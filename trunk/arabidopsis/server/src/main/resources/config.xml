@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains MultiThreadServer configuration values</comment>
+	<entry key="AnnotationPath">/var/www/html/arabidopsis_data/annotation/generated/</entry>
+	<entry key="GraphPath">/var/www/html/arabidopsis_data/graph/generated/</entry>
+	<entry key="ResultPath">/var/www/html/arabidopsis_data/graph/generated/</entry>
+	<entry key="ServerPort">8189</entry>
+	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
+	<entry key="SpeciesTaxId">3702</entry>
+</properties>

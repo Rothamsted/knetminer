@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+<head>
+<title>QTLNetMiner-Poplar</title>
+<script type="text/javascript" src="html/javascript/jquery-1.4.1.js"></script>
+<script type="text/javascript"
+	src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
+<script type="text/javascript">
+ 
+	var genes; //gene records extracted from Poplar GFF file, each line in the file is a gene record
+	var genespreadsheet = new Array(); // a matrx holds each gene reacord like {[chr, start, end],...} 
+ 
+	// var uid = new Date().getTime(); // good way to create unique ID, but need to get value into Flash via FlashVars
+	// var uid = 1234567890; // needs to be unique on page, pass to Flash too
+	// var flashProxy = new FlashProxy(uid,"html/GViewer/javascript/JavaScriptFlashGateway.swf");
+ 
+   /*
+    *   Functions for table manipulation
+    *   To add query rows dynamically
+    *    
+    */
+      var tableId = "ondexDataTable"; // table name explicitly declared, not as an argument in a function
+      
+      // Function to add one row at the end of the table
+      // So far, this only supports Poplar. In order to make it more generic for different species, a species cell (drop down list) 
+      // needs to be added; to make it more intelligent, with differnt species selected, the chromosome cell, QLT cell and findGenes
+      // function should be changed accordingly. In that case, more data files such as Poplar GFF (under html/data/reference)
+      // needs to be prepared and loaded while loading this prototype.html page using AJAX; chromosome, QTL information for differnt
+      // species could also stored in separate files, loaded by AJAX, no need to hardcoded in the javascript
+      function addRowToTable() {
+ 
+        // 3 ways to add a row to table - http://www.mredkj.com/tutorials/tablebasics3.html
+		try {
+		  var tbl = document.getElementById(tableId);
+		  var lastRow = tbl.rows.length;
+		  // if there's no header row in the table, then iteration = lastRow + 1
+		  var iteration = lastRow;
+		  var row = tbl.insertRow(lastRow);
+		  
+		  // Chromosome cell
+		  var cellChromosomeSel = row.insertCell(0);
+		  var chromosomeSel = document.createElement('select');
+		  chromosomeSel.name = 'region';
+		  chromosomeSel.id = 'chromosome';
+		  chromosomeSel.options[0] = new Option('Chromosome....', ' ');
+		  chromosomeSel.options[1] = new Option('Chromosome I', '1');
+		  chromosomeSel.options[2] = new Option('Chromosome II', '2');
+		  chromosomeSel.options[3] = new Option('Chromosome III', '3');
+		  chromosomeSel.options[4] = new Option('Chromosome IV', '4');
+		  chromosomeSel.options[5] = new Option('Chromosome V', '5');
+		  chromosomeSel.options[6] = new Option('Chromosome VI', '6');
+		  chromosomeSel.options[7] = new Option('Chromosome VII', '7');
+		  chromosomeSel.options[8] = new Option('Chromosome VIII', '8');
+		  chromosomeSel.options[9] = new Option('Chromosome IX', '9');
+		  chromosomeSel.options[10] = new Option('Chromosome X', '10');
+		  chromosomeSel.options[11] = new Option('Chromosome XI', '11');
+		  chromosomeSel.options[12] = new Option('Chromosome XII', '12');
+		  chromosomeSel.options[13] = new Option('Chromosome XIII', '13');
+		  chromosomeSel.options[14] = new Option('Chromosome XIV', '14');
+		  chromosomeSel.options[15] = new Option('Chromosome XV', '15');
+		  chromosomeSel.options[16] = new Option('Chromosome XVI', '16');
+		  chromosomeSel.options[17] = new Option('Chromosome XVII', '17');
+		  chromosomeSel.options[18] = new Option('Chromosome XVIII', '18');
+		  chromosomeSel.options[19] = new Option('Chromosome XIX', '19');
+		  cellChromosomeSel.appendChild(chromosomeSel);
+	
+		  // Start cell
+		  var cellStart = row.insertCell(1);
+		  var startText = document.createElement('input');
+		  startText.type = 'text';
+		  startText.name = 'beg';
+		  startText.id = 'beg';
+		  startText.size = 7;
+		  cellStart.appendChild(startText);
+		  
+		  // Stop cell
+		  var cellStop = row.insertCell(2);
+		  var stopText = document.createElement('input');
+		  stopText.type = 'text';
+		  stopText.name = 'end';
+		  stopText.id = 'end';
+		  stopText.size = 7;
+ 
+		  cellStop.appendChild(stopText);
+		  
+		  // Gene cell
+		  var cellGene = row.insertCell(3);
+		  var geneText = document.createElement('input');
+	          geneText.readOnly = true; // or .setAtrribute('readonly', true);
+		  geneText.type = 'text';
+		  geneText.name = 'geneCount';
+		  geneText.id = 'geneCount';
+		  geneText.size = 5;
+		  geneText.onfocus = function(){findGenes(this.id, $("#chromosome option:selected").val(), $("#beg").val(), $("#end").val());};
+		  cellGene.appendChild(geneText);
+		  
+		  // Keyword cell
+		  var cellKeyword = row.insertCell(4);
+		  var keywordText = document.createElement('input');
+		  keywordText.type = 'text';
+		  keywordText.name = 'keyword';
+		  keywordText.id = 'keyword';
+		  keywordText.size = 30;
+		  cellKeyword.appendChild(keywordText);
+		  
+		  // Semantic motif selection
+		  var cellSemMotif = row.insertCell(5);
+		  var semMotifSel = document.createElement('select');
+		  semMotifSel.name = 'algorithm';
+		  semMotifSel.id = 'algorithm';
+		  semMotifSel.options[0] = new Option('All motifs', 'neighbourhood');
+		  semMotifSel.options[1] = new Option('GOA motifs', 'GOA');
+		  semMotifSel.options[2] = new Option('Pathway motifs', 'Pathway');
+		  cellSemMotif.appendChild(semMotifSel);
+		  
+		  
+		}catch(e) {alert(e);}
+      }
+ 
+ 
+   /*
+    *   Function to refresh GViewer
+    *   
+    *   jQuery functions
+    */
+	function searchKeyword(){
+	 
+       var keyword = $("#keyword").val();
+       
+		if(keyword == "" || keyword ==" "){
+			alert("Please provide a keyword e.g. auxin, drought, axillary branching");
+		}
+		else{	
+			$("#loadingDiv").replaceWith('<div id="loadingDiv"  style="position:relative; left:130px; top:-20px;"><img src="html/image/spinner.gif" alt="Wait" /></div>');
+			
+	 
+		    // Sending HTTP request (GET method) using jQuery.ajax to server (Servlet)
+			// The correct response from the server is in this format
+			// "FileCreated:GViewer.xml:Table.tab:NumGenes"
+	   	   $.get("OndexServlet", {keyword : keyword},
+	   		       function(response,textStatus,XMLHttpRequest){
+	   					$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>'); 
+		               var splitedResponse = response.split(":");    
+						if(splitedResponse[0] == "FileCreated"){
+		            	   if(splitedResponse[3] >= 100)
+		            	  	 $("#pGViewer").replaceWith('<div id="pGViewer" style="position:relative; top:-30px; font:14px arial,sans-serif;"><br/><p>Up to '+splitedResponse[3]+' candidate genes are shown in GViewer (green=high, orange=medium, red=low priority). The full results can be downloaded as a table from <a href="/data/annotation/generated/'+ splitedResponse[2] +'" target="_blank">here</a>. Shift+Click on a gene to see its knowledge network.</p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="700" height="700" id="GViewer2" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=/data/annotation/generated/'+ splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&" /><embed id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="700" height="700" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=/data/annotation/generated/'+ splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></div>');
+		            	   else 
+		            	  	 $("#pGViewer").replaceWith('<div id="pGViewer" style="position:relative; top:-30px; font:14px arial,sans-serif;"><br/><p>'+splitedResponse[3]+' candidate genes are shown in GViewer (green=high, orange=medium, red=low priority). The full results can be downloaded as a table from <a href="/data/annotation/generated/'+ splitedResponse[2] +'" target="_blank">here</a>. Shift+Click on a gene to see its knowledge network.</p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="700" height="700" id="GViewer2" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=/data/annotation/generated/'+ splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&" /><embed id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="700" height="700" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=/data/annotation/generated/'+ splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></div>');
+						}
+		               else {
+			               //no genes found
+		            	   $("#pGViewer").replaceWith('<div id="pGViewer" style="position:relative; top:-30px; font:14px arial,sans-serif;"><br/><p>0 candidate genes were associated with the keyword.</p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="700" height="700" id="GViewer2" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&" /><embed id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="700" height="700" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></div>');
+		               }    
+	   	   }); 
+
+		}
+    
+	}
+	
+ 
+	
+	/*
+     *   jQuery.ajax - load the gene annotation data (under /html/data/reference/) from server when the page is loading
+     */
+	$.ajax({
+            url: 'html/data/geneposition.txt',
+            type: 'GET',
+            dataType: 'text',
+            timeout: 10000,
+            error: function(){
+                alert('Error loading annotation data');
+            },
+            success: function(text){
+		        genes = text.split("\n");
+		
+				for(var i=0; i<genes.length; i++){
+				    gene = genes[i].split("\t");
+				    var chr = gene[0];
+				    var beg = gene[1];
+				    var end = gene[2];
+				    if(beg > end){
+						beg = gene[2];
+						end = gene[1];
+					}
+				    genespreadsheet.push([gene[0], gene[1], gene[2]]);
+		        }
+            }
+        });
+	
+	//find the number of gene on chr_name between start - end
+	function findGenes(id, chr_name, start, end) {
+	   
+	   var temparray = new Array(); // store the gene records on chr_name between start - end
+		
+	   for(var i=0; i<genes.length; i++){
+	       if(genespreadsheet[i][0] == chr_name && parseInt(genespreadsheet[i][1]) >= start && parseInt(genespreadsheet[i][1]) <= end)
+		     {
+		          temparray.push(genespreadsheet[i]);
+		     }
+	       }
+		$("#"+id).val(temparray.length);
+	}
+	
+	function contactWindow() {
+		window.open( "html/contact.html", "QTLNetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0" );
+		//contWin.moveTo(100,100);
+	}
+
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-26111300-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+ 
+  </script>
+
+
+
+
+<style type="text/css">
+a:link {
+	color: #E07000;
+} /* unvisited link */
+a:visited {
+	color: #E07000;
+} /* visited link */
+a:hover {
+	color: #FF8F1F;
+} /* mouse over link */
+a:active {
+	color: #FF8F1F;
+} /* selected link */
+</style>
+
+</head>
+<body>
+	<div style="font: 14px arial, sans-serif;" align="right">
+		<a href="http://blog.ondex.org/qtlnetminer/" target="_blank">info</a>
+		. <a href="html/contact.html" onClick="contactWindow(); return false">contact</a>
+		. <a href="http://ondex.rothamsted.ac.uk/tracking/browse/POPLAR"
+			target="_blank">report bugs</a>
+	</div>
+	<table border=0 width="700px" align="center">
+		<tr>
+			<td><img src="html/image/QTLNetMiner_logo.png"
+				style="position: relative; left: -40px; top: -15px;" />
+				<div
+					style="font: 13px verdana, sans-serif; font-style: oblique; font-weight: bold; color: #6B6B6B; position: relative; left: 30px; top: -65px;">
+					Demonstration of candidate gene discovery in the Poplar genome</div></td>
+		</tr>
+		<tr style="font: 14px arial, sans-serif;">
+			<td>
+				<div style="position: relative; top: -30px;">
+					<FORM id="gviewerForm" name="gviewerForm"
+						action="javascript:searchKeyword();">
+
+						<input style="height: 20px;" id="keyword" name="keyword"
+							type="text" size="60" /> [e.g. 'disease resistance', 'xylan|cell
+						wall'] <br />
+						<div id="searchButton" style="position: relative; top: 5px;">
+							<input type="submit" value="Search PoplarKB">
+							<div id="loadingDiv"></div>
+						</div>
+
+					</FORM>
+				</div></td>
+		</tr>
+		<tr>
+			<td>
+				<div id="pGViewer"
+					style="position: relative; top: -30px; font: 14px arial, sans-serif;">
+
+					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+						codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0"
+						width="700" height="700" id="GViewer2" align="middle">
+						<param name="allowScriptAccess" value="sameDomain" />
+						<param name="movie" value="html/GViewer/GViewer2.swf" />
+						<param name="quality" value="high" />
+						<param name="bgcolor" value="#FFFFFF" />
+						<param name="FlashVars"
+							value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&" />
+						<embed id="embed" src="html/GViewer/GViewer2.swf" quality="high"
+							bgcolor="#FFFFFF" width="700" height="700" name="GViewer2"
+							align="middle" allowScriptAccess="sameDomain"
+							type="application/x-shockwave-flash"
+							FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=Poplar Genome&browserURL=OndexServlet?position=Chr&"
+							pluginspage="http://www.macromedia.com/go/getflashplayer" />
+
+					</object>
+
+				</div></td>
+		</tr>
+
+		<tr style="font: 14px arial, sans-serif;">
+			<td>
+
+				<div style="position: relative; top: -40px;">
+					<FORM id="ondexForm" action="OndexServlet" method="GET"
+						target="_blank">
+						<table id="ondexDataTable">
+							<tr>
+								<td>Chromosome</td>
+								<td>Start</td>
+								<td>Stop</td>
+								<td>#Gene</td>
+								<td>Keyword</td>
+								<td>Semantic Motif</td>
+							</tr>
+						</table>
+
+						<SCRIPT LANGUAGE="JavaScript">
+	addRowToTable();
+	</SCRIPT>
+
+						<div style="position: relative; top: 5px;">
+							<input type="submit" value="Search PoplarKB">
+						</div>
+
+						<p />
+
+					</FORM>
+				</div></td>
+		</tr>
+	</table>
+</body>
+</html>
+
+

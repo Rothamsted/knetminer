@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains chromosome configuration</comment>
+	<entry key="1">Chr1</entry>
+	<entry key="2">Chr2</entry>
+	<entry key="3">Chr3</entry>
+	<entry key="4">Chr4</entry>
+	<entry key="5">Chr5</entry>
+	<entry key="6">Chr6</entry>
+	<entry key="7">Chr7</entry>
+	<entry key="8">Chr8</entry>
+	<entry key="9">Chr9</entry>
+	<entry key="10">Chr10</entry>
+	<entry key="11">Chr11</entry>
+	<entry key="12">Chr12</entry>	
+</properties>

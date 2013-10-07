@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Contains OndexServlet configuration values</comment>
+<entry key="DataUrl">http://ondex.rothamsted.ac.uk/wheat_data/graph/generated/</entry>
+<entry key="AppletUrl">http://ondex.rothamsted.ac.uk/applet-0.5.0/</entry>
+<entry key="ServerHost">babvs24</entry>
+<entry key="ServerPort">8189</entry>
+<entry key="TemplateFile">template.html</entry>
+</properties>

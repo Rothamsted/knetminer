@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+
+
+<!--  
+	<feature id="1">
+          <chromosome>Chr1</chromosome>    
+          <start>4827878</start>
+          <end>7046216</end>
+          <type>qtl</type>
+          <color>0xFFCC00</color>
+          <label>FooBar</label>
+          <link>javascript:alert('test foo'); generateNetwork('OndexServlet?mode=network&list=POPTR_0006s11620&keyword=branching', null)</link>
+     </feature>
+	<feature id="1">
+		<chromosome>II</chromosome>	
+		<start>4827878</start>
+		<end>7046216</end>
+		<type>qtl</type>
+		<color>0xFFCC00</color>
+		<label>Stem Height - Year 1</label>
+		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=II:4827878:7046216</link>
+	</feature>
+	<feature id="2">
+		<chromosome>II</chromosome>	
+		<start>3556555</start>
+		<end>4828045</end>
+		<type>qtl</type>
+		<color>0xFF3300</color>
+		<label>Stem Circumference - Year 1</label>
+		<link>OndexServlet?mode=network&keyword=Stem&qtl1=II:3556555:4828045</link>
+	</feature>
+-->	
+</genome>

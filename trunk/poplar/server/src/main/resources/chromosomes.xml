@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains chromosome configuration</comment>
+	<entry key="1">I</entry>
+	<entry key="2">II</entry>
+	<entry key="3">III</entry>
+	<entry key="4">IV</entry>
+	<entry key="5">V</entry>
+	<entry key="6">VI</entry>
+	<entry key="7">VII</entry>
+	<entry key="8">VIII</entry>
+	<entry key="9">IX</entry>
+	<entry key="10">X</entry>
+	<entry key="11">XI</entry>
+	<entry key="12">XII</entry>
+	<entry key="13">XIII</entry>
+	<entry key="14">XIV</entry>
+	<entry key="15">XV</entry>
+	<entry key="16">XVI</entry>
+	<entry key="17">XVII</entry>
+	<entry key="18">XVIII</entry>
+	<entry key="19">XIX</entry>
+</properties>

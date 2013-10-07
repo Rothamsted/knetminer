@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.5"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd">
+
+	<display-name>QTLNetMiner</display-name>
+	<servlet>
+		<description>
+		</description>
+		<display-name>OndexServlet</display-name>
+		<servlet-name>OndexServlet</servlet-name>
+		<servlet-class>rres.ondex.servlet.OndexServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OndexServlet</servlet-name>
+		<url-pattern>/OndexServlet</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>html/index.jsp</welcome-file>
+	</welcome-file-list>
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+			<taglib-location>/WEB-INF/c.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+</web-app>

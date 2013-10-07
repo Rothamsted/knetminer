@@ -1,0 +1,427 @@
+html{
+	height: 101%;
+}
+body {
+	margin:0px;padding:0px;background:#EEEEEE; 
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+h2 {
+	font-family:verdana;
+	font-size: 12pt;
+	padding:0px;
+}
+p {
+	font-style:italic;
+}
+a {
+	text-decoration:none; 
+	color:#4184C1;
+}
+a img {
+	border:none;	
+}
+
+a:hover {
+	text-decoration:underline;
+}
+.textBlock
+{
+	max-width:210px;
+    display:block; 
+    margin-top:-16px; 
+    margin-left:28px;
+}
+.button {
+	height:25px;
+	font-size:14px;
+	cursor:pointer;
+}
+.button_link {
+    background:transparent;
+	overflow:visible;
+    margin:0;
+    padding:0;
+    border:0;
+    color: #3B53A5;
+	text-decoration:none;
+	font-weight:bold;
+    background:transparent; 
+    line-height:normal; 
+    cursor:pointer;
+    -moz-user-select:text;
+}
+/*
+div#wrapper {
+	width:960px;
+	background-color:#FFFFFF;
+	margin-top:10px;
+	margin-bottom:10px;
+	margin-left:auto;
+	margin-right:auto;
+	padding:0px; 
+}
+div#header {
+	margin:0px;
+	text-align:center;
+}
+div#header_menu {
+	float:right;	
+}
+div#header_menu ul {
+	float:right;
+}
+div#header_menu li {
+	text-align:right;
+	float:left;
+	margin-left:15px;
+	margin-right:15px;
+}
+div#header_menu li:first-child 
+    list-style:none;
+}
+*/
+div#title {
+	float:center;
+	padding-top:20px;
+	clear:both;
+}
+div#subtitle {
+	margin-left:auto;
+    margin-right:auto;
+	float:center;
+	clear:right;
+}
+div#leftnav {
+	float:left;
+	width:130px;
+	height:150px;
+	margin:0;
+	padding:1em;
+}
+.rightnav {
+	position:absolute;
+	top:25px;
+	right:45px;
+	max-width:210px;
+}
+.rightnav_genelist {
+	position:absolute;
+	top:0px;
+	right:200px;
+	max-width:210px;
+}
+div#content {
+	margin-left:96px;
+	margin-right:111px;
+}
+ul#main_list {
+	list-style:none;
+	padding:0;
+}
+ul#main_list {
+	padding-left:15px;
+}
+div#keyword_search  {
+	text-align:center;
+	padding-top:20px;
+}
+div#keyword_search ul{
+	list-style:none;
+	display:inline-block; 
+    white-space:nowrap;
+    margin-bottom:0;
+	zoom: 1;
+	*display: inline;
+}
+div#keyword_search li {	
+	float:left;
+}
+div#keyword_search input[type="text"] {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	width:300px;
+	height:20px;
+	margin-right:5px;
+}
+div#list_search {
+	margin-left:34px;
+	position:relative;
+}
+div#loadingDiv {
+	width:30px;
+	height:35px;
+	padding-left:20px;
+	color:#D56048;
+	position:relative;
+	top:3px;
+}
+div#loadingNetworkDiv {
+	float:right;
+	width:210px;
+	height:30px;
+	padding-top:13px;
+	padding-right:5px;
+	color:#D56048;
+}
+div#loadingNetworkDiv img {
+	float:right;
+}
+div#loadingDiv ul li{
+	padding-left:20px;
+}
+div#region_search_area li {
+    list-style:none;
+}
+div#region_search_area {
+    #text-align:center;
+    padding:10px;
+    padding-top:20px;
+    width:100%;
+	position:relative;
+}
+div#region_search_area table {
+	display:inline-block; 
+    white-space:nowrap;
+	zoom: 1;
+	*display: inline;
+    text-align:left;
+}
+div#region_search_area input[type="text"], select {
+	width:95px;
+	margin-right:4px;
+	margin-bottom:5px;
+}
+div#assembly {
+	font-style:italic;
+	text-align:right;
+}
+
+#selectAll {
+	width:96%;
+	text-align:right;
+}
+div#advanced_search_area {
+	margin-top:10px;
+	margin-left:15px;
+	position:relative;
+}
+div#networkButton {
+	width:101%;
+	height:30px;
+	margin-top:8px;
+}
+div#networkButton input[type="button"] {
+	float:right;
+	margin:10px;
+}
+/*
+div#footer {
+	padding:15px;
+	margin:0px;
+}
+*/
+div.scrollTable {
+	width:100%;       /* table width will be 99% of this*/
+	max-height:400px;    /* must be greater than tbody*/
+	overflow:auto;
+	margin:0 auto;
+}
+div.scrollTable table {
+    width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
+	border:none;
+	border-spacing:0px;
+	background-color:transparent;
+	border:1px solid #C2C2C2;
+	border-collapse:collapse;
+}
+div.scrollTable th, div.scrollTable td {
+    padding:4px;
+    border:1px solid #C2C2C2;
+}
+div.scrollTable tbody {
+	overflow: auto;
+	height: 280px;
+	overflow-x: hidden;
+}
+div.scrollTable table>tbody {
+  overflow:auto;
+  height:280px;
+  overflow-x:hidden;
+}
+div.scrollTable table>tbody tr {
+  height:auto;
+}
+div.scrollTable table>thead tr {
+  position:relative;
+  top: 0px;/*expression(offsetParent.scrollTop); IE5+ only*/
+}
+/* tablesorter */
+table.tablesorter {
+	font-family:arial;
+	background-color:#C0C0C0;
+	margin:10px 0pt 15px;
+	font-size: 10pt;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color:#C0C0C0;
+	color:black;
+	font-size:10pt;
+	padding:4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(../image/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color:#3D3D3D;
+	padding:4px;
+	background-color:#FFF;
+	vertical-align:top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#D5EECD;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image:url(../image/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image:url(../image/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+	background-color:#F0F0F6;
+	background-color:#BDB7A8;
+}
+
+table.suggestorTable {
+	margin-left: 28px;
+    text-align: left;
+    padding: 7px;
+	border: 1px solid;
+}
+table.suggestorTable thead tr th {
+	background-color:#C0C0C0;
+	color:black;
+	padding:4px;
+}
+
+table.suggestorTable .evidence_item {
+	margin-left:50px;
+}
+table.tablesorter tbody td {
+	color:#3D3D3D;
+	background-color:#FFF;
+}
+
+/* tooltip */
+#hint {
+	cursor:help;
+}
+.tooltip {
+	margin:8px;
+	padding:8px;
+	border:1px solid grey;
+	background-color:#FBF2D7;
+	position:absolute;
+	margin-bottom:20px;
+	z-index:100000;
+}
+
+/* Evidence pictures */
+.evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font:12px Arial, Helvetica, sans-serif}
+.evidence_item_Gene {background:url(../image/Gene.png) no-repeat;padding-top:6px;height:16px;}
+.evidence_item_BioProc {background:url(../image/Bioogical_proccess.png) no-repeat;}
+.evidence_item_CelComp {background:url(../image/Cellular_component.png) no-repeat;}
+.evidence_item_Comp {background:url(../image/Compound.png) no-repeat;}
+.evidence_item_Enzyme {background:url(../image/Enzyme.png) no-repeat;}
+.evidence_item_EC {background:url(../image/Enzyme_clasification.png) no-repeat;}
+.evidence_item_MolFunc {background:url(../image/Molecular_function.png) no-repeat;}
+.evidence_item_Path {background:url(../image/Pathway.png) no-repeat;}
+.evidence_item_Protein {background:url(../image/Protein.png) no-repeat;}
+.evidence_item_ProtDomain {background:url(../image/Protein_domain.png) no-repeat;}
+.evidence_item_Publication {background:url(../image/Publication.png) no-repeat;}
+.evidence_item_Reaction {background:url(../image/Reaction.png) no-repeat;}
+.evidence_item_Transport {background:url(../image/Transport.png) no-repeat;}
+.evidence_item_TO {background:url(../image/Trait_ontology.png) no-repeat;}
+.evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
+
+.evidence_box {position:absolute; width:185px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2;text-align:left;}
+.evidence_box span {font-size:17px; color:#003399;}
+.evidence_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
+
+/* Legend */
+#legend_picture {position:relative;width:100%;padding-top:25px;}
+#legend_picture #legend_container {position:relative;margin:auto;width:500px;height:88px;}
+
+
+/* General Styles */
+
+#wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../image/background.png) center;padding:0px 30px;  }
+
+/* Header  */
+#header {position:relative; height:125px;clear:left;}
+#header img {border:none;}
+#header #qtlLogo {position:absolute; top:25px; left:30px;}
+#header #organism {position:absolute; top:6px; right:40px;}
+#header #motto {position:absolute; top:110px; left:30px;font-size:12px;}
+#header_spacer {position:relative; height:35px;width:960px; background:url(../image/divisor_header.png) repeat-x ;clear:left;}
+
+/* Footer */
+#footer_spacer {position:relative; height:2px;width:960px; background:url(../image/divisor_footer.png) repeat-x ;clear:left;}
+#footer {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:center; height:77px;}
+#footer #left_footer {position:absolute;left:8px;top:5px;text-align:left;font-size:10px;}
+#footer #right_footer {position:absolute;right:8px;top:5px;text-align:right;font-size:10px;}
+
+/* Tab Window */
+.button_off {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif; background:url(../image/button_off.png) no-repeat}
+.button_off a {color:#518FC8;text-decoration:none;}
+.button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif; background:url(../image/button_on.png) no-repeat;border-bottom:1px solid #C6C5C5}
+.button_on a {color:#FFF;text-decoration:none;}
+.button_on:hover {background:url(../image/button_over.png) no-repeat;}
+.button_filler {position:relative;clear:left;height:1px;width:483px;border-bottom:1px solid #C6C5C5}
+#pGViewer {float:left;}
+#resultsTable {position:relative;float:left;padding-bottom:80px;}
+#evidenceTable {position:relative;float:left;padding-bottom:80px;}
+.margin_left {position:relative;margin-left:7px;}
+
+/* Search bar */
+#search{position:relative;padding:10px 10px 10px 0px;margin:6px 0px 10px 0px;background-color:#F4F5F7;border:2px solid #e4e4e4;width:740px;}
+#pGViewer_title {padding-bottom:10px;font-size:11px;color:#9B9B9B;}
+.preloader_bar {left:250px;position:relative;}
+#matchesResultDiv {font-size:11px; color:#9B9B9B;}
+* #eg_keywords {margin-left:4px;position:relative;top:4px;}
+
+#NetworkCanvas{position:relative;padding-bottom:60px;float:left;}
+#Network_frame{border:none;}
+
+/* Evidence View */
+#evidenceSummary {position:relative; width:100%}
+#evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
+
+/* Suggestor box */
+/* #suggestor_search_area {} */
+.preloader_wrapper {width: 100%;position: relative;}
+#suggestor_invite {color:#900;}
+#suggestor_tables img {position: relative;}
+#suggestor_terms {position:relative;clear:left;padding-left:29px;}
+#suggestor_tables {position:relative;clear:left;}
+.buttonSynonym_off {background:url(../image/synonym_bg_off.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;color:#fff;}
+.buttonSynonym_on {background:url(../image/synonym_bg_on.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;;color:#fff;font-weight:bold;}
+.synonym_right_border {position:absolute;top:0px;right:-9px;}
+.synonym_left_border {position:absolute;top:0px;left:-9px;}
+.addKeyword {width:22px;height:22px;background:url(../image/add_off.png) no-repeat;position:relative;float:left;}
+.addKeywordUndo {width:22px;height:22px;background:url(../image/add_on.png) no-repeat;position:relative;float:left;} 
+.excludeKeyword {width:22px;height:22px;background:url(../image/exclude_off.png) no-repeat;position:relative;float:left;}
+.excludeKeywordUndo {width:22px;height:22px;background:url(../image/exclude_on.png) no-repeat;position:relative;float:left;}
+.replaceKeyword {width:22px;height:22px;background:url(../image/replace_off.png) no-repeat;position:relative;float:left;}
+.replaceKeywordUndo {width:22px;height:22px;background:url(../image/replace_on.png) no-repeat;position:relative;float:left;}
+.tabBox {left: -2px;position: absolute;top: 14px;}
+.conceptTabOn {position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOn.png) no-repeat;z-index:2;}
+.conceptTabOn div {position:absolute;top:9px;right:3px;opacity: 0.6;}
+.conceptTabOff {position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOff.png) no-repeat;z-index:1;}
+.conceptTabOff div {position:absolute;top:9px;right:3px;opacity: 0.6;}
