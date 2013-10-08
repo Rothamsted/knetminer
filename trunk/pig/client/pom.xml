@@ -30,7 +30,7 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>net.sourceforge.ondex.apps.qtlnetminer.common</groupId>
+									<groupId>com.github.qtlnetminer.trunk.common</groupId>
 									<artifactId>common-client</artifactId>
 									<version>${project.version}</version>
 									<classifier>gviewer</classifier>
@@ -50,7 +50,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>net.sourceforge.ondex.apps.qtlnetminer.common</groupId>
+			<groupId>com.github.qtlnetminer.trunk.common</groupId>
 			<artifactId>common-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
