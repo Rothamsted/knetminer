@@ -1,6 +1,7 @@
+/*
 var genespreadsheet = new Array();
 var genes;
-
+*/
 /*
 Functions for show and hide structures when a button is pressed
 */
@@ -319,7 +320,7 @@ function searchKeyword(){
 		var end = trim($("#end"+i).val());
 		var label = trim($("#label"+i).val());
 		if(chr.length>0 && start.length>0 && end.length>0 && parseInt(start)<parseInt(end)){
-			if(countGenes(chr, start, end)>0) {
+			if(findGenes('',chr, start, end)>0) {
 				counter++;
 				request = request+"&qtl"+counter+"="+chr+":"+start+":"+end+":"+label;				
 			}			
@@ -453,6 +454,7 @@ function generateMultiGeneNetwork(keyword) {
  * jQuery.ajax - load the gene annotation data (under /html/data/reference/)
  * from server when the page is loading
  */
+/* 
 $.ajax({
         url: 'html/data/geneposition.txt',
         type: 'GET',
@@ -477,11 +479,12 @@ $.ajax({
 	        }
         }
     });
-
+*/
 /*
  * Function
  * 
  */
+ /*
 function countGenes(chr_name, start, end) {	   
 	var temparray = new Array(); 
 	for(var i=0; i<genes.length; i++) {
@@ -491,13 +494,27 @@ function countGenes(chr_name, start, end) {
 	}
 	return temparray.length;
 }
-
+*/
 /*
  * Function
  * 
  */
 function findGenes(id, chr_name, start, end) {
-	$("#"+id).val(countGenes(chr_name, start, end));
+	if(chr_name != "" && start != "" && end != ""){
+		var searchMode = "countloci";
+		var keyword = chr_name+"-"+start+"-"+end;		
+		var request = "mode="+searchMode+"&keyword="+keyword;
+		var url = 'OndexServlet?'+request;
+		$.post(url, '', function(response, textStatus){
+			if(textStatus == "success"){
+				if(id != ""){
+					$("#"+id).val(response);					
+				}else{
+					return response;
+				}
+			}
+		})
+	}
 }
 
 /*

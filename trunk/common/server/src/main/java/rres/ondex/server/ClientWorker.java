@@ -168,7 +168,7 @@ public class ClientWorker implements Runnable {
 				}
 				return "OndexWeb";
 			}
-			else if(mode.equals("counthits")) {
+			else if(mode.equals("counthits")) {		//counts the hits in real-time for the search box
 				try {
 					Integer matchCount = ondexProvider.searchLucene(keyword).size(); //number of matching documents
 					Hits qtlnetminerResults = new Hits(keyword, ondexProvider);
@@ -182,6 +182,14 @@ public class ClientWorker implements Runnable {
 					e.printStackTrace();
 				}
 				return "MatchCounter";
+
+			}else if(mode.equals("countloci")) {		//counts the genes withina a loci for the Genome or QTL Search box
+				String[] loci = keyword.split("-");
+				String chr = loci[0];
+				Integer start = Integer.parseInt(loci[1]);
+				Integer end = Integer.parseInt(loci[2]);
+				
+				return String.valueOf(ondexProvider.getGeneCount(chr, start, end));
 
 			}else if(mode.equals("synonyms")){				
 				// Synonym table file
