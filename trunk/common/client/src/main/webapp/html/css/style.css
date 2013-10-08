@@ -383,12 +383,12 @@ table.tablesorter tbody td {
 .button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif; background:url(../image/button_on.png) no-repeat;border-bottom:1px solid #C6C5C5}
 .button_on a {color:#FFF;text-decoration:none;}
 .button_on:hover {background:url(../image/button_over.png) no-repeat;}
-.button_filler {position:relative;clear:left;height:1px;width:483px;border-bottom:1px solid #C6C5C5}
+.button_filler {border-bottom: 4px solid #CCCCCC;clear: left;height: 1px;position: relative;width: 754px;}
 #pGViewer {float:left;}
 #resultsTable {position:relative;float:left;padding-bottom:80px;}
 #evidenceTable {position:relative;float:left;padding-bottom:80px;}
 .margin_left {position:relative;margin-left:7px;}
-
+#tabviewer_content {min-height:350px;}
 /* Search bar */
 #search{position:relative;padding:10px 10px 10px 0px;margin:6px 0px 10px 0px;background-color:#F4F5F7;border:2px solid #e4e4e4;width:740px;}
 #pGViewer_title {padding-bottom:10px;font-size:11px;color:#9B9B9B;}

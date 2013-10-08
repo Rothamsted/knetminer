@@ -139,6 +139,15 @@ function matchCounter(){
 	
 $(document).ready(
 		function(){
+			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
+			if(reference_genome === true){
+				$('#genomeorqtlsearchbox').show();	
+				
+			}else{
+				activateButton('resultsTable');
+				$('#pGViewer_button').hide();	
+				$('#pGViewer').hide();				
+			}
 			// Calculates the amounth of documents to be displayed with the current query
 			$('#keywords').keyup(function(){matchCounter();});
 			// Add QTL region
@@ -571,9 +580,11 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
-				table = table + '<th width="100">'+values[1]+'</th>';			
-				table = table + '<th width="60">'+values[3]+'</th>';
-				table = table + '<th width="70">'+values[4]+'</th>';
+				table = table + '<th width="100">'+values[1]+'</th>';	
+				if(reference_genome === true){		
+					table = table + '<th width="60">'+values[3]+'</th>';
+					table = table + '<th width="70">'+values[4]+'</th>';
+				}
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';							
 				table = table + '<th width="70">'+values[7]+'</th>';
@@ -589,9 +600,15 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 				    
-				    var chr = '<td>'+values[3]+'</td>';
-				    var start = '<td>'+values[4]+'</td>';
-				    var end = '<td>'+values[5]+'</td>';
+					if(reference_genome === true){		
+						var chr = '<td>'+values[3]+'</td>';
+						var start = '<td>'+values[4]+'</td>';
+						var end = '<td>'+values[5]+'</td>';
+					}else{
+						var chr = '';
+						var start = '';
+						var end = '';
+					}
 				    var score = '<td>'+values[6]+'</td>';
 				    var withinQTL = '<td>'+values[7]+'</td>';
 				    var usersList = '<td>'+values[8]+'</td>';

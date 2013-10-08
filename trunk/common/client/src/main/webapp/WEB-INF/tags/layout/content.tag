@@ -29,7 +29,7 @@
 						<div id="matchesResultDiv">Please, start typing your query</div>
 					</div>
 				</li>
-				<li>
+				<li id="genomeorqtlsearchbox" style="display:none;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
 					<span id="hint"><img id="hintSearchQtlGenome" src="html/image/hint.png" alt="hint" /></span>
