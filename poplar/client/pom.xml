@@ -3,12 +3,12 @@
 
 	<parent>
 		<artifactId>poplar</artifactId>
-		<groupId>com.github.qtlnetminer.trunk</groupId>
+		<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 		<version>0.5.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.qtlnetminer.trunk.poplar</groupId>
+	<groupId>uk.ac.rothamsted.qtlnetminer.poplar</groupId>
 	<artifactId>poplar-client</artifactId>
 	<packaging>war</packaging>
 	<name>QTLNetMiner Poplar client</name>
@@ -30,7 +30,7 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.github.qtlnetminer.trunk.common</groupId>
+									<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
 									<artifactId>common-client</artifactId>
 									<version>${project.version}</version>
 									<classifier>gviewer</classifier>
@@ -50,7 +50,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.qtlnetminer.trunk.common</groupId>
+			<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
 			<artifactId>common-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>

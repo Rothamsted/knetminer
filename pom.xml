@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.qtlnetminer</groupId>
+	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
 	<name>parent</name>
@@ -78,10 +78,9 @@
             <url>http://www.gnu.org/licenses/gpl.html</url>
         </license>
     </licenses>
-    <description>ONDEX enables data from diverse biological data sets to be linked, integrated and visualised through
-        graph analysis techniques.
+    <description>QTLNetMiner is a platform for fast candidate gene discovery using data mining techniques.
     </description>
-    <url>http://ondex.sourceforge.net/</url>
+    <url>http://ondex.rothamsted.ac.uk/QTLNetMiner/</url>
 
     <ciManagement>
         <system>hudson</system>
@@ -89,14 +88,14 @@
     </ciManagement>
 
     <organization>
-        <name>ONDEX</name>
-        <url>http://www.ondex.org</url>
+        <name>Rothamsted Research</name>
+        <url>http://www.rothamsted.ac.uk/</url>
     </organization>
 
     <scm>
-        <connection>scm:svn:https://svn.code.sf.net/p/ondex/code/trunk</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/ondex/code/trunk</developerConnection>
-        <url>https://svn.code.sf.net/p/ondex/code/trunk</url>
+        <connection>scm:git:https://github.com/KeywanHP/QTLNetMiner</connection>
+        <developerConnection>scm:git:https://github.com/KeywanHP/QTLNetMiner</developerConnection>
+        <url>https://github.com/KeywanHP/QTLNetMiner</url>
     </scm>
 
     <distributionManagement>
@@ -218,32 +217,6 @@
                                         <versionRange>[2.6,)</versionRange>
                                         <goals>
                                             <goal>javadoc</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.cxf</groupId>
-                                        <artifactId>cxf-java2ws-plugin</artifactId>
-                                        <versionRange>[2.2,)</versionRange>
-                                        <goals>
-                                            <goal>java2ws</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.cxf</groupId>
-                                        <artifactId>cxf-codegen-plugin</artifactId>
-                                        <versionRange>[2.2,)</versionRange>
-                                        <goals>
-                                            <goal>generate-sources</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -372,6 +345,7 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <scope>provided</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
@@ -382,21 +356,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
-                <type>jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.hp.hpl.jena</groupId>
-                <artifactId>jena</artifactId>
-                <version>2.5.7</version>
-                <scope>compile</scope>
+                <version>1.2.17</version>   
             </dependency>
 
             <dependency>
