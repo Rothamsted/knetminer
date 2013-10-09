@@ -9,6 +9,11 @@ import org.apache.lucene.queryParser.ParseException;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 
+/**
+ * 
+ * @author pakk
+ *
+ */
 public class Hits {	
 	
 	OndexServiceProvider ondexProvider;
