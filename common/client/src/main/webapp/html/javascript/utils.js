@@ -603,7 +603,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 				    if(multiorganisms === true){
-						var taxid = '<td>'+values[5]+'</td>';
+						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
 					}
 					if(reference_genome === true){		
 						var chr = '<td>'+values[3]+'</td>';
@@ -629,7 +629,14 @@ function createGenesTable(tableUrl, keyword, rows){
 								evidence = evidence+'<div id="evidence_box_'+values[1]+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1]+evidence_elements[0]+'\').slideUp(100);"></a>';
 								evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
 								for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
-									evidence = evidence+'<p>'+evidence_elements[count_eb]+'</p>';
+									//link publications with pubmed
+									pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+									if(evidence_elements[0] == 'Publication')
+										evidenceValue = '<a href="'+pubmedurl+evidence_elements[count_eb].substring(5)+'" target="_blank">'+evidence_elements[count_eb]+'</a>';	
+									else
+										evidenceValue = evidence_elements[count_eb];	
+										
+									evidence = evidence+'<p>'+evidenceValue+'</p>';
 								}
 								evidence = evidence+'</div>';
 							evidence = evidence+'</div>';
@@ -719,9 +726,15 @@ function createEvidenceTable(tableUrl){
 				for(var ev_i=1; ev_i < (evidenceTable.length-1); ev_i++) {
 					values = evidenceTable[ev_i].split("\t");
 					table = table + '<tr>';
-					table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';					 
+					table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';	
+					//link publications with pubmed
+					pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+					if(values[0] == 'Publication')
+						evidenceValue = '<a href="'+pubmedurl+values[1].substring(5)+'" target="_blank">'+values[1]+'</a>';	
+					else
+						evidenceValue = values[1];				 
 					table = table + '<td><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
-					table = table + '<td>'+values[1]+'</td>';
+					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					table = table + '<td>'+values[3]+'</td>';
 					table = table + '<td>'+values[4]+'</td>';

@@ -1359,6 +1359,9 @@ public class OndexServiceProvider {
 					ONDEXConcept c = graph.getConcept(hitID);
 					String ccId = c.getOfType().getId();
 					String name = getDefaultNameForGroupOfConcepts(c);
+					//All publications will have the format PMID:15487445
+					if(ccId == "Publication" && name.substring(0, 4) != "PMID:")
+						name = "PMID:"+name;
 
 					if(!cc2name.containsKey(ccId)){
 						cc2name.put(ccId, ccId+"//"+name);
@@ -1412,6 +1415,9 @@ public class OndexServiceProvider {
 				//Creates type,name,score and numberOfGenes
 				String type = lc.getOfType().getId();
 				String name = getDefaultNameForGroupOfConcepts(lc);
+				//All publications will have the format PMID:15487445
+				if(type == "Publication" && name.substring(0, 4) != "PMID:")
+					name = "PMID:"+name;
 				Float score = luceneConcepts.get(lc);
 				Integer ondexId = lc.getId();
 				if(!mapConcept2Genes.containsKey(lc.getId())){
