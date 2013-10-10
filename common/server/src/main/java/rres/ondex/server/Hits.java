@@ -11,7 +11,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 
 /**
  * 
- * @author pakk
+ * @author zorc
  *
  */
 public class Hits {	
