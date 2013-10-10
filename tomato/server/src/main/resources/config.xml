@@ -7,5 +7,6 @@
 	<entry key="ResultPath">/var/www/html/tomato_data/graph/generated/</entry>
 	<entry key="ServerPort">8189</entry>
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
-	<entry key="SpeciesTaxId">4113</entry>
+	<entry key="SpeciesTaxId">4113,4081</entry>
+	<entry key="reference_genome">false</entry>	
 </properties>
