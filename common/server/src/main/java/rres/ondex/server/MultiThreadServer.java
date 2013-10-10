@@ -5,8 +5,11 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
@@ -100,8 +103,17 @@ public class MultiThreadServer {
 		// Initiate OndexKB
 		OndexServiceProvider ondexServiceProvider = (OndexServiceProvider) Class
 				.forName(props.getProperty("ServiceProvider")).newInstance();
+		String reference_genome = props.getProperty("reference_genome");
+		boolean referenceGenome;
+		if(reference_genome == "true")
+			referenceGenome = true;
+		else
+			referenceGenome = false;
 		String taxID = props.getProperty("SpeciesTaxId");
-		ondexServiceProvider.setTaxId(taxID);
+		List<String> taxIDs = Arrays.asList(taxID.split(","));
+		
+		ondexServiceProvider.setReferenceGenome(referenceGenome);
+		ondexServiceProvider.setTaxId(taxIDs);
 		ondexServiceProvider.loadConfig();
 		ondexServiceProvider.createGraph(fileName);		
 

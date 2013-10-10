@@ -129,7 +129,12 @@ public class OndexServiceProvider {
 	/**
 	 * TaxID of organism for which the knowledgebase was created
 	 */
-	String taxID;
+	List<String> taxID;
+	
+	/**
+	 * true if a reference genome is provided
+	 */
+	boolean referenceGenome;
 
 	/**
 	 * Loads configuration for chromosomes and initialises map
@@ -191,8 +196,7 @@ public class OndexServiceProvider {
 		
 		for (ONDEXConcept gene : seed) {		
 			if (gene.getAttribute(attTAXID) != null
-					&& gene.getAttribute(attTAXID).getValue().toString()
-							.equals(taxID)) {
+					&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
 				numGenesInGenome++;
 			}
 		}
@@ -639,8 +643,7 @@ public class OndexServiceProvider {
 				for (ONDEXConcept c : genes) {
 					int  chrGene = 0, startGene = 0;
 					if (c.getAttribute(attTAXID) == null ||
-							!c.getAttribute(attTAXID).getValue().toString()
-									.equals(taxID)) {
+							!taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
 						continue;
 					}
 					if (c.getAttribute(attChromosome) != null) {
@@ -739,8 +742,7 @@ public class OndexServiceProvider {
 		for (int id : ids) {
 			ONDEXConcept c = graph.getConcept(id);
 			if (c.getAttribute(attTAXID) != null
-					&& c.getAttribute(attTAXID).getValue().toString()
-							.equals(taxID)) {
+					&& taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
 				seed.add(c);
 			}
 		}
@@ -771,8 +773,7 @@ public class OndexServiceProvider {
 			query = query.substring(0, query.length() - 1);
 			for (ONDEXConcept gene : seed) {	
 				if (gene.getAttribute(attTAXID) != null
-						&& gene.getAttribute(attTAXID).getValue().toString()
-								.equals(taxID)) {
+						&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
 	
 					// search gene accessions, names, attributes
 					if (OndexSearch.find(gene, query, false)) {
@@ -1373,10 +1374,13 @@ public class OndexServiceProvider {
 				for(String ccId : cc2name.keySet()){
 					evidence += cc2name.get(ccId)+"||";
 				}
+				
+				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
+				
 				evidence = evidence.substring(0, evidence.length() - 2);
 				
 				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-						+ beg + "\t" + end + "\t" + fmt.format(score) + "\t" +isInList + "\t" + numQTL + "\t" + evidence + "\n");
+						+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + numQTL + "\t" + evidence + "\n");
 				
 			}
 			out.close();
@@ -1739,13 +1743,22 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 			return false;
 	}
 
-	public void setTaxId(String id) {
+	public void setTaxId(List<String> id) {
 		this.taxID = id;
 	}
 	
-	public String getTaxId() {
+	public List<String> getTaxId() {
 		return this.taxID;
 	}
+	
+	public void setReferenceGenome(boolean value) {
+		this.referenceGenome = value;
+	}
+	
+	public boolean getReferenceGenome() {
+		return this.referenceGenome;
+	}
+	
 	
 	/**
 	 * Returns number of organism (taxID) genes at a given loci
@@ -1776,7 +1789,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
 				
 				//check if taxid, chromosome and start meet criteria
-				if(geneTaxID.equals(taxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneBeg >= start && geneBeg <= end){
+				if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneBeg >= start && geneBeg <= end){
 					geneCount++;
 				}
 				
@@ -1814,8 +1827,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 			Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
 			for (ONDEXConcept gene : seed) {		
 				if (gene.getAttribute(attTAXID) != null
-						&& gene.getAttribute(attTAXID).getValue().toString()
-								.equals(taxID)) {
+						&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
 					genes.add(gene);
 				}				
 			}

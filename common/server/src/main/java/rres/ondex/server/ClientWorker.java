@@ -327,10 +327,14 @@ public class ClientWorker implements Runnable {
 				}
 				else {
 					// Gviewer Annotation File
-					boolean xmlIsCreated = ondexProvider.writeAnnotationXML(
-							genes, userGenes, qtl, MultiThreadServer.props.getProperty("AnnotationPath")
-							+ fileGViewer, keyword, 100, qtlnetminerResults, listMode);
-					System.out.println("1.) Gviewer annotation ");
+					if(ondexProvider.getReferenceGenome() == true){
+						ondexProvider.writeAnnotationXML(
+								genes, userGenes, qtl, MultiThreadServer.props.getProperty("AnnotationPath")
+								+ fileGViewer, keyword, 100, qtlnetminerResults, listMode);
+						System.out.println("1.) Gviewer annotation ");
+					}else{
+						System.out.println("1.) No reference genome for Gviewer annotation ");
+					}
 					
 					// Gene table file
 					boolean txtIsCreated = ondexProvider.writeTableOut(
@@ -352,7 +356,7 @@ public class ClientWorker implements Runnable {
 					int totalDocSize = qtlnetminerResults.getLuceneConcepts().size();
 					
 					// We have annotation and table file				
-					if (xmlIsCreated && txtIsCreated && eviTableIsCreated) {
+					if (txtIsCreated && eviTableIsCreated) {
 						request = "FileCreated:"+fileGViewer+":"+fileGeneTable+":"+fileEvidenceTable+":"+genes.size()+":"+docSize+":"+totalDocSize;
 						System.out.println("request is "+request);
 					}
