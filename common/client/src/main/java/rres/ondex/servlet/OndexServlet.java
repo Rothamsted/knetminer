@@ -120,7 +120,7 @@ public class OndexServlet extends HttpServlet {
 			String keyword = request.getParameter("keyword");
 			String mode = request.getParameter("mode");
 			if(keyword != null && keyword.length() > 1 && keyword.length() < 350){
-				if(mode != null && (mode.equals("genome") || mode.equals("qtl") || mode.equals("network") || mode.equals("counthits") || mode.equals("countloci") || mode.equals("synonyms"))){
+				if(mode != null && (mode.equals("genome") || mode.equals("qtl") || mode.equals("network") || mode.equals("evidencepath") || mode.equals("counthits") || mode.equals("countloci") || mode.equals("synonyms"))){
 					validRequest = true;
 					communicateWithServer(request, response);
 				}

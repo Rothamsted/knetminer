@@ -191,6 +191,35 @@ public class ClientWorker implements Runnable {
 				
 				return String.valueOf(ondexProvider.getGeneCount(chr, start, end));
 
+			}else if(mode.equals("evidencepath")) {		//returns the path between an evidence and all connected genes
+				System.out.println("Creating Evidence Path for ONDEXID: "+keyword);
+				Integer evidenceOndexID = Integer.parseInt(keyword);
+				ONDEXGraph subGraph = ondexProvider.evidencePath(evidenceOndexID);
+				
+				long timestamp = System.currentTimeMillis();
+				String fileName = timestamp+"evidencePath.oxl";
+				String exportPath = MultiThreadServer.props.getProperty("GraphPath");	
+				String request = "";
+				// Export graph
+				try {
+					boolean fileIsCreated = false;					
+					try {
+						fileIsCreated = ondexProvider.exportGraph(subGraph, exportPath+fileName);
+					} catch (InvalidPluginArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}				
+					if(fileIsCreated) {
+						request = "FileCreated:"+fileName;
+					}					
+					else {
+						System.out.println("NoFile");
+					}	
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} 
+				return request;
+
 			}else if(mode.equals("synonyms")){				
 				// Synonym table file
 				long timestamp = System.currentTimeMillis();

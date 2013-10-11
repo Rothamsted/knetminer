@@ -387,6 +387,8 @@ table.tablesorter tbody td {
 #pGViewer {float:left;}
 #resultsTable {position:relative;float:left;padding-bottom:80px;}
 #evidenceTable {position:relative;float:left;padding-bottom:80px;}
+#tablesorterEvidence div{margin-left:19px;}
+#tablesorterEvidence div.evidence_item {margin-left:13px;}
 .margin_left {position:relative;margin-left:7px;}
 #tabviewer_content {min-height:350px;}
 /* Search bar */

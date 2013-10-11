@@ -131,6 +131,18 @@ function matchCounter(){
 }
 
 /*
+ * Function to get the network of all genes related to a given evidence
+ * 
+ */		
+function evidencePath(id){	
+	var searchMode = "evidencepath";
+	var keyword = id;		
+	var request = "mode="+searchMode+"&keyword="+keyword;
+	var url = 'OndexServlet?'+request;
+	generateNetwork(url,'');
+}
+
+/*
 * Document ready event executes when the HTML document is loaded
 * 	- add/remove QTL regions
 * 	- advanced search
@@ -460,51 +472,6 @@ function generateMultiGeneNetwork(keyword) {
 	}
 }
 /*
- * jQuery.ajax - load the gene annotation data (under /html/data/reference/)
- * from server when the page is loading
- */
-/* 
-$.ajax({
-        url: 'html/data/geneposition.txt',
-        type: 'GET',
-        dataType: 'text',
-        timeout: 10000,
-        error: function(){
-  
-        },
-        success: function(text){
-	        genes = text.split("\n");
-	
-			for(var i=0; i<genes.length; i++){
-			    gene = genes[i].split("\t");
-			    var chr = gene[0];
-			    var beg = gene[1];
-			    var end = gene[2];
-			    if(beg > end){
-					beg = gene[2];
-					end = gene[1];
-				}
-			    genespreadsheet.push([gene[0], gene[1], gene[2]]);
-	        }
-        }
-    });
-*/
-/*
- * Function
- * 
- */
- /*
-function countGenes(chr_name, start, end) {	   
-	var temparray = new Array(); 
-	for(var i=0; i<genes.length; i++) {
-		if(genespreadsheet[i][0] == chr_name && parseInt(genespreadsheet[i][1]) >= start && parseInt(genespreadsheet[i][1]) <= end) {
-			temparray.push(genespreadsheet[i]);
-		}
-	}
-	return temparray.length;
-}
-*/
-/*
  * Function
  * 
  */
@@ -582,7 +549,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				var values = candidate_genes[0].split("\t");
 				table = table + '<th width="100">'+values[1]+'</th>';	
 				if(multiorganisms == true){
-					table = table + '<th width="60">TAXID</th>';
+					table = table + '<th width="60">'+values[5]+'</th>';
 				}
 				if(reference_genome == true){		
 					table = table + '<th width="60">'+values[3]+'</th>';
@@ -626,9 +593,9 @@ function createGenesTable(tableUrl, keyword, rows){
 						for (var count_i = 0; count_i < (evidences.length); count_i++) {
 							//Shows the icons
 							var evidence_elements = evidences[count_i].split("//");
-							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1]+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
+							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
 								//Builds the evidence box
-								evidence = evidence+'<div id="evidence_box_'+values[1]+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1]+evidence_elements[0]+'\').slideUp(100);"></a>';
+								evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
 								evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
 								for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
 									//link publications with pubmed
@@ -711,7 +678,7 @@ function createEvidenceTable(tableUrl){
 				table = table + '<p></p>';
 				table = table + '<div id="evidenceSummary"></div>';
 				table = table + '<div class = "scrollTable">';
-				table = table + '<table id = "tablesorterEvidence" class="tablesorter">';
+				table = table + '<table id="tablesorterEvidence" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var header = evidenceTable[0].split("\t");
@@ -738,7 +705,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
-					table = table + '<td>'+values[3]+'</td>';
+					table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';

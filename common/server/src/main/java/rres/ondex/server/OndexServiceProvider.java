@@ -853,6 +853,52 @@ public class OndexServiceProvider {
 	
 	
 	/**
+	 * Searches genes related to an evidence, finds semantic motifs
+	 * and shows the path between them
+	 * 
+	 * @param evidenceOndexId
+	 * @return subGraph           
+	 */
+	public ONDEXGraph evidencePath(Integer evidenceOndexId) {
+		System.out.println("Method evidencePath - evidenceOndexId: "+evidenceOndexId.toString());
+		//Searches genes related to the evidenceID
+		Set<Integer> relatedGenes = mapConcept2Genes.get(evidenceOndexId);
+		Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
+		for (Integer rg : relatedGenes) {
+			relatedONDEXConcepts.add(graph.getConcept(rg));
+		}
+		
+		// the results give us a map of every starting concept to every valid path
+		Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);	
+		
+		// create new graph to return
+		ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
+		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
+		ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
+		//Highlights the right path and hides the path that doesn't leads to the evidence
+		for (List<EvidencePathNode> paths : results.values()) {
+			for (EvidencePathNode path : paths) {
+				Set<ONDEXConcept> concepts = path.getAllConcepts();
+				for (ONDEXConcept c : concepts) {
+					graphCloner.cloneConcept(c);				
+				}
+				// search last concept of semantic motif for keyword
+				int indexLastCon = path.getConceptsInPositionOrder().size() - 1;				
+				ONDEXConcept firstCon = (ONDEXConcept) path.getStartingEntity();
+				ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+				if(lastCon.getId() == evidenceOndexId){
+					highlightPath(path,graphCloner);
+				}else{
+					//hidePath(path,graphCloner);
+				}
+			}
+		}
+		ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
+		
+		return subGraph;
+	}
+	
+	/**
 	 * Searches with Lucene for documents, finds semantic motifs
 	 * and by crossing this data makes concepts visible, changes
 	 * the size and highlight the hits
@@ -1042,6 +1088,34 @@ public class OndexServiceProvider {
 			} else {
 				// contains already visual information
 				// (e.g. gene, keyword or part of other paths)
+			}
+		}
+	}
+	
+	/**
+	 * hides the path between a gene and a concept
+	 * 
+	 * @param path
+	 *            Contains concepts and relations of a semantic motif
+	 * @param graphCloner
+	 *            cloner for the new graph
+	 */
+	public void hidePath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
+		ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
+		AttributeName attVisible = md.getAttributeName("visible");
+		if (attVisible == null)
+			attVisible = md.getFactory().createAttributeName("visible",
+					Boolean.class);
+
+		// hide every concept except by the last one
+		int indexLastCon = path.getConceptsInPositionOrder().size() - 1;				
+		ONDEXConcept firstCon = (ONDEXConcept) path.getStartingEntity();
+		ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+		Set<ONDEXConcept> cons = path.getAllConcepts();
+		for (ONDEXConcept pconcept : cons) {
+			if(pconcept.getId() == lastCon.getId()){
+				ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
+				concept.createAttribute(attVisible, false, false);
 			}
 		}
 	}
@@ -1276,7 +1350,7 @@ public class OndexServiceProvider {
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tEND\tSCORE\tUSER\tQTL\tEVIDENCE\n");
+			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n");
 			int i = 0;
 			for (ONDEXConcept gene : candidates) {	
 				i++;
@@ -1360,7 +1434,7 @@ public class OndexServiceProvider {
 					String ccId = c.getOfType().getId();
 					String name = getDefaultNameForGroupOfConcepts(c);
 					//All publications will have the format PMID:15487445
-					if(ccId == "Publication" && name.substring(0, 4) != "PMID:")
+					if(ccId == "Publication" && !name.contains("PMID:"))
 						name = "PMID:"+name;
 
 					if(!cc2name.containsKey(ccId)){
@@ -1416,7 +1490,7 @@ public class OndexServiceProvider {
 				String type = lc.getOfType().getId();
 				String name = getDefaultNameForGroupOfConcepts(lc);
 				//All publications will have the format PMID:15487445
-				if(type == "Publication" && name.substring(0, 4) != "PMID:")
+				if(type == "Publication" && !name.contains("PMID:"))
 					name = "PMID:"+name;
 				Float score = luceneConcepts.get(lc);
 				Integer ondexId = lc.getId();
