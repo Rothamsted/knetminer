@@ -140,7 +140,7 @@ function matchCounter(){
 $(document).ready(
 		function(){
 			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
-			if(reference_genome === true){
+			if(reference_genome == true){
 				$('#genomeorqtlsearchbox').show();	
 				
 			}else{
@@ -581,10 +581,10 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
 				table = table + '<th width="100">'+values[1]+'</th>';	
-				if(multiorganisms === true){
+				if(multiorganisms == true){
 					table = table + '<th width="60">TAXID</th>';
 				}
-				if(reference_genome === true){		
+				if(reference_genome == true){		
 					table = table + '<th width="60">'+values[3]+'</th>';
 					table = table + '<th width="70">'+values[4]+'</th>';
 				}
@@ -602,10 +602,12 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var values = candidate_genes[i].split("\t");
 				    var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
-				    if(multiorganisms === true){
+				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
+					}else{
+						var taxid = '';
 					}
-					if(reference_genome === true){		
+					if(reference_genome == true){		
 						var chr = '<td>'+values[3]+'</td>';
 						var start = '<td>'+values[4]+'</td>';
 					}else{
