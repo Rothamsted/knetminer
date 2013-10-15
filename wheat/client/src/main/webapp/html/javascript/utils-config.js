@@ -1,2 +1,6 @@
-var data_url = "http://ondex.rothamsted.ac.uk/poplar_data/annotation/generated/";
-var species = 'Poplar Genome';
+var data_url = "http://ondex.rothamsted.ac.uk/wheat_data/annotation/generated/";
+var graph_url = "http://ondex.rothamsted.ac.uk/wheat_data/graph/generated/";
+var applet_url = "http://ondex.rothamsted.ac.uk/applet-0.5.0/";
+var species = 'Wheat Genome';
+var reference_genome = false; //true if you are providing a reference genome
+var multiorganisms = false; //true if you specified more than one taxid in the server file config.xml (ie: <entry key="SpeciesTaxId">4113,4081</entry>)
