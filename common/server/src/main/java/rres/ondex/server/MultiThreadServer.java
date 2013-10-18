@@ -104,10 +104,8 @@ public class MultiThreadServer {
 		OndexServiceProvider ondexServiceProvider = (OndexServiceProvider) Class
 				.forName(props.getProperty("ServiceProvider")).newInstance();
 		String reference_genome = props.getProperty("reference_genome");
-		boolean referenceGenome;
-		if(reference_genome == "true")
-			referenceGenome = true;
-		else
+		boolean referenceGenome = true;
+		if(reference_genome.equals("false"))
 			referenceGenome = false;
 		String taxID = props.getProperty("SpeciesTaxId");
 		List<String> taxIDs = Arrays.asList(taxID.split(","));
