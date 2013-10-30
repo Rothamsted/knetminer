@@ -9,7 +9,11 @@
 8^	Gene
 9	Gene
 10	Protein
-
+11^	TO
+12	Enzyme
+13	Reaction
+133^	Reaction
+14^	Path
 
 
 #Transitions
@@ -44,3 +48,9 @@
 10-3	has_function
 10-4	participates_in
 10-5	located_in
+
+2-9	cooc_wi
+7-12	is_a
+12-13	ca_by
+12-133	ca_by
+13-14	part_of
