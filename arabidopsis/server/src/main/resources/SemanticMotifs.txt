@@ -11,6 +11,7 @@
 10	Protein
 11^	TO
 12	Enzyme
+122^	Enzyme
 13	Reaction
 133^	Reaction
 14^	Path
@@ -49,8 +50,10 @@
 10-4	participates_in
 10-5	located_in
 
-2-9	cooc_wi
-7-12	is_a
+1-11	cooc_wi
+9-11	cooc_wi
+10-12	is_a
+10-122	is_a
 12-13	ca_by
 12-133	ca_by
 13-14	part_of
