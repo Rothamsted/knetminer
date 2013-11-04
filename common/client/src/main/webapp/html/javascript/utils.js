@@ -428,7 +428,7 @@ function generateNetwork(url,list){
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
-        		"Alternatively it can be <a href="+graph_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
+        		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
         		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
 	            "<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
 	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
@@ -442,7 +442,7 @@ function generateNetwork(url,list){
 	            "<PARAM NAME=antialiased VALUE=true>" +
 	            "<PARAM NAME=nodes.labels VALUE=true>" +
 	            "<PARAM NAME=edges.lables VALUE=true>" +
-	            "<PARAM NAME=filename VALUE="+graph_url + oxl +">" +
+	            "<PARAM NAME=filename VALUE="+data_url + oxl +">" +
 	            "Your browser is completely ignoring the &lt;APPLET&gt; tag!" +
 	            "</applet>"+
 	            "<br>" +
