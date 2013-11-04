@@ -198,7 +198,7 @@ public class ClientWorker implements Runnable {
 				
 				long timestamp = System.currentTimeMillis();
 				String fileName = timestamp+"evidencePath.oxl";
-				String exportPath = MultiThreadServer.props.getProperty("GraphPath");	
+				String exportPath = MultiThreadServer.props.getProperty("DataPath");	
 				String request = "";
 				// Export graph
 				try {
@@ -225,7 +225,7 @@ public class ClientWorker implements Runnable {
 				long timestamp = System.currentTimeMillis();
 				String fileSynonymTable = timestamp+"SynonymTable.tab";
 				try {
-					ondexProvider.writeSynonymTable(keyword, MultiThreadServer.props.getProperty("AnnotationPath") + fileSynonymTable);
+					ondexProvider.writeSynonymTable(keyword, MultiThreadServer.props.getProperty("DataPath") + fileSynonymTable);
 					System.out.println("Synonym table created");
 					return "File created:"+fileSynonymTable;
 				} catch (ParseException e) {
@@ -251,7 +251,7 @@ public class ClientWorker implements Runnable {
 		// File name
 		long timestamp = System.currentTimeMillis();
 		String fileName = "result_"+timestamp+".oxl";
-		String exportPath = MultiThreadServer.props.getProperty("GraphPath");			
+		String exportPath = MultiThreadServer.props.getProperty("DataPath");			
 		
 		System.out.println("Call applet! Search genes "+list.size());
 		
@@ -358,7 +358,7 @@ public class ClientWorker implements Runnable {
 					// Gviewer Annotation File
 					if(ondexProvider.getReferenceGenome() == true){
 						ondexProvider.writeAnnotationXML(
-								genes, userGenes, qtl, MultiThreadServer.props.getProperty("AnnotationPath")
+								genes, userGenes, qtl, MultiThreadServer.props.getProperty("DataPath")
 								+ fileGViewer, keyword, 100, qtlnetminerResults, listMode);
 						System.out.println("1.) Gviewer annotation ");
 					}else{
@@ -368,13 +368,13 @@ public class ClientWorker implements Runnable {
 					// Gene table file
 					boolean txtIsCreated = ondexProvider.writeTableOut(
 							genes, userGenes, qtl,
-							MultiThreadServer.props.getProperty("AnnotationPath")
+							MultiThreadServer.props.getProperty("DataPath")
 							+ fileGeneTable);
 					System.out.println("2.) Gene table ");
 					
 					// Evidence table file
 					boolean eviTableIsCreated = ondexProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(), 
-							userGenes, qtl, MultiThreadServer.props.getProperty("AnnotationPath") + fileEvidenceTable);
+							userGenes, qtl, MultiThreadServer.props.getProperty("DataPath") + fileEvidenceTable);
 					System.out.println("3.) Evidence table ");
 										
 					
