@@ -220,9 +220,9 @@ public class OndexServlet extends HttpServlet {
 //			            String appletCode = 
 //			            		"<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
 //			            		"Alternatively it can be <a href="+fileName+">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
-//			            		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+APPLET_URL+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
+//			            		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+APPLET_URL+"OndexWeb-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
 //					            "<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
-//					            "<PARAM NAME=ARCHIVE VALUE="+APPLET_URL+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
+//					            "<PARAM NAME=ARCHIVE VALUE="+APPLET_URL+"OndexWeb-0.5.0-SNAPSHOT.jar>" +
 //					            "<param name=type value=application/x-java-applet;version=1.6>" +
 //					            "<param name=scriptable value=false>" +
 //					            "<PARAM NAME=ondex.dir VALUE="+APPLET_URL+"data>" +

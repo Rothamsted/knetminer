@@ -429,9 +429,9 @@ function generateNetwork(url,list){
 	var oxl = response.split(":")[1];
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
         		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
-        		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
+        		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"OndexWeb-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
 	            "<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
-	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
+	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"OndexWeb-0.5.0-SNAPSHOT.jar>" +
 	            "<param name=type value=application/x-java-applet;version=1.6>" +
 	            "<param name=scriptable value=false>" +
 	            "<PARAM NAME=ondex.dir VALUE="+applet_url+"data>" +
