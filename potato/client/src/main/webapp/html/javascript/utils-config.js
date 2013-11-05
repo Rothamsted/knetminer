@@ -1,4 +1,4 @@
-var data_url = "http://ondex.rothamsted.ac.uk/potato_data/annotation/generated/";
+var data_url = "http://ondex.rothamsted.ac.uk/potato_data/";
 var applet_url = "http://ondex.rothamsted.ac.uk/applet-0.5.0/";
 var species = 'Potato Genome';
 var reference_genome = true; //true if you are providing a reference genome

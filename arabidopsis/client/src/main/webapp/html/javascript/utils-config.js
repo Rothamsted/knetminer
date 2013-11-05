@@ -1,4 +1,4 @@
-var data_url = "http://ondex.rothamsted.ac.uk/arabidopsis_data/annotation/generated/";
+var data_url = "http://ondex.rothamsted.ac.uk/arabidopsis_data/";
 var applet_url = "http://ondex.rothamsted.ac.uk/applet-0.5.0/";
 var species = "Arabidopsis Genome";
 var reference_genome = true; //true if you are providing a reference genome
