@@ -14,7 +14,7 @@
 	<name>QTLNetMiner Rice client</name>
 
 	<build>
-		<finalName>QTLNetMinerRice</finalName>
+		<finalName>QTLNetMinerBarley</finalName>
 
 		<plugins>
 			<plugin>
