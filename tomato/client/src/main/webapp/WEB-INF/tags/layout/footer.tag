@@ -10,8 +10,7 @@
     <div id="right_footer">
     	<img src="html/image/bbsrc_logo.png" /><br />
         This work was supported by<br /> 
-        BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />
-        Martin Castellote was also supported by a fellowship from <a href="http://www.mincyt.gov.ar/" target="_blank">MinCyT</a>, Argentina<br />
+        BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />        
     </div>
 	<a target="_blank" href="http://ondex.rothamsted.ac.uk/poplar_data/QTLNetMinerPoplar_UserGuide.pdf">User Guide</a> | <a target="_blank" href="html/release.html">Release Notes</a>
 </div>

@@ -14,7 +14,7 @@
 	<name>QTLNetMiner Tomato client</name>
 
 	<build>
-		<finalName>QTLNetMinerTomato</finalName>
+		<finalName>SOLNetMiner</finalName>
 
 		<plugins>
 			<plugin>
