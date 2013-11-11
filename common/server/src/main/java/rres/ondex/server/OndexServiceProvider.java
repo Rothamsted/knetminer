@@ -678,7 +678,7 @@ public class OndexServiceProvider {
 		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
 		
 		//no Trait-QTL relations found
-		if(ccTrait == null || ccQTL == null) {
+		if(ccTrait == null && ccQTL == null) {
 			return new ArrayList<QTL>();
 		}
 		
@@ -686,10 +686,29 @@ public class OndexServiceProvider {
 		AttributeName attEnd = graph.getMetaData().getAttributeName("END");
 		AttributeName attSignificance = graph.getMetaData().getAttributeName("Significance");
 		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-		Set<ONDEXConcept> concepts = graph.getConceptsOfConceptClass(ccTrait);
+		Set<ONDEXConcept> concepts = null;
+		
 		
 		List<QTL> results = new ArrayList<QTL>();
 		
+		System.out.println("Looking for QTLs...");
+		// If there is not traits but there is QTLs then we return all the QTLs
+		if(ccTrait == null){
+			System.out.println("No Traits found: all QTLS will be shown...");
+			Set<ONDEXConcept> qtls = graph.getConceptsOfConceptClass(ccQTL);
+			for (ONDEXConcept q : qtls) {
+				int chr = (Integer) q.getAttribute(attChromosome).getValue();
+				String chrName = chromBidiMap.get(chr);
+				String start = q.getAttribute(attBegin).getValue().toString();
+				String end = q.getAttribute(attEnd).getValue().toString();
+				results.add(new QTL(chr, chrName, start, end, "", ""));
+			}
+			System.out.println(results.size()+" QTLs where found!");
+			return results;
+		}
+		
+		
+		concepts = graph.getConceptsOfConceptClass(ccTrait);
 		// Trait linked to QTL
 		for(ONDEXConcept conTrait : concepts){
 				//trait concept matches input terms
