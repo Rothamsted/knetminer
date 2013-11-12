@@ -102,8 +102,8 @@ public class OndexServiceProvider {
 	/**
 	 * Query-independent Ondex motifs as a hash map
 	 */
-	HashMap<Integer, Set<Integer>> mapGene2Concepts;
-	HashMap<Integer, Set<Integer>> mapConcept2Genes;
+	static HashMap<Integer, Set<Integer>> mapGene2Concepts;
+	static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 	
 	/**
 	 * Query-dependent mapping between genes and concepts that contain query terms
