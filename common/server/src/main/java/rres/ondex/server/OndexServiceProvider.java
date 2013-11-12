@@ -1504,6 +1504,7 @@ public class OndexServiceProvider {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			//writes the header of the table
 			out.write("TYPE\tNAME\tSCORE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+			System.out.println("Header written");
 			for(ONDEXConcept lc : luceneConcepts.keySet()){
 				//Creates type,name,score and numberOfGenes
 				String type = lc.getOfType().getId();
@@ -1521,18 +1522,21 @@ public class OndexServiceProvider {
 				//Creates numberOfUserGenes and numberOfQTL
 				Integer numberOfUserGenes = 0;	
 				Integer numberOfQTL = 0;
-				Set<ONDEXConcept> genesWithinQTL = searchQTLs(qtls);
+//				Set<ONDEXConcept> genesWithinQTL = searchQTLs(qtls);  //Note: QTLs has been temporarily disabled 
+				System.out.println("Calculating numberOfUserGenes and numberOfQTL...");
 				for (int log : listOfGenes) {
 					
 					if((userGenes != null)&&(graph.getConcept(log) != null)&&(userGenes.contains(graph.getConcept(log)))){
 						numberOfUserGenes++;
 					}
-					if((genesWithinQTL != null)&&(graph.getConcept(log) != null)&&(genesWithinQTL.contains(graph.getConcept(log)))){
-						numberOfQTL++;
-					}
+//					if((genesWithinQTL != null)&&(graph.getConcept(log) != null)&&(genesWithinQTL.contains(graph.getConcept(log)))){
+//						numberOfQTL++;
+//					}
 				}
+				System.out.println("Writing row...");
 				//writes the row
-				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
+//				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
+				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t0\t"+ondexId+"\n");
 			}
 			out.close();
 			return true;
