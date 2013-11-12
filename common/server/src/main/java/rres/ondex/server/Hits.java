@@ -3,6 +3,7 @@ package rres.ondex.server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.queryParser.ParseException;
@@ -11,23 +12,28 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 
 /**
  * 
- * @author zorc
+ * @author zorc, pakk
  *
  */
 public class Hits {	
 	
 	OndexServiceProvider ondexProvider;
 	HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
+	int luceneDocumentsLinked;
+	int numConnectedGenes;
 	ArrayList<ONDEXConcept> sortedCandidates;
 	Set<ONDEXConcept> usersGenes;
 	Set<ONDEXConcept> usersGenesRelated;
 	String keyword = "";
 	
+	
 	public Hits(String keyword, OndexServiceProvider ondexProvider) {
 		this.ondexProvider = ondexProvider;
 		this.keyword = keyword;
 		try {
-			this.luceneConcepts = ondexProvider.searchLucene(keyword);			
+			this.luceneConcepts = ondexProvider.searchLucene(keyword);
+			//remove from constructor if it slows down search noticeably
+			countLinkedGenes();
 		} 
 		catch (IOException e) {			
 			e.printStackTrace();
@@ -37,6 +43,32 @@ public class Hits {
 		}
 	}
 	
+	public void countLinkedGenes(){
+		int linkedDocs = 0;
+		Set<Integer> uniqGenes = new HashSet<Integer>();
+		for(ONDEXConcept lc : luceneConcepts.keySet()){
+			Integer luceneOndexId = lc.getId();
+			//Checks if the document is related to a gene
+			if(!OndexServiceProvider.mapConcept2Genes.containsKey(luceneOndexId)){
+				continue;
+			}
+			linkedDocs++;
+			uniqGenes.addAll(OndexServiceProvider.mapConcept2Genes.get(luceneOndexId));	
+		}
+		
+		this.numConnectedGenes = uniqGenes.size();
+		this.luceneDocumentsLinked = linkedDocs;
+			
+	}
+	
+	public int getLuceneDocumentsLinked() {
+		return luceneDocumentsLinked;
+	}
+
+	public int getNumConnectedGenes() {
+		return numConnectedGenes;
+	}
+
 	public HashMap<ONDEXConcept, Float> getLuceneConcepts(){
 		return this.luceneConcepts;
 	}
