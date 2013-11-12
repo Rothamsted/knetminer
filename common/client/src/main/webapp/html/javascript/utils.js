@@ -115,7 +115,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
  */		
 function matchCounter(){	
 	var keyword = $('#keywords').val();	
-	if((keyword.length > 2) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
+	if((keyword.length > 2) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.charAt(keyword.length-1) != '"') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
 		var searchMode = "counthits";		
 		var request = "mode="+searchMode+"&keyword="+keyword;
 		var url = 'OndexServlet?'+request;
@@ -129,7 +129,10 @@ function matchCounter(){
 					$('#matchesResultDiv').html('No documents or genes will be found with this query');
 			}
 		})
+	}else{
+		$('#matchesResultDiv').html('Wrong syntaxis, please check your query');
 	}
+	
 }
 
 /*
