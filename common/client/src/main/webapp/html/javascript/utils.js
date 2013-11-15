@@ -129,9 +129,11 @@ function matchCounter(){
 					$('#matchesResultDiv').html('No documents or genes will be found with this query');
 			}
 		})
-	}else{
-		$('#matchesResultDiv').html('Wrong syntaxis, please check your query');
-	}
+	}else if(keyword.length < 3){
+			$('#matchesResultDiv').html('Please, start typing your query');
+		}else{
+			$('#matchesResultDiv').html('Wrong syntaxis, please check your query');
+		}
 	
 }
 
@@ -760,7 +762,7 @@ function createSynonymTable(tableUrl){
 			var aSynonyms = new Array();
 			var countTerms = 0;
 			var termName = "";
-			var minRowsInTable = 12;
+			var minRowsInTable = 14;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
 				terms = '';
