@@ -169,19 +169,21 @@ public class ClientWorker implements Runnable {
 				return "OndexWeb";
 			}
 			else if(mode.equals("counthits")) {		//counts the hits in real-time for the search box
-				try {
-					Integer matchCount = ondexProvider.searchLucene(keyword).size(); //number of matching documents
-					Hits qtlnetminerResults = new Hits(keyword, ondexProvider);
-					Integer numberOfGenes = qtlnetminerResults.getSortedCandidates().size();
-					Integer matchGenesCount = ondexProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts()).size(); //number of matching documents related to genes
-					System.out.println("Number of matches: "+matchCount.toString());
-					return (matchCount.toString()+"|"+matchGenesCount.toString()+"|"+numberOfGenes);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				return "MatchCounter";
+				
+					Hits hits = new Hits(keyword, ondexProvider);
+					//number of Lucene documents
+					Integer luceneCount = hits.getLuceneConcepts().size();
+					
+					//number of Lucene documents related to genes
+					Integer luceneLinkedCount = hits.getLuceneDocumentsLinked();
+					
+					//count unique genes linked to Lucene documents	
+					Integer geneCount = hits.getNumConnectedGenes();
+					
+					System.out.println("Number of matches: "+luceneCount.toString());
+					return (luceneCount+"|"+luceneLinkedCount+"|"+geneCount);
+
+				
 
 			}else if(mode.equals("countloci")) {		//counts the genes withina a loci for the Genome or QTL Search box
 				String[] loci = keyword.split("-");
@@ -309,7 +311,7 @@ public class ClientWorker implements Runnable {
 		List<QTL> qtlDB = ondexProvider.findQTL(keyword);
 		
 		//some logic to limit QTL size if too many are found
-		if(qtlDB.size() > 40){
+		if(qtlDB.size() > 70){
 			System.out.println("Too many QTL found, remove not significant ones...");
 			for(QTL q : qtlDB){
 				if(!q.getSignificance().equalsIgnoreCase("significant")){

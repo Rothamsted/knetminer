@@ -102,8 +102,8 @@ public class OndexServiceProvider {
 	/**
 	 * Query-independent Ondex motifs as a hash map
 	 */
-	HashMap<Integer, Set<Integer>> mapGene2Concepts;
-	HashMap<Integer, Set<Integer>> mapConcept2Genes;
+	static HashMap<Integer, Set<Integer>> mapGene2Concepts;
+	static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 	
 	/**
 	 * Query-dependent mapping between genes and concepts that contain query terms
@@ -678,7 +678,7 @@ public class OndexServiceProvider {
 		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
 		
 		//no Trait-QTL relations found
-		if(ccTrait == null || ccQTL == null) {
+		if(ccTrait == null && ccQTL == null) {
 			return new ArrayList<QTL>();
 		}
 		
@@ -686,10 +686,29 @@ public class OndexServiceProvider {
 		AttributeName attEnd = graph.getMetaData().getAttributeName("END");
 		AttributeName attSignificance = graph.getMetaData().getAttributeName("Significance");
 		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-		Set<ONDEXConcept> concepts = graph.getConceptsOfConceptClass(ccTrait);
+		Set<ONDEXConcept> concepts = null;
+		
 		
 		List<QTL> results = new ArrayList<QTL>();
 		
+		System.out.println("Looking for QTLs...");
+		// If there is not traits but there is QTLs then we return all the QTLs
+		if(ccTrait == null){
+			System.out.println("No Traits found: all QTLS will be shown...");
+			Set<ONDEXConcept> qtls = graph.getConceptsOfConceptClass(ccQTL);
+			for (ONDEXConcept q : qtls) {
+				int chr = (Integer) q.getAttribute(attChromosome).getValue();
+				String chrName = chromBidiMap.get(chr);
+				String start = q.getAttribute(attBegin).getValue().toString();
+				String end = q.getAttribute(attEnd).getValue().toString();
+				results.add(new QTL(chr, chrName, start, end, "", ""));
+			}
+			System.out.println(results.size()+" QTLs where found!");
+			return results;
+		}
+		
+		
+		concepts = graph.getConceptsOfConceptClass(ccTrait);
 		// Trait linked to QTL
 		for(ONDEXConcept conTrait : concepts){
 				//trait concept matches input terms
@@ -1485,6 +1504,7 @@ public class OndexServiceProvider {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			//writes the header of the table
 			out.write("TYPE\tNAME\tSCORE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+			System.out.println("Header written");
 			for(ONDEXConcept lc : luceneConcepts.keySet()){
 				//Creates type,name,score and numberOfGenes
 				String type = lc.getOfType().getId();
@@ -1502,18 +1522,21 @@ public class OndexServiceProvider {
 				//Creates numberOfUserGenes and numberOfQTL
 				Integer numberOfUserGenes = 0;	
 				Integer numberOfQTL = 0;
-				Set<ONDEXConcept> genesWithinQTL = searchQTLs(qtls);
+//				Set<ONDEXConcept> genesWithinQTL = searchQTLs(qtls);  //Note: QTLs has been temporarily disabled 
+				System.out.println("Calculating numberOfUserGenes and numberOfQTL...");
 				for (int log : listOfGenes) {
 					
 					if((userGenes != null)&&(graph.getConcept(log) != null)&&(userGenes.contains(graph.getConcept(log)))){
 						numberOfUserGenes++;
 					}
-					if((genesWithinQTL != null)&&(graph.getConcept(log) != null)&&(genesWithinQTL.contains(graph.getConcept(log)))){
-						numberOfQTL++;
-					}
+//					if((genesWithinQTL != null)&&(graph.getConcept(log) != null)&&(genesWithinQTL.contains(graph.getConcept(log)))){
+//						numberOfQTL++;
+//					}
 				}
+				System.out.println("Writing row...");
 				//writes the row
-				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
+//				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
+				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t0\t"+ondexId+"\n");
 			}
 			out.close();
 			return true;
