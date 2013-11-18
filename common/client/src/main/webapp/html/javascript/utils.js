@@ -115,26 +115,27 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
  */		
 function matchCounter(){	
 	var keyword = $('#keywords').val();	
-	if((keyword.length > 2) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.charAt(keyword.length-1) != '"') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
-		var searchMode = "counthits";		
-		var request = "mode="+searchMode+"&keyword="+keyword;
-		var url = 'OndexServlet?'+request;
-		$.post(url, '', function(response, textStatus){
-			if(textStatus == "success"){
-				if(response.split('|')[1] != null && response.split('|')[1] != "0"){
-					$('#matchesResultDiv').html('<b>'+response.split('|')[1]+' documents</b>  and <b>'+response.split('|')[2]+' genes</b> will be found with this query');	
-					$('#keywordsSubmit').removeAttr("disabled");
+	if(keyword.length == 0){
+		$('#matchesResultDiv').html('Please, start typing your query')	
+	} else {
+		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
+			var searchMode = "counthits";		
+			var request = "mode="+searchMode+"&keyword="+keyword;
+			var url = 'OndexServlet?'+request;
+			$.post(url, '', function(response, textStatus){
+				if(textStatus == "success"){
+					if(response.split('|')[1] != null && response.split('|')[1] != "0"){
+						$('#matchesResultDiv').html('<b>'+response.split('|')[1]+' documents</b>  and <b>'+response.split('|')[2]+' genes</b> will be found with this query');	
+						$('#keywordsSubmit').removeAttr("disabled");
+					}
+					else
+						$('#matchesResultDiv').html('No documents or genes will be found with this query');
 				}
-				else
-					$('#matchesResultDiv').html('No documents or genes will be found with this query');
-			}
-		})
-	}else if(keyword.length < 3){
-			$('#matchesResultDiv').html('Please, start typing your query');
+			})
 		}else{
-			$('#matchesResultDiv').html('Wrong syntaxis, please check your query');
+			$('#matchesResultDiv').html('');
 		}
-	
+	}	
 }
 
 /*
