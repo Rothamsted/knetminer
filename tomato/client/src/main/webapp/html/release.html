@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<title>SOLNet Release Notes</title>
 </head>
 
 <body>
@@ -60,6 +60,7 @@
     <li>Raw data</li>
     <ul>
       <li><a href="ftp://ftp.arabidopsis.org/User_Requests/Locus_Germplasm_Phenotype_20130122">ftp://ftp.arabidopsis.org/User_Requests/Locus_Germplasm_Phenotype_20130122</a></li>
+      <li>delete all entries without PubMed ID, with locus names which differ from the structure AT*G***** and all duplicates with same locus name, phenotype and pubmedID (result: 4778 entries)</li>
     </ul>
     <li>Parsers</li>
     <ul>
@@ -169,7 +170,9 @@
   <ul>
     <li>Raw data</li>
     <ul>
-      <li>Biomart (http://plants.ensembl.org/biomart/martview/a2f8345ce4f069a0eb201e9ce25e8c85)</li>
+      <li>Biomart (http://plants.ensembl.org/biomart/martview)</li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=stuberosum_eg_gene.default.feature_page.ensembl_peptide_id|stuberosum_eg_gene.default.feature_page.interpro_id|stuberosum_eg_gene.default.feature_page.interpro_short_description|stuberosum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart InterPro Domains</li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=stuberosum_eg_gene.default.feature_page.ensembl_peptide_id|stuberosum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart PFam Domains</li>
     </ul>
     <li>Parsers</li>
     <ul>
@@ -208,7 +211,9 @@
   <ul>
     <li>Raw data</li>
     <ul>
-      <li>Biomart (http://plants.ensembl.org/biomart/martview/a2f8345ce4f069a0eb201e9ce25e8c85)</li>
+      <li>Biomart (http://plants.ensembl.org/biomart/martview)</li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_peptide_id|slycopersicum_eg_gene.default.feature_page.interpro_id|slycopersicum_eg_gene.default.feature_page.interpro_short_description|slycopersicum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart InterPro Domains</li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_peptide_id|slycopersicum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart PFam Protein Domains</li>
     </ul>
     <li>Parsers</li>
     <ul>
