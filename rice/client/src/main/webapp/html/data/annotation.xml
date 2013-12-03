@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<genome>
+<!-- <genome>
 	<feature id="1">
 		<chromosome>II</chromosome>	
 		<start>4827878</start>
@@ -370,3 +370,4 @@
 		<link>OndexServlet?mode=network&keyword=Height&qtl1=XIV:6688912:12174501</link>
 	</feature>	
 </genome>
+ -->

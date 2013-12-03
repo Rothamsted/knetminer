@@ -7,154 +7,88 @@
 
 <body>
 <h1>BARNet Release Notes</h1>
-<div>
-  <h2>Plants</h2>
+
+<!-- h:<div>
+  <h2>Metadata</h2>
 </div>
 <ul>
-  <li><strong>Description</strong></li>
-  <ul>
-    <li>Contains information of well observed plant  organisms excluding Arabidopsis</li>
-  </ul>
-  <li><strong>Raw data</strong></li>
-  <ul>
-    <li>Uniprot </li>
-    <ul>
-      <li>taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes AND keyword:1185</li>
-    </ul>
-  </ul>
-  <li><strong>Parsers</strong></li>
-  <ul>
-    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml</a></li>
-  </ul>
-  <li><strong>Ondex file</strong></li>
-  <ul>
-    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl</a></li>
-  </ul>
-</ul>
-<p>&nbsp;</p>
-<div>
-  <h2>Arabidopsis</h2>
-</div>
-<ul>
-  <li>Gene-GO (The Gene Ontology)</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-GO/GAF2Ondex.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-GO/GAF2Ondex.txt</a></li>
-      <li>cvsweb.geneontology.org/cgi-bin/cvsweb.cgi/go/gene-associations/gene_association.tair.gz?rev=HEAD  Parsers</li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-GO/Gene-GO.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-GO/Gene-GO.oxl</a></li>
-    </ul>
-  </ul>
-  <li>Gene-Pathway (AraCYC)</li>
-  <ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Pathway/Gene-Pathway.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Pathway/Gene-Pathway.oxl</a></li>
-    </ul>
-  </ul>
-  <li>Gene-Phenotype (TAIR - User  requests)</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="ftp://ftp.arabidopsis.org/User_Requests/Locus_Germplasm_Phenotype_20130122">ftp://ftp.arabidopsis.org/User_Requests/Locus_Germplasm_Phenotype_20130122</a></li>
-      <li>delete all entries without PubMed ID, with locus names which differ from the structure AT*G***** and all duplicates with same locus name, phenotype and pubmedID (result: 4778 entries)</li>
-    </ul>
-    <li>Parsers</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Phenotype/parseArabidopsisPhenotype_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Phenotype/parseArabidopsisPhenotype_console.txt</a></li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Phenotype/Gene-Phenotype.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Phenotype/Gene-Phenotype.oxl</a></li>
-    </ul>
-  </ul>
-  <li>Gene-PPI (TAIR)</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/nbrowse_interactions">ftp://ftp.arabidopsis.org/home/tair/Proteins/nbrowse_interactions</a></li>
-    </ul>
-    <li>Parsers</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-PPI/Gene-PPI_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-PPI/Gene-PPI_console.txt</a></li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-PPI/Gene-PPI.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-PPI/Gene-PPI.oxl</a></li>
-    </ul>
-  </ul>
-  <li>Gene-Protein (TAIR and Phytozome)</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Sequences/blast_datasets/TAIR10_blastsets/TAIR10_pep_20101214_updated">ftp://ftp.arabidopsis.org/home/tair/Sequences/blast_datasets/TAIR10_blastsets/TAIR10_pep_20101214_updated</a></li>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Sequences/blast_datasets/TAIR10_blastsets/TAIR10_cdna_20101214_updated">ftp://ftp.arabidopsis.org/home/tair/Sequences/blast_datasets/TAIR10_blastsets/TAIR10_cdna_20101214_updated</a></li>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Genes/TAIR10_genome_release/TAIR10_locushistory.txt">ftp://ftp.arabidopsis.org/home/tair/Genes/TAIR10_genome_release/TAIR10_locushistory.txt</a></li>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/Id_conversions/AGI2Uniprot.20101118">ftp://ftp.arabidopsis.org/home/tair/Proteins/Id_conversions/AGI2Uniprot.20101118</a></li>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/Domains/TAIR10_all.domains">ftp://ftp.arabidopsis.org/home/tair/Proteins/Domains/TAIR10_all.domains</a></li>
-      <li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz</a></li>
-      <li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz</a></li>
-      <li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz</a></li>
-    </ul>
-    <li>Parsers</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Protein/map_phytozome_tair.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Protein/map_phytozome_tair.xml</a></li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Protein/Gene-Protein.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Protein/Gene-Protein.oxl</a></li>
-    </ul>
-  </ul>
-  <li>Gene-Publication (TAIR - User requests)</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt</a></li>
-    </ul>
-    <li>Parsers</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/ParsePublications_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/ParsePublications_console.txt</a></li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/Gene-Publication.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/Gene-Publication.oxl</a></li>
-    </ul>
-  </ul>
-  <li>TextMining</li>
-  <ul>
-    <li>Raw data</li>
-    <ul>
-      <li><a href="http://palea.cgrb.oregonstate.edu/viewsvn/Poc/trunk/ontology/collaborators_ontology/gramene/traits/trait.obo?view=co">http://palea.cgrb.oregonstate.edu/viewsvn/Poc/trunk/ontology/collaborators_ontology/gramene/traits/trait.obo?view=co </a></li>
-      <li><a href="http://palea.cgrb.oregonstate.edu/viewsvn/Poc/tags/live/plant_ontology_assert.obo?view=co">http://palea.cgrb.oregonstate.edu/viewsvn/Poc/tags/live/plant_ontology_assert.obo?view=co </a></li>
-      <li>Pubmed 
-        <ul>
-          <li>&quot;arabidopsis&quot;  [MeSH Terms]</li>
-        </ul>
-      </li>
-    </ul>
-    <li>Parsers</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/ParsePublications_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml</a></li>
-    </ul>
-    <li>Ondex file</li>
-    <ul>
-      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/</a><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-Publication/ParsePublications_console.txt">Arabidopsis</a><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabodipsis.oxl">.oxl</a></li>
-    </ul>
-  </ul>
-</ul>
+	<p>
+	<table border="0">
+		<tr>
+		<td><strong>Gene-Protein</strong></td>
+		<td></td>
+		<td></td>
+		<td><strong>InterPro-Domain</strong></td>
+		<td></td>
+		<td></td>
+		<td><strong>PFam-Domain</strong></td>
+		<td></td>
+		<td></td>
+		<td><strong>Biomart-Homology</strong></td>
+		<td></td>
+		<td></td>
+		<td><strong>Decypher-Homology</strong></td>
+		<td></td>
+		<td></td>
+		</tr>
+		<tr>
+		<td>Genes: 24243</td>
+		<td></td>
+		<td></td>
+		<td>Proteins: 39413</td>
+		<td></td>
+		<td></td>
+		<td>Proteins: 37023</td>
+		<td></td>
+		<td></td>
+		<td>Proteins: 57376</td>
+		<td></td>
+		<td></td>
+		<td>Proteins: 13480</td>
+		</tr>
+		<tr>
+		<td>Proteins: 62240</td>
+		<td></td>
+		<td></td>
+		<td>Domains: 5642</td>
+		<td></td>
+		<td></td>
+		<td>Domains: 3499</td>
+		<td></td>
+		<td></td>
+		<td>ortho: 75999</td>
+		<td></td>
+		<td></td>
+		<td>h_s_s: 55495</td>
+		</tr>
+		<tr>
+		<td>encodes: 62240</td>
+		<td></td>
+		<td></td>
+		<td>has_Domain: 97385</td>
+		<td></td>
+		<td></td>
+		<td>has_Domain: 49080</td>
+		</tr>
+	</table> 
+</p>
+</ul>/ -->
+
+<p>
+The final barley network contains <strong>296483 concepts</strong> and <strong>983972 relations</strong>.
+</p>
+
 <div>
   <h2>Barley</h2>
 </div>
 <ul>
-  <li>Gene-Protein (Helmholz Centre Munich - MIPS) </li>
+<p>
+  <li>Gene-Protein (Helmholz Centre Munich - MIPS)</li>
   <ul>
     <li>Raw data</li>
     <ul>
-      <li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_21Aug12_Transcript_and_CDS_structure.gff">ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_21Aug12_Transcript_and_CDS_structure.gff</a></li>
-      <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/release-20/fasta/hordeum_vulgare/pep/Hordeum_vulgare.030312v2.20.pep.all.fa.gz">ftp://ftp.ensemblgenomes.org/pub/plants/release-20/fasta/hordeum_vulgare/pep/Hordeum_vulgare.030312v2.20.pep.all.fa.gz</a></li>
+      <li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_21Aug12_Transcript_and_CDS_structure.gff">barley_HighConf_genes_MIPS_21Aug12_Transcript_and_CDS_structure.gff from mips</a></li>
+      <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/release-20/fasta/hordeum_vulgare/pep/Hordeum_vulgare.030312v2.20.pep.all.fa.gz">Hordeum_vulgare.030312v2.20.pep.all.fa.gz from Ensembl</a></li>
       </ul>
     <li>Parsers</li>
     <ul>
@@ -165,13 +99,15 @@
       <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley/Gene_Protein/Gene_Protein.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley/Gene_Protein/Gene_Protein.oxl</a></li>
     </ul>
   </ul>
-  <li>Protein_Domain (Ensembl)</li>
+</p>
+<p>
+  <li>Protein-Domain (Ensembl)</li>
   <ul>
     <li>Raw data</li>
     <ul>
-      <li>Biomart (http://plants.ensembl.org/biomart/martview)</li>
-      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart InterPro Domains</a></li>
-      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">URL BioMart PFam Protein Domains</a></li>
+      <li>Biomart (<a href="http://plants.ensembl.org/biomart/martview">http://plants.ensembl.org/biomart/martview</a>)</li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+      <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
     </ul>
     <li>Parsers</li>
     <ul>
@@ -184,6 +120,100 @@
       <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley/Protein_Domain/Protein_PFam/Protein_PFam.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley/Protein_Domain/Protein_PFam/Protein_PFam.oxl</a></li>
     </ul>
   </ul>
+</p>
+<p>
+  <li>References</li>
+  <ul>
+    <li>Plants (UniProt) - informations of well observed plant organisms excluding Arabidopsis</li>
+    <ul>
+      <li>Raw data</li>
+      <ul>
+    	UniProt: <a href="http://www.uniprot.org/uniprot/?query=%28taxonomy%3A33090+NOT+taxonomy%3A3702%29+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes AND keyword:1185</a>
+      </ul>
+      <li>Parsers</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml</a>
+      </ul>
+      	<li>Ondex file</li>
+      <ul>
+		<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl</a>
+	  </ul>
+    </ul>
+    <li>Arabidopsis (TAIR)</li>
+    <ul>
+     <li>Raw data</li>
+      <ul>
+      	see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">ARANet</a>
+      </ul>
+      <li>Parsers</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl</a>
+      </ul>
+      	<li>Ondex file</li>
+      <ul>
+		<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml</a>
+	  </ul>
+    </ul>
+  </ul>
+</p>
+<p>
+  <li>Homology</li>
+  <ul>
+    <li>Plants (Decypher)</li>
+    <ul>
+      <li>Decypher config file</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig</a>
+      </ul>
+    </ul>
+    <ul>
+      <li>Decypher command file</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt</a>
+      </ul>
+    </ul>
+    <ul>
+      <li>Parsers</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants_console.txt</a>
+      </ul>
+    </ul>
+    <ul>
+      <li>Ondex file</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants.oxl</a>
+      </ul>
+    </ul>
+    <li>Arabidopsis (Biomart)</li>
+    <ul>
+      <li>Raw Data</li>
+      <ul>
+      	<a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_20&ATTRIBUTES=hvulgare_eg_gene.default.homologs.ensembl_gene_id|hvulgare_eg_gene.default.homologs.ensembl_transcript_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|hvulgare_eg_gene.default.homologs.athaliana_eg_orthology_type|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_dn|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ds|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Barley - Arabidopsis</a>
+	  </ul>
+	  <li>Parsers</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis_console.txt</a>
+	  </ul>
+	  <li>Ondex file</li>
+      <ul>
+      	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis.oxl</a>
+	  </ul>
+    </ul>
+  </ul>
+</p>
+<p>
+  <li>Final Network</li>
+  <ul>
+    <li>Parser</li>
+    <ul>
+      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/BarleyKB2013.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/BarleyKB2013.xml</a></li>
+    </ul>
+    <li>Ondex files</li>
+    <ul>
+      <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/BarleyKB2013.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/BarleyKB2013.oxl</a></li>
+    </ul>
+  </ul>
+</p>
 </ul>
 </body>
 </html>
