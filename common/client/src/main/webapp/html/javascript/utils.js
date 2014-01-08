@@ -338,32 +338,36 @@ function searchKeyword(){
 	var list = $("#list_of_genes").val();
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
+	
 	if(list.length > 0){
 		request = request+"&listMode="+listMode;
 	}
-	var counter = 0;
+	var counter = 1;
 	
 	for(i=1; i<=regions; i++){	
 		var chr = $("#chr"+i+" option:selected").val();
 		var start = trim($("#start"+i).val());
 		var end = trim($("#end"+i).val());
 		var label = trim($("#label"+i).val());
+		
 		if(chr.length>0 && start.length>0 && end.length>0 && parseInt(start)<parseInt(end)){
-			if(findGenes('',chr, start, end)>0) {
+			
+//			if(findGenes('',chr, start, end)>0) {
+//				counter++;
+				request = request+"&qtl"+counter+"="+chr+":"+start+":"+end+":"+label;
 				counter++;
-				request = request+"&qtl"+counter+"="+chr+":"+start+":"+end+":"+label;				
-			}			
-		}		
+//			}			
+		}
 	}
 
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
+	else if(($("#genes1").val() == 0) && (searchMode == "qtl")) {		
+		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please define at least one QTL region.</b></div>');
+	}
 	else if(list.length > 500000) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
-	}
-	else if(counter == 0 && searchMode == "qtl") {		
-		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please define at least one QTL region.</b></div>');
 	}
 	else{
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');			
@@ -381,19 +385,21 @@ function searchKeyword(){
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
 				
-
 				if((response == null) || (response == "")){
-					var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
-					$("#pGViewer_title").replaceWith(genomicViewTitle);	
+						var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
+						$("#pGViewer_title").replaceWith(genomicViewTitle);
 				} else
 				if(response.indexOf("NoFile:noGenesFound") !=-1 ||  !response.split(":")[4] > 0){
-					var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br /></div>'
-					var genomicView = '<div id="pGViewer" class="resultViewer">';
-					var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-					genomicView = genomicView + gviewer_html;
-					$("#pGViewer_title").replaceWith(genomicViewTitle);
-					$("#pGViewer").replaceWith(genomicView);
-	        		document.getElementById('resultsTable').innerHTML = "";		        		
+					if (reference_genome == true) {
+						var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br /></div>'
+						var genomicView = '<div id="pGViewer" class="resultViewer">';
+						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
+
+						genomicView = genomicView + gviewer_html;
+						$("#pGViewer_title").replaceWith(genomicViewTitle);
+						$("#pGViewer").replaceWith(genomicView);
+					}
+					document.getElementById('resultsTable').innerHTML = "";		        		
 	        	}
 				else {
 					var splitedResponse = response.split(":");  
@@ -401,17 +407,18 @@ function searchKeyword(){
 					var docSize = splitedResponse[5];
 					var totalDocSize = splitedResponse[6];
 					var candidateGenes = parseInt(results);
+					
 					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
 					var genomicView = '<div id="pGViewer" class="resultViewer"><p class="margin_left">Shift+Click on a gene to see its knowledge network.</p>';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
 						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map and Gene view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
-					}			
+					}	
+					
 					gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
 					genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
 					$("#pGViewer").replaceWith(genomicView);	
-					
 					
 					//Collapse Suggestor view
 					$('#suggestor_search').attr('src', 'html/image/expand.gif');
@@ -491,11 +498,12 @@ function findGenes(id, chr_name, start, end) {
 		var url = 'OndexServlet?'+request;
 		$.post(url, '', function(response, textStatus){
 			if(textStatus == "success"){
-				if(id != ""){
-					$("#"+id).val(response);					
-				}else{
-					return response;
-				}
+//				if(id != ""){
+					$("#"+id).val(response);
+//				}
+//				else{
+//					return response;
+//				}
 			}
 		})
 	}
