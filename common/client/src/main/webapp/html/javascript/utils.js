@@ -298,13 +298,13 @@ $(document).ready(
 	 			target = event.target.id;
  				var message = "";
  				if(target == 'hintSearchQtlGenome'){
- 					message = 'Select the "whole-genome" option to search the whole genome for potential candidate genes or  select the "within QTL" option to search for candidate genes within the QTL coordinates.';
+ 					message = 'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
  				}
  				else if(target == 'hintEnterGenes'){
  					message = 'Helpful hint about a list of genes.';
  				}
 				else if(target == 'hintQuerySuggestor'){
- 					message = 'Add, remove o replace term from your query using the list of suggested terms based on your search chriteria';
+ 					message = 'Add, remove or replace terms from your query using the list of suggested terms based on your search criteria';
  				}
 				else if(target == 'hintEgKeywords'){
  					message = $('#eg_keywords_hidden').html();
@@ -390,16 +390,22 @@ function searchKeyword(){
 						$("#pGViewer_title").replaceWith(genomicViewTitle);
 				} else
 				if(response.indexOf("NoFile:noGenesFound") !=-1 ||  !response.split(":")[4] > 0){
+					var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
+					
 					if (reference_genome == true) {
-						var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br /></div>'
 						var genomicView = '<div id="pGViewer" class="resultViewer">';
 						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-
 						genomicView = genomicView + gviewer_html;
-						$("#pGViewer_title").replaceWith(genomicViewTitle);
 						$("#pGViewer").replaceWith(genomicView);
 					}
-					document.getElementById('resultsTable').innerHTML = "";		        		
+					
+					$("#pGViewer_title").replaceWith(genomicViewTitle);
+					
+					activateButton('resultsTable');
+					document.getElementById('resultsTable').innerHTML = "";	
+					document.getElementById('evidenceTable').innerHTML = "";
+					document.getElementById('NetworkCanvas').innerHTML = "";
+					
 	        	}
 				else {
 					var splitedResponse = response.split(":");  
@@ -598,9 +604,11 @@ function createGenesTable(tableUrl, keyword, rows){
 						var start = '';
 					}
 				    var score = '<td>'+values[6]+'</td>';
-				    var withinQTL = '<td>'+values[7]+'</td>';
-				    var usersList = '<td>'+values[8]+'</td>';
-					
+				    var usersList = '<td>'+values[7]+'</td>';
+				    //QTL coloum with information box
+				    var withinQTLs = values[8].split("||");
+				    var withinQTL = '<td>'+withinQTLs.length+'</td>';
+				    
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
 					var values_evidence = values[9];
@@ -624,10 +632,7 @@ function createGenesTable(tableUrl, keyword, rows){
 									evidence = evidence+'<p>'+evidenceValue+'</p>';
 								}
 								evidence = evidence+'</div>';
-							evidence = evidence+'</div>';
-									
-							
-										
+							evidence = evidence+'</div>';			
 						}
 					}
 					evidence = evidence+'</td>';
@@ -635,7 +640,7 @@ function createGenesTable(tableUrl, keyword, rows){
 					
 				    var select = '<td><input type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 				    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
-					table = table + gene + taxid + chr + start + score + withinQTL + usersList + evidence + select;
+					table = table + gene + taxid + chr + start + score + usersList + withinQTL + evidence + select;
 				    table = table + '</tr>';
 				}
 				table = table+'</tbody>';	

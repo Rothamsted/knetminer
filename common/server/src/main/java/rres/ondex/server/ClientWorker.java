@@ -145,7 +145,7 @@ public class ClientWorker implements Runnable {
 					if(start < end) {
 						validQTL = true;
 						chrIndex = ondexProvider.chromBidiMap.inverseBidiMap().get(chrName);
-						QTL qtl = new QTL(chrIndex, chrName, Long.toString(start), Long.toString(end), label, "significant");
+						QTL qtl = new QTL(chrIndex, chrName, Long.toString(start), Long.toString(end), label, "significant", "Trait");
 						qtls.add(qtl);
 					}
 				}

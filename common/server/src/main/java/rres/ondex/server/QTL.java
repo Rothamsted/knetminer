@@ -8,14 +8,16 @@ public class QTL {
 	public String end;
 	public String label;
 	public String significance;
+	public String trait;
 	//test3
-	public QTL(int chrIndex, String chrName, String start, String end, String label, String significance) {
+	public QTL(int chrIndex, String chrName, String start, String end, String label, String significance, String trait) {
 		this.chrIndex = chrIndex;
 		this.chrName = chrName;
 		this.start = start;
 		this.end = end;
 		this.label = label;
 		this.significance = significance;
+		this.trait = trait;
 	}
 	public int getChrIndex(){
 		return chrIndex;
@@ -56,5 +58,11 @@ public class QTL {
 	}
 	public void setSignificance(String significance) {
 		this.significance = significance;
+	}
+	public String getTrait() {
+		return trait;
+	}
+	public void setTrait(String trait) {
+		this.trait = trait;
 	}
 }

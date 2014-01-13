@@ -686,8 +686,8 @@ public class OndexServiceProvider {
 		AttributeName attEnd = graph.getMetaData().getAttributeName("END");
 		AttributeName attSignificance = graph.getMetaData().getAttributeName("Significance");
 		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+		AttributeName attTrait = graph.getMetaData().getAttributeName("Trait");
 		Set<ONDEXConcept> concepts = null;
-		
 		
 		List<QTL> results = new ArrayList<QTL>();
 		
@@ -701,7 +701,8 @@ public class OndexServiceProvider {
 				String chrName = chromBidiMap.get(chr);
 				String start = q.getAttribute(attBegin).getValue().toString();
 				String end = q.getAttribute(attEnd).getValue().toString();
-				results.add(new QTL(chr, chrName, start, end, "", ""));
+				String trait = q.getAttribute(attTrait).getValue().toString();
+				results.add(new QTL(chr, chrName, start, end, "", "", trait));
 			}
 			System.out.println(results.size()+" QTLs where found!");
 			return results;
@@ -726,11 +727,12 @@ public class OndexServiceProvider {
 								String start = conQTL.getAttribute(attBegin).getValue().toString();
 								String end = conQTL.getAttribute(attEnd).getValue().toString();
 								String label = conQTL.getConceptName().getName();
+								String trait = conQTL.getAttribute(attTrait).getValue().toString();
 								String significance = "";
 								if(conQTL.getAttribute(attSignificance) != null)
 									significance = conQTL.getAttribute(attSignificance).getValue().toString();
 				
-								results.add(new QTL(chr, chrName, start, end, label, significance));
+								results.add(new QTL(chr, chrName, start, end, label, significance, trait));
 							}
 						}
 					}
@@ -1442,6 +1444,31 @@ public class OndexServiceProvider {
 					}
 				}
 				
+				String infoQTL = "";
+				
+				if(!qtls.isEmpty()){
+					for(QTL loci : qtls) {
+						try{
+							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+							Long qtlStart = Long.parseLong(loci.getStart());
+							Long qtlEnd = Long.parseLong(loci.getEnd());
+							
+							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+								if (infoQTL == "")
+									infoQTL += loci.getTrait();
+								else
+									infoQTL += "||" + loci.getTrait();
+//								infoQTL += loci.getTrait() + "||";
+							}
+						}
+						catch(Exception e){
+							System.out.println("An error occurred in method: writeTableOut.");
+							System.out.println(e.getMessage());
+						}
+					}
+					
+				}
+				
 				//get lucene hits per gene
 				Set<Integer> luceneHits = mapGene2HitConcept.get(id);
 				
@@ -1476,7 +1503,11 @@ public class OndexServiceProvider {
 				evidence = evidence.substring(0, evidence.length() - 2);
 				
 				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-						+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + numQTL + "\t" + evidence + "\n");
+				+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+
+				
+//				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
+//						+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + numQTL + "\t" + evidence + "\n");
 				
 			}
 			out.close();
