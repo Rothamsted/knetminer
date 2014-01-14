@@ -701,8 +701,9 @@ public class OndexServiceProvider {
 				String chrName = chromBidiMap.get(chr);
 				String start = q.getAttribute(attBegin).getValue().toString();
 				String end = q.getAttribute(attEnd).getValue().toString();
+				String label = q.getConceptName().getName();
 				String trait = q.getAttribute(attTrait).getValue().toString();
-				results.add(new QTL(chr, chrName, start, end, "", "", trait));
+				results.add(new QTL(chr, chrName, start, end, label, "", trait));
 			}
 			System.out.println(results.size()+" QTLs where found!");
 			return results;
@@ -1455,9 +1456,9 @@ public class OndexServiceProvider {
 							
 							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
 								if (infoQTL == "")
-									infoQTL += loci.getTrait();
+									infoQTL += loci.getLabel() + "//" + loci.getTrait();
 								else
-									infoQTL += "||" + loci.getTrait();
+									infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
 //								infoQTL += loci.getTrait() + "||";
 							}
 						}
