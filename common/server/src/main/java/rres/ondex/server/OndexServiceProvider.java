@@ -448,12 +448,13 @@ public class OndexServiceProvider {
 	public HashMap<ONDEXConcept, Float> searchLucene(String keywords) throws IOException, ParseException {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();		
-		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
+		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE"};
 		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 		
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+
 		
 		String keyword = keywords;
 			
