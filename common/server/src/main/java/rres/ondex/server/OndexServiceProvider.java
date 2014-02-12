@@ -72,6 +72,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 
@@ -448,13 +449,12 @@ public class OndexServiceProvider {
 	public HashMap<ONDEXConcept, Float> searchLucene(String keywords) throws IOException, ParseException {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();		
-		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE"};
+		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
 		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 		
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-
 		
 		String keyword = keywords;
 			
@@ -523,7 +523,6 @@ public class OndexServiceProvider {
 			
 			System.out.println("Query: "+qAnno.toString(fieldNameCA));
 			System.out.println("Annotation hits: "+sHitsAnno.getOndexHits().size());
-			
 			
 		return hit2score;		
 	}
