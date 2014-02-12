@@ -524,6 +524,7 @@ public class OndexServiceProvider {
 			System.out.println("Query: "+qAnno.toString(fieldNameCA));
 			System.out.println("Annotation hits: "+sHitsAnno.getOndexHits().size());
 			
+			
 		return hit2score;		
 	}
 	

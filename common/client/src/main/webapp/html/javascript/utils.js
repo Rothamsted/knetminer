@@ -448,10 +448,51 @@ function generateNetwork(url,list){
 	//OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
+
+//	var attributes = {code:'net.sourceforge.ondex.ovtk2lite.Main', archive:'"+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar', width:'760', height:'600'};
+//	var parameters = { scriptable:'false',
+////						ondex.dir:applet_url+'data',
+////						ovtk.dir:applet_url+'config',
+//						password:'ovtk',
+//						username:'ovtk',
+//						loadappearance:'true',
+//						antialiased:'true',
+////						nodes.labels:'true',
+////						edges.lables:'true',
+//						filename:data_url + oxl};
+//	deployJava.runApplet(attributes, parameters, '1.6');
+	
+	
+//	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
+//	"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
+//	"<script src='https://www.java.com/js/deployJava.js'></script>" +
+//	"<script>" +
+//		"var attributes = {code:'net.sourceforge.ondex.ovtk2lite.Main', archive:'"+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar', width:'760', height:'600'};" +
+//		"var parameters = { scriptable:'false'," +
+//    						"ondex.dir:'"+applet_url+"data'," +
+//    						"ovtk.dir:'"+applet_url+"config'," +
+//    						"password:'ovtk'," +
+//    						"username:'ovtk'," +
+//    						"loadappearance:'true'," +
+//    						"antialiased:'true'," +
+//    						"nodes.labels:'true'," +
+//    						"edges.lables:'true'," +
+//    						"filename:'"+data_url + oxl +"'};" +
+//    	"deployJava.runApplet(attributes, parameters, '1.6');" +
+//    "</script>" +
+//    "<br>" +
+//    "<div id=legend_picture><div id=legend_container>" +
+//    "<img src=html/image/evidence_legend.png>" +
+//    "</div></div>";
+//	$('#NetworkCanvas').html(output);
+//	activateButton('NetworkCanvas');
+//	$('#NetworkCanvas').html(output);
+//	activateButton('NetworkCanvas');
+
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
         		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
         		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
-	            "<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
+        		"<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
 	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
 	            "<param name=type value=application/x-java-applet;version=1.6>" +
 	            "<param name=scriptable value=false>" +
@@ -465,10 +506,49 @@ function generateNetwork(url,list){
 	            "<PARAM NAME=edges.lables VALUE=true>" +
 	            "<PARAM NAME=filename VALUE="+data_url + oxl +">" +
 	            "Your browser is completely ignoring the &lt;APPLET&gt; tag!" +
-	            "</applet>"+
-	            "<br>" +
+	            "</applet>" +
+//	            "<br>" +
+//	            "<div id=legend_picture><div id=legend_container>" +
+//	            "<img src=html/image/evidence_legend.png>" +
+//	            "</div></div>";	            
 	            "<div id=legend_picture><div id=legend_container>" +
-	            "<img src=html/image/evidence_legend.png>" +
+				"<table border=0 cellspacing=1>" +
+				"<tr>" +
+					"<td align=center><img src=html/image/Gene.png></td>" +
+					"<td align=center><img src=html/image/Protein.png></td>" +
+					"<td align=center><img src=html/image/Pathway.png></td>" +
+					"<td align=center><img src=html/image/Compound.png></td>" +
+					"<td align=center><img src=html/image/Enzyme.png></td>" +
+					"<td align=center><img src=html/image/Reaction.png></td>" +
+					"<td align=center><img src=html/image/Publication.png></td>" +
+				"</tr><tr>" +
+					"<td align=center><font size=1.8px>Gene</font></td>" +
+					"<td align=center><font size=1.8px>Protein</font></td>" +
+					"<td align=center><font size=1.8px>Pathway</font></td>" +
+					"<td align=center><font size=1.8px>Compount</font></td>" +
+					"<td align=center><font size=1.8px>Enzyme</font></td>" +
+					"<td align=center><font size=1.8px>Reaction</font></td>" +
+					"<td align=center><font size=1.8px>Publication</font></td>" +
+				"</tr><tr>" +
+					"<td align=center></td>" +
+				"</tr><tr>" +
+					"<td align=center><img src=html/image/Phenotype.png></td>" +
+					"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
+					"<td align=center><img src=html/image/Cellular_component.png></td>" +
+					"<td align=center><img src=html/image/Protein_domain.png></td>" +
+					"<td align=center><img src=html/image/Trait_ontology.png></td>" +
+					"<td align=center><img src=html/image/Molecular_function.png></td>" +
+					"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
+				"</tr><tr>" +
+					"<td align=center><font size=1.8px>Phenotype</font></td>" +
+					"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
+					"<td align=center><font size=1.8px>Cell. Component</font></td>" +
+					"<td align=center><font size=1.8px>Protein Domain</font></td>" +
+					"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
+					"<td align=center><font size=1.8px>Mol. Function</font></td>" +
+					"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
+				"</tr>" +
+				"</table>" +
 	            "</div></div>";
 				$('#NetworkCanvas').html(output);
 				activateButton('NetworkCanvas');
@@ -605,9 +685,32 @@ function createGenesTable(tableUrl, keyword, rows){
 					}
 				    var score = '<td>'+values[6]+'</td>';
 				    var usersList = '<td>'+values[7]+'</td>';
+				    
 				    //QTL coloum with information box
 				    var withinQTLs = values[8].split("||");
-				    var withinQTL = '<td>'+withinQTLs.length+'</td>';
+				    var withinQTL = '<td>' + (withinQTLs.length-1);
+				    if(withinQTLs.length > 1){
+				    	//Shows the icons
+				    	withinQTL = '<td>'+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
+				    	//Builds the evidence box
+				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
+				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
+				    	
+				    	for (var count_i = 0; count_i < (withinQTLs.length); count_i++) {
+				    		var withinQTL_elements = withinQTLs[count_i].split("//");
+				    		withinQTL = withinQTL+'<p>'+withinQTL_elements[1]+'</p>';
+				    		
+//				    		withinQTL = withinQTL+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+'"><span onclick="$(\'#qtl_box_'+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+(withinQTLs.length-1)+'</span>';
+//				    		withinQTL = withinQTLs[1]+'<p>';
+//				    		
+//				    		//Builds the qtl box				    		
+//				    		withinQTL = withinQTL+'<div id="qtl_box_'+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+withinQTLs.length+'\').slideUp(100);"></a>';
+//							withinQTL = withinQTL+'</div>';
+				    	}
+				    }
+				    withinQTL = withinQTL + '</td>';
+				    
+				    //var withinQTL = '<td>' + withinQTLs.length + '</td>';
 				    
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
@@ -618,20 +721,20 @@ function createGenesTable(tableUrl, keyword, rows){
 							//Shows the icons
 							var evidence_elements = evidences[count_i].split("//");
 							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
-								//Builds the evidence box
-								evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
-								evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
-								for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
-									//link publications with pubmed
-									pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-									if(evidence_elements[0] == 'Publication')
-										evidenceValue = '<a href="'+pubmedurl+evidence_elements[count_eb].substring(5)+'" target="_blank">'+evidence_elements[count_eb]+'</a>';	
-									else
-										evidenceValue = evidence_elements[count_eb];	
+							//Builds the evidence box
+							evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
+							evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
+							for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
+								//link publications with pubmed
+								pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+								if(evidence_elements[0] == 'Publication')
+									evidenceValue = '<a href="'+pubmedurl+evidence_elements[count_eb].substring(5)+'" target="_blank">'+evidence_elements[count_eb]+'</a>';	
+								else
+									evidenceValue = evidence_elements[count_eb];	
 										
-									evidence = evidence+'<p>'+evidenceValue+'</p>';
-								}
-								evidence = evidence+'</div>';
+								evidence = evidence+'<p>'+evidenceValue+'</p>';
+							}
+							evidence = evidence+'</div>';
 							evidence = evidence+'</div>';			
 						}
 					}
@@ -648,7 +751,48 @@ function createGenesTable(tableUrl, keyword, rows){
 		        table = table + '</form>';	        
     		}
     		document.getElementById('resultsTable').innerHTML = table+
-    		'<div id="networkButton"><input class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div><div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
+    		'<div id="networkButton"><input class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
+    		"<div id=legend_picture><div id=legend_container>" +
+			"<table border=0 cellspacing=1>" +
+			"<tr>" +
+				"<td align=center><img src=html/image/Gene.png></td>" +
+				"<td align=center><img src=html/image/Protein.png></td>" +
+				"<td align=center><img src=html/image/Pathway.png></td>" +
+				"<td align=center><img src=html/image/Compound.png></td>" +
+				"<td align=center><img src=html/image/Enzyme.png></td>" +
+				"<td align=center><img src=html/image/Reaction.png></td>" +
+				"<td align=center><img src=html/image/Publication.png></td>" +
+			"</tr><tr>" +
+				"<td align=center><font size=1.8px>Gene</font></td>" +
+				"<td align=center><font size=1.8px>Protein</font></td>" +
+				"<td align=center><font size=1.8px>Pathway</font></td>" +
+				"<td align=center><font size=1.8px>Compount</font></td>" +
+				"<td align=center><font size=1.8px>Enzyme</font></td>" +
+				"<td align=center><font size=1.8px>Reaction</font></td>" +
+				"<td align=center><font size=1.8px>Publication</font></td>" +
+			"</tr><tr>" +
+				"<td align=center></td>" +
+			"</tr><tr>" +
+				"<td align=center><img src=html/image/Phenotype.png></td>" +
+				"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
+				"<td align=center><img src=html/image/Cellular_component.png></td>" +
+				"<td align=center><img src=html/image/Protein_domain.png></td>" +
+				"<td align=center><img src=html/image/Trait_ontology.png></td>" +
+				"<td align=center><img src=html/image/Molecular_function.png></td>" +
+				"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
+			"</tr><tr>" +
+				"<td align=center><font size=1.8px>Phenotype</font></td>" +
+				"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
+				"<td align=center><font size=1.8px>Cell. Component</font></td>" +
+				"<td align=center><font size=1.8px>Protein Domain</font></td>" +
+				"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
+				"<td align=center><font size=1.8px>Mol. Function</font></td>" +
+				"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
+			"</tr>" +
+			"</table>" +
+            "</div></div>";
+    		
+//    		"<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
     		$("#tablesorter").tablesorter({ 
     	        headers: { 
     	            // do not sort "select" column 
@@ -740,7 +884,47 @@ function createEvidenceTable(tableUrl){
 				table = table + '</tbody>';
 				table = table + '</table>';
 				table = table + '</div>';
-				table = table + '<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
+				table = table +
+				"<div id=legend_picture><div id=legend_container>" +
+				"<table border=0 cellspacing=1>" +
+				"<tr>" +
+					"<td align=center><img src=html/image/Gene.png></td>" +
+					"<td align=center><img src=html/image/Protein.png></td>" +
+					"<td align=center><img src=html/image/Pathway.png></td>" +
+					"<td align=center><img src=html/image/Compound.png></td>" +
+					"<td align=center><img src=html/image/Enzyme.png></td>" +
+					"<td align=center><img src=html/image/Reaction.png></td>" +
+					"<td align=center><img src=html/image/Publication.png></td>" +
+				"</tr><tr>" +
+					"<td align=center><font size=1.8px>Gene</font></td>" +
+					"<td align=center><font size=1.8px>Protein</font></td>" +
+					"<td align=center><font size=1.8px>Pathway</font></td>" +
+					"<td align=center><font size=1.8px>Compount</font></td>" +
+					"<td align=center><font size=1.8px>Enzyme</font></td>" +
+					"<td align=center><font size=1.8px>Reaction</font></td>" +
+					"<td align=center><font size=1.8px>Publication</font></td>" +
+				"</tr><tr>" +
+					"<td align=center></td>" +
+				"</tr><tr>" +
+					"<td align=center><img src=html/image/Phenotype.png></td>" +
+					"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
+					"<td align=center><img src=html/image/Cellular_component.png></td>" +
+					"<td align=center><img src=html/image/Protein_domain.png></td>" +
+					"<td align=center><img src=html/image/Trait_ontology.png></td>" +
+					"<td align=center><img src=html/image/Molecular_function.png></td>" +
+					"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
+				"</tr><tr>" +
+					"<td align=center><font size=1.8px>Phenotype</font></td>" +
+					"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
+					"<td align=center><font size=1.8px>Cell. Component</font></td>" +
+					"<td align=center><font size=1.8px>Protein Domain</font></td>" +
+					"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
+					"<td align=center><font size=1.8px>Mol. Function</font></td>" +
+					"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
+				"</tr>" +
+				"</table>" +
+	            "</div></div>";
+//				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 				
 				$('#evidenceTable').html(table);
 				$("#tablesorterEvidence").tablesorter(); 

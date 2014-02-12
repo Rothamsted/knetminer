@@ -313,6 +313,11 @@ table.suggestorTable thead tr th {
 table.suggestorTable .evidence_item {
 	margin-left:50px;
 }
+
+table.suggestorTable .qtl_item {
+	margin-left:50px;
+}
+
 table.tablesorter tbody td {
 	color:#3D3D3D;
 	background-color:#FFF;
@@ -354,13 +359,18 @@ table.tablesorter tbody td {
 .evidence_box span {font-size:17px; color:#003399;}
 .evidence_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
-/* Legend */
-#legend_picture {position:relative;width:100%;padding-top:25px;}
-#legend_picture #legend_container {position:relative;margin:auto;width:500px;height:88px;}
+/* QTL box */
+.qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:14px Arial, Helvetica, sans-serif; color:#4184C1}
+.qtl_box {position:absolute; width:185px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:12px Arial, Helvetica, sans-serif; color:#3D3D3D}
+.qtl_box span {font-size:17px; color:#003399; font-style:normal;}
+.qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
+
+/* Legend */
+#legend_picture {position:relative;width:100%;padding-top:50px;}
+#legend_picture #legend_container {position:relative;margin:auto;width:500px;height:80px;}
 
 /* General Styles */
-
 #wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../image/background.png) center;padding:0px 30px;  }
 
 /* Header  */
