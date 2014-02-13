@@ -1345,18 +1345,42 @@ public class OndexServiceProvider {
 	 * @param candidates
 	 * @param qtl 
 	 * @param filename
+	 * @param listMode 
 	 * @return
 	 */
 	public boolean writeTableOut(ArrayList<ONDEXConcept> candidates,
-			Set<ONDEXConcept> userGenes, List<QTL> qtls, String filename) {
+			Set<ONDEXConcept> userGenes, List<QTL> qtls, String filename, 
+			String listMode) {
+		
 		if (candidates.size() == 0) {
 			System.out.println("No candidate path to display.");
 			return false;
 		}
 		
-		if(userGenes == null){
+		Set<Integer> userGeneIds = new HashSet<Integer>();
+		if(userGenes != null){
+			
+			Set<Integer> candidateGeneIds = new HashSet<Integer>();
+			
+			// is conversion into integer sets needed because comparing the
+			// ONDEXConcept objects is not working???
+			for(ONDEXConcept c : candidates){
+				candidateGeneIds.add(c.getId());
+			}
+			
+			for(ONDEXConcept c : userGenes){
+				userGeneIds.add(c.getId());
+				if(!candidateGeneIds.contains(c.getId())){
+					candidates.add(c);
+				}
+			}
+
+		}else{
 			System.out.println("No user gene list defined.");
 		}
+		
+		
+		
 		
 		if(qtls.isEmpty()){
 			System.out.println("No QTL regions defined.");
@@ -1416,14 +1440,10 @@ public class OndexServiceProvider {
 				String geneName = getDefaultNameForConcept(gene);
 
 				String isInList = "no";
-				if(userGenes != null){
-					for(ONDEXConcept c : userGenes){
-						//equal on PID not equal on object because from different graphs						
-						if(c.getId()==gene.getId()){						
-							isInList = "yes";
-						}
-					}
+				if(userGenes != null && userGeneIds.contains(gene.getId())){
+					isInList = "yes";
 				}
+				
 				int numQTL = 0;
 				
 				if(!qtls.isEmpty()){
@@ -1476,6 +1496,11 @@ public class OndexServiceProvider {
 				//organise by concept class
 				HashMap<String, String> cc2name = new HashMap<String, String>(); 
 				
+				if(luceneHits == null){
+					luceneHits = new HashSet<Integer>();
+				}
+				
+				
 				for(int hitID : luceneHits){
 					ONDEXConcept c = graph.getConcept(hitID);
 					String ccId = c.getOfType().getId();
@@ -1501,7 +1526,12 @@ public class OndexServiceProvider {
 				
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 				
-				evidence = evidence.substring(0, evidence.length() - 2);
+				if(!evidence.equals(""))
+					evidence = evidence.substring(0, evidence.length() - 2);
+				
+				if(luceneHits.isEmpty() && listMode.equals("GLrestrict")){
+					continue;
+				}
 				
 				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
 				+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");

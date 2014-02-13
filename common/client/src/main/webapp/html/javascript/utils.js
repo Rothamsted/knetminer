@@ -635,9 +635,9 @@ function createGenesTable(tableUrl, keyword, rows){
         	
     		var candidate_genes = text.split("\n");
     		var results = candidate_genes.length-2;
-    		if(results >= 100){
-    			results = 100;
-    		}
+//    		if(results >= 100){
+//  				results = 100;
+//    		}
     		if(candidate_genes.length > 2) {
 		        table =  '';
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
@@ -665,10 +665,20 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<th width="90">Select</th>';							
 				table = table + '</tr>';
 				table = table + '</thead>';
-				table = table + '<tbody class="scrollTable">';																				
-				for(var i=1; i<=rows; i++) {
+				table = table + '<tbody class="scrollTable">';
+				
+				//this loop iterates over the full table and prints the
+				//first n rows + the user provided genes
+				//can be slow for large number of genes, alternatively server
+				//can can filter and provide smaller file for display																				
+				for(var i=1; i<=results; i++) {
+					var values = candidate_genes[i].split("\t");
+					
+					if(i>rows && values[7]=="no"){
+						continue;
+					}
 		        	table = table + '<tr>';
-				    var values = candidate_genes[i].split("\t");
+				    
 				    var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 				    if(multiorganisms == true){
