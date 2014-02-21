@@ -449,53 +449,13 @@ function generateNetwork(url,list){
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
 
-//	var attributes = {code:'net.sourceforge.ondex.ovtk2lite.Main', archive:'"+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar', width:'760', height:'600'};
-//	var parameters = { scriptable:'false',
-////						ondex.dir:applet_url+'data',
-////						ovtk.dir:applet_url+'config',
-//						password:'ovtk',
-//						username:'ovtk',
-//						loadappearance:'true',
-//						antialiased:'true',
-////						nodes.labels:'true',
-////						edges.lables:'true',
-//						filename:data_url + oxl};
-//	deployJava.runApplet(attributes, parameters, '1.6');
-	
-	
-//	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
-//	"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
-//	"<script src='https://www.java.com/js/deployJava.js'></script>" +
-//	"<script>" +
-//		"var attributes = {code:'net.sourceforge.ondex.ovtk2lite.Main', archive:'"+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar', width:'760', height:'600'};" +
-//		"var parameters = { scriptable:'false'," +
-//    						"ondex.dir:'"+applet_url+"data'," +
-//    						"ovtk.dir:'"+applet_url+"config'," +
-//    						"password:'ovtk'," +
-//    						"username:'ovtk'," +
-//    						"loadappearance:'true'," +
-//    						"antialiased:'true'," +
-//    						"nodes.labels:'true'," +
-//    						"edges.lables:'true'," +
-//    						"filename:'"+data_url + oxl +"'};" +
-//    	"deployJava.runApplet(attributes, parameters, '1.6');" +
-//    "</script>" +
-//    "<br>" +
-//    "<div id=legend_picture><div id=legend_container>" +
-//    "<img src=html/image/evidence_legend.png>" +
-//    "</div></div>";
-//	$('#NetworkCanvas').html(output);
-//	activateButton('NetworkCanvas');
-//	$('#NetworkCanvas').html(output);
-//	activateButton('NetworkCanvas');
-
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
-        		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p>" +
+        		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</p></br>" +
         		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
         		"<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
 	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
-	            "<param name=type value=application/x-java-applet;version=1.6>" +
-	            "<param name=scriptable value=false>" +
+	            "<PARAM NAME=type value=application/x-java-applet;version=1.6>" +
+	            "<PARAM NAME=scriptable value=false>" +
 	            "<PARAM NAME=ondex.dir VALUE="+applet_url+"data>" +
 	            "<PARAM NAME=ovtk.dir VALUE="+applet_url+"config>" +
 	            "<PARAM NAME=password VALUE=ovtk>" +
@@ -506,13 +466,9 @@ function generateNetwork(url,list){
 	            "<PARAM NAME=edges.lables VALUE=true>" +
 	            "<PARAM NAME=filename VALUE="+data_url + oxl +">" +
 	            "Your browser is completely ignoring the &lt;APPLET&gt; tag!" +
-	            "</applet>" +
-//	            "<br>" +
-//	            "<div id=legend_picture><div id=legend_container>" +
-//	            "<img src=html/image/evidence_legend.png>" +
-//	            "</div></div>";	            
+	            "</applet>" +            
 	            "<div id=legend_picture><div id=legend_container>" +
-				"<table border=0 cellspacing=1>" +
+				"<table id=legend_frame cellspacing=1>" +
 				"<tr>" +
 					"<td align=center><img src=html/image/Gene.png></td>" +
 					"<td align=center><img src=html/image/Protein.png></td>" +
@@ -584,12 +540,7 @@ function findGenes(id, chr_name, start, end) {
 		var url = 'OndexServlet?'+request;
 		$.post(url, '', function(response, textStatus){
 			if(textStatus == "success"){
-//				if(id != ""){
-					$("#"+id).val(response);
-//				}
-//				else{
-//					return response;
-//				}
+				$("#"+id).val(response);
 			}
 		})
 	}
@@ -763,7 +714,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		document.getElementById('resultsTable').innerHTML = table+
     		'<div id="networkButton"><input class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
     		"<div id=legend_picture><div id=legend_container>" +
-			"<table border=0 cellspacing=1>" +
+			"<table id=legend_frame cellspacing=1>" +
 			"<tr>" +
 				"<td align=center><img src=html/image/Gene.png></td>" +
 				"<td align=center><img src=html/image/Protein.png></td>" +
@@ -896,7 +847,7 @@ function createEvidenceTable(tableUrl){
 				table = table + '</div>';
 				table = table +
 				"<div id=legend_picture><div id=legend_container>" +
-				"<table border=0 cellspacing=1>" +
+				"<table id=legend_frame cellspacing=1>" +
 				"<tr>" +
 					"<td align=center><img src=html/image/Gene.png></td>" +
 					"<td align=center><img src=html/image/Protein.png></td>" +

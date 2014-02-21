@@ -140,7 +140,7 @@
                 </center>
             </div>
             <div id="resultsTable" class="resultViewer" style="display:none;" ></div>
-            <div id="NetworkCanvas" class="resultViewer" style="display:none;position:relative;top:38px;padding-bottom:60px">
+            <div id="NetworkCanvas" class="resultViewer" style="display:none;position:relative;padding-bottom:80px">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
             </div>
 			<div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
