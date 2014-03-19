@@ -2,8 +2,6 @@
 1*	Gene
 2	Gene
 3	Protein
-4	QTL
-5^	Trait
 6^	Publication
 7^	MolFunc
 8^	BioProc
@@ -14,11 +12,9 @@
 #Transitions
 1-2	ortho
 1-3	enc
+1-6	pub_in
 2-3	enc
 3-6	pub_in
-4-6	pub_in
-4-5	control
-1-4	is_candidate
 3-7	has_function
 3-8	participates_in
 3-9	located_in
