@@ -379,7 +379,7 @@ table.tablesorter tbody td {
 #header img {border:none;}
 #header #qtlLogo {position:absolute; top:25px; left:30px;}
 #header #organism {position:absolute; top:6px; right:40px;}
-#header #motto {position:absolute; top:110px; left:30px;font-size:12px;}
+#header #motto {position:absolute; top:110px; left:30px; font-size:12px;}
 #header_spacer {position:relative; height:35px;width:960px; background:url(../image/divisor_header.png) repeat-x ;clear:left;}
 
 /* Footer */

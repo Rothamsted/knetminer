@@ -311,13 +311,17 @@ public class ClientWorker implements Runnable {
 		List<QTL> qtlDB = ondexProvider.findQTL(keyword);
 		
 		//some logic to limit QTL size if too many are found
+		System.out.println(qtlDB.size() + " QTLs are found.");
 		if(qtlDB.size() > 150){
 			System.out.println("Too many QTL found, remove not significant ones...");
+			List<QTL> toRemove= new ArrayList<QTL>();
 			for(QTL q : qtlDB){
 				if(!q.getSignificance().equalsIgnoreCase("significant")){
-					qtlDB.remove(q);
+					toRemove.add(q);
 				}
 			}
+			qtlDB.removeAll(toRemove);
+			System.out.println(qtlDB.size() + " QTLs are significant.");
 		}
 		
 		//add QTL from knowledgebase to QTL list from user 

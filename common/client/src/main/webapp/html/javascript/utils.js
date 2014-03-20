@@ -673,7 +673,12 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	
 				    	for (var count_i = 0; count_i < (withinQTLs.length); count_i++) {
 				    		var withinQTL_elements = withinQTLs[count_i].split("//");
-				    		withinQTL = withinQTL+'<p>'+withinQTL_elements[1]+'</p>';
+				    		if (withinQTL_elements[1].length > 0) {
+				    			withinQTL = withinQTL+'<p>'+withinQTL_elements[1]+'</p>';
+				    		}
+				    		else {
+				    			withinQTL = withinQTL+'<p>'+withinQTL_elements[0]+'</p>';
+				    		}
 				    		
 //				    		withinQTL = withinQTL+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+'"><span onclick="$(\'#qtl_box_'+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+(withinQTLs.length-1)+'</span>';
 //				    		withinQTL = withinQTLs[1]+'<p>';

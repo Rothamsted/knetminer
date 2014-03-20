@@ -702,24 +702,63 @@ public class OndexServiceProvider {
 				String start = q.getAttribute(attBegin).getValue().toString();
 				String end = q.getAttribute(attEnd).getValue().toString();
 				String label = q.getConceptName().getName();
-				String trait = q.getAttribute(attTrait).getValue().toString();
+				String trait = "";
+				if (q.getAttributes().contains(attTrait) == true) {
+					trait = q.getAttribute(attTrait).getValue().toString();
+				}
 				results.add(new QTL(chr, chrName, start, end, label, "", trait));
 			}
 			System.out.println(results.size()+" QTLs where found!");
 			return results;
 		}
 		
+//		concepts = graph.getConceptsOfConceptClass(ccTrait);
+//		// Trait linked to QTL
+//		for(ONDEXConcept conTrait : concepts){
+//				//trait concept matches input terms
+//				if(OndexSearch.find(conTrait, keyword, false)){
+//					System.out.println("1");
+//					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(conTrait);
+//					for(ONDEXRelation r : rels){
+//						System.out.println("2");
+//						//get QTL concept
+//						System.out.println(ccQTL.toString() + " and " + r.getToConcept().getOfType());
+//						if(r.getToConcept().getOfType().equals(ccQTL)){
+//							System.out.println("3");
+//							//QTL-->Trait
+//							ONDEXConcept conQTL = r.getFromConcept();
+//							if(conQTL.getAttribute(attChromosome) != null){
+//								System.out.println("4");
+//								int chr = (Integer) conQTL.getAttribute(attChromosome).getValue();
+//								String chrName = chromBidiMap.get(chr);
+//								String start = conQTL.getAttribute(attBegin).getValue().toString();
+//								String end = conQTL.getAttribute(attEnd).getValue().toString();
+//								String label = conQTL.getConceptName().getName();
+//								String trait = "";
+//								if (attTrait != null) {
+//									trait = conQTL.getAttribute(attTrait).getValue().toString();
+//								}
+//								String significance = "";
+//								if(attSignificance != null)
+//									significance = conQTL.getAttribute(attSignificance).getValue().toString();
+//				
+//								results.add(new QTL(chr, chrName, start, end, label, significance, trait));
+//							}
+//						}
+//					}
+//				}
+//		}
+
 		
 		concepts = graph.getConceptsOfConceptClass(ccTrait);
 		// Trait linked to QTL
 		for(ONDEXConcept conTrait : concepts){
 				//trait concept matches input terms
 				if(OndexSearch.find(conTrait, keyword, false)){
-					
 					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(conTrait);
 					for(ONDEXRelation r : rels){
 						//get QTL concept
-						if(r.getToConcept().getOfType().equals(ccQTL)){
+						if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)){
 							//QTL-->Trait
 							ONDEXConcept conQTL = r.getFromConcept();
 							if(conQTL.getAttribute(attChromosome) != null){
@@ -728,19 +767,15 @@ public class OndexServiceProvider {
 								String start = conQTL.getAttribute(attBegin).getValue().toString();
 								String end = conQTL.getAttribute(attEnd).getValue().toString();
 								String label = conQTL.getConceptName().getName();
-								String trait = conQTL.getAttribute(attTrait).getValue().toString();
 								String significance = "";
-								if(conQTL.getAttribute(attSignificance) != null)
+								if(conQTL.getAttributes().contains(attSignificance) == true) {
 									significance = conQTL.getAttribute(attSignificance).getValue().toString();
-				
-								results.add(new QTL(chr, chrName, start, end, label, significance, trait));
+								}
+								results.add(new QTL(chr, chrName, start, end, label, significance, ""));
 							}
 						}
 					}
-					
-					
 				}
-			
 		}
 		
 		return results;

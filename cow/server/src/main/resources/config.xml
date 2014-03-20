@@ -2,10 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>Contains MultiThreadServer configuration values</comment>
-	<entry key="AnnotationPath">/var/www/html/cow_data/annotation/generated/</entry>
-	<entry key="GraphPath">/var/www/html/cow_data/graph/generated/</entry>
-	<entry key="ResultPath">/var/www/html/cow_data/graph/generated/</entry>
+	<entry key="DataPath">/var/www/html/cow_data/</entry>
 	<entry key="ServerPort">8189</entry>
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
 	<entry key="SpeciesTaxId">9913</entry>
+	<entry key="reference_genome">true</entry>	
 </properties>
