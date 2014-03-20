@@ -7,5 +7,5 @@
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
 	<entry key="SpeciesTaxId">112509</entry>
 	<!--<entry key="SpeciesTaxId">4513</entry>-->
-	<entry key="reference_genome">false</entry>
+	<entry key="reference_genome">true</entry>
 </properties>

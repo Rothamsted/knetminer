@@ -4,7 +4,7 @@
 	<div id="left_footer">
     	<img src="html/image/rothamsted_logo.png" /><img src="html/image/inta_logo.png" /><br />
         Contact: keywan.hassani-pak@rothamsted.ac.uk<br /> 
-        Developed at Rothamsted Research (<a href="http://www.rothamsted.ac.uk/csys/bioinf.php" target="_blank">Applied Bioinformatics Group</a>)<br />
+        Developed at Rothamsted Research (<a href="http://www.rothamsted.ac.uk/applied-bioinformatics" target="_blank">Applied Bioinformatics Group</a>)<br />
         in Collaboration with Martin Castellote and Sergio Feingold (<a href="http://inta.gob.ar/" target="_blank">INTA</a>, Argentina)
     </div>
     <div id="right_footer">

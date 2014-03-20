@@ -369,6 +369,7 @@ table.tablesorter tbody td {
 /* Legend */
 #legend_picture {position:relative;width:100%;padding-top:50px;}
 #legend_picture #legend_container {position:relative;margin:auto;width:500px;height:80px;}
+#legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px}
 
 /* General Styles */
 #wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../image/background.png) center;padding:0px 30px;  }

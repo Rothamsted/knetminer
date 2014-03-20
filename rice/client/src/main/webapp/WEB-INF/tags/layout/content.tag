@@ -129,12 +129,12 @@
                         <param name="quality" value="high" />
                         <param name="bgcolor" value="#FFFFFF" />
                         <param name="wmode" value="transparent">
-                        <param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&" />
+                        <param name="FlashVars" value="&longestChromosomeLength=196087864&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&" />
                         <embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high"
                             bgcolor="#FFFFFF" width="600" height="600" name="GViewer2"
                             align="middle" allowScriptAccess="sameDomain"
                             type="application/x-shockwave-flash"
-                            FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&"
+                            FlashVars="&longestChromosomeLength=196087864&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&"
                             pluginspage="http://www.macromedia.com/go/getflashplayer" />
                     </object>
                 </center>

@@ -2,9 +2,10 @@
 <div id="footer_spacer"></div>
 <div id="footer">
 	<div id="left_footer">
-    	<img src="html/image/rothamsted_logo.png" /><br />
+    	<img src="html/image/rothamsted_logo.png" /><img src="html/image/IPK-Logo.jpg" /><br />
         Contact: keywan.hassani-pak@rothamsted.ac.uk<br /> 
-        Developed at Rothamsted Research (<a href="http://www.rothamsted.ac.uk/applied-bioinformatics">Applied Bioinformatics Group</a>)
+        Developed at Rothamsted Research (<a href="http://www.rothamsted.ac.uk/applied-bioinformatics" target="_blank">Applied Bioinformatics Group</a>)<br />
+        in Collaboration with Maria Esch (<a href="http://www.ipk-gatersleben.de/" target="_blank">IPK Gatersleben</a>, Germany)
     </div>
     <div id="right_footer">
     	<img src="html/image/bbsrc_logo.png" /><br />
