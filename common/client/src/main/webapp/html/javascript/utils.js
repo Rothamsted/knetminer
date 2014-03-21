@@ -662,35 +662,37 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var usersList = '<td>'+values[7]+'</td>';
 				    
 				    //QTL coloum with information box
-				    var withinQTLs = values[8].split("||");
-				    var withinQTL = '<td>' + (withinQTLs.length-1);
-				    if(withinQTLs.length > 1){
+				    var withinQTL = '<td>';
+				    if(values[8].length > 1){
+				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
 				    	withinQTL = '<td>'+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
 				    	//Builds the evidence box
 				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
 				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
 				    	
-				    	for (var count_i = 0; count_i < (withinQTLs.length); count_i++) {
+				    	var uniqueQTLs = "";
+				    	for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
 				    		var withinQTL_elements = withinQTLs[count_i].split("//");
 				    		if (withinQTL_elements[1].length > 0) {
-				    			withinQTL = withinQTL+'<p>'+withinQTL_elements[1]+'</p>';
+				    			if (uniqueQTLs.indexOf(withinQTL_elements[1]) == -1) {
+				    				uniqueQTLs = uniqueQTLs + withinQTL_elements[1];
+					    			withinQTL = withinQTL+'<p>'+ (values[8].split("//"+withinQTL_elements[1]).length-1) + ' ' + withinQTL_elements[1]+'</p>';
+					    		}
 				    		}
 				    		else {
-				    			withinQTL = withinQTL+'<p>'+withinQTL_elements[0]+'</p>';
+				    			if (uniqueQTLs.indexOf(withinQTL_elements[0]) == -1) {
+				    				uniqueQTLs = uniqueQTLs + withinQTL_elements[0];
+					    			withinQTL = withinQTL+'<p>'+ (values[8].split(withinQTL_elements[0]+"//").length-1) + ' ' + withinQTL_elements[0]+'</p>';
+					    		}
 				    		}
-				    		
-//				    		withinQTL = withinQTL+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+'"><span onclick="$(\'#qtl_box_'+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+(withinQTLs.length-1)+'</span>';
-//				    		withinQTL = withinQTLs[1]+'<p>';
-//				    		
-//				    		//Builds the qtl box				    		
-//				    		withinQTL = withinQTL+'<div id="qtl_box_'+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+withinQTLs.length+'\').slideUp(100);"></a>';
-//							withinQTL = withinQTL+'</div>';
 				    	}
+				    }
+				    else {
+				    	withinQTL = withinQTL+'0';
 				    }
 				    withinQTL = withinQTL + '</td>';
 				    
-				    //var withinQTL = '<td>' + withinQTLs.length + '</td>';
 				    
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
