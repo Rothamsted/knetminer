@@ -1675,10 +1675,10 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				}
 
 				if(synonymsList != null){
-					//Creates de sorted list of synonyms
+					//Creates a sorted list of synonyms
 					sortedSynonymsList.putAll(synonymsList);
 					
-					//wirtes te topX values en the table
+					//writes the topX values in table
 					int topAux = 0;
 					for (Integer entry : sortedSynonymsList.keySet()) {
 						ONDEXConcept eoc = graph.getConcept(entry);
@@ -1691,6 +1691,8 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
+										if (name.contains("\n"))
+											name = name.replace("\n", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
 									}

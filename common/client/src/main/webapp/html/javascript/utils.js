@@ -671,19 +671,38 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
 				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
 				    	
-				    	var uniqueQTLs = "";
+				    	var uniqueQTLs = new Object();
+				    	var uniqueTraits = new Object();
+				    	
 				    	for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
 				    		var withinQTL_elements = withinQTLs[count_i].split("//");
 				    		if (withinQTL_elements[1].length > 0) {
-				    			if (uniqueQTLs.indexOf(withinQTL_elements[1]) == -1) {
-				    				uniqueQTLs = uniqueQTLs + withinQTL_elements[1];
-					    			withinQTL = withinQTL+'<p>'+ (values[8].split("//"+withinQTL_elements[1]).length-1) + ' ' + withinQTL_elements[1]+'</p>';
+				    			if (uniqueTraits[withinQTL_elements[1]] == null)
+				    				uniqueTraits[withinQTL_elements[1]] = 1;
+				    			else
+				    				uniqueTraits[withinQTL_elements[1]] = uniqueTraits[withinQTL_elements[1]] + 1;
+				    		}
+				    		else {
+				    			if (uniqueQTLs[withinQTL_elements[0]] == null)
+				    				uniqueQTLs[withinQTL_elements[0]] = 1;
+				    			else
+				    				uniqueQTLs[withinQTL_elements[0]] = uniqueQTLs[withinQTL_elements[0]] + 1;
+				    		}
+				    	}
+				    	
+				    	var unique = "";
+				    	for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
+				    		var withinQTL_elements = withinQTLs[count_i].split("//");
+				    		if (withinQTL_elements[1].length > 0) {
+				    			if (unique.indexOf(withinQTL_elements[1] + ";") == -1) {
+				    				unique = unique + withinQTL_elements[1] + ";";
+					    			withinQTL = withinQTL+'<p>'+ uniqueTraits[withinQTL_elements[1]] + ' ' + withinQTL_elements[1]+'</p>';
 					    		}
 				    		}
 				    		else {
-				    			if (uniqueQTLs.indexOf(withinQTL_elements[0]) == -1) {
-				    				uniqueQTLs = uniqueQTLs + withinQTL_elements[0];
-					    			withinQTL = withinQTL+'<p>'+ (values[8].split(withinQTL_elements[0]+"//").length-1) + ' ' + withinQTL_elements[0]+'</p>';
+				    			if (unique.indexOf(withinQTL_elements[0] + ";") == -1) {
+				    				unique = unique + withinQTL_elements[0] + ";";
+					    			withinQTL = withinQTL+'<p>'+ uniqueQTLs[withinQTL_elements[0]] + ' ' + withinQTL_elements[0]+'</p>';
 					    		}
 				    		}
 				    	}
@@ -774,11 +793,11 @@ function createGenesTable(tableUrl, keyword, rows){
 			"</table>" +
             "</div></div>";
     		
-//    		"<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
     		$("#tablesorter").tablesorter({ 
     	        headers: { 
     	            // do not sort "select" column 
-    	            8: {  sorter: false }
+    	        	5: {sorter:"digit"},
+    	            8: {sorter: false}
     	        } 
     	    }); 
     		$('input[name="chkall"]').click(function() {
