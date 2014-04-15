@@ -161,12 +161,17 @@ $(document).ready(
 		function(){
 			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
 			if(reference_genome == true){
-				$('#genomeorqtlsearchbox').show();	
-				
-			}else{
+				$('#genomeorqtlsearchbox').show();
+				if (typeof gviewer != "undefined" && gviewer == false) {
+					activateButton('resultsTable');
+					$('#pGViewer_button').hide();	
+					$('#pGViewer').hide();
+				}
+			}
+			else{
 				activateButton('resultsTable');
 				$('#pGViewer_button').hide();	
-				$('#pGViewer').hide();				
+				$('#pGViewer').hide();	
 			}
 			// Calculates the amounth of documents to be displayed with the current query
 			$('#keywords').keyup(function(){matchCounter();});
@@ -392,7 +397,7 @@ function searchKeyword(){
 				if(response.indexOf("NoFile:noGenesFound") !=-1 ||  !response.split(":")[4] > 0){
 					var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 					
-					if (reference_genome == true) {
+					if (typeof gviewer != "undefined" && gviewer != false) {
 						
 						var longestChromosomeLength="";
 						if (typeof longest_chr != "undefined") {
@@ -430,7 +435,7 @@ function searchKeyword(){
 					}
 					
 					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
-					var genomicView = '<div id="pGViewer" class="resultViewer"><p class="margin_left">Shift+Click on a gene to see its knowledge network.</p>';
+					var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
 						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map and Gene view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
@@ -666,7 +671,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				    if(values[8].length > 1){
 				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
-				    	withinQTL = '<td>'+'<div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
+				    	//a replace from dot to underline is necessary for html syntax
+				    	withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
 				    	//Builds the evidence box
 				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
 				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
@@ -842,6 +848,7 @@ function createEvidenceTable(tableUrl){
 			if(evidenceTable.length > 2) {
 				table = '';
 				table = table + '<p></p>';
+//				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a></p><br />';
 				table = table + '<div id="evidenceSummary"></div>';
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id="tablesorterEvidence" class="tablesorter">';
@@ -873,7 +880,14 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+values[2]+'</td>';
 					table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
-					table = table + '<td>'+values[5]+'</td>';
+//					table = table + '<td>'+values[5]+'</td>';
+					//QTL coloum with information box
+					table = table + '<td>';
+				    if(values[5].length > 1)
+				    	var table = table + values[5].split("||").length;
+				    else
+				    	table = table + '0';
+				    table = table + '</td>';
 					table = table + '</tr>';
 					//Calculates the summary box
 					if (containsKey(values[0],summaryArr)){
@@ -1043,8 +1057,13 @@ function createSynonymTable(tableUrl){
 									conceptTabStyles = 'conceptTabOn';	
 								else
 									conceptTabStyles = 'conceptTabOff';	
-									
-								tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div></a>';
+								
+								if (values[1] == "QTL")
+									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div></a>';
+								else if (values[1] == "Trait")
+									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_TO" title="'+values[1]+'"></div></div></a>';
+								else
+									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div></a>';
 								
 							}
 							//If is not a new document type a new row is added to the existing table

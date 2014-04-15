@@ -84,10 +84,13 @@ public class ClientWorker implements Runnable {
 		catch (IOException e) {
 			System.out.println(e.getMessage());
 			out.println("Bye.");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
-	protected String processRequest(String query) throws UnsupportedEncodingException {
+	protected String processRequest(String query) throws UnsupportedEncodingException, ParseException {
 		
 		System.out.println("Processing request...");
 		
@@ -289,7 +292,7 @@ public class ClientWorker implements Runnable {
 		return request;
 	}
 	
-	protected String callOndexProvider(String keyword, String mode, String listMode, List<QTL> qtl, List<String> list) {
+	protected String callOndexProvider(String keyword, String mode, String listMode, List<QTL> qtl, List<String> list) throws ParseException {
 
 		// Setup file names
 		long timestamp = System.currentTimeMillis();
@@ -327,7 +330,6 @@ public class ClientWorker implements Runnable {
 		//add QTL from knowledgebase to QTL list from user 
 		qtl.addAll(qtlDB);
 		System.out.println("Total number of QTL to display: "+qtl.size());
-		
 		
 		try {
 			// Genome search

@@ -53,11 +53,9 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.ONDEXRelation;
-import net.sourceforge.ondex.core.base.ConceptAccessionImpl;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
-import net.sourceforge.ondex.core.searchable.LuceneQueryBuilder;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.oxl.Export;
@@ -69,10 +67,12 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 
@@ -289,8 +289,6 @@ public class OndexServiceProvider {
 			URL motifsUrl = Thread.currentThread().getContextClassLoader()
 					.getResource("SemanticMotifs.txt");
 			
-
-
 			smp = new StateMachineFlatFileParser2();
 			try {
 				if(file.exists()){
@@ -349,7 +347,7 @@ public class OndexServiceProvider {
 
 		// oxl export
 		Export export = new Export();
-		export.setLegacyMode(true);
+//		export.setLegacyMode(true);
 		ONDEXPluginArguments ea = new ONDEXPluginArguments(
 				export.getArgumentDefinitions());
 		ea.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
@@ -471,8 +469,6 @@ public class OndexServiceProvider {
 			}
 			
 			
-			
-		
 			// search concept attributes
 			for (AttributeName att : atts) {
 //				Query qAtt = LuceneQueryBuilder.searchConceptByConceptAttributeExact(att, keyword);
@@ -523,7 +519,6 @@ public class OndexServiceProvider {
 			
 			System.out.println("Query: "+qAnno.toString(fieldNameCA));
 			System.out.println("Annotation hits: "+sHitsAnno.getOndexHits().size());
-			
 			
 		return hit2score;		
 	}
@@ -613,6 +608,18 @@ public class OndexServiceProvider {
 	}
 	
 	/**
+	 * Did you mean function for spelling correction
+	 * @param String keyword
+	 * @return list of spell corrected words
+	 */
+	public List<String> didyoumean(String keyword) throws ParseException {
+			List<String> alternatives = new ArrayList<String>();
+			
+			return alternatives;
+	}
+		
+	
+	/**
 	 * Searches for genes within genomic regions (QTLs)
 	 * 
 	 * @param List<QTL> qtls
@@ -621,7 +628,7 @@ public class OndexServiceProvider {
 	 */
 	public Set<ONDEXConcept> searchQTLs(List<QTL> qtls) {
 		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();		
-					
+		
 		long chrQTL, startQTL, endQTL;
 		for(QTL qtl : qtls) {
 			try {
@@ -672,7 +679,7 @@ public class OndexServiceProvider {
 	 * @param keyword
 	 * @return list of QTL objects
 	 */
-	public List<QTL> findQTL(String keyword){
+	public List<QTL> findQTL(String keyword) throws ParseException {
 		
 		ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
 		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
@@ -687,7 +694,6 @@ public class OndexServiceProvider {
 		AttributeName attSignificance = graph.getMetaData().getAttributeName("Significance");
 		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
 		AttributeName attTrait = graph.getMetaData().getAttributeName("Trait");
-		Set<ONDEXConcept> concepts = null;
 		
 		List<QTL> results = new ArrayList<QTL>();
 		
@@ -710,30 +716,47 @@ public class OndexServiceProvider {
 			}
 		}
 		else {
-			concepts = graph.getConceptsOfConceptClass(ccTrait);
-			// Trait linked to QTL
-			for(ONDEXConcept conTrait : concepts){
-				//trait concept matches input terms
-				if(OndexSearch.find(conTrait, keyword, false)){
-					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(conTrait);
-					for(ONDEXRelation r : rels){
-						//get QTL concept
-						if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)){
-							//QTL-->Trait
-							ONDEXConcept conQTL = r.getFromConcept();
-							if(conQTL.getAttribute(attChromosome) != null){
-								int chr = (Integer) conQTL.getAttribute(attChromosome).getValue();
-								String chrName = chromBidiMap.get(chr);
-								String start = conQTL.getAttribute(attBegin).getValue().toString();
-								String end = conQTL.getAttribute(attEnd).getValue().toString();
-								String label = conQTL.getConceptName().getName();
-								String significance = "";
-								if(conQTL.getAttribute(attSignificance) != null) {
-									significance = conQTL.getAttribute(attSignificance).getValue().toString();
-								}
-								String trait = conTrait.getConceptName().getName();
-								results.add(new QTL(chr, chrName, start, end, label, significance, trait));
+			//be careful with the choice of analyzer: ConceptClasses are not indexed in lowercase letters which let the StandardAnalyzer crash
+			Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+			Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
+
+			String fieldCC = getFieldName("ConceptClass", null);
+			QueryParser parserCC = new QueryParser(Version.LUCENE_36, fieldCC, analyzerWS);
+			Query cC = parserCC.parse("Trait");
+
+			String fieldCN = getFieldName("ConceptName", null);
+			QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldCN, analyzerSt);
+			Query cN = parserCN.parse(keyword);
+			
+			BooleanQuery finalQuery = new BooleanQuery();
+			finalQuery.add(cC, Occur.MUST);
+			finalQuery.add(cN, Occur.MUST);
+			System.out.println("QTL search query: "+finalQuery.toString());
+			
+			ScoredHits<ONDEXConcept> hits = lenv.searchTopConcepts(finalQuery, 100);
+			
+			for(ONDEXConcept c : hits.getOndexHits()){
+				if (c instanceof LuceneConcept) {
+					c = ((LuceneConcept) c).getParent();
+				}
+				Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
+				for(ONDEXRelation r : rels){
+					//get QTL concept
+					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)){
+						//QTL-->Trait
+						ONDEXConcept conQTL = r.getFromConcept();
+						if(conQTL.getAttribute(attChromosome) != null){
+							int chr = (Integer) conQTL.getAttribute(attChromosome).getValue();
+							String chrName = chromBidiMap.get(chr);
+							String start = conQTL.getAttribute(attBegin).getValue().toString();
+							String end = conQTL.getAttribute(attEnd).getValue().toString();
+							String label = conQTL.getConceptName().getName();
+							String significance = "";
+							if(conQTL.getAttribute(attSignificance) != null) {
+								significance = conQTL.getAttribute(attSignificance).getValue().toString();
 							}
+							String trait = c.getConceptName().getName();
+							results.add(new QTL(chr, chrName, start, end, label, significance, trait));
 						}
 					}
 				}
@@ -1449,7 +1472,7 @@ public class OndexServiceProvider {
 							Long qtlStart = Long.parseLong(loci.getStart());
 							Long qtlEnd = Long.parseLong(loci.getEnd());
 							
-							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd ){
+							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
 								numQTL++;
 							}
 						}
@@ -1531,11 +1554,6 @@ public class OndexServiceProvider {
 				
 				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
 				+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
-
-				
-//				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-//						+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + numQTL + "\t" + evidence + "\n");
-				
 			}
 			out.close();
 		} catch (IOException e) {
@@ -1558,10 +1576,17 @@ public class OndexServiceProvider {
 	
 	public boolean writeEvidenceTable(HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<QTL> qtls, String fileName){
 		
+		ONDEXGraphMetaData md = graph.getMetaData();
+		AttributeName attChr = md.getAttributeName("Chromosome");
+		AttributeName attScaf = md.getAttributeName("Scaffold");
+		AttributeName attBeg = md.getAttributeName("BEGIN");
+		AttributeName attEnd = md.getAttributeName("END");
+		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			//writes the header of the table
 			out.write("TYPE\tNAME\tSCORE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+			
 			for(ONDEXConcept lc : luceneConcepts.keySet()){
 				//Creates type,name,score and numberOfGenes
 				String type = lc.getOfType().getId();
@@ -1579,19 +1604,55 @@ public class OndexServiceProvider {
 				//Creates numberOfUserGenes and numberOfQTL
 				Integer numberOfUserGenes = 0;	
 				Integer numberOfQTL = 0;
-//				Set<ONDEXConcept> genesWithinQTL = searchQTLs(qtls);  //Note: QTLs has been temporarily disabled 
+				List<QTL> evidenceQTL = new ArrayList<QTL>();
+				
+				String infoQTL = "";
 				for (int log : listOfGenes) {
-					
 					if((userGenes != null)&&(graph.getConcept(log) != null)&&(userGenes.contains(graph.getConcept(log)))){
 						numberOfUserGenes++;
 					}
-//					if((genesWithinQTL != null)&&(graph.getConcept(log) != null)&&(genesWithinQTL.contains(graph.getConcept(log)))){
-//						numberOfQTL++;
-//					}
+					
+					int chr = 0, beg = 0, end = 0;
+					if (graph.getConcept(log).getAttribute(attChr) != null) {
+						chr = (Integer) graph.getConcept(log).getAttribute(attChr).getValue();
+					}			
+					else if (graph.getConcept(log).getAttribute(attScaf) != null) {
+						chr = (Integer) graph.getConcept(log).getAttribute(attScaf).getValue();
+					} 
+					if (graph.getConcept(log).getAttribute(attBeg) != null) {
+						beg = (Integer) graph.getConcept(log).getAttribute(attBeg).getValue();
+					}
+					if (graph.getConcept(log).getAttribute(attEnd) != null) {
+						end = (Integer) graph.getConcept(log).getAttribute(attEnd).getValue();
+					}
+					
+					if(!qtls.isEmpty()){
+						for(QTL loci : qtls) {
+							try{
+								Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+								Long qtlStart = Long.parseLong(loci.getStart());
+								Long qtlEnd = Long.parseLong(loci.getEnd());
+								
+								if((qtlChrom == chr) && (beg >= qtlStart) && (end <= qtlEnd)){
+									if (!evidenceQTL.contains(loci)) {
+										numberOfQTL++;
+										evidenceQTL.add(loci);
+										if (infoQTL == "")
+											infoQTL += loci.getLabel() + "//" + loci.getTrait();
+										else
+											infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+									}
+								}
+							}
+							catch(Exception e){
+								System.out.println("An error occurred in method: writeEvidenceOut.");
+								System.out.println(e.getMessage());
+							}
+						}
+					}
 				}
 				//writes the row
-//				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
-				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t0\t"+ondexId+"\n");
+				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+infoQTL+"\t"+ondexId+"\n");
 			}
 			out.close();
 			return true;
@@ -1691,8 +1752,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
+										//error going around for publication suggestions
 										if (name.contains("\n"))
 											name = name.replace("\n", "");
+										//error going around for qtl suggestions
+										if (name.contains("\""))
+											name = name.replaceAll("\"", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
 									}
