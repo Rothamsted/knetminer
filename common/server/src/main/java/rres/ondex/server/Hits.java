@@ -90,11 +90,21 @@ public class Hits {
 	}	
 	public void setUsersGenes(Set<ONDEXConcept> usersGenes){	
 		this.usersGenes = usersGenes;
-		if(usersGenes != null && usersGenes.size() > 0){	
-			this.usersGenesRelated = ondexProvider.searchList(usersGenes, keyword);	
-			//this.sortedCandidates.removeAll(this.usersGenesRelated);
-			System.out.println("we found related: "+usersGenesRelated.size());
-		}
+		this.usersGenesRelated = usersGenes;
+		
+		//this should work but it removes not related genes from usersGenes		
+//		Set<ONDEXConcept> temp = usersGenes;
+//		temp.retainAll(sortedCandidates);
+//		this.usersGenesRelated = temp;
+//		System.out.println("Number of user provided genes linked to query: "+usersGenesRelated.size());
+//		
+		//old version
+//		if(usersGenes != null && usersGenes.size() > 0){	
+//			this.usersGenesRelated = ondexProvider.searchList(usersGenes, keyword);
+//			
+//			//this.sortedCandidates.removeAll(this.usersGenesRelated);
+//			System.out.println("we found related: "+usersGenesRelated.size());
+//		}
 	}	
 	public Set<ONDEXConcept> getUsersGenes(){	
 		return this.usersGenes;

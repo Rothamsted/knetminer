@@ -10,16 +10,15 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.lucene.queryParser.ParseException;
-
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
+
+import org.apache.lucene.queryParser.ParseException;
 
 /**
  * @author huf
@@ -308,6 +307,7 @@ public class ClientWorker implements Runnable {
 		Set<ONDEXConcept> userGenes = null;		
 		if(list != null && list.size() > 0) {
 			userGenes = ondexProvider.searchGenes(list);
+			System.out.println("Number of user provided genes: "+userGenes.size());
 		}
 		
 		//find qtl in knowledgebase that match keywords
@@ -348,13 +348,13 @@ public class ClientWorker implements Runnable {
 					System.out.println("Genes after QTL filter: "+genes.size());
 				}
 				if(list.size() > 0){
-					Set<ONDEXConcept> userList = ondexProvider.searchGenes(list);
+					Set<ONDEXConcept> userList = userGenes;
 					if(mode.equals("qtl") && listMode.equals("GLrestrict")){
 						ArrayList<ONDEXConcept> userListArray = new ArrayList<ONDEXConcept>(userList);
 						userListArray = ondexProvider.filterQTLs(userListArray, qtl);
 						userList = new HashSet<ONDEXConcept>(userListArray);
+						System.out.println("Number of user provided genes within QTL: "+userList.size());
 					}
-					System.out.println("userlist 1 "+userList.size());
 					qtlnetminerResults.setUsersGenes(userList);
 				}
 				
@@ -401,7 +401,7 @@ public class ClientWorker implements Runnable {
 			}
 		} 
 		catch (Exception e) {	
-			System.out.println("exception "+e.getMessage());
+			System.err.println("exception "+e.getMessage());
 			e.printStackTrace();
 		}	
 		System.out.println("request is "+request);

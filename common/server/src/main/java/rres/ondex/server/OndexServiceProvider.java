@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -578,34 +577,34 @@ public class OndexServiceProvider {
 		return candidateGenes;				
 	}
 	
-	/**
-	 * From the given set concepts (genes) here we return those associated with the keyword.
-	 * 
-	 * @param List<String> list
-	 * @param String keyword
-	 * 
-	 * @return ArrayList<ONDEXConcept> genes
-	 */
-	public Set<ONDEXConcept> searchList(Set<ONDEXConcept> list, String keyword){
-		Set<ONDEXConcept> relatedGenes = new HashSet<ONDEXConcept>();		
-		if(list.size() > 0){
-			Iterator<ONDEXConcept> itr = list.iterator();
-			ONDEXConcept concept;
-			while(itr.hasNext()){						
-				concept = itr.next();			
-				Set<Integer> accessions = mapGene2Concepts.get(concept.getId());				
-				for(Integer acc : accessions){
-					ONDEXConcept linkedConcept = graph.getConcept(acc);
-					if (OndexSearch.find(linkedConcept, keyword, false)) {				
-						relatedGenes.add(concept);
-						break;
-					}					
-				}
-			}
-		}
-		System.out.println("related genes size: "+relatedGenes.size());
-		return relatedGenes;		
-	}
+//	/**
+//	 * From the given set concepts (genes) here we return those associated with the keyword.
+//	 * 
+//	 * @param List<String> list
+//	 * @param String keyword
+//	 * 
+//	 * @return ArrayList<ONDEXConcept> genes
+//	 */
+//	public Set<ONDEXConcept> searchList(Set<ONDEXConcept> list, String keyword){
+//		Set<ONDEXConcept> relatedGenes = new HashSet<ONDEXConcept>();
+//		
+//		for(ONDEXConcept concept : list){
+//			if(mapGene2Concepts.containsKey(concept.getId())){
+//				Set<Integer> accessions = mapGene2Concepts.get(concept.getId());				
+//				for(Integer acc : accessions){
+//					ONDEXConcept linkedConcept = graph.getConcept(acc);
+//					if (OndexSearch.find(linkedConcept, keyword, false)) {				
+//						relatedGenes.add(concept);
+//						break;
+//					}					
+//				}
+//			}
+//		}
+//			
+//
+//		System.out.println("related genes size: "+relatedGenes.size());
+//		return relatedGenes;		
+//	}
 	
 	/**
 	 * Did you mean function for spelling correction
@@ -1000,18 +999,69 @@ public class OndexServiceProvider {
 				if(luceneResults.containsKey(keywordCon)){
 					// annotate the semantic motif in the new Ondex graph
 					highlightPath(path, graphCloner);
+					
+					ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
+					// if keyword provided, annotate the
+					
+					if(!keywordConcepts.contains(cloneCon)){
+						OndexSearch.highlight(cloneCon, keyword);
+						keywordConcepts.add(cloneCon);
+					}
 				}
 				
-				ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
-				// if keyword provided, annotate the
+				ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);
+				candidateGenes.add(cloneCon);
 				
-				if(!keywordConcepts.contains(cloneCon)){
-					if(OndexSearch.highlight(cloneCon, keyword)){
-						candidateGenes.add(gene);
+
+			}
+		}
+		
+		if(keywordConcepts.isEmpty()){
+			Set<ONDEXConcept> cons = subGraph.getConcepts();
+			Set<ONDEXRelation> rels = subGraph.getRelations();
+			
+			ONDEXGraphMetaData md = subGraph.getMetaData();
+			AttributeName attFlagged = md.getAttributeName("flagged");
+			AttributeName attVisible = md.getAttributeName("visible");
+			AttributeName attSize = md.getAttributeName("size");
+			
+			if (attSize == null)
+				attSize = md.getFactory().createAttributeName("size", Integer.class);
+			if (attVisible == null)
+				attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+			if (attFlagged == null)
+				attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
+			
+			
+			for (ONDEXConcept gene : candidateGenes) {
+				gene.createAttribute(attFlagged, true, false);
+				gene.createAttribute(attVisible, true, false);
+				gene.createAttribute(attSize, new Integer(70), false);
+			}
+			
+			for(ONDEXConcept c : cons){
+				
+				if(c.getOfType().getId().equalsIgnoreCase("Publication") ||
+						c.getOfType().getId().equalsIgnoreCase("CelComp")){
+					c.createAttribute(attVisible, false, false);
+				}
+				else if(c.getOfType().getId().equalsIgnoreCase("BioProc")){
+					c.createAttribute(attSize, new Integer(60), false);
+					c.createAttribute(attVisible, true, false);					
+				}
+				else {
+					if(c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null){
+						c.createAttribute(attSize, new Integer(30), false);
+						c.createAttribute(attVisible, true, false);
 					}
-					keywordConcepts.add(cloneCon);
 				}
 			}
+			
+			for(ONDEXRelation r: rels){
+				r.createAttribute(attVisible, true, false);
+				r.createAttribute(attSize, new Integer(3), false);
+			}
+			
 		}
 		
 		ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
@@ -1094,7 +1144,7 @@ public class OndexServiceProvider {
 		if (g.getAttribute(attSize) == null) {
 
 			// initial size
-			g.createAttribute(attSize, new Integer(30), false);
+			g.createAttribute(attSize, new Integer(40), false);
 			g.createAttribute(attVisible, true, false);
 			g.createAttribute(attFlagged, true, false);
 		} else {
@@ -1109,13 +1159,13 @@ public class OndexServiceProvider {
 			ONDEXRelation r = graphCloner.cloneRelation(rel);
 			if (r.getAttribute(attSize) == null) {
 				// initial size
-				r.createAttribute(attSize, new Integer(3), false);
+				r.createAttribute(attSize, new Integer(5), false);
 				r.createAttribute(attVisible, true, false);
 			} else {
 				// increase size for more supporting evidence
-				Integer size = (Integer) r.getAttribute(attSize).getValue();
-				size++;
-				r.getAttribute(attSize).setValue(size);
+//				Integer size = (Integer) r.getAttribute(attSize).getValue();
+//				size++;
+//				r.getAttribute(attSize).setValue(size);
 			}
 		}
 
