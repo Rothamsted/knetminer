@@ -469,9 +469,9 @@ function generateNetwork(url,list){
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
 
-	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet." + 
-        		"Alternatively it can be <a href="+data_url + oxl +">downloaded</a> and opened in the <a href=http://www.ondex.org>Ondex desktop application</a>.</br></br>" +
-        		"If you see an error and the network is not loading try to add <a href=http://ondex.rothamsted.ac.uk>http://ondex.rothamsted.ac.uk</a> to your exception site list in the java control panel.</p></br></br>" +
+	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet. " + 
+        		"Alternatively it can be <a href="+data_url + oxl +" target=_blank>downloaded</a> and opened in the <a href=http://www.ondex.org target=_blank>Ondex desktop application</a>.</br></br>" +
+        		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</p></br></br>" +
         		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
         		"<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
 	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
