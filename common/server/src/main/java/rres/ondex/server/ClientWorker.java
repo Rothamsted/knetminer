@@ -348,7 +348,7 @@ public class ClientWorker implements Runnable {
 					System.out.println("Genes after QTL filter: "+genes.size());
 				}
 				if(list.size() > 0){
-					Set<ONDEXConcept> userList = userGenes;
+					Set<ONDEXConcept> userList = ondexProvider.searchGenes(list);
 					if(mode.equals("qtl") && listMode.equals("GLrestrict")){
 						ArrayList<ONDEXConcept> userListArray = new ArrayList<ONDEXConcept>(userList);
 						userListArray = ondexProvider.filterQTLs(userListArray, qtl);
