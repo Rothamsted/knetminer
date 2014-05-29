@@ -1,263 +1,125 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta name="description" content="QTLNetMiner - Mining and prioritizing candidate genes in integrated Ondex networks for plant and animal genomes.">
+<meta name="Keywords" content="QTLNetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Barley Release Notes</title>
+<style type="text/css">
+body {margin:0px;padding:0px;background:#EEEEEE; font-family:Verdana, Arial, Helvetica, sans-serif;}
+a {text-decoration:none; color:#666666;}
+a img {text-decoration:none; border:0px;}
+#wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../html/image/background.png) center;padding:0px 30px;  } /* padding:0px 17px 0px 17px;background-image:url(../html/image/wrapper_bg.png); */
+#header {position:relative; height:125px;clear:left;}
+#header #qtlLogo {position:absolute; top:25px; left:30px;}
+#header #OrgLogo {position:absolute; top:6px; right:40px;}
+#header #motto {position:absolute; top:110px; left:30px; font-size:12px;}
+#header_spacer {position:relative; height:35px;width:960px; background:url(../html/image/divisor_header.png) repeat-x ;clear:left;}
+#content {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:justify;}
+#content span {width:930px;clear:left;}
+#content .divisor {position:relative; width:960px;height:17px;clear:left;}
+#content .title {font-size:24px;}
+#content img {position:absolute;}
+#footer_spacer {position:relative; height:2px;width:960px; background:url(../html/image/divisor_footer.png) repeat-x ;clear:left;}
+#footer {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:center; height:70px;}
+#footer #left_footer {position:absolute;left:8px;top:5px;text-align:left;font-size:10px;}
+#footer #right_footer {position:absolute;right:8px;top:5px;text-align:right;font-size:10px;}
+</style>
+
 </head>
 
 <body>
-<h1>Barley Release Notes</h1>
 
-<!-- h:<div>
-  <h2>Metadata</h2>
-</div>
-<ul>
-	<p>
-	<table border="0">
-		<tr>
-		<td><strong>Gene-Protein</strong></td>
-		<td></td>
-		<td></td>
-		<td><strong>InterPro-Domain</strong></td>
-		<td></td>
-		<td></td>
-		<td><strong>PFam-Domain</strong></td>
-		<td></td>
-		<td></td>
-		<td><strong>Biomart-Homology</strong></td>
-		<td></td>
-		<td></td>
-		<td><strong>Decypher-Homology</strong></td>
-		<td></td>
-		<td></td>
-		</tr>
-		<tr>
-		<td>Genes: 24243</td>
-		<td></td>
-		<td></td>
-		<td>Proteins: 39413</td>
-		<td></td>
-		<td></td>
-		<td>Proteins: 37023</td>
-		<td></td>
-		<td></td>
-		<td>Proteins: 57376</td>
-		<td></td>
-		<td></td>
-		<td>Proteins: 13480</td>
-		</tr>
-		<tr>
-		<td>Proteins: 62240</td>
-		<td></td>
-		<td></td>
-		<td>Domains: 5642</td>
-		<td></td>
-		<td></td>
-		<td>Domains: 3499</td>
-		<td></td>
-		<td></td>
-		<td>ortho: 75999</td>
-		<td></td>
-		<td></td>
-		<td>h_s_s: 55495</td>
-		</tr>
-		<tr>
-		<td>encodes: 62240</td>
-		<td></td>
-		<td></td>
-		<td>has_Domain: 97385</td>
-		<td></td>
-		<td></td>
-		<td>has_Domain: 49080</td>
-		</tr>
-	</table> 
-</p>
-</ul>/ -->
+<div id="wrapper">
+	<div id="header">
+    	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner"><img src="../html/image/qtl_logo.png" id="qtlLogo" /></a>
+        <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerBarley"><img src="../html/image/organism.png" id="OrgLogo" height="120"/></a>
+        <span id="motto">A tool for the discovery of candidate genes controlling complex traits.</span>
+    </div>
+    <div id="header_spacer"></div>
+    <div id="content">
+    	<div class="divisor">&nbsp;</div>
+        	<span class="title"><strong>Barley Release Notes</strong> (Updated: 25/05/2014)</span>
+        <div class="divisor">&nbsp;</div>
+    	<span>
 
-<p>The final Barley network contains <strong>342439 concepts</strong> and <strong>1044048 relations</strong>.</p>
 
-<div>
-  <h2>Barley</h2>
-</div>
+<p>The final Barley network has <strong>365684 concepts</strong> and <strong>1154766 relations</strong>.</p>
+<p>The QTLNetMiner instance for Barley (Hordeum vulgare) works on the 79,379 gene models provided by MIPS and IPK Gatersleben. Overall 26,159 genes are high confidence and 53.220 are low confidence.</p>
 
 <ul>
-	<li><p>Gene-Protein (Helmholz Centre Munich - MIPS)</p></li>
+	<p><strong>Raw Data</strong></p>
 	<ul>
-    	<li>Raw data</li>
+    	<li>Gene</li>
     	<ul>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_ProteinSeq.fa">barley_HighConf_genes_MIPS_23Mar12_ProteinSeq.fa from MIPS</a></li>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_LowConf_genes_MIPS_23Mar12_ProteinSeq.fa">barley_LowConf_genes_MIPS_23Mar12_ProteinSeq.fa from MIPS</a></li>
-      		<li>Gff3 File IPK Gatersleben</li>
+      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_ProteinSeq.fa">HighConf genes ProteinSeq.fa</a></li>
+      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_LowConf_genes_MIPS_23Mar12_ProteinSeq.fa">LowConf genes ProteinSeq.fa</a></li>
       	</ul>
-    	<li>Parsers</li>
+    	<li>Protein</li>
     	<ul>
-     	 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_Protein/Gene_Protein_WGSMorex.xml">Gene_Protein.xml</a></li>
+     		<li>Gff3 File IPK Gatersleben</li> 	
+		</ul>
+    	<li>Protein-Domain</li>
+    	<ul>
+			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
+			 and <a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_HumReadDesc.txt">HighConf genes HumReadDesc</a></li>
+    		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
+      		 and <a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_PFAMs.txt">HighConf genes PFAM</a></li>
     	</ul>
-    	<li>Ondex file</li>
+    	<li>Gene Ontology</li>
     	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_Protein/Gene_Protein_WGSMorex.oxl">Gene_Protein.oxl</a></li>
+      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_GOs.txt">HighConf genes GOs</a></li>
+ 		</ul>
+    	<li>References</li>
+    	<ul>
+			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
+			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
     	</ul>
-  	</ul>
-
-	<li><p>Protein-Domain (MIPS + Ensembl)</p></li>
-	InterPro
-		<ul>
-		<li>Raw data</li>
+    	<li>Homology</li>
     	<ul>
-      		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
-    		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_HumReadDesc.txt">barley_HighConf_genes_MIPS_23Mar12_HumReadDesc.txt</a> <a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_InterPro/barley_HighConf_genes_MIPS_23Mar12_HumReadDesc_modified.txt">(processed file for next steps)</a></li>
+    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.homologs.ensembl_gene_id|hvulgare_eg_gene.default.homologs.ensembl_transcript_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|hvulgare_eg_gene.default.homologs.athaliana_eg_orthology_type|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_dn|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ds|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Barley - Arabidopsis</a></li>
+		<li>Decypher</li>
     	</ul>
-    	<li>Parsers</li>
+    	<li>Ontologies</li>
     	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_InterPro/Protein_InterPro_Ensembl_console.txt">Protein_InterPro_Ensembl_console.txt</a></li>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_InterPro/Protein_InterPro_Mips_console.txt">Protein_InterPro_Mips_console.txt</a></li>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_InterPro/Protein_InterPro.xml">Protein_InterPro.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_InterPro/Protein_InterPro2.oxl">Protein_InterPro.oxl</a> (Ensembl data source object were deleted)</li>
-    	</ul>
-  	</ul>
-	PFAM
-	<ul>
-		<li>Raw data</li>
-    	<ul>
-      		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.pfam_pf|hvulgare_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_PFAMs.txt">barley_HighConf_genes_MIPS_23Mar12_IPROScan_PFAMs.txt from MIPS</a></li>
-    	</ul>
-    	<li>Parsers</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_PFam/Protein_PFam_Ensembl_console.txt">Protein_PFam_Ensembl_console.txt</a></li>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_PFam/Protein_PFam_Mips_console.txt">Protein_PFam_Mips_console.txt</a></li>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_PFam/Protein_PFam.xml">Protein_PFam.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Protein_Domain/Protein_PFam/Protein_PFam2.oxl">Protein_PFam.oxl</a> (Ensembl data source object were deleted)</li>
-    	</ul>
-  	</ul>
-    	
-	<li><p>Gene-GO (MIPS)</p></li>
-	<ul>
-    	<li>Raw data</li>
-    	<ul>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_GOs.txt">barley_HighConf_genes_MIPS_23Mar12_IPROScan_GOs.txt from MIPS</a> (processing necessary)</li>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/BioProc.txt">BioProc.txt</a></li>
- 	 		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/CelComp.txt">CelComp.txt</a></li>
- 	 	 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/MolFunc.txt">MolFunc.txt</a></li>
-      	</ul>
-    	<li>Parsers</li>
-    	<ul>
-     	 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/Gene_GO_console.txt">Gene_GO_console.txt</a></li>
-     	 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/Gene_GO.xml">Gene_GO.xml</a></li>
-    	</ul>
-    	<li>Ondex file</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Gene_GO/Gene_GO.oxl">Gene_GO.oxl</a></li>
+    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
     	</ul>
   	</ul>
   	
-  	
-  	<li><p>Organism network</p></li>
+  	<p><strong>Networks</strong></p>
+	
+	All necessary files to create the final Barley network can be find <a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/">here</a>.</br>
+	XML files include the workflow information for Ondex and OXL files are the resulting networks.</br></br>
 	<ul>
-    	<li>Parser</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Barley_WGSMorex_Mips.xml">Barley.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/Barley_WGSMorex_Mips2.oxl">Barley.oxl</a> (Ensembl data source object were deleted)</li>
-    	</ul>
-  	</ul>
-
-	<li><p>References</p></li>
-  	<ul>
-    	<li>Plants (UniProt) - informations of well observed plant organisms excluding Arabidopsis</li>
-    	<ul>
-      		<li>Raw data</li>
-      		<ul>
-    			UniProt: <a href="http://www.uniprot.org/uniprot/?query=%28taxonomy%3A33090+NOT+taxonomy%3A3702%29+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes AND keyword:1185</a>
-      		</ul>
-      		<li>Parsers</li>
-      		<ul>
-      			<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml</a>
-      		</ul>
-      		<li>Ondex file</li>
-      		<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl</a>
-	  		</ul>
-    	</ul>
-    	<li>Arabidopsis (TAIR)</li>
-    	<ul>
-     		<li>Raw data</li>
-      		<ul>
-      			see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a>
-      		</ul>
-      		<li>Parsers</li>
-      		<ul>
-      			<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl</a>
-      		</ul>
-      		<li>Ondex file</li>
-      		<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml</a>
-	  		</ul>
-    	</ul>
-  	</ul>
-
-  	<li><p>Homology</p></li>
-  	<ul>
-    	<li>Arabidopsis and Plants (Decypher)</li>
-    	<ul>
-      		<li>Decypher config file</li>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig_Arabidopsis">DecypherConfig_Arabidopsis</a></ul>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig_Plants">DecypherConfig_Plants</a></ul>
-    	</ul>
-    	<ul>
-      		<li>Decypher command file</li>
-      		<ul>
-      			<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt">Decypher_commands.txt</a>
-      		</ul>
-    	</ul>
-    	<ul>
-			<li>Parsers</li>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants_Mips_console.txt">Barley_Arabidopsis_Mips_console.txt</a></ul>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants_Mips_console.txt">Barley_Plants_console_Mips.txt</a></ul>
-    	</ul>
-    	<ul>
-      		<li>Ondex file</li>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Arabidopsis_Barley_Mips.oxl">Arabidopsis_Barley_Mips.oxl</a></ul>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Arabidopsis_Mips.oxl">Barley_Arabidopsis_Mips.oxl</a></ul>
-      		<ul><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Barley_Plants_Mips.oxl">Barley_Plants_Mips.oxl</a></ul>
-    	</ul>
-    	<li>Arabidopsis (Biomart)</li>
-    	<ul>
-      		<li>Raw Data</li>
-      		<ul>
-      			<a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=hvulgare_eg_gene.default.homologs.ensembl_gene_id|hvulgare_eg_gene.default.homologs.ensembl_transcript_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|hvulgare_eg_gene.default.homologs.athaliana_eg_orthology_type|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_dn|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ds|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Barley - Arabidopsis</a>
-	  		</ul>
-	  		<li>Parsers</li>
-      		<ul>
-      			<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis_console.txt">Barley_Arabidopsis_console.txt</a>
-	  		</ul>
-	  		<li>Ondex file</li>
-      		<ul>
-      			<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Barley_Arabidopsis.oxl">Barley_Arabidopsis.oxl</a>
-	  		</ul>
-    	</ul>
-  	</ul>
-
-	<li><p>Final Network</p></li>
-	<ul>
-    	<li>Parser</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/Barley_WGSMorex_Mips_KB2013.xml">Barley_KB2014.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/Barley_WGSMorex_Mips_KB2013.oxl">Barley_KB2014.oxl</a></li>
-    	</ul>
-  	</ul>
-
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/">Organism</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/">Final Network</a></li>
+	</ul>
 </ul>
+
+
+
+        </span>
+    </div>
+<div id="footer_spacer"></div>
+<div id="footer">
+	<div id="left_footer">
+    	<a target="_blank" href="http://www.rothamsted.ac.uk"><img src="../html/image/rothamsted_logo.png" /></a><br />
+    	Developed at Rothamsted Research (<a target="_blank" href="http://www.rothamsted.ac.uk/applied-bioinformatics">Applied Bioinformatics Group</a>)<br />
+        Contact: keywan.hassani-pak@rothamsted.ac.uk
+    </div>
+    <div id="right_footer">
+    	<a target="_blank" href="http://www.bbsrc.ac.uk"><img src="../html/image/bbsrc_anniversary_logo.png"/></a><br/>
+        This work was supported by<br /> 
+        BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />
+    </div>
+</div>
+</div>
+
+
 </body>
 </html>
