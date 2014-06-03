@@ -346,13 +346,13 @@ public class OndexServiceProvider {
 
 		// oxl export
 		Export export = new Export();
-//		export.setLegacyMode(true);
+		export.setLegacyMode(true);
 		ONDEXPluginArguments ea = new ONDEXPluginArguments(
 				export.getArgumentDefinitions());
 		ea.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
+		ea.addOption("GZip", true);
 		export.setArguments(ea);
 		export.setONDEXGraph(graph2);
-
 		try {
 			export.start();
 		} catch (IOException e) {
@@ -628,26 +628,28 @@ public class OndexServiceProvider {
 	public Set<ONDEXConcept> searchQTLs(List<QTL> qtls) {
 		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();		
 		
-		long chrQTL, startQTL, endQTL;
+		int chrQTL, startQTL, endQTL;
 		for(QTL qtl : qtls) {
 			try {
 				chrQTL = qtl.getChrIndex();
-				startQTL = Long.parseLong(qtl.getStart());
-				endQTL = Long.parseLong(qtl.getEnd());
+				startQTL = Integer.parseInt(qtl.getStart());
+				endQTL = Integer.parseInt(qtl.getEnd());
 				// swap start with stop if start larger than stop
 				if (startQTL > endQTL) {
-					long tmp = startQTL;
+					int tmp = startQTL;
 					startQTL = endQTL;
 					endQTL = tmp;
 				}
 				ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
 				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
+				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 				
 				for (ONDEXConcept c : genes) {
-					int  chrGene = 0, startGene = 0;
+					int  chrGene = 0;
+					double startGene = 0;
 					if (c.getAttribute(attTAXID) == null ||
 							!taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
 						continue;
@@ -655,8 +657,13 @@ public class OndexServiceProvider {
 					if (c.getAttribute(attChromosome) != null) {
 						chrGene = (Integer) c.getAttribute(attChromosome).getValue();
 					}
-					if (c.getAttribute(attBegin) != null) {
-						startGene = (Integer) c.getAttribute(attBegin).getValue();
+					if (attCM != null) {
+						if (c.getAttribute(attCM) != null) {
+							startGene = (Double) c.getAttribute(attCM).getValue();
+						}
+					}
+					else if (c.getAttribute(attBegin) != null) {
+						startGene = (double) ((Integer) c.getAttribute(attBegin).getValue());
 					}				 
 					if(chrGene != 0 && startGene != 0) {
 						if (chrQTL == chrGene && startGene >= startQTL && startGene <= endQTL) {
@@ -1460,6 +1467,7 @@ public class OndexServiceProvider {
 		AttributeName attScaf = md.getAttributeName("Scaffold");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
+		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attTAXID = md.getAttributeName("TAXID");
 		AttributeName attSize = md.getAttributeName("size");
 
@@ -1486,6 +1494,7 @@ public class OndexServiceProvider {
 					}
 				}
 				int chr = 0, beg = 0, end = 0;
+				Double cm = null;
 				if (gene.getAttribute(attChr) != null) {
 					chr = (Integer) gene.getAttribute(attChr).getValue();
 				}			
@@ -1497,6 +1506,11 @@ public class OndexServiceProvider {
 				}
 				if (gene.getAttribute(attEnd) != null) {
 					end = (Integer) gene.getAttribute(attEnd).getValue();
+				}
+				if (attCM != null) {
+					if (gene.getAttribute(attCM) != null) {
+						cm = (Double) gene.getAttribute(attCM).getValue();
+					}
 				}
 				Double score = 0.0;
 				if(scoredCandidates != null){
@@ -1522,9 +1536,17 @@ public class OndexServiceProvider {
 							Long qtlStart = Long.parseLong(loci.getStart());
 							Long qtlEnd = Long.parseLong(loci.getEnd());
 							
-							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
-								numQTL++;
+							if (cm != null) {
+								if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
+									numQTL++;
+								}
 							}
+							else {
+								if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+									numQTL++;
+								}
+							}
+							
 						}
 						catch(Exception e){
 							System.out.println("An error occurred in method: writeTableOut.");
@@ -1543,13 +1565,25 @@ public class OndexServiceProvider {
 							Long qtlStart = Long.parseLong(loci.getStart());
 							Long qtlEnd = Long.parseLong(loci.getEnd());
 							
-							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
-								if (infoQTL == "")
-									infoQTL += loci.getLabel() + "//" + loci.getTrait();
-								else
-									infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-//								infoQTL += loci.getTrait() + "||";
+							if (cm != null) {
+								if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
+									if (infoQTL == "")
+										infoQTL += loci.getLabel() + "//" + loci.getTrait();
+									else
+										infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+//									infoQTL += loci.getTrait() + "||";
+								}
 							}
+							else {
+								if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+									if (infoQTL == "")
+										infoQTL += loci.getLabel() + "//" + loci.getTrait();
+									else
+										infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+//									infoQTL += loci.getTrait() + "||";
+								}
+							}
+
 						}
 						catch(Exception e){
 							System.out.println("An error occurred in method: writeTableOut.");
@@ -1631,6 +1665,7 @@ public class OndexServiceProvider {
 		AttributeName attScaf = md.getAttributeName("Scaffold");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
+		AttributeName attCM = md.getAttributeName("cM");
 		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
@@ -1663,6 +1698,7 @@ public class OndexServiceProvider {
 					}
 					
 					int chr = 0, beg = 0, end = 0;
+					Double cm = 0.00;
 					if (graph.getConcept(log).getAttribute(attChr) != null) {
 						chr = (Integer) graph.getConcept(log).getAttribute(attChr).getValue();
 					}			
@@ -1675,7 +1711,11 @@ public class OndexServiceProvider {
 					if (graph.getConcept(log).getAttribute(attEnd) != null) {
 						end = (Integer) graph.getConcept(log).getAttribute(attEnd).getValue();
 					}
-					
+					if (attCM != null) {
+						if (graph.getConcept(log).getAttribute(attCM) != null) {
+							cm = (Double) graph.getConcept(log).getAttribute(attCM).getValue();
+						}
+					}
 					if(!qtls.isEmpty()){
 						for(QTL loci : qtls) {
 							try{
@@ -1683,14 +1723,28 @@ public class OndexServiceProvider {
 								Long qtlStart = Long.parseLong(loci.getStart());
 								Long qtlEnd = Long.parseLong(loci.getEnd());
 								
-								if((qtlChrom == chr) && (beg >= qtlStart) && (end <= qtlEnd)){
-									if (!evidenceQTL.contains(loci)) {
-										numberOfQTL++;
-										evidenceQTL.add(loci);
-										if (infoQTL == "")
-											infoQTL += loci.getLabel() + "//" + loci.getTrait();
-										else
-											infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+								if (cm != null) {
+									if((qtlChrom == chr) && (cm >= qtlStart) && (cm <= qtlEnd)){
+										if (!evidenceQTL.contains(loci)) {
+											numberOfQTL++;
+											evidenceQTL.add(loci);
+											if (infoQTL == "")
+												infoQTL += loci.getLabel() + "//" + loci.getTrait();
+											else
+												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+										}
+									}
+								}
+								else {
+									if((qtlChrom == chr) && (beg >= qtlStart) && (end <= qtlEnd)){
+										if (!evidenceQTL.contains(loci)) {
+											numberOfQTL++;
+											evidenceQTL.add(loci);
+											if (infoQTL == "")
+												infoQTL += loci.getLabel() + "//" + loci.getTrait();
+											else
+												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+										}
 									}
 								}
 							}
@@ -2049,6 +2103,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attChr = graph.getMetaData().getAttributeName("Chromosome");
 		AttributeName attBeg = graph.getMetaData().getAttributeName("BEGIN");
+		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
 		Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 		
@@ -2063,11 +2118,22 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Integer geneChr = (Integer) gene.getAttribute(attChr).getValue();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
 				
-				//check if taxid, chromosome and start meet criteria
-				if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneBeg >= start && geneBeg <= end){
-					geneCount++;
+				if (attCM != null) {
+					if (gene.getAttribute(attCM) != null) {
+						Double geneCM = (Double) gene.getAttribute(attCM).getValue();
+						
+						//check if taxid, chromosome and start meet criteria
+						if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneCM >= start && geneCM <= end && start < end){
+							geneCount++;
+						}
+					}
 				}
-				
+				else {
+					//check if taxid, chromosome and start meet criteria
+					if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneBeg >= start && geneBeg <= end && start < end){
+						geneCount++;
+					}
+				}
 			}
 		}	
 		

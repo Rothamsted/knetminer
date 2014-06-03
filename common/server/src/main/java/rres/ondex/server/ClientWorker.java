@@ -89,6 +89,15 @@ public class ClientWorker implements Runnable {
 		}
 	}
 	
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	protected String processRequest(String query) throws UnsupportedEncodingException, ParseException {
 		
 		System.out.println("Processing request...");
@@ -134,20 +143,20 @@ public class ClientWorker implements Runnable {
 			String[] r =  region.split(":"); 
 			String chrName;
 			int chrIndex;
-			long start, end;
+			float start, end;
 			String label = "";
 			try {			
 				if(r.length == 3 || r.length == 4){	
 					chrName = r[0];
-					start = Long.parseLong(r[1]);
-					end = Long.parseLong(r[2]);
+					start = Integer.parseInt(r[1]);
+					end = Integer.parseInt(r[2]);
 					if(r.length == 4){
 						label = r[3];
 					}
 					if(start < end) {
 						validQTL = true;
 						chrIndex = ondexProvider.chromBidiMap.inverseBidiMap().get(chrName);
-						QTL qtl = new QTL(chrIndex, chrName, Long.toString(start), Long.toString(end), label, "significant", label); //set "trait" equal to qtl (=label)
+						QTL qtl = new QTL(chrIndex, chrName, r[1], r[2], label, "significant", label); //set "trait" equal to qtl (=label)
 						qtls.add(qtl);
 					}
 				}
@@ -190,9 +199,11 @@ public class ClientWorker implements Runnable {
 			}else if(mode.equals("countloci")) {		//counts the genes withina a loci for the Genome or QTL Search box
 				String[] loci = keyword.split("-");
 				String chr = loci[0];
-				Integer start = Integer.parseInt(loci[1]);
-				Integer end = Integer.parseInt(loci[2]);
-				
+				Integer start = 0, end = 0;
+				if (isInteger(loci[1]) && isInteger(loci[2])){
+					start = Integer.parseInt(loci[1]);
+					end = Integer.parseInt(loci[2]);
+				}
 				return String.valueOf(ondexProvider.getGeneCount(chr, start, end));
 
 			}else if(mode.equals("evidencepath")) {		//returns the path between an evidence and all connected genes
@@ -250,7 +261,8 @@ public class ClientWorker implements Runnable {
 	
 	protected String callApplet(String keyword, List<QTL> qtls, List<String> list) throws UnsupportedEncodingException, InvalidPluginArgumentException {
 		String request = "";
-		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();				
+		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+		list.removeAll(Arrays.asList("", null));
 		
 		// File name
 		long timestamp = System.currentTimeMillis();
@@ -293,6 +305,8 @@ public class ClientWorker implements Runnable {
 	
 	protected String callOndexProvider(String keyword, String mode, String listMode, List<QTL> qtl, List<String> list) throws ParseException {
 
+		list.removeAll(Arrays.asList("", null));
+		
 		// Setup file names
 		long timestamp = System.currentTimeMillis();
 		String fileGViewer = timestamp+"GViewer.xml";

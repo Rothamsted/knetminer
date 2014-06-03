@@ -356,21 +356,17 @@ function searchKeyword(){
 		var label = trim($("#label"+i).val());
 		
 		if(chr.length>0 && start.length>0 && end.length>0 && parseInt(start)<parseInt(end)){
-			
-//			if(findGenes('',chr, start, end)>0) {
-//				counter++;
 				request = request+"&qtl"+counter+"="+chr+":"+start+":"+end+":"+label;
-				counter++;
-//			}			
+				counter++;	
 		}
 	}
 
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
-	else if(($("#genes1").val() == 0) && (searchMode == "qtl")) {		
-		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please define at least one QTL region.</b></div>');
-	}
+//	else if(($("#genes1").val() == 0) && (searchMode == "qtl")) {		
+//		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please define at least one QTL region.</b></div>');
+//	}
 	else if(list.length > 500000) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
 	}
