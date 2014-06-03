@@ -467,6 +467,8 @@ public class OndexServiceProvider {
 				NOTList = lenv.searchTopConcepts(qNQ, 2000);
 			}
 			
+			//number of top concepts retrieved for each Lucene field
+			int max_concepts = 500;
 			
 			// search concept attributes
 			for (AttributeName att : atts) {
@@ -477,7 +479,7 @@ public class OndexServiceProvider {
 				String fieldName = getFieldName("ConceptAttribute", att.getId());
 			    QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName , analyzer);
 			    Query qAtt = parser.parse(keyword);
-				ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, 100);
+				ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
 				mergeHits(hit2score, sHits, NOTList);
 			    
 			}
@@ -487,7 +489,7 @@ public class OndexServiceProvider {
 				String fieldName = getFieldName("ConceptAccessions",dsAc);
 			    QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName , analyzer);
 			    Query qAccessions = parser.parse(keyword);
-				ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, 100);
+				ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
 				mergeHits(hit2score, sHitsAcc, NOTList);				
 			}
 
@@ -496,7 +498,7 @@ public class OndexServiceProvider {
 			String fieldNameCN = getFieldName("ConceptName",null);
 		    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
 		    Query qNames = parserCN.parse(keyword);
-			ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, 100);
+			ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
 			mergeHits(hit2score, sHitsNames, NOTList);
 			
 			
@@ -505,7 +507,7 @@ public class OndexServiceProvider {
 			String fieldNameD = getFieldName("Description",null);
 		    QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD , analyzer);
 		    Query qDesc = parserD.parse(keyword);
-			ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, 100);
+			ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
 			mergeHits(hit2score, sHitsDesc, NOTList);
 			
 			// search concept annotation			
@@ -513,7 +515,7 @@ public class OndexServiceProvider {
 			String fieldNameCA = getFieldName("Annotation",null);
 		    QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA , analyzer);
 		    Query qAnno = parserCA.parse(keyword);
-			ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, 100);		
+			ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);		
 			mergeHits(hit2score, sHitsAnno, NOTList);
 			
 			System.out.println("Query: "+qAnno.toString(fieldNameCA));
@@ -531,7 +533,7 @@ public class OndexServiceProvider {
 		TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
 		
 		System.out.println("total hits from lucene: "+hit2score.keySet().size());
-
+		
 		//1st step: create map of genes to concepts that contain query terms (keywords)
 		mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
 		for (ONDEXConcept c : hit2score.keySet()) {	
@@ -574,6 +576,7 @@ public class OndexServiceProvider {
 						
 		sortedCandidates.putAll(scoredCandidates);	
 		candidateGenes = new ArrayList<ONDEXConcept>(sortedCandidates.keySet());
+		
 		return candidateGenes;				
 	}
 	
