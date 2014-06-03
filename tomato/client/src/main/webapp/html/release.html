@@ -1,318 +1,121 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta name="description" content="QTLNetMiner - Mining and prioritizing candidate genes in integrated Ondex networks for plant and animal genomes.">
+<meta name="Keywords" content="QTLNetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Solanaceae Release Notes</title>
+<style type="text/css">
+body {margin:0px;padding:0px;background:#EEEEEE; font-family:Verdana, Arial, Helvetica, sans-serif;}
+a {text-decoration:none; color:#666666;}
+a img {text-decoration:none; border:0px;}
+#wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../html/image/background.png) center;padding:0px 30px;  } /* padding:0px 17px 0px 17px;background-image:url(../html/image/wrapper_bg.png); */
+#header {position:relative; height:125px;clear:left;}
+#header #qtlLogo {position:absolute; top:25px; left:30px;}
+#header #OrgLogo {position:absolute; top:6px; right:40px;}
+#header #motto {position:absolute; top:110px; left:30px; font-size:12px;}
+#header_spacer {position:relative; height:35px;width:960px; background:url(../html/image/divisor_header.png) repeat-x ;clear:left;}
+#content {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:justify;}
+#content span {width:930px;clear:left;}
+#content .divisor {position:relative; width:960px;height:17px;clear:left;}
+#content .title {font-size:24px;}
+#content img {position:absolute;}
+#footer_spacer {position:relative; height:2px;width:960px; background:url(../html/image/divisor_footer.png) repeat-x ;clear:left;}
+#footer {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:center; height:70px;}
+#footer #left_footer {position:absolute;left:8px;top:5px;text-align:left;font-size:10px;}
+#footer #right_footer {position:absolute;right:8px;top:5px;text-align:right;font-size:10px;}
+</style>
+
 </head>
 
 <body>
-<h1>Solanaceae Release Notes</h1>
 
-<p>The final Solanaceae network contains <strong>376002 concepts</strong> and <strong>1156584 relations</strong>.</p>
+<div id="wrapper">
+	<div id="header">
+    	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner"><img src="../html/image/qtl_logo.png" id="qtlLogo" /></a>
+        <a href="http://ondex.rothamsted.ac.uk/SOLNetMiner"><img src="../html/image/organism.png" id="OrgLogo" height="120"/></a>
+        <span id="motto">A tool for the discovery of candidate genes controlling complex traits.</span>
+    </div>
+    <div id="header_spacer"></div>
+    <div id="content">
+    	<div class="divisor">&nbsp;</div>
+        	<span class="title"><strong>Solanaceae Release Notes</strong></span>
+        <div class="divisor">&nbsp;</div>
+    	<span>
 
-<div>
-  <h2>Potato</h2>
-</div>
+
+<p>The Solanaceae information network contains <strong>383,839 concepts</strong> and <strong>1,291,590 relations</strong>. It includes information of tomato (<i>Solanum lycopersicum</i>) and potato (<i>Solanum tuberosum</i>).</p>
 
 <ul>
-	<li><p>Gene-Protein (Phytozome)</p></li>
+	<p><strong>Datasets used for integration</strong> - Tomato</br>
+	(Datasets used for Potato see Release Notes <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerPotato/html/release.html">here.</a>)</p>
 	<ul>
-    	<li>Raw data</li>
-		<ul>
+    	<li>Gene</li>
+    	<ul>
 			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_gene.gff3.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_gene.gff3.gz</a></li>
+      	</ul>
+    	<li>Protein</li>
+    	<ul>
 			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_protein.fa.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_protein.fa.gz</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz</a></li>
+			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz</a></li>	
 		</ul>
-		<li>Parsers</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Gene_Protein/Gene_Protein.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Gene_Protein/Gene_Protein.xml</a></li>
-		</ul>
-		<li>Ondex file</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Gene_Protein/Gene_Protein.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Gene_Protein/Gene_Protein.oxl</a></li>
-		</ul>	
-	</ul>
-	
-	<li><p>Protein_Domain (Ensembl)</p></li>
- 	<ul>
-		<li>Raw data</li>
-		<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=stuberosum_eg_gene.default.feature_page.ensembl_peptide_id|stuberosum_eg_gene.default.feature_page.interpro_id|stuberosum_eg_gene.default.feature_page.interpro_short_description|stuberosum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=stuberosum_eg_gene.default.feature_page.ensembl_peptide_id|stuberosum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
-		</ul>
-		<li>Parsers</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_InterPro/Protein_InterPro_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_InterPro/Protein_InterPro_console.txt</a></li>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_PFam/Protein_PFam_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_PFam/Protein_PFam_console.txt</a></li>
-		</ul>
-		<li>Ondex files</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_InterPro/Protein_InterPro.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_InterPro/Protein_InterPro.oxl</a></li>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_PFam/Protein_PFam.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Protein_Domain/Protein_PFam/Protein_PFam.oxl</a></li>
-		</ul>
-	</ul>
-
-    <li><p>Organism network</p></li>
-	<ul>
-    	<li>Parser</li>
+    	<li>Protein-Domain</li>
     	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Potato.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Potato.xml</a></li>
+			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.interpro_id|slycopersicum_eg_gene.default.feature_page.interpro_short_description|slycopersicum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
     	</ul>
-    	<li>Ondex files</li>
+    	<li>QTL</li>
     	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Potato.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Potato/Potato.oxl</a></li>
+      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL_200131220.oxl">QTL information</a></li>
+ 		</ul>
+    	<li>References</li>
+    	<ul>
+			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
+			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
+    	</ul>
+    	<li>Homology</li>
+    	<ul>
+    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.homologs.ensembl_transcript_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|slycopersicum_eg_gene.default.homologs.athaliana_eg_orthology_type|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_ds|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_dn&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Tomato - Arabidopsis</a></li>
+		<li>Decypher</li>
+    	</ul>
+    	<li>Ontologies</li>
+    	<ul>
+    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
     	</ul>
   	</ul>
-
-	<li><p>References</p></li>
-	<ul>
-		<li>Plants (UniProt) - informations of well observed plant organisms excluding Arabidopsis</li>
-		<ul>
-			<li>Raw data</li>
-			<ul>
-				UniProt: <a href="http://www.uniprot.org/uniprot/?query=%28taxonomy%3A33090+NOT+taxonomy%3A3702%29+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes AND keyword:1185</a>
-			</ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml</a>
-			</ul>
-			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl</a>
-			</ul>
-		</ul>
-		<li>Arabidopsis (TAIR)</li>
-		<ul>
-			<li>Raw data</li>
- 			<ul>
-				see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a>
-			</ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl</a>
-			</ul>
- 			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml</a>
-			</ul>
-		</ul>
-	</ul>
+  	
+  	<p><strong>Networks</strong> - Tomato</br>
+	(Networks used for Potato see Release Notes <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerPotato/html/release.html">here.</a>)</p>
 	
-	<li><p>Homology</p></li>
+	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
 	<ul>
-		<li>Plants (Decypher)</li>
-		<ul>
-			<li>Decypher config file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig</a>
-			</ul>
-		</ul>
-		<ul>
-			<li>Decypher command file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt</a>
-			</ul>
-		</ul>
-		<ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants_console.txt</a>
-			</ul>
-		</ul>
-		<ul>
-			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants.oxl</a>
-			</ul>
-		</ul>
-		<li>Arabidopsis (Biomart)</li>
-		<ul>
-			<li>Raw Data</li>
-			<ul>
-			BioMart Homologs Potato - Arabidopsis
-			</ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Potato_Arabidopsis_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Potato_Arabidopsis_console.txt</a>
-			</ul>
-			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Potato_Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Potato_Arabidopsis.oxl</a>
-			</ul>
-		</ul>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/">Organism</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/">Final Network</a></li>
 	</ul>
-	
-	<li><p>Final Network</p></li>
-	<ul>
-		<li>Parser</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/potnet/PotatoKB2013.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/potnet/PotatoKB2013.xml</a></li>
-		</ul>
-		<li>Ondex files</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/potnet/PotatoKB2013.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/potnet/PotatoKB2013.oxl</a></li>
-		</ul>
-	</ul>
-</ul>	
+</ul>
 
-<div>
-	<h2>Tomato</h2>
+        </span>
+    </div>
+<div id="footer_spacer"></div>
+<div id="footer">
+	<div id="left_footer">
+    	<a target="_blank" href="http://www.rothamsted.ac.uk"><img src="../html/image/rothamsted_logo.png" /></a><br />
+    	Developed at Rothamsted Research (<a target="_blank" href="http://www.rothamsted.ac.uk/applied-bioinformatics">Applied Bioinformatics Group</a>)<br />
+        Contact: keywan.hassani-pak@rothamsted.ac.uk
+    </div>
+    <div id="right_footer">
+    	<a target="_blank" href="http://www.bbsrc.ac.uk"><img src="../html/image/bbsrc_anniversary_logo.png"/></a><br/>
+        This work was supported by<br /> 
+        BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />
+    </div>
+</div>
 </div>
 
-<ul>
-	<li><p>Gene-Protein (Phytozome)</p></li>
-	<ul>
-		<li>Raw data</li>
-		<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_gene.gff3.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_gene.gff3.gz</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_protein.fa.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_protein.fa.gz</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_annotation_info.txt.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Slycopersicum/annotation/Slycopersicum_225_annotation_info.txt.gz</a></li>
- 		</ul>
-		<li>Parsers</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Gene_Protein/Gene_Protein.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Gene_Protein/Gene_Protein.xml</a></li>
-		</ul>
-		<li>Ondex file</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Gene_Protein/Gene_Protein.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Gene_Protein/Gene_Protein.oxl</a></li>
-		</ul>
-	</ul>
-	
-	<li><p>Protein_Domain (Ensembl)</p></li>
-	<ul>
-		<li>Raw data</li>
-		<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_peptide_id|slycopersicum_eg_gene.default.feature_page.interpro_id|slycopersicum_eg_gene.default.feature_page.interpro_short_description|slycopersicum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_21&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_peptide_id|slycopersicum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
- 		</ul>
-		<li>Parsers</li>
-		<ul>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_InterPro/Protein_InterPro_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_InterPro/Protein_InterPro_console.txt</a></li>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_Pfam/Protein_PFam_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_Pfam/Protein_PFam_console.txt</a></li>
-		</ul>
-		<li>Ondex files</li>
- 		<ul>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_InterPro/Protein_InterPro.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_InterPro/Protein_InterPro.oxl</a></li>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Protein_Domain/Protein_Pfam/Protein_Pfam.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Gene_Domain/Protein_Pfam/Protein_Pfam.oxl</a></li>
-		</ul>
-	</ul>
-	
-	<li><p>QTLs</p></li>
-	<ul>
-<!-- h:		<li>Raw data</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL.txt</a></li>
- 		</ul>
-		<li>Parsers</li>
-		<ul>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL_console.txt</a></li>
-		</ul>/ -->
-		<li>Ondex files</li>
- 		<ul>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL.oxl</a></li>
-		</ul>
-	</ul>
-	
-    <li><p>Organism network</p></li>
-	<ul>
-    	<li>Parser</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Tomato.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Tomato.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-    	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Tomato.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/Tomato.oxl</a></li>
-    	</ul>
-  	</ul>
-	
-	<li><p>References</p></li>
-	<ul>
-		<li>Plants (UniProt) - informations of well observed plant organisms excluding Arabidopsis</li>
-		<ul>
-			<li>Raw data</li>
-			<ul>
-				UniProt: <a href="http://www.uniprot.org/uniprot/?query=%28taxonomy%3A33090+NOT+taxonomy%3A3702%29+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes AND keyword:1185</a>
-			</ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.xml</a>
-			</ul>
-				<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Plants/Plants.oxl</a>
-			</ul>
-		</ul>
-    	<li>Arabidopsis (TAIR)</li>
-    	<ul>
-			<li>Raw data</li>
-			<ul>
-				see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a>
-			</ul>
-			<li>Parsers</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.oxl</a>
-			</ul>
-			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Arabidopsis.xml</a>
-			</ul>
-		</ul>
-	</ul>
-	<li><p>Homology</p></li>
-	<ul>
-		<li>Plants (Decypher)</li>
-		<ul>
-			<li>Decypher config file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/DecypherConfig</a>
-			</ul>
-		</ul>
-		<ul>
-			<li>Decypher command file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Decypher_commands.txt</a>
-			</ul>
-		</ul>
-		<ul>
-			<li>Parsers</li>
-			<ul>
- 				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants_console.txt</a>
-			</ul>
-		</ul>
- 		<ul>
- 			<li>Ondex file</li>
-   			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Potato_Plants.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/Tomato_Plants.oxl</a>
-			</ul>
-		</ul>
-		<li>Arabidopsis (Biomart)</li>
-		<ul>
-			<li>Raw Data</li>
-			<ul>
-			BioMart Homologs Tomato - Arabidopsis
- 			</ul>
-			<li>Parsers</li>
-  			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Tomato_Arabidopsis_console.txt">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Tomato_Arabidopsis_console.txt</a>
-			</ul>
-			<li>Ondex file</li>
-			<ul>
-				<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Tomato_Arabidopsis.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/BioMart/Tomato_Arabidopsis.oxl</a>
-			</ul>
-		</ul>
-	</ul>
 
-  	<li><p>Final Network</p></li>
-  	<ul>
-    	<li>Parser</li>
-    	<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/SOLNetKB2013.xml">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/SOLNetKB2013.xml</a></li>
-    	</ul>
-    	<li>Ondex files</li>
-   		 <ul>
-     		 <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/SOLNetKB2013.oxl">http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/SOLNetKB2013.oxl</a></li>
-    	</ul>
-  	</ul>
-</ul>
 </body>
 </html>
