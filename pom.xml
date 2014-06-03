@@ -17,6 +17,7 @@
 		<module>potato</module>
 		<module>wheat</module>
 		<module>rice</module>
+		<module>barley</module>
 		<module>chicken</module>
 		<module>cow</module>
 	</modules>
