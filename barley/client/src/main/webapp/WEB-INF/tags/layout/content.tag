@@ -6,8 +6,6 @@
 <%@ attribute name="assembly" required="false" description="genome assembly" %>
 
 
-
-
 <div id="content">
 	<div id="search">
 		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()">							
@@ -34,7 +32,8 @@
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
 					<span id="hint"><img id="hintSearchQtlGenome" src="html/image/hint.png" alt="hint" /></span>
 					<hr />
-					<div id="region_search_area" style="display:none;">		
+					<div id="region_search_area" style="display:none;">
+					The QTL search in Barley is based on cM.<br /><br />
 						<div class="rightnav">
 							Search:<br />
 							<input type="radio" name="search_mode" value="genome" checked="checked" />whole-genome<br />
