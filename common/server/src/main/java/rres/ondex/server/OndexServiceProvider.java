@@ -19,6 +19,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,10 +49,12 @@ import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
+import net.sourceforge.ondex.core.EvidenceType;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.ONDEXRelation;
+import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
@@ -109,6 +112,11 @@ public class OndexServiceProvider {
 	 * Query-dependent mapping between genes and concepts that contain query terms
 	 */
 	HashMap<Integer, Set<Integer>> mapGene2HitConcept;
+	
+	/**
+	 * Gene to QTL mapping
+	 */
+	HashMap<Integer, Set<Integer>> mapGene2QTL;
 	
 	/**
 	 * Temp: map query genes to a score
@@ -336,6 +344,10 @@ public class OndexServiceProvider {
 		ONDEXPluginArguments uFA = new ONDEXPluginArguments(
 				uFilter.getArgumentDefinitions());
 		uFA.addOption(ArgumentNames.REMOVE_TAG_ARG, true);
+		
+		//TODO
+		uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Publication");
+		uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Chromosome");
 
 		uFilter.setArguments(uFA);
 		uFilter.setONDEXGraph(og);
@@ -1119,6 +1131,8 @@ public class OndexServiceProvider {
 			attFlagged = md.getFactory().createAttributeName("flagged",
 					Boolean.class);
 		
+		RelationType rt = md.getFactory().createRelationType("part_of");
+		EvidenceType et = md.getFactory().createEvidenceType("QTLNetMiner");
 		
 		// search last concept of semantic motif for keyword
 		int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
@@ -1148,7 +1162,7 @@ public class OndexServiceProvider {
 			// keyword part of another path to same gene or different gene
 
 		}
-
+		
 		// annotate gene concept
 		ONDEXConcept g = graphCloner.cloneConcept(gene);
 		if (g.getAttribute(attSize) == null) {
@@ -1161,6 +1175,24 @@ public class OndexServiceProvider {
 			Integer size = (Integer) g.getAttribute(attSize).getValue();
 			size++;
 			g.getAttribute(attSize).setValue(size);
+		}
+		
+		//add gene-QTL relations to the network
+		if(mapGene2QTL.containsKey(gene.getId())){
+			Set<Integer> qtlSet = mapGene2QTL.get(gene.getId());
+			for(Integer qtlId : qtlSet){
+				ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
+				if(graphCloner.getNewGraph().getRelation(g, qtl, rt) == null){
+					ONDEXRelation r = graphCloner.getNewGraph().getFactory().createRelation(g, qtl, rt, et);
+					r.createAttribute(attSize, new Integer(2), false);
+					r.createAttribute(attVisible, true, false);
+				}
+				if (qtl.getAttribute(attSize) == null) {
+					// initial size
+					qtl.createAttribute(attSize, new Integer(70), false);
+					qtl.createAttribute(attVisible, true, false);
+				}
+			}
 		}
 
 		// annotate path connecting gene to keyword concept
@@ -1230,7 +1262,7 @@ public class OndexServiceProvider {
 	 *            user-specified keyword
 	 */
 	public boolean writeAnnotationXML(ArrayList<ONDEXConcept> genes,
-			Set<ONDEXConcept> userGenes, List<QTL> qtls, String filename,
+			Set<ONDEXConcept> userGenes, List<QTL> userQtl, String filename,
 			String keyword, int maxGenes, Hits hits, String listMode) {
 		if (genes.size() == 0) {
 			System.out.println("No genes to display.");
@@ -1242,6 +1274,12 @@ public class OndexServiceProvider {
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
+		AttributeName attTrait= md.getAttributeName("Trait");
+		ConceptClass ccQTL = md.getConceptClass("QTL");
+		Set<ONDEXConcept> qtlDB = new HashSet<ONDEXConcept>();
+		if(ccQTL != null)		
+			qtlDB = graph.getConceptsOfConceptClass(ccQTL);
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
 		sb.append("<genome>\n");
@@ -1251,7 +1289,7 @@ public class OndexServiceProvider {
 		int size = genes.size();
 		if (genes.size() > maxGenes)
 			size = maxGenes;
-
+		
 		for (ONDEXConcept c : genes) {
 			id++;
 
@@ -1378,10 +1416,10 @@ public class OndexServiceProvider {
 			}
 		}
 		// QTLs
-		for (QTL region : qtls) {
+		for (QTL region : userQtl) {
 			int chr = region.getChrIndex();
-			String start = region.getStart();
-			String end = region.getEnd();
+			int start = Integer.valueOf(region.getStart()) * 100000;
+			int end = Integer.valueOf(region.getEnd()) * 100000;
 			String label = region.getLabel();
 			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
 			
@@ -1396,11 +1434,35 @@ public class OndexServiceProvider {
 			sb.append("<start>" + start + "</start>\n");
 			sb.append("<end>" + end + "</end>\n");
 			sb.append("<type>qtl</type>\n");
-			sb.append("<color>0xFFA500</color>\n"); // Orange			
+			sb.append("<color>0xFF0000</color>\n"); // Orange			
 			sb.append("<label>" + label + "</label>\n");
 			sb.append("<link>" + uri + "</link>\n");
 			sb.append("</feature>\n");
 		}
+		
+		for(ONDEXConcept qtl : qtlDB){
+			int chrQTL = (Integer) qtl.getAttribute(attChr).getValue();
+			String chrLatin = chromBidiMap.get(Integer.valueOf(chrQTL));
+			int startQTL = (Integer) qtl.getAttribute(attBeg).getValue() * 100000;
+			int endQTL = (Integer) qtl.getAttribute(attEnd).getValue() * 100000;
+			String traitDesc = qtl.getAttribute(attTrait).getValue().toString();
+			String acc = qtl.getConceptName().getName();
+			String uri = "http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id="+acc;
+			
+			sb.append("<feature>\n");
+			sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+			sb.append("<start>" + startQTL + "</start>\n");
+			sb.append("<end>" + endQTL + "</end>\n");
+			sb.append("<type>qtl</type>\n");
+			sb.append("<color>0xFFA500</color>\n"); // Orange			
+			sb.append("<label>" + traitDesc + "</label>\n");
+			sb.append("<link>" + uri + "</link>\n");
+			sb.append("</feature>\n");
+			
+		}
+		
+
+		
 		sb.append("</genome>\n");
 		
 		try {
@@ -1468,6 +1530,7 @@ public class OndexServiceProvider {
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attScaf = md.getAttributeName("Scaffold");
+		AttributeName attTrait = md.getAttributeName("Trait");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1496,8 +1559,8 @@ public class OndexServiceProvider {
 						break;
 					}
 				}
-				int chr = 0, beg = 0, end = 0;
-				Double cm = null;
+				int chr = 0;
+				double beg = 0.0;
 				if (gene.getAttribute(attChr) != null) {
 					chr = (Integer) gene.getAttribute(attChr).getValue();
 				}			
@@ -1507,14 +1570,15 @@ public class OndexServiceProvider {
 				if (gene.getAttribute(attBeg) != null) {
 					beg = (Integer) gene.getAttribute(attBeg).getValue();
 				}
-				if (gene.getAttribute(attEnd) != null) {
-					end = (Integer) gene.getAttribute(attEnd).getValue();
-				}
+
 				if (attCM != null) {
 					if (gene.getAttribute(attCM) != null) {
-						cm = (Double) gene.getAttribute(attCM).getValue();
+						beg = (Double) gene.getAttribute(attCM).getValue();
 					}
+				}else if (gene.getAttribute(attBeg) != null) {
+					beg = (Integer) gene.getAttribute(attBeg).getValue();
 				}
+				
 				Double score = 0.0;
 				if(scoredCandidates != null){
 					if(scoredCandidates.get(gene) != null){
@@ -1530,70 +1594,63 @@ public class OndexServiceProvider {
 					isInList = "yes";
 				}
 				
-				int numQTL = 0;
-				
-				if(!qtls.isEmpty()){
-					for(QTL loci : qtls) {
-						try{
-							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
-							Long qtlStart = Long.parseLong(loci.getStart());
-							Long qtlEnd = Long.parseLong(loci.getEnd());
-							
-							if (cm != null) {
-								if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
-									numQTL++;
-								}
-							}
-							else {
-								if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
-									numQTL++;
-								}
-							}
-							
-						}
-						catch(Exception e){
-							System.out.println("An error occurred in method: writeTableOut.");
-							System.out.println(e.getMessage());
-							
-						}
-					}
-				}
-				
 				String infoQTL = "";
-				
-				if(!qtls.isEmpty()){
-					for(QTL loci : qtls) {
-						try{
-							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
-							Long qtlStart = Long.parseLong(loci.getStart());
-							Long qtlEnd = Long.parseLong(loci.getEnd());
-							
-							if (cm != null) {
-								if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
-									if (infoQTL == "")
-										infoQTL += loci.getLabel() + "//" + loci.getTrait();
-									else
-										infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-//									infoQTL += loci.getTrait() + "||";
-								}
-							}
-							else {
-								if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
-									if (infoQTL == "")
-										infoQTL += loci.getLabel() + "//" + loci.getTrait();
-									else
-										infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-//									infoQTL += loci.getTrait() + "||";
-								}
-							}
-
-						}
-						catch(Exception e){
-							System.out.println("An error occurred in method: writeTableOut.");
-							System.out.println(e.getMessage());
-						}
+				if(mapGene2QTL.containsKey(gene.getId())){
+					for(Integer cid : mapGene2QTL.get(gene.getId())){
+						ONDEXConcept qtl = graph.getConcept(cid);
+						String traitDesc = qtl.getAttribute(attTrait).getValue().toString();
+						
+						if (infoQTL == "")
+							infoQTL += traitDesc + "//" + traitDesc;
+						else
+							infoQTL += "||" + traitDesc + "//" + traitDesc;
+						
 					}
 					
+				}
+				
+//				if(!qtls.isEmpty()){
+//					for(QTL loci : qtls) {
+//						try{
+//							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+//							Long qtlStart = Long.parseLong(loci.getStart());
+//							Long qtlEnd = Long.parseLong(loci.getEnd());
+//							
+//							if (cm != null) {
+//								if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
+//									numQTL++;
+//								}
+//							}
+//							else {
+//								if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+//									numQTL++;
+//								}
+//							}
+//							
+//						}
+//						catch(Exception e){
+//							System.out.println("An error occurred in method: writeTableOut.");
+//							System.out.println(e.getMessage());
+//							
+//						}
+//					}
+//				}
+//				
+//				String infoQTL = "";
+//				
+				if(!qtls.isEmpty()){
+					for(QTL loci : qtls) {
+						Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+						Long qtlStart = Long.parseLong(loci.getStart());
+						Long qtlEnd = Long.parseLong(loci.getEnd());
+						
+						if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+							if (infoQTL == "")
+								infoQTL += loci.getLabel() + "//" + loci.getTrait();
+							else
+								infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+						}
+					}
 				}
 				
 				//get lucene hits per gene
@@ -1666,6 +1723,7 @@ public class OndexServiceProvider {
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attScaf = md.getAttributeName("Scaffold");
+		AttributeName attTrait = md.getAttributeName("Trait");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1696,70 +1754,124 @@ public class OndexServiceProvider {
 				
 				String infoQTL = "";
 				for (int log : listOfGenes) {
-					if((userGenes != null)&&(graph.getConcept(log) != null)&&(userGenes.contains(graph.getConcept(log)))){
+					
+					ONDEXConcept gene = graph.getConcept(log);
+					if((userGenes != null) && (gene != null) && (userGenes.contains(gene))){
 						numberOfUserGenes++;
 					}
 					
-					int chr = 0, beg = 0, end = 0;
-					Double cm = 0.00;
-					if (graph.getConcept(log).getAttribute(attChr) != null) {
-						chr = (Integer) graph.getConcept(log).getAttribute(attChr).getValue();
+					if(mapGene2QTL.containsKey(log)){
+						numberOfQTL++;
+						
+//						for(Integer cid : mapGene2QTL.get(log)){
+//							ONDEXConcept qtl = graph.getConcept(cid);
+//							String traitDesc = qtl.getAttribute(attTrait).getValue().toString();
+//							
+//							if (infoQTL == "")
+//								infoQTL += traitDesc + "//" + traitDesc;
+//							else
+//								infoQTL += "||" + traitDesc + "//" + traitDesc;
+//						}
+					}
+					
+					int chr = 0;
+					double beg = 0.0;
+					
+					if (gene.getAttribute(attChr) != null) {
+						chr = (Integer) gene.getAttribute(attChr).getValue();
 					}			
-					else if (graph.getConcept(log).getAttribute(attScaf) != null) {
-						chr = (Integer) graph.getConcept(log).getAttribute(attScaf).getValue();
+					else if (gene.getAttribute(attScaf) != null) {
+						chr = (Integer) gene.getAttribute(attScaf).getValue();
 					} 
-					if (graph.getConcept(log).getAttribute(attBeg) != null) {
-						beg = (Integer) graph.getConcept(log).getAttribute(attBeg).getValue();
+					if (gene.getAttribute(attBeg) != null) {
+						beg = (Integer) gene.getAttribute(attBeg).getValue();
 					}
-					if (graph.getConcept(log).getAttribute(attEnd) != null) {
-						end = (Integer) graph.getConcept(log).getAttribute(attEnd).getValue();
-					}
+
 					if (attCM != null) {
-						if (graph.getConcept(log).getAttribute(attCM) != null) {
-							cm = (Double) graph.getConcept(log).getAttribute(attCM).getValue();
+						if (gene.getAttribute(attCM) != null) {
+							beg = (Double) gene.getAttribute(attCM).getValue();
 						}
+					}else if (gene.getAttribute(attBeg) != null) {
+						beg = (Integer) gene.getAttribute(attBeg).getValue();
 					}
+					
 					if(!qtls.isEmpty()){
 						for(QTL loci : qtls) {
-							try{
-								Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
-								Long qtlStart = Long.parseLong(loci.getStart());
-								Long qtlEnd = Long.parseLong(loci.getEnd());
+							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+							Long qtlStart = Long.parseLong(loci.getStart());
+							Long qtlEnd = Long.parseLong(loci.getEnd());
+							
+							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
 								
-								if (cm != null) {
-									if((qtlChrom == chr) && (cm >= qtlStart) && (cm <= qtlEnd)){
-										if (!evidenceQTL.contains(loci)) {
-											numberOfQTL++;
-											evidenceQTL.add(loci);
-											if (infoQTL == "")
-												infoQTL += loci.getLabel() + "//" + loci.getTrait();
-											else
-												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-										}
-									}
-								}
-								else {
-									if((qtlChrom == chr) && (beg >= qtlStart) && (end <= qtlEnd)){
-										if (!evidenceQTL.contains(loci)) {
-											numberOfQTL++;
-											evidenceQTL.add(loci);
-											if (infoQTL == "")
-												infoQTL += loci.getLabel() + "//" + loci.getTrait();
-											else
-												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-										}
-									}
-								}
-							}
-							catch(Exception e){
-								System.out.println("An error occurred in method: writeEvidenceOut.");
-								System.out.println(e.getMessage());
+								numberOfQTL++;
+//								if (infoQTL == "")
+//									infoQTL += loci.getLabel() + "//" + loci.getTrait();
+//								else
+//									infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
 							}
 						}
 					}
+					
+//					int chr = 0, beg = 0, end = 0;
+//					Double cm = 0.00;
+//					if (graph.getConcept(log).getAttribute(attChr) != null) {
+//						chr = (Integer) graph.getConcept(log).getAttribute(attChr).getValue();
+//					}			
+//					else if (graph.getConcept(log).getAttribute(attScaf) != null) {
+//						chr = (Integer) graph.getConcept(log).getAttribute(attScaf).getValue();
+//					} 
+//					if (graph.getConcept(log).getAttribute(attBeg) != null) {
+//						beg = (Integer) graph.getConcept(log).getAttribute(attBeg).getValue();
+//					}
+//					if (graph.getConcept(log).getAttribute(attEnd) != null) {
+//						end = (Integer) graph.getConcept(log).getAttribute(attEnd).getValue();
+//					}
+//					if (attCM != null) {
+//						if (graph.getConcept(log).getAttribute(attCM) != null) {
+//							cm = (Double) graph.getConcept(log).getAttribute(attCM).getValue();
+//						}
+//					}
+//					if(!qtls.isEmpty()){
+//						for(QTL loci : qtls) {
+//							try{
+//								Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+//								Long qtlStart = Long.parseLong(loci.getStart());
+//								Long qtlEnd = Long.parseLong(loci.getEnd());
+//								
+//								if (cm != null) {
+//									if((qtlChrom == chr) && (cm >= qtlStart) && (cm <= qtlEnd)){
+//										if (!evidenceQTL.contains(loci)) {
+//											numberOfQTL++;
+//											evidenceQTL.add(loci);
+//											if (infoQTL == "")
+//												infoQTL += loci.getLabel() + "//" + loci.getTrait();
+//											else
+//												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+//										}
+//									}
+//								}
+//								else {
+//									if((qtlChrom == chr) && (beg >= qtlStart) && (end <= qtlEnd)){
+//										if (!evidenceQTL.contains(loci)) {
+//											numberOfQTL++;
+//											evidenceQTL.add(loci);
+//											if (infoQTL == "")
+//												infoQTL += loci.getLabel() + "//" + loci.getTrait();
+//											else
+//												infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+//										}
+//									}
+//								}
+//							}
+//							catch(Exception e){
+//								System.out.println("An error occurred in method: writeEvidenceOut.");
+//								System.out.println(e.getMessage());
+//							}
+//						}
+//					}
 				}
 				//writes the row
-				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+infoQTL+"\t"+ondexId+"\n");
+				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
 			}
 			out.close();
 			return true;
@@ -2163,18 +2275,31 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		System.out.println("Populate HashMaps");
 		File file1 = new File("mapConcept2Genes");
 		File file2 = new File("mapGene2Concepts");
-		if(!file1.exists() || !file2.exists()){
 		
-			AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
-			ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
-			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-			Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
-			for (ONDEXConcept gene : seed) {		
-				if (gene.getAttribute(attTAXID) != null
-						&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-					genes.add(gene);
-				}				
-			}
+		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
+		AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
+		AttributeName attEnd = graph.getMetaData().getAttributeName("END");
+		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
+		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+		
+		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
+		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
+		
+		Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
+		if(ccQTL != null)
+			qtls = graph.getConceptsOfConceptClass(ccQTL);
+		
+		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
+		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+		for (ONDEXConcept gene : seed) {		
+			if (gene.getAttribute(attTAXID) != null
+					&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
+				genes.add(gene);
+			}				
+		}
+		
+		if(!file1.exists() || !file2.exists()){
+
 			// the results give us a map of every starting concept to every valid path
 			Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
 			
@@ -2256,7 +2381,54 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				e.printStackTrace();
 			}
 		}	
-		System.out.println("HashMap Populated");
+		System.out.println("Populated Gene2Concept with #mappings: "+mapGene2Concepts.size());
+		System.out.println("Populated Concept2Gene with #mappings: "+mapConcept2Genes.size());
+		
+		System.out.println("Create Gene2QTL map now...");
+		
+		mapGene2QTL = new HashMap<Integer, Set<Integer>>();
+		
+		
+		for(ONDEXConcept gene : genes){
+			
+			int chr = 0;
+			
+			double beg = 0.0;
+			
+			if (gene.getAttribute(attChromosome) != null) {
+				chr = (Integer) gene.getAttribute(attChromosome).getValue();
+			}			
+
+			if (attCM != null) {
+				if (gene.getAttribute(attCM) != null) {
+					beg = (Double) gene.getAttribute(attCM).getValue();
+				}
+			}else if (gene.getAttribute(attBegin) != null) {
+				beg = (Integer) gene.getAttribute(attBegin).getValue();
+			}
+			
+			
+			for (ONDEXConcept q : qtls) {
+				int chrQTL = (Integer) q.getAttribute(attChromosome).getValue();
+				int startQTL = (Integer) q.getAttribute(attBegin).getValue();
+				int endQTL = (Integer) q.getAttribute(attEnd).getValue();
+				
+				
+				if((chrQTL == chr) && (beg >= startQTL) && (beg <= endQTL)){
+					
+					if(!mapGene2QTL.containsKey(gene.getId())){
+						Set<Integer> setQTL = new HashSet<Integer>();														
+						mapGene2QTL.put(gene.getId(), setQTL);							
+					}
+									
+					mapGene2QTL.get(gene.getId()).add(q.getId());
+				}
+
+			}
+		}
+		
+		
+		System.out.println("Populated Gene2QTL with #mappings: "+mapGene2QTL.size());
 	}
 
 	public  ArrayList<ONDEXConcept> filterQTLs(ArrayList<ONDEXConcept> genes, List<QTL> qtls) {

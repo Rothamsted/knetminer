@@ -876,14 +876,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+values[2]+'</td>';
 					table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
-//					table = table + '<td>'+values[5]+'</td>';
-					//QTL coloum with information box
-					table = table + '<td>';
-				    if(values[5].length > 1)
-				    	var table = table + values[5].split("||").length;
-				    else
-				    	table = table + '0';
-				    table = table + '</td>';
+					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
 					//Calculates the summary box
 					if (containsKey(values[0],summaryArr)){
