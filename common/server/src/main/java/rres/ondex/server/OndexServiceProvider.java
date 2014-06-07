@@ -1177,7 +1177,7 @@ public class OndexServiceProvider {
 			g.getAttribute(attSize).setValue(size);
 		}
 		
-		//add gene-QTL relations to the network
+		//add gene-QTL-Trait relations to the network
 		if(mapGene2QTL.containsKey(gene.getId())){
 			Set<Integer> qtlSet = mapGene2QTL.get(gene.getId());
 			for(Integer qtlId : qtlSet){
@@ -1188,9 +1188,25 @@ public class OndexServiceProvider {
 					r.createAttribute(attVisible, true, false);
 				}
 				if (qtl.getAttribute(attSize) == null) {
-					// initial size
 					qtl.createAttribute(attSize, new Integer(70), false);
 					qtl.createAttribute(attVisible, true, false);
+				}
+				Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
+				for (ONDEXRelation r : relSet) {
+					if(r.getOfType().getId().equals("control")){
+						ONDEXRelation rel = graphCloner.cloneRelation(r);
+						if (rel.getAttribute(attSize) == null) {
+							rel.createAttribute(attSize, new Integer(2), false);
+							rel.createAttribute(attVisible, true, false);
+						}
+						ONDEXConcept tC = r.getToConcept();
+						ONDEXConcept traitCon = graphCloner.cloneConcept(tC);
+						if (traitCon.getAttribute(attSize) == null) {
+							traitCon.createAttribute(attSize, new Integer(70), false);
+							traitCon.createAttribute(attVisible, true, false);
+						}
+					}
+					
 				}
 			}
 		}
@@ -1274,6 +1290,8 @@ public class OndexServiceProvider {
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
+		AttributeName attCM = md.getAttributeName("cM");
+		AttributeName attSig = md.getAttributeName("Significance");
 		AttributeName attTrait= md.getAttributeName("Trait");
 		ConceptClass ccQTL = md.getConceptClass("QTL");
 		Set<ONDEXConcept> qtlDB = new HashSet<ONDEXConcept>();
@@ -1291,13 +1309,49 @@ public class OndexServiceProvider {
 			size = maxGenes;
 		
 		for (ONDEXConcept c : genes) {
-			id++;
+			
+			if (id++ > maxGenes)
+				break;
 
 			// only genes that are on chromosomes (not scaffolds)
 			// can be displayed in GViewer
 			if (c.getAttribute(attChr) == null)
 				continue;
 
+			String chr = c.getAttribute(attChr).getValue().toString();
+			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
+			int end = 0; c.getAttribute(attEnd).getValue();
+			
+			int beg = 0;
+			double begCM = -1.00;
+			int begBP = 0;
+			
+			if(attCM != null && c.getAttribute(attCM) != null) {
+				begCM = (Double) c.getAttribute(attCM).getValue();
+			}
+		
+			if(attBeg != null && c.getAttribute(attBeg) != null) {
+				begBP = (Integer) c.getAttribute(attBeg).getValue();
+			}
+			
+			if(attEnd != null && c.getAttribute(attEnd) != null) {
+				end = (Integer) c.getAttribute(attEnd).getValue();
+			}
+			
+			//TODO this can be a parameter CM/BP in future
+			if(attCM != null){
+				
+				//ignore genes that don't have cM attributes and mode is CM
+				if(begCM == -1.00){
+					continue;
+				}	
+				beg = (int) (begCM * 1000000);
+				end = (int) (begCM * 1000000);
+			}	
+			else{
+				beg = begBP;
+			}	
+			
 			String name = c.getPID();
 
 			for (ConceptAccession acc : c.getConceptAccessions()) {
@@ -1308,14 +1362,6 @@ public class OndexServiceProvider {
 					name = acc.getAccession();
 				//}
 			}
-
-			String chr = c.getAttribute(attChr).getValue().toString();
-			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-			String beg = c.getAttribute(attBeg).getValue().toString();
-			String end = c.getAttribute(attEnd).getValue().toString();
-
-			if (id > maxGenes)
-				break;
 
 			String query = "mode=network&keyword=" + keyword+"&list="+name;
 			String uri = "OndexServlet?" + query;
@@ -1338,88 +1384,95 @@ public class OndexServiceProvider {
 			sb.append("</feature>\n");
 		}
 
-		if (usersRelatedGenes != null && usersRelatedGenes.size() > 0) {
-			for (ONDEXConcept u : usersRelatedGenes) {
-				// only genes that are on chromosomes (not scaffolds)
-				// can be displayed in GViewer
-				if (u.getAttribute(attChr) == null)
-					continue;
+//		if (usersRelatedGenes != null && usersRelatedGenes.size() > 0) {
+//			for (ONDEXConcept u : usersRelatedGenes) {
+//				// only genes that are on chromosomes (not scaffolds)
+//				// can be displayed in GViewer
+//				if (u.getAttribute(attChr) == null)
+//					continue;
+//
+//				String name = u.getPID();
+//
+//				for (ConceptAccession acc : u.getConceptAccessions()) {
+//					String accValue = acc.getAccession();
+//					//if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
+//					//		&& accValue.startsWith("AT")
+//					//		&& (accValue.indexOf(".") == -1)) {
+//						name = acc.getAccession();
+//					//}
+//				}
+//
+//				String chr = u.getAttribute(attChr).getValue().toString();
+//				String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
+//				String beg = u.getAttribute(attBeg).getValue().toString();
+//				String end = u.getAttribute(attEnd).getValue().toString();
+//
+//				String query = "mode=network&keyword=" + keyword+"&list="+name;
+//				String uri = "OndexServlet?" + query;
+//
+//				// Genes
+//				sb.append("<feature id=\"" + id + "\">\n");
+//				sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+//				sb.append("<start>" + beg + "</start>\n");
+//				sb.append("<end>" + end + "</end>\n");
+//				sb.append("<type>gene</type>\n");
+//				sb.append("<color>0x0000ff</color>\n"); // COLOR
+//				sb.append("<label>" + name + "</label>\n");
+//				sb.append("<link>" + uri + "</link>\n");
+//				sb.append("</feature>\n");
+//			}
+//		}
+//		
+//		if (!listMode.equals("GLrestrict") && usersUnrelatedGenes != null && usersUnrelatedGenes.size() > 0) {
+//			for (ONDEXConcept u : usersUnrelatedGenes) {
+//				// only genes that are on chromosomes (not scaffolds)
+//				// can be displayed in GViewer
+//				if (u.getAttribute(attChr) == null)
+//					continue;
+//
+//				String name = u.getPID();
+//
+//				for (ConceptAccession acc : u.getConceptAccessions()) {
+//					String accValue = acc.getAccession();
+//					if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
+//							&& accValue.startsWith("AT")
+//							&& (accValue.indexOf(".") == -1)) {
+//						name = acc.getAccession();
+//					}
+//				}
+//
+//				String chr = u.getAttribute(attChr).getValue().toString();
+//				String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
+//				String beg = u.getAttribute(attBeg).getValue().toString();
+//				String end = u.getAttribute(attEnd).getValue().toString();
+//
+//				String query = "mode=network&keyword=" + keyword+"&list="+name;
+//				String uri = "OndexServlet?" + query;
+//
+//				// Genes
+//				sb.append("<feature id=\"" + id + "\">\n");
+//				sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+//				sb.append("<start>" + beg + "</start>\n");
+//				sb.append("<end>" + end + "</end>\n");
+//				sb.append("<type>gene</type>\n");
+//				sb.append("<color>0xFFFFFF</color>\n"); // white
+//				sb.append("<label>" + name + "</label>\n");
+//				sb.append("<link>" + uri + "</link>\n");
+//				sb.append("</feature>\n");
+//			}
+//		}
 
-				String name = u.getPID();
-
-				for (ConceptAccession acc : u.getConceptAccessions()) {
-					String accValue = acc.getAccession();
-					//if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
-					//		&& accValue.startsWith("AT")
-					//		&& (accValue.indexOf(".") == -1)) {
-						name = acc.getAccession();
-					//}
-				}
-
-				String chr = u.getAttribute(attChr).getValue().toString();
-				String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-				String beg = u.getAttribute(attBeg).getValue().toString();
-				String end = u.getAttribute(attEnd).getValue().toString();
-
-				String query = "mode=network&keyword=" + keyword+"&list="+name;
-				String uri = "OndexServlet?" + query;
-
-				// Genes
-				sb.append("<feature id=\"" + id + "\">\n");
-				sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
-				sb.append("<start>" + beg + "</start>\n");
-				sb.append("<end>" + end + "</end>\n");
-				sb.append("<type>gene</type>\n");
-				sb.append("<color>0x0000ff</color>\n"); // COLOR
-				sb.append("<label>" + name + "</label>\n");
-				sb.append("<link>" + uri + "</link>\n");
-				sb.append("</feature>\n");
-			}
-		}
-		
-		if (!listMode.equals("GLrestrict") && usersUnrelatedGenes != null && usersUnrelatedGenes.size() > 0) {
-			for (ONDEXConcept u : usersUnrelatedGenes) {
-				// only genes that are on chromosomes (not scaffolds)
-				// can be displayed in GViewer
-				if (u.getAttribute(attChr) == null)
-					continue;
-
-				String name = u.getPID();
-
-				for (ConceptAccession acc : u.getConceptAccessions()) {
-					String accValue = acc.getAccession();
-					if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
-							&& accValue.startsWith("AT")
-							&& (accValue.indexOf(".") == -1)) {
-						name = acc.getAccession();
-					}
-				}
-
-				String chr = u.getAttribute(attChr).getValue().toString();
-				String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-				String beg = u.getAttribute(attBeg).getValue().toString();
-				String end = u.getAttribute(attEnd).getValue().toString();
-
-				String query = "mode=network&keyword=" + keyword+"&list="+name;
-				String uri = "OndexServlet?" + query;
-
-				// Genes
-				sb.append("<feature id=\"" + id + "\">\n");
-				sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
-				sb.append("<start>" + beg + "</start>\n");
-				sb.append("<end>" + end + "</end>\n");
-				sb.append("<type>gene</type>\n");
-				sb.append("<color>0xFFFFFF</color>\n"); // white
-				sb.append("<label>" + name + "</label>\n");
-				sb.append("<link>" + uri + "</link>\n");
-				sb.append("</feature>\n");
-			}
-		}
-		// QTLs
+		// display user QTLs
 		for (QTL region : userQtl) {
 			int chr = region.getChrIndex();
-			int start = Integer.valueOf(region.getStart()) * 100000;
-			int end = Integer.valueOf(region.getEnd()) * 100000;
+			int start = Integer.valueOf(region.getStart());
+			int end = Integer.valueOf(region.getEnd());
+			
+			//TODO check of MODE is CM/BP
+			if(attCM != null){
+				start = start * 1000000;
+				end = end * 1000000;
+			}
 			String label = region.getLabel();
 			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
 			
@@ -1440,14 +1493,49 @@ public class OndexServiceProvider {
 			sb.append("</feature>\n");
 		}
 		
+//		//find qtl in knowledgebase that match keywords
+//		List<QTL> qtlDB = findQTL(keyword);
+//		
+//		//some logic to limit QTL size if too many are found
+//		System.out.println(qtlDB.size() + " QTLs are found.");
+//		if(qtlDB.size() > 150){
+//			System.out.println("Too many QTL found, remove not significant ones...");
+//			List<QTL> toRemove= new ArrayList<QTL>();
+//			for(QTL q : qtlDB){
+//				if(!q.getSignificance().equalsIgnoreCase("significant")){
+//					toRemove.add(q);
+//				}
+//			}
+//			qtlDB.removeAll(toRemove);
+//			System.out.println(qtlDB.size() + " QTLs are significant.");
+//		}
+//		
+//		//add QTL from knowledgebase to QTL list from user 
+//		qtl.addAll(qtlDB);
+//		System.out.println("Total number of QTL to display: "+qtl.size());
+		
 		for(ONDEXConcept qtl : qtlDB){
+			
+			//to cope with large number of QTL in AnimalQTLdb
+			if(qtlDB.size() > 500){
+				if(attSig == null || !qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
+					continue;
+				}
+			}
+			
 			int chrQTL = (Integer) qtl.getAttribute(attChr).getValue();
 			String chrLatin = chromBidiMap.get(Integer.valueOf(chrQTL));
-			int startQTL = (Integer) qtl.getAttribute(attBeg).getValue() * 100000;
-			int endQTL = (Integer) qtl.getAttribute(attEnd).getValue() * 100000;
+			int startQTL = (Integer) qtl.getAttribute(attBeg).getValue();
+			int endQTL = (Integer) qtl.getAttribute(attEnd).getValue();
 			String traitDesc = qtl.getAttribute(attTrait).getValue().toString();
 			String acc = qtl.getConceptName().getName();
 			String uri = "http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id="+acc;
+			
+			//TODO check of MODE is CM/BP
+			if(attCM != null){
+				startQTL = startQTL * 1000000;
+				endQTL = endQTL * 1000000;
+			}
 			
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
@@ -1528,14 +1616,12 @@ public class OndexServiceProvider {
 		}
 		
 		ONDEXGraphMetaData md = graph.getMetaData();
-		AttributeName attChr = md.getAttributeName("Chromosome");
+		AttributeName attChromosome = md.getAttributeName("Chromosome");
 		AttributeName attScaf = md.getAttributeName("Scaffold");
 		AttributeName attTrait = md.getAttributeName("Trait");
-		AttributeName attBeg = md.getAttributeName("BEGIN");
-		AttributeName attEnd = md.getAttributeName("END");
+		AttributeName attBegin = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attTAXID = md.getAttributeName("TAXID");
-		AttributeName attSize = md.getAttributeName("size");
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
@@ -1561,23 +1647,25 @@ public class OndexServiceProvider {
 				}
 				int chr = 0;
 				double beg = 0.0;
-				if (gene.getAttribute(attChr) != null) {
-					chr = (Integer) gene.getAttribute(attChr).getValue();
+				double begCM = 0.00;
+				int begBP = 0;
+				
+				if(gene.getAttribute(attChromosome) != null) {
+					chr = (Integer) gene.getAttribute(attChromosome).getValue();
 				}			
-				else if (gene.getAttribute(attScaf) != null) {
-					chr = (Integer) gene.getAttribute(attScaf).getValue();
-				} 
-				if (gene.getAttribute(attBeg) != null) {
-					beg = (Integer) gene.getAttribute(attBeg).getValue();
-				}
 
-				if (attCM != null) {
-					if (gene.getAttribute(attCM) != null) {
-						beg = (Double) gene.getAttribute(attCM).getValue();
-					}
-				}else if (gene.getAttribute(attBeg) != null) {
-					beg = (Integer) gene.getAttribute(attBeg).getValue();
+				if(attCM != null && gene.getAttribute(attCM) != null) {
+					begCM = (Double) gene.getAttribute(attCM).getValue();
 				}
+			
+				if(attBegin != null && gene.getAttribute(attBegin) != null) {
+					begBP = (Integer) gene.getAttribute(attBegin).getValue();
+				}
+				
+				if(attCM != null)
+					beg = begCM;
+				else
+					beg = begBP;
 				
 				Double score = 0.0;
 				if(scoredCandidates != null){
@@ -1585,7 +1673,7 @@ public class OndexServiceProvider {
 						score = scoredCandidates.get(gene);
 					}
 				}
-				DecimalFormat fmt = new DecimalFormat("0.000");  				
+				DecimalFormat fmt = new DecimalFormat("0.00");  				
 				
 				String geneName = getDefaultNameForConcept(gene);
 
@@ -1644,7 +1732,7 @@ public class OndexServiceProvider {
 						Long qtlStart = Long.parseLong(loci.getStart());
 						Long qtlEnd = Long.parseLong(loci.getEnd());
 						
-						if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+						if(qtlChrom == chr && begCM >= qtlStart && begCM <= qtlEnd){
 							if (infoQTL == "")
 								infoQTL += loci.getLabel() + "//" + loci.getTrait();
 							else
@@ -1697,7 +1785,7 @@ public class OndexServiceProvider {
 				}
 				
 				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-				+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+				+ fmt.format(beg) + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
 			}
 			out.close();
 		} catch (IOException e) {
@@ -1741,6 +1829,7 @@ public class OndexServiceProvider {
 				if(type == "Publication" && !name.contains("PMID:"))
 					name = "PMID:"+name;
 				Float score = luceneConcepts.get(lc);
+				DecimalFormat fmt = new DecimalFormat("0.00");  
 				Integer ondexId = lc.getId();
 				if(!mapConcept2Genes.containsKey(lc.getId())){
 					continue;
@@ -1871,7 +1960,7 @@ public class OndexServiceProvider {
 //					}
 				}
 				//writes the row
-				out.write(type+"\t"+name+"\t"+score+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
+				out.write(type+"\t"+name+"\t"+fmt.format(score)+"\t"+numberOfGenes+"\t"+numberOfUserGenes+"\t"+numberOfQTL+"\t"+ondexId+"\n");
 			}
 			out.close();
 			return true;
@@ -2392,21 +2481,26 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		for(ONDEXConcept gene : genes){
 			
 			int chr = 0;
-			
 			double beg = 0.0;
+			double begCM = 0.0;
+			int begBP = 0;
 			
-			if (gene.getAttribute(attChromosome) != null) {
+			if(gene.getAttribute(attChromosome) != null) {
 				chr = (Integer) gene.getAttribute(attChromosome).getValue();
 			}			
 
-			if (attCM != null) {
-				if (gene.getAttribute(attCM) != null) {
-					beg = (Double) gene.getAttribute(attCM).getValue();
-				}
-			}else if (gene.getAttribute(attBegin) != null) {
-				beg = (Integer) gene.getAttribute(attBegin).getValue();
+			if(attCM != null && gene.getAttribute(attCM) != null) {
+				begCM = (Double) gene.getAttribute(attCM).getValue();
+			}
+		
+			if(attBegin != null && gene.getAttribute(attBegin) != null) {
+				begBP = (Integer) gene.getAttribute(attBegin).getValue();
 			}
 			
+			if(attCM != null)
+				beg = begCM;
+			else
+				beg = begBP;
 			
 			for (ONDEXConcept q : qtls) {
 				int chrQTL = (Integer) q.getAttribute(attChromosome).getValue();
