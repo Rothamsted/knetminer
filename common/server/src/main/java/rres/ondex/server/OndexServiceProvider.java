@@ -1622,6 +1622,8 @@ public class OndexServiceProvider {
 		AttributeName attBegin = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attTAXID = md.getAttributeName("TAXID");
+		AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
+		ConceptClass ccSNP = md.getConceptClass("SNP");
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
@@ -1767,6 +1769,27 @@ public class OndexServiceProvider {
 						act_name = act_name+"//"+name;
 						cc2name.put(ccId, act_name);
 					}
+				}
+				
+				if(ccSNP != null){
+					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(gene);
+					for (ONDEXRelation rel : rels) {
+						if(rel.getOfType().getId().equals("has_variation")){
+							ONDEXConcept snpConcept = rel.getToConcept();
+							String ccId = "SNP";
+							String name = getDefaultNameForGroupOfConcepts(snpConcept);
+							if(attSnpCons != null && snpConcept.getAttribute(attSnpCons) != null)
+									name = snpConcept.getAttribute(attSnpCons).getValue().toString();
+							if(!cc2name.containsKey(ccId)){
+								cc2name.put(ccId, ccId+"//"+name);
+							}else{
+								String act_name = cc2name.get(ccId);
+								act_name = act_name+"//"+name;
+								cc2name.put(ccId, act_name);
+							}
+						}
+					}
+					
 				}
 				
 				//create output string

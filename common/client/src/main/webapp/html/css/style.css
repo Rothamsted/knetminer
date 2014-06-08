@@ -343,6 +343,7 @@ table.tablesorter tbody td {
 .evidence_item_BioProc {background:url(../image/Bioogical_proccess.png) no-repeat;}
 .evidence_item_CelComp {background:url(../image/Cellular_component.png) no-repeat;}
 .evidence_item_Comp {background:url(../image/Compound.png) no-repeat;}
+.evidence_item_SNP {background:url(../image/Compound.png) no-repeat;}
 .evidence_item_Enzyme {background:url(../image/Enzyme.png) no-repeat;}
 .evidence_item_EC {background:url(../image/Enzyme_clasification.png) no-repeat;}
 .evidence_item_MolFunc {background:url(../image/Molecular_function.png) no-repeat;}
