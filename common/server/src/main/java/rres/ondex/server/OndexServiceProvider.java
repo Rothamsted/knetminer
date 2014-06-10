@@ -1168,13 +1168,13 @@ public class OndexServiceProvider {
 		if (g.getAttribute(attSize) == null) {
 
 			// initial size
-			g.createAttribute(attSize, new Integer(40), false);
+			g.createAttribute(attSize, new Integer(70), false);
 			g.createAttribute(attVisible, true, false);
 			g.createAttribute(attFlagged, true, false);
 		} else {
-			Integer size = (Integer) g.getAttribute(attSize).getValue();
-			size++;
-			g.getAttribute(attSize).setValue(size);
+//			Integer size = (Integer) g.getAttribute(attSize).getValue();
+//			size++;
+//			g.getAttribute(attSize).setValue(size);
 		}
 		
 		//add gene-QTL-Trait relations to the network

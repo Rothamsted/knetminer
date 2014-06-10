@@ -903,7 +903,7 @@ function createEvidenceTable(tableUrl){
 					"<td align=center><font size=1.8px>Gene</font></td>" +
 					"<td align=center><font size=1.8px>Protein</font></td>" +
 					"<td align=center><font size=1.8px>Pathway</font></td>" +
-					"<td align=center><font size=1.8px>Compount</font></td>" +
+					"<td align=center><font size=1.8px>SNP</font></td>" +
 					"<td align=center><font size=1.8px>Enzyme</font></td>" +
 					"<td align=center><font size=1.8px>Reaction</font></td>" +
 					"<td align=center><font size=1.8px>Publication</font></td>" +
