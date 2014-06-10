@@ -1131,7 +1131,7 @@ public class OndexServiceProvider {
 			attFlagged = md.getFactory().createAttributeName("flagged",
 					Boolean.class);
 		
-		RelationType rt = md.getFactory().createRelationType("part_of");
+		RelationType rt = md.getFactory().createRelationType("is_p");
 		EvidenceType et = md.getFactory().createEvidenceType("QTLNetMiner");
 		
 		// search last concept of semantic motif for keyword
