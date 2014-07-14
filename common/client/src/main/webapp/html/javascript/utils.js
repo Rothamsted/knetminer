@@ -464,27 +464,22 @@ function generateNetwork(url,list){
 	//OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
-
+/*	
+	var attributes = {
+		width : 760,
+		height : 600
+	};
+	var parameters = {
+		jnlp_href : applet_url+"OndexWeb.jnlp",
+		loadappearance : true,
+		filename : data_url+oxl
+	};
+*/
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet. " + 
         		"Alternatively it can be <a href="+data_url + oxl +" target=_blank>downloaded</a> and opened in the <a href=http://www.ondex.org target=_blank>Ondex desktop application</a>.</br></br>" +
         		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</p></br></br>" +
-        		"<applet CODE=net.sourceforge.ondex.ovtk2lite.Main ARCHIVE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar WIDTH=760 HEIGHT=600></xmp>" +
-        		"<PARAM NAME=CODE VALUE=net.sourceforge.ondex.ovtk2lite.Main>" +
-	            "<PARAM NAME=ARCHIVE VALUE="+applet_url+"ovtk2lite-0.5.0-SNAPSHOT.jar>" +
-	            "<PARAM NAME=type value=application/x-java-applet;version=1.6>" +
-	            "<PARAM NAME=scriptable value=false>" +
-	            "<PARAM NAME=ondex.dir VALUE="+applet_url+"data>" +
-	            "<PARAM NAME=ovtk.dir VALUE="+applet_url+"config>" +
-	            "<PARAM NAME=password VALUE=ovtk>" +
-	            "<PARAM NAME=username VALUE=ovtk>" +
-	            "<PARAM NAME=loadappearance VALUE=true>" +
-	            "<PARAM NAME=antialiased VALUE=true>" +
-	            "<PARAM NAME=nodes.labels VALUE=true>" +
-	            "<PARAM NAME=edges.lables VALUE=true>" +
-	            "<PARAM NAME=filename VALUE="+data_url + oxl +">" +
-	            "Your browser is completely ignoring the &lt;APPLET&gt; tag!" +
-	            "</applet>" +            
-	            "<div id=legend_picture><div id=legend_container>" +
+        		"<div id=\"OndexWebApplet\"></div>" +
+        		"<div id=legend_picture><div id=legend_container>" +
 				"<table id=legend_frame cellspacing=1>" +
 				"<tr>" +
 					"<td align=center><img src=html/image/Gene.png></td>" +
@@ -524,7 +519,24 @@ function generateNetwork(url,list){
 				"</table>" +
 	            "</div></div>";
 				$('#NetworkCanvas').html(output);
+	
+				var appletSettings = {	
+					id: "OndexWeb",
+					url: applet_url+"OndexWeb.jnlp",
+					width : 760,
+					height : 600,
+					placeholder:"OndexWebApplet",
+					params: 
+					{
+						loadappearance : true,
+						filename : data_url+oxl
+					}
+				};
+				
+				dtjava.embed(appletSettings, { jvm: "1.6+" }, {});
 				activateButton('NetworkCanvas');
+				
+				
 	});
 }
 /*
