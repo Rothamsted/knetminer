@@ -464,20 +464,10 @@ function generateNetwork(url,list){
 	//OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post(url, list, function(response, textStatus){																							 
 	var oxl = response.split(":")[1];
-/*	
-	var attributes = {
-		width : 760,
-		height : 600
-	};
-	var parameters = {
-		jnlp_href : applet_url+"OndexWeb.jnlp",
-		loadappearance : true,
-		filename : data_url+oxl
-	};
-*/
+
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet. " + 
         		"Alternatively it can be <a href="+data_url + oxl +" target=_blank>downloaded</a> and opened in the <a href=http://www.ondex.org target=_blank>Ondex desktop application</a>.</br></br>" +
-        		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</p></br></br>" +
+        		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel. Test</p></br></br>" +
         		"<div id=\"OndexWebApplet\"></div>" +
         		"<div id=legend_picture><div id=legend_container>" +
 				"<table id=legend_frame cellspacing=1>" +

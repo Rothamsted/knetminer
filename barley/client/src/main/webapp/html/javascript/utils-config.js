@@ -1,5 +1,5 @@
-var data_url = "http://ondex.rothamsted.ac.uk/barley_data/";
-var applet_url = "http://ondex.rothamsted.ac.uk/OndexWebBeta/";
+var data_url = "https://ondex.rothamsted.ac.uk/barley_data/";
+var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Barley Genome';
 var reference_genome = true;
 var multiorganisms = false;
