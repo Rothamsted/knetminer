@@ -356,13 +356,17 @@ table.tablesorter tbody td {
 .evidence_item_TO {background:url(../image/Trait_ontology.png) no-repeat;}
 .evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
 
-.evidence_box {position:absolute; width:185px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2;text-align:left;}
+/* both evidence and qtl dropdown boxes */
+.dropdown_box_open { cursor:pointer;}
+.dropdown_box_close {cursor:pointer;position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
+
+/* Evidenence box view */
+.evidence_box {position:absolute; width:185px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2;text-align:left; display:none}
 .evidence_box span {font-size:17px; color:#003399;}
-.evidence_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
 /* QTL box Gene View*/
 .qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:14px Arial, Helvetica, sans-serif; color:#4184C1}
-.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:12px Arial, Helvetica, sans-serif; color:#3D3D3D}
+.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:12px Arial, Helvetica, sans-serif; color:#3D3D3D; display:none;}
 .qtl_box span {font-size:17px; color:#003399; font-style:normal;}
 .qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
@@ -423,18 +427,18 @@ table.tablesorter tbody td {
 #suggestor_tables img {position: relative;}
 #suggestor_terms {position:relative;clear:left;padding-left:29px;}
 #suggestor_tables {position:relative;clear:left;}
-.buttonSynonym_off {background:url(../image/synonym_bg_off.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;color:#fff;}
-.buttonSynonym_on {background:url(../image/synonym_bg_on.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;;color:#fff;font-weight:bold;}
+.buttonSynonym_off {cursor:pointer;background:url(../image/synonym_bg_off.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;color:#fff;}
+.buttonSynonym_on {cursor:pointer;background:url(../image/synonym_bg_on.png) repeat-x; float: left; height: 23px;margin: 0 12px 5px 10px;padding-top: 10px;position: relative;;color:#fff;font-weight:bold;}
 .synonym_right_border {position:absolute;top:0px;right:-9px;}
 .synonym_left_border {position:absolute;top:0px;left:-9px;}
-.addKeyword {width:22px;height:22px;background:url(../image/add_off.png) no-repeat;position:relative;float:left;}
-.addKeywordUndo {width:22px;height:22px;background:url(../image/add_on.png) no-repeat;position:relative;float:left;} 
-.excludeKeyword {width:22px;height:22px;background:url(../image/exclude_off.png) no-repeat;position:relative;float:left;}
-.excludeKeywordUndo {width:22px;height:22px;background:url(../image/exclude_on.png) no-repeat;position:relative;float:left;}
-.replaceKeyword {width:22px;height:22px;background:url(../image/replace_off.png) no-repeat;position:relative;float:left;}
-.replaceKeywordUndo {width:22px;height:22px;background:url(../image/replace_on.png) no-repeat;position:relative;float:left;}
+.addKeyword {cursor:pointer;width:22px;height:22px;background:url(../image/add_off.png) no-repeat;position:relative;float:left;}
+.addKeywordUndo {cursor:pointer;width:22px;height:22px;background:url(../image/add_on.png) no-repeat;position:relative;float:left;} 
+.excludeKeyword {cursor:pointer;width:22px;height:22px;background:url(../image/exclude_off.png) no-repeat;position:relative;float:left;}
+.excludeKeywordUndo {cursor:pointer;width:22px;height:22px;background:url(../image/exclude_on.png) no-repeat;position:relative;float:left;}
+.replaceKeyword {cursor:pointer;width:22px;height:22px;background:url(../image/replace_off.png) no-repeat;position:relative;float:left;}
+.replaceKeywordUndo {cursor:pointer;width:22px;height:22px;background:url(../image/replace_on.png) no-repeat;position:relative;float:left;}
 .tabBox {left: -2px;position: absolute;top: 14px;}
-.conceptTabOn {position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOn.png) no-repeat;z-index:2;}
+.conceptTabOn {cursor:pointer;position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOn.png) no-repeat;z-index:2;}
 .conceptTabOn div {position:absolute;top:9px;right:3px;opacity: 0.6;}
-.conceptTabOff {position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOff.png) no-repeat;z-index:1;}
+.conceptTabOff {cursor:pointer;position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOff.png) no-repeat;z-index:1;}
 .conceptTabOff div {position:absolute;top:9px;right:3px;opacity: 0.6;}

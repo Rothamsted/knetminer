@@ -26,9 +26,11 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 
 function showSynonymTab(tabFrom,tabItemFrom,tableTo){
 $('.suggestorTable:visible').fadeOut(0,function(){
-		$('#'+tabFrom+' .conceptTabOn').attr('class','conceptTabOff');
+		//$('#'+tabFrom+' .conceptTabOn').attr('class','conceptTabOff');
+		$('#'+tabFrom+' .conceptTabOn').toggleClass('conceptTabOff conceptTabOn');
 		$('#'+tableTo).fadeIn();
-		$('#'+tabItemFrom).attr('class','conceptTabOn');
+		//$('#'+tabItemFrom).attr('class','conceptTabOn');
+		$('#'+tabItemFrom).toggleClass('conceptTabOff conceptTabOn');
 	})
 }
 
@@ -52,18 +54,22 @@ function addKeyword(keyword, from, target){
 		keyword = '"'+keyword+'"';
 	newquery = query+' OR '+keyword;
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','addKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','addKeywordUndo');
+	//$('#'+from).parent().attr('onClick','addKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','addKeywordUndo');
+	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
 }
 
 function addKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
+	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
+		keyword = '"'+keyword+'"';
 	newquery = query.replace(' OR '+keyword, "");
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','addKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','addKeyword');
+	//$('#'+from).parent().attr('onClick','addKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','addKeyword');
+	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
 }
@@ -74,18 +80,22 @@ function excludeKeyword(keyword, from, target){
 		keyword = '"'+keyword+'"';
 	newquery = query+' NOT '+keyword;
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','excludeKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','excludeKeywordUndo');
+	//$('#'+from).parent().attr('onClick','excludeKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','excludeKeywordUndo');
+	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
 }
 
 function excludeKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
+	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
+		keyword = '"'+keyword+'"';
 	newquery = query.replace(' NOT '+keyword, "");
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','excludeKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','excludeKeyword');
+	//$('#'+from).parent().attr('onClick','excludeKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','excludeKeyword');
+	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
 }
@@ -94,8 +104,9 @@ function replaceKeyword(oldkeyword, newkeyword, from, target){
 	query = $('#'+target).val();
 	newquery = query.replace(oldkeyword,newkeyword);
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','replaceKeywordUndo(\''+oldkeyword+'\',\''+newkeyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','replaceKeywordUndo');
+	//$('#'+from).parent().attr('onClick','replaceKeywordUndo(\''+oldkeyword+'\',\''+newkeyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','replaceKeywordUndo');
+	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
 }
@@ -104,8 +115,9 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 	query = $('#'+target).val();
 	newquery = query.replace(newkeyword,oldkeyword);
 	$('#'+target).val(newquery);
-	$('#'+from).parent().attr('onClick','replaceKeyword(\''+oldkeyword+'\',\''+newkeyword+'\',\''+from+'\',\''+target+'\')');
-	$('#'+from).attr('class','replaceKeyword');
+	//$('#'+from).parent().attr('onClick','replaceKeyword(\''+oldkeyword+'\',\''+newkeyword+'\',\''+from+'\',\''+target+'\')');
+	//$('#'+from).attr('class','replaceKeyword');
+	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
 }
@@ -467,7 +479,7 @@ function generateNetwork(url,list){
 
 	var output ="<p class=margin_left>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet. " + 
         		"Alternatively it can be <a href="+data_url + oxl +" target=_blank>downloaded</a> and opened in the <a href=http://www.ondex.org target=_blank>Ondex desktop application</a>.</br></br>" +
-        		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel. Test</p></br></br>" +
+        		"If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</p></br></br>" +
         		"<div id=\"OndexWebApplet\"></div>" +
         		"<div id=legend_picture><div id=legend_container>" +
 				"<table id=legend_frame cellspacing=1>" +
@@ -647,8 +659,10 @@ function createGenesTable(tableUrl, keyword, rows){
 					}
 		        	table = table + '<tr>';
 				    
-				    var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
-				    var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
+				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
+				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
+				    
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
 					}else{
@@ -670,9 +684,14 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
 				    	//a replace from dot to underline is necessary for html syntax
-				    	withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
+				    	//withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
+				    	withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><a href"javascript:;" class="dropdown_box_open" id="qtl_box_open_'+values[1].replace(".","_")+withinQTLs.length+'">'+withinQTLs.length+'</a>';
+				    	
 				    	//Builds the evidence box
-				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
+				    	//withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
+				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box"><span class="dropdown_box_close" id="qtl_box_close_'+values[1].replace(".","_")+withinQTLs.length+'"></span>';
+
+				    	
 				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
 				    	
 				    	var uniqueQTLs = new Object();
@@ -725,9 +744,13 @@ function createGenesTable(tableUrl, keyword, rows){
 						for (var count_i = 0; count_i < (evidences.length); count_i++) {
 							//Shows the icons
 							var evidence_elements = evidences[count_i].split("//");
-							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
+							//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
+							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';	
+
 							//Builds the evidence box
-							evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
+							//evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
+							evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_'+values[1].replace(".","_")+evidence_elements[0]+'></span>';
+
 							evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
 							for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
 								//link publications with pubmed
@@ -756,7 +779,8 @@ function createGenesTable(tableUrl, keyword, rows){
 		        table = table + '</form>';	        
     		}
     		document.getElementById('resultsTable').innerHTML = table+
-    		'<div id="networkButton"><input class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
+    		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
+    		'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" ></insert><div id="loadingNetworkDiv"></div></div>'+
     		"<div id=legend_picture><div id=legend_container>" +
 			"<table id=legend_frame cellspacing=1>" +
 			"<tr>" +
@@ -797,6 +821,29 @@ function createGenesTable(tableUrl, keyword, rows){
 			"</table>" +
             "</div></div>";
     		
+    		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
+    			e.preventDefault();
+    			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
+    			var values = e.data.x[geneNum].split("\t");
+    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+    		});
+    		
+    		$(".dropdown_box_open").click(function(e) {
+    			e.preventDefault();
+    			var targetname = $(e.target).attr("id").replace("open_","");
+    			$("#"+targetname).slideDown(300);
+        	});
+        	
+        	$(".dropdown_box_close").click(function(e) {
+    			e.preventDefault();
+    			var targetname = $(e.target).attr("id").replace("close_","");
+    			$("#"+targetname).slideUp(100);
+        	});
+    		
+        	$("#generateMultiGeneNetworkButton").click(function(e) {
+        		generateMultiGeneNetwork(keyword);
+        	});
+        	
     		$("#tablesorter").tablesorter({ 
     	        headers: { 
     	            // do not sort "select" column 
@@ -866,7 +913,9 @@ function createEvidenceTable(tableUrl){
 				for(var ev_i=1; ev_i < (evidenceTable.length-1); ev_i++) {
 					values = evidenceTable[ev_i].split("\t");
 					table = table + '<tr>';
-					table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';	
+					//table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';	
+					table = table + '<td><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+
 					//link publications with pubmed
 					pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
 					if(values[0] == 'Publication')
@@ -876,7 +925,8 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
-					table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
+					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
@@ -933,6 +983,27 @@ function createEvidenceTable(tableUrl){
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 				
 				$('#evidenceTable').html(table);
+				
+				$(".evidenceTableExcludeKeyword").bind("click", {x: evidenceTable}, function(e) {
+					e.preventDefault();
+					var targetID = $(e.target).attr("id");
+					var evidenceNum = targetID.replace("evidence_exclude_","");
+	    			var values = e.data.x[evidenceNum].split("\t");
+					
+					if($(e.target).hasClass("excludeKeyword")){
+						excludeKeyword('ConceptID:'+values[6] , targetID, 'keywords');
+					} else {
+						excludeKeywordUndo('ConceptID:'+values[6] , targetID, 'keywords');
+					}
+				});
+				
+				$(".generateEvidencePath").bind("click", {x: evidenceTable}, function(e) {
+	    			e.preventDefault();
+	    			var evidenceNum = $(e.target).attr("id").replace("generateEvidencePath_","");
+	    			var values = e.data.x[evidenceNum].split("\t");
+	    			evidencePath(values[6]);
+	    		});
+				
 				$("#tablesorterEvidence").tablesorter(); 
 				//Shows the summary box
 				for(key in summaryArr){
@@ -1016,7 +1087,8 @@ function createSynonymTable(tableUrl){
 						var originalTermName = termName.replace(">","");
 						termName = originalTermName.replace(/ /g, '_');
 						termName = termName.replace(/"/g, '');
-						terms = terms + '<a href="javascript:;" onclick="showSynonymTable(\'tablesorterSynonym'+termName+(countConcepts+1)+'\',\'tabBox_'+termName+'\')"><div class="'+divstyle+'" id="tablesorterSynonym'+termName+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_left_border"/>'+termName+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_right_border"/></div></a>';	
+						//terms = terms + '<a href="javascript:;" onclick="showSynonymTable(\'tablesorterSynonym'+termName+(countConcepts+1)+'\',\'tabBox_'+termName+'\')"><div class="'+divstyle+'" id="tablesorterSynonym'+termName+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_left_border"/>'+termName+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_right_border"/></div></a>';	
+						terms = terms + '<div class="'+divstyle+' synonymTabButton" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_left_border"/>'+termName.replace(/_/g, " ")+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_right_border"/></div>';	
 						
 						
 						var aSynonyms = new Array();
@@ -1039,8 +1111,9 @@ function createSynonymTable(tableUrl){
 								else
 									tablevisibility = 'style="display:none;"';	
 									
-								tableHeader = '<table id="tablesorterSynonym'+termName+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
-
+								//tableHeader = '<table id="tablesorterSynonym'+termName+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
+								tableHeader = '<table id="tablesorterSynonym'+termName+'_'+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
+								
 								aTable.push(tableHeader); 
 								aTableLenght.push(0); 
 									
@@ -1050,18 +1123,26 @@ function createSynonymTable(tableUrl){
 									conceptTabStyles = 'conceptTabOff';	
 								
 								if (values[1] == "QTL")
-									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div></a>';
+									//tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div></a>';
+									tabsBox = tabsBox + '<div class="'+conceptTabStyles+' showConceptTab" id="tabBoxItem_'+termName+'_'+countConcepts+'" rel="tablesorterSynonym'+termName+'_'+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div>';
 								else if (values[1] == "Trait")
-									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_TO" title="'+values[1]+'"></div></div></a>';
+									//tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_TO" title="'+values[1]+'"></div></div></a>';
+									tabsBox = tabsBox + '<div class="'+conceptTabStyles+' showConceptTab" id="tabBoxItem_'+termName+'_'+countConcepts+'" rel="tablesorterSynonym'+termName+'_'+countConcepts+'"><div class="evidence_item evidence_item_TO" title="'+values[1]+'"></div></div>';
 								else
-									tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div></a>';
+									//tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div></a>';
+									tabsBox = tabsBox + '<div class="'+conceptTabStyles+' showConceptTab" id="tabBoxItem_'+termName+'_'+countConcepts+'" rel="tablesorterSynonym'+termName+'_'+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div>';
 								
 							}
 							//If is not a new document type a new row is added to the existing table
 							conceptIndex = aNewConcepts.indexOf(values[1]);
 							row = '<tr>';											
 							row = row + '<td width="390">'+values[0]+'</td>'
-							row = row + '<td width="80"><a  href="javascript:;" onclick="addKeyword(\''+values[0]+'\', \'synonymstable_add_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword" title="Add term"></div></a> <a href="javascript:;" onclick="excludeKeyword(\''+values[0]+'\', \'synonymstable_exclude_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword" title="Exclude term"></div></a> <a href="javascript:;" onclick="replaceKeyword(\''+originalTermName+'\',\''+values[0]+'\', \'synonymstable_replace_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword" title="Replace term"></div></a></td>';
+							//row = row + '<td width="80"><a  href="javascript:;" onclick="addKeyword(\''+values[0]+'\', \'synonymstable_add_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword" title="Add term"></div></a> <a href="javascript:;" onclick="excludeKeyword(\''+values[0]+'\', \'synonymstable_exclude_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword" title="Exclude term"></div></a> <a href="javascript:;" onclick="replaceKeyword(\''+originalTermName+'\',\''+values[0]+'\', \'synonymstable_replace_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword" title="Replace term"></div></a></td>';
+							row = row + '<td width="80">';
+							row = row + '<div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword synonymTableEvent" title="Add term"></div>';
+							row = row + '<div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword synonymTableEvent" title="Exclude term"></div>';
+							row = row + '<div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword synonymTableEvent" title="Replace term"></div></td>';
+
 							//row = row + '<th width="78"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></th>';			
 							//row = row + '<th width="60">'+values[2]+'</th>';
 							row = row + '</tr>';
@@ -1073,6 +1154,53 @@ function createSynonymTable(tableUrl){
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
+				
+				$(".synonymTabButton").click(function(e) {
+					var buttonID = $(e.currentTarget).attr("id").replace("_buttonSynonym", "");
+					var termName = buttonID.replace("tablesorterSynonym","").split("_");
+					termName.pop(); //remove conceptNumber element from array
+					showSynonymTable(buttonID , "tabBox_"+termName.join("_"));
+				});
+				
+				$(".showConceptTab").click(function(e){
+					var buttonID = $(e.currentTarget).attr("id");
+					var termName = buttonID.replace("tabBoxItem_","").split("_");
+					var conceptNum = termName.pop(); //remove conceptNumber element from array
+					termName = termName.join("_"); // recombine array
+					showSynonymTab('tabBox_'+termName,buttonID, 'tablesorterSynonym'+termName+'_'+conceptNum);
+				});
+				
+				$(".synonymTableEvent").bind("click", {x: evidenceTable}, function(e) {
+					e.preventDefault();
+					var currentTarget = $(e.currentTarget);
+					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
+					
+					var keyword = e.data.x[synonymNum].split("\t")[0];
+					var originalTermName = e.data.x[0].replace("<","").replace(">","");
+					
+					
+					if(currentTarget.hasClass("addKeyword")){
+						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
+					} 
+					else if(currentTarget.hasClass("addKeywordUndo")){
+						addKeywordUndo(keyword, currentTarget.attr("id"), 'keywords');
+					}
+					else if(currentTarget.hasClass("excludeKeyword")){
+						excludeKeyword(keyword, currentTarget.attr("id"), 'keywords');
+					}
+					else if(currentTarget.hasClass("excludeKeywordUndo")){
+						excludeKeywordUndo(keyword, currentTarget.attr("id"), 'keywords');
+					}
+					else if(currentTarget.hasClass("replaceKeyword")){
+						replaceKeyword(originalTermName, keyword, currentTarget.attr("id"), 'keywords');
+					}
+					else if(currentTarget.hasClass("replaceKeywordUndo")){
+						replaceKeywordUndo(originalTermName, keyword, currentTarget.attr("id"), 'keywords');
+					}
+
+				});
+				
+				
 			}else{
 				table = "No results found";	
 				$('#suggestor_terms').html(" ");
