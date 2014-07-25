@@ -623,7 +623,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
 				table = table + 'Select gene(s) and click "Show Network" button to see the Ondex network.<span id="hint"><img id="hintSortableTable" src="html/image/hint.png" /></span></p>';
 				table = table + '<form name="checkbox_form">';
-				table = table + '<div id="selectAll"><input type="checkbox" name="chkall" />Select All</div>';			
+				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -639,10 +639,10 @@ function createGenesTable(tableUrl, keyword, rows){
 				}
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';							
-				table = table + '<th width="70">'+values[7]+'</th>';
+				table = table + '<th width="85">'+values[7]+'</th>';
 				table = table + '<th width="70">'+values[8]+'</th>';
 				table = table + '<th width="220">'+values[9]+'</th>';
-				table = table + '<th width="90">Select</th>';							
+				table = table + '<th width="70">Select</th>';							
 				table = table + '</tr>';
 				table = table + '</thead>';
 				table = table + '<tbody class="scrollTable">';
@@ -769,7 +769,7 @@ function createGenesTable(tableUrl, keyword, rows){
 					evidence = evidence+'</td>';
 					// Foreach evidence show the images - end
 					
-				    var select = '<td><input type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
+				    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 				    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
 					table = table + gene + taxid + chr + start + score + usersList + withinQTL + evidence + select;
 				    table = table + '</tr>';
@@ -851,8 +851,14 @@ function createGenesTable(tableUrl, keyword, rows){
     	            8: {sorter: false}
     	        } 
     	    }); 
-    		$('input[name="chkall"]').click(function() {
-    			$("#tablesorter :checkbox").attr('checked', $(this).attr('checked'));
+    		$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+	    			if(values[7] == "yes"){
+	    				$("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			}
+    			}
     		});
         }
 	});	
