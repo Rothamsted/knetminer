@@ -11,5 +11,5 @@
         This work was supported by<br /> 
         BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />
     </div>
-	<a target="_blank" href="http://ondex.rothamsted.ac.uk/poplar_data/QTLNetMinerPoplar_UserGuide.pdf">User Guide</a> | <a target="_blank" href="html/release.html">Release Notes</a>
+	<a target="_blank" href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/guides/QTLNetMiner_UserGuide_Poplar.pdf">User Guide</a> | <a target="_blank" href="html/release.html">Release Notes</a>
 </div>
