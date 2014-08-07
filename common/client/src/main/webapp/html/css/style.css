@@ -242,12 +242,12 @@ div.scrollTable th, div.scrollTable td {
 }
 div.scrollTable tbody {
 	overflow: auto;
-	height: 280px;
+	max-height: 280px;
 	overflow-x: hidden;
 }
 div.scrollTable table>tbody {
   overflow:auto;
-  height:280px;
+  max-height:280px;
   overflow-x:hidden;
 }
 div.scrollTable table>tbody tr {
@@ -324,9 +324,31 @@ table.tablesorter tbody td {
 }
 
 /* tooltip */
-#hint {
+span.hint {
+	display:inline-block;
 	cursor:help;
 }
+span.hint-small {
+	position:absolute;
+	right: 10px;
+	height: 19px;
+	width: 19px;
+	background: url(../image/Hint_small.png) 0 0 no-repeat;
+}
+
+span.hint-small:hover {
+	//background-position: -19px 0;
+}
+
+span.hint-big {
+	background: url(../image/Hint_big.png) 0 0 no-repeat;
+	cursor: pointer;
+}
+
+span.hint-big:hover {
+	background-position: -36px 0;
+}
+
 .tooltip {
 	margin:8px;
 	padding:8px;
@@ -411,9 +433,8 @@ table.tablesorter tbody td {
 #pGViewer_title {padding-bottom:10px;font-size:11px;color:#9B9B9B;}
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:11px; color:#9B9B9B;}
-* #eg_keywords {margin-left:4px;position:relative;top:4px;}
 
-#NetworkCanvas{position:relative;padding-bottom:60px;float:left;}
+#NetworkCanvas{position:relative;padding-bottom:20px;float:left;}
 #Network_frame{border:none;}
 
 /* Evidence View */
@@ -442,3 +463,143 @@ table.tablesorter tbody td {
 .conceptTabOn div {position:absolute;top:9px;right:3px;opacity: 0.6;}
 .conceptTabOff {cursor:pointer;position:relative;clear:left;width:33px;height: 62px;margin-top: -14px; background:url(../image/conceptTabOff.png) no-repeat;z-index:1;}
 .conceptTabOff div {position:absolute;top:9px;right:3px;opacity: 0.6;}
+
+
+
+
+/*
+ * networkview Modal popupBox
+ */
+#modalShadow {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index:1999;
+	background-color: #000;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	display:none;
+}
+.modalBox {
+	position: relative;
+	width: 760px;
+	height: 750px;
+}
+
+.modalBox.modalBoxVisible  {
+	position: fixed;
+	left: 3%;
+	right: 3%;
+	top: 44px;
+	bottom: 50px;
+	height: auto;
+	width: auto;
+	z-index: 2000;
+	text-align: center;
+}	
+
+#OndexWebContainer{
+	position:absolute;
+	width:100%;
+	top:0px;
+	bottom:150px;
+}
+
+.modalBoxVisible #OndexWebContainer {
+	bottom: 100px;
+}
+#OndexWeb-app, #OndexWebApplet{
+	width: 100%;
+	height: 100%;
+}
+
+.modalBox #legend_picture {
+	position: absolute;
+	bottom: 50px;
+}
+
+.modalBox.modalBoxVisible #legend_picture{
+	bottom: 0px;
+}
+
+
+
+.modalBox.modalBoxVisible #legend_frame {
+	background-color: #fff;
+}
+
+.modalBox.modalBoxVisible #restoreNetwork {
+	display:inline-block;
+}
+
+#buttonBox {
+	position: relative;
+	height: 50px;
+	margin-top:5px;
+	text-align: right
+}
+
+
+/*
+ * network Buttons
+ */
+ 
+.networkButtons {
+	height: 36px;
+	width: 36px;
+	margin-left: 3px;
+	margin-right: 3px;
+	display: inline-block;
+}
+
+#buttonBox .networkButtons {
+	text-align: right;
+}
+
+#newNetworkWindow {
+	background: url(../image/New_Window.png) 0 0 no-repeat;
+}
+#newNetworkWindow:hover {
+	background-position: -36px 0;
+}
+
+#maximiseNetwork {
+	background: url(../image/Maximise.png) 0 0 no-repeat;
+}
+#maximiseNetwork:hover {
+	background-position: -36px 0;
+}
+
+#downloadNetworkTab {
+	background: url(../image/Download.png) 0 0 no-repeat;
+}
+#downloadNetworkTab:hover {
+	background-position: -36px 0;
+}
+
+#restoreNetwork {
+	background: url(../image/Restore.png) 0 0 no-repeat;
+	position: relative;
+	top:-35px;
+	z-index: 2000;
+	display: none;
+}
+
+#restoreNetwork:hover {
+	background-position: -36px 0;
+}	
+
+#networkHelpBox {
+	display: none;
+	z-index: 1000;
+	width: 730px;
+	height: 265px;
+	position: absolute;
+	top: -290px;
+	background-color: #F4F5F7;
+	border: solid 3px #e4e4e4;
+	padding: 10px 10px 10px 10px;
+}
+	 

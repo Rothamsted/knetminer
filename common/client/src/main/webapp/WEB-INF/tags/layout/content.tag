@@ -17,10 +17,8 @@
 						<ul>
 							<li><input id="keywords" name="keywords" type="text" /></li>
 							<li><input type="submit" id="keywordsSubmit" value="Search" class="button" disabled/></li>
-							<li id="eg_keywords"> 
-								<span id="hint"> <img id="hintEgKeywords" src="html/image/hint.png" alt="hint" /></span>
-							</li>
 							<li><div id="loadingDiv"></div></li>									
+							<li><span id="hintEgKeywords" class="hint hint-small"></span></li>
 							<div id="eg_keywords_hidden" style="display:none;">
 								${eg_keywords}
 							</div>
@@ -32,7 +30,7 @@
 				<li id="genomeorqtlsearchbox" style="display:none;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
-					<span id="hint"><img id="hintSearchQtlGenome" src="html/image/hint.png" alt="hint" /></span>
+					<span id="hintSearchQtlGenome" class="hint hint-small"></span>
 					<hr />
 					<div id="region_search_area" style="display:none;">		
 						<div class="rightnav">
@@ -72,9 +70,7 @@
 				</li>
 				<li>						
 					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
-						<span id="hint">
-							<img id="hintEnterGenes" src="html/image/hint.png" />
-						</span>
+						<span id="hintEnterGenes" class="hint hint-small"></span>
 						<hr />								
 					<div id="list_search">	
 						<div id="advanced_search_area" style="display:none;">												
@@ -94,9 +90,7 @@
 				</li>
 				<li>						
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
-						<span id="hint">
-							<img id="hintQuerySuggestor" src="html/image/hint.png" />
-						</span>
+						<span id="hintQuerySuggestor" class="hint hint-small"></span>
 						<span id="suggestor_invite"></span>
 						<hr />								
 					<div id="suggestor_search">	
@@ -140,7 +134,7 @@
                 </center>
             </div>
             <div id="resultsTable" class="resultViewer" style="display:none;" ></div>
-            <div id="NetworkCanvas" class="resultViewer" style="display:none;position:relative;padding-bottom:80px">
+            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
             </div>
 			<div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
