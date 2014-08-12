@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Properties;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -149,7 +150,7 @@ public class OndexServlet extends HttpServlet {
 		
 		String query;
 		String list;	
-		Socket socket;		
+		Socket socket = null;		
 		PrintWriter out;
 		BufferedReader in;		
 		String resp = "";
@@ -249,13 +250,13 @@ public class OndexServlet extends HttpServlet {
 //		    		}		            
 //		            in.close();
 //		            out.close();
-	            } 
+	            }
 	            catch (IOException e) {
 	            	logger.info("Receiving request over socket failed.");
 	            	e.printStackTrace();
 	            	resp = "An error occurred.";
 	            	return resp;
-	            }	            
+	            }	
 			}	
 			catch(Exception e){
 				logger.info(e.getMessage());	
@@ -263,6 +264,17 @@ public class OndexServlet extends HttpServlet {
 				e.printStackTrace();
 				resp = "An error occurred.";
 				return resp;
+			}
+			finally {
+				if(socket != null) {
+					try{
+						socket.close();
+					}
+					catch(IOException e){
+						logger.info("Close socket failed.");
+		            	e.printStackTrace();
+					}
+				}
 			}
 		}
 		if(resp.length() == 0){

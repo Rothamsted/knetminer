@@ -87,6 +87,16 @@ public class ClientWorker implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally {
+			if(clientSocket != null) {
+				try{
+					clientSocket.close();
+				}
+				catch(IOException e){
+					System.out.println(e.getMessage());
+				}
+			}
+		}
 	}
 	
 	public static boolean isInteger(String s) {
