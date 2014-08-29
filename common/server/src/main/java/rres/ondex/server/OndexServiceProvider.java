@@ -686,7 +686,7 @@ public class OndexServiceProvider {
 					if(chrGene != 0 && startGene != 0) {
 						
 						//TODO re-factor
-						if (c.getAttribute(attLocation) != null) {
+						if (attLocation != null && c.getAttribute(attLocation) != null) {
 							String locGene = c.getAttribute(attLocation).getValue().toString();
 							if (locQTL.equalsIgnoreCase(locGene) && startGene >= startQTL && startGene <= endQTL) {
 								concepts.add(c);
@@ -1678,7 +1678,7 @@ public class OndexServiceProvider {
 				}
 				int chr = 0;
 				String loc = "";
-				double beg = 0.0;
+				String beg = "NA";
 				double begCM = 0.00;
 				int begBP = 0;
 				
@@ -1698,10 +1698,12 @@ public class OndexServiceProvider {
 					begBP = (Integer) gene.getAttribute(attBegin).getValue();
 				}
 				
+				DecimalFormat fmt = new DecimalFormat("0.00"); 
+				
 				if(attCM != null)
-					beg = begCM;
+					beg = fmt.format(begCM);
 				else
-					beg = begBP;
+					beg = Integer.toString(begBP);
 				
 				Double score = 0.0;
 				if(scoredCandidates != null){
@@ -1709,7 +1711,6 @@ public class OndexServiceProvider {
 						score = scoredCandidates.get(gene);
 					}
 				}
-				DecimalFormat fmt = new DecimalFormat("0.00");  				
 				
 				String geneName = getDefaultNameForConcept(gene);
 
@@ -1858,10 +1859,10 @@ public class OndexServiceProvider {
 						location = gene.getAttribute(attLocation).getValue().toString();
 					}
 					out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + location + "\t"
-							+ fmt.format(beg) + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+							+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
 				}else{
 					out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-							+ fmt.format(beg) + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+							+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
 				}
 				
 				
@@ -2403,7 +2404,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
 				
 				//for wheat & barley
-				if(gene.getAttribute(attLocation) != null){
+				if(attLocation != null && gene.getAttribute(attLocation) != null){
 					String geneLoc = gene.getAttribute(attLocation).getValue().toString();
 					if (attCM != null) {
 						if (gene.getAttribute(attCM) != null) {
