@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Flowering time in barley</name>
+		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>1H</chromosome>
+			<start>80</start>
+			<end>110</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+			<chromosome>2H</chromosome>
+			<start>10</start>
+			<end>30</end>
+			<label>QTL2</label>
+		</region>
+	</query>	
+</sampleQueries>

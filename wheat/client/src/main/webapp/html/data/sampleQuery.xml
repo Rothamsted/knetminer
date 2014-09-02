@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Gene set analysis</description>
+		<term>"grain color" OR flavon* OR proanthocyanidin</term>
+		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
+		<gene>Traes_5DS_3470B5005</gene> 
+		<gene>Traes_2BS_A3FACFBB7</gene> 
+		<gene>Traes_3B_0D6720765</gene> 
+		<gene>Traes_2BL_07EC87598</gene> 
+		<gene>Traes_3B_8901FB437</gene> 
+		<gene>Traes_2DL_416879F3F</gene> 
+		<gene>Traes_5BS_E7DEF21BD1</gene> 
+		<gene>Traes_7AS_D5D81566C</gene> 
+		<gene>Traes_3B_857714A63</gene> 
+		<gene>Traes_7AL_40127A553</gene> 
+		<gene>Traes_3B_6C834B60C</gene> 
+		<gene>Traes_2AL_ED4D3BEC1</gene> 
+		<gene>Traes_7BS_1224E5EB1</gene> 
+		<gene>Traes_4AL_416A78462</gene> 
+		<gene>Traes_6DS_5B0F73A26</gene> 
+		<gene>Traes_1BL_1D865A8CC</gene> 
+		<gene>Traes_3DL_247F72C8D</gene> 
+		<gene>Traes_4AL_FCF851DFF</gene> 
+		<gene>Traes_2AL_B23D14FEF</gene> 
+		<gene>Traes_5AL_120F47252</gene> 
+	</query>	
+	<query>
+		<name>Example 2</name>
+		<description>QTL + Gene set analysis</description>
+		<term>color OR flavon* OR proanthocyanidin</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>2B</chromosome>
+			<start>30</start>
+			<end>50</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+			<chromosome>5A</chromosome>
+			<start>50</start>
+			<end>60</end>
+			<label>QTL2</label>
+		</region>
+		<gene>Traes_5DS_3470B5005</gene>
+		<gene>Traes_2BS_A3FACFBB7</gene>
+		<gene>Traes_3B_0D6720765</gene>
+		<gene>Traes_2BL_07EC87598</gene>
+		<gene>Traes_3B_8901FB437</gene>
+		<gene>Traes_2DL_416879F3F</gene>
+		<gene>Traes_5BS_E7DEF21BD1</gene>
+		<gene>Traes_7AS_D5D81566C</gene>
+		<gene>Traes_3B_857714A63</gene>
+		<gene>Traes_7AL_40127A553</gene>
+		<gene>Traes_3B_6C834B60C</gene>
+		<gene>Traes_2AL_ED4D3BEC1</gene>
+		<gene>Traes_7BS_1224E5EB1</gene>
+		<gene>Traes_4AL_416A78462</gene>
+		<gene>Traes_6DS_5B0F73A26</gene>
+		<gene>Traes_1BL_1D865A8CC</gene>
+		<gene>Traes_3DL_247F72C8D</gene>
+		<gene>Traes_4AL_FCF851DFF</gene>
+		<gene>Traes_2AL_B23D14FEF</gene>
+		<gene>Traes_5AL_120F47252</gene>
+	</query>
+</sampleQueries>

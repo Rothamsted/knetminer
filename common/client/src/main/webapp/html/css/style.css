@@ -23,6 +23,10 @@ a img {
 	border:none;	
 }
 
+.redText {
+	color:red;
+}
+
 a:hover {
 	text-decoration:underline;
 }
@@ -197,9 +201,11 @@ div#assembly {
 	font-style:italic;
 	text-align:right;
 }
-
+#numGenes {
+	width: 60px;
+}
 #selectUser {
-	width:96%;
+	float:right;
 	text-align:right;
 }
 div#advanced_search_area {
@@ -350,6 +356,7 @@ span.hint-big:hover {
 }
 
 .tooltip {
+	min-width: 250px;
 	margin:8px;
 	padding:8px;
 	border:1px solid grey;
@@ -357,6 +364,11 @@ span.hint-big:hover {
 	position:absolute;
 	margin-bottom:20px;
 	z-index:100000;
+}
+
+
+.exampleQuery {
+	cursor:pointer;
 }
 
 /* Evidence pictures */
@@ -377,6 +389,12 @@ span.hint-big:hover {
 .evidence_item_Transport {background:url(../image/Transport.png) no-repeat;}
 .evidence_item_TO {background:url(../image/Trait_ontology.png) no-repeat;}
 .evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
+
+/* Preload the evidence pictures */
+body:after{
+	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png); 
+	display:none;
+}
 
 /* both evidence and qtl dropdown boxes */
 .dropdown_box_open { cursor:pointer;}
