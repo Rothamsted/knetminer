@@ -167,6 +167,23 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 									"</table>" +
 								"</div>" +
 							"</div>";
+/*
+ * Function to check the brackets in a string are balanced
+ * 
+ */
+function bracketsAreBalanced(str) {
+	var count = 0;
+	for(var i=0; i< str.length; i++){
+		var ch = str.charAt(i);
+		if(ch == '('){
+			count++;
+		} else if(ch == ')'){
+			count--;
+			if(count < 0) return false;
+		}
+	}
+	return true;
+}
 
 /*
  * Function to get the number of matches
@@ -177,7 +194,7 @@ function matchCounter(){
 	if(keyword.length == 0){
 		$('#matchesResultDiv').html('Please, start typing your query')	
 	} else {
-		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
+		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
 			var searchMode = "counthits";		
 			var request = "mode="+searchMode+"&keyword="+keyword;
 			var url = 'OndexServlet?'+request;
@@ -366,7 +383,7 @@ $(document).ready(
 		    //Match counter
 			//$("#keywords").keyup(matchCounter());			 
 		 	// Tooltip	 	 	 		 		
-		     var sampleQueryButtons = "Some example queries";
+		     var sampleQueryButtons = "<strong>Example queries</strong>";
 			    
 		    	$.ajax({
 		    		type: 'GET',
@@ -560,7 +577,7 @@ $(document).ready(
 		 		}); 	 	
 		 		
 		 		$('span.hint').live('mouseleave', function(event){
-		 			if($(event.relatedTarget).hasClass("tooltip-static")){
+		 			if($(event.relatedTarget).hasClass("tooltip-static") || $(event.relatedTarget).parent().hasClass("tooltip-static")){
 						return;
 					}
 		 			$('div.tooltip').remove();
@@ -676,12 +693,11 @@ function searchKeyword(){
 					var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
-						var mapText = "Only the top 100 genes are displayed in Map view";
-						//var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map and Gene view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
+						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}	
 					
 					gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-					genomicView = genomicView + mapText + gviewer_html;
+					genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
 					$("#pGViewer").replaceWith(genomicView);	
 					
