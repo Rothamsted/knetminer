@@ -5,8 +5,18 @@ var genes;
 /*
 Functions for show and hide structures when a button is pressed
 */
+
+/*
+ * Function to escape special characters from a string for use in jquery selector
+ */
+function escapeJquerySelectors(exp){
+	return exp.replace(/[!"#$%&'()*+,.\/:;<=>?@\[\\\]^`{|}~]/g, '\\$&');
+}
+
 function showSynonymTable(option,tabBoxRelated){
 $('.suggestorTable:visible').fadeOut(0,function(){
+		option = escapeJquerySelectors(option);
+		tabBoxRelated = escapeJquerySelectors(tabBoxRelated);
 		$('.synonym_right_border').attr('src','html/image/synonym_right_off.png');
 		$('.synonym_left_border').attr('src','html/image/synonym_left_off.png');
 		$('.buttonSynonym_on').attr('class','buttonSynonym_off');
@@ -15,23 +25,28 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 		$('#'+tabBoxRelated).fadeIn();
 		
 		//Gets the table related to the active tab
-		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');		
+		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');	
+		relatedTable = escapeJquerySelectors(relatedTable);
 		$('#'+relatedTable).fadeIn();
 		
 		$('#'+option+'_buttonSynonym').attr('class','buttonSynonym_on');
 		$('#'+option+'synonym_right_border').attr('src','html/image/synonym_right_on.png');
 		$('#'+option+'synonym_left_border').attr('src','html/image/synonym_left_on.png');
-	})
+	});
 }
 
 function showSynonymTab(tabFrom,tabItemFrom,tableTo){
 $('.suggestorTable:visible').fadeOut(0,function(){
+		tabFrom = escapeJquerySelectors(tabFrom);
+		tabItemFrom = escapeJquerySelectors(tabItemFrom);
+		tableTo = escapeJquerySelectors(tableTo);
+		
 		//$('#'+tabFrom+' .conceptTabOn').attr('class','conceptTabOff');
 		$('#'+tabFrom+' .conceptTabOn').toggleClass('conceptTabOff conceptTabOn');
 		$('#'+tableTo).fadeIn();
 		//$('#'+tabItemFrom).attr('class','conceptTabOn');
 		$('#'+tabItemFrom).toggleClass('conceptTabOff conceptTabOn');
-	})
+	});
 }
 
 function activateButton(option){
@@ -43,7 +58,7 @@ $('.resultViewer:visible').fadeOut(0,function(){
 		//Collapse Suggestor view
 		$('#suggestor_search').attr('src', 'html/image/expand.gif');
 		$('#suggestor_search_area').slideUp(500);
-	})
+	});
 }
 /*
 Functions for Add, Remove or Replace terms from the query search box
@@ -456,7 +471,7 @@ $(document).ready(
 		    	 			var numRegions = sampleQueries[sampleNum].regions.length;
 		    	 			
 		    	 			
-		    	 			if(sampleQueries[sampleNum].withinRegion.trim() == 'true'){
+		    	 			if(trim(sampleQueries[sampleNum].withinRegion) == 'true'){
 		     					$("input:radio[name=search_mode]").val(['qtl']);
 		     				} else {
 		     					$("input:radio[name=search_mode]").val(['genome']);
@@ -499,7 +514,7 @@ $(document).ready(
 		    		 			}
 		    	 			}
 		    	 			
-		    	 			if(sampleQueries[sampleNum].mapGLWithoutRestriction.trim() == 'true'){
+		    	 			if(trim(sampleQueries[sampleNum].mapGLWithoutRestriction) == 'true'){
 		     					$("input:radio[name=list_mode]").val(['GL']);
 		     				} else {
 		     					$("input:radio[name=list_mode]").val(['GLrestrict']);
