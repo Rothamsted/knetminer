@@ -2,3 +2,6 @@ target/
 .project
 .settings/
 .classpath
+stderr.log
+stdout.log
+*swp
