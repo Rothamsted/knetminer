@@ -14,7 +14,7 @@
 	<name>QTLNetMiner B. oleracea client</name>
 
 	<build>
-		<finalName>QTLNetMiner_boleracea</finalName>
+		<finalName>QTLNetMinerBoleracea</finalName>
 
 		<plugins>
 			<plugin>
