@@ -5,6 +5,6 @@
 	<entry key="DataPath">/var/www/html/boleracea_data/</entry>
 	<entry key="ServerPort">8189</entry>
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
-	<entry key="SpeciesTaxId">3712</entry>
+	<entry key="SpeciesTaxId">109376</entry>
 	<entry key="reference_genome">true</entry>
 </properties>
