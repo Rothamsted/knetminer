@@ -20,6 +20,7 @@
 		<module>barley</module>
 		<module>chicken</module>
 		<module>cow</module>
+		<module>boleracea</module>
 	</modules>
 
 	<reporting>
