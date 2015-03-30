@@ -328,8 +328,8 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Export the Ondex graph to file system
-	 * 
+	 * Export the Ondex graph to file system as a .oxl file and also in JSON format using the new JSON 
+         * Exporter plugin in Ondex.
 	 * @param ONDEXGraph
 	 *            graph
 	 * @throws InvalidPluginArgumentException
@@ -338,6 +338,7 @@ public class OndexServiceProvider {
 			throws InvalidPluginArgumentException {
 
 		boolean fileIsCreated = false;
+		boolean jsonFileIsCreated = false;
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
@@ -378,11 +379,41 @@ public class OndexServiceProvider {
 			System.out.println(e.getMessage());
 		}
 
-		// Check if file exists
+		// Check if .oxl file exists
 		while (!fileIsCreated) {
 			fileIsCreated = checkFileExist(exportPath);
 		}
 		System.out.println("OXL file created:" + exportPath);
+
+               // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
+               net.sourceforge.ondex.export.json.Export jsonExport= new net.sourceforge.ondex.export.json.Export();
+               // JSON output file.
+               String jsonExportPath= exportPath.substring(0, exportPath.length()-4) +".json";
+               try {
+                    ONDEXPluginArguments epa= new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
+                    epa.setOption(FileArgumentDefinition.EXPORT_FILE, jsonExportPath);
+
+                    System.out.println("JSON Export file: "+ epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
+           
+                    jsonExport.setArguments(epa);
+//                    jsonExport.setONDEXGraph(graph);
+                    jsonExport.setONDEXGraph(graph2);
+                    System.out.println("Export JSON data: Total concepts= "+ graph2.getConcepts().size() +
+                            " , Relations= "+ graph2.getRelations().size());
+                    // Export the contents of the 'graph' object as multiple JSON objects to an output file.
+                    jsonExport.start();
+                   }
+               catch(Exception ex) {
+             	     ex.printStackTrace();
+           	     System.out.println(ex.getMessage());
+                    }
+
+		// Check if .json file also exists
+		while(!jsonFileIsCreated) {
+		      jsonFileIsCreated = checkFileExist(jsonExportPath);
+		     }
+		System.out.println("JSON file created:" + jsonExportPath);
+
 		return fileIsCreated;
 	}
 	
