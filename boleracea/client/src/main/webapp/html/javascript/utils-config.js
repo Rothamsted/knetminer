@@ -5,4 +5,3 @@ var species = 'B. oleracea cv. TO1000';
 var reference_genome = true;
 var multiorganisms = false;
 var longest_chr = 64984695;
-
