@@ -70,18 +70,4 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="11" length="140384" number="Pt">
-		<band index="1">
-			<start>0</start>
-			<end>140384</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="12" length="569630" number="Mt">
-		<band index="1">
-			<start>0</start>
-			<end>569630</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
 </genome>
