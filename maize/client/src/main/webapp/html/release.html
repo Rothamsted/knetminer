@@ -43,44 +43,60 @@ a img {text-decoration:none; border:0px;}
         <div class="divisor">&nbsp;</div>
     	<span>
 
-            <p>The Maize (<i>AGPv3</i>) information network contains <strong>21,601 concepts</strong> and <strong>107,952 relations</strong>.</p>
+            <p>The Maize (<i>AGPv3</i>) information network contains <strong>335,882 concepts</strong> and <strong>1,367,956 relations</strong>.</p>
+
 
 <ul>
-<table>
-	<tr>
-		<td><b>Concepts</b><td>
-		<td><b>Source</b><td>
-	</tr>
-	<tr>
-		<td>Genes<td>
-		<td><a href="http://www.ensembl.org/" target = "_blank">Ensembl</a>, release 69<td>
-	</tr>
-	<tr>
-		<td>Proteins<td>
-		<td><a href="http://www.uniprot.org/" target = "_blank">UniProt</a>, release 2012_11<td>
-	</tr>
-	<tr>
-		<td>RNA families<td>
-		<td><a href="http://rfam.sanger.ac.uk/" target = "_blank">Rfam</a>, release 11.0<td>
-	</tr>
-	<tr>
-		<td>GO annotations<td>
-		<td><a href="http://www.geneontology.org/" target = "_blank">The Gene Ontology</a><td>
-	</tr>
-	<tr>
-		<td>Publications<td>
-		<td><a href="http://www.ncbi.nlm.nih.gov/pubmed" target = "_blank">PubMed</a><td>
-	</tr>
-	<tr>
-		<td>PPI<td>
-		<td><a href="http://bio.scu.edu.cn/mppi/" target = "_blank">MppDB</a><td>
-	</tr>
-	<tr>
-		<td>QTL<td>
-		<td><a href="http://www.animalgenome.org/cgi-bin/QTLdb/index" target = "_blank">Animal QTLdb</a>, release 18<td>
-	</tr>
-</table>
+	<p><strong>Datasets used for integration</strong></p>
+	<ul>
+    	<li>Gene</li>
+    	<ul>
+			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/gff3/zea_mays/Zea_mays.AGPv3.26.gff3.gz">Zea_mays.AGPv3.26.gff3 from Ensembl</a></li>
+      	</ul>
+    	<li>Protein</li>
+    	<ul>
+			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/fasta/zea_mays/pep/Zea_mays.AGPv3.26.pep.all.fa.gz">Zea_mays.AGPv3.26.pep.all.fa from Ensembl</a></li>
+		</ul>
+    	<li>Protein-Domain</li>
+    	<ul>
+			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.interpro_id|zmays_eg_gene.default.feature_page.interpro_short_description|zmays_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
+    		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.pfam_pf&FILTERS=zmays_eg_gene.default.filters.with_pfam.only&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
+    	</ul>
+    	<li>Gene Ontology</li>
+    	<ul>
+      		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_gene_id|zmays_eg_gene.default.feature_page.go_accession|zmays_eg_gene.default.feature_page.go_namespace_1003|zmays_eg_gene.default.feature_page.go_linkage_type&FILTERS=&VISIBLEPANEL=resultspanel">BioMart GO</a></li>
+ 		</ul>
+    	<li>References</li>
+    	<ul>
+			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
+			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
+    	</ul>
+    	<li>Homology</li>
+    	<ul>
+    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.homologs.ensembl_peptide_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|zmays_eg_gene.default.homologs.athaliana_eg_orthology_type|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1|zmays_eg_gene.default.homologs.athaliana_eg_homolog_is_tree_compliant&FILTERS=zmays_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Maize - Arabidopsis</a></li>
+		<li>Decypher</li>
+    	</ul>
+    	<li>Ontologies</li>
+    	<ul>
+    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
+      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
+    	</ul>
+  	</ul>
+  	
+  	<p><strong>Networks</strong></p>
+	
+	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
+	<ul>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Maize/">Organism</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/maizenet/">Final Network</a></li>
+	</ul>
+	
 </ul>
+
         </span>
     </div>
 <div id="footer_spacer"></div>
