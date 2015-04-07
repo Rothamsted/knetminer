@@ -49,11 +49,11 @@ a img {text-decoration:none; border:0px;}
 <ul>
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-    	<li>Gene</li>
+    	<li>Gene (Version: 5b; Coding genes: 39,469)</li>
     	<ul>
 			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/gff3/zea_mays/Zea_mays.AGPv3.26.gff3.gz">Zea_mays.AGPv3.26.gff3 from Ensembl</a></li>
       	</ul>
-    	<li>Protein</li>
+    	<li>Protein (Version: 5b; Proteins: 63,391)</li>
     	<ul>
 			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/fasta/zea_mays/pep/Zea_mays.AGPv3.26.pep.all.fa.gz">Zea_mays.AGPv3.26.pep.all.fa from Ensembl</a></li>
 		</ul>
@@ -62,21 +62,17 @@ a img {text-decoration:none; border:0px;}
 			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.interpro_id|zmays_eg_gene.default.feature_page.interpro_short_description|zmays_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
     		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.pfam_pf&FILTERS=zmays_eg_gene.default.filters.with_pfam.only&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
     	</ul>
-    	<li>Gene Ontology</li>
-    	<ul>
-      		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_gene_id|zmays_eg_gene.default.feature_page.go_accession|zmays_eg_gene.default.feature_page.go_namespace_1003|zmays_eg_gene.default.feature_page.go_linkage_type&FILTERS=&VISIBLEPANEL=resultspanel">BioMart GO</a></li>
- 		</ul>
     	<li>References</li>
     	<ul>
 			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
+			<li>Plants (UniProt) - Information about well reviewed plant proteins excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
     	</ul>
     	<li>Homology</li>
     	<ul>
     	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.homologs.ensembl_peptide_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|zmays_eg_gene.default.homologs.athaliana_eg_orthology_type|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1|zmays_eg_gene.default.homologs.athaliana_eg_homolog_is_tree_compliant&FILTERS=zmays_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Maize - Arabidopsis</a></li>
-		<li>Decypher</li>
+		<li>Decypher Tera-Blast of Maize vs. UniProt Plants Reviewed</li>
     	</ul>
-    	<li>Ontologies</li>
+    	<li>Ontologies & Mappings</li>
     	<ul>
     		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
       		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
