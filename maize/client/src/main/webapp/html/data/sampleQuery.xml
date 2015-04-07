@@ -3,60 +3,58 @@
 	<query>
 		<name>Example 1</name>
 		<description>Find candidate genes in QTL</description>
-		<term>"lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"</term>
-		<withinRegion>false</withinRegion>
+		<term>"sugar content" OR glucose</term>
+		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>I</chromosome>
-			<start>29000000</start>
-			<end>30000000</end>
-			<label>QTL1</label>
+			<chromosome>1</chromosome>
+			<start>227000000</start>
+			<end>267000000</end>
+			<label>AQFS466</label>
 		</region>
 		<region>
-			<chromosome>IX</chromosome>
-			<start>8000000</start>
-			<end>9000000</end>
-			<label>QTL2</label>
+			<chromosome>10</chromosome>
+			<start>127000000</start>
+			<end>146000000</end>
+			<label>AQFS472</label>
 		</region>
 	</query>	
 	
 	<query>
 		<name>Example 2</name>
 		<description>QTL + gene list analysis</description>
-		<term>"shoot branching" OR strigolactone</term>
-		<withinRegion>true</withinRegion>
+		<term>drought OR trehalose</term>
+		<withinRegion>false</withinRegion>
 		<region>
-			<chromosome>V</chromosome>
+			<chromosome>1</chromosome>
 			<start>10000000</start>
 			<end>13000000</end>
 			<label>QTL1</label>
 		</region>
 		<region>
-			<chromosome>VI</chromosome>
+			<chromosome>4</chromosome>
 			<start>14000000</start>
 			<end>15000000</end>
 			<label>QTL2</label>
 		</region>
 		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>POTRI.006G155500</gene>
-		<gene>POTRI.002G118900</gene>
-		<gene>POTRI.016G062700</gene>
-		<gene>POTRI.014G016500</gene>
-		<gene>POTRI.007G052000</gene>
-		<gene>POTRI.005G145000</gene>
-		<gene>POTRI.002G046500</gene>
-		<gene>POTRI.001G249400</gene>
-		<gene>POTRI.T069400</gene>
-		<gene>POTRI.T068500</gene>
-		<gene>POTRI.002G131500</gene>
-		<gene>POTRI.T013200</gene>
-		<gene>POTRI.005G100600</gene>
-		<gene>POTRI.003G174300</gene>
-		<gene>POTRI.005G216400</gene>
-		<gene>POTRI.006G238500</gene>
-		<gene>POTRI.009G043400</gene>
-		<gene>POTRI.001G054000</gene>
-		<gene>POTRI.010G212000</gene>
-		<gene>POTRI.004G171400</gene>
-		
+		<gene>GRMZM2G179349</gene>
+		<gene>GRMZM2G015976</gene>
+		<gene>GRMZM2G021706</gene>
+		<gene>GRMZM2G025459</gene>
+		<gene>GRMZM2G179521</gene>
+		<gene>GRMZM2G061950</gene>
+		<gene>GRMZM2G064993</gene>
+		<gene>GRMZM2G008226</gene>
+		<gene>GRMZM2G014729</gene>
+		<gene>GRMZM2G019183</gene>
+		<gene>GRMZM2G099860</gene>
+		<gene>GRMZM2G112830</gene>
+		<gene>GRMZM2G178546</gene>
+		<gene>GRMZM2G312521</gene>
+		<gene>GRMZM2G366659</gene>
+		<gene>GRMZM2G416836</gene>
+		<gene>GRMZM2G527891</gene>
+		<gene>GRMZM2G836674</gene>
+		<gene>GRMZM2G873594</gene>			
 	</query>
 </sampleQueries>
