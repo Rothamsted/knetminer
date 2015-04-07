@@ -179,7 +179,7 @@ div#region_search_area li {
     list-style:none;
 }
 div#region_search_area {
-    text-align:center;
+    #text-align:center;
     padding:10px;
     padding-top:20px;
     width:100%;
