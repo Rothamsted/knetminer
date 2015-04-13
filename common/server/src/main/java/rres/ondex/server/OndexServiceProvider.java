@@ -386,7 +386,7 @@ public class OndexServiceProvider {
 		System.out.println("OXL file created:" + exportPath);
 
                // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
-               net.sourceforge.ondex.export.json.Export jsonExport= new net.sourceforge.ondex.export.json.Export();
+               net.sourceforge.ondex.export.cyjsJson.Export jsonExport= new net.sourceforge.ondex.export.cyjsJson.Export();
                // JSON output file.
                String jsonExportPath= exportPath.substring(0, exportPath.length()-4) +".json";
                try {
