@@ -12,7 +12,7 @@
 //  var jsondata_url = "https://qtlnetminer-test.rothamsted.ac.uk/poplar_data/";
 
   function generateNetworkGraph(jsonFileName) {
-   selectedJSONfile= "./sampleFiles/" + jsonFileName;
+   selectedJSONfile= /*"./sampleFiles/" +*/ jsonFileName;
    var json_File= selectedJSONfile;
 
    // Include this file's contents on the page at runtime using jQuery and a callback function.

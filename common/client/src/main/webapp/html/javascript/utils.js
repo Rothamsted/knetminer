@@ -850,13 +850,6 @@ function generateCyJSNetwork(url,list){
         var json_File= data_url + network_json; // the JSON file generated on the server.
         console.log("generateCyJSNetwork>> jsonFile: "+ json_File);
 
-        // Include this file's contents on the page at runtime using jQuery and a callback function.
-        $.getScript(json_File, function() {
-          console.log(json_File +" file included...");
-          // Initialize the cytoscapeJS container for Network View.
-          initializeNetworkView();
-        });
-        
         cyjs_networkView= window.open("cyjs_networkView.html", "Network View", 
                     "height=600, width=1200, location=no, toolbar=no, menubar=no, scrollbars=no, resizable=no, titlebar=no, directories=no, status=no");
         var cyjs_network= '<html><head>'+
