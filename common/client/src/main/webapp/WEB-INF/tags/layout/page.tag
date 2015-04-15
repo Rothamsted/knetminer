@@ -23,13 +23,27 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+<!--        <link rel="stylesheet" type="text/css" href="html/css/cyjsNetworkViewer_Syle.css"/> -->
         <script type="text/javascript" src="html/javascript/jquery-1.4.1.js"></script>
         <script type="text/javascript" src="html/javascript/utils-config.js"></script> 
         <script type="text/javascript" src="html/javascript/utils.js"></script>  
         <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
-		<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
- 		<script type="text/javascript" src="html/javascript/dtjava.js"></script>
-        <jsp:invoke fragment="extraHeader"/>              
+	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
+ 	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
+        <!-- Libraries and files used for the new cytoscapeJS Network Viewer -->
+<!-- 	<script type="text/javascript" src="html/javascript/cytoscape.min.js.js"></script>
+        <script type="text/javascript" src="html/javascript/jquery-1.11.2.min.js"></script>
+ 	<script type="text/javascript" src="html/javascript/jquery-ui.js"></script>
+ 	<script type="text/javascript" src="html/javascript/cytoscape-cxtmenu.js.js"></script>
+ 	<script type="text/javascript" src="html/javascript/cola.v3.min.js"></script>
+ 	<script type="text/javascript" src="html/javascript/cola.adaptor.js"></script>
+ 	<script type="text/javascript" src="html/javascript/arbor.js"></script>
+ 	<script type="text/javascript" src="html/javascript/dagre.js"></script>
+ 	<script type="text/javascript" src="html/javascript/springy.js"></script>
+        <script type="text/javascript" src="html/config/url_mappings.json"></script>
+        <script type="text/javascript" src="html/javascript/networkView_cyjs.json"></script>
+-->        
+        <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>
         <!-- Main -->
