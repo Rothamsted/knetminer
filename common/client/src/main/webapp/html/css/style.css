@@ -222,6 +222,14 @@ div#networkButton input[type="button"] {
 	float:right;
 	margin:10px;
 }
+
+/* New button to show CytoscapeJS Network Viewer. */
+/*
+#new_generateMultiGeneNetworkButton {
+	float:right;
+	margin:10px;
+}*/
+
 /*
 div#footer {
 	padding:15px;

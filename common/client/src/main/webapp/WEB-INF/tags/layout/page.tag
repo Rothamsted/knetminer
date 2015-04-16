@@ -1,5 +1,5 @@
 <%@ tag description="Page layout" %>
- 
+
 <%@ attribute name="title"       required="true" description="Page title" %>
 <%@ attribute name="keywords"    required="true" description="Page keywords to improve SEO" %>
 <%@ attribute name="description" required="true" description="Page description" %>
@@ -31,18 +31,18 @@
 	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
  	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
         <!-- Libraries and files used for the new cytoscapeJS Network Viewer -->
-<!-- 	<script type="text/javascript" src="html/javascript/cytoscape.min.js.js"></script>
-        <script type="text/javascript" src="html/javascript/jquery-1.11.2.min.js"></script>
- 	<script type="text/javascript" src="html/javascript/jquery-ui.js"></script>
- 	<script type="text/javascript" src="html/javascript/cytoscape-cxtmenu.js.js"></script>
- 	<script type="text/javascript" src="html/javascript/cola.v3.min.js"></script>
- 	<script type="text/javascript" src="html/javascript/cola.adaptor.js"></script>
- 	<script type="text/javascript" src="html/javascript/arbor.js"></script>
- 	<script type="text/javascript" src="html/javascript/dagre.js"></script>
- 	<script type="text/javascript" src="html/javascript/springy.js"></script>
+<!-- 	<script type="text/javascript" src="html/libs/cytoscape.min.js"></script>
+        <script type="text/javascript" src="html/libs/jquery-1.11.2.min.js"></script>
+ 	<script type="text/javascript" src="html/libs/jquery-ui.js"></script>
+ 	<script type="text/javascript" src="html/libs/cytoscape-cxtmenu.js"></script>
+ 	<script type="text/javascript" src="html/libs/cola.v3.min.js"></script>
+ 	<script type="text/javascript" src="html/libs/cola.adaptor.js"></script>
+ 	<script type="text/javascript" src="html/libs/arbor.js"></script>
+ 	<script type="text/javascript" src="html/libs/dagre.js"></script>
+ 	<script type="text/javascript" src="html/libs/springy.js"></script>
         <script type="text/javascript" src="html/config/url_mappings.json"></script>
-        <script type="text/javascript" src="html/javascript/networkView_cyjs.json"></script>
--->        
+        <script type="text/javascript" src="html/javascript/networkView_cyjs.js"></script>
+-->
         <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>

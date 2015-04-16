@@ -6,14 +6,9 @@
  * @returns
  **/
 
-  var selectedJSONfile; // the selected file.
-  // Location of the JSON file on the server.
-//  var jsondata_url = "http://localhost:8080/NetworkCanvasCyJS/web/WEB-INF/sampleFiles/";
-//  var jsondata_url = "https://qtlnetminer-test.rothamsted.ac.uk/poplar_data/";
-
   function generateNetworkGraph(jsonFileName) {
-   selectedJSONfile= /*"./sampleFiles/" +*/ jsonFileName;
-   var json_File= selectedJSONfile;
+
+   var json_File= jsonFileName;
 
    // Include this file's contents on the page at runtime using jQuery and a callback function.
    $.getScript(json_File, function() {
@@ -501,7 +496,7 @@ cy.elements().qtip({
              }
              catch(err) { 
                    itemInfo= "Selected element is neither a Concept nor a Relation"; 
-                   itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack(); // error details
+                   itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack; // error details
                    console.log(itemInfo);
                   }
             }
@@ -1055,7 +1050,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
         }
     catch(err) { 
           itemInfo= "Selected element is neither a Concept nor a Relation"; 
-          itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack(); // error details
+          itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack; // error details
           console.log(itemInfo);
          }
 //    $("#infoDialog").html(itemInfo); // display in the dialog box.

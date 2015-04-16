@@ -5,9 +5,6 @@
 <%@ attribute name="chromosomes" required="false" description="list of chromosomes" %>
 <%@ attribute name="assembly" required="false" description="genome assembly" %>
 
-
-
-
 <div id="content">
 	<div id="search">
 		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()">							
