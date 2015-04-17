@@ -23,26 +23,13 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-<!--        <link rel="stylesheet" type="text/css" href="html/css/cyjsNetworkViewer_Syle.css"/> -->
         <script type="text/javascript" src="html/javascript/jquery-1.4.1.js"></script>
         <script type="text/javascript" src="html/javascript/utils-config.js"></script> 
         <script type="text/javascript" src="html/javascript/utils.js"></script>  
         <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
 	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
  	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
-        <!-- Libraries and files used for the new cytoscapeJS Network Viewer -->
-<!-- 	<script type="text/javascript" src="html/libs/cytoscape.min.js"></script>
-        <script type="text/javascript" src="html/libs/jquery-1.11.2.min.js"></script>
- 	<script type="text/javascript" src="html/libs/jquery-ui.js"></script>
- 	<script type="text/javascript" src="html/libs/cytoscape-cxtmenu.js"></script>
- 	<script type="text/javascript" src="html/libs/cola.v3.min.js"></script>
- 	<script type="text/javascript" src="html/libs/cola.adaptor.js"></script>
- 	<script type="text/javascript" src="html/libs/arbor.js"></script>
- 	<script type="text/javascript" src="html/libs/dagre.js"></script>
- 	<script type="text/javascript" src="html/libs/springy.js"></script>
-        <script type="text/javascript" src="html/config/url_mappings.json"></script>
-        <script type="text/javascript" src="html/javascript/networkView_cyjs.js"></script>
--->
+
         <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>
