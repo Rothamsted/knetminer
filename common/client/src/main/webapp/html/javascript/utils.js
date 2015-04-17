@@ -860,6 +860,8 @@ function generateCyJSNetwork(url,list){
             cyjs_networkView.focus();
             cyjs_networkView.jsonFile= jsonFile; // re-assign the JSON file path.
             console.log("WindowAlreadyOpen>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+            // clear the cytoscapeJS container <div>.
+            cyjs_networkView.document.getElementById('cy').innerHTML= "";
            }
          else {
            cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
@@ -1148,8 +1150,8 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" ></insert><div id="loadingNetworkDiv"></div></div>';
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "CyJS Network" title = "Display new lightweight Network Viewer, using cytoscapeJS"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" >';
+    		table = table + '<input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "CyJS Network" title = "Display new lightweight Network Viewer, using cytoscapeJS"></insert><div id="loadingNetworkDiv"></div></div>';
     		table = table + legendHtmlContainer; // add legend
     		
     		document.getElementById('resultsTable').innerHTML = table;
