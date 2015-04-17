@@ -835,13 +835,19 @@ function generateNetwork(url,list){
 }
 
 /*
+ * Global variable.
+ * Reference for the Network View popup window.
+ */
+var cyjs_networkView= false;
+
+/*
  * Function
  * Generates the new lightweight Network graph, using cytoscapeJS.
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,list){
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
-    $.post(url, list, function(response, textStatus){																							 
+    $.post(url, list, function(response, textStatus) {																							 
     var oxl = response.split(":")[1];
 
     // Network Graph: JSON file.
@@ -850,9 +856,18 @@ function generateCyJSNetwork(url,list){
     console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
 
     try {
-         var cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+         if(cyjs_networkView && !cyjs_networkView.closed) {
+            cyjs_networkView.focus();
+            cyjs_networkView.jsonFile= jsonFile; // re-assign the JSON file path.
+            console.log("WindowAlreadyOpen>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+           }
+         else {
+           cyjs_networkView= window.open("networkGraph.html", "Network View", 
                     "height=600, width=1200, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, directories=yes, status=yes");
-         cyjs_networkView.jsonFile= jsonFile; // JSON file path sent to networkGraph.html window.
+           // Pass the JSON file path to a global variable in the new window.
+           cyjs_networkView.jsonFile= jsonFile;
+           console.log("OpenWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+          }
         }
     catch(err) { 
           var errorMsg= err.stack;
