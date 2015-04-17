@@ -862,7 +862,7 @@ function generateCyJSNetwork(url,list){
             console.log("WindowAlreadyOpen>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
            }
          else {
-           cyjs_networkView= window.open("networkGraph.html", "Network View", 
+           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
                     "height=600, width=1200, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, directories=yes, status=yes");
            // Pass the JSON file path to a global variable in the new window.
            cyjs_networkView.jsonFile= jsonFile;
