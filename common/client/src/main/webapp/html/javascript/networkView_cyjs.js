@@ -371,7 +371,9 @@ cy.elements().qtip({
                        cell2= row.insertCell(1);
                        cell1.innerHTML= "Evidence:";
                        for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].evidences.length; k++) {
-                           evidences= evidences + metadataJSON.ondexmetadata.concepts[j].evidences[k] +", ";
+                           if(metadataJSON.ondexmetadata.concepts[j].evidences[k] !== "") {
+                              evidences= evidences + metadataJSON.ondexmetadata.concepts[j].evidences[k] +", ";
+                             }
                           }
                        cell2.innerHTML= evidences.substring(0, evidences.length-2);
 
@@ -472,7 +474,9 @@ cy.elements().qtip({
                             cell2= row.insertCell(1);
                             cell1.innerHTML= "Evidence:";
                             for(var k=0; k < metadataJSON.ondexmetadata.relations[j].evidences.length; k++) {
-                                relationEvidences= relationEvidences + metadataJSON.ondexmetadata.relations[j].evidences[k] +", ";
+                                if(metadataJSON.ondexmetadata.relations[j].evidences[k] !== "") {
+                                   relationEvidences= relationEvidences + metadataJSON.ondexmetadata.relations[j].evidences[k] +", ";
+                                  }
                                }
                             cell2.innerHTML= relationEvidences.substring(0, relationEvidences.length-2);
 
@@ -925,7 +929,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                     cell2= row.insertCell(1);
                     cell1.innerHTML= "Evidence:";
                     for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].evidences.length; k++) {
-                        evidences= evidences + metadataJSON.ondexmetadata.concepts[j].evidences[k] +", ";
+                        if(metadataJSON.ondexmetadata.concepts[j].evidences[k] !== "") {
+                           evidences= evidences + metadataJSON.ondexmetadata.concepts[j].evidences[k] +", ";
+                          }
                        }
                     cell2.innerHTML= evidences.substring(0, evidences.length-2);
 
@@ -1026,7 +1032,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                        cell2= row.insertCell(1);
                        cell1.innerHTML= "Evidence:";
                        for(var k=0; k < metadataJSON.ondexmetadata.relations[j].evidences.length; k++) {
-                           relationEvidences= relationEvidences + metadataJSON.ondexmetadata.relations[j].evidences[k] +", ";
+                           if(metadataJSON.ondexmetadata.relations[j].evidences[k] !== "") {
+                              relationEvidences= relationEvidences + metadataJSON.ondexmetadata.relations[j].evidences[k] +", ";
+                             }
                           }
                        cell2.innerHTML= relationEvidences.substring(0, relationEvidences.length-2);
 
