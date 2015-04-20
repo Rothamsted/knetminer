@@ -1150,8 +1150,8 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" >';
-    		table = table + '<input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "CyJS Network" title = "Display new lightweight Network Viewer, using cytoscapeJS"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "New Network Viewer" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
+    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		table = table + legendHtmlContainer; // add legend
     		
     		document.getElementById('resultsTable').innerHTML = table;

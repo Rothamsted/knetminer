@@ -224,10 +224,10 @@ div#networkButton input[type="button"] {
 }
 
 /* New button to show CytoscapeJS Network Viewer. */
-#new_generateMultiGeneNetworkButton {
-	float:left;
+/*#new_generateMultiGeneNetworkButton {
+	float:right;
 	margin:10px;
-}
+}*/
 
 /*
 div#footer {
