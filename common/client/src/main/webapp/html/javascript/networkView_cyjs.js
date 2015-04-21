@@ -5,7 +5,6 @@
  * multi-select (using Shift + click), CoLa.js & JSON.
  * @returns
  **/
-
   function generateNetworkGraph(jsonFileName) {
    var json_File= jsonFileName;
    console.log("Received json_File: "+ json_File);
@@ -17,21 +16,25 @@
      initializeNetworkView();
    });
 
-   // Javascript-based approach for including the file dynamically at runtime.
-/*   var script= document.createElement("script");
-   script.setAttribute("type", "text/javascript");
-   script.setAttribute("src", json_File);
-   document.getElementsByTagName("head")[0].appendChild(script); 
-
-   // Initialize the cytoscapeJS container for Network View.
-   initializeNetworkView(); */
   }
+
+   var animate_layout= true; // global variable for layout animation setting (default: true).
+
+   function setLayoutAnimationSetting() { // Toggle layout animation On/ Off.
+    if(document.getElementById("animateLayout").checked) {
+       animate_layout= true;
+      }
+    else {
+     animate_layout= false;
+    }
+    console.log("setLayoutAnimationSetting()>> checkbox checked: "+ document.getElementById("animateLayout").checked +" --> animate_layout= "+ animate_layout);
+   }
 
   /** Define the default layout for the network, using CoLa layout from Cola.js (similar to the "Gem" layout in 
     * Ondex Web). */
    var defaultNetworkLayout= {
     name: 'cola', // CoLa layout, using Cola.v3.min.js & Cola.adaptor.js (Ondex Web: Gem)
-    animate: true, // false, 
+    animate: animate_layout, // true, // false, 
     animationDuration: 500, 
     fit: true, padding: 10, // padding around the simulation
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
@@ -636,7 +639,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function setCoseLayout() {
    var coseNetworkLayout= {
     name: 'cose', // CytoscapeJS Cose layout
-    animate: true /*false*/, animationDuration: 500, avoidOverlap: true, handleDisconnected: true, 
+    animate: animate_layout /*true*/, animationDuration: 500, avoidOverlap: true, handleDisconnected: true, 
     fit: true, boundingBox: undefined, ready: function() {}, stop: function() {}, 
     roots: undefined, padding: 30 /*5*/, randomize: true,  debug: false, nodeRepulsion: 400000, 
     numIter: 100, idealEdgeLength: 10, nodeOverlap: 10, edgeElasticity: 100, nestingFactor: 5, 
@@ -648,7 +651,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function setArborLayout() {
    var arborNetworkLayout= {
     name: 'arbor', // Arbor layout using Arbor.js (Ondex Web: Kamada Kawai).
-    animate: true, animationDuration: 500, maxSimulationTime: 5000, fit: true, padding: 30, 
+    animate: animate_layout /*true*/, animationDuration: 500, maxSimulationTime: 5000, fit: true, padding: 30, 
     boundingBox: undefined, ungrabifyWhileSimulating: false, ready: undefined, stop: undefined,
     avoidOverlap: true, handleDisconnected: true, 
     // forces used by arbor (use arbor default on undefined)
@@ -673,7 +676,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function setSpringyLayout() {
    var springyNetworkLayout= {
     name: 'springy', // Springy layout, uses springy.js (OndexWeb: ForceDirected).
-    animate: false /*true*/, animationDuration: 500, maxSimulationTime: 1000, ungrabifyWhileSimulating: false, 
+    animate: animate_layout /*false*/, animationDuration: 500, maxSimulationTime: 1000, ungrabifyWhileSimulating: false, 
     fit: true, padding: 30, avoidOverlap: true, handleDisconnected: true, 
     boundingBox: undefined, random: false, infinite: false, ready: undefined, stop: undefined, 
     // springy forces
@@ -693,7 +696,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
     rankDir: undefined, // 'TB' for top to bottom flow, 'LR' for left to right
     minLen: function( edge ){ return 1; }, // number of ranks to keep between the source and target of the edge
     // general layout options
-    fit: true, padding: 30, animate: false, animationDuration: 500, // duration of animation in ms if enabled
+    fit: true, padding: 30, animate: animate_layout /*false*/, animationDuration: 500, // duration of animation in ms if enabled
     avoidOverlap: true, handleDisconnected: true, 
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     ready: function(){}, stop: function(){}
@@ -706,7 +709,8 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    var circleNetworkLayout= {
       name: 'circle', // Circle layout (Ondex Web: Circular)
       directed: true, roots: undefined, // '#n12',
-      padding: 10, avoidOverlap: true, handleDisconnected: true 
+      padding: 10, avoidOverlap: true, handleDisconnected: true,
+      animate: animate_layout /*false*/
    };
    cy.layout(circleNetworkLayout); // run the Circle layout.
   }
@@ -716,7 +720,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    var bfNetworkLayout= {
       name: 'breadthfirst', // Breadth first layout (Ondex Web: Hierarchial)
       fit: true, directed: true, padding: 10, circle: false, boundingBox: undefined, avoidOverlap: true, 
-      handleDisconnected: true, maximalAdjustments: 0, animate: false, animationDuration: 500, 
+      handleDisconnected: true, maximalAdjustments: 0, animate: animate_layout /*false*/, animationDuration: 500, 
       roots: undefined, // '#n12', 
       ready: undefined, stop: undefined
    };
@@ -728,7 +732,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    var gridNetworkLayout= {
     name: 'grid', // CytoscapeJS Grid layout
     fit: true, padding: 30, boundingBox: undefined, avoidOverlap: true, handleDisconnected: true, 
-    animate: false, animationDuration: 500,
+    animate: animate_layout /*false*/, animationDuration: 500,
     rows: undefined, // force num of rows in the grid
     columns: undefined, // force num of cols in the grid
     position: function( node ){}, // returns { row, col } for element

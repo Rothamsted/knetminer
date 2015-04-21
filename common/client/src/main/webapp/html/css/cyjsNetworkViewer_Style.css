@@ -142,6 +142,9 @@ root {
          }
 
       /* Layouts */
+      #animationCheckbox {
+       float: right
+      }
    /*   #layouts_container {
           position: relative;
           margin: auto;

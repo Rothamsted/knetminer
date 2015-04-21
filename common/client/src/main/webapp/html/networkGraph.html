@@ -25,15 +25,17 @@
         <b>Network Graph using CytoscapeJS</b><br/><br/><div>
         Show Network: <input type="button" id="showNetGraph" value="Show Network" onclick="generateNetworkGraph(jsonFile);" title="Show network graph using cytoscapeJS">
         </div><hr>
-        <div id=layouts_container><table id=layouts_table cellspacing=1>
+        <div id=layouts_container>
+            <div id="animationCheckbox">Enable Layout Animation: <input type="checkbox" name="layoutAnimation_Chkbx" id="animateLayout" value="Enable Layout Animation" onclick="setLayoutAnimationSetting();" ondblclick="setLayoutAnimationSetting();" onmousedown="setLayoutAnimationSetting();" checked title="Check to enable layout Animation and uncheck to disable."><br/></div>
+            <table id=layouts_table cellspacing=1>
                 <thead><u>Layouts:</u></thead><tr>
-                    <td align=center><input type="radio" name="layoutButton" id="default" value="Default layout" onclick="setDefaultLayout();" checked>Default (CoLa)</td>
+                    <td align=center><input type="radio" name="layoutButton" id="default" value="Default layout" onclick="setDefaultLayout();" checked title="using CoLa layout algorithm">Default (CoLa)</td>
                     <td align=center><input type="radio" name="layoutButton" id="circle" value="Circle layout" onclick="setCircleLayout();">Circular</td>
-                    <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor layout" onclick="setArborLayout();">Arbor</td>
-                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose layout" onclick="setCoseLayout();">Cose</td>
-                    <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree layout" onclick="setTreeLayout();">Tree</td>
+                    <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor layout" onclick="setArborLayout();" title="using Arbor layout algorithm">Arbor</td>
+                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose layout" onclick="setCoseLayout();" title="using CoSE layout algorithm">Cose</td>
+                    <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree layout" onclick="setTreeLayout();" title="using Dagre layout algorithm">Tree</td>
                     <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst layout" onclick="setBreadthfirstLayout();">Breadthfirst</td>
-                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy layout" onclick="setSpringyLayout();">Springy</td>
+                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy layout" onclick="setSpringyLayout();" title="using Springy layout algorithm">Springy</td>
                     <td align=center><input type="radio" name="layoutButton" id="grid" value="Grid layout" onclick="setGridLayout();">Grid</td>
                 </tr>
             </table>
