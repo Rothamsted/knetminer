@@ -527,7 +527,6 @@ cy.elements().qtip({
              var thisConceptType= this.data('conceptType');
              console.log("Hide by Type: this.Type: "+ thisConceptType);
              cy.nodes().forEach(function( ele ) {
-              console.log("ele.conceptType: "+ ele.data('conceptType'));
               if(ele.data('conceptType') === thisConceptType) {
                  ele.hide();
                 }
