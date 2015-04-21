@@ -541,39 +541,21 @@ cy.elements().qtip({
              cy.reset(); // reset the graph's zooming & panning properties.
             }
         },*/
-   /*     {
-         content: 'Export JSON',
-         select: function() {
-             var export_json= cy.json(); // Export the graph's JSON object.
-             // Export the graphJSON variable from the networkGraph.json file as a JSON object and add all 
-             // the required information to make it compatible for usage with the Cytoscape desktop 
-             // application.
-             var json_for_cytoscape= "{ \"data\" : { \"shared_name\" : \"networkGraph_for_Cytoscape\", \"name\" : \"networkGraph\", \"selected\" : true }, \"elements\" : "+networkJSON +" }";
-             // Write to file on the server.
-             
-             // Open new tab to allow user to download this file.
-             
-            }
-        },*/
         {
          content: 'Show Selections',
          select: function() {
              $("#infoDialog").dialog(); // initialize a dialog box.
              // Display details of all the selected elements: nodes & edges.
              var selections= "";
-//             console.log("ShowSelections (Shift+click): selections= "+ selections);
              cy.nodes().forEach(function( ele ) {
-//             console.log("Reading nodes/ ele.id: "+ ele.id());
                 if(ele.selected()) {
                    selections += ele.data('conceptType') +" : "+ ele.data('value') +" , PID: "+ ele.data('pid') + "<br/><br/>";
                   }
              });
 
              cy.edges().forEach(function( ele ) {
-//             console.log("Reading edges/ ele.id: "+ ele.id());
                 if(ele.selected()) {
-//                   console.log("Element: Relation (edge) id= "+ ele.id() +" is "+ (ele.selected() ? 'selected':'not selected'));
-                   selections += "Relation ID= "+ ele.id() +" , label: "+ ele.data('label') +"<br/>";
+                   selections += "Relation: "+ ele.data('label') +" , From: "+ ele.data('source') +" , To: "+ ele.data('target') +"<br/>";
                   }
              });
              console.log("ShowSelections (Shift+click): selections= "+ selections);
