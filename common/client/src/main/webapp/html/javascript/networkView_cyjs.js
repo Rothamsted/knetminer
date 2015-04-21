@@ -349,7 +349,7 @@ cy.elements().qtip({
                 cell1.innerHTML= "PID:";
                 cell2.innerHTML= this.data('pid');
                 // Concept 'Annotation'.
-                row= table.insertRow(2);
+                row= table.insertRow(3);
                 cell1= row.insertCell(0);
                 cell2= row.insertCell(1);
                 cell1.innerHTML= "Annotation:";
@@ -888,7 +888,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
             cell1.innerHTML= "PID:";
             cell2.innerHTML= selectedElement.data('pid');
             // Concept 'Annotation'.
-            row= table.insertRow(2);
+            row= table.insertRow(3);
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "Annotation:";
