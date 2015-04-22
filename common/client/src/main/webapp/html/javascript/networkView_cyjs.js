@@ -41,7 +41,7 @@ window.onload= function () {
     name: 'cola', // CoLa layout, using Cola.v3.min.js & Cola.adaptor.js (Ondex Web: Gem)
     animate: animate_layout, // true, // false, 
     animationDuration: 500, 
-    fit: true, padding: 10, // padding around the simulation
+    fit: true, padding: 2/*10*/, // padding around the simulation
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     refresh: 1, // number of ticks per frame; higher is faster but more jerky
     maxSimulationTime: 8000, // 5000, // max length in ms to run the layout
@@ -53,7 +53,7 @@ window.onload= function () {
     randomize: false, // use random node positions at beginning of layout
     avoidOverlap: true,
     handleDisconnected: true, // if true, avoids disconnected components from overlapping
-    nodeSpacing: function( node ){ return 10; }, // for extra spacing around nodes
+    nodeSpacing: function( node ){ return 20; /*10;*/ }, // for extra spacing around nodes
     flow: undefined, // use DAG/ tree flow layout if specified, e.g. { axis: 'y', minSeparation: 30 }
     alignment: undefined, // relative alignment constraints on nodes, e.g. function( node ){ return { x: 0, y: 1 } }
     // different methods of specifying edge length, each can be a constant numerical value or a function like `function( edge ){ return 2; }`
@@ -136,8 +136,10 @@ $(function() { // on dom ready
         .css({
           'content': 'data(label)', // label for edges (arrows).
           'font-size': '8px',
-          'curve-style': 'bezier', // default. /* options: bezier, unbundled-bezier, haystack (straight edges) */
-          'width': '1px', // '3px', // use mapData() mapper to allow for curved edges for inter-connected nodes.
+          'curve-style': 'bezier', // default. /* options: bezier (curved), unbundled-bezier (curved with manual control points), haystack (straight edges) */
+          // 'width': use mapData() mapper to allow for curved edges for inter-connected nodes.
+          'width': 'mapData(70, 70, 100, 2, 6)', // '1px', // '3px', 
+//          'control-point-step-size': '2px', // From the line perpendicular from source to target, this value specifies the distance between successive bezier edges.
           'line-color': 'data(edgeColor)', // 'gray',
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
           'target-arrow-shape': 'triangle',
@@ -242,7 +244,7 @@ cy.nodes().forEach(function( ele ) {
   else if(conType === "Molecular_Function") {
      imgName= 'Molecular_function';
     }
-  else if(conType === "Enzyme_Classification") {
+  else if((conType === "Enzyme_Classification") || (conType === "Enzyme Classification")) {
      imgName= 'Enzyme_clasification';
     }
   else if(conType === "Trait Ontology") {
