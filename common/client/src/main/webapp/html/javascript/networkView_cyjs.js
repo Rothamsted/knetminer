@@ -5,6 +5,11 @@
  * multi-select (using Shift + click), CoLa.js & JSON.
  * @returns
  **/
+window.onload= function () {
+     // Generate the Network Graph after the page load event.
+     generateNetworkGraph(window.jsonFile);
+    }
+
   function generateNetworkGraph(jsonFileName) {
    var json_File= jsonFileName;
    console.log("Received json_File: "+ json_File);
