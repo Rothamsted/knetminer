@@ -229,7 +229,7 @@ cy.nodes().forEach(function( ele ) {
   var conType= ele.data('conceptType');
   var imgName= 'Gene'; // default
   if(conType === "Biological_Process") {
-     imgName= 'Bioogical_proccess';
+     imgName= 'Biological_process';
     }
   else if(conType === "Cellular_Component") {
        imgName= 'Cellular_component';
@@ -262,7 +262,7 @@ cy.nodes().forEach(function( ele ) {
      imgName= 'Molecular_function';
     }
   else if((conType === "Enzyme_Classification") || (conType === "Enzyme Classification")) {
-     imgName= 'Enzyme_clasification';
+     imgName= 'Enzyme_classification';
     }
   else if(conType === "Trait Ontology") {
      imgName= 'Trait_ontology';
@@ -273,8 +273,8 @@ cy.nodes().forEach(function( ele ) {
   else if(conType === "Phenotype") {
      imgName= 'Phenotype';
     }
-  var eleImage= 'image/'+ imgName +'.png';
-//  var eleImage= data_url +'image/'+ imgName +'.png';
+  var eleImage= 'image/new_images/'+ imgName +'.png';
+//  var eleImage= data_url +'image/new_images/'+ imgName +'.png';
 
   // Add these properties to this element's JSON.
   ele.data('nodeImage', eleImage);
