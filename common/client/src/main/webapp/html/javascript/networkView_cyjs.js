@@ -16,7 +16,6 @@
        generateNetworkGraph(window.jsonFile);
       }*/
 
-
   function generateNetworkGraph(jsonFileName) {
    var json_File= jsonFileName;
    console.log("Received json_File: "+ json_File);
@@ -87,7 +86,9 @@ $(function() { // on dom ready
   for(var j = 0; j < networkJSON.nodes.length; j++) {
       console.log("JSON node.data (id, type, value, pid): "+ 
               networkJSON.nodes[j].data.id +", "+ networkJSON.nodes[j].data.conceptType +", "+ 
-              networkJSON.nodes[j].data.value +", "+ networkJSON.nodes[j].data.pid);
+              networkJSON.nodes[j].data.value +", "+ networkJSON.nodes[j].data.pid +
+              " ; Shape, Colour, visible: "+ networkJSON.nodes[j].data.conceptShape +" , "+
+              networkJSON.nodes[j].data.conceptColor +" , "+ networkJSON.nodes[j].data.visibleDisplay);
      }
   console.log("\n \n");
   for(var k = 0; k < networkJSON.edges.length; k++){
@@ -130,10 +131,10 @@ $(function() { // on dom ready
           'border-width': '1px',
           'font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
-          'shape': 'data(conceptShape)', // 'triangle',
+          'shape': 'data(conceptShape)', // 'triangle'
           'width': '18px', // '22px', // '30px',
           'height': '18px', // '22px', // '30px',
-          'background-color': 'data[conceptColor]',
+          'background-color': 'data[conceptColor]', // 'gray'
           /** Using 'data(conceptColor)' leads to a "null" mapping error if that attribute is not defined 
            * in cytoscapeJS. Using 'data[conceptColor]' is hence preferred as it limits the scope of 
            * assigning a property value only if it is defined in cytoscapeJS as well. */
@@ -145,7 +146,7 @@ $(function() { // on dom ready
           'font-size': '8px',
           'curve-style': 'bezier', // default. /* options: bezier (curved), unbundled-bezier (curved with manual control points), haystack (straight edges) */
           // 'width': use mapData() mapper to allow for curved edges for inter-connected nodes.
-          'width': 'mapData(70, 70, 100, 2, 6)', // '1px', // '3px', 
+          'width': '1px', // 'mapData(70, 70, 100, 2, 6)', // '3px',
 //          'control-point-step-size': '2px', // From the line perpendicular from source to target, this value specifies the distance between successive bezier edges.
           'line-color': 'data(edgeColor)', // 'gray',
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
@@ -196,6 +197,9 @@ $('#cy').cytoscape({
   // interpolate on high density displays instead of increasing resolution.
   pixelRatio: 1,
 
+  // Zoom settings
+  zoom: 1,
+
   // a "motion blur" effect that increases perceived performance for little or no cost.
   motionBlur: true,
   
@@ -230,6 +234,9 @@ cy.nodes().forEach(function( ele ) {
   else if(conType === "Cellular_Component") {
        imgName= 'Cellular_component';
       }
+  else if(conType === "Gene") {
+       imgName= 'Gene';
+      }
   else if(conType === "Protein Domain") {
      imgName= 'Protein_domain';
     }
@@ -244,6 +251,9 @@ cy.nodes().forEach(function( ele ) {
     }
   else if(conType === "Protein") {
      imgName= 'Protein';
+    }
+  else if(conType === "Quantitative Trait Locus") {
+     imgName= 'QTL';
     }
   else if(conType === "Enzyme") {
      imgName= 'Enzyme';
@@ -822,65 +832,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
     itemInfo.document.write("<html><body><b><u>Node details</u></b><br/>"+ nodeInfo +"</body></html>"); */
     var itemInfo= "";
     console.log("Display Item Info. for id: "+ selectedElement.id());
-/*    var elementOf= "";
-    var evidences= ""; // from evidences array in metadataJSON.
-    var attrs= ""; // from attributes array in metadataJSON.
-    var attr= "";
-    var co_accessions= ""; // from co_accessions array in metadataJSON.
-    $("#infoDialog").dialog(); // initialize a dialog box.
+/*  $("#infoDialog").dialog(); // initialize a dialog box.
 */
     try {
-/*         if(selectedElement.isNode()) {
-            // Get all metadata for this concept from the metadataJSON variable.
-            for(var j=0; j < metadataJSON.ondexmetadata.concepts.length; j++) {
-                if(selectedElement.id() === metadataJSON.ondexmetadata.concepts[j].id) {
-                // Get source ('elementOf').
-                elementOf= "Source:"+ 
-                metadataJSON.ondexmetadata.concepts[j].elementOf +"<br/>";
-                // Get evidence information.
-                // ???
-
-                // Get concept attributes.
-                for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].attributes.length; k++) {
-                    if((metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "size")
-                        && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "visible")) {
-                        attr= "<b>"+ metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname +
-                                ":</b> "+ metadataJSON.ondexmetadata.concepts[j].attributes[k].value;
-                        attrs= attrs + attr +"<br/>";
-                       }
-                   }
-                // Get concept accessions.
-                // ???
-               }
-            }
-            attrs= attrs +"<br/>";
-            // Show concept type, value, pid, annotation, evidences, attributes & co-accessions.
-            itemInfo= "Concept Type: "+ selectedElement.data('conceptType') +"<br/>Value: "+ selectedElement.data('value') 
-                        +"<br/>PID: "+ selectedElement.data('pid') + "<br/>Annotation: "+ selectedElement.data('annotation') + 
-                        elementOf + "<br/> <br/><u>Attributes:</u><br/> "+ attrs;
-           }
-        else if(selectedElement.isEdge()) {
-                // Get all metadata for this relation from the metadataJSON variable.
-                for(var j=0; j < metadataJSON.ondexmetadata.relations.length; j++) {
-                    if(selectedElement.id() === metadataJSON.ondexmetadata.relations[j].id) {
-                        // Get relation attributes.
-                        for(var k=0; k < metadataJSON.ondexmetadata.relations[j].attributes.length; k++) {
-                            if((metadataJSON.ondexmetadata.relations[j].attributes[k].attrname !== "size")
-                                && (metadataJSON.ondexmetadata.relations[j].attributes[k].attrname !== "visible")) {
-                                attr= "<b>"+ metadataJSON.ondexmetadata.relations[j].attributes[k].attrname +
-                                        ": </b>"+ metadataJSON.ondexmetadata.relations[j].attributes[k].value;
-                                attrs= attrs + attr +"<br/>";
-                               }
-                           }
-                       }
-                   }
-                attrs= attrs +"<br/>";
-
-                // Show relation label, source, target and its attributes.
-                itemInfo= "Relation ID= "+ selectedElement.id()+ "<br/> Label: "+ selectedElement.data('label') +
-                             "<br/>From: "+ selectedElement.data("source") +"<br/>To: "+ selectedElement.data("target") +"<br/> <br/><u>Attributes:</u><br/> "+ attrs;
-               }
-*/
          // Display item information in the itemInfo <div> in a <table>.
          var table= document.getElementById("itemInfo_Table").getElementsByTagName('tbody')[0]; // get the Item Info. table.
          // Clear the existing table body contents.
