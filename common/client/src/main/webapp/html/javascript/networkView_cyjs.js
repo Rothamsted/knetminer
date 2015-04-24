@@ -271,6 +271,9 @@ cy.nodes().forEach(function( ele ) {
   else if(conType === "Trait Ontology") {
      imgName= 'Trait_ontology';
     }
+  else if(conType === "Scaffold") {
+     imgName= 'Scaffold';
+    }
   else if((conType === "Compound") || (conType === "SNP")) {
      imgName= 'Compound';
     }
