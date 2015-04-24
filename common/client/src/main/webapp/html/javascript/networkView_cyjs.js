@@ -87,14 +87,17 @@ $(function() { // on dom ready
       console.log("JSON node.data (id, type, value, pid): "+ 
               networkJSON.nodes[j].data.id +", "+ networkJSON.nodes[j].data.conceptType +", "+ 
               networkJSON.nodes[j].data.value +", "+ networkJSON.nodes[j].data.pid +
-              " ; Shape, Colour, visible: "+ networkJSON.nodes[j].data.conceptShape +" , "+
-              networkJSON.nodes[j].data.conceptColor +" , "+ networkJSON.nodes[j].data.visibleDisplay);
+              " ; Size, Shape, Colour, conceptDisplay: "+ networkJSON.nodes[j].data.conceptSize +" , "+ 
+              networkJSON.nodes[j].data.conceptShape +" , "+ networkJSON.nodes[j].data.conceptColor +
+              " , "+ networkJSON.nodes[j].data.conceptDisplay);
      }
   console.log("\n \n");
-  for(var k = 0; k < networkJSON.edges.length; k++){
-      console.log("JSON edge.data (id, source, target, edgeColor, label): "+ 
-              networkJSON.edges[k].data.id +", "+ networkJSON.edges[k].data.source +", "+ 
-              networkJSON.edges[k].data.target +", "+ networkJSON.edges[k].data.edgeColor +", "+ networkJSON.edges[k].data.label);
+  for(var k = 0; k < networkJSON.edges.length; k++) {
+      console.log("JSON edge.data (id, label, From, To, Color, Size, relationDisplay): "+ 
+              networkJSON.edges[k].data.id +", "+ networkJSON.edges[k].data.label +", "+ 
+              networkJSON.edges[k].data.source +", "+ networkJSON.edges[k].data.target +", "+ 
+              networkJSON.edges[k].data.relationColor +", "+ networkJSON.edges[k].data.relationSize +
+              ", "+ networkJSON.edges[k].data.relationDisplay);
      }
   console.log("\n \n");
 
@@ -132,13 +135,13 @@ $(function() { // on dom ready
           'font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
           'shape': 'data(conceptShape)', // 'triangle'
-          'width': '18px', // '22px', // '30px',
-          'height': '18px', // '22px', // '30px',
+          'width': '18px', // 'data(conceptSize)',
+          'height': '18px', // 'data(conceptSize)',
           'background-color': 'data[conceptColor]', // 'gray'
           /** Using 'data(conceptColor)' leads to a "null" mapping error if that attribute is not defined 
            * in cytoscapeJS. Using 'data[conceptColor]' is hence preferred as it limits the scope of 
            * assigning a property value only if it is defined in cytoscapeJS as well. */
-          'display': 'data(visibleDisplay)' // display: 'element' (show) or 'none' (hide).
+          'display': 'data(conceptDisplay)' // display: 'element' (show) or 'none' (hide).
          })
       .selector('edge')
         .css({
@@ -146,12 +149,13 @@ $(function() { // on dom ready
           'font-size': '8px',
           'curve-style': 'bezier', // default. /* options: bezier (curved), unbundled-bezier (curved with manual control points), haystack (straight edges) */
           // 'width': use mapData() mapper to allow for curved edges for inter-connected nodes.
-          'width': '1px', // 'mapData(70, 70, 100, 2, 6)', // '3px',
+          'width': '1px', // 'data(relationSize)', // 'mapData(70, 70, 100, 2, 6)', // '3px',
 //          'control-point-step-size': '2px', // From the line perpendicular from source to target, this value specifies the distance between successive bezier edges.
-          'line-color': 'data(edgeColor)', // 'gray',
+          'line-color': 'data(relationColor)', // 'gray',
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
           'target-arrow-shape': 'triangle',
-          'target-arrow-color': 'gray'
+          'target-arrow-color': 'gray',
+          'display': 'data(relationDisplay)' // display: 'element' (show) or 'none' (hide).
         })
       .selector('.highlighted')
         .css({
@@ -769,7 +773,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    console.log("Search for concept value: "+ conceptName);
    var foundID;
    cy.nodes().forEach(function( ele ) {
-       if(ele.data('visibleDisplay') === 'element') {
+       if(ele.data('conceptDisplay') === 'element') {
           if(ele.data('value').indexOf(conceptName) > -1) {
              console.log("Search found: "+ ele.data('value'));
              foundID= ele.id(); // the found node
