@@ -135,8 +135,8 @@ $(function() { // on dom ready
           'font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
           'shape': 'data(conceptShape)', // 'triangle'
-          'width': '18px', // 'data(conceptSize)',
-          'height': '18px', // 'data(conceptSize)',
+          'width': 'data(conceptSize)', // '18px',
+          'height': 'data(conceptSize)', // '18px',
           'background-color': 'data[conceptColor]', // 'gray'
           /** Using 'data(conceptColor)' leads to a "null" mapping error if that attribute is not defined 
            * in cytoscapeJS. Using 'data[conceptColor]' is hence preferred as it limits the scope of 
@@ -149,7 +149,7 @@ $(function() { // on dom ready
           'font-size': '8px',
           'curve-style': 'bezier', // default. /* options: bezier (curved), unbundled-bezier (curved with manual control points), haystack (straight edges) */
           // 'width': use mapData() mapper to allow for curved edges for inter-connected nodes.
-          'width': '1px', // 'data(relationSize)', // 'mapData(70, 70, 100, 2, 6)', // '3px',
+          'width': 'data(relationSize)', // '1px', // 'mapData(70, 70, 100, 2, 6)', // '3px',
 //          'control-point-step-size': '2px', // From the line perpendicular from source to target, this value specifies the distance between successive bezier edges.
           'line-color': 'data(relationColor)', // 'gray',
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
@@ -171,7 +171,7 @@ $(function() { // on dom ready
         'border-color': '#CCCC33' // '#333'
       });
       
-// Initialise a cystoscape container instance as a Javascript object.
+// Initialise a cytoscape container instance as a Javascript object.
 /* var cy= cytoscape({
   container: document.getElementById('cy'),
   elements: networkJSON,
