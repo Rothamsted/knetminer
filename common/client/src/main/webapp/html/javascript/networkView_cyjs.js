@@ -137,7 +137,7 @@ $(function() { // on dom ready
           'shape': 'data(conceptShape)', // 'triangle'
           'width': 'data(conceptSize)', // '18px',
           'height': 'data(conceptSize)', // '18px',
-          'background-color': 'data[conceptColor]', // 'gray'
+          'background-color': 'data(conceptColor)', // 'gray'
           /** Using 'data(conceptColor)' leads to a "null" mapping error if that attribute is not defined 
            * in cytoscapeJS. Using 'data[conceptColor]' is hence preferred as it limits the scope of 
            * assigning a property value only if it is defined in cytoscapeJS as well. */
