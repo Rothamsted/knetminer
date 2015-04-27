@@ -183,6 +183,10 @@ $(function() { // on dom ready
 $('#cy').cytoscape({
   container: document.getElementById('cy'),
 
+  /* Using the cytoscape-css-renderer extension (plugin) to allow node & edge labels to use HTML 
+   * content instead of just plain text. */
+//  'renderer': { name: "css" },
+
   style: networkStylesheet,
 
   // Using the JSON data to create the nodes.
