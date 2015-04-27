@@ -455,7 +455,9 @@ cy.elements().qtip({
                                        attrName= "Aminoacid sequence (AA)";
                                        aaSeq= attrValue.match(/.{1,10}/g); // split into string array of 10 characters each.
                                        counter= 0;
-                                       attrValue= "<font size=\"1\">";
+                                       // Have monospaced font for AA sequence.
+//                                       attrValue= "<font size=\"1\">";
+                                       attrValue= "<span style= \"font-family: 'Courier New', Courier, monospace\">";
                                        for(var p=0; p < aaSeq.length; p++) {
                                            attrValue= attrValue + aaSeq[p] +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                                            counter= counter + 1;
@@ -463,7 +465,8 @@ cy.elements().qtip({
                                               attrValue= attrValue +"<br/>";
                                              }
                                           }
-                                       attrValue= attrValue +"</font>";
+//                                       attrValue= attrValue +"</font>";
+                                       attrValue= attrValue +"</span>";
                                       }
                                cell1.innerHTML= attrName;
                                cell2.innerHTML= attrValue;
@@ -939,7 +942,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                                     attrName= "Aminoacid sequence (AA)";
                                     aaSeq= attrValue.match(/.{1,10}/g); // split into string array of 10 characters each.
                                     counter= 0;
-                                    attrValue= "<font size=\"1\">";
+                                    // Have monospaced font for AA sequence.
+//                                    attrValue= "<font size=\"1\">";
+                                    attrValue= "<span style= \"font-family: 'Courier New', Courier, monospace\">";
                                     for(var p=0; p < aaSeq.length; p++) {
                                         attrValue= attrValue + aaSeq[p] +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                                         counter= counter + 1;
@@ -947,7 +952,8 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                                            attrValue= attrValue +"<br/>";
                                           }
                                        }
-                                    attrValue= attrValue +"</font>";
+//                                    attrValue= attrValue +"</font>";
+                                    attrValue= attrValue +"</span>";
                                    }
                             cell1.innerHTML= attrName;
                             cell2.innerHTML= attrValue;
