@@ -21,7 +21,7 @@ root {
 
       /* CytoscapeJS "core" container */
       #cy {
-        height: 600px;
+        height: 950px; //600px;
         width: 1200px;
         margin: auto;
         position: relative;
