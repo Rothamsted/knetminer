@@ -193,7 +193,9 @@ $('#cy').cytoscape({
   
   // Layout of the Network.
 //  layout: defaultNetworkLayout,
-//  layout: { name: 'cola', animate: true /* , ... */ }, 
+  layout: { name: 'circle', animate: false, padding: 30, avoidOverlap: true, 
+      boundingBox: undefined, handleDisconnected: true, fit: true, counterclockwise: false,
+      radius: 3, rStepSize: 2 }, 
   
   // these options hide parts of the graph during interaction.
 //  hideEdgesOnViewport: true,
@@ -683,8 +685,8 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
   // Relayout: Set default (WebCola) layout.
   function setDefaultLayout() {
-//   cy.layout(defaultNetworkLayout); // run the default (WebCola) layout algorithm.
-   setColaLayout();
+//   setColaLayout();
+   setTimeout(setColaLayout, 200);
   }
 
   // Set WebCola layout (default).
@@ -716,6 +718,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
     infinite: false
    };
    cy.layout(defaultNetworkLayout); // run the default (WebCola) layout algorithm.
+
+   cy.reset(); // reset the graph's zooming & panning properties.
+   cy.fit();
   }
 
   // Set Cose layout.
