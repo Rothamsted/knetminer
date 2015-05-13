@@ -776,3 +776,4 @@ foograph.ForceDirectedVertexLayout.prototype.layout = function(graph) {
   
   graph.normalize(this.width, this.height, true);
 };
+
