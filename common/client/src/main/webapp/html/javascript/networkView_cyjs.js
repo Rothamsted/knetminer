@@ -796,6 +796,25 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    cy.layout(springyNetworkLayout); // run the Springy layout algorithm.
   }
 
+  // Set Spread layout, using foograph.js & rhill-voronoi-core.js.
+  function setSpreadLayout() {
+   console.log("setSpringyLayout()>> animate_layout= "+ animate_layout);
+   var spreadNetworkLayout= {
+    name: 'spread', // Spread layout, uses foograph.js & rhill-voronoi-core.js.
+    animate: animate_layout, ready: undefined, stop: undefined,
+    fit: true, padding: 30, 
+    minDist: 20, // Minimum distance between nodes
+    expandingFactor: -1.0, // If the network does not satisfy the minDist criteria then it expands 
+    // the network by this amount.
+    // If it is set to -1.0 the amount of expansion is automatically calculated based on the minDist,
+    // the aspect ratio & the number of nodes.
+    maxFruchtermanReingoldIterations: 50, // Maximum number of initial force-directed iterations
+    maxExpandIterations: 4, // Maximum number of expanding iterations
+    boundingBox: undefined
+   };
+   cy.layout(spreadNetworkLayout); // run the Springy layout algorithm.
+  }
+
   // Set Dagre layout.
   function setTreeLayout() {
    console.log("setTreeLayout()>> animate_layout= "+ animate_layout);
