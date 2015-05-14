@@ -27,7 +27,7 @@
      initializeNetworkView();
      
      // Re-set the default (WebCola) layout.
-//     setDefaultLayout();
+     setDefaultLayout();
    });
 
   }
@@ -154,7 +154,7 @@ $('#cy').cytoscape({
   elements: networkJSON,
   
   // Layout of the Network.
-  layout: defaultNetworkLayout,
+//  layout: defaultNetworkLayout,
 /*  layout: { name: 'circle', animate: false, padding: 30, avoidOverlap: true, 
       boundingBox: undefined, handleDisconnected: true, fit: true, counterclockwise: false,
       radius: 3, rStepSize: 2 }, */

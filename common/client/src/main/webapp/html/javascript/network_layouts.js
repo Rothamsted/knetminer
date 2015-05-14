@@ -17,20 +17,19 @@
     console.log("setLayoutAnimationSetting()>> checkbox checked: "+ document.getElementById("animateLayout").checked +" --> animate_layout= "+ animate_layout);
    }
 
-/*
   // Relayout: Set default (WebCola) layout for the network graph.
   function setDefaultLayout() {
-   console.log("cytoscapeJS container (cy) initialized... now set Default Layout");
-//   setColaLayout();
-   setTimeout(setColaLayout, 200);
-  }*/
+   console.log("cytoscapeJS container (cy) initialized... now set Default Layout (only on visible elements)...");
+   setColaLayout();
+//   setTimeout(setColaLayout, 200);
+  }
 
   /** Define the default layout for the network, using WebCola layout from Cola.js (similar to the "Gem" layout in 
     * Ondex Web). */
    var defaultNetworkLayout= {
     name: 'cola', // WebCola layout, using Cola.v3.min.js & Cola.adaptor.js (Ondex Web: Gem)
-    refresh: 1/*0.1*/ /*0.5*/, animate: animate_layout, fit: true, padding: 30, boundingBox: undefined, 
-//    animationDuration: 4000,
+    refresh: 1/*0.1*/ /*0.5*/, animate: animate_layout, fit: true, padding: 10/*30*/, 
+    boundingBox: undefined, // animationDuration: 4000,
     maxSimulationTime: 4000/*8000*/, // max length in ms to run the layout
     ungrabifyWhileSimulating: false, ready: function() {}, stop: function() {},
     randomize: false, 
@@ -45,8 +44,8 @@
 //    nodeRepulsion: 400000/*400*/, //numIter: 10 /*100*/, 
     // iterations of cola algorithm; uses default values on undefined
     unconstrIter: 10,
-    userConstIter: undefined, //3
-    allConstIter: undefined, //3
+    userConstIter: 10,// undefined, //3
+    allConstIter: 10, //3
 //    edgeElasticity: 20, // roots: undefined,
 //    coolingFactor: 0.95 // to enable clustering.
 //    maxIter: 10, horizontalNodeSpacing: 75, verticalNodeSpacing: 75,
@@ -60,7 +59,8 @@
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    console.log("setColaLayout()>> animate_layout= "+ animate_layout);
-   cy.layout(defaultNetworkLayout); // run the default (WebCola) layout algorithm.
+   // run the default (WebCola) layout algorithm but only on the visible elements.
+   cy.$(':visible').layout(defaultNetworkLayout);
 
 //   cy.reset(); // reset the graph's zooming & panning properties.
 //   cy.fit();
@@ -78,14 +78,14 @@
     handleDisconnected: true, avoidOverlap: true,
 //    nodeRepulsion: 400000, numIter: 10 /*100*/, 
 //    boundingBox: undefined, ready: function() {} /*undefined*/, stop: function() {} /*undefined*/, 
-    roots: undefined, padding: 30, 
+    roots: undefined, padding: 10/*30*/, 
     randomize: false/*true*/, //edgeLength: undefined/*13*/, /*idealEdgeLength: 13, */
     nodeSpacing: 20,/*function( node ){ return 20; },*/ // for extra spacing around nodes
 //    debug: false, nestingFactor: 5, 
 //    /*nodeOverlap: 10,*/ coolingFactor: 0.95, initialTemp: 200, minTemp: 1.0
     coolingFactor: 0.95 // to enable clustering.
    };
-   cy.layout(coseNetworkLayout); // run the CoSE layout algorithm.
+   cy.$(':visible').layout(coseNetworkLayout); // run the CoSE layout algorithm but only on the visible elements.
   }
 
   // Set Arbor layout.
@@ -95,7 +95,7 @@
     name: 'arbor', // Arbor layout using Arbor.js (Ondex Web: Kamada Kawai).
     animate: animate_layout /*true*/, fit: true, //animationDuration: 4000/*15000*/ /*500*/, 
 //    maxSimulationTime: 8000/*4000*/ /*20000*/ /*1.7976931348623157E+10308 // (infinite, constant simultaion) */, 
-    padding: 30/*[ 50, 50, 50, 50 ]*/, boundingBox: undefined, /*simulationBounds: undefined, */
+    padding: 10/*30*//*[ 50, 50, 50, 50 ]*/, boundingBox: undefined, /*simulationBounds: undefined, */
     ungrabifyWhileSimulating: false, ready: undefined/*function() {}*/, stop: undefined/*function() {}*/, 
     avoidOverlap: true, handleDisconnected: true, randomize: false, //liveUpdate: true /*false*/, 
     // forces used by arbor (use arbor default on undefined)
@@ -121,29 +121,7 @@
     // infinite layout options
     infinite: false
    };
-   cy.layout(arborNetworkLayout); // run the Arbor layout algorithm.
-  }
-
-  // Set Springy layout.
-  /* Not suitable for larger networks */
-  function setSpringyLayout_old() {
-   console.log("setSpringyLayout()>> animate_layout= "+ animate_layout);
-   var springyNetworkLayout= {
-    name: 'springy', // Springy layout, uses springy.js (OndexWeb: ForceDirected).
-    animate: animate_layout, fit: true, padding: 30, boundingBox: undefined, 
-//    animationDuration: 4000, refresh: 0.1/*1*/ /*0.5*/,
-    maxSimulationTime: 4000/*8000*/, 
-    ready: undefined/*function() {} */, stop: undefined/*function() {} */, 
-    avoidOverlap: true, handleDisconnected: true,
-//    nodeSpacing: 20, // for extra spacing around nodes
-    ungrabifyWhileSimulating: false, random: false, infinite: false,
-//    edgeLength: undefined/*10*/, flow: undefined, alignment: undefined, 
-//    gravity: 15, //shake: 30,
-    // springy forces
-    stiffness: undefined/*400*/, repulsion: 400/*400000*/, // to avoid overlap
-    damping: 0.5 /*0.3*/ // should allow for clustering.
-   };
-   cy.layout(springyNetworkLayout); // run the Springy layout algorithm.
+   cy.$(':visible').layout(arborNetworkLayout); // run the Arbor layout algorithm but only on the visible elements.
   }
 
   // Set Springy layout.
@@ -152,23 +130,27 @@
    console.log("setSpringyLayout()>> animate_layout= "+ animate_layout);
    var springyNetworkLayout= {
     name: 'springy', // Springy layout, uses springy.js (OndexWeb: ForceDirected).
-    animate: animate_layout, fit: true, padding: 30, maxSimulationTime: 4000, 
+    animate: animate_layout, fit: true, padding: 10, maxSimulationTime: 4000, 
     ungrabifyWhileSimulating: false, 
     boundingBox: undefined, random: false, infinite: false, 
     ready: undefined, stop: undefined, 
+    avoidOverlap: true, handleDisconnected: true,
+    nodeSpacing: 10, // for extra spacing around nodes
+//    edgeLength: undefined/*10*/, flow: undefined, alignment: undefined, 
+//    gravity: 15, //shake: 30,
     // springy forces
     stiffness: 400, repulsion: 400, damping: 0.5 
    };
-   cy.layout(springyNetworkLayout); // run the Springy layout algorithm.
+   cy.$(':visible').layout(springyNetworkLayout); // run the Springy layout algorithm but only on the visible elements.
   }
 
   // Set Spread layout, using foograph.js & rhill-voronoi-core.js.
   function setSpreadLayout() {
-   console.log("setSpringyLayout()>> animate_layout= "+ animate_layout);
+   console.log("setSpreadLayout()>> animate_layout= "+ animate_layout);
    var spreadNetworkLayout= {
     name: 'spread', // Spread layout, uses foograph.js & rhill-voronoi-core.js.
     animate: animate_layout, ready: undefined, stop: undefined,
-    fit: true, padding: 30, 
+    fit: true, padding: 10, 
     minDist: 20, // Minimum distance between nodes
     expandingFactor: -1.0, // If the network does not satisfy the minDist criteria then it expands 
     // the network by this amount.
@@ -178,7 +160,7 @@
     maxExpandIterations: 4, // Maximum number of expanding iterations
     boundingBox: undefined
    };
-   cy.layout(spreadNetworkLayout); // run the Springy layout algorithm.
+   cy.$(':visible').layout(spreadNetworkLayout); // run the Spread layout but only on the visible elements.
   }
 
   // Set Dagre layout.
@@ -193,7 +175,7 @@
     rankDir: undefined, // 'TB' for top to bottom flow, 'LR' for left to right
     minLen: function( edge ){ return 1; }, // number of ranks to keep between the source and target of the edge
     // general layout options
-    fit: true, padding: 30, animate: animate_layout /*false*/, 
+    fit: true, padding: 10/*30*/, animate: animate_layout /*false*/, 
 //    animationDuration: 500, // duration of animation in ms if enabled
 //    maxSimulationTime: 4000/*8000*/
     avoidOverlap: true, handleDisconnected: true, 
@@ -201,7 +183,7 @@
     ready: function(){}, stop: function(){},
     edgeLength: 10
    };
-   cy.layout(dagreNetworkLayout); // run the Dagre layout algorithm.
+   cy.$(':visible').layout(dagreNetworkLayout); // run the Dagre layout algorithm but only on the visible elements.
   }
 
   // Set Circle layout.
@@ -213,13 +195,13 @@
    var circleNetworkLayout= {
       name: 'circle', // Circle layout (Ondex Web: Circular)
       /*directed: true, roots: undefined, */
-      padding: 30, avoidOverlap: true, boundingBox: undefined, handleDisconnected: true,
+      padding: 10/*30*/, avoidOverlap: true, boundingBox: undefined, handleDisconnected: true,
       animate: animate_layout /*false*/, fit: true, counterclockwise: false,
       radius: 3 /*undefined*/,
 //      startAngle: 3/2 * Math.PI,
       rStepSize: 2
    };
-   cy.layout(circleNetworkLayout); // run the Circle layout.
+   cy.$(':visible').layout(circleNetworkLayout); // run the Circle layout but only on the visible elements.
   }
 
   // Set Breadthfirst layout.
@@ -227,7 +209,7 @@
    console.log("setBreadthfirstLayout()>> animate_layout= "+ animate_layout);
    var bfNetworkLayout= {
       name: 'breadthfirst', // Breadth first layout (Ondex Web: Hierarchial)
-      fit: true, directed: true, padding: 30 /*10*/, circle: false, boundingBox: undefined, avoidOverlap: true, 
+      fit: true, directed: true, padding: 10/*30*/ /*10*/, circle: false, boundingBox: undefined, avoidOverlap: true, 
       handleDisconnected: true, maximalAdjustments: 0, animate: animate_layout /*false*/, 
 //      animationDuration: 1000 /*500*/, 
 //    maxSimulationTime: 4000/*8000*/
@@ -236,7 +218,7 @@
       ready: undefined, stop: undefined,
       nodeSpacing: 20//, edgeLength: 10
    };
-   cy.layout(bfNetworkLayout); // run the Breadthfirst layout.
+   cy.$(':visible').layout(bfNetworkLayout); // run the Breadthfirst layout but only on the visible elements.
   }
 
   // Set Grid layout.
@@ -244,7 +226,7 @@
    console.log("setGridLayout()>> animate_layout= "+ animate_layout);
    var gridNetworkLayout= {
     name: 'grid', // CytoscapeJS Grid layout
-    fit: true, padding: 30, boundingBox: undefined, avoidOverlap: true, handleDisconnected: true, 
+    fit: true, padding: 10/*30*/, boundingBox: undefined, avoidOverlap: true, handleDisconnected: true, 
     animate: animate_layout /*false*/,
 //      animationDuration: 1000 /*500*/, 
 //    maxSimulationTime: 4000/*8000*/
@@ -254,14 +236,14 @@
     ready: undefined, stop: undefined,
     nodeSpacing: 20//, edgeLength: 10
    };
-   cy.layout(gridNetworkLayout); // run the Grid layout.
+   cy.$(':visible').layout(gridNetworkLayout); // run the Grid layout but only on the visible elements.
   }
 
   // Set Concentric layout.
   function setConcentricLayout() {
    console.log("setConcentricLayout()>> animate_layout= "+ animate_layout);
    var concentricNetworkLayout= {
-    name: 'concentric', fit: true, padding: 30, 
+    name: 'concentric', fit: true, padding: 10, 
     startAngle: 3/2 * Math.PI, // the position of the 1st node
     counterclockwise: false, // whether the layout should go anticlockwise (true) or clockwise (false)
     minNodeSpacing: 10, boundingBox: undefined, avoidOverlap: true, height: undefined, width: undefined, 
@@ -272,5 +254,5 @@
     animate: animate_layout /*false*/, animationDuration: 500, ready: undefined, stop: undefined,
     radius: 5 /*undefined*/
    };
-   cy.layout(concentricNetworkLayout); // run the CoSE layout algorithm.
+   cy.$(':visible').layout(concentricNetworkLayout); // run the Concentric layout but only on the visible elements.
   }
