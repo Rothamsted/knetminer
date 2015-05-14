@@ -530,6 +530,8 @@ cy.elements().qtip({
          select: function() {
              cy.elements('node').show(); // show all nodes using eles.show().
              cy.elements('edge').show(); // show all edges using eles.show().
+             // Relayout the graph.
+             rerunLayout();
             }
         },
 
@@ -900,4 +902,38 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
          }
 //    $("#infoDialog").html(itemInfo); // display in the dialog box.
    }
-  
+
+  // Re-run the graph's layout.
+  function rerunLayout() {
+   if(document.getElementById("default").checked) {
+      setColaLayout();
+     }
+   else if(document.getElementById("circle").checked) {
+           setCircleLayout();
+          }
+   else if(document.getElementById("cose").checked) {
+           setCoseLayout();
+          }
+   else if(document.getElementById("arbor").checked) {
+           setArborLayout();
+          }
+   else if(document.getElementById("dagre").checked) {
+           setTreeLayout();
+          }
+   else if(document.getElementById("breadthfirst").checked) {
+           setBreadthfirstLayout();
+          }
+   else if(document.getElementById("springy").checked) {
+           setSpringyLayout();
+          }
+/*   else if(document.getElementById("spread").checked) {
+           setSpreadLayout();
+          }*/
+   else if(document.getElementById("grid").checked) {
+           setGridLayout();
+          }
+   else if(document.getElementById("concentric").checked) {
+           setConcentricLayout();
+          }
+  }
+

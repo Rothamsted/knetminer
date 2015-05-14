@@ -2,7 +2,7 @@
  * @author Ajit Singh
  * @name Network View layouts
  * @description code for Network View using CytoscapeJS layouts such as breadthfirst, grid, cose, circle 
- * and concentric and third party layout algorithms such as WebCola, arbor, springy and dagre (tree).
+ * & concentric & third party layout algorithms such as WebCola, arbor, springy, spread & dagre (tree).
  * @returns
  **/
    var animate_layout= true; // global variable for layout animation setting (default: true).
@@ -174,14 +174,14 @@
     rankSep: undefined, // the separation between adjacent nodes in the same rank
     rankDir: undefined, // 'TB' for top to bottom flow, 'LR' for left to right
     minLen: function( edge ){ return 1; }, // number of ranks to keep between the source and target of the edge
+    edgeWeight: function( edge ){ return 1; }, // higher weight edges are generally made shorter and straighter than lower weight edges
     // general layout options
     fit: true, padding: 10/*30*/, animate: animate_layout /*false*/, 
 //    animationDuration: 500, // duration of animation in ms if enabled
-//    maxSimulationTime: 4000/*8000*/
+    boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     avoidOverlap: true, handleDisconnected: true, 
-    boundingBox: undefined, // constraint layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-    ready: function(){}, stop: function(){},
-    edgeLength: 10
+//    maxSimulationTime: 4000/*8000*/
+    ready: function(){}, stop: function(){} //, edgeLength: 10
    };
    cy.$(':visible').layout(dagreNetworkLayout); // run the Dagre layout algorithm but only on the visible elements.
   }
