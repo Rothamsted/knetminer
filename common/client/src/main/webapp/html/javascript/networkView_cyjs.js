@@ -552,6 +552,8 @@ cy.elements().qtip({
                  ele.hide();
                 }
              });
+             // Relayout the graph.
+             rerunLayout();
             }
         },
             
