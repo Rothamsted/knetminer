@@ -556,7 +556,7 @@ cy.elements().qtip({
              rerunLayout();
             }
         },
-            
+
 /*        {
          content: 'Reset',
          select: function() {
