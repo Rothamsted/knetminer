@@ -8,7 +8,7 @@
   window.onload= function () {
        // Generate the Network Graph after the page load event.
        generateNetworkGraph(window.jsonFile);
-      }
+      };
 
   // Generate the network graph using a new JSON dataset (file) when the graph is refreshed by the user.
 /*  window.opener.location.reload= function () {
