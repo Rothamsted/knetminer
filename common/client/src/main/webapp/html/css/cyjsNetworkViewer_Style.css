@@ -5,9 +5,9 @@
         CSS for the cytoscapeJS Network Viewer page.
 */
 
-root { 
-    display: block;
-}
+      root { 
+         display: block;
+      }
 
       body {
         font: 14px helvetica neue, helvetica, arial, sans-serif;
@@ -19,21 +19,32 @@ root {
        cellspacing: 1px;
       }*/
 
+      /* The Center pane */
+      .ui-layout-center {
+       overflow-y: scroll;
+      }
+
       /* CytoscapeJS "core" container */
       #cy {
-        height: 950px; //600px;
+        height: 900px; //950px; //600px;
         width: 1200px;
-        margin: auto;
         position: relative;
-        top: 1px;
-        bottom: 1px;
+        margin: auto;
+        top: 2px;
+        bottom: 2px;
         padding-bottom: 25px;
-        border: solid 1px #888;
-/*        left: 0px;
+        background: white;
+        border: 1px solid #888;
+/*        left: 0px; //2px;
         float: left;
+        background-color: white;
         border-radius: 6px;
         border: solid 1px gray;*/
        }
+
+/*     [draggable=true] {
+      cursor: move;
+     }*/
        
       /* CSS border for the empty Image tag for exported .png images.
       #png_image {
@@ -58,31 +69,33 @@ root {
       
       div.infoDiv {
 	width:100%;       /* table width will be 99% of this*/
-	max-height:400px;    /* must be greater than tbody*/
+	max-height: 100%; /*95%;*/ /*600px;*/ /*400px;*/    /* must be greater than tbody*/
 	overflow:auto;
 	margin:0 auto;
         border: 1px;
-      }
+       }
 
       div.infoDiv table {
         width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
 	/*border:none;*/
-	border-spacing:0px;
-	background-color:transparent;
-	border:1px solid #C2C2C2;
-	border-collapse:collapse;
+	border-spacing: 0px;
+	background-color: transparent;
+	border: 1px solid #C2C2C2;
+	border-collapse: collapse;
+        /* Table not visible, by default. */
+        display: none;
       }
 
       div.infoDiv th, div.infoDiv td {
-        padding:4px;
-        border:1px solid #C2C2C2;
+        padding: 4px;
+        border: 1px solid #C2C2C2;
       }
 
       table.infoTable thead th {
-	background-color:#C0C0C0;
-	color:black;
-	font-size:10pt;
-	padding:4px;
+	background-color: #C0C0C0;
+	color: black;
+	font-size: 10pt;
+	padding: 4px;
       }
 
       div.infoDiv tbody {
@@ -92,19 +105,33 @@ root {
       }
 
      div.infoDiv table>tbody {
-       overflow:auto;
-       max-height:280px;
-       overflow-x:hidden;
+       overflow: auto;
+       max-height: 280px;
+       overflow-x: hidden;
      }
 
      div.infoDiv table>tbody tr {
-       height:auto;
+       height: auto;
      }
 
      div.infoDiv table>thead tr {
-       position:relative;
-       top: 0px;/*expression(offsetParent.scrollTop); IE5+ only*/
+       position: relative;
+       top: 0px; /*expression(offsetParent.scrollTop); IE5+ only*/
      }
+
+      /* Button to close the Item Info pane */
+      #btnCloseItemInfoPane {
+       position: relative;
+       float: right;
+       margin-right: 1%;
+      }
+
+      /* Button to hide Item Info table */
+/*      #showHideInfo {
+       position: relative;
+       float: right;
+       margin-right: 1%;
+      }*/
 
       /* Legend */
       #legend_picture {
@@ -145,6 +172,7 @@ root {
       #animationCheckbox {
        float: right
       }
+
    /*   #layouts_container {
           position: relative;
           margin: auto;

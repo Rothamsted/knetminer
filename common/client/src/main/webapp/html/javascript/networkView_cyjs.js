@@ -1,27 +1,28 @@
 /**
  * @author Ajit Singh
  * @name Network View example
- * @description example code for Network View using Javascript, jQuery, CytoscapeJS, JQuery UI, cxtmenu, QTip, 
- * multi-select (using Shift + click), WebCola.js & JSON.
+ * @description example code for Network View using Javascript, jQuery, CytoscapeJS, JQuery UI, cxtmenu, 
+ * QTip, multi-select (using Shift + click), JSON, WebCola.js & other layout algorithms.
  * @returns
  **/
-  window.onload= function () {
-       // Generate the Network Graph after the page load event.
-       generateNetworkGraph(window.jsonFile);
-      };
+window.onload= function () {
+     // Generate the Network Graph after the page load event.
+     generateNetworkGraph(window.jsonFile);
+    };
 
-  // Generate the network graph using a new JSON dataset (file) when the graph is refreshed by the user.
-/*  window.opener.location.reload= function () {
-       // Generate the Network Graph after the page load event.
-       generateNetworkGraph(window.jsonFile);
-      }*/
+// Generate the network graph using a new JSON dataset (file) when the graph is refreshed by the user.
+/*window.opener.location.reload= function () {
+     // Generate the Network Graph after the page load event.
+     generateNetworkGraph(window.jsonFile);
+    };*/
 
-  function generateNetworkGraph(jsonFileName) {
+function generateNetworkGraph(jsonFileName) {
    var json_File= jsonFileName;
-   console.log("Received json_File: "+ json_File);
+   console.log("Received json_File: file path: "+ json_File);
 
    // Include this file's contents on the page at runtime using jQuery and a callback function.
-   $.getScript(json_File, function() {
+/*   $.getScript(json_File, function() {*/
+   jQuery.getScript(json_File, function() {
      console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
      initializeNetworkView();
@@ -31,6 +32,14 @@
    });
 
   }
+
+/*
+   // Event occurring when the cytoscapeJS container <div> is dragged.
+   function dragCyContainer() {
+//    console.log("cy container dragged.");
+    // resize the cytoscapeJS container.
+    $('#cy').cytoscape('get').pan();
+   }*/
 
 function initializeNetworkView() {
 // On startup
@@ -84,13 +93,14 @@ $(function() { // on dom ready
    var networkStylesheet= cytoscape.stylesheet()
       .selector('node')
         .css({
-          'content': 'data(value)', // 'data(id)',
-                     /*function() { return this.id() +": "+ this.data('value'); },*/
+          'content': 'data(value)', // '<html>'+ 'data(value)' +'</html>',
+                    // function() { return "<html>"+ this.data('value') +"</html>"; },
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
           'outline-colour': 'black', // text outline color
           'border-style': 'solid', // node border
           'border-width': '1px',
-          'font-size': '8px',
+          'font-size': '8px', // '30px',
+//          'min-zoomed-font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
           'shape': 'data(conceptShape)', // 'triangle'
           'width': 'data(conceptSize)', // '18px',
@@ -127,11 +137,11 @@ $(function() { // on dom ready
           'transition-duration': '0.5s'
         })
       .selector(':selected')
-      .css({ // settings for highlight nodes in case of single click or Shift+click multi-select event.
-        'border-width': '3px',
-        'border-color': '#CCCC33' // '#333'
-      });
-      
+        .css({ // settings for highlighting nodes in case of single click or Shift+click multi-select event.
+          'border-width': '3px',
+          'border-color': '#CCCC33' // '#333'
+        });
+
 // Initialise a cytoscape container instance as a Javascript object.
 /* var cy= cytoscape({
   container: document.getElementById('cy'),
@@ -140,13 +150,13 @@ $(function() { // on dom ready
   ready: function() { console.log('ready'); window.cy= this; }
 });*/
 
-// Initialise a cystoscape container instance on the HTML DOM using JQuery.
+// Initialise a cytoscape container instance on the HTML DOM using JQuery.
 $('#cy').cytoscape({
   container: document.getElementById('cy'),
 
   /* Using the cytoscape-css-renderer extension (plugin) to allow node & edge labels to use HTML 
    * content instead of just plain text. */
-//  'renderer': { name: "css" },
+//  'renderer': { name: "css" }, // default renderer: 'canvas'.
 
   style: networkStylesheet,
 
@@ -171,9 +181,10 @@ $('#cy').cytoscape({
   // interpolate on high density displays instead of increasing resolution.
   pixelRatio: 1,
 
+  // interaction options:
   // Zoom settings
   zoomingEnabled: true, // zooming: both by user and programmatically.
-  userZoomingEnabled: true, // user-enabled zooming.
+//  userZoomingEnabled: true, // user-enabled zooming.
   zoom: 1, // the initial zoom level of the graph before the layout is set.
 //  minZoom: 1e-50,
 //  maxZoom: 1e50,
@@ -182,35 +193,36 @@ $('#cy').cytoscape({
   wheelSensitivity: 0.05,
 
   panningEnabled: true, // panning: both by user and programmatically.
-  userPanningEnabled: true, // user-enabled panning.
+//  userPanningEnabled: true, // user-enabled panning.
 
-  // a "motion blur" effect that increases perceived performance for little or no cost.
-  motionBlur: true,
-  
   // for Touch-based gestures.
 //  selectionType: (isTouchDevice ? 'additive' : 'single'),
   touchTapThreshold: 8,
   desktopTapThreshold: 4,
+  autolock: false,
+  autoungrabify: false,
+  autounselectify: false,
+
+  // a "motion blur" effect that increases perceived performance for little or no cost.
+  motionBlur: true,
 
   ready: function() {
-   console.log('ready');
-//   testCollections();
    window.cy= this;
   }
 });
 
-// Get the cystoscape instance as a Javascript object from JQuery.
+// Get the cytoscape instance as a Javascript object from JQuery.
 var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
 // Pan & zooms the graph to fit all the elements (concept nodes) in the graph.
-//cy.fit();
+// cy.fit();
 
 // cy.boxSelectionEnabled(true); // enable box selection (highlight & select multiple elements for moving via mouse click and drag).
 cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning, i.e., dragging the entire graph.
 
-/*
 // Set requisite background image for each concept (node) instead of using cytoscapeJS shapes.
-cy.nodes().forEach(function( ele ) {
+/*
+ cy.nodes().forEach(function( ele ) {
   var conType= ele.data('conceptType');
   var imgName= 'Gene'; // default
   if(conType === "Biological_Process") {
@@ -261,8 +273,8 @@ cy.nodes().forEach(function( ele ) {
   else if(conType === "Phenotype") {
      imgName= 'Phenotype';
     }
-  var eleImage= 'image/new_images/'+ imgName +'.png';
-//  var eleImage= data_url +'image/new_images/'+ imgName +'.png';
+  var eleImage= 'image/'+ imgName +'.png';
+//  var eleImage= data_url +'image/'+ imgName +'.png';
 
   // Add these properties to this element's JSON.
   ele.data('nodeImage', eleImage);
@@ -286,11 +298,12 @@ cy.elements().qtip({
       try {
       if(this.isNode()) {
 //         qtipMsg= "ID: "+ this.id() +", Type: "+ this.data('conceptType') +", Value: "+ this.data('value');
-         qtipMsg= "Concept Type: "+ this.data('conceptType') +", Value: "+ this.data('value') +", PID: "+ 
+         qtipMsg= "Concept: "+ this.data('value') +", type: "+ this.data('conceptType') +", PID: "+ 
                   this.data('pid') +"<br>"+"Annotation: "+ this.data('annotation');
         }
       else if(this.isEdge()) {
-              qtipMsg= "ID: "+ this.id() +", Relation Label: "+ this.data('label');
+              qtipMsg= "Relation: "+ this.data('label') +", From: "+ this.data('source') +", To: "+ 
+                      this.data('target');
              }
       }
       catch(err) { qtipMsg= "Selected element is neither a Concept nor a Relation"; }
@@ -313,16 +326,27 @@ cy.elements().qtip({
     var info= "";
     try {
     if(thisElement.isNode()) {
-       info= "Concept selected: "+ thisElement.data('conceptType') +", value: "+ thisElement.data('value') +
-               ", PID: "+ thisElement.data('pid');
+       info= "Concept selected: "+ thisElement.data('value') +", type: "+ thisElement.data('conceptType')
+               +", PID: "+ thisElement.data('pid');
       }
       else if(thisElement.isEdge()) {
-              info= "Relation selected: id: "+ thisElement.id() +", Relation Label: "+ thisElement.data('label');
+//              info= "Relation selected: id: "+ thisElement.id() +", Relation Label: "+ thisElement.data('label');
+              info= "Relation selected: "+ thisElement.data('label') +", From: "+ 
+                      thisElement.data('source') +", To: "+ thisElement.data('target');
              }
       }
       catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
     console.log(info);
    });
+
+/*
+  // Modifiying taphold event to handle usage of touch gestures.
+  cy.elements.on('taphold', function(e){
+   this.ungrabify();
+  }).on('free', function(e){
+       this.grabify();
+      });
+*/
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
@@ -340,6 +364,11 @@ cy.elements().qtip({
             function() {
              var itemInfo= "";
              try {
+             // Show Item Info Pane.
+             openItemInfoPane();
+
+             // Display the Item Info table in its parent div.
+             document.getElementById("itemInfo_Table").style.display= "inline";
              // Display item information in the itemInfo <div> in a <table>.
              var table= document.getElementById("itemInfo_Table").getElementsByTagName('tbody')[0]; // get the Item Info. table.
              // Clear the existing table body contents.
@@ -595,14 +624,15 @@ cy.elements().qtip({
     maxSpotlightRadius: 10, // 38, // the maximum radius in pixels of the spotlight
     itemColor: 'white', // the colour of text in the command's content
     itemTextShadowColor: 'black', // the text shadow colour of the command's content
-    itemFontSize: 6, //8,
+//    itemFontSize: 6, //8,
     zIndex: 9999 // the z-index of the ui div
  };
 
 cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
 /* // JQuery Context Menu plugin.
- $.contextMenu({
+// $.contextMenu({
+ jQuery.contextMenu({
 // $('#cy').contextMenu({
 // cy.elements('node').contextMenu({
    selector: '#cy', 
@@ -644,10 +674,57 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
+  // Show or Hide the Item Info table.
+  /** NOT USED ANYMORE. */
+  function showOrHideItemInfoTable() {
+   var iiTable= document.getElementById("itemInfo_Table");
+//   console.log("showOrHideItemInfoTable clicked... current Table.display: "+ iiTable.style.display);
+   if(iiTable.style.display === "none" || iiTable.style.display === "") {
+      iiTable.style.display= "inline";
+     }
+   else {
+      iiTable.style.display= "none";
+     }
+//   console.log("current Table.display changed to: "+ iiTable.style.display);
+  }
+
   // Reset: Re-position the network graph.
   function resetGraph() {
    cy.reset(); // reset the graph's zooming & panning properties.
+   cy.fit();
+//   cy.pan({ x: 100, y: 100 });
+//   cy.center();
   }
+
+/*
+  // Reset: Re-position the network graph.
+  function onlyResetGraph() {
+   cy.reset(); // reset the graph's zooming & panning properties.
+  }
+
+  // Reset: Re-position the network graph.
+  function centerGraph() {
+   cy.center();
+  }
+
+  // Reset: Re-position the network graph.
+  function panGraph() {
+   cy.pan({ x: 50, y: 50 });
+  }
+
+  // Reset: Re-position the network graph.
+  function fitGraph() {
+   cy.fit();
+  }
+
+  // Reset: Re-position the network graph.
+  function zoomGraph() {
+   cy.zoom({
+     level: 7.0, // zoom level
+     renderedPosition: { x: 50, y: 50 }
+    });
+  }
+*/
 
   // Search the graph for a concept using BFS: breadthfirst search
   function findConcept(conceptName) {
@@ -720,6 +797,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 /*  $("#infoDialog").dialog(); // initialize a dialog box.
 */
     try {
+         // Show Item Info Pane.
+         openItemInfoPane();
+
          // Display item information in the itemInfo <div> in a <table>.
          var table= document.getElementById("itemInfo_Table").getElementsByTagName('tbody')[0]; // get the Item Info. table.
          // Clear the existing table body contents.
@@ -897,7 +977,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                    }
                }
         }
-    catch(err) { 
+    catch(err) {
           itemInfo= "Selected element is neither a Concept nor a Relation"; 
           itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack; // error details
           console.log(itemInfo);
@@ -937,5 +1017,13 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    else if(document.getElementById("concentric").checked) {
            setConcentricLayout();
           }
+   console.log("Re-run layout complete...");
   }
 
+ // Open the Item Info pane when the "Item Info" option is selected for a concept or relation.
+ function openItemInfoPane() {
+//  myLayout.show('east', true); // to unhide (show) and open the pane.
+//  myLayout.open('east'); // open the (already unhidden) Item Info pane.
+
+  myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
+ }
