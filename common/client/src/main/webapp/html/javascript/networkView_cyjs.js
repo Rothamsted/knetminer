@@ -273,8 +273,8 @@ cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning
   else if(conType === "Phenotype") {
      imgName= 'Phenotype';
     }
-  var eleImage= 'image/'+ imgName +'.png';
-//  var eleImage= data_url +'image/'+ imgName +'.png';
+  var eleImage= 'image/new_images/'+ imgName +'.png';
+//  var eleImage= data_url +'image/new_images/'+ imgName +'.png';
 
   // Add these properties to this element's JSON.
   ele.data('nodeImage', eleImage);
