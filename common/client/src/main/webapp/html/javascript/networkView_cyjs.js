@@ -322,7 +322,8 @@ cy.elements().qtip({
       if(this.isNode()) {
 //         qtipMsg= "ID: "+ this.id() +", Type: "+ this.data('conceptType') +", Value: "+ this.data('value');
          qtipMsg= "Concept: "+ this.data('value') +", type: "+ this.data('conceptType') +", PID: "+ 
-                  this.data('pid') +"<br>"+"Annotation: "+ this.data('annotation');
+                  this.data('pid') +" , flagged: "+ this.data('flagged') +"<br>"+"Annotation: "+ 
+                  this.data('annotation');
         }
       else if(this.isEdge()) {
               qtipMsg= "Relation: "+ this.data('label') +", From: "+ this.data('source') +", To: "+ 
