@@ -26,7 +26,10 @@ function generateNetworkGraph(jsonFileName) {
      console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
      initializeNetworkView();
-     
+
+     // Highlight nodes with hidden, connected nodes using Shadowing.
+     shadowNodesWithHiddenNeighborhood();
+
      // Re-set the default (WebCola) layout.
      setDefaultLayout();
    });
@@ -163,6 +166,19 @@ $(function() { // on dom ready
         .css({ // settings for highlighting nodes in case of single click or Shift+click multi-select event.
           'border-width': '3px',
           'border-color': '#CCCC33' // '#333'
+        })
+      .selector('.nodeShadowAndOverlay')
+        .css({ // settings for using shadow effect on nodes when they have hidden, connected nodes.
+              'shadow-blur': '25', // disable for larger network graphs, use x & y offset(s) instead.
+              'shadow-color': 'black', // 'data(conceptColor)',
+//            'shadow-offset-x': '5',
+//            'shadow-offset-y': '2',
+              'shadow-opacity': '0.9',
+
+              // settings for overlay effect.
+/*              'overlay-color': 'data(conceptColor)',
+              'overlay-padding': '1.5px',
+              'overlay-opacity': '0.5' */
         });
 
 // Initialise a cytoscape container instance as a Javascript object.
@@ -608,6 +624,9 @@ cy.elements().qtip({
              cy.elements('edge').show(); // show all edges using eles.show().
              // Relayout the graph.
              rerunLayout();
+
+             // Remove shadows around nodes, if any.
+             removeNodeShadow();
             }
         },
 
@@ -1074,3 +1093,51 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
   myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
  }
+
+  // Show shadow effect on nodes with connected, hidden elements in their neighborhood.
+  function shadowNodesWithHiddenNeighborhood() {
+    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+    cy.nodes().forEach(function( ele ) {
+    var thisElement= ele;
+    var neighbor_nodeDisplay, connected_hiddenNodesCount= 0;
+    try {
+         // Retrieve the nodes in this element's neighborhood.
+         var neighborhood_nodes= thisElement.neighborhood().nodes();
+         // Find the hidden nodes connected to this node.
+         for(var j=0; j < neighborhood_nodes.length; j++) {
+             neighbor_nodeDisplay= neighborhood_nodes[j].data('conceptDisplay');
+//             console.log("neighbor_nodeDisplay: "+ neighbor_nodeDisplay);
+             if(neighbor_nodeDisplay === "none") { // Find the hidden, connected nodes.
+                connected_hiddenNodesCount= connected_hiddenNodesCount + 1;
+               }
+            }
+//         console.log("No. of connected, hidden nodes= "+ connected_hiddenNodesCount);
+
+         if(connected_hiddenNodesCount > 0) {
+//            console.log("Highlight node ID (has connected, hidden nodes)= "+ thisElement.data('value'));
+            // Show shadow around nodes that have hidden, connected nodes.
+            thisElement.addClass('nodeShadowAndOverlay');
+          }
+      }
+    catch(err) { 
+          console.log("Error occurred while adding Shadow to concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
+         }
+   });
+  }
+
+  // Remove shadow effect from nodes, if it exists.
+  function removeNodeShadow() {
+    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+    cy.nodes().forEach(function( ele ) {
+    var thisElement= ele;
+    try {
+      if(thisElement.hasClass('nodeShadowAndOverlay')) {
+         // Remove any shadow created around the node.
+         thisElement.removeClass('nodeShadowAndOverlay');
+        }
+     }
+    catch(err) {
+          console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
+         }
+   });
+  }
