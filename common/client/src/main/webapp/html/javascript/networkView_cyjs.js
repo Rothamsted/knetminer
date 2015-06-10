@@ -626,7 +626,9 @@ cy.elements().qtip({
              rerunLayout();
 
              // Remove shadows around nodes, if any.
-             removeNodeShadow();
+             cy.nodes().forEach(function( ele ) {
+              removeNodeShadow(ele);
+             });
             }
         },
 
@@ -830,9 +832,15 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
   // Show concept neighbourhood.
   function showNeighbourhood() {
-   console.log("Show neighborhood: Display concepts in the neighbourhood of the selected concept (node)...");
+//   console.log("Show neighborhood: Display concepts in the neighbourhood of the selected concept (node)...");
    cy.nodes(':selected').neighborhood().nodes().show();
-//   cy.nodes(':selected').neighborhood().edges().show();
+   cy.nodes(':selected').neighborhood().edges().show();
+
+   // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
+   selectedNodes.forEach(function( ele ) {
+    removeNodeShadow(ele);
+   });
+
   }
   
   // Show/ Hide labels for concepts and relations.
@@ -1126,9 +1134,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   }
 
   // Remove shadow effect from nodes, if it exists.
-  function removeNodeShadow() {
-    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-    cy.nodes().forEach(function( ele ) {
+  function removeNodeShadow(ele) {
     var thisElement= ele;
     try {
       if(thisElement.hasClass('nodeShadowAndOverlay')) {
@@ -1139,5 +1145,4 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
     catch(err) {
           console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
          }
-   });
   }
