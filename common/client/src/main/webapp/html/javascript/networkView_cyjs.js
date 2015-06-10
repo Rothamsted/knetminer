@@ -833,8 +833,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   // Show concept neighbourhood.
   function showNeighbourhood() {
 //   console.log("Show neighborhood: Display concepts in the neighbourhood of the selected concept (node)...");
-   cy.nodes(':selected').neighborhood().nodes().show();
-   cy.nodes(':selected').neighborhood().edges().show();
+   var selectedNodes= cy.nodes(':selected');
+   selectedNodes.neighborhood().nodes().show();
+   selectedNodes.neighborhood().edges().show();
 
    // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
    selectedNodes.forEach(function( ele ) {
