@@ -124,7 +124,18 @@ $(function() { // on dom ready
                               catch(err) { console.log(err.stack); }
                               return node_borderWidth;
                           },
-//          'border-color': 'black',
+          'border-color': //'black',
+                          function(ele) {
+                              var node_borderColor= 'black';
+                              try { // Check if the node was flagged or not
+                              if(ele.data('flagged') === "true") {
+                                 node_borderColor= 'navy';
+//                                 console.log("node Flagged= "+ ele.data('flagged') +" , node_borderColor: "+ node_borderColor);
+                                }
+                              }
+                              catch(err) { console.log(err.stack); }
+                              return node_borderColor;
+                          },
           'font-size': '8px', // '30px',
 //          'min-zoomed-font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
