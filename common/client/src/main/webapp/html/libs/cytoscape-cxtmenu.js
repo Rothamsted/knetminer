@@ -132,20 +132,30 @@
         theta2 += dtheta;
       }
 
-      // Left click hides menu and triggers command
-      $(document).on('click', function() {
-        $parent.hide();
-      });
+      var hideParentOnClick, selectOnClickWrapper;
 
-      $wrapper.on('click', function() {
-        if (activeCommandI !== undefined && !!target) {
-          var select = options.commands[activeCommandI].select;
+      function addDomListeners(){
+        // Left click hides menu and triggers command
+        $(document).on('click', hideParentOnClick = function() {
+          $parent.hide();
+        });
 
-          if (select) {
+        $wrapper.on('click', selectOnClickWrapper = function() {
+          if (activeCommandI !== undefined && !!target) {
+            var select = options.commands[activeCommandI].select;
+
+            if (select) {
               select.apply(target);
+              activeCommandI = undefined;
+            }
           }
-        }
-      });
+        });
+      }
+
+      function removeDomListeners(){
+        $(document).off('click', hideParentOnClick);
+        $wrapper.off('click', selectOnClickWrapper);
+      }
 
 
       function drawBg( rspotlight ){
@@ -234,20 +244,38 @@
             fn: fn
           });
 
-          cy.on(events, selector, fn);
+          if( selector === 'core' ){
+            cy.on(events, function( e ){
+              if( e.cyTarget === cy ){ // only if event target is directly core
+                return fn.apply( this, [ e ] );
+              }
+            });
+          } else {
+            cy.on(events, selector, fn);
+          }
 
           return this;
         }
       };
 
       function addEventListeners(){
+        var grabbable;
+        var inGesture = false;
+        var dragHandler;
+
         bindings
-          .on('cxttapstart', options.selector, function(e){
+          .on('cxttapstart taphold', options.selector, function(e){
             target = this; // Remember which node the context menu is for
             var ele = this;
+            var isCy = this === cy;
+
+            grabbable = target.grabbable &&  target.grabbable();
+            if( grabbable ){
+              target.ungrabify();
+            }
 
             var rp, rw, rh;
-            if( ele.isNode() ){
+            if( !isCy && ele.isNode() ){
               rp = ele.renderedPosition();
               rw = ele.renderedWidth();
               rh = ele.renderedHeight();
@@ -276,12 +304,22 @@
             drawBg();
 
             activeCommandI = undefined;
+
+            inGesture = true;
           })
 
-          .on('cxtdrag', options.selector, function(e){ rateLimitedCall(function(){
+          .on('cxtdrag tapdrag', options.selector, dragHandler = function(e){ rateLimitedCall(function(){
 
-            var dx = e.originalEvent.pageX - offset.left - ctrx;
-            var dy = e.originalEvent.pageY - offset.top - ctry;
+            if( !inGesture ){ return; }
+
+            var origE = e.originalEvent;
+            var isTouch = origE.touches && origE.touches.length > 0;
+
+            var pageX = isTouch ? origE.touches[0].pageX : origE.pageX;
+            var pageY = isTouch ? origE.touches[0].pageY : origE.pageY;
+
+            var dx = pageX - offset.left - ctrx;
+            var dy = pageY - offset.top - ctry;
 
             if( dx === 0 ){ dx = 0.01; }
 
@@ -365,7 +403,9 @@
             c2d.globalCompositeOperation = 'source-over';
           }) })
 
-          .on('cxttapend', options.selector, function(e){
+          .on('tapdrag', dragHandler)
+
+          .on('cxttapend tapend', options.selector, function(e){
             var ele = this;
             $parent.hide();
 
@@ -374,17 +414,57 @@
 
               if( select ){
                 select.apply( ele );
+                activeCommandI = undefined;
               }
+            }
+
+            inGesture = false;
+
+            if( grabbable ){
+              target.grabify();
             }
           })
 
-          .on('cxttapend', function(e){
+          .on('cxttapend tapend', function(e){
             $parent.hide();
+
+            inGesture = false;
+
+            if( grabbable ){
+              target.grabify();
+            }
           })
         ;
       }
+
+      function removeEventListeners(){
+        var handlers = data.handlers;
+
+        for( var i = 0; i < handlers.length; i++ ){
+          var h = handlers[i];
+
+          if( h.selector === 'core' ){
+            cy.off(h.events, h.fn);
+          } else {
+            cy.off(h.events, h.selector, h.fn);
+          }
+        }
+      }
+
+      function destroyInstance(){
+        removeEventListeners();
+
+        removeDomListeners();
+        $wrapper.remove();
+      }
         
       addEventListeners();
+
+      return {
+        destroy: function(){
+          destroyInstance();
+        }
+      };
 
     });
 
