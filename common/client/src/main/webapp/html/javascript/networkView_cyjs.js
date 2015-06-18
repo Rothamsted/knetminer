@@ -414,23 +414,36 @@ cy.elements().qtip({
         {
          content: 'Hide',
          select: function() {
-             this.hide(); // hide the selected 'node' element.
+             this.hide(); // hide the selected 'node' or 'edge' element.
             }
         },
 
         {
          content: 'Hide by Type',
          select: function() { // Hide all concepts (nodes) of the same type.
-             var thisConceptType= this.data('conceptType');
-             console.log("Hide by Type: this.Type: "+ thisConceptType);
-             cy.nodes().forEach(function( ele ) {
-              if(ele.data('conceptType') === thisConceptType) {
-                 ele.hide();
-                }
-             });
-             // Relayout the graph.
-             rerunLayout();
-            }
+             if(this.isNode()) {
+                var thisConceptType= this.data('conceptType');
+                console.log("Hide Concept by Type: "+ thisConceptType);
+                cy.nodes().forEach(function( ele ) {
+                 if(ele.data('conceptType') === thisConceptType) {
+                    ele.hide();
+                   }
+                });
+                // Relayout the graph.
+                rerunLayout();
+               }
+             else if(this.isEdge()) { // Hide all relations (edges) of the same type.
+                var thisRelationType= this.data('label');
+                console.log("Hide Relation (by Label type): "+ thisRelationType);
+                cy.edges().forEach(function( ele ) {
+                 if(ele.data('label') === thisRelationType) {
+                    ele.hide();
+                   }
+                });
+                // Relayout the graph.
+                rerunLayout();
+               }
+           }
         },
 
         {
