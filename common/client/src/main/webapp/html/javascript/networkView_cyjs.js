@@ -49,49 +49,7 @@ function initializeNetworkView() {
 $(function() { // on dom ready
   var networkJSON= graphJSON; // using the dynamically included graphJSON object directly.
   var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
-/*
-  console.log("networkJSON: "+ networkJSON +"\n \n metadataJSON: "+ metadataJSON +"\n");
 
-  // Display 'networkJSON' elements.nodes data in console.
-  for(var j = 0; j < networkJSON.nodes.length; j++) {
-      console.log("JSON node.data (id, type, value, pid): "+ 
-              networkJSON.nodes[j].data.id +", "+ networkJSON.nodes[j].data.conceptType +", "+ 
-              networkJSON.nodes[j].data.value +", "+ networkJSON.nodes[j].data.pid +
-              " ; Size, Shape, Colour, conceptDisplay: "+ networkJSON.nodes[j].data.conceptSize +" , "+ 
-              networkJSON.nodes[j].data.conceptShape +" , "+ networkJSON.nodes[j].data.conceptColor +
-              " , "+ networkJSON.nodes[j].data.conceptDisplay);
-     }
-  console.log("\n \n");
-  for(var k = 0; k < networkJSON.edges.length; k++) {
-      console.log("JSON edge.data (id, label, From, To, Color, Size, relationDisplay): "+ 
-              networkJSON.edges[k].data.id +", "+ networkJSON.edges[k].data.label +", "+ 
-              networkJSON.edges[k].data.source +", "+ networkJSON.edges[k].data.target +", "+ 
-              networkJSON.edges[k].data.relationColor +", "+ networkJSON.edges[k].data.relationSize +
-              ", "+ networkJSON.edges[k].data.relationDisplay);
-     }
-  console.log("\n \n");
-
-  // Display concept accessions from JSON metadata.
-  for(var j=0; j < metadataJSON.ondexmetadata.concepts.length; j++) {
-      displayAccessionsString= "";
-      console.log("JSON concept.data (id, ofType): "+ metadataJSON.ondexmetadata.concepts[j].id +", "+ 
-              metadataJSON.ondexmetadata.concepts[j].ofType +"\n"+"Concept accessions: ");
-      for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].coaccessions.length; k++) {
-          displayAccessionsString= displayAccessionsString + 
-                  metadataJSON.ondexmetadata.concepts[j].coaccessions[k].elementOf +": "+ 
-                  metadataJSON.ondexmetadata.concepts[j].coaccessions[k].accession +", ";
-         }
-      console.log(displayAccessionsString.substring(0, displayAccessionsString.length-2));
-     }
-  console.log("\n \n");
-
-  // Display url mappings (for html accessions) imported from url_mappings.json config file.
-  for(var k = 0; k < url_mappings.html_acc.length; k++){
-      console.log("url_mappings (cv, weblink, cc_restriction): "+ url_mappings.html_acc[k].cv +", "+ 
-              url_mappings.html_acc[k].weblink +", "+ url_mappings.html_acc[k].cc_restriction);
-     }
-  console.log("\n \n");
-*/
    // Define the stylesheet to be used for nodes & edges in the cytoscape.js container.
    var networkStylesheet= cytoscape.stylesheet()
       .selector('node')
@@ -192,14 +150,6 @@ $(function() { // on dom ready
               'overlay-opacity': '0.5' */
         });
 
-// Initialise a cytoscape container instance as a Javascript object.
-/* var cy= cytoscape({
-  container: document.getElementById('cy'),
-  elements: networkJSON,
-  layout: defaultNetworkLayout,
-  ready: function() { console.log('ready'); window.cy= this; }
-});*/
-
 // Initialise a cytoscape container instance on the HTML DOM using JQuery.
 $('#cy').cytoscape({
   container: document.getElementById('cy'),
@@ -215,9 +165,8 @@ $('#cy').cytoscape({
   
   // Layout of the Network.
 //  layout: defaultNetworkLayout,
-/*  layout: { name: 'circle', animate: false, padding: 30, avoidOverlap: true, 
-      boundingBox: undefined, handleDisconnected: true, fit: true, counterclockwise: false,
-      radius: 3, rStepSize: 2 }, */
+/*  layout: { name: 'circle', animate: false, padding: 30, avoidOverlap: true, boundingBox: undefined, 
+      handleDisconnected: true, fit: true, counterclockwise: false, radius: 3, rStepSize: 2 }, */
 
   // these options hide parts of the graph during interaction.
 //  hideEdgesOnViewport: true,
@@ -236,8 +185,7 @@ $('#cy').cytoscape({
   zoomingEnabled: true, // zooming: both by user and programmatically.
 //  userZoomingEnabled: true, // user-enabled zooming.
   zoom: 1, // the initial zoom level of the graph before the layout is set.
-//  minZoom: 1e-50,
-//  maxZoom: 1e50,
+//  minZoom: 1e-50, maxZoom: 1e50,
   /* mouse wheel sensitivity settings to enable a more gradual Zooming process. A value between 0 and 1 
    * reduces the sensitivity (zooms slower) & a value greater than 1 increases the sensitivity. */
   wheelSensitivity: 0.05,
@@ -271,8 +219,7 @@ var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning, i.e., dragging the entire graph.
 
 // Set requisite background image for each concept (node) instead of using cytoscapeJS shapes.
-/*
- cy.nodes().forEach(function( ele ) {
+/* cy.nodes().forEach(function( ele ) {
   var conType= ele.data('conceptType');
   var imgName= 'Gene'; // default
   if(conType === "Biological_Process") {
@@ -486,12 +433,6 @@ cy.elements().qtip({
             }
         },
 
-/*        {
-         content: 'Reset',
-         select: function() {
-             cy.reset(); // reset the graph's zooming & panning properties.
-            }
-        },*/
         {
          content: 'Show Selections',
          select: function() {
@@ -530,40 +471,6 @@ cy.elements().qtip({
 
 cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
-/* // JQuery Context Menu plugin.
-// $.contextMenu({
- jQuery.contextMenu({
-// $('#cy').contextMenu({
-// cy.elements('node').contextMenu({
-   selector: '#cy', 
-   callback: function(key, options) {
-    var msg= "Clicked: " + key + " on " + $(this).text();
-    console.log(msg); 
-   },
-   items: {
-       "cxtChange": {name: "Change"},
-       "cxtHide": {name: "Hide"},
-       "sep1": "---------",
-       "cxtShow": {
-                "name": "Show", 
-                "items": {
-                    "cxtShow-key1": {"name": "Immediate Neighbours by concept class"},
-                    "cxtShow-key2": {
-                        "name": "Layouts", 
-                        "items": {
-                            "innerFold2-key1": {"name": "Arbor"},
-                            "innerFold2-key2": {"name": "Circle"},
-                            "innerFold2-key3": {"name": "Cose"}
-                        }
-                    },
-                    "cxtShow-key3": {"name": "Immediate Neighbourhood"},
-                    "cxtShow-key4": {"name": "Relations to other visible concepts"}
-                }
-            },
-      }
-  }); */
-
-
  // Show the popup Info. dialog box.
  $('#infoDialog').click(function() {
    $('#infoDialog').slideToggle(300);
@@ -595,36 +502,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 //   cy.pan({ x: 100, y: 100 });
 //   cy.center();
   }
-
-/*
-  // Reset: Re-position the network graph.
-  function onlyResetGraph() {
-   cy.reset(); // reset the graph's zooming & panning properties.
-  }
-
-  // Reset: Re-position the network graph.
-  function centerGraph() {
-   cy.center();
-  }
-
-  // Reset: Re-position the network graph.
-  function panGraph() {
-   cy.pan({ x: 50, y: 50 });
-  }
-
-  // Reset: Re-position the network graph.
-  function fitGraph() {
-   cy.fit();
-  }
-
-  // Reset: Re-position the network graph.
-  function zoomGraph() {
-   cy.zoom({
-     level: 7.0, // zoom level
-     renderedPosition: { x: 50, y: 50 }
-    });
-  }
-*/
 
   // Search the graph for a concept using BFS: breadthfirst search
   function findConcept(conceptName) {
@@ -662,20 +539,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    window.open(png64,'Image','width=1200px,height=600px,resizable=1');
   }
 
-  // Show concept neighbourhood.
-/*  function showNeighbourhood() {
-//   console.log("Show neighborhood: Display concepts in the neighbourhood of the selected concept (node)...");
-   var selectedNodes= cy.nodes(':selected');
-   selectedNodes.neighborhood().nodes().show();
-   selectedNodes.neighborhood().edges().show();
-
-   // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
-   selectedNodes.forEach(function( ele ) {
-    removeNodeShadow(ele);
-   });
-
-  }*/
-  
   // Show all concepts & relations.
   function showAll() {
    cy.elements('node').show(); // show all nodes using eles.show().
@@ -936,7 +799,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
  function openItemInfoPane() {
 //  myLayout.show('east', true); // to unhide (show) and open the pane.
 //  myLayout.open('east'); // open the (already unhidden) Item Info pane.
-
   myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
  }
 
@@ -952,15 +814,11 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
          // Find the hidden nodes connected to this node.
          for(var j=0; j < neighborhood_nodes.length; j++) {
              neighbor_nodeDisplay= neighborhood_nodes[j].data('conceptDisplay');
-//             console.log("neighbor_nodeDisplay: "+ neighbor_nodeDisplay);
              if(neighbor_nodeDisplay === "none") { // Find the hidden, connected nodes.
                 connected_hiddenNodesCount= connected_hiddenNodesCount + 1;
                }
             }
-//         console.log("No. of connected, hidden nodes= "+ connected_hiddenNodesCount);
-
          if(connected_hiddenNodesCount > 0) {
-//            console.log("Highlight node ID (has connected, hidden nodes)= "+ thisElement.data('value'));
             // Show shadow around nodes that have hidden, connected nodes.
             thisElement.addClass('nodeShadowAndOverlay');
           }
