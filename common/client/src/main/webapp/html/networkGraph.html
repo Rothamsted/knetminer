@@ -49,16 +49,16 @@
             <div id="animationCheckbox">Enable Layout Animation: <input type="checkbox" name="layoutAnimation_Chkbx" id="animateLayout" value="Enable Layout Animation" onclick="setLayoutAnimationSetting();" ondblclick="setLayoutAnimationSetting();" onmousedown="setLayoutAnimationSetting();" checked title="Check to enable layout Animation and uncheck to disable."><br/></div>
             <table id=layouts_table cellspacing=1>
                 <thead><u>Layouts:</u></thead><tr>
-                    <td align=center><input type="radio" name="layoutButton" id="default" value="Default_layout" onclick="setColaLayout();" checked title="using WebCola layout algorithm">Default (WebCola)</td>
-                    <td align=center><input type="radio" name="layoutButton" id="circle" value="Circle_layout" onclick="setCircleLayout();">Circular</td>
-                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose_layout" onclick="setCoseLayout();" title="using CoSE layout algorithm (with node clustering, but performance-intensive for larger networks)">Cose</td>
-                    <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor_layout" onclick="setArborLayout();" title="using Arbor layout algorithm">Arbor</td>
-                    <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst_layout" onclick="setBreadthfirstLayout();">Breadthfirst</td>
-                    <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree_layout" onclick="setTreeLayout();" title="using Dagre layout algorithm">Tree</td>
-                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy_layout" onclick="setSpringyLayout();" title="using Springy layout algorithm (not suitable for larger networks)">Springy</td>
-                    <td align=center><input type="radio" name="layoutButton" id="grid" value="Grid_layout" onclick="setGridLayout();">Grid</td>
-<!--                    <td align=center><input type="radio" name="layoutButton" id="spread" value="Spread_layout" onclick="setSpreadLayout();" title="using foograph.js & rhill-voronoi-core.js">Spread</td> -->
-                    <td align=center><input type="radio" name="layoutButton" id="concentric" value="Concentric_layout" onclick="setConcentricLayout();">Concentric</td>
+                    <td align=center><input type="radio" name="layoutButton" id="default" value="Default_layout" onclick="setColaLayout($('#cy').cytoscape('get').$(':visible'));" checked title="using WebCola layout algorithm">Default (WebCola)</td>
+                    <td align=center><input type="radio" name="layoutButton" id="circle" value="Circle_layout" onclick="setCircleLayout($('#cy').cytoscape('get').$(':visible'));">Circular</td>
+                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose_layout" onclick="setCoseLayout($('#cy').cytoscape('get').$(':visible'));" title="using CoSE layout algorithm (with node clustering, but performance-intensive for larger networks)">Cose</td>
+                    <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor_layout" onclick="setArborLayout($('#cy').cytoscape('get').$(':visible'));" title="using Arbor layout algorithm">Arbor</td>
+                    <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst_layout" onclick="setBreadthfirstLayout($('#cy').cytoscape('get').$(':visible'));">Breadthfirst</td>
+                    <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree_layout" onclick="setTreeLayout($('#cy').cytoscape('get').$(':visible'));" title="using Dagre layout algorithm">Tree</td>
+                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy_layout" onclick="setSpringyLayout($('#cy').cytoscape('get').$(':visible'));" title="using Springy layout algorithm (not suitable for larger networks)">Springy</td>
+                    <td align=center><input type="radio" name="layoutButton" id="grid" value="Grid_layout" onclick="setGridLayout($('#cy').cytoscape('get').$(':visible'));">Grid</td>
+<!--                    <td align=center><input type="radio" name="layoutButton" id="spread" value="Spread_layout" onclick="setSpreadLayout($('#cy').cytoscape('get').$(':visible'));" title="using foograph.js & rhill-voronoi-core.js">Spread</td> -->
+                    <td align=center><input type="radio" name="layoutButton" id="concentric" value="Concentric_layout" onclick="setConcentricLayout($('#cy').cytoscape('get').$(':visible'));">Concentric</td>
                 </tr>
             </table>
         </div><hr>

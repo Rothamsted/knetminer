@@ -20,7 +20,10 @@
   // Relayout: Set default (WebCola) layout for the network graph.
   function setDefaultLayout() {
    console.log("cytoscapeJS container (cy) initialized... now set Default Layout (only on visible elements)...");
-   setColaLayout();
+   // Get the cytoscape instance as a Javascript object from JQuery.
+   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   var eles= cy.$(':visible'); // get only the visible elements.
+   setColaLayout(eles);
 //   setTimeout(setColaLayout, 200);
   }
 
@@ -54,13 +57,10 @@
    };
 
   // Set WebCola layout (default).
-  function setColaLayout() {
-   // Get the cytoscape instance as a Javascript object from JQuery.
-   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-
+  function setColaLayout(eles) {
    console.log("setColaLayout()>> animate_layout= "+ animate_layout);
    // run the default (WebCola) layout algorithm but only on the visible elements.
-   cy.$(':visible').layout(defaultNetworkLayout);
+   eles.layout(defaultNetworkLayout);
 
 //   cy.reset(); // reset the graph's zooming & panning properties.
 //   cy.fit();
@@ -68,7 +68,7 @@
 
   // Set Cose layout.
   /* Slow and performance-hampering for larger networks */
-  function setCoseLayout() {
+  function setCoseLayout(eles) {
    console.log("setCoseLayout()>> animate_layout= "+ animate_layout);
    var coseNetworkLayout= {
     name: 'cose', // CytoscapeJS Cose layout
@@ -85,11 +85,11 @@
 //    /*nodeOverlap: 10,*/ coolingFactor: 0.95, initialTemp: 200, minTemp: 1.0
     coolingFactor: 0.95 // to enable clustering.
    };
-   cy.$(':visible').layout(coseNetworkLayout); // run the CoSE layout algorithm but only on the visible elements.
+   eles.layout(coseNetworkLayout); // run the CoSE layout algorithm but only on the visible elements.
   }
 
   // Set Arbor layout.
-  function setArborLayout() {
+  function setArborLayout(eles) {
    console.log("setArborLayout()>> animate_layout= "+ animate_layout);
    var arborNetworkLayout= {
     name: 'arbor', // Arbor layout using Arbor.js (Ondex Web: Kamada Kawai).
@@ -121,12 +121,12 @@
     // infinite layout options
     infinite: false
    };
-   cy.$(':visible').layout(arborNetworkLayout); // run the Arbor layout algorithm but only on the visible elements.
+   eles.layout(arborNetworkLayout); // run the Arbor layout algorithm but only on the visible elements.
   }
 
   // Set Springy layout.
   /* Not suitable for larger networks */
-  function setSpringyLayout() {
+  function setSpringyLayout(eles) {
    console.log("setSpringyLayout()>> animate_layout= "+ animate_layout);
    var springyNetworkLayout= {
     name: 'springy', // Springy layout, uses springy.js (OndexWeb: ForceDirected).
@@ -141,11 +141,11 @@
     // springy forces
     stiffness: 400, repulsion: 400, damping: 0.5 
    };
-   cy.$(':visible').layout(springyNetworkLayout); // run the Springy layout algorithm but only on the visible elements.
+   eles.layout(springyNetworkLayout); // run the Springy layout algorithm but only on the visible elements.
   }
 
   // Set Spread layout, using foograph.js & rhill-voronoi-core.js.
-  function setSpreadLayout() {
+  function setSpreadLayout(eles) {
    console.log("setSpreadLayout()>> animate_layout= "+ animate_layout);
    var spreadNetworkLayout= {
     name: 'spread', // Spread layout, uses foograph.js & rhill-voronoi-core.js.
@@ -160,11 +160,11 @@
     maxExpandIterations: 4, // Maximum number of expanding iterations
     boundingBox: undefined
    };
-   cy.$(':visible').layout(spreadNetworkLayout); // run the Spread layout but only on the visible elements.
+   eles.layout(spreadNetworkLayout); // run the Spread layout but only on the visible elements.
   }
 
   // Set Dagre layout.
-  function setTreeLayout() {
+  function setTreeLayout(eles) {
    console.log("setTreeLayout()>> animate_layout= "+ animate_layout);
    var dagreNetworkLayout= {
     name: 'dagre', // Dagre layout, using the Ranking algorithm from dagre.js (Ondex Web: RadialTree).
@@ -183,14 +183,11 @@
 //    maxSimulationTime: 4000/*8000*/
     ready: function(){}, stop: function(){} //, edgeLength: 10
    };
-   cy.$(':visible').layout(dagreNetworkLayout); // run the Dagre layout algorithm but only on the visible elements.
+   eles.layout(dagreNetworkLayout); // run the Dagre layout algorithm but only on the visible elements.
   }
 
   // Set Circle layout.
-  function setCircleLayout() {
-   // Get the cytoscape instance as a Javascript object from JQuery.
-   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-
+  function setCircleLayout(eles) {
    console.log("setCircleLayout()>> animate_layout= "+ animate_layout);
    var circleNetworkLayout= {
       name: 'circle', // Circle layout (Ondex Web: Circular)
@@ -201,11 +198,11 @@
 //      startAngle: 3/2 * Math.PI,
       rStepSize: 2
    };
-   cy.$(':visible').layout(circleNetworkLayout); // run the Circle layout but only on the visible elements.
+   eles.layout(circleNetworkLayout); // run the Circle layout but only on the visible elements.
   }
 
   // Set Breadthfirst layout.
-  function setBreadthfirstLayout() {
+  function setBreadthfirstLayout(eles) {
    console.log("setBreadthfirstLayout()>> animate_layout= "+ animate_layout);
    var bfNetworkLayout= {
       name: 'breadthfirst', // Breadth first layout (Ondex Web: Hierarchial)
@@ -218,11 +215,11 @@
       ready: undefined, stop: undefined,
       nodeSpacing: 20//, edgeLength: 10
    };
-   cy.$(':visible').layout(bfNetworkLayout); // run the Breadthfirst layout but only on the visible elements.
+   eles.layout(bfNetworkLayout); // run the Breadthfirst layout but only on the visible elements.
   }
 
   // Set Grid layout.
-  function setGridLayout() {
+  function setGridLayout(eles) {
    console.log("setGridLayout()>> animate_layout= "+ animate_layout);
    var gridNetworkLayout= {
     name: 'grid', // CytoscapeJS Grid layout
@@ -236,11 +233,11 @@
     ready: undefined, stop: undefined,
     nodeSpacing: 20//, edgeLength: 10
    };
-   cy.$(':visible').layout(gridNetworkLayout); // run the Grid layout but only on the visible elements.
+   eles.layout(gridNetworkLayout); // run the Grid layout but only on the visible elements.
   }
 
   // Set Concentric layout.
-  function setConcentricLayout() {
+  function setConcentricLayout(eles) {
    console.log("setConcentricLayout()>> animate_layout= "+ animate_layout);
    var concentricNetworkLayout= {
     name: 'concentric', fit: true, padding: 10, 
@@ -254,5 +251,5 @@
     animate: animate_layout /*false*/, animationDuration: 500, ready: undefined, stop: undefined,
     radius: 5 /*undefined*/
    };
-   cy.$(':visible').layout(concentricNetworkLayout); // run the Concentric layout but only on the visible elements.
+   eles.layout(concentricNetworkLayout); // run the Concentric layout but only on the visible elements.
   }

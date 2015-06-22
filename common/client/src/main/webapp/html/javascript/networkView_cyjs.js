@@ -406,7 +406,7 @@ cy.elements().qtip({
                 removeNodeShadow(this);
 
                 // Relayout the graph.
-                rerunLayout();
+                rerunGraphLayout(selectedNode.neighborhood());
                }
            }
         },
@@ -773,39 +773,49 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 //    $("#infoDialog").html(itemInfo); // display in the dialog box.
    }
 
-  // Re-run the graph's layout.
+  // Re-run the entire graph's layout.
   function rerunLayout() {
+   // Get the cytoscape instance as a Javascript object from JQuery.
+   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   var selected_elements= cy.$(':visible'); // get only the visible elements.
+
+  // Re-run the graph's layout, but only on the visible elements.
+   rerunGraphLayout(selected_elements);
+  }
+
+  // Re-run the graph's layout, but only on the visible elements.
+  function rerunGraphLayout(eles) {
    if(document.getElementById("default").checked) {
-      setColaLayout();
+      setColaLayout(eles);
      }
    else if(document.getElementById("circle").checked) {
-           setCircleLayout();
+           setCircleLayout(eles);
           }
    else if(document.getElementById("cose").checked) {
-           setCoseLayout();
+           setCoseLayout(eles);
           }
    else if(document.getElementById("arbor").checked) {
-           setArborLayout();
+           setArborLayout(eles);
           }
    else if(document.getElementById("dagre").checked) {
-           setTreeLayout();
+           setTreeLayout(eles);
           }
    else if(document.getElementById("breadthfirst").checked) {
-           setBreadthfirstLayout();
+           setBreadthfirstLayout(eles);
           }
    else if(document.getElementById("springy").checked) {
-           setSpringyLayout();
+           setSpringyLayout(eles);
           }
 /*   else if(document.getElementById("spread").checked) {
-           setSpreadLayout();
+           setSpreadLayout(eles);
           }*/
    else if(document.getElementById("grid").checked) {
-           setGridLayout();
+           setGridLayout(eles);
           }
    else if(document.getElementById("concentric").checked) {
-           setConcentricLayout();
+           setConcentricLayout(eles);
           }
-   console.log("Re-run layout complete...");
+//   console.log("Re-run layout complete...");
   }
 
  // Open the Item Info pane when the "Item Info" option is selected for a concept or relation.
