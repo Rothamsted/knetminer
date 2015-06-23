@@ -28,7 +28,7 @@ function generateNetworkGraph(jsonFileName) {
      initializeNetworkView();
 
      // Highlight nodes with hidden, connected nodes using Shadowing.
-     shadowNodesWithHiddenNeighborhood();
+     blurNodesWithHiddenNeighborhood();
 
      // Re-set the default (WebCola) layout.
      setDefaultLayout();
@@ -136,7 +136,7 @@ $(function() { // on dom ready
           'border-width': '3px',
           'border-color': '#CCCC33' // '#333'
         })
-      .selector('.nodeShadowAndOverlay')
+      .selector('.BlurNode')
         .css({ // settings for using shadow effect on nodes when they have hidden, connected nodes.
               'shadow-blur': '25', // disable for larger network graphs, use x & y offset(s) instead.
               'shadow-color': 'black', // 'data(conceptColor)',
@@ -350,7 +350,7 @@ cy.elements().qtip({
 */
 
   // On a 'touchmove' or 'mouseover' event, show jagged edges signifying the number of nodes connected to this node.
-  cy.on('tapdragover', function (e) {
+/*  cy.on('tapdragover', function (e) {
 //    console.log("tapdragover (touchmove or mouseover event)...");
     var thisElement= e.cyTarget;
     var nodeID, info="";
@@ -370,7 +370,183 @@ cy.elements().qtip({
       }
       catch(err) { info= err.stack; }
    console.log(info);
+  });*/
+
+//  var hidden_neigbor_edgesCollection= cy.collection();
+//  var hidden_neigbor_nodesCollection= cy.collection();
+  // On a 'touchmove' or 'mouseover' event, show jagged edges signifying the number of nodes connected to this node.
+  cy.on('tapdragover', function (e) {
+    var thisElement= e.cyTarget;
+
+    try {
+// Empty out both the collections to manage the size of the collection.
+/*if(thisElement.isNode()) { console.log("\t Emptying out both the collections...");
+hidden_neigbor_nodesCollection.forEach(function( el ) {
+     console.log("tapdragover: old data in Nodes collection: node "+ el.id() +" : "+ el.data("value"));
+     hidden_neigbor_nodesCollection.remove(el); // to manage the size of the collection.
+    });
+console.log("\n tapdragover: EMPTIED... nodes left now: "+ hidden_neigbor_nodesCollection.length);
+hidden_neigbor_nodesCollection.forEach(function( el ) { console.log("tapdragout: nodes left: node "+ el.id() +" : "+ el.data("value")); });
+hidden_neigbor_edgesCollection.forEach(function( ele ) {
+     hidden_neigbor_edgesCollection.remove(ele); // to manage the size of the collection.
+    });
+console.log("tapdragover: EMPTIED... edges left now: "+ hidden_neigbor_edgesCollection.length);
+//if(hidden_neigbor_nodesCollection.length >0) { hidden_neigbor_nodesCollection.remove(); }
+//console.log("\n tapdragout: nodes left: "+ hidden_neigbor_nodesCollection.length);
+//if(hidden_neigbor_edgesCollection.length >0) { hidden_neigbor_edgesCollection.remove(); }
+//console.log("tapdragout: edges left: "+ hidden_neigbor_edgesCollection.length);
+}*/
+
+      if(thisElement.isNode() && thisElement.hasClass('BlurNode')) {
+         var eleID= thisElement.id();
+         console.log("\n tapdragover (touchmove or mouseover event) on concept ID: "+ eleID +" , value: "+ thisElement.data('value'));
+
+         // Get all the connected relations (edges) for this concept (node).
+         var neighbor_edges= thisElement.connectedEdges();
+         // Get hidden, connected relations (edges) for this concept (node), that start from this node & are not visible.
+//         var neighbor_edges= cy.edges().sources(thisElement).filter('node[relationDisplay = "none"]');
+
+         // Using cytoscapeJS, set a circle layout on the neighborhood & make the neighboring hidden nodes & edges transparent.
+         // First, get the bounding box for the layout to make it closely clustered.
+//         var eleBBox= thisElement.boundingBox({'includeNodes': 'true', 'includeEdges': 'false', 'includeLabels': 'false' });
+
+         var eleBBox= /*neighbor_edges.connectedNodes()*/thisElement.boundingBox(/*{'includeNodes': 'true', 'includeEdges': 'false', 'includeLabels': 'false' }*/);
+//         console.log("\t eleBBox: x1= "+ eleBBox.x1 +", x2= "+ eleBBox.x2 +", y1= "+ eleBBox.y1 +", y2= "+ eleBBox.y2 +", w= "+ eleBBox.w +", h= "+ eleBBox.h);
+
+         // Define the neighborhood's layout.
+         var mini_circleLayout= { name: 'circle', radius: 0.01, boundingBox: eleBBox,
+             avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
+             counterclockwise: false, rStepSize: 0.01 };
+         // Set the layout.
+         thisElement.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
+//         neighbor_edges/*.filter('edge[relationDisplay = "none"]')*/.filter('edge[source = '+eleID+']').connectedNodes().layout(mini_circleLayout);
+
+/*         var hidden_nodes_on_Edges= neighbor_edges.connectedNodes();
+         console.log("hidden_nodes_on_Edges: size: "+ hidden_nodes_on_Edges.length);*/
+
+         // Find and show hidden relations starting from this concept to other concepts.
+         var neighbor_relationDisplay, neighbor_relationSource;
+         neighbor_edges.forEach(function( ele ) {
+             neighbor_relationSource= ele.data('source');
+             neighbor_relationDisplay= ele.data('relationDisplay');
+             if(neighbor_relationSource === eleID && neighbor_relationDisplay === "none") {
+                console.log("tapdragover>> thisElement.id: "+ eleID +"; neighbor_edge: id: "+ ele.id() +
+                        " , display: "+ neighbor_relationDisplay +" , source: "+ neighbor_relationSource);
+                // Get the hidden concepts (nodes) connected to this relation (edge).
+                var hiddenConnectedNodes= ele.connectedNodes().filter('node[conceptDisplay = "none"]');
+                hiddenConnectedNodes.forEach(function( el ) {
+                console.log("\t hiddenConnectedNodes>> id: "+ el.id() +"; value: "+ el.data('value') +
+                        " , display: "+ el.data('conceptDisplay'));
+                    if(el.id() !== eleID) {
+                      // Show the hidden, connected concept (node).
+                      el.style({'display': 'element', 'opacity': '0.01' });
+                      // Add this concept (node) to a collection, later used to re-set its visual CSS properties
+//                      hidden_neigbor_nodesCollection= hidden_neigbor_nodesCollection.add(el);
+/*                      console.log("tapdragover>> Added connectedNodes>> id: "+ el.id() +" , value: "+ 
+                              el.data('value') +" , visible: "+ el.data('conceptDisplay'));*/
+                    }
+                });
+                // Show the hidden, connected relation (edge) as well.
+//                ele.style({'display': 'element', 'opacity': '0.75', 'curve-style': 'haystack', 'target-arrow-shape': 'none', 'control-point-weight': '1', 'content': '', 'haystack-radius': '0' });
+                ele.style({'display': 'element', 'opacity': '0.75'/*, 'target-arrow-shape': 'none'*/ });
+                // Add this relation (edge) to a collection as well, later used to re-set its visual CSS properties
+//                hidden_neigbor_edgesCollection= hidden_neigbor_edgesCollection.add(ele);
+               }
+            });
+         }
+      }
+    catch(err) { console.log("tapdragover event: Error: "+ err.stack); }
+
+/*    if(thisElement.isNode()) { console.log("\n tapdragover: hidden_neigbor_nodesCollection size= "+ hidden_neigbor_nodesCollection.length);
+    console.log("tapdragover: hidden_neigbor_edgesCollection size= "+ hidden_neigbor_edgesCollection.length); }*/
   });
+
+  // On a 'touchmove' or 'mouseout' event, remove css style changes, if any, from nodes and edges.
+  cy.on('tapdragout', function (e) {
+    var thisElement= e.cyTarget;
+    try {
+      if(thisElement.isNode() && thisElement.hasClass('BlurNode')) {
+/*         console.log("\n tapdragout: hidden_neigbor_nodesCollection size= "+ hidden_neigbor_nodesCollection.length);
+         console.log("tapdragout: hidden_neigbor_edgesCollection size= "+ hidden_neigbor_edgesCollection.length); }*/
+         resetRelationCSS(thisElement);
+        }
+     }
+    catch(err) { console.log("tapdragout event: Error: "+ err.stack); }
+  });
+
+  // Remove css style changes occurring from a 'tapdragover' ('mouseover') event, if any, from nodes and edges.
+  function resetRelationCSS2(thisElement) {
+/*      if(thisElement.isNode()) { console.log("\n resetRelationCSS: hidden_neigbor_nodesCollection size= "+ hidden_neigbor_nodesCollection.length);
+      console.log("resetRelationCSS: hidden_neigbor_edgesCollection size= "+ hidden_neigbor_edgesCollection.length); }*/
+
+//      if(thisElement.isNode() && thisElement.hasClass('BlurNode')) {
+         var eleID= thisElement.id();
+//         var resetCSS= true;
+         console.log("\n resetRelationCSS>> concept ID: "+ eleID +" , value: "+ thisElement.data('value') +
+                 " ; hasClass(BlurNode): "+ thisElement.hasClass('BlurNode'));
+         // Re-set its visual CSS properties of all the concepts and relations in the 2 collections.
+/*         hidden_neigbor_nodesCollection.forEach(function( el ) {
+             if(el.id() !== eleID) {
+//             if(el.data("display") == eleID) {
+                el.style({'display': 'none', 'opacity': '1.0' });
+                console.log("resetRelationCSS>> connectedNodes>> Remove css changes from id: "+ el.id() +
+                        " , value: "+ el.data('value') +" , visible: "+ el.data('conceptDisplay'));
+                }
+//             else { resetCSS= false; }
+         });
+         hidden_neigbor_edgesCollection.forEach(function( ele ) {
+//             if(ele.data("source") !== thisElement.id()) {
+             if(ele.data("target") !== thisElement.id()) {
+                ele.style({'display': 'none', 'opacity': '1.0'/*, 'curve-style': 'unbundled-bezier', 'target-arrow-shape': 'triangle'*/ /* });
+               }
+         });*/
+         // Get all the connected relations (edges) for this concept (node).
+         var neighbor_edges= thisElement.connectedEdges();
+         // Find and show hidden relations starting from this concept to other concepts.
+         var neighbor_relationSource;
+         neighbor_edges.forEach(function( ele ) {
+             neighbor_relationSource= ele.data('source');
+             if(neighbor_relationSource === eleID && ele.style('opacity')) {
+                console.log("neighbor_edge: id: "+ ele.id() +
+                        " , display: "+ ele.data('relationDisplay') +" , source: "+ neighbor_relationSource +" , opacity: "+ thisElement.style('opacity'));
+                // Get the hidden concepts (nodes) connected to this relation (edge).
+                var hiddenConnectedNodes= ele.connectedNodes();
+                hiddenConnectedNodes.removeStyle(); // remove all overridden style properties.
+                hiddenConnectedNodes.filter('node[conceptDisplay = "none"]').connectedEdges().removeStyle(); // remove all overridden style properties.
+               }
+            });
+//        }
+  }
+
+  // Remove css style changes occurring from a 'tapdragover' ('mouseover') event, if any, from nodes and edges.
+  function resetRelationCSS(thisElement) {
+      var eleID= thisElement.id();
+      console.log("resetRelationCSS>> concept ID: "+ eleID +" , value: "+ thisElement.data('value') +
+             " ; hasClass(BlurNode): "+ thisElement.hasClass('BlurNode'));
+      
+      // Get all the connected relations (edges) for this concept (node).
+      var neighbor_edges= thisElement.connectedEdges();
+      neighbor_edges.forEach(function( ele ) {
+          console.log("neighbor_edge: id: "+ ele.id() +" , display: "+ ele.data('relationDisplay') +
+                  " , source: "+ ele.data('source') +" , opacity: "+ ele.style('opacity'));
+          if(ele.style('opacity') === '0.75') {
+             // Get the hidden concepts (nodes) connected to this relation (edge).
+             var hiddenConnectedNodes= ele.connectedNodes();
+             hiddenConnectedNodes.forEach(function( el ) {
+                 console.log("neighbor_node: id: "+ el.id() +" , value: "+ el.data('value') +" , display: "+ 
+                         el.data('conceptDisplay') + " , opacity: "+ el.style('opacity'));
+                 if(el.style('opacity') === '0.01') {
+                    el.removeStyle(); // remove all overridden style properties from this Concept.
+                   }
+             });
+//             var hiddenConnectedNodes= ele.connectedNodes().filter('[opacity = "0.01"]');
+//             hiddenConnectedNodes.removeStyle(); // remove all overridden style properties from Concepts.
+//             hiddenConnectedNodes.filter('node[conceptDisplay = "none"]').connectedEdges().removeStyle(); // remove all overridden style properties from Relations.
+             ele.removeStyle(); // remove all overridden style properties from this Relation.
+               }
+            });
+//        }
+  }
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
@@ -399,14 +575,31 @@ cy.elements().qtip({
              if(this.isNode()) {
                 // Show concept neighborhood.
                 var selectedNode= this;
-                selectedNode.neighborhood().nodes().show();
-                selectedNode.neighborhood().edges().show();
+
+                // Remove css style changes occurring from a 'tapdragover' ('mouseover') event.
+                resetRelationCSS(selectedNode);
+
+                // Show concept neighborhood.
+//                selectedNode.neighborhood().nodes().show();
+//                selectedNode.neighborhood().edges().show();
+                selectedNode.connectedEdges().connectedNodes().show();
+                selectedNode.connectedEdges().show();
 
                 // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
-                removeNodeShadow(this);
+                removeNodeBlur(this);
+                // Remove shadow effect from neighborhood nodes too.
+//                selectedNode.neighborhood().nodes.forEach(function( el ) {
+/*                selectedNode.connectedEdges().connectedNodes().forEach(function( el ) {
+                 removeNodeBlur(el);
+                 // Show neighborhood of connected elements too.
+//                 el.neighborhood().nodes().show();
+//                 el.neighborhood().edges().show();
+                });*/
 
-                // Relayout the graph.
-                rerunGraphLayout(selectedNode.neighborhood());
+                try { // Relayout the graph.
+                  rerunGraphLayout(selectedNode.neighborhood()/*selectedNode.connectedEdges().connectedNodes()*/);
+                 }
+                catch(err) { console.log("Error occurred while setting layout on selected element's neighborhood: "+ err.stack); }
                }
            }
         },
@@ -561,7 +754,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
    // Remove shadows around nodes, if any.
    cy.nodes().forEach(function( ele ) {
-       removeNodeShadow(ele);
+       removeNodeBlur(ele);
       });
   }
 
@@ -826,7 +1019,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
  }
 
   // Show shadow effect on nodes with connected, hidden elements in their neighborhood.
-  function shadowNodesWithHiddenNeighborhood() {
+  function blurNodesWithHiddenNeighborhood() {
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
     cy.nodes().forEach(function( ele ) {
     var thisElement= ele;
@@ -843,7 +1036,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
             }
          if(connected_hiddenNodesCount > 0) {
             // Show shadow around nodes that have hidden, connected nodes.
-            thisElement.addClass('nodeShadowAndOverlay');
+            thisElement.addClass('BlurNode');
           }
       }
     catch(err) { 
@@ -853,12 +1046,12 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   }
 
   // Remove shadow effect from nodes, if it exists.
-  function removeNodeShadow(ele) {
+  function removeNodeBlur(ele) {
     var thisElement= ele;
     try {
-      if(thisElement.hasClass('nodeShadowAndOverlay')) {
+      if(thisElement.hasClass('BlurNode')) {
          // Remove any shadow created around the node.
-         thisElement.removeClass('nodeShadowAndOverlay');
+         thisElement.removeClass('BlurNode');
         }
      }
     catch(err) {
