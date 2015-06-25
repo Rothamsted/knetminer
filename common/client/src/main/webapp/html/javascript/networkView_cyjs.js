@@ -937,20 +937,24 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   // Show shadow effect on nodes with connected, hidden elements in their neighborhood.
   function blurNodesWithHiddenNeighborhood() {
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+
     cy.nodes().forEach(function( ele ) {
     var thisElement= ele;
-    var neighbor_nodeDisplay, connected_hiddenNodesCount= 0;
-    try {
-         // Retrieve the nodes in this element's neighborhood.
-         var neighborhood_nodes= thisElement.neighborhood().nodes();
-         // Find the hidden nodes connected to this node.
-         for(var j=0; j < neighborhood_nodes.length; j++) {
-             neighbor_nodeDisplay= neighborhood_nodes[j].data('conceptDisplay');
-             if(neighbor_nodeDisplay === "none") { // Find the hidden, connected nodes.
-                connected_hiddenNodesCount= connected_hiddenNodesCount + 1;
-               }
-            }
-         if(connected_hiddenNodesCount > 0) {
+    var eleID, connected_hiddenNodesCount= 0;
+    try { // Retrieve the nodes in this element's neighborhood.
+//         var neighborhood_nodes= thisElement.neighborhood().nodes();
+
+         eleID= thisElement.id(); // element ID.
+         // Retrieve the directly connected nodes in this element's neighborhood.
+         var connected_edges= thisElement.connectedEdges();
+         // Get all the relations (edges) with this concept (node) as the source.
+//         var connected_edges= thisElement.connectedEdges().filter('edge[source = '+eleID+']');
+
+         var connected_hidden_nodes= connected_edges.connectedNodes().filter('node[conceptDisplay = "none"]');
+         // Find the number of hidden, connected nodes.
+         connected_hiddenNodesCount= connected_hidden_nodes.length;
+
+         if(connected_hiddenNodesCount > 1) {
             // Show shadow around nodes that have hidden, connected nodes.
             thisElement.addClass('BlurNode');
           }
