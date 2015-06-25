@@ -201,7 +201,7 @@
    eles.layout(circleNetworkLayout); // run the Circle layout but only on the visible elements.
   }
 
-  // Set Breadthfirst layout.
+  // Set Breadthfirst layout (may not work for networks with multiple roots/ starting points).
   function setBreadthfirstLayout(eles) {
    console.log("setBreadthfirstLayout()>> animate_layout= "+ animate_layout);
    var bfNetworkLayout= {
