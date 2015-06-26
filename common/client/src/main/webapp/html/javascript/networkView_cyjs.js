@@ -476,9 +476,9 @@ cy.elements().qtip({
                       stop: function() { cy.center(); cy.fit(); } };
 
                   // Set the layout only using the hidden concepts (nodes).
-//                  console.log("Node neighborhood size: "+ selectedNode.neighborhood().length);
+//                  console.log("Node neighborhood.filter(visible) size: "+ selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').length);
                   if(selectedNode.neighborhood().length > 5/*2*/) {
-                     selectedNode.neighborhood().layout(mini_circleLayout);
+                     selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
                     }
                  }
                 catch(err) { console.log("Error occurred while setting layout on selected element's neighborhood: "+ err.stack); }
