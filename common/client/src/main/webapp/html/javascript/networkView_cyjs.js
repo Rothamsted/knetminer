@@ -339,38 +339,7 @@ cy.elements().qtip({
      // Also update the Item Info table & display it.
      showItemInfo(thisElement);
    });
-
-/*
-  // Modifiying taphold event to handle usage of touch gestures.
-  cy.elements.on('taphold', function(e){
-   this.ungrabify();
-  }).on('free', function(e){
-       this.grabify();
-      });
-*/
-
-  // On a 'touchmove' or 'mouseover' event, show jagged edges signifying the number of nodes connected to this node.
-/*  cy.on('tapdragover', function (e) {
-//    console.log("tapdragover (touchmove or mouseover event)...");
-    var thisElement= e.cyTarget;
-    var nodeID, info="";
-    var connectedNodesCount= 0;
-    try {
-      if(thisElement.isNode()) {
-         nodeID= thisElement.id();
-         // Get the number of nodes connected to this node from the graph's JSON data.
-         for(var k=0; k < networkJSON.edges.length; k++) {
-             if(networkJSON.edges[k].data.source === nodeID)
-                connectedNodesCount= connectedNodesCount + 1;
-            }
-         info= "Node tapdragover (touchmove/ mouseover) event: No. of connected nodes= "+ connectedNodesCount;
-         // Show small, outward edges signifying the number of connected nodes.
-         
-        }
-      }
-      catch(err) { info= err.stack; }
-   console.log(info);
-  });*/
+// cxttap - normalised right click or 2-finger tap event.
 
   // On a 'touchmove' or 'mouseover' event, show edges signifying the number of nodes connected to this node.
   cy.on('tapdragover', function (e) {
@@ -383,29 +352,17 @@ cy.elements().qtip({
          // Get all the connected relations (edges) for this concept (node).
          var neighbor_edges= thisElement.connectedEdges();
 
-         // Using cytoscapeJS, set a circle layout on the neighborhood & make the neighboring hidden nodes & edges transparent.
-         var eleBBox= thisElement.boundingBox(); // get the bounding box of thie selected concept (node) for the layout to run around it.
-         // Define the neighborhood's layout.
-         var mini_circleLayout= { name: 'circle', radius: 0.01, boundingBox: eleBBox,
-             avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
-             counterclockwise: false, rStepSize: 0.01 };
-         // Set the layout only using the hidden concepts (nodes).
-         thisElement.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-//         neighbor_edges.connectedNodes().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-
          // Find and show hidden relations starting from this concept to other concepts.
          var neighbor_relationDisplay, neighbor_relationSource;
          neighbor_edges.forEach(function( ele ) {
              neighbor_relationSource= ele.data('source');
              neighbor_relationDisplay= ele.data('relationDisplay');
              if(/*neighbor_relationSource === eleID && */neighbor_relationDisplay === "none") {
-/*                console.log("\n tapdragover>> thisElement.id: "+ eleID +"; neighbor_Edge: id: "+ ele.id() 
-                        +" , isVisible: "+ ele.visible());*/
+//                console.log("\n tapdragover>> thisElement.id: "+ eleID +"; neighbor_Edge: id: "+ ele.id() +" , isVisible: "+ ele.visible());
                 // Get the hidden concepts (nodes) connected to this relation (edge).
                 var hiddenConnectedNodes= ele.connectedNodes().filter('node[conceptDisplay = "none"]');
                 hiddenConnectedNodes.forEach(function( el ) {
-/*                console.log("\t hiddenConnectedNodes>> Node id: "+ el.id() +"; value: "+ el.data('value') 
-                        +" , isVisible: "+ el.visible());*/
+//                console.log("\t hiddenConnectedNodes>> Node id: "+ el.id() +"; value: "+ el.data('value') +" , isVisible: "+ el.visible());
                     if(el.id() !== eleID && (!(el.visible()))) {
                       // Show the hidden, connected concept (node).
                       el.style({'display': 'element', 'opacity': '0.01' });
@@ -414,10 +371,21 @@ cy.elements().qtip({
                 // Show the hidden, connected relation (edge) as well.
                 if(!(ele.visible())) {
 //                   ele.style({'display': 'element', 'opacity': '0.75', 'curve-style': 'haystack', 'target-arrow-shape': 'none', 'control-point-weight': '1', 'content': '', 'haystack-radius': '0' });
-                   ele.style({'display': 'element', 'opacity': '0.75'/*, 'target-arrow-shape': 'none'*/ });
+                   ele.style({'display': 'element', 'opacity': '0.75'/*, 'target-arrow-shape': 'none', 'control-point-weight': '10'*/ });
                   }
                }
             });
+
+          // Using cytoscapeJS, set a circle layout on the neighborhood & make the neighboring hidden nodes & edges transparent.
+          var eleBBox= thisElement.boundingBox(); // cy.extent(); // get the bounding box of thie selected concept (node) for the layout to run around it.
+          // Define the neighborhood's layout.
+          var mini_circleLayout= { name: 'circle', radius: 2/*0.01*/, boundingBox: eleBBox,
+              avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
+              counterclockwise: false, rStepSize: 1/*0.01*/, ready: undefined, 
+              stop: function() { cy.center(); cy.fit(); } };
+          // Set the layout only using the hidden concepts (nodes).
+          thisElement.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
+//             neighbor_edges.connectedNodes().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
          }
       }
     catch(err) { console.log("tapdragover event: Error: "+ err.stack); }
@@ -436,22 +404,18 @@ cy.elements().qtip({
 
   // Remove css style changes occurring from a 'tapdragover' ('mouseover') event, if any, from nodes and edges.
   function resetRelationCSS(thisElement) {
-      var eleID= thisElement.id();
-      console.log("resetRelationCSS>> concept ID: "+ eleID +" , value: "+ thisElement.data('value') +
-             " , isVisible: "+ thisElement.visible());
+//      console.log("resetRelationCSS>> concept ID: "+ thisElement.id() +" , value: "+ thisElement.data('value') +" , isVisible: "+ thisElement.visible());
 
       // Get all the connected relations (edges) for this concept (node).
       var neighbor_edges= thisElement.connectedEdges();
       neighbor_edges.forEach(function( ele ) {
           if(ele.style('opacity') === '0.75') {
-             console.log("neighbor_edge: id: "+ ele.id() +" , source: "+ ele.data('source') +
-                     " , isVisible: "+ ele.visible());
+//             console.log("neighbor_edge: id: "+ ele.id() +" , source: "+ ele.data('source') +" , isVisible: "+ ele.visible());
              // Get the hidden concepts (nodes) connected to this relation (edge).
              var hiddenConnectedNodes= ele.connectedNodes();
              hiddenConnectedNodes.forEach(function( el ) {
                  if(el.style('opacity') === '0.01') {
-                    console.log("neighbor_node: id: "+ el.id() +" , value: "+ el.data('value') +
-                            " , isVisible: "+ el.visible());
+//                    console.log("neighbor_node: id: "+ el.id() +" , value: "+ el.data('value') +" , isVisible: "+ el.visible());
                     el.removeStyle(); // remove all overridden style properties from this Concept.
                    }
              });
@@ -506,11 +470,13 @@ cy.elements().qtip({
                   // Set a circle layout on the neighborhood.
                   var eleBBox= selectedNode.boundingBox(); // get the bounding box of thie selected concept (node) for the layout to run around it.
                   // Define the neighborhood's layout.
-                  var mini_circleLayout= { name: 'circle', radius: 0.01, boundingBox: eleBBox,
-                      avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, 
-                      animate: false, counterclockwise: false, rStepSize: 0.01 };
+                  var mini_circleLayout= { name: 'circle', radius: 2/*0.01*/, boundingBox: eleBBox,
+                      avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
+                      counterclockwise: false, rStepSize: 1/*0.01*/, ready: undefined, 
+                      stop: function() { cy.center(); cy.fit(); } };
+
                   // Set the layout only using the hidden concepts (nodes).
-                  console.log("Node neighborhood size: "+ selectedNode.neighborhood().length);
+//                  console.log("Node neighborhood size: "+ selectedNode.neighborhood().length);
                   if(selectedNode.neighborhood().length > 5/*2*/) {
                      selectedNode.neighborhood().layout(mini_circleLayout);
                     }
