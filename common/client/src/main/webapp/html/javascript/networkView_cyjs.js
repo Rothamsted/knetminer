@@ -104,7 +104,8 @@ $(function() { // on dom ready
           /** Using 'data(conceptColor)' leads to a "null" mapping error if that attribute is not defined 
            * in cytoscapeJS. Using 'data[conceptColor]' is hence preferred as it limits the scope of 
            * assigning a property value only if it is defined in cytoscapeJS as well. */
-          'display': 'data(conceptDisplay)' // display: 'element' (show) or 'none' (hide).
+          'display': 'data(conceptDisplay)', // display: 'element' (show) or 'none' (hide).
+          'text-opacity': '0' // to make the label invisible by default.
          })
       .selector('edge')
         .css({
@@ -121,7 +122,8 @@ $(function() { // on dom ready
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
           'target-arrow-shape': 'triangle',
           'target-arrow-color': 'gray',
-          'display': 'data(relationDisplay)' // display: 'element' (show) or 'none' (hide).
+          'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
+          'text-opacity': '0' // to make the label invisible by default.
         })
       .selector('.highlighted')
         .css({
