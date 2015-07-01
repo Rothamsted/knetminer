@@ -946,3 +946,18 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
           console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
          }
   }
+
+  // Show node and edge labels.
+  function showAllLabels() {
+   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   if(document.getElementById("show_allLabels").checked) {
+      console.log("Show All concept and relation Labels...");
+      cy.nodes().style({'text-opacity': '1'});
+      cy.edges().style({'text-opacity': '1'});
+     }
+   else {
+      console.log("Hide All concept and relation Labels...");
+      cy.nodes().style({'text-opacity': '0'});
+      cy.edges().style({'text-opacity': '0'});
+     }
+  }
