@@ -720,6 +720,19 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                        }
                     cell2.innerHTML= evidences.substring(0, evidences.length-2);
 
+                    // Get all Synonyms (concept names).
+                    var all_concept_names= "";
+                    row= table.insertRow(table.rows.length); // new row.
+                    cell1= row.insertCell(0);
+                    cell2= row.insertCell(1);
+                    cell1.innerHTML= "<b>Synonyms:</b>";
+                    for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].conames.length; k++) {
+                        if(metadataJSON.ondexmetadata.concepts[j].conames[k].name !== "") {
+                           all_concept_names= all_concept_names + metadataJSON.ondexmetadata.concepts[j].conames[k].name +"<br/>";
+                          }
+                       }
+                    cell2.innerHTML= all_concept_names; // all synonyms.
+
                     // Get concept attributes.
                     row= table.insertRow(table.rows.length); // new row.
                     cell1= row.insertCell(0);
