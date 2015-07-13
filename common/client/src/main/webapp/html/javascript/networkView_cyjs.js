@@ -991,17 +991,54 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
          }
   }
 
-  // Show node and edge labels.
-  function showAllLabels() {
+  // Show all node labels.
+  function showConceptLabels() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-   if(document.getElementById("show_allLabels").checked) {
-      console.log("Show All concept and relation Labels...");
+   if(document.getElementById("show_ConceptLabels").checked) {
+      console.log("Show Concept labels...");
       cy.nodes().style({'text-opacity': '1'});
+     }
+   else {
+      console.log("Hide Concept labels...");
+      cy.nodes().style({'text-opacity': '0'});
+      // Also hide labels on Genes.
+      document.getElementById("show_GeneLabels").checked= false;
+      showGeneLabels();
+     }
+  }
+
+  // Show all edge labels.
+  function showRelationLabels() {
+   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   if(document.getElementById("show_RelationLabels").checked) {
+      console.log("Show Relation labels...");
       cy.edges().style({'text-opacity': '1'});
      }
    else {
-      console.log("Hide All concept and relation Labels...");
-      cy.nodes().style({'text-opacity': '0'});
+      console.log("Hide Relation labels...");
       cy.edges().style({'text-opacity': '0'});
+     }
+  }
+
+  // Show labels only on Genes.
+  function showGeneLabels() {
+   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   if(document.getElementById("show_GeneLabels").checked) {
+      console.log("Show labels on Genes...");
+      cy.nodes().forEach(function( ele ) {
+         var conType= ele.data('conceptType');
+         if(conType === "Gene") {
+            ele.style({'text-opacity': '1'});
+           }
+        });
+    }
+   else {
+      console.log("Hide labels on Genes...");
+      cy.nodes().forEach(function( ele ) {
+         var conType= ele.data('conceptType');
+         if(conType === "Gene") {
+            ele.style({'text-opacity': '0'});
+           }
+        });
      }
   }

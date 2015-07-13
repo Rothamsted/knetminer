@@ -44,9 +44,9 @@
   <body>
     <!-- North pane of split pane added using jquery-ui-layout -->
     <div class="ui-layout-north" onmouseover="myLayout.allowOverflow('north')" onmouseout="myLayout.resetOverflow(this)">
-        <b>Network Graph using CytoscapeJS</b><br/><br/>
+        <b>Network Graph using CytoscapeJS</b><br/>
         <div id=layouts_container>
-            <div id="animationCheckbox">Enable Layout Animation:<input type="checkbox" name="layoutAnimation_Chkbx" id="animateLayout" value="Enable Layout Animation" onclick="setLayoutAnimationSetting();" ondblclick="setLayoutAnimationSetting();" onmousedown="setLayoutAnimationSetting();" checked title="Check to enable layout Animation and uncheck to disable."><br/></div>
+            <div id="animationCheckbox">Enable Animation:<input type="checkbox" name="layoutAnimation_Chkbx" id="animateLayout" value="Enable Layout Animation" onclick="setLayoutAnimationSetting();" ondblclick="setLayoutAnimationSetting();" onmousedown="setLayoutAnimationSetting();" checked title="Check to enable layout Animation and uncheck to disable."><br/></div>
             <table id=layouts_table cellspacing=1>
                 <thead><u>Layouts:</u></thead><tr>
                     <td align=center><input type="radio" name="layoutButton" id="default" value="Default_layout" onclick="setColaLayout($('#cy').cytoscape('get').$(':visible'));" checked title="using WebCola layout algorithm">Default (WebCola)</td>
@@ -74,7 +74,11 @@
             Show All: <input type="button" value="Show All" onclick="showAll();" title="Display all concept & relations in the Network">
             Export graph JSON: <input type="button" value="Export JSON" onclick="exportAsJson();" title="Export the Network graph as a JSON object and show it in a new Tab">
             Export graph Image: <input type="button" value="Export Image" onclick="exportAsImage();" title="Export the Network graph as a .png image (generated below)">
-            Show All Labels:<input type="checkbox" name="showAllLabels_Chkbx" id="show_allLabels" value="Show All Labels" onclick="showAllLabels();" ondblclick="showAllLabels();" onmousedown="showAllLabels();" title="Check to show all Labels."><br/></div>
+        </div>
+        <br/>
+        <div><u>Show Labels:</u> Concepts:<input type="checkbox" name="showConceptLabels_Chkbx" id="show_ConceptLabels" value="Concepts" onclick="showConceptLabels();" ondblclick="showConceptLabels();" onmousedown="showConceptLabels();" title="Check to show Concept labels.">
+            Relations:<input type="checkbox" name="showRelationLabels_Chkbx" id="show_RelationLabels" value="Relations" onclick="showRelationLabels();" ondblclick="showRelationLabels();" onmousedown="showRelationLabels();" title="Check to show Relation labels.">
+            Genes only:<input type="checkbox" name="showGeneLabels_Chkbx" id="show_GeneLabels" value="Genes" onclick="showGeneLabels();" ondblclick="showGeneLabels();" onmousedown="showGeneLabels();" title="Check to show labels on Genes only.">
         </div>
 <!--    <br/>-->
 	<!-- these Show/ Hide buttons have events added dynamically in document.ready -->
