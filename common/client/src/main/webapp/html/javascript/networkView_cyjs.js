@@ -54,10 +54,39 @@ $(function() { // on dom ready
    var networkStylesheet= cytoscape.stylesheet()
       .selector('node')
         .css({
-          'content': 'data(value)', // '<html>'+ 'data(value)' +'</html>',
-                    // function() { return "<html>"+ this.data('value') +"</html>"; },
+          'content': //'data(value)',
+                     function(ele) {
+                      var label= '';
+                      if(ele.data('value').indexOf('<span') > -1) { // Strip html content from text.
+                         var txtLabel= '<html>'+ ele.data('value') +'</html>';
+                         label= jQuery(txtLabel).text();
+                        }
+                      else {
+                         label= ele.data('value');
+                        }
+                      return label;
+                     },
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
-          'outline-colour': 'black', // text outline color
+          'text-background-color': //'black',
+                   function(ele) { // text background color
+                    var labelColor= '';
+                    if(ele.data('value').indexOf('<span') > -1) {
+                       labelColor= 'gold';
+                      }
+                    else {
+                       labelColor= 'black';
+                      }
+                    return labelColor;
+                   },
+          'text-background-opacity': //'0', // default: '0' (disabled).
+                   function(ele) { // text background opacity
+                    var textBackgroundOpacity= '0';
+                    if(ele.data('value').indexOf('<span') > -1) {
+                       textBackgroundOpacity= '1';
+                      }
+                    return textBackgroundOpacity;
+                   },
+          'text-wrap': 'wrap', // for manual and/or autowrapping the label text.
           'border-style': //'solid', // node border, can be 'solid', 'dotted', 'dashed' or 'double'.
                           function(ele) {
                               var node_borderStyle= 'solid';
