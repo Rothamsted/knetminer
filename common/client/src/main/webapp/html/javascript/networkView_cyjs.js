@@ -460,7 +460,7 @@ cy.elements().qtip({
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
-    menuRadius: 75, // 100, // the radius of the circular menu in pixels
+    menuRadius: 80, // 75, // the radius of the circular menu in pixels
 
     // Use selector: '*' to set this circular Context Menu on all the elements of the core.
     /** Note: Specify selector: 'node' or 'edge' to restrict the context menu to a specific type of element. e.g, 
@@ -505,8 +505,8 @@ cy.elements().qtip({
                   // Define the neighborhood's layout.
                   var mini_circleLayout= { name: 'circle', radius: 2/*0.01*/, boundingBox: eleBBox,
                       avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
-                      counterclockwise: false, rStepSize: 1/*0.01*/, ready: undefined, 
-                      stop: function() { cy.center(); cy.fit(); } };
+                      counterclockwise: false, rStepSize: 1/*0.01*/, ready: /*undefined*/function() { cy.center(); cy.fit(); }, 
+                      stop: undefined/*function() { cy.center(); cy.fit(); }*/ };
 
                   // Set the layout only using the hidden concepts (nodes).
 //                  console.log("Node neighborhood.filter(visible) size: "+ selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').length);
@@ -554,7 +554,7 @@ cy.elements().qtip({
            }
         },
 
-        {
+        /*{
          content: 'Show Selections',
          select: function() {
              $("#infoDialog").dialog(); // initialize a dialog box.
@@ -574,6 +574,53 @@ cy.elements().qtip({
              console.log("ShowSelections (Shift+click): selections= "+ selections);
              $("#infoDialog").html(selections);
             }
+        }*/
+
+        {
+         content: 'Label on/off byType',
+         select: function() {
+             var thisElementType, eleType, elements;
+             if(this.isNode()) {
+                thisElementType= this.data('conceptType'); // get all concept Types.
+                eleType= 'conceptType';
+                elements= cy.nodes(); // fetch all the nodes.
+               }
+             else if(this.isEdge()) {
+                thisElementType= this.data('label'); // get all relation Labels.
+                eleType= 'label';
+                elements= cy.edges(); // fetch all the edges.
+               }
+             console.log("Toggle Label on/ off by type: "+ thisElementType);
+
+             if(this.isNode() || this.isEdge()) {
+                if(this.style('text-opacity') === '0') {
+                   elements.forEach(function( ele ) {
+                    if(ele.data(eleType) === thisElementType) {
+                       ele.style({'text-opacity': '1'}); // show the concept/ relation Label.
+                      }
+                   });
+                  }
+                  else {
+                   elements.forEach(function( ele ) {
+                    if(ele.data('conceptType') === thisElementType) {
+                       ele.style({'text-opacity': '0'}); // hide the concept/ relation Label.
+                      }
+                   });
+                  }
+               }
+            }
+        },
+
+        {
+         content: 'Label on/off',
+         select: function() {
+             if(this.style('text-opacity') === '0') {
+                this.style({'text-opacity': '1'}); // show the concept/ relation Label.
+               }
+               else {
+                this.style({'text-opacity': '0'}); // hide the concept/ relation Label.
+               }
+            }
         }
     ], 
     fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
@@ -586,7 +633,7 @@ cy.elements().qtip({
     maxSpotlightRadius: 10, // 38, // the maximum radius in pixels of the spotlight
     itemColor: 'white', // the colour of text in the command's content
     itemTextShadowColor: 'black', // the text shadow colour of the command's content
-//    itemFontSize: 6, //8,
+    itemTextFontSize: 2, //4 //8,
     zIndex: 9999 // the z-index of the ui div
  };
 
@@ -1002,8 +1049,8 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
       console.log("Hide Concept labels...");
       cy.nodes().style({'text-opacity': '0'});
       // Also hide labels on Genes.
-      document.getElementById("show_GeneLabels").checked= false;
-      showGeneLabels();
+//      document.getElementById("show_GeneLabels").checked= false;
+//      showGeneLabels();
      }
   }
 
@@ -1021,7 +1068,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   }
 
   // Show labels only on Genes.
-  function showGeneLabels() {
+/*  function showGeneLabels() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    if(document.getElementById("show_GeneLabels").checked) {
       console.log("Show labels on Genes...");
@@ -1041,4 +1088,4 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
            }
         });
      }
-  }
+  }*/
