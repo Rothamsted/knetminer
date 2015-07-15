@@ -185,7 +185,12 @@
           padding: 10px; 
           border-radius: 6px;
       }*/
-      
+
+      /* cytoscapeJS radial context menu */
+      .cxtmenu-content {
+       font-size: 12px;
+      }
+
       /* page footer */
       #pageFooter {
           position: relative;

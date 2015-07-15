@@ -460,7 +460,7 @@ cy.elements().qtip({
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
-    menuRadius: 80, // 75, // the radius of the circular menu in pixels
+    menuRadius: 75, // the radius of the circular menu in pixels
 
     // Use selector: '*' to set this circular Context Menu on all the elements of the core.
     /** Note: Specify selector: 'node' or 'edge' to restrict the context menu to a specific type of element. e.g, 
@@ -577,7 +577,7 @@ cy.elements().qtip({
         }*/
 
         {
-         content: 'Label on/off byType',
+         content: 'Label on/ off by Type',
          select: function() {
              var thisElementType, eleType, elements;
              if(this.isNode()) {
@@ -612,7 +612,7 @@ cy.elements().qtip({
         },
 
         {
-         content: 'Label on/off',
+         content: 'Label on/ off',
          select: function() {
              if(this.style('text-opacity') === '0') {
                 this.style({'text-opacity': '1'}); // show the concept/ relation Label.
@@ -633,7 +633,6 @@ cy.elements().qtip({
     maxSpotlightRadius: 10, // 38, // the maximum radius in pixels of the spotlight
     itemColor: 'white', // the colour of text in the command's content
     itemTextShadowColor: 'black', // the text shadow colour of the command's content
-    itemTextFontSize: 2, //4 //8,
     zIndex: 9999 // the z-index of the ui div
  };
 
