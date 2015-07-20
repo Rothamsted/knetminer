@@ -2330,12 +2330,31 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		Set<ConceptName> cns = c.getConceptNames();
 		Set<ConceptAccession> accs = c.getConceptAccessions();
 		if((ct == "Gene")||(ct == "Protein")){
-			if(getShortestNotAmbiguousAccession(accs) != ""){
+/*			if(getShortestNotAmbiguousAccession(accs) != ""){
 				cn = getShortestNotAmbiguousAccession(accs);
 			} else {
 				cn = getShortestPreferedName(cns);
-			}			
-		}else if(ct == "Phenotype"){
+			}*/
+                    // Get shortest, non-ambiguous concept accession.
+                    String shortest_acc= getShortestNotAmbiguousAccession(accs);
+                    // Get shortest, preferred concept name.
+                    String shortest_coname= getShortestPreferedName(cns);
+                    int shortest_coname_length= 100000, shortest_acc_length= 100000;
+                    if(!shortest_acc.equals(" ")) {
+                       shortest_acc_length= shortest_acc.length();
+                      }
+                    if(!shortest_coname.equals(" ")) {
+                       shortest_coname_length= shortest_coname.length();
+                      }
+                    // Compare the sizes of both the values
+                    if(shortest_acc_length < shortest_coname_length) {
+                       cn= shortest_acc; // use shortest, non-ambiguous concept accession.
+                      }
+                    else {
+                      cn= shortest_coname; // use shortest, preferred concept name.
+                     }
+		}
+                else if(ct == "Phenotype"){
 			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
 			cn = c.getAttribute(att).getValue().toString().trim();
 		}else{
