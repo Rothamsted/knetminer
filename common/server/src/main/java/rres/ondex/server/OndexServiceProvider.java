@@ -328,8 +328,8 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Export the Ondex graph to file system
-	 * 
+	 * Export the Ondex graph to file system as a .oxl file and also in JSON format using the new JSON 
+         * Exporter plugin in Ondex.
 	 * @param ONDEXGraph
 	 *            graph
 	 * @throws InvalidPluginArgumentException
@@ -338,6 +338,7 @@ public class OndexServiceProvider {
 			throws InvalidPluginArgumentException {
 
 		boolean fileIsCreated = false;
+		boolean jsonFileIsCreated = false;
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
@@ -378,11 +379,41 @@ public class OndexServiceProvider {
 			System.out.println(e.getMessage());
 		}
 
-		// Check if file exists
+		// Check if .oxl file exists
 		while (!fileIsCreated) {
 			fileIsCreated = checkFileExist(exportPath);
 		}
 		System.out.println("OXL file created:" + exportPath);
+
+               // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
+               net.sourceforge.ondex.export.cyjsJson.Export jsonExport= new net.sourceforge.ondex.export.cyjsJson.Export();
+               // JSON output file.
+               String jsonExportPath= exportPath.substring(0, exportPath.length()-4) +".json";
+               try {
+                    ONDEXPluginArguments epa= new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
+                    epa.setOption(FileArgumentDefinition.EXPORT_FILE, jsonExportPath);
+
+                    System.out.println("JSON Export file: "+ epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
+           
+                    jsonExport.setArguments(epa);
+//                    jsonExport.setONDEXGraph(graph);
+                    jsonExport.setONDEXGraph(graph2);
+                    System.out.println("Export JSON data: Total concepts= "+ graph2.getConcepts().size() +
+                            " , Relations= "+ graph2.getRelations().size());
+                    // Export the contents of the 'graph' object as multiple JSON objects to an output file.
+                    jsonExport.start();
+                   }
+               catch(Exception ex) {
+             	     ex.printStackTrace();
+           	     System.out.println(ex.getMessage());
+                    }
+
+		// Check if .json file also exists
+		while(!jsonFileIsCreated) {
+		      jsonFileIsCreated = checkFileExist(jsonExportPath);
+		     }
+		System.out.println("JSON file created:" + jsonExportPath);
+
 		return fileIsCreated;
 	}
 	
@@ -2299,12 +2330,31 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		Set<ConceptName> cns = c.getConceptNames();
 		Set<ConceptAccession> accs = c.getConceptAccessions();
 		if((ct == "Gene")||(ct == "Protein")){
-			if(getShortestNotAmbiguousAccession(accs) != ""){
+/*			if(getShortestNotAmbiguousAccession(accs) != ""){
 				cn = getShortestNotAmbiguousAccession(accs);
 			} else {
 				cn = getShortestPreferedName(cns);
-			}			
-		}else if(ct == "Phenotype"){
+			}*/
+                    // Get shortest, non-ambiguous concept accession.
+                    String shortest_acc= getShortestNotAmbiguousAccession(accs);
+                    // Get shortest, preferred concept name.
+                    String shortest_coname= getShortestPreferedName(cns);
+                    int shortest_coname_length= 100000, shortest_acc_length= 100000;
+                    if(!shortest_acc.equals(" ")) {
+                       shortest_acc_length= shortest_acc.length();
+                      }
+                    if(!shortest_coname.equals(" ")) {
+                       shortest_coname_length= shortest_coname.length();
+                      }
+                    // Compare the sizes of both the values
+                    if(shortest_acc_length < shortest_coname_length) {
+                       cn= shortest_acc; // use shortest, non-ambiguous concept accession.
+                      }
+                    else {
+                      cn= shortest_coname; // use shortest, preferred concept name.
+                     }
+		}
+                else if(ct == "Phenotype"){
 			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
 			cn = c.getAttribute(att).getValue().toString().trim();
 		}else{

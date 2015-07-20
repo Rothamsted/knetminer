@@ -833,6 +833,61 @@ function generateNetwork(url,list){
 				
 	});
 }
+
+/*
+ * Global variable.
+ * Reference for the Network View popup window.
+ */
+var cyjs_networkView= false;
+
+/*
+ * Function
+ * Generates the new lightweight Network graph, using cytoscapeJS.
+ * @author: Ajit Singh.
+ */
+function generateCyJSNetwork(url,list){
+    //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
+    $.post(url, list, function(response, textStatus) {																							 
+    var oxl = response.split(":")[1];
+
+    // Network Graph: JSON file.
+    var network_json= oxl.replace(".oxl", ".json"); // JSON file path
+    var jsonFile= data_url + network_json; // the JSON file generated on the server.
+    console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
+
+    try {
+         if(cyjs_networkView && !cyjs_networkView.closed) {
+            // If the window is already open.
+/*            cyjs_networkView.jsonFile= jsonFile; // re-assign the JSON file path.
+            cyjs_networkView.focus();
+            console.log("WindowAlreadyOpen>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+            // clear the cytoscapeJS container <div>.
+            cyjs_networkView.document.getElementById('cy').innerHTML= "";
+
+//            cyjs_networkView.document.location.reload(); // reload the graph window using new graph.
+            // re-generate the network graph using the new JSON dataset (file) in the already open window.
+//            generateNetworkGraph(cyjs_networkView.jsonFile);
+*/
+            // close the window to reopen it later using new JSON dataset (file).
+            cyjs_networkView.close();
+           }
+//         else {
+/*           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                    "height=600, width=1200, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, directories=yes, status=yes");*/
+           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                    "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
+           // Pass the JSON file path to a global variable in the new window.
+           cyjs_networkView.jsonFile= jsonFile;
+           console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+//          }
+        }
+    catch(err) { 
+          var errorMsg= err.stack;
+          console.log("Error: <br/>"+"Details: "+ errorMsg);
+         }
+   });
+  }
+
 /*
  * Function
  * 
@@ -851,6 +906,28 @@ function generateMultiGeneNetwork(keyword) {
 			generateNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});				
 	}
 }
+
+/*
+ * Function
+ * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
+ * @author: Ajit Singh.
+ */
+function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {	
+	var candidatelist = "";
+	var cb_list = document.checkbox_form.candidates;
+	for (var i=0; i < cb_list.length; i++) {		
+		if(cb_list[i].checked) {
+			candidatelist += cb_list[i].value + "\n";
+		}
+	}
+	if(candidatelist == "") {
+		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+	}
+        else {
+          generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
+	 }
+}
+
 /*
  * Function
  * 
@@ -1083,7 +1160,8 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" ></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "New Network Viewer" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
+    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		table = table + legendHtmlContainer; // add legend
     		
     		document.getElementById('resultsTable').innerHTML = table;
@@ -1117,7 +1195,11 @@ function createGenesTable(tableUrl, keyword, rows){
         	$("#generateMultiGeneNetworkButton").click(function(e) {
         		generateMultiGeneNetwork(keyword);
         	});
-        	
+
+                $("#new_generateMultiGeneNetworkButton").click(function(e) {
+        		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
+        	});
+
     		$("#tablesorter").tablesorter({ 
     	        headers: { 
     	            // do not sort "select" column 
