@@ -36,14 +36,6 @@ function generateNetworkGraph(jsonFileName) {
 
   }
 
-/*
-   // Event occurring when the cytoscapeJS container <div> is dragged.
-   function dragCyContainer() {
-//    console.log("cy container dragged.");
-    // resize the cytoscapeJS container.
-    $('#cy').cytoscape('get').pan();
-   }*/
-
 function initializeNetworkView() {
 // On startup
 $(function() { // on dom ready
@@ -64,6 +56,8 @@ $(function() { // on dom ready
                       else {
                          label= ele.data('value');
                         }
+                      // Trim the label's length.
+                      if(label.length> 30) { label= label.substr(0,29)+'...'; }
                       return label;
                      },
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
@@ -145,8 +139,7 @@ $(function() { // on dom ready
           'control-point-step-size': '10px', //'1px' // specifies the distance between successive bezier edges.
           'control-point-distance': '20px', /* overrides control-point-step-size to curves single edges as well, in addition to parallele edges */
           'control-point-weight': '50'/*'0.7'*/, // '0': curve towards source node, '1': curve towards target node.
-          // 'width': use mapData() mapper to allow for curved edges for inter-connected nodes.
-          'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
+          'width': 'data(relationSize)', // '3px',
           'line-color': 'data(relationColor)', // 'gray',
           'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
           'target-arrow-shape': 'triangle',
@@ -171,14 +164,7 @@ $(function() { // on dom ready
         .css({ // settings for using shadow effect on nodes when they have hidden, connected nodes.
               'shadow-blur': '25', // disable for larger network graphs, use x & y offset(s) instead.
               'shadow-color': 'black', // 'data(conceptColor)',
-//            'shadow-offset-x': '5',
-//            'shadow-offset-y': '2',
               'shadow-opacity': '0.9',
-
-              // settings for overlay effect.
-/*              'overlay-color': 'data(conceptColor)',
-              'overlay-padding': '1.5px',
-              'overlay-opacity': '0.5' */
         });
 
 // Initialise a cytoscape container instance on the HTML DOM using JQuery.
@@ -372,8 +358,7 @@ cy.elements().qtip({
    });
 // cxttap - normalised right click or 2-finger tap event.
 
-/*
-  // On a 'touchmove' or 'mouseover' event, show edges signifying the number of nodes connected to this node.
+/*  // On a 'touchmove' or 'mouseover' event, show edges signifying the number of nodes connected to this node.
   cy.on('tapdragover', function (e) {
     var thisElement= e.cyTarget;
     try {
@@ -478,7 +463,7 @@ cy.elements().qtip({
              showItemInfo(this);
             }
         },
-            
+
         {
          content: 'Show Links',
          select: function() {
