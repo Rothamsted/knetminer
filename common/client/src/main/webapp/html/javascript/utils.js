@@ -880,6 +880,62 @@ function generateCyJSNetwork(url,list){
            cyjs_networkView.jsonFile= jsonFile;
            console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
 //          }
+
+        // Embed the Network Viewer in the 'Network View' tab on the page.
+/*        var output ="<div id='buttonBox'>" +
+        			"<a title='Maximise' href='javascript:;' id='maximiseNetwork' class='networkButtons' type='button'></a>" +
+        			"<a title='Download network' href="+ jsonFile +" target=_blank id='downloadNetworkTab' class='networkButtons' type='button'></a>" +
+	        		"<a title='Open in new window' href='javascript:;' id='newNetworkWindow' class='networkButtons' type='button'></a>" +
+	        		"<span id='networkViewerHelp' class='networkButtons hint-big' title='Network Viewer Help'></span>" +
+	        	"</div>" +
+        		
+        		"<div id='modalShadow'></div>" +
+        		"<div class='modalBox'>" +	//placeholder to stop page length changing when modalBox is opened.
+	        		"<div id='modalBox' class='modalBox'>" +	//modal box is moved to center of window and resizes with it
+	        			"<a title='Restore' href='javascript:;' id='restoreNetwork' class='networkButtons'></a>" +
+		        		"<iframe src=\"html/networkGraph.html\"></iframe>"+
+	        		"</div>" +
+				"</div>";
+	
+	$('#NetworkCanvas').html(output);
+	
+	
+	$("#newNetworkWindow").click(function(){
+           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                    "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
+	});
+	
+	$('#maximiseNetwork').click(function() {
+		$('#modalBox').addClass("modalBoxVisible");
+		//$('#restoreNetwork').show();
+		$('#modalShadow').show();
+	});
+	
+	function closeModalBox(){
+		$('#modalBox').removeClass("modalBoxVisible");
+		//$('#restoreNetwork').hide();
+		$('#modalShadow').hide();
+	}
+	
+	$('#restoreNetwork, #modalShadow, #legend_picture').click(function(){
+			closeModalBox();
+	}).find('#legend_frame').click(function (e) {
+		  e.stopPropagation();
+	});	
+	
+	$('#modalShadow').click(function(){
+			closeModalBox();
+	});
+	
+	
+	$(document).keyup(function(e) {
+        if (e.keyCode == 27){
+        	closeModalBox();
+        }
+	});
+	
+	
+	activateButton('NetworkCanvas');*/
         }
     catch(err) { 
           var errorMsg= err.stack;
@@ -1160,8 +1216,8 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "New Network Viewer" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
-    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network (new)" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
+    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network (old, Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		table = table + legendHtmlContainer; // add legend
     		
     		document.getElementById('resultsTable').innerHTML = table;
