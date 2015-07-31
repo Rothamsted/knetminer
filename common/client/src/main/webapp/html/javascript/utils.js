@@ -1065,7 +1065,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
-				table = table + '<th width="100">'+values[1]+'</th>';	
+				table = table + '<th width="100">'+values[1]+'</th>';
 				if(multiorganisms == true){
 					table = table + '<th width="60">'+values[5]+'</th>';
 				}
@@ -1097,8 +1097,15 @@ function createGenesTable(tableUrl, keyword, rows){
 				    
 				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
-				    
+
+//				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
+				    var gene_Name= values[1];
+                                    // Fetch preferred concept (gene) name and use the shorter name out of the two.
+                                    if(gene_Name.length > values[2].length) {
+                                       gene_Name= values[2];
+                                      }
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
 					}else{
