@@ -1051,6 +1051,19 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
          }
   }
 
+  // Update the label font size for all the concepts and relations.
+  function changeLabelFontSize(new_size) {
+   try {
+     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+//     console.log("changeLabelFontSize>> new_size: "+ new_size);
+     cy.style().selector('node').css({ 'font-size': new_size }).update();
+     cy.style().selector('edge').css({ 'font-size': new_size }).update();
+    }
+   catch(err) {
+          console.log("Error occurred while altering label font size. \n"+"Error Details: "+ err.stack);
+         }
+  }
+
   // Show all node labels.
   function showConceptLabels() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
