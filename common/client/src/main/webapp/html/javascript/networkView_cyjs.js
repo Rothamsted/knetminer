@@ -1043,6 +1043,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
       if(ele.selected()) {
          console.log("Selected concept: "+ ele.data('value') +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
          ele.data('value', new_conceptName);
+         if(ele.style('text-opacity') === '0') {
+            ele.style({'text-opacity': '1'}); // show the concept Label.
+           }
         }
      });
     }
