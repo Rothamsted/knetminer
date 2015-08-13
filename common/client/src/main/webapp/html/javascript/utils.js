@@ -787,7 +787,6 @@ function generateNetwork(url,list){
 	
 	$('#networkViewerHelp').click(function() {
 		$('#networkHelpBox').slideToggle(300);
-		
 	});
 	
 	$('#networkHelpBox').click(function() {
