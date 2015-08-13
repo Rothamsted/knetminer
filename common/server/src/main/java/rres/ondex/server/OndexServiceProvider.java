@@ -2120,9 +2120,10 @@ public class OndexServiceProvider {
 	 */
 	
 public boolean writeSynonymTable(String keyword, String fileName) throws ParseException{
+System.out.println("writeSynonymTable: fileName: "+ fileName +" , keyword: "+ keyword);
 		int topX = 25;
 		Set<String> keys = parseKeywordIntoSetOfTerms(keyword);
-		
+
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (String key : keys) {
@@ -2132,6 +2133,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
 				
 				out.write("<"+key+">\n");
+System.out.println("key: "+ key);
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName",null);
 			    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
@@ -2148,6 +2150,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 					}else{
 						float scoreA = hitSynonyms.getScoreOnEntity(c);
 						float scoreB = synonymsList.get(c.getId());
+System.out.println("scoreA= "+ scoreA +" , scoreB= "+ scoreB);
 						if(scoreA > scoreB){
 							synonymsList.put(c.getId(), scoreA);
 						}
@@ -2167,10 +2170,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
 						for (ConceptName cName : cNames) {
+System.out.println("ConceptName cName isPreferred ?= "+ cName.isPreferred());
 							if(topAux < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
+System.out.println("Preferred Name name: "+ name);
 										//error going around for publication suggestions
 										if (name.contains("\n"))
 											name = name.replace("\n", "");
