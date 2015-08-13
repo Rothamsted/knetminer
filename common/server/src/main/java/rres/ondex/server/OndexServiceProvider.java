@@ -2133,7 +2133,7 @@ System.out.println("writeSynonymTable: fileName: "+ fileName +" , keyword: "+ ke
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
 				
 				out.write("<"+key+">\n");
-System.out.println("key: "+ key);
+
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName",null);
 			    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
@@ -2150,7 +2150,6 @@ System.out.println("key: "+ key);
 					}else{
 						float scoreA = hitSynonyms.getScoreOnEntity(c);
 						float scoreB = synonymsList.get(c.getId());
-System.out.println("scoreA= "+ scoreA +" , scoreB= "+ scoreB);
 						if(scoreA > scoreB){
 							synonymsList.put(c.getId(), scoreA);
 						}
@@ -2164,18 +2163,20 @@ System.out.println("scoreA= "+ scoreA +" , scoreB= "+ scoreB);
 					//writes the topX values in table
 					int topAux = 0;
 					for (Integer entry : sortedSynonymsList.keySet()) {
+                                             // write top 25 suggestions for every entry (concept class) in the list.
+//                                             int topAux = 0;
 						ONDEXConcept eoc = graph.getConcept(entry);
 						Float score = synonymsList.get(entry);
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
 						for (ConceptName cName : cNames) {
-System.out.println("ConceptName cName isPreferred ?= "+ cName.isPreferred());
+System.out.println("ID: "+ id +" , ConceptName: "+ cName.getName().toString() +", isPreferred: "+ cName.isPreferred() +", type: "+ type +", score= "+ score);
 							if(topAux < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
-System.out.println("Preferred Name name: "+ name);
+
 										//error going around for publication suggestions
 										if (name.contains("\n"))
 											name = name.replace("\n", "");
@@ -2184,6 +2185,7 @@ System.out.println("Preferred Name name: "+ name);
 											name = name.replaceAll("\"", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
+System.out.println("\t *Query Suggestor entry: "+ name +" , names selected= "+ topAux);
 									}
 								//}
 							}
