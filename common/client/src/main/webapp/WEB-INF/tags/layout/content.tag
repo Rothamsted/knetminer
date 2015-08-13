@@ -24,6 +24,18 @@
 						<div id="matchesResultDiv">Please, start typing your query</div>
 					</div>
 				</li>
+				<li>						
+					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
+						<span id="hintQuerySuggestor" class="hint hint-small"></span>
+						<span id="suggestor_invite"></span>
+						<hr />								
+					<div id="suggestor_search">	
+						<div id="suggestor_search_area" style="display:none;">
+							<div id="suggestor_terms"> </div>
+							<div id="suggestor_tables">You must perform a search for having the suggested terms related with your query</div>							
+						</div>
+					</div>
+				</li>
 				<li id="genomeorqtlsearchbox" style="display:none;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
@@ -82,18 +94,6 @@
 								</span>
 							</div>
 							<textarea id="list_of_genes" cols="30" rows="7"></textarea>
-						</div>
-					</div>
-				</li>
-				<li>						
-					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
-						<span id="hintQuerySuggestor" class="hint hint-small"></span>
-						<span id="suggestor_invite"></span>
-						<hr />								
-					<div id="suggestor_search">	
-						<div id="suggestor_search_area" style="display:none;">
-							<div id="suggestor_terms"> </div>
-							<div id="suggestor_tables">You must perform a search for having the suggested terms related with your query</div>							
 						</div>
 					</div>
 				</li>
