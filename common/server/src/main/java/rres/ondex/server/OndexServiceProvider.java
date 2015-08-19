@@ -2120,10 +2120,10 @@ public class OndexServiceProvider {
 	 */
 	
 public boolean writeSynonymTable(String keyword, String fileName) throws ParseException{
-System.out.println("writeSynonymTable: fileName: "+ fileName +" , keyword: "+ keyword);
 		int topX = 25;
+                // to store top 25 values for each concept type instead of just 25 values per keyword.
+                int existingCount= 0;
 		Set<String> keys = parseKeywordIntoSetOfTerms(keyword);
-
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (String key : keys) {
@@ -2131,6 +2131,9 @@ System.out.println("writeSynonymTable: fileName: "+ fileName +" , keyword: "+ ke
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>(); 
 				FloatValueComparator comparator =  new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
+//System.out.println("\n Keyword: "+ key);
+				// a HashMap to store the count for the number of values written to the Synonym Table (for each Concept Type).
+				Map<String, Integer> entryCounts_byType= new HashMap<String, Integer>();
 				
 				out.write("<"+key+">\n");
 
@@ -2163,16 +2166,24 @@ System.out.println("writeSynonymTable: fileName: "+ fileName +" , keyword: "+ ke
 					//writes the topX values in table
 					int topAux = 0;
 					for (Integer entry : sortedSynonymsList.keySet()) {
-                                             // write top 25 suggestions for every entry (concept class) in the list.
-//                                             int topAux = 0;
 						ONDEXConcept eoc = graph.getConcept(entry);
 						Float score = synonymsList.get(entry);
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
+
+                                                // write top 25 suggestions for every entry (concept class) in the list.
+                                                if(entryCounts_byType.containsKey(type)) {
+                                                   // get existing count
+                                                   existingCount= entryCounts_byType.get(type);
+                                                  }
+                                                else {
+                                                  existingCount= 0;
+                                                 }
+
 						for (ConceptName cName : cNames) {
-System.out.println("ID: "+ id +" , ConceptName: "+ cName.getName().toString() +", isPreferred: "+ cName.isPreferred() +", type: "+ type +", score= "+ score);
-							if(topAux < topX){
+//							if(topAux < topX){
+							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
@@ -2185,7 +2196,10 @@ System.out.println("ID: "+ id +" , ConceptName: "+ cName.getName().toString() +"
 											name = name.replaceAll("\"", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
-System.out.println("\t *Query Suggestor entry: "+ name +" , names selected= "+ topAux);
+                                                                                existingCount++;
+                                                                                // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
+                                                                                entryCounts_byType.put(type, existingCount);
+// System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
 								//}
 							}
