@@ -2185,6 +2185,8 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 //							if(topAux < topX){
 							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
+                                                            // Exclude Publications from the SYnonym Table for the Query Suggestor
+							    if(!type.equals("Publication")) {
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
 
@@ -2201,7 +2203,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                                                 entryCounts_byType.put(type, existingCount);
 // System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
-								//}
+								}
 							}
 							
 						}
