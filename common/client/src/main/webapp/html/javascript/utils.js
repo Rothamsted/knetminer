@@ -1059,7 +1059,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
-				table = table + '<div id="selectUser">Select All Targets: Known:<input type="checkbox" name="chkusr_known" /> Novel:<input type="checkbox" name="chkusr_novel" /></div>';			
+				table = table + '<div id="selectUser">Select All Targets: Known:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1295,10 +1295,9 @@ function createGenesTable(tableUrl, keyword, rows){
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
-                                console.log("Select Known Targets: value in User list: "+ values[7] +", evidences: "+ values[9]);
 	    			if(values[7] == "yes"){
-				   var evidences= values[9].split("||");
-				   if(evidences.length >0) {
+//                                   console.log("Select Known Targets: Evidences: "+ values[9]);
+				   if(values[9].length > 0) {
 	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
                                      }
 	    			}
@@ -1312,10 +1311,9 @@ function createGenesTable(tableUrl, keyword, rows){
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
-                                console.log("Select Novel Targets: value in User list: "+ values[7] +", evidences: "+ values[9]);
 	    			if(values[7] == "yes"){
-				   var evidences= values[9].split("||");
-				   if(evidences.length === 0) {
+//                                   console.log("Select Novel Targets: Evidences: "+ values[9]);
+				   if(values[9].length === 0) {
 	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
                                      }
 	    			}
