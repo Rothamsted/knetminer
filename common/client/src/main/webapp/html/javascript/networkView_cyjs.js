@@ -117,7 +117,7 @@ $(function() { // on dom ready
                               catch(err) { console.log(err.stack); }
                               return node_borderColor;
                           },
-          'font-size': '8px', // '30px',
+          'font-size': '16px', // '8px',
 //          'min-zoomed-font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
           'shape': 'data(conceptShape)', // 'triangle'
@@ -133,7 +133,7 @@ $(function() { // on dom ready
       .selector('edge')
         .css({
           'content': 'data(label)', // label for edges (arrows).
-          'font-size': '8px',
+          'font-size': '16px',
 //          'min-zoomed-font-size': '8px',
           'curve-style': 'unbundled-bezier', /* options: bezier (curved) (default), unbundled-bezier (curved with manual control points), haystack (straight edges) */
           'control-point-step-size': '10px', //'1px' // specifies the distance between successive bezier edges.
