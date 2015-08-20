@@ -1058,7 +1058,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="500">500</option>';
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
-				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+//				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+				table = table + '<div id="selectUser">Select All Targets: Known:<input type="checkbox" name="chkusr_known" /> Novel:<input type="checkbox" name="chkusr_novel" /></div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1277,12 +1278,46 @@ function createGenesTable(tableUrl, keyword, rows){
     		/*
     		 * if select all targets is checked find all targets and check them.
     		 */
-    		$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
+              /*$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
 	    			if(values[7] == "yes"){
 	    				$("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			}
+    			}
+    		});*/
+
+    		/*
+    		 * Select all KNOWN targets: find all targets with existing Evidence & check them.
+    		 */
+    		$('input[name="chkusr_known"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+                                console.log("Select Known Targets: value in User list: "+ values[7] +", evidences: "+ values[9]);
+	    			if(values[7] == "yes"){
+				   var evidences= values[9].split("||");
+				   if(evidences.length >0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
+	    			}
+    			}
+    		});
+
+    		/*
+    		 * Select all NOVEL targets: find all targets with no Evidence & check them.
+    		 */
+    		$('input[name="chkusr_novel"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+                                console.log("Select Novel Targets: value in User list: "+ values[7] +", evidences: "+ values[9]);
+	    			if(values[7] == "yes"){
+				   var evidences= values[9].split("||");
+				   if(evidences.length === 0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
 	    			}
     			}
     		});
