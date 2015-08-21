@@ -1237,7 +1237,9 @@ function createGenesTable(tableUrl, keyword, rows){
     			e.preventDefault();
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
-    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+//    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+                        // Generate Network using the new Network Viewer.
+                        generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
     		});
     		
     		/*
