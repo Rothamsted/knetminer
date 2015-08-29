@@ -241,7 +241,9 @@ function evidencePath(id){
 	var keyword = id;		
 	var request = "mode="+searchMode+"&keyword="+keyword;
 	var url = 'OndexServlet?'+request;
-	generateNetwork(url,'');
+//	generateNetwork(url,'');
+        // Generate the Network Graph using the new Network Viewer.
+        generateCyJSNetwork(url,'');
 }
 
 /*
@@ -1059,7 +1061,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
-				table = table + '<div id="selectUser">Select All Targets: Known:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1223,10 +1225,12 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network (new)" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
-    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network (old, Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
+//    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web (requires Java)</insert><div id="loadingNetworkDiv"></div></div>';
+        
     		table = table + legendHtmlContainer; // add legend
-    		
+                
     		document.getElementById('resultsTable').innerHTML = table;
     		
     		$("#numGenes").val(rows);
