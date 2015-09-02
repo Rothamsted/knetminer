@@ -1473,7 +1473,7 @@ function createSynonymTable(tableUrl){
 			var aSynonyms = new Array();
 			var countTerms = 0;
 			var termName = "";
-			var minRowsInTable = 14;
+			var minRowsInTable = 20/*14*/;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
 				terms = '';
