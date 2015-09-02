@@ -2186,7 +2186,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
                                                             // Exclude Publications from the Synonym Table for the Query Suggestor
-							    if(!type.equals("Publication")) {
+							    if(!(type.equals("Publication") || type.equals("Thing"))) {
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
 
