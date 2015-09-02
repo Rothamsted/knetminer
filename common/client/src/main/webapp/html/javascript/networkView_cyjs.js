@@ -117,7 +117,7 @@ $(function() { // on dom ready
                               catch(err) { console.log(err.stack); }
                               return node_borderColor;
                           },
-          'font-size': '8px', // '30px',
+          'font-size': '16px', // '8px',
 //          'min-zoomed-font-size': '8px',
           // Set node shape, color & display (visibility) depending on settings in the JSON var.
           'shape': 'data(conceptShape)', // 'triangle'
@@ -133,7 +133,7 @@ $(function() { // on dom ready
       .selector('edge')
         .css({
           'content': 'data(label)', // label for edges (arrows).
-          'font-size': '8px',
+          'font-size': '16px',
 //          'min-zoomed-font-size': '8px',
           'curve-style': 'unbundled-bezier', /* options: bezier (curved) (default), unbundled-bezier (curved with manual control points), haystack (straight edges) */
           'control-point-step-size': '10px', //'1px' // specifies the distance between successive bezier edges.
@@ -732,6 +732,13 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
          // Clear the existing table body contents.
          table.innerHTML= "";
          if(selectedElement.isNode()) {
+            conID= selectedElement.id(); // id
+            conValue= selectedElement.data('value'); // value
+            // Unselect other concepts.
+            cy.$(':selected').nodes().unselect();
+            // Explicity select (highlight) the concept.
+            cy.$('#'+conID).select();
+
             var row= table.insertRow(0); // create a new, empty row.
             // Insert new cells in this row.
             var cell1= row.insertCell(0);
@@ -744,7 +751,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "Value:";
-            cell2.innerHTML= selectedElement.data('value');
+            cell2.innerHTML= conValue;
             // Concept 'PID'.
             row= table.insertRow(2);
             cell1= row.insertCell(0);
@@ -787,8 +794,10 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                     cell2= row.insertCell(1);
                     cell1.innerHTML= "<b>Synonyms:</b>";
                     for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].conames.length; k++) {
-                        if(metadataJSON.ondexmetadata.concepts[j].conames[k].name !== "") {
-                           all_concept_names= all_concept_names + metadataJSON.ondexmetadata.concepts[j].conames[k].name +"<br/>";
+                        co_name= metadataJSON.ondexmetadata.concepts[j].conames[k].name;
+                        if(co_name !== "") {
+                           all_concept_names= all_concept_names + co_name +
+                                   " <a><img src='image/new_images/eye_icon.png' alt='Use' id='"+ co_name +"' onclick='useAsPreferredConceptName(this.id);' title='Use as concept Label'/></a>" +"<br/>";
                           }
                        }
                     cell2.innerHTML= all_concept_names; // all synonyms.
@@ -849,6 +858,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                         cell2= row.insertCell(1);
                         accessionID= metadataJSON.ondexmetadata.concepts[j].coaccessions[k].elementOf;
                         co_acc= metadataJSON.ondexmetadata.concepts[j].coaccessions[k].accession;
+                        accession= co_acc; // retain the original accession value for the eye icon
                         for(var u=0; u < url_mappings.html_acc.length; u++) {
                             if(url_mappings.html_acc[u].cv === accessionID) {
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
@@ -857,6 +867,8 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
                                co_acc= "<a href=\""+ coAccUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ co_acc +"</a>";
                               }
                             }
+                        // Display concept accessions along with an eye icon to use them as preferred concept name.
+                        co_acc= co_acc +" <a><img src='image/new_images/eye_icon.png' alt='Use' id='"+ accession +"' onclick='useAsPreferredConceptName(this.id);' title='Use as concept Label'/></a>";
                         cell1.innerHTML= accessionID;
                         cell2.innerHTML= co_acc;
                        }
@@ -1019,6 +1031,39 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
      }
     catch(err) {
           console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
+         }
+  }
+
+  // Set the given name (label) for the selected concept.
+  function useAsPreferredConceptName(new_conceptName) {
+   try {
+     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+
+     cy.nodes().forEach(function(ele) {
+      if(ele.selected()) {
+         console.log("Selected concept: "+ ele.data('value') +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
+         ele.data('value', new_conceptName);
+         if(ele.style('text-opacity') === '0') {
+            ele.style({'text-opacity': '1'}); // show the concept Label.
+           }
+        }
+     });
+    }
+   catch(err) {
+          console.log("Error occurred while altering preferred concept name. \n"+"Error Details: "+ err.stack);
+         }
+  }
+
+  // Update the label font size for all the concepts and relations.
+  function changeLabelFontSize(new_size) {
+   try {
+     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+//     console.log("changeLabelFontSize>> new_size: "+ new_size);
+     cy.style().selector('node').css({ 'font-size': new_size }).update();
+     cy.style().selector('edge').css({ 'font-size': new_size }).update();
+    }
+   catch(err) {
+          console.log("Error occurred while altering label font size. \n"+"Error Details: "+ err.stack);
          }
   }
 

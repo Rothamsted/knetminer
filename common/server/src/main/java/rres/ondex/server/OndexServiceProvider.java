@@ -2121,8 +2121,9 @@ public class OndexServiceProvider {
 	
 public boolean writeSynonymTable(String keyword, String fileName) throws ParseException{
 		int topX = 25;
+                // to store top 25 values for each concept type instead of just 25 values per keyword.
+                int existingCount= 0;
 		Set<String> keys = parseKeywordIntoSetOfTerms(keyword);
-		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (String key : keys) {
@@ -2130,8 +2131,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>(); 
 				FloatValueComparator comparator =  new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
+//System.out.println("\n Keyword: "+ key);
+				// a HashMap to store the count for the number of values written to the Synonym Table (for each Concept Type).
+				Map<String, Integer> entryCounts_byType= new HashMap<String, Integer>();
 				
 				out.write("<"+key+">\n");
+
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName",null);
 			    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
@@ -2166,11 +2171,25 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
+
+                                                // write top 25 suggestions for every entry (concept class) in the list.
+                                                if(entryCounts_byType.containsKey(type)) {
+                                                   // get existing count
+                                                   existingCount= entryCounts_byType.get(type);
+                                                  }
+                                                else {
+                                                  existingCount= 0;
+                                                 }
+
 						for (ConceptName cName : cNames) {
-							if(topAux < topX){
+//							if(topAux < topX){
+							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
+                                                            // Exclude Publications from the Synonym Table for the Query Suggestor
+							    if(!type.equals("Publication")) {
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
+
 										//error going around for publication suggestions
 										if (name.contains("\n"))
 											name = name.replace("\n", "");
@@ -2179,8 +2198,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 											name = name.replaceAll("\"", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
+                                                                                existingCount++;
+                                                                                // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
+                                                                                entryCounts_byType.put(type, existingCount);
+ System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
-								//}
+								}
 							}
 							
 						}

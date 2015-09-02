@@ -341,7 +341,8 @@
         <repository>
             <id>snapshot_releases</id>
             <name>nexus.repro</name>
-            <url>${nexus.repro}/content/groups/public-snapshots</url>
+            <url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
+<!--            <url>${nexus.repro}/content/groups/public-snapshots</url> -->
         </repository>
     </repositories>
 

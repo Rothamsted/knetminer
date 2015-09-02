@@ -241,7 +241,9 @@ function evidencePath(id){
 	var keyword = id;		
 	var request = "mode="+searchMode+"&keyword="+keyword;
 	var url = 'OndexServlet?'+request;
-	generateNetwork(url,'');
+//	generateNetwork(url,'');
+        // Generate the Network Graph using the new Network Viewer.
+        generateCyJSNetwork(url,'');
 }
 
 /*
@@ -787,7 +789,6 @@ function generateNetwork(url,list){
 	
 	$('#networkViewerHelp').click(function() {
 		$('#networkHelpBox').slideToggle(300);
-		
 	});
 	
 	$('#networkHelpBox').click(function() {
@@ -880,6 +881,62 @@ function generateCyJSNetwork(url,list){
            cyjs_networkView.jsonFile= jsonFile;
            console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
 //          }
+
+        // Embed the Network Viewer in the 'Network View' tab on the page.
+/*        var output ="<div id='buttonBox'>" +
+        			"<a title='Maximise' href='javascript:;' id='maximiseNetwork' class='networkButtons' type='button'></a>" +
+        			"<a title='Download network' href="+ jsonFile +" target=_blank id='downloadNetworkTab' class='networkButtons' type='button'></a>" +
+	        		"<a title='Open in new window' href='javascript:;' id='newNetworkWindow' class='networkButtons' type='button'></a>" +
+	        		"<span id='networkViewerHelp' class='networkButtons hint-big' title='Network Viewer Help'></span>" +
+	        	"</div>" +
+        		
+        		"<div id='modalShadow'></div>" +
+        		"<div class='modalBox'>" +	//placeholder to stop page length changing when modalBox is opened.
+	        		"<div id='modalBox' class='modalBox'>" +	//modal box is moved to center of window and resizes with it
+	        			"<a title='Restore' href='javascript:;' id='restoreNetwork' class='networkButtons'></a>" +
+		        		"<iframe src=\"html/networkGraph.html\"></iframe>"+
+	        		"</div>" +
+				"</div>";
+	
+	$('#NetworkCanvas').html(output);
+	
+	
+	$("#newNetworkWindow").click(function(){
+           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                    "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
+	});
+	
+	$('#maximiseNetwork').click(function() {
+		$('#modalBox').addClass("modalBoxVisible");
+		//$('#restoreNetwork').show();
+		$('#modalShadow').show();
+	});
+	
+	function closeModalBox(){
+		$('#modalBox').removeClass("modalBoxVisible");
+		//$('#restoreNetwork').hide();
+		$('#modalShadow').hide();
+	}
+	
+	$('#restoreNetwork, #modalShadow, #legend_picture').click(function(){
+			closeModalBox();
+	}).find('#legend_frame').click(function (e) {
+		  e.stopPropagation();
+	});	
+	
+	$('#modalShadow').click(function(){
+			closeModalBox();
+	});
+	
+	
+	$(document).keyup(function(e) {
+        if (e.keyCode == 27){
+        	closeModalBox();
+        }
+	});
+	
+	
+	activateButton('NetworkCanvas');*/
         }
     catch(err) { 
           var errorMsg= err.stack;
@@ -1003,13 +1060,14 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="500">500</option>';
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
-				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+//				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
-				table = table + '<th width="100">'+values[1]+'</th>';	
+				table = table + '<th width="100">'+values[1]+'</th>';
 				if(multiorganisms == true){
 					table = table + '<th width="60">'+values[5]+'</th>';
 				}
@@ -1041,8 +1099,15 @@ function createGenesTable(tableUrl, keyword, rows){
 				    
 				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
-				    
+
+//				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
+				    var gene_Name= values[1];
+                                    // Fetch preferred concept (gene) name and use the shorter name out of the two.
+                                    if(gene_Name.length > values[2].length) {
+                                       gene_Name= values[2];
+                                      }
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
 					}else{
@@ -1160,10 +1225,12 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "New Network Viewer" title = "Display the network graph in the new lightweight Network Viewer, using cytoscapeJS">';
-    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
+//    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
+        
     		table = table + legendHtmlContainer; // add legend
-    		
+                
     		document.getElementById('resultsTable').innerHTML = table;
     		
     		$("#numGenes").val(rows);
@@ -1174,7 +1241,9 @@ function createGenesTable(tableUrl, keyword, rows){
     			e.preventDefault();
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
-    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+//    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+                        // Generate Network using the new Network Viewer.
+                        generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
     		});
     		
     		/*
@@ -1215,12 +1284,44 @@ function createGenesTable(tableUrl, keyword, rows){
     		/*
     		 * if select all targets is checked find all targets and check them.
     		 */
-    		$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
+              /*$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
 	    			if(values[7] == "yes"){
 	    				$("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			}
+    			}
+    		});*/
+
+    		/*
+    		 * Select all KNOWN targets: find all targets with existing Evidence & check them.
+    		 */
+    		$('input[name="chkusr_known"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+	    			if(values[7] == "yes"){
+//                                   console.log("Select Known Targets: Evidences: "+ values[9]);
+				   if(values[9].length > 0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
+	    			}
+    			}
+    		});
+
+    		/*
+    		 * Select all NOVEL targets: find all targets with no Evidence & check them.
+    		 */
+    		$('input[name="chkusr_novel"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+	    			if(values[7] == "yes"){
+//                                   console.log("Select Novel Targets: Evidences: "+ values[9]);
+				   if(values[9].length === 0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
 	    			}
     			}
     		});
