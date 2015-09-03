@@ -1106,7 +1106,7 @@ function createGenesTable(tableUrl, keyword, rows){
                                     if(gene_Name.length > values[2].length) {
                                        gene_Name= values[2];
                                       }
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
 
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
@@ -1397,7 +1397,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-					table = table + '<td><a href="javascript:;" class="generateEvidencePath" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
