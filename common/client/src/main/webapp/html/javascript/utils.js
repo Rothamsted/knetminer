@@ -1597,7 +1597,7 @@ function createSynonymTable(tableUrl){
                                 $('#suggestor_tables').children().each(function () {
                                   var elementID= $(this).attr('id');
                                   var elementHeight= $(this).height();
-                                  console.log(elementID +" height= "+ elementHeight);
+//                                  console.log(elementID +" height= "+ elementHeight);
                                   if(elementID.indexOf("tabBox_")>-1) {
                                      // Retain the height of tabBox elements (to be used as the minimum Table height).
                                      suggestorTabHeight= elementHeight;
