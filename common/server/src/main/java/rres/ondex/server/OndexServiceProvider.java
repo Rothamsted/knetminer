@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -211,7 +212,76 @@ public class OndexServiceProvider {
 		
 
 		System.out.println("Done. Waiting for queries...");
+
+                // GWrite Stats about the created Ondex graph & its mappings to a .tab file.
+                displayGraphStats(MultiThreadServer.props.getProperty("DataPath"));
 	}
+
+        /* 
+         * Generate Stats about the created Ondex graph and its mappings: mapConcept2Genes & 
+         * mapGene2Concepts.
+         */
+        private void displayGraphStats(String fileUrl) {
+            String fileName= fileUrl +"Network_Stats.tab";
+            int minValues, maxValues= 0, avgValues, all_values_count= 0;
+            try {
+                 int totalGenes= numGenesInGenome;
+                 int totalConcepts= graph.getConcepts().size();
+                 int totalRelations= graph.getRelations().size();
+                 int geneEvidenceConcepts= mapConcept2Genes.size();
+
+                 minValues= mapGene2Concepts.get(mapGene2Concepts.keySet().toArray()[0]).size(); // initial value
+                 /* Get the min., max. & average size (no. of values per key) for the gene-evidence 
+                  * network (in the mapGene2Concepts HashMap. 
+                  */
+                 Set set= mapGene2Concepts.entrySet(); // dataMap.entrySet();
+                 Iterator iterator= set.iterator();
+                 while(iterator.hasNext()) {
+                       Map.Entry mEntry= (Map.Entry) iterator.next();
+                       HashSet<Integer> value= (HashSet<Integer>) mEntry.getValue(); // Value (as a HashSet<Integer>).
+                       int number_of_values= value.size(); // size of the values HashSet for this Key.
+         
+                       if(number_of_values < minValues) { minValues= number_of_values; }
+                       if(number_of_values > maxValues) { maxValues= number_of_values; }
+                       // Retain the sum of sizes of all the key-value pairs in the HashMap.
+                       all_values_count= all_values_count + number_of_values;
+                      }
+
+                 // Total no. of keys in the HashMap.
+                 int all_keys= mapGene2Concepts.keySet().size();
+                 // Calculate average size of gene-evidence networks in the HashMap.
+                 avgValues= all_values_count/ all_keys;
+
+/*		 System.out.println("Graph Stats:");
+                 System.out.println("1) Total number of genes: "+ totalGenes);
+                 System.out.println("2) Total concepts: "+ totalConcepts);
+                 System.out.println("3) Total Relations: "+ totalRelations);
+ 		 System.out.println("4) Concept2Gene #mappings: "+ geneEvidenceConcepts);
+                 System.out.println("5) Min., Max., Average size of gene-evidence networks: "+ 
+                        minValues +", "+ maxValues +", "+ avgValues);*/
+
+                 // Write the Stats to a .tab file.
+		 StringBuffer sb= new StringBuffer();
+//		 sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+                 sb.append("<stats>\n");
+		 sb.append("<totalGenes>").append(totalGenes).append("</totalGenes>\n");
+		 sb.append("<totalConcepts>").append(totalConcepts).append("</totalConcepts>\n");
+		 sb.append("<totalRelations>").append(totalRelations).append("</totalRelations>\n");
+		 sb.append("<geneEvidenceConcepts>").append(geneEvidenceConcepts).append("</geneEvidenceConcepts>\n");
+		 sb.append("<evidenceNetworkSizes>\n");
+                 sb.append("<minSize>").append(minValues).append("</minSize>\n");
+                 sb.append("<maxSize>").append(maxValues).append("</maxSize>\n");
+                 sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
+                 sb.append("</evidenceNetworkSizes>\n");
+                 sb.append("</stats>");
+                
+                 BufferedWriter out= new BufferedWriter(new FileWriter(fileName));
+		 out.write(sb.toString()); // write contents.
+	 	 out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        }
 
 	/**
 	 * Loads OndexKB Graph (OXL data file into memory)
@@ -2201,7 +2271,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                                                 existingCount++;
                                                                                 // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
                                                                                 entryCounts_byType.put(type, existingCount);
- System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
+// System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
 								}
 							}
