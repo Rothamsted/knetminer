@@ -213,7 +213,7 @@ public class OndexServiceProvider {
 
 		System.out.println("Done. Waiting for queries...");
 
-                // GWrite Stats about the created Ondex graph & its mappings to a .tab file.
+                // Write Stats about the created Ondex graph & its mappings to a file.
                 displayGraphStats(MultiThreadServer.props.getProperty("DataPath"));
 	}
 
