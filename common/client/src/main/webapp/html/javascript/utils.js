@@ -28,7 +28,7 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');	
 		relatedTable = escapeJquerySelectors(relatedTable);
 		$('#'+relatedTable).fadeIn();
-		
+                
 		$('#'+option+'_buttonSynonym').attr('class','buttonSynonym_on');
 		$('#'+option+'synonym_right_border').attr('src','html/image/synonym_right_on.png');
 		$('#'+option+'synonym_left_border').attr('src','html/image/synonym_left_on.png');
@@ -1106,7 +1106,7 @@ function createGenesTable(tableUrl, keyword, rows){
                                     if(gene_Name.length > values[2].length) {
                                        gene_Name= values[2];
                                       }
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
 
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
@@ -1397,7 +1397,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-					table = table + '<td><a href="javascript:;" class="generateEvidencePath" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
@@ -1473,7 +1473,7 @@ function createSynonymTable(tableUrl){
 			var aSynonyms = new Array();
 			var countTerms = 0;
 			var termName = "";
-			var minRowsInTable = 14;
+			var minRowsInTable = 20/*14*/;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
 				terms = '';
@@ -1590,7 +1590,27 @@ function createSynonymTable(tableUrl){
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
-				
+                                
+                                // Ensure that the sizes of all the Tables for all the tabs per keyword are adequately set.
+                                var suggestorTabHeight;
+//                                console.log("suggestor_tables contents: ");
+                                $('#suggestor_tables').children().each(function () {
+                                  var elementID= $(this).attr('id');
+                                  var elementHeight= $(this).height();
+//                                  console.log(elementID +" height= "+ elementHeight);
+                                  if(elementID.indexOf("tabBox_")>-1) {
+                                     // Retain the height of tabBox elements (to be used as the minimum Table height).
+                                     suggestorTabHeight= elementHeight;
+                                    }
+                                  else if(elementID.indexOf("tablesorterSynonym")>-1) {
+                                          if(elementHeight < suggestorTabHeight) {
+                                             // Increase this table's height.
+                                             $(this).height(suggestorTabHeight+50);
+//                                             console.log(elementID +" height was= "+ elementHeight +" , now= "+ $(this).height());
+                                            }
+                                         }
+                                });
+
 				$(".synonymTabButton").click(function(e) {
 					var buttonID = $(e.currentTarget).attr("id").replace("_buttonSynonym", "");
 					var termName = buttonID.replace("tablesorterSynonym","").split("_");
