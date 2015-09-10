@@ -1,10 +1,17 @@
+
+window.onload= function () {
+     // Display knowledge network Stats.
+     fetchStats();
+    };
+
 /*
  * Function to read .tab file containing stats about the knowledge network & its mappings & to update 
  * them in the release.html webpage.
  */
 function fetchStats() {
- var fileUrl= dataUrl +"Network_Stats.tab";
-	$.ajax({
+    var fileUrl= dataUrl +"Network_Stats.tab";
+    try {
+     $.ajax({
         url:fileUrl,
         type:'GET',
         dataType:'text',
@@ -15,8 +22,6 @@ function fetchStats() {
         success: function(text){
 console.log("Stats>> response: "+ text);
     		var resp= text.split("\n");
-                var resp= response.replace("<", "");
-                resp= resp.replace(">", "");
                 var totalGenes= fetchValue(resp[1]);
                 var totalConcepts= fetchValue(resp[2]);
                 var totalRelations= fetchValue(resp[3]);
@@ -35,7 +40,9 @@ console.log("Stats>> response: "+ text);
                 
                 document.getElementByID('network_stats').innerHTML= statsText;
 	}
-    });
+      });
+    }
+  catch(err) { console.log("Error occurred while retrieving Network details: "+ err); }
 }
 
  function fetchValue(valText) {
