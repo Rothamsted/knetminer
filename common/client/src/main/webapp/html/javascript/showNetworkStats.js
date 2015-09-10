@@ -42,7 +42,7 @@ console.log("Stats>> response: "+ text);
 	}
       });
     }
-  catch(err) { console.log("Error occurred while retrieving Network details: "+ err); }
+  catch(err) { console.log("Error occurred while retrieving Network details: "+ err.stack); }
 }
 
  function fetchValue(valText) {
