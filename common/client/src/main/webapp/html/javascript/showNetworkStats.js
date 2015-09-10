@@ -9,7 +9,8 @@ window.onload= function () {
  * them in the release.html webpage.
  */
 function fetchStats() {
-    var fileUrl= dataUrl +"Network_Stats.tab";
+    var fileUrl= data_url +"Network_Stats.tab";
+console.log("Fetching Network stats from: "+ fileUrl);
     try {
      $.ajax({
         url:fileUrl,
@@ -20,7 +21,6 @@ function fetchStats() {
         error: function(){						  
         },
         success: function(text){
-console.log("Stats>> response: "+ text);
     		var resp= text.split("\n");
                 var totalGenes= fetchValue(resp[1]);
                 var totalConcepts= fetchValue(resp[2]);
@@ -31,18 +31,21 @@ console.log("Stats>> response: "+ text);
                 var avgValues= fetchValue(resp[8]);
                 
                 // Display stats data.
-                var statsText= "Graph Stats:</br>"+"<ul><li>Total number of genes: "+ totalGenes +
-                        "</li><li>Total concepts: "+ totalConcepts +"</li><li>Total Relations: "+ 
-                        totalRelations +"</li><li>Concept2Gene #mappings: "+ geneEvidenceConcepts +
-                        "</li><li>Size of the gene-evidence networks:<ul><li>Min.: "+ minValues +
-                        "</li><li>Max.: "+ maxValues +"</li><li>Average: "+ avgValues +"</li></ul>"+
+                var statsText= "<br/><ul><li>Total number of genes: "+ totalGenes +"</li>"+
+                        "<li>Total concepts: <strong>"+ totalConcepts +"</strong></li>"+
+                        "<li>Total Relations: <strong>"+ totalRelations +"</strong></li>"+
+                        "<li>Concept2Gene #mappings: "+ geneEvidenceConcepts +"</li>"+
+                        "<li>Size of the gene-evidence networks:"+
+                        "<ul><li>Min.: "+ minValues +"</li>"+
+                        "<li>Max.: "+ maxValues +"</li>"+
+                        "<li>Average: "+ avgValues +"</li></ul>"+
                         "</li></ul>";
-                
-                document.getElementByID('network_stats').innerHTML= statsText;
+//console.log("stats: "+ statsText);
+                $("#network_stats").append(statsText);
 	}
       });
     }
-  catch(err) { console.log("Error occurred while retrieving Network details: "+ err.stack); }
+  catch(err) { console.log("Error occurred while retrieving Network details: \n"+ err.message +"\n"+ err.stack); }
 }
 
  function fetchValue(valText) {
