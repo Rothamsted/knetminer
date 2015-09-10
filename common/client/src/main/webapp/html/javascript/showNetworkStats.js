@@ -9,7 +9,7 @@ window.onload= function () {
  * them in the release.html webpage.
  */
 function fetchStats() {
-    var fileUrl= data_url +"Network_Stats.tab";
+    var fileUrl= data_url +"latestNetwork_Stats.tab";
 console.log("Fetching Network stats from: "+ fileUrl);
     try {
      $.ajax({
@@ -29,12 +29,14 @@ console.log("Fetching Network stats from: "+ fileUrl);
                 var minValues= fetchValue(resp[6]);
                 var maxValues= fetchValue(resp[7]);
                 var avgValues= fetchValue(resp[8]);
-                
+                var conceptPercentage= (geneEvidenceConcepts / totalConcepts)*100;
+                conceptPercentage= conceptPercentage.toFixed(1);
+
                 // Display stats data.
                 var statsText= "<br/><ul><li>Total number of genes: "+ totalGenes +"</li>"+
                         "<li>Total concepts: <strong>"+ totalConcepts +"</strong></li>"+
-                        "<li>Total Relations: <strong>"+ totalRelations +"</strong></li>"+
-                        "<li>Concept2Gene #mappings: "+ geneEvidenceConcepts +"</li>"+
+                        "<li>Total relations: <strong>"+ totalRelations +"</strong></li>"+
+                        "<li>Concept2Gene #mappings: "+ geneEvidenceConcepts +" ("+ conceptPercentage +"%)</li>"+
                         "<li>Size of the gene-evidence networks:"+
                         "<ul><li>Min.: "+ minValues +"</li>"+
                         "<li>Max.: "+ maxValues +"</li>"+
