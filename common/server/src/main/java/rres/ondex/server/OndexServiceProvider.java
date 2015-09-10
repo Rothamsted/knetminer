@@ -222,8 +222,14 @@ public class OndexServiceProvider {
          * mapGene2Concepts.
          */
         private void displayGraphStats(String fileUrl) {
-            String fileName= fileUrl +"Network_Stats.tab";
+            // Update the Network Stats file that holds the latest Stats information.
+            String fileName= fileUrl + "latestNetwork_Stats.tab";
+
             int minValues, maxValues= 0, avgValues, all_values_count= 0;
+
+            // Also, create a timetamped Stats file to retain historic Stats information.
+	    long timestamp= System.currentTimeMillis();
+            String newFileName= fileUrl + timestamp +"_Network_Stats.tab";
             try {
                  int totalGenes= numGenesInGenome;
                  int totalConcepts= graph.getConcepts().size();
@@ -275,9 +281,15 @@ public class OndexServiceProvider {
                  sb.append("</evidenceNetworkSizes>\n");
                  sb.append("</stats>");
                 
+                 // Update the file storing the latest Stats data.
                  BufferedWriter out= new BufferedWriter(new FileWriter(fileName));
 		 out.write(sb.toString()); // write contents.
 	 	 out.close();
+
+                 // Also, create the timestamped Stats file.
+                 BufferedWriter out2= new BufferedWriter(new FileWriter(newFileName));
+		 out2.write(sb.toString()); // write contents.
+	 	 out2.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
