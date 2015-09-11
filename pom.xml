@@ -22,6 +22,7 @@
 		<module>cow</module>
 		<module>boleracea</module>
 		<module>maize</module>
+		<module>drosophilla</module>
 	</modules>
 
 	<reporting>
