@@ -29,7 +29,7 @@ console.log("Fetching Network stats from: "+ fileUrl);
                 var minValues= fetchValue(resp[6]);
                 var maxValues= fetchValue(resp[7]);
                 var avgValues= fetchValue(resp[8]);
-                var conceptPercentage= (geneEvidenceConcepts / totalConcepts)*100;
+                var conceptPercentage= (geneEvidenceConcepts / (totalConcepts-totalGenes))*100;
                 conceptPercentage= conceptPercentage.toFixed(1);
 
                 // Display stats data.
