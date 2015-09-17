@@ -572,6 +572,12 @@ public class OndexServiceProvider {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();		
 		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
+                // sources identified in KNETviewer
+/*                String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", 
+                    "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT", 
+                    "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB", "PFAM", 
+                    "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE", "PUBCHEM", 
+                    "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};*/
 		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 		
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
@@ -593,7 +599,9 @@ public class OndexServiceProvider {
 			}
 			
 			//number of top concepts retrieved for each Lucene field
-			int max_concepts = 500;
+                        /* increased for now from 500 to 1500, until Lucene code is ported from Ondex 
+                         * to QTLNetMiner, when we'll make changes to the QueryParser code instead. */
+			int max_concepts = 1500/*500*/;
 			
 			// search concept attributes
 			for (AttributeName att : atts) {
@@ -2253,6 +2261,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
+//System.out.println("Query Suggestor>> synonymsList>> Concept id: "+ id +" , Type: "+ type +", name: "+ eoc.getConceptName().getName().toString());
 
                                                 // write top 25 suggestions for every entry (concept class) in the list.
                                                 if(entryCounts_byType.containsKey(type)) {
@@ -2264,6 +2273,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                  }
 
 						for (ConceptName cName : cNames) {
+//System.out.println("\t Synonyms: "+ cName.getName().toString() +", isPreferred: "+ cName.isPreferred() +", \t existingCount= "+ existingCount +", limit: "+ topX);
 //							if(topAux < topX){
 							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
@@ -2283,6 +2293,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                                                 existingCount++;
                                                                                 // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
                                                                                 entryCounts_byType.put(type, existingCount);
+//System.out.println("\t \t name: "+ name +" (type: "+ type +") written in suggestor table...");
 // System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
 								}

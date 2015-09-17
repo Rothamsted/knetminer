@@ -10,12 +10,12 @@ window.onload= function () {
  */
 function fetchStats() {
     var fileUrl= data_url +"latestNetwork_Stats.tab";
-console.log("Fetching Network stats from: "+ fileUrl);
+//console.log("Fetching Network stats from: "+ fileUrl);
     try {
      $.ajax({
         url:fileUrl,
-        type:'GET',
-        dataType:'text',
+        type: 'GET',
+        dataType: 'text',
         async: true,
         timeout: 1000000,
         error: function(){						  
@@ -29,7 +29,8 @@ console.log("Fetching Network stats from: "+ fileUrl);
                 var minValues= fetchValue(resp[6]);
                 var maxValues= fetchValue(resp[7]);
                 var avgValues= fetchValue(resp[8]);
-                var conceptPercentage= (geneEvidenceConcepts / totalConcepts)*100;
+                // calculate concept occurrence percentage.
+                var conceptPercentage= (geneEvidenceConcepts / (totalConcepts-totalGenes))*100;
                 conceptPercentage= conceptPercentage.toFixed(1);
 
                 // Display stats data.
