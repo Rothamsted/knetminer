@@ -10,12 +10,12 @@ window.onload= function () {
  */
 function fetchStats() {
     var fileUrl= data_url +"latestNetwork_Stats.tab";
-console.log("Fetching Network stats from: "+ fileUrl);
+//console.log("Fetching Network stats from: "+ fileUrl);
     try {
      $.ajax({
         url:fileUrl,
-        type:'GET',
-        dataType:'text',
+        type: 'GET',
+        dataType: 'text',
         async: true,
         timeout: 1000000,
         error: function(){						  
