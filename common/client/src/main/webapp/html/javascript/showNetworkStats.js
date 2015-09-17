@@ -29,6 +29,7 @@ function fetchStats() {
                 var minValues= fetchValue(resp[6]);
                 var maxValues= fetchValue(resp[7]);
                 var avgValues= fetchValue(resp[8]);
+                // calculate concept occurrence percentage.
                 var conceptPercentage= (geneEvidenceConcepts / (totalConcepts-totalGenes))*100;
                 conceptPercentage= conceptPercentage.toFixed(1);
 
