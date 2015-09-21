@@ -601,7 +601,7 @@ public class OndexServiceProvider {
 			//number of top concepts retrieved for each Lucene field
                         /* increased for now from 500 to 1500, until Lucene code is ported from Ondex 
                          * to QTLNetMiner, when we'll make changes to the QueryParser code instead. */
-			int max_concepts = 1500/*500*/;
+			int max_concepts = 2000/*500*/;
 			
 			// search concept attributes
 			for (AttributeName att : atts) {
@@ -2221,7 +2221,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>(); 
 				FloatValueComparator comparator =  new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
-//System.out.println("\n Keyword: "+ key);
+//                                System.out.println("\n Keyword: "+ key);
 				// a HashMap to store the count for the number of values written to the Synonym Table (for each Concept Type).
 				Map<String, Integer> entryCounts_byType= new HashMap<String, Integer>();
 				
@@ -2229,10 +2229,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName",null);
-			    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
-			    Query qNames = parserCN.parse(key);
-				ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 100);
-				
+ 			        QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
+			        Query qNames = parserCN.parse(key);
+				ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/*100*/);
+                                 /* number of top concepts searched for each Lucene field, increased 
+                                  * for now from 100 to 500, until Lucene code is ported from Ondex
+                                  * to QTLNetMiner, when we'll make changes to the QueryParser code instead. */
 				
 				for(ONDEXConcept c : hitSynonyms.getOndexHits()){
 					if (c instanceof LuceneConcept) {
@@ -2261,7 +2263,6 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
-//System.out.println("Query Suggestor>> synonymsList>> Concept id: "+ id +" , Type: "+ type +", name: "+ eoc.getConceptName().getName().toString());
 
                                                 // write top 25 suggestions for every entry (concept class) in the list.
                                                 if(entryCounts_byType.containsKey(type)) {
@@ -2273,7 +2274,6 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                  }
 
 						for (ConceptName cName : cNames) {
-//System.out.println("\t Synonyms: "+ cName.getName().toString() +", isPreferred: "+ cName.isPreferred() +", \t existingCount= "+ existingCount +", limit: "+ topX);
 //							if(topAux < topX){
 							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
@@ -2293,8 +2293,7 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                                                                                 existingCount++;
                                                                                 // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
                                                                                 entryCounts_byType.put(type, existingCount);
-//System.out.println("\t \t name: "+ name +" (type: "+ type +") written in suggestor table...");
-// System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
+//                                                                       System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
 								}
 							}

@@ -619,7 +619,7 @@ function searchKeyword(){
 	var list = $("#list_of_genes").val();
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
-	
+
 	if(list.length > 0){
 		request = request+"&listMode="+listMode;
 	}
@@ -636,7 +636,7 @@ function searchKeyword(){
 				counter++;	
 		}
 	}
-
+console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -661,7 +661,7 @@ function searchKeyword(){
 	        },
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
-				
+console.log("response: "+ response);				
 				if((response == null) || (response == "")){
 						var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
 						$("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -854,89 +854,18 @@ function generateCyJSNetwork(url,list){
     // Network Graph: JSON file.
     var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
-    console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
+//    console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
 
     try {
          if(cyjs_networkView && !cyjs_networkView.closed) {
-            // If the window is already open.
-/*            cyjs_networkView.jsonFile= jsonFile; // re-assign the JSON file path.
-            cyjs_networkView.focus();
-            console.log("WindowAlreadyOpen>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
-            // clear the cytoscapeJS container <div>.
-            cyjs_networkView.document.getElementById('cy').innerHTML= "";
-
-//            cyjs_networkView.document.location.reload(); // reload the graph window using new graph.
-            // re-generate the network graph using the new JSON dataset (file) in the already open window.
-//            generateNetworkGraph(cyjs_networkView.jsonFile);
-*/
-            // close the window to reopen it later using new JSON dataset (file).
+            // If the window is already open, close the window to reopen it later using new JSON dataset (file).
             cyjs_networkView.close();
            }
-//         else {
-/*           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
-                    "height=600, width=1200, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, directories=yes, status=yes");*/
-           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
-                    "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
-           // Pass the JSON file path to a global variable in the new window.
-           cyjs_networkView.jsonFile= jsonFile;
-           console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
-//          }
-
-        // Embed the Network Viewer in the 'Network View' tab on the page.
-/*        var output ="<div id='buttonBox'>" +
-        			"<a title='Maximise' href='javascript:;' id='maximiseNetwork' class='networkButtons' type='button'></a>" +
-        			"<a title='Download network' href="+ jsonFile +" target=_blank id='downloadNetworkTab' class='networkButtons' type='button'></a>" +
-	        		"<a title='Open in new window' href='javascript:;' id='newNetworkWindow' class='networkButtons' type='button'></a>" +
-	        		"<span id='networkViewerHelp' class='networkButtons hint-big' title='Network Viewer Help'></span>" +
-	        	"</div>" +
-        		
-        		"<div id='modalShadow'></div>" +
-        		"<div class='modalBox'>" +	//placeholder to stop page length changing when modalBox is opened.
-	        		"<div id='modalBox' class='modalBox'>" +	//modal box is moved to center of window and resizes with it
-	        			"<a title='Restore' href='javascript:;' id='restoreNetwork' class='networkButtons'></a>" +
-		        		"<iframe src=\"html/networkGraph.html\"></iframe>"+
-	        		"</div>" +
-				"</div>";
-	
-	$('#NetworkCanvas').html(output);
-	
-	
-	$("#newNetworkWindow").click(function(){
-           cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
-                    "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
-	});
-	
-	$('#maximiseNetwork').click(function() {
-		$('#modalBox').addClass("modalBoxVisible");
-		//$('#restoreNetwork').show();
-		$('#modalShadow').show();
-	});
-	
-	function closeModalBox(){
-		$('#modalBox').removeClass("modalBoxVisible");
-		//$('#restoreNetwork').hide();
-		$('#modalShadow').hide();
-	}
-	
-	$('#restoreNetwork, #modalShadow, #legend_picture').click(function(){
-			closeModalBox();
-	}).find('#legend_frame').click(function (e) {
-		  e.stopPropagation();
-	});	
-	
-	$('#modalShadow').click(function(){
-			closeModalBox();
-	});
-	
-	
-	$(document).keyup(function(e) {
-        if (e.keyCode == 27){
-        	closeModalBox();
-        }
-	});
-	
-	
-	activateButton('NetworkCanvas');*/
+         cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                  "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
+         // Pass the JSON file path to a global variable in the new window.
+         cyjs_networkView.jsonFile= jsonFile;
+//         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
         }
     catch(err) { 
           var errorMsg= err.stack;
