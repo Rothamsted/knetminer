@@ -28,7 +28,7 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');	
 		relatedTable = escapeJquerySelectors(relatedTable);
 		$('#'+relatedTable).fadeIn();
-		
+                
 		$('#'+option+'_buttonSynonym').attr('class','buttonSynonym_on');
 		$('#'+option+'synonym_right_border').attr('src','html/image/synonym_right_on.png');
 		$('#'+option+'synonym_left_border').attr('src','html/image/synonym_left_on.png');
@@ -241,7 +241,9 @@ function evidencePath(id){
 	var keyword = id;		
 	var request = "mode="+searchMode+"&keyword="+keyword;
 	var url = 'OndexServlet?'+request;
-	generateNetwork(url,'');
+//	generateNetwork(url,'');
+        // Generate the Network Graph using the new Network Viewer.
+        generateCyJSNetwork(url,'');
 }
 
 /*
@@ -617,7 +619,7 @@ function searchKeyword(){
 	var list = $("#list_of_genes").val();
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
-	
+
 	if(list.length > 0){
 		request = request+"&listMode="+listMode;
 	}
@@ -634,7 +636,7 @@ function searchKeyword(){
 				counter++;	
 		}
 	}
-
+console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -659,7 +661,7 @@ function searchKeyword(){
 	        },
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
-				
+console.log("response: "+ response);				
 				if((response == null) || (response == "")){
 						var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
 						$("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -787,7 +789,6 @@ function generateNetwork(url,list){
 	
 	$('#networkViewerHelp').click(function() {
 		$('#networkHelpBox').slideToggle(300);
-		
 	});
 	
 	$('#networkHelpBox').click(function() {
@@ -833,6 +834,46 @@ function generateNetwork(url,list){
 				
 	});
 }
+
+/*
+ * Global variable.
+ * Reference for the Network View popup window.
+ */
+var cyjs_networkView= false;
+
+/*
+ * Function
+ * Generates the new lightweight Network graph, using cytoscapeJS.
+ * @author: Ajit Singh.
+ */
+function generateCyJSNetwork(url,list){
+    //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
+    $.post(url, list, function(response, textStatus) {																							 
+    var oxl = response.split(":")[1];
+
+    // Network Graph: JSON file.
+    var network_json= oxl.replace(".oxl", ".json"); // JSON file path
+    var jsonFile= data_url + network_json; // the JSON file generated on the server.
+//    console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
+
+    try {
+         if(cyjs_networkView && !cyjs_networkView.closed) {
+            // If the window is already open, close the window to reopen it later using new JSON dataset (file).
+            cyjs_networkView.close();
+           }
+         cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+                  "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
+         // Pass the JSON file path to a global variable in the new window.
+         cyjs_networkView.jsonFile= jsonFile;
+//         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+        }
+    catch(err) { 
+          var errorMsg= err.stack;
+          console.log("Error: <br/>"+"Details: "+ errorMsg);
+         }
+   });
+  }
+
 /*
  * Function
  * 
@@ -851,6 +892,28 @@ function generateMultiGeneNetwork(keyword) {
 			generateNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});				
 	}
 }
+
+/*
+ * Function
+ * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
+ * @author: Ajit Singh.
+ */
+function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {	
+	var candidatelist = "";
+	var cb_list = document.checkbox_form.candidates;
+	for (var i=0; i < cb_list.length; i++) {		
+		if(cb_list[i].checked) {
+			candidatelist += cb_list[i].value + "\n";
+		}
+	}
+	if(candidatelist == "") {
+		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+	}
+        else {
+          generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
+	 }
+}
+
 /*
  * Function
  * 
@@ -926,13 +989,14 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="500">500</option>';
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
-				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+//				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
-				table = table + '<th width="100">'+values[1]+'</th>';	
+				table = table + '<th width="100">'+values[1]+'</th>';
 				if(multiorganisms == true){
 					table = table + '<th width="60">'+values[5]+'</th>';
 				}
@@ -964,8 +1028,15 @@ function createGenesTable(tableUrl, keyword, rows){
 				    
 				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
-				    
+
+//				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
+				    var gene_Name= values[1];
+                                    // Fetch preferred concept (gene) name and use the shorter name out of the two.
+                                    if(gene_Name.length > values[2].length) {
+                                       gene_Name= values[2];
+                                      }
+				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
 					}else{
@@ -1083,9 +1154,12 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
     		
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" ></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
+//    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
+    		table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
+        
     		table = table + legendHtmlContainer; // add legend
-    		
+                
     		document.getElementById('resultsTable').innerHTML = table;
     		
     		$("#numGenes").val(rows);
@@ -1096,7 +1170,9 @@ function createGenesTable(tableUrl, keyword, rows){
     			e.preventDefault();
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
-    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+//    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+                        // Generate Network using the new Network Viewer.
+                        generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
     		});
     		
     		/*
@@ -1117,7 +1193,11 @@ function createGenesTable(tableUrl, keyword, rows){
         	$("#generateMultiGeneNetworkButton").click(function(e) {
         		generateMultiGeneNetwork(keyword);
         	});
-        	
+
+                $("#new_generateMultiGeneNetworkButton").click(function(e) {
+        		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
+        	});
+
     		$("#tablesorter").tablesorter({ 
     	        headers: { 
     	            // do not sort "select" column 
@@ -1133,12 +1213,44 @@ function createGenesTable(tableUrl, keyword, rows){
     		/*
     		 * if select all targets is checked find all targets and check them.
     		 */
-    		$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
+              /*$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
 	    			if(values[7] == "yes"){
 	    				$("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			}
+    			}
+    		});*/
+
+    		/*
+    		 * Select all KNOWN targets: find all targets with existing Evidence & check them.
+    		 */
+    		$('input[name="chkusr_known"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+	    			if(values[7] == "yes"){
+//                                   console.log("Select Known Targets: Evidences: "+ values[9]);
+				   if(values[9].length > 0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
+	    			}
+    			}
+    		});
+
+    		/*
+    		 * Select all NOVEL targets: find all targets with no Evidence & check them.
+    		 */
+    		$('input[name="chkusr_novel"]').bind("click", {x: candidate_genes}, function(e) {
+    			var numResults = candidate_genes.length-2;
+    			for(var i=1; i<=numResults; i++){
+	    			var values = e.data.x[i].split("\t");
+	    			if(values[7] == "yes"){
+//                                   console.log("Select Novel Targets: Evidences: "+ values[9]);
+				   if(values[9].length === 0) {
+	    			      $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+                                     }
 	    			}
     			}
     		});
@@ -1214,7 +1326,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-					table = table + '<td><a href="javascript:;" class="generateEvidencePath" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>';
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
@@ -1299,7 +1411,7 @@ function createSynonymTable(tableUrl){
 			var aSynonyms = new Array();
 			var countTerms = 0;
 			var termName = "";
-			var minRowsInTable = 14;
+			var minRowsInTable = 20/*14*/;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
 				terms = '';
@@ -1416,7 +1528,27 @@ function createSynonymTable(tableUrl){
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
-				
+                                
+                                // Ensure that the sizes of all the Tables for all the tabs per keyword are adequately set.
+                                var suggestorTabHeight;
+//                                console.log("suggestor_tables contents: ");
+                                $('#suggestor_tables').children().each(function () {
+                                  var elementID= $(this).attr('id');
+                                  var elementHeight= $(this).height();
+//                                  console.log(elementID +" height= "+ elementHeight);
+                                  if(elementID.indexOf("tabBox_")>-1) {
+                                     // Retain the height of tabBox elements (to be used as the minimum Table height).
+                                     suggestorTabHeight= elementHeight;
+                                    }
+                                  else if(elementID.indexOf("tablesorterSynonym")>-1) {
+                                          if(elementHeight < suggestorTabHeight) {
+                                             // Increase this table's height.
+                                             $(this).height(suggestorTabHeight+50);
+//                                             console.log(elementID +" height was= "+ elementHeight +" , now= "+ $(this).height());
+                                            }
+                                         }
+                                });
+
 				$(".synonymTabButton").click(function(e) {
 					var buttonID = $(e.currentTarget).attr("id").replace("_buttonSynonym", "");
 					var termName = buttonID.replace("tablesorterSynonym","").split("_");

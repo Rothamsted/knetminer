@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -211,7 +212,88 @@ public class OndexServiceProvider {
 		
 
 		System.out.println("Done. Waiting for queries...");
+
+                // Write Stats about the created Ondex graph & its mappings to a file.
+                displayGraphStats(MultiThreadServer.props.getProperty("DataPath"));
 	}
+
+        /* 
+         * Generate Stats about the created Ondex graph and its mappings: mapConcept2Genes & 
+         * mapGene2Concepts.
+         */
+        private void displayGraphStats(String fileUrl) {
+            // Update the Network Stats file that holds the latest Stats information.
+            String fileName= fileUrl + "latestNetwork_Stats.tab";
+
+            int minValues, maxValues= 0, avgValues, all_values_count= 0;
+
+            // Also, create a timetamped Stats file to retain historic Stats information.
+	    long timestamp= System.currentTimeMillis();
+            String newFileName= fileUrl + timestamp +"_Network_Stats.tab";
+            try {
+                 int totalGenes= numGenesInGenome;
+                 int totalConcepts= graph.getConcepts().size();
+                 int totalRelations= graph.getRelations().size();
+                 int geneEvidenceConcepts= mapConcept2Genes.size();
+
+                 minValues= mapGene2Concepts.get(mapGene2Concepts.keySet().toArray()[0]).size(); // initial value
+                 /* Get the min., max. & average size (no. of values per key) for the gene-evidence 
+                  * network (in the mapGene2Concepts HashMap. 
+                  */
+                 Set set= mapGene2Concepts.entrySet(); // dataMap.entrySet();
+                 Iterator iterator= set.iterator();
+                 while(iterator.hasNext()) {
+                       Map.Entry mEntry= (Map.Entry) iterator.next();
+                       HashSet<Integer> value= (HashSet<Integer>) mEntry.getValue(); // Value (as a HashSet<Integer>).
+                       int number_of_values= value.size(); // size of the values HashSet for this Key.
+         
+                       if(number_of_values < minValues) { minValues= number_of_values; }
+                       if(number_of_values > maxValues) { maxValues= number_of_values; }
+                       // Retain the sum of sizes of all the key-value pairs in the HashMap.
+                       all_values_count= all_values_count + number_of_values;
+                      }
+
+                 // Total no. of keys in the HashMap.
+                 int all_keys= mapGene2Concepts.keySet().size();
+                 // Calculate average size of gene-evidence networks in the HashMap.
+                 avgValues= all_values_count/ all_keys;
+
+/*		 System.out.println("Graph Stats:");
+                 System.out.println("1) Total number of genes: "+ totalGenes);
+                 System.out.println("2) Total concepts: "+ totalConcepts);
+                 System.out.println("3) Total Relations: "+ totalRelations);
+ 		 System.out.println("4) Concept2Gene #mappings: "+ geneEvidenceConcepts);
+                 System.out.println("5) Min., Max., Average size of gene-evidence networks: "+ 
+                        minValues +", "+ maxValues +", "+ avgValues);*/
+
+                 // Write the Stats to a .tab file.
+		 StringBuffer sb= new StringBuffer();
+//		 sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+                 sb.append("<stats>\n");
+		 sb.append("<totalGenes>").append(totalGenes).append("</totalGenes>\n");
+		 sb.append("<totalConcepts>").append(totalConcepts).append("</totalConcepts>\n");
+		 sb.append("<totalRelations>").append(totalRelations).append("</totalRelations>\n");
+		 sb.append("<geneEvidenceConcepts>").append(geneEvidenceConcepts).append("</geneEvidenceConcepts>\n");
+		 sb.append("<evidenceNetworkSizes>\n");
+                 sb.append("<minSize>").append(minValues).append("</minSize>\n");
+                 sb.append("<maxSize>").append(maxValues).append("</maxSize>\n");
+                 sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
+                 sb.append("</evidenceNetworkSizes>\n");
+                 sb.append("</stats>");
+                
+                 // Update the file storing the latest Stats data.
+                 BufferedWriter out= new BufferedWriter(new FileWriter(fileName));
+		 out.write(sb.toString()); // write contents.
+	 	 out.close();
+
+                 // Also, create the timestamped Stats file.
+                 BufferedWriter out2= new BufferedWriter(new FileWriter(newFileName));
+		 out2.write(sb.toString()); // write contents.
+	 	 out2.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        }
 
 	/**
 	 * Loads OndexKB Graph (OXL data file into memory)
@@ -328,8 +410,8 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Export the Ondex graph to file system
-	 * 
+	 * Export the Ondex graph to file system as a .oxl file and also in JSON format using the new JSON 
+         * Exporter plugin in Ondex.
 	 * @param ONDEXGraph
 	 *            graph
 	 * @throws InvalidPluginArgumentException
@@ -338,6 +420,7 @@ public class OndexServiceProvider {
 			throws InvalidPluginArgumentException {
 
 		boolean fileIsCreated = false;
+		boolean jsonFileIsCreated = false;
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
@@ -378,11 +461,41 @@ public class OndexServiceProvider {
 			System.out.println(e.getMessage());
 		}
 
-		// Check if file exists
+		// Check if .oxl file exists
 		while (!fileIsCreated) {
 			fileIsCreated = checkFileExist(exportPath);
 		}
 		System.out.println("OXL file created:" + exportPath);
+
+               // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
+               net.sourceforge.ondex.export.cyjsJson.Export jsonExport= new net.sourceforge.ondex.export.cyjsJson.Export();
+               // JSON output file.
+               String jsonExportPath= exportPath.substring(0, exportPath.length()-4) +".json";
+               try {
+                    ONDEXPluginArguments epa= new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
+                    epa.setOption(FileArgumentDefinition.EXPORT_FILE, jsonExportPath);
+
+                    System.out.println("JSON Export file: "+ epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
+           
+                    jsonExport.setArguments(epa);
+//                    jsonExport.setONDEXGraph(graph);
+                    jsonExport.setONDEXGraph(graph2);
+                    System.out.println("Export JSON data: Total concepts= "+ graph2.getConcepts().size() +
+                            " , Relations= "+ graph2.getRelations().size());
+                    // Export the contents of the 'graph' object as multiple JSON objects to an output file.
+                    jsonExport.start();
+                   }
+               catch(Exception ex) {
+             	     ex.printStackTrace();
+           	     System.out.println(ex.getMessage());
+                    }
+
+		// Check if .json file also exists
+		while(!jsonFileIsCreated) {
+		      jsonFileIsCreated = checkFileExist(jsonExportPath);
+		     }
+		System.out.println("JSON file created:" + jsonExportPath);
+
 		return fileIsCreated;
 	}
 	
@@ -459,6 +572,12 @@ public class OndexServiceProvider {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();		
 		String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR", "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
+                // sources identified in KNETviewer
+/*                String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", 
+                    "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT", 
+                    "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB", "PFAM", 
+                    "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE", "PUBCHEM", 
+                    "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};*/
 		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 		
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
@@ -480,7 +599,9 @@ public class OndexServiceProvider {
 			}
 			
 			//number of top concepts retrieved for each Lucene field
-			int max_concepts = 500;
+                        /* increased for now from 500 to 1500, until Lucene code is ported from Ondex 
+                         * to QTLNetMiner, when we'll make changes to the QueryParser code instead. */
+			int max_concepts = 2000/*500*/;
 			
 			// search concept attributes
 			for (AttributeName att : atts) {
@@ -2090,8 +2211,9 @@ public class OndexServiceProvider {
 	
 public boolean writeSynonymTable(String keyword, String fileName) throws ParseException{
 		int topX = 25;
+                // to store top 25 values for each concept type instead of just 25 values per keyword.
+                int existingCount= 0;
 		Set<String> keys = parseKeywordIntoSetOfTerms(keyword);
-		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (String key : keys) {
@@ -2099,14 +2221,20 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>(); 
 				FloatValueComparator comparator =  new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
+//                                System.out.println("\n Keyword: "+ key);
+				// a HashMap to store the count for the number of values written to the Synonym Table (for each Concept Type).
+				Map<String, Integer> entryCounts_byType= new HashMap<String, Integer>();
 				
 				out.write("<"+key+">\n");
+
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName",null);
-			    QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
-			    Query qNames = parserCN.parse(key);
-				ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 100);
-				
+ 			        QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN , analyzer);
+			        Query qNames = parserCN.parse(key);
+				ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/*100*/);
+                                 /* number of top concepts searched for each Lucene field, increased 
+                                  * for now from 100 to 500, until Lucene code is ported from Ondex
+                                  * to QTLNetMiner, when we'll make changes to the QueryParser code instead. */
 				
 				for(ONDEXConcept c : hitSynonyms.getOndexHits()){
 					if (c instanceof LuceneConcept) {
@@ -2135,11 +2263,25 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 						String type = eoc.getOfType().getId().toString();
 						Integer id = eoc.getId();
 						Set<ConceptName> cNames = eoc.getConceptNames();
+
+                                                // write top 25 suggestions for every entry (concept class) in the list.
+                                                if(entryCounts_byType.containsKey(type)) {
+                                                   // get existing count
+                                                   existingCount= entryCounts_byType.get(type);
+                                                  }
+                                                else {
+                                                  existingCount= 0;
+                                                 }
+
 						for (ConceptName cName : cNames) {
-							if(topAux < topX){
+//							if(topAux < topX){
+							if(existingCount < topX){
 								//if(type == "Gene" || type == "BioProc" || type == "MolFunc" || type == "CelComp"){
+                                                            // Exclude Publications from the Synonym Table for the Query Suggestor
+							    if(!(type.equals("Publication") || type.equals("Thing"))) {
 									if(cName.isPreferred()){
 										String name = cName.getName().toString();
+
 										//error going around for publication suggestions
 										if (name.contains("\n"))
 											name = name.replace("\n", "");
@@ -2148,8 +2290,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 											name = name.replaceAll("\"", "");
 										out.write(name+"\t"+type+"\t"+score.toString()+"\t"+id+"\n");
 										topAux++;
+                                                                                existingCount++;
+                                                                                // store the count per concept Type for every entry added to the Query Suggestor (synonym) table.
+                                                                                entryCounts_byType.put(type, existingCount);
+//                                                                       System.out.println("\t *Query Suggestor table: new entry: synonym name: "+ name +" , Type: "+ type + " , entries_of_this_type= "+ existingCount);
 									}
-								//}
+								}
 							}
 							
 						}
@@ -2299,12 +2445,31 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		Set<ConceptName> cns = c.getConceptNames();
 		Set<ConceptAccession> accs = c.getConceptAccessions();
 		if((ct == "Gene")||(ct == "Protein")){
-			if(getShortestNotAmbiguousAccession(accs) != ""){
+/*			if(getShortestNotAmbiguousAccession(accs) != ""){
 				cn = getShortestNotAmbiguousAccession(accs);
 			} else {
 				cn = getShortestPreferedName(cns);
-			}			
-		}else if(ct == "Phenotype"){
+			}*/
+                    // Get shortest, non-ambiguous concept accession.
+                    String shortest_acc= getShortestNotAmbiguousAccession(accs);
+                    // Get shortest, preferred concept name.
+                    String shortest_coname= getShortestPreferedName(cns);
+                    int shortest_coname_length= 100000, shortest_acc_length= 100000;
+                    if(!shortest_acc.equals(" ")) {
+                       shortest_acc_length= shortest_acc.length();
+                      }
+                    if(!shortest_coname.equals(" ")) {
+                       shortest_coname_length= shortest_coname.length();
+                      }
+                    // Compare the sizes of both the values
+                    if(shortest_acc_length < shortest_coname_length) {
+                       cn= shortest_acc; // use shortest, non-ambiguous concept accession.
+                      }
+                    else {
+                      cn= shortest_coname; // use shortest, preferred concept name.
+                     }
+		}
+                else if(ct == "Phenotype"){
 			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
 			cn = c.getAttribute(att).getValue().toString().trim();
 		}else{

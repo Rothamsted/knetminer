@@ -1,5 +1,5 @@
 <%@ tag description="Page layout" %>
- 
+
 <%@ attribute name="title"       required="true" description="Page title" %>
 <%@ attribute name="keywords"    required="true" description="Page keywords to improve SEO" %>
 <%@ attribute name="description" required="true" description="Page description" %>
@@ -27,9 +27,10 @@
         <script type="text/javascript" src="html/javascript/utils-config.js"></script> 
         <script type="text/javascript" src="html/javascript/utils.js"></script>  
         <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
-		<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
- 		<script type="text/javascript" src="html/javascript/dtjava.js"></script>
-        <jsp:invoke fragment="extraHeader"/>              
+	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
+ 	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
+
+        <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>
         <!-- Main -->
