@@ -10,20 +10,13 @@ window.onload= function () {
      generateNetworkGraph(window.jsonFile);
     };
 
-// Generate the network graph using a new JSON dataset (file) when the graph is refreshed by the user.
-/*window.opener.location.reload= function () {
-     // Generate the Network Graph after the page load event.
-     generateNetworkGraph(window.jsonFile);
-    };*/
-
 function generateNetworkGraph(jsonFileName) {
    var json_File= jsonFileName;
-   console.log("Received json_File: file path: "+ json_File);
+//   console.log("Received json_File: file path: "+ json_File);
 
    // Include this file's contents on the page at runtime using jQuery and a callback function.
 /*   $.getScript(json_File, function() {*/
    jQuery.getScript(json_File, function() {
-     console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
      initializeNetworkView();
 
@@ -87,7 +80,6 @@ $(function() { // on dom ready
                               try { // Check if the node was flagged or not
                               if(ele.data('flagged') === "true") {
                                  node_borderStyle= 'double'; // can be 'solid', 'dotted', 'dashed' or 'double'.
-//                                 console.log("node Flagged= "+ ele.data('flagged') +" , node_borderStyle: "+ node_borderStyle);
                                 }
                               }
                               catch(err) { console.log(err.stack); }
@@ -99,7 +91,6 @@ $(function() { // on dom ready
                               try { // Check if the node was flagged or not
                               if(ele.data('flagged') === "true") {
                                  node_borderWidth= '3px';
-//                                 console.log("node Flagged= "+ ele.data('flagged') +" , node_borderWidth: "+ node_borderWidth);
                                 }
                               }
                               catch(err) { console.log(err.stack); }
@@ -111,7 +102,6 @@ $(function() { // on dom ready
                               try { // Check if the node was flagged or not
                               if(ele.data('flagged') === "true") {
                                  node_borderColor= 'navy';
-//                                 console.log("node Flagged= "+ ele.data('flagged') +" , node_borderColor: "+ node_borderColor);
                                 }
                               }
                               catch(err) { console.log(err.stack); }
@@ -182,8 +172,6 @@ $('#cy').cytoscape({
   
   // Layout of the Network.
 //  layout: defaultNetworkLayout,
-/*  layout: { name: 'circle', animate: false, padding: 30, avoidOverlap: true, boundingBox: undefined, 
-      handleDisconnected: true, fit: true, counterclockwise: false, radius: 3, rStepSize: 2 }, */
 
   // these options hide parts of the graph during interaction.
 //  hideEdgesOnViewport: true,
@@ -235,73 +223,6 @@ var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 // cy.boxSelectionEnabled(true); // enable box selection (highlight & select multiple elements for moving via mouse click and drag).
 cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning, i.e., dragging the entire graph.
 
-// Set requisite background image for each concept (node) instead of using cytoscapeJS shapes.
-/* cy.nodes().forEach(function( ele ) {
-  var conType= ele.data('conceptType');
-  var imgName= 'Gene'; // default
-  if(conType === "Biological_Process") {
-     imgName= 'Biological_process';
-    }
-  else if(conType === "Cellular_Component") {
-       imgName= 'Cellular_component';
-      }
-  else if(conType === "Gene") {
-       imgName= 'Gene';
-      }
-  else if(conType === "Protein Domain") {
-     imgName= 'Protein_domain';
-    }
-  else if(conType === "Pathway") {
-     imgName= 'Pathway';
-    }
-  else if(conType === "Reaction") {
-     imgName= 'Reaction';
-    }
-  else if(conType === "Publication") {
-     imgName= 'Publication';
-    }
-  else if(conType === "Protein") {
-     imgName= 'Protein';
-    }
-  else if(conType === "Quantitative Trait Locus") {
-     imgName= 'QTL';
-    }
-  else if(conType === "Enzyme") {
-     imgName= 'Enzyme';
-    }
-  else if(conType === "Molecular_Function") {
-     imgName= 'Molecular_function';
-    }
-  else if((conType === "Enzyme_Classification") || (conType === "Enzyme Classification")) {
-     imgName= 'Enzyme_classification';
-    }
-  else if(conType === "Trait Ontology") {
-     imgName= 'Trait_ontology';
-    }
-  else if(conType === "Scaffold") {
-     imgName= 'Scaffold';
-    }
-  else if((conType === "Compound") || (conType === "SNP")) {
-     imgName= 'Compound';
-    }
-  else if(conType === "Phenotype") {
-     imgName= 'Phenotype';
-    }
-  var eleImage= 'image/new_images/'+ imgName +'.png';
-//  var eleImage= data_url +'image/new_images/'+ imgName +'.png';
-
-  // Add these properties to this element's JSON.
-  ele.data('nodeImage', eleImage);
-//  console.log("data.nodeImage "+ ele.data('nodeImage'));
- });
-
- // Update the stylesheet for the Network Graph to show background images for Nodes.
- cy.style().selector('node').css({ // Show actual background images.
-           'background-image': 'data(nodeImage)',
-           'background-fit': 'none' // can be 'none' (for original size), 'contain' (to fit inside node) or 'cover' (to cover the node).
-          }).update();
-*/
-
 /** Add a Qtip message to all the nodes & edges using QTip displaying their Concept Type & value when a 
  * node/ edge is clicked.
  * Note: Specify 'node' or 'edge' to bind an event to a specific type of element.
@@ -311,7 +232,6 @@ cy.elements().qtip({
       var qtipMsg= "";
       try {
       if(this.isNode()) {
-//         qtipMsg= "ID: "+ this.id() +", Type: "+ this.data('conceptType') +", Value: "+ this.data('value');
          qtipMsg= "Concept: "+ this.data('value') +", type: "+ this.data('conceptType') +", PID: "+ 
                   this.data('pid') +" , flagged: "+ this.data('flagged') +"<br>"+"Annotation: "+ 
                   this.data('annotation');
@@ -345,7 +265,6 @@ cy.elements().qtip({
                +", PID: "+ thisElement.data('pid');
       }
       else if(thisElement.isEdge()) {
-//              info= "Relation selected: id: "+ thisElement.id() +", Relation Label: "+ thisElement.data('label');
               info= "Relation selected: "+ thisElement.data('label') +", From: "+ 
                       thisElement.data('source') +", To: "+ thisElement.data('target');
              }
@@ -357,91 +276,6 @@ cy.elements().qtip({
      showItemInfo(thisElement);
    });
 // cxttap - normalised right click or 2-finger tap event.
-
-/*  // On a 'touchmove' or 'mouseover' event, show edges signifying the number of nodes connected to this node.
-  cy.on('tapdragover', function (e) {
-    var thisElement= e.cyTarget;
-    try {
-      if(thisElement.isNode() && thisElement.hasClass('BlurNode')) {
-         var eleID= thisElement.id();
-         // Get hidden, connected relations (edges) for this concept (node), that are not visible.
-//         var neighbor_edges= cy.edges().sources(thisElement).filter('node[relationDisplay = "none"]');
-         // Get all the connected relations (edges) for this concept (node).
-         var neighbor_edges= thisElement.connectedEdges();
-
-         // Find and show hidden relations starting from this concept to other concepts.
-         var neighbor_relationDisplay, neighbor_relationSource;
-         neighbor_edges.forEach(function( ele ) {
-             neighbor_relationSource= ele.data('source');
-             neighbor_relationDisplay= ele.data('relationDisplay');
-//             if(neighbor_relationSource === eleID && neighbor_relationDisplay === "none") {
-             if(neighbor_relationDisplay === "none") {
-//                console.log("\n tapdragover>> thisElement.id: "+ eleID +"; neighbor_Edge: id: "+ ele.id() +" , isVisible: "+ ele.visible());
-                // Get the hidden concepts (nodes) connected to this relation (edge).
-                var hiddenConnectedNodes= ele.connectedNodes().filter('node[conceptDisplay = "none"]');
-                hiddenConnectedNodes.forEach(function( el ) {
-//                console.log("\t hiddenConnectedNodes>> Node id: "+ el.id() +"; value: "+ el.data('value') +" , isVisible: "+ el.visible());
-                    if(el.id() !== eleID && (!(el.visible()))) {
-                      // Show the hidden, connected concept (node).
-                      el.style({'display': 'element', 'opacity': '0.01' });
-                    }
-                });
-                // Show the hidden, connected relation (edge) as well.
-                if(!(ele.visible())) {
-//                   ele.style({'display': 'element', 'opacity': '0.75', 'curve-style': 'haystack', 'target-arrow-shape': 'none', 'control-point-weight': '1', 'content': '', 'haystack-radius': '0' });
-                   ele.style({'display': 'element', 'opacity': '0.75' });
-                  }
-               }
-            });
-
-          // Using cytoscapeJS, set a circle layout on the neighborhood & make the neighboring hidden nodes & edges transparent.
-          var eleBBox= thisElement.boundingBox(); // cy.extent(); // get the bounding box of thie selected concept (node) for the layout to run around it.
-          // Define the neighborhood's layout.
-          var mini_circleLayout= { name: 'circle', radius: 2, boundingBox: eleBBox,
-              avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
-              counterclockwise: false, rStepSize: 1, ready: undefined, stop: function() { cy.center(); cy.fit(); } };
-          // Set the layout only using the hidden concepts (nodes).
-          thisElement.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-//             neighbor_edges.connectedNodes().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-         }
-      }
-    catch(err) { console.log("tapdragover event: Error: "+ err.stack); }
-  });
-
-  // On a 'touchmove' or 'mouseout' event, remove css style changes, if any, from nodes and edges.
-  cy.on('tapdragout', function (e) {
-    var thisElement= e.cyTarget;
-    try {
-      if(thisElement.isNode() && thisElement.hasClass('BlurNode')) {
-         resetRelationCSS(thisElement);
-        }
-     }
-    catch(err) { console.log("tapdragout event: Error: "+ err.stack); }
-  });
-
-  // Remove css style changes occurring from a 'tapdragover' ('mouseover') event, if any, from nodes and edges.
-  function resetRelationCSS(thisElement) {
-//      console.log("resetRelationCSS>> concept ID: "+ thisElement.id() +" , value: "+ thisElement.data('value') +" , isVisible: "+ thisElement.visible());
-
-      // Get all the connected relations (edges) for this concept (node).
-      var neighbor_edges= thisElement.connectedEdges();
-      neighbor_edges.forEach(function( ele ) {
-          if(ele.style('opacity') === '0.75') {
-//             console.log("neighbor_edge: id: "+ ele.id() +" , source: "+ ele.data('source') +" , isVisible: "+ ele.visible());
-             // Get the hidden concepts (nodes) connected to this relation (edge).
-             var hiddenConnectedNodes= ele.connectedNodes();
-             hiddenConnectedNodes.forEach(function( el ) {
-                 if(el.style('opacity') === '0.01') {
-//                    console.log("neighbor_node: id: "+ el.id() +" , value: "+ el.data('value') +" , isVisible: "+ el.visible());
-                    el.removeStyle(); // remove all overridden style properties from this Concept.
-                   }
-             });
-             // remove all overridden style properties from this Relation too.
-             ele.removeStyle();
-             }
-         });
-  }
-*/
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
@@ -494,7 +328,6 @@ cy.elements().qtip({
                       stop: undefined/*function() { cy.center(); cy.fit(); }*/ };
 
                   // Set the layout only using the hidden concepts (nodes).
-//                  console.log("Node neighborhood.filter(visible) size: "+ selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').length);
                   if(selectedNode.neighborhood().length > 5/*2*/) {
                      selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
                     }
@@ -516,7 +349,6 @@ cy.elements().qtip({
          select: function() { // Hide all concepts (nodes) of the same type.
              if(this.isNode()) {
                 var thisConceptType= this.data('conceptType');
-                console.log("Hide Concept by Type: "+ thisConceptType);
                 cy.nodes().forEach(function( ele ) {
                  if(ele.data('conceptType') === thisConceptType) {
                     ele.hide();
@@ -527,7 +359,6 @@ cy.elements().qtip({
                }
              else if(this.isEdge()) { // Hide all relations (edges) of the same type.
                 var thisRelationType= this.data('label');
-                console.log("Hide Relation (by Label type): "+ thisRelationType);
                 cy.edges().forEach(function( ele ) {
                  if(ele.data('label') === thisRelationType) {
                     ele.hide();
@@ -538,28 +369,6 @@ cy.elements().qtip({
                }
            }
         },
-
-        /*{
-         content: 'Show Selections',
-         select: function() {
-             $("#infoDialog").dialog(); // initialize a dialog box.
-             // Display details of all the selected elements: nodes & edges.
-             var selections= "";
-             cy.nodes().forEach(function( ele ) {
-                if(ele.selected()) {
-                   selections += ele.data('conceptType') +" : "+ ele.data('value') +" , PID: "+ ele.data('pid') + "<br/><br/>";
-                  }
-             });
-
-             cy.edges().forEach(function( ele ) {
-                if(ele.selected()) {
-                   selections += "Relation: "+ ele.data('label') +" , From: "+ ele.data('source') +" , To: "+ ele.data('target') +"<br/>";
-                  }
-             });
-             console.log("ShowSelections (Shift+click): selections= "+ selections);
-             $("#infoDialog").html(selections);
-            }
-        }*/
 
         {
          content: 'Label on/ off by Type',
@@ -575,7 +384,6 @@ cy.elements().qtip({
                 eleType= 'label';
                 elements= cy.edges(); // fetch all the edges.
                }
-             console.log("Toggle Label on/ off by type: "+ thisElementType);
 
              if(this.isNode() || this.isEdge()) {
                 if(this.style('text-opacity') === '0') {
@@ -637,14 +445,12 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   /** NOT USED ANYMORE. */
   function showOrHideItemInfoTable() {
    var iiTable= document.getElementById("itemInfo_Table");
-//   console.log("showOrHideItemInfoTable clicked... current Table.display: "+ iiTable.style.display);
    if(iiTable.style.display === "none" || iiTable.style.display === "") {
       iiTable.style.display= "inline";
      }
    else {
       iiTable.style.display= "none";
      }
-//   console.log("current Table.display changed to: "+ iiTable.style.display);
   }
 
   // Reset: Re-position the network graph.
@@ -657,12 +463,10 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
   // Search the graph for a concept using BFS: breadthfirst search
   function findConcept(conceptName) {
-   console.log("Search for concept value: "+ conceptName);
    var foundID;
    cy.nodes().forEach(function( ele ) {
        if(ele.data('conceptDisplay') === 'element') {
           if(ele.data('value').indexOf(conceptName) > -1) {
-             console.log("Search found: "+ ele.data('value'));
              foundID= ele.id(); // the found node
 
              // select the matched concept.
@@ -678,7 +482,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    var exportJson= cy.json(); // get JSON object for the network graph.
 
    // Display in a new blank browser tab.
-//   window.open().document.write(exportJson); // for text data
    window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
   }
   
@@ -704,17 +507,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
       });
   }
 
-  // Show/ Hide labels for concepts and relations.
- /* function showOrHideLabels() {
-   console.log("cy.hideLabelsOnViewport= "+ cy.hideLabelsOnViewport);
-   if(cy.hideLabelsOnViewport === "false") {
-      cy.hideLabelsOnViewport= "true";
-     }
-   else {
-      cy.hideLabelsOnViewport= "false";
-     }
-  }*/
-
   /** Item Info.: display information about the selected concept(s)/ relation(s) including attributes, 
    * co-accessions and evidences.
    * @type type
@@ -722,8 +514,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    function showItemInfo(selectedElement) {
     var itemInfo= "";
     var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
-/*    console.log("Display Item Info. for id: "+ selectedElement.id() +", isNode ?= "+ 
-            selectedElement.isNode() +", isEdge ?= "+ selectedElement.isEdge());*/
     try {
          // Display the Item Info table in its parent div.
          document.getElementById("itemInfo_Table").style.display= "inline";
@@ -979,13 +769,11 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    else if(document.getElementById("concentric").checked) {
            setConcentricLayout(eles);
           }
-//   console.log("Re-run layout complete...");
   }
 
  // Open the Item Info pane when the "Item Info" option is selected for a concept or relation.
  function openItemInfoPane() {
 //  myLayout.show('east', true); // to unhide (show) and open the pane.
-//  myLayout.open('east'); // open the (already unhidden) Item Info pane.
   myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
  }
 
@@ -1041,7 +829,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
      cy.nodes().forEach(function(ele) {
       if(ele.selected()) {
-         console.log("Selected concept: "+ ele.data('value') +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
          ele.data('value', new_conceptName);
          if(ele.style('text-opacity') === '0') {
             ele.style({'text-opacity': '1'}); // show the concept Label.
@@ -1058,7 +845,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function changeLabelFontSize(new_size) {
    try {
      var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-//     console.log("changeLabelFontSize>> new_size: "+ new_size);
      cy.style().selector('node').css({ 'font-size': new_size }).update();
      cy.style().selector('edge').css({ 'font-size': new_size }).update();
     }
@@ -1071,15 +857,10 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function showConceptLabels() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    if(document.getElementById("show_ConceptLabels").checked) {
-      console.log("Show Concept labels...");
       cy.nodes().style({'text-opacity': '1'});
      }
    else {
-      console.log("Hide Concept labels...");
       cy.nodes().style({'text-opacity': '0'});
-      // Also hide labels on Genes.
-//      document.getElementById("show_GeneLabels").checked= false;
-//      showGeneLabels();
      }
   }
 
@@ -1087,34 +868,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function showRelationLabels() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    if(document.getElementById("show_RelationLabels").checked) {
-      console.log("Show Relation labels...");
       cy.edges().style({'text-opacity': '1'});
      }
    else {
-      console.log("Hide Relation labels...");
       cy.edges().style({'text-opacity': '0'});
      }
   }
-
-  // Show labels only on Genes.
-/*  function showGeneLabels() {
-   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-   if(document.getElementById("show_GeneLabels").checked) {
-      console.log("Show labels on Genes...");
-      cy.nodes().forEach(function( ele ) {
-         var conType= ele.data('conceptType');
-         if(conType === "Gene") {
-            ele.style({'text-opacity': '1'});
-           }
-        });
-    }
-   else {
-      console.log("Hide labels on Genes...");
-      cy.nodes().forEach(function( ele ) {
-         var conType= ele.data('conceptType');
-         if(conType === "Gene") {
-            ele.style({'text-opacity': '0'});
-           }
-        });
-     }
-  }*/
