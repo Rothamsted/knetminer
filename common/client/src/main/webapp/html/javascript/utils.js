@@ -1210,7 +1210,7 @@ function createEvidenceTable(tableUrl){
 						evidenceValue = '<a href="'+pubmedurl+values[1].substring(5)+'" target="_blank">'+values[1]+'</a>';	
 					else
 						evidenceValue = values[1];				 
-					table = table + '<td><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
+					table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
@@ -1256,7 +1256,16 @@ function createEvidenceTable(tableUrl){
 	    			evidencePath(values[6]);
 	    		});
 				
-				$("#tablesorterEvidence").tablesorter({sortList: [[3,1]]});  //sort by score in decending order
+				$("#tablesorterEvidence").tablesorter({
+                    sortList: [[3,1]],  //sort by score in decending order
+                    textExtraction: function(node) { // Sort TYPE column
+                        var attr = $(node).attr('type-sort-value');
+                        if (typeof attr !== 'undefined' && attr !== false) {
+                            return attr;
+                        }
+                        return $(node).text();
+                    }
+                });
 				//Shows the summary box
 				for(key in summaryArr){
 					summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="'+key+'"></div>'+summaryArr[key]+'</div>';	
