@@ -2,59 +2,22 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>Find candidate genes in QTL</description>
-		<term>"sugar content" OR glucose</term>
-		<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>1</chromosome>
-			<start>227000000</start>
-			<end>267000000</end>
-			<label>AQFS466</label>
-		</region>
-		<region>
-			<chromosome>10</chromosome>
-			<start>127000000</start>
-			<end>146000000</end>
-			<label>AQFS472</label>
-		</region>
+		<description>Insecticide resistance</description>
+		<term>"insecticide resistance" OR P450 OR cytochrome</term>
 	</query>	
-	
 	<query>
 		<name>Example 2</name>
-		<description>QTL + gene list analysis</description>
-		<term>drought OR trehalose</term>
-		<withinRegion>false</withinRegion>
-		<region>
-			<chromosome>1</chromosome>
-			<start>10000000</start>
-			<end>13000000</end>
-			<label>QTL1</label>
-		</region>
-		<region>
-			<chromosome>4</chromosome>
-			<start>14000000</start>
-			<end>15000000</end>
-			<label>QTL2</label>
-		</region>
-		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>GRMZM2G179349</gene>
-		<gene>GRMZM2G015976</gene>
-		<gene>GRMZM2G021706</gene>
-		<gene>GRMZM2G025459</gene>
-		<gene>GRMZM2G179521</gene>
-		<gene>GRMZM2G061950</gene>
-		<gene>GRMZM2G064993</gene>
-		<gene>GRMZM2G008226</gene>
-		<gene>GRMZM2G014729</gene>
-		<gene>GRMZM2G019183</gene>
-		<gene>GRMZM2G099860</gene>
-		<gene>GRMZM2G112830</gene>
-		<gene>GRMZM2G178546</gene>
-		<gene>GRMZM2G312521</gene>
-		<gene>GRMZM2G366659</gene>
-		<gene>GRMZM2G416836</gene>
-		<gene>GRMZM2G527891</gene>
-		<gene>GRMZM2G836674</gene>
-		<gene>GRMZM2G873594</gene>			
+		<description>Detoxification</description>
+		<term>detoxification OR transferase OR esterase</term>
 	</query>
+	<query>
+		<name>Example 3</name>
+		<description>GABA receptor</description>
+		<term>"Voltage-Sensitive Sodium Channels" OR "GABA receptor"</term>
+	</query>	
+	<query>
+		<name>Example 4</name>
+		<description>Growth regulator</description>
+		<term>growth regulator</term>
+	</query>	
 </sampleQueries>
