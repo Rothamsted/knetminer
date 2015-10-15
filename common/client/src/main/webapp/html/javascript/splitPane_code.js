@@ -18,7 +18,8 @@ $(document).ready(function () {
 //	        north__initHidden: true,
 //		north__slidable: false,	// OVERRIDE the pane-default of 'slidable=true'
 //		north__togglerLength_closed: '50%', //'100%', // toggle-button is full-width of resizer-bar
-//		north__spacing_closed: 20, // resizer-bar size when closed (20= big resizer bar) (default: zero height)
+//		north__spacing_open: 6, // 0: no resizer-bar when open (zero height)
+		north__spacing_closed: 12, // resizer-bar size when closed (20= big resizer bar) (default: zero height)
 		north__maxSize: 0.2, // 20% of layout width
                 // Allow pane to slide open with a click anywhere on its resizer bar.
                 north__slideTrigger_open: "click", // click, dblclick or mouseenter 
@@ -34,8 +35,8 @@ $(document).ready(function () {
 //		south__resizable: false, // OVERRIDE the pane-default of 'resizable=true'
    	        south__initClosed: true,
 //	        south__initHidden: true,
-//		south__spacing_open: 0, // no resizer-bar when open (zero height)
-//		south__spacing_closed: 20, // resizer-bar when closed (20= big resizer bar) (default: zero height)
+//		south__spacing_open: 6, // 0: no resizer-bar when open (zero height)
+		south__spacing_closed: 12, // resizer-bar when closed (20= big resizer bar) (default: zero height)
                 south__size: 25,
 		south__minSize: 25,
 		south__maxSize: 0.03, // 3% of layout width
@@ -53,6 +54,8 @@ $(document).ready(function () {
 		// some pane-size settings
    	        east__initClosed: true,
 //	        east__initHidden: true,
+//		east__spacing_open: 6, // 0: no resizer-bar when open (zero height)
+		east__spacing_closed: 12, // resizer-bar when closed (20= big resizer bar) (default: zero height)
                 east__size: 400,
 		east__minSize: 300,
 		east__maxSize: 0.5, // 50% of layout width
