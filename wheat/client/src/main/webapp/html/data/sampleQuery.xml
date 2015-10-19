@@ -117,20 +117,20 @@
 		<term>dormancy OR color OR flavon* OR proanthocyanidin</term>
                 <mapGLWithoutRestriction>false</mapGLWithoutRestriction>
                 <gene>TRAES_4DS_8C9BC2BFA</gene>
-                <gene>ES_7AS_556F7B49E</gene>
-                <gene>ES_2DS_8827E95F0</gene>
-                <gene>ES_2BS_A3FACFBB7</gene>
-                <gene>ES_2DL_BC7F606B9</gene>
-                <gene>ES_2BS_4AC3D17E8</gene>
-                <gene>ES_2AL_ED4D3BEC1</gene>
-                <gene>ES_2BL_07EC87598</gene>
-                <gene>ES_2AS_0EA2792B8</gene>
-                <gene>ES_2BS_0FA5E53AD</gene>
-                <gene>ES_3B_96D744B6B</gene>
-                <gene>ES_3AL_197871859</gene>
-                <gene>ES_7AL_8D7C375FF</gene>
-                <gene>ES_3B_0B9FADF42</gene>
-                <gene>ES_2DL_C0E026879</gene>
-                <gene>ES_3B_82E1F5484</gene>
+                <gene>TRAES_7AS_556F7B49E</gene>
+                <gene>TRAES_2DS_8827E95F0</gene>
+                <gene>TRAES_2BS_A3FACFBB7</gene>
+                <gene>TRAES_2DL_BC7F606B9</gene>
+                <gene>TRAES_2BS_4AC3D17E8</gene>
+                <gene>TRAES_2AL_ED4D3BEC1</gene>
+                <gene>TRAES_2BL_07EC87598</gene>
+                <gene>TRAES_2AS_0EA2792B8</gene>
+                <gene>TRAES_2BS_0FA5E53AD</gene>
+                <gene>TRAES_3B_96D744B6B</gene>
+                <gene>TRAES_3AL_197871859</gene>
+                <gene>TRAES_7AL_8D7C375FF</gene>
+                <gene>TRAES_3B_0B9FADF42</gene>
+                <gene>TRAES_2DL_C0E026879</gene>
+                <gene>TRAES_3B_82E1F5484</gene>
 	</query>
 </sampleQueries>
