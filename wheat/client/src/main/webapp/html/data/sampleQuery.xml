@@ -133,4 +133,16 @@
                 <gene>TRAES_2DL_C0E026879</gene>
                 <gene>TRAES_3B_82E1F5484</gene>
 	</query>
+	<query>
+		<name>Example 4</name>
+		<description>Grain size QTL</description>
+		<term>"seed size" OR "grain size" OR "grain weight" OR TGW OR "grain width"</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>5A</chromosome>
+			<start>16</start>
+			<end>53</end>
+			<label>QTL1</label>
+		</region>
+	</query>
 </sampleQueries>
