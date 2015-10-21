@@ -124,6 +124,10 @@ function replaceKeyword(oldkeyword, newkeyword, from, target){
 	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
+
+console.log("replaceKeyword: query: "+ query +", oldKeyword: "+ oldkeyword +", newKeyword: "+ newkeyword +", newQuery: "+ newquery);
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
@@ -135,6 +139,10 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
+
+console.log("replaceKeywordUndo: query: "+ query +", oldKeyword: "+ oldkeyword +", newKeyword: "+ newkeyword +", newQuery: "+ newquery);
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 /*
@@ -237,6 +245,9 @@ function matchCounter(){
  * 
  */		
 function evidencePath(id){	
+	// Preloader for the new Network Viewer (KNETviewer).
+ 	$("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
+
 	var searchMode = "evidencepath";
 	var keyword = id;		
 	var request = "mode="+searchMode+"&keyword="+keyword;
@@ -244,6 +255,10 @@ function evidencePath(id){
 //	generateNetwork(url,'');
         // Generate the Network Graph using the new Network Viewer.
         generateCyJSNetwork(url,'');
+
+console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
+	// Remove the preloader for the new Network Viewer
+	$("#loadingNetworkDiv").html("");
 }
 
 /*
@@ -271,10 +286,15 @@ $(document).ready(
 			}
 			$("#keywords").focus();
 			// Calculates the amounth of documents to be displayed with the current query
-			$('#keywords').keyup(function(e){
-				if(e.which != 13){	//this stops matchCouter begin called when the enter key is used to perform a search.
-					matchCounter();
-				}
+			$('#keywords').keyup(function(e) {
+                            if(e.which != 13){	//this stops matchCouter being called when the enter key is used to perform a search.
+			       matchCounter();
+                               
+                               // Refresh the query suggester table as well if it's already open.
+			    /*   if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                  refreshQuerySuggester();
+                                 }*/
+      			      }
 			});
 			// Add QTL region
 			$('#addRow').click(
@@ -379,23 +399,9 @@ $(document).ready(
 				               height: 'toggle'
 				               }, 500
 				          );	
-						  if($('#suggestor_search').attr('src') == "html/image/collapse.gif")
-						  {
-								 //Preloader for Synonym table
-								$('#suggestor_terms').html('')										
-								$('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
-								//Creates Synonym table
-								var searchMode = "synonyms";
-								var keyword = $('#keywords').val();		
-								var request = "mode="+searchMode+"&keyword="+keyword;
-								var url = 'OndexServlet?'+request;
-								$.post(url, '', function(response, textStatus){
-									if(textStatus == "success"){
-											synonymFile = response.split(":")[1];
-											createSynonymTable(data_url+synonymFile);
-										}
-								})
-						  }																	  
+						  if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                                     refreshQuerySuggester();
+						    }																	  
 		    		 });
 		    //Match counter
 			//$("#keywords").keyup(matchCounter());			 
@@ -539,6 +545,10 @@ $(document).ready(
 		    	 			}
 		    	 			
 		    	 			matchCounter(); // updates number of matched documents and genes counter
+                                                // Refresh the Query Suggester, if it's already open.
+	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                                   refreshQuerySuggester();
+                                                  }
 		    	 		});
 		    		}
 		    	}); 
@@ -607,7 +617,22 @@ $(document).ready(
 
 
 		
-
+function refreshQuerySuggester() {
+  //Preloader for Synonym table
+  $('#suggestor_terms').html('');
+  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
+  //Creates Synonym table
+  var searchMode = "synonyms";
+  var keyword = $('#keywords').val();		
+  var request = "mode="+searchMode+"&keyword="+keyword;
+  var url = 'OndexServlet?'+request;
+  $.post(url, '', function(response, textStatus){
+    if(textStatus == "success"){
+       synonymFile = response.split(":")[1];
+       createSynonymTable(data_url+synonymFile);
+      }
+  });
+}
 /*
  * Function to refresh GViewer
  * 
@@ -636,7 +661,7 @@ function searchKeyword(){
 				counter++;	
 		}
 	}
-console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
+//console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -661,7 +686,7 @@ console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +",
 	        },
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
-console.log("response: "+ response);				
+//console.log("response: "+ response);
 				if((response == null) || (response == "")){
 						var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
 						$("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -910,7 +935,14 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
 	}
         else {
+ 	  // Preloader for the new Network Viewer (KNETviewer).
+ 	  $("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
+
           generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
+
+console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
+	  // Remove the preloader for the new Network Viewer
+	  $("#loadingNetworkDiv").html("");
 	 }
 }
 
@@ -1168,11 +1200,17 @@ function createGenesTable(tableUrl, keyword, rows){
     		 */
     		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
     			e.preventDefault();
+ 	                // Preloader for the new Network Viewer (KNETviewer).
+ 	                $("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
+console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
 //    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
                         // Generate Network using the new Network Viewer.
                         generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
+
+	                // Remove the preloader for the new Network Viewer
+	                $("#loadingNetworkDiv").html("");
     		});
     		
     		/*
@@ -1340,6 +1378,8 @@ function createEvidenceTable(tableUrl){
 				table = table + '</tbody>';
 				table = table + '</table>';
 				table = table + '</div>';
+                                // Insert a preloader to be used for the new Network Viewer (KNETviewer).
+				table = table + '<div id="loadingNetworkDiv"></div>';
 				table = table + legendHtmlContainer;
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 				
@@ -1571,7 +1611,7 @@ function createSynonymTable(tableUrl){
 					
 					var keyword = e.data.x[synonymNum].split("\t")[0];
 					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-					
+					console.log("synonymNum: "+ synonymNum +", originalTermName: "+ originalTermName);
 					
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
