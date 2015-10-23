@@ -74,6 +74,9 @@ function addKeyword(keyword, from, target){
 	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function addKeywordUndo(keyword, from, target){
@@ -87,6 +90,9 @@ function addKeywordUndo(keyword, from, target){
 	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function excludeKeyword(keyword, from, target){
@@ -100,6 +106,9 @@ function excludeKeyword(keyword, from, target){
 	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function excludeKeywordUndo(keyword, from, target){
@@ -113,6 +122,9 @@ function excludeKeywordUndo(keyword, from, target){
 	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function replaceKeyword(oldkeyword, newkeyword, from, target){
@@ -125,7 +137,6 @@ function replaceKeyword(oldkeyword, newkeyword, from, target){
 	//Updates the query counter
 	matchCounter();
 
-console.log("replaceKeyword: query: "+ query +", oldKeyword: "+ oldkeyword +", newKeyword: "+ newkeyword +", newQuery: "+ newquery);
         // Refresh the query suggester table as well by replicating its 'click' event.
         refreshQuerySuggester();
 }
@@ -140,7 +151,6 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 	//Updates the query counter
 	matchCounter();
 
-console.log("replaceKeywordUndo: query: "+ query +", oldKeyword: "+ oldkeyword +", newKeyword: "+ newkeyword +", newQuery: "+ newquery);
         // Refresh the query suggester table as well by replicating its 'click' event.
         refreshQuerySuggester();
 }
@@ -287,13 +297,33 @@ $(document).ready(
 			$("#keywords").focus();
 			// Calculates the amounth of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
-                            if(e.which != 13){	//this stops matchCouter being called when the enter key is used to perform a search.
+//                            if(e.which !== 13){	//this stops matchCouter being called when the enter key is used to perform a search.
+                            // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
 			       matchCounter();
-                               
+      			      }
+
+                            // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
                                // Refresh the query suggester table as well if it's already open.
-			    /*   if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                                   refreshQuerySuggester();
-                                 }*/
+                                  var keyword = $('#keywords').val();
+                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1 || keyword.indexOf(' NOT ') != -1) {
+                                     // Refresh the Query Suggester tabs (suggestor_terms) to show the newly added tabs in the DOM.
+//                                     ???;
+                                     // Focus on the new tab in the Query Suggester.
+                                     $('#suggestor_terms').children().each(function () {
+console.log("suggesterTerms tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
+                                     });
+                                     $('.synonymTabButton').each(function () {
+console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
+                                     });
+                                     $('#suggestor_terms').children().last().attr('class','buttonSynonym_on');
+console.log("newestTab (children) : "+ $('#suggestor_terms').children().last().attr('id'));
+console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
+                                    }
+                                 }
       			      }
 			});
 			// Add QTL region
@@ -390,7 +420,7 @@ $(document).ready(
 		    		 });
 		     // Suggestor search
 		     $('#suggestor_search').click(
-		    		 function() {				         
+                             function() {				         
 		    			 var src = ($(this).attr('src') === 'html/image/expand.gif')
 		    	            ? 'html/image/collapse.gif'
 		    	            : 'html/image/expand.gif';
@@ -1608,10 +1638,10 @@ function createSynonymTable(tableUrl){
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
-					
 					var keyword = e.data.x[synonymNum].split("\t")[0];
-					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-					console.log("synonymNum: "+ synonymNum +", originalTermName: "+ originalTermName);
+//					var originalTermName = e.data.x[0].replace("<","").replace(">","");
+                                        var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
+//                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
 					
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
