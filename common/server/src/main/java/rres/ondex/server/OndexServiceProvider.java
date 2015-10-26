@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -2178,8 +2179,8 @@ public class OndexServiceProvider {
 	 * @param keyword
 	 * @return null or the list of terms
 	 */
-	public static Set<String> parseKeywordIntoSetOfTerms(String keyword) {
-		Set<String> result = new HashSet<String>();
+	public static LinkedHashSet<String> parseKeywordIntoSetOfTerms(String keyword) {
+		LinkedHashSet<String> result = new LinkedHashSet<String>();
 		String key = keyword.replace("(", "");
 		key = key.replace(")", "");
 		
@@ -2196,7 +2197,8 @@ public class OndexServiceProvider {
 		for (String k : key.split("___")) {
 			result.add(k.trim());
 //			System.out.println("subkeyword for synonym table: "+k.trim());
-		}	
+		}
+                System.out.println("keys: "+ result);
 		return result;
 	}
 	
@@ -2215,18 +2217,22 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		int topX = 25;
                 // to store top 25 values for each concept type instead of just 25 values per keyword.
                 int existingCount= 0;
-		Set<String> keys = parseKeywordIntoSetOfTerms(keyword);
+		/*Set<String>*/LinkedHashSet<String> keys= parseKeywordIntoSetOfTerms(keyword);
 		try {
+                     // Convert the LinkedHashSet to a String[] array.
+                     String[] synonymKeys= keys.toArray(new String[keys.size()]);
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-			for (String key : keys) {
+//			for (String key : keys) {
+                        for (int k= synonymKeys.length - 1; k>=0; k--) {
+                             String key = synonymKeys[k];
 				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>(); 
 				FloatValueComparator comparator =  new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
-//                                System.out.println("\n Keyword: "+ key);
+//                                System.out.println("\n writeSynonymTable: Keyword: "+ key);
 				// a HashMap to store the count for the number of values written to the Synonym Table (for each Concept Type).
 				Map<String, Integer> entryCounts_byType= new HashMap<String, Integer>();
-				
+
 				out.write("<"+key+">\n");
 
 				// search concept names
