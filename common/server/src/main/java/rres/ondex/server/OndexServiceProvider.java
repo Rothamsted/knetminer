@@ -2186,6 +2186,8 @@ public class OndexServiceProvider {
 		key = key.replace("NOT", "___");
 		key = key.replace(" AND ", "___");
 		key = key.replace(" OR ", "___");
+                // replace quotes with blank
+		key = key.replace("\"", "");
 		
 		//System.out.println(key);
 		
@@ -2193,7 +2195,7 @@ public class OndexServiceProvider {
 		
 		for (String k : key.split("___")) {
 			result.add(k.trim());
-			//System.out.println("subkeyworkd for synonym table: "+k.trim());
+//			System.out.println("subkeyword for synonym table: "+k.trim());
 		}	
 		return result;
 	}
