@@ -1,0 +1,5 @@
+.mask-loader.hide-loader{display:none}
+.mask-loader.show-loader{display:block}
+.mask-loader.img{background:url(./network-ajax-loader.gif) center center no-repeat}
+.mask-loader.text-alert{text-align: center; }
+.mask-loader.text-alert .textalert{position: relative;top: 50%;transform: translateY(-50%);}
