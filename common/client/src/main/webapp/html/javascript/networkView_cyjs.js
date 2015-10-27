@@ -6,8 +6,14 @@
  * @returns
  **/
 window.onload= function () {
+     // Show loader.
+     showNetworkLoader();
+
      // Generate the Network Graph after the page load event.
      generateNetworkGraph(window.jsonFile);
+     
+     // Remove loader.
+     removeNetworkLoader();
     };
 
 function generateNetworkGraph(jsonFileName) {
@@ -28,6 +34,34 @@ function generateNetworkGraph(jsonFileName) {
    });
 
   }
+
+ function showNetworkLoader() {
+  // Show loader while the Network loads.
+  $('body').maskLoader({
+//  $('#cy').maskLoader({
+      // fade effect
+      'fade': true,
+      'z-index': '999',
+      'background': 'white',
+      'opacity': '0.6',
+      // position property
+      'position': 'absolute',
+      // custom loading spinner
+      'imgLoader': false,
+      // If false, you will have to run the "create" function.
+      //  Ex: $('body').maskLoader().create(); 
+      'autoCreate':true,
+      // displayes text alert
+      'textAlert':false
+     });
+ }
+
+ function removeNetworkLoader() {
+  // Remove Network loader.
+  var maskloader = $('body').maskLoader();
+//  var maskloader = $('#cy').maskLoader();
+  maskloader.destroy();
+ }
 
 function initializeNetworkView() {
 // On startup
@@ -302,37 +336,7 @@ cy.elements().qtip({
          content: 'Show Links',
          select: function() {
              if(this.isNode()) {
-                // Show concept neighborhood.
-                var selectedNode= this;
-
-                // Remove css style changes occurring from a 'tapdragover' ('mouseover') event.
-//                resetRelationCSS(selectedNode);
-
-                // Show concept neighborhood.
-//                selectedNode.neighborhood().nodes().show();
-//                selectedNode.neighborhood().edges().show();
-                selectedNode.connectedEdges().connectedNodes().show();
-                selectedNode.connectedEdges().show();
-
-                // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
-                removeNodeBlur(this);
-
-                try { // Relayout the graph.
-//                  rerunGraphLayout(/*selectedNode.neighborhood()*/selectedNode.connectedEdges().connectedNodes());
-                  // Set a circle layout on the neighborhood.
-                  var eleBBox= selectedNode.boundingBox(); // get the bounding box of thie selected concept (node) for the layout to run around it.
-                  // Define the neighborhood's layout.
-                  var mini_circleLayout= { name: 'circle', radius: 2/*0.01*/, boundingBox: eleBBox,
-                      avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
-                      counterclockwise: false, rStepSize: 1/*0.01*/, ready: /*undefined*/function() { cy.center(); cy.fit(); }, 
-                      stop: undefined/*function() { cy.center(); cy.fit(); }*/ };
-
-                  // Set the layout only using the hidden concepts (nodes).
-                  if(selectedNode.neighborhood().length > 5/*2*/) {
-                     selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-                    }
-                 }
-                catch(err) { console.log("Error occurred while setting layout on selected element's neighborhood: "+ err.stack); }
+                showLinks(this);
                }
            }
         },
@@ -820,6 +824,51 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
     catch(err) {
           console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
          }
+  }
+
+  // Show hidden, connected nodes connected to this node & also remove shadow effect from nodes, wheere needed.
+  function showLinks(ele) {
+    var selectedNode= ele;
+    // Remove css style changes occurring from a 'tapdragover' ('mouseover') event.
+//    resetRelationCSS(selectedNode);
+
+    // Show concept neighborhood.
+//    selectedNode.neighborhood().nodes().show();
+//    selectedNode.neighborhood().edges().show();
+    selectedNode.connectedEdges().connectedNodes().show();
+    selectedNode.connectedEdges().show();
+
+    // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
+    removeNodeBlur(selectedNode);
+
+    // Remove shadow effect from connected nodes too, if they do not have more hidden nodes in their neighborhood.
+    selectedNode.connectedEdges().connectedNodes().forEach(function( elem ) {
+        var its_connected_hidden_nodes= elem.connectedEdges().connectedNodes().filter('node[conceptDisplay = "none"]');
+        var its_connected_hiddenNodesCount= its_connected_hidden_nodes.length;
+//        console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
+        if(its_connected_hiddenNodesCount </*<=*/ 1) {
+           removeNodeBlur(elem);
+           elem.connectedEdges().show();
+          }
+    });
+
+    try { // Relayout the graph.
+//         rerunGraphLayout(/*selectedNode.neighborhood()*/selectedNode.connectedEdges().connectedNodes());
+         // Set a circle layout on the neighborhood.
+         var eleBBox= selectedNode.boundingBox(); // get the bounding box of thie selected concept (node) for the layout to run around it.
+         // Define the neighborhood's layout.
+         var mini_circleLayout= { name: 'circle', radius: 2/*0.01*/, boundingBox: eleBBox,
+                avoidOverlap: true, fit: true, handleDisconnected: true, padding: 10, animate: false, 
+                counterclockwise: false, rStepSize: 1/*0.01*/, ready: /*undefined*/function() { cy.center(); cy.fit(); }, 
+                stop: undefined/*function() { cy.center(); cy.fit(); }*/ };
+
+         // Set the layout only using the hidden concepts (nodes).
+//         console.log("Node neighborhood.filter(visible) size: "+ selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').length);
+//         if(selectedNode.neighborhood().length > 5/*2*/) {
+              selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
+//             }
+        }
+    catch(err) { console.log("Error occurred while setting layout on selected element's neighborhood: "+ err.stack); }
   }
 
   // Set the given name (label) for the selected concept.
