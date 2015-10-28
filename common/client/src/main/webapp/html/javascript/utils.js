@@ -256,7 +256,7 @@ function matchCounter(){
  */		
 function evidencePath(id){	
 	// Preloader for the new Network Viewer (KNETviewer).
- 	$("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
+	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	var searchMode = "evidencepath";
 	var keyword = id;		
@@ -265,10 +265,6 @@ function evidencePath(id){
 //	generateNetwork(url,'');
         // Generate the Network Graph using the new Network Viewer.
         generateCyJSNetwork(url,'');
-
-console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
-	// Remove the preloader for the new Network Viewer
-	$("#loadingNetworkDiv").html("");
 }
 
 /*
@@ -309,21 +305,21 @@ $(document).ready(
 			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                                   refreshQuerySuggester();
                                   var keyword = $('#keywords').val();
-                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1 || keyword.indexOf(' NOT ') != -1) {
+/*                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1) {
                                      // Refresh the Query Suggester tabs (suggestor_terms) to show the newly added tabs in the DOM.
 //                                     ???;
                                      // Focus on the new tab in the Query Suggester.
                                      $('#suggestor_terms').children().each(function () {
 console.log("suggesterTerms tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
                                      });
-                                     $('.synonymTabButton').each(function () {
-console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
-                                     });
+//                                     $('.synonymTabButton').each(function () {
+//console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
+//                                     });
                                      $('#suggestor_terms').children().last().attr('class','buttonSynonym_on');
 console.log("newestTab (children) : "+ $('#suggestor_terms').children().last().attr('id'));
 console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
                                     }
-                                 }
+*/                                 }
       			      }
 			});
 			// Add QTL region
@@ -653,7 +649,7 @@ function refreshQuerySuggester() {
   $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
   //Creates Synonym table
   var searchMode = "synonyms";
-  var keyword = $('#keywords').val();		
+  var keyword = $('#keywords').val();
   var request = "mode="+searchMode+"&keyword="+keyword;
   var url = 'OndexServlet?'+request;
   $.post(url, '', function(response, textStatus){
@@ -921,6 +917,10 @@ function generateCyJSNetwork(url,list){
          // Pass the JSON file path to a global variable in the new window.
          cyjs_networkView.jsonFile= jsonFile;
 //         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+
+	  // Remove the preloader for the new Network Viewer
+	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+	  $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
         }
     catch(err) { 
           var errorMsg= err.stack;
@@ -966,13 +966,9 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 	}
         else {
  	  // Preloader for the new Network Viewer (KNETviewer).
- 	  $("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
+	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
           generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
-
-console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
-	  // Remove the preloader for the new Network Viewer
-	  $("#loadingNetworkDiv").html("");
 	 }
 }
 
@@ -1231,16 +1227,13 @@ function createGenesTable(tableUrl, keyword, rows){
     		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
     			e.preventDefault();
  	                // Preloader for the new Network Viewer (KNETviewer).
- 	                $("#loadingNetworkDiv").html("<b>Loading Network, please wait...</b>");
-console.log("loadingNetworkDiv: "+ $("#loadingNetworkDiv").html());
+	                $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
+
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
 //    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
                         // Generate Network using the new Network Viewer.
                         generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
-
-	                // Remove the preloader for the new Network Viewer
-	                $("#loadingNetworkDiv").html("");
     		});
     		
     		/*
@@ -1409,7 +1402,7 @@ function createEvidenceTable(tableUrl){
 				table = table + '</table>';
 				table = table + '</div>';
                                 // Insert a preloader to be used for the new Network Viewer (KNETviewer).
-				table = table + '<div id="loadingNetworkDiv"></div>';
+				table = table + '<div id="loadingNetwork_Div"></div>';
 				table = table + legendHtmlContainer;
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 				
@@ -1533,12 +1526,10 @@ function createSynonymTable(tableUrl){
 						termName = termName.replace(/"/g, '');
 						//terms = terms + '<a href="javascript:;" onclick="showSynonymTable(\'tablesorterSynonym'+termName+(countConcepts+1)+'\',\'tabBox_'+termName+'\')"><div class="'+divstyle+'" id="tablesorterSynonym'+termName+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_left_border"/>'+termName+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_right_border"/></div></a>';	
 						terms = terms + '<div class="'+divstyle+' synonymTabButton" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_left_border"/>'+termName.replace(/_/g, " ")+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_right_border"/></div>';	
-						
-						
-						var aSynonyms = new Array();
+//                                                console.log("synonymTable[] length= "+ evidenceTable.length +", \t ev_i= "+ ev_i +", termName: "+ termName);
 						tabsBox = '<div class="tabBox" id="tabBox_'+termName+'" '+tabBoxvisibility+'>';
-					//Foreach of Docment that belongs to a Term
-					}else{						
+					//Foreach of Document that belongs to a Term
+					}else {
 						values = evidenceTable[ev_i].split("\t");
 						//Check for duplicated values
 						if(aSynonyms.indexOf(values[0]) == -1){
@@ -1598,7 +1589,7 @@ function createSynonymTable(tableUrl){
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
-                                
+
                                 // Ensure that the sizes of all the Tables for all the tabs per keyword are adequately set.
                                 var suggestorTabHeight;
 //                                console.log("suggestor_tables contents: ");

@@ -172,6 +172,17 @@ div#loadingNetworkDiv {
 div#loadingNetworkDiv img {
 	float:right;
 }
+div#loadingNetwork_Div {
+	float:right;
+	width:210px;
+	height:20px;
+	padding-top:13px;
+	padding-right:5px;
+	color:#D56048;
+}
+div#loadingNetwork_Div img {
+	float:right;
+}
 div#loadingDiv ul li{
 	padding-left:20px;
 }
