@@ -291,7 +291,7 @@ $(document).ready(
 				$('#pGViewer').hide();	
 			}
 			$("#keywords").focus();
-			// Calculates the amounth of documents to be displayed with the current query
+			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
 //                            if(e.which !== 13){	//this stops matchCouter being called when the enter key is used to perform a search.
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
@@ -644,7 +644,6 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 
 		
 function refreshQuerySuggester() {
-  //Preloader for Synonym table
   $('#suggestor_terms').html('');
   // Add "..." preloader bar (gif image) for suggestor tables.
 //  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
@@ -1466,7 +1465,10 @@ function createSynonymTable(tableUrl){
         dataType:'text',
         async: true,
         timeout: 1000000,
-        error: function(){						  
+        error: function() {
+	    table = "No suggestions found";	
+	    $('#suggestor_terms').html(" ");
+	    $('#suggestor_tables').html(table);
         },
         success: function(text){
 			var summaryArr = new Array();
@@ -1659,7 +1661,7 @@ function createSynonymTable(tableUrl){
 				
 				
 			}else{
-				table = "No results found";	
+				table = "No suggestions found";	
 				$('#suggestor_terms').html(" ");
 				$('#suggestor_tables').html(table);
 			}
