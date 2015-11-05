@@ -646,7 +646,8 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 function refreshQuerySuggester() {
   //Preloader for Synonym table
   $('#suggestor_terms').html('');
-  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
+  // Add "..." preloader bar (gif image) for suggestor tables.
+//  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
   //Creates Synonym table
   var searchMode = "synonyms";
   var keyword = $('#keywords').val();
