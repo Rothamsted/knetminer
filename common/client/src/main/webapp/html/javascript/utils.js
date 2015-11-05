@@ -1659,7 +1659,7 @@ function createSynonymTable(tableUrl){
 				
 				
 			}else{
-				table = "No results found";	
+				table = "No suggestions found";	
 				$('#suggestor_terms').html(" ");
 				$('#suggestor_tables').html(table);
 			}
