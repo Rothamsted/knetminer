@@ -25,7 +25,7 @@
 					</div>
 				</li>
 				<li>						
-					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
+					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggester</b>
 						<span id="hintQuerySuggestor" class="hint hint-small"></span>
 						<span id="suggestor_invite"></span>
 						<hr />								
