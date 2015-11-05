@@ -648,7 +648,7 @@ function refreshQuerySuggester() {
   $('#suggestor_terms').html('');
   // Add "..." preloader bar (gif image) for suggestor tables.
 //  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
-  //Creates Synonym table
+  // Create the Synonym table.
   var searchMode = "synonyms";
   var keyword = $('#keywords').val();
   var request = "mode="+searchMode+"&keyword="+keyword;
@@ -660,6 +660,7 @@ function refreshQuerySuggester() {
       }
   });
 }
+
 /*
  * Function to refresh GViewer
  * 
