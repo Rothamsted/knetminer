@@ -1,0 +1,13 @@
+h1 {
+  color: red;
+}
+
+path {
+  /*fill: #ccc;
+  stroke: #000;
+  stroke-width: 1px;*/
+}
+
+svg {
+  border: 1px solid black;
+}

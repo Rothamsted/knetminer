@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body>
+
+    <div id="map">
+    </div>
+    <script src="../d3/d3.min.js"></script>
+    <script src="../chromosome.js"></script>
+    <script src="../xml_reader.js"></script>
+    <script src="../genemap.js"></script>
+
+    <script>
+
+      var drawChart = function(data) {
+        var chart = GENEMAP.GeneMap();
+
+        d3.select("#map")
+          .datum(data)
+          .call(chart);
+      };
+
+      var reader = GENEMAP.XmlReader();
+      reader.readBasemapXML("./data/poplar_basemap.xml", drawChart);
+
+    </script>
+
+  </body>
+</html>
