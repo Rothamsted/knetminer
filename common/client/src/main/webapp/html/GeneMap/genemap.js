@@ -4,6 +4,7 @@ GENEMAP.GeneMap = function(config) {
     var default_values = {
       width: 800,
       height: 600,
+      maxChromosomeHeight: 500
     };
 
 
@@ -26,10 +27,9 @@ GENEMAP.GeneMap = function(config) {
 
         var svgEnter = svg.enter().append("svg").append("g").classed("zoom_window", true);
 
-        svg.attr("width", 600)
-           .attr("height", 500)
+        svg.attr("width", config.width)
+           .attr("height", config.height)
            .attr("style", "background-color:none");
-
 
         var container = svg.select(".zoom_window");
 
@@ -40,6 +40,7 @@ GENEMAP.GeneMap = function(config) {
 
         svg.call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
 
+        // setup the containers for each of the chromosomes
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
         chromosomeContainers.enter().append("g").classed("container", true);
@@ -50,7 +51,13 @@ GENEMAP.GeneMap = function(config) {
           }
         });
 
-        var chromosomeDrawer = GENEMAP.Chromosome();
+        // draw the chromosomes
+        var longest = Math.max.apply(null, d.chromosomes.map(function(c){return c.length;}))
+        var chromosomeScale = d3.scale.linear().range([0, config.maxChromosomeHeight]).domain([0, longest])
+
+        var chromosomeDrawer = GENEMAP.Chromosome()
+          .yScale(chromosomeScale);
+
         chromosomeContainers.call(chromosomeDrawer);
 
       });
@@ -65,6 +72,12 @@ GENEMAP.GeneMap = function(config) {
     my.height = function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
+      return my;
+    }
+
+    my.maxChromosomeHeight = function(value) {
+      if (!arguments.length) return config.maxChromosomeHeight;
+      config.maxChromosomeHeight = value;
       return my;
     }
 

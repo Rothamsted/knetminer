@@ -3,7 +3,8 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.Chromosome = function(config) {
     var default_values = {
       width: 40,
-      height: 400,
+      height: 400, // only used if no scale is provided
+      yScale: null
     };
 
     // apply defaults to the config
@@ -29,6 +30,12 @@ GENEMAP.Chromosome = function(config) {
       selection.each(function(d, i){
 
         var y = d3.scale.linear().range([0, config.height]).domain([0, +d.length]);
+        var height = config.height;
+
+        if (config.yScale !== null){
+          y = config.yScale;
+          height = y(d.length);
+        };
 
         var chromosomeGroup = d3.select(this).selectAll("g.chromosome").data([d]);
 
@@ -51,19 +58,14 @@ GENEMAP.Chromosome = function(config) {
         enterGroup.append("rect").classed("outline", true);
 
         // Enter + Update elements
-        chromosomeGroup.select("mask").attr({
-            width: config.width,
-            height: config.height
-        });
-
         chromosomeGroup.select("#chromosome_mask_" + d.number).attr({
           width: config.width,
-          height: config.height,
+          height: height,
         });
 
         chromosomeGroup.select(".mask_rect").attr({
           width: config.width,
-          height: config.height,
+          height: height,
           x: 0,
           y: 0,
           rx: 20,
@@ -76,7 +78,7 @@ GENEMAP.Chromosome = function(config) {
         chromosomeGroup.select("rect.outline")
           .attr({
             width: config.width,
-            height: config.height,
+            height: height,
             rx: 20,
             ry: 20
           })
@@ -111,6 +113,12 @@ GENEMAP.Chromosome = function(config) {
     my.height = function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
+      return my;
+    }
+
+    my.yScale = function(value) {
+      if (!arguments.length) return config.yScale;
+      config.yScale = value;
       return my;
     }
 
