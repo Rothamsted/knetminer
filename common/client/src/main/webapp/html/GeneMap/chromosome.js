@@ -1,19 +1,14 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.Chromosome = function(config) {
-    var default_values = {
+GENEMAP.Chromosome = function(userConfig) {
+    var defaultConfig = {
       width: 40,
       height: 400, // only used if no scale is provided
-      yScale: null
+      yScale: null,
+      labelHeight: 20
     };
 
-    // apply defaults to the config
-    config = config || {};
-    for (var opt in default_values) {
-      if (default_values.hasOwnProperty(opt) && !config.hasOwnProperty(opt)){
-          config[opt] = default_values[opt];
-      }
-    }
+    var config = _.merge({}, defaultConfig, userConfig);
 
     /// returns the color property of the data formatted as an HTML color (#ffffff)
     var getColor = function(d) {
@@ -54,10 +49,21 @@ GENEMAP.Chromosome = function(config) {
             class: "mask_rect", x:0, y:0
           });
 
+        enterGroup.append("text");
         enterGroup.append("g").classed("bands_container", true);
         enterGroup.append("rect").classed("outline", true);
 
         // Enter + Update elements
+        chromosomeGroup.select("text").attr({
+          x: config.width / 2,
+          y: config.labelHeight /2,
+          'font-family': 'sans-serif',
+          'font-size': '24px',
+          'text-anchor': 'middle'
+        }).text( function(d) {
+            return d.number;
+        });
+
         chromosomeGroup.select("#chromosome_mask_" + d.number).attr({
           width: config.width,
           height: height,
@@ -79,13 +85,18 @@ GENEMAP.Chromosome = function(config) {
           .attr({
             width: config.width,
             height: height,
+            y: config.labelHeight,
             rx: 20,
             ry: 20
           })
           .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
 
         // setup the chromosome bands
-        var bands = chromosomeGroup.select(".bands_container").selectAll("rect.band").data(d.bands);
+        var bandsContainer = chromosomeGroup.select(".bands_container").attr({
+          transform: 'translate(0,' + config.labelHeight + ')'
+        });
+
+        var bands = bandsContainer.selectAll("rect.band").data(d.bands);
         bands.enter().append("rect").attr("class", "band");
 
         bands.attr({

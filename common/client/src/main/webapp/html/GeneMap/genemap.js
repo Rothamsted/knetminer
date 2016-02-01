@@ -1,20 +1,19 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.GeneMap = function(user_config) {
-    var default_config = {
+GENEMAP.GeneMap = function(userConfig) {
+    var defaultConfig = {
       width: "100%",
       height: "100%",
       longestChromosomeHeight: 500,
       chromosomePerRow: 10,
       chromosomeWidth: 30,
       annotationWidth: 50,
+      labelHeight: 20,
       margin: {top: 20, left: 20, bottom: 20, right: 20},
       spacing: {horizontal: 20, vertical: 20},
     };
 
-    var config = _.merge({}, default_config, user_config);
-
-
+    var config = _.merge({}, defaultConfig, userConfig);
 
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
@@ -43,7 +42,7 @@ GENEMAP.GeneMap = function(user_config) {
         var bbox = svg.node().getBoundingClientRect();
 
         // update the layout object with the new settings
-        var layoutConfig = _.pick(config, ['margin', 'spacing', 'longestChromosomeHeight', 'chromosomeWidth', 'annotationWidth', 'chromosomePerRow']);
+        var layoutConfig = _.pick(config, ['margin', 'spacing', 'longestChromosomeHeight', 'chromosomeWidth', 'annotationWidth', 'chromosomePerRow', 'labelHeight']);
         var layoutGenerator = GENEMAP.MapLayout(layoutConfig)
           .width(bbox.width)
           .height(bbox.height);
@@ -66,7 +65,7 @@ GENEMAP.GeneMap = function(user_config) {
         var longest = Math.max.apply(null, d.chromosomes.map(function(c){ return c.length; }));
         var chromosomeScale = d3.scale.linear().range([0, config.longestChromosomeHeight]).domain([0, longest]);
 
-        var chromosomeDrawer = GENEMAP.Chromosome()
+        var chromosomeDrawer = GENEMAP.Chromosome({ labelHeight: config.labelHeight })
           .yScale(chromosomeScale);
 
         chromosomeContainers.call(chromosomeDrawer);

@@ -11,6 +11,7 @@ GENEMAP.MapLayout = function(userConfig) {
     chromosomeWidth: 50,
     chromosomePerRow: 5,
     longestChromosomeHeight: 200,
+    labelHeight: 10,
     annotationWidth: 100,
     margin: {top: 25, left: 25, bottom: 25, right: 25},
     spacing: {horizontal: 30, vertical: 30},
@@ -28,7 +29,7 @@ GENEMAP.MapLayout = function(userConfig) {
       };
 
       var minColWidth = config.spacing.horizontal + config.chromosomeWidth + config.annotationWidth;
-      var minRowHeight = config.spacing.vertical + config.longestChromosomeHeight;
+      var minRowHeight = config.spacing.vertical + config.longestChromosomeHeight + config.labelHeight;
 
       var rows = Math.ceil(numberOfChromosomes / config.chromosomePerRow);
 
