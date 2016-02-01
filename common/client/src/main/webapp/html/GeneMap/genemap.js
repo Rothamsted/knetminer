@@ -2,9 +2,10 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.GeneMap = function(config) {
     var default_values = {
-      width: 800,
-      height: 600,
-      maxChromosomeHeight: 500
+      width: "100%",
+      height: "100%",
+      maxChromosomeHeight: 500,
+      chromosomePerRow: 6,
     };
 
 
@@ -41,19 +42,23 @@ GENEMAP.GeneMap = function(config) {
         svg.call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
 
         // setup the containers for each of the chromosomes
+        var bbox = svg.node().getBoundingClientRect();
+        var widthForEach = (bbox.width - 20) / d.chromosomes.length
+
+
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
         chromosomeContainers.enter().append("g").classed("container", true);
 
         chromosomeContainers.attr({
           transform: function(d, i){
-            return "translate(" + ((i * 100) + 10) + ",10)";
+            return "translate(" + ((i * widthForEach) + 10) + ",10)";
           }
         });
 
         // draw the chromosomes
-        var longest = Math.max.apply(null, d.chromosomes.map(function(c){return c.length;}))
-        var chromosomeScale = d3.scale.linear().range([0, config.maxChromosomeHeight]).domain([0, longest])
+        var longest = Math.max.apply(null, d.chromosomes.map(function(c){ return c.length; }));
+        var chromosomeScale = d3.scale.linear().range([0, config.maxChromosomeHeight]).domain([0, longest]);
 
         var chromosomeDrawer = GENEMAP.Chromosome()
           .yScale(chromosomeScale);

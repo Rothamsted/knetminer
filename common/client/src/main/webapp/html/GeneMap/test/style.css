@@ -11,3 +11,12 @@ path {
 svg {
   border: 1px solid black;
 }
+
+html, body {
+  height: 100%;
+}
+
+#map {
+  width: 80%;
+  height: 80%;
+}
