@@ -1,21 +1,19 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.GeneMap = function(config) {
-    var default_values = {
+GENEMAP.GeneMap = function(user_config) {
+    var default_config = {
       width: "100%",
       height: "100%",
-      maxChromosomeHeight: 500,
-      chromosomePerRow: 6,
+      longestChromosomeHeight: 500,
+      chromosomePerRow: 10,
+      chromosomeWidth: 30,
+      annotationWidth: 50,
+      margin: {top: 20, left: 20, bottom: 20, right: 20},
+      spacing: {horizontal: 20, vertical: 20},
     };
 
+    var config = _.merge({}, default_config, user_config);
 
-    // apply defaults to the config
-    config = config || {};
-    for (var opt in default_values) {
-      if (default_values.hasOwnProperty(opt) && !config.hasOwnProperty(opt)){
-          config[opt] = default_values[opt];
-      }
-    }
 
 
     // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -43,8 +41,14 @@ GENEMAP.GeneMap = function(config) {
 
         // setup the containers for each of the chromosomes
         var bbox = svg.node().getBoundingClientRect();
-        var widthForEach = (bbox.width - 20) / d.chromosomes.length
 
+        // update the layout object with the new settings
+        var layoutConfig = _.pick(config, ['margin', 'spacing', 'longestChromosomeHeight', 'chromosomeWidth', 'annotationWidth', 'chromosomePerRow']);
+        var layoutGenerator = GENEMAP.MapLayout(layoutConfig)
+          .width(bbox.width)
+          .height(bbox.height);
+
+        var layout = layoutGenerator.generateLayout(d.chromosomes.length);
 
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
@@ -52,19 +56,20 @@ GENEMAP.GeneMap = function(config) {
 
         chromosomeContainers.attr({
           transform: function(d, i){
-            return "translate(" + ((i * widthForEach) + 10) + ",10)";
+            var xPos = layout.chromosomes[i].x;
+            var yPos = layout.chromosomes[i].y;
+            return "translate(" + xPos + ","+ yPos +")";
           }
         });
 
         // draw the chromosomes
         var longest = Math.max.apply(null, d.chromosomes.map(function(c){ return c.length; }));
-        var chromosomeScale = d3.scale.linear().range([0, config.maxChromosomeHeight]).domain([0, longest]);
+        var chromosomeScale = d3.scale.linear().range([0, config.longestChromosomeHeight]).domain([0, longest]);
 
         var chromosomeDrawer = GENEMAP.Chromosome()
           .yScale(chromosomeScale);
 
         chromosomeContainers.call(chromosomeDrawer);
-
       });
     }
 
