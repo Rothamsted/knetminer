@@ -57,13 +57,14 @@ GENEMAP.GeneMap = function(userConfig) {
           var translate = d3.event.translate;
 
           // padding the size of the drawing with 1/2 the bbox so you can
-          // center on any point of the drawing.
-          var minx = -layout.drawing.width * d3.event.scale + bbox.width/2;
-          var maxx = bbox.width/2;
+          // center on any point of the drawing. Also taking margins into
+          // account to further center the view.
+          var minx = -layout.drawing.width * d3.event.scale + (bbox.width + config.margin.right)/2;
+          var maxx = bbox.width/2 - config.margin.left;
           translate[0] = _.clamp(translate[0], minx, maxx);
 
-          var miny = -layout.drawing.height * d3.event.scale + bbox.height/2 ;
-          var maxy = bbox.height/2;
+          var miny = -layout.drawing.height * d3.event.scale + (bbox.height + config.margin.bottom)/2 ;
+          var maxy = bbox.height/2 - config.margin.top;
           translate[1] = _.clamp(translate[1], miny, maxy);
 
           zoom.translate(translate);

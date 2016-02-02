@@ -45,8 +45,8 @@ GENEMAP.MapLayout = function(userConfig) {
       }
 
       layout.drawing = {
-        width: colWidth * config.chromosomePerRow,
-        height: rowHeight * rows
+        width: colWidth * config.chromosomePerRow + config.margin.left + config.margin.right,
+        height: rowHeight * rows + config.margin.top + config.margin.bottom
       }
 
       for(var i =0; i < numberOfChromosomes; i++){
@@ -54,8 +54,8 @@ GENEMAP.MapLayout = function(userConfig) {
         var row = Math.floor(i / config.chromosomePerRow);
 
         layout.chromosomes.push( {
-          y: (row * rowHeight) + config.margin.left,
-          x: (col * colWidth) + config.margin.top
+          y: (row * rowHeight) + config.margin.top,
+          x: (col * colWidth) + config.margin.left
         });
       }
 
