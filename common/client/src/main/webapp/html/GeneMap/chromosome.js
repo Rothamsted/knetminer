@@ -41,7 +41,14 @@ GENEMAP.Chromosome = function(userConfig) {
             id: "chromosome_" + d.number
           });
 
-        enterGroup.append("defs")
+        enterGroup.append("defs");
+        enterGroup.append("text");
+        enterGroup.append("g").classed("bands_container", true);
+        enterGroup.append("rect").classed("outline", true);
+
+        // Enter + Update elements
+
+        chromosomeGroup.select('defs').html('')
           .append("mask").attr({
               id: "chromosome_mask_" + d.number, x: 0, y: 0
           })
@@ -49,11 +56,6 @@ GENEMAP.Chromosome = function(userConfig) {
             class: "mask_rect", x:0, y:0
           });
 
-        enterGroup.append("text");
-        enterGroup.append("g").classed("bands_container", true);
-        enterGroup.append("rect").classed("outline", true);
-
-        // Enter + Update elements
         chromosomeGroup.select("text").attr({
           x: config.width / 2,
           y: config.labelHeight /2,
@@ -108,7 +110,7 @@ GENEMAP.Chromosome = function(userConfig) {
           stroke: "none"
         });
 
-        
+
         bands.exit().remove();
 
         chromosomeGroup.select(".bands_container").style({

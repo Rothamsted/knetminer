@@ -6,7 +6,7 @@ GENEMAP.GeneMap = function(userConfig) {
       height: "100%",
       longestChromosomeHeight: 500,
       chromosomePerRow: 6,
-      chromosomeWidth: 30,
+      chromosomeWidth: 24,
       annotationWidth: 200,
       labelHeight: 20,
       margin: {top: 20, left: 20, bottom: 20, right: 20},
@@ -46,7 +46,7 @@ GENEMAP.GeneMap = function(userConfig) {
           width: layout.drawing.width,
           height: layout.drawing.height
         }).style({
-          fill:'none',
+          fill:'#fafafa',
           "stroke": "#ccc",
           "stroke-width": 0.5
         })
@@ -90,6 +90,7 @@ GENEMAP.GeneMap = function(userConfig) {
         var chromosomeScale = d3.scale.linear().range([0, config.longestChromosomeHeight]).domain([0, longest]);
 
         var chromosomeDrawer = GENEMAP.Chromosome({ labelHeight: config.labelHeight })
+          .width(config.chromosomeWidth)
           .yScale(chromosomeScale);
 
         chromosomeContainers.call(chromosomeDrawer);
