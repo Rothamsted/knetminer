@@ -12,6 +12,9 @@
 
   <body>
 
+    <button onclick="selectBasemap('./data/poplar_basemap.xml')">Poplar</button>
+    <button onclick="selectBasemap('./data/wheat_basemap.xml')">Wheat</button>
+
     <div id="map"></div>
     <script src="../d3/d3.min.js"></script>
     <script src="../js/lodash/lodash.min.js"></script>
@@ -33,7 +36,11 @@
       };
 
       var reader = GENEMAP.XmlReader();
-      reader.readBasemapXML("./data/poplar_basemap.xml", drawChart);
+
+      var selectBasemap = function(file){
+        reader.readBasemapXML(file, drawChart);
+      }
+      selectBasemap("./data/poplar_basemap.xml");
 
     </script>
 

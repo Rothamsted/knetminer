@@ -44,6 +44,11 @@ GENEMAP.MapLayout = function(userConfig) {
         rowHeight = minRowHeight;
       }
 
+      layout.drawing = {
+        width: colWidth * config.chromosomePerRow,
+        height: rowHeight * rows
+      }
+
       for(var i =0; i < numberOfChromosomes; i++){
         var col = i % config.chromosomePerRow;
         var row = Math.floor(i / config.chromosomePerRow);

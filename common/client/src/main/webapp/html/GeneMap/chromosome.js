@@ -108,6 +108,9 @@ GENEMAP.Chromosome = function(userConfig) {
           stroke: "none"
         });
 
+        
+        bands.exit().remove();
+
         chromosomeGroup.select(".bands_container").style({
               mask: "url(#chromosome_mask_" + d.number + ")"
         });
