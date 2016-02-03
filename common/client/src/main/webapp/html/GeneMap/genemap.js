@@ -15,21 +15,75 @@ GENEMAP.GeneMap = function(userConfig) {
 
     var config = _.merge({}, defaultConfig, userConfig);
 
+    var layout; // the layout to be used;
+    var svg; // the top SVG element
+    var zoom; // the zoom behaviour
+    var container; // the g container that performs the zooming
+
+    var onZoom = function() {
+      var translate = d3.event.translate;
+
+      if (layout) {
+        var bbox = svg.node().getBoundingClientRect();
+
+        // padding the size of the drawing with 1/2 the bbox so you can
+        // center on any point of the drawing. Also taking margins into
+        // account to further center the view.
+        var minx = -layout.drawing.width * d3.event.scale + (bbox.width + config.margin.right)/2;
+        var maxx = bbox.width/2 - config.margin.left;
+        translate[0] = _.clamp(translate[0], minx, maxx);
+
+        var miny = -layout.drawing.height * d3.event.scale + (bbox.height + config.margin.bottom)/2 ;
+        var maxy = bbox.height/2 - config.margin.top;
+        translate[1] = _.clamp(translate[1], miny, maxy);
+      }
+
+      zoom.translate(translate);
+      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
+    };
+
+    // Sets the attributes on the .drawing_outline rectangle for the outline
+    var drawDocumentOutline = function() {
+
+      container.select(".drawing_outline").attr({
+        width: layout.drawing.width,
+        height: layout.drawing.height,
+        'vector-effect': 'non-scaling-stroke'
+      }).style({
+        fill:'#fafafa',
+        "stroke": "#ccc",
+        "stroke-width": 0.5
+      })
+    }
+
+    var constructSkeletonChart = function(mapContainer) {
+      mapContainer
+        .append("svg")
+        .append("g").classed("zoom_window", true)
+        .append("rect").classed('drawing_outline', true);
+
+      // basic zooming functionality
+      zoom = d3.behavior.zoom().scaleExtent([0.01, 8]);
+      zoom.on("zoom", onZoom);
+      mapContainer.select('svg').call(zoom);
+    }
+
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
       selection.each(function(d, i){
 
-        // var y = d3.scale.linear().range([0, config.height]).domain([0, +d.length]);
-        svg = d3.select(this).selectAll("svg").data([d]);
+        if (!d3.select(this).select('svg').node()){
+          constructSkeletonChart(d3.select(this));
+        }
 
-        var svgEnter = svg.enter().append("svg").append("g").classed("zoom_window", true).append("rect").classed('drawing_outline', true);
+        svg = d3.select(this).select("svg").datum(d);
 
         svg.attr("width", config.width)
            .attr("height", config.height)
            .attr("style", "background-color:none");
 
-        var container = svg.select(".zoom_window");
+        container = svg.select(".zoom_window");
 
         // setup the containers for each of the chromosomes
         var bbox = svg.node().getBoundingClientRect();
@@ -40,39 +94,9 @@ GENEMAP.GeneMap = function(userConfig) {
           .width(bbox.width)
           .height(bbox.height);
 
-        var layout = layoutGenerator.generateLayout(d.chromosomes.length);
+        layout = layoutGenerator.generateLayout(d.chromosomes.length);
 
-        container.select(".drawing_outline").attr({
-          width: layout.drawing.width,
-          height: layout.drawing.height
-        }).style({
-          fill:'#fafafa',
-          "stroke": "#ccc",
-          "stroke-width": 0.5
-        })
-
-        // basic zooming functionality
-        var zoom = d3.behavior.zoom().scaleExtent([1, 8]);
-        var onZoom = function() {
-          var translate = d3.event.translate;
-
-          // padding the size of the drawing with 1/2 the bbox so you can
-          // center on any point of the drawing. Also taking margins into
-          // account to further center the view.
-          var minx = -layout.drawing.width * d3.event.scale + (bbox.width + config.margin.right)/2;
-          var maxx = bbox.width/2 - config.margin.left;
-          translate[0] = _.clamp(translate[0], minx, maxx);
-
-          var miny = -layout.drawing.height * d3.event.scale + (bbox.height + config.margin.bottom)/2 ;
-          var maxy = bbox.height/2 - config.margin.top;
-          translate[1] = _.clamp(translate[1], miny, maxy);
-
-          zoom.translate(translate);
-          container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
-        }
-        zoom.on("zoom", onZoom);
-
-        svg.call(zoom)
+        drawDocumentOutline();
 
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
