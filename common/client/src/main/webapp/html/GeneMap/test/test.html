@@ -24,12 +24,18 @@
     <script src="../genemap.js"></script>
 
     <script>
+      var chart = GENEMAP.GeneMap({
+        margins: { top:50 }
+      });
+
+      // redraw on window resize
+      var resize =function() {
+        //d3.select('#map').call(chart);
+      }
+
+      d3.select(window).on('resize', resize);
 
       var drawChart = function(data) {
-        var chart = GENEMAP.GeneMap({
-          margins: { top:50 }
-        });
-
         d3.select("#map")
           .datum(data)
           .call(chart);

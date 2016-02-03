@@ -5,7 +5,7 @@ GENEMAP.Chromosome = function(userConfig) {
       width: 40,
       height: 400, // only used if no scale is provided
       yScale: null,
-      labelHeight: 20
+      labelHeight: 35
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
