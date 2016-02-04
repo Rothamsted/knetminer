@@ -1,0 +1,42 @@
+var GENEMAP = GENEMAP || {};
+
+GENEMAP.AnnotationXMLReader = function() {
+  if (!(this instanceof arguments.callee)) {
+    return new arguments.callee();
+  }
+
+  var _readFeature = function(elt) {
+    return {
+      id: elt.getAttribute("id"),
+      chromosome: elt.getElementsByTagName("chromosome")[0].childNodes[0].nodeValue,
+      start: elt.getElementsByTagName("start")[0].childNodes[0].nodeValue,
+      end: elt.getElementsByTagName("end")[0].childNodes[0].nodeValue,
+      type: elt.getElementsByTagName("type")[0].childNodes[0].nodeValue,
+      color: elt.getElementsByTagName("color")[0].childNodes[0].nodeValue,
+      label: elt.getElementsByTagName("label")[0].childNodes[0].nodeValue,
+      link: elt.getElementsByTagName("link")[0].childNodes[0].nodeValue
+    };
+  };
+
+  var _readAnnotations = function(xml) {
+    var genome = {};
+    genome.features = [];
+
+    var elements = xml.getElementsByTagName("feature");
+    for(var i = 0; i < elements.length; i++){
+      genome.features.push(_readFeature(elements[i]));
+    }
+
+    return genome;
+  };
+
+  return {
+
+    readAnnotationXML: function(path, callbackFn) {
+      d3.xml(path, function(error, xml) {
+        var data = _readAnnotations(xml)
+        callbackFn(data);
+      });
+    },
+  }
+}

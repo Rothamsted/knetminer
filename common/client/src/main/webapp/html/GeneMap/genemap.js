@@ -36,9 +36,8 @@ GENEMAP.GeneMap = function(userConfig) {
         translate[1] = _.clamp(translate[1], miny, maxy);
       }
 
-            zoom.translate(translate);
-            container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
-      console.log("scale: " + d3.event.scale  + " T:" + zoom.translate());
+      zoom.translate(translate);
+      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
     };
 
     // Sets the attributes on the .drawing_outline rectangle for the outline
