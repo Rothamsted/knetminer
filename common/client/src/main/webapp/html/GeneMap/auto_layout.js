@@ -13,7 +13,7 @@ GENEMAP.AutoLayout = function(userConfig) {
     longestChromosomeHeight: 1,
     labelHeight: 0.05,
     annotationWidth: 0.2,
-    margin: {top: 0.3, left: 0.3, bottom: 0.3, right: 0.3},
+    margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
     spacing: {horizontal: 0.05, vertical: 0.05},
   };
 

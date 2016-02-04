@@ -12,8 +12,16 @@
 
   <body>
 
-    <button onclick="selectBasemap('./data/poplar_basemap.xml')">Poplar</button>
-    <button onclick="selectBasemap('./data/wheat_basemap.xml')">Wheat</button>
+    <span>Basemap:</span>
+    <select id="basemap-file">
+      <option selected="selected" value='./data/poplar_basemap.xml'>Poplar</option>
+      <option value='./data/wheat_basemap.xml'>Wheat</option>
+      <option value='./data/simple_basemap.xml'>Simple</option>
+    </select>
+    <span>Num Per Row:</span>
+    <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;"/>
+    <button onclick="redraw(false)">Draw</button>
+    <button onclick="redraw(true)">Reset Zoom</button>
 
     <div id="map"></div>
     <script src="../d3/d3.min.js"></script>
@@ -31,7 +39,7 @@
 
       // redraw on window resize
       var resize =function() {
-        //d3.select('#map').call(chart);
+        d3.select('#map').call(chart);
       }
 
       d3.select(window).on('resize', resize);
@@ -44,10 +52,20 @@
 
       var reader = GENEMAP.XmlReader();
 
-      var selectBasemap = function(file){
+      var redraw = function(resetZoom){
+        var sel = document.getElementById('basemap-file');
+        var file = sel.options[sel.selectedIndex].value;
+
+        var numberPerRow = +document.getElementById('chromosome_per_row').value;
+        chart.layout().numberPerRow = numberPerRow;
+
+        if (resetZoom){
+          chart.resetZoom();
+        }
+
         reader.readBasemapXML(file, drawChart);
       }
-      selectBasemap("./data/poplar_basemap.xml");
+      redraw();
 
     </script>
 

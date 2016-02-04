@@ -4,14 +4,10 @@ GENEMAP.GeneMap = function(userConfig) {
     var defaultConfig = {
       width: "100%",
       height: "100%",
-      longestChromosomeHeight: 500,
-      chromosomePerRow: 8,
-      chromosomeWidth: 24,
-      annotationWidth: 20,
-      labelHeight: 20,
-      margin: {top: 20, left: 20, bottom: 20, right: 20},
-      spacing: {horizontal: 20, vertical: 20},
-      layout: {}
+      layout: {
+        margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05}
+      },
+      contentBorder: false
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -40,14 +36,13 @@ GENEMAP.GeneMap = function(userConfig) {
         translate[1] = _.clamp(translate[1], miny, maxy);
       }
 
-      zoom.translate(translate);
-      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
+            zoom.translate(translate);
+            container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
       console.log("scale: " + d3.event.scale  + " T:" + zoom.translate());
     };
 
     // Sets the attributes on the .drawing_outline rectangle for the outline
     var drawDocumentOutline = function() {
-
       container.select(".drawing_outline").attr({
         width: layout.drawing.width,
         height: layout.drawing.height,
@@ -56,8 +51,23 @@ GENEMAP.GeneMap = function(userConfig) {
         fill:'#fafafa',
         "stroke": "#ccc",
         "stroke-width": 0.5
-      })
-    }
+      });
+    };
+
+    // draws an outline around the content of the drawing area (inside the margins)
+    var drawContentOutline = function() {
+      container.select(".drawing_margin").attr({
+        x: layout.drawing.margin.left,
+        y: layout.drawing.margin.top,
+        width: layout.drawing.width - layout.drawing.margin.left - layout.drawing.margin.right ,
+        height: layout.drawing.height- layout.drawing.margin.top - layout.drawing.margin.bottom,
+        'vector-effect': 'non-scaling-stroke'
+      }).style({
+        fill:'none',
+        "stroke": "#000",
+        "stroke-width": 0.5
+      });
+    };
 
     var constructSkeletonChart = function(mapContainer) {
       mapContainer
@@ -65,7 +75,9 @@ GENEMAP.GeneMap = function(userConfig) {
         .append("g").classed("zoom_window", true)
         .append("rect").classed('drawing_outline', true);
 
-      mapContainer.select(".zoom_window").append("rect").classed('drawing_margin', true);
+      if (config.contentBorder) {
+        mapContainer.select(".zoom_window").append("rect").classed('drawing_margin', true);
+      }
 
       // basic zooming functionality
       zoom = d3.behavior.zoom().scaleExtent([1, 10]);
@@ -102,17 +114,9 @@ GENEMAP.GeneMap = function(userConfig) {
 
         drawDocumentOutline();
 
-        container.select(".drawing_margin").attr({
-          x: layout.drawing.margin.left,
-          y: layout.drawing.margin.top,
-          width: layout.drawing.width - layout.drawing.margin.left - layout.drawing.margin.right ,
-          height: layout.drawing.height- layout.drawing.margin.top - layout.drawing.margin.bottom,
-          'vector-effect': 'non-scaling-stroke'
-        }).style({
-          fill:'none',
-          "stroke": "#000",
-          "stroke-width": 0.5
-        })
+        if (config.contentBorder) {
+          drawContentOutline();
+        }
 
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
@@ -141,23 +145,29 @@ GENEMAP.GeneMap = function(userConfig) {
       });
     }
 
+    my.resetZoom = function() {
+      zoom.translate([0,0]);
+      zoom.scale(1);
+      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
+    };
+
     my.width = function(value) {
       if (!arguments.length) return config.width;
       config.width = value;
       return my;
-    }
+    };
 
     my.height = function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
       return my;
-    }
+    };
 
-    my.maxChromosomeHeight = function(value) {
-      if (!arguments.length) return config.maxChromosomeHeight;
-      config.maxChromosomeHeight = value;
+    my.layout = function(value) {
+      if (!arguments.length) return config.layout;
+      config.layout = _.merge(config.layout, value);;
       return my;
-    }
+    };
 
     return my;
 };
