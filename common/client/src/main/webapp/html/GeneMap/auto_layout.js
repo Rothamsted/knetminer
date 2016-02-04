@@ -11,8 +11,10 @@ GENEMAP.AutoLayout = function(userConfig) {
     numberPerRow: 10,
     chromosomeWidth: 0.05,
     longestChromosomeHeight: 1,
+    maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,
     annotationWidth: 0.2,
+    minLabelHeightPx: 8,
     margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
     spacing: {horizontal: 0.05, vertical: 0.05},
   };
@@ -50,6 +52,21 @@ GENEMAP.AutoLayout = function(userConfig) {
         labelHeight: heightRatio * config.labelHeight,
         width: widthRatio * config.chromosomeWidth,
         annotationWidth: widthRatio * config.annotationWidth
+      }
+
+      if (layout.chromosome.labelHeight < config.minLabelHeightPx){
+        // if the label doesn't reach the minimum height increase it to the minimum
+        // and take the extra height from the chromosome height
+        var extraHeight = config.minLabelHeightPx - layout.chromosome.labelHeight;
+        layout.chromosome.height = layout.chromosome.height - extraHeight;
+        layout.chromosome.labelHeight = config.minLabelHeightPx;
+      }
+
+      if (layout.chromosome.width / layout.chromosome.height > config.maxCrhomosomeWidthToLengthRatio){
+        var newWdith = layout.chromosome.height * config.maxCrhomosomeWidthToLengthRatio;
+        var lostWidth = layout.chromosome.width - newWdith;
+        layout.chromosome.annotationWidth = layout.chromosome.annotationWidth + lostWidth;
+        layout.chromosome.width = newWdith;
       }
 
       layout.drawing = _.pick(config, ['width', 'height']);
