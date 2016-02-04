@@ -5,12 +5,13 @@ GENEMAP.GeneMap = function(userConfig) {
       width: "100%",
       height: "100%",
       longestChromosomeHeight: 500,
-      chromosomePerRow: 6,
+      chromosomePerRow: 8,
       chromosomeWidth: 24,
-      annotationWidth: 200,
+      annotationWidth: 20,
       labelHeight: 20,
       margin: {top: 20, left: 20, bottom: 20, right: 20},
       spacing: {horizontal: 20, vertical: 20},
+      layout: {}
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -26,20 +27,22 @@ GENEMAP.GeneMap = function(userConfig) {
       if (layout) {
         var bbox = svg.node().getBoundingClientRect();
 
+
         // padding the size of the drawing with 1/2 the bbox so you can
         // center on any point of the drawing. Also taking margins into
         // account to further center the view.
-        var minx = -layout.drawing.width * d3.event.scale + (bbox.width + config.margin.right)/2;
-        var maxx = bbox.width/2 - config.margin.left;
+        var minx = -layout.drawing.width * d3.event.scale + bbox.width/2 + layout.drawing.margin.right * d3.event.scale ;// + (bbox.width + layout.drawing.margin.left + layout.drawing.margin.right)/2) ;
+        var maxx = bbox.width/2 - (layout.drawing.margin.left * d3.event.scale);
         translate[0] = _.clamp(translate[0], minx, maxx);
 
-        var miny = -layout.drawing.height * d3.event.scale + (bbox.height + config.margin.bottom)/2 ;
-        var maxy = bbox.height/2 - config.margin.top;
+        var miny = -layout.drawing.height * d3.event.scale + bbox.height/2 + layout.drawing.margin.bottom * d3.event.scale ;
+        var maxy = bbox.height/2 - (layout.drawing.margin.top * d3.event.scale);
         translate[1] = _.clamp(translate[1], miny, maxy);
       }
 
       zoom.translate(translate);
       container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
+      console.log("scale: " + d3.event.scale  + " T:" + zoom.translate());
     };
 
     // Sets the attributes on the .drawing_outline rectangle for the outline
@@ -62,8 +65,10 @@ GENEMAP.GeneMap = function(userConfig) {
         .append("g").classed("zoom_window", true)
         .append("rect").classed('drawing_outline', true);
 
+      mapContainer.select(".zoom_window").append("rect").classed('drawing_margin', true);
+
       // basic zooming functionality
-      zoom = d3.behavior.zoom().scaleExtent([0.01, 8]);
+      zoom = d3.behavior.zoom().scaleExtent([1, 10]);
       zoom.on("zoom", onZoom);
       mapContainer.select('svg').call(zoom);
     }
@@ -89,14 +94,25 @@ GENEMAP.GeneMap = function(userConfig) {
         var bbox = svg.node().getBoundingClientRect();
 
         // update the layout object with the new settings
-        var layoutConfig = _.pick(config, ['margin', 'spacing', 'longestChromosomeHeight', 'chromosomeWidth', 'annotationWidth', 'chromosomePerRow', 'labelHeight']);
-        var layoutGenerator = GENEMAP.MapLayout(layoutConfig)
+        var layoutGenerator = GENEMAP.AutoLayout(config.layout)
           .width(bbox.width)
           .height(bbox.height);
 
         layout = layoutGenerator.generateLayout(d.chromosomes.length);
 
         drawDocumentOutline();
+
+        container.select(".drawing_margin").attr({
+          x: layout.drawing.margin.left,
+          y: layout.drawing.margin.top,
+          width: layout.drawing.width - layout.drawing.margin.left - layout.drawing.margin.right ,
+          height: layout.drawing.height- layout.drawing.margin.top - layout.drawing.margin.bottom,
+          'vector-effect': 'non-scaling-stroke'
+        }).style({
+          fill:'none',
+          "stroke": "#000",
+          "stroke-width": 0.5
+        })
 
         var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
 
@@ -112,10 +128,11 @@ GENEMAP.GeneMap = function(userConfig) {
 
         // draw the chromosomes
         var longest = Math.max.apply(null, d.chromosomes.map(function(c){ return c.length; }));
-        var chromosomeScale = d3.scale.linear().range([0, config.longestChromosomeHeight]).domain([0, longest]);
+        var chromosomeScale = d3.scale.linear().range([0, layout.chromosome.height]).domain([0, longest]);
 
-        var chromosomeDrawer = GENEMAP.Chromosome({ labelHeight: config.labelHeight })
-          .width(config.chromosomeWidth)
+        var chromosomeDrawer = GENEMAP.Chromosome({ labelHeight: layout.chromosome.labelHeight })
+          .width(layout.chromosome.width)
+          .height(layout.chromosome.height)
           .yScale(chromosomeScale);
 
         chromosomeContainers.call(chromosomeDrawer);

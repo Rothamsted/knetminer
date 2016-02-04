@@ -5,7 +5,8 @@ GENEMAP.Chromosome = function(userConfig) {
       width: 40,
       height: 400, // only used if no scale is provided
       yScale: null,
-      labelHeight: 35
+      labelHeight: 35,
+      outline: false
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -24,12 +25,14 @@ GENEMAP.Chromosome = function(userConfig) {
     function my(selection) {
       selection.each(function(d, i){
 
-        var y = d3.scale.linear().range([0, config.height]).domain([0, +d.length]);
-        var height = config.height;
-
+        var y, height;
         if (config.yScale !== null){
           y = config.yScale;
           height = y(d.length);
+        }
+        else {
+          y = d3.scale.linear().range([0, config.height]).domain([0, +d.length]);
+          height = config.height;
         };
 
         var chromosomeGroup = d3.select(this).selectAll("g.chromosome").data([d]);
@@ -46,6 +49,10 @@ GENEMAP.Chromosome = function(userConfig) {
         enterGroup.append("g").classed("bands_container", true);
         enterGroup.append("rect").classed("outline", true);
 
+        if (config.border){
+          enterGroup.append("rect").classed("border", true);
+        }
+
         // Enter + Update elements
 
         chromosomeGroup.select('defs').html('')
@@ -60,7 +67,7 @@ GENEMAP.Chromosome = function(userConfig) {
           x: config.width / 2,
           y: config.labelHeight /2,
           'font-family': 'sans-serif',
-          'font-size': '24px',
+          'font-size': config.labelHeight + 'px',
           'text-anchor': 'middle'
         }).text( function(d) {
             return d.number;
@@ -76,8 +83,8 @@ GENEMAP.Chromosome = function(userConfig) {
           height: height,
           x: 0,
           y: 0,
-          rx: 20,
-          ry: 20
+          rx: config.height * 0.05,
+          ry: config.height * 0.05
         }).style({
           stroke: "none",
           fill: "#fff"
@@ -88,10 +95,21 @@ GENEMAP.Chromosome = function(userConfig) {
             width: config.width,
             height: height,
             y: config.labelHeight,
-            rx: 20,
-            ry: 20
+            rx: config.height * 0.05,
+            ry: config.height * 0.05
           })
           .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
+
+        if (config.border){
+          chromosomeGroup.select("rect.border")
+            .attr({
+              x:0,
+              y:0,
+              width: config.width,
+              height: config.height + config.labelHeight
+            })
+            .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
+        }
 
         // setup the chromosome bands
         var bandsContainer = chromosomeGroup.select(".bands_container").attr({
@@ -110,13 +128,11 @@ GENEMAP.Chromosome = function(userConfig) {
           stroke: "none"
         });
 
-
         bands.exit().remove();
 
         chromosomeGroup.select(".bands_container").style({
               mask: "url(#chromosome_mask_" + d.number + ")"
         });
-
       });
     }
 

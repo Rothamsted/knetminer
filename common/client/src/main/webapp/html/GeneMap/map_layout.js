@@ -1,6 +1,7 @@
 var GENEMAP = GENEMAP || {};
 
 GENEMAP.MapLayout = function(userConfig) {
+
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee(userConfig);
   }
@@ -94,7 +95,7 @@ GENEMAP.MapLayout = function(userConfig) {
 
     spacing: function(value) {
       if (!arguments.length) return config.spacing;
-      config.spacing = value;
+      config.spacing = _.merge(config.spacing, value);
       return this;
     }
 
