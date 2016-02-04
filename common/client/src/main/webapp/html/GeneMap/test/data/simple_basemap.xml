@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1" length="500" number="A">
+		<band index="1">
+			<start>0</start>
+			<end>200</end>
+			<color>0xff0000</color>
+		</band>
+		<band index="2">
+			<start>250</start>
+			<end>300</end>
+			<color>0x0000ff</color>
+		</band>
+		<band index="3">
+			<start>300</start>
+			<end>350</end>
+			<color>0x00ff00</color>
+		</band>
+	</chromosome>
+	<chromosome index="2" length="700" number="B">
+		<band index="1">
+			<start>0</start>
+			<end>100</end>
+			<color>0xff0000</color>
+		</band>
+		<band index="2">
+			<start>500</start>
+			<end>700</end>
+			<color>0x0000ff</color>
+		</band>
+	</chromosome>
+	<chromosome index="3" length="300" number="C">
+		<band index="1">
+			<start>150</start>
+			<end>200</end>
+			<color>0xff0000</color>
+		</band>
+	</chromosome>
+</genome>
