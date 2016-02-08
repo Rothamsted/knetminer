@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.AutoLayout = function(userConfig) {
+GENEMAP.AutoLayoutDecorator = function(userConfig) {
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee(userConfig);
   }
@@ -23,10 +23,9 @@ GENEMAP.AutoLayout = function(userConfig) {
 
   return {
 
-    generateLayout: function(numberOfChromosomes) {
-      var layout = {
-        chromosomes: []
-      };
+    decorateGenome: function(inputGenome) {
+
+      genome = _.cloneDeep(inputGenome)
 
       // a cell contains the chromosome (with label), annotation area and the padding to the right & bottom
       var cell = {
@@ -39,7 +38,7 @@ GENEMAP.AutoLayout = function(userConfig) {
         height: config.height * (1 - config.margin.top - config.margin.bottom)
       };
 
-      var rows = Math.ceil(numberOfChromosomes / config.numberPerRow);
+      var rows = Math.ceil(genome.chromosomes.length / config.numberPerRow);
 
       var cellWidth = sizeLessMargin.width / config.numberPerRow;
       var cellHeight = sizeLessMargin.height / rows;
@@ -47,47 +46,52 @@ GENEMAP.AutoLayout = function(userConfig) {
       var widthRatio = cellWidth / (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
       var heightRatio = cellHeight / (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
 
-      layout.chromosome = {
+      var longest = Math.max.apply(null, genome.chromosomes.map(function(c){ return c.length; }));
+
+      var chromosomeLayout = {
         height: heightRatio * config.longestChromosomeHeight,
         labelHeight: heightRatio * config.labelHeight,
         width: widthRatio * config.chromosomeWidth,
-        annotationWidth: widthRatio * config.annotationWidth
+        annotationWidth: widthRatio * config.annotationWidth,
+        longestChromosome: longest
       }
 
-      if (layout.chromosome.labelHeight < config.minLabelHeightPx){
+      if (chromosomeLayout.labelHeight < config.minLabelHeightPx){
         // if the label doesn't reach the minimum height increase it to the minimum
         // and take the extra height from the chromosome height
-        var extraHeight = config.minLabelHeightPx - layout.chromosome.labelHeight;
-        layout.chromosome.height = layout.chromosome.height - extraHeight;
-        layout.chromosome.labelHeight = config.minLabelHeightPx;
+        var extraHeight = config.minLabelHeightPx - chromosomeLayout.labelHeight;
+        chromosomeLayout.height = layout.chromosome.height - extraHeight;
+        chromosomeLayout.labelHeight = config.minLabelHeightPx;
       }
 
-      if (layout.chromosome.width / layout.chromosome.height > config.maxCrhomosomeWidthToLengthRatio){
-        var newWdith = layout.chromosome.height * config.maxCrhomosomeWidthToLengthRatio;
-        var lostWidth = layout.chromosome.width - newWdith;
-        layout.chromosome.annotationWidth = layout.chromosome.annotationWidth + lostWidth;
-        layout.chromosome.width = newWdith;
+      if (chromosomeLayout.width / chromosomeLayout.height > config.maxCrhomosomeWidthToLengthRatio){
+        var newWdith = chromosomeLayout.height * config.maxCrhomosomeWidthToLengthRatio;
+        var lostWidth = chromosomeLayout.width - newWdith;
+        chromosomeLayout.annotationWidth = chromosomeLayout.annotationWidth + lostWidth;
+        chromosomeLayout.width = newWdith;
       }
 
-      layout.drawing = _.pick(config, ['width', 'height']);
-      layout.drawing.margin = {
-        top: config.margin.top * layout.drawing.height,
-        left: config.margin.left * layout.drawing.width,
-        bottom: config.margin.bottom * layout.drawing.height,
-        right: config.margin.right * layout.drawing.width,
+      genome.drawing = _.pick(config, ['width', 'height']);
+      genome.drawing.margin = {
+        top: config.margin.top * genome.drawing.height,
+        left: config.margin.left * genome.drawing.width,
+        bottom: config.margin.bottom * genome.drawing.height,
+        right: config.margin.right * genome.drawing.width,
       }
 
-      for(var i =0; i < numberOfChromosomes; i++){
+      genome.chromosomes.forEach(function(chromosome, i) {
         var col = i % config.numberPerRow;
         var row = Math.floor(i / config.numberPerRow);
 
-        layout.chromosomes.push({
-          y: (row * cellHeight) + (config.margin.top * config.height),
-          x: (col * cellWidth) + (config.margin.left * config.width)
-        });
-      }
+        chromosome.y = (row * cellHeight) + (config.margin.top * config.height);
+        chromosome.x = (col * cellWidth) + (config.margin.left * config.width);
 
-      return layout;
+        chromosome = _.merge(chromosome, chromosomeLayout);
+      });
+
+      genome.choromosomeLayout = chromosomeLayout;
+
+      return genome;
     },
 
     width: function(value) {

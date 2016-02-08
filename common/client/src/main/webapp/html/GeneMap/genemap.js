@@ -12,7 +12,7 @@ GENEMAP.GeneMap = function(userConfig) {
 
     var config = _.merge({}, defaultConfig, userConfig);
 
-    var layout; // the layout to be used;
+    var genome; // the layout to be used;
     var svg; // the top SVG element
     var zoom; // the zoom behaviour
     var container; // the g container that performs the zooming
@@ -20,19 +20,19 @@ GENEMAP.GeneMap = function(userConfig) {
     var onZoom = function() {
       var translate = d3.event.translate;
 
-      if (layout) {
+      if (genome) {
         var bbox = svg.node().getBoundingClientRect();
 
 
         // padding the size of the drawing with 1/2 the bbox so you can
         // center on any point of the drawing. Also taking margins into
         // account to further center the view.
-        var minx = -layout.drawing.width * d3.event.scale + bbox.width/2 + layout.drawing.margin.right * d3.event.scale ;// + (bbox.width + layout.drawing.margin.left + layout.drawing.margin.right)/2) ;
-        var maxx = bbox.width/2 - (layout.drawing.margin.left * d3.event.scale);
+        var minx = -genome.drawing.width * d3.event.scale + bbox.width/2 + genome.drawing.margin.right * d3.event.scale ;
+        var maxx = bbox.width/2 - (genome.drawing.margin.left * d3.event.scale);
         translate[0] = _.clamp(translate[0], minx, maxx);
 
-        var miny = -layout.drawing.height * d3.event.scale + bbox.height/2 + layout.drawing.margin.bottom * d3.event.scale ;
-        var maxy = bbox.height/2 - (layout.drawing.margin.top * d3.event.scale);
+        var miny = -genome.drawing.height * d3.event.scale + bbox.height/2 + genome.drawing.margin.bottom * d3.event.scale ;
+        var maxy = bbox.height/2 - (genome.drawing.margin.top * d3.event.scale);
         translate[1] = _.clamp(translate[1], miny, maxy);
       }
 
@@ -43,18 +43,18 @@ GENEMAP.GeneMap = function(userConfig) {
     // Sets the attributes on the .drawing_outline rectangle for the outline
     var drawDocumentOutline = function() {
       container.select(".drawing_outline").attr({
-        width: layout.drawing.width,
-        height: layout.drawing.height
+        width: genome.drawing.width,
+        height: genome.drawing.height
       });
     };
 
     // draws an outline around the content of the drawing area (inside the margins)
     var drawContentOutline = function() {
       container.select(".drawing_margin").attr({
-        x: layout.drawing.margin.left,
-        y: layout.drawing.margin.top,
-        width: layout.drawing.width - layout.drawing.margin.left - layout.drawing.margin.right ,
-        height: layout.drawing.height- layout.drawing.margin.top - layout.drawing.margin.bottom,
+        x: genome.drawing.margin.left,
+        y: genome.drawing.margin.top,
+        width: genome.drawing.width - genome.drawing.margin.left - genome.drawing.margin.right ,
+        height: genome.drawing.height- genome.drawing.margin.top - genome.drawing.margin.bottom,
       });
     };
 
@@ -83,7 +83,7 @@ GENEMAP.GeneMap = function(userConfig) {
           constructSkeletonChart(d3.select(this));
         }
 
-        svg = d3.select(this).select("svg").datum(d);
+        svg = d3.select(this).select("svg");
 
         svg.attr("width", config.width)
            .attr("height", config.height);
@@ -94,11 +94,12 @@ GENEMAP.GeneMap = function(userConfig) {
         var bbox = svg.node().getBoundingClientRect();
 
         // update the layout object with the new settings
-        var layoutGenerator = GENEMAP.AutoLayout(config.layout)
+        var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
           .width(bbox.width)
           .height(bbox.height);
 
-        layout = layoutGenerator.generateLayout(d.chromosomes.length);
+        genome = layoutDecorator.decorateGenome(d);
+        svg.datum(genome);
 
         drawDocumentOutline();
 
@@ -106,27 +107,9 @@ GENEMAP.GeneMap = function(userConfig) {
           drawContentOutline();
         }
 
-        var chromosomeContainers = container.selectAll("g.chromosome_container").data(d.chromosomes)
-
-        chromosomeContainers.enter().append("g").classed("chromosome_container", true);
-
-        chromosomeContainers.attr({
-          transform: function(d, i){
-            var xPos = layout.chromosomes[i].x;
-            var yPos = layout.chromosomes[i].y;
-            return "translate(" + xPos + ","+ yPos +")";
-          }
-        });
-
         // draw the chromosomes
-        var longest = Math.max.apply(null, d.chromosomes.map(function(c){ return c.length; }));
-        var chromosomeScale = d3.scale.linear().range([0, layout.chromosome.height]).domain([0, longest]);
-
-        var chromosomeDrawer = GENEMAP.Chromosome({ labelHeight: layout.chromosome.labelHeight })
-          .width(layout.chromosome.width)
-          .height(layout.chromosome.height)
-          .yScale(chromosomeScale);
-
+        var chromosomeDrawer = GENEMAP.Chromosome();
+        var chromosomeContainers = container.selectAll("g.chromosome").data(genome.chromosomes)
         chromosomeContainers.call(chromosomeDrawer);
 
         chromosomeContainers.exit().remove();
@@ -159,7 +142,7 @@ GENEMAP.GeneMap = function(userConfig) {
 
     my.draw = function(target, basemapPath, annotationPath) {
       var reader = GENEMAP.XmlDataReader();
-      
+
       reader.readXMLData(basemapPath, "./data/poplar_annotation.xml").then(function(data) {
         d3.select(target).datum(data).call(my)
       });

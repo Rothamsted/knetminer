@@ -13,23 +13,14 @@ GENEMAP.Annotations = function(userConfig) {
 
     var config = _.merge({}, defaultConfig, userConfig);
 
-    /// returns the color property of the data formatted as an HTML color (#ffffff)
-    var getColor = function(d) {
-      // transform 0xffffff into #ffffff
-      // if any letters are missing i.e. #ffff append 0s at the start => #00ffff
-      return "#" +
-              "0".repeat(8 - d.color.length) +
-              d.color.substring(2, d.color.length);
-    };
-
     // adds the gene annotations to the annotations group within it, uses the data
     // bound to the annotationsGroup to generate the annotation elements
     var setupGeneAnnotations = function(annotationsGroup, y){
       var halfWidth = config.width / 2.0;
 
-      var geneData = annotationsGroup.data()[0].filter(function(e){ return e.type === 'gene'; })
+      var chromosome = annotationsGroup.data()[0];
       // Enter + Update elements
-      var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(geneData);
+      var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(chromosome.annotations.genes);
 
       var geneAnnotationsEnterGroup = geneAnnotations.enter().append("g").classed("gene_annotation", true);
 
@@ -78,9 +69,10 @@ GENEMAP.Annotations = function(userConfig) {
     var setupQTLAnnotations = function(annotationsGroup, y) {
 
       var hozPosition = config.width;
-      var qtlData = annotationsGroup.data()[0].filter(function(e){ return e.type === 'QTL'; })
+      var chromosome = annotationsGroup.data()[0];
 
-      var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(qtlData);
+      // Enter + Update elements
+      var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(chromosome.annotations.qtls);
 
       // setup the new annotations
       var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append("g").classed("qtl_annotation", true);
@@ -110,7 +102,7 @@ GENEMAP.Annotations = function(userConfig) {
         width: 10,
         height: function(d) { return y(d.end) - y(d.start);},
       }).style({
-        fill: getColor
+        fill: function(d) { return d.color; }
       });
 
       qtlAnnotations.selectAll("text").attr({
@@ -126,7 +118,7 @@ GENEMAP.Annotations = function(userConfig) {
     // draw a border around the annotation target element
     var drawBorder = function(target) {
       // create the border element if it doesn't exist
-      if (d3.select(target).select("rect.border").node() === null){
+      if (d3.select(target).select("rect.border").empty()){
         d3.select(target).append("rect").classed("border", true);
       }
 
@@ -139,30 +131,33 @@ GENEMAP.Annotations = function(userConfig) {
         });
     };
 
+    var buildYScale = function(d) {
+      return d3.scale.linear().range([0, d.height]).domain([0, d.longestChromosome]);
+    }
+
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
+
+      selection.enter().append("g").attr('class', 'annotations');
+
       selection.each(function(d, i){
         var target = this;
         var targetSelection = d3.select(target);
 
-        var y, height;
-        if (config.yScale !== null){
-          y = config.yScale;
-          height = y(config.longestChromosome);
-        }
-        else {
-          y = d3.scale.linear().range([0, config.height]).domain([0, config.longestChromosome]);
-          height = config.height;
-        };
+        var y = buildYScale(d);
+        var height = y(d.length);
 
-        // create the annotationsGroup element if it doesn't exist
-        var annotationsGroup = targetSelection.selectAll("g.annotations").data([d]);
-        annotationsGroup.enter().append("g").attr({ class: 'annotations', id: 'annotation_' + d.number });
+        targetSelection.attr({
+          id: function(d) { return 'annotation_' + d.number},
+          transform: function(d){
+            return "translate(" + (d.x + d.width) + ","+ d.y +")";
+          }
+        })
 
-        setupGeneAnnotations(annotationsGroup, y);
+        setupGeneAnnotations(targetSelection, y);
 
-        setupQTLAnnotations(annotationsGroup, y);
+        setupQTLAnnotations(targetSelection, y);
 
         if (config.border) {
           drawBorder(this);

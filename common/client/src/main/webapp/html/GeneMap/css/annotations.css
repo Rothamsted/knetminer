@@ -6,7 +6,7 @@ g.annotations  line {
   vector-effect: non-scaling-stroke;
 }
 
-g.annotations_container rect.border {
+g.annotations rect.border {
   fill: none;
   stroke-width: 0.5;
   stroke: #000;

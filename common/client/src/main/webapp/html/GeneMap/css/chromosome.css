@@ -1,26 +1,26 @@
 
-.chromosome_container {
+.chromosome {
   font-family: sans-serif;
   text-anchor: middle;
 }
 
-.chromosome_container .mask_rect {
+.chromosome .mask_rect {
   stroke: none;
   fill: #fff;
 }
 
-.chromosome_container rect.outline {
+.chromosome rect.outline {
    fill: none;
    stroke-width: 0.5;
    stroke: #000;
 }
 
-.chromosome_container rect.border {
+.chromosome rect.border {
    fill: none;
    stroke-width: 0.5;
    stroke: #000;
 }
 
-.chromosome_container rect.band {
+.chromosome rect.band {
   stroke: none;
 }
