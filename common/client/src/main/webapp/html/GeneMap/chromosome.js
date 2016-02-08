@@ -5,8 +5,8 @@ GENEMAP.Chromosome = function(userConfig) {
       width: 40,
       height: 400, // only used if no scale is provided
       yScale: null,
-      labelHeight: 35,
-      outline: false
+      labelHeight: 20,
+      border: false
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -65,9 +65,9 @@ GENEMAP.Chromosome = function(userConfig) {
 
         chromosomeGroup.select("text").attr({
           x: config.width / 2,
-          y: config.labelHeight /2,
+          y: config.labelHeight  * (0.85),
           'font-family': 'sans-serif',
-          'font-size': config.labelHeight + 'px',
+          'font-size': config.labelHeight ,
           'text-anchor': 'middle'
         }).text( function(d) {
             return d.number;

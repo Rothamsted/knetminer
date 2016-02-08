@@ -1,0 +1,921 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+	<feature id="0">
+		<chromosome>XVIII</chromosome>
+		<start>13820469</start>
+		<end>13829606</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.018G112500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.018G112500</link>
+	</feature>
+	<feature id="1">
+		<chromosome>X</chromosome>
+		<start>12741875</start>
+		<end>12744762</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.010G107900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G107900</link>
+	</feature>
+	<feature id="2">
+		<chromosome>V</chromosome>
+		<start>1191048</start>
+		<end>1191803</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.005G015200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G015200</link>
+	</feature>
+	<feature id="3">
+		<chromosome>VIII</chromosome>
+		<start>8891625</start>
+		<end>8895156</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.008G133800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G133800</link>
+	</feature>
+	<feature id="4">
+		<chromosome>XII</chromosome>
+		<start>15487124</start>
+		<end>15489549</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.012G141300</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.012G141300</link>
+	</feature>
+	<feature id="5">
+		<chromosome>XIII</chromosome>
+		<start>625131</start>
+		<end>626888</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.013G009800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.013G009800</link>
+	</feature>
+	<feature id="6">
+		<chromosome>V</chromosome>
+		<start>1497265</start>
+		<end>1498173</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.005G018900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G018900</link>
+	</feature>
+	<feature id="7">
+		<chromosome>IX</chromosome>
+		<start>4452827</start>
+		<end>4457973</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.009G034700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.009G034700</link>
+	</feature>
+	<feature id="8">
+		<chromosome>X</chromosome>
+		<start>1614683</start>
+		<end>1615576</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.010G012100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G012100</link>
+	</feature>
+	<feature id="9">
+		<chromosome>X</chromosome>
+		<start>19317219</start>
+		<end>19321595</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.010G201500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G201500</link>
+	</feature>
+	<feature id="10">
+		<chromosome>XVIII</chromosome>
+		<start>3659628</start>
+		<end>3660571</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.018G042700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.018G042700</link>
+	</feature>
+	<feature id="11">
+		<chromosome>IV</chromosome>
+		<start>17469013</start>
+		<end>17469261</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.004G153000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G153000</link>
+	</feature>
+	<feature id="12">
+		<chromosome>II</chromosome>
+		<start>14718115</start>
+		<end>14719833</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.002G187200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G187200</link>
+	</feature>
+	<feature id="13">
+		<chromosome>VIII</chromosome>
+		<start>5884501</start>
+		<end>5889490</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.008G094000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G094000</link>
+	</feature>
+	<feature id="14">
+		<chromosome>II</chromosome>
+		<start>15756130</start>
+		<end>15757772</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.002G196700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G196700</link>
+	</feature>
+	<feature id="15">
+		<chromosome>XIV</chromosome>
+		<start>9438935</start>
+		<end>9440553</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.014G122000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.014G122000</link>
+	</feature>
+	<feature id="16">
+		<chromosome>II</chromosome>
+		<start>957319</start>
+		<end>958407</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.002G016400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G016400</link>
+	</feature>
+	<feature id="17">
+		<chromosome>XV</chromosome>
+		<start>14991769</start>
+		<end>14993788</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.015G143900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.015G143900</link>
+	</feature>
+	<feature id="18">
+		<chromosome>XIV</chromosome>
+		<start>8823410</start>
+		<end>8826996</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.014G112700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.014G112700</link>
+	</feature>
+	<feature id="19">
+		<chromosome>VI</chromosome>
+		<start>2075575</start>
+		<end>2076873</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.006G030600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G030600</link>
+	</feature>
+	<feature id="20">
+		<chromosome>VI</chromosome>
+		<start>1906503</start>
+		<end>1907711</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.006G028300</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G028300</link>
+	</feature>
+	<feature id="21">
+		<chromosome>IV</chromosome>
+		<start>3689407</start>
+		<end>3691663</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.004G047900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G047900</link>
+	</feature>
+	<feature id="22">
+		<chromosome>V</chromosome>
+		<start>24989890</start>
+		<end>24991750</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.005G245700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G245700</link>
+	</feature>
+	<feature id="23">
+		<chromosome>IV</chromosome>
+		<start>6241013</start>
+		<end>6245172</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.004G074800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G074800</link>
+	</feature>
+	<feature id="24">
+		<chromosome>V</chromosome>
+		<start>1607422</start>
+		<end>1612229</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.005G020900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G020900</link>
+	</feature>
+	<feature id="25">
+		<chromosome>XI</chromosome>
+		<start>5043431</start>
+		<end>5046101</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.011G057200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.011G057200</link>
+	</feature>
+	<feature id="26">
+		<chromosome>X</chromosome>
+		<start>16599809</start>
+		<end>16606223</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.010G160100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G160100</link>
+	</feature>
+	<feature id="27">
+		<chromosome>XVIII</chromosome>
+		<start>2328419</start>
+		<end>2329341</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.018G029700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.018G029700</link>
+	</feature>
+	<feature id="28">
+		<chromosome>II</chromosome>
+		<start>19423792</start>
+		<end>19424554</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.002G213900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G213900</link>
+	</feature>
+	<feature id="29">
+		<chromosome>XII</chromosome>
+		<start>11356226</start>
+		<end>11359696</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.012G086500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.012G086500</link>
+	</feature>
+	<feature id="30">
+		<chromosome>XIX</chromosome>
+		<start>15429086</start>
+		<end>15432213</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.019G127600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.019G127600</link>
+	</feature>
+	<feature id="31">
+		<chromosome>II</chromosome>
+		<start>5358761</start>
+		<end>5362324</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.002G077500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G077500</link>
+	</feature>
+	<feature id="32">
+		<chromosome>XIII</chromosome>
+		<start>15851310</start>
+		<end>15854076</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.013G155900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.013G155900</link>
+	</feature>
+	<feature id="33">
+		<chromosome>V</chromosome>
+		<start>11453452</start>
+		<end>11457951</end>
+		<type>gene</type>
+		<color>0x00FF00</color>
+		<label>POTRI.005G138200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G138200</link>
+	</feature>
+	<feature id="34">
+		<chromosome>II</chromosome>
+		<start>16882188</start>
+		<end>16886849</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.002G205600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G205600</link>
+	</feature>
+	<feature id="35">
+		<chromosome>XIV</chromosome>
+		<start>9957276</start>
+		<end>9961653</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.014G130600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.014G130600</link>
+	</feature>
+	<feature id="36">
+		<chromosome>V</chromosome>
+		<start>12893430</start>
+		<end>12897255</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.005G146700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G146700</link>
+	</feature>
+	<feature id="37">
+		<chromosome>I</chromosome>
+		<start>41295099</start>
+		<end>41297754</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.001G393800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G393800</link>
+	</feature>
+	<feature id="38">
+		<chromosome>XI</chromosome>
+		<start>13738155</start>
+		<end>13740579</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.011G112400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.011G112400</link>
+	</feature>
+	<feature id="39">
+		<chromosome>XVI</chromosome>
+		<start>10401460</start>
+		<end>10402998</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.016G104600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.016G104600</link>
+	</feature>
+	<feature id="40">
+		<chromosome>VI</chromosome>
+		<start>7069609</start>
+		<end>7070889</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.006G092700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G092700</link>
+	</feature>
+	<feature id="41">
+		<chromosome>V</chromosome>
+		<start>3872517</start>
+		<end>3877916</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.005G054400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G054400</link>
+	</feature>
+	<feature id="42">
+		<chromosome>V</chromosome>
+		<start>3866056</start>
+		<end>3869027</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.005G054100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G054100</link>
+	</feature>
+	<feature id="43">
+		<chromosome>X</chromosome>
+		<start>10304065</start>
+		<end>10308864</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.010G077800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G077800</link>
+	</feature>
+	<feature id="44">
+		<chromosome>VII</chromosome>
+		<start>3826365</start>
+		<end>3831693</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.007G044100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.007G044100</link>
+	</feature>
+	<feature id="45">
+		<chromosome>XI</chromosome>
+		<start>16676393</start>
+		<end>16681084</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.011G147400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.011G147400</link>
+	</feature>
+	<feature id="46">
+		<chromosome>XIII</chromosome>
+		<start>2952826</start>
+		<end>2958260</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.013G042000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.013G042000</link>
+	</feature>
+	<feature id="47">
+		<chromosome>VIII</chromosome>
+		<start>10983915</start>
+		<end>10989740</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.008G161500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G161500</link>
+	</feature>
+	<feature id="48">
+		<chromosome>XII</chromosome>
+		<start>13199781</start>
+		<end>13200131</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.012G109100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.012G109100</link>
+	</feature>
+	<feature id="49">
+		<chromosome>II</chromosome>
+		<start>24029680</start>
+		<end>24031874</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.002G249800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G249800</link>
+	</feature>
+	<feature id="50">
+		<chromosome>X</chromosome>
+		<start>22071022</start>
+		<end>22075422</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.010G246500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G246500</link>
+	</feature>
+	<feature id="51">
+		<chromosome>XIX</chromosome>
+		<start>2269281</start>
+		<end>2275307</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.019G019600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.019G019600</link>
+	</feature>
+	<feature id="52">
+		<chromosome>XIII</chromosome>
+		<start>3427912</start>
+		<end>3433982</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.013G047400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.013G047400</link>
+	</feature>
+	<feature id="53">
+		<chromosome>I</chromosome>
+		<start>24871962</start>
+		<end>24872672</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.001G237500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G237500</link>
+	</feature>
+	<feature id="54">
+		<chromosome>XVII</chromosome>
+		<start>10109768</start>
+		<end>10111295</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.017G083900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.017G083900</link>
+	</feature>
+	<feature id="55">
+		<chromosome>II</chromosome>
+		<start>2807783</start>
+		<end>2812959</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.002G044100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G044100</link>
+	</feature>
+	<feature id="56">
+		<chromosome>V</chromosome>
+		<start>8973166</start>
+		<end>8974291</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.005G116600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G116600</link>
+	</feature>
+	<feature id="57">
+		<chromosome>XIII</chromosome>
+		<start>704905</start>
+		<end>709435</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.013G011200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.013G011200</link>
+	</feature>
+	<feature id="58">
+		<chromosome>VIII</chromosome>
+		<start>16819217</start>
+		<end>16821752</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.008G213400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G213400</link>
+	</feature>
+	<feature id="59">
+		<chromosome>VIII</chromosome>
+		<start>679400</start>
+		<end>683120</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.008G012200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G012200</link>
+	</feature>
+	<feature id="60">
+		<chromosome>VII</chromosome>
+		<start>13786841</start>
+		<end>13789179</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.007G117700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.007G117700</link>
+	</feature>
+	<feature id="61">
+		<chromosome>V</chromosome>
+		<start>23117918</start>
+		<end>23122920</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.005G219000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G219000</link>
+	</feature>
+	<feature id="62">
+		<chromosome>VI</chromosome>
+		<start>14258006</start>
+		<end>14261554</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.006G156100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G156100</link>
+	</feature>
+	<feature id="63">
+		<chromosome>VI</chromosome>
+		<start>16213547</start>
+		<end>16217073</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.006G162900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G162900</link>
+	</feature>
+	<feature id="64">
+		<chromosome>XII</chromosome>
+		<start>15692850</start>
+		<end>15697512</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.012G144700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.012G144700</link>
+	</feature>
+	<feature id="65">
+		<chromosome>II</chromosome>
+		<start>8600908</start>
+		<end>8605311</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.002G114500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G114500</link>
+	</feature>
+	<feature id="66">
+		<chromosome>XVIII</chromosome>
+		<start>11205149</start>
+		<end>11208993</end>
+		<type>gene</type>
+		<color>0xFFA500</color>
+		<label>POTRI.018G085100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.018G085100</link>
+	</feature>
+	<feature id="67">
+		<chromosome>I</chromosome>
+		<start>48906316</start>
+		<end>48911008</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.001G454500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G454500</link>
+	</feature>
+	<feature id="68">
+		<chromosome>I</chromosome>
+		<start>31286638</start>
+		<end>31288770</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.001G309300</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G309300</link>
+	</feature>
+	<feature id="69">
+		<chromosome>VI</chromosome>
+		<start>1752996</start>
+		<end>1755845</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.006G025600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G025600</link>
+	</feature>
+	<feature id="70">
+		<chromosome>XVI</chromosome>
+		<start>1340845</start>
+		<end>1344557</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.016G023800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.016G023800</link>
+	</feature>
+	<feature id="71">
+		<chromosome>IV</chromosome>
+		<start>9539100</start>
+		<end>9540009</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G107800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G107800</link>
+	</feature>
+	<feature id="72">
+		<chromosome>IV</chromosome>
+		<start>15714835</start>
+		<end>15715724</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G136500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G136500</link>
+	</feature>
+	<feature id="73">
+		<chromosome>IV</chromosome>
+		<start>15804489</start>
+		<end>15805773</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G136900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G136900</link>
+	</feature>
+	<feature id="74">
+		<chromosome>IV</chromosome>
+		<start>15741892</start>
+		<end>15743665</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G136600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G136600</link>
+	</feature>
+	<feature id="75">
+		<chromosome>IV</chromosome>
+		<start>15772920</start>
+		<end>15774153</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G136700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G136700</link>
+	</feature>
+	<feature id="76">
+		<chromosome>IV</chromosome>
+		<start>15641001</start>
+		<end>15642234</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G136000</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G136000</link>
+	</feature>
+	<feature id="77">
+		<chromosome>VII</chromosome>
+		<start>2117876</start>
+		<end>2120057</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.007G028200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.007G028200</link>
+	</feature>
+	<feature id="78">
+		<chromosome>I</chromosome>
+		<start>22628156</start>
+		<end>22631750</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.001G220600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G220600</link>
+	</feature>
+	<feature id="79">
+		<chromosome>XIX</chromosome>
+		<start>2857530</start>
+		<end>2865486</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.019G025100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.019G025100</link>
+	</feature>
+	<feature id="80">
+		<chromosome>XIV</chromosome>
+		<start>11820278</start>
+		<end>11823941</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.014G152300</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.014G152300</link>
+	</feature>
+	<feature id="81">
+		<chromosome>XVII</chromosome>
+		<start>15250170</start>
+		<end>15254230</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.017G144600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.017G144600</link>
+	</feature>
+	<feature id="82">
+		<chromosome>XI</chromosome>
+		<start>8609333</start>
+		<end>8611126</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.011G084100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.011G084100</link>
+	</feature>
+	<feature id="83">
+		<chromosome>XVII</chromosome>
+		<start>9783132</start>
+		<end>9785158</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.017G082500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.017G082500</link>
+	</feature>
+	<feature id="84">
+		<chromosome>I</chromosome>
+		<start>8797888</start>
+		<end>8798655</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.001G110800</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G110800</link>
+	</feature>
+	<feature id="85">
+		<chromosome>IX</chromosome>
+		<start>11635665</start>
+		<end>11636534</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.009G147700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.009G147700</link>
+	</feature>
+	<feature id="86">
+		<chromosome>VII</chromosome>
+		<start>1065288</start>
+		<end>1066743</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.007G014200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.007G014200</link>
+	</feature>
+	<feature id="87">
+		<chromosome>X</chromosome>
+		<start>11713267</start>
+		<end>11717675</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.010G094600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G094600</link>
+	</feature>
+	<feature id="88">
+		<chromosome>VIII</chromosome>
+		<start>9910857</start>
+		<end>9915722</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.008G147200</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G147200</link>
+	</feature>
+	<feature id="89">
+		<chromosome>X</chromosome>
+		<start>14063825</start>
+		<end>14066944</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.010G124300</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.010G124300</link>
+	</feature>
+	<feature id="90">
+		<chromosome>XIV</chromosome>
+		<start>14689233</start>
+		<end>14690143</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.014G178900</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.014G178900</link>
+	</feature>
+	<feature id="91">
+		<chromosome>I</chromosome>
+		<start>11675686</start>
+		<end>11676681</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.001G143700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.001G143700</link>
+	</feature>
+	<feature id="92">
+		<chromosome>VI</chromosome>
+		<start>25184801</start>
+		<end>25186843</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.006G243600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G243600</link>
+	</feature>
+	<feature id="93">
+		<chromosome>VI</chromosome>
+		<start>25193357</start>
+		<end>25195343</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.006G243700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G243700</link>
+	</feature>
+	<feature id="94">
+		<chromosome>XVIII</chromosome>
+		<start>2995999</start>
+		<end>2998101</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.018G036700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.018G036700</link>
+	</feature>
+	<feature id="95">
+		<chromosome>VIII</chromosome>
+		<start>7871802</start>
+		<end>7875000</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.008G121100</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.008G121100</link>
+	</feature>
+	<feature id="96">
+		<chromosome>VI</chromosome>
+		<start>25737607</start>
+		<end>25740927</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.006G251700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.006G251700</link>
+	</feature>
+	<feature id="97">
+		<chromosome>IV</chromosome>
+		<start>5584445</start>
+		<end>5586876</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.004G066700</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.004G066700</link>
+	</feature>
+	<feature id="98">
+		<chromosome>III</chromosome>
+		<start>19515627</start>
+		<end>19515848</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.003G190500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.003G190500</link>
+	</feature>
+	<feature id="99">
+		<chromosome>V</chromosome>
+		<start>24813725</start>
+		<end>24815760</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.005G242400</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G242400</link>
+	</feature>
+	<feature id="100">
+		<chromosome>II</chromosome>
+		<start>175066</start>
+		<end>175320</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.002G002600</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.002G002600</link>
+	</feature>
+	<feature id="101">
+		<chromosome>V</chromosome>
+		<start>25751811</start>
+		<end>25754502</end>
+		<type>gene</type>
+		<color>0xFF0000</color>
+		<label>POTRI.005G258500</label>
+		<link>OndexServlet?mode=network&keyword=drought&list=POTRI.005G258500</link>
+	</feature>
+</genome>

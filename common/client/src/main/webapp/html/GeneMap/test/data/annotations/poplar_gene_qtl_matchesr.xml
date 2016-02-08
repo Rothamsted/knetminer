@@ -1,0 +1,984 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>XV</chromosome>
+<start>14138164</start>
+<end>14141019</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.015G129900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G129900</link>
+</feature>
+<feature id="1">
+<chromosome>XII</chromosome>
+<start>14591264</start>
+<end>14593900</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.012G128500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G128500</link>
+</feature>
+<feature id="2">
+<chromosome>IV</chromosome>
+<start>6333019</start>
+<end>6335092</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.004G075900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G075900</link>
+</feature>
+<feature id="3">
+<chromosome>XVIII</chromosome>
+<start>134941</start>
+<end>135322</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.018G002100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G002100</link>
+</feature>
+<feature id="4">
+<chromosome>VIII</chromosome>
+<start>9144030</start>
+<end>9144592</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G137400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G137400</link>
+</feature>
+<feature id="5">
+<chromosome>IX</chromosome>
+<start>5087488</start>
+<end>5088261</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.009G044500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G044500</link>
+</feature>
+<feature id="6">
+<chromosome>I</chromosome>
+<start>25985557</start>
+<end>25986532</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G250400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G250400</link>
+</feature>
+<feature id="7">
+<chromosome>XIV</chromosome>
+<start>18398635</start>
+<end>18404232</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.014G195400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G195400</link>
+</feature>
+<feature id="8">
+<chromosome>XII</chromosome>
+<start>4328750</start>
+<end>4332196</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.012G047100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G047100</link>
+</feature>
+<feature id="9">
+<chromosome>X</chromosome>
+<start>22503100</start>
+<end>22505216</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.010G254600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G254600</link>
+</feature>
+<feature id="10">
+<chromosome>IV</chromosome>
+<start>6354062</start>
+<end>6356276</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.004G076200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G076200</link>
+</feature>
+<feature id="11">
+<chromosome>IV</chromosome>
+<start>6338888</start>
+<end>6341316</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.004G076000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G076000</link>
+</feature>
+<feature id="12">
+<chromosome>VIII</chromosome>
+<start>501898</start>
+<end>508420</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G009100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G009100</link>
+</feature>
+<feature id="13">
+<chromosome>IV</chromosome>
+<start>7598523</start>
+<end>7601365</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.004G089500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G089500</link>
+</feature>
+<feature id="14">
+<chromosome>XIX</chromosome>
+<start>5057689</start>
+<end>5059803</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.019G043200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G043200</link>
+</feature>
+<feature id="15">
+<chromosome>IX</chromosome>
+<start>8926944</start>
+<end>8931587</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.009G100900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G100900</link>
+</feature>
+<feature id="16">
+<chromosome>I</chromosome>
+<start>10993592</start>
+<end>10996832</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G136800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G136800</link>
+</feature>
+<feature id="17">
+<chromosome>VIII</chromosome>
+<start>9149691</start>
+<end>9150917</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G137500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G137500</link>
+</feature>
+<feature id="18">
+<chromosome>X</chromosome>
+<start>12440312</start>
+<end>12446398</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.010G103400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G103400</link>
+</feature>
+<feature id="19">
+<chromosome>V</chromosome>
+<start>11860620</start>
+<end>11866033</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G140800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G140800</link>
+</feature>
+<feature id="20">
+<chromosome>I</chromosome>
+<start>13195797</start>
+<end>13197278</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G158500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G158500</link>
+</feature>
+<feature id="21">
+<chromosome>VIII</chromosome>
+<start>2975114</start>
+<end>2976816</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G050300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G050300</link>
+</feature>
+<feature id="22">
+<chromosome>VII</chromosome>
+<start>4259518</start>
+<end>4264312</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.007G046400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.007G046400</link>
+</feature>
+<feature id="23">
+<chromosome>II</chromosome>
+<start>11035929</start>
+<end>11041674</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.002G148600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G148600</link>
+</feature>
+<feature id="24">
+<chromosome>III</chromosome>
+<start>13973742</start>
+<end>13978843</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.003G116500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G116500</link>
+</feature>
+<feature id="25">
+<chromosome>X</chromosome>
+<start>22258103</start>
+<end>22264978</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.010G249900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G249900</link>
+</feature>
+<feature id="26">
+<chromosome>XI</chromosome>
+<start>48429</start>
+<end>49732</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.011G000800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G000800</link>
+</feature>
+<feature id="27">
+<chromosome>IX</chromosome>
+<start>11815487</start>
+<end>11817601</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.009G150000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G150000</link>
+</feature>
+<feature id="28">
+<chromosome>VIII</chromosome>
+<start>128980</start>
+<end>132346</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G002400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G002400</link>
+</feature>
+<feature id="29">
+<chromosome>II</chromosome>
+<start>9513971</start>
+<end>9517462</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.002G126800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G126800</link>
+</feature>
+<feature id="30">
+<chromosome>XII</chromosome>
+<start>2861864</start>
+<end>2864760</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.012G032200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G032200</link>
+</feature>
+<feature id="31">
+<chromosome>XV</chromosome>
+<start>1770772</start>
+<end>1773175</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.015G022900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G022900</link>
+</feature>
+<feature id="32">
+<chromosome>IX</chromosome>
+<start>8828600</start>
+<end>8835734</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.009G099200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G099200</link>
+</feature>
+<feature id="33">
+<chromosome>XIII</chromosome>
+<start>6499294</start>
+<end>6502577</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.013G076000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.013G076000</link>
+</feature>
+<feature id="34">
+<chromosome>I</chromosome>
+<start>30710669</start>
+<end>30714824</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G303900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G303900</link>
+</feature>
+<feature id="35">
+<chromosome>XIX</chromosome>
+<start>8582033</start>
+<end>8591868</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.019G055600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G055600</link>
+</feature>
+<feature id="36">
+<chromosome>XVII</chromosome>
+<start>4071148</start>
+<end>4072332</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.017G048800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.017G048800</link>
+</feature>
+<feature id="37">
+<chromosome>VIII</chromosome>
+<start>4764928</start>
+<end>4766336</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.008G076500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G076500</link>
+</feature>
+<feature id="38">
+<chromosome>IX</chromosome>
+<start>4749523</start>
+<end>4752233</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G039600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G039600</link>
+</feature>
+<feature id="39">
+<chromosome>V</chromosome>
+<start>24770761</start>
+<end>24776020</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.005G241700</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G241700</link>
+</feature>
+<feature id="40">
+<chromosome>XIV</chromosome>
+<start>2528557</start>
+<end>2532669</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.014G030000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G030000</link>
+</feature>
+<feature id="41">
+<chromosome>VI</chromosome>
+<start>2320458</start>
+<end>2323198</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.006G034300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G034300</link>
+</feature>
+<feature id="42">
+<chromosome>XI</chromosome>
+<start>2601021</start>
+<end>2602272</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.011G031300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G031300</link>
+</feature>
+<feature id="43">
+<chromosome>I</chromosome>
+<start>30055995</start>
+<end>30058502</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G296000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G296000</link>
+</feature>
+<feature id="44">
+<chromosome>I</chromosome>
+<start>25713972</start>
+<end>25716695</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G246500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G246500</link>
+</feature>
+<feature id="45">
+<chromosome>I</chromosome>
+<start>16503564</start>
+<end>16506485</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G187200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G187200</link>
+</feature>
+<feature id="46">
+<chromosome>X</chromosome>
+<start>19928721</start>
+<end>19931575</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.010G210200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G210200</link>
+</feature>
+<feature id="47">
+<chromosome>XVII</chromosome>
+<start>12374459</start>
+<end>12375215</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.017G106600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.017G106600</link>
+</feature>
+<feature id="48">
+<chromosome>III</chromosome>
+<start>20623402</start>
+<end>20624621</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.003G205200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G205200</link>
+</feature>
+<feature id="49">
+<chromosome>XVI</chromosome>
+<start>14020886</start>
+<end>14021244</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G137500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.016G137500</link>
+</feature>
+<feature id="50">
+<chromosome>XII</chromosome>
+<start>14411349</start>
+<end>14412740</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.012G125700</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G125700</link>
+</feature>
+<feature id="51">
+<chromosome>VIII</chromosome>
+<start>10530564</start>
+<end>10532509</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.008G155800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G155800</link>
+</feature>
+<feature id="52">
+<chromosome>XIV</chromosome>
+<start>11358097</start>
+<end>11372866</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.014G148800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G148800</link>
+</feature>
+<feature id="53">
+<chromosome>IV</chromosome>
+<start>1206565</start>
+<end>1209934</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.004G018300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G018300</link>
+</feature>
+<feature id="54">
+<chromosome>II</chromosome>
+<start>23623838</start>
+<end>23624781</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.002G244100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G244100</link>
+</feature>
+<feature id="55">
+<chromosome>XII</chromosome>
+<start>15704924</start>
+<end>15707972</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.012G144900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G144900</link>
+</feature>
+<feature id="56">
+<chromosome>III</chromosome>
+<start>10487399</start>
+<end>10493793</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.003G076500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G076500</link>
+</feature>
+<feature id="57">
+<chromosome>XIV</chromosome>
+<start>10519734</start>
+<end>10521152</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.014G137500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G137500</link>
+</feature>
+<feature id="58">
+<chromosome>XII</chromosome>
+<start>3457078</start>
+<end>3458464</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.012G039100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G039100</link>
+</feature>
+<feature id="59">
+<chromosome>XII</chromosome>
+<start>1772665</start>
+<end>1773882</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.012G019400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G019400</link>
+</feature>
+<feature id="60">
+<chromosome>VI</chromosome>
+<start>25337833</start>
+<end>25339670</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.006G245900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G245900</link>
+</feature>
+<feature id="61">
+<chromosome>VI</chromosome>
+<start>25345115</start>
+<end>25347031</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.006G246000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G246000</link>
+</feature>
+<feature id="62">
+<chromosome>XVIII</chromosome>
+<start>9384316</start>
+<end>9388732</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.018G072400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G072400</link>
+</feature>
+<feature id="63">
+<chromosome>I</chromosome>
+<start>27479703</start>
+<end>27484013</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G266900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G266900</link>
+</feature>
+<feature id="64">
+<chromosome>XI</chromosome>
+<start>15975700</start>
+<end>15980358</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.011G135900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G135900</link>
+</feature>
+<feature id="65">
+<chromosome>XV</chromosome>
+<start>11745257</start>
+<end>11746780</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.015G097700</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G097700</link>
+</feature>
+<feature id="66">
+<chromosome>IX</chromosome>
+<start>6310104</start>
+<end>6314535</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G061100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G061100</link>
+</feature>
+<feature id="67">
+<chromosome>VIII</chromosome>
+<start>18316177</start>
+<end>18316834</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.008G219400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G219400</link>
+</feature>
+<feature id="68">
+<chromosome>III</chromosome>
+<start>13272407</start>
+<end>13278730</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G109100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G109100</link>
+</feature>
+<feature id="69">
+<chromosome>III</chromosome>
+<start>13089569</start>
+<end>13093543</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G106800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G106800</link>
+</feature>
+<feature id="70">
+<chromosome>VI</chromosome>
+<start>14877812</start>
+<end>14882314</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G158500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G158500</link>
+</feature>
+<feature id="71">
+<chromosome>II</chromosome>
+<start>1159793</start>
+<end>1165086</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.002G019800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G019800</link>
+</feature>
+<feature id="72">
+<chromosome>VI</chromosome>
+<start>14541150</start>
+<end>14545990</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G157000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G157000</link>
+</feature>
+<feature id="73">
+<chromosome>I</chromosome>
+<start>10293639</start>
+<end>10295832</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G126800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G126800</link>
+</feature>
+<feature id="74">
+<chromosome>XVIII</chromosome>
+<start>1923625</start>
+<end>1930970</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.018G023900</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G023900</link>
+</feature>
+<feature id="75">
+<chromosome>IX</chromosome>
+<start>8297554</start>
+<end>8300019</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.009G090200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G090200</link>
+</feature>
+<feature id="76">
+<chromosome>XIV</chromosome>
+<start>5665819</start>
+<end>5671853</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.014G070000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G070000</link>
+</feature>
+<feature id="77">
+<chromosome>X</chromosome>
+<start>8772473</start>
+<end>8773264</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.010G058500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G058500</link>
+</feature>
+<feature id="78">
+<chromosome>XV</chromosome>
+<start>15195166</start>
+<end>15201531</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.015G147600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G147600</link>
+</feature>
+<feature id="79">
+<chromosome>XVIII</chromosome>
+<start>2141918</start>
+<end>2145799</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.018G027000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G027000</link>
+</feature>
+<feature id="80">
+<chromosome>VII</chromosome>
+<start>11516417</start>
+<end>11520551</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.007G089000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.007G089000</link>
+</feature>
+<feature id="81">
+<chromosome>III</chromosome>
+<start>16814591</start>
+<end>16815349</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G155300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G155300</link>
+</feature>
+<feature id="82">
+<chromosome>X</chromosome>
+<start>22526329</start>
+<end>22529171</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.010G255000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G255000</link>
+</feature>
+<feature id="83">
+<chromosome>XIX</chromosome>
+<start>5086300</start>
+<end>5086939</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.019G043500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G043500</link>
+</feature>
+<feature id="84">
+<chromosome>I</chromosome>
+<start>44554203</start>
+<end>44559561</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G420200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G420200</link>
+</feature>
+<feature id="85">
+<chromosome>III</chromosome>
+<start>11344426</start>
+<end>11355221</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G086000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G086000</link>
+</feature>
+<feature id="86">
+<chromosome>I</chromosome>
+<start>12099585</start>
+<end>12110455</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G148400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G148400</link>
+</feature>
+<feature id="87">
+<chromosome>V</chromosome>
+<start>764844</start>
+<end>767136</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G010200</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G010200</link>
+</feature>
+<feature id="88">
+<chromosome>V</chromosome>
+<start>762195</start>
+<end>764390</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G010100</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G010100</link>
+</feature>
+<feature id="89">
+<chromosome>V</chromosome>
+<start>16112939</start>
+<end>16114676</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G160300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G160300</link>
+</feature>
+<feature id="90">
+<chromosome>XII</chromosome>
+<start>6661881</start>
+<end>6662216</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.012G061800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G061800</link>
+</feature>
+<feature id="91">
+<chromosome>VIII</chromosome>
+<start>4347241</start>
+<end>4347732</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.008G070500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G070500</link>
+</feature>
+<feature id="92">
+<chromosome>VI</chromosome>
+<start>16666113</start>
+<end>16667961</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G165000</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G165000</link>
+</feature>
+<feature id="93">
+<chromosome>II</chromosome>
+<start>23377846</start>
+<end>23379062</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.002G241300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G241300</link>
+</feature>
+<feature id="94">
+<chromosome>I</chromosome>
+<start>9282853</start>
+<end>9287647</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G115800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G115800</link>
+</feature>
+<feature id="95">
+<chromosome>XVIII</chromosome>
+<start>1463691</start>
+<end>1466831</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.018G019300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G019300</link>
+</feature>
+<feature id="96">
+<chromosome>VIII</chromosome>
+<start>12053629</start>
+<end>12054636</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.008G176500</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G176500</link>
+</feature>
+<feature id="97">
+<chromosome>VI</chromosome>
+<start>27783200</start>
+<end>27794413</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G279700</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G279700</link>
+</feature>
+<feature id="98">
+<chromosome>VIII</chromosome>
+<start>4058820</start>
+<end>4061811</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.008G066800</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G066800</link>
+</feature>
+<feature id="99">
+<chromosome>IV</chromosome>
+<start>5492038</start>
+<end>5494783</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.004G065600</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G065600</link>
+</feature>
+<feature id="100">
+<chromosome>II</chromosome>
+<start>19001437</start>
+<end>19005150</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.002G212400</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G212400</link>
+</feature>
+<feature id="101">
+<chromosome>V</chromosome>
+<start>539822</start>
+<end>543096</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G008300</label>
+<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G008300</link>
+</feature>
+<feature>
+<chromosome>IX</chromosome>
+<start>8388547</start>
+<end>8798608</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 2</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 2</link>
+</feature>
+<feature>
+<chromosome>X</chromosome>
+<start>11368808</start>
+<end>13814117</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 1</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 1</link>
+</feature>
+<feature>
+<chromosome>II</chromosome>
+<start>3556555</start>
+<end>4828045</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 2</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 2</link>
+</feature>
+<feature>
+<chromosome>V</chromosome>
+<start>5567014</start>
+<end>15737515</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 1</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 1</link>
+</feature>
+<feature>
+<chromosome>I</chromosome>
+<start>6435461</start>
+<end>9764020</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 1</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 1</link>
+</feature>
+<feature>
+<chromosome>V</chromosome>
+<start>5567014</start>
+<end>14527936</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 2</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 2</link>
+</feature>
+<feature>
+<chromosome>III</chromosome>
+<start>9528444</start>
+<end>10796866</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Stem Volume - Year 1</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Stem Volume - Year 1</link>
+</feature>
+</genome>

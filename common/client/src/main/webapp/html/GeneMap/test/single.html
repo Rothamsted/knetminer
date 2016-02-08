@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body>
+
+    <svg height="500", width="1000">
+      <g id="zoom_container">
+        <g id="chromosome_container" transform="translate(10,10)"></g>
+        <g id="annotations_container" transform="translate(50,10)"></g>
+      </g>
+    </svg>
+    <script src="../d3/d3.min.js"></script>
+    <script src="../js/lodash/lodash.min.js"></script>
+    <script src="../chromosome.js"></script>
+    <script src="../annotations.js"></script>
+
+    <script>
+
+      var zoom = d3.behavior.zoom().scaleExtent([1, 20]);
+      zoom.on("zoom", function() {
+        d3.select("#zoom_container").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      });
+      d3.select('svg').call(zoom);
+
+      var c = GENEMAP.Chromosome({
+        border: true
+      });
+
+      d3.select("#chromosome_container")
+        .datum({
+          index: 1,
+          length: 1000,
+          number: "ABC",
+          bands: [
+            {
+              index:1,
+              start:200,
+              end:400,
+              color:'0xff0000'
+            },
+            {
+              index:2,
+              start:400,
+              end:600,
+              color:'0x00ff00'
+            },
+            {
+              index:3,
+              start:750,
+              end:1000,
+              color:'0x0000ff'
+            },
+          ]
+        })
+        .call(c);
+
+        var a = GENEMAP.Annotations({
+          border: true
+        });
+
+        d3.select('#annotations_container')
+          .datum([{
+            chromosome: "III",
+            start: 200,
+            end: 201,
+            midpoint: 200.5,
+            type: "gene",
+            label: "POTRI.018G112500",
+            color: "0xffff00",
+            link: "http://www.google.com"
+          },
+          {
+            chromosome: "III",
+            start: 260,
+            end: 262,
+            midpoint: 261,
+            type: "gene",
+            label: "POTRI.018G112500",
+            color: "0xffff00",
+            link: "http://www.google.com"
+          },
+          {
+            chromosome: "III",
+            start: 500,
+            end: 800,
+            midpoint: 650,
+            type: "QTL",
+            label: "Stem Width",
+            color: "0xff00ff",
+            link: "http://www.google.com"
+          },
+        ]).call(a);
+
+    </script>
+
+  </body>
+</html>
