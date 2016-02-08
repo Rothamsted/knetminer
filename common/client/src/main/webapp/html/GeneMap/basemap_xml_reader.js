@@ -50,11 +50,8 @@ GENEMAP.BasemapXmlReader = function() {
 
   return {
 
-    readBasemapXML: function(path, callbackFn) {
-      d3.xml(path, function(error, xml) {
-        var data = _readBasemapXML(xml)
-        callbackFn(data);
-      });
+    readBasemapXML: function(path) {
+      return d3.promise.xml(path).then(_readBasemapXML);
     }
   }
 }

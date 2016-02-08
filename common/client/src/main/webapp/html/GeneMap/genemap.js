@@ -44,12 +44,7 @@ GENEMAP.GeneMap = function(userConfig) {
     var drawDocumentOutline = function() {
       container.select(".drawing_outline").attr({
         width: layout.drawing.width,
-        height: layout.drawing.height,
-        'vector-effect': 'non-scaling-stroke'
-      }).style({
-        fill:'#fafafa',
-        "stroke": "#ccc",
-        "stroke-width": 0.5
+        height: layout.drawing.height
       });
     };
 
@@ -60,11 +55,6 @@ GENEMAP.GeneMap = function(userConfig) {
         y: layout.drawing.margin.top,
         width: layout.drawing.width - layout.drawing.margin.left - layout.drawing.margin.right ,
         height: layout.drawing.height- layout.drawing.margin.top - layout.drawing.margin.bottom,
-        'vector-effect': 'non-scaling-stroke'
-      }).style({
-        fill:'none',
-        "stroke": "#000",
-        "stroke-width": 0.5
       });
     };
 
@@ -96,8 +86,7 @@ GENEMAP.GeneMap = function(userConfig) {
         svg = d3.select(this).select("svg").datum(d);
 
         svg.attr("width", config.width)
-           .attr("height", config.height)
-           .attr("style", "background-color:none");
+           .attr("height", config.height);
 
         container = svg.select(".zoom_window");
 
@@ -167,6 +156,18 @@ GENEMAP.GeneMap = function(userConfig) {
       config.layout = _.merge(config.layout, value);;
       return my;
     };
+
+    my.draw = function(target, basemapPath, annotationPath) {
+      var reader = GENEMAP.XmlDataReader();
+      
+      reader.readXMLData(basemapPath, "./data/poplar_annotation.xml").then(function(data) {
+        d3.select(target).datum(data).call(my)
+      });
+    }
+
+    my.redraw = function(target) {
+      d3.select(target).call(my);
+    }
 
     return my;
 };
