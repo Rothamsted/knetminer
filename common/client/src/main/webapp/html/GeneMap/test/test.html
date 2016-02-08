@@ -29,7 +29,7 @@
     <script src="../d3/d3.min.js"></script>
     <script src="../js/lodash/lodash.min.js"></script>
     <script src="../chromosome.js"></script>
-    <script src="../xml_reader.js"></script>
+    <script src="../basemap_xml_reader.js"></script>
     <script src="../map_layout.js"></script>
     <script src="../auto_layout.js"></script>
     <script src="../genemap.js"></script>
@@ -52,7 +52,7 @@
           .call(chart);
       };
 
-      var reader = GENEMAP.XmlReader();
+      var reader = GENEMAP.BasemapXmlReader();
 
       var redraw = function(resetZoom){
         var sel = document.getElementById('basemap-file');

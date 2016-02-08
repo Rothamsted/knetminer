@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.XmlReader = function() {
+GENEMAP.BasemapXmlReader = function() {
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee();
   }
