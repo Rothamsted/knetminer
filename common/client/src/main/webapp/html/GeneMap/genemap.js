@@ -117,9 +117,9 @@ GENEMAP.GeneMap = function(userConfig) {
           drawContentOutline();
         }
 
-        var chromosomeContainers = container.selectAll("g.container").data(d.chromosomes)
+        var chromosomeContainers = container.selectAll("g.chromosome_container").data(d.chromosomes)
 
-        chromosomeContainers.enter().append("g").classed("container", true);
+        chromosomeContainers.enter().append("g").classed("chromosome_container", true);
 
         chromosomeContainers.attr({
           transform: function(d, i){

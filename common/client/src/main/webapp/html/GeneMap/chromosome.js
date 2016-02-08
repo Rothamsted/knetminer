@@ -66,9 +66,7 @@ GENEMAP.Chromosome = function(userConfig) {
         chromosomeGroup.select("text").attr({
           x: config.width / 2,
           y: config.labelHeight  * (0.85),
-          'font-family': 'sans-serif',
           'font-size': config.labelHeight ,
-          'text-anchor': 'middle'
         }).text( function(d) {
             return d.number;
         });
@@ -85,9 +83,6 @@ GENEMAP.Chromosome = function(userConfig) {
           y: 0,
           rx: config.height * 0.05,
           ry: config.height * 0.05
-        }).style({
-          stroke: "none",
-          fill: "#fff"
         });
 
         chromosomeGroup.select("rect.outline")
@@ -97,8 +92,7 @@ GENEMAP.Chromosome = function(userConfig) {
             y: config.labelHeight,
             rx: config.height * 0.05,
             ry: config.height * 0.05
-          })
-          .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
+          });
 
         if (config.border){
           chromosomeGroup.select("rect.border")
@@ -107,8 +101,7 @@ GENEMAP.Chromosome = function(userConfig) {
               y:0,
               width: config.width,
               height: config.height + config.labelHeight
-            })
-            .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
+            });
         }
 
         // setup the chromosome bands
@@ -124,8 +117,7 @@ GENEMAP.Chromosome = function(userConfig) {
           y: function(d) { return y(d.start)},
           height: function(d) { return y(d.end - d.start); },
           x: 0,
-          fill: getColor,
-          stroke: "none"
+          fill: getColor
         });
 
         bands.exit().remove();

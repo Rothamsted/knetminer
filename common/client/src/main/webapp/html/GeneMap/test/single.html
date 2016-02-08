@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../css/annotations.css" />
+    <link rel="stylesheet" href="../css/chromosome.css" />
 
   </head>
 
@@ -14,8 +16,8 @@
 
     <svg height="500", width="1000">
       <g id="zoom_container">
-        <g id="chromosome_container" transform="translate(10,10)"></g>
-        <g id="annotations_container" transform="translate(50,10)"></g>
+        <g class="chromosome_container" transform="translate(10,10)"></g>
+        <g class="annotations_container" transform="translate(50,10)"></g>
       </g>
     </svg>
     <script src="../d3/d3.min.js"></script>
@@ -35,7 +37,7 @@
         border: true
       });
 
-      d3.select("#chromosome_container")
+      d3.select(".chromosome_container")
         .datum({
           index: 1,
           length: 1000,
@@ -67,7 +69,7 @@
           border: true
         });
 
-        d3.select('#annotations_container')
+        d3.select('.annotations_container')
           .datum([{
             chromosome: "III",
             start: 200,

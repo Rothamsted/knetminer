@@ -42,10 +42,6 @@ GENEMAP.Annotations = function(userConfig) {
         y1: function(d) { return y(d.midpoint);},
         y2: function(d) { return y(d.midpoint);},
         x2: halfWidth
-      }).style({
-        stroke: '#000',
-        'stroke-width':1,
-        'vector-effect': 'non-scaling-stroke'
       });
 
       // generate a little triange based on the data
@@ -66,18 +62,13 @@ GENEMAP.Annotations = function(userConfig) {
 
       geneAnnotations.selectAll("polygon").attr({
         points: pointsFn
-      }).style({
-        fill: "red",
-        stroke: "black",
-        'stroke-width': 0.5
       });
 
       geneAnnotations.selectAll("text").attr({
         x: halfWidth ,
-        y: function(d) { return y(d.start) - 5; },
-        'font-family': 'sans-serif',
-        'font-size': config.labelHeight ,
-        'text-anchor': 'middle'
+        y: function(d) { return y(d.start) - 5; }
+      }).style({
+        'font-size': config.labelHeight
       }).text( function(d) {
           return d.label;
       });
@@ -86,62 +77,50 @@ GENEMAP.Annotations = function(userConfig) {
 
     var setupQTLAnnotations = function(annotationsGroup, y) {
 
-        var hozPosition = config.width;
-        var qtlData = annotationsGroup.data()[0].filter(function(e){ return e.type === 'QTL'; })
+      var hozPosition = config.width;
+      var qtlData = annotationsGroup.data()[0].filter(function(e){ return e.type === 'QTL'; })
 
-        var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(qtlData);
+      var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(qtlData);
 
-        // setup the new annotations
-        var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append("g").classed("qtl_annotation", true);
-        qtlAnnotationsEnterGroup.append("line").classed("top-line", true);
-        qtlAnnotationsEnterGroup.append("line").classed("bottom-line", true);
-        qtlAnnotationsEnterGroup.append("rect").classed("qtl-selector", true);
-        qtlAnnotationsEnterGroup.append("text");
+      // setup the new annotations
+      var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append("g").classed("qtl_annotation", true);
+      qtlAnnotationsEnterGroup.append("line").classed("top-line", true);
+      qtlAnnotationsEnterGroup.append("line").classed("bottom-line", true);
+      qtlAnnotationsEnterGroup.append("rect").classed("qtl-selector", true);
+      qtlAnnotationsEnterGroup.append("text");
 
-        // update
-        qtlAnnotations.selectAll("line.top-line").attr({
-          x1: 0,
-          y1: function(d) { return y(d.start);},
-          y2: function(d) { return y(d.start);},
-          x2: hozPosition
-        }).style({
-          stroke: '#000',
-          'stroke-width':1,
-          'vector-effect': 'non-scaling-stroke'
-        });
+      // update
+      qtlAnnotations.selectAll("line.top-line").attr({
+        x1: 0,
+        y1: function(d) { return y(d.start);},
+        y2: function(d) { return y(d.start);},
+        x2: hozPosition
+      });
 
-        qtlAnnotations.selectAll("line.bottom-line").attr({
-          x1: 0,
-          y1: function(d) { return y(d.end);},
-          y2: function(d) { return y(d.end);},
-          x2: hozPosition
-        }).style({
-          stroke: '#000',
-          'stroke-width':1,
-          'vector-effect': 'non-scaling-stroke'
-        });
+      qtlAnnotations.selectAll("line.bottom-line").attr({
+        x1: 0,
+        y1: function(d) { return y(d.end);},
+        y2: function(d) { return y(d.end);},
+        x2: hozPosition
+      });
 
-        qtlAnnotations.selectAll("rect.qtl-selector").attr({
-          x: hozPosition - 10,
-          y: function(d) { return y(d.start);},
-          width: 10,
-          height: function(d) { return y(d.end) - y(d.start);},
-        }).style({
-          fill: getColor,
-          stroke: 'none',
-          'stroke-width':1,
-          'vector-effect': 'non-scaling-stroke'
-        });
+      qtlAnnotations.selectAll("rect.qtl-selector").attr({
+        x: hozPosition - 10,
+        y: function(d) { return y(d.start);},
+        width: 10,
+        height: function(d) { return y(d.end) - y(d.start);},
+      }).style({
+        fill: getColor
+      });
 
-        qtlAnnotations.selectAll("text").attr({
-          x: hozPosition ,
-          y: function(d) { return y(d.midpoint) - 5; },
-          'font-family': 'sans-serif',
-          'font-size': config.labelHeight ,
-          'text-anchor': 'middle'
-        }).text( function(d) {
-            return d.label;
-        });
+      qtlAnnotations.selectAll("text").attr({
+        x: hozPosition ,
+        y: function(d) { return y(d.midpoint) - 5; }
+      })
+      .style('font-size', config.labelHeight)
+      .text( function(d) {
+          return d.label;
+      });
     };
 
     // draw a border around the annotation target element
@@ -157,8 +136,7 @@ GENEMAP.Annotations = function(userConfig) {
           y:0,
           width: config.width,
           height: config.height + config.labelHeight
-        })
-        .style({ fill: "none", "stroke-width": "0.5", stroke: "#000"});
+        });
     };
 
     // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -179,26 +157,12 @@ GENEMAP.Annotations = function(userConfig) {
         };
 
         // create the annotationsGroup element if it doesn't exist
-        // var annotationsGroup = targetSelection.select("g.annotations");
-        // if (annotationsGroup.empty()){
-        //   annotationsGroup = targetSelection.append("g").attr({
-        //     class: 'annotations',
-        //     id: 'annotation_' + d.number
-        //   });
-        // }
-
-        // create the annotationsGroup element if it doesn't exist
         var annotationsGroup = targetSelection.selectAll("g.annotations").data([d]);
-
-        annotationsGroup.enter().append("g").attr({
-          class: 'annotations',
-          id: 'annotation_' + d.number
-        });
+        annotationsGroup.enter().append("g").attr({ class: 'annotations', id: 'annotation_' + d.number });
 
         setupGeneAnnotations(annotationsGroup, y);
 
         setupQTLAnnotations(annotationsGroup, y);
-
 
         if (config.border) {
           drawBorder(this);
