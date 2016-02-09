@@ -46,23 +46,27 @@
         x:10,
         longestChromosome: 1000,
         labelHeight: 20,
-        annotationsWidth: 400,
+        annotationWidth: 400,
+        showAnnotationLabels: true,
         bands: [
           {
             index:1,
             start:200,
+            midpoint:300,
             end:400,
             color:'#ff0000'
           },
           {
             index:2,
             start:400,
+            midpoint:500,
             end:600,
             color:'#00ff00'
           },
           {
             index:3,
             start:750,
+            midpoint:875,
             end:1000,
             color:'#0000ff'
           },
@@ -102,11 +106,11 @@
         }
       };
 
-      d3.select("#zoom_container").selectAll(".chromosome").data([chromosome]).call(c);
+      d3.select("#zoom_container").data([[chromosome]]).call(c);
 
       var a = GENEMAP.Annotations({ border: true });
 
-      d3.select("#zoom_container").selectAll('.annotations').data([chromosome]).call(a);
+      d3.select("#zoom_container").call(a);
 
     </script>
 

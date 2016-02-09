@@ -13,6 +13,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,
+    showAnnotationLabels: true,
     annotationWidth: 0.2,
     minLabelHeightPx: 8,
     margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
@@ -53,14 +54,15 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         labelHeight: heightRatio * config.labelHeight,
         width: widthRatio * config.chromosomeWidth,
         annotationWidth: widthRatio * config.annotationWidth,
-        longestChromosome: longest
+        longestChromosome: longest,
+        showAnnotationLabels: config.showAnnotationLabels
       }
 
       if (chromosomeLayout.labelHeight < config.minLabelHeightPx){
         // if the label doesn't reach the minimum height increase it to the minimum
         // and take the extra height from the chromosome height
         var extraHeight = config.minLabelHeightPx - chromosomeLayout.labelHeight;
-        chromosomeLayout.height = layout.chromosome.height - extraHeight;
+        chromosomeLayout.height = chromosomeLayout.height - extraHeight;
         chromosomeLayout.labelHeight = config.minLabelHeightPx;
       }
 

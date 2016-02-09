@@ -1,40 +1,40 @@
 
 
-g.annotations  line {
+g.annotation-group  line {
   stroke: #000;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
 
-g.annotations rect.border {
+g.annotation-group rect.border {
   fill: none;
   stroke-width: 0.5;
   stroke: #000;
 }
 
-g.annotations text {
+g.annotation-group text {
   font-family: sans-serif;
 }
 
 /* Gene annotations */
-.gene_annotation polygon {
+.annotation-group .gene_annotation polygon {
   fill: red;
   stroke: black;
   stroke-width: 0.5;
 }
 
-.gene_annotation text {
+.annotation-group .gene_annotation text {
   text-anchor: middle;
 }
 
 /* QTL annotations */
 
-.qtl_annotation rect.qtl-selector {
+.annotation-group .qtl_annotation rect.qtl-selector {
   stroke: none;
   stroke-width:1;
   vector-effect: 'non-scaling-stroke';
 }
 
-.qtl_annotation text {
+.annotation-group .qtl_annotation text {
   text-anchor: middle;
 }

@@ -2,13 +2,9 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.Annotations = function(userConfig) {
     var defaultConfig = {
-      width: 400,
-      height: 400, // only used if no scale is provided
-      yScale: null,
-      labelHeight: 20,
       border: false,
-      longestChromosome: 1000,
-      triangleSize: 10
+      triangleSize: 6,
+      labelHeight: 8
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -16,9 +12,10 @@ GENEMAP.Annotations = function(userConfig) {
     // adds the gene annotations to the annotations group within it, uses the data
     // bound to the annotationsGroup to generate the annotation elements
     var setupGeneAnnotations = function(annotationsGroup, y){
-      var halfWidth = config.width / 2.0;
 
       var chromosome = annotationsGroup.data()[0];
+      var hozPosition = chromosome.annotationWidth / 2.0;
+
       // Enter + Update elements
       var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(chromosome.annotations.genes);
 
@@ -32,7 +29,7 @@ GENEMAP.Annotations = function(userConfig) {
         x1: 0,
         y1: function(d) { return y(d.midpoint);},
         y2: function(d) { return y(d.midpoint);},
-        x2: halfWidth
+        x2: hozPosition
       });
 
       // generate a little triange based on the data
@@ -42,12 +39,12 @@ GENEMAP.Annotations = function(userConfig) {
         var a = config.triangleSize;
 
         // start at the top right and move down to the bottom left
-        points.push([halfWidth, y(midpoint) - a/2]);
-        points.push([halfWidth, y(midpoint) + a/2]);
+        points.push([hozPosition, y(midpoint) - a/2]);
+        points.push([hozPosition, y(midpoint) + a/2]);
 
         // add the final point at 1/2 height to make an equelateral triangle
         var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
-        points.push([halfWidth - h, y(midpoint)])
+        points.push([hozPosition - h, y(midpoint)])
         return points.join(" ");
       }
 
@@ -55,21 +52,25 @@ GENEMAP.Annotations = function(userConfig) {
         points: pointsFn
       });
 
+
       geneAnnotations.selectAll("text").attr({
-        x: halfWidth ,
+        x: hozPosition ,
         y: function(d) { return y(d.start) - 5; }
       }).style({
-        'font-size': config.labelHeight
+        'font-size': config.labelHeight,
+        'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
       }).text( function(d) {
           return d.label;
       });
 
+      geneAnnotations.exit().remove();
     };
 
     var setupQTLAnnotations = function(annotationsGroup, y) {
 
-      var hozPosition = config.width;
       var chromosome = annotationsGroup.data()[0];
+      var hozPosition = chromosome.annotationWidth;
+      var yOffset = chromosome.labelHeight;
 
       // Enter + Update elements
       var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(chromosome.annotations.qtls);
@@ -107,27 +108,33 @@ GENEMAP.Annotations = function(userConfig) {
 
       qtlAnnotations.selectAll("text").attr({
         x: hozPosition ,
-        y: function(d) { return y(d.midpoint) - 5; }
+        y: function(d) { return y(d.midpoint) + config.labelHeight/2.6; }
       })
-      .style('font-size', config.labelHeight)
+      .style({
+        'font-size': config.labelHeight ,
+        'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
+      })
       .text( function(d) {
           return d.label;
       });
+      
+      qtlAnnotations.exit().remove();
     };
 
     // draw a border around the annotation target element
-    var drawBorder = function(target) {
+    var drawBorder = function(group, chromosome, y) {
+
       // create the border element if it doesn't exist
-      if (d3.select(target).select("rect.border").empty()){
-        d3.select(target).append("rect").classed("border", true);
+      if (group.select("rect.border").empty()){
+        group.append("rect").classed("border", true);
       }
 
-      d3.select(target).select("rect.border")
+      group.select("rect.border")
         .attr({
           x:0,
           y:0,
-          width: config.width,
-          height: config.height + config.labelHeight
+          width: chromosome.annotationWidth,
+          height: y(chromosome.length)
         });
     };
 
@@ -138,31 +145,33 @@ GENEMAP.Annotations = function(userConfig) {
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
-
-      selection.enter().append("g").attr('class', 'annotations');
-
       selection.each(function(d, i){
-        var target = this;
-        var targetSelection = d3.select(target);
 
-        var y = buildYScale(d);
-        var height = y(d.length);
+        var groups = d3.select(this).selectAll(".annotation-group").data(d);
 
-        targetSelection.attr({
-          id: function(d) { return 'annotation_' + d.number},
-          transform: function(d){
-            return "translate(" + (d.x + d.width) + ","+ d.y +")";
+        groups.enter().append("g").attr('class', 'annotation-group');
+
+        groups.each(function(d, i) {
+          var y = buildYScale(d);
+
+
+          var group = d3.select(this).attr({
+            id: function(d) { return 'annotation_' + d.number},
+            transform: function(d){
+              return "translate(" + (d.x + d.width) + ","+ (d.y + d.labelHeight) +")";
+            }
+          })
+
+          setupGeneAnnotations(group, y);
+
+          setupQTLAnnotations(group, y);
+
+          if (config.border) {
+            drawBorder(group, d, y);
           }
-        })
+        });
 
-        setupGeneAnnotations(targetSelection, y);
-
-        setupQTLAnnotations(targetSelection, y);
-
-        if (config.border) {
-          drawBorder(this);
-        }
-
+        groups.exit().remove();
       });
     }
 

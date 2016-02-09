@@ -16,29 +16,40 @@ GENEMAP.XmlDataReader = function() {
             d.substring(2, d.length);
   };
 
-  var _joinData = function(data) {
-    var genome = data[0];
+  var _processBasemapData = function(genome) {
+    genome.chromosomes.forEach(function(chromosome) {
+      // include empty lists incase there is no annotation data
+      chromosome.annotations = {
+          genes: [],
+          qtls: []
+      };
+
+      chromosome.bands.forEach(function(band) {
+          band.color = getColor(band.color);
+      });
+    });
+
+    return genome;
+  }
+
+  var _processJoinedData = function(data) {
+    var genome = _processBasemapData(data[0]);
     var annotations = data[1];
 
     annotations.features.forEach(function(annotation){
-      annotations.color = getColor(annotation.color);
+      annotation.color = getColor(annotation.color);
     });
 
     genome.chromosomes.forEach(function(chromosome) {
       var chromosomeAnnotations = annotations.features.filter(function(e) { return e.chromosome === chromosome.number});
 
-      var genes = chromosomeAnnotations.filter(function(e){ return e.type === 'gene'; })
-      var qtls = chromosomeAnnotations.filter(function(e){ return e.type === 'QTL'; })
+      var genes = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'gene'; })
+      var qtls = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'qtl'; })
 
       chromosome.annotations = {
         genes: genes,
         qtls: qtls
       }
-
-      chromosome.bands.forEach(function(band) {
-          band.color = getColor(band.color);
-      });
-
     });
 
     return genome;
@@ -55,12 +66,12 @@ GENEMAP.XmlDataReader = function() {
         var annotationReader = GENEMAP.AnnotationXMLReader();
         var annotationPromise = annotationReader.readAnnotationXML(annotationPath);
 
-        var promise = Promise.all([basemapPromise, annotationPromise]).then(_joinData);
+        var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData);
 
         return promise;
       }
 
-      return basemapPromise;
+      return basemapPromise.then(_processBasemapData);
     }
   }
 }

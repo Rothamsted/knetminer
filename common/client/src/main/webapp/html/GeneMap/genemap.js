@@ -5,7 +5,8 @@ GENEMAP.GeneMap = function(userConfig) {
       width: "100%",
       height: "100%",
       layout: {
-        margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05}
+        margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05},
+        numberPerRow: 5
       },
       contentBorder: false
     };
@@ -107,12 +108,20 @@ GENEMAP.GeneMap = function(userConfig) {
           drawContentOutline();
         }
 
-        // draw the chromosomes
+        // setup the cotnainer and draw the chromosomes
         var chromosomeDrawer = GENEMAP.Chromosome();
-        var chromosomeContainers = container.selectAll("g.chromosome").data(genome.chromosomes)
-        chromosomeContainers.call(chromosomeDrawer);
 
-        chromosomeContainers.exit().remove();
+        var chromosomeContainer = container.selectAll("g.chromosome-container").data([genome.chromosomes]);
+        chromosomeContainer.enter().append("g").attr("class", "chromosome-container");
+        chromosomeContainer.call(chromosomeDrawer);
+
+        // setup the annotations container and draw the annotations
+        var annotationDrawer = GENEMAP.Annotations();
+
+        var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
+        annotationContainer.enter().append("g").attr("class", "annotation-container");
+        annotationContainer.call(annotationDrawer);
+
       });
     }
 
@@ -143,7 +152,7 @@ GENEMAP.GeneMap = function(userConfig) {
     my.draw = function(target, basemapPath, annotationPath) {
       var reader = GENEMAP.XmlDataReader();
 
-      reader.readXMLData(basemapPath, "./data/poplar_annotation.xml").then(function(data) {
+      reader.readXMLData(basemapPath, annotationPath).then(function(data) {
         d3.select(target).datum(data).call(my)
       });
     }

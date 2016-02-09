@@ -7,7 +7,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.015G129900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G129900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.015G129900</link>
 </feature>
 <feature id="1">
 <chromosome>XII</chromosome>
@@ -16,7 +16,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.012G128500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G128500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G128500</link>
 </feature>
 <feature id="2">
 <chromosome>IV</chromosome>
@@ -25,7 +25,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.004G075900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G075900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G075900</link>
 </feature>
 <feature id="3">
 <chromosome>XVIII</chromosome>
@@ -34,7 +34,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.018G002100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G002100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.018G002100</link>
 </feature>
 <feature id="4">
 <chromosome>VIII</chromosome>
@@ -43,7 +43,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.008G137400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G137400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G137400</link>
 </feature>
 <feature id="5">
 <chromosome>IX</chromosome>
@@ -52,7 +52,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.009G044500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G044500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G044500</link>
 </feature>
 <feature id="6">
 <chromosome>I</chromosome>
@@ -61,7 +61,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.001G250400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G250400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G250400</link>
 </feature>
 <feature id="7">
 <chromosome>XIV</chromosome>
@@ -70,7 +70,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.014G195400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G195400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.014G195400</link>
 </feature>
 <feature id="8">
 <chromosome>XII</chromosome>
@@ -79,7 +79,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.012G047100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G047100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G047100</link>
 </feature>
 <feature id="9">
 <chromosome>X</chromosome>
@@ -88,7 +88,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.010G254600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G254600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G254600</link>
 </feature>
 <feature id="10">
 <chromosome>IV</chromosome>
@@ -97,7 +97,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.004G076200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G076200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G076200</link>
 </feature>
 <feature id="11">
 <chromosome>IV</chromosome>
@@ -106,7 +106,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.004G076000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G076000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G076000</link>
 </feature>
 <feature id="12">
 <chromosome>VIII</chromosome>
@@ -115,7 +115,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.008G009100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G009100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G009100</link>
 </feature>
 <feature id="13">
 <chromosome>IV</chromosome>
@@ -124,7 +124,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.004G089500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G089500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G089500</link>
 </feature>
 <feature id="14">
 <chromosome>XIX</chromosome>
@@ -133,7 +133,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.019G043200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G043200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.019G043200</link>
 </feature>
 <feature id="15">
 <chromosome>IX</chromosome>
@@ -142,7 +142,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.009G100900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G100900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G100900</link>
 </feature>
 <feature id="16">
 <chromosome>I</chromosome>
@@ -151,7 +151,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.001G136800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G136800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G136800</link>
 </feature>
 <feature id="17">
 <chromosome>VIII</chromosome>
@@ -160,7 +160,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.008G137500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G137500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G137500</link>
 </feature>
 <feature id="18">
 <chromosome>X</chromosome>
@@ -169,7 +169,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.010G103400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G103400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G103400</link>
 </feature>
 <feature id="19">
 <chromosome>V</chromosome>
@@ -178,7 +178,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.005G140800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G140800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G140800</link>
 </feature>
 <feature id="20">
 <chromosome>I</chromosome>
@@ -187,7 +187,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.001G158500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G158500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G158500</link>
 </feature>
 <feature id="21">
 <chromosome>VIII</chromosome>
@@ -196,7 +196,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.008G050300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G050300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G050300</link>
 </feature>
 <feature id="22">
 <chromosome>VII</chromosome>
@@ -205,7 +205,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.007G046400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.007G046400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.007G046400</link>
 </feature>
 <feature id="23">
 <chromosome>II</chromosome>
@@ -214,7 +214,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.002G148600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G148600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G148600</link>
 </feature>
 <feature id="24">
 <chromosome>III</chromosome>
@@ -223,7 +223,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.003G116500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G116500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G116500</link>
 </feature>
 <feature id="25">
 <chromosome>X</chromosome>
@@ -232,7 +232,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.010G249900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G249900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G249900</link>
 </feature>
 <feature id="26">
 <chromosome>XI</chromosome>
@@ -241,7 +241,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.011G000800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G000800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.011G000800</link>
 </feature>
 <feature id="27">
 <chromosome>IX</chromosome>
@@ -250,7 +250,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.009G150000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G150000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G150000</link>
 </feature>
 <feature id="28">
 <chromosome>VIII</chromosome>
@@ -259,7 +259,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.008G002400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G002400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G002400</link>
 </feature>
 <feature id="29">
 <chromosome>II</chromosome>
@@ -268,7 +268,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.002G126800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G126800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G126800</link>
 </feature>
 <feature id="30">
 <chromosome>XII</chromosome>
@@ -277,7 +277,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.012G032200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G032200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G032200</link>
 </feature>
 <feature id="31">
 <chromosome>XV</chromosome>
@@ -286,7 +286,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.015G022900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G022900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.015G022900</link>
 </feature>
 <feature id="32">
 <chromosome>IX</chromosome>
@@ -295,7 +295,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.009G099200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G099200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G099200</link>
 </feature>
 <feature id="33">
 <chromosome>XIII</chromosome>
@@ -304,7 +304,7 @@
 <type>gene</type>
 <color>0x00FF00</color>
 <label>POTRI.013G076000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.013G076000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.013G076000</link>
 </feature>
 <feature id="34">
 <chromosome>I</chromosome>
@@ -313,7 +313,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.001G303900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G303900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G303900</link>
 </feature>
 <feature id="35">
 <chromosome>XIX</chromosome>
@@ -322,7 +322,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.019G055600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G055600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.019G055600</link>
 </feature>
 <feature id="36">
 <chromosome>XVII</chromosome>
@@ -331,7 +331,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.017G048800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.017G048800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.017G048800</link>
 </feature>
 <feature id="37">
 <chromosome>VIII</chromosome>
@@ -340,7 +340,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.008G076500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G076500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G076500</link>
 </feature>
 <feature id="38">
 <chromosome>IX</chromosome>
@@ -349,7 +349,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.009G039600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G039600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G039600</link>
 </feature>
 <feature id="39">
 <chromosome>V</chromosome>
@@ -358,7 +358,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.005G241700</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G241700</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G241700</link>
 </feature>
 <feature id="40">
 <chromosome>XIV</chromosome>
@@ -367,7 +367,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.014G030000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G030000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.014G030000</link>
 </feature>
 <feature id="41">
 <chromosome>VI</chromosome>
@@ -376,7 +376,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.006G034300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G034300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G034300</link>
 </feature>
 <feature id="42">
 <chromosome>XI</chromosome>
@@ -385,7 +385,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.011G031300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G031300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.011G031300</link>
 </feature>
 <feature id="43">
 <chromosome>I</chromosome>
@@ -394,7 +394,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.001G296000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G296000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G296000</link>
 </feature>
 <feature id="44">
 <chromosome>I</chromosome>
@@ -403,7 +403,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.001G246500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G246500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G246500</link>
 </feature>
 <feature id="45">
 <chromosome>I</chromosome>
@@ -412,7 +412,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.001G187200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G187200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G187200</link>
 </feature>
 <feature id="46">
 <chromosome>X</chromosome>
@@ -421,7 +421,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.010G210200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G210200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G210200</link>
 </feature>
 <feature id="47">
 <chromosome>XVII</chromosome>
@@ -430,7 +430,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.017G106600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.017G106600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.017G106600</link>
 </feature>
 <feature id="48">
 <chromosome>III</chromosome>
@@ -439,7 +439,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.003G205200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G205200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G205200</link>
 </feature>
 <feature id="49">
 <chromosome>XVI</chromosome>
@@ -448,7 +448,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.016G137500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.016G137500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.016G137500</link>
 </feature>
 <feature id="50">
 <chromosome>XII</chromosome>
@@ -457,7 +457,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.012G125700</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G125700</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G125700</link>
 </feature>
 <feature id="51">
 <chromosome>VIII</chromosome>
@@ -466,7 +466,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.008G155800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G155800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G155800</link>
 </feature>
 <feature id="52">
 <chromosome>XIV</chromosome>
@@ -475,7 +475,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.014G148800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G148800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.014G148800</link>
 </feature>
 <feature id="53">
 <chromosome>IV</chromosome>
@@ -484,7 +484,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.004G018300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G018300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G018300</link>
 </feature>
 <feature id="54">
 <chromosome>II</chromosome>
@@ -493,7 +493,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.002G244100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G244100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G244100</link>
 </feature>
 <feature id="55">
 <chromosome>XII</chromosome>
@@ -502,7 +502,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.012G144900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G144900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G144900</link>
 </feature>
 <feature id="56">
 <chromosome>III</chromosome>
@@ -511,7 +511,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.003G076500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G076500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G076500</link>
 </feature>
 <feature id="57">
 <chromosome>XIV</chromosome>
@@ -520,7 +520,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.014G137500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G137500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.014G137500</link>
 </feature>
 <feature id="58">
 <chromosome>XII</chromosome>
@@ -529,7 +529,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.012G039100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G039100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G039100</link>
 </feature>
 <feature id="59">
 <chromosome>XII</chromosome>
@@ -538,7 +538,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.012G019400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G019400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G019400</link>
 </feature>
 <feature id="60">
 <chromosome>VI</chromosome>
@@ -547,7 +547,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.006G245900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G245900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G245900</link>
 </feature>
 <feature id="61">
 <chromosome>VI</chromosome>
@@ -556,7 +556,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.006G246000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G246000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G246000</link>
 </feature>
 <feature id="62">
 <chromosome>XVIII</chromosome>
@@ -565,7 +565,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.018G072400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G072400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.018G072400</link>
 </feature>
 <feature id="63">
 <chromosome>I</chromosome>
@@ -574,7 +574,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.001G266900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G266900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G266900</link>
 </feature>
 <feature id="64">
 <chromosome>XI</chromosome>
@@ -583,7 +583,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.011G135900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.011G135900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.011G135900</link>
 </feature>
 <feature id="65">
 <chromosome>XV</chromosome>
@@ -592,7 +592,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.015G097700</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G097700</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.015G097700</link>
 </feature>
 <feature id="66">
 <chromosome>IX</chromosome>
@@ -601,7 +601,7 @@
 <type>gene</type>
 <color>0xFFA500</color>
 <label>POTRI.009G061100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G061100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G061100</link>
 </feature>
 <feature id="67">
 <chromosome>VIII</chromosome>
@@ -610,7 +610,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.008G219400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G219400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G219400</link>
 </feature>
 <feature id="68">
 <chromosome>III</chromosome>
@@ -619,7 +619,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.003G109100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G109100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G109100</link>
 </feature>
 <feature id="69">
 <chromosome>III</chromosome>
@@ -628,7 +628,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.003G106800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G106800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G106800</link>
 </feature>
 <feature id="70">
 <chromosome>VI</chromosome>
@@ -637,7 +637,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.006G158500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G158500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G158500</link>
 </feature>
 <feature id="71">
 <chromosome>II</chromosome>
@@ -646,7 +646,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.002G019800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G019800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G019800</link>
 </feature>
 <feature id="72">
 <chromosome>VI</chromosome>
@@ -655,7 +655,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.006G157000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G157000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G157000</link>
 </feature>
 <feature id="73">
 <chromosome>I</chromosome>
@@ -664,7 +664,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.001G126800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G126800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G126800</link>
 </feature>
 <feature id="74">
 <chromosome>XVIII</chromosome>
@@ -673,7 +673,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.018G023900</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G023900</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.018G023900</link>
 </feature>
 <feature id="75">
 <chromosome>IX</chromosome>
@@ -682,7 +682,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.009G090200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.009G090200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.009G090200</link>
 </feature>
 <feature id="76">
 <chromosome>XIV</chromosome>
@@ -691,7 +691,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.014G070000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.014G070000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.014G070000</link>
 </feature>
 <feature id="77">
 <chromosome>X</chromosome>
@@ -700,7 +700,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.010G058500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G058500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G058500</link>
 </feature>
 <feature id="78">
 <chromosome>XV</chromosome>
@@ -709,7 +709,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.015G147600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.015G147600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.015G147600</link>
 </feature>
 <feature id="79">
 <chromosome>XVIII</chromosome>
@@ -718,7 +718,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.018G027000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G027000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.018G027000</link>
 </feature>
 <feature id="80">
 <chromosome>VII</chromosome>
@@ -727,7 +727,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.007G089000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.007G089000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.007G089000</link>
 </feature>
 <feature id="81">
 <chromosome>III</chromosome>
@@ -736,7 +736,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.003G155300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G155300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G155300</link>
 </feature>
 <feature id="82">
 <chromosome>X</chromosome>
@@ -745,7 +745,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.010G255000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.010G255000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.010G255000</link>
 </feature>
 <feature id="83">
 <chromosome>XIX</chromosome>
@@ -754,7 +754,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.019G043500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.019G043500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.019G043500</link>
 </feature>
 <feature id="84">
 <chromosome>I</chromosome>
@@ -763,7 +763,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.001G420200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G420200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G420200</link>
 </feature>
 <feature id="85">
 <chromosome>III</chromosome>
@@ -772,7 +772,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.003G086000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.003G086000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.003G086000</link>
 </feature>
 <feature id="86">
 <chromosome>I</chromosome>
@@ -781,7 +781,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.001G148400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G148400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G148400</link>
 </feature>
 <feature id="87">
 <chromosome>V</chromosome>
@@ -790,7 +790,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.005G010200</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G010200</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G010200</link>
 </feature>
 <feature id="88">
 <chromosome>V</chromosome>
@@ -799,7 +799,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.005G010100</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G010100</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G010100</link>
 </feature>
 <feature id="89">
 <chromosome>V</chromosome>
@@ -808,7 +808,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.005G160300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G160300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G160300</link>
 </feature>
 <feature id="90">
 <chromosome>XII</chromosome>
@@ -817,7 +817,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.012G061800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.012G061800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.012G061800</link>
 </feature>
 <feature id="91">
 <chromosome>VIII</chromosome>
@@ -826,7 +826,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.008G070500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G070500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G070500</link>
 </feature>
 <feature id="92">
 <chromosome>VI</chromosome>
@@ -835,7 +835,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.006G165000</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G165000</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G165000</link>
 </feature>
 <feature id="93">
 <chromosome>II</chromosome>
@@ -844,7 +844,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.002G241300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G241300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G241300</link>
 </feature>
 <feature id="94">
 <chromosome>I</chromosome>
@@ -853,7 +853,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.001G115800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.001G115800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.001G115800</link>
 </feature>
 <feature id="95">
 <chromosome>XVIII</chromosome>
@@ -862,7 +862,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.018G019300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.018G019300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.018G019300</link>
 </feature>
 <feature id="96">
 <chromosome>VIII</chromosome>
@@ -871,7 +871,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.008G176500</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G176500</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G176500</link>
 </feature>
 <feature id="97">
 <chromosome>VI</chromosome>
@@ -880,7 +880,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.006G279700</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.006G279700</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.006G279700</link>
 </feature>
 <feature id="98">
 <chromosome>VIII</chromosome>
@@ -889,7 +889,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.008G066800</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.008G066800</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.008G066800</link>
 </feature>
 <feature id="99">
 <chromosome>IV</chromosome>
@@ -898,7 +898,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.004G065600</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.004G065600</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.004G065600</link>
 </feature>
 <feature id="100">
 <chromosome>II</chromosome>
@@ -907,7 +907,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.002G212400</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.002G212400</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.002G212400</link>
 </feature>
 <feature id="101">
 <chromosome>V</chromosome>
@@ -916,7 +916,7 @@
 <type>gene</type>
 <color>0xFF0000</color>
 <label>POTRI.005G008300</label>
-<link>OndexServlet?mode=network&keyword=volume&list=POTRI.005G008300</link>
+<link>OndexServlet?mode=network&amp;keyword=volume&amp;list=POTRI.005G008300</link>
 </feature>
 <feature>
 <chromosome>IX</chromosome>

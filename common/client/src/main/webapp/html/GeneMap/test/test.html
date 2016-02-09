@@ -21,6 +21,7 @@
       <option value='./data/wheat_basemap.xml'>Wheat</option>
       <option value='./data/simple_basemap.xml'>Simple</option>
     </select>
+    <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" />
     <span>Num Per Row:</span>
     <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;"/>
     <button onclick="redraw(false)">Draw</button>
@@ -31,6 +32,7 @@
     <script src="../js/lodash/lodash.min.js"></script>
     <script src="../js/d3.promise/d3.promise.min.js"></script>
     <script src="../chromosome.js"></script>
+    <script src="../annotations.js"></script>
     <script src="../basemap_xml_reader.js"></script>
     <script src="../annotation_xml_reader.js"></script>
     <script src="../xml_data_reader.js"></script>
@@ -55,11 +57,18 @@
         var numberPerRow = +document.getElementById('chromosome_per_row').value;
         chart.layout().numberPerRow = numberPerRow;
 
+        chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
+
         if (resetZoom){
           chart.resetZoom();
         }
 
-        chart.draw('#map', file, "./data/poplar_annotation.xml");
+        var annotationFile = null;
+        if (file.indexOf('poplar') > -1 ){
+          annotationFile = "./data/annotations/poplar_gene_qtl_matches.xml"
+        }
+
+        chart.draw('#map', file, annotationFile);
       }
 
       redraw();
