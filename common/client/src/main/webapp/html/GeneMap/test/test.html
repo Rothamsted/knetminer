@@ -21,7 +21,7 @@
       <option value='./data/wheat_basemap.xml'>Wheat</option>
       <option value='./data/simple_basemap.xml'>Simple</option>
     </select>
-    <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" />
+    <!-- <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" /> -->
     <span>Num Per Row:</span>
     <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;"/>
     <button onclick="redraw(false)">Draw</button>
@@ -57,7 +57,7 @@
         var numberPerRow = +document.getElementById('chromosome_per_row').value;
         chart.layout().numberPerRow = numberPerRow;
 
-        chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
+        // chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
 
         if (resetZoom){
           chart.resetZoom();

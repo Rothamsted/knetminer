@@ -8,12 +8,15 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
   var defaultConfig = {
     width: 900,
     height: 600,
+    scale: 1,
+    translate: [0,0],
     numberPerRow: 10,
     chromosomeWidth: 0.05,
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,
-    showAnnotationLabels: true,
+    annotationLabelHeight: 0.02,
+    annotationLabelThreshold:10,
     annotationWidth: 0.2,
     minLabelHeightPx: 8,
     margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
@@ -55,7 +58,12 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         width: widthRatio * config.chromosomeWidth,
         annotationWidth: widthRatio * config.annotationWidth,
         longestChromosome: longest,
-        showAnnotationLabels: config.showAnnotationLabels
+        showAnnotationLabels: true,
+        annotationLabelHeight: heightRatio * config.annotationLabelHeight
+      }
+
+      if (chromosomeLayout.annotationLabelHeight * config.scale < config.annotationLabelThreshold){
+        chromosomeLayout.showAnnotationLabels = false;
       }
 
       if (chromosomeLayout.labelHeight < config.minLabelHeightPx){
@@ -105,6 +113,18 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     height: function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
+      return this;
+    },
+
+    scale: function(value) {
+      if (!arguments.length) return config.scale;
+      config.scale = value;
+      return this;
+    },
+
+    translate: function(value) {
+      if (!arguments.length) return config.translate;
+      config.translate = value;
       return this;
     },
 

@@ -14,6 +14,7 @@ GENEMAP.GeneMap = function(userConfig) {
     var config = _.merge({}, defaultConfig, userConfig);
 
     var genome; // the layout to be used;
+    var target; // the containing element for the map
     var svg; // the top SVG element
     var zoom; // the zoom behaviour
     var container; // the g container that performs the zooming
@@ -38,6 +39,10 @@ GENEMAP.GeneMap = function(userConfig) {
       }
 
       zoom.translate(translate);
+
+      // re-draw the map
+      drawMap();
+
       container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
     };
 
@@ -75,53 +80,60 @@ GENEMAP.GeneMap = function(userConfig) {
       mapContainer.select('svg').call(zoom);
     }
 
+    var drawMap = function() {
+
+      if (!d3.select(target).select('svg').node()){
+        constructSkeletonChart(d3.select(target));
+      }
+
+      svg = d3.select(target).select("svg");
+
+      svg.attr("width", config.width)
+         .attr("height", config.height);
+
+      container = svg.select(".zoom_window");
+
+      // setup the containers for each of the chromosomes
+      var bbox = svg.node().getBoundingClientRect();
+
+      // update the layout object with the new settings
+      var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
+        .width(bbox.width)
+        .height(bbox.height)
+        .scale(zoom.scale())
+        .translate(zoom.translate());
+
+      genome = layoutDecorator.decorateGenome(genome);
+      svg.datum(genome);
+
+      drawDocumentOutline();
+
+      if (config.contentBorder) {
+        drawContentOutline();
+      }
+
+      // setup the cotnainer and draw the chromosomes
+      var chromosomeDrawer = GENEMAP.Chromosome();
+
+      var chromosomeContainer = container.selectAll("g.chromosome-container").data([genome.chromosomes]);
+      chromosomeContainer.enter().append("g").attr("class", "chromosome-container");
+      chromosomeContainer.call(chromosomeDrawer);
+
+      // setup the annotations container and draw the annotations
+      var annotationDrawer = GENEMAP.Annotations();
+
+      var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
+      annotationContainer.enter().append("g").attr("class", "annotation-container");
+      annotationContainer.call(annotationDrawer);
+    };
+
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
       selection.each(function(d, i){
-
-        if (!d3.select(this).select('svg').node()){
-          constructSkeletonChart(d3.select(this));
-        }
-
-        svg = d3.select(this).select("svg");
-
-        svg.attr("width", config.width)
-           .attr("height", config.height);
-
-        container = svg.select(".zoom_window");
-
-        // setup the containers for each of the chromosomes
-        var bbox = svg.node().getBoundingClientRect();
-
-        // update the layout object with the new settings
-        var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
-          .width(bbox.width)
-          .height(bbox.height);
-
-        genome = layoutDecorator.decorateGenome(d);
-        svg.datum(genome);
-
-        drawDocumentOutline();
-
-        if (config.contentBorder) {
-          drawContentOutline();
-        }
-
-        // setup the cotnainer and draw the chromosomes
-        var chromosomeDrawer = GENEMAP.Chromosome();
-
-        var chromosomeContainer = container.selectAll("g.chromosome-container").data([genome.chromosomes]);
-        chromosomeContainer.enter().append("g").attr("class", "chromosome-container");
-        chromosomeContainer.call(chromosomeDrawer);
-
-        // setup the annotations container and draw the annotations
-        var annotationDrawer = GENEMAP.Annotations();
-
-        var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
-        annotationContainer.enter().append("g").attr("class", "annotation-container");
-        annotationContainer.call(annotationDrawer);
-
+        genome = d;
+        target = this;
+        drawMap();
       });
     }
 

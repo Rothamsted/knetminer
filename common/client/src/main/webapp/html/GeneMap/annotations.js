@@ -57,7 +57,7 @@ GENEMAP.Annotations = function(userConfig) {
         x: hozPosition ,
         y: function(d) { return y(d.start) - 5; }
       }).style({
-        'font-size': config.labelHeight,
+        'font-size': chromosome.annotationLabelHeight,
         'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
       }).text( function(d) {
           return d.label;
@@ -108,16 +108,16 @@ GENEMAP.Annotations = function(userConfig) {
 
       qtlAnnotations.selectAll("text").attr({
         x: hozPosition ,
-        y: function(d) { return y(d.midpoint) + config.labelHeight/2.6; }
+        y: function(d) { return y(d.midpoint) + chromosome.annotationLabelHeight/2.6; }
       })
       .style({
-        'font-size': config.labelHeight ,
+        'font-size': chromosome.annotationLabelHeight ,
         'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
       })
       .text( function(d) {
           return d.label;
       });
-      
+
       qtlAnnotations.exit().remove();
     };
 
