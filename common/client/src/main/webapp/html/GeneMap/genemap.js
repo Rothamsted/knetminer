@@ -13,6 +13,7 @@ GENEMAP.GeneMap = function(userConfig) {
 
     var config = _.merge({}, defaultConfig, userConfig);
 
+    var target; // the target for the containing HTML element
     var genome; // the layout to be used;
     var target; // the containing element for the map
     var svg; // the top SVG element
@@ -113,6 +114,9 @@ GENEMAP.GeneMap = function(userConfig) {
       }
 
       var infoBox = GENEMAP.InfoBox();
+      if (target){
+        infoBox.target(target);
+      }
       infoBox.attach();
 
       // setup the cotnainer and draw the chromosomes
@@ -166,7 +170,7 @@ GENEMAP.GeneMap = function(userConfig) {
 
     my.draw = function(target, basemapPath, annotationPath) {
       var reader = GENEMAP.XmlDataReader();
-
+      target = target;
       reader.readXMLData(basemapPath, annotationPath).then(function(data) {
         d3.select(target).datum(data).call(my)
       });
