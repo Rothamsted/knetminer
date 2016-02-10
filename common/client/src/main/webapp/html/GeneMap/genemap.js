@@ -112,6 +112,9 @@ GENEMAP.GeneMap = function(userConfig) {
         drawContentOutline();
       }
 
+      var infoBox = GENEMAP.InfoBox();
+      infoBox.attach();
+
       // setup the cotnainer and draw the chromosomes
       var chromosomeDrawer = GENEMAP.Chromosome();
 

@@ -22,7 +22,7 @@ GENEMAP.Annotations = function(userConfig) {
       var geneAnnotationsEnterGroup = geneAnnotations.enter().append("g").classed("gene_annotation", true);
 
       geneAnnotationsEnterGroup.append("line").classed("midpoint-line", true);
-      geneAnnotationsEnterGroup.append("polygon");
+      geneAnnotationsEnterGroup.append("polygon").attr('class', 'infobox');
       geneAnnotationsEnterGroup.append("text");
 
       geneAnnotations.selectAll("line.midpoint-line").attr({
@@ -79,7 +79,7 @@ GENEMAP.Annotations = function(userConfig) {
       var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append("g").classed("qtl_annotation", true);
       qtlAnnotationsEnterGroup.append("line").classed("top-line", true);
       qtlAnnotationsEnterGroup.append("line").classed("bottom-line", true);
-      qtlAnnotationsEnterGroup.append("rect").classed("qtl-selector", true);
+      qtlAnnotationsEnterGroup.append("rect").classed("qtl-selector infobox", true);
       qtlAnnotationsEnterGroup.append("text");
 
       // update

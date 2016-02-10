@@ -6,28 +6,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="style.css" />
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="../css/annotations.css" />
     <link rel="stylesheet" href="../css/chromosome.css" />
     <link rel="stylesheet" href="../css/mapview.css" />
+    <link rel="stylesheet" href="../css/infobox.css" />
+    <link rel="stylesheet" href="style.css" />
 
   </head>
 
   <body>
 
     <span>Basemap:</span>
+
     <select id="basemap-file">
       <option selected="selected" value='./data/poplar_basemap.xml'>Poplar</option>
       <option value='./data/wheat_basemap.xml'>Wheat</option>
       <option value='./data/simple_basemap.xml'>Simple</option>
     </select>
+
     <!-- <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" /> -->
     <span>Num Per Row:</span>
+
     <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;"/>
     <button onclick="redraw(false)">Draw</button>
     <button onclick="redraw(true)">Reset Zoom</button>
 
     <div id="map"></div>
+
+    <script src="../js/jquery-1.12.0.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <script src="../d3/d3.min.js"></script>
     <script src="../js/lodash/lodash.min.js"></script>
     <script src="../js/d3.promise/d3.promise.min.js"></script>
@@ -38,6 +46,7 @@
     <script src="../xml_data_reader.js"></script>
     <script src="../map_layout.js"></script>
     <script src="../auto_layout.js"></script>
+    <script src="../infobox.js"></script>
     <script src="../genemap.js"></script>
 
     <script>
