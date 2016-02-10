@@ -2,6 +2,7 @@
 .chromosome {
   font-family: sans-serif;
   text-anchor: middle;
+  vector-effect: non-scaling-stroke;
 }
 
 .chromosome .mask_rect {
@@ -13,6 +14,7 @@
    fill: none;
    stroke-width: 0.5;
    stroke: #000;
+   vector-effect: non-scaling-stroke;
 }
 
 .chromosome rect.border {

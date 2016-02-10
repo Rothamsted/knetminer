@@ -3,7 +3,6 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.Annotations = function(userConfig) {
     var defaultConfig = {
       border: false,
-      triangleSize: 6,
       labelHeight: 8
     };
 
@@ -36,7 +35,7 @@ GENEMAP.Annotations = function(userConfig) {
       var pointsFn = function(d) {
         var points = []
         var midpoint = d.start + (d.end - d.start) / 2;
-        var a = config.triangleSize;
+        var a = chromosome.annotationMarkerSize;
 
         // start at the top right and move down to the bottom left
         points.push([hozPosition, y(midpoint) - a/2]);
@@ -54,8 +53,8 @@ GENEMAP.Annotations = function(userConfig) {
 
 
       geneAnnotations.selectAll("text").attr({
-        x: hozPosition ,
-        y: function(d) { return y(d.start) - 5; }
+        x: hozPosition  + chromosome.annotationLabelHeight * 0.5,
+        y: function(d) { return y(d.midpoint) + (0.4 * chromosome.annotationLabelHeight) ; }
       }).style({
         'font-size': chromosome.annotationLabelHeight,
         'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
@@ -107,8 +106,8 @@ GENEMAP.Annotations = function(userConfig) {
       });
 
       qtlAnnotations.selectAll("text").attr({
-        x: hozPosition ,
-        y: function(d) { return y(d.midpoint) + chromosome.annotationLabelHeight/2.6; }
+        x: hozPosition / 2 ,
+        y: function(d) { return y(d.start) + chromosome.annotationLabelHeight; }
       })
       .style({
         'font-size': chromosome.annotationLabelHeight ,

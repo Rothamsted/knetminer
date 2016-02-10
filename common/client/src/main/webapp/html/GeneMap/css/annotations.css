@@ -21,10 +21,11 @@ g.annotation-group text {
   fill: red;
   stroke: black;
   stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
 }
 
 .annotation-group .gene_annotation text {
-  text-anchor: middle;
+  text-anchor: start;
 }
 
 /* QTL annotations */

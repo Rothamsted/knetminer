@@ -15,9 +15,13 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,
-    annotationLabelHeight: 0.02,
-    annotationLabelThreshold:10,
-    annotationWidth: 0.2,
+    annotationLabelHeight: 0.015,
+    annotationLabelThreshold:12,
+    annotationLableMaxSize: 14,
+    annotationMarkerSize: 0.02,
+    annotationMarkerMinSize: 6,
+    annotationMarkerMaxSize: 16,
+    annotationWidth: 0.4,
     minLabelHeightPx: 8,
     margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
     spacing: {horizontal: 0.05, vertical: 0.05},
@@ -59,11 +63,18 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         annotationWidth: widthRatio * config.annotationWidth,
         longestChromosome: longest,
         showAnnotationLabels: true,
-        annotationLabelHeight: heightRatio * config.annotationLabelHeight
+        annotationLabelHeight: heightRatio * config.annotationLabelHeight,
+        annotationMarkerSize: heightRatio * config.annotationMarkerSize
       }
+
+      chromosomeLayout.annotationMarkerSize = _.clamp(chromosomeLayout.annotationMarkerSize * config.scale, config.annotationMarkerMinSize, config.annotationMarkerMaxSize) / config.scale;
 
       if (chromosomeLayout.annotationLabelHeight * config.scale < config.annotationLabelThreshold){
         chromosomeLayout.showAnnotationLabels = false;
+      }
+
+      if (chromosomeLayout.annotationLabelHeight * config.scale > config.annotationLableMaxSize){
+        chromosomeLayout.annotationLabelHeight = config.annotationLableMaxSize / config.scale;
       }
 
       if (chromosomeLayout.labelHeight < config.minLabelHeightPx){
