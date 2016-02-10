@@ -50,16 +50,16 @@ GENEMAP.Chromosome = function(userConfig) {
         height: height,
         x: 0,
         y: 0,
-        rx: d.height * 0.05,
-        ry: d.height * 0.05
+        rx: d.height * 0.02,
+        ry: d.height * 0.02
       });
 
       var chromosomeShape = {
         width: d.width,
         height: height,
         y: d.labelHeight,
-        rx: d.height * 0.05,
-        ry: d.height * 0.05
+        rx: d.height * 0.02,
+        ry: d.height * 0.02
       };
 
       chromosome.select("rect.background").attr(chromosomeShape);
