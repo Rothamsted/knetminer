@@ -119,6 +119,15 @@ GENEMAP.GeneMap = function(userConfig) {
       }
       infoBox.attach();
 
+      // setup the annotations container and draw the annotations
+      // should be drawn before the chormosomes as some of the lines need to be
+      // underneath the chormosome drawings.
+      var annotationDrawer = GENEMAP.Annotations();
+
+      var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
+      annotationContainer.enter().append("g").attr("class", "annotation-container");
+      annotationContainer.call(annotationDrawer);
+
       // setup the cotnainer and draw the chromosomes
       var chromosomeDrawer = GENEMAP.Chromosome();
 
@@ -126,12 +135,6 @@ GENEMAP.GeneMap = function(userConfig) {
       chromosomeContainer.enter().append("g").attr("class", "chromosome-container");
       chromosomeContainer.call(chromosomeDrawer);
 
-      // setup the annotations container and draw the annotations
-      var annotationDrawer = GENEMAP.Annotations();
-
-      var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
-      annotationContainer.enter().append("g").attr("class", "annotation-container");
-      annotationContainer.call(annotationDrawer);
     };
 
     // An SVG representation of a chromosome with banding data. This won't create an SVG

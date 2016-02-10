@@ -24,3 +24,7 @@
 .chromosome rect.band {
   stroke: none;
 }
+
+.chromosome rect.background {
+  fill: #fff;
+}

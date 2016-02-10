@@ -26,7 +26,7 @@ GENEMAP.Annotations = function(userConfig) {
       geneAnnotationsEnterGroup.append("text");
 
       geneAnnotations.selectAll("line.midpoint-line").attr({
-        x1: 0,
+        x1: -chromosome.width/2,
         y1: function(d) { return y(d.midpoint);},
         y2: function(d) { return y(d.midpoint);},
         x2: hozPosition
@@ -84,14 +84,14 @@ GENEMAP.Annotations = function(userConfig) {
 
       // update
       qtlAnnotations.selectAll("line.top-line").attr({
-        x1: 0,
+        x1: -chromosome.width/2,
         y1: function(d) { return y(d.start);},
         y2: function(d) { return y(d.start);},
         x2: hozPosition
       });
 
       qtlAnnotations.selectAll("line.bottom-line").attr({
-        x1: 0,
+        x1: -chromosome.width/2,
         y1: function(d) { return y(d.end);},
         y2: function(d) { return y(d.end);},
         x2: hozPosition

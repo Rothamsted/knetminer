@@ -54,14 +54,16 @@ GENEMAP.Chromosome = function(userConfig) {
         ry: d.height * 0.05
       });
 
-      chromosome.select("rect.outline")
-        .attr({
-          width: d.width,
-          height: height,
-          y: d.labelHeight,
-          rx: d.height * 0.05,
-          ry: d.height * 0.05
-        });
+      var chromosomeShape = {
+        width: d.width,
+        height: height,
+        y: d.labelHeight,
+        rx: d.height * 0.05,
+        ry: d.height * 0.05
+      };
+
+      chromosome.select("rect.background").attr(chromosomeShape);
+      chromosome.select("rect.outline").attr(chromosomeShape);
 
       if (config.border){
         chromosome.select("rect.border")
@@ -108,6 +110,7 @@ GENEMAP.Chromosome = function(userConfig) {
         var enterGroup = chroosomes.enter().append("g").attr('class', "chromosome");
         enterGroup.append("defs");
         enterGroup.append("text");
+        enterGroup.append("rect").classed("background", true);
         enterGroup.append("g").classed("bands_container", true);
         enterGroup.append("rect").classed("outline", true);
 
