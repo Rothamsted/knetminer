@@ -11,7 +11,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     scale: 1,
     translate: [0,0],
     numberPerRow: 10,
-    chromosomeWidth: 0.05,
+    chromosomeWidth: 0.06,
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,

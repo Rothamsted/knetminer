@@ -1,7 +1,7 @@
 
 
 g.annotation-group  line {
-  stroke: #000;
+  stroke: #666;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
@@ -18,7 +18,7 @@ g.annotation-group text {
 
 /* Gene annotations */
 .annotation-group .gene_annotation polygon {
-  fill: red;
+  fill: #3366FF;
   stroke: black;
   stroke-width: 0.5;
   vector-effect: non-scaling-stroke;

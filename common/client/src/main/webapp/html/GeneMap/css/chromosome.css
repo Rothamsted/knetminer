@@ -3,6 +3,7 @@
   font-family: sans-serif;
   text-anchor: middle;
   vector-effect: non-scaling-stroke;
+  font-weight: bold;
 }
 
 .chromosome .mask_rect {

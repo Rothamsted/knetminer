@@ -39,7 +39,8 @@ The map is drawn within a contained element, the id of which has to be passed to
 
 The basic constructed layout is
 
-	svg - The map creates its own SVG element to contain the drawing
+
+   - The map creates its own SVG element to contain the drawing
 		zoom window - This is a wrapper that has the d3 zoom functionality added to it
 			outline - This draws the document outline and sets the backgorund color
 			annotation-container - This contains the annotations for genes and QTLS

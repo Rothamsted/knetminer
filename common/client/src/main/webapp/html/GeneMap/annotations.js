@@ -13,7 +13,7 @@ GENEMAP.Annotations = function(userConfig) {
     var setupGeneAnnotations = function(annotationsGroup, y){
 
       var chromosome = annotationsGroup.data()[0];
-      var hozPosition = chromosome.annotationWidth / 2.0;
+      var hozPosition = chromosome.annotationWidth / 6.0;
 
       // Enter + Update elements
       var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(chromosome.annotations.genes);
@@ -43,6 +43,7 @@ GENEMAP.Annotations = function(userConfig) {
 
         // add the final point at 1/2 height to make an equelateral triangle
         var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
+        h = h * 1.5;
         points.push([hozPosition - h, y(midpoint)])
         return points.join(" ");
       }
@@ -68,7 +69,7 @@ GENEMAP.Annotations = function(userConfig) {
     var setupQTLAnnotations = function(annotationsGroup, y) {
 
       var chromosome = annotationsGroup.data()[0];
-      var hozPosition = chromosome.annotationWidth;
+      var hozPosition = chromosome.annotationWidth * 0.5;
       var yOffset = chromosome.labelHeight;
 
       // Enter + Update elements
@@ -161,9 +162,10 @@ GENEMAP.Annotations = function(userConfig) {
             }
           })
 
+          setupQTLAnnotations(group, y);
+
           setupGeneAnnotations(group, y);
 
-          setupQTLAnnotations(group, y);
 
           if (config.border) {
             drawBorder(group, d, y);
