@@ -24,6 +24,15 @@ g.annotation-group text {
   vector-effect: non-scaling-stroke;
 }
 
+/* Gene annotations */
+.annotation-group path.link {
+  fill: none;
+  stroke: black;
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+
 .annotation-group .gene_annotation text {
   text-anchor: start;
 }
@@ -37,5 +46,5 @@ g.annotation-group text {
 }
 
 .annotation-group .qtl_annotation text {
-  text-anchor: middle;
+  text-anchor: end;
 }

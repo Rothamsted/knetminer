@@ -3,7 +3,8 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.Annotations = function(userConfig) {
     var defaultConfig = {
       border: false,
-      labelHeight: 8
+      labelHeight: 8,
+      labelRectangles: false
     };
 
     var config = _.merge({}, defaultConfig, userConfig);
@@ -15,52 +16,102 @@ GENEMAP.Annotations = function(userConfig) {
       var chromosome = annotationsGroup.data()[0];
       var hozPosition = chromosome.annotationWidth / 6.0;
 
+      var nodes = chromosome.annotations.genes.map(function(data){
+        return new labella.Node(y(data.midpoint),  chromosome.annotationMarkerSize, data);
+      });
+
+      var force = new labella.Force({
+        minPos: 0,
+        nodeSpacing: 1
+      }).nodes(nodes).compute();
+
+      var renderer = new labella.Renderer({
+        direction: 'right',
+        layerGap:  chromosome.annotationWidth / 6.0,
+        nodeHeight: chromosome.annotationWidth / 6.0
+      });
+
+      renderer.layout(force.nodes());
+
       // Enter + Update elements
-      var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(chromosome.annotations.genes);
+      var geneAnnotations = annotationsGroup.selectAll("g.gene_annotation").data(force.nodes());
 
       var geneAnnotationsEnterGroup = geneAnnotations.enter().append("g").classed("gene_annotation", true);
 
       geneAnnotationsEnterGroup.append("line").classed("midpoint-line", true);
+      geneAnnotationsEnterGroup.append("path").classed("link", true);
+      if (config.labelRectangles) {
+        geneAnnotationsEnterGroup.append("rect").classed("labella", true);
+      }
       geneAnnotationsEnterGroup.append("polygon").attr('class', 'infobox');
       geneAnnotationsEnterGroup.append("text");
 
-      geneAnnotations.selectAll("line.midpoint-line").attr({
+      geneAnnotations.select("line.midpoint-line").attr({
         x1: -chromosome.width/2,
-        y1: function(d) { return y(d.midpoint);},
-        y2: function(d) { return y(d.midpoint);},
-        x2: hozPosition
+        y1: function(d) { return y(d.data.midpoint);},
+        y2: function(d) { return y(d.data.midpoint);},
+        x2: 0
       });
 
       // generate a little triange based on the data
       var pointsFn = function(d) {
+
         var points = []
-        var midpoint = d.start + (d.end - d.start) / 2;
+        var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
         var a = chromosome.annotationMarkerSize;
 
-        // start at the top right and move down to the bottom left
-        points.push([hozPosition, y(midpoint) - a/2]);
-        points.push([hozPosition, y(midpoint) + a/2]);
-
-        // add the final point at 1/2 height to make an equelateral triangle
         var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
         h = h * 1.5;
-        points.push([hozPosition - h, y(midpoint)])
+        points.push([d.x, d.y]);
+        // points.push([d.x, d.y - d.dy/2]); // tip of the arrow
+        points.push([d.x + h, d.y - a/2]);
+        points.push([d.x + h, d.y + a/2]);
+
+
+        // // start at the top right and move down to the bottom left
+        // points.push([hozPosition, y(midpoint) - a/2]);
+        // points.push([hozPosition, y(midpoint) + a/2]);
+        //
+        // // add the final point at 1/2 height to make an equelateral triangle
+        // var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
+        // h = h * 1.5;
+        // points.push([hozPosition - h, y(midpoint)])
         return points.join(" ");
       }
 
-      geneAnnotations.selectAll("polygon").attr({
+      geneAnnotations.select("polygon").attr({
         points: pointsFn
+      }).style({
+        fill: function(d) {
+          return d.data.color;
+        }
       });
 
+      geneAnnotations.select('path.link')
+        .attr('d', function(d){return renderer.generatePath(d);});
 
-      geneAnnotations.selectAll("text").attr({
-        x: hozPosition  + chromosome.annotationLabelHeight * 0.5,
-        y: function(d) { return y(d.midpoint) + (0.4 * chromosome.annotationLabelHeight) ; }
+      // draw the labella labels as rectangles, useful for debugging
+      if (config.labelRectangles) {
+        geneAnnotations.select('rect.labella').attr({
+            fill: 'green',
+            stroke: 'none',
+            x: function(d) { return d.x; },
+            y: function(d) {
+              return d.y - d.dy/2;
+            },
+            width: function(d) { return d.dx; },
+            height: function(d) { return d.dy; }
+          });
+      }
+
+      geneAnnotations.select("text").attr({
+        x: function(d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight * 0.5},
+        y: function(d) { return d.y + (0.4 * chromosome.annotationLabelHeight) ; }
       }).style({
         'font-size': chromosome.annotationLabelHeight,
         'visibility': chromosome.showAnnotationLabels ? 'visible' : 'hidden'
       }).text( function(d) {
-          return d.label;
+          return d.data.label;
       });
 
       geneAnnotations.exit().remove();
@@ -107,7 +158,7 @@ GENEMAP.Annotations = function(userConfig) {
       });
 
       qtlAnnotations.selectAll("text").attr({
-        x: hozPosition / 2 ,
+        x: hozPosition,
         y: function(d) { return y(d.start) + chromosome.annotationLabelHeight; }
       })
       .style({
