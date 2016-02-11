@@ -14,9 +14,14 @@ GENEMAP.InfoBox = function() {
 
   my.attach = function() {
     $(".infobox").each(function () {
+        var data = this.__data__;
+        // check if labella is being used, in which case the data will be moved into the .data property.
+        if (data.data){
+          data = data.data;
+        }
         $(this).popover({
-            title: this.__data__.label,
-            content: "<div>Chromosome "+ this.__data__.chromosome + " "+ this.__data__.start + "-"+ this.__data__.end + "<br /> <a href='" + this.__data__.link + "'>link </a></div",
+            title: data.label,
+            content: "<div>Chromosome "+ data.chromosome + " "+ data.start + "-"+ data.end + "<br /> <a href='" + data.link + "'>link </a></div",
             container: target,
             placement: "right",
             animation: true,
