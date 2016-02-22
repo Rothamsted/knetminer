@@ -15,7 +15,6 @@ GENEMAP.GeneMap = function(userConfig) {
 
     var target; // the target for the containing HTML element
     var genome; // the layout to be used;
-    var target; // the containing element for the map
     var svg; // the top SVG element
     var zoom; // the zoom behaviour
     var container; // the g container that performs the zooming
@@ -109,7 +108,7 @@ GENEMAP.GeneMap = function(userConfig) {
       zoom = d3.behavior.zoom().scaleExtent([1, 10]);
       zoom.on("zoom", onZoom);
       mapContainer.select('svg').call(zoom);
-    }
+    };
 
     var drawMap = function() {
 
@@ -155,7 +154,7 @@ GENEMAP.GeneMap = function(userConfig) {
       // underneath the chormosome drawings.
       var annotationDrawer = GENEMAP.Annotations();
 
-      var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes])
+      var annotationContainer = container.selectAll("g.annotation-container").data([genome.chromosomes]);
       annotationContainer.enter().append("g").attr("class", "annotation-container");
       annotationContainer.call(annotationDrawer);
 
@@ -198,7 +197,7 @@ GENEMAP.GeneMap = function(userConfig) {
 
     my.layout = function(value) {
       if (!arguments.length) return config.layout;
-      config.layout = _.merge(config.layout, value);;
+      config.layout = _.merge(config.layout, value);
       return my;
     };
 
@@ -206,13 +205,13 @@ GENEMAP.GeneMap = function(userConfig) {
       var reader = GENEMAP.XmlDataReader();
       target = target;
       reader.readXMLData(basemapPath, annotationPath).then(function(data) {
-        d3.select(target).datum(data).call(my)
+        d3.select(target).datum(data).call(my);
       });
-    }
+    };
 
     my.redraw = function(target) {
       d3.select(target).call(my);
-    }
+    };
 
     return my;
 };

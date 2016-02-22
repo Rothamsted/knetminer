@@ -56,7 +56,7 @@ GENEMAP.Annotations = function(userConfig) {
       // generate a little triange based on the data
       var pointsFn = function(d) {
 
-        var points = []
+        var points = [];
         var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
         var a = chromosome.annotationMarkerSize;
 
@@ -77,7 +77,7 @@ GENEMAP.Annotations = function(userConfig) {
         // h = h * 1.5;
         // points.push([hozPosition - h, y(midpoint)])
         return points.join(" ");
-      }
+      };
 
       geneAnnotations.select("polygon").attr({
         points: pointsFn
@@ -105,7 +105,7 @@ GENEMAP.Annotations = function(userConfig) {
       }
 
       geneAnnotations.select("text").attr({
-        x: function(d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight * 0.5},
+        x: function(d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight * 0.5; },
         y: function(d) { return d.y + (0.4 * chromosome.annotationLabelHeight) ; }
       }).style({
         'font-size': chromosome.annotationLabelHeight,
@@ -191,7 +191,7 @@ GENEMAP.Annotations = function(userConfig) {
 
     var buildYScale = function(d) {
       return d3.scale.linear().range([0, d.height]).domain([0, d.longestChromosome]);
-    }
+    };
 
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
@@ -207,11 +207,11 @@ GENEMAP.Annotations = function(userConfig) {
 
 
           var group = d3.select(this).attr({
-            id: function(d) { return 'annotation_' + d.number},
+            id: function(d) { return 'annotation_' + d.number; },
             transform: function(d){
               return "translate(" + (d.x + d.width) + ","+ (d.y + d.labelHeight) +")";
             }
-          })
+          });
 
           setupQTLAnnotations(group, y);
 
@@ -231,19 +231,19 @@ GENEMAP.Annotations = function(userConfig) {
       if (!arguments.length) return config.width;
       config.width = value;
       return my;
-    }
+    };
 
     my.height = function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
       return my;
-    }
+    };
 
     my.yScale = function(value) {
       if (!arguments.length) return config.yScale;
       config.yScale = value;
       return my;
-    }
+    };
 
     return my;
 };

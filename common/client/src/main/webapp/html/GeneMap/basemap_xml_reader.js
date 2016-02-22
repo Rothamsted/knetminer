@@ -13,7 +13,7 @@ GENEMAP.BasemapXmlReader = function() {
       end: elt.getElementsByTagName("end")[0].childNodes[0].nodeValue,
       color: elt.getElementsByTagName("color")[0].childNodes[0].nodeValue,
     };
-  }
+  };
 
   // read a chromosome JS object from an XML element
   var _readChromosome = function(elt) {
@@ -22,17 +22,17 @@ GENEMAP.BasemapXmlReader = function() {
       length:elt.getAttribute("length"),
       number:elt.getAttribute("number"),
       bands:[]
-    }
+    };
 
     var bandElements = elt.getElementsByTagName("band");
 
     for (var j = 0; j < bandElements.length; j++) {
-      var band = _readBand(bandElements[j])
+      var band = _readBand(bandElements[j]);
       chromosome.bands.push(band);
     }
 
     return chromosome;
-  }
+  };
 
   // reads the genome data from a basemap XML document
   var _readBasemapXML = function(xml) {
@@ -46,12 +46,12 @@ GENEMAP.BasemapXmlReader = function() {
     }
 
     return genome;
-  }
+  };
 
   return {
 
     readBasemapXML: function(path) {
       return d3.promise.xml(path).then(_readBasemapXML);
     }
-  }
-}
+  };
+};

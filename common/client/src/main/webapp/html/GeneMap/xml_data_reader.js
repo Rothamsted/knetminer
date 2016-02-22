@@ -30,7 +30,7 @@ GENEMAP.XmlDataReader = function() {
     });
 
     return genome;
-  }
+  };
 
   var _processJoinedData = function(data) {
     var genome = _processBasemapData(data[0]);
@@ -41,15 +41,17 @@ GENEMAP.XmlDataReader = function() {
     });
 
     genome.chromosomes.forEach(function(chromosome) {
-      var chromosomeAnnotations = annotations.features.filter(function(e) { return e.chromosome === chromosome.number});
+      var chromosomeAnnotations = annotations.features.filter(
+        function(e) { return e.chromosome === chromosome.number; }
+      );
 
-      var genes = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'gene'; })
-      var qtls = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'qtl'; })
+      var genes = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'gene'; });
+      var qtls = chromosomeAnnotations.filter(function(e){ return e.type.toLowerCase() === 'qtl'; });
 
       chromosome.annotations = {
         genes: genes,
         qtls: qtls
-      }
+      };
     });
 
     return genome;
@@ -73,5 +75,5 @@ GENEMAP.XmlDataReader = function() {
 
       return basemapPromise.then(_processBasemapData);
     }
-  }
-}
+  };
+};

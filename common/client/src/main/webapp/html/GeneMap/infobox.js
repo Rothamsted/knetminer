@@ -37,8 +37,7 @@ GENEMAP.InfoBox = function() {
     if (!arguments.length) return target;
     target = value;
     return my;
-  }
-
+  };
 
   return my;
 };

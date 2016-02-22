@@ -1,9 +1,7 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.AnnotationXMLReader = function() {
-  if (!(this instanceof arguments.callee)) {
-    return new arguments.callee();
-  }
+GENEMAP.AnnotationXMLReader = function () {
+  "use strict";
 
   var _readFeature = function(elt) {
     var start = +elt.getElementsByTagName("start")[0].childNodes[0].nodeValue;
@@ -40,5 +38,5 @@ GENEMAP.AnnotationXMLReader = function() {
     readAnnotationXML: function(path) {
       return d3.promise.xml(path).then(_readAnnotations);
     },
-  }
-}
+  };
+};

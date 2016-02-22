@@ -14,7 +14,6 @@ GENEMAP.Chromosome = function(userConfig) {
     // function to update a single chromosome element given the enter + update selection
     // and data. This assumes the basic element structure is in place.
     var updateChromosome = function(d, i) {
-      var y, height;
       var y = buildYScale(d);
       var height = y(d.length);
       var chromosome = d3.select(this);
@@ -86,7 +85,7 @@ GENEMAP.Chromosome = function(userConfig) {
 
       bands.attr({
         width: d.width,
-        y: function(d) { return y(d.start)},
+        y: function(d) { return y(d.start); },
         height: function(d) { return y(d.end - d.start); },
         x: 0,
         fill: function(d) { return d.color; }
@@ -131,19 +130,19 @@ GENEMAP.Chromosome = function(userConfig) {
       if (!arguments.length) return config.width;
       config.width = value;
       return my;
-    }
+    };
 
     my.height = function(value) {
       if (!arguments.length) return config.height;
       config.height = value;
       return my;
-    }
+    };
 
     my.yScale = function(value) {
       if (!arguments.length) return config.yScale;
       config.yScale = value;
       return my;
-    }
+    };
 
     return my;
 };
