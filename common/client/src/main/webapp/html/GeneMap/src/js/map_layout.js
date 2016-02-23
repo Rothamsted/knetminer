@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.MapLayout = function(userConfig) {
+GENEMAP.MapLayout = function (userConfig) {
 
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee(userConfig);
@@ -14,17 +14,17 @@ GENEMAP.MapLayout = function(userConfig) {
     longestChromosomeHeight: 200,
     labelHeight: 10,
     annotationWidth: 100,
-    margin: {top: 25, left: 25, bottom: 25, right: 25},
-    spacing: {horizontal: 30, vertical: 30},
+    margin: { top: 25, left: 25, bottom: 25, right: 25, },
+    spacing: { horizontal: 30, vertical: 30, },
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
   return {
 
-    generateLayout: function(numberOfChromosomes) {
+    generateLayout: function (numberOfChromosomes) {
       var layout = {
-        chromosomes: []
+        chromosomes: [],
       };
 
       var minColWidth = config.spacing.horizontal + config.chromosomeWidth + config.annotationWidth;
@@ -45,23 +45,24 @@ GENEMAP.MapLayout = function(userConfig) {
 
       layout.drawing = {
         width: colWidth * config.chromosomePerRow + config.margin.left + config.margin.right,
-        height: rowHeight * rows + config.margin.top + config.margin.bottom
+        height: rowHeight * rows + config.margin.top + config.margin.bottom,
       };
 
-      for(var i =0; i < numberOfChromosomes; i++){
+      for (var i = 0; i < numberOfChromosomes; i++) {
         var col = i % config.chromosomePerRow;
         var row = Math.floor(i / config.chromosomePerRow);
 
-        layout.chromosomes.push( {
+        layout.chromosomes.push({
           y: (row * rowHeight) + config.margin.top,
-          x: (col * colWidth) + config.margin.left
+          x: (col * colWidth) + config.margin.left,
         });
+
       }
 
       return layout;
     },
 
-    width: function(value) {
+    width: function (value) {
       if (!arguments.length) {
         return config.width;
       }
@@ -70,7 +71,7 @@ GENEMAP.MapLayout = function(userConfig) {
       return this;
     },
 
-    height: function(value) {
+    height: function (value) {
       if (!arguments.length) {
         return config.height;
       }
@@ -79,7 +80,7 @@ GENEMAP.MapLayout = function(userConfig) {
       return this;
     },
 
-    chromosomeWidth: function(value) {
+    chromosomeWidth: function (value) {
       if (!arguments.length) {
         return config.chromosomeWidth;
       }
@@ -88,7 +89,7 @@ GENEMAP.MapLayout = function(userConfig) {
       return this;
     },
 
-    annotationWidth: function(value) {
+    annotationWidth: function (value) {
       if (!arguments.length) {
         return config.annotationWidth;
       }
@@ -97,7 +98,7 @@ GENEMAP.MapLayout = function(userConfig) {
       return this;
     },
 
-    margin: function(value) {
+    margin: function (value) {
       if (!arguments.length) {
         return config.margin;
       }
@@ -106,13 +107,13 @@ GENEMAP.MapLayout = function(userConfig) {
       return this;
     },
 
-    spacing: function(value) {
+    spacing: function (value) {
       if (!arguments.length) {
         return config.spacing;
       }
 
       config.spacing = _.merge(config.spacing, value);
       return this;
-    }
+    },
   };
 };

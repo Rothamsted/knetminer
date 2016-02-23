@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.AutoLayoutDecorator = function(userConfig) {
+GENEMAP.AutoLayoutDecorator = function (userConfig) {
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee(userConfig);
   }
@@ -9,7 +9,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     width: 900,
     height: 600,
     scale: 1,
-    translate: [0,0],
+    translate: [0, 0],
     numberPerRow: 10,
     chromosomeWidth: 0.06,
     longestChromosomeHeight: 1,
@@ -23,21 +23,21 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     annotationMarkerMaxSize: 16,
     annotationWidth: 0.4,
     minLabelHeightPx: 8,
-    margin: {top: 0.1, left: 0.1, bottom: 0.1, right: 0.1},
-    spacing: {horizontal: 0.05, vertical: 0.05},
+    margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
+    spacing: { horizontal: 0.05, vertical: 0.05 },
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
   return {
 
-    decorateGenome: function(inputGenome) {
+    decorateGenome: function (inputGenome) {
 
       var genome = _.cloneDeep(inputGenome);
 
       var sizeLessMargin = {
         width: config.width * (1 - config.margin.left - config.margin.right),
-        height: config.height * (1 - config.margin.top - config.margin.bottom)
+        height: config.height * (1 - config.margin.top - config.margin.bottom),
       };
 
       var rows = Math.ceil(genome.chromosomes.length / config.numberPerRow);
@@ -48,7 +48,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       var widthRatio = cellWidth / (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
       var heightRatio = cellHeight / (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
 
-      var longest = Math.max.apply(null, genome.chromosomes.map(function(c){ return c.length; }));
+      var longest = Math.max.apply(null, genome.chromosomes.map(function (c) { return c.length; }));
 
       var chromosomeLayout = {
         height: heightRatio * config.longestChromosomeHeight,
@@ -58,20 +58,22 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         longestChromosome: longest,
         showAnnotationLabels: true,
         annotationLabelHeight: heightRatio * config.annotationLabelHeight,
-        annotationMarkerSize: heightRatio * config.annotationMarkerSize
+        annotationMarkerSize: heightRatio * config.annotationMarkerSize,
       };
 
-      chromosomeLayout.annotationMarkerSize = _.clamp(chromosomeLayout.annotationMarkerSize * config.scale, config.annotationMarkerMinSize, config.annotationMarkerMaxSize) / config.scale;
+      chromosomeLayout.annotationMarkerSize =
+        _.clamp(chromosomeLayout.annotationMarkerSize * config.scale,
+                config.annotationMarkerMinSize, config.annotationMarkerMaxSize) / config.scale;
 
-      if (chromosomeLayout.annotationLabelHeight * config.scale < config.annotationLabelThreshold){
+      if (chromosomeLayout.annotationLabelHeight * config.scale < config.annotationLabelThreshold) {
         chromosomeLayout.showAnnotationLabels = false;
       }
 
-      if (chromosomeLayout.annotationLabelHeight * config.scale > config.annotationLableMaxSize){
+      if (chromosomeLayout.annotationLabelHeight * config.scale > config.annotationLableMaxSize) {
         chromosomeLayout.annotationLabelHeight = config.annotationLableMaxSize / config.scale;
       }
 
-      if (chromosomeLayout.labelHeight < config.minLabelHeightPx){
+      if (chromosomeLayout.labelHeight < config.minLabelHeightPx) {
         // if the label doesn't reach the minimum height increase it to the minimum
         // and take the extra height from the chromosome height
         var extraHeight = config.minLabelHeightPx - chromosomeLayout.labelHeight;
@@ -79,7 +81,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         chromosomeLayout.labelHeight = config.minLabelHeightPx;
       }
 
-      if (chromosomeLayout.width / chromosomeLayout.height > config.maxCrhomosomeWidthToLengthRatio){
+      if (chromosomeLayout.width / chromosomeLayout.height > config.maxCrhomosomeWidthToLengthRatio) {
         var newWdith = chromosomeLayout.height * config.maxCrhomosomeWidthToLengthRatio;
         var lostWidth = chromosomeLayout.width - newWdith;
         chromosomeLayout.annotationWidth = chromosomeLayout.annotationWidth + lostWidth;
@@ -94,7 +96,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         right: config.margin.right * genome.drawing.width,
       };
 
-      genome.chromosomes.forEach(function(chromosome, i) {
+      genome.chromosomes.forEach(function (chromosome, i) {
         var col = i % config.numberPerRow;
         var row = Math.floor(i / config.numberPerRow);
 
@@ -109,7 +111,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return genome;
     },
 
-    width: function(value) {
+    width: function (value) {
       if (!arguments.length) {
         return config.width;
       }
@@ -118,7 +120,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    height: function(value) {
+    height: function (value) {
       if (!arguments.length) {
         return config.height;
       }
@@ -127,7 +129,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    scale: function(value) {
+    scale: function (value) {
       if (!arguments.length) {
         return config.scale;
       }
@@ -136,7 +138,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    translate: function(value) {
+    translate: function (value) {
       if (!arguments.length) {
         return config.translate;
       }
@@ -145,7 +147,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    chromosomeWidth: function(value) {
+    chromosomeWidth: function (value) {
       if (!arguments.length) {
         return config.chromosomeWidth;
       }
@@ -154,7 +156,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    annotationWidth: function(value) {
+    annotationWidth: function (value) {
       if (!arguments.length) {
         return config.annotationWidth;
       }
@@ -163,7 +165,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    margin: function(value) {
+    margin: function (value) {
       if (!arguments.length) {
         return config.margin;
       }
@@ -172,13 +174,13 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
       return this;
     },
 
-    spacing: function(value) {
+    spacing: function (value) {
       if (!arguments.length) {
         return config.spacing;
       }
 
       config.spacing = _.merge(config.spacing, value);
       return this;
-    }
+    },
   };
 };
