@@ -63,7 +63,7 @@
     "checkParamNames": true,
     "requireParamTypes": true,
     "checkReturnTypes": true,
-    "checkTypes": true
+    "checkTypes": true,
   },
 
   "disallowMultipleLineBreaks": true,
@@ -75,5 +75,5 @@
   "requireCommaBeforeLineBreak": null,
   "requireDotNotation": null,
   "requireMultipleVarDecl": null,
-  "requireParenthesesAroundIIFE": true
+  "requireParenthesesAroundIIFE": true,
 }
