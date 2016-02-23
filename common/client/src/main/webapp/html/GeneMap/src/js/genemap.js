@@ -19,32 +19,7 @@ GENEMAP.GeneMap = function(userConfig) {
     var zoom; // the zoom behaviour
     var container; // the g container that performs the zooming
 
-    var onZoom = function() {
-      var translate = d3.event.translate;
-
-      if (genome) {
-        var bbox = svg.node().getBoundingClientRect();
-
-
-        // padding the size of the drawing with 1/2 the bbox so you can
-        // center on any point of the drawing. Also taking margins into
-        // account to further center the view.
-        var minx = -genome.drawing.width * d3.event.scale + bbox.width/2 + genome.drawing.margin.right * d3.event.scale ;
-        var maxx = bbox.width/2 - (genome.drawing.margin.left * d3.event.scale);
-        translate[0] = _.clamp(translate[0], minx, maxx);
-
-        var miny = -genome.drawing.height * d3.event.scale + bbox.height/2 + genome.drawing.margin.bottom * d3.event.scale ;
-        var maxy = bbox.height/2 - (genome.drawing.margin.top * d3.event.scale);
-        translate[1] = _.clamp(translate[1], miny, maxy);
-      }
-
-      zoom.translate(translate);
-
-      // re-draw the map
-      drawMap();
-
-      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
-    };
+    var onZoom;
 
     // Sets the attributes on the .drawing_outline rectangle for the outline
     var drawDocumentOutline = function() {
@@ -167,10 +142,38 @@ GENEMAP.GeneMap = function(userConfig) {
 
     };
 
+    onZoom = function() {
+      var translate = d3.event.translate;
+
+      if (genome) {
+        var bbox = svg.node().getBoundingClientRect();
+
+
+        // padding the size of the drawing with 1/2 the bbox so you can
+        // center on any point of the drawing. Also taking margins into
+        // account to further center the view.
+        var minx = -genome.drawing.width * d3.event.scale + bbox.width/2 + genome.drawing.margin.right * d3.event.scale ;
+        var maxx = bbox.width/2 - (genome.drawing.margin.left * d3.event.scale);
+        translate[0] = _.clamp(translate[0], minx, maxx);
+
+        var miny = -genome.drawing.height * d3.event.scale + bbox.height/2 + genome.drawing.margin.bottom * d3.event.scale ;
+        var maxy = bbox.height/2 - (genome.drawing.margin.top * d3.event.scale);
+        translate[1] = _.clamp(translate[1], miny, maxy);
+      }
+
+      zoom.translate(translate);
+
+      // re-draw the map
+      drawMap();
+
+      container.attr("transform", "translate(" + zoom.translate() + ")scale(" + d3.event.scale + ")");
+    };
+
+
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
-      selection.each(function(d, i){
+      selection.each(function(d){
         genome = d;
         target = this;
         drawMap();
@@ -184,19 +187,28 @@ GENEMAP.GeneMap = function(userConfig) {
     };
 
     my.width = function(value) {
-      if (!arguments.length) return config.width;
+      if (!arguments.length) {
+        return config.width;
+      }
+
       config.width = value;
       return my;
     };
 
     my.height = function(value) {
-      if (!arguments.length) return config.height;
+      if (!arguments.length) {
+        return config.height;
+      }
+
       config.height = value;
       return my;
     };
 
     my.layout = function(value) {
-      if (!arguments.length) return config.layout;
+      if (!arguments.length) {
+        return config.layout;
+      }
+
       config.layout = _.merge(config.layout, value);
       return my;
     };

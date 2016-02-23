@@ -14,7 +14,6 @@ GENEMAP.Annotations = function(userConfig) {
     var setupGeneAnnotations = function(annotationsGroup, y){
 
       var chromosome = annotationsGroup.data()[0];
-      var hozPosition = chromosome.annotationWidth / 6.0;
 
       var nodes = chromosome.annotations.genes.map(function(data){
         return new labella.Node(y(data.midpoint),  chromosome.annotationMarkerSize, data);
@@ -57,7 +56,7 @@ GENEMAP.Annotations = function(userConfig) {
       var pointsFn = function(d) {
 
         var points = [];
-        var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
+        // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
         var a = chromosome.annotationMarkerSize;
 
         var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
@@ -121,7 +120,6 @@ GENEMAP.Annotations = function(userConfig) {
 
       var chromosome = annotationsGroup.data()[0];
       var hozPosition = chromosome.annotationWidth * 0.5;
-      var yOffset = chromosome.labelHeight;
 
       // Enter + Update elements
       var qtlAnnotations = annotationsGroup.selectAll("g.qtl_annotation").data(chromosome.annotations.qtls);
@@ -196,13 +194,13 @@ GENEMAP.Annotations = function(userConfig) {
     // An SVG representation of a chromosome with banding data. This won't create an SVG
     // element, it expects that to already have been created.
     function my(selection) {
-      selection.each(function(d, i){
+      selection.each(function(d){
 
         var groups = d3.select(this).selectAll(".annotation-group").data(d);
 
         groups.enter().append("g").attr('class', 'annotation-group');
 
-        groups.each(function(d, i) {
+        groups.each(function(d) {
           var y = buildYScale(d);
 
 
@@ -228,19 +226,28 @@ GENEMAP.Annotations = function(userConfig) {
     }
 
     my.width = function(value) {
-      if (!arguments.length) return config.width;
+      if (!arguments.length) {
+        return config.width;
+      }
+
       config.width = value;
       return my;
     };
 
     my.height = function(value) {
-      if (!arguments.length) return config.height;
+      if (!arguments.length) {
+        return config.height;
+      }
+
       config.height = value;
       return my;
     };
 
     my.yScale = function(value) {
-      if (!arguments.length) return config.yScale;
+      if (!arguments.length) {
+        return config.yScale;
+      }
+      
       config.yScale = value;
       return my;
     };

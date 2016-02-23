@@ -33,13 +33,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
 
     decorateGenome: function(inputGenome) {
 
-      genome = _.cloneDeep(inputGenome)
-
-      // a cell contains the chromosome (with label), annotation area and the padding to the right & bottom
-      var cell = {
-        width: config.spacing.horizontal + config.chromosomeWidth + config.annotationWidth,
-        height: config.spacing.vertical + config.longestChromosomeHeight + config.labelHeight
-      };
+      var genome = _.cloneDeep(inputGenome);
 
       var sizeLessMargin = {
         width: config.width * (1 - config.margin.left - config.margin.right),
@@ -65,7 +59,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         showAnnotationLabels: true,
         annotationLabelHeight: heightRatio * config.annotationLabelHeight,
         annotationMarkerSize: heightRatio * config.annotationMarkerSize
-      }
+      };
 
       chromosomeLayout.annotationMarkerSize = _.clamp(chromosomeLayout.annotationMarkerSize * config.scale, config.annotationMarkerMinSize, config.annotationMarkerMaxSize) / config.scale;
 
@@ -98,7 +92,7 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
         left: config.margin.left * genome.drawing.width,
         bottom: config.margin.bottom * genome.drawing.height,
         right: config.margin.right * genome.drawing.width,
-      }
+      };
 
       genome.chromosomes.forEach(function(chromosome, i) {
         var col = i % config.numberPerRow;
@@ -116,49 +110,73 @@ GENEMAP.AutoLayoutDecorator = function(userConfig) {
     },
 
     width: function(value) {
-      if (!arguments.length) return config.width;
+      if (!arguments.length) {
+        return config.width;
+      }
+
       config.width = value;
       return this;
     },
 
     height: function(value) {
-      if (!arguments.length) return config.height;
+      if (!arguments.length) {
+        return config.height;
+      }
+
       config.height = value;
       return this;
     },
 
     scale: function(value) {
-      if (!arguments.length) return config.scale;
+      if (!arguments.length) {
+        return config.scale;
+      }
+
       config.scale = value;
       return this;
     },
 
     translate: function(value) {
-      if (!arguments.length) return config.translate;
+      if (!arguments.length) {
+        return config.translate;
+      }
+
       config.translate = value;
       return this;
     },
 
     chromosomeWidth: function(value) {
-      if (!arguments.length) return config.chromosomeWidth;
+      if (!arguments.length) {
+        return config.chromosomeWidth;
+      }
+
       config.chromosomeWidth = value;
       return this;
     },
 
     annotationWidth: function(value) {
-      if (!arguments.length) return config.annotationWidth;
+      if (!arguments.length) {
+        return config.annotationWidth;
+      }
+
       config.annotationWidth = value;
       return this;
     },
 
     margin: function(value) {
-      if (!arguments.length) return config.margin;
+      if (!arguments.length) {
+        return config.margin;
+      }
+
       config.margin = _.merge(config.margin, value);
       return this;
     },
 
     spacing: function(value) {
-      if (!arguments.length) return config.spacing;
+      if (!arguments.length) {
+        return config.spacing;
+      }
+
       config.spacing = _.merge(config.spacing, value);
       return this;
     }

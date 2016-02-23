@@ -13,7 +13,7 @@ GENEMAP.Chromosome = function(userConfig) {
 
     // function to update a single chromosome element given the enter + update selection
     // and data. This assumes the basic element structure is in place.
-    var updateChromosome = function(d, i) {
+    var updateChromosome = function(d) {
       var y = buildYScale(d);
       var height = y(d.length);
       var chromosome = d3.select(this);
@@ -101,7 +101,7 @@ GENEMAP.Chromosome = function(userConfig) {
     // An SVG representation of a chromosome with banding data. This is expecting the passed selection to be within an
     // SVG element and to have a list of chromosome JSON objects as its data.
     function my(selection) {
-      selection.each(function(d, i){
+      selection.each(function(d){
 
         // build up the selection of chromosome objects
         var chroosomes = d3.select(this).selectAll(".chromosome").data(d);
@@ -127,19 +127,27 @@ GENEMAP.Chromosome = function(userConfig) {
     }
 
     my.width = function(value) {
-      if (!arguments.length) return config.width;
+      if (!arguments.length) {
+        return config.width;
+      }
       config.width = value;
       return my;
     };
 
     my.height = function(value) {
-      if (!arguments.length) return config.height;
+      if (!arguments.length) {
+        return config.height;
+      }
+
       config.height = value;
       return my;
     };
 
     my.yScale = function(value) {
-      if (!arguments.length) return config.yScale;
+      if (!arguments.length) {
+        return config.yScale;
+      }
+      
       config.yScale = value;
       return my;
     };

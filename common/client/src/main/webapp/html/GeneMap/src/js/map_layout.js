@@ -20,8 +20,6 @@ GENEMAP.MapLayout = function(userConfig) {
 
   var config = _.merge({}, defaultConfig, userConfig);
 
-
-
   return {
 
     generateLayout: function(numberOfChromosomes) {
@@ -64,40 +62,57 @@ GENEMAP.MapLayout = function(userConfig) {
     },
 
     width: function(value) {
-      if (!arguments.length) return config.width;
+      if (!arguments.length) {
+        return config.width;
+      }
+
       config.width = value;
       return this;
     },
 
     height: function(value) {
-      if (!arguments.length) return config.height;
+      if (!arguments.length) {
+        return config.height;
+      }
+
       config.height = value;
       return this;
     },
 
     chromosomeWidth: function(value) {
-      if (!arguments.length) return config.chromosomeWidth;
+      if (!arguments.length) {
+        return config.chromosomeWidth;
+      }
+
       config.chromosomeWidth = value;
       return this;
     },
 
     annotationWidth: function(value) {
-      if (!arguments.length) return config.annotationWidth;
+      if (!arguments.length) {
+        return config.annotationWidth;
+      }
+
       config.annotationWidth = value;
       return this;
     },
 
     margin: function(value) {
-      if (!arguments.length) return config.margin;
+      if (!arguments.length) {
+        return config.margin;
+      }
+
       config.margin = _.merge(config.margin, value);
       return this;
     },
 
     spacing: function(value) {
-      if (!arguments.length) return config.spacing;
+      if (!arguments.length) {
+        return config.spacing;
+      }
+
       config.spacing = _.merge(config.spacing, value);
       return this;
     }
-
   };
 };

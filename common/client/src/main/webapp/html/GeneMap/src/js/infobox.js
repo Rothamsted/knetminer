@@ -7,7 +7,7 @@ GENEMAP.InfoBox = function() {
   var target = 'body';
 
   var closeAllPopovers = function(e) {
-    if (typeof $(e.target).data('original-title') == 'undefined' && !$(e.target).parents().is('.popover.in')) {
+    if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
       $('[data-original-title]').popover('hide');
     }
   };
@@ -34,7 +34,10 @@ GENEMAP.InfoBox = function() {
   };
 
   my.target = function(value) {
-    if (!arguments.length) return target;
+    if (!arguments.length) {
+      return target;
+    }
+    
     target = value;
     return my;
   };
