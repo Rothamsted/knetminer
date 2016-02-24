@@ -4,6 +4,7 @@
 var gulp  = require('gulp'),
     args = require('yargs').argv,
     del = require('del'),
+    runSequence = require('run-sequence'),
     $ = require('gulp-load-plugins')({ lazy: true }),
     config = require('./gulp.config')();
 
@@ -91,21 +92,13 @@ gulp.task('html', ['clean-html'], function () {
     .pipe(gulp.dest(config.outputDir));
 });
 
-gulp.task('inject', ['styles', 'scripts', 'dev-data', 'clean-html'], function () {
+gulp.task('inject', ['styles', 'scripts', 'dev-data'], function (done) {
   $.util.log('repopulating the dev directory');
 
-  var injectStyles = gulp.src(config.outputCss, { read: false });
-  var injectScripts = gulp.src(config.outputJs, { read: false });
-
-  var wiredepOptions = config.getWiredepDefaultOptions();
-  var injectOptions = {};
-  var wiredep = require('wiredep').stream;
-
-  return gulp.src(config.html)
-    .pipe(wiredep(wiredepOptions))
-    .pipe($.inject(injectStyles), injectOptions)
-    .pipe($.inject(injectScripts), injectOptions)
-    .pipe(gulp.dest(config.outputDir));
+  // force the html task to wait for the styles, scripts and data tasks
+  runSequence('html', function () {
+    done();
+  });
 });
 
 // create a default task and just log a message
