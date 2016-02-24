@@ -16,6 +16,8 @@ module.exports = function () {
     outputCssDir: './.tmp/css/',
     outputCss: './.tmp/css/*.css',
 
+    build: './dist/',
+
     // configuration
     bower: {
       json: require('./bower.json'),

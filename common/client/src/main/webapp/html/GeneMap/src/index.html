@@ -6,16 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+    <!-- build:css styles/lib.css -->
     <!-- bower:css -->
     <!-- endbower -->
+    <!-- endbuild -->
 
+    <!-- build:css styles/genemap.css -->
     <!-- inject:css -->
     <link rel="stylesheet" href="css/annotations.css">
     <link rel="stylesheet" href="css/bootstrap-namespaced.css">
     <link rel="stylesheet" href="css/chromosome.css">
     <link rel="stylesheet" href="css/infobox.css">
     <link rel="stylesheet" href="css/mapview.css">
-    <!--endinject -->
+    <!-- endinject -->
+    <!-- endbuild -->
 
     <style>
       svg {
@@ -53,6 +58,7 @@
 
     <div id="map" class="bootstrap"></div>
 
+    <!-- build:js js/lib.js -->
     <!-- bower:js -->
     <script src="jquery/dist/jquery.js"></script>
     <script src="bootstrap/dist/js/bootstrap.js"></script>
@@ -61,7 +67,9 @@
     <script src="d3.promise/dist/d3.promise.min.js"></script>
     <script src="labella/dist/labella.min.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
 
+    <!-- build:js js/genemap.js -->
     <!-- inject:js -->
     <script src="js/annotations.js"></script>
     <script src="js/annotation_xml_reader.js"></script>
@@ -73,6 +81,7 @@
     <script src="js/map_layout.js"></script>
     <script src="js/xml_data_reader.js"></script>
     <!--endinject -->
+    <!-- endbuild -->
 
     <script>
       var chart = GENEMAP.GeneMap();

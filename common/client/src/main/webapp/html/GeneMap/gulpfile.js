@@ -28,6 +28,10 @@ gulp.task('clean-styles', function () {
   clean(files);
 });
 
+gulp.task('clean-dist', function () {
+  clean(['./dist/**/', '!./dist/']);
+});
+
 // *** dev compilation ***
 
 gulp.task('styles', ['clean-styles'], function () {
@@ -41,11 +45,6 @@ gulp.task('styles', ['clean-styles'], function () {
     .pipe($.less())
     .pipe($.autoprefixer({ browsers: ['last 2 version', '> 5%'] }))
     .pipe(gulp.dest(config.outputCssDir));
-});
-
-gulp.task('dev-data', ['clean-data'], function () {
-  return gulp.src(config.data)
-    .pipe(gulp.dest(config.outputDataDir));
 });
 
 gulp.task('livereload', function () {
@@ -96,9 +95,31 @@ gulp.task('serve-dev', ['inject', 'livereload'], function () {
   });
 });
 
+gulp.task('help', $.taskListing);
+
 // create a default task and just log a message
-gulp.task('default', function () {
-  return $.util.log('Gulp is running!');
+gulp.task('default', ['help']);
+
+gulp.task('optimise', ['inject', 'clean-dist'], function () {
+  var assets = $.useref({ searchPath: ['.tmp', 'src', './bower_components'] });
+
+  return gulp.src(config.html)
+    .pipe($.plumber(function (err) {
+      $.util.log(err);
+      this.emit('end');
+    }))
+    .pipe(assets)
+    .pipe($.if('*.js', $.uglify()))
+    .pipe($.if('*.css', $.csso()))
+    .pipe(gulp.dest(config.build));
+});
+
+gulp.task('serve-prod', ['optimise'], function () {
+  return $.connect.server({
+    root: ['dist', 'test/data'],
+    port: '8080',
+    livereload: false,
+  });
 });
 
 ////////////
