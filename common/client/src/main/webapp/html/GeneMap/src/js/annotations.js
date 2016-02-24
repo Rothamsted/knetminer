@@ -21,7 +21,7 @@ GENEMAP.Annotations = function (userConfig) {
 
     var force = new labella.Force({
       minPos: 0,
-      nodeSpacing: 1,
+      nodeSpacing: 3,
     }).nodes(nodes).compute();
 
     var renderer = new labella.Renderer({
@@ -106,7 +106,7 @@ GENEMAP.Annotations = function (userConfig) {
     }
 
     geneAnnotations.select('text').attr({
-      x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight * 0.5; },
+      x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight; },
       y: function (d) { return d.y + (0.4 * chromosome.annotationLabelHeight); },
     }).style({
       'font-size': chromosome.annotationLabelHeight,

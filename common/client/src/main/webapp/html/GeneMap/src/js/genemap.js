@@ -9,6 +9,10 @@ GENEMAP.GeneMap = function (userConfig) {
       numberPerRow: 5,
     },
     contentBorder: false,
+
+    // the extra area outside of the content that the user can pan overflow
+    // as a proportion of the content. The content doesn't include the margins.
+    extraPanArea: 0.25,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -168,13 +172,13 @@ GENEMAP.GeneMap = function (userConfig) {
       var minx = -genome.drawing.width * d3.event.scale + bbox.width / 2 +
                   genome.drawing.margin.right * d3.event.scale;
 
-      var maxx = bbox.width / 2 - (genome.drawing.margin.left * d3.event.scale);
+      var maxx = bbox.width * config.extraPanArea - (genome.drawing.margin.left * d3.event.scale);
       translate[0] = _.clamp(translate[0], minx, maxx);
 
       var miny = -genome.drawing.height * d3.event.scale + bbox.height / 2 +
                   genome.drawing.margin.bottom * d3.event.scale;
 
-      var maxy = bbox.height / 2 - (genome.drawing.margin.top * d3.event.scale);
+      var maxy = bbox.height * config.extraPanArea - (genome.drawing.margin.top * d3.event.scale);
       translate[1] = _.clamp(translate[1], miny, maxy);
     }
 
