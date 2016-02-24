@@ -40,7 +40,7 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var constructSkeletonChart = function (mapContainer) {
-    var svg = mapContainer.append('svg');
+    var svg = mapContainer.append('svg').classed('mapview', true);
 
     var filter = svg.append('defs').append('filter').attr('id', 'shine1');
     filter.append('feGaussianBlur').attr({
@@ -85,6 +85,16 @@ GENEMAP.GeneMap = function (userConfig) {
     mapContainer.select('svg').call(zoom);
   };
 
+  var onMouseDown = function () {
+    console.log('mouse down');
+    svg.classed('dragging', true);
+  };
+
+  var onMouseUp = function () {
+    console.log('mouse up');
+    svg.classed('dragging', false);
+  };
+
   var drawMap = function () {
 
     if (!d3.select(target).select('svg').node()) {
@@ -93,8 +103,12 @@ GENEMAP.GeneMap = function (userConfig) {
 
     svg = d3.select(target).select('svg');
 
-    svg.attr('width', config.width)
-       .attr('height', config.height);
+    svg.attr({
+      width: config.width,
+      height: config.height,
+    })
+    .on('mousedown', onMouseDown)
+    .on('mouseup', onMouseUp);
 
     container = svg.select('.zoom_window');
 

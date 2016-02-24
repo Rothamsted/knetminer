@@ -6,10 +6,12 @@ GENEMAP.InfoBox = function () {
 
   var target = 'body';
 
-  var closeAllPopovers = function (e) {
-    if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
-      $('[data-original-title]').popover('hide');
-    }
+  var closeAllPopovers = function () {
+    $('.infobox').not(this).popover('hide');
+
+    // if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
+    //   $('[data-original-title]').popover('hide');
+    // }
   };
 
   my.attach = function () {
@@ -22,10 +24,11 @@ GENEMAP.InfoBox = function () {
       }
 
       $(this).popover({
-        title: data.label,
-        content: '<div>Chromosome ' + data.chromosome + ' ' +
-          data.start + '-' + data.end +
-          '<br /> <a href="' + data.link + '">link </a></div',
+        title: null,
+        content: '<div><a href="' + data.link + '">' + data.label + '</a>' +
+                 '<br />Chromosome ' + data.chromosome + ' :' +
+                  data.start + '-' + data.end +
+                  '</div>',
         container: target,
         placement: 'right',
         animation: true,
@@ -34,7 +37,7 @@ GENEMAP.InfoBox = function () {
       });
     });
 
-    $('html').off('click').on('click', closeAllPopovers);
+    $('html').off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
   };
 
   my.target = function (value) {
