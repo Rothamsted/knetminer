@@ -1,0 +1,24 @@
+{
+  "name": "gene-map",
+  "description": "",
+  "main": "genemap.js",
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.12.0",
+    "bootstrap": "^3.3.6",
+    "d3": "3.4.13",
+    "lodash": "^4.5.1",
+    "d3.promise": "^1.1.0",
+    "labella": "^1.1.1"
+  }
+}

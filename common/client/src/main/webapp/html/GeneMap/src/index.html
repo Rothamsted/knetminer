@@ -6,12 +6,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="../css/custom_bootstrap.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="../css/annotations.css" />
-    <link rel="stylesheet" href="../css/chromosome.css" />
-    <link rel="stylesheet" href="../css/mapview.css" />
-    <link rel="stylesheet" href="../css/infobox.css" />
-    <link rel="stylesheet" href="style.css" />
+    <!-- bower:css -->
+    <!-- endbower -->
+
+    <!-- inject:css -->
+    <!--endinject -->
+
+    <style>
+      svg {
+        border: 1px solid black;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      #map {
+        width: 80%;
+        height: 80%;
+      }
+    </style>
 
   </head>
 
@@ -34,33 +48,23 @@
 
     <div id="map" class="bootstrap"></div>
 
-    <script src="../js/jquery-1.12.0.js"></script>
-    <script src="../js/bootstrap/bootstrap.min.js"></script>
-    <script src="../d3/d3.min.js"></script>
-    <script src="../js/lodash/lodash.min.js"></script>
-    <script src="../js/d3.promise/d3.promise.min.js"></script>
-    <script src="../js/labella/labella.min.js"></script>
-    <script src="../src/js/chromosome.js"></script>
-    <script src="../src/js/annotations.js"></script>
-    <script src="../src/js/basemap_xml_reader.js"></script>
-    <script src="../src/js/annotation_xml_reader.js"></script>
-    <script src="../src/js/xml_data_reader.js"></script>
-    <script src="../src/js/map_layout.js"></script>
-    <script src="../src/js/auto_layout.js"></script>
-    <script src="../src/js/infobox.js"></script>
-    <script src="../src/js/genemap.js"></script>
+    <!-- bower:js -->
+    <!-- endbower -->
+
+    <!-- inject:js -->
+    <!--endinject -->
 
     <script>
       var chart = GENEMAP.GeneMap();
 
       // redraw on window resize
-      var resize =function() {
-        chart.redraw("#map");
-      }
+      var resize = function () {
+        chart.redraw('#map');
+      };
 
       d3.select(window).on('resize', resize);
 
-      var redraw = function(resetZoom){
+      var redraw = function (resetZoom) {
         var sel = document.getElementById('basemap-file');
         var file = sel.options[sel.selectedIndex].value;
 
@@ -69,17 +73,17 @@
 
         // chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
 
-        if (resetZoom){
+        if (resetZoom) {
           chart.resetZoom();
         }
 
         var annotationFile = null;
-        if (file.indexOf('poplar') > -1 ){
-          annotationFile = "./data/annotations/poplar_gene_qtl_matches.xml"
+        if (file.indexOf('poplar') > -1) {
+          annotationFile = './data/annotations/poplar_gene_qtl_matches.xml';
         }
 
         chart.draw('#map', file, annotationFile);
-      }
+      };
 
       redraw();
 

@@ -1,11 +1,13 @@
+/* Remove jQuery as $ so it can be used by gulp-load-plugins */
 /* globals require, -$ */
 
-// grab our gulp packages
 var gulp  = require('gulp'),
     args = require('yargs').argv,
     del = require('del'),
     $ = require('gulp-load-plugins')({ lazy: true }),
     config = require('./gulp.config')();
+
+// *** Code analysis ***
 
 gulp.task('vet', function () {
   $.util.log('Running static code analysis.');
@@ -18,10 +20,30 @@ gulp.task('vet', function () {
     .pipe($.jshint.reporter('jshint-stylish', { verbose: true }));
 });
 
+
+// *** cleaning tasks ***
+
 gulp.task('clean-styles', function () {
-  var files = config.temp + '**/*.css';
+  var files = config.outputDir + '**/*.css';
   clean(files);
 });
+
+gulp.task('clean-scripts', function () {
+  var files = config.outputDir + '**/*.js';
+  clean(files);
+});
+
+gulp.task('clean-html', function () {
+  var files = config.outputDir + '**/*.html';
+  clean(files);
+});
+
+gulp.task('clean-data', function () {
+  var files = config.outputDir + '**/*.xml';
+  clean(files);
+});
+
+// *** dev compilation ***
 
 gulp.task('styles', ['clean-styles'], function () {
   $.util.log('Compiling Less to CSS.');
@@ -33,16 +55,62 @@ gulp.task('styles', ['clean-styles'], function () {
     }))
     .pipe($.less())
     .pipe($.autoprefixer({ browsers: ['last 2 version', '> 5%'] }))
-    .pipe(gulp.dest(config.temp));
+    .pipe(gulp.dest(config.outputCssDir));
+});
+
+gulp.task('scripts', ['clean-scripts'], function () {
+  return gulp.src(config.js)
+    .pipe(gulp.dest(config.outputJsDir));
+});
+
+gulp.task('dev-data', ['clean-data'], function () {
+  return gulp.src(config.data)
+    .pipe(gulp.dest(config.outputDataDir));
+});
+
+gulp.task('less-watcher', function () {
+  gulp.watch([config.less], ['styles']);
+});
+
+// *** HTML injection ***
+
+gulp.task('html', ['clean-html'], function () {
+  $.util.log('injecting JavaScript and CSS into the html files');
+
+  var injectStyles = gulp.src(config.outputCss, { read: false });
+  var injectScripts = gulp.src(config.outputJs, { read: false });
+
+  var wiredepOptions = config.getWiredepDefaultOptions();
+  var injectOptions = {};
+  var wiredep = require('wiredep').stream;
+
+  return gulp.src(config.html)
+    .pipe(wiredep(wiredepOptions))
+    .pipe($.inject(injectStyles), injectOptions)
+    .pipe($.inject(injectScripts), injectOptions)
+    .pipe(gulp.dest(config.outputDir));
+});
+
+gulp.task('inject', ['styles', 'scripts', 'dev-data', 'clean-html'], function () {
+  $.util.log('repopulating the dev directory');
+
+  var injectStyles = gulp.src(config.outputCss, { read: false });
+  var injectScripts = gulp.src(config.outputJs, { read: false });
+
+  var wiredepOptions = config.getWiredepDefaultOptions();
+  var injectOptions = {};
+  var wiredep = require('wiredep').stream;
+
+  return gulp.src(config.html)
+    .pipe(wiredep(wiredepOptions))
+    .pipe($.inject(injectStyles), injectOptions)
+    .pipe($.inject(injectScripts), injectOptions)
+    .pipe(gulp.dest(config.outputDir));
 });
 
 // create a default task and just log a message
 gulp.task('default', function () {
   return $.util.log('Gulp is running!');
-});
-
-gulp.task('less-watcher', function () {
-  gulp.watch([config.less], ['styles']);
 });
 
 ////////////
