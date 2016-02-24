@@ -10,6 +10,11 @@
     <!-- endbower -->
 
     <!-- inject:css -->
+    <link rel="stylesheet" href="css/annotations.css">
+    <link rel="stylesheet" href="css/bootstrap-namespaced.css">
+    <link rel="stylesheet" href="css/chromosome.css">
+    <link rel="stylesheet" href="css/infobox.css">
+    <link rel="stylesheet" href="css/mapview.css">
     <!--endinject -->
 
     <style>
@@ -34,9 +39,9 @@
     <span>Basemap:</span>
 
     <select id="basemap-file">
-      <option selected="selected" value='./data/poplar_basemap.xml'>Poplar</option>
-      <option value='./data/wheat_basemap.xml'>Wheat</option>
-      <option value='./data/simple_basemap.xml'>Simple</option>
+      <option selected="selected" value='poplar_basemap.xml'>Poplar</option>
+      <option value='wheat_basemap.xml'>Wheat</option>
+      <option value='simple_basemap.xml'>Simple</option>
     </select>
 
     <!-- <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" /> -->
@@ -49,9 +54,24 @@
     <div id="map" class="bootstrap"></div>
 
     <!-- bower:js -->
+    <script src="jquery/dist/jquery.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.js"></script>
+    <script src="d3/d3.js"></script>
+    <script src="lodash/lodash.js"></script>
+    <script src="d3.promise/dist/d3.promise.min.js"></script>
+    <script src="labella/dist/labella.min.js"></script>
     <!-- endbower -->
 
     <!-- inject:js -->
+    <script src="js/annotations.js"></script>
+    <script src="js/annotation_xml_reader.js"></script>
+    <script src="js/auto_layout.js"></script>
+    <script src="js/basemap_xml_reader.js"></script>
+    <script src="js/chromosome.js"></script>
+    <script src="js/genemap.js"></script>
+    <script src="js/infobox.js"></script>
+    <script src="js/map_layout.js"></script>
+    <script src="js/xml_data_reader.js"></script>
     <!--endinject -->
 
     <script>
@@ -79,7 +99,7 @@
 
         var annotationFile = null;
         if (file.indexOf('poplar') > -1) {
-          annotationFile = './data/annotations/poplar_gene_qtl_matches.xml';
+          annotationFile = 'annotations/poplar_gene_qtl_matches.xml';
         }
 
         chart.draw('#map', file, annotationFile);

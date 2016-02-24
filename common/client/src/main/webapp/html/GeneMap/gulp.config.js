@@ -10,21 +10,17 @@ module.exports = function () {
     less: ['./src/less/*.less', '!./src/less/variables.less'],
     html: './src/*.html',
     js: './src/js/*.js',
-    data: './test/data/**/*.xml',
 
     // the development output
-    outputDir: './dev/',
-    outputCssDir: './dev/css/',
-    outputCss: './dev/css/*.css',
-    outputDataDir: './dev/data/',
-    outputJsDir: './dev/js/',
-    outputJs: './dev/js/*.js',
+    srcDir: './src/',
+    outputCssDir: './.tmp/css/',
+    outputCss: './.tmp/css/*.css',
 
     // configuration
     bower: {
       json: require('./bower.json'),
       directory: './bower_components/',
-      ignorePath: '../..',
+      ignorePath: '../bower_components/',
     },
   };
 

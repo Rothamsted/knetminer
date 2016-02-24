@@ -21,26 +21,10 @@ gulp.task('vet', function () {
     .pipe($.jshint.reporter('jshint-stylish', { verbose: true }));
 });
 
-
 // *** cleaning tasks ***
 
 gulp.task('clean-styles', function () {
   var files = config.outputDir + '**/*.css';
-  clean(files);
-});
-
-gulp.task('clean-scripts', function () {
-  var files = config.outputDir + '**/*.js';
-  clean(files);
-});
-
-gulp.task('clean-html', function () {
-  var files = config.outputDir + '**/*.html';
-  clean(files);
-});
-
-gulp.task('clean-data', function () {
-  var files = config.outputDir + '**/*.xml';
   clean(files);
 });
 
@@ -59,45 +43,56 @@ gulp.task('styles', ['clean-styles'], function () {
     .pipe(gulp.dest(config.outputCssDir));
 });
 
-gulp.task('scripts', ['clean-scripts'], function () {
-  return gulp.src(config.js)
-    .pipe(gulp.dest(config.outputJsDir));
-});
-
 gulp.task('dev-data', ['clean-data'], function () {
   return gulp.src(config.data)
     .pipe(gulp.dest(config.outputDataDir));
 });
 
-gulp.task('less-watcher', function () {
+gulp.task('livereload', function () {
+  $.watch([config.outputCss, config.js, config.html])
+    .pipe($.connect.reload());
+});
+
+gulp.task('watch', function () {
   gulp.watch([config.less], ['styles']);
 });
 
 // *** HTML injection ***
 
-gulp.task('html', ['clean-html'], function () {
+gulp.task('html', function () {
   $.util.log('injecting JavaScript and CSS into the html files');
 
   var injectStyles = gulp.src(config.outputCss, { read: false });
-  var injectScripts = gulp.src(config.outputJs, { read: false });
+  var injectScripts = gulp.src(config.js, { read: false });
 
   var wiredepOptions = config.getWiredepDefaultOptions();
-  var injectOptions = {};
+  var injectOptions = {
+    ignorePath: ['src', '.tmp'], addRootSlash: false,
+  };
+
   var wiredep = require('wiredep').stream;
 
   return gulp.src(config.html)
     .pipe(wiredep(wiredepOptions))
-    .pipe($.inject(injectStyles), injectOptions)
-    .pipe($.inject(injectScripts), injectOptions)
-    .pipe(gulp.dest(config.outputDir));
+    .pipe($.inject(injectStyles, injectOptions))
+    .pipe($.inject(injectScripts, injectOptions))
+    .pipe(gulp.dest(config.srcDir));
 });
 
-gulp.task('inject', ['styles', 'scripts', 'dev-data'], function (done) {
-  $.util.log('repopulating the dev directory');
+gulp.task('inject', ['styles'], function (done) {
+  $.util.log('rebuilding styles and html');
 
-  // force the html task to wait for the styles, scripts and data tasks
+  // force the html task to wait for the styles
   runSequence('html', function () {
     done();
+  });
+});
+
+gulp.task('serve-dev', ['inject', 'livereload'], function () {
+  return $.connect.server({
+    root: ['src', '.tmp', 'bower_components', 'test/data'],
+    port: '8080',
+    livereload: true,
   });
 });
 
