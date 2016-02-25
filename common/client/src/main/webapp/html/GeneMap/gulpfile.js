@@ -24,7 +24,7 @@ gulp.task('vet', function () {
 // *** cleaning tasks ***
 
 gulp.task('clean-styles', function () {
-  var files = config.outputDir + '**/*.css';
+  var files = config.tmpDir + '**/*.css';
   clean(files);
 });
 

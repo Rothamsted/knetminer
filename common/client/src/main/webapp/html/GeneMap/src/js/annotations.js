@@ -198,7 +198,7 @@ GENEMAP.Annotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
-      var groups = d3.select(this).selectAll('.annotation-group').data(d);
+      var groups = d3.select(this).selectAll('.annotation-group').data([d]);
 
       groups.enter().append('g').attr('class', 'annotation-group');
 
@@ -208,7 +208,7 @@ GENEMAP.Annotations = function (userConfig) {
         var group = d3.select(this).attr({
           id: function (d) { return 'annotation_' + d.number; },
           transform: function (d) {
-            return 'translate(' + (d.x + d.width) + ',' + (d.y + d.labelHeight) + ')';
+            return 'translate(' + d.width + ',' + d.labelHeight + ')';
           },
         });
 

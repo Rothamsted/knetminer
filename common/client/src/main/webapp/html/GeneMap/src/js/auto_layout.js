@@ -42,11 +42,16 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
       var rows = Math.ceil(genome.chromosomes.length / config.numberPerRow);
 
-      var cellWidth = sizeLessMargin.width / config.numberPerRow;
-      var cellHeight = sizeLessMargin.height / rows;
+      var cellDimensions = {
+        width: sizeLessMargin.width / config.numberPerRow,
+        height: sizeLessMargin.height / rows,
+      };
 
-      var widthRatio = cellWidth / (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
-      var heightRatio = cellHeight / (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
+      var widthRatio = cellDimensions.width /
+        (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
+
+      var heightRatio = cellDimensions.height /
+        (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
 
       var longest = Math.max.apply(null, genome.chromosomes.map(function (c) { return c.length; }));
 
@@ -100,8 +105,12 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         var col = i % config.numberPerRow;
         var row = Math.floor(i / config.numberPerRow);
 
-        chromosome.y = (row * cellHeight) + (config.margin.top * config.height);
-        chromosome.x = (col * cellWidth) + (config.margin.left * config.width);
+        chromosome.cell =  {
+          y: (row * cellDimensions.height) + (config.margin.top * config.height),
+          x: (col * cellDimensions.width) + (config.margin.left * config.width),
+          width: cellDimensions.width,
+          height: cellDimensions.height,
+        };
 
         chromosome = _.merge(chromosome, chromosomeLayout);
       });

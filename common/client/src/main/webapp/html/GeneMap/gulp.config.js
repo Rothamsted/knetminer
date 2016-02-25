@@ -3,6 +3,8 @@
 module.exports = function () {
   var config = {
 
+    tmpDir: './tmp/',
+
     // all the JavaScript files for this project
     alljs: ['./src/**/*.js', './*.js'],
 

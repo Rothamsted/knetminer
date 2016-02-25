@@ -8,7 +8,7 @@ GENEMAP.GeneMap = function (userConfig) {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
       numberPerRow: 5,
     },
-    contentBorder: false,
+    contentBorder: true,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -110,11 +110,11 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.attr({
       width: config.width,
       height: config.height,
+      // viewBox: '0 0 100 100',
+      // preserveAspectRatio: 'none',
     })
     .on('mousedown', onMouseDown)
     .on('mouseup', onMouseUp);
-
-    container = svg.select('.zoom_window');
 
     // setup the containers for each of the chromosomes
     var bbox = svg.node().getBoundingClientRect();
@@ -129,6 +129,8 @@ GENEMAP.GeneMap = function (userConfig) {
     genome = layoutDecorator.decorateGenome(genome);
     svg.datum(genome);
 
+    container = svg.select('.zoom_window');
+
     drawDocumentOutline();
 
     if (config.contentBorder) {
@@ -142,21 +144,9 @@ GENEMAP.GeneMap = function (userConfig) {
 
     infoBox.attach();
 
-    // setup the annotations container and draw the annotations
-    // should be drawn before the chormosomes as some of the lines need to be
-    // underneath the chormosome drawings.
-    var annotationDrawer = GENEMAP.Annotations();
-
-    var annotationContainer = container.selectAll('g.annotation-container').data([genome.chromosomes]);
-    annotationContainer.enter().append('g').attr('class', 'annotation-container');
-    annotationContainer.call(annotationDrawer);
-
-    // setup the cotnainer and draw the chromosomes
-    var chromosomeDrawer = GENEMAP.Chromosome();
-
-    var chromosomeContainer = container.selectAll('g.chromosome-container').data([genome.chromosomes]);
-    chromosomeContainer.enter().append('g').attr('class', 'chromosome-container');
-    chromosomeContainer.call(chromosomeDrawer);
+    // draw the chromosome cell for each of the chromosome objects on the genome
+    var cellDrawer = GENEMAP.ChromosomeCell();
+    container.call(cellDrawer);
 
   };
 
@@ -166,16 +156,16 @@ GENEMAP.GeneMap = function (userConfig) {
     if (genome) {
       var bbox = svg.node().getBoundingClientRect();
 
-      // padding the size of the drawing with 1/2 the bbox so you can
-      // center on any point of the drawing. Also taking margins into
-      // account to further center the view.
-      var minx = -genome.drawing.width * d3.event.scale + bbox.width / 2 +
+      // padding the size of the drawing with by a factor of config.extraPanArea * the bbox.
+      // Setting this value to 0.5 will allow you to center on any point of the drawing at every zoom level.
+      // Margins aren't taken into account when calcuating the pannable padding.
+      var minx = -genome.drawing.width * d3.event.scale + bbox.width * (1 - config.extraPanArea) +
                   genome.drawing.margin.right * d3.event.scale;
 
       var maxx = bbox.width * config.extraPanArea - (genome.drawing.margin.left * d3.event.scale);
       translate[0] = _.clamp(translate[0], minx, maxx);
 
-      var miny = -genome.drawing.height * d3.event.scale + bbox.height / 2 +
+      var miny = -genome.drawing.height * d3.event.scale + bbox.height * (1 - config.extraPanArea) +
                   genome.drawing.margin.bottom * d3.event.scale;
 
       var maxy = bbox.height * config.extraPanArea - (genome.drawing.margin.top * d3.event.scale);

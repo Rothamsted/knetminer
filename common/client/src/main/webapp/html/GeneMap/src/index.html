@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/annotations.css">
     <link rel="stylesheet" href="css/bootstrap-namespaced.css">
     <link rel="stylesheet" href="css/chromosome.css">
+    <link rel="stylesheet" href="css/chromosome_cell.css">
     <link rel="stylesheet" href="css/infobox.css">
     <link rel="stylesheet" href="css/mapview.css">
     <!-- endinject -->
@@ -26,7 +27,7 @@
       svg {
         border: 1px solid black;
       }
-
+ 
       html, body {
         height: 100%;
       }
@@ -43,16 +44,19 @@
 
     <span>Basemap:</span>
 
-    <select id="basemap-file">
-      <option selected="selected" value='poplar_basemap.xml'>Poplar</option>
-      <option value='wheat_basemap.xml'>Wheat</option>
-      <option value='simple_basemap.xml'>Simple</option>
+    <select id="basemap-file" onclick="redraw();">
+      <option selected="selected" value='arabidopsis'>Arabidopsis</option>
+      <option selected="selected" value='barley'>Barley</option>
+      <option selected="selected" value='poplar'>Poplar</option>
+      <option value='wheat'>Wheat</option>
+      <option value='simple'>Simple</option>
     </select>
 
     <!-- <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" /> -->
     <span>Num Per Row:</span>
 
-    <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;"/>
+    <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;" onclick="redraw();"/>
+    <input id="chk-annotations" type="checkbox" checked="true" onclick="redraw();"> Include Annotations
     <button onclick="redraw(false)">Draw</button>
     <button onclick="redraw(true)">Reset Zoom</button>
 
@@ -76,6 +80,7 @@
     <script src="js/auto_layout.js"></script>
     <script src="js/basemap_xml_reader.js"></script>
     <script src="js/chromosome.js"></script>
+    <script src="js/chromosome_cell.js"></script>
     <script src="js/genemap.js"></script>
     <script src="js/infobox.js"></script>
     <script src="js/map_layout.js"></script>
@@ -95,7 +100,7 @@
 
       var redraw = function (resetZoom) {
         var sel = document.getElementById('basemap-file');
-        var file = sel.options[sel.selectedIndex].value;
+        var file = 'basemap/' + sel.options[sel.selectedIndex].value + '.xml';
 
         var numberPerRow = +document.getElementById('chromosome_per_row').value;
         chart.layout().numberPerRow = numberPerRow;
@@ -107,8 +112,10 @@
         }
 
         var annotationFile = null;
-        if (file.indexOf('poplar') > -1) {
-          annotationFile = 'annotations/poplar_gene_qtl_matches.xml';
+        var includeAnnotations = document.getElementById('chk-annotations').checked;
+
+        if (includeAnnotations) {
+          annotationFile = 'annotations/' + sel.options[sel.selectedIndex].value + '.xml';
         }
 
         chart.draw('#map', file, annotationFile);
