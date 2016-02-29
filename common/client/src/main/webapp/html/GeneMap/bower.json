@@ -20,5 +20,9 @@
     "lodash": "^4.5.1",
     "d3.promise": "^1.1.0",
     "labella": "^1.1.1"
+  },
+  "devDependencies": {
+    "jasmine-core": "jasmine#^2.4.1",
+    "jasmine-collection-matchers": "^0.1.2"
   }
 }

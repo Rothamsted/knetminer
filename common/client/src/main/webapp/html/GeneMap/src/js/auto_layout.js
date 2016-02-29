@@ -40,10 +40,11 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         height: config.height * (1 - config.margin.top - config.margin.bottom),
       };
 
-      var rows = Math.ceil(genome.chromosomes.length / config.numberPerRow);
+      var cols = Math.min(config.numberPerRow, genome.chromosomes.length);
+      var rows = Math.ceil(genome.chromosomes.length / cols);
 
       var cellDimensions = {
-        width: sizeLessMargin.width / config.numberPerRow,
+        width: sizeLessMargin.width / cols,
         height: sizeLessMargin.height / rows,
       };
 

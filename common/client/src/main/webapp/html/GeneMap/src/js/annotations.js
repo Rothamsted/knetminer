@@ -20,8 +20,13 @@ GENEMAP.Annotations = function (userConfig) {
     });
 
     var force = new labella.Force({
-      minPos: 0,
       nodeSpacing: 3,
+      algorithm: 'overlap',
+      lineSpacing: 2,
+      maxPos: y(chromosome.longestChromosome),
+      minPos: 0,
+      density: 0.85,
+
     }).nodes(nodes).compute();
 
     var renderer = new labella.Renderer({

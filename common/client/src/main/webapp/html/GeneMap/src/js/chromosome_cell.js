@@ -2,7 +2,7 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
-    border: true,
+    border: false,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);

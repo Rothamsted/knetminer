@@ -1,0 +1,921 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>7H</chromosome>
+<start>3707914</start>
+<end>3707914</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK373064</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK373064</link>
+</feature>
+<feature id="1">
+<chromosome>2H</chromosome>
+<start>91005665</start>
+<end>91005665</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK373395</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK373395</link>
+</feature>
+<feature id="2">
+<chromosome>7H</chromosome>
+<start>23016997</start>
+<end>23016997</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_45550.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_45550.1</link>
+</feature>
+<feature id="3">
+<chromosome>1H</chromosome>
+<start>9915014</start>
+<end>9915014</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_58706.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_58706.1</link>
+</feature>
+<feature id="4">
+<chromosome>4H</chromosome>
+<start>51912181</start>
+<end>51912181</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_77034.3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_77034.3</link>
+</feature>
+<feature id="5">
+<chromosome>3H</chromosome>
+<start>51203966</start>
+<end>51203966</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_57826.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_57826.1</link>
+</feature>
+<feature id="6">
+<chromosome>4H</chromosome>
+<start>54603399</start>
+<end>54603399</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK359388</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK359388</link>
+</feature>
+<feature id="7">
+<chromosome>3H</chromosome>
+<start>55807365</start>
+<end>55807365</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_20636.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_20636.1</link>
+</feature>
+<feature id="8">
+<chromosome>7H</chromosome>
+<start>23016997</start>
+<end>23016997</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_45548.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_45548.2</link>
+</feature>
+<feature id="9">
+<chromosome>1H</chromosome>
+<start>117492917</start>
+<end>117492917</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_62564.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_62564.2</link>
+</feature>
+<feature id="10">
+<chromosome>4H</chromosome>
+<start>111331444</start>
+<end>111331444</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_18990.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_18990.1</link>
+</feature>
+<feature id="11">
+<chromosome>7H</chromosome>
+<start>106444759</start>
+<end>106444759</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_72778.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_72778.2</link>
+</feature>
+<feature id="12">
+<chromosome>4H</chromosome>
+<start>1020520</start>
+<end>1020520</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_16746.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_16746.1</link>
+</feature>
+<feature id="13">
+<chromosome>3H</chromosome>
+<start>93817925</start>
+<end>93817925</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK362686</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK362686</link>
+</feature>
+<feature id="14">
+<chromosome>5H</chromosome>
+<start>125833333</start>
+<end>125833333</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK370299</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK370299</link>
+</feature>
+<feature id="15">
+<chromosome>6H</chromosome>
+<start>94900849</start>
+<end>94900849</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK354181</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK354181</link>
+</feature>
+<feature id="16">
+<chromosome>6H</chromosome>
+<start>28541076</start>
+<end>28541076</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_39684.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_39684.1</link>
+</feature>
+<feature id="17">
+<chromosome>6H</chromosome>
+<start>94900849</start>
+<end>94900849</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_4901.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_4901.1</link>
+</feature>
+<feature id="18">
+<chromosome>5H</chromosome>
+<start>136597222</start>
+<end>136597222</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_3170.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_3170.2</link>
+</feature>
+<feature id="19">
+<chromosome>1H</chromosome>
+<start>15084985</start>
+<end>15084985</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_4222.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_4222.1</link>
+</feature>
+<feature id="20">
+<chromosome>4H</chromosome>
+<start>59631728</start>
+<end>59631728</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_62525.3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_62525.3</link>
+</feature>
+<feature id="21">
+<chromosome>7H</chromosome>
+<start>60835694</start>
+<end>60835694</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_64177.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_64177.1</link>
+</feature>
+<feature id="22">
+<chromosome>7H</chromosome>
+<start>61756373</start>
+<end>61756373</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_68874.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_68874.1</link>
+</feature>
+<feature id="23">
+<chromosome>5H</chromosome>
+<start>114766533</start>
+<end>114766533</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_74993.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_74993.1</link>
+</feature>
+<feature id="24">
+<chromosome>6H</chromosome>
+<start>105099150</start>
+<end>105099150</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_74987.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_74987.1</link>
+</feature>
+<feature id="25">
+<chromosome>2H</chromosome>
+<start>70821529</start>
+<end>70821529</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK250902.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK250902.1</link>
+</feature>
+<feature id="26">
+<chromosome>1H</chromosome>
+<start>71033994</start>
+<end>71033994</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_10354.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_10354.1</link>
+</feature>
+<feature id="27">
+<chromosome>6H</chromosome>
+<start>87322946</start>
+<end>87322946</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK368372</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK368372</link>
+</feature>
+<feature id="28">
+<chromosome>5H</chromosome>
+<start>43680555</start>
+<end>43680555</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_71576.3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_71576.3</link>
+</feature>
+<feature id="29">
+<chromosome>7H</chromosome>
+<start>283286</start>
+<end>283286</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>AK366848</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK366848</link>
+</feature>
+<feature id="30">
+<chromosome>3H</chromosome>
+<start>52029957</start>
+<end>52029957</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_65417.5</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_65417.5</link>
+</feature>
+<feature id="31">
+<chromosome>1H</chromosome>
+<start>48087818</start>
+<end>48087818</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_74793.3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_74793.3</link>
+</feature>
+<feature id="32">
+<chromosome>1H</chromosome>
+<start>87874582</start>
+<end>87874582</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_3802.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_3802.1</link>
+</feature>
+<feature id="33">
+<chromosome>4H</chromosome>
+<start>2903682</start>
+<end>2903682</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>MLOC_69914.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_69914.1</link>
+</feature>
+<feature id="34">
+<chromosome>7H</chromosome>
+<start>13881019</start>
+<end>13881019</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK354351</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK354351</link>
+</feature>
+<feature id="35">
+<chromosome>5H</chromosome>
+<start>122013888</start>
+<end>122013888</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_12488.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_12488.1</link>
+</feature>
+<feature id="36">
+<chromosome>5H</chromosome>
+<start>95138888</start>
+<end>95138888</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_54400.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_54400.1</link>
+</feature>
+<feature id="37">
+<chromosome>4H</chromosome>
+<start>43838526</start>
+<end>43838526</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK369461</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK369461</link>
+</feature>
+<feature id="38">
+<chromosome>5H</chromosome>
+<start>43958333</start>
+<end>43958333</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK365960</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK365960</link>
+</feature>
+<feature id="39">
+<chromosome>5H</chromosome>
+<start>43760478</start>
+<end>43760478</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_67910.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_67910.1</link>
+</feature>
+<feature id="40">
+<chromosome>5H</chromosome>
+<start>122430555</start>
+<end>122430555</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK374593</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK374593</link>
+</feature>
+<feature id="41">
+<chromosome>6H</chromosome>
+<start>52053824</start>
+<end>52053824</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_71548.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_71548.1</link>
+</feature>
+<feature id="42">
+<chromosome>6H</chromosome>
+<start>49787535</start>
+<end>49787535</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_63800.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_63800.1</link>
+</feature>
+<feature id="43">
+<chromosome>6H</chromosome>
+<start>65439093</start>
+<end>65439093</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK367093</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK367093</link>
+</feature>
+<feature id="44">
+<chromosome>2H</chromosome>
+<start>80028328</start>
+<end>80028328</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_20456.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_20456.1</link>
+</feature>
+<feature id="45">
+<chromosome>4H</chromosome>
+<start>51404124</start>
+<end>51404124</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK365215</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK365215</link>
+</feature>
+<feature id="46">
+<chromosome>2H</chromosome>
+<start>108002832</start>
+<end>108002832</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_17696.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_17696.1</link>
+</feature>
+<feature id="47">
+<chromosome>6H</chromosome>
+<start>117554316</start>
+<end>117554316</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_58390.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_58390.1</link>
+</feature>
+<feature id="48">
+<chromosome>2H</chromosome>
+<start>53753541</start>
+<end>53753541</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_73512.7</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_73512.7</link>
+</feature>
+<feature id="49">
+<chromosome>3H</chromosome>
+<start>52029957</start>
+<end>52029957</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK366122</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK366122</link>
+</feature>
+<feature id="50">
+<chromosome>2H</chromosome>
+<start>75566572</start>
+<end>75566572</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_76462.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_76462.1</link>
+</feature>
+<feature id="51">
+<chromosome>2H</chromosome>
+<start>132577903</start>
+<end>132577903</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK359912</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK359912</link>
+</feature>
+<feature id="52">
+<chromosome>1H</chromosome>
+<start>62688551</start>
+<end>62688551</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_44017.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_44017.2</link>
+</feature>
+<feature id="53">
+<chromosome>2H</chromosome>
+<start>57719546</start>
+<end>57719546</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK369186</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK369186</link>
+</feature>
+<feature id="54">
+<chromosome>5H</chromosome>
+<start>120069444</start>
+<end>120069444</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_56602.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_56602.1</link>
+</feature>
+<feature id="55">
+<chromosome>5H</chromosome>
+<start>139097222</start>
+<end>139097222</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_62283.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_62283.1</link>
+</feature>
+<feature id="56">
+<chromosome>3H</chromosome>
+<start>51628895</start>
+<end>51628895</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK370282</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK370282</link>
+</feature>
+<feature id="57">
+<chromosome>6H</chromosome>
+<start>49220963</start>
+<end>49220963</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_55265.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_55265.2</link>
+</feature>
+<feature id="58">
+<chromosome>2H</chromosome>
+<start>146529745</start>
+<end>146529745</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_64731.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_64731.1</link>
+</feature>
+<feature id="59">
+<chromosome>1H</chromosome>
+<start>4107648</start>
+<end>4107648</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK375404</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK375404</link>
+</feature>
+<feature id="60">
+<chromosome>7H</chromosome>
+<start>70803322</start>
+<end>70803322</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_51851.2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_51851.2</link>
+</feature>
+<feature id="61">
+<chromosome>2H</chromosome>
+<start>57436260</start>
+<end>57436260</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_67781.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_67781.1</link>
+</feature>
+<feature id="62">
+<chromosome>7H</chromosome>
+<start>76416430</start>
+<end>76416430</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_45474.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_45474.1</link>
+</feature>
+<feature id="63">
+<chromosome>3H</chromosome>
+<start>52029957</start>
+<end>52029957</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>AK252064.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK252064.1</link>
+</feature>
+<feature id="64">
+<chromosome>2H</chromosome>
+<start>48441926</start>
+<end>48441926</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_60101.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_60101.1</link>
+</feature>
+<feature id="65">
+<chromosome>7H</chromosome>
+<start>67917847</start>
+<end>67917847</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_67076.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_67076.1</link>
+</feature>
+<feature id="66">
+<chromosome>7H</chromosome>
+<start>69559476</start>
+<end>69559476</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>MLOC_80269.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_80269.1</link>
+</feature>
+<feature id="67">
+<chromosome>7H</chromosome>
+<start>2053824</start>
+<end>2053824</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_62511.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_62511.1</link>
+</feature>
+<feature id="68">
+<chromosome>5H</chromosome>
+<start>95138888</start>
+<end>95138888</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_44963.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_44963.1</link>
+</feature>
+<feature id="69">
+<chromosome>1H</chromosome>
+<start>46813031</start>
+<end>46813031</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_4360.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_4360.1</link>
+</feature>
+<feature id="70">
+<chromosome>2H</chromosome>
+<start>82082152</start>
+<end>82082152</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_60276.4</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_60276.4</link>
+</feature>
+<feature id="71">
+<chromosome>1H</chromosome>
+<start>47827725</start>
+<end>47827725</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_57711.3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_57711.3</link>
+</feature>
+<feature id="72">
+<chromosome>1H</chromosome>
+<start>46916806</start>
+<end>46916806</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK365664</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK365664</link>
+</feature>
+<feature id="73">
+<chromosome>6H</chromosome>
+<start>69050991</start>
+<end>69050991</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_55989.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_55989.1</link>
+</feature>
+<feature id="74">
+<chromosome>5H</chromosome>
+<start>62485646</start>
+<end>62485646</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_61472.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_61472.1</link>
+</feature>
+<feature id="75">
+<chromosome>7H</chromosome>
+<start>13881019</start>
+<end>13881019</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK363034</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK363034</link>
+</feature>
+<feature id="76">
+<chromosome>7H</chromosome>
+<start>1912181</start>
+<end>1912181</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_79789.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_79789.1</link>
+</feature>
+<feature id="77">
+<chromosome>2H</chromosome>
+<start>59419263</start>
+<end>59419263</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_64762.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_64762.1</link>
+</feature>
+<feature id="78">
+<chromosome>7H</chromosome>
+<start>132011331</start>
+<end>132011331</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_11583.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_11583.1</link>
+</feature>
+<feature id="79">
+<chromosome>4H</chromosome>
+<start>59773371</start>
+<end>59773371</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK362819</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK362819</link>
+</feature>
+<feature id="80">
+<chromosome>6H</chromosome>
+<start>55028328</start>
+<end>55028328</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK354186</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK354186</link>
+</feature>
+<feature id="81">
+<chromosome>2H</chromosome>
+<start>70821529</start>
+<end>70821529</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK370579</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK370579</link>
+</feature>
+<feature id="82">
+<chromosome>6H</chromosome>
+<start>68909348</start>
+<end>68909348</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_15020.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_15020.1</link>
+</feature>
+<feature id="83">
+<chromosome>7H</chromosome>
+<start>104815864</start>
+<end>104815864</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_79158.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_79158.1</link>
+</feature>
+<feature id="84">
+<chromosome>3H</chromosome>
+<start>142209631</start>
+<end>142209631</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK355523</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK355523</link>
+</feature>
+<feature id="85">
+<chromosome>5H</chromosome>
+<start>44930555</start>
+<end>44930555</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_80901.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_80901.1</link>
+</feature>
+<feature id="86">
+<chromosome>3H</chromosome>
+<start>76062322</start>
+<end>76062322</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK366128</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK366128</link>
+</feature>
+<feature id="87">
+<chromosome>7H</chromosome>
+<start>66076487</start>
+<end>66076487</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK252155.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK252155.1</link>
+</feature>
+<feature id="88">
+<chromosome>5H</chromosome>
+<start>95000000</start>
+<end>95000000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK369222</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK369222</link>
+</feature>
+<feature id="89">
+<chromosome>2H</chromosome>
+<start>70821529</start>
+<end>70821529</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK362916</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK362916</link>
+</feature>
+<feature id="90">
+<chromosome>2H</chromosome>
+<start>135339943</start>
+<end>135339943</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK373798</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK373798</link>
+</feature>
+<feature id="91">
+<chromosome>1H</chromosome>
+<start>54461756</start>
+<end>54461756</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_44823.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_44823.1</link>
+</feature>
+<feature id="92">
+<chromosome>7H</chromosome>
+<start>67634531</start>
+<end>67634531</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_36326.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_36326.1</link>
+</feature>
+<feature id="93">
+<chromosome>6H</chromosome>
+<start>55382436</start>
+<end>55382436</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_12631.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_12631.1</link>
+</feature>
+<feature id="94">
+<chromosome>3H</chromosome>
+<start>60430632</start>
+<end>60430632</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK375311</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK375311</link>
+</feature>
+<feature id="95">
+<chromosome>2H</chromosome>
+<start>70821529</start>
+<end>70821529</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_54056.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_54056.1</link>
+</feature>
+<feature id="96">
+<chromosome>4H</chromosome>
+<start>57294617</start>
+<end>57294617</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_59693.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_59693.1</link>
+</feature>
+<feature id="97">
+<chromosome>2H</chromosome>
+<start>81798866</start>
+<end>81798866</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AK375953</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=AK375953</link>
+</feature>
+<feature id="98">
+<chromosome>6H</chromosome>
+<start>113243626</start>
+<end>113243626</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_51499.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_51499.1</link>
+</feature>
+<feature id="99">
+<chromosome>4H</chromosome>
+<start>91147308</start>
+<end>91147308</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_27026.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_27026.1</link>
+</feature>
+<feature id="100">
+<chromosome>4H</chromosome>
+<start>91147308</start>
+<end>91147308</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_27027.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_27027.1</link>
+</feature>
+<feature id="101">
+<chromosome>3H</chromosome>
+<start>108427762</start>
+<end>108427762</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>MLOC_9904.1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=MLOC_9904.1</link>
+</feature>
+</genome>

@@ -89,7 +89,7 @@ gulp.task('inject', ['styles'], function (done) {
 
 gulp.task('serve-dev', ['inject', 'livereload'], function () {
   return $.connect.server({
-    root: ['src', '.tmp', 'bower_components', 'test/data'],
+    root: ['src', '.tmp', 'bower_components', 'test/data', 'test'],
     port: '8080',
     livereload: true,
   });

@@ -111,7 +111,7 @@ GENEMAP.GeneMap = function (userConfig) {
       width: config.width,
       height: config.height,
       // viewBox: '0 0 100 100',
-      // preserveAspectRatio: 'none',
+      // preserveAspectRatio: 'xMinYMin slice',
     })
     .on('mousedown', onMouseDown)
     .on('mouseup', onMouseUp);
