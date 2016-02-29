@@ -6,9 +6,9 @@ GENEMAP.GeneMap = function (userConfig) {
     height: '100%',
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
-      numberPerRow: 5,
+      numberPerRow: 10,
     },
-    contentBorder: true,
+    contentBorder: false,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -119,10 +119,25 @@ GENEMAP.GeneMap = function (userConfig) {
     // setup the containers for each of the chromosomes
     var bbox = svg.node().getBoundingClientRect();
 
+    console.log(bbox);
+
+    var initialWidth = bbox.width;
+    var initialHeight = bbox.height;
+
+    if (initialWidth === 0) {
+      initialWidth = 750;
+    }
+
+    if (initialHeight === 0) {
+      initialHeight = 400;
+    }
+
+    console.log('width : ' + initialWidth + ' height: ' + initialHeight);
+
     // update the layout object with the new settings
     var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
-      .width(bbox.width)
-      .height(bbox.height)
+      .width(initialWidth)
+      .height(initialHeight)
       .scale(zoom.scale())
       .translate(zoom.translate());
 
@@ -229,6 +244,7 @@ GENEMAP.GeneMap = function (userConfig) {
     var reader = GENEMAP.XmlDataReader();
     target = target;
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
+      console.log('drawing genome to target');
       d3.select(target).datum(data).call(my);
     });
   };
