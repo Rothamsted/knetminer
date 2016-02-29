@@ -20,8 +20,13 @@ GENEMAP.Annotations = function (userConfig) {
     });
 
     var force = new labella.Force({
+      nodeSpacing: 3,
+      algorithm: 'overlap',
+      lineSpacing: 2,
+      maxPos: y(chromosome.longestChromosome),
       minPos: 0,
-      nodeSpacing: 1,
+      density: 0.85,
+
     }).nodes(nodes).compute();
 
     var renderer = new labella.Renderer({
@@ -106,7 +111,7 @@ GENEMAP.Annotations = function (userConfig) {
     }
 
     geneAnnotations.select('text').attr({
-      x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight * 0.5; },
+      x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight; },
       y: function (d) { return d.y + (0.4 * chromosome.annotationLabelHeight); },
     }).style({
       'font-size': chromosome.annotationLabelHeight,
@@ -198,7 +203,7 @@ GENEMAP.Annotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
-      var groups = d3.select(this).selectAll('.annotation-group').data(d);
+      var groups = d3.select(this).selectAll('.annotation-group').data([d]);
 
       groups.enter().append('g').attr('class', 'annotation-group');
 
@@ -208,7 +213,7 @@ GENEMAP.Annotations = function (userConfig) {
         var group = d3.select(this).attr({
           id: function (d) { return 'annotation_' + d.number; },
           transform: function (d) {
-            return 'translate(' + (d.x + d.width) + ',' + (d.y + d.labelHeight) + ')';
+            return 'translate(' + d.width + ',' + d.labelHeight + ')';
           },
         });
 

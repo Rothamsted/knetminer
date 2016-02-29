@@ -20,7 +20,6 @@ GENEMAP.Chromosome = function (userConfig) {
 
     chromosome.attr({
       id: 'chromosome_' + d.number,
-      transform: 'translate(' + d.x + ',' + d.y + ')',
     });
 
     chromosome.select('defs').html('')
@@ -103,7 +102,7 @@ GENEMAP.Chromosome = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
       // build up the selection of chromosome objects
-      var chroosomes = d3.select(this).selectAll('.chromosome').data(d);
+      var chroosomes = d3.select(this).selectAll('.chromosome').data([d]);
 
       // setup a basic element structure for any new chromosomes
       var enterGroup = chroosomes.enter().append('g').attr('class', 'chromosome');

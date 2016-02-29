@@ -15,12 +15,12 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
     labelHeight: 0.05,
-    annotationLabelHeight: 0.015,
+    annotationLabelHeight: 0.02,
     annotationLabelThreshold:12,
     annotationLableMaxSize: 14,
-    annotationMarkerSize: 0.02,
+    annotationMarkerSize: 0.03,
     annotationMarkerMinSize: 6,
-    annotationMarkerMaxSize: 16,
+    annotationMarkerMaxSize: 20,
     annotationWidth: 0.4,
     minLabelHeightPx: 8,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
@@ -40,13 +40,19 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         height: config.height * (1 - config.margin.top - config.margin.bottom),
       };
 
-      var rows = Math.ceil(genome.chromosomes.length / config.numberPerRow);
+      var cols = Math.min(config.numberPerRow, genome.chromosomes.length);
+      var rows = Math.ceil(genome.chromosomes.length / cols);
 
-      var cellWidth = sizeLessMargin.width / config.numberPerRow;
-      var cellHeight = sizeLessMargin.height / rows;
+      var cellDimensions = {
+        width: sizeLessMargin.width / cols,
+        height: sizeLessMargin.height / rows,
+      };
 
-      var widthRatio = cellWidth / (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
-      var heightRatio = cellHeight / (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
+      var widthRatio = cellDimensions.width /
+        (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
+
+      var heightRatio = cellDimensions.height /
+        (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
 
       var longest = Math.max.apply(null, genome.chromosomes.map(function (c) { return c.length; }));
 
@@ -100,8 +106,12 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         var col = i % config.numberPerRow;
         var row = Math.floor(i / config.numberPerRow);
 
-        chromosome.y = (row * cellHeight) + (config.margin.top * config.height);
-        chromosome.x = (col * cellWidth) + (config.margin.left * config.width);
+        chromosome.cell =  {
+          y: (row * cellDimensions.height) + (config.margin.top * config.height),
+          x: (col * cellDimensions.width) + (config.margin.left * config.width),
+          width: cellDimensions.width,
+          height: cellDimensions.height,
+        };
 
         chromosome = _.merge(chromosome, chromosomeLayout);
       });

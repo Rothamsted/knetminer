@@ -2,7 +2,7 @@ describe("AutoLayoutSpec", function() {
   var auto;
 
   beforeEach(function() {
-    auto = GENEMAP.AutoLayout();
+    auto = GENEMAP.AutoLayoutDecorator();
   });
 
   afterEach(function() {

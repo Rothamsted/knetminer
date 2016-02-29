@@ -32,6 +32,7 @@
     "$": false,
     "Promise": false,
     "_":false,
-    "labella":false
+    "labella":false,
+    "console":false
   }
 }

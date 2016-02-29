@@ -69,7 +69,12 @@ GENEMAP.XmlDataReader = function () {
         var annotationReader = GENEMAP.AnnotationXMLReader();
         var annotationPromise = annotationReader.readAnnotationXML(annotationPath);
 
-        var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData);
+        var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData, function (error) {
+          console.log(error);
+
+          // try and process the basemap file
+          return basemapPromise.then(_processBasemapData);
+        });
 
         return promise;
       }
