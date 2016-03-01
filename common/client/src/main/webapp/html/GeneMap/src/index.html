@@ -36,6 +36,12 @@
         width: 80%;
         height: 80%;
       }
+
+      #box {
+        height: 100px;
+        width: 100px;
+        background-color: red;
+      }
     </style>
 
   </head>
@@ -68,14 +74,17 @@
 
     <div id="map" class="bootstrap"></div>
 
+    <div id="box"></div>
     <!-- build:js js/lib.js -->
     <!-- bower:js -->
-    <script src="jquery/dist/jquery.js"></script>
+    <script src="jquery/jquery.js"></script>
     <script src="bootstrap/dist/js/bootstrap.js"></script>
     <script src="d3/d3.js"></script>
     <script src="lodash/lodash.js"></script>
     <script src="d3.promise/dist/d3.promise.min.js"></script>
     <script src="labella/dist/labella.min.js"></script>
+    <script src="hammerjs/hammer.js"></script>
+    <script src="jquery-hammerjs/jquery.hammer.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -128,6 +137,10 @@
       };
 
       redraw();
+
+      $('#box').hammer().on('press', function () {
+        console.log('press', this);
+      });
 
     </script>
 

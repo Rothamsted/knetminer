@@ -20,7 +20,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     annotationLableMaxSize: 14,
     annotationMarkerSize: 0.03,
     annotationMarkerMinSize: 6,
-    annotationMarkerMaxSize: 20,
+    annotationMarkerMaxSize: 24,
     annotationWidth: 0.4,
     minLabelHeightPx: 8,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },

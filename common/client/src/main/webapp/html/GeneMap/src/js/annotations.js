@@ -49,8 +49,13 @@ GENEMAP.Annotations = function (userConfig) {
       geneAnnotationsEnterGroup.append('rect').classed('labella', true);
     }
 
-    geneAnnotationsEnterGroup.append('polygon').attr('class', 'infobox');
+    geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
     geneAnnotationsEnterGroup.append('text');
+    geneAnnotationsEnterGroup.append('use').attr({
+      'xlink:href': '#pin',
+      width:10,
+      height: 10,
+    });
 
     geneAnnotations.select('line.midpoint-line').attr({
       x1: -chromosome.width / 2,
@@ -58,6 +63,54 @@ GENEMAP.Annotations = function (userConfig) {
       y2: function (d) { return y(d.data.midpoint); },
       x2: 0,
     });
+
+
+    // $(geneAnnotations[0]).hammer().off('press').on('press', function () {
+    //   // $(this).children().popover('show');
+    //   console.log('press' + this);
+    // });
+    //
+    // $(geneAnnotations[0]).hammer().off('tap').on('tap', function () {
+    //   var group = d3.select(this);
+    //   group.classed('selected', !group.classed('selected'));
+    //   console.log('click: ' + this);
+    // });
+
+    $(geneAnnotations[0]).off('mousedown').on('mousedown', function (e) {
+      console.log('annotation mousedown ' + e);
+      return false;
+    });
+
+    $(geneAnnotations[0]).off('click').on('click', function (e) {
+      console.log('annotation click ' + e);
+      var group = d3.select(this);
+      group.classed('selected', !group.classed('selected'));
+      return false;
+    });
+
+    $(geneAnnotations[0]).off('contextmenu').on('contextmenu', function (e) {
+
+
+      $('.infobox').not($(this).children()).popover('hide');
+      $(this).children().popover('toggle');
+      console.log('contextmenu ' + e);
+      e.preventDefault();
+      return false;
+    });
+
+    // geneAnnotations.on('click', function (evt) {
+    //   var group = d3.select(this);
+    //   group.classed('selected', !group.classed('selected'));
+    //   console.log('click: ' + evt);
+    // });
+    //
+    // geneAnnotations.on('mouseover', function (evt) {
+    //   console.log('moseover: ' + evt);
+    // });
+    //
+    // geneAnnotations.on('mouseout', function (evt) {
+    //   console.log('mouseout: ' + evt);
+    // });
 
     // generate a little triange based on the data
     var pointsFn = function (d) {
@@ -118,6 +171,11 @@ GENEMAP.Annotations = function (userConfig) {
       visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
     }).text(function (d) {
       return d.data.label;
+    });
+
+    geneAnnotations.select('use').attr({
+      x: function (d) { return d.x; },
+      y: function (d) { return d.y; },
     });
 
     geneAnnotations.exit().remove();

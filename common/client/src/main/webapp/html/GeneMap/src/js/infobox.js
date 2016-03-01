@@ -30,11 +30,17 @@ GENEMAP.InfoBox = function () {
                   data.start + '-' + data.end +
                   '</div>',
         container: target,
-        placement: 'right',
+        placement: 'bottom',
         animation: true,
-        trigger: 'click',
+        trigger: 'manual',
         html: true,
       });
+
+      // $(this).hammer().on('press', function () {
+      //   $(this).popover('show');
+      //   console.log('press' + this);
+      // });
+
     });
 
     $('html').off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);

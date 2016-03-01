@@ -1,49 +1,73 @@
 
+g.annotation-group {
 
-g.annotation-group  line {
-  stroke: #666;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
+  line {
+    stroke: #666;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
 
-g.annotation-group rect.border {
-  fill: none;
-  stroke-width: 0.5;
-  stroke: #000;
-}
+  rect.border {
+    fill: none;
+    stroke-width: 0.5;
+    stroke: #000;
+  }
 
-g.annotation-group text {
-  font-family: sans-serif;
-}
+  text {
+    font-family: sans-serif;
+  }
 
-/* Gene annotations */
-.annotation-group .gene_annotation polygon {
-  fill: #3366FF;
-  stroke: black;
-  stroke-width: 0.5;
-  vector-effect: non-scaling-stroke;
-}
+  cursor: pointer;
 
-/* Gene annotations */
-.annotation-group path.link {
-  fill: none;
-  stroke: black;
-  stroke-width: 0.5;
-  vector-effect: non-scaling-stroke;
-}
+  .gene_annotation {
+    polygon {
+      fill: #3366FF;
+      stroke: black;
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
 
-.annotation-group .gene_annotation text {
-  text-anchor: center;
-}
+    text {
+      text-anchor: center;
+    }
 
-/* QTL annotations */
+    path.link {
+      fill: none;
+      stroke: black;
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
 
-.annotation-group .qtl_annotation rect.qtl-selector {
-  stroke: none;
-  stroke-width:1;
-  vector-effect: 'non-scaling-stroke';
-}
+  }
 
-.annotation-group .qtl_annotation text {
-  text-anchor: middle;
+  .gene_annotation:hover {
+    polygon, path.link {
+      stroke-width: 1;
+    }
+
+    line {
+      stroke-width: 1.5;
+    }
+
+
+  }
+
+  .gene_annotation.selected {
+    polygon, path.link, line {
+      stroke-width: 2;
+    }
+  }
+
+  .qtl_annotation {
+
+    rect.qtl-selector {
+      stroke: none;
+      stroke-width:1;
+      vector-effect: 'non-scaling-stroke';
+    }
+
+    text {
+      text-anchor: middle;
+    }
+  }
 }

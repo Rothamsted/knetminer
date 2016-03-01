@@ -43,38 +43,42 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
-  var constructSkeletonChart = function (mapContainer) {
+  var constructSkeletonChart = function (mapContainer, data) {
     var svg = mapContainer.append('svg').classed('mapview', true);
 
-    var filter = svg.append('defs').append('filter').attr('id', 'shine1');
-    filter.append('feGaussianBlur').attr({
-      stdDeviation: 2,
-      in: 'SourceGraphic',
-      result: 'blur1',
-    });
+    svg.node().appendChild(data);
 
-    filter.append('feSpecularLighting').attr({
-      result:'spec1',
-      in:'blur1',
-      surfaceScale:5,
-      specularConstant:1,
-      specularExponent:20,
-      'lighting-color':'#FFFFFF',
-    }).append('fePointLight').attr({ x: -10000, y:-10000, z:10000 });
+    // var filter = svg.append('defs').append('filter').attr('id', 'shine1');
+    // filter.append('feGaussianBlur').attr({
+    //   stdDeviation: 2,
+    //   in: 'SourceGraphic',
+    //   result: 'blur1',
+    // });
+    //
+    // filter.append('feSpecularLighting').attr({
+    //   result:'spec1',
+    //   in:'blur1',
+    //   surfaceScale:5,
+    //   specularConstant:1,
+    //   specularExponent:20,
+    //   'lighting-color':'#FFFFFF',
+    // }).append('fePointLight').attr({ x: -10000, y:-10000, z:10000 });
+    //
+    // filter.append('feComposite').attr({
+    //   in:'spec1',
+    //   in2:'SourceAlpha',
+    //   operator:'in',
+    //   result:'spec_light',
+    // });
+    //
+    // filter.append('feComposite').attr({
+    //   in:'SourceGraphic',
+    //   in2:'spec_light',
+    //   operator:'out',
+    //   result:'spec_light_fill',
+    // });
 
-    filter.append('feComposite').attr({
-      in:'spec1',
-      in2:'SourceAlpha',
-      operator:'in',
-      result:'spec_light',
-    });
 
-    filter.append('feComposite').attr({
-      in:'SourceGraphic',
-      in2:'spec_light',
-      operator:'out',
-      result:'spec_light_fill',
-    });
 
     svg.append('g').classed('zoom_window', true)
       .append('rect').classed('drawing_outline', true);
@@ -82,6 +86,12 @@ GENEMAP.GeneMap = function (userConfig) {
     if (config.contentBorder) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
+
+    mapContainer.select('.zoom_window').append('use').attr({
+      x: 1,
+      y: 1,
+      'xlink:href': '#pin',
+    });
 
     // basic zooming functionality
     zoom = d3.behavior.zoom().scaleExtent([1, 10]);
@@ -99,10 +109,10 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.classed('dragging', false);
   };
 
-  var drawMap = function () {
+  var drawMap = function (data) {
 
     if (!d3.select(target).select('svg').node()) {
-      constructSkeletonChart(d3.select(target));
+      constructSkeletonChart(d3.select(target), data);
     }
 
     svg = d3.select(target).select('svg');
@@ -130,6 +140,7 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.datum(genome);
 
     container = svg.select('.zoom_window');
+
 
     drawDocumentOutline();
 
@@ -188,7 +199,12 @@ GENEMAP.GeneMap = function (userConfig) {
 
       genome = d;
       target = _this;
-      drawMap();
+
+      d3.promise.xml('/img/pin.svg', 'image/svg+xml').then(function (xml) {
+        var importedNode = document.importNode(xml.documentElement, true);
+        console.log(importedNode);
+        drawMap(importedNode.getElementsByTagName('defs')[0]);
+      });
     });
   }
 

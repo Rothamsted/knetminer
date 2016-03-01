@@ -14,12 +14,14 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "1.12.0",
+    "jquery": "1.10.2",
     "bootstrap": "^3.3.6",
     "d3": "3.4.13",
     "lodash": "^4.5.1",
     "d3.promise": "^1.1.0",
-    "labella": "^1.1.1"
+    "labella": "^1.1.1",
+    "hammerjs": "^2.0.6",
+    "jquery-hammerjs": "^2.0.0"
   },
   "devDependencies": {
     "jasmine-core": "jasmine#^2.4.1",
