@@ -100,20 +100,24 @@ GENEMAP.GeneMap = function (userConfig) {
       });
 
       var url = 'OndexServlet?mode=network&keyword=volume';
-      $.ajax({
-        url: url,
-        method: 'POST',
-        data: {
-          list: selectedLabels.join('\n'),
-        },
-      }).done(function (response, status) {
-        console.log('done with status ' + status + ' response:' + response);
-
-      }).fail(function (jqXHR, status, error) {
-        console.log('fail with status ' + status + ' and error ' + error);
-      });
 
       console.log('selected labels: ' + selectedLabels);
+
+      generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
+
+      // $.ajax({
+      //   url: url,
+      //   method: 'POST',
+      //   data: {
+      //     list: selectedLabels.join('\n'),
+      //   },
+      // }).done(function (response, status) {
+      //   console.log('done with status ' + status + ' response:' + response);
+      //
+      // }).fail(function (jqXHR, status, error) {
+      //   console.log('fail with status ' + status + ' and error ' + error);
+      // });
+
       return false;
     }).on('mousedown', function (e) {
       console.log('network mousedown ' + e);
@@ -247,7 +251,7 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      d3.promise.xml('/out/symbol/svg/sprite.symbol.svg', 'image/svg+xml').then(function (xml) {
+      d3.promise.xml('./out/symbol/svg/sprite.symbol.svg', 'image/svg+xml').then(function (xml) {
         var importedNode = document.importNode(xml.documentElement, true);
         console.log(importedNode);
         drawMap(importedNode.getElementsByTagName('symbol'));
