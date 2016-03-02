@@ -1506,7 +1506,7 @@ public class OndexServiceProvider {
 				//}
 			}
 
-			String query = "mode=network&keyword=" + keyword+"&list="+name;
+			String query = "mode=network&amp;keyword=" + keyword+"&amp;list="+name;
 			String uri = "OndexServlet?" + query;
 
 			// Genes
