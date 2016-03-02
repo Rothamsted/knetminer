@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+      svg {
+        border: 1px solid black;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div id="map">
+    </div>
+
+    <script src="jquery/dist/jquery.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.js"></script>
+    <script src="d3/d3.js"></script>
+    <script src="lodash/lodash.js"></script>
+    <script src="d3.promise/dist/d3.promise.min.js"></script>
+    <script src="labella/dist/labella.min.js"></script>
+    <script src="hammerjs/hammer.js"></script>
+    <script src="jquery-hammerjs/jquery.hammer.js"></script>
+
+    <script>
+      $(function () {
+        console.log('ready!');
+
+        d3.promise.xml('./out/sprite-defs.svg', 'image/svg+xml').then(function (xml) {
+          var importedNode = document.importNode(xml.documentElement, true);
+          console.log(importedNode);
+          var data = importedNode.getElementsByTagName('defs');
+
+          var svg = d3.select('#map').append('svg').attr({ width: 800, height: 300 });;
+          svg.node().appendChild(data[0]);
+
+          svg.append('use').attr({
+            'xlink:href': '#network',
+            width: 100,
+            height: 100,
+          });
+
+          var $base = $('#map');
+          $($base).html($($base).html());
+
+        });
+      });
+    </script>
+
+  </body>
+</html>

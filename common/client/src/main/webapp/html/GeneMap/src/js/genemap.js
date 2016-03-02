@@ -43,13 +43,12 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
-  var constructSkeletonChart = function (mapContainer, data) {
+  var constructSkeletonChart = function (mapContainer) {
     var svg = mapContainer.append('svg').classed('mapview', true);
 
-    // svg.node().appendChild(data);
-    _.map(_.toArray(data), function (elt) { svg.node().appendChild(elt); });
+    // _.map(_.toArray(data), function (elt) { svg.node().appendChild(elt); });
 
-    var filter = svg.append('defs').append('filter').attr('id', 'shine1');
+    var filter = svg.select('defs').append('filter').attr('id', 'shine1');
     filter.append('feGaussianBlur').attr({
       stdDeviation: 2,
       in: 'SourceGraphic',
@@ -87,12 +86,20 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     svg.append('use').attr({
-      x: 10,
-      y: 10,
       'xlink:href': '#network',
-      width: 40,
-      height: 40,
-    }).on('click', function () {
+      width: 50,
+      height: 50,
+      class: 'icon network-btn disabled',
+      y: 10,
+      x: 10,
+    });
+
+    // basic zooming functionality
+    zoom = d3.behavior.zoom().scaleExtent([1, 10]);
+    zoom.on('zoom', onZoom);
+    mapContainer.select('svg').call(zoom);
+
+    svg.select('use').on('click', function () {
       console.log('network view clicked');
 
       var selectedLabels = _.map($('.gene_annotation.selected'), function (elt) {
@@ -105,19 +112,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
       generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
 
-      // $.ajax({
-      //   url: url,
-      //   method: 'POST',
-      //   data: {
-      //     list: selectedLabels.join('\n'),
-      //   },
-      // }).done(function (response, status) {
-      //   console.log('done with status ' + status + ' response:' + response);
-      //
-      // }).fail(function (jqXHR, status, error) {
-      //   console.log('fail with status ' + status + ' and error ' + error);
-      // });
-
       return false;
     }).on('mousedown', function (e) {
       console.log('network mousedown ' + e);
@@ -129,10 +123,6 @@ GENEMAP.GeneMap = function (userConfig) {
       return false;
     });
 
-    // basic zooming functionality
-    zoom = d3.behavior.zoom().scaleExtent([1, 10]);
-    zoom.on('zoom', onZoom);
-    mapContainer.select('svg').call(zoom);
   };
 
   var onMouseDown = function () {
@@ -251,10 +241,18 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      d3.promise.xml('./out/symbol/svg/sprite.symbol.svg', 'image/svg+xml').then(function (xml) {
-        var importedNode = document.importNode(xml.documentElement, true);
-        console.log(importedNode);
-        drawMap(importedNode.getElementsByTagName('symbol'));
+      d3.promise.xml('./out/sprite-defs.svg', 'image/svg+xml').then(function (xml) {
+        // var importedNode = document.importNode(xml.documentElement, true);
+        // console.log(importedNode);
+        // target.appendChild(xml.documentElement);
+
+        // create a <div> element and load the sprites SVG into it
+        var div = document.createElement('div');
+        div.innerHTML = new XMLSerializer().serializeToString(xml.documentElement);
+        document.body.insertBefore(div, document.body.childNodes[0]);
+
+        // draw the map SVG
+        drawMap();
       });
     });
   }

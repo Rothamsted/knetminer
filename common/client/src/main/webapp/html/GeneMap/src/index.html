@@ -31,17 +31,14 @@
       html, body {
         height: 100%;
       }
+      
 
       #map {
         width: 80%;
         height: 80%;
       }
 
-      #box {
-        height: 100px;
-        width: 100px;
-        background-color: red;
-      }
+
     </style>
 
   </head>
@@ -72,9 +69,8 @@
     <button onclick="redraw(false)">Draw</button>
     <button onclick="redraw(true)">Reset Zoom</button>
 
-    <div id="map" class="bootstrap"></div>
+    <div id="map" class='bootstrap'></div>
 
-    <div id="box"></div>
 
     <!-- build:js js/genemap-lib.js -->
     <!-- bower:js -->
@@ -105,43 +101,50 @@
     <!-- endbuild -->
 
     <script>
-      var chart = GENEMAP.GeneMap();
 
-      // redraw on window resize
-      var resize = function () {
-        chart.redraw('#map');
-      };
+  function generateCyJSNetwork(url, list) {
+    console.log('generateCyJSNetwork call with url=' + url + ' list = ' + list);
+  }
 
-      d3.select(window).on('resize', resize);
+  var chart = GENEMAP.GeneMap();
 
-      var redraw = function (resetZoom) {
-        var sel = document.getElementById('basemap-file');
-        var file = 'basemap/' + sel.options[sel.selectedIndex].value + '.xml';
+  var redraw = function (resetZoom) {
+    var sel = document.getElementById('basemap-file');
+    var file = 'basemap/' + sel.options[sel.selectedIndex].value + '.xml';
 
-        var numberPerRow = +document.getElementById('chromosome_per_row').value;
-        chart.layout().numberPerRow = numberPerRow;
+    var numberPerRow = +document.getElementById('chromosome_per_row').value;
+    chart.layout().numberPerRow = numberPerRow;
 
-        // chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
+    // chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
 
-        if (resetZoom) {
-          chart.resetZoom();
-        }
+    if (resetZoom) {
+      chart.resetZoom();
+    }
 
-        var annotationFile = null;
-        var includeAnnotations = document.getElementById('chk-annotations').checked;
+    var annotationFile = null;
+    var includeAnnotations = document.getElementById('chk-annotations').checked;
 
-        if (includeAnnotations) {
-          annotationFile = 'annotations/' + sel.options[sel.selectedIndex].value + '.xml';
-        }
+    if (includeAnnotations) {
+      annotationFile = 'annotations/' + sel.options[sel.selectedIndex].value + '.xml';
+    }
 
-        chart.draw('#map', file, annotationFile);
-      };
+    chart.draw('#map', file, annotationFile);
+  };
 
-      redraw();
+  $(function () {
 
-      $('#box').hammer().on('press', function () {
-        console.log('press', this);
-      });
+
+
+    // redraw on window resize
+    var resize = function () {
+      chart.redraw('#map');
+    };
+
+    d3.select(window).on('resize', resize);
+
+
+    redraw();
+  });
 
     </script>
 

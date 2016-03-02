@@ -31,7 +31,46 @@ svg {
   cursor: grabbing;
 }
 
-.icon {
-  cursor: default;
-  stroke: '#eee';
+use.network-btn {
+  fill: #CCC;
+  color: #CCC;
+  stroke:#CCC;
+  cursor: not-allowed;
+}
+
+use.network-btn.enabled {
+  fill: #4BC0A5;
+  color: #A4DFD1;
+  stroke:#333;
+  cursor: pointer;
+}
+
+use.network-btn.enabled:hover {
+  fill: #0099CC;
+  color: #7FCBE5;
+  stroke:#555;
+  cursor: pointer;
+}
+
+// svg path {
+//   fill: inherit;
+// }
+//
+ellipse {
+  stroke: inherit;
+}
+
+
+
+#network {}
+
+#asdf {
+  ellipse {
+    fill: white;
+    stroke-width: 2px;
+    stroke: #ccc
+  }
+  path {
+    fill: #ccc;
+  }
 }
