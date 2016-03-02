@@ -9,6 +9,10 @@
 	<fileSets>
 		<fileSet>
 			<directory>src/main/webapp</directory>
+			<excludes>
+				<exclude>html/GeneMap/node_modules/**</exclude>
+				<exclude>html/GeneMap/bower_components/**</exclude>
+			</excludes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 	</fileSets>
