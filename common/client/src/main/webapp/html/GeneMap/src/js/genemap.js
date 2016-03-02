@@ -46,39 +46,38 @@ GENEMAP.GeneMap = function (userConfig) {
   var constructSkeletonChart = function (mapContainer, data) {
     var svg = mapContainer.append('svg').classed('mapview', true);
 
-    svg.node().appendChild(data);
+    // svg.node().appendChild(data);
+    _.map(_.toArray(data), function (elt) { svg.node().appendChild(elt); });
 
-    // var filter = svg.append('defs').append('filter').attr('id', 'shine1');
-    // filter.append('feGaussianBlur').attr({
-    //   stdDeviation: 2,
-    //   in: 'SourceGraphic',
-    //   result: 'blur1',
-    // });
-    //
-    // filter.append('feSpecularLighting').attr({
-    //   result:'spec1',
-    //   in:'blur1',
-    //   surfaceScale:5,
-    //   specularConstant:1,
-    //   specularExponent:20,
-    //   'lighting-color':'#FFFFFF',
-    // }).append('fePointLight').attr({ x: -10000, y:-10000, z:10000 });
-    //
-    // filter.append('feComposite').attr({
-    //   in:'spec1',
-    //   in2:'SourceAlpha',
-    //   operator:'in',
-    //   result:'spec_light',
-    // });
-    //
-    // filter.append('feComposite').attr({
-    //   in:'SourceGraphic',
-    //   in2:'spec_light',
-    //   operator:'out',
-    //   result:'spec_light_fill',
-    // });
+    var filter = svg.append('defs').append('filter').attr('id', 'shine1');
+    filter.append('feGaussianBlur').attr({
+      stdDeviation: 2,
+      in: 'SourceGraphic',
+      result: 'blur1',
+    });
 
+    filter.append('feSpecularLighting').attr({
+      result:'spec1',
+      in:'blur1',
+      surfaceScale:5,
+      specularConstant:1,
+      specularExponent:20,
+      'lighting-color':'#FFFFFF',
+    }).append('fePointLight').attr({ x: -10000, y:-10000, z:10000 });
 
+    filter.append('feComposite').attr({
+      in:'spec1',
+      in2:'SourceAlpha',
+      operator:'in',
+      result:'spec_light',
+    });
+
+    filter.append('feComposite').attr({
+      in:'SourceGraphic',
+      in2:'spec_light',
+      operator:'out',
+      result:'spec_light_fill',
+    });
 
     svg.append('g').classed('zoom_window', true)
       .append('rect').classed('drawing_outline', true);
@@ -87,10 +86,43 @@ GENEMAP.GeneMap = function (userConfig) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
 
-    mapContainer.select('.zoom_window').append('use').attr({
-      x: 1,
-      y: 1,
-      'xlink:href': '#pin',
+    svg.append('use').attr({
+      x: 10,
+      y: 10,
+      'xlink:href': '#network',
+      width: 40,
+      height: 40,
+    }).on('click', function () {
+      console.log('network view clicked');
+
+      var selectedLabels = _.map($('.gene_annotation.selected'), function (elt) {
+        return elt.__data__.data.label;
+      });
+
+      var url = 'OndexServlet?mode=network&keyword=volume';
+      $.ajax({
+        url: url,
+        method: 'POST',
+        data: {
+          list: selectedLabels.join('\n'),
+        },
+      }).done(function (response, status) {
+        console.log('done with status ' + status + ' response:' + response);
+
+      }).fail(function (jqXHR, status, error) {
+        console.log('fail with status ' + status + ' and error ' + error);
+      });
+
+      console.log('selected labels: ' + selectedLabels);
+      return false;
+    }).on('mousedown', function (e) {
+      console.log('network mousedown ' + e);
+      d3.event.stopPropagation();
+      return false;
+    }).on('mouseup', function (e) {
+      console.log('network mouseup ' + e);
+      d3.event.stopPropagation();
+      return false;
     });
 
     // basic zooming functionality
@@ -141,23 +173,23 @@ GENEMAP.GeneMap = function (userConfig) {
 
     container = svg.select('.zoom_window');
 
-
     drawDocumentOutline();
 
     if (config.contentBorder) {
       drawContentOutline();
     }
 
+    // draw the chromosome cell for each of the chromosome objects on the genome
+    var cellDrawer = GENEMAP.ChromosomeCell();
+    container.call(cellDrawer);
+
+    // attach the infobox events
     var infoBox = GENEMAP.InfoBox();
     if (target) {
       infoBox.target(target);
     }
 
     infoBox.attach();
-
-    // draw the chromosome cell for each of the chromosome objects on the genome
-    var cellDrawer = GENEMAP.ChromosomeCell();
-    container.call(cellDrawer);
 
   };
 
@@ -200,10 +232,10 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      d3.promise.xml('/img/pin.svg', 'image/svg+xml').then(function (xml) {
+      d3.promise.xml('/out/symbol/svg/sprite.symbol.svg', 'image/svg+xml').then(function (xml) {
         var importedNode = document.importNode(xml.documentElement, true);
         console.log(importedNode);
-        drawMap(importedNode.getElementsByTagName('defs')[0]);
+        drawMap(importedNode.getElementsByTagName('symbol'));
       });
     });
   }

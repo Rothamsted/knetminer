@@ -122,6 +122,23 @@ gulp.task('serve-prod', ['optimise'], function () {
   });
 });
 
+gulp.task('sprite', function () {
+  return gulp.src('assets/svg/*.svg')
+    .pipe($.svgSprite({
+      shape: {
+        dimensions:{
+          maxWidth: 100,
+          maxHeight: 100,
+        },
+      },
+      mode: {
+        symbol: true,
+        defs: true,
+      },
+    }))
+    .pipe(gulp.dest('assets/out'));
+});
+
 ////////////
 function clean(path) {
   $.util.log('Cleaning: ' + $.util.colors.blue(path));
