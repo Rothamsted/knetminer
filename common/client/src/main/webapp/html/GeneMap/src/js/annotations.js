@@ -5,6 +5,7 @@ GENEMAP.Annotations = function (userConfig) {
     border: false,
     labelHeight: 8,
     labelRectangles: false,
+    onAnnotationSelectFunction: $.noop(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -85,6 +86,7 @@ GENEMAP.Annotations = function (userConfig) {
       console.log('annotation click ' + e);
       var group = d3.select(this);
       group.classed('selected', !group.classed('selected'));
+      config.onAnnotationSelectFunction();
       return false;
     });
 
@@ -312,6 +314,15 @@ GENEMAP.Annotations = function (userConfig) {
     }
 
     config.yScale = value;
+    return my;
+  };
+
+  my.onAnnotationSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onAnnotationSelectFunction;
+    }
+
+    config.onAnnotationSelectFunction = value;
     return my;
   };
 

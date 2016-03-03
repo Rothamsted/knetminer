@@ -33,6 +33,7 @@
     "Promise": false,
     "_":false,
     "labella":false,
-    "console":false
+    "console":false,
+    "generateCyJSNetwork":false    
   }
 }

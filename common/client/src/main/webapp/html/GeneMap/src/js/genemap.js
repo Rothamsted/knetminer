@@ -43,8 +43,19 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  var onAnnotationSelectionChanged = function () {
+    var anyGenesSelected = $('g.gene_annotation.selected').length > 0;
+
+    svg.select('use.network-btn').classed('enabled', anyGenesSelected);
+    svg.select('use.network-btn').classed('disabled', !anyGenesSelected);
+  };
+
   var constructSkeletonChart = function (mapContainer) {
-    var svg = mapContainer.append('svg').classed('mapview', true);
+    var svg = mapContainer.append('svg').attr({
+      width: config.width,
+      height: config.height,
+      class: 'mapview',
+    });
 
     // _.map(_.toArray(data), function (elt) { svg.node().appendChild(elt); });
 
@@ -85,13 +96,15 @@ GENEMAP.GeneMap = function (userConfig) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
 
+    var bbox = svg.node().getBoundingClientRect();
+
     svg.append('use').attr({
       'xlink:href': '#network',
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       class: 'icon network-btn disabled',
       y: 10,
-      x: 10,
+      x: bbox.width - 50,
     });
 
     // basic zooming functionality
@@ -101,6 +114,10 @@ GENEMAP.GeneMap = function (userConfig) {
 
     svg.select('use').on('click', function () {
       console.log('network view clicked');
+
+      if ($(this).hasClass('disabled')) {
+        return;
+      }
 
       var selectedLabels = _.map($('.gene_annotation.selected'), function (elt) {
         return elt.__data__.data.label;
@@ -123,6 +140,7 @@ GENEMAP.GeneMap = function (userConfig) {
       return false;
     });
 
+    return svg;
   };
 
   var onMouseDown = function () {
@@ -138,19 +156,18 @@ GENEMAP.GeneMap = function (userConfig) {
   var drawMap = function (data) {
 
     if (!d3.select(target).select('svg').node()) {
-      constructSkeletonChart(d3.select(target), data);
+      svg = constructSkeletonChart(d3.select(target), data);
+    } else {
+      svg = d3.select(target).select('svg');
+
+      svg.attr({
+        width: config.width,
+        height: config.height,
+      });
     }
 
-    svg = d3.select(target).select('svg');
-
-    svg.attr({
-      width: config.width,
-      height: config.height,
-      // viewBox: '0 0 100 100',
-      // preserveAspectRatio: 'xMinYMin slice',
-    })
-    .on('mousedown', onMouseDown)
-    .on('mouseup', onMouseUp);
+    svg.on('mousedown', onMouseDown)
+      .on('mouseup', onMouseUp);
 
     // setup the containers for each of the chromosomes
     var bbox = svg.node().getBoundingClientRect();
@@ -190,6 +207,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // draw the chromosome cell for each of the chromosome objects on the genome
     var cellDrawer = GENEMAP.ChromosomeCell();
+    cellDrawer.onAnnotationSelectFunction(onAnnotationSelectionChanged);
     container.call(cellDrawer);
 
     // attach the infobox events

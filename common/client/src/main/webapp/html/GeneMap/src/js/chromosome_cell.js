@@ -3,6 +3,7 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
     border: false,
+    onAnnotationSelectFunction: $.noop(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -40,7 +41,9 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // draw the annotations
       // should be drawn before the chormosomes as some of the lines need to be
       // underneath the chormosome drawings.
-      var annotationDrawer = GENEMAP.Annotations();
+      var annotationDrawer = GENEMAP.Annotations()
+        .onAnnotationSelectFunction(config.onAnnotationSelectFunction);
+
       cells.call(annotationDrawer);
 
       // draw the chromosomes in the cells
@@ -51,6 +54,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       cells.exit().remove();
     });
   }
+
+  my.onAnnotationSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onAnnotationSelectFunction;
+    }
+
+    config.onAnnotationSelectFunction = value;
+    return my;
+  };
 
   return my;
 };
