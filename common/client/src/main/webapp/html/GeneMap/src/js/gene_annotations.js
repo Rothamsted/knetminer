@@ -1,8 +1,8 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.Annotations = function (userConfig) {
+GENEMAP.GeneAnnotations = function (userConfig) {
   var defaultConfig = {
-    border: false,
+    border: true,
     labelHeight: 8,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
@@ -52,14 +52,9 @@ GENEMAP.Annotations = function (userConfig) {
 
     geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
     geneAnnotationsEnterGroup.append('text');
-    geneAnnotationsEnterGroup.append('use').attr({
-      'xlink:href': '#pin',
-      width:10,
-      height: 10,
-    });
 
     geneAnnotations.select('line.midpoint-line').attr({
-      x1: -chromosome.width / 2,
+      x1: -(chromosome.chromosomePosition.width * 0.5),
       y1: function (d) { return y(d.data.midpoint); },
       y2: function (d) { return y(d.data.midpoint); },
       x2: 0,
@@ -91,7 +86,6 @@ GENEMAP.Annotations = function (userConfig) {
     });
 
     $(geneAnnotations[0]).off('contextmenu').on('contextmenu', function (e) {
-
 
       $('.infobox').not($(this).children()).popover('hide');
       $(this).children().popover('toggle');
@@ -149,7 +143,9 @@ GENEMAP.Annotations = function (userConfig) {
     });
 
     geneAnnotations.select('path.link')
-      .attr('d', function (d) { return renderer.generatePath(d); });
+      .attr({
+        d: function (d) { return renderer.generatePath(d); },
+      });
 
     // draw the labella labels as rectangles, useful for debugging
     if (config.labelRectangles) {
@@ -183,60 +179,6 @@ GENEMAP.Annotations = function (userConfig) {
     geneAnnotations.exit().remove();
   };
 
-  var setupQTLAnnotations = function (annotationsGroup, y) {
-
-    var chromosome = annotationsGroup.data()[0];
-    var hozPosition = chromosome.annotationWidth * 0.5;
-
-    // Enter + Update elements
-    var qtlAnnotations = annotationsGroup.selectAll('g.qtl_annotation').data(chromosome.annotations.qtls);
-
-    // setup the new annotations
-    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl_annotation', true);
-    qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
-    qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('text');
-
-    // update
-    qtlAnnotations.selectAll('line.top-line').attr({
-      x1: -chromosome.width / 2,
-      y1: function (d) { return y(d.start);},
-      y2: function (d) { return y(d.start);},
-      x2: hozPosition,
-    });
-
-    qtlAnnotations.selectAll('line.bottom-line').attr({
-      x1: -chromosome.width / 2,
-      y1: function (d) { return y(d.end);},
-      y2: function (d) { return y(d.end);},
-      x2: hozPosition,
-    });
-
-    qtlAnnotations.selectAll('rect.qtl-selector').attr({
-      x: hozPosition - 10,
-      y: function (d) { return y(d.start); },
-      width: 10,
-      height: function (d) { return y(d.end) - y(d.start); },
-    }).style({
-      fill: function (d) { return d.color; },
-    });
-
-    qtlAnnotations.selectAll('text').attr({
-      x: hozPosition,
-      y: function (d) { return y(d.start) + chromosome.annotationLabelHeight; },
-    })
-    .style({
-      'font-size': chromosome.annotationLabelHeight + 'px',
-      visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
-    })
-    .text(function (d) {
-      return d.label;
-    });
-
-    qtlAnnotations.exit().remove();
-  };
-
   // draw a border around the annotation target element
   var drawBorder = function (group, chromosome, y) {
 
@@ -249,13 +191,13 @@ GENEMAP.Annotations = function (userConfig) {
       .attr({
         x:0,
         y:0,
-        width: chromosome.annotationWidth,
-        height: y(chromosome.length),
+        width: chromosome.annotationWidth / 2,
+        height: chromosome.chromosomePosition.maxHeight,
       });
   };
 
   var buildYScale = function (d) {
-    return d3.scale.linear().range([0, d.height]).domain([0, d.longestChromosome]);
+    return d3.scale.linear().range([0, d.chromosomePosition.maxHeight]).domain([0, d.longestChromosome]);
   };
 
   // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -263,21 +205,21 @@ GENEMAP.Annotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
-      var groups = d3.select(this).selectAll('.annotation-group').data([d]);
+      var groups = d3.select(this).selectAll('.gene-annotation-group').data([d]);
 
-      groups.enter().append('g').attr('class', 'annotation-group');
+      groups.enter().append('g').attr('class', 'gene-annotation-group');
 
       groups.each(function (d) {
         var y = buildYScale(d);
 
+        var chromosomeEdge = d.chromosomePosition.x + d.chromosomePosition.width;
+
         var group = d3.select(this).attr({
           id: function (d) { return 'annotation_' + d.number; },
           transform: function (d) {
-            return 'translate(' + d.width + ',' + d.labelHeight + ')';
+            return 'translate(' + chromosomeEdge + ',' + d.labelHeight + ')';
           },
         });
-
-        setupQTLAnnotations(group, y);
 
         setupGeneAnnotations(group, y);
 

@@ -57,9 +57,13 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
       var longest = Math.max.apply(null, genome.chromosomes.map(function (c) { return c.length; }));
 
       var chromosomeLayout = {
-        height: heightRatio * config.longestChromosomeHeight,
+        chromosomePosition: {
+          maxHeight: heightRatio * config.longestChromosomeHeight,
+          width: widthRatio * config.chromosomeWidth,
+          x: (cellDimensions.width * 0.5) - (widthRatio * config.chromosomeWidth) * 0.5,
+          y: 0,
+        },
         labelHeight: heightRatio * config.labelHeight,
-        width: widthRatio * config.chromosomeWidth,
         annotationWidth: widthRatio * config.annotationWidth,
         longestChromosome: longest,
         showAnnotationLabels: true,

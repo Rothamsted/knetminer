@@ -2,7 +2,7 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
-    border: false,
+    border: true,
     onAnnotationSelectFunction: $.noop(),
   };
 
@@ -41,10 +41,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // draw the annotations
       // should be drawn before the chormosomes as some of the lines need to be
       // underneath the chormosome drawings.
-      var annotationDrawer = GENEMAP.Annotations()
+      var geneDrawer = GENEMAP.GeneAnnotations()
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction);
 
-      cells.call(annotationDrawer);
+      cells.call(geneDrawer);
+
+      var qtlDrawer = GENEMAP.QtlAnnotations()
+        .onAnnotationSelectFunction(config.onAnnotationSelectFunction);
+
+      cells.call(qtlDrawer);
 
       // draw the chromosomes in the cells
       var chromosomeDrawer = GENEMAP.Chromosome();

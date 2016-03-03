@@ -2,13 +2,13 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.Chromosome = function (userConfig) {
   var defaultConfig = {
-    border: false,
+    border: true,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
   var buildYScale = function (d) {
-    return d3.scale.linear().range([0, d.height]).domain([0, d.longestChromosome]);
+    return d3.scale.linear().range([0, d.chromosomePosition.maxHeight]).domain([0, d.longestChromosome]);
   };
 
   // function to update a single chromosome element given the enter + update selection
@@ -31,7 +31,7 @@ GENEMAP.Chromosome = function (userConfig) {
       });
 
     chromosome.select('text').attr({
-      x: d.width / 2,
+      x: d.chromosomePosition.x + (d.chromosomePosition.width / 2),
       y: d.labelHeight  * (0.5),
       'font-size': d.labelHeight,
     }).text(function (d) {
@@ -39,25 +39,26 @@ GENEMAP.Chromosome = function (userConfig) {
     });
 
     chromosome.select('#chromosome_mask_' + d.number).attr({
-      width: d.width,
+      width: d.chromosomePosition.width,
       height: height,
     });
 
     chromosome.select('.mask_rect').attr({
-      width: d.width,
+      width: d.chromosomePosition.width,
       height: height,
-      x: 0,
-      y: 0,
-      rx: d.height * 0.01,
-      ry: d.height * 0.01,
+      x: d.chromosomePosition.x,
+      y: d.chromosomePosition.y,
+      rx: d.chromosomePosition.maxHeight * 0.01,
+      ry: d.chromosomePosition.maxHeight * 0.01,
     });
 
     var chromosomeShape = {
-      width: d.width,
+      width: d.chromosomePosition.width,
       height: height,
+      x: d.chromosomePosition.x,
       y: d.labelHeight,
-      rx: d.height * 0.01,
-      ry: d.height * 0.01,
+      rx: d.chromosomePosition.maxHeight * 0.01,
+      ry: d.chromosomePosition.maxHeight * 0.01,
     };
 
     chromosome.select('rect.background').attr(chromosomeShape);
@@ -66,10 +67,10 @@ GENEMAP.Chromosome = function (userConfig) {
     if (config.border) {
       chromosome.select('rect.border')
         .attr({
-          x:0,
-          y:0,
-          width: d.width,
-          height: d.height + d.labelHeight,
+          x: d.chromosomePosition.x,
+          y: d.chromosomePosition.y,
+          width: d.chromosomePosition.width,
+          height: d.chromosomePosition.maxHeight + d.labelHeight,
         });
     }
 
@@ -82,10 +83,10 @@ GENEMAP.Chromosome = function (userConfig) {
     bands.enter().append('rect').attr('class', 'band');
 
     bands.attr({
-      width: d.width,
+      width: d.chromosomePosition.width,
       y: function (d) { return y(d.start); },
       height: function (d) { return y(d.end - d.start); },
-      x: 0,
+      x: d.chromosomePosition.x,
       fill: function (d) { return d.color; },
     });
 
