@@ -3,7 +3,7 @@ var genespreadsheet = new Array();
 var genes;
 */
 
-var genemap = GENEMAP.GeneMap();
+var genemap = GENEMAP.GeneMap().width(750).height(400);
 
 /*
 Functions for show and hide structures when a button is pressed

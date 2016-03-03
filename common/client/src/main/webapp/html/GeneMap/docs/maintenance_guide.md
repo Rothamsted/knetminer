@@ -127,3 +127,26 @@ The infoboxes are the popovers that appear when the annotations are clicked. The
 To avoid having to use bootstrap's css on the entire site I've generated a customised version of the bootstrap css based on the answer to a question on [Stack Overflow](http://stackoverflow.com/questions/13966259/how-to-namespace-twitter-bootstrap-so-styles-dont-conflict).
 
 This was compiles using [WinLess](http://winless.org/) although any Less compiler should work.
+
+# npm and bower
+
+To manage the development dependencies npm is used and bower is used for the libraries used at runtime. As this is a only a browser based component there should be no non-development dependencies installed by npm.
+
+After checking out a copy of the source code you will need to run in the `GeneMap` directory:
+
+    npm install
+    bower install
+
+This should automatically install all the dependancies.
+
+# gulp
+
+To automate development tasks `gulp` is used. This should be installed when `npm install` is run. To get a list of all the tasks run the `gulp` command in the `GeneMap` direcotry.
+
+The main development tasks are:
+ * *serve-dev* start the development server on port 8080
+ * *optimise* build the combined & minified JavaScript and CSS files placing them into the `dist` folder
+ * *watch* watches for changes to the .less files and automatically re-compiles the temporary .css files in the `.tmp` directory.
+ * *inject* injects the dependencies into the index.html file (from bower, src/js and .tmp/css), also re-compiles all the CSS and SVG files.
+
+ All of these configurations are controlled by the `gulpfile.js` and `gulp.config.js` files in the `GeneMap` directory.

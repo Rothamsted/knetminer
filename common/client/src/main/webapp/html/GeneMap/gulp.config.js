@@ -3,7 +3,7 @@
 module.exports = function () {
   var config = {
 
-    tmpDir: './tmp/',
+    tmpDir: './.tmp/',
 
     // all the JavaScript files for this project
     alljs: ['./src/**/*.js', './*.js'],
@@ -12,11 +12,13 @@ module.exports = function () {
     less: ['./src/less/*.less', '!./src/less/variables.less'],
     html: './src/*.html',
     js: './src/js/*.js',
+    svg: './assets/svg/*.svg',
 
     // the development output
     srcDir: './src/',
     outputCssDir: './.tmp/css/',
     outputCss: './.tmp/css/*.css',
+    outputSvg: './.tmp/assets/*.svg',
 
     build: './dist/',
 
@@ -25,6 +27,16 @@ module.exports = function () {
       json: require('./bower.json'),
       directory: './bower_components/',
       ignorePath: '../bower_components/',
+    },
+
+    svgSpriteConfig: {
+      mode: {
+        defs: {
+          dest: '.',
+          sprite: 'sprite-defs.svg',
+          inline: true,
+        },
+      },
     },
   };
 

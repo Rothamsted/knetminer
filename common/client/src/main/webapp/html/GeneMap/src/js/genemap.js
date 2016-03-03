@@ -2,8 +2,9 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
-    width: '100%',
-    height: '100%',
+    width: '800',
+    height: '500',
+    svgDefsFile: './assets/sprite-defs.svg',
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
       numberPerRow: 10,
@@ -24,6 +25,27 @@ GENEMAP.GeneMap = function (userConfig) {
   var container; // the g container that performs the zooming
 
   var onZoom;
+
+  // returns the size of the SVG element, if the size is defined as a %
+  // will attempt to get the actual size in px by interrogating the bounding box
+  // this can cause issues if the element is currently hidden.
+  var getSvgSize = function () {
+    var size = { width: config.width, height: config.height };
+
+    if (size.width.toString().indexOf('%') >= 0 || size.height.toString().indexOf('%') >= 0) {
+      var bbox = d3.select(target).select('svg').node().getBoundingClientRect();
+
+      if (size.width.toString().indexOf('%') >= 0) {
+        size.width = bbox.width;
+      }
+
+      if (size.height.toString().indexOf('%') >= 0) {
+        size.height = bbox.height;
+      }
+    }
+
+    return size;
+  };
 
   // Sets the attributes on the .drawing_outline rectangle for the outline
   var drawDocumentOutline = function () {
@@ -96,15 +118,13 @@ GENEMAP.GeneMap = function (userConfig) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
 
-    var bbox = svg.node().getBoundingClientRect();
-
     svg.append('use').attr({
       'xlink:href': '#network',
       width: 40,
       height: 40,
       class: 'icon network-btn disabled',
       y: 10,
-      x: bbox.width - 50,
+      x: getSvgSize().width - 50,
     });
 
     // basic zooming functionality
@@ -169,28 +189,12 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.on('mousedown', onMouseDown)
       .on('mouseup', onMouseUp);
 
-    // setup the containers for each of the chromosomes
-    var bbox = svg.node().getBoundingClientRect();
-
-    console.log(bbox);
-
-    var initialWidth = bbox.width;
-    var initialHeight = bbox.height;
-
-    if (initialWidth === 0) {
-      initialWidth = 750;
-    }
-
-    if (initialHeight === 0) {
-      initialHeight = 400;
-    }
-
-    console.log('width : ' + initialWidth + ' height: ' + initialHeight);
+    console.log('width : ' + getSvgSize().width + ' height: ' + getSvgSize().height);
 
     // update the layout object with the new settings
     var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
-      .width(initialWidth)
-      .height(initialHeight)
+      .width(getSvgSize().width)
+      .height(getSvgSize().height)
       .scale(zoom.scale())
       .translate(zoom.translate());
 
@@ -259,12 +263,9 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      d3.promise.xml('./out/sprite-defs.svg', 'image/svg+xml').then(function (xml) {
-        // var importedNode = document.importNode(xml.documentElement, true);
-        // console.log(importedNode);
-        // target.appendChild(xml.documentElement);
+      d3.promise.xml(config.svgDefsFile, 'image/svg+xml').then(function (xml) {
 
-        // create a <div> element and load the sprites SVG into it
+        // create a <div> element and load the defs SVG into it
         var div = document.createElement('div');
         div.innerHTML = new XMLSerializer().serializeToString(xml.documentElement);
         document.body.insertBefore(div, document.body.childNodes[0]);

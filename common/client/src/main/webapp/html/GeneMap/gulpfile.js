@@ -28,8 +28,25 @@ gulp.task('clean-styles', function () {
   clean(files);
 });
 
+gulp.task('clean-svg', function () {
+  var files = config.tmpDir + '**/*.svg';
+  clean(files);
+});
+
 gulp.task('clean-dist', function () {
-  clean(['./dist/**/', '!./dist/']);
+  clean(['./dist/**/*', '!./dist/']);
+});
+
+gulp.task('clean-dist-assets', function () {
+  clean(['./dist/assets/**/*', '!./dist/assets/']);
+});
+
+gulp.task('clean-dist-js', function () {
+  clean(['./dist/js/**/*', '!./dist/assets/']);
+});
+
+gulp.task('clean-dist-css', function () {
+  clean(['./dist/css/**/*', '!./dist/assets/']);
 });
 
 // *** dev compilation ***
@@ -48,12 +65,13 @@ gulp.task('styles', ['clean-styles'], function () {
 });
 
 gulp.task('livereload', function () {
-  $.watch([config.outputCss, config.js, config.html])
+  $.watch([config.outputCss, config.js, config.html, config.outputSvg])
     .pipe($.connect.reload());
 });
 
 gulp.task('watch', function () {
   gulp.watch([config.less], ['styles']);
+  gulp.watch([config.svg], ['sprite-tmp']);
 });
 
 // *** HTML injection ***
@@ -78,7 +96,7 @@ gulp.task('html', function () {
     .pipe(gulp.dest(config.srcDir));
 });
 
-gulp.task('inject', ['styles'], function (done) {
+gulp.task('inject', ['styles', 'sprite-tmp'], function (done) {
   $.util.log('rebuilding styles and html');
 
   // force the html task to wait for the styles
@@ -89,7 +107,7 @@ gulp.task('inject', ['styles'], function (done) {
 
 gulp.task('serve-dev', ['inject', 'livereload'], function () {
   return $.connect.server({
-    root: ['src', '.tmp', 'assets', 'bower_components', 'test/data', 'test'],
+    root: ['src', '.tmp', 'bower_components', 'test/data', 'test'],
     port: '8080',
     livereload: true,
   });
@@ -100,7 +118,7 @@ gulp.task('help', $.taskListing);
 // create a default task and just log a message
 gulp.task('default', ['help']);
 
-gulp.task('optimise', ['inject', 'clean-dist'], function () {
+gulp.task('optimise', ['inject', 'sprite-dist', 'clean-dist-js', 'clean-dist-css'], function () {
   var assets = $.useref({ searchPath: ['.tmp', 'src', './bower_components'] });
 
   return gulp.src(config.html)
@@ -122,18 +140,16 @@ gulp.task('serve-prod', ['optimise'], function () {
   });
 });
 
-gulp.task('sprite', function () {
-  return gulp.src('assets/svg/*.svg')
-    .pipe($.svgSprite({
-      mode: {
-        defs: {
-          dest: '.',
-          sprite: 'sprite-defs.svg',
-          inline: true,
-        },
-      },
-    }))
-    .pipe(gulp.dest('assets/out'));
+gulp.task('sprite-tmp', ['clean-svg'], function () {
+  return gulp.src(config.svg)
+    .pipe($.svgSprite(config.svgSpriteConfig))
+    .pipe(gulp.dest(config.tmpDir + 'assets/'));
+});
+
+gulp.task('sprite-dist', ['clean-dist-assets'], function () {
+  return gulp.src(config.svg)
+    .pipe($.svgSprite(config.svgSpriteConfig))
+    .pipe(gulp.dest(config.build + 'assets/'));
 });
 
 ////////////
