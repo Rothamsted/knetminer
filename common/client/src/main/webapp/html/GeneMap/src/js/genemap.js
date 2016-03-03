@@ -79,38 +79,6 @@ GENEMAP.GeneMap = function (userConfig) {
       class: 'mapview',
     });
 
-    // _.map(_.toArray(data), function (elt) { svg.node().appendChild(elt); });
-
-    var filter = svg.select('defs').append('filter').attr('id', 'shine1');
-    filter.append('feGaussianBlur').attr({
-      stdDeviation: 2,
-      in: 'SourceGraphic',
-      result: 'blur1',
-    });
-
-    filter.append('feSpecularLighting').attr({
-      result:'spec1',
-      in:'blur1',
-      surfaceScale:5,
-      specularConstant:1,
-      specularExponent:20,
-      'lighting-color':'#FFFFFF',
-    }).append('fePointLight').attr({ x: -10000, y:-10000, z:10000 });
-
-    filter.append('feComposite').attr({
-      in:'spec1',
-      in2:'SourceAlpha',
-      operator:'in',
-      result:'spec_light',
-    });
-
-    filter.append('feComposite').attr({
-      in:'SourceGraphic',
-      in2:'spec_light',
-      operator:'out',
-      result:'spec_light_fill',
-    });
-
     svg.append('g').classed('zoom_window', true)
       .append('rect').classed('drawing_outline', true);
 

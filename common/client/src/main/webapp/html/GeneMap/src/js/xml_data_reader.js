@@ -11,7 +11,8 @@ GENEMAP.XmlDataReader = function () {
   var getColor = function (d) {
     // transform 0xffffff into #ffffff
     // if any letters are missing i.e. #ffff append 0s at the start => #00ffff
-    return '#' + '0'.repeat(8 - d.length) + d.substring(2, d.length);
+    var zeros = new Array(8 - d.length + 1).join('0');
+    return '#' + zeros + d.substring(2, d.length);
   };
 
   var _processBasemapData = function (genome) {

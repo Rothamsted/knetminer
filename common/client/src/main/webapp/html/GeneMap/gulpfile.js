@@ -142,6 +142,10 @@ gulp.task('serve-prod', ['optimise'], function () {
 
 gulp.task('sprite-tmp', ['clean-svg'], function () {
   return gulp.src(config.svg)
+    .pipe($.plumber(function (err) {
+      $.util.log(err);
+      this.emit('end');
+    }))
     .pipe($.svgSprite(config.svgSpriteConfig))
     .pipe(gulp.dest(config.tmpDir + 'assets/'));
 });

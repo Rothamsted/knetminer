@@ -28,7 +28,6 @@ GENEMAP.Chromosome = function (userConfig) {
       })
       .append('rect').attr({
         class: 'mask_rect', x:0, y:0,
-        /* filter:'url(#shine1)' */
       });
 
     chromosome.select('text').attr({
