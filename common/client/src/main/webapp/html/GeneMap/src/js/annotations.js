@@ -169,7 +169,7 @@ GENEMAP.Annotations = function (userConfig) {
       x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight; },
       y: function (d) { return d.y + (0.4 * chromosome.annotationLabelHeight); },
     }).style({
-      'font-size': chromosome.annotationLabelHeight,
+      'font-size': chromosome.annotationLabelHeight + 'px',
       visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
     }).text(function (d) {
       return d.data.label;
@@ -227,7 +227,7 @@ GENEMAP.Annotations = function (userConfig) {
       y: function (d) { return y(d.start) + chromosome.annotationLabelHeight; },
     })
     .style({
-      'font-size': chromosome.annotationLabelHeight,
+      'font-size': chromosome.annotationLabelHeight + 'px',
       visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
     })
     .text(function (d) {
