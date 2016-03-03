@@ -14,7 +14,6 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     chromosomeWidth: 0.06,
     longestChromosomeHeight: 1,
     maxCrhomosomeWidthToLengthRatio: 0.1,
-    labelHeight: 0.05,
     annotationLabelHeight: 0.02,
     annotationLabelThreshold:12,
     annotationLableMaxSize: 14,
@@ -24,7 +23,9 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     annotationWidth: 0.4,
     minLabelHeightPx: 8,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
-    spacing: { horizontal: 0.05, vertical: 0.05 },
+    cellMargin: { top: 0.05, left: 0.05, bottom: 0.05, right: 0.05 },
+    labelHeight: 0.05,
+    chromosomeAspectRatio: 0.04,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -48,56 +49,63 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         height: sizeLessMargin.height / rows,
       };
 
-      var widthRatio = cellDimensions.width /
-        (config.chromosomeWidth + config.annotationWidth + config.spacing.horizontal);
+      // calculate the margin widths:
+      var cellMargins = {
+        top: cellDimensions.height * config.cellMargin.top,
+        bottom: cellDimensions.height * config.cellMargin.bottom,
+        left: cellDimensions.width * config.cellMargin.left,
+        right: cellDimensions.width * config.cellMargin.right,
+      };
 
-      var heightRatio = cellDimensions.height /
-        (config.longestChromosomeHeight + config.labelHeight + config.spacing.vertical);
+      // calculate the chromosome label height
+      var labelHeight = config.labelHeight * cellDimensions.height;
+
+      // calculate the chromosome heightRatio
+      var chromosomeHeight = cellDimensions.height - labelHeight - cellMargins.top - cellMargins.bottom;
+
+      // calculate the chromosome width
+      var chromosomeWidth = chromosomeHeight * config.chromosomeAspectRatio;
+
+      // calculate the total annotations widthRatio
+      var totalAnnotations = cellDimensions.width - chromosomeWidth - cellMargins.left - cellMargins.right;
+
+      // spit this between the two regions
+      var annotationWidth = totalAnnotations / 2;
 
       var longest = Math.max.apply(null, genome.chromosomes.map(function (c) { return c.length; }));
 
-      var chromosomeLayout = {
+      var cellLayout = {
         chromosomePosition: {
-          maxHeight: heightRatio * config.longestChromosomeHeight,
-          width: widthRatio * config.chromosomeWidth,
-          x: (cellDimensions.width * 0.5) - (widthRatio * config.chromosomeWidth) * 0.5,
-          y: 0,
+          height: chromosomeHeight,
+          width: chromosomeWidth,
+          x: cellMargins.left + annotationWidth,
+          y: cellMargins.top + labelHeight,
         },
-        labelHeight: heightRatio * config.labelHeight,
-        annotationWidth: widthRatio * config.annotationWidth,
+        labelPosition: {
+          height: labelHeight,
+          width: cellDimensions.width - cellMargins.left - cellMargins.right,
+          x: cellMargins.left,
+          y: cellMargins.right,
+        },
+        qtlAnnotationPosition: {
+          height: chromosomeHeight,
+          width: annotationWidth,
+          x: cellMargins.left,
+          y: cellMargins.top + labelHeight,
+        },
+        geneAnnotationPosition: {
+          height: chromosomeHeight,
+          width: annotationWidth,
+          x: cellMargins.left + annotationWidth + chromosomeWidth,
+          y: cellMargins.top + labelHeight,
+        },
         longestChromosome: longest,
         showAnnotationLabels: true,
-        annotationLabelHeight: heightRatio * config.annotationLabelHeight,
-        annotationMarkerSize: heightRatio * config.annotationMarkerSize,
+        annotationLabelHeight: 10,
+        annotationMarkerSize: 10,
       };
 
-      chromosomeLayout.annotationMarkerSize =
-        _.clamp(chromosomeLayout.annotationMarkerSize * config.scale,
-                config.annotationMarkerMinSize, config.annotationMarkerMaxSize) / config.scale;
-
-      if (chromosomeLayout.annotationLabelHeight * config.scale < config.annotationLabelThreshold) {
-        chromosomeLayout.showAnnotationLabels = false;
-      }
-
-      if (chromosomeLayout.annotationLabelHeight * config.scale > config.annotationLableMaxSize) {
-        chromosomeLayout.annotationLabelHeight = config.annotationLableMaxSize / config.scale;
-      }
-
-      if (chromosomeLayout.labelHeight < config.minLabelHeightPx) {
-        // if the label doesn't reach the minimum height increase it to the minimum
-        // and take the extra height from the chromosome height
-        var extraHeight = config.minLabelHeightPx - chromosomeLayout.labelHeight;
-        chromosomeLayout.height = chromosomeLayout.height - extraHeight;
-        chromosomeLayout.labelHeight = config.minLabelHeightPx;
-      }
-
-      if (chromosomeLayout.width / chromosomeLayout.height > config.maxCrhomosomeWidthToLengthRatio) {
-        var newWdith = chromosomeLayout.height * config.maxCrhomosomeWidthToLengthRatio;
-        var lostWidth = chromosomeLayout.width - newWdith;
-        chromosomeLayout.annotationWidth = chromosomeLayout.annotationWidth + lostWidth;
-        chromosomeLayout.width = newWdith;
-      }
-
+      // decorate the genome with the layout information
       genome.drawing = _.pick(config, ['width', 'height']);
       genome.drawing.margin = {
         top: config.margin.top * genome.drawing.height,
@@ -116,11 +124,9 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
           width: cellDimensions.width,
           height: cellDimensions.height,
         };
-
-        chromosome = _.merge(chromosome, chromosomeLayout);
       });
 
-      genome.choromosomeLayout = chromosomeLayout;
+      genome.cellLayout = cellLayout;
 
       return genome;
     },

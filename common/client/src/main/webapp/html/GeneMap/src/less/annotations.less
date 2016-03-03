@@ -1,3 +1,86 @@
+g.gene-annotations {
+
+  rect.border {
+    fill: none;
+    stroke-width: 0.5;
+    stroke: blue;
+  }
+
+  .gene-annotation {
+    polygon {
+      fill: #3366FF;
+      stroke: black;
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    text {
+      font-family: sans-serif;
+      text-anchor: center;
+    }
+
+    line {
+      stroke: #666;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    path.link {
+      fill: none;
+      stroke: black;
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
+  }
+
+  .gene-annotation:hover {
+    polygon, path.link {
+      stroke-width: 1;
+    }
+
+    line {
+      stroke-width: 1.5;
+    }
+
+
+  }
+
+  .gene-annotation.selected {
+    polygon, path.link, line {
+      stroke-width: 2;
+    }
+  }
+}
+
+g.qtl-annotations {
+
+  rect.border {
+    fill: none;
+    stroke-width: 0.5;
+    stroke: red;
+  }
+
+  .qtl-annotation {
+
+    text {
+      font-family: sans-serif;
+      text-anchor: center;
+    }
+
+    line {
+      stroke: #666;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    path.link {
+      fill: none;
+      stroke: black;
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
+  }
+}
 
 g.gene-annotation-group, g.qtl-annotation-group {
 

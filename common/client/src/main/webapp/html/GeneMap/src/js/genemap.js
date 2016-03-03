@@ -66,7 +66,7 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var onAnnotationSelectionChanged = function () {
-    var anyGenesSelected = $('g.gene_annotation.selected').length > 0;
+    var anyGenesSelected = $('g.gene-annotation.selected').length > 0;
 
     svg.select('use.network-btn').classed('enabled', anyGenesSelected);
     svg.select('use.network-btn').classed('disabled', !anyGenesSelected);
@@ -107,7 +107,7 @@ GENEMAP.GeneMap = function (userConfig) {
         return;
       }
 
-      var selectedLabels = _.map($('.gene_annotation.selected'), function (elt) {
+      var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
         return elt.__data__.data.label;
       });
 

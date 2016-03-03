@@ -2,91 +2,80 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.Chromosome = function (userConfig) {
   var defaultConfig = {
-    border: true,
+    border: false,
+    longestChromosome: 100,
+    layout: {
+      width: 10,
+      height: 100,
+      x: 0,
+      y: 0,
+    },
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
-  var buildYScale = function (d) {
-    return d3.scale.linear().range([0, d.chromosomePosition.maxHeight]).domain([0, d.longestChromosome]);
+  // the position of the chromosome within the cell, extracted from the chromosome
+  // data passed to the drawer
+  var position = null;
+
+  var buildYScale = function () {
+    return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
   };
 
   // function to update a single chromosome element given the enter + update selection
   // and data. This assumes the basic element structure is in place.
   var updateChromosome = function (d) {
-    var y = buildYScale(d);
+    var y = buildYScale();
     var height = y(d.length);
     var chromosome = d3.select(this);
 
     chromosome.attr({
       id: 'chromosome_' + d.number,
+      transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
     });
 
     chromosome.select('defs').html('')
       .append('mask').attr({
-        id: 'chromosome_mask_' + d.number, x: 0, y: 0,
+        id: 'chromosome_mask_' + d.number,
       })
       .append('rect').attr({
-        class: 'mask_rect', x:0, y:0,
+        class: 'mask_rect',
       });
 
-    chromosome.select('text').attr({
-      x: d.chromosomePosition.x + (d.chromosomePosition.width / 2),
-      y: d.labelHeight  * (0.5),
-      'font-size': d.labelHeight,
-    }).text(function (d) {
-      return d.number;
-    });
-
     chromosome.select('#chromosome_mask_' + d.number).attr({
-      width: d.chromosomePosition.width,
+      width: config.layout.width,
       height: height,
-    });
-
-    chromosome.select('.mask_rect').attr({
-      width: d.chromosomePosition.width,
-      height: height,
-      x: d.chromosomePosition.x,
-      y: d.chromosomePosition.y,
-      rx: d.chromosomePosition.maxHeight * 0.01,
-      ry: d.chromosomePosition.maxHeight * 0.01,
     });
 
     var chromosomeShape = {
-      width: d.chromosomePosition.width,
+      width: config.layout.width,
       height: height,
-      x: d.chromosomePosition.x,
-      y: d.labelHeight,
-      rx: d.chromosomePosition.maxHeight * 0.01,
-      ry: d.chromosomePosition.maxHeight * 0.01,
+      rx: config.layout.height * 0.01,
+      ry: config.layout.height * 0.01,
     };
 
+    chromosome.select('.mask_rect').attr(chromosomeShape);
     chromosome.select('rect.background').attr(chromosomeShape);
     chromosome.select('rect.outline').attr(chromosomeShape);
 
     if (config.border) {
       chromosome.select('rect.border')
         .attr({
-          x: d.chromosomePosition.x,
-          y: d.chromosomePosition.y,
-          width: d.chromosomePosition.width,
-          height: d.chromosomePosition.maxHeight + d.labelHeight,
+          width: config.layout.width,
+          height: config.layout.height,
         });
     }
 
     // setup the chromosome bands
-    var bandsContainer = chromosome.select('.bands_container').attr({
-      transform: 'translate(0,' + d.labelHeight + ')',
-    });
+    var bandsContainer = chromosome.select('.bands_container');
 
     var bands = bandsContainer.selectAll('rect.band').data(d.bands);
     bands.enter().append('rect').attr('class', 'band');
 
     bands.attr({
-      width: d.chromosomePosition.width,
+      width: config.layout.width,
       y: function (d) { return y(d.start); },
       height: function (d) { return y(d.end - d.start); },
-      x: d.chromosomePosition.x,
       fill: function (d) { return d.color; },
     });
 
@@ -124,30 +113,21 @@ GENEMAP.Chromosome = function (userConfig) {
     });
   }
 
-  my.width = function (value) {
+  my.layout = function (value) {
     if (!arguments.length) {
-      return config.width;
+      return config.layout;
     }
 
-    config.width = value;
+    config.layout = value;
     return my;
   };
 
-  my.height = function (value) {
+  my.longestChromosome = function (value) {
     if (!arguments.length) {
-      return config.height;
+      return config.longestChromosome;
     }
 
-    config.height = value;
-    return my;
-  };
-
-  my.yScale = function (value) {
-    if (!arguments.length) {
-      return config.yScale;
-    }
-
-    config.yScale = value;
+    config.longestChromosome = value;
     return my;
   };
 

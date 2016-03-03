@@ -12,6 +12,8 @@ GENEMAP.ChromosomeCell = function (userConfig) {
   // SVG element and to have a list of chromosome JSON objects as its data.
   function my(selection) {
     selection.each(function (d) {
+      var layout = d.cellLayout;
+
       // build up the selection of chromosome objects
       var cells = d3.select(this).selectAll('.chromosome-cell').data(d.chromosomes);
 
@@ -42,17 +44,26 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // should be drawn before the chormosomes as some of the lines need to be
       // underneath the chormosome drawings.
       var geneDrawer = GENEMAP.GeneAnnotations()
-        .onAnnotationSelectFunction(config.onAnnotationSelectFunction);
+        .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
+        .layout(layout.geneAnnotationPosition)
+        .longestChromosome(layout.longestChromosome)
+        .chromosomeWidth(layout.chromosomePosition.width);
 
       cells.call(geneDrawer);
 
       var qtlDrawer = GENEMAP.QtlAnnotations()
-        .onAnnotationSelectFunction(config.onAnnotationSelectFunction);
+        .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
+        .layout(layout.qtlAnnotationPosition)
+        .longestChromosome(layout.longestChromosome)
+        .chromosomeWidth(layout.chromosomePosition.width);
 
       cells.call(qtlDrawer);
 
       // draw the chromosomes in the cells
-      var chromosomeDrawer = GENEMAP.Chromosome();
+      var chromosomeDrawer = GENEMAP.Chromosome()
+        .layout(layout.chromosomePosition)
+        .longestChromosome(layout.longestChromosome);
+
       cells.call(chromosomeDrawer);
 
       // remove any missing elements

@@ -2,46 +2,56 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.GeneAnnotations = function (userConfig) {
   var defaultConfig = {
-    border: true,
-    labelHeight: 8,
+    border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
+    longestChromosome: 100,
+    layout: {
+      width: 10,
+      height: 100,
+      x: 0,
+      y: 0,
+    },
+    chromosomeWidth: 20,
+    annotationMarkerSize: 5,
+    annotationLabelSize: 5,
+    showAnnotationLabels: true,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
+  var buildYScale = function () {
+    return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
+  };
+
   // adds the gene annotations to the annotations group within it, uses the data
   // bound to the annotationsGroup to generate the annotation elements
-  var setupGeneAnnotations = function (annotationsGroup, y) {
+  var setupGeneAnnotations = function (annotationGroup, chromosome) {
 
-    var chromosome = annotationsGroup.data()[0];
+    var y = buildYScale();
 
     var nodes = chromosome.annotations.genes.map(function (data) {
-      return new labella.Node(y(data.midpoint),  chromosome.annotationMarkerSize, data);
+      return new labella.Node(y(data.midpoint),  config.annotationMarkerSize, data);
     });
 
     var force = new labella.Force({
       nodeSpacing: 3,
       algorithm: 'overlap',
       lineSpacing: 2,
-      maxPos: y(chromosome.longestChromosome),
-      minPos: 0,
-      density: 0.85,
-
     }).nodes(nodes).compute();
 
     var renderer = new labella.Renderer({
       direction: 'right',
-      layerGap:  chromosome.annotationWidth / 6.0,
-      nodeHeight: chromosome.annotationWidth / 6.0,
+      layerGap: config.layout.width / 3.0,
+      nodeHeight: config.annotationMarkerSize * 1.5,
     });
 
     renderer.layout(force.nodes());
 
     // Enter + Update elements
-    var geneAnnotations = annotationsGroup.selectAll('g.gene_annotation').data(force.nodes());
+    var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(force.nodes());
 
-    var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene_annotation', true);
+    var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene-annotation', true);
 
     geneAnnotationsEnterGroup.append('line').classed('midpoint-line', true);
     geneAnnotationsEnterGroup.append('path').classed('link', true);
@@ -54,23 +64,11 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     geneAnnotationsEnterGroup.append('text');
 
     geneAnnotations.select('line.midpoint-line').attr({
-      x1: -(chromosome.chromosomePosition.width * 0.5),
+      x1: -(config.chromosomeWidth * 0.5),
       y1: function (d) { return y(d.data.midpoint); },
       y2: function (d) { return y(d.data.midpoint); },
       x2: 0,
     });
-
-
-    // $(geneAnnotations[0]).hammer().off('press').on('press', function () {
-    //   // $(this).children().popover('show');
-    //   console.log('press' + this);
-    // });
-    //
-    // $(geneAnnotations[0]).hammer().off('tap').on('tap', function () {
-    //   var group = d3.select(this);
-    //   group.classed('selected', !group.classed('selected'));
-    //   console.log('click: ' + this);
-    // });
 
     $(geneAnnotations[0]).off('mousedown').on('mousedown', function (e) {
       console.log('annotation mousedown ' + e);
@@ -94,43 +92,20 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       return false;
     });
 
-    // geneAnnotations.on('click', function (evt) {
-    //   var group = d3.select(this);
-    //   group.classed('selected', !group.classed('selected'));
-    //   console.log('click: ' + evt);
-    // });
-    //
-    // geneAnnotations.on('mouseover', function (evt) {
-    //   console.log('moseover: ' + evt);
-    // });
-    //
-    // geneAnnotations.on('mouseout', function (evt) {
-    //   console.log('mouseout: ' + evt);
-    // });
-
     // generate a little triange based on the data
     var pointsFn = function (d) {
-
       var points = [];
 
       // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
-      var a = chromosome.annotationMarkerSize;
+      var a = config.annotationMarkerSize;
 
       var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
-      h = h * 1.5;
+      h = h * 1.5; // stretch the width of the triangle
+
       points.push([d.x, d.y]);
-      /* points.push([d.x, d.y - d.dy/2]); // tip of the arrow */
       points.push([d.x + h, d.y - a / 2]);
       points.push([d.x + h, d.y + a / 2]);
 
-      // start at the top right and move down to the bottom left
-      // points.push([hozPosition, y(midpoint) - a/2]);
-      // points.push([hozPosition, y(midpoint) + a/2]);
-      //
-      // // add the final point at 1/2 height to make an equelateral triangle
-      // var h = Math.sqrt( Math.pow(a, 2) - Math.pow((a/2), 2));
-      // h = h * 1.5;
-      // points.push([hozPosition - h, y(midpoint)])
       return points.join(' ');
     };
 
@@ -162,25 +137,20 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     geneAnnotations.select('text').attr({
-      x: function (d) { return d.x + chromosome.annotationMarkerSize + chromosome.annotationLabelHeight; },
-      y: function (d) { return d.y + (0.4 * chromosome.annotationLabelHeight); },
+      x: function (d) { return d.x + config.annotationMarkerSize + config.annotationLabelSize; },
+      y: function (d) { return d.y + (0.4 * config.annotationLabelSize); },
     }).style({
-      'font-size': chromosome.annotationLabelHeight + 'px',
-      visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
+      'font-size': config.annotationLabelSize + 'px',
+      visibility: config.showAnnotationLabels ? 'visible' : 'hidden',
     }).text(function (d) {
       return d.data.label;
-    });
-
-    geneAnnotations.select('use').attr({
-      x: function (d) { return d.x; },
-      y: function (d) { return d.y; },
     });
 
     geneAnnotations.exit().remove();
   };
 
   // draw a border around the annotation target element
-  var drawBorder = function (group, chromosome, y) {
+  var drawBorder = function (group) {
 
     // create the border element if it doesn't exist
     if (group.select('rect.border').empty()) {
@@ -189,15 +159,9 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     group.select('rect.border')
       .attr({
-        x:0,
-        y:0,
-        width: chromosome.annotationWidth / 2,
-        height: chromosome.chromosomePosition.maxHeight,
+        width: config.layout.width,
+        height: config.layout.height,
       });
-  };
-
-  var buildYScale = function (d) {
-    return d3.scale.linear().range([0, d.chromosomePosition.maxHeight]).domain([0, d.longestChromosome]);
   };
 
   // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -205,59 +169,24 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
-      var groups = d3.select(this).selectAll('.gene-annotation-group').data([d]);
+      var annotationGroup = d3.select(this).selectAll('.gene-annotations').data([d]);
 
-      groups.enter().append('g').attr('class', 'gene-annotation-group');
+      annotationGroup.enter().append('g').attr('class', 'gene-annotations');
 
-      groups.each(function (d) {
-        var y = buildYScale(d);
-
-        var chromosomeEdge = d.chromosomePosition.x + d.chromosomePosition.width;
-
-        var group = d3.select(this).attr({
-          id: function (d) { return 'annotation_' + d.number; },
-          transform: function (d) {
-            return 'translate(' + chromosomeEdge + ',' + d.labelHeight + ')';
-          },
-        });
-
-        setupGeneAnnotations(group, y);
-
-        if (config.border) {
-          drawBorder(group, d, y);
-        }
+      annotationGroup.attr({
+        transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
+        id: function (d) { return 'annotation_' + d.number; },
       });
 
-      groups.exit().remove();
+      setupGeneAnnotations(annotationGroup, d);
+
+      if (config.border) {
+        drawBorder(annotationGroup);
+      }
+
+      annotationGroup.exit().remove();
     });
   }
-
-  my.width = function (value) {
-    if (!arguments.length) {
-      return config.width;
-    }
-
-    config.width = value;
-    return my;
-  };
-
-  my.height = function (value) {
-    if (!arguments.length) {
-      return config.height;
-    }
-
-    config.height = value;
-    return my;
-  };
-
-  my.yScale = function (value) {
-    if (!arguments.length) {
-      return config.yScale;
-    }
-
-    config.yScale = value;
-    return my;
-  };
 
   my.onAnnotationSelectFunction = function (value) {
     if (!arguments.length) {
@@ -265,6 +194,33 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.layout = function (value) {
+    if (!arguments.length) {
+      return config.layout;
+    }
+
+    config.layout = value;
+    return my;
+  };
+
+  my.longestChromosome = function (value) {
+    if (!arguments.length) {
+      return config.longestChromosome;
+    }
+
+    config.longestChromosome = value;
+    return my;
+  };
+
+  my.chromosomeWidth = function (value) {
+    if (!arguments.length) {
+      return config.chromosomeWidth;
+    }
+
+    config.chromosomeWidth = value;
     return my;
   };
 

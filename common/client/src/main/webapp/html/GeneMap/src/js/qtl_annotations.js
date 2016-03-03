@@ -2,25 +2,38 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.QtlAnnotations = function (userConfig) {
   var defaultConfig = {
-    border: true,
-    labelHeight: 8,
-    labelRectangles: false,
+    border: false,
     onAnnotationSelectFunction: $.noop(),
+    longestChromosome: 100,
+    layout: {
+      width: 10,
+      height: 100,
+      x: 0,
+      y: 0,
+    },
+    chromosomeWidth: 20,
+    annotationMarkerSize: 5,
+    annotationLabelSize: 5,
+    showAnnotationLabels: true,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
 
-  var setupQTLAnnotations = function (annotationsGroup, y) {
+  var buildYScale = function () {
+    return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
+  };
 
-    var chromosome = annotationsGroup.data()[0];
-    var leftEdge = chromosome.chromosomePosition.x + chromosome.chromosomePosition.width / 2;
-    var hozPosition = leftEdge - chromosome.annotationWidth * 0.5;
+  var setupQTLAnnotations = function (annotationsGroup, chromosome) {
+
+    var y = buildYScale();
+    var xStart = config.layout.width * 0.2;
+    var xEnd = config.layout.width + config.chromosomeWidth / 2;
 
     // Enter + Update elements
-    var qtlAnnotations = annotationsGroup.selectAll('g.qtl_annotation').data(chromosome.annotations.qtls);
+    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.annotations.qtls);
 
     // setup the new annotations
-    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl_annotation', true);
+    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation', true);
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
@@ -28,21 +41,21 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     // update
     qtlAnnotations.selectAll('line.top-line').attr({
-      x1: leftEdge,
+      x1: xStart,
       y1: function (d) { return y(d.start);},
       y2: function (d) { return y(d.start);},
-      x2: hozPosition,
+      x2: xEnd,
     });
 
     qtlAnnotations.selectAll('line.bottom-line').attr({
-      x1: leftEdge,
+      x1: xStart,
       y1: function (d) { return y(d.end);},
       y2: function (d) { return y(d.end);},
-      x2: hozPosition,
+      x2: xEnd,
     });
 
     qtlAnnotations.selectAll('rect.qtl-selector').attr({
-      x: hozPosition,
+      x: xStart,
       y: function (d) { return y(d.start); },
       width: 5,
       height: function (d) { return y(d.end) - y(d.start); },
@@ -51,12 +64,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     });
 
     qtlAnnotations.selectAll('text').attr({
-      x: hozPosition,
-      y: function (d) { return y(d.start) + chromosome.annotationLabelHeight; },
+      x: xStart,
+      y: function (d) { return y(d.start) + config.annotationLabelSize; },
     })
     .style({
-      'font-size': chromosome.annotationLabelHeight + 'px',
-      visibility: chromosome.showAnnotationLabels ? 'visible' : 'hidden',
+      'font-size': config.annotationLabelSize + 'px',
+      visibility: config.showAnnotationLabels ? 'visible' : 'hidden',
     })
     .text(function (d) {
       return d.label;
@@ -66,27 +79,18 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   };
 
   // draw a border around the annotation target element
-  var drawBorder = function (group, chromosome, y) {
+  var drawBorder = function (group) {
 
     // create the border element if it doesn't exist
     if (group.select('rect.border').empty()) {
       group.append('rect').classed('border', true);
     }
 
-    var width = chromosome.annotationWidth / 2;
-    var indent = chromosome.chromosomePosition.x - width;
-
     group.select('rect.border')
       .attr({
-        x:indent,
-        y:0,
-        width: width,
-        height: chromosome.chromosomePosition.maxHeight,
+        width: config.layout.width,
+        height: config.layout.height,
       });
-  };
-
-  var buildYScale = function (d) {
-    return d3.scale.linear().range([0, d.chromosomePosition.maxHeight]).domain([0, d.longestChromosome]);
   };
 
   // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -94,57 +98,24 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
-      var groups = d3.select(this).selectAll('.qtl-annotation-group').data([d]);
+      var qtlAnnotationGroup = d3.select(this).selectAll('.qtl-annotations').data([d]);
 
-      groups.enter().append('g').attr('class', 'qtl-annotation-group');
+      qtlAnnotationGroup.enter().append('g').attr('class', 'qtl-annotations');
 
-      groups.each(function (d) {
-        var y = buildYScale(d);
-
-        var group = d3.select(this).attr({
-          id: function (d) { return 'annotation_' + d.number; },
-          transform: function (d) {
-            return 'translate(0,' + d.labelHeight + ')';
-          },
-        });
-
-        setupQTLAnnotations(group, y);
-
-        if (config.border) {
-          drawBorder(group, d, y);
-        }
+      qtlAnnotationGroup.attr({
+        transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
+        id: function (d) { return 'annotation_' + d.number; },
       });
 
-      groups.exit().remove();
+      setupQTLAnnotations(qtlAnnotationGroup, d);
+
+      if (config.border) {
+        drawBorder(qtlAnnotationGroup);
+      }
+
+      qtlAnnotationGroup.exit().remove();
     });
   }
-
-  my.width = function (value) {
-    if (!arguments.length) {
-      return config.width;
-    }
-
-    config.width = value;
-    return my;
-  };
-
-  my.height = function (value) {
-    if (!arguments.length) {
-      return config.height;
-    }
-
-    config.height = value;
-    return my;
-  };
-
-  my.yScale = function (value) {
-    if (!arguments.length) {
-      return config.yScale;
-    }
-
-    config.yScale = value;
-    return my;
-  };
 
   my.onAnnotationSelectFunction = function (value) {
     if (!arguments.length) {
@@ -152,6 +123,33 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.layout = function (value) {
+    if (!arguments.length) {
+      return config.layout;
+    }
+
+    config.layout = value;
+    return my;
+  };
+
+  my.longestChromosome = function (value) {
+    if (!arguments.length) {
+      return config.longestChromosome;
+    }
+
+    config.longestChromosome = value;
+    return my;
+  };
+
+  my.chromosomeWidth = function (value) {
+    if (!arguments.length) {
+      return config.chromosomeWidth;
+    }
+
+    config.chromosomeWidth = value;
     return my;
   };
 
