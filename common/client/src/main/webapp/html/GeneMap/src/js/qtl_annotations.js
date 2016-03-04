@@ -15,6 +15,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
+    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -33,7 +34,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.annotations.qtls);
 
     // setup the new annotations
-    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation', true);
+    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation infobox', true);
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
@@ -75,6 +76,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return d.label;
     });
 
+    config.infoBoxManager.setupInfoboxOnSelection(qtlAnnotations);
+
     qtlAnnotations.exit().remove();
   };
 
@@ -104,7 +107,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
       qtlAnnotationGroup.attr({
         transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
-        id: function (d) { return 'annotation_' + d.number; },
       });
 
       setupQTLAnnotations(qtlAnnotationGroup, d);
@@ -177,6 +179,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
     config.showAnnotationLabels = value;
+    return my;
+  };
+
+  my.infoBoxManager = function (value) {
+    if (!arguments.length) {
+      return config.infoBoxManager;
+    }
+
+    config.infoBoxManager = value;
     return my;
   };
 

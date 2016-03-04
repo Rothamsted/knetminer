@@ -16,6 +16,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
+    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -70,26 +71,14 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       x2: 0,
     });
 
-    $(geneAnnotations[0]).off('mousedown').on('mousedown', function (e) {
-      console.log('annotation mousedown ' + e);
-      e.preventDefault();
-      return false;
-    });
 
-    $(geneAnnotations[0]).off('click').on('click', function (e) {
-      console.log('annotation click ' + e);
+    config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
+
+    geneAnnotations.on('click', function () {
+      console.log('gene annotation click ');
       var group = d3.select(this);
       group.classed('selected', !group.classed('selected'));
       config.onAnnotationSelectFunction();
-      return false;
-    });
-
-    $(geneAnnotations[0]).off('contextmenu').on('contextmenu', function (e) {
-
-      $('.infobox').not($(this).children()).popover('hide');
-      $(this).children().popover('toggle');
-      console.log('contextmenu ' + e);
-      e.preventDefault();
       return false;
     });
 
@@ -249,6 +238,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.showAnnotationLabels = value;
+    return my;
+  };
+
+  my.infoBoxManager = function (value) {
+    if (!arguments.length) {
+      return config.infoBoxManager;
+    }
+
+    config.infoBoxManager = value;
     return my;
   };
 

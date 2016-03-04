@@ -7,16 +7,17 @@ GENEMAP.InfoBox = function () {
   var target = 'body';
 
   var closeAllPopovers = function () {
-    $('.infobox').not(this).popover('hide');
-
-    // if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
-    //   $('[data-original-title]').popover('hide');
-    // }
+    $('.infobox').popover('hide');
   };
 
   my.attach = function () {
-    $('.infobox').each(function () {
-      var data = this.__data__;
+    $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
+  };
+
+  my.setupInfoboxOnSelection = function (selection) {
+
+    selection.selectAll('.infobox').each(function (d) {
+      var data = d;
 
       // check if labella is being used, in which case the data will be moved into the .data property.
       if (data.data) {
@@ -35,15 +36,30 @@ GENEMAP.InfoBox = function () {
         trigger: 'manual',
         html: true,
       });
-
-      // $(this).hammer().on('press', function () {
-      //   $(this).popover('show');
-      //   console.log('press' + this);
-      // });
-
     });
 
-    $('html').off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
+    selection.on('mousedown', function () {
+
+      console.log('infobox mousedown ');
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+
+    }).on('contextmenu', function () {
+
+      $('.infobox').not($(this).children()).popover('hide');
+      $(this).children().popover('toggle');
+      console.log('infobox contextmenu ');
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+
+    }).on('dblclick', function () {
+      console.log('infobox dblclick ');
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+    });
   };
 
   my.target = function (value) {

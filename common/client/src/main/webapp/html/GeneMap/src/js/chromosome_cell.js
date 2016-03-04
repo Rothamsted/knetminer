@@ -2,8 +2,9 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
-    border: true,
+    border: false,
     onAnnotationSelectFunction: $.noop(),
+    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -50,7 +51,8 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .chromosomeWidth(layout.chromosomePosition.width)
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
-        .showAnnotationLabels(layout.annotations.label.show);
+        .showAnnotationLabels(layout.annotations.label.show)
+        .infoBoxManager(config.infoBoxManager);
 
       cells.call(geneDrawer);
 
@@ -61,7 +63,8 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .chromosomeWidth(layout.chromosomePosition.width)
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
-        .showAnnotationLabels(layout.annotations.label.show);
+        .showAnnotationLabels(layout.annotations.label.show)
+        .infoBoxManager(config.infoBoxManager);
 
       cells.call(qtlDrawer);
 
@@ -89,6 +92,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.infoBoxManager = function (value) {
+    if (!arguments.length) {
+      return config.infoBoxManager;
+    }
+
+    config.infoBoxManager = value;
     return my;
   };
 

@@ -141,6 +141,11 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.classed('dragging', false);
   };
 
+  var onContext = function() {
+    console.log('context click');
+    d3.event.preventDefault();
+  };
+
   var drawMap = function (data) {
 
     if (!d3.select(target).select('svg').node()) {
@@ -155,7 +160,8 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     svg.on('mousedown', onMouseDown)
-      .on('mouseup', onMouseUp);
+      .on('mouseup', onMouseUp)
+      .on('contextmenu', onContext);
 
     console.log('width : ' + getSvgSize().width + ' height: ' + getSvgSize().height);
 
@@ -176,12 +182,6 @@ GENEMAP.GeneMap = function (userConfig) {
       drawContentOutline();
     }
 
-    // draw the chromosome cell for each of the chromosome objects on the genome
-    var cellDrawer = GENEMAP.ChromosomeCell();
-    cellDrawer.onAnnotationSelectFunction(onAnnotationSelectionChanged);
-    container.call(cellDrawer);
-
-    // attach the infobox events
     var infoBox = GENEMAP.InfoBox();
     if (target) {
       infoBox.target(target);
@@ -189,6 +189,12 @@ GENEMAP.GeneMap = function (userConfig) {
 
     infoBox.attach();
 
+    // draw the chromosome cell for each of the chromosome objects on the genome
+    var cellDrawer = GENEMAP.ChromosomeCell()
+      .onAnnotationSelectFunction(onAnnotationSelectionChanged)
+      .infoBoxManager(infoBox);
+
+    container.call(cellDrawer);
   };
 
   onZoom = function () {
