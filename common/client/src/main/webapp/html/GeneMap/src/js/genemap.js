@@ -88,11 +88,11 @@ GENEMAP.GeneMap = function (userConfig) {
 
     svg.append('use').attr({
       'xlink:href': '#network',
-      width: 40,
-      height: 40,
+      width: 50,
+      height: 50,
       class: 'icon network-btn disabled',
       y: 10,
-      x: getSvgSize().width - 50,
+      x: getSvgSize().width - 60,
     });
 
     // basic zooming functionality
@@ -163,8 +163,7 @@ GENEMAP.GeneMap = function (userConfig) {
     var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
       .width(getSvgSize().width)
       .height(getSvgSize().height)
-      .scale(zoom.scale())
-      .translate(zoom.translate());
+      .scale(zoom.scale());
 
     genome = layoutDecorator.decorateGenome(genome);
     svg.datum(genome);

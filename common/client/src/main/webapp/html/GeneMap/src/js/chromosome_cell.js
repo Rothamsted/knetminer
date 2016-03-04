@@ -47,7 +47,10 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
         .layout(layout.geneAnnotationPosition)
         .longestChromosome(layout.longestChromosome)
-        .chromosomeWidth(layout.chromosomePosition.width);
+        .chromosomeWidth(layout.chromosomePosition.width)
+        .annotationLabelSize(layout.annotations.label.size)
+        .annotationMarkerSize(layout.annotations.marker.size)
+        .showAnnotationLabels(layout.annotations.label.show);
 
       cells.call(geneDrawer);
 
@@ -55,7 +58,10 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
         .layout(layout.qtlAnnotationPosition)
         .longestChromosome(layout.longestChromosome)
-        .chromosomeWidth(layout.chromosomePosition.width);
+        .chromosomeWidth(layout.chromosomePosition.width)
+        .annotationLabelSize(layout.annotations.label.size)
+        .annotationMarkerSize(layout.annotations.marker.size)
+        .showAnnotationLabels(layout.annotations.label.show);
 
       cells.call(qtlDrawer);
 
@@ -65,6 +71,12 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .longestChromosome(layout.longestChromosome);
 
       cells.call(chromosomeDrawer);
+
+      // draw the labels for the chromosomes
+      var chromosomeLabelDrawer = GENEMAP.ChromosomeLabel()
+        .layout(layout.labelPosition);
+
+      cells.call(chromosomeLabelDrawer);
 
       // remove any missing elements
       cells.exit().remove();

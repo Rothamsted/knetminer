@@ -72,6 +72,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     $(geneAnnotations[0]).off('mousedown').on('mousedown', function (e) {
       console.log('annotation mousedown ' + e);
+      e.preventDefault();
       return false;
     });
 
@@ -221,6 +222,33 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.chromosomeWidth = value;
+    return my;
+  };
+
+  my.annotationLabelSize = function (value) {
+    if (!arguments.length) {
+      return config.annotationLabelSize;
+    }
+
+    config.annotationLabelSize = value;
+    return my;
+  };
+
+  my.annotationMarkerSize = function (value) {
+    if (!arguments.length) {
+      return config.annotationMarkerSize;
+    }
+
+    config.annotationMarkerSize = value;
+    return my;
+  };
+
+  my.showAnnotationLabels = function (value) {
+    if (!arguments.length) {
+      return config.showAnnotationLabels;
+    }
+
+    config.showAnnotationLabels = value;
     return my;
   };
 

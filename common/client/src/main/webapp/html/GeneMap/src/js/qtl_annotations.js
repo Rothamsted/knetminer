@@ -153,5 +153,32 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     return my;
   };
 
+  my.annotationLabelSize = function (value) {
+    if (!arguments.length) {
+      return config.annotationLabelSize;
+    }
+
+    config.annotationLabelSize = value;
+    return my;
+  };
+
+  my.annotationMarkerSize = function (value) {
+    if (!arguments.length) {
+      return config.annotationMarkerSize;
+    }
+
+    config.annotationMarkerSize = value;
+    return my;
+  };
+
+  my.showAnnotationLabels = function (value) {
+    if (!arguments.length) {
+      return config.showAnnotationLabels;
+    }
+
+    config.showAnnotationLabels = value;
+    return my;
+  };
+
   return my;
 };

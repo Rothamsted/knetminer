@@ -14,10 +14,6 @@ GENEMAP.Chromosome = function (userConfig) {
 
   var config = _.merge({}, defaultConfig, userConfig);
 
-  // the position of the chromosome within the cell, extracted from the chromosome
-  // data passed to the drawer
-  var position = null;
-
   var buildYScale = function () {
     return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
   };
@@ -96,7 +92,6 @@ GENEMAP.Chromosome = function (userConfig) {
       // setup a basic element structure for any new chromosomes
       var enterGroup = chroosomes.enter().append('g').attr('class', 'chromosome');
       enterGroup.append('defs');
-      enterGroup.append('text');
       enterGroup.append('rect').classed('background', true);
       enterGroup.append('g').classed('bands_container', true);
       enterGroup.append('rect').classed('outline', true);
