@@ -11,6 +11,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       x: 0,
       y: 0,
     },
+    bandWidthPercentage: 1 / 6,
+    gapPercentage: 1 / 6,
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
@@ -27,18 +29,28 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
     var y = buildYScale();
-    var xStart = config.layout.width * 0.2;
     var xEnd = config.layout.width + config.chromosomeWidth / 2;
+    var badnWidth = config.layout.width * config.bandWidthPercentage;
+    var gap = config.layout.width * config.gapPercentage;
+
+    var xStart = function (d) {
+      return config.layout.width - d.position * (gap + badnWidth);
+    };
+
+    var positioner = GENEMAP.QtlPositioner();
+
+    var qtlData = positioner.sortQTLAnnotations(chromosome.annotations.qtls);
 
     // Enter + Update elements
-    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.annotations.qtls);
+    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(qtlData);
 
     // setup the new annotations
     var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation infobox', true);
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('text');
+    qtlAnnotationsEnterGroup.append('text').classed('qtl-label', true);
+    qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
     // update
     qtlAnnotations.selectAll('line.top-line').attr({
@@ -58,15 +70,22 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotations.selectAll('rect.qtl-selector').attr({
       x: xStart,
       y: function (d) { return y(d.start); },
-      width: 5,
+      width: badnWidth,
       height: function (d) { return y(d.end) - y(d.start); },
     }).style({
       fill: function (d) { return d.color; },
     });
 
-    qtlAnnotations.selectAll('text').attr({
-      x: xStart,
-      y: function (d) { return y(d.start) + config.annotationLabelSize; },
+    var textYPos = function (d) {
+      return y(d.end);
+    };
+
+    qtlAnnotations.selectAll('text.qtl-label').attr({
+      x: 0,
+      y: config.annotationLabelSize,
+      transform: function (d) {
+        return 'translate(' + xStart(d) + ',' + textYPos(d) + ')rotate(270)';
+      },
     })
     .style({
       'font-size': config.annotationLabelSize + 'px',

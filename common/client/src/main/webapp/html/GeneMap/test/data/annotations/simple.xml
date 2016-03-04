@@ -10,8 +10,8 @@
 		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=II:4827878:7046216</link>
 	</feature>
 	<feature id="2">
-		<chromosome>B</chromosome>
-		<start>250</start>
+		<chromosome>A</chromosome>
+		<start>230</start>
 		<end>500</end>
 		<type>qtl</type>
 		<color>0xFF3300</color>
@@ -20,7 +20,7 @@
 	</feature>
 	<feature id="3">
 		<chromosome>A</chromosome>
-		<start>250</start>
+		<start>140</start>
 		<end>270</end>
 		<type>qtl</type>
 		<color>0xFF33FF</color>

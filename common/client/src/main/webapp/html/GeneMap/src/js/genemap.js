@@ -141,7 +141,7 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.classed('dragging', false);
   };
 
-  var onContext = function() {
+  var onContext = function () {
     console.log('context click');
     d3.event.preventDefault();
   };

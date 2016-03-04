@@ -39,6 +39,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       nodeSpacing: 3,
       algorithm: 'overlap',
       lineSpacing: 2,
+      minPos: 0,
+      maxPos: config.layout.height,
     }).nodes(nodes).compute();
 
     var renderer = new labella.Renderer({
@@ -70,7 +72,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       y2: function (d) { return y(d.data.midpoint); },
       x2: 0,
     });
-
 
     config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
 

@@ -99,7 +99,9 @@
     <script src="js/infobox.js"></script>
     <script src="js/map_layout.js"></script>
     <script src="js/qtl_annotations.js"></script>
+    <script src="js/qtl_positioner.js"></script>
     <script src="js/xml_data_reader.js"></script>
+    <script src="js/xml_data_reader0.js"></script>
     <!--endinject -->
     <!-- endbuild -->
 
@@ -138,15 +140,12 @@
 
   $(function () {
 
-
-
     // redraw on window resize
     var resize = function () {
       chart.redraw('#map');
     };
 
     d3.select(window).on('resize', resize);
-
 
     redraw();
   });
