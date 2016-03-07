@@ -53,21 +53,21 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
     // update
-    qtlAnnotations.selectAll('line.top-line').attr({
+    qtlAnnotations.select('line.top-line').attr({
       x1: xStart,
       y1: function (d) { return y(d.start);},
       y2: function (d) { return y(d.start);},
       x2: xEnd,
     });
 
-    qtlAnnotations.selectAll('line.bottom-line').attr({
+    qtlAnnotations.select('line.bottom-line').attr({
       x1: xStart,
       y1: function (d) { return y(d.end);},
       y2: function (d) { return y(d.end);},
       x2: xEnd,
     });
 
-    qtlAnnotations.selectAll('rect.qtl-selector').attr({
+    qtlAnnotations.select('rect.qtl-selector').attr({
       x: xStart,
       y: function (d) { return y(d.start); },
       width: badnWidth,
@@ -80,7 +80,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return y(d.end);
     };
 
-    qtlAnnotations.selectAll('text.qtl-label').attr({
+    qtlAnnotations.select('text.qtl-label').attr({
       x: 0,
       y: config.annotationLabelSize,
       transform: function (d) {

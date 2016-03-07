@@ -14,7 +14,7 @@ GENEMAP.QtlPositioner = function () {
   my.sortQTLAnnotations = function (annotations) {
 
     var qtlData = annotations.sort(function (a, b) {
-      return a.midpoint < b.midpoint;
+      return a.midpoint - b.midpoint;
     });
 
     var stack = [];

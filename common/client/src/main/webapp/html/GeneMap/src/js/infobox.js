@@ -26,7 +26,7 @@ GENEMAP.InfoBox = function () {
 
       $(this).popover({
         title: null,
-        content: '<div><a href="' + data.link + '">' + data.label + '</a>' +
+        content: '<div><a href="' + data.link + '" target="_blank">' + data.label + '</a>' +
                  '<br />Chromosome ' + data.chromosome + ' :' +
                   data.start + '-' + data.end +
                   '</div>',
