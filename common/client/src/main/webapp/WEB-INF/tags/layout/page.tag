@@ -27,18 +27,7 @@
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
 
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
-        <%-- <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script> --%>
-
-        <script src="html/GeneMap/src/js/annotations.js"></script>
-        <script src="html/GeneMap/src/js/annotation_xml_reader.js"></script>
-        <script src="html/GeneMap/src/js/auto_layout.js"></script>
-        <script src="html/GeneMap/src/js/basemap_xml_reader.js"></script>
-        <script src="html/GeneMap/src/js/chromosome.js"></script>
-        <script src="html/GeneMap/src/js/chromosome_cell.js"></script>
-        <script src="html/GeneMap/src/js/genemap.js"></script>
-        <script src="html/GeneMap/src/js/infobox.js"></script>
-        <script src="html/GeneMap/src/js/map_layout.js"></script>
-        <script src="html/GeneMap/src/js/xml_data_reader.js"></script>
+        <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>

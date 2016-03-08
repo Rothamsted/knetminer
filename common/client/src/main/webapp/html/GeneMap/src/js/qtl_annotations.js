@@ -89,7 +89,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     })
     .style({
       'font-size': config.annotationLabelSize + 'px',
-      visibility: config.showAnnotationLabels ? 'visible' : 'hidden',
+      visibility: function (d) {
+        if (d.showLabel === 'show') {
+          return 'visible';
+        } else if (d.showLabel === 'hide') {
+          return 'hidden';
+        }
+
+        return config.showAnnotationLabels ? 'visible' : 'hidden';
+      },
     })
     .text(function (d) {
       return d.label;

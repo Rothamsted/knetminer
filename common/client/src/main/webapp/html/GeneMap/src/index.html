@@ -36,6 +36,8 @@
       #map {
         width: 80%;
         height: 80%;
+        margin-left: 100px;
+        margin-top: 50px;
       }
 
 
@@ -53,6 +55,8 @@
       <option value='boleracea'>Boleracea</option>
       <option value='chicken'>Chicken</option>
       <option value='cow'>Cow</option>
+      <option value='cow_milk'>Cow - Milk</option>
+      <option value='cow_weight'>Cow - Weight</option>
       <option value='maize'>Maize</option>
       <option selected="selected" value='poplar'>Poplar</option>
       <option value='pig'>Pig</option>
@@ -61,13 +65,28 @@
       <option value='simple'>Simple</option>
     </select>
 
-    <!-- <span>Show Labels</span><input id="show-labels" type="checkbox" value="show" /> -->
+    <span>Show Gene Labels</span>
+    <select id="show-gene-labels" onchange="updateLabel();">
+      <option value='show'>Show</option>
+      <option value='hide'>Hide</option>
+      <option value='auto' selected='selected'>Auto</option>
+    </select>
+
+    <span>Show Qtl Labels</span>
+    <select id="show-qtl-labels" onchange="updateLabel();">
+      <option value='show'>Show</option>
+      <option value='hide'>Hide</option>
+      <option value='auto' selected='selected'>Auto</option>
+    </select>
+
+
     <span>Num Per Row:</span>
 
     <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;" onclick="redraw();"/>
     <input id="chk-annotations" type="checkbox" checked="true" onclick="redraw();"> Include Annotations
     <button onclick="redraw(false)">Draw</button>
     <button onclick="redraw(true)">Reset Zoom</button>
+    <button onclick="save()">Save</button>
 
     <div id="map" class='bootstrap'></div>
 
@@ -83,6 +102,7 @@
     <script src="labella/dist/labella.min.js"></script>
     <script src="hammerjs/hammer.js"></script>
     <script src="jquery-hammerjs/jquery.hammer.js"></script>
+    <script src="file-saver.js/FileSaver.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -97,11 +117,9 @@
     <script src="js/genemap.js"></script>
     <script src="js/gene_annotations.js"></script>
     <script src="js/infobox.js"></script>
-    <script src="js/map_layout.js"></script>
     <script src="js/qtl_annotations.js"></script>
     <script src="js/qtl_positioner.js"></script>
     <script src="js/xml_data_reader.js"></script>
-    <script src="js/xml_data_reader0.js"></script>
     <!--endinject -->
     <!-- endbuild -->
 
@@ -112,21 +130,50 @@
     console.log('generateCyJSNetwork call with url=' + url + ' list = ' + list.list);
   }
 
+  function save() {
+    var html = d3.select('#map').select('svg')
+          .attr('version', 1.1)
+          .attr('xmlns', 'http://www.w3.org/2000/svg')
+          .node().parentNode.innerHTML;
+
+    saveAs(new Blob([html], { type:'application/svg+xml' }), 'genome.svg');
+  }
+
+  function updateLabel() {
+    var geneLabelSelect = document.getElementById('show-gene-labels');
+    var geneValue = geneLabelSelect.options[geneLabelSelect.selectedIndex].value;
+
+    chart.setGeneLabels(geneValue);
+
+    var qtlLabelSelect = document.getElementById('show-qtl-labels');
+    var qtlValue = qtlLabelSelect.options[qtlLabelSelect.selectedIndex].value;
+
+    chart.setQtlLabels(qtlValue);
+    chart.redraw('#map');
+  }
+
   //var chart = GENEMAP.GeneMap().width('100%').height('100%');
   var chart = GENEMAP.GeneMap().width(700).height(400);
 
   var redraw = function (resetZoom) {
     var sel = document.getElementById('basemap-file');
-    var file = 'basemap/' + sel.options[sel.selectedIndex].value + '.xml';
+    var option = sel.options[sel.selectedIndex].value;
+
+    if (option === 'cow_milk' || option === 'cow_weight') {
+      option = 'cow';
+    }
+
+    var file = 'basemap/' + option + '.xml';
 
     var numberPerRow = +document.getElementById('chromosome_per_row').value;
     chart.layout().numberPerRow = numberPerRow;
 
-    // chart.layout().showAnnotationLabels = document.querySelector('#show-labels').checked;
-
     if (resetZoom) {
       chart.resetZoom();
     }
+
+    document.getElementById('show-gene-labels').options[2].selected = true;
+    document.getElementById('show-qtl-labels').options[2].selected = true;
 
     var annotationFile = null;
     var includeAnnotations = document.getElementById('chk-annotations').checked;

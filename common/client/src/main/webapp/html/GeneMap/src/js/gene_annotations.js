@@ -132,7 +132,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       y: function (d) { return d.y + (0.4 * config.annotationLabelSize); },
     }).style({
       'font-size': config.annotationLabelSize + 'px',
-      visibility: config.showAnnotationLabels ? 'visible' : 'hidden',
+      visibility: function (d) {
+        if (d.data.showLabel === 'show') {
+          return 'visible';
+        } else if (d.data.showLabel === 'hide') {
+          return 'hidden';
+        }
+
+        return config.showAnnotationLabels ? 'visible' : 'hidden';
+      },
     }).text(function (d) {
       return d.data.label;
     });

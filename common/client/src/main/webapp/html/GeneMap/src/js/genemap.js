@@ -295,5 +295,37 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.select(target).call(my);
   };
 
+  my.setGeneLabels = function (value) {
+    if (target) {
+      var data = d3.select(target).datum();
+
+      data.chromosomes.forEach(function (chromosome) {
+        chromosome.annotations.genes.forEach(function (geneAnnotation) {
+          if (value === 'auto') {
+            delete geneAnnotation.showLabel;
+          } else {
+            geneAnnotation.showLabel = value;
+          }
+        });
+      });
+    }
+  };
+
+  my.setQtlLabels = function (value) {
+    if (target) {
+      var data = d3.select(target).datum();
+
+      data.chromosomes.forEach(function (chromosome) {
+        chromosome.annotations.qtls.forEach(function (qtlAnnotation) {
+          if (value === 'auto') {
+            delete qtlAnnotation.showLabel;
+          } else {
+            qtlAnnotation.showLabel = value;
+          }
+        });
+      });
+    }
+  };
+
   return my;
 };

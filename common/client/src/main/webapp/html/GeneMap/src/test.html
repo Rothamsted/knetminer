@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv='content-type' content='text/html; charset=UTF-8'>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
 
 
     <style>
@@ -17,40 +17,105 @@
 
   <body>
 
-    <div id="map">
+    <div id='map'>
     </div>
 
-    <script src="jquery/dist/jquery.js"></script>
-    <script src="bootstrap/dist/js/bootstrap.js"></script>
-    <script src="d3/d3.js"></script>
-    <script src="lodash/lodash.js"></script>
-    <script src="d3.promise/dist/d3.promise.min.js"></script>
-    <script src="labella/dist/labella.min.js"></script>
-    <script src="hammerjs/hammer.js"></script>
-    <script src="jquery-hammerjs/jquery.hammer.js"></script>
+    <a id="save" href="#">Save SVG</a>
+
+    <script src='jquery/dist/jquery.js'></script>
+    <script src='bootstrap/dist/js/bootstrap.js'></script>
+    <script src='d3/d3.js'></script>
+    <script src='lodash/lodash.js'></script>
+    <script src='d3.promise/dist/d3.promise.min.js'></script>
+    <script src='labella/dist/labella.min.js'></script>
+    <script src='hammerjs/hammer.js'></script>
+    <script src='jquery-hammerjs/jquery.hammer.js'></script>
+    <script src="file-saver.js/FileSaver.js"></script>
 
     <script>
       $(function () {
         console.log('ready!');
 
-        d3.promise.xml('./out/sprite-defs.svg', 'image/svg+xml').then(function (xml) {
-          var importedNode = document.importNode(xml.documentElement, true);
-          console.log(importedNode);
-          var data = importedNode.getElementsByTagName('defs');
+        var width = 900, height = 600;
 
-          var svg = d3.select('#map').append('svg').attr({ width: 800, height: 300 });;
-          svg.node().appendChild(data[0]);
+        var randomX = d3.random.normal(width / 2, 80),
+            randomY = d3.random.normal(height / 2, 80);
 
-          svg.append('use').attr({
-            'xlink:href': '#network',
-            width: 100,
-            height: 100,
-          });
-
-          var $base = $('#map');
-          $($base).html($($base).html());
-
+        var data = d3.range(2000).map(function () {
+          return [
+            randomX(),
+            randomY(),
+          ];
         });
+
+        var svg = d3.select('#map').append('svg')
+            .attr('id', 'svg-image')
+            .attr('width', width)
+            .attr('height', height);
+
+        svg.selectAll('circle')
+            .data(data)
+          .enter().append('circle')
+            .attr('r', 2.5)
+            .attr('transform', function (d) { return 'translate(' + d + ')'; });
+        //
+        // d3.select('#save').on('click', function () {
+        //   var html = d3.select('svg')
+        //         .attr('version', 1.1)
+        //         .attr('xmlns', 'http://www.w3.org/2000/svg')
+        //         .node().parentNode.innerHTML;
+
+          //console.log(html);
+
+
+          //
+          // });
+
+        // this works in Chrome & FF
+
+        // var html = d3.select('svg')
+        //       .attr('version', 1.1)
+        //       .attr('xmlns', 'http://www.w3.org/2000/svg')
+        //       .node().parentNode.innerHTML;
+        // var blob = new Blob([html], { type:'image/svg+xml' });
+        // var a = document.getElementById('save');
+        //
+        // // var blob = new Blob(data, {type: "octet/stream"}),
+        // var url = window.URL.createObjectURL(blob);
+        // a.href = url;
+        // a.download = 'image.svg';
+
+
+        // var svgElt = document.getElementById('svg-image');
+        // var serializer = new XMLSerializer();
+        // var source = serializer.serializeToString(svgElt);
+        //
+        // //add name spaces.
+        // if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+        //     source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        // }
+        // if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+        //     source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        // }
+        //
+        // //add xml declaration
+        // // source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+        //
+        // //convert svg source to URI data scheme.
+        // var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+        //
+        // //set url value to a element's href attribute.
+        // document.getElementById("save").href = url;
+        // document.getElementById("save").download = 'image.svg';
+
+        var html = d3.select('svg')
+              .attr('version', 1.1)
+              .attr('xmlns', 'http://www.w3.org/2000/svg')
+              .node().parentNode.innerHTML;
+        // var blob = new Blob([html], { type:'image/svg+xml' });
+        saveAs(new Blob([html], {type:"application/svg+xml"}), "name.svg")
+
+
       });
     </script>
 
