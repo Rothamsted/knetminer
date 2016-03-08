@@ -68,8 +68,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var onAnnotationSelectionChanged = function () {
     var anyGenesSelected = $('g.gene-annotation.selected').length > 0;
 
-    svg.select('use.network-btn').classed('enabled', anyGenesSelected);
-    svg.select('use.network-btn').classed('disabled', !anyGenesSelected);
+    d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
 
   var constructSkeletonChart = function (mapContainer) {
@@ -227,6 +226,96 @@ GENEMAP.GeneMap = function (userConfig) {
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
   };
 
+
+  var onInfoButtonClick = function () {
+    console.log('info button clicked.');
+  };
+
+  // click handler for the network view button
+  var onNetworkBtnClick = function () {
+
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
+      return elt.__data__.data.label;
+    });
+
+    var url = 'OndexServlet?mode=network&keyword=volume';
+
+    console.log('selected labels: ' + selectedLabels);
+
+    generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
+  };
+
+  var setGeneLabelState = function (value) {
+
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.annotations.genes.forEach(function (geneAnnotation) {
+        if (value === 'auto') {
+          delete geneAnnotation.showLabel;
+        } else {
+          geneAnnotation.showLabel = value;
+        }
+      });
+    });
+  };
+
+  var onTackBtnClick = function () {
+    var btn = d3.select(target).select('.tag-btn');
+
+    if (btn.classed('auto-label')) {
+      btn.classed('show-label', true);
+      btn.classed('hide-label', false);
+      btn.classed('auto-label', false);
+      btn.attr('title', 'Show Labels');
+      setGeneLabelState('show');
+
+    } else if (btn.classed('show-label')) {
+      btn.classed('show-label', false);
+      btn.classed('hide-label', true);
+      btn.classed('auto-label', false);
+      btn.attr('title', 'Hide Labels');
+      setGeneLabelState('hide');
+    } else {
+      btn.classed('show-label', false);
+      btn.classed('hide-label', false);
+      btn.classed('auto-label', true);
+      btn.attr('title', 'Automatic Labels');
+      setGeneLabelState('auto');
+    }
+
+    drawMap();
+  };
+
+  var drawMenu = function () {
+    // <div class="genemap-menu">
+    //   <span class="info-btn"></span>
+    //   <span class="network-btn"></span>
+    // </div>
+
+    var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
+    menu.enter().append('div').classed('genemap-menu', true);
+
+    var menuItems = menu.selectAll('span').data(['info-btn', 'network-btn', 'tag-btn']);
+    menuItems.enter().append('span');
+    menuItems.attr({
+      class: function (d) { return d; },
+    });
+
+    menu.select('.network-btn').on('click', onNetworkBtnClick);
+    menu.select('.info-btn').on('click', onInfoButtonClick);
+
+    menu.select('.tag-btn')
+      .classed('auto-label', true)
+      .attr('title', 'Automatic Labels')
+      .on('click', onTackBtnClick);
+
+    // make sure the button is enabled correctly
+    onAnnotationSelectionChanged();
+  };
+
   // An SVG representation of a chromosome with banding data. This won't create an SVG
   // element, it expects that to already have been created.
   function my(selection) {
@@ -244,6 +333,7 @@ GENEMAP.GeneMap = function (userConfig) {
         document.body.insertBefore(div, document.body.childNodes[0]);
 
         // draw the map SVG
+        drawMenu();
         drawMap();
       });
     });
@@ -297,17 +387,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
   my.setGeneLabels = function (value) {
     if (target) {
-      var data = d3.select(target).datum();
-
-      data.chromosomes.forEach(function (chromosome) {
-        chromosome.annotations.genes.forEach(function (geneAnnotation) {
-          if (value === 'auto') {
-            delete geneAnnotation.showLabel;
-          } else {
-            geneAnnotation.showLabel = value;
-          }
-        });
-      });
+      setGeneLabelState(value);
     }
   };
 

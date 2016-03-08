@@ -107,7 +107,7 @@ gulp.task('inject', ['styles', 'sprite-tmp'], function (done) {
 
 gulp.task('serve-dev', ['inject', 'livereload'], function () {
   return $.connect.server({
-    root: ['src', '.tmp', 'bower_components', 'test/data', 'test'],
+    root: ['src', '.tmp', 'assets', 'bower_components', 'test/data', 'test'],
     port: '8080',
     livereload: true,
   });
