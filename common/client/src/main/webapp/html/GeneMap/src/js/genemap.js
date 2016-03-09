@@ -72,6 +72,7 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var constructSkeletonChart = function (mapContainer) {
+
     var svg = mapContainer.append('svg').attr({
       width: config.width,
       height: config.height,
@@ -85,47 +86,10 @@ GENEMAP.GeneMap = function (userConfig) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
 
-    // svg.append('use').attr({
-    //   'xlink:href': '#network',
-    //   width: 50,
-    //   height: 50,
-    //   class: 'icon network-btn disabled',
-    //   y: 10,
-    //   x: getSvgSize().width - 60,
-    // });
-
     // basic zooming functionality
     zoom = d3.behavior.zoom().scaleExtent([1, 10]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
-
-    // svg.select('use').on('click', function () {
-    //   console.log('network view clicked');
-    //
-    //   if ($(this).hasClass('disabled')) {
-    //     return;
-    //   }
-    //
-    //   var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
-    //     return elt.__data__.data.label;
-    //   });
-    //
-    //   var url = 'OndexServlet?mode=network&keyword=volume';
-    //
-    //   console.log('selected labels: ' + selectedLabels);
-    //
-    //   generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
-    //
-    //   return false;
-    // }).on('mousedown', function (e) {
-    //   console.log('network mousedown ' + e);
-    //   d3.event.stopPropagation();
-    //   return false;
-    // }).on('mouseup', function (e) {
-    //   console.log('network mouseup ' + e);
-    //   d3.event.stopPropagation();
-    //   return false;
-    // });
 
     return svg;
   };
@@ -145,10 +109,10 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.event.preventDefault();
   };
 
-  var drawMap = function (data) {
+  var drawMap = function () {
 
     if (!d3.select(target).select('svg').node()) {
-      svg = constructSkeletonChart(d3.select(target), data);
+      svg = constructSkeletonChart(d3.select(target));
     } else {
       svg = d3.select(target).select('svg');
 
@@ -161,8 +125,6 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.on('mousedown', onMouseDown)
       .on('mouseup', onMouseUp)
       .on('contextmenu', onContext);
-
-    console.log('width : ' + getSvgSize().width + ' height: ' + getSvgSize().height);
 
     // update the layout object with the new settings
     var layoutDecorator = GENEMAP.AutoLayoutDecorator(config.layout)
@@ -183,7 +145,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     var infoBox = GENEMAP.InfoBox()
       .redrawFunction(drawMap);
-      
+
     if (target) {
       infoBox.target(target);
     }
@@ -227,7 +189,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
   };
-
 
   var onInfoButtonClick = function () {
     console.log('info button clicked.');
@@ -327,17 +288,9 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      d3.promise.xml(config.svgDefsFile, 'image/svg+xml').then(function (xml) {
-
-        // create a <div> element and load the defs SVG into it
-        var div = document.createElement('div');
-        div.innerHTML = new XMLSerializer().serializeToString(xml.documentElement);
-        document.body.insertBefore(div, document.body.childNodes[0]);
-
-        // draw the map SVG
-        drawMenu();
-        drawMap();
-      });
+      // draw the map SVG
+      drawMenu();
+      drawMap();
     });
   }
 

@@ -9,8 +9,6 @@ GENEMAP.QtlPositioner = function () {
 
   var my = {};
 
-
-
   my.sortQTLAnnotations = function (annotations) {
 
     var qtlData = annotations.sort(function (a, b) {

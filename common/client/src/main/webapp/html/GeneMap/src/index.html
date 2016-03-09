@@ -65,13 +65,6 @@
       <option value='simple'>Simple</option>
     </select>
 
-    <span>Show Gene Labels</span>
-    <select id="show-gene-labels" onchange="updateLabel();">
-      <option value='show'>Show</option>
-      <option value='hide'>Hide</option>
-      <option value='auto' selected='selected'>Auto</option>
-    </select>
-
     <span>Show Qtl Labels</span>
     <select id="show-qtl-labels" onchange="updateLabel();">
       <option value='show'>Show</option>
@@ -175,7 +168,6 @@
       chart.resetZoom();
     }
 
-    document.getElementById('show-gene-labels').options[2].selected = true;
     document.getElementById('show-qtl-labels').options[2].selected = true;
 
     var annotationFile = null;

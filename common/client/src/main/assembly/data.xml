@@ -15,9 +15,5 @@
 			</excludes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
-		<fileSet>
-			<directory>src/main/webapp/html/GeneMap/dist/assets/</directory>
-			<outputDirectory>/assets/</outputDirectory>
-		</fileSet>
 	</fileSets>
 </assembly>
