@@ -31,24 +31,37 @@ svg {
   cursor: grabbing;
 }
 
-
-.info-btn {
+.btn {
   height: 36px;
   width: 36px;
-  background: url(../img/information.png) 0 0 no-repeat;
   display: inline-block;
   cursor: pointer;
+}
+
+.info-btn {
+  background: url(../img/information.png) 0 0 no-repeat;
+  .btn;
 }
 .info-btn:hover {
   background: url(../img/information_hover.png) 0 0 no-repeat;
 }
 
+.fit-btn {
+  background: url(../img/fit_to_size.png) 0 0 no-repeat;
+  .btn;
+}
+.fit-btn:hover {
+  background: url(../img/fit_to_size_hover.png) 0 0 no-repeat;
+}
+
+.fit-btn.disabled {
+  background: url(../img/fit_to_size_disabled.png) 0 0 no-repeat;
+  pointer: default;
+}
+
 .network-btn {
-  height: 36px;
-  width: 36px;
   background: url(../img/graph.png) 0 0 no-repeat;
-  display: inline-block;
-  cursor: pointer;
+  .btn;
 }
 .network-btn:hover {
   background: url(../img/graph_hover.png) 0 0 no-repeat;
@@ -60,10 +73,7 @@ svg {
 }
 
 .tag-btn {
-  height: 36px;
-  width: 36px;
-  display: inline-block;
-  cursor: pointer;
+  .btn;
 }
 
 .tag-btn.auto-label {
@@ -87,10 +97,7 @@ svg {
 }
 
 .btn-infobox-label {
-  height: 36px;
-  width: 36px;
-  display: inline-block;
-  cursor: pointer;
+  .btn;
 }
 
 .btn-infobox-label.auto-label {

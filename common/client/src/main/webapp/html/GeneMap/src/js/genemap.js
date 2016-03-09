@@ -47,6 +47,29 @@ GENEMAP.GeneMap = function (userConfig) {
     return size;
   };
 
+  var hasMapMoved = function () {
+    var moved = false;
+
+    if (zoom) {
+      moved = (zoom.translate()[0] !== 0 || zoom.translate()[1] !== 0) || moved;
+      moved = (zoom.scale() !== 1) || moved;
+    }
+
+    return moved;
+  };
+
+  var setFitButtonEnabled = function () {
+    d3.select(target).selectAll('.genemap-menu').select('.fit-btn')
+      .classed('disabled', !hasMapMoved());
+  };
+
+  var resetMapZoom = function () {
+    zoom.translate([0, 0]);
+    zoom.scale(1);
+    container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+    setFitButtonEnabled();
+  };
+
   // Sets the attributes on the .drawing_outline rectangle for the outline
   var drawDocumentOutline = function () {
     container.select('.drawing_outline').attr({
@@ -187,6 +210,8 @@ GENEMAP.GeneMap = function (userConfig) {
     // re-draw the map
     drawMap();
 
+    setFitButtonEnabled();
+
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
   };
 
@@ -252,6 +277,14 @@ GENEMAP.GeneMap = function (userConfig) {
     drawMap();
   };
 
+  var fitBtnClick = function () {
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    resetMapZoom();
+  };
+
   var drawMenu = function () {
     // <div class="genemap-menu">
     //   <span class="info-btn"></span>
@@ -261,7 +294,7 @@ GENEMAP.GeneMap = function (userConfig) {
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuItems = menu.selectAll('span').data(['info-btn', 'network-btn', 'tag-btn']);
+    var menuItems = menu.selectAll('span').data(['network-btn', 'tag-btn', 'fit-btn', 'info-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) { return d; },
@@ -274,6 +307,10 @@ GENEMAP.GeneMap = function (userConfig) {
       .classed('auto-label', true)
       .attr('title', 'Automatic Labels')
       .on('click', onTackBtnClick);
+
+    menu.select('.fit-btn')
+      .classed('disabled', !hasMapMoved())
+      .on('click', fitBtnClick);
 
     // make sure the button is enabled correctly
     onAnnotationSelectionChanged();
@@ -294,11 +331,7 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   }
 
-  my.resetZoom = function () {
-    zoom.translate([0, 0]);
-    zoom.scale(1);
-    container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
-  };
+  my.resetZoom = resetMapZoom;
 
   my.width = function (value) {
     if (!arguments.length) {
