@@ -3,10 +3,6 @@ var GENEMAP = GENEMAP || {};
 // reads from the basemap and (optinally) annotation XML files
 GENEMAP.XmlDataReader = function () {
 
-  if (!(this instanceof arguments.callee)) {
-    return new arguments.callee();
-  }
-
   /// returns the color property of the data formatted as an HTML color (#ffffff)
   var getColor = function (d) {
     // transform 0xffffff into #ffffff
@@ -49,6 +45,9 @@ GENEMAP.XmlDataReader = function () {
 
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
+
+      var combiner = GENEMAP.QTLAnnotationCombiner();
+      qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
       chromosome.annotations = {
         genes: genes,

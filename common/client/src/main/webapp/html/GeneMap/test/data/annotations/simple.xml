@@ -36,22 +36,4 @@
 		<label>QTL Number 4</label>
 		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=V:5567014:15737515</link>
 	</feature>
-	<feature id="5">
-		<chromosome>A</chromosome>
-		<start>212</start>
-		<end>213</end>
-		<type>qtl</type>
-		<color>0xFF33FF</color>
-		<label>QTL Number 5</label>
-		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=10:11368808:13814117</link>
-	</feature>
-	<feature id="6">
-		<chromosome>A</chromosome>
-		<start>212</start>
-		<end>213</end>
-		<type>qtl</type>
-		<color>0xFF33FF</color>
-		<label>QTL Number 6</label>
-		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=10:11368808:13814117</link>
-	</feature>
 </genome>

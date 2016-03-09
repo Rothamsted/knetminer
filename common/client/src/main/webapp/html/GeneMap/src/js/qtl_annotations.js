@@ -73,7 +73,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       width: badnWidth,
       height: function (d) { return y(d.end) - y(d.start); },
     }).style({
-      fill: function (d) { return d.color; },
+      fill: function (d) {
+        return d.colors[0];
+      },
     });
 
     var textYPos = function (d) {
@@ -100,7 +102,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       },
     })
     .text(function (d) {
-      return d.label;
+      return d.labels[0];
     });
 
     config.infoBoxManager.setupInfoboxOnSelection(qtlAnnotations);

@@ -16,7 +16,8 @@
   <script src="bootstrap/dist/js/bootstrap.js"></script>
   <script src="d3/d3.js"></script>
   <script src="lodash/lodash.js"></script>
-  <script src="es6-promise/promise.js"></script>
+  <!-- using this polyfil seems to break jasmine !-->
+  <!-- <script src="es6-promise/promise.js"></script> -->
   <script src="d3.promise/dist/d3.promise.min.js"></script>
   <script src="labella/dist/labella.min.js"></script>
   <script src="hammerjs/hammer.js"></script>
@@ -32,11 +33,10 @@
   <script src="js/genemap.js"></script>
   <script src="js/gene_annotations.js"></script>
   <script src="js/infobox.js"></script>
-  <script src="js/map_layout.js"></script>
   <script src="js/qtl_annotations.js"></script>
+  <script src="js/qtl_annotation_combiner.js"></script>
   <script src="js/qtl_positioner.js"></script>
   <script src="js/xml_data_reader.js"></script>
-  <script src="js/xml_data_reader0.js"></script>
 
   <!-- include spec files here... -->
   <script src="spec/ChromosomeSpec.js"></script>
@@ -45,6 +45,7 @@
   <script src="spec/basemap_reader_spec.js"></script>
   <script src="spec/xml_reader_spec.js"></script>
   <script src="spec/qtl_positioner_spec.js"></script>
+  <script src="spec/qtl_combiner_spec.js"></script>
 
 </head>
 

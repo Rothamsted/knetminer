@@ -32,18 +32,6 @@ gulp.task('clean-dist', function () {
   clean(['./dist/**/*', '!./dist/']);
 });
 
-gulp.task('clean-dist-assets', function () {
-  clean(['./dist/img/*', '!./dist/']);
-});
-
-gulp.task('clean-dist-js', function () {
-  clean(['./dist/js/**/*', '!./dist/']);
-});
-
-gulp.task('clean-dist-css', function () {
-  clean(['./dist/css/**/*', '!./dist/']);
-});
-
 // *** dev compilation ***
 
 gulp.task('styles', ['clean-styles'], function () {

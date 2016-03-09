@@ -23,7 +23,7 @@ describe('QTL Positioner', function () {
     var returned = positioner.sortQTLAnnotations(list);
     var returnedIds = returned.map(function (e) { return e.id; });
 
-    expect(returnedIds).toEqual([3, 2, 1]);
+    expect(returnedIds).toEqual([1, 2, 3]);
   });
 
   it('if two regions overlap (not just touch) the second gets an increased position', function () {
@@ -59,7 +59,7 @@ describe('QTL Positioner', function () {
       makeQTL(1, 450, 600),
       makeQTL(2, 400, 600),
       makeQTL(3, 300, 500),
-      makeQTL(3, 200, 300),
+      makeQTL(3, 600, 700),
     ];
 
     var returned = positioner.sortQTLAnnotations(list);
@@ -74,7 +74,7 @@ describe('QTL Positioner', function () {
       makeQTL(1, 450, 600), // 1
       makeQTL(2, 400, 600), // 2
       makeQTL(3, 300, 600), // 3
-      makeQTL(3, 200, 425), // 1 (instead of 4) 
+      makeQTL(3, 200, 425), // 1 (instead of 4)
     ];
 
     var returned = positioner.sortQTLAnnotations(list);
