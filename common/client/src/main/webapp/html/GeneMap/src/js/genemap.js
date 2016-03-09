@@ -85,47 +85,47 @@ GENEMAP.GeneMap = function (userConfig) {
       mapContainer.select('.zoom_window').append('rect').classed('drawing_margin', true);
     }
 
-    svg.append('use').attr({
-      'xlink:href': '#network',
-      width: 50,
-      height: 50,
-      class: 'icon network-btn disabled',
-      y: 10,
-      x: getSvgSize().width - 60,
-    });
+    // svg.append('use').attr({
+    //   'xlink:href': '#network',
+    //   width: 50,
+    //   height: 50,
+    //   class: 'icon network-btn disabled',
+    //   y: 10,
+    //   x: getSvgSize().width - 60,
+    // });
 
     // basic zooming functionality
     zoom = d3.behavior.zoom().scaleExtent([1, 10]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
 
-    svg.select('use').on('click', function () {
-      console.log('network view clicked');
-
-      if ($(this).hasClass('disabled')) {
-        return;
-      }
-
-      var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
-        return elt.__data__.data.label;
-      });
-
-      var url = 'OndexServlet?mode=network&keyword=volume';
-
-      console.log('selected labels: ' + selectedLabels);
-
-      generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
-
-      return false;
-    }).on('mousedown', function (e) {
-      console.log('network mousedown ' + e);
-      d3.event.stopPropagation();
-      return false;
-    }).on('mouseup', function (e) {
-      console.log('network mouseup ' + e);
-      d3.event.stopPropagation();
-      return false;
-    });
+    // svg.select('use').on('click', function () {
+    //   console.log('network view clicked');
+    //
+    //   if ($(this).hasClass('disabled')) {
+    //     return;
+    //   }
+    //
+    //   var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
+    //     return elt.__data__.data.label;
+    //   });
+    //
+    //   var url = 'OndexServlet?mode=network&keyword=volume';
+    //
+    //   console.log('selected labels: ' + selectedLabels);
+    //
+    //   generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
+    //
+    //   return false;
+    // }).on('mousedown', function (e) {
+    //   console.log('network mousedown ' + e);
+    //   d3.event.stopPropagation();
+    //   return false;
+    // }).on('mouseup', function (e) {
+    //   console.log('network mouseup ' + e);
+    //   d3.event.stopPropagation();
+    //   return false;
+    // });
 
     return svg;
   };
@@ -181,7 +181,9 @@ GENEMAP.GeneMap = function (userConfig) {
       drawContentOutline();
     }
 
-    var infoBox = GENEMAP.InfoBox();
+    var infoBox = GENEMAP.InfoBox()
+      .redrawFunction(drawMap);
+      
     if (target) {
       infoBox.target(target);
     }

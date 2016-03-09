@@ -107,15 +107,14 @@
         // //set url value to a element's href attribute.
         // document.getElementById("save").href = url;
         // document.getElementById("save").download = 'image.svg';
-
-        var html = d3.select('svg')
-              .attr('version', 1.1)
-              .attr('xmlns', 'http://www.w3.org/2000/svg')
-              .node().parentNode.innerHTML;
-        // var blob = new Blob([html], { type:'image/svg+xml' });
-        saveAs(new Blob([html], {type:"application/svg+xml"}), "name.svg")
-
-
+        $('#save').on('click', function () {
+          var html = d3.select('svg')
+                .attr('version', 1.1)
+                .attr('xmlns', 'http://www.w3.org/2000/svg')
+                .node().parentNode.innerHTML;
+          // var blob = new Blob([html], { type:'image/svg+xml' });
+          saveAs(new Blob([html], {type:"application/svg+xml"}), "name.svg")
+        }
       });
     </script>
 

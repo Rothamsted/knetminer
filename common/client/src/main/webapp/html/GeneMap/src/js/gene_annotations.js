@@ -66,6 +66,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
     geneAnnotationsEnterGroup.append('text');
 
+    geneAnnotations.attr('id', function (d) {
+      return 'feature_' + d.data.id;
+    });
+
     geneAnnotations.select('line.midpoint-line').attr({
       x1: -(config.chromosomeWidth * 0.5),
       y1: function (d) { return y(d.data.midpoint); },
