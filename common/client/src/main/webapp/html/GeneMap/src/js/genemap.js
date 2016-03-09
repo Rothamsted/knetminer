@@ -78,6 +78,58 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  var setGeneLabelState = function (value) {
+
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.annotations.genes.forEach(function (geneAnnotation) {
+        if (value === 'auto') {
+          delete geneAnnotation.showLabel;
+        } else {
+          geneAnnotation.showLabel = value;
+        }
+      });
+    });
+  };
+
+  var setTabButtonState = function (value) {
+    var btn = d3.select(target).select('.tag-btn');
+    if (value === 'show') {
+      btn.classed('show-label', true);
+      btn.classed('hide-label', false);
+      btn.classed('auto-label', false);
+      btn.classed('manual-label', false);
+      btn.attr('title', 'Show Labels');
+
+    } else if (value === 'hide') {
+      btn.classed('show-label', false);
+      btn.classed('hide-label', true);
+      btn.classed('auto-label', false);
+      btn.classed('manual-label', false);
+      btn.attr('title', 'Hide Labels');
+    } else if (value === 'manual') {
+      btn.classed('show-label', false);
+      btn.classed('hide-label', false);
+      btn.classed('auto-label', false);
+      btn.classed('manual-label', true);
+      btn.attr('title', 'Manual Labels');
+    } else {
+      btn.classed('show-label', false);
+      btn.classed('hide-label', false);
+      btn.classed('auto-label', true);
+      btn.classed('manual-label', false);
+      btn.attr('title', 'Automatic Labels');
+    }
+  };
+
+  var setManualLabelState = function () {
+    // if all the labels aren't already hidden
+    if (!d3.select(target).select('.tag-btn').classed('manual-label')) {
+      setGeneLabelState('hide');
+      setTabButtonState('manual');
+      drawMap();
+    }
+  };
+
   // draws an outline around the content of the drawing area (inside the margins)
   var drawContentOutline = function () {
     container.select('.drawing_margin').attr({
@@ -167,7 +219,7 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     var infoBox = GENEMAP.InfoBox()
-      .redrawFunction(drawMap);
+      .hideLabelFunction(setManualLabelState);
 
     if (target) {
       infoBox.target(target);
@@ -237,42 +289,21 @@ GENEMAP.GeneMap = function (userConfig) {
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
 
-  var setGeneLabelState = function (value) {
-
-    genome.chromosomes.forEach(function (chromosome) {
-      chromosome.annotations.genes.forEach(function (geneAnnotation) {
-        if (value === 'auto') {
-          delete geneAnnotation.showLabel;
-        } else {
-          geneAnnotation.showLabel = value;
-        }
-      });
-    });
-  };
-
   var onTackBtnClick = function () {
     var btn = d3.select(target).select('.tag-btn');
+    var newState;
 
+    // iterate over the 3 states when the button is clicked
     if (btn.classed('auto-label')) {
-      btn.classed('show-label', true);
-      btn.classed('hide-label', false);
-      btn.classed('auto-label', false);
-      btn.attr('title', 'Show Labels');
-      setGeneLabelState('show');
-
+      newState = 'show';
     } else if (btn.classed('show-label')) {
-      btn.classed('show-label', false);
-      btn.classed('hide-label', true);
-      btn.classed('auto-label', false);
-      btn.attr('title', 'Hide Labels');
-      setGeneLabelState('hide');
+      newState = 'hide';
     } else {
-      btn.classed('show-label', false);
-      btn.classed('hide-label', false);
-      btn.classed('auto-label', true);
-      btn.attr('title', 'Automatic Labels');
-      setGeneLabelState('auto');
+      newState = 'auto';
     }
+
+    setTabButtonState(newState);
+    setGeneLabelState(newState);
 
     drawMap();
   };

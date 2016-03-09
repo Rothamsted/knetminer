@@ -5,7 +5,7 @@ GENEMAP.InfoBox = function () {
   var my = {};
 
   var target = 'body';
-  var redrawFunction = $.noop;
+  var hideLabelFunction = $.noop;
 
   var closeAllPopovers = function (event) {
     if ($(event.target).hasClass('btn-infobox-label')) {
@@ -36,6 +36,8 @@ GENEMAP.InfoBox = function () {
     $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
 
     $(target).off('click').on('click', '.btn-infobox-label', function (event) {
+
+      hideLabelFunction();
       console.log('infobox label click ' + event);
       var featureId = $(event.target).data().featureId;
 
@@ -60,6 +62,7 @@ GENEMAP.InfoBox = function () {
       var popover = $('#' + featureId).find('.infobox').data('bs.popover');
       popover.options.content = generatePopoverContent(featureId, data);
       popover.toggle();
+
 
       event.preventDefault();
       event.stopPropagation();
@@ -134,12 +137,12 @@ GENEMAP.InfoBox = function () {
     return my;
   };
 
-  my.redrawFunction = function (value) {
+  my.hideLabelFunction = function (value) {
     if (!arguments.length) {
-      return redrawFunction;
+      return hideLabelFunction;
     }
 
-    redrawFunction = value;
+    hideLabelFunction = value;
     return my;
   };
 
