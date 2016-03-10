@@ -2,7 +2,7 @@ describe('QTL Positioner', function () {
   var positioner;
 
   var makeQTL = function (id, start, end) {
-    return { id: id, start: start, end: end, midpoint: (start - end) / 2 + start };
+    return { id: id, start: start, end: end, midpoint: (end - start) / 2 + start };
   };
 
   beforeEach(function () {
@@ -81,6 +81,21 @@ describe('QTL Positioner', function () {
     var returnedPositions = returned.map(function (e) { return e.position; });
 
     expect(returnedPositions).toEqual([1, 2, 3, 1]);
+  });
+
+  it('can cope with thin regions followed by large regions', function () {
+
+    var list = [
+      makeQTL(1, 100, 200), // 1
+      makeQTL(2, 150, 300), // 2
+      makeQTL(3, 220, 250), // 1
+      makeQTL(3, 175, 10000), // 3
+    ];
+
+    var returned = positioner.sortQTLAnnotations(list);
+    var returnedPositions = returned.map(function (e) { return e.position; });
+
+    expect(returnedPositions).toEqual([1, 2, 1, 3]);
   });
 
   it('position 1 given to non overlapping regions', function () {
