@@ -50,4 +50,6 @@ Once installed you can start the tomcat server with the `/opt/tomcat/bin/catalin
 
 To run the server component unzip the server code somewhere on the VM (or in the C:\code\qtl directory which is automatically mapped to the /vagrant directory on the VM). You will also need the .oxl file in the same directory, some of these can be downloaded from the https://ondex.rothamsted.ac.uk/ site, e.g.: https://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/poplarnet/Poplar_v3_KB2014.oxl.
 
-Then navigate to the unzipped directory and run `. startup.sh`. This process will require a lot of RAM.
+Then navigate to the unzipped directory and run `. startup.sh`. This process will require a lot of RAM. The process takes a while to startup but you should know it is ready when the message `Done. Waiting for queries...` appears in the `stdout.log` file.
+
+The tomcat management site should be available on http://localhost:8888/, click on 'Manage App' and login with the admin account (pw: 'admin'). You can now browse to the client .war file and deploy the application.
