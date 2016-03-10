@@ -3,7 +3,7 @@
 
 ### Building the compressed and minified files
 
-These files 'genemap.js', 'genemap-lib.js' and 'genemap.css' may well have already been checked into version control, but if they need to be recompiled you can use the following steps. Once after checkout go to the `GeneMap` directory and run:
+The required files 'genemap.js', 'genemap-lib.js' and 'genemap.css' as well as the images are found in the 'dist' directory, which isnt currently checked into version control. They will need to be recompiled before they can be used, to do this you can use the following steps. Once after checkout go to the `GeneMap` directory and run:
 
     npm install
     bower install
