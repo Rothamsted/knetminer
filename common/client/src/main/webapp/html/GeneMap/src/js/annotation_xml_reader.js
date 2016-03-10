@@ -1,5 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
+// reads the gene and qtl annotations from the .xml file
 GENEMAP.AnnotationXMLReader = function () {
 
   var _readFeature = function (elt) {

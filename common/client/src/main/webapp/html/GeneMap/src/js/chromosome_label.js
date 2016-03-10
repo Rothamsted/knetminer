@@ -1,5 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
+// draws the chromosome labels on the map in the correct position
 GENEMAP.ChromosomeLabel = function (userConfig) {
   var defaultConfig = {
     border: false,

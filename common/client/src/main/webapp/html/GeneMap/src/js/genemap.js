@@ -26,6 +26,8 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var onZoom;
 
+  var menuManager;
+
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
   // this can cause issues if the element is currently hidden.
@@ -47,6 +49,7 @@ GENEMAP.GeneMap = function (userConfig) {
     return size;
   };
 
+  // test if the map has panned or zoomed at all
   var hasMapMoved = function () {
     var moved = false;
 
@@ -58,16 +61,13 @@ GENEMAP.GeneMap = function (userConfig) {
     return moved;
   };
 
-  var setFitButtonEnabled = function () {
-    d3.select(target).selectAll('.genemap-menu').select('.fit-btn')
-      .classed('disabled', !hasMapMoved());
-  };
-
+  // reset the maps pan and zoom to the initial state
   var resetMapZoom = function () {
     zoom.translate([0, 0]);
     zoom.scale(1);
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
-    setFitButtonEnabled();
+    menuManager.setFitButtonEnabled(hasMapMoved());
+
     // need to redraw the map so that label fonts/visibiltiy is recalculated
     drawMap();
   };
@@ -80,6 +80,9 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  // sets the 'showLabel' property on each of the gene annotations, shoudl be either
+  // 'show', 'hide' or 'auto'. If 'auto' is selected the 'showLabel' property is remove
+  // instead the layout configuraiton will be used to determine if the text is shown
   var setGeneLabelState = function (value) {
 
     genome.chromosomes.forEach(function (chromosome) {
@@ -93,41 +96,13 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
-  var setTabButtonState = function (value) {
-    var btn = d3.select(target).select('.tag-btn');
-    if (value === 'show') {
-      btn.classed('show-label', true);
-      btn.classed('hide-label', false);
-      btn.classed('auto-label', false);
-      btn.classed('manual-label', false);
-      btn.attr('title', 'Show Labels');
-
-    } else if (value === 'hide') {
-      btn.classed('show-label', false);
-      btn.classed('hide-label', true);
-      btn.classed('auto-label', false);
-      btn.classed('manual-label', false);
-      btn.attr('title', 'Hide Labels');
-    } else if (value === 'manual') {
-      btn.classed('show-label', false);
-      btn.classed('hide-label', false);
-      btn.classed('auto-label', false);
-      btn.classed('manual-label', true);
-      btn.attr('title', 'Manual Labels');
-    } else {
-      btn.classed('show-label', false);
-      btn.classed('hide-label', false);
-      btn.classed('auto-label', true);
-      btn.classed('manual-label', false);
-      btn.attr('title', 'Automatic Labels');
-    }
-  };
-
+  // sets the map to the 'manual' label state, this hides all the labels (so selected ones can be show)
+  // and sets the button to the 'manual' icon.
   var setManualLabelState = function () {
     // if all the labels aren't already hidden
     if (!d3.select(target).select('.tag-btn').classed('manual-label')) {
       setGeneLabelState('hide');
-      setTabButtonState('manual');
+      menuManager.setTabButtonState('manual');
       drawMap();
     }
   };
@@ -142,12 +117,15 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  // called when a gene annotation is selected or deselected, decides if the
+  // network button should be enabled or not
   var onAnnotationSelectionChanged = function () {
     var anyGenesSelected = $('g.gene-annotation.selected').length > 0;
 
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
 
+  // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {
 
     var svg = mapContainer.append('svg').attr({
@@ -186,6 +164,7 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.event.preventDefault();
   };
 
+  // draw the genemap into the target element.
   var drawMap = function () {
 
     if (!d3.select(target).select('svg').node()) {
@@ -209,18 +188,20 @@ GENEMAP.GeneMap = function (userConfig) {
       .height(getSvgSize().height)
       .scale(zoom.scale());
 
+    // set the layout on the genome and set it as the data source
     genome = layoutDecorator.decorateGenome(genome);
     svg.datum(genome);
 
     container = svg.select('.zoom_window');
 
+    // draw the outlines
     drawDocumentOutline();
 
     if (config.contentBorder) {
       drawContentOutline();
     }
 
-    // setup the infobox
+    // setup the infobox manager
     var infoBox = GENEMAP.InfoBox()
       .setManualLabelMode(setManualLabelState);
 
@@ -238,6 +219,7 @@ GENEMAP.GeneMap = function (userConfig) {
     container.call(cellDrawer);
   };
 
+  // called whenever a zoom event occurss
   onZoom = function () {
     var translate = d3.event.translate;
 
@@ -265,21 +247,13 @@ GENEMAP.GeneMap = function (userConfig) {
     // re-draw the map
     drawMap();
 
-    setFitButtonEnabled();
+    menuManager.setFitButtonEnabled(hasMapMoved());
 
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
   };
 
-  var onInfoButtonClick = function () {
-    console.log('info button clicked.');
-  };
-
   // click handler for the network view button
-  var onNetworkBtnClick = function () {
-
-    if ($(this).hasClass('disabled')) {
-      return;
-    }
+  var openNetworkView = function () {
 
     var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
       return elt.__data__.data.label;
@@ -292,62 +266,24 @@ GENEMAP.GeneMap = function (userConfig) {
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
 
-  var onTackBtnClick = function () {
-    var btn = d3.select(target).select('.tag-btn');
+  // togels the global label visibility, from 'auto', to 'show' and to 'hide'
+  var toggleLableVisibility = function () {
+    var oldState = menuManager.getTagButtonState();
     var newState;
 
     // iterate over the 3 states when the button is clicked
-    if (btn.classed('auto-label')) {
+    if (oldState === 'auto') {
       newState = 'show';
-    } else if (btn.classed('show-label')) {
+    } else if (oldState === 'show') {
       newState = 'hide';
     } else {
       newState = 'auto';
     }
 
-    setTabButtonState(newState);
+    menuManager.setTabButtonState(newState);
     setGeneLabelState(newState);
 
     drawMap();
-  };
-
-  var fitBtnClick = function () {
-    if ($(this).hasClass('disabled')) {
-      return;
-    }
-
-    resetMapZoom();
-  };
-
-  var drawMenu = function () {
-    // <div class="genemap-menu">
-    //   <span class="info-btn"></span>
-    //   <span class="network-btn"></span>
-    // </div>
-
-    var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
-    menu.enter().append('div').classed('genemap-menu', true);
-
-    var menuItems = menu.selectAll('span').data(['network-btn', 'tag-btn', 'fit-btn', 'info-btn']);
-    menuItems.enter().append('span');
-    menuItems.attr({
-      class: function (d) { return d; },
-    });
-
-    menu.select('.network-btn').on('click', onNetworkBtnClick);
-    menu.select('.info-btn').on('click', onInfoButtonClick);
-
-    menu.select('.tag-btn')
-      .classed('auto-label', true)
-      .attr('title', 'Automatic Labels')
-      .on('click', onTackBtnClick);
-
-    menu.select('.fit-btn')
-      .classed('disabled', !hasMapMoved())
-      .on('click', fitBtnClick);
-
-    // make sure the button is enabled correctly
-    onAnnotationSelectionChanged();
   };
 
   // An SVG representation of a chromosome with banding data. This won't create an SVG
@@ -359,8 +295,19 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = d;
       target = _this;
 
-      // draw the map SVG
-      drawMenu();
+      if (!menuManager) {
+        menuManager = GENEMAP.MenuBar()
+          .onTagBtnClick(toggleLableVisibility)
+          .onFitBtnClick(resetMapZoom)
+          .onNetworkBtnClick(openNetworkView);
+      }
+
+      d3.select(target).call(menuManager);
+
+      menuManager.setNetworkButtonEnabled(false);
+      menuManager.setFitButtonEnabled(false);
+      menuManager.setTabButtonState('auto');
+
       drawMap();
     });
   }

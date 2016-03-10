@@ -16,11 +16,9 @@ To re-build the files in the `dist` folder.
 
 More information about npm, bower and gulp can be found in the maintenance guide.
 
-### Vagrant Virtual Machine
-
 ## General Installation Notes
 
-This is a guide to using the GeneMap component, not neccesarily within the QTLNetMiner application.
+This is a guide to using the GeneMap component, not necessarily within the QTLNetMiner application.
 
 ### Required files
 

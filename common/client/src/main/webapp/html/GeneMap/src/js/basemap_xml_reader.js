@@ -1,5 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
+// reads the chromosome data from the basemap file
 GENEMAP.BasemapXmlReader = function () {
 
   // read a chromosome band object from an XML element
