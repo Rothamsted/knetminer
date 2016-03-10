@@ -68,6 +68,8 @@ GENEMAP.GeneMap = function (userConfig) {
     zoom.scale(1);
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
     setFitButtonEnabled();
+    // need to redraw the map so that label fonts/visibiltiy is recalculated
+    drawMap();
   };
 
   // Sets the attributes on the .drawing_outline rectangle for the outline
@@ -218,8 +220,9 @@ GENEMAP.GeneMap = function (userConfig) {
       drawContentOutline();
     }
 
+    // setup the infobox
     var infoBox = GENEMAP.InfoBox()
-      .hideLabelFunction(setManualLabelState);
+      .setManualLabelMode(setManualLabelState);
 
     if (target) {
       infoBox.target(target);

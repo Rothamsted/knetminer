@@ -52,6 +52,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotationsEnterGroup.append('text').classed('qtl-label', true);
     qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
+    qtlAnnotations.attr('id', function (d) {
+      return 'feature_' + d.id;
+    });
+
     // update
     qtlAnnotations.select('line.top-line').attr({
       x1: xStart,
@@ -79,15 +83,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     });
 
     var textYPos = function (d) {
-      return y(d.end);
+      return y(d.midpoint);
     };
 
     qtlAnnotations.select('text.qtl-label').attr({
-      x: 0,
-      y: config.annotationLabelSize,
-      transform: function (d) {
-        return 'translate(' + xStart(d) + ',' + textYPos(d) + ')rotate(270)';
-      },
+      x: xStart,
+      y: textYPos,//config.annotationLabelSize,
+      // transform: function (d) {
+      //   return 'translate(' + xStart(d) + ',' + textYPos(d) + ')rotate(270)';
+      // },
     })
     .style({
       'font-size': config.annotationLabelSize + 'px',
@@ -102,10 +106,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       },
     })
     .text(function (d) {
-      return d.labels[0];
+      return '(' + d.labels.length + ')';
     });
 
-    config.infoBoxManager.setupInfoboxOnSelection(qtlAnnotations);
+    config.infoBoxManager.setupQTLInfoboxOnSelection(qtlAnnotations);
 
     qtlAnnotations.exit().remove();
   };

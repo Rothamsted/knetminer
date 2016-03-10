@@ -5,8 +5,9 @@ GENEMAP.InfoBox = function () {
   var my = {};
 
   var target = 'body';
-  var hideLabelFunction = $.noop;
+  var setManualLabelMode = $.noop;
 
+  // close all open popovers
   var closeAllPopovers = function (event) {
     if ($(event.target).hasClass('btn-infobox-label')) {
       return;
@@ -16,10 +17,10 @@ GENEMAP.InfoBox = function () {
     $('.infobox').popover('hide');
   };
 
+  // generates the HTML content for the Gene popover
   var generatePopoverContent = function (id, data) {
     var button = '<span class="btn-infobox-label show-label" ' +
-      ' data-feature-id="' + id +
-      '" title ="Show Label"></span>';
+      ' data-feature-id="' + id + '" title ="Show Label"></span>';
 
     if (data.showLabel === 'show')
     {
@@ -32,12 +33,51 @@ GENEMAP.InfoBox = function () {
               '</div>';
   };
 
+  // generates the HTML content for the QTL popover
+  var generateQTLPopoverContent = function (data) {
+
+    var content = '<div>';
+
+    for (var i = 0; i < data.labels.length; i++) {
+      content += '<a href="' + data.links[i] + '" target="_blank">' + data.labels[i] + '</a><br />';
+    }
+
+    content += 'Chromosome ' + data.chromosome + ' :' + data.start + '-' + data.end + '</div>';
+    return content;
+  };
+
+  // sets the event handlers on the d3 selection to toggle the popover
+  var setupPopoverEventHandlers = function (selection) {
+
+    selection.on('mousedown', function () {
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+
+    }).on('contextmenu', function () {
+
+      $('.infobox').not($(this).children()).popover('hide');
+      $(this).children().popover('toggle');
+
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+    }).on('dblclick', function () {
+
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
+    });
+  };
+
+  // atach the infobox listeners to the target, this is so that click + scroll
+  // events will close any popovers
   my.attach = function () {
     $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
 
     $(target).off('click').on('click', '.btn-infobox-label', function (event) {
 
-      hideLabelFunction();
+      setManualLabelMode();
       console.log('infobox label click ' + event);
       var featureId = $(event.target).data().featureId;
 
@@ -59,18 +99,24 @@ GENEMAP.InfoBox = function () {
 
       feature.select('text').style('visibility', visibility);
 
-      var popover = $('#' + featureId).find('.infobox').data('bs.popover');
-      popover.options.content = generatePopoverContent(featureId, data);
-      popover.toggle();
+      // generate the new HTML
+      var content = generatePopoverContent(featureId, data);
 
+      // update the html in the popver
+      var popover = $('#' + featureId).find('.infobox').data('bs.popover');
+      popover.options.content = content;
+
+      // update the html in the currently displayed popover
+      $(this).closest('.popover-content').html(content);
 
       event.preventDefault();
       event.stopPropagation();
       return false;
     });
-
   };
 
+  // Setup the infobox popovers for the gene annotations, this includes a link and
+  // a button to toggle the gene label
   my.setupInfoboxOnSelection = function (selection) {
 
     selection.selectAll('.infobox').each(function (d) {
@@ -104,30 +150,41 @@ GENEMAP.InfoBox = function () {
 
     });
 
-    selection.on('mousedown', function () {
+    setupPopoverEventHandlers(selection);
+  };
 
-      console.log('infobox mousedown ');
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
-      return false;
+  // Setup the QTL infobox popovers, this (possibly) includes multiple
+  // links from the combined QTL regions
+  my.setupQTLInfoboxOnSelection = function (selection) {
 
-    }).on('contextmenu', function () {
+    selection.selectAll('.infobox').each(function (d) {
+      var data = d;
 
-      $('.infobox').not($(this).children()).popover('hide');
-      $(this).children().popover('toggle');
-      console.log('infobox contextmenu ');
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
-      return false;
+      var content = generateQTLPopoverContent(data);
 
-    }).on('dblclick', function () {
-      console.log('infobox dblclick ');
-      d3.event.preventDefault();
-      d3.event.stopPropagation();
-      return false;
+      // does this element already have a popover?
+      var popover = $(this).data('bs.popover');
+      if (popover) {
+        // update the popover content
+        popover.options.content = content;
+      } else {
+        // create a new popover
+        $(this).popover({
+          title: null,
+          content: content,
+          container: target,
+          placement: 'bottom',
+          animation: true,
+          trigger: 'manual',
+          html: true,
+        });
+      }
+
+      setupPopoverEventHandlers(selection);
     });
   };
 
+  // specify the 'target' element the popover will exist within
   my.target = function (value) {
     if (!arguments.length) {
       return target;
@@ -137,12 +194,14 @@ GENEMAP.InfoBox = function () {
     return my;
   };
 
-  my.hideLabelFunction = function (value) {
+  // Function to set the 'manual' label mode, will be called before
+  // each individual label is toggled
+  my.setManualLabelMode = function (value) {
     if (!arguments.length) {
-      return hideLabelFunction;
+      return setManualLabelMode;
     }
 
-    hideLabelFunction = value;
+    setManualLabelMode = value;
     return my;
   };
 
