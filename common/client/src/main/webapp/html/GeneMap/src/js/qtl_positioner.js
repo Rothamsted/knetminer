@@ -34,9 +34,9 @@ GENEMAP.QtlPositioner = function () {
       }
 
       // remove the regions that don't overlap this one
-      stack = _.difference(stack, remove);
+      var overlap = _.difference(stack, remove);
 
-      var usedPositions = stack.map(getPosition);
+      var usedPositions = overlap.map(getPosition);
       var pos = 0;
       for (pos = 1; pos < usedPositions.length + 1; pos++) {
         if (usedPositions.indexOf(pos) === -1) {

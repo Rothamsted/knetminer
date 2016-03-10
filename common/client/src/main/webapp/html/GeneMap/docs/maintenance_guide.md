@@ -123,3 +123,7 @@ The main development tasks are:
  * *inject* injects the dependencies into the index.html file (from bower, src/js and .tmp/css), also re-compiles all the CSS and SVG files.
 
  All of these configurations are controlled by the `gulpfile.js` and `gulp.config.js` files in the `GeneMap` directory.
+
+# tests
+
+There are a number of automated tests written in Jasmine. These tests aren't comprehensive but do cover several areas (particularly the areas that don't directly interact with the DOM). To run the tests run the `gulp serve-dev` process and navigate to http://localhost:8080/SpecRunner.html.
