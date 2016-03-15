@@ -137,9 +137,9 @@ public class OndexServerTest
 			System.exit(0);
 		}
 			
-		String host = args[0];
-		int port = Integer.parseInt(args[1]);
-		String query = args[2];	
+		String host = args[0]; // "babvs43";
+		int port = Integer.parseInt(args[1]); // 8080;
+		String query = args[2]; // "keyword=drought&mode=counthits";
 				
 		OndexServerTest test = new OndexServerTest(host,port);
 				
