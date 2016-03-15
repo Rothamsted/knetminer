@@ -1,38 +1,32 @@
-describe("Annotation Reader", function() {
-  var simple_qtl = './data/annotations/simple_qtls.xml';
+describe('Annotation Reader', function () {
+  var simpleQtl = './annotations/simple.xml';
   var reader;
 
-  beforeEach(function() {
+  beforeEach(function () {
     reader = GENEMAP.AnnotationXMLReader();
   });
 
-  afterEach(function() {
+  afterEach(function () {
   });
 
-  describe("async loading of simple QTL file", function() {
+  describe('async loading of simple QTL file', function () {
     var returned = null;
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
 
-        var callbackFunction = function(data){
+      var data = reader.readAnnotationXML(simpleQtl)
+        .then(function (data) {
           returned = data;
           done();
-        }
-
-        var data = reader.readAnnotationXML(simple_qtl, callbackFunction);
+        });
     });
 
-
-    it("4 features are returned with the ids 1 to 4", function() {
+    it('4 features are returned with the ids 1 to 4', function () {
       expect(returned.features.length).toBe(4);
 
-      var ids = returned.features.map(function(f){ return +f.id});
+      var ids = returned.features.map(function (f) { return +f.id; });
 
-      expect(ids).toEqual([1,2,3,4]);
+      expect(ids).toEqual([1, 2, 3, 4]);
     });
-
-
   });
-
-
 });
