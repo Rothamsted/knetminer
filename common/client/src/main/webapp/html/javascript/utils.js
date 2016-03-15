@@ -74,6 +74,9 @@ function addKeyword(keyword, from, target){
 	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function addKeywordUndo(keyword, from, target){
@@ -87,6 +90,9 @@ function addKeywordUndo(keyword, from, target){
 	$('#'+from).toggleClass('addKeywordUndo addKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function excludeKeyword(keyword, from, target){
@@ -100,6 +106,9 @@ function excludeKeyword(keyword, from, target){
 	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function excludeKeywordUndo(keyword, from, target){
@@ -113,6 +122,9 @@ function excludeKeywordUndo(keyword, from, target){
 	$('#'+from).toggleClass('excludeKeywordUndo excludeKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function replaceKeyword(oldkeyword, newkeyword, from, target){
@@ -124,6 +136,9 @@ function replaceKeyword(oldkeyword, newkeyword, from, target){
 	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
@@ -135,6 +150,9 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 	$('#'+from).toggleClass('replaceKeywordUndo replaceKeyword');
 	//Updates the query counter
 	matchCounter();
+
+        // Refresh the query suggester table as well by replicating its 'click' event.
+        refreshQuerySuggester();
 }
 
 /*
@@ -237,6 +255,9 @@ function matchCounter(){
  * 
  */		
 function evidencePath(id){	
+	// Preloader for the new Network Viewer (KNETviewer).
+	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+
 	var searchMode = "evidencepath";
 	var keyword = id;		
 	var request = "mode="+searchMode+"&keyword="+keyword;
@@ -270,11 +291,36 @@ $(document).ready(
 				$('#pGViewer').hide();	
 			}
 			$("#keywords").focus();
-			// Calculates the amounth of documents to be displayed with the current query
-			$('#keywords').keyup(function(e){
-				if(e.which != 13){	//this stops matchCouter begin called when the enter key is used to perform a search.
-					matchCounter();
-				}
+			// Calculates the amount of documents to be displayed with the current query
+			$('#keywords').keyup(function(e) {
+//                            if(e.which !== 13){	//this stops matchCouter being called when the enter key is used to perform a search.
+                            // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+			       matchCounter();
+      			      }
+
+                            // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+                               // Refresh the query suggester table as well if it's already open.
+			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                  refreshQuerySuggester();
+                                  var keyword = $('#keywords').val();
+/*                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1) {
+                                     // Refresh the Query Suggester tabs (suggestor_terms) to show the newly added tabs in the DOM.
+//                                     ???;
+                                     // Focus on the new tab in the Query Suggester.
+                                     $('#suggestor_terms').children().each(function () {
+console.log("suggesterTerms tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
+                                     });
+//                                     $('.synonymTabButton').each(function () {
+//console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
+//                                     });
+                                     $('#suggestor_terms').children().last().attr('class','buttonSynonym_on');
+console.log("newestTab (children) : "+ $('#suggestor_terms').children().last().attr('id'));
+console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
+                                    }
+*/                                 }
+      			      }
 			});
 			// Add QTL region
 			$('#addRow').click(
@@ -370,7 +416,7 @@ $(document).ready(
 		    		 });
 		     // Suggestor search
 		     $('#suggestor_search').click(
-		    		 function() {				         
+                             function() {				         
 		    			 var src = ($(this).attr('src') === 'html/image/expand.gif')
 		    	            ? 'html/image/collapse.gif'
 		    	            : 'html/image/expand.gif';
@@ -379,23 +425,9 @@ $(document).ready(
 				               height: 'toggle'
 				               }, 500
 				          );	
-						  if($('#suggestor_search').attr('src') == "html/image/collapse.gif")
-						  {
-								 //Preloader for Synonym table
-								$('#suggestor_terms').html('')										
-								$('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
-								//Creates Synonym table
-								var searchMode = "synonyms";
-								var keyword = $('#keywords').val();		
-								var request = "mode="+searchMode+"&keyword="+keyword;
-								var url = 'OndexServlet?'+request;
-								$.post(url, '', function(response, textStatus){
-									if(textStatus == "success"){
-											synonymFile = response.split(":")[1];
-											createSynonymTable(data_url+synonymFile);
-										}
-								})
-						  }																	  
+						  if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                                     refreshQuerySuggester();
+						    }																	  
 		    		 });
 		    //Match counter
 			//$("#keywords").keyup(matchCounter());			 
@@ -539,6 +571,10 @@ $(document).ready(
 		    	 			}
 		    	 			
 		    	 			matchCounter(); // updates number of matched documents and genes counter
+                                                // Refresh the Query Suggester, if it's already open.
+	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                                                   refreshQuerySuggester();
+                                                  }
 		    	 		});
 		    		}
 		    	}); 
@@ -607,6 +643,22 @@ $(document).ready(
 
 
 		
+function refreshQuerySuggester() {
+  $('#suggestor_terms').html('');
+  // Add "..." preloader bar (gif image) for suggestor tables.
+//  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
+  // Create the Synonym table.
+  var searchMode = "synonyms";
+  var keyword = $('#keywords').val();
+  var request = "mode="+searchMode+"&keyword="+keyword;
+  var url = 'OndexServlet?'+request;
+  $.post(url, '', function(response, textStatus){
+    if(textStatus == "success"){
+       synonymFile = response.split(":")[1];
+       createSynonymTable(data_url+synonymFile);
+      }
+  });
+}
 
 /*
  * Function to refresh GViewer
@@ -636,7 +688,7 @@ function searchKeyword(){
 				counter++;	
 		}
 	}
-console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
+//console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -661,14 +713,14 @@ console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +",
 	        },
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
-console.log("response: "+ response);				
+//console.log("response: "+ response);
 				if((response == null) || (response == "")){
 						var genomicViewTitle = '<div id="pGViewer_title">Sorry, the server is being updated. Please, re-enter your job later<br /></div>';
 						$("#pGViewer_title").replaceWith(genomicViewTitle);
 				} else
 				if(response.indexOf("NoFile:noGenesFound") !=-1 ||  !response.split(":")[4] > 0){
 					var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
-					
+
 					if (typeof gviewer != "undefined" && gviewer != false) {
 						
 						var longestChromosomeLength="";
@@ -677,13 +729,13 @@ console.log("response: "+ response);
 								longestChromosomeLength="&longestChromosomeLength="+longest_chr;
 							}
 						}
-						
+
 						var genomicView = '<div id="pGViewer" class="resultViewer">';
 						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
 						genomicView = genomicView + gviewer_html;
 						$("#pGViewer").replaceWith(genomicView);
-					}
-					
+                                                              }
+
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
 					
 					activateButton('resultsTable');
@@ -717,7 +769,7 @@ console.log("response: "+ response);
 					genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
 					$("#pGViewer").replaceWith(genomicView);	
-					
+
 					//Collapse Suggestor view
 					$('#suggestor_search').attr('src', 'html/image/expand.gif');
 			 		$('#suggestor_search_area').slideUp(500);
@@ -866,6 +918,10 @@ function generateCyJSNetwork(url,list){
          // Pass the JSON file path to a global variable in the new window.
          cyjs_networkView.jsonFile= jsonFile;
 //         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+
+	  // Remove the preloader for the new Network Viewer
+	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+	  $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
         }
     catch(err) { 
           var errorMsg= err.stack;
@@ -910,6 +966,9 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
 	}
         else {
+ 	  // Preloader for the new Network Viewer (KNETviewer).
+	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
+
           generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
 	 }
 }
@@ -1168,6 +1227,9 @@ function createGenesTable(tableUrl, keyword, rows){
     		 */
     		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
     			e.preventDefault();
+ 	                // Preloader for the new Network Viewer (KNETviewer).
+	                $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
+
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
 //    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
@@ -1340,6 +1402,8 @@ function createEvidenceTable(tableUrl){
 				table = table + '</tbody>';
 				table = table + '</table>';
 				table = table + '</div>';
+                                // Insert a preloader to be used for the new Network Viewer (KNETviewer).
+				table = table + '<div id="loadingNetwork_Div"></div>';
 				table = table + legendHtmlContainer;
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 				
@@ -1401,7 +1465,10 @@ function createSynonymTable(tableUrl){
         dataType:'text',
         async: true,
         timeout: 1000000,
-        error: function(){						  
+        error: function() {
+	    table = "No suggestions found";	
+	    $('#suggestor_terms').html(" ");
+	    $('#suggestor_tables').html(table);
         },
         success: function(text){
 			var summaryArr = new Array();
@@ -1463,12 +1530,10 @@ function createSynonymTable(tableUrl){
 						termName = termName.replace(/"/g, '');
 						//terms = terms + '<a href="javascript:;" onclick="showSynonymTable(\'tablesorterSynonym'+termName+(countConcepts+1)+'\',\'tabBox_'+termName+'\')"><div class="'+divstyle+'" id="tablesorterSynonym'+termName+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_left_border"/>'+termName+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+(countConcepts+1)+'synonym_right_border"/></div></a>';	
 						terms = terms + '<div class="'+divstyle+' synonymTabButton" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'_buttonSynonym"><img src="html/image/synonym_left_'+imgstatus+'.png" class="synonym_left_border" id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_left_border"/>'+termName.replace(/_/g, " ")+'<img src="html/image/synonym_right_'+imgstatus+'.png" class="synonym_right_border"  id="tablesorterSynonym'+termName+'_'+(countConcepts+1)+'synonym_right_border"/></div>';	
-						
-						
-						var aSynonyms = new Array();
+//                                                console.log("synonymTable[] length= "+ evidenceTable.length +", \t ev_i= "+ ev_i +", termName: "+ termName);
 						tabsBox = '<div class="tabBox" id="tabBox_'+termName+'" '+tabBoxvisibility+'>';
-					//Foreach of Docment that belongs to a Term
-					}else{						
+					//Foreach of Document that belongs to a Term
+					}else {
 						values = evidenceTable[ev_i].split("\t");
 						//Check for duplicated values
 						if(aSynonyms.indexOf(values[0]) == -1){
@@ -1528,7 +1593,7 @@ function createSynonymTable(tableUrl){
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
-                                
+
                                 // Ensure that the sizes of all the Tables for all the tabs per keyword are adequately set.
                                 var suggestorTabHeight;
 //                                console.log("suggestor_tables contents: ");
@@ -1568,10 +1633,10 @@ function createSynonymTable(tableUrl){
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
-					
 					var keyword = e.data.x[synonymNum].split("\t")[0];
-					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-					
+//					var originalTermName = e.data.x[0].replace("<","").replace(">","");
+                                        var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
+//                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
 					
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
@@ -1596,7 +1661,7 @@ function createSynonymTable(tableUrl){
 				
 				
 			}else{
-				table = "No results found";	
+				table = "No suggestions found";	
 				$('#suggestor_terms').html(" ");
 				$('#suggestor_tables').html(table);
 			}
