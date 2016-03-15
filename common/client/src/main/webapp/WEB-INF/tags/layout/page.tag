@@ -13,7 +13,7 @@
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
- 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -23,20 +23,25 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <script type="text/javascript" src="html/javascript/jquery-1.4.1.js"></script>
-        <script type="text/javascript" src="html/javascript/utils-config.js"></script> 
-        <script type="text/javascript" src="html/javascript/utils.js"></script>  
+        <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+
+        <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
+        <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
+
+        <script type="text/javascript" src="html/javascript/utils-config.js"></script>
+        <script type="text/javascript" src="html/javascript/utils.js"></script>
         <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
-	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>  
- 	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
+      	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
+       	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
 
         <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>
         <!-- Main -->
         <div id="wrapper">
-        	<layout:header species="${species}" /> 
- 			<layout:content eg_keywords="${eg_keywords}" chromosomes="${chromosomes}"  assembly="${assembly}"/>        
+        	<layout:header species="${species}" />
+ 			<layout:content eg_keywords="${eg_keywords}" chromosomes="${chromosomes}"  assembly="${assembly}"/>
             <layout:footer/>
         </div>
         <jsp:invoke fragment="extraBottom"/>

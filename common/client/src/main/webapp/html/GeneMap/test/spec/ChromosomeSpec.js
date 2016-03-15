@@ -50,11 +50,6 @@ describe("Chromosome", function() {
       expect(svg.selectAll('.outline')[0].length).toBe(1);
     });
 
-    it("has a text label", function() {
-      expect(svg.select("text")[0].length).toBe(1);
-      expect(svg.select("text").node().textContent).toBe("One");
-    });
-
     it('includes a mask', function() {
       var maskSelection = svg.select("mask");
       expect(maskSelection[0].length).toBe(1);

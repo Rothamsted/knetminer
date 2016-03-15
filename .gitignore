@@ -5,3 +5,5 @@ target/
 stderr.log
 stdout.log
 *swp
+.vagrant/
+poplar-server/

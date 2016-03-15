@@ -1,0 +1,642 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>C6</chromosome>
+<start>14526247</start>
+<end>14532558</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g053640</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g053640</link>
+</feature>
+<feature id="1">
+<chromosome>C6</chromosome>
+<start>12462168</start>
+<end>12464720</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046620</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046620</link>
+</feature>
+<feature id="2">
+<chromosome>C6</chromosome>
+<start>12561625</start>
+<end>12563095</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046710</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046710</link>
+</feature>
+<feature id="3">
+<chromosome>C6</chromosome>
+<start>14114484</start>
+<end>14115050</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g051100</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051100</link>
+</feature>
+<feature id="4">
+<chromosome>C6</chromosome>
+<start>14022324</start>
+<end>14023239</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g050960</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g050960</link>
+</feature>
+<feature id="5">
+<chromosome>C6</chromosome>
+<start>10617418</start>
+<end>10618434</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g042530</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042530</link>
+</feature>
+<feature id="6">
+<chromosome>C6</chromosome>
+<start>12501570</start>
+<end>12504039</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046670</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046670</link>
+</feature>
+<feature id="7">
+<chromosome>C6</chromosome>
+<start>14436748</start>
+<end>14439272</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g051490</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051490</link>
+</feature>
+<feature id="8">
+<chromosome>C6</chromosome>
+<start>12683201</start>
+<end>12683752</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046850</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046850</link>
+</feature>
+<feature id="9">
+<chromosome>C6</chromosome>
+<start>14439580</start>
+<end>14441376</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g051500</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051500</link>
+</feature>
+<feature id="10">
+<chromosome>C6</chromosome>
+<start>10650484</start>
+<end>10653232</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g042580</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042580</link>
+</feature>
+<feature id="11">
+<chromosome>C6</chromosome>
+<start>14215481</start>
+<end>14218761</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g051240</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051240</link>
+</feature>
+<feature id="12">
+<chromosome>C6</chromosome>
+<start>12921373</start>
+<end>12922854</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g047960</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g047960</link>
+</feature>
+<feature id="13">
+<chromosome>C6</chromosome>
+<start>10491734</start>
+<end>10494114</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g042400</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042400</link>
+</feature>
+<feature id="14">
+<chromosome>C6</chromosome>
+<start>12488225</start>
+<end>12489999</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046660</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046660</link>
+</feature>
+<feature id="15">
+<chromosome>C6</chromosome>
+<start>14027497</start>
+<end>14028458</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g050970</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g050970</link>
+</feature>
+<feature id="16">
+<chromosome>C6</chromosome>
+<start>11676911</start>
+<end>11678757</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g044070</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044070</link>
+</feature>
+<feature id="17">
+<chromosome>C6</chromosome>
+<start>14541582</start>
+<end>14551696</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g053660</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g053660</link>
+</feature>
+<feature id="18">
+<chromosome>C6</chromosome>
+<start>12293149</start>
+<end>12296270</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046510</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046510</link>
+</feature>
+<feature id="19">
+<chromosome>C6</chromosome>
+<start>12877216</start>
+<end>12878655</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g047920</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g047920</link>
+</feature>
+<feature id="20">
+<chromosome>C6</chromosome>
+<start>14806480</start>
+<end>14807941</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g055960</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g055960</link>
+</feature>
+<feature id="21">
+<chromosome>C6</chromosome>
+<start>11762761</start>
+<end>11766418</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g044120</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044120</link>
+</feature>
+<feature id="22">
+<chromosome>C6</chromosome>
+<start>14168689</start>
+<end>14169168</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g051140</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051140</link>
+</feature>
+<feature id="23">
+<chromosome>C6</chromosome>
+<start>12332764</start>
+<end>12333495</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>Bo6g046550</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046550</link>
+</feature>
+<feature id="24">
+<chromosome>C6</chromosome>
+<start>10291669</start>
+<end>10295715</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g041250</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g041250</link>
+</feature>
+<feature id="25">
+<chromosome>C6</chromosome>
+<start>14754498</start>
+<end>14757124</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g055880</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g055880</link>
+</feature>
+<feature id="26">
+<chromosome>C6</chromosome>
+<start>12041756</start>
+<end>12044106</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g044360</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044360</link>
+</feature>
+<feature id="27">
+<chromosome>C6</chromosome>
+<start>12075050</start>
+<end>12077244</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g044390</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044390</link>
+</feature>
+<feature id="28">
+<chromosome>C6</chromosome>
+<start>14110380</start>
+<end>14110949</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051090</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051090</link>
+</feature>
+<feature id="29">
+<chromosome>C6</chromosome>
+<start>14837635</start>
+<end>14840244</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g055980</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g055980</link>
+</feature>
+<feature id="30">
+<chromosome>C6</chromosome>
+<start>10462710</start>
+<end>10465626</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g042360</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042360</link>
+</feature>
+<feature id="31">
+<chromosome>C6</chromosome>
+<start>12652693</start>
+<end>12653252</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g046800</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046800</link>
+</feature>
+<feature id="32">
+<chromosome>C6</chromosome>
+<start>14563472</start>
+<end>14566059</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g053700</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g053700</link>
+</feature>
+<feature id="33">
+<chromosome>C6</chromosome>
+<start>14860526</start>
+<end>14864352</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g056000</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g056000</link>
+</feature>
+<feature id="34">
+<chromosome>C6</chromosome>
+<start>14456168</start>
+<end>14457130</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051550</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051550</link>
+</feature>
+<feature id="35">
+<chromosome>C6</chromosome>
+<start>11605843</start>
+<end>11608778</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g044020</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044020</link>
+</feature>
+<feature id="36">
+<chromosome>C6</chromosome>
+<start>11794195</start>
+<end>11795595</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g044160</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044160</link>
+</feature>
+<feature id="37">
+<chromosome>C6</chromosome>
+<start>14220382</start>
+<end>14229166</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051250</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051250</link>
+</feature>
+<feature id="38">
+<chromosome>C6</chromosome>
+<start>12634390</start>
+<end>12636686</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g046790</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g046790</link>
+</feature>
+<feature id="39">
+<chromosome>C6</chromosome>
+<start>10112286</start>
+<end>10116622</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g040050</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g040050</link>
+</feature>
+<feature id="40">
+<chromosome>C6</chromosome>
+<start>14286260</start>
+<end>14287768</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051340</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051340</link>
+</feature>
+<feature id="41">
+<chromosome>C6</chromosome>
+<start>11640630</start>
+<end>11641710</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g044040</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044040</link>
+</feature>
+<feature id="42">
+<chromosome>C6</chromosome>
+<start>14504106</start>
+<end>14504798</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g052640</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g052640</link>
+</feature>
+<feature id="43">
+<chromosome>C6</chromosome>
+<start>14380803</start>
+<end>14383268</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051420</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051420</link>
+</feature>
+<feature id="44">
+<chromosome>C6</chromosome>
+<start>14076749</start>
+<end>14077527</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g051050</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051050</link>
+</feature>
+<feature id="45">
+<chromosome>C6</chromosome>
+<start>11348510</start>
+<end>11350276</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g043900</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g043900</link>
+</feature>
+<feature id="46">
+<chromosome>C6</chromosome>
+<start>10474513</start>
+<end>10475036</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>Bo6g042370</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042370</link>
+</feature>
+<feature id="47">
+<chromosome>C6</chromosome>
+<start>14292708</start>
+<end>14294121</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g051360</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051360</link>
+</feature>
+<feature id="48">
+<chromosome>C6</chromosome>
+<start>14288247</start>
+<end>14291093</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g051350</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051350</link>
+</feature>
+<feature id="49">
+<chromosome>C6</chromosome>
+<start>10410440</start>
+<end>10414466</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042330</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042330</link>
+</feature>
+<feature id="50">
+<chromosome>C6</chromosome>
+<start>10007162</start>
+<end>10012784</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g040010</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g040010</link>
+</feature>
+<feature id="51">
+<chromosome>C6</chromosome>
+<start>10452570</start>
+<end>10456246</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042350</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042350</link>
+</feature>
+<feature id="52">
+<chromosome>C6</chromosome>
+<start>10624221</start>
+<end>10624901</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042550</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042550</link>
+</feature>
+<feature id="53">
+<chromosome>C6</chromosome>
+<start>14949359</start>
+<end>14950792</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g056130</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g056130</link>
+</feature>
+<feature id="54">
+<chromosome>C6</chromosome>
+<start>11583691</start>
+<end>11585426</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g044010</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g044010</link>
+</feature>
+<feature id="55">
+<chromosome>C6</chromosome>
+<start>10507895</start>
+<end>10513648</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042410</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042410</link>
+</feature>
+<feature id="56">
+<chromosome>C6</chromosome>
+<start>14750628</start>
+<end>14754021</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g055870</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g055870</link>
+</feature>
+<feature id="57">
+<chromosome>C6</chromosome>
+<start>10301901</start>
+<end>10306774</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g041260</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g041260</link>
+</feature>
+<feature id="58">
+<chromosome>C6</chromosome>
+<start>14015425</start>
+<end>14017921</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g050950</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g050950</link>
+</feature>
+<feature id="59">
+<chromosome>C6</chromosome>
+<start>14940401</start>
+<end>14945613</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g056120</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g056120</link>
+</feature>
+<feature id="60">
+<chromosome>C6</chromosome>
+<start>14727689</start>
+<end>14729818</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g055840</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g055840</link>
+</feature>
+<feature id="61">
+<chromosome>C6</chromosome>
+<start>14212446</start>
+<end>14214627</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g051230</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051230</link>
+</feature>
+<feature id="62">
+<chromosome>C6</chromosome>
+<start>14596420</start>
+<end>14597598</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g054740</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g054740</link>
+</feature>
+<feature id="63">
+<chromosome>C6</chromosome>
+<start>14594789</start>
+<end>14595833</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g054730</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g054730</link>
+</feature>
+<feature id="64">
+<chromosome>C6</chromosome>
+<start>10681858</start>
+<end>10685208</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042620</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042620</link>
+</feature>
+<feature id="65">
+<chromosome>C6</chromosome>
+<start>10148231</start>
+<end>10151285</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g040080</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g040080</link>
+</feature>
+<feature id="66">
+<chromosome>C6</chromosome>
+<start>10484781</start>
+<end>10488993</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g042380</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g042380</link>
+</feature>
+<feature id="67">
+<chromosome>C6</chromosome>
+<start>14600828</start>
+<end>14603827</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g054750</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g054750</link>
+</feature>
+<feature id="68">
+<chromosome>C6</chromosome>
+<start>14068742</start>
+<end>14070155</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>Bo6g051030</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;list=Bo6g051030</link>
+</feature>
+<feature>
+<chromosome>C6</chromosome>
+<start>10000000</start>
+<end>13000000</end>
+<type>qtl</type>
+<color>0xFF0000</color>
+<label>First</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;qtl1=C6:10000000:13000000</link>
+</feature>
+<feature>
+<chromosome>C6</chromosome>
+<start>14000000</start>
+<end>15000000</end>
+<type>qtl</type>
+<color>0xFF0000</color>
+<label>Second</label>
+<link>OndexServlet?mode=network&amp;keyword="resistance"&amp;qtl1=C6:14000000:15000000</link>
+</feature>
+</genome>

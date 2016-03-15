@@ -1,0 +1,114 @@
+@color_blue: #1171a3;
+
+.style-test {
+  transform-ordigin: center bottom;
+  color: @color_blue;
+  height: 200px;
+}
+
+svg {
+  background-color:none;
+}
+
+.drawing_outline{
+    fill:#fafafa;
+    stroke: #ccc;
+    stroke-width: 0.5;
+}
+
+.drawing_margin {
+    fill:none;
+    stroke: #000;
+    stroke-width: 0.5;
+    vector-effect: non-scaling-stroke;
+}
+
+.mapview {
+  cursor: grab;
+}
+
+.mapview.dragging {
+  cursor: grabbing;
+}
+
+.btn {
+  height: 36px;
+  width: 36px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.info-btn {
+  background: url(../img/information.png) 0 0 no-repeat;
+  .btn;
+}
+.info-btn:hover {
+  background: url(../img/information_hover.png) 0 0 no-repeat;
+}
+
+.fit-btn {
+  background: url(../img/fit_to_size.png) 0 0 no-repeat;
+  .btn;
+}
+.fit-btn:hover {
+  background: url(../img/fit_to_size_hover.png) 0 0 no-repeat;
+}
+
+.fit-btn.disabled {
+  background: url(../img/fit_to_size_disabled.png) 0 0 no-repeat;
+  pointer: default;
+}
+
+.network-btn {
+  background: url(../img/graph.png) 0 0 no-repeat;
+  .btn;
+}
+.network-btn:hover {
+  background: url(../img/graph_hover.png) 0 0 no-repeat;
+}
+
+.network-btn.disabled {
+  background: url(../img/graph_disabled.png) 0 0 no-repeat;
+  cursor: default;
+}
+
+.tag-btn {
+  .btn;
+}
+
+.tag-btn.auto-label {
+  background: url(../img/tag_auto.png) 0 0 no-repeat;
+}
+.tag-btn.show-label {
+  background: url(../img/tag_show.png) 0 0 no-repeat;
+}
+.tag-btn.hide-label {
+  background: url(../img/tag_hide.png) 0 0 no-repeat;
+}
+.tag-btn.manual-label {
+  background: url(../img/tag_manual.png) 0 0 no-repeat;
+}
+
+.tag-btn.auto-label:hover {
+  background: url(../img/tag_auto_hover.png) 0 0 no-repeat;
+}
+.tag-btn.show-label:hover {
+  background: url(../img/tag_show_hover.png) 0 0 no-repeat;
+}
+.tag-btn.hide-label:hover {
+  background: url(../img/tag_hide_hover.png) 0 0 no-repeat;
+}
+.tag-btn.manual-label:hover {
+  background: url(../img/tag_manual_hover.png) 0 0 no-repeat;
+}
+
+.btn-infobox-label {
+  .btn;
+}
+
+.btn-infobox-label.show-label {
+  background: url(../img/tag_show.png) 0 0 no-repeat;
+}
+.btn-infobox-label.hide-label {
+  background: url(../img/tag_hide.png) 0 0 no-repeat;
+}

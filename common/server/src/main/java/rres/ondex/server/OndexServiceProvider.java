@@ -1507,7 +1507,9 @@ public class OndexServiceProvider {
 				//}
 			}
 
-			String query = "mode=network&keyword=" + keyword+"&list="+name;
+//			String query = "mode=network&keyword=" + keyword+"&list="+name;
+                        // Replace '&' with '&amp;' to make it comptaible with the new d3.js-based Map View.
+			String query = "mode=network&amp;keyword=" + keyword+"&amp;list="+name;
 			String uri = "OndexServlet?" + query;
 
 			// Genes
@@ -1627,7 +1629,9 @@ public class OndexServiceProvider {
 			if(label.length() == 0){
 				label = "QTL";
 			}
-			String query = "mode=network&keyword=" + keyword+"&qtl1="+chrLatin+":"+start+":"+end;
+//			String query = "mode=network&keyword=" + keyword+"&qtl1="+chrLatin+":"+start+":"+end;
+                        // Replace '&' with '&amp;' to make it comptaible with the new d3.js-based Map View.
+			String query = "mode=network&amp;keyword=" + keyword+"&amp;qtl1="+chrLatin+":"+start+":"+end;
 			String uri = "OndexServlet?" + query;
 			
 			sb.append("<feature>\n");
