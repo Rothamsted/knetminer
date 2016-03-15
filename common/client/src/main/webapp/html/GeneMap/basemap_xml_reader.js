@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
-GENEMAP.XmlReader = function() {
+GENEMAP.BasemapXmlReader = function() {
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee();
   }
@@ -50,11 +50,8 @@ GENEMAP.XmlReader = function() {
 
   return {
 
-    readBasemapXML: function(path, callbackFn) {
-      d3.xml(path, function(error, xml) {
-        var data = _readBasemapXML(xml)
-        callbackFn(data);
-      });
+    readBasemapXML: function(path) {
+      return d3.promise.xml(path).then(_readBasemapXML);
     }
   }
 }

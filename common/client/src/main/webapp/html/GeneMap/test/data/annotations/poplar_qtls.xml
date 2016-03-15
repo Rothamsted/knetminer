@@ -34,7 +34,7 @@
 		<type>qtl</type>
 		<color>0x33FFFF</color>
 		<label>Stem Volume - Year 1</label>
-		<link>OndexServlet?mode=network&amp;amp;keyword=Stem&amp;qtl1=V:5567014:15737515</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=V:5567014:15737515</link>
 	</feature>
 	<feature id="5">
 		<chromosome>X</chromosome>

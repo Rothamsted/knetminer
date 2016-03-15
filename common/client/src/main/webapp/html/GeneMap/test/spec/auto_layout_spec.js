@@ -15,7 +15,7 @@ describe("AutoLayoutSpec", function() {
 
     var layout = auto.generateLayout(20);
 
-    expect(layout.drawing).toEqual({width: 1000, height:500});
+    expect(_.pick(layout.drawing, ['width', 'height'])).toEqual({width: 1000, height:500});
   });
 
   describe("Fluent API, can get/set", function() {
