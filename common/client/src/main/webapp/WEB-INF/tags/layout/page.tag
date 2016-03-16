@@ -23,7 +23,7 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+        <!-- <link rel="stylesheet" type="text/css" href="html/css/style.css"/> -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
 
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
