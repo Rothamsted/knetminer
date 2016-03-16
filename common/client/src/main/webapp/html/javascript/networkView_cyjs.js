@@ -461,8 +461,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   function resetGraph() {
    cy.reset(); // reset the graph's zooming & panning properties.
    cy.fit();
-//   cy.pan({ x: 100, y: 100 });
-//   cy.center();
   }
 
   // Search the graph for a concept using BFS: breadthfirst search
@@ -744,13 +742,16 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   // Re-run the graph's layout, but only on the visible elements.
   function rerunGraphLayout(eles) {
    if(document.getElementById("default").checked) {
-      setColaLayout(eles);
+      setCoseLayout(eles);
      }
    else if(document.getElementById("circle").checked) {
            setCircleLayout(eles);
           }
-   else if(document.getElementById("cose").checked) {
-           setCoseLayout(eles);
+   else if(document.getElementById("cola").checked) {
+           setColaLayout(eles);
+          }
+   else if(document.getElementById("cose_bilkent").checked) {
+           setCoseBilkentLayout(eles);
           }
    else if(document.getElementById("arbor").checked) {
            setArborLayout(eles);
@@ -764,9 +765,9 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    else if(document.getElementById("springy").checked) {
            setSpringyLayout(eles);
           }
-/*   else if(document.getElementById("spread").checked) {
+   else if(document.getElementById("spread").checked) {
            setSpreadLayout(eles);
-          }*/
+          }
    else if(document.getElementById("grid").checked) {
            setGridLayout(eles);
           }
