@@ -26,8 +26,8 @@
 
       /* CytoscapeJS "core" container */
       #cy {
-        height: 900px;/*99%;*/ //950px; //600px;
-        width: 1200px;/*99%;*/
+        height: 900px;/*98%;*/ //950px; //600px;
+        width: 1200px;/*98%;*/
         position: relative;
         margin: auto;
         top: 2px;
