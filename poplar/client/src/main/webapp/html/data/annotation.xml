@@ -7,7 +7,7 @@
 		<type>qtl</type>
 		<color>0xFFCC00</color>
 		<label>Stem Height - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=II:4827878:7046216</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=II:4827878:7046216</link>
 	</feature>
 	<feature id="2">
 		<chromosome>II</chromosome>	
@@ -16,7 +16,7 @@
 		<type>qtl</type>
 		<color>0xFF3300</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=II:3556555:4828045</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=II:3556555:4828045</link>
 	</feature>
 	<feature id="3">
 		<chromosome>X</chromosome>	
@@ -25,7 +25,7 @@
 		<type>qtl</type>
 		<color>0xFF3300</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=10:11368808:13814117</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=10:11368808:13814117</link>
 	</feature>
 	<feature id="4">
 		<chromosome>V</chromosome>	
@@ -34,7 +34,7 @@
 		<type>qtl</type>
 		<color>0x33FFFF</color>
 		<label>Stem Volume - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=V:5567014:15737515</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=V:5567014:15737515</link>
 	</feature>
 	<feature id="5">
 		<chromosome>X</chromosome>	
@@ -43,7 +43,7 @@
 		<type>qtl</type>
 		<color>0x33FFFF</color>
 		<label>Stem Volume - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=X:11368808:13814117</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=X:11368808:13814117</link>
 	</feature>
 	<feature id="6">
 		<chromosome>I</chromosome>	
@@ -52,7 +52,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=I:11238978:21053405</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=I:11238978:21053405</link>
 	</feature>
 	<feature id="7">
 		<chromosome>XIII</chromosome>	
@@ -61,7 +61,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=XIII:2840453:7359216</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=XIII:2840453:7359216</link>
 	</feature>
 	<feature id="8">
 		<chromosome>X</chromosome>	
@@ -70,7 +70,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=X:11368808:13814117</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=X:11368808:13814117</link>
 	</feature>
 	<feature id="9">
 		<chromosome>II</chromosome>	
@@ -79,7 +79,7 @@
 		<type>qtl</type>
 		<color>0xFF0000</color>
 		<label>Stem Height - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=II:4827878:7046216</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=II:4827878:7046216</link>
 	</feature>
 	<feature id="10">
 		<chromosome>X</chromosome>	
@@ -88,7 +88,7 @@
 		<type>qtl</type>
 		<color>0xFF0000</color>
 		<label>Stem Height - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=X:11368808:13814117</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=X:11368808:13814117</link>
 	</feature>
 	<feature id="11">
 		<chromosome>XVIII</chromosome>	
@@ -97,7 +97,7 @@
 		<type>qtl</type>
 		<color>0xFF0000</color>
 		<label>Stem Height - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=XVIII:3751676:7569581</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=XVIII:3751676:7569581</link>
 	</feature>
 	<feature id="12">
 		<chromosome>II</chromosome>	
@@ -106,7 +106,7 @@
 		<type>qtl</type>
 		<color>0x0000CC</color>
 		<label>Stem Circumference - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=II:4827878:7046216</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=II:4827878:7046216</link>
 	</feature>
 	<feature id="13">
 		<chromosome>X</chromosome>	
@@ -115,7 +115,7 @@
 		<type>qtl</type>
 		<color>0x0000CC</color>
 		<label>Stem Circumference - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=X:11368808:13814117</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=X:11368808:13814117</link>
 	</feature>
 	<feature id="14">
 		<chromosome>XVIII</chromosome>	
@@ -124,7 +124,7 @@
 		<type>qtl</type>
 		<color>0x0000CC</color>
 		<label>Stem Circumference - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=XVIII:3751676:7569581</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=XVIII:3751676:7569581</link>
 	</feature>
 	<feature id="15">
 		<chromosome>II</chromosome>	
@@ -133,7 +133,7 @@
 		<type>qtl</type>
 		<color>0x6699FF</color>
 		<label>Stem Volume - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=II:3556555:4828045</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=II:3556555:4828045</link>
 	</feature>
 	<feature id="16">
 		<chromosome>II</chromosome>	
@@ -142,7 +142,7 @@
 		<type>qtl</type>
 		<color>0xDBFF70</color>
 		<label>Biomass - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Biomass&qtl1=II:4827878:7046216</link>
+		<link>OndexServlet?mode=network&amp;keyword=Biomass&amp;qtl1=II:4827878:7046216</link>
 	</feature>
 	<feature id="17">
 		<chromosome>VIII</chromosome>	
@@ -151,7 +151,7 @@
 		<type>qtl</type>
 		<color>0xB8F500</color>
 		<label>Stem Height - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=VIII:6561398:7359216</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=VIII:6561398:7359216</link>
 	</feature>
 	<feature id="18">
 		<chromosome>I</chromosome>	
@@ -160,7 +160,7 @@
 		<type>qtl</type>
 		<color>0x3D00F5</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=I:5467454:6435691</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=I:5467454:6435691</link>
 	</feature>
 	<feature id="19">
 		<chromosome>IV</chromosome>	
@@ -169,7 +169,7 @@
 		<type>qtl</type>
 		<color>0x3D00F5</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IV:6435461:6609278</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IV:6435461:6609278</link>
 	</feature>
 	<feature id="20">
 		<chromosome>IV</chromosome>	
@@ -178,7 +178,7 @@
 		<type>qtl</type>
 		<color>0x3D00F5</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IV:9528444:10796866</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IV:9528444:10796866</link>
 	</feature>
 	<feature id="21">
 		<chromosome>IX</chromosome>	
@@ -187,7 +187,7 @@
 		<type>qtl</type>
 		<color>0x3D00F5</color>
 		<label>Stem Circumference - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IX:8388547:8798608</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IX:8388547:8798608</link>
 	</feature>
 	<feature id="22">
 		<chromosome>I</chromosome>	
@@ -196,7 +196,7 @@
 		<type>qtl</type>
 		<color>0x9470FF</color>
 		<label>Stem Volume - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=I:6435461:9764020</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=I:6435461:9764020</link>
 	</feature>
 	<feature id="23">
 		<chromosome>IV</chromosome>	
@@ -205,7 +205,7 @@
 		<type>qtl</type>
 		<color>0x9470FF</color>
 		<label>Stem Volume - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IV:9528444:10796866</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IV:9528444:10796866</link>
 	</feature>
 	<feature id="24">
 		<chromosome>V</chromosome>	
@@ -214,7 +214,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=V:5567014:14527936</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=V:5567014:14527936</link>
 	</feature>
 	<feature id="25">
 		<chromosome>VIII</chromosome>	
@@ -223,7 +223,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=VIII:6561398:7359216</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=VIII:6561398:7359216</link>
 	</feature>
 	<feature id="26">
 		<chromosome>XII</chromosome>	
@@ -232,7 +232,7 @@
 		<type>qtl</type>
 		<color>0x990066</color>
 		<label>No. sylleptic branches - Year 1</label>
-		<link>OndexServlet?mode=network&keyword=branches&qtl1=XII:6844625:11326410</link>
+		<link>OndexServlet?mode=network&amp;keyword=branches&amp;qtl1=XII:6844625:11326410</link>
 	</feature>
 	<feature id="27">
 		<chromosome>IX</chromosome>	
@@ -241,7 +241,7 @@
 		<type>qtl</type>
 		<color>0xFF0000</color>
 		<label>Stem Height - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=IX:8388547:8798608</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=IX:8388547:8798608</link>
 	</feature>
 	<feature id="28">
 		<chromosome>XV</chromosome>	
@@ -250,7 +250,7 @@
 		<type>qtl</type>
 		<color>0xFF0000</color>
 		<label>Stem Height - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem Height&qtl1=XV:7354020:8719156</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=XV:7354020:8719156</link>
 	</feature>
 	<feature id="29">
 		<chromosome>IX</chromosome>	
@@ -259,7 +259,7 @@
 		<type>qtl</type>
 		<color>0x0000CC</color>
 		<label>Stem Circumference - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IX:8388547:8798608</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IX:8388547:8798608</link>
 	</feature>
 	<feature id="30">
 		<chromosome>V</chromosome>	
@@ -268,7 +268,7 @@
 		<type>qtl</type>
 		<color>0x6699FF</color>
 		<label>Stem Volume - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=V:5567014:14527936</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=V:5567014:14527936</link>
 	</feature>
 	<feature id="31">
 		<chromosome>IX</chromosome>	
@@ -277,7 +277,7 @@
 		<type>qtl</type>
 		<color>0x6699FF</color>
 		<label>Stem Volume - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Stem&qtl1=IX:8388547:8798608</link>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=IX:8388547:8798608</link>
 	</feature>
 	<feature id="32">
 		<chromosome>V</chromosome>	
@@ -286,7 +286,7 @@
 		<type>qtl</type>
 		<color>0xDBFF70</color>
 		<label>Biomass - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Biomass&qtl1=V:5567014:14527936</link>
+		<link>OndexServlet?mode=network&amp;keyword=Biomass&amp;qtl1=V:5567014:14527936</link>
 	</feature>
 	<feature id="33">
 		<chromosome>IX</chromosome>	
@@ -295,7 +295,7 @@
 		<type>qtl</type>
 		<color>0xDBFF70</color>
 		<label>Biomass - Year 2</label>
-		<link>OndexServlet?mode=network&keyword=Biomass&qtl1=IX:8388547:8798608</link>
+		<link>OndexServlet?mode=network&amp;keyword=Biomass&amp;qtl1=IX:8388547:8798608</link>
 	</feature>
 	<feature id="34">
 		<chromosome>VI</chromosome>	
@@ -304,7 +304,7 @@
 		<type>qtl</type>
 		<color>0x79CC3D</color>
 		<label>Abscission</label>
-		<link>OndexServlet?mode=network&keyword=Abscission&qtl1=VI:14129278:18217388</link>
+		<link>OndexServlet?mode=network&amp;keyword=Abscission&amp;qtl1=VI:14129278:18217388</link>
 	</feature>
 	<feature id="35">
 		<chromosome>XIX</chromosome>	
@@ -313,7 +313,7 @@
 		<type>qtl</type>
 		<color>0x79CC3D</color>
 		<label>Abscission</label>
-		<link>OndexServlet?mode=network&keyword=Abscission&qtl1=XIX:0:2309196</link>
+		<link>OndexServlet?mode=network&amp;keyword=Abscission&amp;qtl1=XIX:0:2309196</link>
 	</feature>
 	<feature id="36">
 		<chromosome>XIX</chromosome>	
@@ -322,7 +322,7 @@
 		<type>qtl</type>
 		<color>0x3DF500</color>
 		<label>Leaf number</label>
-		<link>OndexServlet?mode=network&keyword=Leaf number&qtl1=XIX:0:2309196</link>
+		<link>OndexServlet?mode=network&amp;keyword=Leaf number&amp;qtl1=XIX:0:2309196</link>
 	</feature>
 	<feature id="37">
 		<chromosome>XIX</chromosome>	
@@ -331,7 +331,7 @@
 		<type>qtl</type>
 		<color>0xF5B800</color>
 		<label>Necrosis</label>
-		<link>OndexServlet?mode=network&keyword=Necrosis&qtl1=XIX:0:2309196</link>
+		<link>OndexServlet?mode=network&amp;keyword=Necrosis&amp;qtl1=XIX:0:2309196</link>
 	</feature>
 	<feature id="38">
 		<chromosome>XVIII</chromosome>	
@@ -340,7 +340,7 @@
 		<type>qtl</type>
 		<color>0x79CC3D</color>
 		<label>Abscission</label>
-		<link>OndexServlet?mode=network&keyword=Abscission&qtl1=XVIII:84662:10483240</link>
+		<link>OndexServlet?mode=network&amp;keyword=Abscission&amp;qtl1=XVIII:84662:10483240</link>
 	</feature>
 	<feature id="39">
 		<chromosome>XVIII</chromosome>	
@@ -349,7 +349,7 @@
 		<type>qtl</type>
 		<color>0xF53D00</color>
 		<label>Carotenoid Content</label>
-		<link>OndexServlet?mode=network&keyword=Carotenoid Content&qtl1=XVIII:3751676:10483240</link>
+		<link>OndexServlet?mode=network&amp;keyword=Carotenoid Content&amp;qtl1=XVIII:3751676:10483240</link>
 	</feature>
 	<feature id="40">
 		<chromosome>XIV</chromosome>	
@@ -358,7 +358,7 @@
 		<type>qtl</type>
 		<color>0x79CC3D</color>
 		<label>Abscission</label>
-		<link>OndexServlet?mode=network&keyword=Abscission&qtl1=XIV:6688912:12174501</link>
+		<link>OndexServlet?mode=network&amp;keyword=Abscission&amp;qtl1=XIV:6688912:12174501</link>
 	</feature>		
 	<feature id="41">
 		<chromosome>XIV</chromosome>	
@@ -367,6 +367,6 @@
 		<type>qtl</type>
 		<color>0x22AA55</color>
 		<label>Height</label>
-		<link>OndexServlet?mode=network&keyword=Height&qtl1=XIV:6688912:12174501</link>
+		<link>OndexServlet?mode=network&amp;keyword=Height&amp;qtl1=XIV:6688912:12174501</link>
 	</feature>	
 </genome>
