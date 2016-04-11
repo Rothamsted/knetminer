@@ -285,7 +285,7 @@ $(document).ready(
 				if (typeof gviewer != "undefined" && gviewer == false) {
 					activateButton('resultsTable');
 //					$('#pGViewer_button').hide();
-					$('#genemap-button').hide();
+					$('#genemap-tab_button').hide();
 //					$('#pGViewer').hide();
 					$('#genemap-tab').hide();
 				}
@@ -293,7 +293,7 @@ $(document).ready(
 			else{
 				activateButton('resultsTable');
 //					$('#pGViewer_button').hide();
-					$('#genemap-button').hide();
+					$('#genemap-tab_button').hide();
 //					$('#pGViewer').hide();
 					$('#genemap-tab').hide();
 			}
