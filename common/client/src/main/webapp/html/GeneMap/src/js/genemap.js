@@ -7,7 +7,7 @@ GENEMAP.GeneMap = function (userConfig) {
     svgDefsFile: './assets/sprite-defs.svg',
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
-      numberPerRow: 10,
+      numberPerRow: 7/*10*/,
     },
     contentBorder: false,
 
@@ -259,12 +259,19 @@ GENEMAP.GeneMap = function (userConfig) {
       return elt.__data__.data.label;
     });
 
-    var url = 'OndexServlet?mode=network&keyword=volume';
+//    var url = 'OndexServlet?mode=network&keyword=volume';
+    var keyword = escape(trim($("#keywords").val()));
+    var url = 'OndexServlet?mode=network&keyword='+keyword;
+    console.log('request url passed: ' + url);
 
     console.log('selected labels: ' + selectedLabels);
 
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
+
+   function trim(text) {
+       return text.replace(/^\s+|\s+$/g, "");
+   }
 
   // togels the global label visibility, from 'auto', to 'show' and to 'hide'
   var toggleLableVisibility = function () {
