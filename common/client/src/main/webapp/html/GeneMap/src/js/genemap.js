@@ -26,7 +26,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var onZoom;
 
-  var menuManager;
+  var menuManager; //holds a GENEMAP.MenuBar
 
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
@@ -68,7 +68,7 @@ GENEMAP.GeneMap = function (userConfig) {
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
     menuManager.setFitButtonEnabled(hasMapMoved());
 
-    // need to redraw the map so that label fonts/visibiltiy is recalculated
+    // need to redraw the map so that label fonts/visibility is recalculated
     drawMap();
   };
 
@@ -80,9 +80,9 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
-  // sets the 'showLabel' property on each of the gene annotations, shoudl be either
+  // sets the 'showLabel' property on each of the gene annotations, should be either
   // 'show', 'hide' or 'auto'. If 'auto' is selected the 'showLabel' property is remove
-  // instead the layout configuraiton will be used to determine if the text is shown
+  // instead the layout configuration will be used to determine if the text is shown
   var setGeneLabelState = function (value) {
 
     genome.chromosomes.forEach(function (chromosome) {
