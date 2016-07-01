@@ -20,6 +20,8 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var target; // the target for the containing HTML element
   var genome; // the layout to be used;
+  var full_genome; // the layout to be used;
+  var single_genome_view; //bool
   var svg; // the top SVG element
   var zoom; // the zoom behaviour
   var container; // the g container that performs the zooming
@@ -125,6 +127,18 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
 
+  var onToggleLabelSelect = function ( chromosome ) {
+    if (single_genome_view) {
+      genome = full_genome;
+      single_genome_view = false
+    }
+    else{
+      genome = { chromosomes : [chromosome] };
+      single_genome_view = true
+    }
+    drawMap()
+  };
+
   // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {
 
@@ -214,6 +228,7 @@ GENEMAP.GeneMap = function (userConfig) {
     // draw the chromosome cell for each of the chromosome objects on the genome
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
+      .onLabelSelectFunction(onToggleLabelSelect)
       .infoBoxManager(infoBox);
 
     container.call(cellDrawer);
@@ -292,8 +307,10 @@ GENEMAP.GeneMap = function (userConfig) {
     selection.each(function (d) {
       var _this = this;
 
-      genome = d;
+      full_genome = d;
+      genome = full_genome
       target = _this;
+      single_genome_view = false
 
       if (!menuManager) {
         menuManager = GENEMAP.MenuBar()

@@ -4,6 +4,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
     border: false,
     onAnnotationSelectFunction: $.noop(),
+    onLabelSelectFunction: $.noop(),
     infoBoxManager: GENEMAP.InfoBox(),
   };
 
@@ -77,7 +78,10 @@ GENEMAP.ChromosomeCell = function (userConfig) {
 
       // draw the labels for the chromosomes
       var chromosomeLabelDrawer = GENEMAP.ChromosomeLabel()
-        .layout(layout.labelPosition);
+        .layout(layout.labelPosition)
+          .onLabelSelectFunction(config.onLabelSelectFunction)
+          ;
+
 
       cells.call(chromosomeLabelDrawer);
 
@@ -92,6 +96,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.onLabelSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onLabelSelectFunction;
+    }
+
+    config.onLabelSelectFunction = value;
     return my;
   };
 
