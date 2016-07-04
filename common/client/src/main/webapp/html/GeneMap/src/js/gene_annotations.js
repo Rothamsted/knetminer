@@ -163,15 +163,24 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     var pointsFn = function (d) {
       var points = [];
 
-      // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
       var a = config.annotationMarkerSize;
+      if (d.data.type == "gene") {
+        // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
 
-      var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
-      h = h * 1.5; // stretch the width of the triangle
+        var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
+        h = h * 1.5; // stretch the width of the triangle
 
-      points.push([d.x, d.y]);
-      points.push([d.x + h, d.y - a / 2]);
-      points.push([d.x + h, d.y + a / 2]);
+        points.push([d.x, d.y]);
+        points.push([d.x + h, d.y - a / 2]);
+        points.push([d.x + h, d.y + a / 2]);
+
+      }
+      else if (d.data.type == "geneslist") {
+        points.push([d.x , d.y + a / 2]);
+        points.push([d.x , d.y - a / 2]);
+        points.push([d.x + a , d.y - a / 2]);
+        points.push([d.x + a , d.y + a / 2]);
+      }
 
       return points.join(' ');
     };
