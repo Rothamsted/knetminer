@@ -34,10 +34,10 @@ GENEMAP.InfoBox = function () {
   };
 
   var generateGenesListPopoverContent = function( data ) {
-    var content =  '<div> Genes in cluster <br />';
+    var content =  '<div>'
     for (var i = 0; i < data.genes_list.length; i++) {
       gene = data.genes_list[i];
-      content += gene.label + "<br />";
+      content += gene.midpoint + " " + gene.label + "<br />";
     }
     content += "</div>";
     return content;
@@ -138,6 +138,7 @@ GENEMAP.InfoBox = function () {
       }
 
       var content = ""
+      var title = null;
 
       if (data.type == "gene") {
         var id = $(this).closest('.gene-annotation').attr('id');
@@ -145,6 +146,7 @@ GENEMAP.InfoBox = function () {
       }
       else if (data.type == "geneslist") {
         content = generateGenesListPopoverContent(data);
+        title = "Genes in cluster"
       }
 
       // does this element already have a popover?
@@ -155,7 +157,7 @@ GENEMAP.InfoBox = function () {
       } else {
         // create a new popover
         $(this).popover({
-          title: null,
+          title: title,
           content: content,
           container: target,
           placement: 'bottom',

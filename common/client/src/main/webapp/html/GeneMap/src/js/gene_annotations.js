@@ -14,14 +14,18 @@ GENEMAP.GeneClusterer = function (y, userConfig){
   my.createNodesFromGenes = function(genes) {
     var result = [];
 
+    //Return empty list if we have no genes
     if (genes.length < 1 )
     {
       return result;
     }
 
+    //Use precanned algorithm for clustering
+    //It return list of lists of midpoints
     cluster_points = ss.ckmeans( genes.map( function(d){ return d.midpoint;} ), Math.min(6, genes.length) );
-    var cluster_dict = []
 
+    //Now we have to retrieve the genes at each midpoint, populating cluster_dict
+    var cluster_dict = []
     for ( var iclus= 0 ; iclus < cluster_points.length ; iclus++ )
     {
       cluster_dict.push([]);
@@ -43,14 +47,19 @@ GENEMAP.GeneClusterer = function (y, userConfig){
       cluster_dict[iCluster].push( genes[iGene]);
     }
 
+
+    //loop over clusters and add nodes to the result
     for ( var iclus= 0 ; iclus < cluster_dict.length ; iclus++ ) {
       var genes = cluster_dict[iclus];
+
+      //for small clusters, add individual genes
       if (genes.length < 2) {
         for ( var iGene = 0 ; iGene < genes.length ; iGene ++){
          result.push( new labella.Node(
           y(genes[iGene].midpoint), config.annotationMarkerSize, genes[iGene]) );
       }
       }
+      //for large clusters, add 1 node for all of them
       else {
         var average_midpoint = genes.reduce( function(sum, current){
               return sum + current.midpoint;
@@ -159,13 +168,13 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       return false;
     });
 
-    // generate a little triange based on the data
+    // generate  markers
     var pointsFn = function (d) {
       var points = [];
 
       var a = config.annotationMarkerSize;
+      //genes represented by triangles
       if (d.data.type == "gene") {
-        // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
 
         var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
         h = h * 1.5; // stretch the width of the triangle
@@ -175,6 +184,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         points.push([d.x + h, d.y + a / 2]);
 
       }
+      //gene clusters represented by squares
       else if (d.data.type == "geneslist") {
         points.push([d.x , d.y + a / 2]);
         points.push([d.x , d.y - a / 2]);
