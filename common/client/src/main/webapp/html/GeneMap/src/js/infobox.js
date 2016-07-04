@@ -18,7 +18,7 @@ GENEMAP.InfoBox = function () {
   };
 
   // generates the HTML content for the Gene popover
-  var generatePopoverContent = function (id, data) {
+  var generateGenePopoverContent = function (id, data) {
     var button = '<span class="btn-infobox-label show-label" ' +
       ' data-feature-id="' + id + '" title ="Show Label"></span>';
 
@@ -32,6 +32,16 @@ GENEMAP.InfoBox = function () {
               data.start + '-' + data.end + button +
               '</div>';
   };
+
+  var generateGenesListPopoverContent = function( data ) {
+    var content =  '<div> Genes in cluster <br />';
+    for (var i = 0; i < data.genes_list.length; i++) {
+      gene = data.genes_list[i];
+      content += gene.label + "<br />";
+    }
+    content += "</div>";
+    return content;
+  }
 
   // generates the HTML content for the QTL popover
   var generateQTLPopoverContent = function (data) {
@@ -100,7 +110,7 @@ GENEMAP.InfoBox = function () {
       feature.select('text').style('visibility', visibility);
 
       // generate the new HTML
-      var content = generatePopoverContent(featureId, data);
+      var content = generateGenePopoverContent(featureId, data);
 
       // update the html in the popver
       var popover = $('#' + featureId).find('.infobox').data('bs.popover');
@@ -127,8 +137,15 @@ GENEMAP.InfoBox = function () {
         data = data.data;
       }
 
-      var id = $(this).closest('.gene-annotation').attr('id');
-      var content = generatePopoverContent(id, data);
+      var content = ""
+
+      if (data.type == "gene") {
+        var id = $(this).closest('.gene-annotation').attr('id');
+        content = generateGenePopoverContent(id, data);
+      }
+      else if (data.type == "geneslist") {
+        content = generateGenesListPopoverContent(data);
+      }
 
       // does this element already have a popover?
       var popover = $(this).data('bs.popover');

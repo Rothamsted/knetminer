@@ -21,7 +21,8 @@
     "es6-promise": "^3.2.1",
     "d3.promise": "^1.1.0",
     "labella": "^1.1.1",
-    "file-saver.js": "^1.20150507.2"
+    "file-saver.js": "^1.20150507.2",
+    "simple-statistics": "v1.0.1"
   },
   "devDependencies": {
     "jasmine-core": "jasmine#^2.4.1",
