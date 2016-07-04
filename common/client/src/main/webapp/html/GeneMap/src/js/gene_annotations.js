@@ -1,5 +1,26 @@
 var GENEMAP = GENEMAP || {};
 
+//Group genes into clusters for display
+//y is the yscale
+GENEMAP.GeneClusterer = function (y, userConfig){
+  var my = {};
+
+  var defaultConfig = {
+    annotationMarkerSize: 5,
+  };
+
+  var config = _.merge({}, defaultConfig, userConfig);
+
+  my.createNodesFromGenes = function(genes) {
+    return genes.map(function(data){
+      return new labella.Node(
+          y(data.midpoint), config.annotationMarkerSize, data );
+    } );
+  };
+
+  return my;
+};
+
 GENEMAP.GeneAnnotations = function (userConfig) {
   var defaultConfig = {
     border: false,
@@ -31,9 +52,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     var y = buildYScale();
 
-    var nodes = chromosome.annotations.genes.map(function (data) {
-      return new labella.Node(y(data.midpoint),  config.annotationMarkerSize, data);
-    });
+    var geneClusterer = GENEMAP.GeneClusterer(y, _.pick(config, ['annotationMarkerSize']));
+    var nodes = geneClusterer.createNodesFromGenes( chromosome.annotations.genes )
 
     var force = new labella.Force({
       nodeSpacing: 3,
@@ -46,7 +66,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     var renderer = new labella.Renderer({
       direction: 'right',
       layerGap: config.layout.width / 3.0,
-      nodeHeight: config.annotationMarkerSize * 1.5,
+      nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
     });
 
     renderer.layout(force.nodes());
