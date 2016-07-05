@@ -164,17 +164,17 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var onMouseDown = function () {
-    console.log('mouse down');
+    log.trace('mouse down');
     svg.classed('dragging', true);
   };
 
   var onMouseUp = function () {
-    console.log('mouse up');
+    log.trace('mouse up');
     svg.classed('dragging', false);
   };
 
   var onContext = function () {
-    console.log('context click');
+    log.trace('context click');
     d3.event.preventDefault();
   };
 
@@ -276,7 +276,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     var url = 'OndexServlet?mode=network&keyword=volume';
 
-    console.log('selected labels: ' + selectedLabels);
+    log.info('selected labels: ' + selectedLabels);
 
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
@@ -364,7 +364,7 @@ GENEMAP.GeneMap = function (userConfig) {
     var reader = GENEMAP.XmlDataReader();
     target = target;
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
-      console.log('drawing genome to target');
+      log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
     });
   };

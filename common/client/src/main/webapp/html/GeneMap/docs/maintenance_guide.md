@@ -8,6 +8,7 @@ libraries:
  * bootstrap - used for the popover functionality
  * jquery - required for bootstrap.
  * simple-statistics - for the ckmeans clustering algorithm
+ * loglevel - for logging
 
 # Design patterns
 
@@ -87,18 +88,30 @@ It is then processed by the processor, this alters the colors and combines the d
 			annotations
 				genes
 				geneClusters
+				geneDisplayClusters
 				qtls
 			bands
 				start
 				midpoint
-				end
+				endls
+				
 				color
 				
 Here `geneClusters` are the groups of genes which are merged when there is not enough room to display all genes at once.
+`geneDisplayClusters` is a copy of `geneClusters` which can have temporary modifications.
 
 #infobox
 
 The infoboxes are the popovers that appear when the annotations are clicked. They are twitter bootstrap popovers that are triggered on click (as opposed to hover). To dismiss them when something else is clicked there is a click handler on the html element that clears all popovers.
+
+# logging
+
+Logging is handled by the loglevel library:
+
+    log.error( 'An error message' );
+    
+Log level can be set in the console window with `setLevel()` and will be persisted between sessions if the second argument is true.
+In index.html, `log.setDefaultLevel("info")` applies only if a previously persisted log level is not found.
 
 # namespaced bootstrap
 

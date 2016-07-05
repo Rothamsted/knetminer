@@ -78,7 +78,7 @@ GENEMAP.XmlDataReader = function () {
 
         var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData, function (error) {
 
-          console.log('error while reading XML files: ' + error);
+          log.error('error while reading XML files: ' + error);
 
           // try and process the basemap file
           return basemapPromise.then(_processBasemapData);

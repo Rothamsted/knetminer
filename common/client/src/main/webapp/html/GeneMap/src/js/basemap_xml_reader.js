@@ -49,7 +49,7 @@ GENEMAP.BasemapXmlReader = function () {
   return {
 
     readBasemapXML: function (path) {
-      console.log('reading basemap file: ' + path);
+      log.info('reading basemap file: ', path);
       return d3.promise.xml(path).then(_readBasemapXML);
     },
   };

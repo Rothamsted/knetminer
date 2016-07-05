@@ -100,6 +100,7 @@
     <script src="labella/dist/labella.min.js"></script>
     <script src="file-saver.js/FileSaver.js"></script>
     <script src="simple-statistics/dist/simple_statistics.min.js"></script>
+    <script src="loglevel/dist/loglevel.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -124,10 +125,11 @@
     <!-- endbuild -->
 
     <script>
+  log.setDefaultLevel( "info");
 
   // stub for the global function defined in utils.js that handles opening the network view
   function generateCyJSNetwork(url, list) {
-    console.log('generateCyJSNetwork call with url=' + url + ' list = ' + list.list);
+    log.info('generateCyJSNetwork call with url=' + url + ' list = ' + list.list);
   }
 
   function save() {

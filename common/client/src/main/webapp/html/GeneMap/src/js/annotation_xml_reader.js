@@ -36,7 +36,7 @@ GENEMAP.AnnotationXMLReader = function () {
   return {
 
     readAnnotationXML: function (path) {
-      console.log('reading annotation file: ' + path);
+      log.info('reading annotation file: ', path);
       return d3.promise.xml(path).then(_readAnnotations);
     },
   };

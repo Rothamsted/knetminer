@@ -13,8 +13,8 @@ GENEMAP.InfoBox = function () {
       return;
     }
 
-    //console.log('closing popovers ...');
-    //console.log( event);
+    log.debug('closing popovers ...');
+    log.debug( event);
     $('.infobox').popover('hide');
   };
 
@@ -89,7 +89,7 @@ GENEMAP.InfoBox = function () {
     $(target).off('click').on('click', '.btn-infobox-label', function (event) {
 
       setManualLabelMode();
-      console.log('infobox label click ' + event);
+      log.trace('infobox label click ' + event);
       var featureId = $(event.target).data().featureId;
 
       var feature = d3.select('#' + featureId);

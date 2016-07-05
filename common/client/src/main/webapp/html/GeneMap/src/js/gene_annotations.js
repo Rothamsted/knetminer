@@ -107,7 +107,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     geneAnnotations.on('click', function (d) {
       if (d.data.type == "gene") {
-        console.log('gene annotation click');
+        log.info('gene annotation click');
         var group = d3.select(this);
         group.classed('selected', !group.classed('selected'));
         config.onAnnotationSelectFunction();
@@ -115,7 +115,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       }
 
       if (d.data.type == "geneslist") {
-        console.log('geneslist annotation click');
+        log.info('geneslist annotation click');
         annotations = chromosome.annotations;
         annotations.geneDisplayClusters = annotations.geneClusters.slice();
         genesList = d.data.genesList;
