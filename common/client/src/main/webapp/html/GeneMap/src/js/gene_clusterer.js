@@ -63,10 +63,15 @@ GENEMAP.GeneClusterer = function (userConfig){
                         return sum + current.midpoint;
                     }, 0 ) / genes.length;
 
+                //Generate a unique id by concatenating all the gene ids
+                var id = genes.reduce( function( sum, current){
+                    return sum + current.id.toString();}, "");
+
                 var genesCollection = {
                     genesList : genes,
                     midpoint : averageMidpoint,
-                    type : "geneslist"
+                    type : "geneslist",
+                    id : id.toString()
                 };
 
                 result.push( genesCollection);

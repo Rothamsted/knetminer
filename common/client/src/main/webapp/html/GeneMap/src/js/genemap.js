@@ -313,8 +313,12 @@ GENEMAP.GeneMap = function (userConfig) {
       //Run clustering algorithm so we can use the clusters later when drawing
       var geneClusterer = GENEMAP.GeneClusterer();
       fullGenome.chromosomes.forEach(function (chromosome) {
-        chromosome.annotations.geneClusters = geneClusterer.createClustersFromGenes(
-            chromosome.annotations.genes);
+        annotations = chromosome.annotations;
+        annotations.geneClusters = geneClusterer.createClustersFromGenes(
+            annotations.genes);
+
+        //keep a copy so we can modify parts of it
+        annotations.geneDisplayClusters = annotations.geneClusters.slice();
       } );
 
 

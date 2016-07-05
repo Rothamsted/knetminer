@@ -57,7 +57,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
       var maxLayer = Math.max.apply(null, layers);
       if ( maxLayer > 3 ) {
-        nodeSource = chromosome.annotations.geneClusters;
+        nodeSource = chromosome.annotations.geneDisplayClusters;
         nodes = nodeSource.map(function (d) {
           return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
           } );
@@ -75,7 +75,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     renderer.layout(force.nodes());
 
     // Enter + Update elements
-    var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(force.nodes());
+    // Use a key function so that the correct mapping between graphical objects
+    // and data points is maintained even when clustering changes
+    var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
+        force.nodes(), function(d){return d.data.id});
 
     var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene-annotation', true);
 
@@ -104,11 +107,25 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     geneAnnotations.on('click', function (d) {
       if (d.data.type == "gene") {
-        console.log('gene annotation click ');
+        console.log('gene annotation click');
         var group = d3.select(this);
         group.classed('selected', !group.classed('selected'));
         config.onAnnotationSelectFunction();
         return false;
+      }
+
+      if (d.data.type == "geneslist") {
+        console.log('geneslist annotation click');
+        annotations = chromosome.annotations;
+        annotations.geneDisplayClusters = annotations.geneClusters.slice();
+        genesList = d.data.genesList;
+        for ( var iGene = 0 ; iGene < genesList.length ; iGene++ )
+        {
+          annotations.geneDisplayClusters.push(genesList[iGene]) ;
+        }
+        var clusterIndex = annotations.geneDisplayClusters.indexOf(d.data);
+        annotations.geneDisplayClusters.splice(clusterIndex, 1);
+        setupGeneAnnotations(annotationGroup, chromosome );
       }
     });
 

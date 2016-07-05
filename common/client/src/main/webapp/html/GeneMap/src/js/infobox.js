@@ -13,7 +13,8 @@ GENEMAP.InfoBox = function () {
       return;
     }
 
-    console.log('closing popovers ...' + event);
+    //console.log('closing popovers ...');
+    //console.log( event);
     $('.infobox').popover('hide');
   };
 
@@ -130,6 +131,7 @@ GENEMAP.InfoBox = function () {
   my.setupInfoboxOnSelection = function (selection) {
 
     selection.selectAll('.infobox').each(function (d) {
+
       var data = d;
 
       // check if labella is being used, in which case the data will be moved into the .data property.
@@ -137,7 +139,7 @@ GENEMAP.InfoBox = function () {
         data = data.data;
       }
 
-      var content = ""
+      var content = "";
       var title = null;
 
       if (data.type == "gene") {
