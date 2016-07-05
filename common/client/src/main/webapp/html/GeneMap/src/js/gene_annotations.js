@@ -206,7 +206,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       }
     });
 
-    geneAnnotations.exit().remove();
+    var exitGroup = geneAnnotations.exit()
+    //avoid any orphaned popovers
+    exitGroup.each( function(d){
+      $('.infobox', this).popover('hide') ;
+    } );
+    exitGroup.remove();
   };
 
   // draw a border around the annotation target element
