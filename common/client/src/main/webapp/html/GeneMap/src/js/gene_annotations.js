@@ -34,23 +34,16 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     var y = buildYScale();
 
-
-    var nodes;
-
+    //We can build nodes directly from genes or from gene clusters
+    //NB a gene cluster might be a single gene anyway
+    var nodeSource = chromosome.annotations.genes;
     if ( config.doClustering) {
-      var geneClusterer = GENEMAP.GeneClusterer().nClusters(config.nClusters);
-      //gene_clusters will contain either gene or gene_cluster objects
-      //both have a midpoint field so they can be used for Nodes
-      var gene_clusters = geneClusterer.createClustersFromGenes(chromosome.annotations.genes)
-      nodes = gene_clusters.map(function (d) {
-            return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
-          }
-      );
+      nodeSource = chromosome.annotations.gene_clusters;
     }
-    else {
-      nodes = chromosome.annotations.genes.map(function (d) {
-        return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d); })
-    }
+
+    var nodes = nodeSource.map(function (d) {
+      return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
+    } );
 
     var force = new labella.Force({
       nodeSpacing: 3,
