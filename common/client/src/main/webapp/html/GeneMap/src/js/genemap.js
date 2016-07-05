@@ -310,18 +310,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
       fullGenome = d;
 
-      //Run clustering algorithm so we can use the clusters later when drawing
-      var geneClusterer = GENEMAP.GeneClusterer();
-      fullGenome.chromosomes.forEach(function (chromosome) {
-        annotations = chromosome.annotations;
-        annotations.geneClusters = geneClusterer.createClustersFromGenes(
-            annotations.genes);
-
-        //keep a copy so we can modify parts of it
-        annotations.geneDisplayClusters = annotations.geneClusters.slice();
-      } );
-
-
       //To start with, we'll display all chromosomes, i.e. the fullGenome
       genome = fullGenome
       singleGenomeView = false

@@ -36,6 +36,8 @@ GENEMAP.XmlDataReader = function () {
       annotation.color = getColor(annotation.color);
     });
 
+    var geneClusterer = GENEMAP.GeneClusterer();
+
     genome.chromosomes.forEach(function (chromosome) {
       var chromosomeAnnotations = annotations.features.filter(
         function (e) { return e.chromosome === chromosome.number; });
@@ -49,8 +51,13 @@ GENEMAP.XmlDataReader = function () {
       var combiner = GENEMAP.QTLAnnotationCombiner();
       qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
+      //Run clustering algorithm so we can use the clusters later when drawing
+     geneClusters = geneClusterer.createClustersFromGenes(genes);
+
       chromosome.annotations = {
         genes: genes,
+        geneClusters: geneClusters,
+        geneDisplayClusters: geneClusters.slice(), //a copy for future modification
         qtls: qtls,
       };
     });
