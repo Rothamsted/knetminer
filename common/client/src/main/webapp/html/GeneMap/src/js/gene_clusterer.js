@@ -9,7 +9,7 @@ GENEMAP.GeneClusterer = function (userConfig){
 
     var config = _.merge({}, defaultConfig, userConfig);
 
-    my.createNodesFromGenes = function(genes) {
+    my.createClustersFromGenes = function(genes) {
         var result = [];
 
         //Return empty list if we have no genes

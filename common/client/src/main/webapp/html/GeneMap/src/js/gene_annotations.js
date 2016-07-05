@@ -33,10 +33,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     var y = buildYScale();
 
     var geneClusterer = GENEMAP.GeneClusterer();
-    var gene_objects = geneClusterer.createNodesFromGenes( chromosome.annotations.genes )
-    var nodes = gene_objects.map( function(d){
-      return new labella.Node(
-          y(d.midpoint), config.annotationMarkerSize, d ); }
+
+    //gene_clusters will contain either gene or gene_cluster objects
+    //both have a midpoint field so they can be used for Nodes
+    var gene_clusters = geneClusterer.createClustersFromGenes( chromosome.annotations.genes )
+    var nodes = gene_clusters.map( function(d){
+      return new labella.Node( y(d.midpoint), config.annotationMarkerSize, d ); }
     );
 
     var force = new labella.Force({
