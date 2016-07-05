@@ -19,7 +19,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     showAnnotationLabels: true,
     infoBoxManager: GENEMAP.InfoBox(),
     nClusters: 6,
-    doClustering: 6,
+    doClustering: true,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -34,12 +34,9 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     var y = buildYScale();
 
-    //We can build nodes directly from genes or from gene clusters
-    //NB a gene cluster might be a single gene anyway
+
+    //Start by constructing nodes directly from genes
     var nodeSource = chromosome.annotations.genes;
-    if ( config.doClustering) {
-      nodeSource = chromosome.annotations.gene_clusters;
-    }
 
     var nodes = nodeSource.map(function (d) {
       return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
@@ -51,13 +48,29 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       lineSpacing: 2,
       minPos: 0,
       maxPos: config.layout.height,
-    }).nodes(nodes).compute();
+    });
+
+   force.nodes(nodes).compute();
+
+    //If clustering is enabled we might want to redo the layout using clusters of genes
+    if ( config.doClustering) {
+      var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
+      var maxLayer = Math.max.apply(null, layers);
+      if ( maxLayer > 3 ) {
+        nodeSource = chromosome.annotations.gene_clusters;
+        nodes = nodeSource.map(function (d) {
+          return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
+          } );
+      }
+      force.nodes(nodes).compute();
+    }
 
     var renderer = new labella.Renderer({
       direction: 'right',
       layerGap: config.layout.width / 3.0,
       nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
     });
+
 
     renderer.layout(force.nodes());
 
