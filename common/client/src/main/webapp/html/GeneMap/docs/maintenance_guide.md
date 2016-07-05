@@ -7,6 +7,7 @@ libraries:
  * d3.promise.js - adds promises to d3's file reading functions
  * bootstrap - used for the popover functionality
  * jquery - required for bootstrap.
+ * simple-statistics - for the ckmeans clustering algorithm
 
 # Design patterns
 
@@ -85,12 +86,15 @@ It is then processed by the processor, this alters the colors and combines the d
 		chromosomes
 			annotations
 				genes
+				geneClusters
 				qtls
 			bands
 				start
 				midpoint
 				end
 				color
+				
+Here `geneClusters` are the groups of genes which are merged when there is not enough room to display all genes at once.
 
 #infobox
 
