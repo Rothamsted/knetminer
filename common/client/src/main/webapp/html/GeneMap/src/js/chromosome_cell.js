@@ -12,12 +12,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
 
   // An SVG representation of a chromosome with banding data. This is expecting the passed selection to be within an
   // SVG element and to have a list of chromosome JSON objects as its data.
+
+
   function my(selection) {
     selection.each(function (d) {
       var layout = d.cellLayout;
 
       // build up the selection of chromosome objects
       var cells = d3.select(this).selectAll('.chromosome-cell').data(d.chromosomes);
+
 
       // setup a basic element structure for any new chromosomes
       var enterGroup = cells.enter().append('g').attr('class', 'chromosome-cell');
@@ -45,6 +48,11 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // draw the annotations
       // should be drawn before the chormosomes as some of the lines need to be
       // underneath the chormosome drawings.
+
+      //If there's only one chromosome we have space for more clusters
+      var nChromosomes = d.chromosomes.length;
+      var doClustering = nChromosomes > 1;
+
       var geneDrawer = GENEMAP.GeneAnnotations()
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
         .layout(layout.geneAnnotationPosition)
@@ -53,7 +61,9 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
         .showAnnotationLabels(layout.annotations.label.show)
-        .infoBoxManager(config.infoBoxManager);
+        .infoBoxManager(config.infoBoxManager)
+        .doClustering(doClustering)
+        ;
 
       cells.call(geneDrawer);
 

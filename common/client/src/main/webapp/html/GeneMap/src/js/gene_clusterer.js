@@ -5,7 +5,7 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.GeneClusterer = function (userConfig){
     var my = {};
 
-    var defaultConfig = {};
+    var defaultConfig = { nClusters : 6 };
 
     var config = _.merge({}, defaultConfig, userConfig);
 
@@ -20,7 +20,8 @@ GENEMAP.GeneClusterer = function (userConfig){
 
         //Use precanned algorithm for clustering
         //It return list of lists of midpoints
-        cluster_points = ss.ckmeans( genes.map( function(d){ return d.midpoint;} ), Math.min(6, genes.length) );
+        cluster_points = ss.ckmeans( genes.map( function(d){ return d.midpoint;} ),
+            Math.min(config.nClusters, genes.length) );
 
         //Now we have to retrieve the genes at each midpoint, populating cluster_dict
         var cluster_dict = []
@@ -74,6 +75,15 @@ GENEMAP.GeneClusterer = function (userConfig){
 
         return result;
     };
+
+    my.nClusters = function(value) {
+        if (!arguments.length) {
+            return config.nClusters;
+        }
+
+        config.nClusters = value;
+        return my;
+    }
 
     return my;
 };

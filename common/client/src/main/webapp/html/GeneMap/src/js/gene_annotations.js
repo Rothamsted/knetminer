@@ -18,6 +18,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     annotationLabelSize: 5,
     showAnnotationLabels: true,
     infoBoxManager: GENEMAP.InfoBox(),
+    nClusters: 6,
+    doClustering: 6,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -32,14 +34,23 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     var y = buildYScale();
 
-    var geneClusterer = GENEMAP.GeneClusterer();
 
-    //gene_clusters will contain either gene or gene_cluster objects
-    //both have a midpoint field so they can be used for Nodes
-    var gene_clusters = geneClusterer.createClustersFromGenes( chromosome.annotations.genes )
-    var nodes = gene_clusters.map( function(d){
-      return new labella.Node( y(d.midpoint), config.annotationMarkerSize, d ); }
-    );
+    var nodes;
+
+    if ( config.doClustering) {
+      var geneClusterer = GENEMAP.GeneClusterer().nClusters(config.nClusters);
+      //gene_clusters will contain either gene or gene_cluster objects
+      //both have a midpoint field so they can be used for Nodes
+      var gene_clusters = geneClusterer.createClustersFromGenes(chromosome.annotations.genes)
+      nodes = gene_clusters.map(function (d) {
+            return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
+          }
+      );
+    }
+    else {
+      nodes = chromosome.annotations.genes.map(function (d) {
+        return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d); })
+    }
 
     var force = new labella.Force({
       nodeSpacing: 3,
@@ -85,12 +96,14 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
 
-    geneAnnotations.on('click', function () {
-      console.log('gene annotation click ');
-      var group = d3.select(this);
-      group.classed('selected', !group.classed('selected'));
-      config.onAnnotationSelectFunction();
-      return false;
+    geneAnnotations.on('click', function (d) {
+      if (d.data.type == "gene") {
+        console.log('gene annotation click ');
+        var group = d3.select(this);
+        group.classed('selected', !group.classed('selected'));
+        config.onAnnotationSelectFunction();
+        return false;
+      }
     });
 
     // generate  markers
@@ -283,6 +296,24 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     config.infoBoxManager = value;
     return my;
   };
+
+  my.nClusters = function(value) {
+    if (!arguments.length) {
+      return config.nClusters;
+    }
+
+    config.nClusters = value;
+    return my;
+  }
+
+  my.doClustering = function(value) {
+    if (!arguments.length) {
+      return config.doClustering;
+    }
+
+    config.doClustering = value;
+    return my;
+  }
 
   return my;
 };

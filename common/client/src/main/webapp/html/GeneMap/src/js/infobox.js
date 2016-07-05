@@ -146,7 +146,7 @@ GENEMAP.InfoBox = function () {
       }
       else if (data.type == "geneslist") {
         content = generateGenesListPopoverContent(data);
-        title = "Genes in cluster"
+        title = "Genes in cluster";
       }
 
       // does this element already have a popover?
