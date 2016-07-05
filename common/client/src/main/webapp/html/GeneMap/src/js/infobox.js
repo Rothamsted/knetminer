@@ -35,8 +35,8 @@ GENEMAP.InfoBox = function () {
 
   var generateGenesListPopoverContent = function( data ) {
     var content =  '<div>'
-    for (var i = 0; i < data.genes_list.length; i++) {
-      gene = data.genes_list[i];
+    for (var i = 0; i < data.genesList.length; i++) {
+      gene = data.genesList[i];
       content += gene.midpoint + " " + gene.label + "<br />";
     }
     content += "</div>";

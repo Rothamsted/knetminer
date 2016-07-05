@@ -20,8 +20,8 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var target; // the target for the containing HTML element
   var genome; // the layout to be used;
-  var full_genome; // the layout to be used;
-  var single_genome_view; //bool
+  var fullGenome; // the layout to be used;
+  var singleGenomeView; //bool
   var svg; // the top SVG element
   var zoom; // the zoom behaviour
   var container; // the g container that performs the zooming
@@ -128,13 +128,13 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var onToggleLabelSelect = function ( chromosome ) {
-    if (single_genome_view) {
-      genome = full_genome;
-      single_genome_view = false
+    if (singleGenomeView) {
+      genome = fullGenome;
+      singleGenomeView = false
     }
     else{
       genome = { chromosomes : [chromosome] };
-      single_genome_view = true
+      singleGenomeView = true
     }
     drawMap()
   };
@@ -308,19 +308,19 @@ GENEMAP.GeneMap = function (userConfig) {
       var _this = this;
       target = _this;
 
-      full_genome = d;
+      fullGenome = d;
 
       //Run clustering algorithm so we can use the clusters later when drawing
       var geneClusterer = GENEMAP.GeneClusterer();
-      full_genome.chromosomes.forEach(function (chromosome) {
-        chromosome.annotations.gene_clusters = geneClusterer.createClustersFromGenes(
+      fullGenome.chromosomes.forEach(function (chromosome) {
+        chromosome.annotations.geneClusters = geneClusterer.createClustersFromGenes(
             chromosome.annotations.genes);
       } );
 
 
-      //To start with, we'll display all chromosomes, i.e. the full_genome
-      genome = full_genome
-      single_genome_view = false
+      //To start with, we'll display all chromosomes, i.e. the fullGenome
+      genome = fullGenome
+      singleGenomeView = false
 
       if (!menuManager) {
         menuManager = GENEMAP.MenuBar()

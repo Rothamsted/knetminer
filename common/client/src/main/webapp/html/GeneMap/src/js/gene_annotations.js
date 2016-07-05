@@ -57,7 +57,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
       var maxLayer = Math.max.apply(null, layers);
       if ( maxLayer > 3 ) {
-        nodeSource = chromosome.annotations.gene_clusters;
+        nodeSource = chromosome.annotations.geneClusters;
         nodes = nodeSource.map(function (d) {
           return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
           } );
@@ -185,7 +185,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         return d.data.label;
       }
       else if (d.data.type == "geneslist"){
-        return "(" + d.data.genes_list.length + ")";
+        return "(" + d.data.genesList.length + ")";
       }
     });
 
