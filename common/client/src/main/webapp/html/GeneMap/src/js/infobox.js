@@ -38,7 +38,12 @@ GENEMAP.InfoBox = function () {
     var content =  '<div>'
     for (var i = 0; i < data.genesList.length; i++) {
       gene = data.genesList[i];
-      content += gene.midpoint + " " + gene.label + "<br />";
+      link = '<a href ="' + gene.link + '" target="_blank">' + gene.label + '</a>';
+      svg =  '<svg height="1em" width="1em" viewBox="0 0 100 100">';
+      svg += '<path id = "triangle" d="M 0 50 L 100 100 L 100 0 Z" fill = "' + gene.color + '" />';
+      svg += '</svg>';
+
+      content += svg +  " " + gene.midpoint + " " + link + "<br />";
     }
     content += "</div>";
     return content;
