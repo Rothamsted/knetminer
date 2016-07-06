@@ -284,14 +284,18 @@ $(document).ready(
 				$('#genomeorqtlsearchbox').show();
 				if (typeof gviewer != "undefined" && gviewer == false) {
 					activateButton('resultsTable');
-					$('#pGViewer_button').hide();
-					$('#pGViewer').hide();
+//					$('#pGViewer_button').hide();
+					$('#genemap-button').hide();
+//					$('#pGViewer').hide();
+					$('#genemap-tab').hide();
 				}
 			}
 			else{
 				activateButton('resultsTable');
-				$('#pGViewer_button').hide();
-				$('#pGViewer').hide();
+//					$('#pGViewer_button').hide();
+					$('#genemap-button').hide();
+//					$('#pGViewer').hide();
+					$('#genemap-tab').hide();
 			}
 			$("#keywords").focus();
 			// Calculates the amount of documents to be displayed with the current query
@@ -735,10 +739,10 @@ function searchKeyword(){
 							}
 						}
 
-						var genomicView = '<div id="pGViewer" class="resultViewer">';
+					/*	var genomicView = '<div id="pGViewer" class="resultViewer">';
 						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
 						genomicView = genomicView + gviewer_html;
-						$("#pGViewer").replaceWith(genomicView);
+						$("#pGViewer").replaceWith(genomicView); */
 
 						//Collapse Suggestor view
 						$('#suggestor_search').attr('src', 'html/image/expand.gif');
@@ -769,16 +773,16 @@ function searchKeyword(){
 					}
 
 					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
-					var genomicView = '<div id="pGViewer" class="resultViewer">';
+				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
 						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}
 
-					gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-					genomicView = genomicView + gviewer_html;
+				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
+				//	genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
-					$("#pGViewer").replaceWith(genomicView);
+				//	$("#pGViewer").replaceWith(genomicView);
 
 					// Setup the mapview component
 					var basemap = "html/data/basemap.xml";
@@ -1404,7 +1408,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
 					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
-					table = table + '<td>'+values[4]+'</td>';
+					table = table + '<td>'+values[4]+'</td>'; // user genes
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
 					//Calculates the summary box
