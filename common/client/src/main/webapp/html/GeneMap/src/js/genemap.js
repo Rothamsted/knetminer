@@ -94,8 +94,6 @@ GENEMAP.GeneMap = function (userConfig) {
       return gene.id == geneId;
     });
 
-    log.info(gene);
-
     return gene;
   }
 

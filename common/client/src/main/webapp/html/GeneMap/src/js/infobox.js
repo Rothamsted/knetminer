@@ -3,8 +3,10 @@ var GENEMAP = GENEMAP || {};
 GENEMAP.InfoBox = function () {
 
   var my = {};
-
   var target = 'body';
+
+
+  //Functions which must be injected
   var setManualLabelMode = $.noop;
   var retrieveGeneFunction = function (chromosomeNumber, geneId){ return null;};
   var onAnnotationSelectFunction = $.noop;
@@ -14,12 +16,22 @@ GENEMAP.InfoBox = function () {
     $('.infobox').popover('hide');
   };
 
+  //////////////////////////////////////////////////////////////////////////////////////
+  //EVENT HANDLERS
+  //These functions handle events triggered by clicking on certain parts of the popovers
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  //Toggle gene select property when a gene in a genelist popover is clicked
   var handleGeneListGeneSelect = function(event) {
     log.trace("HandleGeneListGeneSelect");
-    button =$( $(event.target).parents('.btn-genelist-gene-select')[0]);
+
+    //extract the gene this selection referred to
+    button = $(event.target);
     geneId = button.context.dataset.geneId;
     chromosomeNumber = button.context.dataset.chromosomeNumber;
     gene = retrieveGeneFunction( chromosomeNumber, geneId );
+
+    //toggle selection state
     if (gene) {
       gene.selected = !gene.selected;
       onAnnotationSelectFunction();
@@ -28,6 +40,54 @@ GENEMAP.InfoBox = function () {
       log.warn( "Can't find gene to update selected status!") ;
     }
   }
+
+  //Handle label toggle for individual gene
+  var handleLabelToggle = function(event) {
+    log.trace('HandleLabelToggle');
+    setManualLabelMode();
+
+
+    //extract the feature this label refers to
+    var featureId = $(event.target).data().featureId;
+    var feature = d3.select('#' + featureId);
+    var data = feature.datum();
+
+    //if using labella, the data is nested under data
+    if (data.data) {
+      data = data.data;
+    }
+
+    //toggle visibility
+    var visibility;
+    if (data.showLabel === 'show') {
+      data.showLabel = 'hide';
+      visibility = 'hidden';
+    } else {
+      data.showLabel = 'show';
+      visibility = 'visible';
+    }
+
+    feature.select('text').style('visibility', visibility);
+
+    // generate the new HTML
+    var content = generateGenePopoverContent(featureId, data);
+
+    // update the html in the popver
+    var popover = $('#' + featureId).find('.infobox').data('bs.popover');
+    popover.options.content = content;
+
+    // update the html in the currently displayed popover
+    $(this).closest('.popover-content').html(content);
+
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //HTML GENERATORS
+  //These functions generate the content to go in the popovers
+  //////////////////////////////////////////////////////////////////////////////////////
 
   // generates the HTML content for the Gene popover
   var generateGenePopoverContent = function (id, data) {
@@ -45,6 +105,7 @@ GENEMAP.InfoBox = function () {
               '</div>';
   };
 
+  // generates the HTML content for the GeneList popover
   var generateGenesListPopoverContent = function( genesCollection ) {
     var content =  '<div>'
     for (var i = 0; i < genesCollection.genesList.length; i++) {
@@ -116,61 +177,44 @@ GENEMAP.InfoBox = function () {
     });
   };
 
+  //////////////////////////////////////////////////
+  //PUBLIC INTERFACE
+  //////////////////////////////////////////////////
+
   // atach the infobox listeners to the target, this is so that click + scroll
-  // events will close any popovers
+  // events (barring some exceptions) will close any popovers
+  //The exceptions are for interactions with the popovers themselves
   my.attach = function () {
+
+    //Intercept mouse events
     $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll',  function(event){
+
+      //Exceptions - don't close the popopver we are trying to interact with
       if ($(event.target).hasClass('btn-infobox-label')) { return; }
-      if ($(event.target).parents('.btn-genelist-gene-select').length){
-        handleGeneListGeneSelect(event);
-        return;
-      }
+      if ($(event.target).hasClass('btn-genelist-gene-select')){ return; }
+
+      //all other cases
       closeAllPopovers(event);
     } );
 
-    $(target).off('click').on('click', '.btn-genelist-gene-select', function (event) {
+    //Now handle the cases for interacting with popovers
+    $(target).off('click', '.btn-genelist-gene-select').on('click', '.btn-genelist-gene-select', function (event) {
       log.trace( "Genelist gene select" );
+      handleGeneListGeneSelect(event);
     } );
 
-    $(target).off('click').on('click', '.btn-infobox-label', function (event) {
-
-      setManualLabelMode();
-      log.trace('infobox label click  ... ');
-      var featureId = $(event.target).data().featureId;
-
-      var feature = d3.select('#' + featureId);
-      var data = feature.datum();
-
-      if (data.data) {
-        data = data.data;
-      }
-
-      var visibility;
-      if (data.showLabel === 'show') {
-        data.showLabel = 'hide';
-        visibility = 'hidden';
-      } else {
-        data.showLabel = 'show';
-        visibility = 'visible';
-      }
-
-      feature.select('text').style('visibility', visibility);
-
-      // generate the new HTML
-      var content = generateGenePopoverContent(featureId, data);
-
-      // update the html in the popver
-      var popover = $('#' + featureId).find('.infobox').data('bs.popover');
-      popover.options.content = content;
-
-      // update the html in the currently displayed popover
-      $(this).closest('.popover-content').html(content);
-
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    });
+    $(target).off('click', '.btn-infobox-label').on('click', '.btn-infobox-label', function (event) {
+      log.trace( "Toggle gene label" );
+      handleLabelToggle(event);
+    } );
   };
+
+
+  //////////////////////////////////////////////////
+  //SETUP INFOBOX FUNCTIONS
+  //These functions are responsible for generating
+  //creating the popover objects
+  //////////////////////////////////////////////////
 
   // Setup the infobox popovers for the gene annotations, this includes a link and
   // a button to toggle the gene label
@@ -200,7 +244,6 @@ GENEMAP.InfoBox = function () {
           return gene.selected; }) ) {
         }
       }
-
 
       // does this element already have a popover?
       var popover = $(this).data('bs.popover');
