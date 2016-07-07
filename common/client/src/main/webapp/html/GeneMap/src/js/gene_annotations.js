@@ -96,6 +96,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       return 'feature_' + d.data.id;
     });
 
+    geneAnnotations.classed('selected', function(d){ return d.data.selected; });
+
     geneAnnotations.select('line.midpoint-line').attr({
       x1: -(config.chromosomeWidth * 0.5),
       y1: function (d) { return y(d.data.midpoint); },
@@ -106,23 +108,29 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
 
     geneAnnotations.on('click', function (d) {
+      //If user clicks on a gene, toggle gene selection
       if (d.data.type == "gene") {
         log.info('gene annotation click');
+        d.data.selected = !d.data.selected;
         var group = d3.select(this);
-        group.classed('selected', !group.classed('selected'));
+        group.classed('selected',function(d){ return d.data.selected; });
         config.onAnnotationSelectFunction();
         return false;
       }
 
+      //If user clicks on a cluster of genes, expand that cluster
       if (d.data.type == "geneslist") {
         log.info('geneslist annotation click');
         annotations = chromosome.annotations;
         annotations.geneDisplayClusters = annotations.geneClusters.slice();
         genesList = d.data.genesList;
-        for ( var iGene = 0 ; iGene < genesList.length ; iGene++ )
-        {
-          annotations.geneDisplayClusters.push(genesList[iGene]) ;
-        }
+
+        //add each gene as it's own cluster
+        genesList.forEach( function(gene){
+          annotations.geneDisplayClusters.push(gene) ;
+        } );
+
+        //delete the original cluster
         var clusterIndex = annotations.geneDisplayClusters.indexOf(d.data);
         annotations.geneDisplayClusters.splice(clusterIndex, 1);
         setupGeneAnnotations(annotationGroup, chromosome );

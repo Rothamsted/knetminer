@@ -122,7 +122,11 @@ GENEMAP.GeneMap = function (userConfig) {
   // called when a gene annotation is selected or deselected, decides if the
   // network button should be enabled or not
   var onAnnotationSelectionChanged = function () {
-    var anyGenesSelected = $('g.gene-annotation.selected').length > 0;
+    //find out if any of the genes in any of the chromosomes are currently selected
+    var anyGenesSelected = genome.chromosomes.some( function(chromosome) {
+      return chromosome.annotations.genes.some( function(gene){
+        return gene.selected;});
+    } );
 
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
@@ -270,14 +274,17 @@ GENEMAP.GeneMap = function (userConfig) {
   // click handler for the network view button
   var openNetworkView = function () {
 
-    var selectedLabels = _.map($('.gene-annotation.selected'), function (elt) {
-      return elt.__data__.data.label;
-    });
+    //extract labels for all selected genes on all chromosomes
+    var selectedLabels = _.flatMap(genome.chromosomes.map( function(chromosome){
+      return chromosome.annotations.genes.filter( function(gene){
+        return gene.selected
+      }).map( function(gene){
+        return gene.label; }) ; }
+    ) );
 
     var url = 'OndexServlet?mode=network&keyword=volume';
 
     log.info('selected labels: ' + selectedLabels);
-
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
 

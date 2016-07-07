@@ -18,6 +18,7 @@ GENEMAP.AnnotationXMLReader = function () {
       color: elt.getElementsByTagName('color')[0].childNodes[0].nodeValue,
       label: elt.getElementsByTagName('label')[0].childNodes[0].nodeValue,
       link: elt.getElementsByTagName('link')[0].childNodes[0].nodeValue,
+      selected: false,
     };
   };
 
