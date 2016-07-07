@@ -36,18 +36,29 @@ GENEMAP.InfoBox = function () {
               '</div>';
   };
 
-  var generateGenesListPopoverContent = function( data ) {
+  var generateGenesListPopoverContent = function( genesCollection ) {
     var content =  '<div>'
-    for (var i = 0; i < data.genesList.length; i++) {
-      gene = data.genesList[i];
-      link = '<a href ="' + gene.link + '" target="_blank">' + gene.label + '</a>';
-      svg ='<span class= "btn-genelist-gene-select" id="feature_'+ gene.id + '" data-gene-id=' + gene.id + '>'
-      svg +=  '<svg height="1em" width="1em" viewBox="0 0 100 100">';
-      svg += '<path id = "triangle" d="M 0 50 L 100 100 L 100 0 Z" fill = "' + gene.color + '" />';
-      svg += '</svg>';
-      svg += '</span>'
+    for (var i = 0; i < genesCollection.genesList.length; i++) {
+      gene = genesCollection.genesList[i];
 
-      content += svg +  " " + gene.midpoint + " " + link + "<br />";
+      //build attributes for span
+      cssClass = "btn-genelist-gene-select";
+      if ( gene.selected){
+        cssClass += " selected";
+      }
+
+      id = "feature_"+gene.id
+
+      svgSpan ='<span class= "'+ cssClass + '"  id=' + id + ' data-gene-id=' + gene.id + '>'
+      svgSpan += '<svg height="1.5em" width="1.5em" viewBox="0 0 100 100">';
+      svgSpan += '<path d="M 10 50 L 90 90 L 90 10 Z" fill = "' + gene.color + '" />';
+      svgSpan += '</svg>';
+      svgSpan += '</span>'
+
+      //build link
+      link = '<a href ="' + gene.link + '" target="_blank">' + gene.label + '</a>';
+
+      content += svgSpan +  " " + gene.midpoint + " " + link + "<br />";
     }
     content += "</div>";
     return content;
@@ -171,7 +182,13 @@ GENEMAP.InfoBox = function () {
       else if (data.type == "geneslist") {
         content = generateGenesListPopoverContent(data);
         title = "Genes in cluster";
+
+        if (data.genesList.some( function(gene){
+          return gene.selected; }) ) {
+          log.info( content);
+        }
       }
+
 
       // does this element already have a popover?
       var popover = $(this).data('bs.popover');

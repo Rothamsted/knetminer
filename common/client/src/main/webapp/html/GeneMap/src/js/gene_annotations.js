@@ -112,8 +112,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       if (d.data.type == "gene") {
         log.info('gene annotation click');
         d.data.selected = !d.data.selected;
-        var group = d3.select(this);
-        group.classed('selected',function(d){ return d.data.selected; });
         config.onAnnotationSelectFunction();
         return false;
       }

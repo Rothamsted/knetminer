@@ -128,6 +128,8 @@ GENEMAP.GeneMap = function (userConfig) {
         return gene.selected;});
     } );
 
+    drawMap();
+
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
 
