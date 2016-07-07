@@ -6,17 +6,19 @@ GENEMAP.InfoBox = function () {
 
   var target = 'body';
   var setManualLabelMode = $.noop;
+  var toggleGeneSelection = $.noop;
 
   // close all open popovers
   var closeAllPopovers = function (event) {
-    if ($(event.target).hasClass('btn-infobox-label')) {
-      return;
-    }
-
-    log.debug('closing popovers ...');
-    log.debug( event);
     $('.infobox').popover('hide');
   };
+
+  var handleGeneListGeneSelect = function(event) {
+    log.error("HandleGeneListGeneSelect");
+    button =$( $(event.target).parents('.btn-genelist-gene-select')[0]);
+    geneId = button.context.dataset.geneId;
+    toggleGeneSelection()
+  }
 
   // generates the HTML content for the Gene popover
   var generateGenePopoverContent = function (id, data) {
@@ -39,9 +41,11 @@ GENEMAP.InfoBox = function () {
     for (var i = 0; i < data.genesList.length; i++) {
       gene = data.genesList[i];
       link = '<a href ="' + gene.link + '" target="_blank">' + gene.label + '</a>';
-      svg =  '<svg height="1em" width="1em" viewBox="0 0 100 100">';
+      svg ='<span class= "btn-genelist-gene-select" id="feature_'+ gene.id + '" data-gene-id=' + gene.id + '>'
+      svg +=  '<svg height="1em" width="1em" viewBox="0 0 100 100">';
       svg += '<path id = "triangle" d="M 0 50 L 100 100 L 100 0 Z" fill = "' + gene.color + '" />';
       svg += '</svg>';
+      svg += '</span>'
 
       content += svg +  " " + gene.midpoint + " " + link + "<br />";
     }
@@ -89,12 +93,25 @@ GENEMAP.InfoBox = function () {
   // atach the infobox listeners to the target, this is so that click + scroll
   // events will close any popovers
   my.attach = function () {
-    $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll', closeAllPopovers);
+    $(target).off('mousedown mousewheel DOMMouseScroll').on('mousedown mousewheel DOMMouseScroll',  function(event){
+      if ($(event.target).hasClass('btn-infobox-label')) { return; }
+      if ($(event.target).parents('.btn-genelist-gene-select').length){
+        handleGeneListGeneSelect(event);
+        return;
+      }
+      closeAllPopovers(event);
+    } );
+
+    $(target).off('click').on('click', '.btn-genelist-gene-select', function (event) {
+      log.error( "Genelist gene select" );
+      log.error( event.target );
+    } );
 
     $(target).off('click').on('click', '.btn-infobox-label', function (event) {
 
       setManualLabelMode();
-      log.trace('infobox label click ' + event);
+      log.trace('infobox label click  ... ');
+      log.trace(event);
       var featureId = $(event.target).data().featureId;
 
       var feature = d3.select('#' + featureId);
