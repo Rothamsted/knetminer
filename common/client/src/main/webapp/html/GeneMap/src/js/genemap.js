@@ -82,6 +82,23 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  //Retrieves a gene object from Chromosome Id and Gene Id
+  //Used when the object can't be bound to the DOM element
+  //so information has to be preserved as string constants
+  var retrieveGene = function( chromosomeNumber, geneId){
+    var chromosome = genome.chromosomes.find( function(chromosome){
+      return chromosome.number == chromosomeNumber;
+    });
+
+    var gene = chromosome.annotations.genes.find( function(gene){
+      return gene.id == geneId;
+    });
+
+    log.info(gene);
+
+    return gene;
+  }
+
   // sets the 'showLabel' property on each of the gene annotations, should be either
   // 'show', 'hide' or 'auto'. If 'auto' is selected the 'showLabel' property is remove
   // instead the layout configuration will be used to determine if the text is shown
@@ -223,7 +240,9 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // setup the infobox manager
     var infoBox = GENEMAP.InfoBox()
-      .setManualLabelMode(setManualLabelState);
+      .setManualLabelMode(setManualLabelState)
+      .onAnnotationSelectFunction( onAnnotationSelectionChanged)
+      .retrieveGeneFunction( retrieveGene);
 
     if (target) {
       infoBox.target(target);

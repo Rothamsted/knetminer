@@ -31,6 +31,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   // adds the gene annotations to the annotations group within it, uses the data
   // bound to the annotationsGroup to generate the annotation elements
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
+    log.trace('setupGeneAnnotations');
 
     var y = buildYScale();
 

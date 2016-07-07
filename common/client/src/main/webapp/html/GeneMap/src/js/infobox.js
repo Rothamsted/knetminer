@@ -6,7 +6,8 @@ GENEMAP.InfoBox = function () {
 
   var target = 'body';
   var setManualLabelMode = $.noop;
-  var toggleGeneSelection = $.noop;
+  var retrieveGeneFunction = function (chromosomeNumber, geneId){ return null;};
+  var onAnnotationSelectFunction = $.noop;
 
   // close all open popovers
   var closeAllPopovers = function (event) {
@@ -14,10 +15,18 @@ GENEMAP.InfoBox = function () {
   };
 
   var handleGeneListGeneSelect = function(event) {
-    log.error("HandleGeneListGeneSelect");
+    log.trace("HandleGeneListGeneSelect");
     button =$( $(event.target).parents('.btn-genelist-gene-select')[0]);
     geneId = button.context.dataset.geneId;
-    toggleGeneSelection()
+    chromosomeNumber = button.context.dataset.chromosomeNumber;
+    gene = retrieveGeneFunction( chromosomeNumber, geneId );
+    if (gene) {
+      gene.selected = !gene.selected;
+      onAnnotationSelectFunction();
+    }
+    else {
+      log.warn( "Can't find gene to update selected status!") ;
+    }
   }
 
   // generates the HTML content for the Gene popover
@@ -49,7 +58,13 @@ GENEMAP.InfoBox = function () {
 
       id = "feature_"+gene.id
 
-      svgSpan ='<span class= "'+ cssClass + '"  id=' + id + ' data-gene-id=' + gene.id + '>'
+      svgSpan ='<span '
+        + ' class= "'+ cssClass + '"'
+        + ' id=' + id
+        + ' data-gene-id=' + gene.id
+        + ' data-chromosome-number=' + gene.chromosome
+        + ' >'
+
       svgSpan += '<svg height="1.5em" width="1.5em" viewBox="0 0 100 100">';
       svgSpan += '<path d="M 10 50 L 90 90 L 90 10 Z" fill = "' + gene.color + '" />';
       svgSpan += '</svg>';
@@ -114,15 +129,13 @@ GENEMAP.InfoBox = function () {
     } );
 
     $(target).off('click').on('click', '.btn-genelist-gene-select', function (event) {
-      log.error( "Genelist gene select" );
-      log.error( event.target );
+      log.trace( "Genelist gene select" );
     } );
 
     $(target).off('click').on('click', '.btn-infobox-label', function (event) {
 
       setManualLabelMode();
       log.trace('infobox label click  ... ');
-      log.trace(event);
       var featureId = $(event.target).data().featureId;
 
       var feature = d3.select('#' + featureId);
@@ -185,7 +198,6 @@ GENEMAP.InfoBox = function () {
 
         if (data.genesList.some( function(gene){
           return gene.selected; }) ) {
-          log.info( content);
         }
       }
 
@@ -194,7 +206,10 @@ GENEMAP.InfoBox = function () {
       var popover = $(this).data('bs.popover');
       if (popover) {
         // update the popover content
+        //http://stackoverflow.com/a/13565154
         popover.options.content = content;
+        popover.setContent();
+        popover.$tip.addClass(popover.options.placement);
       } else {
         // create a new popover
         $(this).popover({
@@ -262,6 +277,25 @@ GENEMAP.InfoBox = function () {
     }
 
     setManualLabelMode = value;
+    return my;
+  };
+
+
+  my.onAnnotationSelectFunction = function (value) {
+    if (!arguments.length) {
+      return onAnnotationSelectFunction;
+    }
+
+    onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.retrieveGeneFunction = function (value) {
+    if (!arguments.length) {
+      return retrieveGeneFunction;
+    }
+
+    retrieveGeneFunction = value;
     return my;
   };
 
