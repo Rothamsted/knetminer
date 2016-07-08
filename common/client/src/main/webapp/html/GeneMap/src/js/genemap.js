@@ -327,6 +327,24 @@ GENEMAP.GeneMap = function (userConfig) {
     drawMap();
   };
 
+  var collapseClusters = function (){
+    log.info( 'collapseClusters');
+    genome.chromosomes.map( function(chromosome){
+      chromosome.annotations.geneDisplayClusters = chromosome.annotations.geneClusters.slice();
+    })
+
+    drawMap();
+  }
+
+  var expandClusters = function (){
+    log.info( 'expandClusters');
+    genome.chromosomes.map( function(chromosome){
+      chromosome.annotations.geneDisplayClusters = chromosome.annotations.genes.slice(0);
+    })
+
+    drawMap();
+  }
+
   // An SVG representation of a chromosome with banding data. This won't create an SVG
   // element, it expects that to already have been created.
   function my(selection) {
@@ -344,7 +362,9 @@ GENEMAP.GeneMap = function (userConfig) {
         menuManager = GENEMAP.MenuBar()
           .onTagBtnClick(toggleLableVisibility)
           .onFitBtnClick(resetMapZoom)
-          .onNetworkBtnClick(openNetworkView);
+          .onNetworkBtnClick(openNetworkView)
+          .onClusterCollapseBtnClick(collapseClusters)
+          .onClusterExpandBtnClick(expandClusters)
       }
 
       d3.select(target).call(menuManager);

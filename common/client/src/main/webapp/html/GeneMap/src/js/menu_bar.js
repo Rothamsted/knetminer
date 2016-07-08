@@ -5,6 +5,8 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onClusterCollapseBtnClick: $.noop,
+    onClusterExpandBtnClick: $.noop,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -37,12 +39,28 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onFitBtnClick();
   };
 
+  var myOnClusterCollapseBtnClick = function () {
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    config.onClusterCollapseBtnClick();
+  };
+
+  var myOnClusterExpandBtnClick = function () {
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    config.onClusterExpandBtnClick();
+  };
+
   var drawMenu = function () {
 
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuItems = menu.selectAll('span').data(['network-btn', 'tag-btn', 'fit-btn']);
+    var menuItems = menu.selectAll('span').data(['network-btn', 'tag-btn', 'fit-btn', 'expand-btn', 'collapse-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) { return d; },
@@ -55,6 +73,12 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.fit-btn')
       .on('click', myOnFitBtnClick);
+
+    menu.select('.collapse-btn')
+      .on('click', myOnClusterCollapseBtnClick);
+
+    menu.select('.expand-btn')
+      .on('click', myOnClusterExpandBtnClick);
   };
 
   // attach the menu bar to the target element
@@ -93,6 +117,24 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onFitBtnClick = value;
+    return my;
+  };
+
+  my.onClusterCollapseBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onClusterCollapseBtnClick;
+    }
+
+    config.onClusterCollapseBtnClick = value;
+    return my;
+  };
+
+  my.onClusterExpandBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onClusterExpandBtnClick;
+    }
+
+    config.onClusterExpandBtnClick = value;
     return my;
   };
 
