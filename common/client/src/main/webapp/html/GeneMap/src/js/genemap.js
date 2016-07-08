@@ -8,6 +8,7 @@ GENEMAP.GeneMap = function (userConfig) {
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
       numberPerRow: 10,
+      maxAnnotationLayers: 3,
     },
     contentBorder: false,
 
@@ -252,7 +253,8 @@ GENEMAP.GeneMap = function (userConfig) {
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onLabelSelectFunction(onToggleLabelSelect)
-      .infoBoxManager(infoBox);
+      .infoBoxManager(infoBox)
+      .maxAnnotationLayers( config.layout.maxAnnotationLayers);
 
     container.call(cellDrawer);
   };
@@ -345,6 +347,12 @@ GENEMAP.GeneMap = function (userConfig) {
     drawMap();
   }
 
+  var setMaxAnnotationLayers = function(maxLayers){
+    config.layout.maxAnnotationLayers = maxLayers;
+    drawMap();
+  }
+
+
   // An SVG representation of a chromosome with banding data. This won't create an SVG
   // element, it expects that to already have been created.
   function my(selection) {
@@ -365,6 +373,8 @@ GENEMAP.GeneMap = function (userConfig) {
           .onNetworkBtnClick(openNetworkView)
           .onClusterCollapseBtnClick(collapseClusters)
           .onClusterExpandBtnClick(expandClusters)
+          .onSetMaxLayers(setMaxAnnotationLayers);
+
       }
 
       d3.select(target).call(menuManager);
@@ -372,6 +382,7 @@ GENEMAP.GeneMap = function (userConfig) {
       menuManager.setNetworkButtonEnabled(false);
       menuManager.setFitButtonEnabled(false);
       menuManager.setTabButtonState('auto');
+      menuManager.SetAnnotationLayers(config.layout.maxAnnotationLayers);
 
       drawMap();
     });

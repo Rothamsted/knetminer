@@ -87,10 +87,10 @@ GENEMAP.Chromosome = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
       // build up the selection of chromosome objects
-      var chroosomes = d3.select(this).selectAll('.chromosome').data([d]);
+      var chromosomes = d3.select(this).selectAll('.chromosome').data([d]);
 
       // setup a basic element structure for any new chromosomes
-      var enterGroup = chroosomes.enter().append('g').attr('class', 'chromosome');
+      var enterGroup = chromosomes.enter().append('g').attr('class', 'chromosome');
       enterGroup.append('defs');
       enterGroup.append('rect').classed('background', true);
       enterGroup.append('g').classed('bands_container', true);
@@ -101,10 +101,10 @@ GENEMAP.Chromosome = function (userConfig) {
       }
 
       // update each of the chromosomes
-      chroosomes.each(updateChromosome);
+      chromosomes.each(updateChromosome);
 
       // remove any missing elements
-      chroosomes.exit().remove();
+      chromosomes.exit().remove();
     });
   }
 

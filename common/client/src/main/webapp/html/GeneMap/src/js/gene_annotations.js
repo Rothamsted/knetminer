@@ -20,6 +20,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     infoBoxManager: GENEMAP.InfoBox(),
     nClusters: 6,
     doClustering: true,
+    maxAnnotationLayers: 3,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -57,7 +58,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     if ( config.doClustering) {
       var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
       var maxLayer = Math.max.apply(null, layers);
-      if ( maxLayer > 3 ) {
+      if ( maxLayer > config.maxAnnotationLayers ) {
         nodeSource = chromosome.annotations.geneDisplayClusters;
         nodes = nodeSource.map(function (d) {
           return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
@@ -347,6 +348,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.doClustering = value;
+    return my;
+  }
+
+  my.maxAnnotationLayers= function(value) {
+    if (!arguments.length) {
+      return config.maxAnnotationLayers;
+    }
+
+    config.maxAnnotationLayers= value;
     return my;
   }
 
