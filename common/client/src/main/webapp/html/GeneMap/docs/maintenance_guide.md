@@ -113,6 +113,20 @@ Logging is handled by the loglevel library:
 Log level can be set in the console window with `setLevel()` and will be persisted between sessions if the second argument is true.
 In index.html, `log.setDefaultLevel("info")` applies only if a previously persisted log level is not found.
 
+# icons
+Icons come from the O-Collection.
+They are downloaded in svg form, then converted to png of the correct size using inkscape. E.g:
+
+    & 'C:\Program Files\Inkscape\inkscape.exe' --export-png=assets\img\information.png --export-width=36 --export-height=36 assets\svg\information.svg
+
+The colours can be edited manually in the svg files:
+
+    gray: #444444
+    blue: #21a2ef
+    
+Both svg and png files are committed in the repository.
+
+
 # namespaced bootstrap
 
 To avoid having to use bootstrap's css on the entire site I've generated a customised version of the bootstrap css based on the answer to a question on [Stack Overflow](http://stackoverflow.com/questions/13966259/how-to-namespace-twitter-bootstrap-so-styles-dont-conflict).
