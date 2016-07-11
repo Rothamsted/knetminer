@@ -1,0 +1,921 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>Chr2</chromosome>
+<start>23480906</start>
+<end>23484373</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400023181</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400023181</link>
+</feature>
+<feature id="1">
+<chromosome>Chr6</chromosome>
+<start>183100</start>
+<end>191631</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400002152</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002152</link>
+</feature>
+<feature id="2">
+<chromosome>Chr9</chromosome>
+<start>7977041</start>
+<end>7977445</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400002676</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002676</link>
+</feature>
+<feature id="3">
+<chromosome>Chr3</chromosome>
+<start>18603026</start>
+<end>18605854</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400014293</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400014293</link>
+</feature>
+<feature id="4">
+<chromosome>Chr10</chromosome>
+<start>48448107</start>
+<end>48448673</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400045042</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400045042</link>
+</feature>
+<feature id="5">
+<chromosome>Chr1</chromosome>
+<start>84134595</start>
+<end>84136534</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400002804</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002804</link>
+</feature>
+<feature id="6">
+<chromosome>Chr2</chromosome>
+<start>62141109</start>
+<end>62142062</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400003531</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400003531</link>
+</feature>
+<feature id="7">
+<chromosome>Chr8</chromosome>
+<start>31572346</start>
+<end>31575064</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400014509</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400014509</link>
+</feature>
+<feature id="8">
+<chromosome>Chr5</chromosome>
+<start>369472</start>
+<end>375911</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400028381</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400028381</link>
+</feature>
+<feature id="9">
+<chromosome>Chr1</chromosome>
+<start>68158333</start>
+<end>68164835</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400001121</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400001121</link>
+</feature>
+<feature id="10">
+<chromosome>Chr4</chromosome>
+<start>63350984</start>
+<end>63353021</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400009956</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400009956</link>
+</feature>
+<feature id="11">
+<chromosome>Chr4</chromosome>
+<start>51248187</start>
+<end>51249578</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400037332</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400037332</link>
+</feature>
+<feature id="12">
+<chromosome>Chr3</chromosome>
+<start>42112958</start>
+<end>42114134</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400000636</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400000636</link>
+</feature>
+<feature id="13">
+<chromosome>Chr12</chromosome>
+<start>18126066</start>
+<end>18129211</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400035697</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400035697</link>
+</feature>
+<feature id="14">
+<chromosome>Chr6</chromosome>
+<start>48220039</start>
+<end>48224171</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400026962</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400026962</link>
+</feature>
+<feature id="15">
+<chromosome>Chr2</chromosome>
+<start>61655739</start>
+<end>61656855</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400003632</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400003632</link>
+</feature>
+<feature id="16">
+<chromosome>Chr6</chromosome>
+<start>4236366</start>
+<end>4242878</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400005328</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400005328</link>
+</feature>
+<feature id="17">
+<chromosome>Chr10</chromosome>
+<start>50806874</start>
+<end>50808478</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400019138</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400019138</link>
+</feature>
+<feature id="18">
+<chromosome>Chr4</chromosome>
+<start>3537145</start>
+<end>3539199</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400026764</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400026764</link>
+</feature>
+<feature id="19">
+<chromosome>Chr4</chromosome>
+<start>334860</start>
+<end>337355</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400002864</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002864</link>
+</feature>
+<feature id="20">
+<chromosome>Chr9</chromosome>
+<start>25457325</start>
+<end>25459940</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400020864</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020864</link>
+</feature>
+<feature id="21">
+<chromosome>Chr3</chromosome>
+<start>37331217</start>
+<end>37334207</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400015277</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400015277</link>
+</feature>
+<feature id="22">
+<chromosome>Chr12</chromosome>
+<start>2932805</start>
+<end>2934850</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400002889</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002889</link>
+</feature>
+<feature id="23">
+<chromosome>Chr9</chromosome>
+<start>38625144</start>
+<end>38634567</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400015075</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400015075</link>
+</feature>
+<feature id="24">
+<chromosome>Chr6</chromosome>
+<start>52003533</start>
+<end>52004551</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400030315</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400030315</link>
+</feature>
+<feature id="25">
+<chromosome>Chr5</chromosome>
+<start>20372769</start>
+<end>20373896</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG401027437</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG401027437</link>
+</feature>
+<feature id="26">
+<chromosome>Chr9</chromosome>
+<start>43892562</start>
+<end>43896930</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400011397</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400011397</link>
+</feature>
+<feature id="27">
+<chromosome>Chr6</chromosome>
+<start>54110100</start>
+<end>54117076</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400020061</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020061</link>
+</feature>
+<feature id="28">
+<chromosome>Chr9</chromosome>
+<start>51961083</start>
+<end>51961739</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400017928</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400017928</link>
+</feature>
+<feature id="29">
+<chromosome>Chr2</chromosome>
+<start>65115510</start>
+<end>65123252</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400004042</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400004042</link>
+</feature>
+<feature id="30">
+<chromosome>Chr12</chromosome>
+<start>67113577</start>
+<end>67122945</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400004651</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400004651</link>
+</feature>
+<feature id="31">
+<chromosome>Chr5</chromosome>
+<start>20365251</start>
+<end>20366188</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG402027437</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG402027437</link>
+</feature>
+<feature id="32">
+<chromosome>Chr3</chromosome>
+<start>20393267</start>
+<end>20394022</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400010131</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400010131</link>
+</feature>
+<feature id="33">
+<chromosome>Chr8</chromosome>
+<start>23307995</start>
+<end>23312511</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>PGSC0003DMG400020785</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020785</link>
+</feature>
+<feature id="34">
+<chromosome>Chr1</chromosome>
+<start>80827868</start>
+<end>80835699</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400027524</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400027524</link>
+</feature>
+<feature id="35">
+<chromosome>Chr8</chromosome>
+<start>34742765</start>
+<end>34746487</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400030869</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400030869</link>
+</feature>
+<feature id="36">
+<chromosome>Chr5</chromosome>
+<start>10148639</start>
+<end>10158322</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400011721</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400011721</link>
+</feature>
+<feature id="37">
+<chromosome>Chr2</chromosome>
+<start>42917765</start>
+<end>42919506</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400015490</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400015490</link>
+</feature>
+<feature id="38">
+<chromosome>Chr2</chromosome>
+<start>62293440</start>
+<end>62294971</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400003522</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400003522</link>
+</feature>
+<feature id="39">
+<chromosome>Chr10</chromosome>
+<start>45201302</start>
+<end>45207698</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400023687</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400023687</link>
+</feature>
+<feature id="40">
+<chromosome>Chr6</chromosome>
+<start>35625336</start>
+<end>35629465</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400037026</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400037026</link>
+</feature>
+<feature id="41">
+<chromosome>Chr6</chromosome>
+<start>48362509</start>
+<end>48368674</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400026968</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400026968</link>
+</feature>
+<feature id="42">
+<chromosome>Chr5</chromosome>
+<start>2672154</start>
+<end>2678637</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400014544</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400014544</link>
+</feature>
+<feature id="43">
+<chromosome>Chr5</chromosome>
+<start>8008452</start>
+<end>8009916</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400040429</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400040429</link>
+</feature>
+<feature id="44">
+<chromosome>Chr4</chromosome>
+<start>2645777</start>
+<end>2650897</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG402029471</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG402029471</link>
+</feature>
+<feature id="45">
+<chromosome>Chr8</chromosome>
+<start>5929214</start>
+<end>5932951</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400036131</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400036131</link>
+</feature>
+<feature id="46">
+<chromosome>Chr12</chromosome>
+<start>60906708</start>
+<end>60907331</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400004255</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400004255</link>
+</feature>
+<feature id="47">
+<chromosome>Chr8</chromosome>
+<start>786238</start>
+<end>787635</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400012525</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400012525</link>
+</feature>
+<feature id="48">
+<chromosome>Chr8</chromosome>
+<start>789268</start>
+<end>790256</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400012526</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400012526</link>
+</feature>
+<feature id="49">
+<chromosome>Chr8</chromosome>
+<start>782776</start>
+<end>783892</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400012524</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400012524</link>
+</feature>
+<feature id="50">
+<chromosome>Chr10</chromosome>
+<start>17651649</start>
+<end>17654819</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400020924</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020924</link>
+</feature>
+<feature id="51">
+<chromosome>Chr4</chromosome>
+<start>60023393</start>
+<end>60024184</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400007951</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400007951</link>
+</feature>
+<feature id="52">
+<chromosome>Chr3</chromosome>
+<start>46348497</start>
+<end>46354055</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400002484</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002484</link>
+</feature>
+<feature id="53">
+<chromosome>Chr5</chromosome>
+<start>60206991</start>
+<end>60213085</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG402023373</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG402023373</link>
+</feature>
+<feature id="54">
+<chromosome>Chr1</chromosome>
+<start>2408524</start>
+<end>2409187</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021356</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021356</link>
+</feature>
+<feature id="55">
+<chromosome>Chr1</chromosome>
+<start>2425889</start>
+<end>2427290</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021325</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021325</link>
+</feature>
+<feature id="56">
+<chromosome>Chr6</chromosome>
+<start>303211</start>
+<end>307024</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400002146</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400002146</link>
+</feature>
+<feature id="57">
+<chromosome>Chr11</chromosome>
+<start>7342313</start>
+<end>7348581</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400031071</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400031071</link>
+</feature>
+<feature id="58">
+<chromosome>Chr11</chromosome>
+<start>4336755</start>
+<end>4338036</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400016228</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400016228</link>
+</feature>
+<feature id="59">
+<chromosome>Chr7</chromosome>
+<start>49106920</start>
+<end>49111077</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400012391</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400012391</link>
+</feature>
+<feature id="60">
+<chromosome>Chr1</chromosome>
+<start>2382889</start>
+<end>2384166</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021360</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021360</link>
+</feature>
+<feature id="61">
+<chromosome>Chr1</chromosome>
+<start>2397837</start>
+<end>2399084</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021358</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021358</link>
+</feature>
+<feature id="62">
+<chromosome>Chr1</chromosome>
+<start>2386944</start>
+<end>2388172</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021359</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021359</link>
+</feature>
+<feature id="63">
+<chromosome>Chr1</chromosome>
+<start>2414471</start>
+<end>2415860</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021327</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021327</link>
+</feature>
+<feature id="64">
+<chromosome>Chr1</chromosome>
+<start>2420554</start>
+<end>2421816</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400021326</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021326</link>
+</feature>
+<feature id="65">
+<chromosome>Chr10</chromosome>
+<start>5126335</start>
+<end>5127893</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400019407</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400019407</link>
+</feature>
+<feature id="66">
+<chromosome>Chr9</chromosome>
+<start>49997406</start>
+<end>50000415</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>PGSC0003DMG400029651</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400029651</link>
+</feature>
+<feature id="67">
+<chromosome>Chr12</chromosome>
+<start>64420116</start>
+<end>64421490</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400029300</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400029300</link>
+</feature>
+<feature id="68">
+<chromosome>Chr8</chromosome>
+<start>24146360</start>
+<end>24147542</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400029952</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400029952</link>
+</feature>
+<feature id="69">
+<chromosome>Chr12</chromosome>
+<start>65200413</start>
+<end>65203456</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400029343</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400029343</link>
+</feature>
+<feature id="70">
+<chromosome>Chr9</chromosome>
+<start>47619924</start>
+<end>47622432</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400045908</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400045908</link>
+</feature>
+<feature id="71">
+<chromosome>Chr10</chromosome>
+<start>439301</start>
+<end>442603</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG401014410</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG401014410</link>
+</feature>
+<feature id="72">
+<chromosome>Chr1</chromosome>
+<start>78881448</start>
+<end>78883102</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400000067</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400000067</link>
+</feature>
+<feature id="73">
+<chromosome>Chr1</chromosome>
+<start>78877217</start>
+<end>78878205</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400000066</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400000066</link>
+</feature>
+<feature id="74">
+<chromosome>Chr7</chromosome>
+<start>52673241</start>
+<end>52681111</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400022282</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400022282</link>
+</feature>
+<feature id="75">
+<chromosome>Chr8</chromosome>
+<start>35967349</start>
+<end>35971943</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400014792</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400014792</link>
+</feature>
+<feature id="76">
+<chromosome>Chr6</chromosome>
+<start>2324136</start>
+<end>2325840</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400020653</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020653</link>
+</feature>
+<feature id="77">
+<chromosome>Chr7</chromosome>
+<start>2645031</start>
+<end>2649873</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400030682</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400030682</link>
+</feature>
+<feature id="78">
+<chromosome>Chr12</chromosome>
+<start>2467759</start>
+<end>2473729</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400007913</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400007913</link>
+</feature>
+<feature id="79">
+<chromosome>Chr7</chromosome>
+<start>44456825</start>
+<end>44458951</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400018352</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400018352</link>
+</feature>
+<feature id="80">
+<chromosome>Chr8</chromosome>
+<start>4560068</start>
+<end>4561577</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400005863</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400005863</link>
+</feature>
+<feature id="81">
+<chromosome>Chr8</chromosome>
+<start>41552161</start>
+<end>41555878</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400012239</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400012239</link>
+</feature>
+<feature id="82">
+<chromosome>Chr3</chromosome>
+<start>17562136</start>
+<end>17568987</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400009077</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400009077</link>
+</feature>
+<feature id="83">
+<chromosome>Chr9</chromosome>
+<start>49305304</start>
+<end>49307486</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400011572</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400011572</link>
+</feature>
+<feature id="84">
+<chromosome>Chr6</chromosome>
+<start>52810669</start>
+<end>52819407</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400030366</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400030366</link>
+</feature>
+<feature id="85">
+<chromosome>Chr2</chromosome>
+<start>53531122</start>
+<end>53531697</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400010238</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400010238</link>
+</feature>
+<feature id="86">
+<chromosome>Chr11</chromosome>
+<start>40831541</start>
+<end>40840496</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400027397</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400027397</link>
+</feature>
+<feature id="87">
+<chromosome>Chr1</chromosome>
+<start>4865419</start>
+<end>4873370</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400022701</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400022701</link>
+</feature>
+<feature id="88">
+<chromosome>Chr12</chromosome>
+<start>1789232</start>
+<end>1790501</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400007873</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400007873</link>
+</feature>
+<feature id="89">
+<chromosome>Chr10</chromosome>
+<start>3892795</start>
+<end>3894399</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400021683</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021683</link>
+</feature>
+<feature id="90">
+<chromosome>Chr12</chromosome>
+<start>1715662</start>
+<end>1716535</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400007929</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400007929</link>
+</feature>
+<feature id="91">
+<chromosome>Chr12</chromosome>
+<start>1672415</start>
+<end>1673280</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400007928</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400007928</link>
+</feature>
+<feature id="92">
+<chromosome>Chr5</chromosome>
+<start>7332861</start>
+<end>7339009</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400004113</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400004113</link>
+</feature>
+<feature id="93">
+<chromosome>Chr9</chromosome>
+<start>22577580</start>
+<end>22579892</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400035001</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400035001</link>
+</feature>
+<feature id="94">
+<chromosome>Chr2</chromosome>
+<start>66311646</start>
+<end>66312413</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400010052</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400010052</link>
+</feature>
+<feature id="95">
+<chromosome>Chr2</chromosome>
+<start>60836405</start>
+<end>60837219</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400001534</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400001534</link>
+</feature>
+<feature id="96">
+<chromosome>Chr4</chromosome>
+<start>17451906</start>
+<end>17455525</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400013819</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400013819</link>
+</feature>
+<feature id="97">
+<chromosome>Chr7</chromosome>
+<start>44319770</start>
+<end>44322534</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400018307</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400018307</link>
+</feature>
+<feature id="98">
+<chromosome>Chr10</chromosome>
+<start>3898897</start>
+<end>3900645</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400021684</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400021684</link>
+</feature>
+<feature id="99">
+<chromosome>Chr11</chromosome>
+<start>19871489</start>
+<end>19875030</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400015910</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400015910</link>
+</feature>
+<feature id="100">
+<chromosome>Chr3</chromosome>
+<start>29285190</start>
+<end>29286095</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400020606</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400020606</link>
+</feature>
+<feature id="101">
+<chromosome>Chr4</chromosome>
+<start>50897911</start>
+<end>50903861</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>PGSC0003DMG400024823</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=PGSC0003DMG400024823</link>
+</feature>
+</genome>

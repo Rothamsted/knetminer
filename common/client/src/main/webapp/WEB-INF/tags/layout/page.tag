@@ -23,10 +23,16 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <script type="text/javascript" src="html/javascript/jquery-1.4.1.js"></script>
+        <!-- <link rel="stylesheet" type="text/css" href="html/css/style.css"/> -->
+        
+        <!-- GeneMap -->
+        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+        <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
+        <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
+
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
-        <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script>
+    <!--    <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script> -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
        	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
 

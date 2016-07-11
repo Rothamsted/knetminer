@@ -105,14 +105,15 @@
 	<div id="tabviewer">
 
     	<div id="tabviewer_buttons">
-        	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div>
+        <!--	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div> -->
+		<div class="menu_button button_off" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="resultsTable_button"><a href="javascript:;" onclick="activateButton('resultsTable');">Gene View</a> </div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="menu_button button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
         	<div class="button_filler"></div>
         </div>
         <div id="tabviewer_content">
-            <div id="pGViewer" class="resultViewer">
+            <!--<div id="pGViewer" class="resultViewer">
                 <center>
                     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle">
                         <param name="allowScriptAccess" value="sameDomain" />
@@ -130,11 +131,15 @@
                     </object>
                 </center>
             </div>
+	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
+	    <div id="genemap-tab" class="resultViewer">
+                <div id="genemap" class="bootstrap"> </div>
+	    </div>
             <div id="resultsTable" class="resultViewer" style="display:none;" ></div>
+            <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
             <div id="NetworkCanvas" class="resultViewer" style="display:none;">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
             </div>
-			<div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
         </div>
 	</div>
 </div>

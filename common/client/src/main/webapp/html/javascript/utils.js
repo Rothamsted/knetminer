@@ -2,6 +2,9 @@
 var genespreadsheet = new Array();
 var genes;
 */
+
+var genemap = GENEMAP.GeneMap().width(750).height(400);
+
 /*
 Functions for show and hide structures when a button is pressed
 */
@@ -20,15 +23,15 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 		$('.synonym_right_border').attr('src','html/image/synonym_right_off.png');
 		$('.synonym_left_border').attr('src','html/image/synonym_left_off.png');
 		$('.buttonSynonym_on').attr('class','buttonSynonym_off');
-		
+
 		$('.tabBox:visible').fadeOut();
 		$('#'+tabBoxRelated).fadeIn();
-		
+
 		//Gets the table related to the active tab
-		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');	
+		relatedTable = $('#'+tabBoxRelated+' div.conceptTabOn').attr('rel');
 		relatedTable = escapeJquerySelectors(relatedTable);
 		$('#'+relatedTable).fadeIn();
-                
+
 		$('#'+option+'_buttonSynonym').attr('class','buttonSynonym_on');
 		$('#'+option+'synonym_right_border').attr('src','html/image/synonym_right_on.png');
 		$('#'+option+'synonym_left_border').attr('src','html/image/synonym_left_on.png');
@@ -40,7 +43,7 @@ $('.suggestorTable:visible').fadeOut(0,function(){
 		tabFrom = escapeJquerySelectors(tabFrom);
 		tabItemFrom = escapeJquerySelectors(tabItemFrom);
 		tableTo = escapeJquerySelectors(tableTo);
-		
+
 		//$('#'+tabFrom+' .conceptTabOn').attr('class','conceptTabOff');
 		$('#'+tabFrom+' .conceptTabOn').toggleClass('conceptTabOff conceptTabOn');
 		$('#'+tableTo).fadeIn();
@@ -54,7 +57,7 @@ $('.resultViewer:visible').fadeOut(0,function(){
 		$('.button_off').attr('class','button_on');
 		$('#'+option).fadeIn();
 		$('#'+option+'_button').attr('class','button_off');
-		
+
 		//Collapse Suggestor view
 		$('#suggestor_search').attr('src', 'html/image/expand.gif');
 		$('#suggestor_search_area').slideUp(500);
@@ -157,7 +160,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 
 /*
  * String containing the legend for all the tables and the network view.
- * 
+ *
  */
 var legendHtmlContainer = 	"<div id=legend_picture>" +
 								"<div id=legend_container>" +
@@ -202,7 +205,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 							"</div>";
 /*
  * Function to check the brackets in a string are balanced
- * 
+ *
  */
 function bracketsAreBalanced(str) {
 	var count = 0;
@@ -220,15 +223,15 @@ function bracketsAreBalanced(str) {
 
 /*
  * Function to get the number of matches
- * 
- */		
-function matchCounter(){	
-	var keyword = $('#keywords').val();	
+ *
+ */
+function matchCounter(){
+	var keyword = $('#keywords').val();
 	if(keyword.length == 0){
-		$('#matchesResultDiv').html('Please, start typing your query')	
+		$('#matchesResultDiv').html('Please, start typing your query')
 	} else {
 		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
-			var searchMode = "counthits";		
+			var searchMode = "counthits";
 			var request = "mode="+searchMode+"&keyword="+keyword;
 			var url = 'OndexServlet?'+request;
 			$.post(url, '', function(response, textStatus){
@@ -237,7 +240,7 @@ function matchCounter(){
 						$('#matchesResultDiv').html('<span class="redText">The QTLNetMiner server is currently offline. Please try again later.</span>');
 					}
 					else if (response.split('|')[1] != "0"){
-						$('#matchesResultDiv').html('<b>'+response.split('|')[1]+' documents</b>  and <b>'+response.split('|')[2]+' genes</b> will be found with this query');	
+						$('#matchesResultDiv').html('<b>'+response.split('|')[1]+' documents</b>  and <b>'+response.split('|')[2]+' genes</b> will be found with this query');
 						$('#keywordsSubmit').removeAttr("disabled");
 					}
 					else
@@ -247,7 +250,7 @@ function matchCounter(){
 		}else{
 			$('#matchesResultDiv').html('');
 		}
-	}	
+	}
 }
 
 /*
@@ -259,7 +262,7 @@ function evidencePath(id){
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	var searchMode = "evidencepath";
-	var keyword = id;		
+	var keyword = id;
 	var request = "mode="+searchMode+"&keyword="+keyword;
 	var url = 'OndexServlet?'+request;
 //	generateNetwork(url,'');
@@ -273,7 +276,7 @@ function evidencePath(id){
 * 	- advanced search
 * 	- tooltips
 */
-	
+
 $(document).ready(
 		function(){
 			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
@@ -281,14 +284,18 @@ $(document).ready(
 				$('#genomeorqtlsearchbox').show();
 				if (typeof gviewer != "undefined" && gviewer == false) {
 					activateButton('resultsTable');
-					$('#pGViewer_button').hide();	
-					$('#pGViewer').hide();
+//					$('#pGViewer_button').hide();
+					$('#genemap-tab_button').hide();
+//					$('#pGViewer').hide();
+					$('#genemap-tab').hide();
 				}
 			}
 			else{
 				activateButton('resultsTable');
-				$('#pGViewer_button').hide();	
-				$('#pGViewer').hide();	
+//					$('#pGViewer_button').hide();
+					$('#genemap-tab_button').hide();
+//					$('#pGViewer').hide();
+					$('#genemap-tab').hide();
 			}
 			$("#keywords").focus();
 			// Calculates the amount of documents to be displayed with the current query
@@ -336,7 +343,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 								   'onChange': 'findGenes(\'genes'+(curMaxInput)+'\', $(\'#chr'+(curMaxInput)+' option:selected\').val(), $(\'#start'+(curMaxInput)+'\').val(), $(\'#end'+(curMaxInput)+'\').val())',
 								   'value': ''
 								  })
-							.parent().parent()	  
+							.parent().parent()
 							.find('td:eq(1)')
 							.find('input:text:eq(0)')
 							.attr({'id': 'start' + (curMaxInput),
@@ -369,7 +376,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 								'onFocus': 'findGenes(this.id, $(\'#chr'+(curMaxInput)+' option:selected\').val(), $(\'#start'+(curMaxInput)+'\').val(), $(\'#end'+(curMaxInput)+'\').val())',
 								'value': ''
 						});
-						
+
 						$('#removeRow').removeAttr('disabled');
 						if ($('#region_search_area tr').length >= 7) {
 							$('#addRow').attr('disabled', true);
@@ -386,13 +393,13 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 							$('#removeRow').attr('disabled', true);
 						}
 						else if ($('#rows tr').length < 7) {
-							$('#addRow').removeAttr('disabled');								
+							$('#addRow').removeAttr('disabled');
 						}
 						return false;
 					});
 			// Region search
 		     $('#region_search').click(
-		    		 function() {				         
+		    		 function() {
 		    			 var src = ($(this).attr('src') === 'html/image/expand.gif')
 		    	            ? 'html/image/collapse.gif'
 		    	            : 'html/image/expand.gif';
@@ -404,7 +411,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    		 });
 			// Advanced search
 		     $('#advanced_search').click(
-		    		 function() {				         
+		    		 function() {
 		    			 var src = ($(this).attr('src') === 'html/image/expand.gif')
 		    	            ? 'html/image/collapse.gif'
 		    	            : 'html/image/expand.gif';
@@ -430,24 +437,24 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 						    }																	  
 		    		 });
 		    //Match counter
-			//$("#keywords").keyup(matchCounter());			 
-		 	// Tooltip	 	 	 		 		
+			//$("#keywords").keyup(matchCounter());
+		 	// Tooltip
 		     var sampleQueryButtons = "<strong>Example queries</strong>";
-			    
+
 		    	$.ajax({
 		    		type: 'GET',
 		    		url: "html/data/sampleQuery.xml",
 		    		dataType: "xml",
 		    		cache: false, //force cache off
 		    		success: function(sampleQuery) {
-		    			
+
 		    			// Parse the values from the recieved sampleQueries.xml file into an object.
 		    			var sampleQueries = new Array();	//object to hold parsed xml data
 		    			$("query", sampleQuery).each(function() {	//for each different Query
 		    				var tempXML = new Array();
 		    				tempXML["name"] = $("name", this).text();
 		    				tempXML["desciption"] = $("description", this).text();
-		    				tempXML["term"] = $("term", this).text();	
+		    				tempXML["term"] = $("term", this).text();
 		    				tempXML["withinRegion"] = $("withinRegion", this).text();
 		    				var regions = Array();
 		    				$("region", this).each(function(){
@@ -459,9 +466,9 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    					});
 		    				});
 		    				tempXML["regions"] = regions;
-		    				
+
 		    				tempXML["mapGLWithoutRestriction"] = $("mapGLWithoutRestriction", this).text();
-		    				
+
 		    				var genes = Array();
 		    				$("gene", this).each(function(){
 		    					genes.push($(this).text());
@@ -469,10 +476,10 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    				tempXML["genes"] = genes;
 		    				sampleQueries.push(tempXML);
 		    			});
-		    			
+
 	    				/*
 	    				 * Object structure for parsed XML data
-	    				 * 
+	    				 *
 	    				 * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
 	    				 * 		> name				= STRING - Name of the example query
 	    				 * 		> description		= STRING - short description of the example query
@@ -485,9 +492,9 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 	    				 * 			> label		 	= STRING - region label
 	    				 * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
 	    				 * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
-	    				 * 
+	    				 *
 	    				 */
-		    			
+
 		    			// Create a string of html with a button for each of the example queries.
 		    			for(i=0; i<sampleQueries.length; i++) {
 		    				desc = "";
@@ -497,32 +504,32 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    				sampleQueryButtons += "</br><a href:'javascript;' class='exampleQuery' id='exampleQuery"+i+"'>"+sampleQueries[i].name+"</button></a>"+desc;
 		    	 			//$("#exampleSelect").append("<option value="+i+">"+sampleQueries[i].term+"</option>");
 		    	 		}
-		    			
+
 		    			// set an event handler to populate the search fields when one of the example queries is clicked
-		    	 		$(".exampleQuery").live("click", function() {
+							$('body').on('click', '.exampleQuery', function() {
 		    	 			sampleNum = $(this)[0].id.replace('exampleQuery','');
 		    	 			$("#keywords").val(sampleQueries[sampleNum].term);
 		    	 			var numRegions = sampleQueries[sampleNum].regions.length;
-		    	 			
-		    	 			
+
+
 		    	 			if(trim(sampleQueries[sampleNum].withinRegion) == 'true'){
 		     					$("input:radio[name=search_mode]").val(['qtl']);
 		     				} else {
 		     					$("input:radio[name=search_mode]").val(['genome']);
 		     				}
-		    	 			 				
+
 		    	 			if(numRegions > 0){
 		    	 				while(!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
-		    	 					$("#addRow").click(); 
+		    	 					$("#addRow").click();
 		    	 				}
 		    	 				while($("#chr" + (numRegions + 1)).length){	//while the row after the last one for which we have data exists remove one.
 		    	 					$("#removeRow").click();
 		    	 				}
-		    	 				
-		    	 				if($("#region_search_area").is(":hidden")){	
+
+		    	 				if($("#region_search_area").is(":hidden")){
 		    	 					$("#region_search").click();
 		    	 				}
-		    	 				
+
 		    	 				//loop through all regions and fill in the QTL region rows
 		    	 				for(i=0; i<numRegions; i++){
 		    	 					var num = i+1;
@@ -536,26 +543,26 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    	 				while($("#chr2").length){	//while there is more than 1 row remove one.
 		    	 					$("#removeRow").click();
 		    	 				}
-		    	 				
+
 		    	 				$("#chr1").attr('selectedIndex',0);
 		     					$("#start1").val("");
 		     					$("#end1").val("");
 		     					$("#label1").val("");
 		     					$("#genes1").focus();
-		     					
+
 		    	 				if($("#region_search_area").is(":visible")){
 		    		 				$("#region_search").click();
 		    		 			}
 		    	 			}
-		    	 			
+
 		    	 			if(trim(sampleQueries[sampleNum].mapGLWithoutRestriction) == 'true'){
 		     					$("input:radio[name=list_mode]").val(['GL']);
 		     				} else {
 		     					$("input:radio[name=list_mode]").val(['GLrestrict']);
 		     				}
-		    	 			
+
 		    	 			if(sampleQueries[sampleNum].genes.length > 0){
-		    	 				if($("#advanced_search_area").is(":hidden")){	
+		    	 				if($("#advanced_search_area").is(":hidden")){
 		    	 					$("#advanced_search").click();
 		    	 				}
 		    	 				var genesText = "";
@@ -569,7 +576,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    		 				$("#advanced_search").click();
 		    		 			}
 		    	 			}
-		    	 			
+
 		    	 			matchCounter(); // updates number of matched documents and genes counter
                                                 // Refresh the Query Suggester, if it's already open.
 	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
@@ -577,9 +584,9 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
                                                   }
 		    	 		});
 		    		}
-		    	}); 
-				
-		    	$('span.hint').live('mouseenter', function(event){
+		    	});
+
+					$('body').on('mouseenter', 'span.hint', function(event){
 		 			target = $(this)[0].id;
 	 				var message = "";
 	 				addClass = "";
@@ -601,10 +608,10 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 	 					message = 'This opens the Ondex Web java applet and displays a sub-network of the large Ondex knowledgebase that only contains the selected genes (light blue triangles) and the relevant evidence network.';
 	 					//message = 'Sort multiple columns simultaneously by holding down the shift key and clicking column headers! ';
 	 				}
-	 				
+
 					$('div.tooltip').remove();
 					$('<div class="tooltip '+addClass+'">'+message+'</div>').appendTo('body');
-					
+
 					tooltipY = $(this).offset()['top'] - 12;
 					tooltipX = $(this).offset()['left'] - 4;
 					winWidth = $(window).width();
@@ -612,33 +619,35 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 						tooltipX = winWidth - 300;
 					}
 					$('div.tooltip.tooltip-static').css({top: tooltipY, left: tooltipX}); //for sample queries tooltip
-		 		});	 
+		 		});
 
 
-				
-		 		
-		 		$('span.hint:not(#hintEgKeywords)').live('mousemove', function(event){
+
+				$('body').on('mousemove', 'span.hint:not(#hintEgKeywords)', function(event){
 		 			var tooltipX = event.pageX - 8;
 		     		var tooltipY = event.pageY + 8;
-		     		
+
 		     		winWidth = $(window).width();
 					if(tooltipX + 300 > winWidth){
 						tooltipX = winWidth - 300;
 					}
-					
+
 		     		$('div.tooltip').css({top: tooltipY, left: tooltipX});
-		 		}); 	 	
-		 		
-		 		$('span.hint').live('mouseleave', function(event){
+		 		});
+
+
+				$('body').on('mouseleave', 'span.hint', function(event){
 		 			if($(event.relatedTarget).hasClass("tooltip-static") || $(event.relatedTarget).parent().hasClass("tooltip-static")){
 						return;
 					}
 		 			$('div.tooltip').remove();
-		 		});	 
-		 		
-		 		$('div.tooltip-static').live('mouseleave', function(event){
+		 		});
+
+				$('body').on('mouseleave', 'div.tooltip-static', function(event){
 		 			$('div.tooltip').remove();
-		 		});	
+		 		});
+
+				genemap.draw('#genemap', 'html/data/basemap.xml', null);
 			});
 
 
@@ -662,7 +671,7 @@ function refreshQuerySuggester() {
 
 /*
  * Function to refresh GViewer
- * 
+ *
  */
 function searchKeyword(){
 	var searchMode = getRadioValue(document.gviewerForm.search_mode);
@@ -676,31 +685,31 @@ function searchKeyword(){
 		request = request+"&listMode="+listMode;
 	}
 	var counter = 1;
-	
-	for(i=1; i<=regions; i++){	
+
+	for(i=1; i<=regions; i++){
 		var chr = $("#chr"+i+" option:selected").val();
 		var start = trim($("#start"+i).val());
 		var end = trim($("#end"+i).val());
 		var label = trim($("#label"+i).val());
-		
+
 		if(chr.length>0 && start.length>0 && end.length>0 && parseInt(start)<parseInt(end)){
 				request = request+"&qtl"+counter+"="+chr+":"+start+":"+end+":"+label;
-				counter++;	
+				counter++;
 		}
 	}
 //console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
-//	else if(($("#genes1").val() == 0) && (searchMode == "qtl")) {		
+//	else if(($("#genes1").val() == 0) && (searchMode == "qtl")) {
 //		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please define at least one QTL region.</b></div>');
 //	}
 	else if(list.length > 500000) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
 	}
 	else{
-		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');			
-		
+		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
+
 		$.ajax({
 	        url:"OndexServlet?"+request,
 	        type:'POST',
@@ -709,7 +718,7 @@ function searchKeyword(){
 	        timeout: 1000000,
 	        data:{list : list},
 	        error: function(errorlog){
-				alert("An error has ocurred "+errorlog);						  
+				alert("An error has ocurred "+errorlog);
 	        },
 	        success: function(response, textStatus){
 				$("#loadingDiv").replaceWith('<div id="loadingDiv"></div>');
@@ -722,7 +731,7 @@ function searchKeyword(){
 					var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 
 					if (typeof gviewer != "undefined" && gviewer != false) {
-						
+
 						var longestChromosomeLength="";
 						if (typeof longest_chr != "undefined") {
 							if (longest_chr != null) {
@@ -730,52 +739,75 @@ function searchKeyword(){
 							}
 						}
 
-						var genomicView = '<div id="pGViewer" class="resultViewer">';
+					/*	var genomicView = '<div id="pGViewer" class="resultViewer">';
 						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
 						genomicView = genomicView + gviewer_html;
-						$("#pGViewer").replaceWith(genomicView);
-                                                              }
+						$("#pGViewer").replaceWith(genomicView); */
+
+						//Collapse Suggestor view
+						$('#suggestor_search').attr('src', 'html/image/expand.gif');
+				 		$('#suggestor_search_area').slideUp(500);
+					}
 
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
-					
+
+
 					activateButton('resultsTable');
-					document.getElementById('resultsTable').innerHTML = "";	
+					document.getElementById('resultsTable').innerHTML = "";
 					document.getElementById('evidenceTable').innerHTML = "";
 					document.getElementById('NetworkCanvas').innerHTML = "";
-					
+
 	        	}
 				else {
-					var splitedResponse = response.split(":");  
+                                    // For a valid response
+					var splitedResponse = response.split(":");
 					var results = splitedResponse[4];
 					var docSize = splitedResponse[5];
 					var totalDocSize = splitedResponse[6];
 					var candidateGenes = parseInt(results);
-					
+
 					var longestChromosomeLength="";
 					if (typeof longest_chr != "undefined") {
 						if (longest_chr != null) {
 							longestChromosomeLength="&longestChromosomeLength="+longest_chr;
 						}
 					}
-					
+
 					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
-					var genomicView = '<div id="pGViewer" class="resultViewer">';
+				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
 						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
-					}	
-					
-					gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-					genomicView = genomicView + gviewer_html;
+					}
+
+				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
+				//	genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
-					$("#pGViewer").replaceWith(genomicView);	
+				//	$("#pGViewer").replaceWith(genomicView);
+
+					// Setup the mapview component
+					var basemap = "html/data/basemap.xml";
+					var annotations = data_url + splitedResponse[1];
+                                        // create new basemap with bands for genes and pass it as well to the Map Viewer.
+                                        //
+//					console.log("Search response= "+ response +"\n");
+//					console.log("splitedResponse[:]= "+ splitedResponse);
+//					console.log("splitedResponse[0]= "+ splitedResponse[0]);
+//					console.log("splitedResponse[1]= "+ splitedResponse[1]);
+//					console.log("splitedResponse[2]= "+ splitedResponse[2]);
+//					console.log("splitedResponse[3]= "+ splitedResponse[3]);
+//					console.log("results(splitedResponse[4])= "+ results +", candidateGenes= "+ candidateGenes);
+//					console.log("docSize(splitedResponse[5])= "+ splitedResponse);
+//					console.log("totalDocSize(splitedResponse[6])= "+ splitedResponse);
+//					console.log("annotations= "+ annotations);
+
+					genemap.draw('#genemap', basemap, annotations);
 
 					//Collapse Suggestor view
 					$('#suggestor_search').attr('src', 'html/image/expand.gif');
-			 		$('#suggestor_search_area').slideUp(500);
-										
-					
-					activateButton('resultsTable');					
+                                        $('#suggestor_search_area').slideUp(500);
+
+					activateButton('resultsTable');
 					createGenesTable(data_url+splitedResponse[2], keyword, candidateGenes);
 					createEvidenceTable(data_url+splitedResponse[3]);
 				}
@@ -786,11 +818,11 @@ function searchKeyword(){
 
 /*
  * Function
- * 
+ *
  */
 function generateNetwork(url,list){
 	//OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
-	$.post(url, list, function(response, textStatus){																							 
+	$.post(url, list, function(response, textStatus){
 	var oxl = response.split(":")[1];
 
 	var output ="<div id='buttonBox'>" +
@@ -799,7 +831,7 @@ function generateNetwork(url,list){
 	        		"<a title='Open in new window' href='javascript:;' id='newNetworkWindow' class='networkButtons' type='button'></a>" +
 	        		"<span id='networkViewerHelp' class='networkButtons hint-big' title='Network Viewer Help'></span>" +
 	        	"</div>" +
-        		
+
         		"<div id='modalShadow'></div>" +
         		"<div class='modalBox'>" +	//placeholder to stop page length changing when modalBox is opened.
 	        		"<div id='modalBox' class='modalBox'>" +	//modal box is moved to center of window and resizes with it
@@ -817,73 +849,73 @@ function generateNetwork(url,list){
  				"<li>If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</li>" +
  				"</div>";
 
-				
-	
+
+
     //output += legendHtmlContainer;
-	
+
 	$('#NetworkCanvas').html(output);
-	
-	
-	var appletSettings = {	
+
+
+	var appletSettings = {
 		id: 'OndexWeb',
 		url: applet_url+'OndexWeb.jnlp',
 		width : '100%',
 		height : '100%',
 		placeholder:'OndexWebApplet',
-		params: 
+		params:
 		{
 			loadappearance : true,
 			filename : data_url+oxl
 		}
 	};
-	
+
 	dtjava.embed(appletSettings, { jvm: "1.6+" }, {});
-	
+
 	$('#networkViewerHelp').click(function() {
 		$('#networkHelpBox').slideToggle(300);
 	});
-	
+
 	$('#networkHelpBox').click(function() {
 		$('#networkHelpBox').slideToggle(300);
 	})
-	
+
 	$("#newNetworkWindow").click(function(){
 		var w = window.open('html/networkViewer.html?oxl='+oxl,'NetworkWindow','resizable=yes,dependent=yes,status=no,toolbar=no,menubar=no,scrollbars=no,menubar=no');
 	});
-	
+
 	$('#maximiseNetwork').click(function() {
 		$('#modalBox').addClass("modalBoxVisible");
 		//$('#restoreNetwork').show();
 		$('#modalShadow').show();
 	});
-	
+
 	function closeModalBox(){
 		$('#modalBox').removeClass("modalBoxVisible");
 		//$('#restoreNetwork').hide();
 		$('#modalShadow').hide();
 	}
-	
+
 	$('#restoreNetwork, #modalShadow, #legend_picture').click(function(){
 			closeModalBox();
 	}).find('#legend_frame').click(function (e) {
 		  e.stopPropagation();
-	});	
-	
+	});
+
 	$('#modalShadow').click(function(){
 			closeModalBox();
 	});
-	
-	
+
+
 	$(document).keyup(function(e) {
         if (e.keyCode == 27){
         	closeModalBox();
         }
 	});
-	
-	
+
+
 	activateButton('NetworkCanvas');
-				
-				
+
+
 	});
 }
 
@@ -900,7 +932,7 @@ var cyjs_networkView= false;
  */
 function generateCyJSNetwork(url,list){
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
-    $.post(url, list, function(response, textStatus) {																							 
+    $.post(url, list, function(response, textStatus) {
     var oxl = response.split(":")[1];
 
     // Network Graph: JSON file.
@@ -913,7 +945,7 @@ function generateCyJSNetwork(url,list){
             // If the window is already open, close the window to reopen it later using new JSON dataset (file).
             cyjs_networkView.close();
            }
-         cyjs_networkView= window.open("html/networkGraph.html", "Network View", 
+         cyjs_networkView= window.open("html/networkGraph.html", "Network View",
                   "fullscreen=yes, location=no, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, titlebar=yes, status=yes");
          // Pass the JSON file path to a global variable in the new window.
          cyjs_networkView.jsonFile= jsonFile;
@@ -923,7 +955,7 @@ function generateCyJSNetwork(url,list){
 	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 	  $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
         }
-    catch(err) { 
+    catch(err) {
           var errorMsg= err.stack;
           console.log("Error: <br/>"+"Details: "+ errorMsg);
          }
@@ -932,12 +964,12 @@ function generateCyJSNetwork(url,list){
 
 /*
  * Function
- * 
+ *
  */
-function generateMultiGeneNetwork(keyword) {	
+function generateMultiGeneNetwork(keyword) {
 	var candidatelist = "";
 	var cb_list = document.checkbox_form.candidates;
-	for (var i=0; i < cb_list.length; i++) {		
+	for (var i=0; i < cb_list.length; i++) {
 		if(cb_list[i].checked) {
 			candidatelist += cb_list[i].value + "\n";
 		}
@@ -945,7 +977,7 @@ function generateMultiGeneNetwork(keyword) {
 	if(candidatelist == "") {
 		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
 	} else {
-			generateNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});				
+			generateNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
 	}
 }
 
@@ -954,10 +986,10 @@ function generateMultiGeneNetwork(keyword) {
  * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
  * @author: Ajit Singh.
  */
-function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {	
+function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 	var candidatelist = "";
 	var cb_list = document.checkbox_form.candidates;
-	for (var i=0; i < cb_list.length; i++) {		
+	for (var i=0; i < cb_list.length; i++) {
 		if(cb_list[i].checked) {
 			candidatelist += cb_list[i].value + "\n";
 		}
@@ -975,12 +1007,12 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 
 /*
  * Function
- * 
+ *
  */
 function findGenes(id, chr_name, start, end) {
 	if(chr_name != "" && start != "" && end != ""){
 		var searchMode = "countloci";
-		var keyword = chr_name+"-"+start+"-"+end;		
+		var keyword = chr_name+"-"+start+"-"+end;
 		var request = "mode="+searchMode+"&keyword="+keyword;
 		var url = 'OndexServlet?'+request;
 		$.post(url, '', function(response, textStatus){
@@ -993,7 +1025,7 @@ function findGenes(id, chr_name, start, end) {
 
 /*
  * Function
- * 
+ *
  */
 function contactWindow() {
 	window.open( "html/contact.html", "QTLNetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0" );
@@ -1001,7 +1033,7 @@ function contactWindow() {
 
 /*
  * Function
- * 
+ *
  */
 function getRadioValue(radio) {
 	var radioValue;
@@ -1015,7 +1047,7 @@ function getRadioValue(radio) {
 
 /*
  * Function
- * 
+ *
  */
 function createGenesTable(tableUrl, keyword, rows){
 	var table = "";
@@ -1025,13 +1057,13 @@ function createGenesTable(tableUrl, keyword, rows){
         dataType:'text',
         async: true,
         timeout: 1000000,
-        error: function(){						  
+        error: function(){
         },
         success: function printGenesTable(text){
         	if($("#numGenes").length){
         		rows = $("#numGenes").val();
         	}
-        	
+
     		var candidate_genes = text.split("\n");
     		var results = candidate_genes.length-2;
 
@@ -1048,8 +1080,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="500">500</option>';
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
-//				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';			
-				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';			
+//				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="chkusr_known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="chkusr_novel" title="Click to select Targets without existing evidence." /></div>';
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1059,32 +1091,32 @@ function createGenesTable(tableUrl, keyword, rows){
 				if(multiorganisms == true){
 					table = table + '<th width="60">'+values[5]+'</th>';
 				}
-				if(reference_genome == true){		
+				if(reference_genome == true){
 					table = table + '<th width="60">'+values[3]+'</th>';
 					table = table + '<th width="70">'+values[4]+'</th>';
 				}
 				//table = table + '<th width="70">'+values[5]+'</th>';
-				table = table + '<th width="70">'+values[6]+'</th>';							
+				table = table + '<th width="70">'+values[6]+'</th>';
 				table = table + '<th width="85">'+values[7]+'</th>';
 				table = table + '<th width="70">'+values[8]+'</th>';
 				table = table + '<th width="220">'+values[9]+'</th>';
-				table = table + '<th width="70">Select</th>';							
+				table = table + '<th width="70">Select</th>';
 				table = table + '</tr>';
 				table = table + '</thead>';
 				table = table + '<tbody class="scrollTable">';
-				
+
 				//this loop iterates over the full table and prints the
 				//first n rows + the user provided genes
 				//can be slow for large number of genes, alternatively server
-				//can filter and provide smaller file for display																				
+				//can filter and provide smaller file for display
 				for(var i=1; i<=results; i++) {
 					var values = candidate_genes[i].split("\t");
-					
+
 					if(i>rows && values[7]=="no"){
 						continue;
 					}
 		        	table = table + '<tr>';
-				    
+
 				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
 				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 
@@ -1101,7 +1133,7 @@ function createGenesTable(tableUrl, keyword, rows){
 					}else{
 						var taxid = '';
 					}
-					if(reference_genome == true){		
+					if(reference_genome == true){
 						var chr = '<td>'+values[3]+'</td>';
 						var start = '<td>'+values[4]+'</td>';
 					}else{
@@ -1110,7 +1142,7 @@ function createGenesTable(tableUrl, keyword, rows){
 					}
 				    var score = '<td>'+values[6]+'</td>';
 				    var usersList = '<td>'+values[7]+'</td>';
-				    
+
 				    //QTL coloum with information box
 				    var withinQTL = '<td>';
 				    if(values[8].length > 1){
@@ -1119,17 +1151,17 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	//a replace from dot to underline is necessary for html syntax
 				    	//withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><span onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideDown(300);" style="cursor:pointer;">'+withinQTLs.length+'</span>';
 				    	withinQTL = '<td><div class="qtl_item qtl_item_'+withinQTLs.length+'" title="'+withinQTLs.length+' QTLs"><a href"javascript:;" class="dropdown_box_open" id="qtl_box_open_'+values[1].replace(".","_")+withinQTLs.length+'">'+withinQTLs.length+'</a>';
-				    	
+
 				    	//Builds the evidence box
 				    	//withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box" style="display:none"><a class="qtl_box_close" href="javascript:;" onclick="$(\'#qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'\').slideUp(100);"></a>';
 				    	withinQTL = withinQTL+'<div id="qtl_box_'+values[1].replace(".","_")+withinQTLs.length+'" class="qtl_box"><span class="dropdown_box_close" id="qtl_box_close_'+values[1].replace(".","_")+withinQTLs.length+'"></span>';
 
-				    	
+
 				    	withinQTL = withinQTL+'<p><span>'+"QTLs"+'</span></p>';
-				    	
+
 				    	var uniqueQTLs = new Object();
 				    	var uniqueTraits = new Object();
-				    	
+
 				    	for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
 				    		var withinQTL_elements = withinQTLs[count_i].split("//");
 				    		if (withinQTL_elements[1].length > 0) {
@@ -1145,7 +1177,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				    				uniqueQTLs[withinQTL_elements[0]] = uniqueQTLs[withinQTL_elements[0]] + 1;
 				    		}
 				    	}
-				    	
+
 				    	var unique = "";
 				    	for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
 				    		var withinQTL_elements = withinQTLs[count_i].split("//");
@@ -1167,8 +1199,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	withinQTL = withinQTL+'0';
 				    }
 				    withinQTL = withinQTL + '</td>';
-				    
-				    
+
+
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
 					var values_evidence = values[9];
@@ -1177,8 +1209,8 @@ function createGenesTable(tableUrl, keyword, rows){
 						for (var count_i = 0; count_i < (evidences.length); count_i++) {
 							//Shows the icons
 							var evidence_elements = evidences[count_i].split("//");
-							//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';	
-							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';	
+							//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';
+							evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
 
 							//Builds the evidence box
 							//evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
@@ -1189,38 +1221,38 @@ function createGenesTable(tableUrl, keyword, rows){
 								//link publications with pubmed
 								pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
 								if(evidence_elements[0] == 'Publication')
-									evidenceValue = '<a href="'+pubmedurl+evidence_elements[count_eb].substring(5)+'" target="_blank">'+evidence_elements[count_eb]+'</a>';	
+									evidenceValue = '<a href="'+pubmedurl+evidence_elements[count_eb].substring(5)+'" target="_blank">'+evidence_elements[count_eb]+'</a>';
 								else
-									evidenceValue = evidence_elements[count_eb];	
-										
+									evidenceValue = evidence_elements[count_eb];
+
 								evidence = evidence+'<p>'+evidenceValue+'</p>';
 							}
 							evidence = evidence+'</div>';
-							evidence = evidence+'</div>';			
+							evidence = evidence+'</div>';
 						}
 					}
 					evidence = evidence+'</td>';
 					// Foreach evidence show the images - end
-					
+
 				    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 				    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
 					table = table + gene + taxid + chr + start + score + usersList + withinQTL + evidence + select;
 				    table = table + '</tr>';
 				}
-				table = table+'</tbody>';	
-		        table = table+'</table></div>';			        
-		        table = table + '</form>';	        
+				table = table+'</tbody>';
+		        table = table+'</table></div>';
+		        table = table + '</form>';
     		}
-    		
+
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
     		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
 //    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
-        
+
     		table = table + legendHtmlContainer; // add legend
-                
+
     		document.getElementById('resultsTable').innerHTML = table;
-    		
+
     		$("#numGenes").val(rows);
     		/*
     		 * click Handler for viewing a network.
@@ -1236,7 +1268,7 @@ function createGenesTable(tableUrl, keyword, rows){
                         // Generate Network using the new Network Viewer.
                         generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
     		});
-    		
+
     		/*
     		 * click handlers for opening and closing the qtl and evidence column drop down boxes.
     		 */
@@ -1245,13 +1277,13 @@ function createGenesTable(tableUrl, keyword, rows){
     			var targetname = $(e.target).attr("id").replace("open_","");
     			$("#"+targetname).slideDown(300);
         	});
-        	
+
         	$(".dropdown_box_close").click(function(e) {
     			e.preventDefault();
     			var targetname = $(e.target).attr("id").replace("close_","");
     			$("#"+targetname).slideUp(100);
         	});
-    		
+
         	$("#generateMultiGeneNetworkButton").click(function(e) {
         		generateMultiGeneNetwork(keyword);
         	});
@@ -1260,18 +1292,18 @@ function createGenesTable(tableUrl, keyword, rows){
         		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
         	});
 
-    		$("#tablesorter").tablesorter({ 
-    	        headers: { 
-    	            // do not sort "select" column 
+    		$("#tablesorter").tablesorter({
+    	        headers: {
+    	            // do not sort "select" column
     	        	5: {sorter:"digit"},
     	            8: {sorter: false}
-    	        } 
-    	    }); 
-    		
+    	        }
+    	    });
+
     		$("#numGenes").change(function(e){
     			printGenesTable(text);	//if number of genes to show changes redraw table.
     		});
-    		
+
     		/*
     		 * if select all targets is checked find all targets and check them.
     		 */
@@ -1317,18 +1349,18 @@ function createGenesTable(tableUrl, keyword, rows){
     			}
     		});
         }
-	});	
+	});
 }
 
 /*
  * Function
- * 
+ *
  */
 function containsKey(keyToTest, array){
 	result = false;
-	for(key in array) { 
+	for(key in array) {
 		if(key == keyToTest){
-			result = true;	
+			result = true;
 		}
 	}
 	return result;
@@ -1336,7 +1368,7 @@ function containsKey(keyToTest, array){
 
 /*
  * Function
- * 
+ *
  */
 function createEvidenceTable(tableUrl){
 	var table = "";
@@ -1346,7 +1378,7 @@ function createEvidenceTable(tableUrl){
         dataType:'text',
         async: true,
         timeout: 1000000,
-        error: function(){						  
+        error: function(){
         },
         success: function(text){
 			var summaryArr = new Array();
@@ -1362,41 +1394,41 @@ function createEvidenceTable(tableUrl){
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var header = evidenceTable[0].split("\t");
-				table = table + '<th width="60">Actions</th>';				
+				table = table + '<th width="60">Actions</th>';
 				table = table + '<th width="50">'+header[0]+'</th>';
 				table = table + '<th width="212">'+header[1]+'</th>'
-				table = table + '<th width="78">'+header[2]+'</th>';			
+				table = table + '<th width="78">'+header[2]+'</th>';
 				table = table + '<th width="60">'+header[3]+'</th>';
 				table = table + '<th width="103">'+header[4]+'</th>';
-				table = table + '<th width="50">'+header[5]+'</th>';							
+				table = table + '<th width="50">'+header[5]+'</th>';
 				table = table + '</tr>';
 				table = table + '</thead>';
 				table = table + '<tbody class="scrollTable">';
 				for(var ev_i=1; ev_i < (evidenceTable.length-1); ev_i++) {
 					values = evidenceTable[ev_i].split("\t");
 					table = table + '<tr>';
-					//table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';	
+					//table = table + '<td><a href="javascript:;" onclick="excludeKeyword(\'ConceptID:'+values[6]+'\', \'evidence_exclude_'+ev_i+'\', \'keywords\')"><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword" title="Exclude term"></div></a></td>';
 					table = table + '<td><div id="evidence_exclude_'+ev_i+'" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
 
 					//link publications with pubmed
 					pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
 					if(values[0] == 'Publication')
-						evidenceValue = '<a href="'+pubmedurl+values[1].substring(5)+'" target="_blank">'+values[1]+'</a>';	
+						evidenceValue = '<a href="'+pubmedurl+values[1].substring(5)+'" target="_blank">'+values[1]+'</a>';
 					else
-						evidenceValue = values[1];				 
+						evidenceValue = values[1];
 					table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
 					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
-					table = table + '<td>'+values[4]+'</td>';
+					table = table + '<td>'+values[4]+'</td>'; // user genes
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
 					//Calculates the summary box
 					if (containsKey(values[0],summaryArr)){
-						summaryArr[values[0]] = summaryArr[values[0]]+1;					
+						summaryArr[values[0]] = summaryArr[values[0]]+1;
 					} else {
-						summaryArr[values[0]] = 1;	
+						summaryArr[values[0]] = 1;
 					}
 				}
 				table = table + '</tbody>';
@@ -1406,22 +1438,22 @@ function createEvidenceTable(tableUrl){
 				table = table + '<div id="loadingNetwork_Div"></div>';
 				table = table + legendHtmlContainer;
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
-				
+
 				$('#evidenceTable').html(table);
-				
+
 				$(".evidenceTableExcludeKeyword").bind("click", {x: evidenceTable}, function(e) {
 					e.preventDefault();
 					var targetID = $(e.target).attr("id");
 					var evidenceNum = targetID.replace("evidence_exclude_","");
 	    			var values = e.data.x[evidenceNum].split("\t");
-					
+
 					if($(e.target).hasClass("excludeKeyword")){
 						excludeKeyword('ConceptID:'+values[6] , targetID, 'keywords');
 					} else {
 						excludeKeywordUndo('ConceptID:'+values[6] , targetID, 'keywords');
 					}
 				});
-				
+
 				/*
 				 * click handler for generating the evidence path network
 				 */
@@ -1431,7 +1463,7 @@ function createEvidenceTable(tableUrl){
 	    			var values = e.data.x[evidenceNum].split("\t");
 	    			evidencePath(values[6]);
 	    		});
-				
+
 				$("#tablesorterEvidence").tablesorter({
                     sortList: [[3,1]],  //sort by score in decending order
                     textExtraction: function(node) { // Sort TYPE column
@@ -1444,9 +1476,9 @@ function createEvidenceTable(tableUrl){
                 });
 				//Shows the summary box
 				for(key in summaryArr){
-					summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="'+key+'"></div>'+summaryArr[key]+'</div>';	
+					summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="'+key+'"></div>'+summaryArr[key]+'</div>';
 				}
-				
+
 				$('#evidenceSummary').html(summaryText);
 			}
 		}
@@ -1455,7 +1487,7 @@ function createEvidenceTable(tableUrl){
 
 /*
  * Function
- * 
+ *
  */
 function createSynonymTable(tableUrl){
 	var table = "";
@@ -1482,47 +1514,47 @@ function createSynonymTable(tableUrl){
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
 				terms = '';
-				table = '';								
+				table = '';
 				for(var ev_i=0; ev_i < (evidenceTable.length-1); ev_i++) {
 					if(nullTerm){
 						nullTerm = false;
 						continue;
 					}
 					//End of Term
-					if(evidenceTable[ev_i].substr(0,2) == '</'){	
+					if(evidenceTable[ev_i].substr(0,2) == '</'){
 						//Includes the tab box
 						table =  table +tabsBox+'</div>';
 						//Includes the tables
 						for (var i = 0; i < aTable.length; i++) {
-							
+
 							if(aTableLenght[i] < minRowsInTable){
 								for(var rows = aTableLenght[i]; rows < minRowsInTable ; rows++){
-									aTable[i] = aTable[i] +'<tr><td>&nbsp;</td><td>&nbsp;</td></tr>'	
+									aTable[i] = aTable[i] +'<tr><td>&nbsp;</td><td>&nbsp;</td></tr>'
 								}
 							}
-							
-						  table =  table + aTable[i]+'</table>';						  
-						}											
-					//New Term	
+
+						  table =  table + aTable[i]+'</table>';
+						}
+					//New Term
 					}else if(evidenceTable[ev_i][0] == '<'){
 						if(evidenceTable[ev_i+1].substr(0,2) == '</'){
 							nullTerm = true;
 							continue;
 						}
-						var aNewConcepts = new Array();	
+						var aNewConcepts = new Array();
 						var aTable = new Array();
 						var aTableLenght = new Array();
 						var countConcepts = 0;
 						countTerms++;
-						
+
 						if(ev_i == 0){
-							divstyle = "buttonSynonym_on";	
+							divstyle = "buttonSynonym_on";
 							imgstatus = 'on';
 							tabBoxvisibility = '';
 						}else{
 							divstyle = "buttonSynonym_off";
 							imgstatus = 'off';
-							tabBoxvisibility = 'style="display:none;"';	
+							tabBoxvisibility = 'style="display:none;"';
 						}
 						termName = evidenceTable[ev_i].replace("<","");
 						var originalTermName = termName.replace(">","");
@@ -1544,23 +1576,23 @@ function createSynonymTable(tableUrl){
 								aNewConcepts.push(values[1]);
 								conceptIndex = aNewConcepts.indexOf(values[1]);
 								countConcepts++;
-								
+
 								if((countTerms == 1) && (countConcepts == 1))
-									tablevisibility = '';	
+									tablevisibility = '';
 								else
-									tablevisibility = 'style="display:none;"';	
-									
+									tablevisibility = 'style="display:none;"';
+
 								//tableHeader = '<table id="tablesorterSynonym'+termName+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
 								tableHeader = '<table id="tablesorterSynonym'+termName+'_'+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
-								
-								aTable.push(tableHeader); 
-								aTableLenght.push(0); 
-									
+
+								aTable.push(tableHeader);
+								aTableLenght.push(0);
+
 								if(countConcepts == 1)
-									conceptTabStyles = 'conceptTabOn';	
+									conceptTabStyles = 'conceptTabOn';
 								else
-									conceptTabStyles = 'conceptTabOff';	
-								
+									conceptTabStyles = 'conceptTabOff';
+
 								if (values[1] == "QTL")
 									//tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div></a>';
 									tabsBox = tabsBox + '<div class="'+conceptTabStyles+' showConceptTab" id="tabBoxItem_'+termName+'_'+countConcepts+'" rel="tablesorterSynonym'+termName+'_'+countConcepts+'"><div class="evidence_item evidence_item_Phenotype" title="'+values[1]+'"></div></div>';
@@ -1570,11 +1602,11 @@ function createSynonymTable(tableUrl){
 								else
 									//tabsBox = tabsBox + '<a href="javascript:;" onclick="showSynonymTab(\'tabBox_'+termName+'\',\'tabBoxItem_'+termName+countConcepts+'\',\'tablesorterSynonym'+termName+countConcepts+'\')"><div class="'+conceptTabStyles+'" id="tabBoxItem_'+termName+countConcepts+'" rel="tablesorterSynonym'+termName+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div></a>';
 									tabsBox = tabsBox + '<div class="'+conceptTabStyles+' showConceptTab" id="tabBoxItem_'+termName+'_'+countConcepts+'" rel="tablesorterSynonym'+termName+'_'+countConcepts+'"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></div>';
-								
+
 							}
 							//If is not a new document type a new row is added to the existing table
 							conceptIndex = aNewConcepts.indexOf(values[1]);
-							row = '<tr>';											
+							row = '<tr>';
 							row = row + '<td width="390">'+values[0]+'</td>'
 							//row = row + '<td width="80"><a  href="javascript:;" onclick="addKeyword(\''+values[0]+'\', \'synonymstable_add_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword" title="Add term"></div></a> <a href="javascript:;" onclick="excludeKeyword(\''+values[0]+'\', \'synonymstable_exclude_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword" title="Exclude term"></div></a> <a href="javascript:;" onclick="replaceKeyword(\''+originalTermName+'\',\''+values[0]+'\', \'synonymstable_replace_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword" title="Replace term"></div></a></td>';
 							row = row + '<td width="80">';
@@ -1582,14 +1614,14 @@ function createSynonymTable(tableUrl){
 							row = row + '<div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword synonymTableEvent" title="Exclude term"></div>';
 							row = row + '<div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword synonymTableEvent" title="Replace term"></div></td>';
 
-							//row = row + '<th width="78"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></th>';			
+							//row = row + '<th width="78"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></th>';
 							//row = row + '<th width="60">'+values[2]+'</th>';
 							row = row + '</tr>';
-							aTable[conceptIndex] = aTable[conceptIndex] + row;	
-							aTableLenght[conceptIndex] = aTableLenght[conceptIndex] + 1;	
+							aTable[conceptIndex] = aTable[conceptIndex] + row;
+							aTableLenght[conceptIndex] = aTableLenght[conceptIndex] + 1;
 						}
 					}
-				}				
+				}
 				//$('#suggestor_invite').html(countSynonyms+' synonyms found');
 				$('#suggestor_terms').html(terms);
 				$('#suggestor_tables').html(table);
@@ -1620,7 +1652,7 @@ function createSynonymTable(tableUrl){
 					termName.pop(); //remove conceptNumber element from array
 					showSynonymTable(buttonID , "tabBox_"+termName.join("_"));
 				});
-				
+
 				$(".showConceptTab").click(function(e){
 					var buttonID = $(e.currentTarget).attr("id");
 					var termName = buttonID.replace("tabBoxItem_","").split("_");
@@ -1628,7 +1660,7 @@ function createSynonymTable(tableUrl){
 					termName = termName.join("_"); // recombine array
 					showSynonymTab('tabBox_'+termName,buttonID, 'tablesorterSynonym'+termName+'_'+conceptNum);
 				});
-				
+
 				$(".synonymTableEvent").bind("click", {x: evidenceTable}, function(e) {
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
@@ -1640,7 +1672,7 @@ function createSynonymTable(tableUrl){
 					
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
-					} 
+					}
 					else if(currentTarget.hasClass("addKeywordUndo")){
 						addKeywordUndo(keyword, currentTarget.attr("id"), 'keywords');
 					}
@@ -1658,8 +1690,8 @@ function createSynonymTable(tableUrl){
 					}
 
 				});
-				
-				
+
+
 			}else{
 				table = "No suggestions found";	
 				$('#suggestor_terms').html(" ");
@@ -1671,7 +1703,7 @@ function createSynonymTable(tableUrl){
 
 /*
  * Function
- * 
+ *
  */
 function trim(text) {
     return text.replace(/^\s+|\s+$/g, "");
@@ -1679,7 +1711,7 @@ function trim(text) {
 
 /*
  * Google Analytics
- * 
+ *
  */
 var _gaq = _gaq || [];
  _gaq.push(['_setAccount', 'UA-26111300-1']);
