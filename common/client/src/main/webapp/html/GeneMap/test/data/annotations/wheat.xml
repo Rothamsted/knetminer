@@ -1,0 +1,921 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>2D</chromosome>
+<start>76530000</start>
+<end>76530000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2DL_574F25C6E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_574F25C6E</link>
+</feature>
+<feature id="1">
+<chromosome>1A</chromosome>
+<start>78560000</start>
+<end>78560000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_1AS_F79A0F2B3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AS_F79A0F2B3</link>
+</feature>
+<feature id="2">
+<chromosome>2A</chromosome>
+<start>68140000</start>
+<end>68140000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2AL_98259C56F</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2AL_98259C56F</link>
+</feature>
+<feature id="3">
+<chromosome>2D</chromosome>
+<start>73810000</start>
+<end>73810000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2DL_EC6B1E9EF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_EC6B1E9EF</link>
+</feature>
+<feature id="4">
+<chromosome>2B</chromosome>
+<start>94880000</start>
+<end>94880000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2BL_ADCABCA16</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BL_ADCABCA16</link>
+</feature>
+<feature id="5">
+<chromosome>4D</chromosome>
+<start>8365000</start>
+<end>8365000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4DL_6063F821A</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4DL_6063F821A</link>
+</feature>
+<feature id="6">
+<chromosome>4B</chromosome>
+<start>74630000</start>
+<end>74630000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4BL_46BE39DD3</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4BL_46BE39DD3</link>
+</feature>
+<feature id="7">
+<chromosome>4A</chromosome>
+<start>19890000</start>
+<end>19890000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4AS_13CE9F8B7</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4AS_13CE9F8B7</link>
+</feature>
+<feature id="8">
+<chromosome>7B</chromosome>
+<start>76380000</start>
+<end>76380000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_7BS_E1A78B674</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BS_E1A78B674</link>
+</feature>
+<feature id="9">
+<chromosome>4B</chromosome>
+<start>67460000</start>
+<end>67460000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4BL_5B565FA50</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4BL_5B565FA50</link>
+</feature>
+<feature id="10">
+<chromosome>4A</chromosome>
+<start>28220000</start>
+<end>28220000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4AS_35A112009</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4AS_35A112009</link>
+</feature>
+<feature id="11">
+<chromosome>7B</chromosome>
+<start>167180000</start>
+<end>167180000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_7BL_57F31555F</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BL_57F31555F</link>
+</feature>
+<feature id="12">
+<chromosome>5A</chromosome>
+<start>2570000</start>
+<end>2570000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_5AL_5D65F5235</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5AL_5D65F5235</link>
+</feature>
+<feature id="13">
+<chromosome>3B</chromosome>
+<start>61805000</start>
+<end>61805000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3B_EC4229279</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_EC4229279</link>
+</feature>
+<feature id="14">
+<chromosome>1B</chromosome>
+<start>64465000</start>
+<end>64465000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_1BL_864110630</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_864110630</link>
+</feature>
+<feature id="15">
+<chromosome>3B</chromosome>
+<start>161280000</start>
+<end>161280000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3B_30CDC7816</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_30CDC7816</link>
+</feature>
+<feature id="16">
+<chromosome>1A</chromosome>
+<start>27990000</start>
+<end>27990000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_1AS_655E0ECF6</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AS_655E0ECF6</link>
+</feature>
+<feature id="17">
+<chromosome>3B</chromosome>
+<start>65800000</start>
+<end>65800000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3B_293EA2209</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_293EA2209</link>
+</feature>
+<feature id="18">
+<chromosome>3A</chromosome>
+<start>197420000</start>
+<end>197420000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3AL_A4E4C8A70</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3AL_A4E4C8A70</link>
+</feature>
+<feature id="19">
+<chromosome>1D</chromosome>
+<start>15790000</start>
+<end>15790000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_1DS_F800D5F6C</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1DS_F800D5F6C</link>
+</feature>
+<feature id="20">
+<chromosome>3B</chromosome>
+<start>68295000</start>
+<end>68295000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3B_2A5C09288</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_2A5C09288</link>
+</feature>
+<feature id="21">
+<chromosome>6A</chromosome>
+<start>118540000</start>
+<end>118540000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_6AL_30768AD47</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_30768AD47</link>
+</feature>
+<feature id="22">
+<chromosome>6D</chromosome>
+<start>125510000</start>
+<end>125510000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_6DL_C6E63ED1C</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6DL_C6E63ED1C</link>
+</feature>
+<feature id="23">
+<chromosome>3D</chromosome>
+<start>158860000</start>
+<end>158860000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_3DL_359340FCF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3DL_359340FCF</link>
+</feature>
+<feature id="24">
+<chromosome>6B</chromosome>
+<start>65069999</start>
+<end>65069999</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_6BS_04D7C6A64</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6BS_04D7C6A64</link>
+</feature>
+<feature id="25">
+<chromosome>7A</chromosome>
+<start>157310000</start>
+<end>157310000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_7AL_CF9AE38A6</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7AL_CF9AE38A6</link>
+</feature>
+<feature id="26">
+<chromosome>4A</chromosome>
+<start>19890000</start>
+<end>19890000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_4AS_B67F89B5A</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4AS_B67F89B5A</link>
+</feature>
+<feature id="27">
+<chromosome>7D</chromosome>
+<start>1790000</start>
+<end>1790000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_7DS_B82B9C04E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7DS_B82B9C04E</link>
+</feature>
+<feature id="28">
+<chromosome>1B</chromosome>
+<start>76710000</start>
+<end>76710000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_1BL_6F4AB886C</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_6F4AB886C</link>
+</feature>
+<feature id="29">
+<chromosome>2D</chromosome>
+<start>76530000</start>
+<end>76530000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2DL_5DB97AA60</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_5DB97AA60</link>
+</feature>
+<feature id="30">
+<chromosome>7B</chromosome>
+<start>66450000</start>
+<end>66450000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_7BS_9F5A66A59</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BS_9F5A66A59</link>
+</feature>
+<feature id="31">
+<chromosome>5B</chromosome>
+<start>108430000</start>
+<end>108430000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_5BL_C1D6B6B74</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5BL_C1D6B6B74</link>
+</feature>
+<feature id="32">
+<chromosome>5D</chromosome>
+<start>134970000</start>
+<end>134970000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_5DL_7E2053226</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5DL_7E2053226</link>
+</feature>
+<feature id="33">
+<chromosome>2A</chromosome>
+<start>68140000</start>
+<end>68140000</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>TRAES_2AL_1B43EA59E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2AL_1B43EA59E</link>
+</feature>
+<feature id="34">
+<chromosome>2B</chromosome>
+<start>82720000</start>
+<end>82720000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2BL_A69F6C5DF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BL_A69F6C5DF</link>
+</feature>
+<feature id="35">
+<chromosome>3A</chromosome>
+<start>60620000</start>
+<end>60620000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_3AS_0C811ABEB</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3AS_0C811ABEB</link>
+</feature>
+<feature id="36">
+<chromosome>6D</chromosome>
+<start>81580000</start>
+<end>81580000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_6DL_E3F8412B5</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6DL_E3F8412B5</link>
+</feature>
+<feature id="37">
+<chromosome>2D</chromosome>
+<start>79140000</start>
+<end>79140000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2DS_5913D3C50</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DS_5913D3C50</link>
+</feature>
+<feature id="38">
+<chromosome>2A</chromosome>
+<start>68140000</start>
+<end>68140000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2AS_E3050D198</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2AS_E3050D198</link>
+</feature>
+<feature id="39">
+<chromosome>2B</chromosome>
+<start>78500000</start>
+<end>78500000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2BS_7F89E8AC9</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BS_7F89E8AC9</link>
+</feature>
+<feature id="40">
+<chromosome>4B</chromosome>
+<start>65700000</start>
+<end>65700000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_4BL_29F6FE8E4</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4BL_29F6FE8E4</link>
+</feature>
+<feature id="41">
+<chromosome>6A</chromosome>
+<start>64440000</start>
+<end>64440000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_6AL_459357092</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_459357092</link>
+</feature>
+<feature id="42">
+<chromosome>2B</chromosome>
+<start>85220000</start>
+<end>85220000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2BL_5945B9FDB</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BL_5945B9FDB</link>
+</feature>
+<feature id="43">
+<chromosome>4A</chromosome>
+<start>78350000</start>
+<end>78350000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_4AL_5DC5B376E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4AL_5DC5B376E</link>
+</feature>
+<feature id="44">
+<chromosome>2B</chromosome>
+<start>92400000</start>
+<end>92400000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2BL_4E4B55DC2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BL_4E4B55DC2</link>
+</feature>
+<feature id="45">
+<chromosome>5A</chromosome>
+<start>54880000</start>
+<end>54880000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5AL_544BAC661</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5AL_544BAC661</link>
+</feature>
+<feature id="46">
+<chromosome>5A</chromosome>
+<start>55270000</start>
+<end>55270000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5AL_7E42C9674</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5AL_7E42C9674</link>
+</feature>
+<feature id="47">
+<chromosome>5D</chromosome>
+<start>134074999</start>
+<end>134074999</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5DL_7B5600745</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5DL_7B5600745</link>
+</feature>
+<feature id="48">
+<chromosome>5A</chromosome>
+<start>74090000</start>
+<end>74090000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5AL_AC98088C1</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5AL_AC98088C1</link>
+</feature>
+<feature id="49">
+<chromosome>6D</chromosome>
+<start>86360000</start>
+<end>86360000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_6DL_8D95F127B</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6DL_8D95F127B</link>
+</feature>
+<feature id="50">
+<chromosome>7A</chromosome>
+<start>91170000</start>
+<end>91170000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_7AS_D4F03387A</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7AS_D4F03387A</link>
+</feature>
+<feature id="51">
+<chromosome>2D</chromosome>
+<start>76530000</start>
+<end>76530000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2DL_68D8EF127</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_68D8EF127</link>
+</feature>
+<feature id="52">
+<chromosome>2D</chromosome>
+<start>76530000</start>
+<end>76530000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2DL_AB6FEEC91</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_AB6FEEC91</link>
+</feature>
+<feature id="53">
+<chromosome>6A</chromosome>
+<start>123950000</start>
+<end>123950000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_6AL_671AFD8EF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_671AFD8EF</link>
+</feature>
+<feature id="54">
+<chromosome>5D</chromosome>
+<start>134970000</start>
+<end>134970000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5DL_D859AA635</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5DL_D859AA635</link>
+</feature>
+<feature id="55">
+<chromosome>5B</chromosome>
+<start>105650000</start>
+<end>105650000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5BL_03B778722</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5BL_03B778722</link>
+</feature>
+<feature id="56">
+<chromosome>3D</chromosome>
+<start>12835000</start>
+<end>12835000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_3DL_812365188</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3DL_812365188</link>
+</feature>
+<feature id="57">
+<chromosome>4D</chromosome>
+<start>8365000</start>
+<end>8365000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_4DL_D7E96ABA9</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4DL_D7E96ABA9</link>
+</feature>
+<feature id="58">
+<chromosome>5B</chromosome>
+<start>49790000</start>
+<end>49790000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5BL_BD06E9603</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5BL_BD06E9603</link>
+</feature>
+<feature id="59">
+<chromosome>2A</chromosome>
+<start>68140000</start>
+<end>68140000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2AL_E007C4739</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2AL_E007C4739</link>
+</feature>
+<feature id="60">
+<chromosome>1A</chromosome>
+<start>83970000</start>
+<end>83970000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_1AL_F46285EB2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AL_F46285EB2</link>
+</feature>
+<feature id="61">
+<chromosome>5B</chromosome>
+<start>45150000</start>
+<end>45150000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5BS_B3EA386B9</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5BS_B3EA386B9</link>
+</feature>
+<feature id="62">
+<chromosome>5D</chromosome>
+<start>36570000</start>
+<end>36570000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5DS_2C9596E74</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5DS_2C9596E74</link>
+</feature>
+<feature id="63">
+<chromosome>5B</chromosome>
+<start>134615000</start>
+<end>134615000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_5BL_08AD9048F</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_5BL_08AD9048F</link>
+</feature>
+<feature id="64">
+<chromosome>3A</chromosome>
+<start>60185000</start>
+<end>60185000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_3AS_D2419DE55</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3AS_D2419DE55</link>
+</feature>
+<feature id="65">
+<chromosome>3B</chromosome>
+<start>62230000</start>
+<end>62230000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_3B_317360A68</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_317360A68</link>
+</feature>
+<feature id="66">
+<chromosome>2D</chromosome>
+<start>82420000</start>
+<end>82420000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>TRAES_2DL_47E007976</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2DL_47E007976</link>
+</feature>
+<feature id="67">
+<chromosome>2A</chromosome>
+<start>87120000</start>
+<end>87120000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_2AL_C7E81A177</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2AL_C7E81A177</link>
+</feature>
+<feature id="68">
+<chromosome>3B</chromosome>
+<start>136700000</start>
+<end>136700000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3B_CB014C9FF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_CB014C9FF</link>
+</feature>
+<feature id="69">
+<chromosome>2B</chromosome>
+<start>152170000</start>
+<end>152170000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_2BL_7C41B883F</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BL_7C41B883F</link>
+</feature>
+<feature id="70">
+<chromosome>3A</chromosome>
+<start>154150000</start>
+<end>154150000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3AL_4B5816218</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3AL_4B5816218</link>
+</feature>
+<feature id="71">
+<chromosome>3D</chromosome>
+<start>145240000</start>
+<end>145240000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3DL_25BEB4D80</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3DL_25BEB4D80</link>
+</feature>
+<feature id="72">
+<chromosome>7D</chromosome>
+<start>1790000</start>
+<end>1790000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7DS_325AA8A34</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7DS_325AA8A34</link>
+</feature>
+<feature id="73">
+<chromosome>2B</chromosome>
+<start>77680000</start>
+<end>77680000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_2BS_57D51731D</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_2BS_57D51731D</link>
+</feature>
+<feature id="74">
+<chromosome>1B</chromosome>
+<start>64040000</start>
+<end>64040000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1BL_508896426</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_508896426</link>
+</feature>
+<feature id="75">
+<chromosome>3B</chromosome>
+<start>75560000</start>
+<end>75560000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3B_29E9674E4</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_29E9674E4</link>
+</feature>
+<feature id="76">
+<chromosome>3A</chromosome>
+<start>63630000</start>
+<end>63630000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3AL_C79DC8EEC</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3AL_C79DC8EEC</link>
+</feature>
+<feature id="77">
+<chromosome>7B</chromosome>
+<start>77910000</start>
+<end>77910000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7BL_E2E7AA383</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BL_E2E7AA383</link>
+</feature>
+<feature id="78">
+<chromosome>7D</chromosome>
+<start>111080000</start>
+<end>111080000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7DL_613F5240E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7DL_613F5240E</link>
+</feature>
+<feature id="79">
+<chromosome>1B</chromosome>
+<start>64040000</start>
+<end>64040000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1BL_AB6212E5B</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_AB6212E5B</link>
+</feature>
+<feature id="80">
+<chromosome>4B</chromosome>
+<start>65700000</start>
+<end>65700000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_4BS_330D73745</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4BS_330D73745</link>
+</feature>
+<feature id="81">
+<chromosome>1D</chromosome>
+<start>125850000</start>
+<end>125850000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1DL_EF4406137</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1DL_EF4406137</link>
+</feature>
+<feature id="82">
+<chromosome>1B</chromosome>
+<start>64040000</start>
+<end>64040000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1BL_73E5A673A</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_73E5A673A</link>
+</feature>
+<feature id="83">
+<chromosome>4A</chromosome>
+<start>0</start>
+<end>0</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_4AS_A3A4DD4CF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4AS_A3A4DD4CF</link>
+</feature>
+<feature id="84">
+<chromosome>6A</chromosome>
+<start>126650000</start>
+<end>126650000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6AL_F78231838</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_F78231838</link>
+</feature>
+<feature id="85">
+<chromosome>1A</chromosome>
+<start>78560000</start>
+<end>78560000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1AL_31EE3550E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AL_31EE3550E</link>
+</feature>
+<feature id="86">
+<chromosome>6A</chromosome>
+<start>76800000</start>
+<end>76800000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6AL_C0E74F959</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_C0E74F959</link>
+</feature>
+<feature id="87">
+<chromosome>6D</chromosome>
+<start>94210000</start>
+<end>94210000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6DL_29F162FB2</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6DL_29F162FB2</link>
+</feature>
+<feature id="88">
+<chromosome>6B</chromosome>
+<start>83570000</start>
+<end>83570000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6BL_953171851</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6BL_953171851</link>
+</feature>
+<feature id="89">
+<chromosome>1B</chromosome>
+<start>64890000</start>
+<end>64890000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1BL_A5A91DE10</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1BL_A5A91DE10</link>
+</feature>
+<feature id="90">
+<chromosome>1A</chromosome>
+<start>78560000</start>
+<end>78560000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1AL_ED83D13D4</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AL_ED83D13D4</link>
+</feature>
+<feature id="91">
+<chromosome>1A</chromosome>
+<start>78560000</start>
+<end>78560000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_1AL_C65571370</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_1AL_C65571370</link>
+</feature>
+<feature id="92">
+<chromosome>3B</chromosome>
+<start>136700000</start>
+<end>136700000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3B_D0FE7D42B</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_D0FE7D42B</link>
+</feature>
+<feature id="93">
+<chromosome>4D</chromosome>
+<start>7920000</start>
+<end>7920000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_4DL_140E30C0C</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_4DL_140E30C0C</link>
+</feature>
+<feature id="94">
+<chromosome>3B</chromosome>
+<start>82880000</start>
+<end>82880000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_3B_29A81F834</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_3B_29A81F834</link>
+</feature>
+<feature id="95">
+<chromosome>6B</chromosome>
+<start>78040000</start>
+<end>78040000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6BL_B1673B99B</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6BL_B1673B99B</link>
+</feature>
+<feature id="96">
+<chromosome>6A</chromosome>
+<start>67920000</start>
+<end>67920000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6AL_22D6C7054</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6AL_22D6C7054</link>
+</feature>
+<feature id="97">
+<chromosome>7A</chromosome>
+<start>100440000</start>
+<end>100440000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7AL_06400DA6C</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7AL_06400DA6C</link>
+</feature>
+<feature id="98">
+<chromosome>6D</chromosome>
+<start>86360000</start>
+<end>86360000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_6DL_7CA12F7FB</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_6DL_7CA12F7FB</link>
+</feature>
+<feature id="99">
+<chromosome>7B</chromosome>
+<start>76380000</start>
+<end>76380000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7BS_E3BDDBFEF</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BS_E3BDDBFEF</link>
+</feature>
+<feature id="100">
+<chromosome>7D</chromosome>
+<start>112070000</start>
+<end>112070000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7DL_AF47AD87E</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7DL_AF47AD87E</link>
+</feature>
+<feature id="101">
+<chromosome>7B</chromosome>
+<start>77910000</start>
+<end>77910000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>TRAES_7BL_9F1904C9A</label>
+<link>OndexServlet?mode=network&amp;keyword=drought&amp;list=TRAES_7BL_9F1904C9A</link>
+</feature>
+</genome>
