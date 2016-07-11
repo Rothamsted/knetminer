@@ -7,33 +7,38 @@
         <link href="css/maskloader.css" rel="stylesheet">
 
         <meta charset=utf-8 />
-        <script src="libs/jquery-1.11.2.min.js"></script>
-        <script src="libs/cytoscape.min.js"></script>
-        <script src="libs/jquery-ui.js"></script>
-        <script src="libs/cytoscape-cxtmenu.js"></script>
-<!--        <script src="libs/cytoscape-css-renderer.js"></script> -->
+        <script src="libs_knetviewer/jquery-1.11.2.min.js"></script>
+        <script src="libs_knetviewer/cytoscapejs_2.4.0/cytoscape.min.js"></script>
+        <script src="libs_knetviewer/jquery-ui.js"></script>
+        <script src="libs_knetviewer/cytoscape-cxtmenu.js"></script>
+<!--        <script src="libs_knetviewer/cytoscape-css-renderer.js"></script> -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
-        <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/70964f0306e770837dbe2b81197c12fdc7804e38/cytoscape-qtip.js"></script>
+<!--        <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/70964f0306e770837dbe2b81197c12fdc7804e38/cytoscape-qtip.js"></script> -->
+        <script src="libs_knetviewer/cytoscape-qtip.js"></script>
 <!--        <script src="https://medialize.github.io/jQuery-contextMenu/src/jquery.contextMenu.js" type="text/javascript"></script>
         <link href="https://medialize.github.io/jQuery-contextMenu/src/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
         <script src="https://medialize.github.io/jQuery-contextMenu/src/jquery.ui.position.js" type="text/javascript"></script> -->
         <!-- jQuery-ui-layout: for adding split panes -->
-	<script src="libs/jquery.layout-latest.js"></script>
+	<script src="libs_knetviewer/jquery.layout-latest.js"></script>
         <!-- jQuery Ajax MaskLoader: for Loader overlay, for the container while the network loads -->
-        <script src="libs/jquery.maskloader.js"></script>
+        <script src="libs_knetviewer/jquery.maskloader.js"></script>
         <!-- For WebCola layout -->
-        <script src="libs/cola.v3.min.js"></script>
-        <script src="libs/cola.adaptor.js"></script>
+        <script src="libs_knetviewer/cola/cola.v3.min.js"></script>
+        <script src="libs_knetviewer/cola/cytoscape-cola.js"></script>
         <!-- For Arbor layout -->
-        <script src="libs/arbor.js"></script>
-        <!-- For Springy layout -->
-        <script src="libs/springy.js"></script>
+        <script src="libs_knetviewer/arbor/arbor.js"></script>
+        <script src="libs_knetviewer/arbor/cytoscape-arbor.js"></script>
         <!-- For Dagre (Tree) layout -->
-        <script src="libs/dagre.js"></script>
+        <script src="libs_knetviewer/dagre/dagre.js"></script>
+        <script src="libs_knetviewer/dagre/cytoscape-dagre.js"></script>
+        <!-- For Springy layout -->
+        <script src="libs_knetviewer/springy/springy.js"></script>
+        <script src="libs_knetviewer/springy/cytoscape-springy.js"></script>
         <!-- For Spread layout -->
-        <script src="libs/foograph.js"></script>
-        <script src="libs/rhill-voronoi-core.js"></script>
+        <script src="libs_knetviewer/spread/cytoscape-spread.js"></script>
+        <!-- For CoSE-Bilkent layout -->
+        <script src="libs_knetviewer/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <!-- URL mappings config file used for generating url's in Item Info table -->
         <script type="text/javascript" src="config/url_mappings.json"></script>
 
@@ -55,14 +60,15 @@
                 <thead><u>Layouts:</u></thead><tr>
                     <td align=center><input type="radio" name="layoutButton" id="default" value="Default_layout" onclick="setColaLayout($('#cy').cytoscape('get').$(':visible'));" checked title="using WebCola layout algorithm">Default (WebCola)</td>
                     <td align=center><input type="radio" name="layoutButton" id="circle" value="Circle_layout" onclick="setCircleLayout($('#cy').cytoscape('get').$(':visible'));">Circular</td>
+                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose_layout" onclick="setCoseLayout($('#cy').cytoscape('get').$(':visible'));" title="using CoSE layout algorithm (useful for larger networks with clustering)">CoSE</td>
+                    <td align=center><input type="radio" name="layoutButton" id="cose_bilkent" value="Cose_Bilkent_layout" onclick="setCoseBilkentLayout($('#cy').cytoscape('get').$(':visible'));" title="using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)">CoSE-Bilkent</td>
+                    <td align=center><input type="radio" name="layoutButton" id="concentric" value="Concentric_layout" onclick="setConcentricLayout($('#cy').cytoscape('get').$(':visible'));">Concentric</td>
+<!--                    <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst_layout" onclick="setBreadthfirstLayout($('#cy').cytoscape('get').$(':visible'));" title="Layout using Breadthfirst graph traversal (may not work for networks with multiple roots/ starting points)">Breadthfirst</td> -->
                     <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor_layout" onclick="setArborLayout($('#cy').cytoscape('get').$(':visible'));" title="using Arbor layout algorithm">Arbor</td>
                     <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree_layout" onclick="setTreeLayout($('#cy').cytoscape('get').$(':visible'));" title="using Dagre layout algorithm">Tree</td>
                     <td align=center><input type="radio" name="layoutButton" id="grid" value="Grid_layout" onclick="setGridLayout($('#cy').cytoscape('get').$(':visible'));">Grid</td>
-                    <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst_layout" onclick="setBreadthfirstLayout($('#cy').cytoscape('get').$(':visible'));" title="Layout using Breadthfirst graph traversal (may not work for networks with multiple roots/ starting points)">Breadthfirst</td>
-                    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose_layout" onclick="setCoseLayout($('#cy').cytoscape('get').$(':visible'));" title="using CoSE layout algorithm (with node clustering, but performance-intensive for larger networks)">Cose</td>
-                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy_layout" onclick="setSpringyLayout($('#cy').cytoscape('get').$(':visible'));" title="using Springy layout algorithm (not suitable for larger networks)">Springy</td>
-<!--                    <td align=center><input type="radio" name="layoutButton" id="spread" value="Spread_layout" onclick="setSpreadLayout($('#cy').cytoscape('get').$(':visible'));" title="using foograph.js & rhill-voronoi-core.js">Spread</td> -->
-                    <td align=center><input type="radio" name="layoutButton" id="concentric" value="Concentric_layout" onclick="setConcentricLayout($('#cy').cytoscape('get').$(':visible'));">Concentric</td>
+                    <td align=center><input type="radio" name="layoutButton" id="spread" value="Spread_layout" onclick="setSpreadLayout($('#cy').cytoscape('get').$(':visible'));" title="using foograph.js & rhill-voronoi-core.js">Spread</td>
+<!--                    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy_layout" onclick="setSpringyLayout($('#cy').cytoscape('get').$(':visible'));" title="using Springy layout algorithm (not suitable for larger networks)">Springy</td> -->
                 </tr>
             </table>
         </div><hr>

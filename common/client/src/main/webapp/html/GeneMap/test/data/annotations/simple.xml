@@ -1,0 +1,39 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+	<feature id="1">
+		<chromosome>A</chromosome>
+		<start>175</start>
+		<end>250</end>
+		<type>qtl</type>
+		<color>0xFFCC00</color>
+		<label>QTL Number 1</label>
+		<link>OndexServlet?mode=network&amp;keyword=Stem Height&amp;qtl1=II:4827878:7046216</link>
+	</feature>
+	<feature id="2">
+		<chromosome>A</chromosome>
+		<start>230</start>
+		<end>500</end>
+		<type>qtl</type>
+		<color>0xFF3300</color>
+		<label>QTL Number 2</label>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=II:3556555:4828045</link>
+	</feature>
+	<feature id="3">
+		<chromosome>A</chromosome>
+		<start>150</start>
+		<end>275</end>
+		<type>qtl</type>
+		<color>0xFF33FF</color>
+		<label>QTL Number 3</label>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=10:11368808:13814117</link>
+	</feature>
+	<feature id="4">
+		<chromosome>B</chromosome>
+		<start>550</start>
+		<end>700</end>
+		<type>qtl</type>
+		<color>0x33FFFF</color>
+		<label>QTL Number 4</label>
+		<link>OndexServlet?mode=network&amp;keyword=Stem&amp;qtl1=V:5567014:15737515</link>
+	</feature>
+</genome>

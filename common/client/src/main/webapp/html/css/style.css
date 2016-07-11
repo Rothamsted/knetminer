@@ -647,3 +647,8 @@ body:after{
 	padding: 10px 10px 10px 10px;
 }
 
+
+#genemap {
+	width: 750px;
+	height: 450px;
+}
