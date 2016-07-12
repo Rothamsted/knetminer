@@ -211,8 +211,8 @@ GENEMAP.GeneMap = function (userConfig) {
       var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout( {
           longestChromosome: genome.cellLayout.longestChromosome,
           layout: genome.cellLayout.geneAnnotationPosition,
-          annotationMarkerSize: genome.cellLayout.annotations.label.size,
-          annotationLabelSize: genome.cellLayout.annotations.marker.size,
+          annotationMarkerSize: genome.cellLayout.annotations.marker.size,
+          annotationLabelSize: genome.cellLayout.annotations.label.size,
           doCluster : doCluster,
           nClusters: 6,
           maxAnnotationLayers: config.layout.maxAnnotationLayers,
