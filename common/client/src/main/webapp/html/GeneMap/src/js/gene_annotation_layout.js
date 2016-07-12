@@ -1,5 +1,9 @@
 var GENEMAP = GENEMAP || {};
 
+//Produce layout for gene annotations
+//GENEMAP.GeneClusterer is used to cluster genes if necessary
+//Labella is used to generate layout of nodes
+
 GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
   var defaultConfig = {
@@ -32,12 +36,14 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     return ( maxLayer > config.maxAnnotationLayers );
   }
 
+  //Use labella to generate layout nodes for each gene
+  //or cluster of genes
   var generateChromosomeLayout = function(chromosome){
 
     var y = buildYScale();
 
     var force = new labella.Force({
-      nodeSpacing: 5,
+      nodeSpacing: 4,
       algorithm: 'overlap',
       lineSpacing: 2,
       minPos: 0,
@@ -62,10 +68,25 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       force.nodes(nodes).compute();
     }
 
+    //Compute paths
+    var renderer = new labella.Renderer({
+      direction: 'right',
+      layerGap: config.layout.width / 3.0,
+      nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
+    });
+
+    renderer.layout(nodes);
+
+    nodes.forEach( function(node){
+     node.data.path = renderer.generatePath(node);
+    });
+
     return nodes;
 
   }
 
+  //Produce list of clusters (which could be single genes)
+  //for a given chromosome
   var generateChromosomeClusters = function(chromosome){
     var geneClusterer = GENEMAP.GeneClusterer();
     //Run clustering algorithm so we can use the clusters later when drawing

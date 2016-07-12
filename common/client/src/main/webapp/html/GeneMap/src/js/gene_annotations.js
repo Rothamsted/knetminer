@@ -37,21 +37,14 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
    var y = buildYScale();
 
-    var renderer = new labella.Renderer({
-      direction: 'right',
-      layerGap: config.layout.width / 3.0,
-      nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
-    });
-
-    renderer.layout(chromosome.layout.nodes);
-
     // Enter + Update elements
     // Use a key function so that the correct mapping between graphical objects
     // and data points is maintained even when clustering changes
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
         chromosome.layout.nodes, function(d){return d.data.id});
 
-    var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene-annotation', true);
+    var geneAnnotationsEnterGroup = geneAnnotations.enter()
+      .append('g').classed('gene-annotation', true);
 
     geneAnnotationsEnterGroup.append('line').classed('midpoint-line', true);
     geneAnnotationsEnterGroup.append('path').classed('link', true);
@@ -130,7 +123,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     geneAnnotations.select('path.link')
       .attr({
-        d: function (d) { return renderer.generatePath(d); },
+        d: function (d) { return d.data.path ;}
       });
 
     // draw the labella labels as rectangles, useful for debugging
