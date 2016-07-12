@@ -58,9 +58,7 @@ GENEMAP.MenuBar = function (userConfig) {
 
   var mySetMaxAnnotationLayers = function(value) {
     items = d3.select(target).select('.layer-dropdown').selectAll('li');
-    log.info(items.size());
     items.classed('active', function(d){  return d == value; } );
-    config.onSetMaxLayers(value);
   }
 
   var drawMenu = function () {
@@ -110,9 +108,12 @@ GENEMAP.MenuBar = function (userConfig) {
 
     dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data( [1,2,3,4,5,6,7,8,9,10]);
     dropdownItems.enter()
-      .append('li').on('click', function(d){ mySetMaxAnnotationLayers(d);})
-      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d} );
-
+      .append('li').on('click', function(d){
+      mySetMaxAnnotationLayers(d); //update view
+      config.onSetMaxLayers(d); //update model
+    })
+      .append('a').attr({'class': 'dropdown-item', 'href' : '#'})
+      .text(function(d){return d} );
   };
 
   // attach the menu bar to the target element

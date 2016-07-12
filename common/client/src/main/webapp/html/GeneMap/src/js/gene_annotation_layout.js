@@ -37,7 +37,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var y = buildYScale();
 
     var force = new labella.Force({
-      nodeSpacing: 3,
+      nodeSpacing: 5,
       algorithm: 'overlap',
       lineSpacing: 2,
       minPos: 0,
@@ -97,7 +97,6 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     chromosome.layout.displayClusters = chromosome.layout.clusters.slice();
 
     //add each gene as it's own cluster
-    log.info( cluster);
     cluster.genesList.forEach( function(gene){
       chromosome.layout.displayClusters.push(gene) ;
     } );
