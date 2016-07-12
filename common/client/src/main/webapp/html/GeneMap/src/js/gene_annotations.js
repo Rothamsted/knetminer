@@ -6,6 +6,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
+    onExpandClusterFunction: $.noop(),
     longestChromosome: 100,
     layout: {
       width: 10,
@@ -34,38 +35,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
     log.trace('setupGeneAnnotations');
 
-    var y = buildYScale();
-
-
-    //Start by constructing nodes directly from genes
-    var nodeSource = chromosome.annotations.genes;
-
-    var nodes = nodeSource.map(function (d) {
-      return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
-    } );
-
-    var force = new labella.Force({
-      nodeSpacing: 3,
-      algorithm: 'overlap',
-      lineSpacing: 2,
-      minPos: 0,
-      maxPos: config.layout.height,
-    });
-
-   force.nodes(nodes).compute();
-
-    //If clustering is enabled we might want to redo the layout using clusters of genes
-    if ( config.doClustering) {
-      var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
-      var maxLayer = Math.max.apply(null, layers);
-      if ( maxLayer > config.maxAnnotationLayers ) {
-        nodeSource = chromosome.annotations.geneDisplayClusters;
-        nodes = nodeSource.map(function (d) {
-          return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
-          } );
-      }
-      force.nodes(nodes).compute();
-    }
+   var y = buildYScale();
 
     var renderer = new labella.Renderer({
       direction: 'right',
@@ -73,14 +43,13 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
     });
 
-
-    renderer.layout(force.nodes());
+    renderer.layout(chromosome.layout.nodes);
 
     // Enter + Update elements
     // Use a key function so that the correct mapping between graphical objects
     // and data points is maintained even when clustering changes
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
-        force.nodes(), function(d){return d.data.id});
+        chromosome.layout.nodes, function(d){return d.data.id});
 
     var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene-annotation', true);
 
@@ -115,25 +84,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         log.info('gene annotation click');
         d.data.selected = !d.data.selected;
         config.onAnnotationSelectFunction();
-        return false;
       }
 
       //If user clicks on a cluster of genes, expand that cluster
       if (d.data.type == "geneslist") {
         log.info('geneslist annotation click');
-        annotations = chromosome.annotations;
-        annotations.geneDisplayClusters = annotations.geneClusters.slice();
-        genesList = d.data.genesList;
-
-        //add each gene as it's own cluster
-        genesList.forEach( function(gene){
-          annotations.geneDisplayClusters.push(gene) ;
-        } );
-
-        //delete the original cluster
-        var clusterIndex = annotations.geneDisplayClusters.indexOf(d.data);
-        annotations.geneDisplayClusters.splice(clusterIndex, 1);
-        setupGeneAnnotations(annotationGroup, chromosome );
+        config.onExpandClusterFunction(chromosome, d.data);
       }
     });
 
@@ -267,6 +223,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.onExpandClusterFunction = function (value) {
+    if (!arguments.length) {
+      return config.onExpandClusterFunction;
+    }
+
+    config.onExpandClusterFunction = value;
     return my;
   };
 

@@ -4,6 +4,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
   var defaultConfig = {
     border: false,
     onAnnotationSelectFunction: $.noop(),
+    onExpandClusterFunction: $.noop(),
     onLabelSelectFunction: $.noop(),
     infoBoxManager: GENEMAP.InfoBox(),
     maxAnnotationLayers: 3,
@@ -56,6 +57,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
 
       var geneDrawer = GENEMAP.GeneAnnotations()
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
+        .onExpandClusterFunction(config.onExpandClusterFunction)
         .layout(layout.geneAnnotationPosition)
         .longestChromosome(layout.longestChromosome)
         .chromosomeWidth(layout.chromosomePosition.width)
@@ -108,6 +110,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     }
 
     config.onAnnotationSelectFunction = value;
+    return my;
+  };
+
+  my.onExpandClusterFunction = function (value) {
+    if (!arguments.length) {
+      return config.onExpandClusterFunction;
+    }
+
+    config.onExpandClusterFunction = value;
     return my;
   };
 

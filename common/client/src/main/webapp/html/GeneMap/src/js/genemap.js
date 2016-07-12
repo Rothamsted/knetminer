@@ -31,8 +31,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var menuManager; //holds a GENEMAP.MenuBar
 
-  var geneAnnotationLayout; //does clustering and labella arranging of nodes
-
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
   // this can cause issues if the element is currently hidden.
@@ -151,6 +149,7 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);
   };
 
+
   var onToggleLabelSelect = function ( chromosome ) {
     if (singleGenomeView) {
       genome = fullGenome;
@@ -202,6 +201,29 @@ GENEMAP.GeneMap = function (userConfig) {
     d3.event.preventDefault();
   };
 
+  var computeGeneLayout = function() {
+    var doCluster = genome.chromosomes.length > 1;
+    genome.chromosomes.forEach( function(chromosome){
+        log.info('setting up chromosome layout');
+        chromosome.layout = chromosome.layout || {};
+        var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout( {
+            longestChromosome: genome.cellLayout.longestChromosome,
+            layout: genome.cellLayout.geneAnnotationPosition,
+            annotationMarkerSize: genome.cellLayout.annotations.label.size,
+            annotationLabelSize: genome.cellLayout.annotations.marker.size,
+            doCluster : doCluster,
+            nClusters: 6,
+            maxAnnotationLayers: config.layout.maxAnnotationLayers,
+          }
+        );
+      if( ! chromosome.layout.displayClusters ) {
+        geneAnnotationLayout.computeChromosomeClusters(chromosome);
+      }
+        geneAnnotationLayout.layoutChromosome(chromosome);
+    });
+
+  }
+
   // draw the genemap into the target element.
   var drawMap = function () {
 
@@ -228,6 +250,9 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // set the layout on the genome and set it as the data source
     genome = layoutDecorator.decorateGenome(genome);
+
+    computeGeneLayout();
+
     svg.datum(genome);
 
     container = svg.select('.zoom_window');
@@ -254,6 +279,7 @@ GENEMAP.GeneMap = function (userConfig) {
     // draw the chromosome cell for each of the chromosome objects on the genome
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
+      .onExpandClusterFunction(onExpandCluster)
       .onLabelSelectFunction(onToggleLabelSelect)
       .infoBoxManager(infoBox)
       .maxAnnotationLayers( config.layout.maxAnnotationLayers);
@@ -333,8 +359,9 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var collapseClusters = function (){
     log.info( 'collapseClusters');
+    var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout();
     genome.chromosomes.map( function(chromosome){
-      chromosome.annotations.geneDisplayClusters = chromosome.annotations.geneClusters.slice();
+      geneAnnotationLayout.collapseAllChromosomeClusters(chromosome);
     })
 
     drawMap();
@@ -342,8 +369,9 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var expandClusters = function (){
     log.info( 'expandClusters');
+    var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout();
     genome.chromosomes.map( function(chromosome){
-      chromosome.annotations.geneDisplayClusters = chromosome.annotations.genes.slice(0);
+      geneAnnotationLayout.expandAllChromosomeClusters(chromosome);
     })
 
     drawMap();
@@ -351,6 +379,12 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var setMaxAnnotationLayers = function(maxLayers){
     config.layout.maxAnnotationLayers = maxLayers;
+    drawMap();
+  }
+
+  var onExpandCluster = function (chromosome,cluster) {
+    var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout();
+    geneAnnotationLayout.expandAChromosomeCluster(chromosome,cluster);
     drawMap();
   }
 
