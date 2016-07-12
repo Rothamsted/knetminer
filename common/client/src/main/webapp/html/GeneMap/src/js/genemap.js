@@ -31,6 +31,8 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var menuManager; //holds a GENEMAP.MenuBar
 
+  var geneAnnotationLayout; //does clustering and labella arranging of nodes
+
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
   // this can cause issues if the element is currently hidden.
