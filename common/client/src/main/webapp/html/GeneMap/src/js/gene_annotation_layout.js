@@ -42,13 +42,15 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     var y = buildYScale();
 
-    var force = new labella.Force({
+    forceConfig = {
       nodeSpacing: 4,
       algorithm: 'overlap',
       lineSpacing: 2,
       minPos: 0,
-      maxPos: config.layout.height,
-    });
+      maxPos: config.layout.height
+    };
+
+    var force = new labella.Force( forceConfig );
 
     //Start by constructing nodes directly from genes
     var nodeSource = chromosome.annotations.genes;
@@ -69,12 +71,13 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     }
 
     //Compute paths
-    var renderer = new labella.Renderer({
+    renderConfig  = {
       direction: 'right',
       layerGap: config.layout.width / 3.0,
       nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
-    });
+    };
 
+    var renderer = new labella.Renderer(renderConfig);
     renderer.layout(nodes);
 
     nodes.forEach( function(node){

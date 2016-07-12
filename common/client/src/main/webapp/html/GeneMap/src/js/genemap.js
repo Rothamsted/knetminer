@@ -27,6 +27,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var zoom; // the zoom behaviour
   var container; // the g container that performs the zooming
 
+  var lastZoomScale;
   var onZoom;
 
   var menuManager; //holds a GENEMAP.MenuBar
@@ -179,6 +180,7 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     // basic zooming functionality
+    lastZoomScale = 1;
     zoom = d3.behavior.zoom().scaleExtent([1, 10]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
@@ -202,6 +204,8 @@ GENEMAP.GeneMap = function (userConfig) {
   };
 
   var computeGeneLayout = function() {
+    decorateGenomeLayout();
+    log.info( genome.cellLayout );
     var doCluster = genome.chromosomes.length > 1;
     genome.chromosomes.forEach( function(chromosome){
 
@@ -324,6 +328,11 @@ GENEMAP.GeneMap = function (userConfig) {
     zoom.translate(translate);
 
     // re-draw the map
+    if( zoom.scale != lastZoomScale){
+      computeGeneLayout();
+    }
+    lastZoomScale = zoom.scale;
+
     drawMap();
 
     menuManager.setFitButtonEnabled(hasMapMoved());
