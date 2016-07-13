@@ -12,6 +12,7 @@ GENEMAP.Chromosome = function (userConfig) {
       y: 0,
     },
     onAnnotationSelectFunction: $.noop(),
+    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -102,7 +103,7 @@ GENEMAP.Chromosome = function (userConfig) {
 
     var y = buildYScale();
     var bands = bandsContainer.selectAll('rect.band').data(chromosome.layout.geneBandNodes);
-    bands.enter().append('rect').attr('class', 'band geneline');
+    bands.enter().append('rect').attr('class', 'band geneline infobox');
 
     bands.attr({
       width: config.layout.width,
@@ -131,6 +132,8 @@ GENEMAP.Chromosome = function (userConfig) {
         //config.onExpandClusterFunction(chromosome, d.data);
       }
     });
+
+    config.infoBoxManager.setupInfoboxOnSelection(bands);
 
     bands.exit().remove();
   }
@@ -194,6 +197,15 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     config.bands = value;
+    return my;
+  };
+
+  my.infoBoxManager = function (value) {
+    if (!arguments.length) {
+      return config.infoBoxManager;
+    }
+
+    config.infoBoxManager = value;
     return my;
   };
 

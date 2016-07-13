@@ -261,8 +261,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.annotationLabelSize = value;
-    return my;
-  };
+    return my;  };
 
   my.annotationMarkerSize = function (value) {
     if (!arguments.length) {
