@@ -113,6 +113,7 @@ GENEMAP.Chromosome = function (userConfig) {
       y: function (d) { return d.y;},
       height: function (d) {return d.height;},
       fill: function (d) { return d.fill; },
+      'fill-opacity' : 0.4,
       "stroke-dasharray": function(d) {
       return [0,config.layout.width, d.height, config.layout.width + d.height]},
     })
@@ -150,7 +151,7 @@ GENEMAP.Chromosome = function (userConfig) {
           target: $(this),
           parent: $(this),
           'modal-position': 'relative',
-          backdrop : true
+          placement: "right",
         });
         $('#clusterPopover').modalPopover('show');
 

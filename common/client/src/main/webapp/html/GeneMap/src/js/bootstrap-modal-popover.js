@@ -51,8 +51,10 @@
     getPosition:function () {
       var $element = this.$parent;
       var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
+      log.info( $element);
       return $.extend({}, (pos), {
-        width:$element[0].offsetWidth || 0, height:$element[0].offsetHeight || 0
+        width:$element[0].offsetWidth || $element[0].width.baseVal.value || 0,
+        height:$element[0].offsetHeight || $element[0].height.baseVal.value || 0
       });
     },
 
@@ -66,7 +68,7 @@
 
       var pos = this.getPosition();
 
-      log.info(pos);
+      log.info( pos );
 
       var actualWidth = $dialog[0].offsetWidth;
       var actualHeight = $dialog[0].offsetHeight;
@@ -87,7 +89,7 @@
           break;
       }
 
-      log.info(tp);
+      log.info( tp );
 
       $dialog
         .css(tp)

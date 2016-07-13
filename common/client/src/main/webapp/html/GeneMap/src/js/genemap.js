@@ -181,12 +181,15 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // basic zooming functionality
     lastZoomScale = 1;
-    zoom = d3.behavior.zoom().scaleExtent([1, 10]);
+    zoom = d3.behavior.zoom().scaleExtent([1, 25]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
 
     var popoverDiv = mapContainer.append( 'div')
       .attr({ 'id' : 'clusterPopover', class: 'popover' });
+
+    popoverDiv.append('div')
+      .attr( {'class' : 'arrow'})
 
     popoverDiv.append('h3')
       .attr( {'class' : 'popover-title'}).text('Cluster');
@@ -241,7 +244,7 @@ GENEMAP.GeneMap = function (userConfig) {
       var geneBandLayout = GENEMAP.GeneBandsLayout( {
           longestChromosome: genome.cellLayout.longestChromosome,
           layout: genome.cellLayout.geneAnnotationPosition,
-          nClusters: 5,
+          nClusters: 50,
         }
       );
 
