@@ -4,6 +4,7 @@ GENEMAP.Chromosome = function (userConfig) {
   var defaultConfig = {
     border: false,
     longestChromosome: 100,
+    bands: "basemap",
     layout: {
       width: 10,
       height: 100,
@@ -20,25 +21,25 @@ GENEMAP.Chromosome = function (userConfig) {
 
   // function to update a single chromosome element given the enter + update selection
   // and data. This assumes the basic element structure is in place.
-  var updateChromosome = function (d) {
+  var updateChromosome = function (chromosome) {
     var y = buildYScale();
-    var height = y(d.length);
-    var chromosome = d3.select(this);
+    var height = y(chromosome.length);
+    var chromosomeGroup = d3.select(this);
 
-    chromosome.attr({
-      id: 'chromosome_' + d.number,
+    chromosomeGroup.attr({
+      id: 'chromosome_' + chromosome.number,
       transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
     });
 
-    chromosome.select('defs').html('')
+    chromosomeGroup.select('defs').html('')
       .append('mask').attr({
-        id: 'chromosome_mask_' + d.number,
+        id: 'chromosome_mask_' + chromosome.number,
       })
       .append('rect').attr({
         class: 'mask_rect',
       });
 
-    chromosome.select('#chromosome_mask_' + d.number).attr({
+    chromosomeGroup.select('#chromosome_mask_' + chromosome.number).attr({
       width: config.layout.width,
       height: height,
     });
@@ -50,12 +51,12 @@ GENEMAP.Chromosome = function (userConfig) {
       ry: config.layout.height * 0.01,
     };
 
-    chromosome.select('.mask_rect').attr(chromosomeShape);
-    chromosome.select('rect.background').attr(chromosomeShape);
-    chromosome.select('rect.outline').attr(chromosomeShape);
+    chromosomeGroup.select('.mask_rect').attr(chromosomeShape);
+    chromosomeGroup.select('rect.background').attr(chromosomeShape);
+    chromosomeGroup.select('rect.outline').attr(chromosomeShape);
 
     if (config.border) {
-      chromosome.select('rect.border')
+      chromosomeGroup.select('rect.border')
         .attr({
           width: config.layout.width,
           height: config.layout.height,
@@ -63,9 +64,27 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     // setup the chromosome bands
-    var bandsContainer = chromosome.select('.bands_container');
+    var bandsContainer = chromosomeGroup.select('.bands_container');
 
-    var bands = bandsContainer.selectAll('rect.band').data(d.bands);
+    var drawBands;
+    if (config.bands == "basemap"){
+      drawBands = drawBasemapBands;
+    }
+    else if (config.bands == "genes"){
+      drawBands = drawGeneLines;
+    }
+
+    drawBands( bandsContainer, chromosome);
+
+    chromosomeGroup.select('.bands_container').style({
+      mask: 'url(#chromosome_mask_' + chromosome.number + ')',
+    });
+  };
+
+  var drawBasemapBands = function( bandsContainer, chromosome){
+
+    var y = buildYScale();
+    var bands = bandsContainer.selectAll('rect.band').data(chromosome.bands);
     bands.enter().append('rect').attr('class', 'band');
 
     bands.attr({
@@ -76,11 +95,23 @@ GENEMAP.Chromosome = function (userConfig) {
     });
 
     bands.exit().remove();
+  }
 
-    chromosome.select('.bands_container').style({
-      mask: 'url(#chromosome_mask_' + d.number + ')',
+  var drawGeneLines = function( bandsContainer, chromosome){
+
+    var y = buildYScale();
+    var bands = bandsContainer.selectAll('rect.band').data(chromosome.annotations.allGenes);
+    bands.enter().append('rect').attr('class', 'band geneline');
+
+    bands.attr({
+      width: config.layout.width,
+      y: function (d) { if(y(d.end - d.start) > 1){ return y(d.midpoint);} else{ return y(d.midpoint) - 0.5; } } ,
+      height: function (d) { return Math.max(1, y(d.end - d.start)); },
+      fill: function (d) { return d.color; },
     });
-  };
+
+    bands.exit().remove();
+  }
 
   // An SVG representation of a chromosome with banding data. This is expecting the passed selection to be within an
   // SVG element and to have a list of chromosome JSON objects as its data.
@@ -123,6 +154,15 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     config.longestChromosome = value;
+    return my;
+  };
+
+  my.bands = function (value) {
+    if (!arguments.length) {
+      return config.bands;
+    }
+
+    config.bands = value;
     return my;
   };
 

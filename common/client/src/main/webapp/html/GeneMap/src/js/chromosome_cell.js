@@ -86,7 +86,9 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // draw the chromosomes in the cells
       var chromosomeDrawer = GENEMAP.Chromosome()
         .layout(layout.chromosomePosition)
-        .longestChromosome(layout.longestChromosome);
+        .longestChromosome(layout.longestChromosome)
+        .bands("genes");
+
 
       cells.call(chromosomeDrawer);
 

@@ -40,7 +40,7 @@ GENEMAP.XmlDataReader = function () {
       var chromosomeAnnotations = annotations.features.filter(
         function (e) { return e.chromosome === chromosome.number; });
 
-      var genes = chromosomeAnnotations.filter(
+      var allGenes = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'gene'; });
 
       var qtls = chromosomeAnnotations.filter(
@@ -49,8 +49,11 @@ GENEMAP.XmlDataReader = function () {
       var combiner = GENEMAP.QTLAnnotationCombiner();
       qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
+      var genes = allGenes.slice(0, 10);
+
       chromosome.annotations = {
         genes: genes,
+        allGenes: allGenes,
         qtls: qtls,
       };
     });
