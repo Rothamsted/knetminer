@@ -371,7 +371,7 @@ public class ClientWorker implements Runnable {
                                             // Generate Annotation file.
 						ondexProvider.writeAnnotationXML(
 								genes, userGenes, qtl, MultiThreadServer.props.getProperty("DataPath")
-								+ fileGViewer, keyword, 100, qtlnetminerResults, listMode);
+								+ fileGViewer, keyword, 1000/*100*/, qtlnetminerResults, listMode);
 						System.out.println("1.) Gviewer annotation ");
 					}else{
 						System.out.println("1.) No reference genome for Gviewer annotation ");
