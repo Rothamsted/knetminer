@@ -69,7 +69,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       x2: 0,
     });
 
-    config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
+    config.infoBoxManager.setupInfoboxOnSelection(geneAnnotationsEnterGroup);
 
     geneAnnotations.on('click', function (d) {
       //If user clicks on a gene, toggle gene selection

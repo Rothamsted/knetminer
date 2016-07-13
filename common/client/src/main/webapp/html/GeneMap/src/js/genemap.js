@@ -205,7 +205,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var computeGeneLayout = function() {
     decorateGenomeLayout();
-    log.info( genome.cellLayout );
     var doCluster = genome.chromosomes.length > 1;
     genome.chromosomes.forEach( function(chromosome){
 
@@ -265,8 +264,6 @@ GENEMAP.GeneMap = function (userConfig) {
     svg.on('mousedown', onMouseDown)
       .on('mouseup', onMouseUp)
       .on('contextmenu', onContext);
-
-    decorateGenomeLayout();
 
     svg.datum(genome);
 
