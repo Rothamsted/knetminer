@@ -226,6 +226,20 @@ GENEMAP.GeneMap = function (userConfig) {
         geneAnnotationLayout.computeChromosomeClusters(chromosome);
       }
       geneAnnotationLayout.layoutChromosome(chromosome);
+
+      var geneBandLayout = GENEMAP.GeneBandsLayout( {
+          longestChromosome: genome.cellLayout.longestChromosome,
+          layout: genome.cellLayout.geneAnnotationPosition,
+          nClusters: 100,
+        }
+      );
+
+      if( ! chromosome.layout.geneBandDisplayClusters ) {
+        geneBandLayout.computeChromosomeClusters(chromosome);
+      }
+
+      geneBandLayout.layoutChromosome(chromosome);
+
     });
   }
 

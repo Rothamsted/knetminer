@@ -100,14 +100,29 @@ GENEMAP.Chromosome = function (userConfig) {
   var drawGeneLines = function( bandsContainer, chromosome){
 
     var y = buildYScale();
-    var bands = bandsContainer.selectAll('rect.band').data(chromosome.annotations.allGenes);
+    var bands = bandsContainer.selectAll('rect.band').data(chromosome.layout.geneBandNodes);
     bands.enter().append('rect').attr('class', 'band geneline');
 
     bands.attr({
       width: config.layout.width,
-      y: function (d) { if(y(d.end - d.start) > 1){ return y(d.midpoint);} else{ return y(d.midpoint) - 0.5; } } ,
-      height: function (d) { return Math.max(1, y(d.end - d.start)); },
-      fill: function (d) { return d.color; },
+      y: function (d) { return d.y;},
+      height: function (d) {return d.height;},
+      fill: function (d) { return d.fill; },
+    });
+
+    bands.on('click', function (d) {
+      //If user clicks on a gene, toggle gene selection
+      if (d.data.type == "gene") {
+        log.info('gene annotation click');
+        d.data.selected = !d.data.selected;
+        //config.onAnnotationSelectFunction();
+      }
+
+      //If user clicks on a cluster of genes, expand that cluster
+      if (d.data.type == "geneslist") {
+        log.info('geneslist annotation click');
+        //config.onExpandClusterFunction(chromosome, d.data);
+      }
     });
 
     bands.exit().remove();
