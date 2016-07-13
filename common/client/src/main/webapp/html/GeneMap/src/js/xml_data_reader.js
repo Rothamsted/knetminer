@@ -49,7 +49,7 @@ GENEMAP.XmlDataReader = function () {
       var combiner = GENEMAP.QTLAnnotationCombiner();
       qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
-      var genes = allGenes.slice(0, 10);
+      var genes = allGenes.slice(0, 100);
 
       chromosome.annotations = {
         genes: genes,

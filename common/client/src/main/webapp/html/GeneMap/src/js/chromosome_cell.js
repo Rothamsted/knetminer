@@ -87,6 +87,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       var chromosomeDrawer = GENEMAP.Chromosome()
         .layout(layout.chromosomePosition)
         .longestChromosome(layout.longestChromosome)
+        .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
         .bands("genes");
 
 

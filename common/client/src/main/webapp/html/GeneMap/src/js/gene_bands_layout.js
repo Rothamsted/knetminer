@@ -39,7 +39,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
       return {y: y(start), height: rawDY};
     }
     else {
-      return { y: y(midpoint), height: 1};
+      return { y: y(midpoint) - 0.5, height: 1};
     }
   }
 

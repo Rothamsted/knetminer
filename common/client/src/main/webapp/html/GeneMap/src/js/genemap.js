@@ -268,10 +268,11 @@ GENEMAP.GeneMap = function (userConfig) {
       });
     }
 
+    decorateGenomeLayout();
+
     if (!genome.chromosomes.every(function (chromosome) {
           return chromosome.layout; } ) ) {
     //Set up initial layout
-    decorateGenomeLayout();
     computeGeneLayout();
     }
 

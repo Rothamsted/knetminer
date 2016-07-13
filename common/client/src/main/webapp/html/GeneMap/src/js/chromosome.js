@@ -11,6 +11,7 @@ GENEMAP.Chromosome = function (userConfig) {
       x: 0,
       y: 0,
     },
+    onAnnotationSelectFunction: $.noop(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -108,14 +109,20 @@ GENEMAP.Chromosome = function (userConfig) {
       y: function (d) { return d.y;},
       height: function (d) {return d.height;},
       fill: function (d) { return d.fill; },
-    });
+      "stroke-dasharray": function(d) {
+      return [0,config.layout.width, d.height, config.layout.width + d.height]},
+    })
+    bands.classed( "selected", function(d){
+     return d.data.selected
+    }
+    );
 
     bands.on('click', function (d) {
       //If user clicks on a gene, toggle gene selection
       if (d.data.type == "gene") {
         log.info('gene annotation click');
         d.data.selected = !d.data.selected;
-        //config.onAnnotationSelectFunction();
+        config.onAnnotationSelectFunction();
       }
 
       //If user clicks on a cluster of genes, expand that cluster
@@ -153,6 +160,15 @@ GENEMAP.Chromosome = function (userConfig) {
       chromosomes.exit().remove();
     });
   }
+
+  my.onAnnotationSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onAnnotationSelectFunction;
+    }
+
+    config.onAnnotationSelectFunction = value;
+    return my;
+  };
 
   my.layout = function (value) {
     if (!arguments.length) {
