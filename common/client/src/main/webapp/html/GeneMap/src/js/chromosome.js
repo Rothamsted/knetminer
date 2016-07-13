@@ -103,7 +103,10 @@ GENEMAP.Chromosome = function (userConfig) {
 
     var y = buildYScale();
     var bands = bandsContainer.selectAll('rect.band').data(chromosome.layout.geneBandNodes);
-    bands.enter().append('rect').attr('class', 'band geneline infobox');
+    bands.enter().append('rect').attr({
+      'id': function(d){ return d.data.id},
+      'class': 'band geneline infobox'
+    });
 
     bands.attr({
       width: config.layout.width,
@@ -129,11 +132,30 @@ GENEMAP.Chromosome = function (userConfig) {
       //If user clicks on a cluster of genes, expand that cluster
       if (d.data.type == "geneslist") {
         log.info('geneslist annotation click');
-        //config.onExpandClusterFunction(chromosome, d.data);
+
+        popover = d3.select('#clusterPopover').select('.popover-content').selectAll('p')
+          .data(d.data.genesList, function(d){ return d.id});
+
+        geneItem = popover.enter().append('p');
+        geneItem
+          .append('a')
+          .attr( {'href': function(gene){ return gene.link;}})
+          .text( function( gene){ return gene.label}) ;
+
+        popover.exit().remove();
+
+        log.info( $(this));
+
+        $('#clusterPopover').modalPopover( {
+          target: $(this),
+          parent: $(this),
+          'modal-position': 'relative',
+          backdrop : true
+        });
+        $('#clusterPopover').modalPopover('show');
+
       }
     });
-
-    config.infoBoxManager.setupInfoboxOnSelection(bands);
 
     bands.exit().remove();
   }

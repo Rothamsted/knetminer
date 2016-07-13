@@ -14,6 +14,7 @@ GENEMAP.InfoBox = function () {
   // close all open popovers
   var closeAllPopovers = function (event) {
     $('.infobox').popover('hide');
+    $('#clusterPopover').modalPopover('hide');
   };
 
   //////////////////////////////////////////////////////////////////////////////////////

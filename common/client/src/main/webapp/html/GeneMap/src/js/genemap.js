@@ -185,6 +185,17 @@ GENEMAP.GeneMap = function (userConfig) {
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
 
+    var popoverDiv = mapContainer.append( 'div')
+      .attr({ 'id' : 'clusterPopover', class: 'popover' });
+
+    popoverDiv.append('h3')
+      .attr( {'class' : 'popover-title'}).text('Cluster');
+
+    popoverDiv.append( 'div')
+      .attr( { 'class' : 'popover-content'});
+
+
+
     return svg;
   };
 
@@ -230,7 +241,7 @@ GENEMAP.GeneMap = function (userConfig) {
       var geneBandLayout = GENEMAP.GeneBandsLayout( {
           longestChromosome: genome.cellLayout.longestChromosome,
           layout: genome.cellLayout.geneAnnotationPosition,
-          nClusters: 100,
+          nClusters: 5,
         }
       );
 

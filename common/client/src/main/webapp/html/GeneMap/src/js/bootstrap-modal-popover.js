@@ -1,5 +1,28 @@
 //Source: https://github.com/gegham-khachatryan/BootstrapModalPopover
 //Forked from: https://github.com/scruffles/BootstrapModalPopover
+
+//The MIT License (MIT)
+//
+//Copyright (c) 2013-2014 Bryan Young
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+
 !function ($) {
 
   /* MODAL POPOVER PUBLIC CLASS DEFINITION
@@ -29,7 +52,7 @@
       var $element = this.$parent;
       var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
       return $.extend({}, (pos), {
-        width:$element[0].offsetWidth, height:$element[0].offsetHeight
+        width:$element[0].offsetWidth || 0, height:$element[0].offsetHeight || 0
       });
     },
 
@@ -42,6 +65,8 @@
         this.options.placement;
 
       var pos = this.getPosition();
+
+      log.info(pos);
 
       var actualWidth = $dialog[0].offsetWidth;
       var actualHeight = $dialog[0].offsetHeight;
@@ -61,6 +86,8 @@
           tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
           break;
       }
+
+      log.info(tp);
 
       $dialog
         .css(tp)
