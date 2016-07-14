@@ -144,16 +144,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
       y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
     }).style({
-      'font-size': config.annotationLabelSize + 'px',
-      visibility: function (d) {
-        if (d.data.showLabel === 'show') {
-          return 'visible';
-        } else if (d.data.showLabel === 'hide') {
-          return 'visible';
-        }
-
-        return config.showAnnotationLabels ? 'visible' : 'visible';
-      },
+      'stroke': function(d){ return (d.data.selected ? d.color : 'none' ) },
+      'font-size': function(d){ return (d.data.selected ? 0.2 : 0 ) + config.annotationLabelSize + 'px'},
+      'font-weight' : function(d){ return d.data.selected ? 'bold' : 'normal'},
+      'background-color' : function(d){ return d.data.selected ? 'white' : 'none'},
     })
       .attr( { fill: function (d) { return d.data.color; } })
       .text(function (d) {
