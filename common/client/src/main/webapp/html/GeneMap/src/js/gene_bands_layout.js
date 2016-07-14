@@ -16,6 +16,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
     },
     doCluster : true,
     nClusters: 6,
+    scale: 1,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -31,25 +32,19 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
     return config.doCluster;
   }
 
-  var generatePosition = function (start, end, midpoint){
-    var rawHeight = end - start;
-    var rawDY = y(rawHeight);
-
-    if (rawDY > 1)  {
-      return {y: y(start), height: rawDY};
-    }
-    else {
-      return { y: y(midpoint) - 0.5, height: 1};
-    }
-  }
 
   var createNode = function(cluster){
     if (cluster.type == "gene") {
       var gene = cluster;
 
-      result = generatePosition( gene.start, gene.end, gene.midpoint);
-      result.fill = gene.color;
-      result.data = gene;
+      result = {
+        start : gene.start,
+        end : gene.end,
+        midpoint : gene.midpoint,
+        color : gene.color,
+        data : gene
+      };
+
       return result;
     }
     else if (cluster.type == "geneslist"){
@@ -60,9 +55,14 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
         return Math.min(min, current.start);
       }, Infinity);
 
-      result = generatePosition( minPosition, maxPosition, cluster.midpoint);
-      result.fill = "#0000FF";
-      result.data = cluster;
+      result = {
+        start : minPosition,
+        end : maxPosition,
+        midpoint : cluster.midpoint,
+        color : "#0000FF",
+        data : cluster
+      };
+
       return result;
       }
     else{

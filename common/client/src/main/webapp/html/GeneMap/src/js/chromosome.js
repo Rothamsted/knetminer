@@ -11,6 +11,7 @@ GENEMAP.Chromosome = function (userConfig) {
       x: 0,
       y: 0,
     },
+    scale : 1,
     onAnnotationSelectFunction: $.noop(),
     infoBoxManager: GENEMAP.InfoBox(),
   };
@@ -99,6 +100,30 @@ GENEMAP.Chromosome = function (userConfig) {
     bands.exit().remove();
   }
 
+  var generateGeneLineAttr = function (y, gene){
+    var rawHeight = gene.end - gene.start;
+    var rawDY = y(rawHeight);
+
+    var result;
+
+    if (rawDY * config.scale > 2 )  {
+      result =  {y: y(gene.start), height: rawDY};
+    }
+    else {
+      height = Math.min( 2 / config.scale, 2)
+      result =  { y: y(gene.midpoint) - height / 2,  height: height};
+    }
+
+    result.fill = gene.color;
+    result.width = config.layout.width;
+    result['fill-opacity'] = 0.8;
+    result['stroke-dasharray'] = [
+      0, config.layout.width, result.height, config.layout.width + result.height];
+    result['stroke-width'] = config.layout.width / 5;
+
+    return result;
+  }
+
   var drawGeneLines = function( bandsContainer, chromosome){
 
     var y = buildYScale();
@@ -108,15 +133,11 @@ GENEMAP.Chromosome = function (userConfig) {
       'class': 'band geneline infobox'
     });
 
-    bands.attr({
-      width: config.layout.width,
-      y: function (d) { return d.y;},
-      height: function (d) {return d.height;},
-      fill: function (d) { return d.fill; },
-      'fill-opacity' : 0.4,
-      "stroke-dasharray": function(d) {
-      return [0,config.layout.width, d.height, config.layout.width + d.height]},
-    })
+    bands.each( function(band) {
+      attribs = generateGeneLineAttr(y, band);
+      d3.select(this).attr( attribs );
+    } );
+
     bands.classed( "selected", function(d){
      return d.data.selected
     }
@@ -220,6 +241,15 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     config.bands = value;
+    return my;
+  };
+
+  my.scale = function (value) {
+    if (!arguments.length) {
+      return config.scale;
+    }
+
+    config.scale = value;
     return my;
   };
 

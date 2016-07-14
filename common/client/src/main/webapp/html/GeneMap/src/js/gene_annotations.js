@@ -53,7 +53,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       geneAnnotationsEnterGroup.append('rect').classed('labella', true);
     }
 
-    geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
+    //geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
     geneAnnotationsEnterGroup.append('text');
 
     geneAnnotations.attr('id', function (d) {
@@ -141,20 +141,22 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     geneAnnotations.select('text').attr({
-      x: function (d) { return d.x + config.annotationMarkerSize + config.annotationLabelSize; },
-      y: function (d) { return d.y + (0.4 * config.annotationLabelSize); },
+      x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
+      y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
     }).style({
       'font-size': config.annotationLabelSize + 'px',
       visibility: function (d) {
         if (d.data.showLabel === 'show') {
           return 'visible';
         } else if (d.data.showLabel === 'hide') {
-          return 'hidden';
+          return 'visible';
         }
 
-        return config.showAnnotationLabels ? 'visible' : 'hidden';
+        return config.showAnnotationLabels ? 'visible' : 'visible';
       },
-    }).text(function (d) {
+    })
+      .attr( { fill: function (d) { return d.data.color; } })
+      .text(function (d) {
       if (d.data.type == "gene") {
         return d.data.label;
       }

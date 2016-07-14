@@ -8,7 +8,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
   var defaultConfig = {
     width: 900,
     height: 600,
-    numberPerRow: 10,
+    numberPerRow: 6,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
     cellMargin: { top: 0.05, left: 0.05, bottom: 0.05, right: 0.05 },
     labelHeight: 0.02,
@@ -19,7 +19,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         size: 3,
         show: true,
         showThreshold: 8,
-        maxSize: 20,
+        maxSize: 15,
       },
       marker: {
         size: 6,
@@ -130,6 +130,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         },
         longestChromosome: longest,
         annotations: annotationsConfig,
+        scale : config.scale,
       };
 
       // decorate the genome with the layout information

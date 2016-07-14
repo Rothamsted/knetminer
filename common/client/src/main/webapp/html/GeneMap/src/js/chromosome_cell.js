@@ -89,6 +89,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .longestChromosome(layout.longestChromosome)
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
         .infoBoxManager(config.infoBoxManager)
+        .scale( layout.scale)
         .bands("genes");
 
 

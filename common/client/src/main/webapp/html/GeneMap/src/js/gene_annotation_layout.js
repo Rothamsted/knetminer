@@ -43,9 +43,9 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var y = buildYScale();
 
     forceConfig = {
-      nodeSpacing: 4,
+      nodeSpacing: 3,
       algorithm: 'overlap',
-      lineSpacing: 2,
+      lineSpacing: 0.5,
       minPos: 0,
       maxPos: config.layout.height
     };
@@ -56,9 +56,12 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var nodeSource = chromosome.annotations.genes;
 
     var nodes = nodeSource.map(function (d) {
-      return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
+      return new labella.Node(y(d.midpoint),
+        Math.max(config.annotationMarkerSize, 2), d);
     } );
+
     force.nodes(nodes).compute();
+
 
     //If clustering is enabled we might want to redo the layout using clusters of genes
     if( shouldRecluster(force.nodes()) ){
@@ -73,8 +76,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Compute paths
     renderConfig  = {
       direction: 'right',
-      layerGap: config.layout.width / 3.0,
-      nodeHeight: config.annotationMarkerSize * 1.5 + config.annotationLabelSize * 5.0  ,
+      layerGap: 1.5 * config.layout.width /  (1 + Math.log(config.scale)),
+      nodeHeight: config.annotationLabelSize * 5.0  ,
     };
 
     var renderer = new labella.Renderer(renderConfig);
@@ -83,6 +86,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     nodes.forEach( function(node){
      node.data.path = renderer.generatePath(node);
     });
+
 
     return nodes;
 

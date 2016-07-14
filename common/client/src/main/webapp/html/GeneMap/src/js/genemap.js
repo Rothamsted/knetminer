@@ -7,7 +7,7 @@ GENEMAP.GeneMap = function (userConfig) {
     svgDefsFile: './assets/sprite-defs.svg',
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
-      numberPerRow: 10,
+      numberPerRow: 6,
       maxAnnotationLayers: 3,
     },
     contentBorder: false,
@@ -233,6 +233,7 @@ GENEMAP.GeneMap = function (userConfig) {
           doCluster : doCluster,
           nClusters: 6,
           maxAnnotationLayers: config.layout.maxAnnotationLayers,
+          scale: zoom.scale()
         }
       );
 
@@ -245,6 +246,7 @@ GENEMAP.GeneMap = function (userConfig) {
           longestChromosome: genome.cellLayout.longestChromosome,
           layout: genome.cellLayout.geneAnnotationPosition,
           nClusters: 50,
+          scale: zoom.scale()
         }
       );
 
@@ -354,12 +356,13 @@ GENEMAP.GeneMap = function (userConfig) {
     zoom.translate(translate);
 
     // re-draw the map
-    if( zoom.scale != lastZoomScale){
+    if( zoom.scale() != lastZoomScale){
+      log.info( "New zoom");
       computeGeneLayout();
+      drawMap();
     }
-    lastZoomScale = zoom.scale;
+    lastZoomScale = zoom.scale();
 
-    drawMap();
 
     menuManager.setFitButtonEnabled(hasMapMoved());
 
