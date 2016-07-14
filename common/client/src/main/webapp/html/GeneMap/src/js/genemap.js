@@ -140,6 +140,7 @@ GENEMAP.GeneMap = function (userConfig) {
   // network button should be enabled or not
   var onAnnotationSelectionChanged = function () {
     //find out if any of the genes in any of the chromosomes are currently selected
+
     var anyGenesSelected = genome.chromosomes.some( function(chromosome) {
       return chromosome.annotations.genes.some( function(gene){
         return gene.selected;});

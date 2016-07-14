@@ -49,6 +49,9 @@ GENEMAP.XmlDataReader = function () {
       var combiner = GENEMAP.QTLAnnotationCombiner();
       qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
+      allGenes.forEach( function(gene){
+        gene.visible = false;
+      })
       var genes = allGenes.slice(0, 100);
 
       chromosome.annotations = {

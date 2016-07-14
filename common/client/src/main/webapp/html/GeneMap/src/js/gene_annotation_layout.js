@@ -52,8 +52,17 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     var force = new labella.Force( forceConfig );
 
+    allGenes = chromosome.annotations.allGenes;
     //Start by constructing nodes directly from genes
-    var nodeSource = chromosome.annotations.genes;
+    var nodeSource = new Set(allGenes.filter( function(gene){ return gene.visible}));
+    for ( iGene = 0 ; iGene < allGenes.length ; iGene++) {
+      nodeSource.add(allGenes[iGene]);
+      if ( nodeSource.size == 10)
+      { break}
+    }
+    nodeSource = Array.from(nodeSource)
+
+      chromosome.annotations.allGenes.slice(0,10);
 
     var nodes = nodeSource.map(function (d) {
       return new labella.Node(y(d.midpoint),

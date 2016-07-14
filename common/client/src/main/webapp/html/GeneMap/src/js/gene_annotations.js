@@ -149,7 +149,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       'font-weight' : function(d){ return d.data.selected ? 'bold' : 'normal'},
       'background-color' : function(d){ return d.data.selected ? 'white' : 'none'},
     })
-      .attr( { fill: function (d) { return d.data.color; } })
+      .attr( { fill: function (d) { return (d.data.visible || d.data.selected) ? d.data.color : "gray"; } })
       .text(function (d) {
       if (d.data.type == "gene") {
         return d.data.label;
