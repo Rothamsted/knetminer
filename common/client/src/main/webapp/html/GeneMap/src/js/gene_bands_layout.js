@@ -83,14 +83,65 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
 
 //Produce list of clusters (which could be single genes)
 //for a given chromosome
-  var generateChromosomeClusters = function(chromosome){
-    var geneClusterer = GENEMAP.GeneClusterer()
-      .nClusters(config.nClusters);
-    //Run clustering algorithm so we can use the clusters later when drawing
-    genes = chromosome.annotations.allGenes;
-    geneClusters = geneClusterer.createClustersFromGenes(genes);
+  var generateChromosomeClusters = function(chromosome) {
+
+    var genes = chromosome.annotations.allGenes.slice()
+      .sort(function (lhs, rhs) {
+        return lhs.midpoint < rhs.midpoint
+      });
+
+    if (chromosome.number == "7A") {
+      log.info( "GENES");
+      genes.forEach(function (c) {
+        log.info(c.type, c.midpoint)
+      })
+    }
+
+    var geneClusters = [];
+
+    var iGene = 0;
+    while (iGene < genes.length) {
+      iDiff = iGene;
+      while (iDiff < genes.length &&
+      (genes[iGene].midpoint == genes[iDiff].midpoint)) {
+        iDiff++;
+      }
+      nMatching = iDiff - iGene;
+
+      if (nMatching == 1) {
+        geneClusters.push(genes[iGene]);
+        iGene++;
+      }
+      else {
+        var genesList = genes.slice(iGene, iDiff);
+        var id = genesList.reduce(function (sum, current) {
+          return sum + current.id.toString();
+        }, "");
+
+        var genesCollection = {
+          genesList: genesList,
+          midpoint: genesList[0].midpoint,
+          type: "geneslist",
+          id: id,
+        };
+        geneClusters.push(genesCollection);
+        iGene = iDiff;
+      }
+    }
+
+    geneClusters.sort(function (lhs, rhs) {
+      return lhs.midpoint < rhs.midpoint
+    });
+
+    if (chromosome.number == "7A") {
+      log.info( "CLUSTERS");
+      geneClusters.forEach(function (c) {
+        log.info(c.type, c.midpoint)
+      })
+    }
     return geneClusters;
   }
+
 
   my = {};
 

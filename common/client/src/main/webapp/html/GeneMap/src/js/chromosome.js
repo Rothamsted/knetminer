@@ -147,7 +147,17 @@ GENEMAP.Chromosome = function (userConfig) {
       //If user clicks on a gene, toggle gene selection
       if (d.data.type == "gene") {
         log.info('gene annotation click');
-        d.data.selected = !d.data.selected;
+
+        if ( !d.data.visible && !d.data.hidden) {
+          //this gene was annotated automatically - hide it
+          d.data.visible = false;
+          d.data.hidden = true;
+        }
+        else {
+          //toggle visibility
+          d.data.visible = !d.data.visible;
+        }
+
         config.onAnnotationSelectFunction();
       }
 
@@ -155,27 +165,18 @@ GENEMAP.Chromosome = function (userConfig) {
       if (d.data.type == "geneslist") {
         log.info('geneslist annotation click');
 
-        popover = d3.select('#clusterPopover').select('.popover-content').selectAll('p')
-          .data(d.data.genesList, function(d){ return d.id});
+        clusterCurrentlyHidden = d.data.genesList.some( function(gene){
+          return !(gene.displayed) } );
 
-        geneItem = popover.enter().append('p');
-        geneItem
-          .append('a')
-          .attr( {'href': function(gene){ return gene.link;}})
-          .text( function( gene){ return gene.label}) ;
-
-        popover.exit().remove();
-
-        log.info( $(this));
-
-        $('#clusterPopover').modalPopover( {
-          target: $(this),
-          parent: $(this),
-          'modal-position': 'relative',
-          placement: "right",
+        d.data.genesList.forEach( function(gene){
+          gene.visible = clusterCurrentlyHidden;
+          gene.hidden = !clusterCurrentlyHidden;
+          log.info( gene.label, gene.visible, gene.hidden);
         });
-        $('#clusterPopover').modalPopover('show');
 
+        log.info(d.data.genesList);
+
+        config.onAnnotationSelectFunction();
       }
     });
 

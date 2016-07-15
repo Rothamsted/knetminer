@@ -146,6 +146,7 @@ GENEMAP.GeneMap = function (userConfig) {
         return gene.selected;});
     } );
 
+    computeGeneLayout();
     drawMap();
 
     d3.select('.network-btn').classed('disabled', !anyGenesSelected);

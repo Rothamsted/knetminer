@@ -53,14 +53,25 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var force = new labella.Force( forceConfig );
 
     allGenes = chromosome.annotations.allGenes;
+
+
+    allGenes.forEach( function(gene){ gene.displayed = false}) ;
+
     //Start by constructing nodes directly from genes
     var nodeSource = new Set(allGenes.filter( function(gene){ return gene.visible}));
-    for ( iGene = 0 ; iGene < allGenes.length ; iGene++) {
-      nodeSource.add(allGenes[iGene]);
-      if ( nodeSource.size == 10)
-      { break}
-    }
-    nodeSource = Array.from(nodeSource)
+
+    allGenes.slice(0, 10)
+      .filter( function(gene){return !gene.hidden;})
+      .forEach( function(gene){ nodeSource.add(gene)});
+
+    //for ( iGene = 0 ; iGene < allGenes.length ; iGene++) {
+    //  nodeSource.add(allGenes[iGene]);
+    //  if ( nodeSource.size == 10)
+    //  { break}
+    //}
+
+    nodeSource = Array.from(nodeSource);
+    nodeSource.forEach( function(gene){gene.displayed = true});
 
       chromosome.annotations.allGenes.slice(0,10);
 

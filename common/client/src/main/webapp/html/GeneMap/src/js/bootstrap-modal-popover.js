@@ -51,11 +51,35 @@
     getPosition:function () {
       var $element = this.$parent;
       var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
-      log.info( $element);
-      return $.extend({}, (pos), {
-        width:$element[0].offsetWidth || $element[0].width.baseVal.value || 0,
-        height:$element[0].offsetHeight || $element[0].height.baseVal.value || 0
-      });
+
+      var width = 0;
+      var height = 0;
+
+      //Position manipulations added to support the QTLNetMiner Application
+      //We try a few different methods for getting the size of the element hosting the popopver.
+
+      if ( "offsetWidth" in $element[0] && $element[0].offsetWidth){
+        //This works fine for html objecst
+        width = $element[0].offsetWidth;
+        height = $element[0].offsetHeight;
+      }
+      else if ( "width" in $element[0] && $element[0].width.baseVal){
+        //This works fine for svg objects with defined width
+        width = $element[0].width.baseVal.value;
+        height = $element[0].height.baseVal.value;
+      }
+      else if ( "getBBox" in $element[0]) {
+        //This works for svg text objects
+
+        //Raw BBox doesn't take Current Transformation Matrix into account.
+        bbox = $element[0].getBBox();
+        ctm = $element[0].getCTM();
+        width = bbox.width * ctm.a;
+        height = bbox.height * ctm.d;
+      }
+
+
+      return $.extend({}, (pos), { width: width, height: height });
     },
 
     show: function () {
@@ -68,7 +92,6 @@
 
       var pos = this.getPosition();
 
-      log.info( pos );
 
       var actualWidth = $dialog[0].offsetWidth;
       var actualHeight = $dialog[0].offsetHeight;
@@ -89,7 +112,6 @@
           break;
       }
 
-      log.info( tp );
 
       $dialog
         .css(tp)

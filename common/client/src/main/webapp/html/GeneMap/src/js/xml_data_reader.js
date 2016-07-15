@@ -51,6 +51,8 @@ GENEMAP.XmlDataReader = function () {
 
       allGenes.forEach( function(gene){
         gene.visible = false;
+        gene.hidden = false;
+        gene.displayed = false;
       })
       var genes = allGenes.slice(0, 100);
 

@@ -122,9 +122,13 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     });
 
     geneAnnotations.select('path.link')
+      .style( "stroke" , function (d){return (d.data.visible ? d.color : 'gray')})
+      .transition()
+      .delay(750)
       .attr({
-        d: function (d) { return d.data.path ;}
-      });
+        d: function (d) { return d.data.path ;},
+      })
+    ;
 
     // draw the labella labels as rectangles, useful for debugging
     if (config.labelRectangles) {
@@ -140,7 +144,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         });
     }
 
-    geneAnnotations.select('text').attr({
+    geneAnnotations.select('text')
+      .transition()
+      .delay(750)
+      .attr({
       x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
       y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
     }).style({
@@ -158,6 +165,33 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         return "(" + d.data.genesList.length + ")";
       }
     });
+
+    geneAnnotations.select('text')
+      .on('contextmenu', function(d){
+        log.info(d);
+        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+        popoverTitle.selectAll('*').remove();
+        popoverTitle.text("");
+
+        popoverTitle
+          .append('a')
+          .attr( {'href' : d.data.link } )
+          .text(d.data.label);
+
+
+        $('#clusterPopover').modalPopover( {
+          target: $(this),
+          parent: $(this),
+          'modal-position': 'relative',
+          placement: "right",
+        });
+        $('#clusterPopover').modalPopover('show');
+
+        popoverContent = d3.select('#clusterPopover').select('.popover-content');
+        popoverContent.selectAll('*').remove();
+        popoverContent.text("");
+        popoverContent.append('p').text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
+      });
 
     var exitGroup = geneAnnotations.exit()
     //avoid any orphaned popovers
