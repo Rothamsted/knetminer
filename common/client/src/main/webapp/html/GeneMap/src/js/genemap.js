@@ -162,6 +162,7 @@ GENEMAP.GeneMap = function (userConfig) {
       genome = { chromosomes : [chromosome] };
       singleGenomeView = true
     }
+    computeGeneLayout();
     drawMap()
   };
 
@@ -222,40 +223,40 @@ GENEMAP.GeneMap = function (userConfig) {
   var computeGeneLayout = function() {
     decorateGenomeLayout();
     var doCluster = genome.chromosomes.length > 1;
+
+    var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout( {
+        longestChromosome: genome.cellLayout.longestChromosome,
+        layout: genome.cellLayout.geneAnnotationPosition,
+        annotationMarkerSize: genome.cellLayout.annotations.marker.size,
+        annotationLabelSize: genome.cellLayout.annotations.label.size,
+        doCluster : doCluster,
+        nClusters: 6,
+        maxAnnotationLayers: config.layout.maxAnnotationLayers,
+        scale: zoom.scale()
+      }
+    );
+
+    var geneBandLayout = GENEMAP.GeneBandsLayout( {
+        longestChromosome: genome.cellLayout.longestChromosome,
+        layout: genome.cellLayout.geneAnnotationPosition,
+        nClusters: 50,
+        scale: zoom.scale()
+      }
+    );
+
     genome.chromosomes.forEach( function(chromosome){
 
       chromosome.layout = chromosome.layout || {};
-
-
-      var geneAnnotationLayout = GENEMAP.GeneAnnotationLayout( {
-          longestChromosome: genome.cellLayout.longestChromosome,
-          layout: genome.cellLayout.geneAnnotationPosition,
-          annotationMarkerSize: genome.cellLayout.annotations.marker.size,
-          annotationLabelSize: genome.cellLayout.annotations.label.size,
-          doCluster : doCluster,
-          nClusters: 6,
-          maxAnnotationLayers: config.layout.maxAnnotationLayers,
-          scale: zoom.scale()
-        }
-      );
 
       if( ! chromosome.layout.displayClusters ) {
         geneAnnotationLayout.computeChromosomeClusters(chromosome);
       }
       geneAnnotationLayout.layoutChromosome(chromosome);
 
-      var geneBandLayout = GENEMAP.GeneBandsLayout( {
-          longestChromosome: genome.cellLayout.longestChromosome,
-          layout: genome.cellLayout.geneAnnotationPosition,
-          nClusters: 50,
-          scale: zoom.scale()
-        }
-      );
 
       if( ! chromosome.layout.geneBandDisplayClusters ) {
         geneBandLayout.computeChromosomeClusters(chromosome);
       }
-
       geneBandLayout.layoutChromosome(chromosome);
 
     });

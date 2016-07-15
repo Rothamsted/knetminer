@@ -43,6 +43,16 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
         chromosome.layout.nodes, function(d){return d.data.id});
 
+    geneAnnotations.select('path.link').transition().delay(750)
+      .attr({ d: function (d) { return d.data.path ;} })
+    ;
+
+    geneAnnotations.select('text').transition().delay(750)
+      .attr({
+        x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
+        y: function (d) { return d.y + 0.4 * config.annotationLabelSize; }
+      });
+
     var geneAnnotationsEnterGroup = geneAnnotations.enter()
       .append('g').classed('gene-annotation', true);
 
@@ -53,7 +63,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       geneAnnotationsEnterGroup.append('rect').classed('labella', true);
     }
 
-    //geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
     geneAnnotationsEnterGroup.append('text');
 
     geneAnnotations.attr('id', function (d) {
@@ -123,8 +132,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     geneAnnotations.select('path.link')
       .style( "stroke" , function (d){return (d.data.visible ? d.color : 'gray')})
-      .transition()
-      .delay(750)
       .attr({
         d: function (d) { return d.data.path ;},
       })
@@ -145,8 +152,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     geneAnnotations.select('text')
-      .transition()
-      .delay(750)
       .attr({
       x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
       y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
