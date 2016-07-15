@@ -19,6 +19,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     doCluster : true,
     nClusters: 6,
     maxAnnotationLayers: 3,
+    scale: 1,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -40,55 +41,109 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   //or cluster of genes
   var generateChromosomeLayout = function(chromosome){
 
+    //How much space do we have?
+    var availableWidth = config.layout.width;
+    var availableHeight = config.layout.height;
+    var labelLength = 20;
+    var minDisplayedFontSize = 12;
+    var maxDisplayedFontSize = 16;
+    var fontCoordRatio = 3.5;
+
+    //How many rows of labels do we show?
+
+    //Can we show 1 row?
+    var par1 =  {};
+    par1.layerGap = availableWidth * ( 0.1 + 0.1 / config.scale )
+    par1.spaceForLabel = availableWidth - par1.layerGap;
+    par1.setFontSize = par1.spaceForLabel / labelLength * fontCoordRatio;
+    par1.possible = par1.setFontSize * config.scale  > minDisplayedFontSize;
+    par1.density = 1.0;
+
+    //Can we show 2 rows?
+    var par2 = {};
+    par2.layerGap = availableWidth / 3;
+    par2.spaceForLabel = par2.layerGap;
+    par2.setFontSize = par2.spaceForLabel / labelLength * fontCoordRatio;
+    par2.possible = par2.setFontSize *config.scale  > minDisplayedFontSize;
+    par2.density = 0.9;
+
+    //var nRows = par1.possible + par2.possible;
+    var nRows = par1.possible + par2.possible;
+    log.info( nRows );
+    var par = (nRows == 2) ? _.clone(par2) : _.clone(par1);
+    par.setFontSize = Math.min( par.setFontSize, maxDisplayedFontSize / config.scale  ) ;
+    par.nodeSpacing =  Math.max( 2, par.setFontSize );
+    par.lineSpacing =  1;
+    par.scale = config.scale;
+    par.availableHeight = availableHeight;
+    if ( nRows == 0 ) {
+      par.nLabels = 0;
+    } else if (nRows == 1 ){
+      par.nLabels = 0.4  * availableHeight / (par.nodeSpacing + par.lineSpacing);
+    } else if (nRows == 2 ){
+    par.nLabels = 0.6  * availableHeight / (par.nodeSpacing + par.lineSpacing);
+  }
+
+    if ( false &&  chromosome.number == "7A")
+    {
+      log.info( "par1",  par1);
+      log.info( "par2", par2);
+      log.info( "par", par);
+     };
+
     var y = buildYScale();
 
     forceConfig = {
-      nodeSpacing: 3,
+      nodeSpacing: par.nodeSpacing,
+      lineSpacing: par.lineSpacing,
       algorithm: 'overlap',
-      lineSpacing: 0.5,
       minPos: 0,
-      maxPos: config.layout.height
+      maxPos: par.availableHeight,
+      density: par.density,
     };
 
     var force = new labella.Force( forceConfig );
 
     allGenes = chromosome.annotations.allGenes;
 
-
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Start by constructing nodes directly from genes
     var nodeSource = new Set(allGenes.filter( function(gene){ return gene.visible}));
 
-    allGenes.slice(0, 10)
+    allGenes.slice(0, par.nLabels)
       .filter( function(gene){return !gene.hidden;})
       .forEach( function(gene){ nodeSource.add(gene)});
 
-    //for ( iGene = 0 ; iGene < allGenes.length ; iGene++) {
-    //  nodeSource.add(allGenes[iGene]);
-    //  if ( nodeSource.size == 10)
-    //  { break}
-    //}
-
     nodeSource = Array.from(nodeSource);
-    nodeSource.forEach( function(gene){gene.displayed = true});
-
-      chromosome.annotations.allGenes.slice(0,10);
+    nodeSource.forEach( function(gene){
+      gene.displayed = true
+      gene.fontSize = par.setFontSize;
+    });
 
     var nodes = nodeSource.map(function (d) {
-      return new labella.Node(y(d.midpoint),
-        Math.max(config.annotationMarkerSize, 2), d);
+      return new labella.Node(y(d.midpoint), par.setFontSize, d);
     } );
 
-    force.nodes(nodes).compute();
+    try {
+      force.nodes(nodes).compute();
+    } catch (e){
+      if ( e instanceof RangeError){
+        log.error(e.message);
+        log.info(chromosome.number);
+        log.info(par);
+        return null;
+      }
+      throw e;
+    }
 
 
     //If clustering is enabled we might want to redo the layout using clusters of genes
-    if( shouldRecluster(force.nodes()) ){
+    if( false && shouldRecluster(force.nodes()) ){
       nodeSource = chromosome.layout.displayClusters;
 
       nodes = nodeSource.map(function (d) {
-        return new labella.Node(y(d.midpoint), config.annotationMarkerSize, d);
+        return new labella.Node(y(d.midpoint), setFontSize, d);
       } );
       force.nodes(nodes).compute();
     }
@@ -96,8 +151,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Compute paths
     renderConfig  = {
       direction: 'right',
-      layerGap: 1.5 * config.layout.width /  (1 + Math.log(config.scale)),
-      nodeHeight: config.annotationLabelSize * 5.0  ,
+      layerGap: par.layerGap,
+      nodeHeight: par.spaceForLabel,
     };
 
     var renderer = new labella.Renderer(renderConfig);
@@ -125,7 +180,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   my = {};
 
   my.layoutChromosome = function(chromosome){
-    chromosome.layout.nodes = generateChromosomeLayout(chromosome)
+    chromosome.layout.nodes = (
+    generateChromosomeLayout(chromosome) || chromosome.layout.nodes);
   }
 
   my.computeChromosomeClusters = function(chromosome){

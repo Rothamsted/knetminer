@@ -90,7 +90,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
         return lhs.midpoint < rhs.midpoint
       });
 
-    if (chromosome.number == "7A") {
+    if ( false && chromosome.number == "7A") {
       log.info( "GENES");
       genes.forEach(function (c) {
         log.info(c.type, c.midpoint)
@@ -133,7 +133,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
       return lhs.midpoint < rhs.midpoint
     });
 
-    if (chromosome.number == "7A") {
+    if ( false && chromosome.number == "7A") {
       log.info( "CLUSTERS");
       geneClusters.forEach(function (c) {
         log.info(c.type, c.midpoint)

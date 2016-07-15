@@ -152,7 +152,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
     }).style({
       'stroke': function(d){ return (d.data.selected ? d.color : 'none' ) },
-      'font-size': function(d){ return (d.data.selected ? 0.2 : 0 ) + config.annotationLabelSize + 'px'},
+      'font-size': function(d){ return (d.data.selected ? 0.2 : 0 ) + d.data.fontSize + 'px'},
       'font-weight' : function(d){ return d.data.selected ? 'bold' : 'normal'},
       'background-color' : function(d){ return d.data.selected ? 'white' : 'none'},
     })

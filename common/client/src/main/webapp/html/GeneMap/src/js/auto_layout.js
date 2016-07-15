@@ -55,7 +55,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
     decorateGenome: function (inputGenome) {
 
-      var genome = _.cloneDeep(inputGenome);
+      //var genome = _.cloneDeep(inputGenome);
+      var genome =  inputGenome;
 
       var sizeLessMargin = {
         width: config.width * (1 - config.margin.left - config.margin.right),
