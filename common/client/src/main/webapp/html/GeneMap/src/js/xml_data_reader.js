@@ -54,10 +54,18 @@ GENEMAP.XmlDataReader = function () {
       var combiner = GENEMAP.QTLAnnotationCombiner();
       qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
-      allGenes.forEach( function(gene){
+      var maxOpacity = 0.9;
+      var opacityFallOff = 3.5;
+      var importanceFunction = function(index){
+        return maxOpacity - 0.5
+          +  1 / (1 + Math.pow( index, opacityFallOff)) ;
+      };
+
+      allGenes.forEach( function(gene,index){
         gene.visible = false;
         gene.hidden = false;
         gene.displayed = false;
+        gene.importance = importanceFunction(index);
       })
       var genes = allGenes.slice(0, 100);
 
