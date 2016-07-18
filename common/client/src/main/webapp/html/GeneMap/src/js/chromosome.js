@@ -148,7 +148,7 @@ GENEMAP.Chromosome = function (userConfig) {
       if (d.data.type == "gene") {
         log.info('gene annotation click');
 
-        if ( !d.data.visible && !d.data.hidden) {
+        if (d.data.displayed && !d.data.visible && !d.data.hidden) {
           //this gene was annotated automatically - hide it
           d.data.visible = false;
           d.data.hidden = true;

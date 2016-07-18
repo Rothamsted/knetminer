@@ -37,22 +37,24 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
    var y = buildYScale();
 
-    // Enter + Update elements
+    //Data join
     // Use a key function so that the correct mapping between graphical objects
     // and data points is maintained even when clustering changes
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
-        chromosome.layout.nodes, function(d){return d.data.id});
+      chromosome.layout.nodes, function(d){return d.data.id});
 
-    geneAnnotations.select('path.link').transition().delay(750)
+    //Update only
+    geneAnnotations.select('path.link').transition().delay(1000)
       .attr({ d: function (d) { return d.data.path ;} })
     ;
 
-    geneAnnotations.select('text').transition().delay(750)
+    geneAnnotations.select('text').transition().delay(1000)
       .attr({
         x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
         y: function (d) { return d.y + 0.4 * config.annotationLabelSize; }
       });
 
+    // Enter only
     var geneAnnotationsEnterGroup = geneAnnotations.enter()
       .append('g').classed('gene-annotation', true);
 
@@ -63,8 +65,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       geneAnnotationsEnterGroup.append('rect').classed('labella', true);
     }
 
-    geneAnnotationsEnterGroup.append('text');
+    geneAnnotationsEnterGroup.append('text')
+    .attr({ d: function (d) { return d.data.path ;} })
 
+    //Enter and update
     geneAnnotations.attr('id', function (d) {
       return 'feature_' + d.data.id;
     });
@@ -77,8 +81,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       y2: function (d) { return y(d.data.midpoint); },
       x2: 0,
     });
-
-    config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
 
     geneAnnotations.on('click', function (d) {
       //If user clicks on a gene, toggle gene selection
@@ -95,43 +97,11 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       }
     });
 
-    // generate  markers
-    var pointsFn = function (d) {
-      var points = [];
-
-      var a = config.annotationMarkerSize;
-      //genes represented by triangles
-      if (d.data.type == "gene") {
-
-        var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
-        h = h * 1.5; // stretch the width of the triangle
-
-        points.push([d.x, d.y]);
-        points.push([d.x + h, d.y - a / 2]);
-        points.push([d.x + h, d.y + a / 2]);
-
-      }
-      //gene clusters represented by squares
-      else if (d.data.type == "geneslist") {
-        points.push([d.x , d.y + a / 2]);
-        points.push([d.x , d.y - a / 2]);
-        points.push([d.x + a , d.y - a / 2]);
-        points.push([d.x + a , d.y + a / 2]);
-      }
-
-      return points.join(' ');
-    };
-
-    geneAnnotations.select('polygon').attr({
-      points: pointsFn,
-    }).style({
-      fill: function (d) {
-        return d.data.color;
-      },
-    });
-
     geneAnnotations.select('path.link')
-      .style( "stroke" , function (d){return (d.data.visible ? d.color : 'gray')})
+      .style( "stroke" , function (d){
+        if (d.data.visible || d.data.selected )
+        {return d.data.color;}
+        else {return "gray"; } })
       .attr({
         d: function (d) { return d.data.path ;},
       })

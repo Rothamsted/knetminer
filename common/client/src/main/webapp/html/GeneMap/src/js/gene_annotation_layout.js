@@ -46,7 +46,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var availableHeight = config.layout.height;
     var labelLength = 20;
     var minDisplayedFontSize = 12;
-    var maxDisplayedFontSize = 16;
+    var maxDisplayedFontSize = 14;
     var fontCoordRatio = 3.5;
 
     //How many rows of labels do we show?
@@ -69,7 +69,6 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     //var nRows = par1.possible + par2.possible;
     var nRows = par1.possible + par2.possible;
-    log.info( nRows );
     var par = (nRows == 2) ? _.clone(par2) : _.clone(par1);
     par.setFontSize = Math.min( par.setFontSize, maxDisplayedFontSize / config.scale  ) ;
     par.nodeSpacing =  Math.max( 2, par.setFontSize );
