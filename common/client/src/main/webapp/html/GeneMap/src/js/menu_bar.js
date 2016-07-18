@@ -5,6 +5,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onResetBtnClick: $.noop,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -37,6 +38,14 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onFitBtnClick();
   };
 
+  var myOnResetBtnClick = function () {
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    config.onResetBtnClick();
+  };
+
   var mySetMaxAnnotationLayers = function(value) {
     items = d3.select(target).select('.layer-dropdown').selectAll('li');
     items.classed('active', function(d){  return d == value; } );
@@ -48,7 +57,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn']);
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -63,6 +72,9 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.fit-btn')
       .on('click', myOnFitBtnClick);
+
+    menu.select('.reset-btn')
+      .on('click', myOnResetBtnClick);
   }
 
   // attach the menu bar to the target element
@@ -104,35 +116,13 @@ GENEMAP.MenuBar = function (userConfig) {
     return my;
   };
 
-  my.onClusterCollapseBtnClick = function (value) {
+  my.onResetBtnClick = function (value) {
     if (!arguments.length) {
-      return config.onClusterCollapseBtnClick;
+      return config.onResetBtnClick;
     }
 
-    config.onClusterCollapseBtnClick = value;
+    config.onResetBtnClick = value;
     return my;
-  };
-
-  my.onClusterExpandBtnClick = function (value) {
-    if (!arguments.length) {
-      return config.onClusterExpandBtnClick;
-    }
-
-    config.onClusterExpandBtnClick = value;
-    return my;
-  };
-
-  my.onSetMaxLayers = function (value) {
-    if (!arguments.length) {
-      return config.onSetMaxLayers;
-    }
-
-    config.onSetMaxLayers= value;
-    return my;
-  };
-
-  my.SetAnnotationLayers = function (value) {
-    mySetMaxAnnotationLayers(value);
   };
 
   // sets the tag button state to the specified value

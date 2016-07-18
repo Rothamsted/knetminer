@@ -85,12 +85,12 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
 //for a given chromosome
   var generateChromosomeClusters = function(chromosome) {
 
-    var genes = chromosome.annotations.allGenes.slice()
-      .sort(function (lhs, rhs) {
-        return lhs.midpoint < rhs.midpoint
+    var genes = chromosome.annotations.allGenes.slice();
+    genes.sort(function (lhs, rhs) {
+        return lhs.midpoint - rhs.midpoint
       });
 
-    if ( false && chromosome.number == "7A") {
+    if ( false && chromosome.number == "2B") {
       log.info( "GENES");
       genes.forEach(function (c) {
         log.info(c.type, c.midpoint)
@@ -133,7 +133,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
       return lhs.midpoint < rhs.midpoint
     });
 
-    if ( false && chromosome.number == "7A") {
+    if ( false && chromosome.number == "2B") {
       log.info( "CLUSTERS");
       geneClusters.forEach(function (c) {
         log.info(c.type, c.midpoint)

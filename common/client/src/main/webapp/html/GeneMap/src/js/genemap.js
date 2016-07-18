@@ -318,6 +318,19 @@ onZoom = function () {
     drawMap();
   };
 
+  var resetLabels = function() {
+    log.info( 'Reset Labels');
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.annotations.genes.forEach(function (gene) {
+        gene.selected == false
+        gene.visible = false;
+        gene.hidden = false;
+      });
+    });
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -481,6 +494,7 @@ onZoom = function () {
           .onTagBtnClick(toggleLableVisibility)
           .onFitBtnClick(resetMapZoom)
           .onNetworkBtnClick(openNetworkView)
+          .onResetBtnClick(resetLabels)
         ;
       }
 
