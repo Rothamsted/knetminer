@@ -38,6 +38,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
       chromosome.layout.nodes, function(d){return d.data.id});
 
+
     //--------------------------------------------------------------------------
     // Enter only - create graphics objects
     //--------------------------------------------------------------------------

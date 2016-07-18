@@ -321,8 +321,8 @@ onZoom = function () {
   var resetLabels = function() {
     log.info( 'Reset Labels');
     genome.chromosomes.forEach(function (chromosome) {
-      chromosome.annotations.genes.forEach(function (gene) {
-        gene.selected == false
+      chromosome.annotations.allGenes.forEach(function (gene) {
+        gene.selected = false
         gene.visible = false;
         gene.hidden = false;
       });

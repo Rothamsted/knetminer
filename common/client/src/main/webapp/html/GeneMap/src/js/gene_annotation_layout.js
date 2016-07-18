@@ -64,18 +64,21 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     //Can we show 2 rows?
     var par2 = {};
-    par2.layerGap = availableWidth / 3;
-    par2.spaceForLabel = par2.layerGap;
+    par2.spaceForLabel = availableWidth / 3;
     par2.setFontSize = par2.spaceForLabel / labelLength * fontCoordRatio;
     par2.possible = par2.setFontSize *config.scale  > minDisplayedFontSize;
+
+    par2.setFontSize = Math.min( par2.setFontSize, maxDisplayedFontSize / config.scale  ) ;
     par2.nodeSpacing = par2.setFontSize;
+    par2.spaceForLabel = 1.3 * labelLength * par2.setFontSize / fontCoordRatio;
+    par2.layerGap = Math.min(5*par2.setFontSize, availableWidth / 3);
     par2.density = 0.9;
 
     //var nRows = par1.possible + par2.possible;
     var nRows = par1.possible + par2.possible;
     var par = (nRows == 2) ? _.clone(par2) : _.clone(par1);
     par.setFontSize = Math.min( par.setFontSize, maxDisplayedFontSize / config.scale  ) ;
-    par.nodeSpacing =  Math.max( 2, par.nodeSpacing );
+    par.nodeSpacing =  Math.max( 2, par.setFontSize );
     par.lineSpacing =  1;
     par.scale = config.scale;
     par.availableHeight = availableHeight;
@@ -87,7 +90,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
   }
 
-    if ( false &&  chromosome.number == "2B")
+    if ( true &&  chromosome.number == "2B")
     {
       log.info( "par1",  par1);
       log.info( "par2", par2);
@@ -171,6 +174,11 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     nodes.forEach( function(node){
      node.data.path = renderer.generatePath(node);
     });
+
+
+    if ( true &&  chromosome.number == "2B") {
+      log.info( nodes );
+    }
 
 
     return nodes;
