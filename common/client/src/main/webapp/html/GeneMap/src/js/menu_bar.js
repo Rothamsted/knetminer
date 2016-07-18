@@ -5,9 +5,6 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
-    onClusterCollapseBtnClick: $.noop,
-    onClusterExpandBtnClick: $.noop,
-    onSetMaxLayers: $.noop
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -40,22 +37,6 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onFitBtnClick();
   };
 
-  var myOnClusterCollapseBtnClick = function () {
-    if ($(this).hasClass('disabled')) {
-      return;
-    }
-
-    config.onClusterCollapseBtnClick();
-  };
-
-  var myOnClusterExpandBtnClick = function () {
-    if ($(this).hasClass('disabled')) {
-      return;
-    }
-
-    config.onClusterExpandBtnClick();
-  };
-
   var mySetMaxAnnotationLayers = function(value) {
     items = d3.select(target).select('.layer-dropdown').selectAll('li');
     items.classed('active', function(d){  return d == value; } );
@@ -67,10 +48,12 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'expand-btn', 'collapse-btn', 'layer-dropdown']);
+      ['network-btn', 'tag-btn', 'fit-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
-      class: function (d) { return d; },
+      class: function (d) {
+        return d;
+      },
     });
 
     menu.select('.network-btn').on('click', myOnNetworkBtnClick);
@@ -80,41 +63,7 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.fit-btn')
       .on('click', myOnFitBtnClick);
-
-    menu.select('.collapse-btn')
-      .on('click', myOnClusterCollapseBtnClick);
-
-    menu.select('.expand-btn')
-      .on('click', myOnClusterExpandBtnClick);
-
-    var dropdownSpan = menu.select('.layer-dropdown').attr( {'class': 'layer-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
-    var dropdownSpanEnter = dropdownSpan.enter();
-
-    var dropdownButtonAttr = {
-      'class' : 'btn btn-default dropdown-toggle' ,
-      'id' : 'label-dropdown-menu',
-      'type' : "button",
-      'data-toggle' : "dropdown",
-      'aria-haspopup' : 'true'};
-
-    var dropdown = dropdownSpanEnter.append('span').attr({ 'class': 'btn-group'});
-
-    dropdown
-      .append('button').attr( dropdownButtonAttr).text('Max Layers')
-      .append( 'span').attr({'class':'caret'});
-
-    dropdown
-      .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': 'label-dropdown-menu'});
-
-    dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data( [1,2,3,4,5,6,7,8,9,10]);
-    dropdownItems.enter()
-      .append('li').on('click', function(d){
-      mySetMaxAnnotationLayers(d); //update view
-      config.onSetMaxLayers(d); //update model
-    })
-      .append('a').attr({'class': 'dropdown-item', 'href' : '#'})
-      .text(function(d){return d} );
-  };
+  }
 
   // attach the menu bar to the target element
   function my(selection) {

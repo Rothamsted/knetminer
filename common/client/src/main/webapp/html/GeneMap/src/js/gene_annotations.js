@@ -18,7 +18,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
-    infoBoxManager: GENEMAP.InfoBox(),
     nClusters: 6,
     doClustering: true,
     maxAnnotationLayers: 3,
@@ -92,7 +91,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
       //If user clicks on a cluster of genes, expand that cluster
       if (d.data.type == "geneslist") {
-        log.info('geneslist annotation click');
+        log.trace('geneslist annotation click');
         config.onExpandClusterFunction(chromosome, d.data);
       }
     });
@@ -143,7 +142,10 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     geneAnnotations.select('text')
       .on('contextmenu', function(d){
-        log.info(d);
+        log.trace('Gene Annotation Context Menu');
+        log.trace(d);
+        d3.select('#clusterPopover').attr( 'class' , 'popover');
+
         popoverTitle = d3.select('#clusterPopover').select('.popover-title');
         popoverTitle.selectAll('*').remove();
         popoverTitle.text("");

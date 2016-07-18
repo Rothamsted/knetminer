@@ -138,7 +138,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
       if ( genome.chromosomes.length == 1 )
       {
         cellLayout.chromosomePosition.x = cellMargins.left + 0.5 * annotationWidth;
-        cellLayout.geneAnnotationPosition.x = cellMargins.left * 0.5 * annotationWidth + chromosomeWidth;
+        cellLayout.geneAnnotationPosition.x = cellMargins.left + 0.5 * annotationWidth + chromosomeWidth;
         cellLayout.qtlAnnotationPosition.width = annotationWidth * 0.5;
         cellLayout.geneAnnotationPosition.width = annotationWidth * 1.5;
       }

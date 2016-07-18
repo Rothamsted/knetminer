@@ -13,7 +13,6 @@ GENEMAP.Chromosome = function (userConfig) {
     },
     scale : 1,
     onAnnotationSelectFunction: $.noop(),
-    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -171,10 +170,7 @@ GENEMAP.Chromosome = function (userConfig) {
         d.data.genesList.forEach( function(gene){
           gene.visible = clusterCurrentlyHidden;
           gene.hidden = !clusterCurrentlyHidden;
-          log.info( gene.label, gene.visible, gene.hidden);
         });
-
-        log.info(d.data.genesList);
 
         config.onAnnotationSelectFunction();
       }

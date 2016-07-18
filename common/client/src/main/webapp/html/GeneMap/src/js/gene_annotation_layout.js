@@ -14,6 +14,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       x: 0, //not used
       y: 0, //not used
     },
+    autoLabels : true,
+    manualLabels : true,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     doCluster : true,
@@ -57,6 +59,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     par1.spaceForLabel = availableWidth - par1.layerGap;
     par1.setFontSize = par1.spaceForLabel / labelLength * fontCoordRatio;
     par1.possible = par1.setFontSize * config.scale  > minDisplayedFontSize;
+    par1.nodeSpacing = par1.setFontSize;
     par1.density = 1.0;
 
     //Can we show 2 rows?
@@ -65,13 +68,14 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     par2.spaceForLabel = par2.layerGap;
     par2.setFontSize = par2.spaceForLabel / labelLength * fontCoordRatio;
     par2.possible = par2.setFontSize *config.scale  > minDisplayedFontSize;
+    par2.nodeSpacing = par2.setFontSize;
     par2.density = 0.9;
 
     //var nRows = par1.possible + par2.possible;
     var nRows = par1.possible + par2.possible;
     var par = (nRows == 2) ? _.clone(par2) : _.clone(par1);
     par.setFontSize = Math.min( par.setFontSize, maxDisplayedFontSize / config.scale  ) ;
-    par.nodeSpacing =  Math.max( 2, par.setFontSize );
+    par.nodeSpacing =  Math.max( 2, par.nodeSpacing );
     par.lineSpacing =  1;
     par.scale = config.scale;
     par.availableHeight = availableHeight;
@@ -80,7 +84,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     } else if (nRows == 1 ){
       par.nLabels = 0.4  * availableHeight / (par.nodeSpacing + par.lineSpacing);
     } else if (nRows == 2 ){
-    par.nLabels = 0.6  * availableHeight / (par.nodeSpacing + par.lineSpacing);
+    par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
   }
 
     if ( false &&  chromosome.number == "7A")
@@ -103,16 +107,23 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     var force = new labella.Force( forceConfig );
 
-    allGenes = chromosome.annotations.allGenes;
+    //Decide which labels to display
 
+    //Start with no labels displayed
+    allGenes = chromosome.annotations.allGenes;
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
-    //Start by constructing nodes directly from genes
-    var nodeSource = new Set(allGenes.filter( function(gene){ return gene.visible}));
+    //Include all genes set to visible
+    var nodeSource = config.manualLabels
+      ? new Set(allGenes.filter( function(gene){ return gene.visible}))
+      : new Set();
 
+    //Automatically show some additional labels
+    if ( config.autoLabels){
     allGenes.slice(0, par.nLabels)
       .filter( function(gene){return !gene.hidden;})
       .forEach( function(gene){ nodeSource.add(gene)});
+      }
 
     nodeSource = Array.from(nodeSource);
     nodeSource.forEach( function(gene){

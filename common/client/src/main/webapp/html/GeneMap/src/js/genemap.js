@@ -17,6 +17,24 @@ GENEMAP.GeneMap = function (userConfig) {
     extraPanArea: 0.25,
   };
 
+  // close all open popovers
+  var closeAllPopovers = function (event) {
+    $('#clusterPopover').modalPopover('hide');
+  }
+    //Intercept mouse events
+
+  var attachClickHandler  = function (){
+    $(target).off('mousedown mousewheel DOMMouseScroll')
+      .on('mousedown mousewheel DOMMouseScroll',  function(event) {
+        //Exceptions - don't close the popopver we are trying to interact with
+        if (event.target.tagName.toLowerCase() === 'a' ){
+          return;
+        }
+        //all other cases
+        closeAllPopovers(event);
+      } );
+  }
+
   var config = _.merge({}, defaultConfig, userConfig);
 
   var target; // the target for the containing HTML element
@@ -31,6 +49,8 @@ GENEMAP.GeneMap = function (userConfig) {
   var onZoom;
 
   var menuManager; //holds a GENEMAP.MenuBar
+  var autoLabels; //bool
+  var manualLabels; //bool
 
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
@@ -104,6 +124,27 @@ GENEMAP.GeneMap = function (userConfig) {
   // instead the layout configuration will be used to determine if the text is shown
   var setGeneLabelState = function (value) {
 
+    if (value == "auto") {
+      autoLabels = true;
+      manualLabels = true;
+      genome.chromosomes.forEach(function (chromosome) {
+        chromosome.annotations.genes.forEach(function (gene) {
+          if (gene.selected == true) {
+            gene.visible = true;
+          }
+        })
+      });
+    }
+    else if ( value == "show"){
+      autoLabels = false;
+      manualLabels = true;
+    }
+    else if ( value == "hide"){
+      autoLabels = false;
+      manualLabels = false;
+    }
+
+
     genome.chromosomes.forEach(function (chromosome) {
       chromosome.annotations.genes.forEach(function (geneAnnotation) {
         if (value === 'auto') {
@@ -113,11 +154,15 @@ GENEMAP.GeneMap = function (userConfig) {
         }
       });
     });
+
+    computeGeneLayout();
+    drawMap();
   };
 
   // sets the map to the 'manual' label state, this hides all the labels (so selected ones can be show)
   // and sets the button to the 'manual' icon.
   var setManualLabelState = function () {
+
     // if all the labels aren't already hidden
     if (!d3.select(target).select('.tag-btn').classed('manual-label')) {
       setGeneLabelState('hide');
@@ -232,7 +277,9 @@ GENEMAP.GeneMap = function (userConfig) {
         doCluster : doCluster,
         nClusters: 6,
         maxAnnotationLayers: config.layout.maxAnnotationLayers,
-        scale: zoom.scale()
+        scale: zoom.scale(),
+        autoLabels: autoLabels,
+      manualLabels: manualLabels,
       }
     );
 
@@ -311,23 +358,24 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     // setup the infobox manager
-    var infoBox = GENEMAP.InfoBox()
-      .setManualLabelMode(setManualLabelState)
-      .onAnnotationSelectFunction( onAnnotationSelectionChanged)
-      .retrieveGeneFunction( retrieveGene);
+    //var infoBox = GENEMAP.InfoBox()
+    //  .setManualLabelMode(setManualLabelState)
+    //  .onAnnotationSelectFunction( onAnnotationSelectionChanged)
+    //  .retrieveGeneFunction( retrieveGene);
+    //
+    //if (target) {
+    //  infoBox.target(target);
+    //}
+    //
+    //infoBox.attach();
 
-    if (target) {
-      infoBox.target(target);
-    }
-
-    infoBox.attach();
+    attachClickHandler();
 
     // draw the chromosome cell for each of the chromosome objects on the genome
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onExpandClusterFunction(onExpandCluster)
       .onLabelSelectFunction(onToggleLabelSelect)
-      .infoBoxManager(infoBox)
       .maxAnnotationLayers( config.layout.maxAnnotationLayers);
 
     container.call(cellDrawer);
@@ -360,7 +408,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // re-draw the map
     if( zoom.scale() != lastZoomScale){
-      log.info( "New zoom");
+      log.trace( "New zoom");
       computeGeneLayout();
       drawMap();
     }

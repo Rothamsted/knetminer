@@ -6,7 +6,6 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     onAnnotationSelectFunction: $.noop(),
     onExpandClusterFunction: $.noop(),
     onLabelSelectFunction: $.noop(),
-    infoBoxManager: GENEMAP.InfoBox(),
     maxAnnotationLayers: 3,
   };
 
@@ -64,7 +63,6 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
         .showAnnotationLabels(layout.annotations.label.show)
-        .infoBoxManager(config.infoBoxManager)
         .maxAnnotationLayers(config.maxAnnotationLayers)
         .doClustering(doClustering)
         ;
@@ -78,8 +76,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .chromosomeWidth(layout.chromosomePosition.width)
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
-        .showAnnotationLabels(layout.annotations.label.show)
-        .infoBoxManager(config.infoBoxManager);
+        .showAnnotationLabels(layout.annotations.label.show);
 
       cells.call(qtlDrawer);
 
@@ -88,7 +85,6 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .layout(layout.chromosomePosition)
         .longestChromosome(layout.longestChromosome)
         .onAnnotationSelectFunction(config.onAnnotationSelectFunction)
-        .infoBoxManager(config.infoBoxManager)
         .scale( layout.scale)
         .bands("genes");
 

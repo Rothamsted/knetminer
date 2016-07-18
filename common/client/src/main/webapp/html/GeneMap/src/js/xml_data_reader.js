@@ -8,7 +8,12 @@ GENEMAP.XmlDataReader = function () {
     // transform 0xffffff into #ffffff
     // if any letters are missing i.e. #ffff append 0s at the start => #00ffff
     var zeros = new Array(8 - d.length + 1).join('0');
-    return '#' + zeros + d.substring(2, d.length);
+    color =  '#' + zeros + d.substring(2, d.length);
+
+    //modify colours
+    if (color == '#00FF00'){ color = '#208000';}
+
+    return color;
   };
 
   var _processBasemapData = function (genome) {
