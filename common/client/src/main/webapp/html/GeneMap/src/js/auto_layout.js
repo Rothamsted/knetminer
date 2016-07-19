@@ -8,7 +8,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
   var defaultConfig = {
     width: 900,
     height: 600,
-    numberPerRow: 6,
+    numberPerRow: 7/*10*/,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
     cellMargin: { top: 0.05, left: 0.05, bottom: 0.05, right: 0.05 },
     labelHeight: 0.02,
@@ -65,6 +65,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
       var cols = Math.min(config.numberPerRow, genome.chromosomes.length);
       var rows = Math.ceil(genome.chromosomes.length / cols);
+console.log("numberPerRow= "+ config.numberPerRow +", chromosomes.length= "+ genome.chromosomes.length);
+console.log("Cols= "+ cols +", rows= "+ rows);
 
       var cellDimensions = {
         width: sizeLessMargin.width / cols,

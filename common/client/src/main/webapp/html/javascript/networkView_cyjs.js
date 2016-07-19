@@ -742,13 +742,13 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   // Re-run the graph's layout, but only on the visible elements.
   function rerunGraphLayout(eles) {
    if(document.getElementById("default").checked) {
-      setCoseLayout(eles);
+      setColaLayout(eles);
      }
    else if(document.getElementById("circle").checked) {
            setCircleLayout(eles);
           }
-   else if(document.getElementById("cola").checked) {
-           setColaLayout(eles);
+   else if(document.getElementById("cose").checked) {
+           setCoseLayout(eles);
           }
    else if(document.getElementById("cose_bilkent").checked) {
            setCoseBilkentLayout(eles);
