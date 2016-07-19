@@ -372,7 +372,7 @@ onZoom = function () {
     genome.chromosomes.forEach( function(chromosome){
       chromosome.layout = chromosome.layout || {};
 
-      if( ! chromosome.layout.displayClusters ) {
+      if( ! chromosome.layout.annotationDisplayClusters ) {
         geneAnnotationLayout.computeChromosomeClusters(chromosome);
       }
       geneAnnotationLayout.layoutChromosome(chromosome);

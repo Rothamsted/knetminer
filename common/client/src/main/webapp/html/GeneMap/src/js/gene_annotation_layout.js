@@ -153,7 +153,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     //If clustering is enabled we might want to redo the layout using clusters of genes
     if( false && shouldRecluster(force.nodes()) ){
-      nodeSource = chromosome.layout.displayClusters;
+      nodeSource = chromosome.layout.annotationDisplayClusters;
 
       nodes = nodeSource.map(function (d) {
         return new labella.Node(y(d.midpoint), setFontSize, d);
@@ -198,34 +198,34 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   my = {};
 
   my.layoutChromosome = function(chromosome){
-    chromosome.layout.nodes = (
-    generateChromosomeLayout(chromosome) || chromosome.layout.nodes);
+    chromosome.layout.annotationNodes = (
+    generateChromosomeLayout(chromosome) || chromosome.layout.annotationNodes);
   }
 
   my.computeChromosomeClusters = function(chromosome){
-    chromosome.layout.clusters = generateChromosomeClusters(chromosome);
-    chromosome.layout.displayClusters = chromosome.layout.clusters.slice();
+    chromosome.layout.annotationClusters = generateChromosomeClusters(chromosome);
+    chromosome.layout.annotationDisplayClusters = chromosome.layout.annotationClusters.slice();
   };
 
   my.expandAllChromosomeClusters = function(chromosome) {
-    chromosome.layout.displayClusters = chromosome.annotations.genes;
+    chromosome.layout.annotationDisplayClusters = chromosome.annotations.genes;
   };
 
   my.collapseAllChromosomeClusters = function(chromosome) {
-    chromosome.layout.displayClusters = chromosome.layout.clusters.slice();
+    chromosome.layout.annotationDisplayClusters = chromosome.layout.annotationClusters.slice();
   };
 
   my.expandAChromosomeCluster= function( chromosome, cluster) {
-    chromosome.layout.displayClusters = chromosome.layout.clusters.slice();
+    chromosome.layout.annotationDisplayClusters = chromosome.layout.annotationClusters.slice();
 
     //add each gene as it's own cluster
     cluster.genesList.forEach( function(gene){
-      chromosome.layout.displayClusters.push(gene) ;
+      chromosome.layout.annotationDisplayClusters.push(gene) ;
     } );
 
     //delete the original cluster
-    var clusterIndex = chromosome.layout.displayClusters.indexOf(cluster);
-    chromosome.layout.displayClusters.splice(clusterIndex, 1);
+    var clusterIndex = chromosome.layout.annotationDisplayClusters.indexOf(cluster);
+    chromosome.layout.annotationDisplayClusters.splice(clusterIndex, 1);
   };
 
   return my;

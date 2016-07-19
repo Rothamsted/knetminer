@@ -36,7 +36,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     // Use a key function so that the correct mapping between graphical objects
     // and data points is maintained even when clustering changes
     var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
-      chromosome.layout.nodes, function(d){return d.data.id});
+      chromosome.layout.annotationNodes, function(d){return d.data.id});
 
 
     //--------------------------------------------------------------------------
