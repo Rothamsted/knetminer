@@ -17,7 +17,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
-    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -109,7 +108,44 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return '(' + d.labels.length + ')';
     });
 
-    config.infoBoxManager.setupQTLInfoboxOnSelection(qtlAnnotations);
+    qtlAnnotations
+      .on('contextmenu', function(d){
+        log.trace('Gene Annotation Context Menu');
+        log.trace(d);
+
+        d3.select('#clusterPopover').attr( 'class' , 'popover');
+
+        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+        popoverTitle.selectAll('*').remove();
+        popoverTitle.text("");
+
+        popoverTitle
+          .text( 'Chromosome ' + d.chromosome + ': '
+          + d.start + '-' + d.end);
+
+
+        $('#clusterPopover').modalPopover( {
+          target: $(this),
+          parent: $(this),
+          'modal-position': 'relative',
+          placement: "left",
+        });
+        $('#clusterPopover').modalPopover('show');
+
+        popoverContent = d3.select('#clusterPopover').select('.popover-content');
+        popoverContent.selectAll('*').remove();
+        popoverContent.text("");
+
+        d3.select('.popover-content')
+          .selectAll('p').data(_.zip(d.links, d.labels) )
+          .enter()
+          .append('p')
+          .append('a')
+          .attr( {"href": function(d){return d[0];},"target": "_blank"})
+          .text(function(d){return d[1];} );
+
+
+      });
 
     qtlAnnotations.exit().remove();
   };

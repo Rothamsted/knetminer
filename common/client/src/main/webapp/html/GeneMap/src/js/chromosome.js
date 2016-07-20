@@ -4,12 +4,15 @@ GENEMAP.Chromosome = function (userConfig) {
   var defaultConfig = {
     border: false,
     longestChromosome: 100,
+    bands: "basemap",
     layout: {
       width: 10,
       height: 100,
       x: 0,
       y: 0,
     },
+    scale : 1,
+    onAnnotationSelectFunction: $.noop(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -20,25 +23,25 @@ GENEMAP.Chromosome = function (userConfig) {
 
   // function to update a single chromosome element given the enter + update selection
   // and data. This assumes the basic element structure is in place.
-  var updateChromosome = function (d) {
+  var updateChromosome = function (chromosome) {
     var y = buildYScale();
-    var height = y(d.length);
-    var chromosome = d3.select(this);
+    var height = y(chromosome.length);
+    var chromosomeGroup = d3.select(this);
 
-    chromosome.attr({
-      id: 'chromosome_' + d.number,
+    chromosomeGroup.attr({
+      id: 'chromosome_' + chromosome.number,
       transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
     });
 
-    chromosome.select('defs').html('')
+    chromosomeGroup.select('defs').html('')
       .append('mask').attr({
-        id: 'chromosome_mask_' + d.number,
+        id: 'chromosome_mask_' + chromosome.number,
       })
       .append('rect').attr({
         class: 'mask_rect',
       });
 
-    chromosome.select('#chromosome_mask_' + d.number).attr({
+    chromosomeGroup.select('#chromosome_mask_' + chromosome.number).attr({
       width: config.layout.width,
       height: height,
     });
@@ -50,12 +53,12 @@ GENEMAP.Chromosome = function (userConfig) {
       ry: config.layout.height * 0.01,
     };
 
-    chromosome.select('.mask_rect').attr(chromosomeShape);
-    chromosome.select('rect.background').attr(chromosomeShape);
-    chromosome.select('rect.outline').attr(chromosomeShape);
+    chromosomeGroup.select('.mask_rect').attr(chromosomeShape);
+    chromosomeGroup.select('rect.background').attr(chromosomeShape);
+    chromosomeGroup.select('rect.outline').attr(chromosomeShape);
 
     if (config.border) {
-      chromosome.select('rect.border')
+      chromosomeGroup.select('rect.border')
         .attr({
           width: config.layout.width,
           height: config.layout.height,
@@ -63,9 +66,27 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     // setup the chromosome bands
-    var bandsContainer = chromosome.select('.bands_container');
+    var bandsContainer = chromosomeGroup.select('.bands_container');
 
-    var bands = bandsContainer.selectAll('rect.band').data(d.bands);
+    var drawBands;
+    if (config.bands == "basemap"){
+      drawBands = drawBasemapBands;
+    }
+    else if (config.bands == "genes"){
+      drawBands = drawGeneLines;
+    }
+
+    drawBands( bandsContainer, chromosome);
+
+    chromosomeGroup.select('.bands_container').style({
+      mask: 'url(#chromosome_mask_' + chromosome.number + ')',
+    });
+  };
+
+  var drawBasemapBands = function( bandsContainer, chromosome){
+
+    var y = buildYScale();
+    var bands = bandsContainer.selectAll('rect.band').data(chromosome.bands);
     bands.enter().append('rect').attr('class', 'band');
 
     bands.attr({
@@ -76,21 +97,97 @@ GENEMAP.Chromosome = function (userConfig) {
     });
 
     bands.exit().remove();
+  }
 
-    chromosome.select('.bands_container').style({
-      mask: 'url(#chromosome_mask_' + d.number + ')',
+  var generateGeneLineAttr = function (y, gene){
+    var rawHeight = gene.end - gene.start;
+    var rawDY = y(rawHeight);
+
+    var result;
+
+    if (rawDY * config.scale > 2 )  {
+      result =  {y: y(gene.start), height: rawDY};
+    }
+    else {
+      height = Math.min( 2 / config.scale, 2)
+      result =  { y: y(gene.midpoint) - height / 2,  height: height};
+    }
+
+    result.fill = gene.color;
+    result.width = config.layout.width;
+    result['fill-opacity'] = 0.8;
+    result['stroke-dasharray'] = [
+      0, config.layout.width, result.height, config.layout.width + result.height];
+    result['stroke-width'] = config.layout.width / 5;
+
+    return result;
+  }
+
+  var drawGeneLines = function( bandsContainer, chromosome){
+
+    var y = buildYScale();
+    var bands = bandsContainer.selectAll('rect.band').data(chromosome.layout.geneBandNodes);
+    bands.enter().append('rect').attr({
+      'id': function(d){ return d.data.id},
+      'class': 'band geneline infobox'
     });
-  };
+
+    bands.each( function(band) {
+      attribs = generateGeneLineAttr(y, band);
+      d3.select(this).attr( attribs );
+    } );
+
+    bands.classed( "selected", function(d){
+     return d.data.selected
+    }
+    );
+
+    bands.on('click', function (d) {
+      //If user clicks on a gene, toggle gene selection
+      if (d.data.type == "gene") {
+        log.info('gene annotation click');
+
+        if (d.data.displayed && !d.data.visible && !d.data.hidden) {
+          //this gene was annotated automatically - hide it
+          d.data.visible = false;
+          d.data.hidden = true;
+        }
+        else {
+          //toggle visibility
+          d.data.visible = !d.data.visible;
+        }
+
+        config.onAnnotationSelectFunction();
+      }
+
+      //If user clicks on a cluster of genes, expand that cluster
+      if (d.data.type == "geneslist") {
+        log.info('geneslist annotation click');
+
+        clusterCurrentlyHidden = d.data.genesList.some( function(gene){
+          return !(gene.displayed) } );
+
+        d.data.genesList.forEach( function(gene){
+          gene.visible = clusterCurrentlyHidden;
+          gene.hidden = !clusterCurrentlyHidden;
+        });
+
+        config.onAnnotationSelectFunction();
+      }
+    });
+
+    bands.exit().remove();
+  }
 
   // An SVG representation of a chromosome with banding data. This is expecting the passed selection to be within an
   // SVG element and to have a list of chromosome JSON objects as its data.
   function my(selection) {
     selection.each(function (d) {
       // build up the selection of chromosome objects
-      var chroosomes = d3.select(this).selectAll('.chromosome').data([d]);
+      var chromosomes = d3.select(this).selectAll('.chromosome').data([d]);
 
       // setup a basic element structure for any new chromosomes
-      var enterGroup = chroosomes.enter().append('g').attr('class', 'chromosome');
+      var enterGroup = chromosomes.enter().append('g').attr('class', 'chromosome');
       enterGroup.append('defs');
       enterGroup.append('rect').classed('background', true);
       enterGroup.append('g').classed('bands_container', true);
@@ -101,12 +198,21 @@ GENEMAP.Chromosome = function (userConfig) {
       }
 
       // update each of the chromosomes
-      chroosomes.each(updateChromosome);
+      chromosomes.each(updateChromosome);
 
       // remove any missing elements
-      chroosomes.exit().remove();
+      chromosomes.exit().remove();
     });
   }
+
+  my.onAnnotationSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onAnnotationSelectFunction;
+    }
+
+    config.onAnnotationSelectFunction = value;
+    return my;
+  };
 
   my.layout = function (value) {
     if (!arguments.length) {
@@ -123,6 +229,33 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     config.longestChromosome = value;
+    return my;
+  };
+
+  my.bands = function (value) {
+    if (!arguments.length) {
+      return config.bands;
+    }
+
+    config.bands = value;
+    return my;
+  };
+
+  my.scale = function (value) {
+    if (!arguments.length) {
+      return config.scale;
+    }
+
+    config.scale = value;
+    return my;
+  };
+
+  my.infoBoxManager = function (value) {
+    if (!arguments.length) {
+      return config.infoBoxManager;
+    }
+
+    config.infoBoxManager = value;
     return my;
   };
 

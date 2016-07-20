@@ -5,6 +5,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onResetBtnClick: $.noop,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -37,15 +38,31 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onFitBtnClick();
   };
 
+  var myOnResetBtnClick = function () {
+    if ($(this).hasClass('disabled')) {
+      return;
+    }
+
+    config.onResetBtnClick();
+  };
+
+  var mySetMaxAnnotationLayers = function(value) {
+    items = d3.select(target).select('.layer-dropdown').selectAll('li');
+    items.classed('active', function(d){  return d == value; } );
+  }
+
   var drawMenu = function () {
 
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuItems = menu.selectAll('span').data(['network-btn', 'tag-btn', 'fit-btn']);
+    var menuItems = menu.selectAll('span').data(
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
-      class: function (d) { return d; },
+      class: function (d) {
+        return d;
+      },
     });
 
     menu.select('.network-btn').on('click', myOnNetworkBtnClick);
@@ -55,7 +72,10 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.fit-btn')
       .on('click', myOnFitBtnClick);
-  };
+
+    menu.select('.reset-btn')
+      .on('click', myOnResetBtnClick);
+  }
 
   // attach the menu bar to the target element
   function my(selection) {
@@ -93,6 +113,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onFitBtnClick = value;
+    return my;
+  };
+
+  my.onResetBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onResetBtnClick;
+    }
+
+    config.onResetBtnClick = value;
     return my;
   };
 
@@ -150,6 +179,7 @@ GENEMAP.MenuBar = function (userConfig) {
   my.setNetworkButtonEnabled = function (value) {
     d3.select(target).select('.network-btn').classed('disabled', !value);
   };
+
 
   return my;
 };

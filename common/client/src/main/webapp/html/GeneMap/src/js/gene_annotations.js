@@ -1,10 +1,12 @@
 var GENEMAP = GENEMAP || {};
 
+
 GENEMAP.GeneAnnotations = function (userConfig) {
   var defaultConfig = {
     border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
+    onExpandClusterFunction: $.noop(),
     longestChromosome: 100,
     layout: {
       width: 10,
@@ -15,8 +17,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
-    showAnnotationLabels: true,
-    infoBoxManager: GENEMAP.InfoBox(),
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -28,47 +28,56 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   // adds the gene annotations to the annotations group within it, uses the data
   // bound to the annotationsGroup to generate the annotation elements
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
+    log.trace('setupGeneAnnotations');
 
-    var y = buildYScale();
+   var y = buildYScale();
 
-    var nodes = chromosome.annotations.genes.map(function (data) {
-      return new labella.Node(y(data.midpoint),  config.annotationMarkerSize, data);
-    });
+    //Data join
+    // Use a key function so that the correct mapping between graphical objects
+    // and data points is maintained even when clustering changes
+    var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(
+      chromosome.layout.annotationNodes, function(d){return d.data.id});
 
-    var force = new labella.Force({
-      nodeSpacing: 3,
-      algorithm: 'overlap',
-      lineSpacing: 2,
-      minPos: 0,
-      maxPos: config.layout.height,
-    }).nodes(nodes).compute();
 
-    var renderer = new labella.Renderer({
-      direction: 'right',
-      layerGap: config.layout.width / 3.0,
-      nodeHeight: config.annotationMarkerSize * 1.5,
-    });
+    //--------------------------------------------------------------------------
+    // Enter only - create graphics objects
+    //--------------------------------------------------------------------------
+    //path and text are created with correct position attributes already
+    var geneAnnotationsEnterGroup = geneAnnotations.enter()
+      .append('g').classed('gene-annotation', true);
 
-    renderer.layout(force.nodes());
+    geneAnnotationsEnterGroup
+      .append('line').classed('midpoint-line', true);
 
-    // Enter + Update elements
-    var geneAnnotations = annotationGroup.selectAll('g.gene-annotation').data(force.nodes());
-
-    var geneAnnotationsEnterGroup = geneAnnotations.enter().append('g').classed('gene-annotation', true);
-
-    geneAnnotationsEnterGroup.append('line').classed('midpoint-line', true);
-    geneAnnotationsEnterGroup.append('path').classed('link', true);
+    geneAnnotationsEnterGroup
+      .append('path').classed('link', true)
+      .attr({ d: function (d) { return d.data.path ;} })
+    ;
 
     if (config.labelRectangles) {
-      geneAnnotationsEnterGroup.append('rect').classed('labella', true);
+      geneAnnotationsEnterGroup
+        .append('rect').classed('labella', true);
     }
 
-    geneAnnotationsEnterGroup.append('polygon').classed('infobox', true);
-    geneAnnotationsEnterGroup.append('text');
+    geneAnnotationsEnterGroup
+      .append('text')
+      .attr({
+        x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
+        y: function (d) { return d.y + 0.4 * config.annotationLabelSize; }
+      });
+
+    //--------------------------------------------------------------------------
+    //Enter and update
+    //--------------------------------------------------------------------------
+
+    //SET UP TEXT ATTRIBUTES
 
     geneAnnotations.attr('id', function (d) {
       return 'feature_' + d.data.id;
     });
+
+    geneAnnotations
+      .classed('selected', function(d){ return d.data.selected; });
 
     geneAnnotations.select('line.midpoint-line').attr({
       x1: -(config.chromosomeWidth * 0.5),
@@ -77,79 +86,132 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       x2: 0,
     });
 
-    config.infoBoxManager.setupInfoboxOnSelection(geneAnnotations);
-
-    geneAnnotations.on('click', function () {
-      console.log('gene annotation click ');
-      var group = d3.select(this);
-      group.classed('selected', !group.classed('selected'));
-      config.onAnnotationSelectFunction();
-      return false;
-    });
-
-    // generate a little triange based on the data
-    var pointsFn = function (d) {
-      var points = [];
-
-      // var midpoint = d.data.start + (d.data.end - d.data.start) / 2;
-      var a = config.annotationMarkerSize;
-
-      var h = Math.sqrt(Math.pow(a, 2) - Math.pow((a / 2), 2));
-      h = h * 1.5; // stretch the width of the triangle
-
-      points.push([d.x, d.y]);
-      points.push([d.x + h, d.y - a / 2]);
-      points.push([d.x + h, d.y + a / 2]);
-
-      return points.join(' ');
-    };
-
-    geneAnnotations.select('polygon').attr({
-      points: pointsFn,
-    }).style({
-      fill: function (d) {
-        return d.data.color;
-      },
-    });
-
-    geneAnnotations.select('path.link')
-      .attr({
-        d: function (d) { return renderer.generatePath(d); },
+    geneAnnotations.select('text')
+      .text(function (d) {
+        if (d.data.type == "gene") {
+          return d.data.label;
+        }
+        else if (d.data.type == "geneslist"){
+          return "(" + d.data.genesList.length + ")";
+        }
       });
 
     // draw the labella labels as rectangles, useful for debugging
     if (config.labelRectangles) {
       geneAnnotations.select('rect.labella').attr({
-          fill: 'green',
-          stroke: 'none',
-          x: function (d) { return d.x; },
-          y: function (d) {
-            return d.y - d.dy / 2;
-          },
-          width: function (d) { return d.dx; },
-          height: function (d) { return d.dy; },
-        });
+        fill: 'pink',
+        stroke: 'none',
+        x: function (d) { return d.x; },
+        y: function (d) {
+          return d.y - d.dy / 2;
+        },
+        width: function (d) { return d.dx; },
+        height: function (d) { return d.dy; },
+      });
     }
 
-    geneAnnotations.select('text').attr({
-      x: function (d) { return d.x + config.annotationMarkerSize + config.annotationLabelSize; },
-      y: function (d) { return d.y + (0.4 * config.annotationLabelSize); },
-    }).style({
-      'font-size': config.annotationLabelSize + 'px',
-      visibility: function (d) {
-        if (d.data.showLabel === 'show') {
-          return 'visible';
-        } else if (d.data.showLabel === 'hide') {
-          return 'hidden';
-        }
+    //LINK AND LABEL STYLING
+    //selected annotations are bold and larger
 
-        return config.showAnnotationLabels ? 'visible' : 'hidden';
-      },
-    }).text(function (d) {
-      return d.data.label;
+    //(visble || selected) implies manual select - so use colors
+    //Otherwise, label has been displayed automatically - color gray
+
+    //See also annotations.less for additional styling
+
+
+    geneAnnotations.select('path.link')
+      .style( "stroke" , function (d){
+        return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
+      )
+      .style( "opacity", function(d){
+        return (d.data.visible || d.data.selected ) ? 1: d.data.importance; }
+      )
+    ;
+    geneAnnotations.select('text')
+      .style( 'font-size', function(d){
+        return (d.data.selected ? 0.2 : 0 ) + d.data.fontSize + 'px'})
+
+      .style( 'font-weight', function(d){
+        return d.data.selected ? 'bold' : 'normal'} )
+
+      .style( 'opacity', function(d){
+        return ( d.data.visible || d.data.selected ) ? 1 : d.data.importance })
+
+      .style( 'fill', function (d) {
+        return (d.data.visible || d.data.selected) ? d.data.color : null; })
+    ;
+
+
+    //TRANSITIONS
+    //Move links and labels into their correct positions
+    //(NB new elements were created at correct position anyway)
+
+    geneAnnotations.select('text')
+      .transition().duration(300)
+      .attr({
+        x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
+         y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
+  })
+    ;
+
+    geneAnnotations.select('path.link')
+      .transition().duration(300)
+      .attr({
+        d: function (d) { return d.data.path ;},
+      })
+    ;
+
+    //EVENT HANDLING
+
+    //Left click to select gene or expand cluster
+    geneAnnotations.on('click', function (d) {
+      //If user clicks on a gene, toggle gene selection
+      if (d.data.type == "gene") {
+        log.info('gene annotation click');
+        d.data.selected = !d.data.selected;
+        config.onAnnotationSelectFunction();
+      }
+
+      //If user clicks on a cluster of genes, expand that cluster
+      if (d.data.type == "geneslist") {
+        log.trace('geneslist annotation click');
+        config.onExpandClusterFunction(chromosome, d.data);
+      }
     });
 
-    geneAnnotations.exit().remove();
+    //right click to display popover
+    geneAnnotations.select('text')
+      .on('contextmenu', function(d){
+        log.trace('Gene Annotation Context Menu');
+        log.trace(d);
+        d3.select('#clusterPopover').attr( 'class' , 'popover');
+
+        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+        popoverTitle.selectAll('*').remove();
+        popoverTitle.text("");
+
+        popoverTitle
+          .append('a')
+          .attr( {'href' : d.data.link } )
+          .text(d.data.label);
+
+        $('#clusterPopover').modalPopover( {
+          target: $(this),
+          parent: $(this),
+          'modal-position': 'relative',
+          placement: "right",
+        });
+        $('#clusterPopover').modalPopover('show');
+
+        popoverContent = d3.select('#clusterPopover').select('.popover-content');
+        popoverContent.selectAll('*').remove();
+        popoverContent.text("");
+        popoverContent.append('p')
+          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
+      });
+
+    var exitGroup = geneAnnotations.exit()
+    exitGroup.remove();
   };
 
   // draw a border around the annotation target element
@@ -200,6 +262,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     return my;
   };
 
+  my.onExpandClusterFunction = function (value) {
+    if (!arguments.length) {
+      return config.onExpandClusterFunction;
+    }
+
+    config.onExpandClusterFunction = value;
+    return my;
+  };
+
   my.layout = function (value) {
     if (!arguments.length) {
       return config.layout;
@@ -233,8 +304,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.annotationLabelSize = value;
-    return my;
-  };
+    return my;  };
 
   my.annotationMarkerSize = function (value) {
     if (!arguments.length) {
@@ -242,24 +312,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.annotationMarkerSize = value;
-    return my;
-  };
-
-  my.showAnnotationLabels = function (value) {
-    if (!arguments.length) {
-      return config.showAnnotationLabels;
-    }
-
-    config.showAnnotationLabels = value;
-    return my;
-  };
-
-  my.infoBoxManager = function (value) {
-    if (!arguments.length) {
-      return config.infoBoxManager;
-    }
-
-    config.infoBoxManager = value;
     return my;
   };
 

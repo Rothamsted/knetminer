@@ -19,7 +19,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         size: 3,
         show: true,
         showThreshold: 8,
-        maxSize: 20,
+        maxSize: 15,
       },
       marker: {
         size: 6,
@@ -55,7 +55,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
     decorateGenome: function (inputGenome) {
 
-      var genome = _.cloneDeep(inputGenome);
+      //var genome = _.cloneDeep(inputGenome);
+      var genome =  inputGenome;
 
       var sizeLessMargin = {
         width: config.width * (1 - config.margin.left - config.margin.right),
@@ -132,7 +133,17 @@ console.log("Cols= "+ cols +", rows= "+ rows);
         },
         longestChromosome: longest,
         annotations: annotationsConfig,
+        scale : config.scale,
       };
+
+      //special case where we only have 1 chromosome
+      if ( genome.chromosomes.length == 1 )
+      {
+        cellLayout.chromosomePosition.x = cellMargins.left + 0.5 * annotationWidth;
+        cellLayout.geneAnnotationPosition.x = cellMargins.left + 0.5 * annotationWidth + chromosomeWidth;
+        cellLayout.qtlAnnotationPosition.width = annotationWidth * 0.5;
+        cellLayout.geneAnnotationPosition.width = annotationWidth * 1.5;
+      }
 
       // decorate the genome with the layout information
       genome.drawing = _.pick(config, ['width', 'height']);
