@@ -11,6 +11,7 @@ GENEMAP.GeneMap = function (userConfig) {
       maxAnnotationLayers: 3,
     },
     contentBorder: false,
+    nGenesToDisplay: 200,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -358,6 +359,7 @@ onZoom = function () {
         scale: zoom.scale(),
         autoLabels: autoLabels,
         manualLabels: manualLabels,
+        nGenesToDisplay: config.nGenesToDisplay
       }
     );
 
@@ -365,7 +367,8 @@ onZoom = function () {
         longestChromosome: genome.cellLayout.longestChromosome,
         layout: genome.cellLayout.geneAnnotationPosition,
         nClusters: 50,
-        scale: zoom.scale()
+        scale: zoom.scale(),
+        nGenesToDisplay: config.nGenesToDisplay
       }
     );
 

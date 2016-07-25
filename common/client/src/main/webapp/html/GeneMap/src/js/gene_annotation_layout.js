@@ -20,6 +20,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     annotationLabelSize: 5,
     doCluster : true,
     nClusters: 6,
+    nGenesToDisplay: 1000,
     maxAnnotationLayers: 3,
     scale: 1,
   };
@@ -113,7 +114,9 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Decide which labels to display
 
     //Start with no labels displayed
-    allGenes = chromosome.annotations.allGenes;
+    allGenes = chromosome.annotations.allGenes.filter( function(gene){
+     return (gene.globalIndex < config.nGenesToDisplay);
+    });
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Include all genes set to visible

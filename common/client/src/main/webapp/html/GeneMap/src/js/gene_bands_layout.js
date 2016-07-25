@@ -85,7 +85,11 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
 //for a given chromosome
   var generateChromosomeClusters = function(chromosome) {
 
-    var genes = chromosome.annotations.allGenes.slice();
+    var genes = chromosome.annotations.allGenes.filter( function(gene){
+      return (gene.globalIndex < config.nGenesToDisplay )
+    });
+
+    log.info( "Laying out " + genes.length + " genes.");
     genes.sort(function (lhs, rhs) {
         return lhs.midpoint - rhs.midpoint
       });
