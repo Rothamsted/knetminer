@@ -11,7 +11,7 @@ GENEMAP.GeneMap = function (userConfig) {
       maxAnnotationLayers: 3,
     },
     contentBorder: false,
-    nGenesToDisplay: 200,
+    nGenesToDisplay: 1000,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -332,6 +332,13 @@ onZoom = function () {
     drawMap();
   }
 
+  var onSetNGenestoDisplay = function( nGenes) {
+    config.nGenesToDisplay = nGenes;
+    resetClusters();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -346,6 +353,14 @@ onZoom = function () {
     // set the layout on the genome and set it as the data source
     genome = layoutDecorator.decorateGenome(genome);
   }
+
+  var resetClusters = function() {
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.layout = chromosome.layout || {};
+      chromosome.layout.annotationDisplayClusters = null;
+      chromosome.layout.geneBandDisplayClusters = null;
+    });
+  };
 
   var computeGeneLayout = function() {
     decorateGenomeLayout();
@@ -498,6 +513,8 @@ onZoom = function () {
           .onFitBtnClick(resetMapZoom)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
+          .onSetMaxGenesClick(onSetNGenestoDisplay)
+          .initialMaxGenes(config.nGenesToDisplay)
         ;
       }
 

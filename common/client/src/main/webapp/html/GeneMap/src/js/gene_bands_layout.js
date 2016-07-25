@@ -17,6 +17,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
     doCluster : true,
     nClusters: 6,
     scale: 1,
+    nGenesToDisplay: 1000,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -89,6 +90,7 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
       return (gene.globalIndex < config.nGenesToDisplay )
     });
 
+    log.info( "nGenesToDisplay is " + config.nGenesToDisplay );
     log.info( "Laying out " + genes.length + " genes.");
     genes.sort(function (lhs, rhs) {
         return lhs.midpoint - rhs.midpoint

@@ -91,7 +91,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
   }
 
-    if ( true &&  chromosome.number == "2B")
+    if ( false &&  chromosome.number == "2B")
     {
       log.info( "par1",  par1);
       log.info( "par2", par2);
@@ -179,7 +179,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     });
 
 
-    if ( true &&  chromosome.number == "2B") {
+    if ( false &&  chromosome.number == "2B") {
       log.info( nodes );
     }
 
