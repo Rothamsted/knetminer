@@ -106,7 +106,7 @@
 
     	<div id="tabviewer_buttons">
         <!--	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div> -->
-		<div class="menu_button button_off" id="genemap-button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
+		<div class="menu_button button_off" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="resultsTable_button"><a href="javascript:;" onclick="activateButton('resultsTable');">Gene View</a> </div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="menu_button button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>

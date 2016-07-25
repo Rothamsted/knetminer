@@ -21,6 +21,7 @@
 		<module>chicken</module>
 		<module>cow</module>
 		<module>boleracea</module>
+		<module>cicer</module>
 		<module>maize</module>
 		<module>drosophilla</module>
 	</modules>
