@@ -20,6 +20,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     annotationLabelSize: 5,
     doCluster : true,
     nClusters: 6,
+    nGenesToDisplay: 1000,
     maxAnnotationLayers: 3,
     scale: 1,
   };
@@ -90,7 +91,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
   }
 
-    if ( true &&  chromosome.number == "2B")
+    if ( false &&  chromosome.number == "2B")
     {
       log.info( "par1",  par1);
       log.info( "par2", par2);
@@ -113,7 +114,9 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Decide which labels to display
 
     //Start with no labels displayed
-    allGenes = chromosome.annotations.allGenes;
+    allGenes = chromosome.annotations.allGenes.filter( function(gene){
+     return (gene.globalIndex < config.nGenesToDisplay);
+    });
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Include all genes set to visible
@@ -176,7 +179,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     });
 
 
-    if ( true &&  chromosome.number == "2B") {
+    if ( false &&  chromosome.number == "2B") {
       log.info( nodes );
     }
 

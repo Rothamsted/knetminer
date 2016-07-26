@@ -6,6 +6,8 @@ GENEMAP.MenuBar = function (userConfig) {
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
     onResetBtnClick: $.noop,
+    onSetMaxGenesClick : $.noop,
+    initialMaxGenes : 1000,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -46,9 +48,40 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onResetBtnClick();
   };
 
-  var mySetMaxAnnotationLayers = function(value) {
-    items = d3.select(target).select('.layer-dropdown').selectAll('li');
-    items.classed('active', function(d){  return d == value; } );
+  var buildDropdown = function(selection, id, data, callback, initialValue){
+    dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
+
+    var dropdownSpanEnter = dropDown.enter();
+
+
+    var dropdown = dropdownSpanEnter
+      .append('span') .attr({ 'class': 'btn-group'});
+
+    var dropdownButtonAttr = {
+      'class' : 'menu-dropdown btn btn-default dropdown-toggle' ,
+      'id' : id,
+      'type' : "button",
+      'data-toggle' : "dropdown",
+      'aria-haspopup' : 'true'};
+
+    maxLabelWidth = data.reduce( function(max, d){return Math.max(max, d.toString().length)}, 0);
+
+    button = dropdown
+      .append('button').attr( dropdownButtonAttr).style( {width: maxLabelWidth + 1 + 'em'});
+
+      button.append('span').attr( {class: 'title'}).text(initialValue);
+      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "left": "80%", "top" : "45%"});
+
+    dropdown
+      .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': id });
+
+    dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data(data);
+    dropdownItems.enter()
+      .append('li').on('click', function(d){
+      dropdown.select('span.title').text(d);
+      callback(d);
+    })
+      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d} );
   }
 
   var drawMenu = function () {
@@ -57,7 +90,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn']);
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -75,6 +108,11 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.reset-btn')
       .on('click', myOnResetBtnClick);
+
+    var dropdownSpan = menu.select('.ngenes-dropdown');
+    dropdownSpan.text("Max genes to display: ");
+    buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
+      config.onSetMaxGenesClick, config.initialMaxGenes);
   }
 
   // attach the menu bar to the target element
@@ -124,6 +162,24 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onResetBtnClick = value;
     return my;
   };
+
+  my.onSetMaxGenesClick = function (value) {
+    if (!arguments.length) {
+      return config.onSetMaxGenesClick;
+    }
+
+    config.onSetMaxGenesClick = value;
+    return my;
+  };
+
+  my.initialMaxGenes = function (value) {
+    if (!arguments.length) {
+      return config.initialMaxGenes;
+    }
+
+    config.initialMaxGenes = value;
+    return my;
+  }
 
   // sets the tag button state to the specified value
   // value should be 'show', 'hide', 'auto' or 'manual'

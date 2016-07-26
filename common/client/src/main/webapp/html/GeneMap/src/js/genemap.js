@@ -11,6 +11,7 @@ GENEMAP.GeneMap = function (userConfig) {
       maxAnnotationLayers: 3,
     },
     contentBorder: false,
+    nGenesToDisplay: 1000,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -331,6 +332,13 @@ onZoom = function () {
     drawMap();
   }
 
+  var onSetNGenestoDisplay = function( nGenes) {
+    config.nGenesToDisplay = nGenes;
+    resetClusters();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -346,6 +354,14 @@ onZoom = function () {
     genome = layoutDecorator.decorateGenome(genome);
   }
 
+  var resetClusters = function() {
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.layout = chromosome.layout || {};
+      chromosome.layout.annotationDisplayClusters = null;
+      chromosome.layout.geneBandDisplayClusters = null;
+    });
+  };
+
   var computeGeneLayout = function() {
     decorateGenomeLayout();
     var doCluster = genome.chromosomes.length > 1;
@@ -358,6 +374,7 @@ onZoom = function () {
         scale: zoom.scale(),
         autoLabels: autoLabels,
         manualLabels: manualLabels,
+        nGenesToDisplay: config.nGenesToDisplay
       }
     );
 
@@ -365,7 +382,8 @@ onZoom = function () {
         longestChromosome: genome.cellLayout.longestChromosome,
         layout: genome.cellLayout.geneAnnotationPosition,
         nClusters: 50,
-        scale: zoom.scale()
+        scale: zoom.scale(),
+        nGenesToDisplay: config.nGenesToDisplay
       }
     );
 
@@ -495,6 +513,8 @@ onZoom = function () {
           .onFitBtnClick(resetMapZoom)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
+          .onSetMaxGenesClick(onSetNGenestoDisplay)
+          .initialMaxGenes(config.nGenesToDisplay)
         ;
       }
 
