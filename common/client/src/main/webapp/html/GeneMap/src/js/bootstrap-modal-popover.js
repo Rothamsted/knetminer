@@ -52,6 +52,8 @@
       var $element = this.$parent;
       var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
 
+      log.trace( pos );
+
       var width = 0;
       var height = 0;
 
@@ -72,8 +74,8 @@
         //This works for svg text objects
 
         //Raw BBox doesn't take Current Transformation Matrix into account.
-        bbox = $element[0].getBBox();
-        ctm = $element[0].getCTM();
+        var bbox = $element[0].getBBox();
+        var ctm = $element[0].getCTM();
         width = bbox.width * ctm.a;
         height = bbox.height * ctm.d;
       }
@@ -96,6 +98,8 @@
       var actualWidth = $dialog[0].offsetWidth;
       var actualHeight = $dialog[0].offsetHeight;
 
+      var boundingBox = this.options.boundingSize ? this.options.boundingSize[0][0].getBoundingClientRect() : null;
+
       var tp;
       switch (placement) {
         case 'bottom':
@@ -105,10 +109,18 @@
           tp = { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 }
           break;
         case 'left':
-          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth }
+          var left = pos.left - actualWidth
+          if ( boundingBox){
+            left = Math.max( left, boundingBox.left);
+          }
+          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
           break;
         case 'right':
-          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
+          var left = pos.left + pos.width;
+          if ( boundingBox){
+            left = Math.min( left, boundingBox.left + boundingBox.width)
+          }
+          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
           break;
       }
 

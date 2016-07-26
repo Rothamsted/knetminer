@@ -17,6 +17,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
+    drawing: null,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -129,6 +130,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           parent: $(this),
           'modal-position': 'relative',
           placement: "left",
+          boundingSize: config.drawing,
         });
         $('#clusterPopover').modalPopover('show');
 
@@ -203,6 +205,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
     config.layout = value;
+    return my;
+  };
+
+  my.drawing = function (value) {
+    if (!arguments.length) {
+      return config.drawing;
+    }
+
+    config.drawing = value;
     return my;
   };
 

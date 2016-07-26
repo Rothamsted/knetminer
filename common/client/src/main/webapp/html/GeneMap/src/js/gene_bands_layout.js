@@ -90,8 +90,8 @@ GENEMAP.GeneBandsLayout = function (userConfig) {
       return (gene.globalIndex < config.nGenesToDisplay )
     });
 
-    log.info( "nGenesToDisplay is " + config.nGenesToDisplay );
-    log.info( "Laying out " + genes.length + " genes.");
+    log.trace( "nGenesToDisplay is " + config.nGenesToDisplay );
+    log.trace( "Laying out " + genes.length + " genes.");
     genes.sort(function (lhs, rhs) {
         return lhs.midpoint - rhs.midpoint
       });

@@ -374,7 +374,7 @@ onZoom = function () {
         scale: zoom.scale(),
         autoLabels: autoLabels,
         manualLabels: manualLabels,
-        nGenesToDisplay: config.nGenesToDisplay
+        nGenesToDisplay: config.nGenesToDisplay,
       }
     );
 
@@ -487,7 +487,8 @@ onZoom = function () {
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onLabelSelectFunction(onToggleLabelSelect)
-      .maxAnnotationLayers( config.layout.maxAnnotationLayers);
+      .maxAnnotationLayers( config.layout.maxAnnotationLayers)
+      .svg(svg);
 
     container.call(cellDrawer);
   };
