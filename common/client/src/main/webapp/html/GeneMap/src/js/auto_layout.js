@@ -143,6 +143,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         cellLayout.geneAnnotationPosition.x = cellMargins.left + 0.5 * annotationWidth + chromosomeWidth;
         cellLayout.qtlAnnotationPosition.width = annotationWidth * 0.5;
         cellLayout.geneAnnotationPosition.width = annotationWidth * 1.5;
+        cellLayout.labelPosition.x = cellMargins.left + 0.5 * annotationWidth;
+        cellLayout.labelPosition.width = chromosomeWidth;
       }
 
       // decorate the genome with the layout information
