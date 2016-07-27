@@ -7,6 +7,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onTagBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
+    onExportBtnClick : $.noop,
     initialMaxGenes : 1000,
   };
 
@@ -90,7 +91,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown']);
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -117,6 +118,12 @@ GENEMAP.MenuBar = function (userConfig) {
     dropdownSpan.text("Max genes to display: ");
     buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
       config.onSetMaxGenesClick, config.initialMaxGenes);
+
+    menu.select('.export-btn').selectAll('a').data(['Export']).enter()
+      .append('a')
+      .attr( { 'title' : 'export to png'})
+      .text( function(d){ return d})
+      .on('click', config.onExportBtnClick);
   }
 
   // attach the menu bar to the target element
@@ -182,6 +189,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.initialMaxGenes = value;
+    return my;
+  }
+
+  my.onExportBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onExportBtnClick;
+    }
+
+    config.onExportBtnClick = value;
     return my;
   }
 

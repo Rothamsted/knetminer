@@ -110,6 +110,24 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
+  var exportToPng = function () {
+    log.info( "Exporting to png, scale is " + zoom.scale() );
+    //Export the whole img at the current zoom level
+
+    //Un-transform the svg for saving
+    container.attr('transform',
+      'translate(0,0)scale(1)');
+
+    //Save as png
+    saveSvgAsPng( container[0][0], "genemap.png", {
+      scale: zoom.scale(),
+    });
+
+    //Re-transform the svg to how it was before
+    container.attr('transform',
+      'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+  }
+
 // called whenever a zoom event occurss
 onZoom = function () {
   var translate = d3.event.translate;
@@ -516,6 +534,7 @@ onZoom = function () {
           .onResetBtnClick(resetLabels)
           .onSetMaxGenesClick(onSetNGenestoDisplay)
           .initialMaxGenes(config.nGenesToDisplay)
+          .onExportBtnClick(exportToPng)
         ;
       }
 
