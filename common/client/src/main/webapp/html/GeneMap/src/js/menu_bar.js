@@ -119,10 +119,8 @@ GENEMAP.MenuBar = function (userConfig) {
     buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
       config.onSetMaxGenesClick, config.initialMaxGenes);
 
-    menu.select('.export-btn').selectAll('a').data(['Export']).enter()
-      .append('a')
+    menu.select('.export-btn')
       .attr( { 'title' : 'export to png'})
-      .text( function(d){ return d})
       .on('click', config.onExportBtnClick);
   }
 
