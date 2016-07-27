@@ -98,15 +98,19 @@ GENEMAP.MenuBar = function (userConfig) {
       },
     });
 
-    menu.select('.network-btn').on('click', myOnNetworkBtnClick);
+    menu.select('.network-btn')
+      .attr( 'title', 'Launch network view')
+      .on('click', myOnNetworkBtnClick);
 
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
 
     menu.select('.fit-btn')
+      .attr( 'title', 'Reset pan and zoom')
       .on('click', myOnFitBtnClick);
 
     menu.select('.reset-btn')
+      .attr( 'title', 'Reset selections')
       .on('click', myOnResetBtnClick);
 
     var dropdownSpan = menu.select('.ngenes-dropdown');
