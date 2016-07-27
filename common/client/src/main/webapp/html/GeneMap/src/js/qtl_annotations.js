@@ -80,7 +80,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       width: bandWidth,
       height: function (d) { return y(d.end) - y(d.start); },
     }).style({
-      fill: function (d) { return d.colors[0]; },
+      fill: function (d) { return d.qtlList[0].color; },
     });
 
     var textYPos = function (d) {
@@ -110,7 +110,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         r: 0.6*config.annotationLabelSize + 'px' ,
       }).style({
         visibility: labelVisibility,
-        fill: function (d) { return d.colors[0]; },
+        fill: function (d) { return d.qtlList[0].color; },
       })
     ;
 
@@ -125,7 +125,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       visibility: labelVisibility,
     })
     .text(function (d) {
-      return d.labels.length ;
+      return d.count ;
     });
 
     qtlAnnotations
@@ -156,12 +156,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         popoverContent.text("");
 
         d3.select('.popover-content')
-          .selectAll('p').data(_.zip(d.links, d.labels) )
+          .selectAll('p').data(d.qtlList)
           .enter()
           .append('p')
           .append('a')
-          .attr( {"href": function(d){return d[0];},"target": "_blank"})
-          .text(function(d){return d[1];} );
+          .attr( {"href": function(d){return d.link;},"target": "_blank"})
+          .text(function(d){return d.label;} );
       });
 
     qtlAnnotations.exit().remove();
