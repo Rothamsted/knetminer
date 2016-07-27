@@ -65,8 +65,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
       var cols = Math.min(config.numberPerRow, genome.chromosomes.length);
       var rows = Math.ceil(genome.chromosomes.length / cols);
-console.log("numberPerRow= "+ config.numberPerRow +", chromosomes.length= "+ genome.chromosomes.length);
-console.log("Cols= "+ cols +", rows= "+ rows);
+console.log("Map View: numberPerRow= "+ config.numberPerRow +", chromosomes.length= "+ genome.chromosomes.length);
+//console.log("Cols= "+ cols +", rows= "+ rows);
 
       var cellDimensions = {
         width: sizeLessMargin.width / cols,
