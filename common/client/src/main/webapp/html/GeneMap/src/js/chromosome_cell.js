@@ -75,7 +75,8 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .chromosomeWidth(layout.chromosomePosition.width)
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
-        .showAnnotationLabels(layout.annotations.label.show);
+        .showAnnotationLabels(layout.annotations.label.show)
+        .scale( layout.scale);
 
       cells.call(qtlDrawer);
 
