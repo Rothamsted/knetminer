@@ -1081,7 +1081,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
-				table = table + '<div id="selectUser">Known targets:<input type="radio" name="radio_Targets" id="radio_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="radio" name="radio_Targets" id="radio_Novel" title="Click to select Targets without existing evidence." /></div>';
+				table = table + '<div id="selectUser">Known targets:<input type="radio" name="radio_Targets" value="radio_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="radio" name="radio_Targets" value="radio_Novel" title="Click to select Targets without existing evidence." /></div>';
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1325,17 +1325,18 @@ function createGenesTable(tableUrl, keyword, rows){
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
-	    			if(values[7] == "yes") {
+	    			if(values[7] === "yes") {
 //                                   console.log("Evidences: "+ values[9]);
+                                   console.log("Known/ Novel Targets chosen: "+ $(this).val());
                                    // Check which radio button option was selected.
                                    if($(this).val() === "radio_Known") { // Select Known Targets.
 				      if(values[9].length > 0) {
-	    			         $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			         $("#checkboxGene_"+i).prop('checked', $(this).prop('checked'));
                                         }
                                      }
                                    else if($(this).val() === "radio_Novel") { // Select Novel Targets.
 				           if(values[9].length === 0) {
-	    			              $("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
+	    			              $("#checkboxGene_"+i).prop('checked', $(this).prop('checked'));
                                              }
                                           }
 	    			}
