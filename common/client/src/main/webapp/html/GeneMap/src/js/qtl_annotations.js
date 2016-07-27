@@ -38,12 +38,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return config.layout.width - d.position * (gap + bandWidth);
     };
 
-    var positioner = GENEMAP.QtlPositioner();
-
-    var qtlData = positioner.sortQTLAnnotations(chromosome.annotations.qtls);
-
     // Enter + Update elements
-    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(qtlData);
+    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.layout.qtlNodes);
 
     // setup the new annotations
     var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation infobox', true);

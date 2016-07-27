@@ -405,6 +405,8 @@ onZoom = function () {
       }
     );
 
+    var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({});
+
     genome.chromosomes.forEach( function(chromosome){
       chromosome.layout = chromosome.layout || {};
 
@@ -413,11 +415,15 @@ onZoom = function () {
       }
       geneAnnotationLayout.layoutChromosome(chromosome);
 
-
       if( ! chromosome.layout.geneBandDisplayClusters ) {
         geneBandLayout.computeChromosomeClusters(chromosome);
       }
       geneBandLayout.layoutChromosome(chromosome);
+
+      if( ! chromosome.layout.qtlDisplayClusters ) {
+        qtlAnnotationLayout.computeChromosomeClusters(chromosome);
+      }
+      qtlAnnotationLayout.layoutChromosome(chromosome);
 
     });
   }

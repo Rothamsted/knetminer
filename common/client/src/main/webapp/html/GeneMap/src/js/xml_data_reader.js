@@ -59,9 +59,6 @@ GENEMAP.XmlDataReader = function () {
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
-      var combiner = GENEMAP.QTLAnnotationCombiner();
-      qtls = combiner.combineSimilarQTLAnnotations(qtls);
-
       var maxOpacity = 0.9;
       var opacityFallOff = 3.5;
       var importanceFunction = function(index){
