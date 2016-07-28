@@ -365,6 +365,14 @@ onZoom = function () {
     drawMap();
   }
 
+  var onSetNumberPerRow = function( numberPerRow) {
+    log.info( numberPerRow );
+    config.layout.numberPerRow = numberPerRow;
+    resetClusters();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -550,7 +558,9 @@ onZoom = function () {
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
           .onSetMaxGenesClick(onSetNGenestoDisplay)
+          .onSetNumberPerRowClick(onSetNumberPerRow)
           .initialMaxGenes(config.nGenesToDisplay)
+          .initialNPerRow(config.layout.numberPerRow)
           .onExportBtnClick(exportViewToPng)
           .onExportAllBtnClick(exportAllToPng)
         ;

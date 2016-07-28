@@ -7,9 +7,11 @@ GENEMAP.MenuBar = function (userConfig) {
     onTagBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
+    onSetNumberPerRowClick : $.noop,
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
     initialMaxGenes : 1000,
+    initialNPerRow : 10,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -92,7 +94,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn', 'export-all-btn']);
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -127,6 +129,47 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.select('.export-all-btn')
       .attr( { 'title' : 'export all to png'})
       .on('click', config.onExportAllBtnClick);
+
+    var spinnerSpan = menu.select('.nperow-spinner').classed('bootstrap', true);
+
+
+    var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
+
+    enterSpinner
+      .append('span')
+      .attr( {
+        for : function(d){return d},
+      })
+      .text('Num per row: ');
+
+    enterSpinner
+      .append( 'input')
+      .attr({
+        id: function(d){return d},
+        type: 'text',
+        value: config.initialNPerRow,
+        name: function(d){return d},
+      });
+
+    var spinner = spinnerSpan.select('input');
+    var $spinner = $(spinner);
+
+    $spinner.TouchSpin({
+      min: 0,
+      max: 20,
+      step: 1,
+    });
+
+    d3.select('.nperow-spinner').select('.input-group').style({
+      width : '8em',
+      display: 'inline-table'
+    })
+
+    $('#nPerRowSpinner').on('change', function(event){
+      config.onSetNumberPerRowClick( $('#nPerRowSpinner').val());
+    });
+
+
   }
 
   // attach the menu bar to the target element
@@ -186,12 +229,30 @@ GENEMAP.MenuBar = function (userConfig) {
     return my;
   };
 
+  my.onSetNumberPerRowClick = function (value) {
+    if (!arguments.length) {
+      return config.onSetNumberPerRowClick;
+    }
+
+    config.onSetNumberPerRowClick = value;
+    return my;
+  };
+
   my.initialMaxGenes = function (value) {
     if (!arguments.length) {
       return config.initialMaxGenes;
     }
 
     config.initialMaxGenes = value;
+    return my;
+  }
+
+  my.initialNPerRow = function (value) {
+    if (!arguments.length) {
+      return config.initialNPerRow;
+    }
+
+    config.initialNPerRow = value;
     return my;
   }
 
