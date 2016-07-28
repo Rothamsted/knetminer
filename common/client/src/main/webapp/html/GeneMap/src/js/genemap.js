@@ -406,6 +406,7 @@ onZoom = function () {
     );
 
     var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
+      longestChromosome: genome.cellLayout.longestChromosome,
       scale: zoom.scale()
     });
 

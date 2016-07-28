@@ -2,7 +2,10 @@ var GENEMAP = GENEMAP || {};
 
 GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
-  var defaultConfig = { scale: 1};
+  var defaultConfig = {
+    scale: 1,
+    longestChromosome: 1000,
+  };
   var config = _.merge({}, defaultConfig, userConfig);
 
   var generateNodesFromClusters = function(clusters) {
@@ -42,7 +45,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   var generateChromosomeLayout = function(chromosome){
     chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
 
-    var nLevels = Math.floor(config.scale);
+    var nLevels = Math.ceil(Math.floor(config.scale - 0.1) / 2);
 
     while ( nLevels -- ) {
       chromosome.layout.qtlDisplayClusters = openClusters(
@@ -90,9 +93,17 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         var overlap =  Math.min(a.end, b.end) - Math.max(a.start, b.start);
         var aLength = a.end - a.start;
         var bLength = b.end - b.start;
-        var normedOverlap = overlap / ( aLength + bLength) / Math.abs( aLength - bLength);
-        return Math.exp( - normedOverlap );
-      },"single", 1 );
+
+        //var normedOverlap = overlap / ( aLength + bLength);
+        //var lengthDifference = Math.max( aLength, bLength) / Math.min( aLength, bLength);
+        //return lengthDifference + Math.exp( - normedOverlap ) ;
+
+        var normedOverlap = overlap;
+        var lengthDifference = Math.abs( aLength - bLength);
+
+        return Math.max(0.1, lengthDifference - normedOverlap);
+
+      },"single", null );
 
     hClusters.forEach(function(cluster) {
       annotateCluster(cluster);
