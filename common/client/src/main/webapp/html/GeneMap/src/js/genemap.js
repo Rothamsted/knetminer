@@ -405,7 +405,9 @@ onZoom = function () {
       }
     );
 
-    var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({});
+    var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
+      scale: zoom.scale()
+    });
 
     genome.chromosomes.forEach( function(chromosome){
       chromosome.layout = chromosome.layout || {};
