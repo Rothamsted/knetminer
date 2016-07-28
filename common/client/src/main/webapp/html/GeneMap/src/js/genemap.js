@@ -110,9 +110,9 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
 
-  var exportToPng = function () {
-    log.info( "Exporting to png, scale is " + zoom.scale() );
+  var exportAllToPng = function () {
     //Export the whole img at the current zoom level
+    log.info( "Exporting whole canvas to png, scale is " + zoom.scale() );
 
     //Un-transform the svg for saving
     container.attr('transform',
@@ -126,6 +126,14 @@ GENEMAP.GeneMap = function (userConfig) {
     //Re-transform the svg to how it was before
     container.attr('transform',
       'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+  }
+
+  var exportViewToPng = function () {
+    //Export the current view
+    log.info( "Exporting view to png, scale is " + zoom.scale() );
+
+    //Save as png
+    saveSvgAsPng( svg[0][0], "genemap.png" );
   }
 
 // called whenever a zoom event occurss
@@ -543,7 +551,8 @@ onZoom = function () {
           .onResetBtnClick(resetLabels)
           .onSetMaxGenesClick(onSetNGenestoDisplay)
           .initialMaxGenes(config.nGenesToDisplay)
-          .onExportBtnClick(exportToPng)
+          .onExportBtnClick(exportViewToPng)
+          .onExportAllBtnClick(exportAllToPng)
         ;
       }
 
