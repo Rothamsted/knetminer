@@ -178,4 +178,6 @@
     }
     return clusters;
   }
+
+  exports.hcluster = hcluster;
 })(this.hcluster = {});
