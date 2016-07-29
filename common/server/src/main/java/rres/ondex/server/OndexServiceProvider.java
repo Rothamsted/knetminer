@@ -1527,6 +1527,14 @@ public class OndexServiceProvider {
 			}
 			sb.append("<label>" + name + "</label>\n");
 			sb.append("<link>" + uri + "</link>\n");
+                        // Add 'score' tag as well.
+                        Double score= 0.0;
+			if(scoredCandidates != null){
+			   if(scoredCandidates.get(c) != null){
+			      score = scoredCandidates.get(c); // fetch score
+			     }
+			  }
+                        sb.append("<score>"+ score +"</score>\n"); // score
 			sb.append("</feature>\n");
 		
 			if (id++ > maxGenes)

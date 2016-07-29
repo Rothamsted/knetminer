@@ -8,7 +8,12 @@ GENEMAP.XmlDataReader = function () {
     // transform 0xffffff into #ffffff
     // if any letters are missing i.e. #ffff append 0s at the start => #00ffff
     var zeros = new Array(8 - d.length + 1).join('0');
-    return '#' + zeros + d.substring(2, d.length);
+    color =  '#' + zeros + d.substring(2, d.length);
+
+    //modify colours
+    if (color == '#00FF00'){ color = '#208000';}
+
+    return color;
   };
 
   var _processBasemapData = function (genome) {
@@ -36,21 +41,42 @@ GENEMAP.XmlDataReader = function () {
       annotation.color = getColor(annotation.color);
     });
 
+    //Tag each gene with its global index
+    var allGenomeGenes = annotations.features
+      .filter( function (e)
+      { return e.type.toLowerCase() === 'gene'; })
+      .forEach( function(gene, index) {
+      gene.globalIndex = index;
+      });
+
     genome.chromosomes.forEach(function (chromosome) {
       var chromosomeAnnotations = annotations.features.filter(
         function (e) { return e.chromosome === chromosome.number; });
 
-      var genes = chromosomeAnnotations.filter(
+      var allGenes = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'gene'; });
 
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
-      var combiner = GENEMAP.QTLAnnotationCombiner();
-      qtls = combiner.combineSimilarQTLAnnotations(qtls);
+      var maxOpacity = 0.9;
+      var opacityFallOff = 3.5;
+      var importanceFunction = function(index){
+        return maxOpacity - 0.5
+          +  1 / (1 + Math.pow( index, opacityFallOff)) ;
+      };
+
+      allGenes.forEach( function(gene,index){
+        gene.visible = false;
+        gene.hidden = false;
+        gene.displayed = false;
+        gene.importance = importanceFunction(index);
+      })
+      var genes = allGenes.slice(0, 100);
 
       chromosome.annotations = {
         genes: genes,
+        allGenes: allGenes,
         qtls: qtls,
       };
     });
@@ -71,7 +97,7 @@ GENEMAP.XmlDataReader = function () {
 
         var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData, function (error) {
 
-          console.log('error while reading XML files: ' + error);
+          log.error('error while reading XML files: ' + error);
 
           // try and process the basemap file
           return basemapPromise.then(_processBasemapData);
