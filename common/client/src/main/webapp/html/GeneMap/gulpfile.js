@@ -22,6 +22,10 @@ gulp.task('vet', function () {
 });
 
 // *** cleaning tasks ***
+function clean(path) {
+  $.util.log('Cleaning: ' + $.util.colors.blue(path));
+  return del(path);
+}
 
 gulp.task('clean-styles', function () {
   var files = config.tmpDir + '**/*.css';
@@ -32,9 +36,9 @@ gulp.task('clean-dist', function () {
   clean(['./dist/**/*', '!./dist/']);
 });
 
-// *** dev compilation ***
+// *** CSS Compilation ***
 
-gulp.task('styles', ['clean-styles'], function () {
+gulp.task('compile-styles', ['clean-styles'], function () {
   $.util.log('Compiling Less to CSS.');
 
   return gulp.src(config.less)
@@ -44,21 +48,20 @@ gulp.task('styles', ['clean-styles'], function () {
     }))
     .pipe($.less())
     .pipe($.autoprefixer({ browsers: ['last 2 version', '> 5%'] }))
-    .pipe(gulp.dest(config.outputCssDir));
+    .pipe(gulp.dest(config.outputCssDir, {overwrite : true}));
 });
 
-gulp.task('livereload', function () {
-  $.watch([config.outputCss, config.js, config.html, config.outputSvg])
-    .pipe($.connect.reload());
-});
-
-gulp.task('watch', function () {
-  gulp.watch([config.less], ['styles']);
+// *** JS copying ***
+gulp.task('copy-js', function() {
+  //Copy js into .tmp folder
+  $.util.log('Moving js files into place');
+  return gulp.src(config.alljs)
+    .pipe(gulp.dest(config.srcDir, {overwrite : true}));
 });
 
 // *** HTML injection ***
 
-gulp.task('html', function () {
+gulp.task('inject-html', ['compile-styles'],  function () {
   $.util.log('injecting JavaScript and CSS into the html files');
 
   var injectStyles = gulp.src(config.outputCss, { read: false });
@@ -78,20 +81,40 @@ gulp.task('html', function () {
     .pipe(gulp.dest(config.srcDir));
 });
 
-gulp.task('inject', ['styles'], function (done) {
-  $.util.log('rebuilding styles and html');
 
-  //Copy js into .tmp folder
-  gulp.src(config.alljs)
-    .pipe(gulp.dest(config.srcDir));
+// *** All Injection ***
+gulp.task('inject', ['compile-styles', 'copy-js', 'inject-html'] );
 
-  // force the html task to wait for the styles
-  runSequence('html', function () {
-    done();
-  });
+// *** Watch and live reload ***
+
+gulp.task('watch-css', ['inject-html'], function () {
+  return gulp.watch(config.less, ['compile-styles'] )
+    ;
 });
 
-gulp.task('serve-dev', ['inject', 'livereload'], function () {
+gulp.task('watch-js', ['inject-html'], function () {
+  return gulp.watch(config.js, ['copy-js'] );
+});
+
+gulp.task( 'watch', ['watch-css', 'watch-js']), function (){
+  return $.util.log('Watching  styles and js');
+};
+
+gulp.task( 'reload', function() {
+  return gulp.src(config.injectedHtml)
+    .pipe($.connect.reload() );
+
+})
+
+gulp.task('livereload', ['watch'],  function () {
+  $.util.log('Connecting live reload');
+  return gulp.watch(config.allOutputFiles, ['reload']);
+});
+
+
+//gulp.task('serve-dev', [ 'livereload', 'inject'], function () {
+gulp.task('serve-dev', [ 'livereload'], function () {
+  $.util.log('Starting serve-dev');
   return $.connect.server({
     root: ['.tmp', 'assets', 'bower_components', 'test/data', 'test'],
     port: '8080',
@@ -132,7 +155,3 @@ gulp.task('serve-prod', ['optimise'], function () {
 });
 
 ////////////
-function clean(path) {
-  $.util.log('Cleaning: ' + $.util.colors.blue(path));
-  return del(path);
-}
