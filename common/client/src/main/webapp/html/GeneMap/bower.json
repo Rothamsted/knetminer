@@ -27,6 +27,12 @@
     "saveSvgAsPng": "https://github.com/exupero/saveSvgAsPng.git#~1.0.1",
     "bootstrap-touchspin": "~3.1.1"
   },
+  "overrides": {
+    "bootstrap-touchspin": {
+      "main": [ "dist/jquery.bootstrap-touchspin.min.js",
+        "dist/jquery.bootstrap-touchspin.min.css" ]
+    }
+  },
   "devDependencies": {
     "jasmine-core": "jasmine#^2.4.1",
     "jasmine-collection-matchers": "^0.1.2"
