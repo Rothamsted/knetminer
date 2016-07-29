@@ -33,7 +33,7 @@ gulp.task('clean-styles', function () {
 });
 
 gulp.task('clean-dist', function () {
-  clean(['./dist/**/*', '!./dist/']);
+  clean('./dist/*');
 });
 
 // *** CSS Compilation ***
@@ -88,8 +88,7 @@ gulp.task('inject', ['compile-styles', 'copy-js', 'inject-html'] );
 // *** Watch and live reload ***
 
 gulp.task('watch-css', ['inject-html'], function () {
-  return gulp.watch(config.less, ['compile-styles'] )
-    ;
+  return gulp.watch(config.less, ['compile-styles'] );
 });
 
 gulp.task('watch-js', ['inject-html'], function () {
@@ -101,14 +100,17 @@ gulp.task( 'watch', ['watch-css', 'watch-js']), function (){
 };
 
 gulp.task( 'reload', function() {
-  return gulp.src(config.injectedHtml)
+  gulp.src(config.injectedHtml)
     .pipe($.connect.reload() );
 
 })
 
 gulp.task('livereload', ['watch'],  function () {
   $.util.log('Connecting live reload');
-  return gulp.watch(config.allOutputFiles, ['reload']);
+  return gulp.watch(config.allOutputFiles, $.batch( function(){
+      gulp.src(config.injectedHtml)
+        .pipe($.connect.reload() );
+  }));
 });
 
 
