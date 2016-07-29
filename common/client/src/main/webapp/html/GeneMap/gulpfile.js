@@ -81,6 +81,10 @@ gulp.task('html', function () {
 gulp.task('inject', ['styles'], function (done) {
   $.util.log('rebuilding styles and html');
 
+  //Copy js into .tmp folder
+  gulp.src(config.alljs)
+    .pipe(gulp.dest(config.srcDir));
+
   // force the html task to wait for the styles
   runSequence('html', function () {
     done();
@@ -89,7 +93,7 @@ gulp.task('inject', ['styles'], function (done) {
 
 gulp.task('serve-dev', ['inject', 'livereload'], function () {
   return $.connect.server({
-    root: ['src', '.tmp', 'assets', 'bower_components', 'test/data', 'test'],
+    root: ['.tmp', 'assets', 'bower_components', 'test/data', 'test'],
     port: '8080',
     livereload: true,
   });
@@ -106,9 +110,9 @@ gulp.task('copy-assets', ['clean-dist'], function () {
 });
 
 gulp.task('optimise', ['inject', 'copy-assets', 'clean-dist'], function () {
-  var assets = $.useref({ searchPath: ['.tmp', 'src', './bower_components'] });
+  var assets = $.useref({ searchPath: ['.tmp', './bower_components'] });
 
-  return gulp.src(config.html)
+  return gulp.src(config.injectedHtml)
     .pipe($.plumber(function (err) {
       $.util.log(err);
       this.emit('end');

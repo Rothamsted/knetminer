@@ -15,7 +15,8 @@ module.exports = function () {
     svg: './assets/svg/*.svg',
 
     // the development output
-    srcDir: './src/',
+    srcDir: './.tmp/',
+    injectedHtml: './.tmp/*.html',
     outputCssDir: './.tmp/css/',
     outputCss: './.tmp/css/*.css',
     outputSvg: './.tmp/assets/*.svg',
