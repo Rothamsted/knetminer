@@ -21,18 +21,17 @@ GENEMAP.QTLAnnotationCombiner = function () {
       });
 
       _.forEach(hash, function (value, key) {
-        var qtl = value[0];
-        qtl.count = value.length;
 
-        qtl.labels = value.map(function (q) { return q.label; });
-        qtl.links = value.map(function (q) { return q.link; });
-        qtl.colors = value.map(function (q) { return q.color; });
-
-        delete qtl.label;
-        delete qtl.link;
-        delete qtl.color;
-
-        result.push(qtl);
+        var qtlCollection = {
+          qtlList: value,
+          count : value.length,
+          start: value[0].start,
+          midpoint: value[0].midpoint,
+          end: value[0].end,
+          type: "qtllist",
+          id: key,
+        };
+        result.push(qtlCollection);
       });
 
       return result;

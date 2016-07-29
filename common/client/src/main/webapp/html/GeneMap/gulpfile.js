@@ -101,8 +101,8 @@ gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
 
 gulp.task('copy-assets', ['clean-dist'], function () {
-  return gulp.src('./assets/img/*')
-    .pipe(gulp.dest(config.build + 'img/'));
+  return gulp.src('./assets/img/*', {'base' :'./assets'})
+    .pipe(gulp.dest(config.build));
 });
 
 gulp.task('optimise', ['inject', 'copy-assets', 'clean-dist'], function () {

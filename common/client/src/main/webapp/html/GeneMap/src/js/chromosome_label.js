@@ -10,6 +10,7 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
       x: 0,
       y: 0,
     },
+    onLabelSelectFunction: function(d){ alert( 'Click' + d.number)},
     labelSize: 10,
   };
 
@@ -37,7 +38,9 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
         y: config.layout.height * 0.5,
       }).style({
         'font-size': config.labelSize + 'px',
-      }).text(d.number);
+      }).text(d.number)
+          .on('click', config.onLabelSelectFunction )
+      ;
 
       if (config.border) {
         labelGroup.select('rect').attr({
@@ -57,6 +60,15 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
     }
 
     config.layout = value;
+    return my;
+  };
+
+  my.onLabelSelectFunction = function (value) {
+    if (!arguments.length) {
+      return config.onLabelSelectFunction;
+    }
+
+    config.onLabelSelectFunction = value;
     return my;
   };
 
