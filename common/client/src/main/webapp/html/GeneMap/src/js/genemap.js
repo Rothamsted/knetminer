@@ -304,8 +304,9 @@ onZoom = function () {
       genome = { chromosomes : [chromosome] };
       singleGenomeView = true
     }
-    computeGeneLayout();
-    drawMap()
+
+
+    resetMapZoom();
   };
 
   // click handler for the network view button
