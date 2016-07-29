@@ -13,6 +13,7 @@ GENEMAP.Chromosome = function (userConfig) {
     },
     scale : 1,
     onAnnotationSelectFunction: $.noop(),
+    drawing: null,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -220,6 +221,15 @@ GENEMAP.Chromosome = function (userConfig) {
     }
 
     config.layout = value;
+    return my;
+  };
+
+  my.drawing = function (value) {
+    if (!arguments.length) {
+      return config.drawing;
+    }
+
+    config.drawing = value;
     return my;
   };
 

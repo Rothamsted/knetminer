@@ -41,6 +41,14 @@ GENEMAP.XmlDataReader = function () {
       annotation.color = getColor(annotation.color);
     });
 
+    //Tag each gene with its global index
+    var allGenomeGenes = annotations.features
+      .filter( function (e)
+      { return e.type.toLowerCase() === 'gene'; })
+      .forEach( function(gene, index) {
+      gene.globalIndex = index;
+      });
+
     genome.chromosomes.forEach(function (chromosome) {
       var chromosomeAnnotations = annotations.features.filter(
         function (e) { return e.chromosome === chromosome.number; });
@@ -50,9 +58,6 @@ GENEMAP.XmlDataReader = function () {
 
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
-
-      var combiner = GENEMAP.QTLAnnotationCombiner();
-      qtls = combiner.combineSimilarQTLAnnotations(qtls);
 
       var maxOpacity = 0.9;
       var opacityFallOff = 3.5;

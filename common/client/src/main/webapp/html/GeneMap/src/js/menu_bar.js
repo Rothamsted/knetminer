@@ -6,6 +6,12 @@ GENEMAP.MenuBar = function (userConfig) {
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
     onResetBtnClick: $.noop,
+    onSetMaxGenesClick : $.noop,
+    onSetNumberPerRowClick : $.noop,
+    onExportBtnClick : $.noop,
+    onExportAllBtnClick : $.noop,
+    initialMaxGenes : 1000,
+    initialNPerRow : 10,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -46,9 +52,40 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onResetBtnClick();
   };
 
-  var mySetMaxAnnotationLayers = function(value) {
-    items = d3.select(target).select('.layer-dropdown').selectAll('li');
-    items.classed('active', function(d){  return d == value; } );
+  var buildDropdown = function(selection, id, data, callback, initialValue){
+    dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
+
+    var dropdownSpanEnter = dropDown.enter();
+
+
+    var dropdown = dropdownSpanEnter
+      .append('span') .attr({ 'class': 'btn-group'});
+
+    var dropdownButtonAttr = {
+      'class' : 'menu-dropdown btn btn-default dropdown-toggle' ,
+      'id' : id,
+      'type' : "button",
+      'data-toggle' : "dropdown",
+      'aria-haspopup' : 'true'};
+
+    maxLabelWidth = data.reduce( function(max, d){return Math.max(max, d.toString().length)}, 0);
+
+    button = dropdown
+      .append('button').attr( dropdownButtonAttr).style( {width: maxLabelWidth + 1 + 'em'});
+
+      button.append('span').attr( {class: 'title'}).text(initialValue);
+      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "left": "80%", "top" : "45%"});
+
+    dropdown
+      .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': id });
+
+    dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data(data);
+    dropdownItems.enter()
+      .append('li').on('click', function(d){
+      dropdown.select('span.title').text(d);
+      callback(d);
+    })
+      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d} );
   }
 
   var drawMenu = function () {
@@ -57,7 +94,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn']);
+      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -65,16 +102,74 @@ GENEMAP.MenuBar = function (userConfig) {
       },
     });
 
-    menu.select('.network-btn').on('click', myOnNetworkBtnClick);
+    menu.select('.network-btn')
+      .attr( 'title', 'Launch network view')
+      .on('click', myOnNetworkBtnClick);
 
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
 
     menu.select('.fit-btn')
+      .attr( 'title', 'Reset pan and zoom')
       .on('click', myOnFitBtnClick);
 
     menu.select('.reset-btn')
+      .attr( 'title', 'Reset selections')
       .on('click', myOnResetBtnClick);
+
+    var dropdownSpan = menu.select('.ngenes-dropdown');
+    dropdownSpan.text("Max genes to display: ");
+    buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
+      config.onSetMaxGenesClick, config.initialMaxGenes);
+
+    menu.select('.export-btn')
+      .attr( { 'title' : 'export view to png'})
+      .on('click', config.onExportBtnClick);
+
+    menu.select('.export-all-btn')
+      .attr( { 'title' : 'export all to png'})
+      .on('click', config.onExportAllBtnClick);
+
+    var spinnerSpan = menu.select('.nperow-spinner').classed('bootstrap', true);
+
+
+    var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
+
+    enterSpinner
+      .append('span')
+      .attr( {
+        for : function(d){return d},
+      })
+      .text('Num per row: ');
+
+    enterSpinner
+      .append( 'input')
+      .attr({
+        id: function(d){return d},
+        type: 'text',
+        value: config.initialNPerRow,
+        name: function(d){return d},
+      });
+
+    var spinner = spinnerSpan.select('input');
+    var $spinner = $(spinner);
+
+    $spinner.TouchSpin({
+      min: 0,
+      max: 20,
+      step: 1,
+    });
+
+    d3.select('.nperow-spinner').select('.input-group').style({
+      width : '8em',
+      display: 'inline-table'
+    })
+
+    $('#nPerRowSpinner').on('change', function(event){
+      config.onSetNumberPerRowClick( $('#nPerRowSpinner').val());
+    });
+
+
   }
 
   // attach the menu bar to the target element
@@ -124,6 +219,60 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onResetBtnClick = value;
     return my;
   };
+
+  my.onSetMaxGenesClick = function (value) {
+    if (!arguments.length) {
+      return config.onSetMaxGenesClick;
+    }
+
+    config.onSetMaxGenesClick = value;
+    return my;
+  };
+
+  my.onSetNumberPerRowClick = function (value) {
+    if (!arguments.length) {
+      return config.onSetNumberPerRowClick;
+    }
+
+    config.onSetNumberPerRowClick = value;
+    return my;
+  };
+
+  my.initialMaxGenes = function (value) {
+    if (!arguments.length) {
+      return config.initialMaxGenes;
+    }
+
+    config.initialMaxGenes = value;
+    return my;
+  }
+
+  my.initialNPerRow = function (value) {
+    if (!arguments.length) {
+      return config.initialNPerRow;
+    }
+
+    config.initialNPerRow = value;
+    return my;
+  }
+
+  my.onExportBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onExportBtnClick;
+    }
+
+    config.onExportBtnClick = value;
+    return my;
+  }
+
+  my.onExportAllBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onExportAllBtnClick;
+    }
+
+    config.onExportAllBtnClick = value;
+    return my;
+  }
 
   // sets the tag button state to the specified value
   // value should be 'show', 'hide', 'auto' or 'manual'

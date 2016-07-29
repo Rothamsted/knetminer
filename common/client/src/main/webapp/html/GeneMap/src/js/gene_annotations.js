@@ -17,6 +17,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
+    drawing: null,
   };
 
   var config = _.merge({}, defaultConfig, userConfig);
@@ -200,6 +201,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
           parent: $(this),
           'modal-position': 'relative',
           placement: "right",
+          boundingSize: config.drawing,
         });
         $('#clusterPopover').modalPopover('show');
 
@@ -280,6 +282,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     return my;
   };
 
+  my.drawing = function (value) {
+    if (!arguments.length) {
+      return config.drawing;
+    }
+
+    config.drawing = value;
+    return my;
+  };
+
   my.longestChromosome = function (value) {
     if (!arguments.length) {
       return config.longestChromosome;
@@ -314,6 +325,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     config.annotationMarkerSize = value;
     return my;
   };
+
 
   return my;
 };

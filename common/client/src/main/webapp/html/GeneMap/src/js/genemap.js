@@ -11,6 +11,7 @@ GENEMAP.GeneMap = function (userConfig) {
       maxAnnotationLayers: 3,
     },
     contentBorder: false,
+    nGenesToDisplay: 1000,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -108,6 +109,32 @@ GENEMAP.GeneMap = function (userConfig) {
       height: drawing.height - margin.top - margin.bottom,
     });
   };
+
+  var exportAllToPng = function () {
+    //Export the whole img at the current zoom level
+    log.info( "Exporting whole canvas to png, scale is " + zoom.scale() );
+
+    //Un-transform the svg for saving
+    container.attr('transform',
+      'translate(0,0)scale(1)');
+
+    //Save as png
+    saveSvgAsPng( container[0][0], "genemap.png", {
+      scale: zoom.scale(),
+    });
+
+    //Re-transform the svg to how it was before
+    container.attr('transform',
+      'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+  }
+
+  var exportViewToPng = function () {
+    //Export the current view
+    log.info( "Exporting view to png, scale is " + zoom.scale() );
+
+    //Save as png
+    saveSvgAsPng( svg[0][0], "genemap.png" );
+  }
 
 // called whenever a zoom event occurss
 onZoom = function () {
@@ -331,6 +358,21 @@ onZoom = function () {
     drawMap();
   }
 
+  var onSetNGenestoDisplay = function( nGenes) {
+    config.nGenesToDisplay = nGenes;
+    resetClusters();
+    computeGeneLayout();
+    drawMap();
+  }
+
+  var onSetNumberPerRow = function( numberPerRow) {
+    log.info( numberPerRow );
+    config.layout.numberPerRow = numberPerRow;
+    resetClusters();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -346,6 +388,14 @@ onZoom = function () {
     genome = layoutDecorator.decorateGenome(genome);
   }
 
+  var resetClusters = function() {
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.layout = chromosome.layout || {};
+      chromosome.layout.annotationDisplayClusters = null;
+      chromosome.layout.geneBandDisplayClusters = null;
+    });
+  };
+
   var computeGeneLayout = function() {
     decorateGenomeLayout();
     var doCluster = genome.chromosomes.length > 1;
@@ -358,6 +408,7 @@ onZoom = function () {
         scale: zoom.scale(),
         autoLabels: autoLabels,
         manualLabels: manualLabels,
+        nGenesToDisplay: config.nGenesToDisplay,
       }
     );
 
@@ -365,9 +416,15 @@ onZoom = function () {
         longestChromosome: genome.cellLayout.longestChromosome,
         layout: genome.cellLayout.geneAnnotationPosition,
         nClusters: 50,
-        scale: zoom.scale()
+        scale: zoom.scale(),
+        nGenesToDisplay: config.nGenesToDisplay
       }
     );
+
+    var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
+      longestChromosome: genome.cellLayout.longestChromosome,
+      scale: zoom.scale()
+    });
 
     genome.chromosomes.forEach( function(chromosome){
       chromosome.layout = chromosome.layout || {};
@@ -377,11 +434,15 @@ onZoom = function () {
       }
       geneAnnotationLayout.layoutChromosome(chromosome);
 
-
       if( ! chromosome.layout.geneBandDisplayClusters ) {
         geneBandLayout.computeChromosomeClusters(chromosome);
       }
       geneBandLayout.layoutChromosome(chromosome);
+
+      if( ! chromosome.layout.qtlDisplayClusters ) {
+        qtlAnnotationLayout.computeChromosomeClusters(chromosome);
+      }
+      qtlAnnotationLayout.layoutChromosome(chromosome);
 
     });
   }
@@ -469,7 +530,8 @@ onZoom = function () {
     var cellDrawer = GENEMAP.ChromosomeCell()
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onLabelSelectFunction(onToggleLabelSelect)
-      .maxAnnotationLayers( config.layout.maxAnnotationLayers);
+      .maxAnnotationLayers( config.layout.maxAnnotationLayers)
+      .svg(svg);
 
     container.call(cellDrawer);
   };
@@ -495,6 +557,12 @@ onZoom = function () {
           .onFitBtnClick(resetMapZoom)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
+          .onSetMaxGenesClick(onSetNGenestoDisplay)
+          .onSetNumberPerRowClick(onSetNumberPerRow)
+          .initialMaxGenes(config.nGenesToDisplay)
+          .initialNPerRow(config.layout.numberPerRow)
+          .onExportBtnClick(exportViewToPng)
+          .onExportAllBtnClick(exportAllToPng)
         ;
       }
 
