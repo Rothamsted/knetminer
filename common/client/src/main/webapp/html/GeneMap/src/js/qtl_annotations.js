@@ -85,12 +85,16 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     };
 
     var labelVisibility = function (d) {
-      if (d.showLabel === 'show') {
+      if (d.displayLabel === 'show') {
         return 'visible';
-      } else if (d.showLabel === 'hide') {
+      } else if (d.displayLabel === 'hide') {
         return 'hidden';
       }
         return config.showAnnotationLabels ? 'visible' : 'hidden';
+    };
+
+    var xLabel = function (d) {
+      return config.layout.width - (d.labelPosition + 2 ) * (gap + bandWidth);
     };
 
     var qtlCountParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-count-group', true);
@@ -108,7 +112,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
     var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
-      var data =   (d.type == 'qtl' ? [d] : []);
+      var data =   (d.displayLabel ? [d] : []);
+      log.info( data.length );
       return data;
     }, function (d){ return 'label_' + d.id });
 
@@ -122,8 +127,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //Then we can easily center text and circle
     qtlAnnotations.select( 'g.qtl-count-group').attr({
       transform: function(d){
-        return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"}
-    });
+        if (d){
+        return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
+      } else {
+        return "translate(0,0)"
+      }
+    }});
 
     qtlAnnotations.select( 'circle.qtl-count')
       .attr({
@@ -153,8 +162,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     qtlAnnotations.select( 'g.qtl-label-group').attr({
       transform: function(d){
-        return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"}
-    });
+        if (d.displayLabel){
+          return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
+        } else {
+          return "translate(0,0)"
+        }
+    }});
 
     qtlAnnotations.select('text.qtl-label').attr({
       x: 0,

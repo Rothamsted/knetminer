@@ -7,8 +7,16 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
     longestChromosome: 1000,
     showAllQTLs: true,
     showSelectedQTLs: true,
+    showAutoQTLLabels: true,
+    showSelectedQTLLabels: true,
   };
   var config = _.merge({}, defaultConfig, userConfig);
+
+  var buildYScale = function () {
+    return d3.scale.linear()
+      .range([0, config.layout.height])
+      .domain([0, config.longestChromosome]);
+  };
 
   var generateNodesFromClusters = function(clusters) {
     return clusters.map( function(c){
@@ -78,11 +86,49 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       });
     }
     else {
-        nodes = [];
-      }
+      nodes = [];
+    }
 
-    positioner = GENEMAP.QtlPositioner();
-    return positioner.sortQTLAnnotations(nodes);
+    var positioner = GENEMAP.QtlPositioner();
+
+    nodes =  positioner.sortQTLAnnotations(nodes);
+
+    //qtllist nodes never display labels
+    var qtlNodes = nodes.filter( function(node){
+      return node.type == 'qtl'
+    });
+
+    qtlNodes.forEach( function(node){
+      node.displayLabel = false;
+    });
+
+    if (config.showSelectedQTLLabels ){
+      qtlNodes.filter( function(node){
+        return node.selected;
+      }).forEach( function(node){
+        node.displayLabel = true;
+      })
+    }
+
+    if ( config.showAutoQTLLabels ){
+      //Layout qtl labels
+      var maxPosition = nodes.reduce( function(cur, node){
+        return Math.max(cur, node.position);}, 0);
+
+      if (maxPosition < 3 ) {
+        qtlNodes.forEach( function(node){
+          node.displayLabel = true;
+        })
+      }
+      else {
+        qtlNodes.forEach( function(node){
+          node.displayLabel = false;
+        })
+      }
+    }
+    nodes = positioner.sortQTLLabels(nodes, buildYScale(), 4);
+
+    return nodes;
   };
 
 
@@ -140,23 +186,23 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   };
 
   var openClusters = function(clusters){
-      var result = [];
+    var result = [];
 
-      clusters.forEach( function (cluster ){
-        if (cluster.value || cluster.unit ) {
-          result.push(cluster)
-        }
-        else {
-          var l = cluster.left;
-          var r = cluster.right;
+    clusters.forEach( function (cluster ){
+      if (cluster.value || cluster.unit ) {
+        result.push(cluster)
+      }
+      else {
+        var l = cluster.left;
+        var r = cluster.right;
 
-          result.push(l);
-          result.push(r);
-        }
-      });
+        result.push(l);
+        result.push(r);
+      }
+    });
 
     return result;
-   };
+  };
 
   var flattenCluster = function(cluster){
     if (cluster.size == 1){

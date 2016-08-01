@@ -452,6 +452,7 @@ onZoom = function () {
 
     var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
       longestChromosome: genome.cellLayout.longestChromosome,
+      layout: genome.cellLayout.geneAnnotationPosition,
       scale: zoom.scale(),
       showAllQTLs: showAllQTLs,
       showSelectedQTLs: showSelectedQTLs,
@@ -474,7 +475,6 @@ onZoom = function () {
         qtlAnnotationLayout.computeChromosomeClusters(chromosome);
       }
       qtlAnnotationLayout.layoutChromosome(chromosome);
-
     });
   }
 
