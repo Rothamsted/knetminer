@@ -54,7 +54,7 @@ GENEMAP.MenuBar = function (userConfig) {
   };
 
   var buildDropdown = function(selection, id, data, callback, initialValue){
-    dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
+    var dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
 
     var dropdownSpanEnter = dropDown.enter();
 
@@ -94,9 +94,27 @@ GENEMAP.MenuBar = function (userConfig) {
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'qtl-btn', 'fit-btn', 'reset-btn',
-        'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
+    var menuRows = menu.selectAll('div').data( [
+      [
+        'ngenes-dropdown',
+      'nperrow-spinner'
+      ],
+        [
+          'network-btn',
+        'tag-btn',
+        'qtl-btn',
+        'fit-btn',
+        'reset-btn',
+        'export-btn',
+        'export-all-btn'
+        ],
+      ])
+      .enter().append('div');
+
+      var menuItems = menuRows.selectAll('span')
+      .data(function(d,i){ return d;})
+      ;
+
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -135,19 +153,15 @@ GENEMAP.MenuBar = function (userConfig) {
       .attr( { 'title' : 'export all to png'})
       .on('click', config.onExportAllBtnClick);
 
-    var spinnerSpan = menu.select('.nperow-spinner').classed('bootstrap', true);
-
-
+    var spinnerSpan = menu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
-    enterSpinner
-      .append('span')
-      .attr( {
-        for : function(d){return d},
-      })
+    enterSpinner .append('span')
+      .attr( { for : function(d){return d}, })
       .text('Num per row: ');
 
     enterSpinner
+      .append('span')
       .append( 'input')
       .attr({
         id: function(d){return d},
@@ -165,7 +179,7 @@ GENEMAP.MenuBar = function (userConfig) {
       step: 1,
     });
 
-    d3.select('.nperow-spinner').select('.input-group').style({
+    d3.select('.nperrow-spinner').select('.input-group').style({
       width : '8em',
       display: 'inline-table'
     })
