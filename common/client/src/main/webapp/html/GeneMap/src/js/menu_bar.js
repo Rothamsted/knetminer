@@ -5,6 +5,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onQtlBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
     onSetNumberPerRowClick : $.noop,
@@ -94,7 +95,8 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
+      ['network-btn', 'tag-btn', 'qtl-btn', 'fit-btn', 'reset-btn',
+        'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -108,6 +110,9 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
+
+    menu.select('.qtl-btn')
+      .on('click', config.onQtlBtnClick);
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
@@ -199,6 +204,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onTagBtnClick = value;
+    return my;
+  };
+
+  my.onQtlBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onQtlBtnClick;
+    }
+
+    config.onQtlBtnClick = value;
     return my;
   };
 

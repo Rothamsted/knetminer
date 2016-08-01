@@ -107,10 +107,14 @@ gulp.task( 'reload', function() {
 
 gulp.task('livereload', ['watch'],  function () {
   $.util.log('Connecting live reload');
-  return gulp.watch(config.allOutputFiles, $.batch( function(){
-      gulp.src(config.injectedHtml)
-        .pipe($.connect.reload() );
-  }));
+  //return gulp.watch(config.allOutputFiles, $.batch( function(){
+  //    gulp.src(config.injectedHtml)
+  //      .pipe($.connect.reload() );
+  //}));
+  return gulp.watch(config.allOutputFiles,  function(){
+    gulp.src(config.injectedHtml)
+      .pipe($.connect.reload() );
+  });
 });
 
 

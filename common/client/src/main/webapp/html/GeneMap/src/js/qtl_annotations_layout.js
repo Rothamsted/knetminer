@@ -5,6 +5,8 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   var defaultConfig = {
     scale: 1,
     longestChromosome: 1000,
+    showAllQTLs: true,
+    showSelectedQTLs: true,
   };
   var config = _.merge({}, defaultConfig, userConfig);
 
@@ -28,6 +30,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       return {
         cluster: c,
         qtlList : qtlList,
+        color : qtlList[0].color,
         count : qtlList.length,
         start : start,
         end : end,
@@ -38,21 +41,40 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       }
     });
 
+    //The old way
     var combiner = GENEMAP.QTLAnnotationCombiner();
-    var identicalResult = combiner.combineSimilarQTLAnnotations(chromosome.annotations.qtls);
+    var result = combiner.combineSimilarQTLAnnotations(chromosome.annotations.qtls);
   }
 
   var generateChromosomeLayout = function(chromosome){
-    chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
+    log.info( 'GenerateChromosomeLayout');
+    log.info( config.showAllQTLs, config.showSelectedQTLs);
+    if (config.showAllQTLs ) {
+      chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
 
-    var nLevels = Math.ceil(Math.floor(config.scale - 0.1) / 2);
+      var nLevels = Math.ceil(Math.floor(config.scale - 0.1) / 2);
 
-    while ( nLevels -- ) {
-      chromosome.layout.qtlDisplayClusters = openClusters(
-        chromosome.layout.qtlDisplayClusters);
+      while ( nLevels -- ) {
+        chromosome.layout.qtlDisplayClusters = openClusters(
+          chromosome.layout.qtlDisplayClusters);
+      }
+
+      var nodes = generateNodesFromClusters( chromosome.layout.qtlDisplayClusters);
+
     }
+    else if ( config.showSelectedQTLs) {
+      chromosome.layout.qtlDisplayClusters = chromosome.annotations.qtls
+        .filter( function(d){return d.selected});
 
-    var nodes = generateNodesFromClusters( chromosome.layout.qtlDisplayClusters);
+      var nodes = chromosome.layout.qtlDisplayClusters.map( function(d){
+        result =  _.clone(d);
+        result.type = 'qtl';
+        return result;
+      });
+    }
+    else {
+        nodes = [];
+      }
 
     positioner = GENEMAP.QtlPositioner();
     return positioner.sortQTLAnnotations(nodes);

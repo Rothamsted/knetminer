@@ -80,7 +80,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       width: bandWidth,
       height: function (d) { return y(d.end) - y(d.start); },
     }).style({
-      fill: function (d) { return d.qtlList[0].color; },
+      fill: function (d) { return d.color; },
     });
 
     var textYPos = function (d) {
@@ -110,7 +110,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         r: 0.6*config.annotationLabelSize + 'px' ,
       }).style({
         visibility: labelVisibility,
-        fill: function (d) { return d.qtlList[0].color; },
+        fill: function (d) { return d.color; },
       })
     ;
 
@@ -151,17 +151,52 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         });
         $('#clusterPopover').modalPopover('show');
 
+        $('#clusterPopover').on('mousedown mousewheel', function(event){
+          log.info('popover click');
+          event.stopPropagation();
+        });
+
         popoverContent = d3.select('#clusterPopover').select('.popover-content');
         popoverContent.selectAll('*').remove();
         popoverContent.text("");
 
-        d3.select('.popover-content')
-          .selectAll('p').data(d.qtlList)
-          .enter()
+        var popoverContent = d3.select('.popover-content')
+          .selectAll('p').data(d.qtlList);
+
+        var popoverContentEnter = popoverContent.enter();
+
+        popoverContentEnter
           .append('p')
+          .classed( 'popover-annotation', true)
+
+        var label = popoverContent
+          .append('div').attr( {'class' : 'checkbox'})
+          .append('label');
+
+          label
+          .append('input')
+            .attr({
+              'type' : 'checkbox',
+              'value' : '',
+            })
+            .property( 'checked', function(d){ return d.selected })
+            .on('click', function(d){
+              d.selected = !d.selected;
+              popoverContent
+                .classed( 'selected', function(d){return d.selected});
+            })
+          ;
+
+          label
           .append('a')
           .attr( {"href": function(d){return d.link;},"target": "_blank"})
           .text(function(d){return d.label;} );
+
+        popoverContent
+          .classed( 'selected', function(d){return d.selected});
+
+
+
       });
 
     qtlAnnotations.exit().remove();

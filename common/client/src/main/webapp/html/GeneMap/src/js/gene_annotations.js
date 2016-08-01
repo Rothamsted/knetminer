@@ -205,6 +205,11 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         });
         $('#clusterPopover').modalPopover('show');
 
+        $('#clusterPopover').on('mousedown mousewheel', function(event){
+          log.info('popover click');
+          event.stopPropagation();
+        });
+
         popoverContent = d3.select('#clusterPopover').select('.popover-content');
         popoverContent.selectAll('*').remove();
         popoverContent.text("");

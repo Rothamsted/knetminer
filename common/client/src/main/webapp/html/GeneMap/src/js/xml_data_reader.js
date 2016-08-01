@@ -59,6 +59,11 @@ GENEMAP.XmlDataReader = function () {
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
+      qtls.forEach( function(qtl, index){
+        qtl.id = chromosome.number + '_' + index;
+        qtl.selected = false;
+      })
+
       var maxOpacity = 0.9;
       var opacityFallOff = 3.5;
       var importanceFunction = function(index){

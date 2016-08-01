@@ -40,6 +40,8 @@ GENEMAP.GeneMap = function (userConfig) {
   var autoLabels; //bool
   var manualLabels; //bool
 
+  var showAllQTLs; //bool
+  var showSelectedQTLs; //bool
 
   //--------------------------------------------------
   //SVG and ZOOM FUNCTIONS
@@ -374,6 +376,24 @@ onZoom = function () {
     drawMap();
   }
 
+  var onToggleQTLDisplay = function(){
+    log.info('onToggleQTLDisplay');
+    if ( showAllQTLs && showSelectedQTLs){
+      showAllQTLs = false;
+    }
+    else if ( !showAllQTLs && showSelectedQTLs) {
+      showAllQTLs = false;
+      showSelectedQTLs = false;
+    }
+    else{
+        showAllQTLs = true;
+    showSelectedQTLs = true;
+    }
+    resetQtls();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -394,6 +414,13 @@ onZoom = function () {
       chromosome.layout = chromosome.layout || {};
       chromosome.layout.annotationDisplayClusters = null;
       chromosome.layout.geneBandDisplayClusters = null;
+    });
+  };
+
+  var resetQtls = function() {
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.layout = chromosome.layout || {};
+      chromosome.layout.qtlDisplayClusters = null;
     });
   };
 
@@ -424,7 +451,9 @@ onZoom = function () {
 
     var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
       longestChromosome: genome.cellLayout.longestChromosome,
-      scale: zoom.scale()
+      scale: zoom.scale(),
+      showAllQTLs: showAllQTLs,
+      showSelectedQTLs: showSelectedQTLs,
     });
 
     genome.chromosomes.forEach( function(chromosome){
@@ -556,6 +585,7 @@ onZoom = function () {
         menuManager = GENEMAP.MenuBar()
           .onTagBtnClick(toggleLableVisibility)
           .onFitBtnClick(resetMapZoom)
+          .onQtlBtnClick(onToggleQTLDisplay)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
           .onSetMaxGenesClick(onSetNGenestoDisplay)
