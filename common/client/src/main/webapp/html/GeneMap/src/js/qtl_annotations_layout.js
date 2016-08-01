@@ -27,18 +27,25 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       var midpoint = (start + end ) / 2;
 
-      return {
-        cluster: c,
-        qtlList : qtlList,
-        color : qtlList[0].color,
-        count : qtlList.length,
-        start : start,
-        end : end,
-        midpoint : midpoint,
-        chromosome : qtlList[0].chromosome,
-        type: "qtllist",
-        id: id
+      if ( qtlList.length == 1){
+        var result =  qtlList[0];
+        result.type = 'qtl'
       }
+      else {
+        var result = {
+          cluster: c,
+          qtlList: qtlList,
+          color: qtlList[0].color,
+          count: qtlList.length,
+          start: start,
+          end: end,
+          midpoint: midpoint,
+          chromosome: qtlList[0].chromosome,
+          type: "qtllist",
+          id: id
+        }
+      }
+      return result;
     });
 
     //The old way
@@ -47,8 +54,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   }
 
   var generateChromosomeLayout = function(chromosome){
-    log.info( 'GenerateChromosomeLayout');
-    log.info( config.showAllQTLs, config.showSelectedQTLs);
     if (config.showAllQTLs ) {
       chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
 
@@ -67,7 +72,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         .filter( function(d){return d.selected});
 
       var nodes = chromosome.layout.qtlDisplayClusters.map( function(d){
-        result =  _.clone(d);
+        result = d;
         result.type = 'qtl';
         return result;
       });

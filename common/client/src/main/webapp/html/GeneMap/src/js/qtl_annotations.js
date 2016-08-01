@@ -39,18 +39,14 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     };
 
     // Enter + Update elements
-    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.layout.qtlNodes);
+    var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.layout.qtlNodes, function(d){
+      return d.id});
 
     // setup the new annotations
     var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation infobox', true);
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
-
-    var qtlLabelGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
-    qtlLabelGroup.append('circle').classed('qtl-label', true);
-    qtlLabelGroup.append('text').classed('qtl-label', true);
-
     qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
 
@@ -74,6 +70,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       x2: xEnd,
     });
 
+
     qtlAnnotations.select('rect.qtl-selector').attr({
       x: xStart,
       y: function (d) { return y(d.start); },
@@ -96,6 +93,20 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return config.showAnnotationLabels ? 'visible' : 'hidden';
     };
 
+    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
+    qtlLabelParentGroup.append('g').classed( 'blocker', true);
+    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
+      var data =   (d.type == 'qtllist' ? [d] : []);
+      return data;
+    }, function (d){ return 'label_' + d.id });
+
+    var qtlLabelParentEnterGroup = qtlLabelAnnotations.enter();
+    var qtlLabelGroup = qtlLabelParentEnterGroup.append('g').classed( 'qtl', true);
+    qtlLabelGroup.append('circle').classed('qtl-label', true);
+    qtlLabelGroup.append('text').classed('qtl-label', true);
+
+    qtlLabelAnnotations.exit().remove();
+
     //Apply transform to group containing text and circular background
     //Then we can easily center text and circle
     qtlAnnotations.select( 'g.qtl-label-group').attr({
@@ -112,6 +123,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         visibility: labelVisibility,
         fill: function (d) { return d.color; },
       })
+      .attr( {'id' : function(d){ return d.id} })
     ;
 
     qtlAnnotations.select('text.qtl-label').attr({
@@ -125,7 +137,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       visibility: labelVisibility,
     })
     .text(function (d) {
-      return d.count ;
+      return d.count;
     });
 
     qtlAnnotations
@@ -161,7 +173,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         popoverContent.text("");
 
         var popoverContent = d3.select('.popover-content')
-          .selectAll('p').data(d.qtlList);
+          .selectAll('p').data(
+            (d.type == 'qtllist' ? d.qtlList :[d] )
+          );
 
         var popoverContentEnter = popoverContent.enter();
 
@@ -194,9 +208,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
         popoverContent
           .classed( 'selected', function(d){return d.selected});
-
-
-
       });
 
     qtlAnnotations.exit().remove();
