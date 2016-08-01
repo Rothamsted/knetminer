@@ -49,7 +49,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
     qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
-
     //Apply attributes to all elements
 
     qtlAnnotations.attr('id', function (d) {
@@ -70,7 +69,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       x2: xEnd,
     });
 
-
     qtlAnnotations.select('rect.qtl-selector').attr({
       x: xStart,
       y: function (d) { return y(d.start); },
@@ -79,6 +77,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }).style({
       fill: function (d) { return d.color; },
     });
+
+    qtlAnnotations.exit().remove();
 
     var textYPos = function (d) {
       return y(d.midpoint);
@@ -93,28 +93,39 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return config.showAnnotationLabels ? 'visible' : 'hidden';
     };
 
-    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
-    qtlLabelParentGroup.append('g').classed( 'blocker', true);
-    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
+    var qtlCountParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-count-group', true);
+    var qtlCountAnnotations = qtlCountParentGroup.selectAll('g.qtllist').data( function(d){
       var data =   (d.type == 'qtllist' ? [d] : []);
+      return data;
+    }, function (d){ return 'label_' + d.id });
+
+    var qtlCountParentEnterGroup = qtlCountAnnotations.enter();
+    var qtlCountGroup = qtlCountParentEnterGroup.append('g').classed( 'qtllist', true);
+    qtlCountGroup.append('circle').classed('qtl-count', true);
+    qtlCountGroup.append('text').classed('qtl-count', true);
+
+    qtlCountAnnotations.exit().remove();
+
+    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
+    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
+      var data =   (d.type == 'qtl' ? [d] : []);
       return data;
     }, function (d){ return 'label_' + d.id });
 
     var qtlLabelParentEnterGroup = qtlLabelAnnotations.enter();
     var qtlLabelGroup = qtlLabelParentEnterGroup.append('g').classed( 'qtl', true);
-    qtlLabelGroup.append('circle').classed('qtl-label', true);
     qtlLabelGroup.append('text').classed('qtl-label', true);
 
     qtlLabelAnnotations.exit().remove();
 
     //Apply transform to group containing text and circular background
     //Then we can easily center text and circle
-    qtlAnnotations.select( 'g.qtl-label-group').attr({
+    qtlAnnotations.select( 'g.qtl-count-group').attr({
       transform: function(d){
         return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"}
     });
 
-    qtlAnnotations.select( 'circle.qtl-label')
+    qtlAnnotations.select( 'circle.qtl-count')
       .attr({
         cx: 0,
         cy: 0,
@@ -126,7 +137,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       .attr( {'id' : function(d){ return d.id} })
     ;
 
-    qtlAnnotations.select('text.qtl-label').attr({
+    qtlAnnotations.select('text.qtl-count').attr({
       x: 0,
       y: 0,
       dy: "0.3em",
@@ -139,6 +150,27 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     .text(function (d) {
       return d.count;
     });
+
+    qtlAnnotations.select( 'g.qtl-label-group').attr({
+      transform: function(d){
+        return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"}
+    });
+
+    qtlAnnotations.select('text.qtl-label').attr({
+      x: 0,
+      y: 0,
+      dy: "0.3em",
+      "text-anchor": "middle"
+    }).style({
+        'font-size': config.annotationLabelSize + 'px',
+      })
+      .attr( {
+        'transform' : 'rotate(270)',
+        visibility: labelVisibility,
+      })
+      .text(function (d) {
+        return d.label;
+      });
 
     qtlAnnotations
       .on('contextmenu', function(d){
@@ -153,20 +185,11 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           .text( 'Chromosome ' + d.chromosome + ': '
           + d.start + '-' + d.end);
 
-
-        $('#clusterPopover').modalPopover( {
-          target: $(this),
-          parent: $(this),
-          'modal-position': 'relative',
-          placement: "left",
-          boundingSize: config.drawing,
-        });
-        $('#clusterPopover').modalPopover('show');
-
-        $('#clusterPopover').on('mousedown mousewheel', function(event){
-          log.info('popover click');
-          event.stopPropagation();
-        });
+        $.fn.redraw = function(){
+          return $(this).each(function(){
+            var redraw = this.offsetHeight;
+          });
+        };
 
         popoverContent = d3.select('#clusterPopover').select('.popover-content');
         popoverContent.selectAll('*').remove();
@@ -208,9 +231,22 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
         popoverContent
           .classed( 'selected', function(d){return d.selected});
+
+        $('#clusterPopover').modalPopover( {
+          target: $(this),
+          $parent: $(this).find('rect'),
+          'modal-position': 'body',
+          placement: "left",
+          boundingSize: config.drawing,
+        });
+        $('#clusterPopover').modalPopover('show');
+
+        $('#clusterPopover').on('mousedown mousewheel', function(event){
+          log.info('popover click');
+          event.stopPropagation();
+        });
       });
 
-    qtlAnnotations.exit().remove();
   };
 
   // draw a border around the annotation target element

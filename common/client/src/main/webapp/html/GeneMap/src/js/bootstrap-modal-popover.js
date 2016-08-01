@@ -50,9 +50,11 @@
 
     getPosition:function () {
       var $element = this.$parent;
-      var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
+      //var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
+      var pos = $($element).position();
+      var pos = $($element).offset();
 
-      log.trace( pos );
+      log.trace( $element[0]);
 
       var width = 0;
       var height = 0;
@@ -61,27 +63,34 @@
       //We try a few different methods for getting the size of the element hosting the popopver.
 
       if ( "offsetWidth" in $element[0] && $element[0].offsetWidth){
+        log.trace( 'Using offsetWidth');
         //This works fine for html objecst
         width = $element[0].offsetWidth;
         height = $element[0].offsetHeight;
       }
-      else if ( "width" in $element[0] && $element[0].width.baseVal){
-        //This works fine for svg objects with defined width
-        width = $element[0].width.baseVal.value;
-        height = $element[0].height.baseVal.value;
-      }
+      //else if ( "width" in $element[0] && $element[0].width.baseVal){
+      //  log.info( 'Using width');
+      //  //This works fine for svg objects with defined width
+      //  width = $element[0].width.baseVal.value;
+      //  height = $element[0].height.baseVal.value;
+      //}
       else if ( "getBBox" in $element[0]) {
+        log.trace( 'Using getBBox');
         //This works for svg text objects
 
         //Raw BBox doesn't take Current Transformation Matrix into account.
         var bbox = $element[0].getBBox();
-        var ctm = $element[0].getCTM();
+        var ctm = $element[0].getScreenCTM();
+        log.trace( bbox, ctm);
         width = bbox.width * ctm.a;
         height = bbox.height * ctm.d;
       }
 
+      result = $.extend({}, (pos), { width: width, height: height });
 
-      return $.extend({}, (pos), { width: width, height: height });
+      log.trace( result );
+
+      return  result;
     },
 
     show: function () {
@@ -189,7 +198,7 @@
       var data = typeof option == 'string' ? $this.data('modal-popover') : undefined;
       var options = $.extend({}, $.fn.modalPopover.defaults, $this.data(), typeof option == 'object' && option);
       // todo need to replace 'parent' with 'target'
-      options['$parent'] = (data && data.$parent) || option.$parent || $(options.target);
+      options['$parent'] = ( options.$parent || (data && data.$parent) || $(options.target) );
 
       if (!data) $this.data('modal-popover', (data = new ModalPopover(this, options)));
 
