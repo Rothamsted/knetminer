@@ -58,7 +58,6 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var dropdownSpanEnter = dropDown.enter();
 
-
     var dropdown = dropdownSpanEnter
       .append('span') .attr({ 'class': 'btn-group'});
 
@@ -69,13 +68,16 @@ GENEMAP.MenuBar = function (userConfig) {
       'data-toggle' : "dropdown",
       'aria-haspopup' : 'true'};
 
-    maxLabelWidth = data.reduce( function(max, d){return Math.max(max, d.toString().length)}, 0);
+    var maxLabelWidth = data.reduce( function(max, d){
+      return Math.max(max, d[0].toString().length)
+    }, 0);
 
     button = dropdown
-      .append('button').attr( dropdownButtonAttr).style( {width: maxLabelWidth + 1 + 'em'});
+      .append('button').attr( dropdownButtonAttr)
+      .style( {width: (0.8*maxLabelWidth + 1) + 'em'});
 
       button.append('span').attr( {class: 'title'}).text(initialValue);
-      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "left": "80%", "top" : "45%"});
+      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "right": "0.5em", "top" : "45%"});
 
     dropdown
       .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': id });
@@ -83,10 +85,10 @@ GENEMAP.MenuBar = function (userConfig) {
     dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data(data);
     dropdownItems.enter()
       .append('li').on('click', function(d){
-      dropdown.select('span.title').text(d);
-      callback(d);
+      dropdown.select('span.title').text(d[0]);
+      callback(d[1]);
     })
-      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d} );
+      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d[0]} );
   }
 
   var drawMenu = function () {
@@ -95,23 +97,23 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
     var menuRows = menu.selectAll('div').data( [
-      [
-        'ngenes-dropdown',
-      'nperrow-spinner'
-      ],
+        [
+          'ngenes-dropdown',
+          'nperrow-spinner'
+        ],
         [
           'network-btn',
-        'tag-btn',
-        'qtl-btn',
-        'fit-btn',
-        'reset-btn',
-        'export-btn',
-        'export-all-btn'
+          'reset-btn',
+          'tag-btn',
+          'qtl-btn',
+          'fit-btn',
+          'export-btn',
+          'export-all-btn'
         ],
       ])
       .enter().append('div');
 
-      var menuItems = menuRows.selectAll('span')
+    var menuItems = menuRows.selectAll('span')
       .data(function(d,i){ return d;})
       ;
 
@@ -129,8 +131,13 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
 
-    menu.select('.qtl-btn')
-      .on('click', config.onQtlBtnClick);
+    var qtlDropdown = menu.select('.qtl-btn');
+    buildDropdown( qtlDropdown, 'qtl-btn', [
+      [ 'Show all QTLs', 'all'],
+      ['Show selected QTLs', 'selected'],
+      ["Don't show QTLs", 'none'] ],
+      config.onQtlBtnClick, 'Show all QTLs');
+      //.on('click', config.onQtlBtnClick);
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
@@ -142,7 +149,8 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var dropdownSpan = menu.select('.ngenes-dropdown');
     dropdownSpan.text("Max genes to display: ");
-    buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
+    buildDropdown( dropdownSpan, 'ngenes-dropdown',
+      [['50', 50], ['100', 100], ['200',200], ['500', 500], ['1000',1000]],
       config.onSetMaxGenesClick, config.initialMaxGenes);
 
     menu.select('.export-btn')

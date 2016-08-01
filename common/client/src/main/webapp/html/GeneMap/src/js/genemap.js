@@ -376,18 +376,19 @@ onZoom = function () {
     drawMap();
   }
 
-  var onToggleQTLDisplay = function(){
+  var onToggleQTLDisplay = function(state){
     log.info('onToggleQTLDisplay');
-    if ( showAllQTLs && showSelectedQTLs){
-      showAllQTLs = false;
+    if ( state == 'all' ){
+      showAllQTLs = true;
+      showSelectedQTLs = true;
     }
-    else if ( !showAllQTLs && showSelectedQTLs) {
+    else if ( state == 'selected'){
       showAllQTLs = false;
-      showSelectedQTLs = false;
+      showSelectedQTLs = 'true';
     }
     else{
-        showAllQTLs = true;
-    showSelectedQTLs = true;
+        showAllQTLs = false;
+    showSelectedQTLs = false;
     }
     resetQtls();
     computeGeneLayout();
