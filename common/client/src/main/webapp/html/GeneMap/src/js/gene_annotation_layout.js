@@ -44,10 +44,20 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   //or cluster of genes
   var generateChromosomeLayout = function(chromosome){
 
+    allGenes = chromosome.annotations.allGenes.filter( function(gene){
+      return (gene.globalIndex < config.nGenesToDisplay);
+    });
+
     //How much space do we have?
     var availableWidth = config.layout.width;
-    var availableHeight = config.layout.height;
-    var labelLength = 20;
+
+
+    //For short chromosomes, allow labels to use up to 20% past the end of the chromosome
+    var availableHeight = config.layout.height * ( Math.min( 1, 0.2 + chromosome.length / config.longestChromosome ) ) ;
+
+    //The longest label determines when we can start displaying them without overlaps
+    var labelLength = allGenes.reduce( function(cur, gene){return Math.max(cur, gene.label.length)}, 0);
+
     var minDisplayedFontSize = 12;
     var maxDisplayedFontSize = 14;
     var fontCoordRatio = 3.5;
@@ -114,9 +124,6 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Decide which labels to display
 
     //Start with no labels displayed
-    allGenes = chromosome.annotations.allGenes.filter( function(gene){
-     return (gene.globalIndex < config.nGenesToDisplay);
-    });
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Include all genes set to visible
