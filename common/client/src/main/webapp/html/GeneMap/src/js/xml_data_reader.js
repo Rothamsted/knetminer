@@ -21,6 +21,7 @@ GENEMAP.XmlDataReader = function () {
 
       // include empty lists incase there is no annotation data
       chromosome.annotations = {
+        allGenes: [],
         genes: [],
         qtls: [],
       };
@@ -107,6 +108,8 @@ GENEMAP.XmlDataReader = function () {
           // try and process the basemap file
           return basemapPromise.then(_processBasemapData);
         });
+
+        log.info(promise);
 
         return promise;
       }
