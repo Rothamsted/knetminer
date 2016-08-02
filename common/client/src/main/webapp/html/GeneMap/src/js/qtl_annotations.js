@@ -38,12 +38,17 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return config.layout.width - d.position * (gap + bandWidth);
     };
 
+    //--BOXES-----------------------------
+    //Here we handle the actual rectangles but not the labels
+
     // Enter + Update elements
     var qtlAnnotations = annotationsGroup.selectAll('g.qtl-annotation').data(chromosome.layout.qtlNodes, function(d){
       return d.id});
 
     // setup the new annotations
-    var qtlAnnotationsEnterGroup = qtlAnnotations.enter().append('g').classed('qtl-annotation infobox', true);
+    var qtlAnnotationsEnterGroup = qtlAnnotations.enter()
+      .append('g').classed('qtl-annotation infobox', true);
+
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
@@ -80,6 +85,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     qtlAnnotations.exit().remove();
 
+
+    //--COUNTS--------------------
+    //The little circles with the number of QTLs in a cluster
+
     var textYPos = function (d) {
       return y(d.midpoint);
     };
@@ -90,49 +99,37 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       } else if (d.displayLabel === 'hide') {
         return 'hidden';
       }
-        return config.showAnnotationLabels ? 'visible' : 'hidden';
+      return config.showAnnotationLabels ? 'visible' : 'hidden';
     };
 
-    var xLabel = function (d) {
-      return config.layout.width - (d.labelPosition + 2 ) * (gap + bandWidth);
-    };
 
-    var qtlCountParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-count-group', true);
-    var qtlCountAnnotations = qtlCountParentGroup.selectAll('g.qtllist').data( function(d){
-      var data =   (d.type == 'qtllist' ? [d] : []);
-      return data;
-    }, function (d){ return 'label_' + d.id });
+    var qtlCountParentGroup = qtlAnnotationsEnterGroup
+      .append('g').classed('qtl-count-group', true);
+
+    var qtlCountAnnotations = qtlCountParentGroup
+      .selectAll('g.qtllist').data( function(d){
+        //Only need to display count if we have a qtllist
+        //If it's just a single qtl then don't connect any data
+        var data =   (d.type == 'qtllist' ? [d] : []);
+        return data;
+      }, function (d){ return 'label_' + d.id });
 
     var qtlCountParentEnterGroup = qtlCountAnnotations.enter();
-    var qtlCountGroup = qtlCountParentEnterGroup.append('g').classed( 'qtllist', true);
+    var qtlCountGroup = qtlCountParentEnterGroup
+      .append('g').classed( 'qtllist', true);
     qtlCountGroup.append('circle').classed('qtl-count', true);
     qtlCountGroup.append('text').classed('qtl-count', true);
-
-    qtlCountAnnotations.exit().remove();
-
-    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
-    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
-      var data =   (d.displayLabel ? [d] : []);
-      log.info( data.length );
-      return data;
-    }, function (d){ return 'label_' + d.id });
-
-    var qtlLabelParentEnterGroup = qtlLabelAnnotations.enter();
-    var qtlLabelGroup = qtlLabelParentEnterGroup.append('g').classed( 'qtl', true);
-    qtlLabelGroup.append('text').classed('qtl-label', true);
-
-    qtlLabelAnnotations.exit().remove();
 
     //Apply transform to group containing text and circular background
     //Then we can easily center text and circle
     qtlAnnotations.select( 'g.qtl-count-group').attr({
       transform: function(d){
         if (d){
-        return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
-      } else {
-        return "translate(0,0)"
-      }
-    }});
+          return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
+        } else {
+          return "translate(0,0)"
+        }
+      }});
 
     qtlAnnotations.select( 'circle.qtl-count')
       .attr({
@@ -152,13 +149,36 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       dy: "0.3em",
       "text-anchor": "middle"
     }).style({
-      'fill': "white",
-      'font-size': config.annotationLabelSize + 'px',
-      visibility: labelVisibility,
-    })
-    .text(function (d) {
-      return d.count;
-    });
+        'fill': "white",
+        'font-size': config.annotationLabelSize + 'px',
+        visibility: labelVisibility,
+      })
+      .text(function (d) {
+        return d.count;
+      });
+
+
+    qtlCountAnnotations.exit().remove();
+
+    //--LABELS--------------------
+    //The labels shown vertically along the qtl
+
+    var xLabel = function (d) {
+      return config.layout.width - (d.labelPosition + 2 ) * (gap + bandWidth);
+    };
+
+    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
+    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
+      //Only join the data if displayLabel is true
+      var data =   (d.displayLabel ? [d] : []);
+      return data;
+    }, function (d){ return 'label_' + d.id });
+
+    var qtlLabelParentEnterGroup = qtlLabelAnnotations.enter();
+    var qtlLabelGroup = qtlLabelParentEnterGroup.append('g').classed( 'qtl', true);
+    qtlLabelGroup.append('text').classed('qtl-label', true);
+
+    qtlLabelAnnotations.exit().remove();
 
     qtlAnnotations.select( 'g.qtl-label-group').attr({
       transform: function(d){
@@ -167,14 +187,16 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         } else {
           return "translate(0,0)"
         }
-    }});
+      }});
 
-    qtlAnnotations.select('text.qtl-label').attr({
-      x: 0,
-      y: 0,
-      dy: "0.3em",
-      "text-anchor": "middle"
-    }).style({
+    qtlAnnotations.select('text.qtl-label')
+      .attr({
+        x: 0,
+        y: 0,
+        dy: "0.3em",
+        "text-anchor": "middle"
+      })
+      .style({
         'font-size': config.annotationLabelSize + 'px',
       })
       .attr( {
@@ -185,31 +207,50 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return d.label;
       });
 
+    //POPOVER HANDLING
+
     qtlAnnotations
       .on('contextmenu', function(d){
         log.trace('Gene Annotation Context Menu');
-        d3.select('#clusterPopover').attr( 'class' , 'popover');
 
-        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
-        popoverTitle.selectAll('*').remove();
-        popoverTitle.text("");
+
+        var popover = d3.select( '#clusterPopover');
+        popover.attr( 'class', 'popover');
+
+        //POPOVER TITLE
+        var popoverTitle = popover.select('.popover-title');
+
+        //Clear existing content
+        popoverTitle.selectAll('*')
+          .remove();
+
+        popoverTitle
+          .text("");
 
         popoverTitle
           .text( 'Chromosome ' + d.chromosome + ': '
-          + d.start + '-' + d.end);
+            + d.start + '-' + d.end);
 
+        //Repaint the div so that the popover
+        // code gets the correct dimensions
         $.fn.redraw = function(){
           return $(this).each(function(){
             var redraw = this.offsetHeight;
           });
         };
 
-        popoverContent = d3.select('#clusterPopover').select('.popover-content');
-        popoverContent.selectAll('*').remove();
+        //POPOVER CONTENT
+        popoverContent = popover.select('.popover-content');
+
+        //Clear existing content
+        popoverContent .selectAll('*')
+          .remove();
+
         popoverContent.text("");
 
         var popoverContent = d3.select('.popover-content')
           .selectAll('p').data(
+            //Either bind a single qtl or a list of qtls
             (d.type == 'qtllist' ? d.qtlList :[d] )
           );
 
@@ -220,41 +261,59 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           .classed( 'popover-annotation', true)
 
         var label = popoverContent
-          .append('div').attr( {'class' : 'checkbox'})
+          .append('div')
+          .attr( {'class' : 'checkbox'})
           .append('label');
 
-          label
+        //Labels in the popover can be clicked to toggle selection
+        label
           .append('input')
-            .attr({
-              'type' : 'checkbox',
-              'value' : '',
-            })
-            .property( 'checked', function(d){ return d.selected })
-            .on('click', function(d){
-              d.selected = !d.selected;
-              popoverContent
-                .classed( 'selected', function(d){return d.selected});
-            })
-          ;
+          .attr({
+            'type' : 'checkbox',
+            'value' : '',
+          })
+          .property(
+            'checked', function(d){
+              return d.selected })
+          .on(
+            'click', function(d){
+            d.selected = !d.selected;
+            popoverContent.classed(
+              'selected', function(d){return d.selected});
+          })
+        ;
 
-          label
+        label
           .append('a')
-          .attr( {"href": function(d){return d.link;},"target": "_blank"})
+          .attr(
+            {"href": function(d){
+              return d.link;},"target": "_blank"
+            })
           .text(function(d){return d.label;} );
 
         popoverContent
-          .classed( 'selected', function(d){return d.selected});
+          .classed( 'selected', function(d){
+            return d.selected});
 
-        $('#clusterPopover').modalPopover( {
+
+        //Apply the boostrap popover function
+
+        $clusterPopover = $('#clusterPopover');
+
+        $clusterPopover
+          .modalPopover( {
           target: $(this),
           $parent: $(this).find('rect'),
           'modal-position': 'body',
           placement: "left",
           boundingSize: config.drawing,
         });
-        $('#clusterPopover').modalPopover('show');
 
-        $('#clusterPopover').on('mousedown mousewheel', function(event){
+        $clusterPopover
+          .modalPopover('show');
+
+        $clusterPopover
+          .on('mousedown mousewheel', function(event){
           log.info('popover click');
           event.stopPropagation();
         });
@@ -284,7 +343,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
       var qtlAnnotationGroup = d3.select(this).selectAll('.qtl-annotations').data([d]);
 
-      qtlAnnotationGroup.enter().append('g').attr('class', 'qtl-annotations');
+      qtlAnnotationGroup.enter()
+        .append('g').attr('class', 'qtl-annotations');
 
       qtlAnnotationGroup.attr({
         transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',

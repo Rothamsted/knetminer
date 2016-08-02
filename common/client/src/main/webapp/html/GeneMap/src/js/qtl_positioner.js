@@ -1,6 +1,5 @@
 var GENEMAP = GENEMAP || {};
 
-// reads from the basemap and (optinally) annotation XML files
 GENEMAP.QtlPositioner = function () {
 
   var regionsOverlap = function (regionA, regionB) {
