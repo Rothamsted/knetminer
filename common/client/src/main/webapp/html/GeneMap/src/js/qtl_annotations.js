@@ -211,7 +211,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         visibility: labelVisibility,
       })
       .text(function (d) {
+        if (d.label.length > 15 ){
+          return d.label.substring(0, 12) + '...'
+        }
+        else{
         return d.label;
+        }
       });
 
     //POPOVER HANDLING
