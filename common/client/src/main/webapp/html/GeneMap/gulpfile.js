@@ -78,7 +78,7 @@ gulp.task('inject-html', ['compile-styles'],  function () {
     .pipe(wiredep(wiredepOptions))
     .pipe($.inject(injectStyles, injectOptions))
     .pipe($.inject(injectScripts, injectOptions))
-    .pipe(gulp.dest(config.srcDir));
+    .pipe(gulp.dest(config.srcDir), {overwrite: true});
 });
 
 
