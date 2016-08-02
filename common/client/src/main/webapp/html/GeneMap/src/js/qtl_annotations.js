@@ -12,7 +12,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       y: 0,
     },
     bandWidthPercentage: 1 / 8,
-    gapPercentage: 1 / 10,
+    gapPercentage: 1 / 15,
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
@@ -32,7 +32,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var y = buildYScale();
     var xEnd = config.layout.width + config.chromosomeWidth / 2;
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
-    var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
+    var gap = config.layout.width * config.gapPercentage * Math.max(1, (2 - 0.5 * Math.pow( 5 - config.scale,2) ));
 
     var xStart = function (d) {
       return config.layout.width - d.position * (gap + bandWidth);
@@ -106,7 +106,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var qtlCountParentGroup = qtlAnnotationsEnterGroup
       .append('g').classed('qtl-count-group', true);
 
-    var qtlCountAnnotations = qtlCountParentGroup
+    var qtlCountAnnotations = qtlAnnotations.select('g.qtl-count-group')
       .selectAll('g.qtllist').data( function(d){
         //Only need to display count if we have a qtllist
         //If it's just a single qtl then don't connect any data
@@ -164,21 +164,28 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //The labels shown vertically along the qtl
 
     var xLabel = function (d) {
-      return config.layout.width - (d.labelPosition + 2 ) * (gap + bandWidth);
+      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
     };
 
-    var qtlLabelParentGroup = qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
-    var qtlLabelAnnotations = qtlLabelParentGroup.selectAll('g.qtl').data( function(d){
+     qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
+
+    var qtlLabelAnnotations = qtlAnnotations
+      .select('g.qtl-label-group').selectAll('g.qtl').data( function(d){
       //Only join the data if displayLabel is true
       var data =   (d.displayLabel ? [d] : []);
       return data;
     }, function (d){ return 'label_' + d.id });
 
-    var qtlLabelParentEnterGroup = qtlLabelAnnotations.enter();
-    var qtlLabelGroup = qtlLabelParentEnterGroup.append('g').classed( 'qtl', true);
-    qtlLabelGroup.append('text').classed('qtl-label', true);
+    var qtlLabelAnnotationsEnterGroup = qtlLabelAnnotations.enter();
+    var qtlLabelGroup = qtlLabelAnnotationsEnterGroup
+      .append('g').classed( 'qtl', true);
 
-    qtlLabelAnnotations.exit().remove();
+    qtlLabelGroup
+      .append('text')
+      .classed('qtl-label', true);
+
+    qtlLabelAnnotations
+      .exit().remove();
 
     qtlAnnotations.select( 'g.qtl-label-group').attr({
       transform: function(d){

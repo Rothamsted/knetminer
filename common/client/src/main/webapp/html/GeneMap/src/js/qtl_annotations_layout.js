@@ -126,7 +126,11 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         })
       }
     }
-    nodes = positioner.sortQTLLabels(nodes, buildYScale(), 4);
+    //nodes = positioner.sortQTLLabels(nodes, buildYScale(), 4);
+
+    nodes.forEach( function(node){
+      node.labelPosition = node.position + 0.4;
+    });
 
     return nodes;
   };
