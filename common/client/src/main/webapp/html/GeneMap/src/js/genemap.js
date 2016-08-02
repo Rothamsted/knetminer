@@ -312,8 +312,10 @@ onZoom = function () {
       singleGenomeView = true
     }
 
-
     resetMapZoom();
+    computeGeneLayout();
+    drawMap();
+
   };
 
   // click handler for the network view button
@@ -534,7 +536,6 @@ onZoom = function () {
   // draw the genemap into the target element.
   var drawMap = function () {
 
-
     //Create svg if necessary
     if (!d3.select(target).select('svg').node()) {
       svg = constructSkeletonChart(d3.select(target));
@@ -546,7 +547,7 @@ onZoom = function () {
         height: config.height,
       });
     }
-    
+
     logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
       +  ']  zoom:'  + zoom.scale().toFixed(2) );
 
@@ -660,6 +661,7 @@ onZoom = function () {
 
   my.redraw = function (target) {
     d3.select(target).call(my);
+    closeAllPopovers();
   };
 
   my.setGeneLabels = function (value) {
