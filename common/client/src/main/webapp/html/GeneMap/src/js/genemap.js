@@ -28,6 +28,8 @@ GENEMAP.GeneMap = function (userConfig) {
   var svg; // the top SVG element
   var container; // the g container that performs the zooming
 
+  var logSpan;
+
   var zoom; // the zoom behaviour
   var onZoom;
   var lastZoomScale;
@@ -173,6 +175,9 @@ onZoom = function () {
 
   menuManager.setFitButtonEnabled(hasMapMoved());
   container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
+
+  logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
+    +  ']  zoom:'  + zoom.scale().toFixed(2) );
 };
 
   //--------------------------------------------------
@@ -487,6 +492,8 @@ onZoom = function () {
       class: 'mapview',
     });
 
+    logSpan = mapContainer.append('div').append('span').classed('logger', 'true');
+
     //Click handles
     attachClickHandler();
 
@@ -527,6 +534,7 @@ onZoom = function () {
   // draw the genemap into the target element.
   var drawMap = function () {
 
+
     //Create svg if necessary
     if (!d3.select(target).select('svg').node()) {
       svg = constructSkeletonChart(d3.select(target));
@@ -538,6 +546,9 @@ onZoom = function () {
         height: config.height,
       });
     }
+    
+    logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
+      +  ']  zoom:'  + zoom.scale().toFixed(2) );
 
     //Update layout parameters
     decorateGenomeLayout();
@@ -565,6 +576,7 @@ onZoom = function () {
       .svg(svg);
 
     container.call(cellDrawer);
+
   };
 
 
