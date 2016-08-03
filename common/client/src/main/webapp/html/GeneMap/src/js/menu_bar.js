@@ -76,19 +76,48 @@ GENEMAP.MenuBar = function (userConfig) {
       .append('button').attr( dropdownButtonAttr)
       .style( {width: (0.8*maxLabelWidth + 1) + 'em'});
 
-      button.append('span').attr( {class: 'title'}).text(initialValue);
-      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "right": "0.5em", "top" : "45%"});
+    button.append('span')
+      .attr( {
+        class: 'title'
+      }).text(initialValue);
+
+    button.append( 'span')
+      .attr( {
+        'class':'caret'
+      }).style({
+      "position": "absolute",
+      "right": "0.5em",
+      "top" : "45%"});
 
     dropdown
-      .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': id });
+      .insert('ul')
+      .attr( {
+        'class': 'dropdown-menu'
+        , 'aria-labelledby': id
+      });
 
-    dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data(data);
+    dropdownItems = dropdown
+      .select('.dropdown-menu')
+      .selectAll('.dropdown-item')
+      .data(data);
+
     dropdownItems.enter()
-      .append('li').on('click', function(d){
-      dropdown.select('span.title').text(d[0]);
-      callback(d[1]);
-    })
-      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d[0]} );
+      .append('li')
+      .on('click', function(d){
+        dropdown
+          .select('span.title')
+          .text(d[0]);
+        callback(d[1]);
+      })
+      .append('a')
+      .attr({
+        'class': 'dropdown-item',
+        'href' : '#'})
+      .text(function(d){return d[0]} )
+      .on('click', function(e){
+        d3.event.preventDefault();
+      });
+
   }
 
   var drawMenu = function () {
