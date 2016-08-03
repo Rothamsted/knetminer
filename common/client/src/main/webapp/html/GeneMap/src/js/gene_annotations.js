@@ -196,6 +196,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
           .attr( {'href' : d.data.link } )
           .text(d.data.label);
 
+        popoverContent = d3.select('#clusterPopover').select('.popover-content');
+        popoverContent.selectAll('*').remove();
+        popoverContent.text("");
+        popoverContent.append('p')
+          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
+
         $('#clusterPopover').modalPopover( {
           target: $(this),
           parent: $(this),
@@ -210,11 +216,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
           event.stopPropagation();
         });
 
-        popoverContent = d3.select('#clusterPopover').select('.popover-content');
-        popoverContent.selectAll('*').remove();
-        popoverContent.text("");
-        popoverContent.append('p')
-          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
       });
 
     var exitGroup = geneAnnotations.exit()

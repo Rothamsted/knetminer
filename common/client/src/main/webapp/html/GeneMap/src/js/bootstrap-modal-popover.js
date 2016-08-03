@@ -48,98 +48,141 @@
 
     constructor: ModalPopover,
 
-    getPosition:function () {
-      var $element = this.$parent;
-      //var pos = this.options.modalPosition === 'body' ? $element.offset() : $element.position();
-      var pos = $($element).position();
-      var pos = $($element).offset();
+    getDimensions:function($element) {
+      var width;
+      var height;
 
-      log.trace( $element[0]);
-
-      var width = 0;
-      var height = 0;
-
-      //Position manipulations added to support the QTLNetMiner Application
-      //We try a few different methods for getting the size of the element hosting the popopver.
-
-      if ( "offsetWidth" in $element[0] && $element[0].offsetWidth){
-        log.trace( 'Using offsetWidth');
+      if ("offsetWidth" in $element[0] && $element[0].offsetWidth) {
+        log.trace('Using offsetWidth');
         //This works fine for html objecst
         width = $element[0].offsetWidth;
         height = $element[0].offsetHeight;
       }
-      //else if ( "width" in $element[0] && $element[0].width.baseVal){
-      //  log.info( 'Using width');
-      //  //This works fine for svg objects with defined width
-      //  width = $element[0].width.baseVal.value;
-      //  height = $element[0].height.baseVal.value;
-      //}
-      else if ( "getBBox" in $element[0]) {
-        log.trace( 'Using getBBox');
+      else if ("getBBox" in $element[0]) {
+        log.trace('Using getBBox');
         //This works for svg text objects
 
         //Raw BBox doesn't take Current Transformation Matrix into account.
         var bbox = $element[0].getBBox();
         var ctm = $element[0].getScreenCTM();
-        log.trace( bbox, ctm);
         width = bbox.width * ctm.a;
         height = bbox.height * ctm.d;
       }
 
-      result = $.extend({}, (pos), { width: width, height: height });
-
-      log.trace( result );
-
-      return  result;
+      return { width: width, height: height};
     },
 
     show: function () {
-      var $dialog = this.$element;
-      $dialog.css({ top: 0, left: 0, display: 'block', 'z-index': 1050 });
 
-      var placement = typeof this.options.placement == 'function' ?
-        this.options.placement.call(this, $tip[0], this.$element[0]) :
-        this.options.placement;
-
-      var pos = this.getPosition();
+      for( var round = 0 ; round < 2 ; round ++ ){
 
 
-      var actualWidth = $dialog[0].offsetWidth;
-      var actualHeight = $dialog[0].offsetHeight;
+        //dialog is the popup box we are creating
+        var $dialog = this.$element;
+        $dialog.css({ top: 0, left: 0, display: 'block', 'z-index': 1050 });
 
-      var boundingBox = this.options.boundingSize ? this.options.boundingSize[0][0].getBoundingClientRect() : null;
 
-      var tp;
-      switch (placement) {
-        case 'bottom':
-          tp = { top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 }
-          break;
-        case 'top':
-          tp = { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 }
-          break;
-        case 'left':
-          var left = pos.left - actualWidth
-          if ( boundingBox){
-            left = Math.max( left, boundingBox.left);
+        var actualWidth = $dialog[0].offsetWidth;
+        var actualHeight = $dialog[0].offsetHeight;
+
+
+        //parent is the element we are creating the popup box next to
+        //We're using the updated position function from jquery-ui
+        var parent = this.$parent;
+
+        var positionDirective = {
+          my: 'left top', at: 'left top', of: parent,
+          collision: 'none',
+          using: function( hash, feedback){
+              pos = hash;
           }
-          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
-          break;
-        case 'right':
-          var left = pos.left + pos.width;
-          if ( boundingBox){
-            left = Math.min( left, boundingBox.left + boundingBox.width)
-          }
-          tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
-          break;
+        };
+
+        var pos;
+        positionDirective.using =
+          function( hash, feedback){
+          pos = hash;
+        };
+
+        $dialog
+          .position(positionDirective);
+
+        var parentDimensions = this.getDimensions( $(parent));
+
+        pos = _.merge({}, pos, parentDimensions);
+
+        var placement = typeof this.options.placement == 'function' ?
+          this.options.placement.call(this, $tip[0], this.$element[0]) :
+          this.options.placement;
+
+        var boundingBox = this.options.boundingSize
+          ? this.options.boundingSize[0][0].getBoundingClientRect()
+          : null;
+
+
+        var boundLeftPos = null;
+        var boundRightPos = null;
+
+        if ( this.options.boundingSize ){
+          var boundingLeftDirective = {
+            my: 'left center', at: 'right center', of: this.options.boundingSize[0],
+            collision: 'none',
+            using: function( hash, feedback){
+              boundLeftPos = hash;
+            }
+          };
+
+          $dialog
+            .position(boundingLeftDirective);
+
+          var boundingRightDirective = {
+            my: 'right center', at: 'left center', of: this.options.boundingSize[0],
+            collision: 'none',
+            using: function( hash, feedback){
+              boundRightPos = hash;
+            }
+          };
+
+          $dialog
+            .position(boundingRightDirective);
+        }
+
+        var arrowMargin = 10;
+
+
+        var tp;
+        switch (placement) {
+          case 'bottom':
+            tp = { top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 }
+            break;
+          case 'top':
+            tp = { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 }
+            break;
+          case 'left':
+            var left = pos.left - actualWidth
+            if ( boundRightPos){
+              left = Math.max( left, boundRightPos.left) - arrowMargin;
+            }
+            tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
+            break;
+          case 'right':
+            var left = pos.left + pos.width;
+            if ( boundLeftPos){
+              left = Math.min( left, boundLeftPos.left) + arrowMargin;
+            }
+            tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
+            break;
+        }
+
+        $dialog
+          .css(tp)
+          .addClass(placement)
+          .addClass('in');
+
+        $dialog.toggleClass('force-redraw');
+
+        $.fn.modal.Constructor.prototype.show.call(this, arguments); // super
       }
-
-
-      $dialog
-        .css(tp)
-        .addClass(placement)
-        .addClass('in');
-
-      $.fn.modal.Constructor.prototype.show.call(this, arguments); // super
     },
 
     /** todo entire function was copied just to set the background to 'none'. need a better way */
