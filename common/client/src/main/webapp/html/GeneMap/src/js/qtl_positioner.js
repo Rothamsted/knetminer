@@ -8,102 +8,94 @@ GENEMAP.QtlPositioner = function () {
 
   var my = {};
 
-  my.sortQTLAnnotations = function (annotations) {
+  my.positionAnnotations = function( annotations, getPosition, setPosition,
+                                     startFunction, midFunction, endFunction){
 
-    var qtlData = annotations.sort(function (a, b) {
-      return a.midpoint - b.midpoint;
-    });
+    var start = startFunction;
+    var end = endFunction;
+    var mid = midFunction;
 
-    var stack = [];
-
-    var getPosition = function (i) {
-      return qtlData[i].position;
+    var checkOverlap = function( a, b){
+      return (start(a) < end(b)) && (start(b) < end(a));
     };
 
-    for (var i = 0; i < qtlData.length; i++) {
-      var thisRegion = qtlData[i];
+    var input = annotations.sort(function(a,b){
+      return mid(a) - mid(b);
+    });
 
+    var stack = []
+
+    for ( var i = 0;  i < input.length ; i++ ){
+
+      var iAn = annotations[i];
       var remove = [];
 
-      // check the current region still overlaps the regions in the stack
-      for (var j = 0; j < stack.length; j++) {
-        if (!regionsOverlap(thisRegion, qtlData[stack[j]])) {
+      for ( var j = 0 ; j < stack.length; j++){
+
+        var jAn = input[stack[j]];
+
+        // check the current region still overlaps the regions in the stack
+        if (!checkOverlap( iAn, jAn)){
           remove.push(stack[j]);
         }
       }
 
-      // remove the regions that don't overlap this one
       var overlap = _.difference(stack, remove);
+      var usedPositions = overlap.map(function(k){
+        return getPosition(input[k]);
+      });
 
-      var usedPositions = overlap.map(getPosition);
       var pos = 0;
-      for (pos = 1; pos < usedPositions.length + 1; pos++) {
-        if (usedPositions.indexOf(pos) === -1) {
+      for (pos = 1; pos < usedPositions.length + 1 ; pos ++){
+        if ( usedPositions.indexOf(pos) === -1){
           break;
         }
       }
 
-      qtlData[i].position = pos;
+      setPosition(iAn,pos);
       stack.push(i);
     }
 
+    return input;
+ }
 
-    return qtlData;
-  };
-
-  var labelsOverlap = function (regionA, regionB) {
-    return (regionA.labelStart < regionB.labelEnd) && (regionB.labelStart < regionA.labelEnd);
-  };
+  my.sortQTLAnnotations =  function( annotations ){
+    return my.positionAnnotations(
+      annotations,
+      function(node){return node.position},
+      function(node, pos){ node.position = pos},
+      function(node){return node.start},
+      function(node){return node.midpoint},
+      function(node){return node.end}
+    );
+  }
 
   my.sortQTLLabels = function (nodes, yscale, fontsize) {
+    var annotations = nodes;
 
-    var labelledNodes = nodes.filter( function(node){
-      return node.displayLabel;
-    }).sort( function(a,b){
-      return a.midpoint - b.midpoint } );
-
-    labelledNodes.forEach( function(node){
-      var labelLength = node.label.length * fontsize ;
-      node.labelStart = yscale(node.midpoint) - labelLength / 2;
-      node.labelEnd = yscale(node.midpoint) + labelLength / 2;
-    });
-
-    var stack = [];
-
-    for (var i = 0; i < labelledNodes.length; i++) {
-      var thisNode = labelledNodes[i];
-
-      var remove = [];
-
-      // check the current region still overlaps the regions in the stack
-      for (var j = 0; j < stack.length; j++) {
-        if (!labelsOverlap(thisNode, labelledNodes[stack[j]])) {
-          remove.push(stack[j]);
-        }
-      }
-
-
-      // remove the regions that don't overlap this one
-      var overlap = _.difference(stack, remove);
-
-      var usedPositions = overlap.map(function(i){
-        return labelledNodes[i].labelPosition});
-
-      var pos = 0;
-      for (pos = 1; pos < usedPositions.length + 1; pos++) {
-        if (usedPositions.indexOf(pos) === -1) {
-          break;
-        }
-      }
-
-
-      labelledNodes[i].labelPosition = pos;
-      stack.push(i)
-    }
-
-    return nodes;
-
+    return my.positionAnnotations(
+      annotations,
+      function(node){return node.labelPosition },
+      function(node, pos){node.labelPosition = pos },
+      function(node){ return yscale(node.midpoint) - node.label.length * fontsize  / 2},
+      function(node){return node.midpoint},
+      function(node){ return yscale(node.midpoint) + node.label.length * fontsize  / 2}
+    );
   }
+
+  my.sortQTLAnnotationsWithLabels = function( nodes, yscale, fontsize){
+    var annotations = nodes;
+
+    return my.positionAnnotations(
+      annotations,
+      function(node){return node.comboPosition },
+      function(node, pos){node.comboPosition = pos },
+      function(node){ return Math.min(yscale(node.midpoint) - node.label.length * fontsize  / 2, node.start)},
+      function(node){return node.midpoint},
+      function(node){ return Math.max(yscale(node.midpoint) + node.label.length * fontsize  / 2, node.end)}
+    );
+  }
+
 
   return my;
 };
