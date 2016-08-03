@@ -465,6 +465,7 @@ onZoom = function () {
       showSelectedQTLs: showSelectedQTLs,
       showAutoQTLLabels: showAllQTLs,
       showSelectedQTLLabels: showSelectedQTLs,
+      annotationLabelSize: genome.cellLayout.annotations.label.size,
     });
 
     genome.chromosomes.forEach( function(chromosome){

@@ -32,7 +32,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var y = buildYScale();
     var xEnd = config.layout.width + config.chromosomeWidth / 2;
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
-    var gap = config.layout.width * config.gapPercentage * Math.max(1, (2 - 0.5 * Math.pow( 5 - config.scale,2) ));
+    var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
+
+    var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
+        return node.displayLabel;
+    });
+
+    if (labelsToDisplay) {
+      gap = config.layout.width * config.gapPercentage * Math.max(1.5, (2 - 0.5 * Math.pow(5 - config.scale, 2) ));
+    }
 
     var xStart = function (d) {
       return config.layout.width - d.position * (gap + bandWidth);

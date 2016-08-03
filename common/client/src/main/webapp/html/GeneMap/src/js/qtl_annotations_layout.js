@@ -9,6 +9,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
     showSelectedQTLs: true,
     showAutoQTLLabels: true,
     showSelectedQTLLabels: true,
+    annotationLabelSize: 5,
   };
   var config = _.merge({}, defaultConfig, userConfig);
 
@@ -105,7 +106,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       log.trace( '-Col ', key);
       log.trace('positions ', column.map(function(node){return node.position }));
 
-      var fontsize = 4;
+      var fontsize = config.annotationLabelSize;
       var yscale = buildYScale();
 
       //Position the QTL labels
@@ -193,7 +194,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       });
 
       displayNodes = positioner.sortQTLAnnotationsWithLabels(
-        displayNodes, buildYScale(), 4);
+        displayNodes, buildYScale(), config.annotationLabelSize);
 
       displayNodes.forEach( function(node){
         node.position = node.comboPosition;
