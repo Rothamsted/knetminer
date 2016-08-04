@@ -27,6 +27,25 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
   };
 
+  var leftRoundedRect = function (start, end, x, width, radius ){
+    if ( (end - start) < width){
+      return "M" + x  + "," + start
+        + "h" + -width
+        + "v" + (end - start)
+        + "h" + width
+        +  "z";
+    }
+    else {
+      return "M" + x + "," + start
+        + "h" + (radius - width)
+        + "a" + radius + " " + radius + " 0 0 0" + -radius + " " + radius
+        + "v" + (end - start - 2 * radius)
+        + "a" + radius + "," + radius + " 0 0 0" + radius + "," + radius
+        + "h" + (width - radius)
+        + "z";
+    }
+  };
+
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
     var y = buildYScale();
@@ -59,7 +78,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
+    //qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
+    qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
     qtlAnnotationsEnterGroup.append('text').classed('test', true);
 
     //Apply attributes to all elements
@@ -69,14 +89,14 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     });
 
     qtlAnnotations.select('line.top-line').attr({
-      x1: xStart,
+      x1: function(d) { return xStart(d) + 0.4 * bandWidth},
       y1: function (d) { return y(d.start);},
       y2: function (d) { return y(d.start);},
       x2: xEnd,
     });
 
     qtlAnnotations.select('line.bottom-line').attr({
-      x1: xStart,
+      x1: function(d) { return xStart(d) + 0.4 * bandWidth},
       y1: function (d) { return y(d.end);},
       y2: function (d) { return y(d.end);},
       x2: xEnd,
@@ -90,6 +110,17 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }).style({
       fill: function (d) { return d.color; },
     });
+
+    qtlAnnotations.select('path.qtl-selector').attr({
+      d: function(d){ return leftRoundedRect(
+        y(d.start),
+        y(d.end),
+        xStart(d)+bandWidth,
+        bandWidth,
+        0.4 * bandWidth) },
+      fill: function (d) { return d.color; },
+    } );
+
 
     qtlAnnotations.exit().remove();
 
@@ -323,7 +354,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         $clusterPopover
           .modalPopover( {
           target: $(this),
-          $parent: $(this).find('rect'),
+          $parent: $(this).find('path'),
           'modal-position': 'body',
           placement: "left",
           boundingSize: config.drawing,

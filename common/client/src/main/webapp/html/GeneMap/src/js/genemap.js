@@ -515,7 +515,7 @@ onZoom = function () {
 
     // basic zooming functionality
     lastZoomScale = 1;
-    zoom = d3.behavior.zoom().scaleExtent([1, 25]);
+    zoom = d3.behavior.zoom().scaleExtent([1, 50]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
 
