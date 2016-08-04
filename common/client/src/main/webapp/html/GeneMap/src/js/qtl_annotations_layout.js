@@ -119,18 +119,34 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       log.trace('labelPositions ', column.map(function(node){return node.labelPosition }));
       log.trace('maxLabelPosition', maxLabelPosition);
 
-      //If the QTL labels don't fit on one line, then don't display them
-      if (maxLabelPosition > 1){
-        column.forEach( function(node){
+
+
+      //STRATEGY 1 - if there is more than one lane of labels,
+      //show only the first lane
+      column.forEach( function(node){
+        if( node.labelPosition > 1){
           node.displayLabel = false;
-        });
-      }
-      else{
-        column.forEach( function(node){
-          node.labelPosition = node.position + 0.4;
+       }
+        else{
           node.displayLabel = true;
-        });
-      }
+          node.labelPosition = node.position + 0.4;
+        }
+      });
+
+      //STRATEGY 1 - if there is more than one lane of labels,
+      //don't show any labels
+
+      //if (maxLabelPosition > 1){
+      //  column.forEach( function(node){
+      //    node.displayLabel = false;
+      //  });
+      //}
+      //else{
+      //  column.forEach( function(node){
+      //    node.labelPosition = node.position + 0.4;
+      //    node.displayLabel = true;
+      //  });
+      //}
 
       log.trace('labelPositions', column.map(function(node){return node.labelPosition }));
     });
@@ -172,6 +188,10 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       log.trace('maxPosition', maxPosition);
 
+      qtlNodes.forEach( function(node){
+        node.screenLabel = node.label.substring(0, 12) + '...'
+      });
+
       //If there aren't too many lanes of QTLs,
       //then try displaying some labels automatically
       if (maxPosition < 3 ) {
@@ -182,6 +202,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
           node.displayLabel = false;
         })
       }
+
     }
 
     if (config.showSelectedQTLLabels && !config.showAutoQTLLabels ){
@@ -191,6 +212,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       displayNodes.forEach( function(node){
         node.displayLabel = true;
+        node.screenLabel = node.label;
       });
 
       displayNodes = positioner.sortQTLAnnotationsWithLabels(

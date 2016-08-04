@@ -198,7 +198,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     });
 
     //right click to display popover
-    geneAnnotations.select('text')
+    geneAnnotations
       .on('contextmenu', function(d){
         log.trace('Gene Annotation Context Menu');
         log.trace(d);

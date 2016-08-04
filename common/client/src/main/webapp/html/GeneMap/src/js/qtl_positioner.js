@@ -73,13 +73,16 @@ GENEMAP.QtlPositioner = function () {
   my.sortQTLLabels = function (nodes, yscale, fontsize) {
     var annotations = nodes;
 
+    var fontCorrection = 0.6;
+    var fontScale = fontCorrection * fontsize;
+
     return my.positionAnnotations(
       annotations,
       function(node){return node.labelPosition },
       function(node, pos){node.labelPosition = pos },
-      function(node){ return yscale(node.midpoint) - node.label.length * fontsize  / 2},
+      function(node){ return yscale(node.midpoint) -fontScale * node.screenLabel.length / 2},
       function(node){return node.midpoint},
-      function(node){ return yscale(node.midpoint) + node.label.length * fontsize  / 2}
+      function(node){ return yscale(node.midpoint) + fontScale * node.screenLabel.length / 2}
     );
   }
 

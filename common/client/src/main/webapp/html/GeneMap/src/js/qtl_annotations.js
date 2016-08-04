@@ -46,12 +46,17 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
   };
 
+
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
     var y = buildYScale();
     var xEnd = config.layout.width + config.chromosomeWidth / 2;
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
     var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
+
+    var xLabel = function (d) {
+      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
+    };
 
     var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
         return node.displayLabel;
@@ -80,7 +85,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
     //qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
     qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('text').classed('test', true);
+    qtlAnnotationsEnterGroup.append('rect').classed('test', true);
 
     //Apply attributes to all elements
 
@@ -120,6 +125,28 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         0.4 * bandWidth) },
       fill: function (d) { return d.color; },
     } );
+
+    if( false) { //Rectanges to check size of labels
+      qtlAnnotations.select('rect.test')
+        .attr({
+            x: function (d) {
+              return d.displayLabel ? xLabel(d) : 0
+            },
+            y: function (d) {
+              return d.displayLabel ? y(d.midpoint) - 0.6 * d.screenLabel.length * config.annotationLabelSize / 2 : 0
+            },
+            width: function (d) {
+              return bandWidth
+            },
+            height: function (d) {
+              return d.displayLabel ? 0.6 * d.screenLabel.length * config.annotationLabelSize : 0
+            },
+            fill: function (d) {
+              return 'pink'
+            }
+          }
+        );
+    }
 
 
     qtlAnnotations.exit().remove();
@@ -202,9 +229,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //--LABELS--------------------
     //The labels shown vertically along the qtl
 
-    var xLabel = function (d) {
-      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
-    };
 
      qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
 
@@ -250,13 +274,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         visibility: labelVisibility,
       })
       .text(function (d) {
-        if (d.label.length > 15 ){
-          return d.label.substring(0, 12) + '...'
-        }
-        else{
-        return d.label;
-        }
+        return d.screenLabel;
       });
+
 
     //POPOVER HANDLING
 
@@ -331,6 +351,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
             d.selected = !d.selected;
             popoverContent.classed(
               'selected', function(d){return d.selected});
+              config.onAnnotationSelectFunction();
           })
         ;
 
