@@ -95,7 +95,11 @@ gulp.task('watch-js', ['inject-html'], function () {
   return gulp.watch(config.js, ['copy-js'] );
 });
 
-gulp.task( 'watch', ['watch-css', 'watch-js']), function (){
+gulp.task('watch-html', ['inject-html'], function () {
+  return gulp.watch(config.html, ['inject-html'] );
+});
+
+gulp.task( 'watch', ['watch-css', 'watch-js', 'watch-html']), function (){
   return $.util.log('Watching  styles and js');
 };
 

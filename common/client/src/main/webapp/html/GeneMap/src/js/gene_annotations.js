@@ -125,7 +125,11 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
       )
       .style( "opacity", function(d){
-        return (d.data.visible || d.data.selected ) ? 1: d.data.importance; }
+        return (d.data.visible || d.data.selected )
+          ? 1
+          : ( d.data.normedScore
+            ? d.data.normedScore
+            : d.data.importance); }
       )
     ;
     geneAnnotations.select('text')

@@ -60,10 +60,17 @@ GENEMAP.XmlDataReader = function () {
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
+      //Build qtl index
       qtls.forEach( function(qtl, index){
         qtl.id = chromosome.number + '_' + index;
         qtl.selected = false;
       })
+
+      //Build genes scores
+      var maxScore  = qtls.reduce( function(cur, qtl){
+        return Math.max(cur, qtl.score);
+      }, 0);
+
 
       var maxOpacity = 0.9;
       var opacityFallOff = 3.5;

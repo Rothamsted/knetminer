@@ -486,7 +486,10 @@ onZoom = function () {
       }
       qtlAnnotationLayout.layoutChromosome(chromosome);
     });
+
+    geneAnnotationLayout.computeNormalisedGeneScores(genome.chromosomes);
   }
+
 
   // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {

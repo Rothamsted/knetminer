@@ -1,7 +1,19 @@
 var GENEMAP = GENEMAP || {};
 
+
+
 // reads the gene and qtl annotations from the .xml file
 GENEMAP.AnnotationXMLReader = function () {
+
+  var _getValue = function (elt, name){
+    var element = elt.getElementsByTagName(name);
+    if (element && element.length > 0){
+      return element[0].childNodes[0].nodeValue;
+    }
+    else {
+      return null;
+    }
+  }
 
   var _readFeature = function (elt) {
     var start = +elt.getElementsByTagName('start')[0].childNodes[0].nodeValue;
@@ -14,10 +26,11 @@ GENEMAP.AnnotationXMLReader = function () {
       start: start,
       end: end,
       midpoint: midpoint,
-      type: elt.getElementsByTagName('type')[0].childNodes[0].nodeValue,
-      color: elt.getElementsByTagName('color')[0].childNodes[0].nodeValue,
-      label: elt.getElementsByTagName('label')[0].childNodes[0].nodeValue,
-      link: elt.getElementsByTagName('link')[0].childNodes[0].nodeValue,
+      type:  _getValue(elt, 'type'),
+      color: _getValue(elt, 'color'),
+      label: _getValue(elt, 'label'),
+      link:  _getValue(elt, 'link'),
+      score: _getValue(elt, 'score'),
       selected: false,
     };
   };

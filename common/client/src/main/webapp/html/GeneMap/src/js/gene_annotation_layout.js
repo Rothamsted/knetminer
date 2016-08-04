@@ -238,5 +238,39 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     chromosome.layout.annotationDisplayClusters.splice(clusterIndex, 1);
   };
 
+  my.computeNormalisedGeneScores = function ( chromosomes ){
+
+    var allVisible = chromosomes.reduce( function( total, cur){
+      return total.concat(cur.annotations.genes.filter( function(gene){
+        return gene.displayed;
+      }));
+    },[]);
+
+    var allScored = allVisible.every( function(gene){
+      return gene.score;
+    })
+
+    if ( allScored ){
+
+      var maxScore = allVisible.reduce( function(max, cur){
+        return Math.max(max , cur.score);
+      }, 0);
+
+      var minScore = allVisible.reduce( function(min, cur){
+        return Math.min(min , cur.score);
+      }, 0);
+
+      allVisible.forEach( function(gene){
+          gene.normedScore = 0.5 * (gene.score - minScore) / (maxScore - minScore)  + 0.5;
+        }
+      );
+    }
+    else{
+      allVisible.forEach( function(gene){
+        gene.normedScore = null;
+      });
+    }
+  }
+
   return my;
 }
