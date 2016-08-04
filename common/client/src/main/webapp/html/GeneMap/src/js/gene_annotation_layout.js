@@ -200,8 +200,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   var generateChromosomeClusters = function(chromosome){
     var geneClusterer = GENEMAP.GeneClusterer();
     //Run clustering algorithm so we can use the clusters later when drawing
-    genes = chromosome.annotations.genes;
-    geneClusters = geneClusterer.createClustersFromGenes(genes);
+    var genes = chromosome.annotations.genes;
+    var geneClusters = geneClusterer.createClustersFromGenes(genes);
     return geneClusters;
   }
 
