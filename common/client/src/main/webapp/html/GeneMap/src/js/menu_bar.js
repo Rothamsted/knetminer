@@ -74,7 +74,7 @@ GENEMAP.MenuBar = function (userConfig) {
 
     button = dropdown
       .append('button').attr( dropdownButtonAttr)
-      .style( {width: (0.8*maxLabelWidth + 1) + 'em'});
+      .style( {width: (0.4*maxLabelWidth + 4) + 'em'});
 
     button.append('span')
       .attr( {
@@ -133,9 +133,9 @@ GENEMAP.MenuBar = function (userConfig) {
         [
           'network-btn',
           'reset-btn',
+          'fit-btn',
           'tag-btn',
           'qtl-btn',
-          'fit-btn',
           'export-btn',
           'export-all-btn'
         ],
@@ -166,7 +166,6 @@ GENEMAP.MenuBar = function (userConfig) {
       ['Show selected QTLs', 'selected'],
       ["Don't show QTLs", 'none'] ],
       config.onQtlBtnClick, 'Show all QTLs');
-      //.on('click', config.onQtlBtnClick);
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
