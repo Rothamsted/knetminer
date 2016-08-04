@@ -17,6 +17,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
+    scale: null,
     drawing: null,
   };
 
@@ -120,10 +121,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     //See also annotations.less for additional styling
 
 
-    geneAnnotations.select('path.link')
-      .style( "stroke" , function (d){
-        return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
-      )
+    var strokeWidth = '0.5';
+    if( !GENEMAP.vectorEffectSupport) {
+      strokeWidth = 0.5 / config.scale;
+    }
+
+     geneAnnotations.select('path.link')
       .style( "opacity", function(d){
         return (d.data.visible || d.data.selected )
           ? 1
@@ -131,7 +134,17 @@ GENEMAP.GeneAnnotations = function (userConfig) {
             ? d.data.normedScore
             : d.data.importance); }
       )
+      .style( "stroke-width" , function(d) {
+        return strokeWidth
+      } )
+       .style( "stroke" , function (d){
+         return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
+       )
     ;
+
+
+
+
     geneAnnotations.select('text')
       .style( 'font-size', function(d){
         return (d.data.selected ? 0.2 : 0 ) + d.data.fontSize + 'px'})
@@ -399,6 +412,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.drawing = value;
+    return my;
+  };
+
+  my.scale = function (value) {
+    if (!arguments.length) {
+      return config.scale;
+    }
+
+    config.scale = value;
     return my;
   };
 

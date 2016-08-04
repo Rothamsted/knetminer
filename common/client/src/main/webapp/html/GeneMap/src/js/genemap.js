@@ -1,5 +1,7 @@
 var GENEMAP = GENEMAP || {};
 
+ GENEMAP.vectorEffectSupport = true;
+
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
     width: '800',
@@ -44,6 +46,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
   var showAllQTLs; //bool
   var showSelectedQTLs; //bool
+
 
   //--------------------------------------------------
   //SVG and ZOOM FUNCTIONS
@@ -508,6 +511,9 @@ onZoom = function () {
     });
 
     logSpan = mapContainer.append('div').append('span').classed('logger', 'true');
+
+
+    GENEMAP.vectorEffectSupport = 'vectorEffect' in svg[0][0].style;
 
     //Click handles
     attachClickHandler();

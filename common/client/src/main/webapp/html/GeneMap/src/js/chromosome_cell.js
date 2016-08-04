@@ -64,6 +64,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
         .drawing(config.svg)
+        .scale( layout.scale)
         ;
 
       cells.call(geneDrawer);
