@@ -191,21 +191,121 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         log.trace(d);
         d3.select('#clusterPopover').attr( 'class' , 'popover');
 
+        //POPOVER TITLE
         popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+
+        //clear
         popoverTitle.selectAll('*').remove();
         popoverTitle.text("");
 
+        //populate
         popoverTitle
           .append('a')
           .attr( {'href' : d.data.link } )
           .text(d.data.label);
 
+        //POPOVER CONTENT
         popoverContent = d3.select('#clusterPopover').select('.popover-content');
+
+        //clear
         popoverContent.selectAll('*').remove();
         popoverContent.text("");
+
+        //populate
         popoverContent.append('p')
           .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
 
+        if(d.data.score){
+        popoverContent.append('p')
+          .text( 'Score: ' + parseFloat(d.data.score).toFixed(3) );
+        }
+
+        popoverContent.append('hr');
+
+        var footer = popoverContent
+          .append('p')
+          .style( 'float', 'right')
+          ;
+
+        var updateFooter = function(){
+
+          footerLinks = footer.selectAll('a')
+            .data(['show', 'hide', 'auto']);
+
+          footerLinks.enter()
+            .append('a')
+            .attr( 'href', '#')
+            .text(function(l){
+              return l; } )
+            .classed('btn btn-small', true)
+            .on('click', function(l){
+              if (l == 'show'){
+                d.data.visible = true;
+              }
+              else if ( l == 'hide'){
+                d.data.visible = false;
+                d.data.hidden = true;
+              }
+              else if ( l == 'auto'){
+                d.data.visible = false;
+                d.data.hidden = false;
+              }
+              config.onAnnotationSelectFunction();
+              d3.event.preventDefault();
+              updateFooter();
+            });
+
+          footerLinks.classed('disabled',
+            function(l){
+              return  false
+                || ( (l == 'show') && ( d.data.visible) )
+                || ( (l == 'hide') && ( d.data.hidden && !d.data.visible) )
+                || ( (l == 'auto') && (!d.data.hidden && !d.data.visible) ) ;
+          });
+        }
+
+        updateFooter();
+
+
+        //footer.append( 'a')
+        //  .attr( 'href', '#')
+        //  .text('show')
+        //  .classed('btn', true)
+        //  .classed('disabled',
+        //    d.data.visible == true )
+        //  .on('click', function(event){
+        //    d.data.visible = true;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+        //
+        //footer.append( 'a')
+        //  .attr( 'href', '#')
+        //  .text('hide')
+        //  .classed('btn', true)
+        //  .classed('disabled',
+        //    (d.data.visible == false) && (d.data.hidden == true))
+        //  .on('click', function(event){
+        //    d.data.visible = false;
+        //    d.data.hidden = true;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+        //
+        //footer.append( 'a')
+        //  .text('auto')
+        //  .attr( 'href', '#')
+        //  .classed('btn btn-small', true)
+        //  .classed('disabled',
+        //    (d.data.visible == false) && (d.data.hidden == false))
+        //  .on('click', function(event){
+        //    d.data.visible = false;
+        //    d.data.hidden = false;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+
+        //ACTIVATE POPOVER
         $('#clusterPopover').modalPopover( {
           target: $(this),
           parent: $(this),
