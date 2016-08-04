@@ -192,7 +192,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         d3.select('#clusterPopover').attr( 'class' , 'popover');
 
         //POPOVER TITLE
-        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+        popoverTitle = d3.select('#clusterPopover')
+          .select('.popover-title');
 
         //clear
         popoverTitle.selectAll('*').remove();

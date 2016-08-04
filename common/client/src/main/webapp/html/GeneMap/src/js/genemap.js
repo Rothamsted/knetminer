@@ -206,15 +206,22 @@ onZoom = function () {
   //Intercept mouse events
 
   var attachClickHandler  = function () {
-    $(target).off('mousedown mousewheel DOMMouseScroll')
-      .on('mousedown mousewheel DOMMouseScroll', function (event) {
-        //Exceptions - don't close the popopver we are trying to interact with
-        if (event.target.tagName.toLowerCase() === 'a') {
-          return;
-        }
-        //all other cases
-        closeAllPopovers(event);
-      });
+
+    var closeFunction = function(event){
+      //Exceptions - don't close the popopver we are trying to interact with
+      if (event.target.tagName.toLowerCase() === 'a') {
+        return;
+      }
+      //all other cases
+      closeAllPopovers(event);
+    }
+
+    var events = 'mousedown mousewheel DOMMouseScroll touchstart '
+
+
+    $(target).off(events)
+      .on(events, closeFunction);
+
   }
 
   //--------------------------------------------------

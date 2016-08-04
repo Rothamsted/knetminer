@@ -58,6 +58,88 @@ GENEMAP.Chromosome = function (userConfig) {
     chromosomeGroup.select('rect.background').attr(chromosomeShape);
     chromosomeGroup.select('rect.outline').attr(chromosomeShape);
 
+    var selection = [];
+
+    var updateSelection = function(){
+
+      var gSelect = chromosomeGroup.selectAll('rect.selection').data(selection);
+
+      gSelect.enter()
+        .append('rect')
+        .attr( 'class', 'selection')
+        .style( {
+          'fill' : 'gray',
+          'opacity' : 0.2,
+        });
+
+      gSelect
+        .attr( {
+          'x': 0,
+          'y': function(d){ return Math.min(d.start, d.end)},
+          'width': config.layout.width,
+          'height': function(d){ return Math.abs(d.end - d.start)},
+        });
+
+      gSelect.exit()
+        .remove();
+    }
+
+
+    var drag = d3.behavior.drag()
+      .on( 'dragstart', function(event){
+        //log.info(y.invert( d3.event.y))
+        var pos = d3.mouse(this);
+        selection.push({
+          'start' : pos[1],
+          'end' : pos[1]
+        });
+        updateSelection();
+        d3.event.sourceEvent.stopPropagation();
+      })
+      .on( 'drag', function(event){
+        selection[0].end = d3.event.y;
+        updateSelection();
+        d3.event.sourceEvent.stopPropagation();
+        d3.event.sourceEvent.preventDefault();
+      })
+      .on( 'dragend', function(event){
+        d3.event.sourceEvent.stopPropagation();
+        var geneStart = y.invert(selection[0].start);
+        var geneEnd = y.invert(selection[0].end);
+        if( geneStart > geneEnd){
+          var temp = geneStart;
+          geneStart = geneEnd;
+          geneEnd = temp;
+        }
+
+        var nodesToUpdate = chromosome.layout.geneBandNodes.filter( function(node){
+          return (node.data.midpoint > geneStart && node.data.midpoint < geneEnd )
+        }
+        );
+
+        log.info( nodesToUpdate);
+
+        nodesToUpdate.forEach( function(node){
+          if (node.data.type == "gene") {
+            node.data.visible  = true;
+          }
+          else if ( node.data.type == "geneslist"){
+            node.data.genesList.forEach( function(gene) {
+              gene.visible = true;
+            });
+            }
+        } );
+
+        config.onAnnotationSelectFunction();
+
+        selection = [];
+        updateSelection();
+
+      });
+
+    chromosomeGroup.select('rect.background')
+      .call(drag);
+
     if (config.border) {
       chromosomeGroup.select('rect.border')
         .attr({
