@@ -197,7 +197,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Include all genes set to visible
-    var nodeSource = config.manualLabels
+    var nodeSet = config.manualLabels
       ? new Set(allGenes.filter( function(gene){ return gene.visible}))
       : new Set();
 
@@ -205,10 +205,10 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     if ( config.autoLabels){
       allGenes.slice(0, par.nLabels)
         .filter( function(gene){return !gene.hidden;})
-        .forEach( function(gene){ nodeSource.add(gene)});
+        .forEach( function(gene){ nodeSet.add(gene)});
     }
 
-    nodeSource = Array.from(nodeSource);
+    var nodeSource = Array.from(nodeSet);
     var nodes = generateNodes(force, y, par, nodeSource);
 
     var maxLayer;
@@ -221,9 +221,15 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       log.trace( 'Too many lables to display - clustering instead')
 
       var geneClusterer = GENEMAP.GeneClusterer()
-        .nClusters(par.nLabels);
+        .nClusters(Math.max(par.nLabels,1));
 
-      var clusterSource = geneClusterer.createClustersFromGenes(nodeSource);
+      try {
+        var clusterSource = geneClusterer.createClustersFromGenes(nodeSource);
+      }
+      catch(e){
+        log.info(nodeSource);
+        clusterSource = [];
+      }
       nodes = generateNodes(force, y, par, clusterSource)
     }
 

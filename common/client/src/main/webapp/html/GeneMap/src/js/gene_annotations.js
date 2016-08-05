@@ -6,7 +6,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
-    onExpandClusterFunction: $.noop(),
+    onExpandClusterunction: $.noop(),
     longestChromosome: 100,
     layout: {
       width: 10,
