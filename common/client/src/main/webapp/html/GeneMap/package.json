@@ -7,11 +7,13 @@
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
+    "gulp-batch": "^1.0.5",
     "gulp-connect": "^2.3.1",
     "gulp-csso": "^1.0.1",
     "gulp-if": "^2.0.0",
