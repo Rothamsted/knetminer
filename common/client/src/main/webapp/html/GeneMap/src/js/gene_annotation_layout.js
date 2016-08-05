@@ -44,10 +44,20 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   //or cluster of genes
   var generateChromosomeLayout = function(chromosome){
 
+    allGenes = chromosome.annotations.allGenes.filter( function(gene){
+      return (gene.globalIndex < config.nGenesToDisplay);
+    });
+
     //How much space do we have?
     var availableWidth = config.layout.width;
-    var availableHeight = config.layout.height;
-    var labelLength = 20;
+
+
+    //For short chromosomes, allow labels to use up to 20% past the end of the chromosome
+    var availableHeight = config.layout.height * ( Math.min( 1, 0.2 + chromosome.length / config.longestChromosome ) ) ;
+
+    //The longest label determines when we can start displaying them without overlaps
+    var labelLength = allGenes.reduce( function(cur, gene){return Math.max(cur, gene.label.length)}, 0);
+
     var minDisplayedFontSize = 12;
     var maxDisplayedFontSize = 14;
     var fontCoordRatio = 3.5;
@@ -114,9 +124,6 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //Decide which labels to display
 
     //Start with no labels displayed
-    allGenes = chromosome.annotations.allGenes.filter( function(gene){
-     return (gene.globalIndex < config.nGenesToDisplay);
-    });
     allGenes.forEach( function(gene){ gene.displayed = false}) ;
 
     //Include all genes set to visible
@@ -193,8 +200,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
   var generateChromosomeClusters = function(chromosome){
     var geneClusterer = GENEMAP.GeneClusterer();
     //Run clustering algorithm so we can use the clusters later when drawing
-    genes = chromosome.annotations.genes;
-    geneClusters = geneClusterer.createClustersFromGenes(genes);
+    var genes = chromosome.annotations.genes;
+    var geneClusters = geneClusterer.createClustersFromGenes(genes);
     return geneClusters;
   }
 
@@ -230,6 +237,40 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var clusterIndex = chromosome.layout.annotationDisplayClusters.indexOf(cluster);
     chromosome.layout.annotationDisplayClusters.splice(clusterIndex, 1);
   };
+
+  my.computeNormalisedGeneScores = function ( chromosomes ){
+
+    var allVisible = chromosomes.reduce( function( total, cur){
+      return total.concat(cur.annotations.genes.filter( function(gene){
+        return gene.displayed;
+      }));
+    },[]);
+
+    var allScored = allVisible.every( function(gene){
+      return gene.score;
+    })
+
+    if ( allScored ){
+
+      var maxScore = allVisible.reduce( function(max, cur){
+        return Math.max(max , cur.score);
+      }, 0);
+
+      var minScore = allVisible.reduce( function(min, cur){
+        return Math.min(min , cur.score);
+      }, 0);
+
+      allVisible.forEach( function(gene){
+          gene.normedScore = 0.5 * (gene.score - minScore) / (maxScore - minScore)  + 0.5;
+        }
+      );
+    }
+    else{
+      allVisible.forEach( function(gene){
+        gene.normedScore = null;
+      });
+    }
+  }
 
   return my;
 }

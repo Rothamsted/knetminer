@@ -21,6 +21,7 @@ GENEMAP.XmlDataReader = function () {
 
       // include empty lists incase there is no annotation data
       chromosome.annotations = {
+        allGenes: [],
         genes: [],
         qtls: [],
       };
@@ -58,6 +59,18 @@ GENEMAP.XmlDataReader = function () {
 
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
+
+      //Build qtl index
+      qtls.forEach( function(qtl, index){
+        qtl.id = chromosome.number + '_' + index;
+        qtl.selected = false;
+      })
+
+      //Build genes scores
+      var maxScore  = qtls.reduce( function(cur, qtl){
+        return Math.max(cur, qtl.score);
+      }, 0);
+
 
       var maxOpacity = 0.9;
       var opacityFallOff = 3.5;
@@ -102,6 +115,8 @@ GENEMAP.XmlDataReader = function () {
           // try and process the basemap file
           return basemapPromise.then(_processBasemapData);
         });
+
+        log.info(promise);
 
         return promise;
       }
