@@ -40,8 +40,106 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     return ( maxLayer > config.maxAnnotationLayers );
   }
 
-  //Use labella to generate layout nodes for each gene
-  //or cluster of genes
+  var calculatePossibleRows = function(scale, availableWidth, labelLength, minDisplayedFontSize ){
+
+    var fontCoordRatio = 3.5;
+
+    //Try 2 rows:
+    var spaceForLabel = availableWidth / 3;
+    var setFontSize =spaceForLabel / labelLength * fontCoordRatio;
+    var possible = setFontSize * scale  > minDisplayedFontSize;
+
+    if (possible){
+      return 2;
+    }
+
+    //Otherwise, try 1 row
+
+    var layerGap = availableWidth * ( 0.1 + 0.1 / scale )
+    spaceForLabel = availableWidth -layerGap;
+    setFontSize = spaceForLabel / labelLength * fontCoordRatio;
+    possible = setFontSize * scale  > minDisplayedFontSize;
+
+    if ( possible){
+      return 1;
+    }
+    return 0;
+  }
+
+  var compute1RowLayout = function(scale, availableWidth, labelLength,
+                                   maxDisplayedFontSize, availableHeight){
+    var fontCoordRatio = 3.5;
+
+    par = {};
+
+    par.scale = scale;
+    par.availableHeight = availableHeight;
+    par.lineSpacing =  1;
+
+    par.layerGap = availableWidth * ( 0.1 + 0.1 / scale )
+    par.spaceForLabel = availableWidth - par.layerGap;
+
+    par.setFontSize = Math.min(
+      par.spaceForLabel / labelLength * fontCoordRatio ,
+      maxDisplayedFontSize / config.scale
+    ) ;
+
+    par.nodeSpacing =  Math.max( 2, par.setFontSize );
+
+    par.nLabels = 0.4  * availableHeight / (par.nodeSpacing + par.lineSpacing);
+    par.density = 1.0;
+
+    return par;
+  };
+
+  var compute2RowLayout  = function(scale, availableWidth, labelLength,
+                                    maxDisplayedFontSize, availableHeight){
+    var fontCoordRatio = 3.5;
+
+    var par = {};
+
+    par.scale = scale;
+    par.availableHeight = availableHeight;
+    par.lineSpacing =  1;
+
+    par.setFontSize = Math.min(
+      availableWidth / 3 / labelLength * fontCoordRatio,
+      maxDisplayedFontSize / config.scale  ) ;
+
+    par.nodeSpacing = Math.max(2, par.setFontSize);
+    par.spaceForLabel = 1.3 * labelLength * par.setFontSize / fontCoordRatio;
+    par.layerGap = Math.min(5*par.setFontSize, availableWidth / 3);
+    par.density = 0.9;
+    par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
+
+    return par;
+  };
+
+  var generateNodes = function(force, y, par, nodeSource){
+
+    nodeSource.forEach( function(gene){
+      gene.displayed = true
+      gene.fontSize = par.setFontSize;
+    });
+
+    var nodes = nodeSource.map(function (d) {
+      return new labella.Node(y(d.midpoint), par.setFontSize, d);
+    } );
+
+    try {
+      force.nodes(nodes).compute();
+    } catch (e){
+      if ( e instanceof RangeError){
+        return null;
+      }
+      throw e;
+    }
+    return nodes;
+  }
+
+
+//Use labella to generate layout nodes for each gene
+//or cluster of genes
   var generateChromosomeLayout = function(chromosome){
 
     allGenes = chromosome.annotations.allGenes.filter( function(gene){
@@ -51,62 +149,34 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     //How much space do we have?
     var availableWidth = config.layout.width;
 
-
     //For short chromosomes, allow labels to use up to 20% past the end of the chromosome
-    var availableHeight = config.layout.height * ( Math.min( 1, 0.2 + chromosome.length / config.longestChromosome ) ) ;
+    var availableHeight = config.layout.height * ( Math.min(
+        1,
+        0.2 + chromosome.length / config.longestChromosome
+      ) ) ;
 
     //The longest label determines when we can start displaying them without overlaps
-    var labelLength = allGenes.reduce( function(cur, gene){return Math.max(cur, gene.label.length)}, 0);
+    var labelLength = allGenes.reduce( function(cur, gene){
+      return Math.max(cur, gene.label.length)
+    }, 0);
 
     var minDisplayedFontSize = 12;
     var maxDisplayedFontSize = 14;
-    var fontCoordRatio = 3.5;
 
     //How many rows of labels do we show?
+    var nrows = calculatePossibleRows(config.scale, availableWidth, labelLength, minDisplayedFontSize);
 
-    //Can we show 1 row?
-    var par1 =  {};
-    par1.layerGap = availableWidth * ( 0.1 + 0.1 / config.scale )
-    par1.spaceForLabel = availableWidth - par1.layerGap;
-    par1.setFontSize = par1.spaceForLabel / labelLength * fontCoordRatio;
-    par1.possible = par1.setFontSize * config.scale  > minDisplayedFontSize;
-    par1.nodeSpacing = par1.setFontSize;
-    par1.density = 1.0;
-
-    //Can we show 2 rows?
-    var par2 = {};
-    par2.spaceForLabel = availableWidth / 3;
-    par2.setFontSize = par2.spaceForLabel / labelLength * fontCoordRatio;
-    par2.possible = par2.setFontSize *config.scale  > minDisplayedFontSize;
-
-    par2.setFontSize = Math.min( par2.setFontSize, maxDisplayedFontSize / config.scale  ) ;
-    par2.nodeSpacing = par2.setFontSize;
-    par2.spaceForLabel = 1.3 * labelLength * par2.setFontSize / fontCoordRatio;
-    par2.layerGap = Math.min(5*par2.setFontSize, availableWidth / 3);
-    par2.density = 0.9;
-
-    //var nRows = par1.possible + par2.possible;
-    var nRows = par1.possible + par2.possible;
-    var par = (nRows == 2) ? _.clone(par2) : _.clone(par1);
-    par.setFontSize = Math.min( par.setFontSize, maxDisplayedFontSize / config.scale  ) ;
-    par.nodeSpacing =  Math.max( 2, par.setFontSize );
-    par.lineSpacing =  1;
-    par.scale = config.scale;
-    par.availableHeight = availableHeight;
-    if ( nRows == 0 ) {
+    var par;
+    if ( nrows ==2 ){
+      par = compute2RowLayout(config.scale, availableWidth,labelLength,maxDisplayedFontSize, availableHeight);
+    }
+    else if ( nrows == 1) {
+      par = compute1RowLayout(config.scale, availableWidth,labelLength,maxDisplayedFontSize, availableHeight);
+    }
+    else if ( nrows == 0 ){
+      par = compute1RowLayout(config.scale, availableWidth,labelLength,maxDisplayedFontSize, availableHeight);
       par.nLabels = 0;
-    } else if (nRows == 1 ){
-      par.nLabels = 0.4  * availableHeight / (par.nodeSpacing + par.lineSpacing);
-    } else if (nRows == 2 ){
-    par.nLabels =  0.6 * availableHeight / (par.nodeSpacing + par.lineSpacing);
-  }
-
-    if ( false &&  chromosome.number == "2B")
-    {
-      log.info( "par1",  par1);
-      log.info( "par2", par2);
-      log.info( "par", par);
-     };
+    }
 
     var y = buildYScale();
 
@@ -133,42 +203,28 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     //Automatically show some additional labels
     if ( config.autoLabels){
-    allGenes.slice(0, par.nLabels)
-      .filter( function(gene){return !gene.hidden;})
-      .forEach( function(gene){ nodeSource.add(gene)});
-      }
-
-    nodeSource = Array.from(nodeSource);
-    nodeSource.forEach( function(gene){
-      gene.displayed = true
-      gene.fontSize = par.setFontSize;
-    });
-
-    var nodes = nodeSource.map(function (d) {
-      return new labella.Node(y(d.midpoint), par.setFontSize, d);
-    } );
-
-    try {
-      force.nodes(nodes).compute();
-    } catch (e){
-      if ( e instanceof RangeError){
-        log.error(e.message);
-        log.info(chromosome.number);
-        log.info(par);
-        return null;
-      }
-      throw e;
+      allGenes.slice(0, par.nLabels)
+        .filter( function(gene){return !gene.hidden;})
+        .forEach( function(gene){ nodeSource.add(gene)});
     }
 
+    nodeSource = Array.from(nodeSource);
+    var nodes = generateNodes(force, y, par, nodeSource);
 
-    //If clustering is enabled we might want to redo the layout using clusters of genes
-    if( false && shouldRecluster(force.nodes()) ){
-      nodeSource = chromosome.layout.annotationDisplayClusters;
+    var maxLayer;
+    if ( nodes){
+    var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
+    maxLayer =  Math.max.apply(null, layers);
+    }
 
-      nodes = nodeSource.map(function (d) {
-        return new labella.Node(y(d.midpoint), setFontSize, d);
-      } );
-      force.nodes(nodes).compute();
+    if (!nodes || maxLayer > 4  ) {
+      log.trace( 'Too many lables to display - clustering instead')
+
+      var geneClusterer = GENEMAP.GeneClusterer()
+        .nClusters(par.nLabels);
+
+      var clusterSource = geneClusterer.createClustersFromGenes(nodeSource);
+      nodes = generateNodes(force, y, par, clusterSource)
     }
 
     //Compute paths
@@ -182,21 +238,18 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     renderer.layout(nodes);
 
     nodes.forEach( function(node){
-     node.data.path = renderer.generatePath(node);
+      node.data.path = renderer.generatePath(node);
     });
-
 
     if ( false &&  chromosome.number == "2B") {
       log.info( nodes );
     }
 
-
     return nodes;
-
   }
 
-  //Produce list of clusters (which could be single genes)
-  //for a given chromosome
+//Produce list of clusters (which could be single genes)
+//for a given chromosome
   var generateChromosomeClusters = function(chromosome){
     var geneClusterer = GENEMAP.GeneClusterer();
     //Run clustering algorithm so we can use the clusters later when drawing

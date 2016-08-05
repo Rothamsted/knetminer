@@ -157,11 +157,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
   var generateChromosomeLayout = function(chromosome){
 
-    var level = log.getLevel();
-    if ( chromosome.number == '7' ){
-      log.setLevel('trace');
-    }
-
     log.trace('---START---')
 
     //Get clustered QTLs
@@ -223,8 +218,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         node.labelPosition = node.comboPosition + 0.4;
       })
     }
-
-    log.setLevel(level);
 
     return nodes;
   };

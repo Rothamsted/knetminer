@@ -142,9 +142,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
        )
     ;
 
-
-
-
     geneAnnotations.select('text')
       .style( 'font-size', function(d){
         return (d.data.selected ? 0.2 : 0 ) + d.data.fontSize + 'px'})
