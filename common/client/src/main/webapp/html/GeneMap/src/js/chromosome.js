@@ -117,8 +117,6 @@ GENEMAP.Chromosome = function (userConfig) {
         }
         );
 
-        log.info( nodesToUpdate);
-
         nodesToUpdate.forEach( function(node){
           if (node.data.type == "gene") {
             node.data.visible  = true;
