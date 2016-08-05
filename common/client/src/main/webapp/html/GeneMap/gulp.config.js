@@ -16,6 +16,7 @@ module.exports = function () {
 
     // the development output
     srcDir: './.tmp/',
+    allOutputFiles: './.tmp/**/*',
     injectedHtml: './.tmp/*.html',
     outputCssDir: './.tmp/css/',
     outputCss: './.tmp/css/*.css',
