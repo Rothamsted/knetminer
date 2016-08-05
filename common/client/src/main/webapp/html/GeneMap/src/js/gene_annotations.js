@@ -17,6 +17,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     chromosomeWidth: 20,
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
+    scale: null,
     drawing: null,
   };
 
@@ -120,14 +121,30 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     //See also annotations.less for additional styling
 
 
-    geneAnnotations.select('path.link')
-      .style( "stroke" , function (d){
-        return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
-      )
+    var strokeWidth = '0.5';
+    if( !GENEMAP.vectorEffectSupport) {
+      strokeWidth = 0.5 / config.scale;
+    }
+
+     geneAnnotations.select('path.link')
       .style( "opacity", function(d){
-        return (d.data.visible || d.data.selected ) ? 1: d.data.importance; }
+        return (d.data.visible || d.data.selected )
+          ? 1
+          : ( d.data.normedScore
+            ? d.data.normedScore
+            : d.data.importance); }
       )
+      .style( "stroke-width" , function(d) {
+        return strokeWidth
+      } )
+       .style( "stroke" , function (d){
+         return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
+       )
     ;
+
+
+
+
     geneAnnotations.select('text')
       .style( 'font-size', function(d){
         return (d.data.selected ? 0.2 : 0 ) + d.data.fontSize + 'px'})
@@ -181,21 +198,128 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     });
 
     //right click to display popover
-    geneAnnotations.select('text')
+    geneAnnotations
       .on('contextmenu', function(d){
         log.trace('Gene Annotation Context Menu');
         log.trace(d);
         d3.select('#clusterPopover').attr( 'class' , 'popover');
 
-        popoverTitle = d3.select('#clusterPopover').select('.popover-title');
+        //POPOVER TITLE
+        popoverTitle = d3.select('#clusterPopover')
+          .select('.popover-title');
+
+        //clear
         popoverTitle.selectAll('*').remove();
         popoverTitle.text("");
 
+        //populate
         popoverTitle
           .append('a')
           .attr( {'href' : d.data.link } )
           .text(d.data.label);
 
+        //POPOVER CONTENT
+        popoverContent = d3.select('#clusterPopover').select('.popover-content');
+
+        //clear
+        popoverContent.selectAll('*').remove();
+        popoverContent.text("");
+
+        //populate
+        popoverContent.append('p')
+          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
+
+        if(d.data.score){
+        popoverContent.append('p')
+          .text( 'Score: ' + parseFloat(d.data.score).toFixed(3) );
+        }
+
+        popoverContent.append('hr');
+
+        var footer = popoverContent
+          .append('p')
+          .style( 'float', 'right')
+          ;
+
+        var updateFooter = function(){
+
+          footerLinks = footer.selectAll('a')
+            .data(['show', 'hide', 'auto']);
+
+          footerLinks.enter()
+            .append('a')
+            .attr( 'href', '#')
+            .text(function(l){
+              return l; } )
+            .classed('btn btn-small', true)
+            .on('click', function(l){
+              if (l == 'show'){
+                d.data.visible = true;
+              }
+              else if ( l == 'hide'){
+                d.data.visible = false;
+                d.data.hidden = true;
+              }
+              else if ( l == 'auto'){
+                d.data.visible = false;
+                d.data.hidden = false;
+              }
+              config.onAnnotationSelectFunction();
+              d3.event.preventDefault();
+              updateFooter();
+            });
+
+          footerLinks.classed('disabled',
+            function(l){
+              return  false
+                || ( (l == 'show') && ( d.data.visible) )
+                || ( (l == 'hide') && ( d.data.hidden && !d.data.visible) )
+                || ( (l == 'auto') && (!d.data.hidden && !d.data.visible) ) ;
+          });
+        }
+
+        updateFooter();
+
+
+        //footer.append( 'a')
+        //  .attr( 'href', '#')
+        //  .text('show')
+        //  .classed('btn', true)
+        //  .classed('disabled',
+        //    d.data.visible == true )
+        //  .on('click', function(event){
+        //    d.data.visible = true;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+        //
+        //footer.append( 'a')
+        //  .attr( 'href', '#')
+        //  .text('hide')
+        //  .classed('btn', true)
+        //  .classed('disabled',
+        //    (d.data.visible == false) && (d.data.hidden == true))
+        //  .on('click', function(event){
+        //    d.data.visible = false;
+        //    d.data.hidden = true;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+        //
+        //footer.append( 'a')
+        //  .text('auto')
+        //  .attr( 'href', '#')
+        //  .classed('btn btn-small', true)
+        //  .classed('disabled',
+        //    (d.data.visible == false) && (d.data.hidden == false))
+        //  .on('click', function(event){
+        //    d.data.visible = false;
+        //    d.data.hidden = false;
+        //    config.onAnnotationSelectFunction();
+        //    d3.event.preventDefault();
+        //  });
+
+        //ACTIVATE POPOVER
         $('#clusterPopover').modalPopover( {
           target: $(this),
           parent: $(this),
@@ -205,11 +329,11 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         });
         $('#clusterPopover').modalPopover('show');
 
-        popoverContent = d3.select('#clusterPopover').select('.popover-content');
-        popoverContent.selectAll('*').remove();
-        popoverContent.text("");
-        popoverContent.append('p')
-          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
+        $('#clusterPopover').on('mousedown mousewheel', function(event){
+          log.info('popover click');
+          event.stopPropagation();
+        });
+
       });
 
     var exitGroup = geneAnnotations.exit()
@@ -288,6 +412,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     }
 
     config.drawing = value;
+    return my;
+  };
+
+  my.scale = function (value) {
+    if (!arguments.length) {
+      return config.scale;
+    }
+
+    config.scale = value;
     return my;
   };
 
