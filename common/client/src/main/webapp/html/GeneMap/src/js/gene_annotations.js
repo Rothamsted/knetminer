@@ -198,7 +198,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     geneAnnotations
       .on('contextmenu', function(d){
         log.trace('Gene Annotation Context Menu');
-        log.trace(d);
         d3.select('#clusterPopover').attr( 'class' , 'popover');
 
         //POPOVER TITLE
@@ -277,49 +276,15 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
         updateFooter();
 
-
-        //footer.append( 'a')
-        //  .attr( 'href', '#')
-        //  .text('show')
-        //  .classed('btn', true)
-        //  .classed('disabled',
-        //    d.data.visible == true )
-        //  .on('click', function(event){
-        //    d.data.visible = true;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
-        //
-        //footer.append( 'a')
-        //  .attr( 'href', '#')
-        //  .text('hide')
-        //  .classed('btn', true)
-        //  .classed('disabled',
-        //    (d.data.visible == false) && (d.data.hidden == true))
-        //  .on('click', function(event){
-        //    d.data.visible = false;
-        //    d.data.hidden = true;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
-        //
-        //footer.append( 'a')
-        //  .text('auto')
-        //  .attr( 'href', '#')
-        //  .classed('btn btn-small', true)
-        //  .classed('disabled',
-        //    (d.data.visible == false) && (d.data.hidden == false))
-        //  .on('click', function(event){
-        //    d.data.visible = false;
-        //    d.data.hidden = false;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
+        //To line up the popover correctly,
+        // we need to use the text as the target,
+        //not the whole group
+        var target = d3.select(this).select('text');
 
         //ACTIVATE POPOVER
         $('#clusterPopover').modalPopover( {
-          target: $(this),
-          parent: $(this),
+          target: $(target[0]),
+          parent: $(target[0]),
           'modal-position': 'relative',
           placement: "right",
           boundingSize: config.drawing,
