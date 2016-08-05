@@ -32,7 +32,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
     log.trace('setupGeneAnnotations');
 
-   var y = buildYScale();
+    var y = buildYScale();
 
     //Data join
     // Use a key function so that the correct mapping between graphical objects
@@ -126,20 +126,20 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       strokeWidth = 0.5 / config.scale;
     }
 
-     geneAnnotations.select('path.link')
+    geneAnnotations.select('path.link')
       .style( "opacity", function(d){
         return (d.data.visible || d.data.selected )
           ? 1
           : ( d.data.normedScore
-            ? d.data.normedScore
-            : d.data.importance); }
+          ? d.data.normedScore
+          : d.data.importance); }
       )
       .style( "stroke-width" , function(d) {
         return strokeWidth
       } )
-       .style( "stroke" , function (d){
-         return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
-       )
+      .style( "stroke" , function (d){
+        return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
+      )
     ;
 
     geneAnnotations.select('text')
@@ -150,7 +150,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         return d.data.selected ? 'bold' : 'normal'} )
 
       .style( 'opacity', function(d){
-        return ( d.data.visible || d.data.selected ) ? 1 : d.data.importance })
+        return (d.data.visible || d.data.selected )
+          ? 1
+          : ( d.data.normedScore
+          ? d.data.normedScore
+          : d.data.importance); }
+      )
 
       .style( 'fill', function (d) {
         return (d.data.visible || d.data.selected) ? d.data.color : null; })
@@ -165,8 +170,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       .transition().duration(300)
       .attr({
         x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
-         y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
-  })
+        y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
+      })
     ;
 
     geneAnnotations.select('path.link')
@@ -218,74 +223,77 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     var genesEnterGroup = genesGroup.enter()
 
-    var row = genesEnterGroup.append('p');
+    var newRow = genesEnterGroup.append('p');
 
-    row.append('span').classed('label', true)
-    row.append('div').classed('btn-group', true)
+    newRow.append('span').classed('genelabel', true)
+    newRow.append('div').classed('btn-group', true)
     ;
 
-    genesGroup
-      .select('span.label')
-      .text(function(d){
-      return d.label;
-    })
-      .style( 'font-weight', function(d){
-        return d.selected ? 'bold' : 'normal'} )
+    var updateRow = function( row, gene){
+      log.info(gene);
+      row.select('span.genelabel')
+        .text(function(gene){
+          return gene.label;
+        })
+        .style( 'font-weight', function(gene){
+          return gene.selected ? 'bold' : 'normal'} )
 
-      .style( 'opacity', function(d){
-        return ( d.visible || d.selected ) ? 1 : d.importance })
+        .style( 'opacity', function(gene){
+          return (gene.visible || gene.selected )
+            ? 1
+            : ( gene.normedScore
+            ? gene.normedScore
+            : gene.importance); })
 
-      .style( 'color', function (d) {
-        return (d.visible || d.selected) ? d.color : null; })
-    ;
+        .style( 'color', function (d) {
+          return (gene.visible || gene.selected) ? gene.color : null; })
+      ;
 
+      var footer = row.select('div.btn-group');
 
-    genesGroup
-      .select('div.btn-group')
-      .each(function(gene){
-        var footer = d3.select(this);
-          var updateFooter = function(footer, gene){
-            log.info(gene);
-            log.info(footer);
+      footerLinks = footer.selectAll('a')
+        .data(['show', 'hide', 'auto']);
 
-            footerLinks = footer.selectAll('a')
-              .data(['show', 'hide', 'auto']);
-
-            footerLinks.enter()
-              .append('a')
-              .attr( 'href', '#')
-              .text(function(l){
-                return l; } )
-              .classed('btn btn-small', true)
-              .on('click', function(l){
-                if (l == 'show'){
-                  gene.visible = true;
-                }
-                else if ( l == 'hide'){
-                  gene.visible = false;
-                  gene.hidden = true;
-                }
-                else if ( l == 'auto'){
-                  gene.visible = false;
-                  gene.hidden = false;
-                }
-                config.onAnnotationSelectFunction();
-                d3.event.preventDefault();
-                updateFooter(footer, gene);
-              });
-
-            footerLinks.classed('disabled',
-              function(l){
-                return  false
-                  || ( (l == 'show') && ( gene.visible) )
-                  || ( (l == 'hide') && ( gene.hidden && !gene.visible) )
-                  || ( (l == 'auto') && (!gene.hidden && !gene.visible) ) ;
-              });
+      footerLinks.enter()
+        .append('a')
+        .attr( 'href', '#')
+        .text(function(l){
+          return l; } )
+        .classed('btn btn-small', true)
+        .on('click', function(l){
+          if (l == 'show'){
+            gene.visible = true;
           }
+          else if ( l == 'hide'){
+            gene.visible = false;
+            gene.hidden = true;
+          }
+          else if ( l == 'auto'){
+            gene.visible = false;
+            gene.hidden = false;
+          }
+          config.onAnnotationSelectFunction();
+          d3.event.preventDefault();
+          updateRow(row, gene);
+        });
 
-        updateFooter(footer, gene);
-      }
-      )
+      footerLinks.classed('disabled',
+        function(l){
+          return  false
+            || ( (l == 'show') && ( gene.visible) )
+            || ( (l == 'hide') && ( gene.hidden && !gene.visible) )
+            || ( (l == 'auto') && (!gene.hidden && !gene.visible) ) ;
+        });
+    }
+
+    genesGroup
+      .each(function(gene){
+        var row = d3.select(this);
+        log.info( row, gene);
+        updateRow(row, gene );
+      });
+
+
   }
 
   var geneContent = function(popoverContent, node){
@@ -387,7 +395,6 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     else {
       geneContent(popoverContent, d);
     }
-
 
     //To line up the popover correctly,
     // we need to use the text as the target,
