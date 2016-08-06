@@ -472,9 +472,10 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    				var genes = Array();
 		    				$("gene", this).each(function(){
 		    					genes.push($(this).text());
+                                                    //console.log("push to genes: $(this).text()= "+ $(this).text());
 		    				});
 		    				tempXML["genes"] = genes;
-		    				sampleQueries.push(tempXML);
+                                                sampleQueries.push(tempXML);
 		    			});
 
 	    				/*
@@ -561,13 +562,15 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		     					$("input:radio[name=list_mode]").val(['GLrestrict']);
 		     				}
 
-		    	 			if(sampleQueries[sampleNum].genes.length > 0){
+		    	 			//console.log("sampleQueries[sampleNum].genes.length= "+ sampleQueries[sampleNum].genes.length);
+                                                if(sampleQueries[sampleNum].genes.length > 0){
 		    	 				if($("#advanced_search_area").is(":hidden")){
 		    	 					$("#advanced_search").click();
 		    	 				}
 		    	 				var genesText = "";
-		    	 				for(gene in sampleQueries[sampleNum].genes){
+		    	 				for(gene=0; gene <sampleQueries[sampleNum].genes.length; gene++){
 		    	 					genesText+= sampleQueries[sampleNum].genes[gene] + "\n";
+                                                                //console.log("sampleQueries["+sampleNum+"].genes["+ gene +"]= "+ sampleQueries[sampleNum].genes[gene] +"\n \t genesText now: "+ genesText);
 		    	 				}
 		    	 				$("#list_of_genes").val(genesText);
 		    	 			}else {

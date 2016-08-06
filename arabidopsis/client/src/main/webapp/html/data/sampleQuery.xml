@@ -11,7 +11,7 @@
 			<end>10180000</end>
 			<label>Petal size</label>
 		</region>
-		<gene>At4g18330</gene>
+                <gene>At4g18330</gene>
 	</query>	
 	<query>
 		<name>Example 2</name>
