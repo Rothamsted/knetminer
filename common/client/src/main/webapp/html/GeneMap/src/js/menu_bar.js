@@ -5,6 +5,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onQtlBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
     onSetNumberPerRowClick : $.noop,
@@ -53,10 +54,9 @@ GENEMAP.MenuBar = function (userConfig) {
   };
 
   var buildDropdown = function(selection, id, data, callback, initialValue){
-    dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
+    var dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
 
     var dropdownSpanEnter = dropDown.enter();
-
 
     var dropdown = dropdownSpanEnter
       .append('span') .attr({ 'class': 'btn-group'});
@@ -68,24 +68,56 @@ GENEMAP.MenuBar = function (userConfig) {
       'data-toggle' : "dropdown",
       'aria-haspopup' : 'true'};
 
-    maxLabelWidth = data.reduce( function(max, d){return Math.max(max, d.toString().length)}, 0);
+    var maxLabelWidth = data.reduce( function(max, d){
+      return Math.max(max, d[0].toString().length)
+    }, 0);
 
     button = dropdown
-      .append('button').attr( dropdownButtonAttr).style( {width: maxLabelWidth + 1 + 'em'});
+      .append('button').attr( dropdownButtonAttr)
+      .style( {width: (0.4*maxLabelWidth + 4) + 'em'});
 
-      button.append('span').attr( {class: 'title'}).text(initialValue);
-      button.append( 'span').attr({'class':'caret'}).style({"position": "absolute", "left": "80%", "top" : "45%"});
+    button.append('span')
+      .attr( {
+        class: 'title'
+      }).text(initialValue);
+
+    button.append( 'span')
+      .attr( {
+        'class':'caret'
+      }).style({
+      "position": "absolute",
+      "right": "0.5em",
+      "top" : "45%"});
 
     dropdown
-      .insert( 'ul').attr( {'class': 'dropdown-menu', 'aria-labelledby': id });
+      .insert('ul')
+      .attr( {
+        'class': 'dropdown-menu'
+        , 'aria-labelledby': id
+      });
 
-    dropdownItems = dropdown.select('.dropdown-menu').selectAll('.dropdown-item').data(data);
+    dropdownItems = dropdown
+      .select('.dropdown-menu')
+      .selectAll('.dropdown-item')
+      .data(data);
+
     dropdownItems.enter()
-      .append('li').on('click', function(d){
-      dropdown.select('span.title').text(d);
-      callback(d);
-    })
-      .append('a').attr({'class': 'dropdown-item', 'href' : '#'}).text(function(d){return d} );
+      .append('li')
+      .on('click', function(d){
+        dropdown
+          .select('span.title')
+          .text(d[0]);
+        callback(d[1]);
+      })
+      .append('a')
+      .attr({
+        'class': 'dropdown-item',
+        'href' : '#'})
+      .text(function(d){return d[0]} )
+      .on('click', function(e){
+        d3.event.preventDefault();
+      });
+
   }
 
   var drawMenu = function () {
@@ -93,8 +125,27 @@ GENEMAP.MenuBar = function (userConfig) {
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuItems = menu.selectAll('span').data(
-      ['network-btn', 'tag-btn', 'fit-btn', 'reset-btn', 'ngenes-dropdown', 'export-btn', 'export-all-btn', 'nperow-spinner']);
+    var menuRows = menu.selectAll('div').data( [
+        [
+          'ngenes-dropdown',
+          'nperrow-spinner'
+        ],
+        [
+          'network-btn',
+          'reset-btn',
+          'fit-btn',
+          'tag-btn',
+          'qtl-btn',
+          'export-btn',
+          'export-all-btn'
+        ],
+      ])
+      .enter().append('div');
+
+    var menuItems = menuRows.selectAll('span')
+      .data(function(d,i){ return d;})
+      ;
+
     menuItems.enter().append('span');
     menuItems.attr({
       class: function (d) {
@@ -109,6 +160,13 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
 
+    var qtlDropdown = menu.select('.qtl-btn');
+    buildDropdown( qtlDropdown, 'qtl-btn', [
+      [ 'Show all QTLs', 'all'],
+      ['Show selected QTLs', 'selected'],
+      ["Don't show QTLs", 'none'] ],
+      config.onQtlBtnClick, 'Show all QTLs');
+
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
       .on('click', myOnFitBtnClick);
@@ -119,7 +177,8 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var dropdownSpan = menu.select('.ngenes-dropdown');
     dropdownSpan.text("Max genes to display: ");
-    buildDropdown( dropdownSpan, 'ngenes-dropdown', [50, 100, 200, 500, 1000],
+    buildDropdown( dropdownSpan, 'ngenes-dropdown',
+      [['50', 50], ['100', 100], ['200',200], ['500', 500], ['1000',1000]],
       config.onSetMaxGenesClick, config.initialMaxGenes);
 
     menu.select('.export-btn')
@@ -130,19 +189,15 @@ GENEMAP.MenuBar = function (userConfig) {
       .attr( { 'title' : 'export all to png'})
       .on('click', config.onExportAllBtnClick);
 
-    var spinnerSpan = menu.select('.nperow-spinner').classed('bootstrap', true);
-
-
+    var spinnerSpan = menu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
-    enterSpinner
-      .append('span')
-      .attr( {
-        for : function(d){return d},
-      })
+    enterSpinner .append('span')
+      .attr( { for : function(d){return d}, })
       .text('Num per row: ');
 
     enterSpinner
+      .append('span')
       .append( 'input')
       .attr({
         id: function(d){return d},
@@ -160,7 +215,7 @@ GENEMAP.MenuBar = function (userConfig) {
       step: 1,
     });
 
-    d3.select('.nperow-spinner').select('.input-group').style({
+    d3.select('.nperrow-spinner').select('.input-group').style({
       width : '8em',
       display: 'inline-table'
     })
@@ -199,6 +254,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onTagBtnClick = value;
+    return my;
+  };
+
+  my.onQtlBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onQtlBtnClick;
+    }
+
+    config.onQtlBtnClick = value;
     return my;
   };
 

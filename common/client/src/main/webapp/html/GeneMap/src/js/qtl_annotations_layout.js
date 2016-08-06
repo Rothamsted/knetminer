@@ -5,8 +5,21 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   var defaultConfig = {
     scale: 1,
     longestChromosome: 1000,
+    showAllQTLs: true,
+    showSelectedQTLs: true,
+    showAutoQTLLabels: true,
+    showSelectedQTLLabels: true,
+    annotationLabelSize: 5,
   };
   var config = _.merge({}, defaultConfig, userConfig);
+
+  var positioner = GENEMAP.QtlPositioner();
+
+  var buildYScale = function () {
+    return d3.scale.linear()
+      .range([0, config.layout.height])
+      .domain([0, config.longestChromosome]);
+  };
 
   var generateNodesFromClusters = function(clusters) {
     return clusters.map( function(c){
@@ -25,37 +38,195 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       var midpoint = (start + end ) / 2;
 
-      return {
-        cluster: c,
-        qtlList : qtlList,
-        count : qtlList.length,
-        start : start,
-        end : end,
-        midpoint : midpoint,
-        chromosome : qtlList[0].chromosome,
-        type: "qtllist",
-        id: id
+      if ( qtlList.length == 1){
+        var result =  qtlList[0];
+        result.type = 'qtl'
       }
+      else {
+        var result = {
+          cluster: c,
+          qtlList: qtlList,
+          color: qtlList[0].color,
+          count: qtlList.length,
+          start: start,
+          end: end,
+          midpoint: midpoint,
+          chromosome: qtlList[0].chromosome,
+          type: "qtllist",
+          id: id
+        }
+      }
+      return result;
     });
 
-    var combiner = GENEMAP.QTLAnnotationCombiner();
-    var identicalResult = combiner.combineSimilarQTLAnnotations(chromosome.annotations.qtls);
   }
 
-  var generateChromosomeLayout = function(chromosome){
-    chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
+  var clusterQTLs = function(chromosome){
 
-    var nLevels = Math.ceil(Math.floor(config.scale - 0.1) / 2);
+    var nodes = []
 
-    while ( nLevels -- ) {
-      chromosome.layout.qtlDisplayClusters = openClusters(
-        chromosome.layout.qtlDisplayClusters);
+    if (config.showAllQTLs ) {
+
+      chromosome.layout.qtlDisplayClusters = chromosome.layout.qtlClusters.slice();
+      var clusters = chromosome.layout.qtlDisplayClusters;
+
+      var nLevels = Math.ceil(Math.floor(config.scale - 0.1) / 2);
+
+      while ( nLevels -- ) {
+        clusters  = openClusters( clusters);
+      }
+
+      nodes = generateNodesFromClusters( clusters);
+    }
+    else if ( config.showSelectedQTLs) {
+      chromosome.layout.qtlDisplayClusters = chromosome.annotations.qtls
+        .filter( function(d){return d.selected});
+
+      var clusters = chromosome.layout.qtlDisplayClusters;
+
+      var nodes = clusters.map( function(d){
+        result = d;
+        result.type = 'qtl';
+        return result;
+      });
     }
 
-    var nodes = generateNodesFromClusters( chromosome.layout.qtlDisplayClusters);
+    return nodes;
+  }
 
-    positioner = GENEMAP.QtlPositioner();
-    return positioner.sortQTLAnnotations(nodes);
+  var autoDisplayLabels = function(nodes){
+
+    log.trace('Do label layout');
+    //Layout qtl labels
+
+    //look at each line of labels separately
+    var columns = _.groupBy(nodes, 'position' );
+    _.forOwn( columns,  function ( column, key){
+
+      log.trace( '-Col ', key);
+      log.trace('positions ', column.map(function(node){return node.position }));
+
+      var fontsize = config.annotationLabelSize;
+      var yscale = buildYScale();
+
+      //Position the QTL labels
+      column = positioner.sortQTLLabels(column, yscale, fontsize);
+
+      var maxLabelPosition = column.reduce( function(cur, node){
+        return Math.max(node.labelPosition, cur);
+      }, 0 );
+
+      log.trace('labelPositions ', column.map(function(node){return node.labelPosition }));
+      log.trace('maxLabelPosition', maxLabelPosition);
+
+
+
+      //STRATEGY 1 - if there is more than one lane of labels,
+      //show only the first lane
+      column.forEach( function(node){
+        if( node.labelPosition > 1){
+          node.displayLabel = false;
+       }
+        else{
+          node.displayLabel = true;
+          node.labelPosition = node.position + 0.4;
+        }
+      });
+
+      //STRATEGY 1 - if there is more than one lane of labels,
+      //don't show any labels
+
+      //if (maxLabelPosition > 1){
+      //  column.forEach( function(node){
+      //    node.displayLabel = false;
+      //  });
+      //}
+      //else{
+      //  column.forEach( function(node){
+      //    node.labelPosition = node.position + 0.4;
+      //    node.displayLabel = true;
+      //  });
+      //}
+
+      log.trace('labelPositions', column.map(function(node){return node.labelPosition }));
+    });
+
+    return nodes;
+  }
+
+
+  var generateChromosomeLayout = function(chromosome){
+
+    var level = log.getLevel();
+    if ( chromosome.number == '7' ){
+      log.setLevel('trace');
+    }
+
+    log.trace('---START---')
+
+    //Get clustered QTLs
+    var nodes = clusterQTLs(chromosome);
+
+    nodes.forEach( function(node){
+      node.displayLabel = false;
+    });
+
+    //qtllist nodes never display labels
+    var qtlNodes = nodes.filter( function(node){
+      return node.type == 'qtl'
+    });
+
+
+
+    if ( config.showAutoQTLLabels ){
+
+      //Position QTL annotations ignoring labels
+      nodes =  positioner.sortQTLAnnotations(nodes);
+
+      var maxPosition = nodes.reduce( function(cur, node){
+        return Math.max(cur, node.position);}, 0);
+
+      log.trace('maxPosition', maxPosition);
+
+      qtlNodes.forEach( function(node){
+        node.screenLabel = node.label.substring(0, 12) + '...'
+      });
+
+      //If there aren't too many lanes of QTLs,
+      //then try displaying some labels automatically
+      if (maxPosition < 3 ) {
+        autoDisplayLabels(qtlNodes);
+      }
+      else {
+        qtlNodes.forEach( function(node){
+          node.displayLabel = false;
+        })
+      }
+
+    }
+
+    if (config.showSelectedQTLLabels && !config.showAutoQTLLabels ){
+      var displayNodes = nodes.filter( function(node){
+        return node.selected;
+      });
+
+      displayNodes.forEach( function(node){
+        node.displayLabel = true;
+        node.screenLabel = node.label;
+      });
+
+      displayNodes = positioner.sortQTLAnnotationsWithLabels(
+        displayNodes, buildYScale(), config.annotationLabelSize);
+
+      displayNodes.forEach( function(node){
+        node.position = node.comboPosition;
+        node.labelPosition = node.comboPosition + 0.4;
+      })
+    }
+
+    log.setLevel(level);
+
+    return nodes;
   };
 
 
@@ -113,23 +284,23 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   };
 
   var openClusters = function(clusters){
-      var result = [];
+    var result = [];
 
-      clusters.forEach( function (cluster ){
-        if (cluster.value || cluster.unit ) {
-          result.push(cluster)
-        }
-        else {
-          var l = cluster.left;
-          var r = cluster.right;
+    clusters.forEach( function (cluster ){
+      if (cluster.value || cluster.unit ) {
+        result.push(cluster)
+      }
+      else {
+        var l = cluster.left;
+        var r = cluster.right;
 
-          result.push(l);
-          result.push(r);
-        }
-      });
+        result.push(l);
+        result.push(r);
+      }
+    });
 
     return result;
-   };
+  };
 
   var flattenCluster = function(cluster){
     if (cluster.size == 1){
