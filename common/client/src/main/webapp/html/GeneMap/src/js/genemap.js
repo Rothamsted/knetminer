@@ -1,5 +1,7 @@
 var GENEMAP = GENEMAP || {};
 
+ GENEMAP.vectorEffectSupport = true;
+
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
     width: '800',
@@ -28,6 +30,8 @@ GENEMAP.GeneMap = function (userConfig) {
   var svg; // the top SVG element
   var container; // the g container that performs the zooming
 
+  var logSpan;
+
   var zoom; // the zoom behaviour
   var onZoom;
   var lastZoomScale;
@@ -39,6 +43,9 @@ GENEMAP.GeneMap = function (userConfig) {
   var menuManager; //holds a GENEMAP.MenuBar
   var autoLabels; //bool
   var manualLabels; //bool
+
+  var showAllQTLs; //bool
+  var showSelectedQTLs; //bool
 
 
   //--------------------------------------------------
@@ -171,6 +178,9 @@ onZoom = function () {
 
   menuManager.setFitButtonEnabled(hasMapMoved());
   container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
+
+  logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
+    +  ']  zoom:'  + zoom.scale().toFixed(2) );
 };
 
   //--------------------------------------------------
@@ -199,15 +209,22 @@ onZoom = function () {
   //Intercept mouse events
 
   var attachClickHandler  = function () {
-    $(target).off('mousedown mousewheel DOMMouseScroll')
-      .on('mousedown mousewheel DOMMouseScroll', function (event) {
-        //Exceptions - don't close the popopver we are trying to interact with
-        if (event.target.tagName.toLowerCase() === 'a') {
-          return;
-        }
-        //all other cases
-        closeAllPopovers(event);
-      });
+
+    var closeFunction = function(event){
+      //Exceptions - don't close the popopver we are trying to interact with
+      if (event.target.tagName.toLowerCase() === 'a') {
+        return;
+      }
+      //all other cases
+      closeAllPopovers(event);
+    }
+
+    var events = 'mousedown mousewheel DOMMouseScroll touchstart '
+
+
+    $(target).off(events)
+      .on(events, closeFunction);
+
   }
 
   //--------------------------------------------------
@@ -304,8 +321,11 @@ onZoom = function () {
       genome = { chromosomes : [chromosome] };
       singleGenomeView = true
     }
+
+    resetMapZoom();
     computeGeneLayout();
-    drawMap()
+    drawMap();
+
   };
 
   // click handler for the network view button
@@ -373,6 +393,25 @@ onZoom = function () {
     drawMap();
   }
 
+  var onToggleQTLDisplay = function(state){
+    log.info('onToggleQTLDisplay');
+    if ( state == 'all' ){
+      showAllQTLs = true;
+      showSelectedQTLs = true;
+    }
+    else if ( state == 'selected'){
+      showAllQTLs = false;
+      showSelectedQTLs = 'true';
+    }
+    else{
+        showAllQTLs = false;
+    showSelectedQTLs = false;
+    }
+    resetQtls();
+    computeGeneLayout();
+    drawMap();
+  }
+
   //--------------------------------------------------
   //LAYOUT FUNCTIONS
   //--------------------------------------------------
@@ -393,6 +432,13 @@ onZoom = function () {
       chromosome.layout = chromosome.layout || {};
       chromosome.layout.annotationDisplayClusters = null;
       chromosome.layout.geneBandDisplayClusters = null;
+    });
+  };
+
+  var resetQtls = function() {
+    genome.chromosomes.forEach(function (chromosome) {
+      chromosome.layout = chromosome.layout || {};
+      chromosome.layout.qtlDisplayClusters = null;
     });
   };
 
@@ -423,7 +469,13 @@ onZoom = function () {
 
     var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
       longestChromosome: genome.cellLayout.longestChromosome,
-      scale: zoom.scale()
+      layout: genome.cellLayout.geneAnnotationPosition,
+      scale: zoom.scale(),
+      showAllQTLs: showAllQTLs,
+      showSelectedQTLs: showSelectedQTLs,
+      showAutoQTLLabels: showAllQTLs,
+      showSelectedQTLLabels: showSelectedQTLs,
+      annotationLabelSize: genome.cellLayout.annotations.label.size,
     });
 
     genome.chromosomes.forEach( function(chromosome){
@@ -443,9 +495,11 @@ onZoom = function () {
         qtlAnnotationLayout.computeChromosomeClusters(chromosome);
       }
       qtlAnnotationLayout.layoutChromosome(chromosome);
-
     });
+
+    geneAnnotationLayout.computeNormalisedGeneScores(genome.chromosomes);
   }
+
 
   // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {
@@ -455,6 +509,11 @@ onZoom = function () {
       height: config.height,
       class: 'mapview',
     });
+
+    logSpan = mapContainer.append('div').append('span').classed('logger', 'true');
+
+
+    GENEMAP.vectorEffectSupport = 'vectorEffect' in svg[0][0].style;
 
     //Click handles
     attachClickHandler();
@@ -472,7 +531,7 @@ onZoom = function () {
 
     // basic zooming functionality
     lastZoomScale = 1;
-    zoom = d3.behavior.zoom().scaleExtent([1, 25]);
+    zoom = d3.behavior.zoom().scaleExtent([1, 50]);
     zoom.on('zoom', onZoom);
     mapContainer.select('svg').call(zoom);
 
@@ -508,6 +567,9 @@ onZoom = function () {
       });
     }
 
+    logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
+      +  ']  zoom:'  + zoom.scale().toFixed(2) );
+
     //Update layout parameters
     decorateGenomeLayout();
 
@@ -534,6 +596,7 @@ onZoom = function () {
       .svg(svg);
 
     container.call(cellDrawer);
+
   };
 
 
@@ -555,6 +618,7 @@ onZoom = function () {
         menuManager = GENEMAP.MenuBar()
           .onTagBtnClick(toggleLableVisibility)
           .onFitBtnClick(resetMapZoom)
+          .onQtlBtnClick(onToggleQTLDisplay)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
           .onSetMaxGenesClick(onSetNGenestoDisplay)
@@ -616,6 +680,7 @@ onZoom = function () {
 
   my.redraw = function (target) {
     d3.select(target).call(my);
+    closeAllPopovers();
   };
 
   my.setGeneLabels = function (value) {
