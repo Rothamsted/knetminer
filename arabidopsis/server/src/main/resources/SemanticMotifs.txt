@@ -15,7 +15,7 @@
 13	Reaction
 133^	Reaction
 14^	Path
-
+15	SNP
 
 #Transitions
 1-2	pub_in
@@ -27,6 +27,8 @@
 1-11	cooc_wi
 1-8	genetic
 1-8	physical
+1-15	has_variation
+15-6	associated_with
 
 1-9	genetic
 1-9	physical
@@ -57,7 +59,6 @@
 10-3	has_function
 10-4	participates_in
 10-5	located_in
-
 
 
 10-12	is_a
