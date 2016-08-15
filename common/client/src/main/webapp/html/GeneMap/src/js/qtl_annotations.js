@@ -50,7 +50,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
     var y = buildYScale();
-    var xEnd = config.layout.width + config.chromosomeWidth / 2;
+    var xEnd = config.layout.width;
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
     var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
 
@@ -87,9 +87,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var qtlAnnotationsEnterGroup = qtlAnnotations.enter()
       .append('g').classed('qtl-annotation infobox', true);
 
-    qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
-    qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
-    //qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
+    //qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
+    //qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
+    qtlAnnotationsEnterGroup.append('rect').classed('qtl-hoverbox', true);
+    qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
     qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
     qtlAnnotationsEnterGroup.append('rect').classed('test', true);
 
@@ -99,38 +100,62 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return 'feature_' + d.id;
     });
 
-    qtlAnnotations.select('line.top-line').attr({
-      x1: function(d) { return xStart(d) + 0.4 * bandWidth},
-      y1: function (d) { return y(d.start);},
-      y2: function (d) { return y(d.start);},
-      x2: xEnd,
-    });
+    //qtlAnnotations.select('line.top-line').attr({
+    //  x1: function(d) { return xStart(d) + 0.4 * bandWidth},
+    //  y1: function (d) { return y(d.start);},
+    //  y2: function (d) { return y(d.start);},
+    //  x2: xEnd,
+    //});
+    //
+    //qtlAnnotations.select('line.bottom-line').attr({
+    //  x1: function(d) { return xStart(d) + 0.4 * bandWidth},
+    //  y1: function (d) { return y(d.end);},
+    //  y2: function (d) { return y(d.end);},
+    //  x2: xEnd,
+    //});
 
-    qtlAnnotations.select('line.bottom-line').attr({
-      x1: function(d) { return xStart(d) + 0.4 * bandWidth},
-      y1: function (d) { return y(d.end);},
-      y2: function (d) { return y(d.end);},
-      x2: xEnd,
-    });
+    qtlAnnotations.select('rect.qtl-hoverbox').attr({
+      x: function(d) { return xStart(d)},
+      y: function (d) { return y(d.start);},
+      width: function(d) { return  d.position * (gap + bandWidth) + config.chromosomeWidth; },
+      height: function(d){ return y(d.end) -y (d.start)} ,
+      fill: function(d){ return d.color; },
+      visibility: function(d){return d.hover ? 'visible' : 'hidden' },
+    })
+
+    //qtlAnnotations.select('path.qtl-selector')
+    //  .attr({
+    //    d: function(d){ return leftRoundedRect(
+    //      y(d.start),
+    //      y(d.end),
+    //      xStart(d)+bandWidth,
+    //      bandWidth,
+    //      0 //for rounded edges, use: 0.4 * bandWidth,
+    //    ) },
+    //    fill: function (d) { return d.color; },
+    //  } )
 
     qtlAnnotations.select('rect.qtl-selector').attr({
       x: xStart,
       y: function (d) { return y(d.start); },
       width: bandWidth,
       height: function (d) { return y(d.end) - y(d.start); },
-    }).style({
-      fill: function (d) { return d.color; },
-    });
-
-    qtlAnnotations.select('path.qtl-selector').attr({
-      d: function(d){ return leftRoundedRect(
-        y(d.start),
-        y(d.end),
-        xStart(d)+bandWidth,
-        bandWidth,
-        0.4 * bandWidth) },
-      fill: function (d) { return d.color; },
-    } );
+      }).style({
+        fill: function (d) { return d.color; },
+      })
+      .on('mouseenter', function(d) {
+        d.hover = true;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+      .on('mouseout', function(d) {
+        d.hover = false;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+      .on('click', function(d){
+        d.hover = !d.hover;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+      ;
 
     if( false) { //Rectanges to check size of labels
       qtlAnnotations.select('rect.test')
@@ -381,7 +406,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         $clusterPopover
           .modalPopover( {
           target: $(this),
-          $parent: $(this).find('path'),
+          $parent: $(this).find('rect'),
           'modal-position': 'body',
           placement: "left",
           boundingSize: config.drawing,
