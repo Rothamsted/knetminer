@@ -97,7 +97,10 @@ GENEMAP.ChromosomeCell = function (userConfig) {
       // draw the labels for the chromosomes
       var chromosomeLabelDrawer = GENEMAP.ChromosomeLabel()
         .layout(layout.labelPosition)
-          .onLabelSelectFunction(config.onLabelSelectFunction)
+        .sizeLayout(layout.sizeLabelPosition)
+        .onLabelSelectFunction(config.onLabelSelectFunction)
+        .longestChromosome(layout.longestChromosome)
+        .scale( layout.scale)
           ;
 
 

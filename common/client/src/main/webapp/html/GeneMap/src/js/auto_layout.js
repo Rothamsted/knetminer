@@ -83,9 +83,10 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
       // calculate the chromosome label height
       var labelHeight = config.labelHeight * cellDimensions.height;
+      var sizeLabelHeight = config.labelHeight * cellDimensions.height;
 
       // calculate the chromosome heightRatio
-      var chromosomeHeight = cellDimensions.height - labelHeight - cellMargins.top - cellMargins.bottom;
+      var chromosomeHeight = cellDimensions.height - labelHeight - sizeLabelHeight - cellMargins.top - cellMargins.bottom;
 
       // calculate the chromosome width
       var chromosomeWidth = chromosomeHeight * config.chromosomeAspectRatio;
@@ -118,6 +119,13 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
           width: cellDimensions.width - cellMargins.left - cellMargins.right,
           x: cellMargins.left,
           y: cellMargins.top,
+        },
+        sizeLabelPosition:{
+          cellHeight:  chromosomeHeight,
+          height: sizeLabelHeight,
+          width: cellDimensions.width - cellMargins.left - cellMargins.right,
+          x: cellMargins.left,
+          y: cellMargins.top + labelHeight,
         },
         qtlAnnotationPosition: {
           height: chromosomeHeight,
