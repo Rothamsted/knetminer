@@ -54,17 +54,23 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
     var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
 
-    var xLabel = function (d) {
-      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
-    };
 
     var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
         return node.displayLabel;
     });
 
     if (labelsToDisplay) {
-      gap = config.layout.width * config.gapPercentage * Math.max(1.5, (2 - 0.5 * Math.pow(5 - config.scale, 2) ));
+      if (config.scale < 8){
+        gap = config.layout.width * config.gapPercentage * 1.5;
+      }
+      else {
+        gap = config.layout.width * config.gapPercentage * 1.5 * Math.pow(8, 0.6) / Math.pow(config.scale, 0.6);
+      }
     }
+
+    var xLabel = function (d) {
+      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
+    };
 
     var xStart = function (d) {
       return config.layout.width - d.position * (gap + bandWidth);
