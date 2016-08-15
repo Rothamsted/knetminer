@@ -10,7 +10,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     height: 600,
     numberPerRow: 7/*10*/,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
-    cellMargin: { top: 0.05, left: 0.05, bottom: 0.05, right: 0.05 },
+    cellMargin: { top: 0.05, left: 0.05, bottom: 0.10, right: 0.05 },
     labelHeight: 0.02,
     chromosomeAspectRatio: 0.04,
     scale: 1,

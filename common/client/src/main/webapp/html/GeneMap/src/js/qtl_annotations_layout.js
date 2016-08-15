@@ -184,7 +184,12 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       log.trace('maxPosition', maxPosition);
 
       qtlNodes.forEach( function(node){
+        if ( node.label.length > 15 ){
         node.screenLabel = node.label.substring(0, 12) + '...'
+        }
+        else{
+          node.screenLabel = node.label;
+        }
       });
 
       //If there aren't too many lanes of QTLs,
