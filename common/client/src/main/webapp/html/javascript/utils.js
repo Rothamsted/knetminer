@@ -472,9 +472,10 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    				var genes = Array();
 		    				$("gene", this).each(function(){
 		    					genes.push($(this).text());
+                                                    //console.log("push to genes: $(this).text()= "+ $(this).text());
 		    				});
 		    				tempXML["genes"] = genes;
-		    				sampleQueries.push(tempXML);
+                                                sampleQueries.push(tempXML);
 		    			});
 
 	    				/*
@@ -561,13 +562,15 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		     					$("input:radio[name=list_mode]").val(['GLrestrict']);
 		     				}
 
-		    	 			if(sampleQueries[sampleNum].genes.length > 0){
+		    	 			//console.log("sampleQueries[sampleNum].genes.length= "+ sampleQueries[sampleNum].genes.length);
+                                                if(sampleQueries[sampleNum].genes.length > 0){
 		    	 				if($("#advanced_search_area").is(":hidden")){
 		    	 					$("#advanced_search").click();
 		    	 				}
 		    	 				var genesText = "";
-		    	 				for(gene in sampleQueries[sampleNum].genes){
+		    	 				for(gene=0; gene <sampleQueries[sampleNum].genes.length; gene++){
 		    	 					genesText+= sampleQueries[sampleNum].genes[gene] + "\n";
+                                                                //console.log("sampleQueries["+sampleNum+"].genes["+ gene +"]= "+ sampleQueries[sampleNum].genes[gene] +"\n \t genesText now: "+ genesText);
 		    	 				}
 		    	 				$("#list_of_genes").val(genesText);
 		    	 			}else {
@@ -777,7 +780,7 @@ function searchKeyword(){
 				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 100){
 						candidateGenes = 100;
-						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 100 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
+						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}
 
 				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
@@ -1001,6 +1004,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
  	  // Preloader for the new Network Viewer (KNETviewer).
 	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
+          console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
           generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
 	 }
 }

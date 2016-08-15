@@ -339,7 +339,8 @@ onZoom = function () {
         return gene.label; }) ; }
     ) );
 
-    var url = 'OndexServlet?mode=network&keyword=volume';
+    var url = 'OndexServlet?mode=network&keyword='+$('#keywords').val();
+    console.log("GeneMap: Launch Network for url: "+ url);
 
     log.info('selected labels: ' + selectedLabels);
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
