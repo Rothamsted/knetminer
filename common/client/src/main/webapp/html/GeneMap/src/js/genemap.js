@@ -675,6 +675,7 @@ onZoom = function () {
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
+      resetMapZoom();
     });
   };
 
