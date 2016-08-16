@@ -41,10 +41,14 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       if ( qtlList.length == 1){
         var result =  qtlList[0];
         result.type = 'qtl'
+        result.index =  c.index;
+        result.parentIndex =  c.parentIndex;
       }
       else {
         var result = {
           cluster: c,
+          index: c.index,
+          parentIndex: c.parentIndex,
           qtlList: qtlList,
           color: qtlList[0].color,
           count: qtlList.length,
@@ -228,7 +232,10 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
   };
 
 
-  var annotateCluster = function(cluster){
+  var annotateCluster = function(cluster,indexObj){
+    cluster.index = indexObj.index;
+    indexObj.index = indexObj.index + 1;
+
     if (cluster.value){
       cluster.unit = true;
       cluster.start = cluster.value.start;
@@ -239,8 +246,11 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       var l = cluster.left;
       var r = cluster.right;
 
-      annotateCluster(l);
-      annotateCluster(r);
+      l.parentIndex = cluster.index;
+      r.parentIndex = cluster.index;
+
+      annotateCluster(l, indexObj);
+      annotateCluster(r, indexObj);
 
       cluster.unit = (l.unit && r.unit
       && (l.start == r.start ) && ( l.end == r.end));
@@ -248,6 +258,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       cluster.start = Math.min(cluster.left.start, cluster.right.start);
       cluster.end = Math.max(cluster.left.end, cluster.right.end);
     }
+
   }
 
   var generateChromosomeClusters = function(chromosome){
@@ -274,9 +285,15 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       },"single", null );
 
+    var indexObj = {index : 0};
+
     hClusters.forEach(function(cluster) {
-      annotateCluster(cluster);
+      annotateCluster(cluster,indexObj);
     });
+
+    if ( chromosome.number == 'V'){
+    log.info( hClusters);
+    }
 
     return hClusters
   };

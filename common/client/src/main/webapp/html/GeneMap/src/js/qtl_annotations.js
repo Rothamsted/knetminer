@@ -49,6 +49,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
+    var tranSpeed = 500;
     var y = buildYScale();
     var xEnd = config.layout.width;
     var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
@@ -87,32 +88,57 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var qtlAnnotationsEnterGroup = qtlAnnotations.enter()
       .append('g').classed('qtl-annotation infobox', true);
 
+    qtlAnnotationsEnterGroup.append('rect').classed('qtl-hoverbox', true);
+    var qtlSelector = qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
+    qtlAnnotationsEnterGroup.append('rect').classed('test', true);
     //qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
     //qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('qtl-hoverbox', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('test', true);
+    //qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
+
+    var oldNodes = {};
+    var newNodes = {};
+
+
+    qtlAnnotations.exit().select('rect').each(function (d) {
+      oldNodes[d.index] = _.pick(this, ['x', 'y', 'width', 'height']);
+      oldNodes[d.index].midpoint = d.midpoint;
+      oldNodes[d.index].position = d.position;
+    });
+
+    qtlSelector.each(function (d) {
+      newNodes[d.index] = _.pick(this, ['x', 'y', 'width', 'height']);
+      newNodes[d.index].midpoint = d.midpoint;
+      newNodes[d.index].position = d.position;
+    });
+
+    var chooser = function(dict, index, key, fallThrough){
+      if (_.has(dict, index)){
+        return dict[index][key].animVal.value;
+      }
+      else{
+        return fallThrough;
+      }
+    }
+
+    qtlSelector.attr({
+      x: function (d) {
+        return chooser( oldNodes, d.parentIndex, 'x', xStart(d))
+      },
+      y: function (d) {
+        return chooser( oldNodes, d.parentIndex, 'y', y(d.start))
+      },
+      width: bandWidth,
+
+      height: function (d) {
+        return chooser( oldNodes, d.parentIndex, 'height', y(d.end) - y(d.start))
+        }
+    });
 
     //Apply attributes to all elements
 
     qtlAnnotations.attr('id', function (d) {
       return 'feature_' + d.id;
     });
-
-    //qtlAnnotations.select('line.top-line').attr({
-    //  x1: function(d) { return xStart(d) + 0.4 * bandWidth},
-    //  y1: function (d) { return y(d.start);},
-    //  y2: function (d) { return y(d.start);},
-    //  x2: xEnd,
-    //});
-    //
-    //qtlAnnotations.select('line.bottom-line').attr({
-    //  x1: function(d) { return xStart(d) + 0.4 * bandWidth},
-    //  y1: function (d) { return y(d.end);},
-    //  y2: function (d) { return y(d.end);},
-    //  x2: xEnd,
-    //});
 
     qtlAnnotations.select('rect.qtl-hoverbox').attr({
       x: function(d) { return xStart(d)},
@@ -135,12 +161,16 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //    fill: function (d) { return d.color; },
     //  } )
 
-    qtlAnnotations.select('rect.qtl-selector').attr({
-      x: xStart,
-      y: function (d) { return y(d.start); },
-      width: bandWidth,
-      height: function (d) { return y(d.end) - y(d.start); },
-      }).style({
+    qtlAnnotations.select('rect.qtl-selector').transition().duration(tranSpeed)
+      .attr({
+        x: xStart,
+        y: function (d) { return y(d.start); },
+        width: bandWidth,
+        height: function (d) { return y(d.end) - y(d.start); }
+      });
+
+    qtlAnnotations.select('rect.qtl-selector')
+      .style({
         fill: function (d) { return d.color; },
       })
       .on('mouseenter', function(d) {
@@ -180,8 +210,27 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
 
-    qtlAnnotations.exit().remove();
 
+    qtlAnnotations.exit().select('rect')
+      .transition().duration(tranSpeed)
+      .attr({
+      x: function (d) {
+        return chooser( newNodes, d.parentIndex, 'x', xStart(d))
+      },
+      y: function (d) {
+        return chooser( newNodes, d.parentIndex, 'y', y(d.start))
+      },
+
+      width: bandWidth,
+
+      height: function (d) {
+        return chooser( newNodes, d.parentIndex, 'height', y(d.end) - y(d.start))
+      }
+    })
+      .remove()
+    ;
+
+    qtlAnnotations.exit().remove();
 
     //--COUNTS--------------------
     //The little circles with the number of QTLs in a cluster
@@ -211,15 +260,48 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return data;
       }, function (d){ return 'label_' + d.id });
 
+
     var qtlCountParentEnterGroup = qtlCountAnnotations.enter();
     var qtlCountGroup = qtlCountParentEnterGroup
       .append('g').classed( 'qtllist', true);
     qtlCountGroup.append('circle').classed('qtl-count', true);
     qtlCountGroup.append('text').classed('qtl-count', true);
 
+    qtlCountParentGroup
+      .each( function(d){
+        if (_.has(newNodes, d.index)){
+
+          if (_.has(oldNodes, d.parentIndex)){
+
+            oldNode = oldNodes[d.parentIndex];
+
+            var oldXStart = config.layout.width - oldNode.position * (gap+bandWidth);
+            var oldTextYPos = y(oldNode.midpoint);
+
+            d3.select(this).attr({
+              transform:
+                "translate(" + (oldXStart + 0.5*bandWidth) + "," + oldTextYPos + ")"
+            });
+          }
+          else {
+            d3.select(this).attr({
+              transform: function(d) {
+                if (d) {
+                  return "translate(" + (xStart(d) + 0.5 * bandWidth) + "," + textYPos(d) + ")"
+                } else {
+                  return "translate(0,0)"
+                }
+              }
+            });
+          }
+        }
+      });
+
     //Apply transform to group containing text and circular background
     //Then we can easily center text and circle
-    qtlAnnotations.select( 'g.qtl-count-group').attr({
+    qtlAnnotations.select( 'g.qtl-count-group')
+      .transition().duration(tranSpeed)
+      .attr({
       transform: function(d){
         if (d){
           return "translate(" + (xStart(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
@@ -227,6 +309,21 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           return "translate(0,0)"
         }
       }});
+
+    qtlAnnotations.select( 'g.qtl-count-group')
+      .on('mouseenter', function(d) {
+        d.hover = true;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+      .on('mouseout', function(d) {
+        d.hover = false;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+      .on('click', function(d){
+        d.hover = !d.hover;
+        setupQTLAnnotations(annotationsGroup, chromosome);
+      })
+    ;
 
     qtlAnnotations.select( 'circle.qtl-count')
       .attr({
@@ -271,8 +368,32 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }, function (d){ return 'label_' + d.id });
 
     var qtlLabelAnnotationsEnterGroup = qtlLabelAnnotations.enter();
+
+
+    var newLabels = [];
+
+
     var qtlLabelGroup = qtlLabelAnnotationsEnterGroup
       .append('g').classed( 'qtl', true);
+
+    qtlLabelGroup.each(function (d){
+      newLabels.push(d.id);
+    });
+
+    qtlAnnotations.select( 'g.qtl-label-group')
+      .each( function(d){
+        if (_.includes(newLabels, d.id) ){
+          d3.select(this).attr({
+            transform: function(d){
+              if (d.displayLabel){
+                return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
+              } else {
+                return "translate(0,0)"
+              }
+            }
+          })
+        }
+      });
 
     qtlLabelGroup
       .append('text')
@@ -281,7 +402,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlLabelAnnotations
       .exit().remove();
 
-    qtlAnnotations.select( 'g.qtl-label-group').attr({
+    qtlAnnotations.select( 'g.qtl-label-group')
+      .transition().duration(tranSpeed)
+      .attr({
       transform: function(d){
         if (d.displayLabel){
           return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
