@@ -84,7 +84,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       maxDisplayedFontSize / config.scale
     ) ;
 
-    par.nodeSpacing =  Math.max( 2, par.setFontSize );
+    //par.nodeSpacing =  Math.max( 2, par.setFontSize );
+    par.nodeSpacing =   par.setFontSize ;
 
     par.nLabels = 0.4  * availableHeight / (par.nodeSpacing + par.lineSpacing);
     par.density = 1.0;
@@ -106,7 +107,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       availableWidth / 3 / labelLength * fontCoordRatio,
       maxDisplayedFontSize / config.scale  ) ;
 
-    par.nodeSpacing = Math.max(2, par.setFontSize);
+    //par.nodeSpacing = Math.max(2, par.setFontSize);
+    par.nodeSpacing =   par.setFontSize ;
     par.spaceForLabel = 1.3 * labelLength * par.setFontSize / fontCoordRatio;
     par.layerGap = Math.min(5*par.setFontSize, availableWidth / 3);
     par.density = 0.9;
@@ -211,12 +213,23 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     var nodeSource = Array.from(nodeSet);
     var nodes = generateNodes(force, y, par, nodeSource);
 
+    //If the layout algorithm fails (stack limit exceeded),
+    //try again using the 'simple' algorithm.
+    if ( !nodes){
+      force.options( { algorithm: 'simple'});
+      nodes = generateNodes( force, y, par, nodeSource);
+    }
+
+    //How many layers did we end up with?
     var maxLayer;
     if ( nodes){
     var layers = nodes.map(function (d) {  return d.getLayerIndex(); } );
     maxLayer =  Math.max.apply(null, layers);
     }
 
+
+    //If the algorithm sill fails or there are too many layers,
+    //we need to reduce the number of nodes by clustering
     if (!nodes || maxLayer > 4  ) {
       log.trace( 'Too many lables to display - clustering instead')
 
