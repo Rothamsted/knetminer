@@ -11,6 +11,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onSetNumberPerRowClick : $.noop,
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
+    onExpandBtnClick : $.noop,
     initialMaxGenes : 1000,
     initialNPerRow : 10,
   };
@@ -137,7 +138,8 @@ GENEMAP.MenuBar = function (userConfig) {
           'tag-btn',
           'qtl-btn',
           'export-btn',
-          'export-all-btn'
+          'export-all-btn',
+          'expand-btn'
         ],
       ])
       .enter().append('div');
@@ -224,6 +226,12 @@ GENEMAP.MenuBar = function (userConfig) {
       config.onSetNumberPerRowClick( $('#nPerRowSpinner').val());
     });
 
+    menu.select('.expand-btn')
+      .attr( {'title' : 'expand' })
+      .on('click', config.onExpandBtnClick);
+
+    var expandEnter = menu.select('.expand-btn').selectAll('a').data(['expand']).enter();
+    expandEnter.append('a').text( function(d){return d});
 
   }
 
@@ -335,6 +343,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onExportAllBtnClick = value;
+    return my;
+  }
+
+  my.onExpandBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onExpandBtnClick;
+    }
+
+    config.onExpandBtnClick = value;
     return my;
   }
 

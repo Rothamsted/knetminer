@@ -47,10 +47,46 @@ GENEMAP.GeneMap = function (userConfig) {
   var showAllQTLs; //bool
   var showSelectedQTLs; //bool
 
+  var expanded = false;
+  var originalLayout = {};
+
 
   //--------------------------------------------------
   //SVG and ZOOM FUNCTIONS
   //--------------------------------------------------
+
+
+  var updateDimensions = function() {
+    if (expanded){
+      var height = $(target).height();
+      config.height = height  - 100;
+      config.width =  '100%';
+    }
+  }
+
+  var expandToScreen = function() {
+
+    var d3target = d3.select(target);
+
+    if ( !expanded){
+
+      originalLayout.height = config.height;
+      originalLayout.width = config.width;
+      d3.select(target).classed('fullscreen', true);
+      expanded = true;
+    }
+    else {
+      config.height = originalLayout.height;
+      config.width = originalLayout.width;
+      d3.select(target).classed('fullscreen', false);
+      expanded = false;
+    }
+
+    updateDimensions();
+
+    resetMapZoom();
+    drawMap();
+  };
 
   // returns the size of the SVG element, if the size is defined as a %
   // will attempt to get the actual size in px by interrogating the bounding box
@@ -628,6 +664,7 @@ onZoom = function () {
           .initialNPerRow(config.layout.numberPerRow)
           .onExportBtnClick(exportViewToPng)
           .onExportAllBtnClick(exportAllToPng)
+          .onExpandBtnClick(expandToScreen)
         ;
       }
 
@@ -681,6 +718,7 @@ onZoom = function () {
   };
 
   my.redraw = function (target) {
+    updateDimensions();
     d3.select(target).call(my);
     closeAllPopovers();
   };
