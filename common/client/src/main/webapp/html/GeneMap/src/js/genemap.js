@@ -12,6 +12,7 @@ GENEMAP.GeneMap = function (userConfig) {
       numberPerRow: 6,
       maxAnnotationLayers: 3,
     },
+    pngScale: 2,
     contentBorder: false,
     nGenesToDisplay: 1000,
 
@@ -163,7 +164,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     //Save as png
     saveSvgAsPng( container[0][0], "genemap.png", {
-      scale: zoom.scale(),
+      scale: zoom.scale() * config.pngScale,
     });
 
     //Re-transform the svg to how it was before
@@ -176,7 +177,9 @@ GENEMAP.GeneMap = function (userConfig) {
     log.info( "Exporting view to png, scale is " + zoom.scale() );
 
     //Save as png
-    saveSvgAsPng( svg[0][0], "genemap.png" );
+    saveSvgAsPng( svg[0][0], "genemap.png", {
+      scale: config.pngScale
+    });
   }
 
 // called whenever a zoom event occurss
