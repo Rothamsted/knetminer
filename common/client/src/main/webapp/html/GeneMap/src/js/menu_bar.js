@@ -128,7 +128,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.enter().append('div').classed('genemap-menu', true);
 
 
-    var menuRows = menu.selectAll('div').data( [
+    var menuRows = menu.selectAll('span').data( [
         [
           'network-btn',
         ],[
