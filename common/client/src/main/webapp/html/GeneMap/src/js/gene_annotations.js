@@ -412,7 +412,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     $('#clusterPopover').modalPopover('show');
 
     $('#clusterPopover').on('mousedown mousewheel', function(event){
-      log.info('popover click');
+      log.trace('popover click');
       event.stopPropagation();
     });
 

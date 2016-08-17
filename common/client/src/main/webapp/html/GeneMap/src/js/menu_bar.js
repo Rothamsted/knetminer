@@ -5,6 +5,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onLabelBtnClick: $.noop,
     onQtlBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
@@ -135,7 +136,8 @@ GENEMAP.MenuBar = function (userConfig) {
           'fit-btn',
           'expand-btn',
         ],[
-          'tag-btn',
+          //'tag-btn',
+          'label-btn',
           'qtl-btn',
           'ngenes-dropdown',
         ],[
@@ -164,6 +166,13 @@ GENEMAP.MenuBar = function (userConfig) {
 
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
+
+    var labelDropdown = menu.select('.label-btn');
+    buildDropdown( labelDropdown, 'label-btn', [
+        [ 'Auto labels', 'auto'],
+        ['Checked labels', 'show'],
+        ["No labels", 'hide'] ],
+      config.onLabelBtnClick, 'Auto labels');
 
     var qtlDropdown = menu.select('.qtl-btn');
     buildDropdown( qtlDropdown, 'qtl-btn', [
@@ -209,8 +218,17 @@ GENEMAP.MenuBar = function (userConfig) {
     popoverDiv.append('div')
       .attr( {'class' : 'arrow'})
 
-    popoverDiv.append('h3')
+    popoverHeading = popoverDiv.append('h3')
       .attr( {'class' : 'popover-title'}).text('Advanced options');
+
+    popoverHeading
+      .append('button')
+      .attr( {'class' : 'close'})
+    .on('click', function() {
+      $('.genemap-advanced-menu').modalPopover('toggle');
+    })
+    .append('span')
+     .html('&times')
 
     popoverDiv
       .append('div')
@@ -305,6 +323,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onTagBtnClick = value;
+    return my;
+  };
+
+  my.onLabelBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onLabelBtnClick;
+    }
+
+    config.onLabelBtnClick = value;
     return my;
   };
 

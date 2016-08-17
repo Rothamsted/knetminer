@@ -116,8 +116,6 @@ GENEMAP.XmlDataReader = function () {
           return basemapPromise.then(_processBasemapData);
         });
 
-        log.info(promise);
-
         return promise;
       }
 

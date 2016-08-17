@@ -291,10 +291,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       annotateCluster(cluster,indexObj);
     });
 
-    if ( chromosome.number == 'V'){
-    log.info( hClusters);
-    }
-
     return hClusters
   };
 

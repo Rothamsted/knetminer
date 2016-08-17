@@ -426,7 +426,7 @@ onZoom = function () {
   }
 
   var onSetNumberPerRow = function( numberPerRow) {
-    log.info( numberPerRow );
+    log.trace('Number per row:', numberPerRow );
     config.layout.numberPerRow = numberPerRow;
     resetClusters();
     computeGeneLayout();
@@ -658,6 +658,7 @@ onZoom = function () {
         menuManager = GENEMAP.MenuBar()
           .onTagBtnClick(toggleLableVisibility)
           .onFitBtnClick(resetMapZoom)
+          .onLabelBtnClick(setGeneLabelState)
           .onQtlBtnClick(onToggleQTLDisplay)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
@@ -713,12 +714,9 @@ onZoom = function () {
   my.draw = function (outerTargetId, basemapPath, annotationPath) {
     var reader = GENEMAP.XmlDataReader();
     var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
-    log.info( outerTarget);
 
     outerTarget.enter()
       .append('div').attr( 'id', function(d){ return d;});
-
-    log.info( outerTarget);
 
     target = d3.select(outerTargetId).select('#genemap-target')[0][0];
 
