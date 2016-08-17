@@ -126,23 +126,26 @@ GENEMAP.MenuBar = function (userConfig) {
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
+
     var menuRows = menu.selectAll('div').data( [
         [
-          'nperrow-spinner'
-        ],
-        [
           'network-btn',
+        ],[
           'reset-btn',
           'fit-btn',
           'expand-btn',
+        ],[
           'tag-btn',
           'qtl-btn',
-          'export-btn',
-          'export-all-btn',
           'ngenes-dropdown',
-        ],
+        ],[
+          'export-btn',
+          'advanced-toggle'
+        ]
       ])
-      .enter().append('div');
+      .enter()
+      .append('span')
+      .classed('menu-block', true)
 
     var menuItems = menuRows.selectAll('span')
       .data(function(d,i){ return d;})
@@ -187,14 +190,47 @@ GENEMAP.MenuBar = function (userConfig) {
       .attr( { 'title' : 'export view to png'})
       .on('click', config.onExportBtnClick);
 
-    menu.select('.export-all-btn')
-      .attr( { 'title' : 'export all to png'})
-      .on('click', config.onExportAllBtnClick);
+    menu.select('.expand-btn')
+      .attr( 'title', 'View full screen')
+      .on('click', config.onExpandBtnClick);
 
-    var spinnerSpan = menu.select('.nperrow-spinner')
+    menu.select('.advanced-toggle')
+      .attr( 'title', 'Show advanced options')
+      .on('click', function(){
+        $('.genemap-advanced-menu').modalPopover('toggle');
+      } );
+
+    var advancedMenu = d3.select(target).selectAll('.genemap-advanced-menu').data([null]);
+    popoverDiv = advancedMenu.enter()
+      .append('div')
+      .classed('genemap-advanced-menu', true)
+      .classed('popover', true)
+
+    popoverDiv.append('div')
+      .attr( {'class' : 'arrow'})
+
+    popoverDiv.append('h3')
+      .attr( {'class' : 'popover-title'}).text('Advanced options');
+
+    popoverDiv
+      .append('div')
+      .classed('popover-content', true)
+
+    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
+      [
+        'nperrow-spinner',
+        'export-all-btn',
+      ] )
+    advancedMenuItems.enter()
+      .append('div')
+      .append('span')
+      .attr( 'class', function(d){return d;});
+
+    var spinnerSpan = advancedMenu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
-    enterSpinner .append('span')
+    enterSpinner
+      .append('span')
       .attr( { for : function(d){return d}, })
       .text('Num per row: ');
 
@@ -226,9 +262,19 @@ GENEMAP.MenuBar = function (userConfig) {
       config.onSetNumberPerRowClick( $('#nPerRowSpinner').val());
     });
 
-    menu.select('.expand-btn')
-      .attr( 'title', 'View full screen')
-      .on('click', config.onExpandBtnClick);
+    advancedMenu.select('.export-all-btn')
+      .attr( { 'title' : 'export all to png'})
+      .on('click', config.onExportAllBtnClick);
+
+    //ACTIVATE POPOVER
+    $('.genemap-advanced-menu').modalPopover( {
+      target: $('.advanced-toggle'),
+      parent: $('.advanced-toggle'),
+      'modal-position': 'relative',
+      placement: "right",
+      boundingSize: config.drawing,
+    });
+
 
   }
 

@@ -729,8 +729,8 @@ onZoom = function () {
     });
   };
 
-  my.redraw = function (outertarget) {
-    target = d3.select(outertarget).select('#genemap-target')[0][0];
+  my.redraw = function (outerTarget) {
+    target = d3.select(outerTarget).select('#genemap-target')[0][0];
     updateDimensions();
     d3.select(target).call(my);
     closeAllPopovers();
