@@ -339,13 +339,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       .attr({
         cx: 0,
         cy: 0,
-        r: 0.6*config.annotationLabelSize + 'px' ,
+        r: bandWidth + 'px' ,
       }).style({
-        visibility: labelVisibility,
+        visibility: 'visible',
         fill: function (d) { return d.color; },
       })
       .attr( {'id' : function(d){ return d.id} })
     ;
+
+    var labelFontSize = Math.min( Math.max( 10 / config.scale,bandWidth ), 14 / config.scale )
 
     qtlAnnotations.select('text.qtl-count').attr({
       x: 0,
@@ -354,8 +356,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       "text-anchor": "middle"
     }).style({
         'fill': "white",
-        'font-size': config.annotationLabelSize + 'px',
-        visibility: labelVisibility,
+        'font-size': labelFontSize + 'px',
+        'visibility': (labelFontSize < 2 * bandWidth) ? 'visible' : 'hidden',
       })
       .text(function (d) {
         return d.count;

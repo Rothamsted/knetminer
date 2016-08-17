@@ -80,8 +80,27 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         clusters  = openClusters( clusters);
       }
 
-      nodes = generateNodesFromClusters( clusters);
+      var nClusters = clusters.length;
+
+      while (true) {
+        nodes = generateNodesFromClusters( clusters);
+        nodes = positioner.sortQTLAnnotations(nodes);
+        var maxPosition = nodes.reduce( function(cur, node){
+          return Math.max(cur, node.position);}, 0);
+
+        if ( maxPosition < 2 ){
+          clusters = openClusters(clusters);
+          if ( nClusters == clusters.length){
+            break;
+          }
+          nClusters = clusters.length;
+        }
+        else{
+          break;
+        }
+      }
     }
+
     else if ( config.showSelectedQTLs) {
       chromosome.layout.qtlDisplayClusters = chromosome.annotations.qtls
         .filter( function(d){return d.selected});
