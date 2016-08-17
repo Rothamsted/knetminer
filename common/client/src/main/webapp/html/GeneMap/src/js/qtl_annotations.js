@@ -347,7 +347,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       .attr( {'id' : function(d){ return d.id} })
     ;
 
-    var labelFontSize = Math.min( Math.max( 10 / config.scale,bandWidth ), 14 / config.scale )
+    var circleFontSize = Math.min( Math.max( 10 / config.scale,bandWidth ), 14 / config.scale )
 
     qtlAnnotations.select('text.qtl-count').attr({
       x: 0,
@@ -356,8 +356,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       "text-anchor": "middle"
     }).style({
         'fill': "white",
-        'font-size': labelFontSize + 'px',
-        'visibility': (labelFontSize < 2 * bandWidth) ? 'visible' : 'hidden',
+        'font-size': circleFontSize + 'px',
+        'visibility': (circleFontSize < 2 * bandWidth) ? 'visible' : 'hidden',
       })
       .text(function (d) {
         return d.count;
@@ -369,61 +369,37 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //--LABELS--------------------
     //The labels shown vertically along the qtl
 
-
      qtlAnnotationsEnterGroup.append('g').classed('qtl-label-group', true);
 
     var qtlLabelAnnotations = qtlAnnotations
       .select('g.qtl-label-group').selectAll('g.qtl').data( function(d){
       //Only join the data if displayLabel is true
       var data =   (d.displayLabel ? [d] : []);
-      return data;
+      return data
     }, function (d){ return 'label_' + d.id });
-
-    var qtlLabelAnnotationsEnterGroup = qtlLabelAnnotations.enter();
-
-
-    var newLabels = [];
-
-
-    var qtlLabelGroup = qtlLabelAnnotationsEnterGroup
-      .append('g').classed( 'qtl', true);
-
-    qtlLabelGroup.each(function (d){
-      newLabels.push(d.id);
-    });
-
-    qtlAnnotations.select( 'g.qtl-label-group')
-      .each( function(d){
-        if (_.includes(newLabels, d.id) ){
-          d3.select(this).attr({
-            transform: function(d){
-              if (d.displayLabel){
-                return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
-              } else {
-                return "translate(0,0)"
-              }
-            }
-          })
-        }
-      });
-
-    qtlLabelGroup
-      .append('text')
-      .classed('qtl-label', true);
 
     qtlLabelAnnotations
       .exit().remove();
 
-    qtlAnnotations.select( 'g.qtl-label-group')
+    qtlLabelAnnotations
       .transition().duration(tranSpeed)
       .attr({
-      transform: function(d){
-        if (d.displayLabel){
-          return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")"
-        } else {
-          return "translate(0,0)"
-        }
-      }});
+        transform: function(d){
+          return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")";
+        }});
+
+    var qtlLabelAnnotationsEnterGroup = qtlLabelAnnotations.enter();
+
+    var qtlLabelGroup = qtlLabelAnnotationsEnterGroup
+      .append('g').classed( 'qtl', true)
+      .attr({
+        transform: function(d){
+          return "translate(" + (xLabel(d) + 0.5*bandWidth) + "," + textYPos(d) + ")";
+        }});
+
+    qtlLabelGroup
+      .append('text')
+      .classed('qtl-label', true);
 
     qtlAnnotations.select('text.qtl-label')
       .attr({
