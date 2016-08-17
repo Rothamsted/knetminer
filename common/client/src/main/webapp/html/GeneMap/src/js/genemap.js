@@ -710,9 +710,18 @@ onZoom = function () {
     return my;
   };
 
-  my.draw = function (target, basemapPath, annotationPath) {
+  my.draw = function (outerTargetId, basemapPath, annotationPath) {
     var reader = GENEMAP.XmlDataReader();
-    target = target;
+    var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
+    log.info( outerTarget);
+
+    outerTarget.enter()
+      .append('div').attr( 'id', function(d){ return d;});
+
+    log.info( outerTarget);
+
+    target = d3.select(outerTargetId).select('#genemap-target')[0][0];
+
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
@@ -720,7 +729,8 @@ onZoom = function () {
     });
   };
 
-  my.redraw = function (target) {
+  my.redraw = function (outertarget) {
+    target = d3.select(outertarget).select('#genemap-target')[0][0];
     updateDimensions();
     d3.select(target).call(my);
     closeAllPopovers();
