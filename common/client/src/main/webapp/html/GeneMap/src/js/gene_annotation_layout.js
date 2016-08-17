@@ -230,7 +230,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
     //If the algorithm sill fails or there are too many layers,
     //we need to reduce the number of nodes by clustering
-    if (!nodes || maxLayer > 4  ) {
+    if (!nodes || maxLayer > 3  ) {
       log.trace( 'Too many lables to display - clustering instead')
 
       var geneClusterer = GENEMAP.GeneClusterer()
