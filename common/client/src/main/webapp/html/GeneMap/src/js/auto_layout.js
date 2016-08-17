@@ -19,7 +19,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         size: 3,
         show: true,
         showThreshold: 8,
-        maxSize: 15,
+        maxSize: 14,
       },
       marker: {
         size: 6,
@@ -130,6 +130,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         qtlAnnotationPosition: {
           height: chromosomeHeight,
           width: annotationWidth,
+          chromosomeWidth: chromosomeWidth,
           x: cellMargins.left,
           y: cellMargins.top + labelHeight,
         },

@@ -110,7 +110,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       log.trace( '-Col ', key);
       log.trace('positions ', column.map(function(node){return node.position }));
 
-      var fontsize = config.annotationLabelSize;
+      var fontsize =  14 / config.scale;
       var yscale = buildYScale();
 
       //Position the QTL labels
@@ -137,7 +137,7 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         }
       });
 
-      //STRATEGY 1 - if there is more than one lane of labels,
+      //STRATEGY 2 - if there is more than one lane of labels,
       //don't show any labels
 
       //if (maxLabelPosition > 1){
@@ -175,8 +175,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       return node.type == 'qtl'
     });
 
-
-
     if ( config.showAutoQTLLabels ){
 
       //Position QTL annotations ignoring labels
@@ -198,8 +196,16 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
 
       //If there aren't too many lanes of QTLs,
       //then try displaying some labels automatically
-      if (maxPosition < 3 ) {
+
+      var fontSize = 14 / config.scale;
+      var fontTooBig = fontSize > 0.6 * config.layout.chromosomeWidth;
+      var tooManyLanes = maxPosition > 3;
+
+      if ( (!tooManyLanes) && (!fontTooBig)) {
         autoDisplayLabels(qtlNodes);
+        qtlNodes.forEach( function(node){
+          node.fontSize = fontSize;
+        });
       }
       else {
         qtlNodes.forEach( function(node){
@@ -214,9 +220,14 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         return node.selected;
       });
 
+      var fontSize = 14 / config.scale;
+      var bandWidth =  Math.max(0.3 * config.layout.chromosomeWidth, 3.2) / Math.pow(config.scale, 0.6);
+
       displayNodes.forEach( function(node){
         node.displayLabel = true;
         node.screenLabel = node.label;
+        node.fontSize = Math.min(fontSize, 2 * bandWidth) ;
+        log.info(node.fontSize);
       });
 
       displayNodes = positioner.sortQTLAnnotationsWithLabels(

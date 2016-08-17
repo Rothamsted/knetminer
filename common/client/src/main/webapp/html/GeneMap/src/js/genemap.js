@@ -509,7 +509,7 @@ onZoom = function () {
 
     var qtlAnnotationLayout = GENEMAP.QTLAnnotationLayout({
       longestChromosome: genome.cellLayout.longestChromosome,
-      layout: genome.cellLayout.geneAnnotationPosition,
+      layout: genome.cellLayout.qtlAnnotationPosition,
       scale: zoom.scale(),
       showAllQTLs: showAllQTLs,
       showSelectedQTLs: showSelectedQTLs,

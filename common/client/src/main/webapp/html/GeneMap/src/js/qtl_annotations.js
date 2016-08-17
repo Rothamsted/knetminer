@@ -55,21 +55,29 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
     //var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
 
-    var bandWidth =  3.2 / Math.pow(config.scale, 0.6);
-    var gap = 1.7 / Math.pow(config.scale, 0.6);
+    //var bandWidth =  3.2 / Math.pow(config.scale, 0.6);
+    //var gap = 1.7 / Math.pow(config.scale, 0.6);
+
+    var bandWidth =  Math.max(0.3 * config.layout.chromosomeWidth, 3.2) / Math.pow(config.scale, 0.6);
+    var gap = Math.max(0.8 * config.layout.chromosomeWidth, 1.7 ) / Math.pow(config.scale, 0.6);
+
 
     var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
         return node.displayLabel;
     });
 
     if (labelsToDisplay) {
-      if (config.scale < 8){
-        gap = config.layout.width * config.gapPercentage * 1.5;
-      }
-      else {
-        gap = config.layout.width * config.gapPercentage * 1.5 * Math.pow(8, 0.6) / Math.pow(config.scale, 0.6);
-      }
+      gap = gap * 1.5 ;
     }
+
+    //if (labelsToDisplay) {
+    //  if (config.scale < 8){
+    //    gap = config.layout.width * config.gapPercentage * 1.5;
+    //  }
+    //  else {
+    //    gap = config.layout.width * config.gapPercentage * 1.5 * Math.pow(8, 0.6) / Math.pow(config.scale, 0.6);
+    //  }
+    //}
 
     var xLabel = function (d) {
       return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
@@ -92,14 +100,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     qtlAnnotationsEnterGroup.append('rect').classed('qtl-hoverbox', true);
     var qtlSelector = qtlAnnotationsEnterGroup.append('rect').classed('qtl-selector infobox', true);
-    qtlAnnotationsEnterGroup.append('rect').classed('test', true);
-    //qtlAnnotationsEnterGroup.append('line').classed('top-line', true);
-    //qtlAnnotationsEnterGroup.append('line').classed('bottom-line', true);
-    //qtlAnnotationsEnterGroup.append('path').classed('qtl-selector infobox', true);
 
     var oldNodes = {};
     var newNodes = {};
-
 
     qtlAnnotations.exit().select('rect').each(function (d) {
       oldNodes[d.index] = _.pick(this, ['x', 'y', 'width', 'height']);
@@ -189,20 +192,26 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       })
       ;
 
-    if( false) { //Rectanges to check size of labels
+    debugQtlLableBoxes = false;
+
+    if( debugQtlLableBoxes) { //Rectanges to check size of labels
       qtlAnnotations.select('rect.test')
         .attr({
             x: function (d) {
               return d.displayLabel ? xLabel(d) : 0
             },
             y: function (d) {
-              return d.displayLabel ? y(d.midpoint) - 0.6 * d.screenLabel.length * config.annotationLabelSize / 2 : 0
+              return d.displayLabel
+                ? y(d.midpoint) - 0.6 * d.screenLabel.length * config.annotationLabelSize / 2
+                : 0
             },
             width: function (d) {
               return bandWidth
             },
             height: function (d) {
-              return d.displayLabel ? 0.6 * d.screenLabel.length * config.annotationLabelSize : 0
+              return d.displayLabel
+                ? 0.6 * d.screenLabel.length * config.annotationLabelSize
+                : 0
             },
             fill: function (d) {
               return 'pink'
@@ -210,8 +219,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           }
         );
     }
-
-
 
     qtlAnnotations.exit().select('rect')
       .transition().duration(tranSpeed)
@@ -247,7 +254,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       } else if (d.displayLabel === 'hide') {
         return 'hidden';
       }
-      return config.showAnnotationLabels ? 'visible' : 'hidden';
+      //return config.showAnnotationLabels ? 'visible' : 'hidden';
+      return true;
     };
 
 
@@ -423,7 +431,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         "text-anchor": "middle"
       })
       .style({
-        'font-size': config.annotationLabelSize + 'px',
+        'font-size':  function(d){ return d.fontSize + 'px';}
       })
       .attr( {
         'transform' : 'rotate(270)',
@@ -475,7 +483,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
         popoverContent.text("");
 
-        var popoverContent = d3.select('.popover-content')
+        var popoverContent = popover.select('.popover-content')
           .selectAll('p').data(
             //Either bind a single qtl or a list of qtls
             (d.type == 'qtllist' ? d.qtlList :[d] )
