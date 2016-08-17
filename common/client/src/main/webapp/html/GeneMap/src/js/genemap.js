@@ -18,7 +18,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
-    extraPanArea: 0.25,
+    extraPanArea: 0.4,
   };
 
   //--------------------------------------------------
