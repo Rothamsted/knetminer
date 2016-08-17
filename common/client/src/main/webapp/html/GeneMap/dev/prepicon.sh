@@ -16,18 +16,24 @@ dest=$( echo $folder | sed 's/svg/img/' )
 
 
 echo "Modifying original in place:"
-sed -e 's/fill="#[0-9]\+"/fill="#444444"/g' < $inputfile > tmp && mv tmp $inputfile
-
+sed -e 's/fill="#[0-9]\+"/fill="#444444"/g' -e 's/fill:#[0-9]\+/fill:#444444/g' < $inputfile > tmp && mv tmp $inputfile
 
 hoversvg=$folder/${filestem}_hover.svg
 echo "Creating hover version at $hoversvg"
-sed -e 's/fill="#[0-9]\+"/fill="#21a2ef"/g' < $inputfile > $hoversvg
+sed -e 's/fill="#[0-9]\+"/fill="#21a2ef"/g' -e 's/fill:#[0-9]\+/fill:#21a2ef/g' $inputfile > $hoversvg
+
+dissvg=$folder/${filestem}_disabled.svg
+echo "Creating disabled version at $dissvg"
+sed -e 's/fill="#[0-9]\+"/fill="#cccccc"/g' -e 's/fill:#[0-9]\+/fill:#cccccc/g' < $inputfile > $dissvg
 
 origout=$dest/${filestem}.png
 echo "Orig out: $origout"
-"/cygdrive/c/Program Files/Inkscape/inkscape.exe" --export-png=$origout --export-width=36 --export-height=36  $inputfile
+"/cygdrive/c/Program Files/Inkscape/inkscape.exe" --export-png=$origout --export-width=36 --export-height=36  --export-background-opacity 0 $inputfile
 
-
-echo "Hover out: $hoverout"
 hoverout=$dest/${filestem}_hover.png
-"/cygdrive/c/Program Files/Inkscape/inkscape.exe" --export-png=$hoverout --export-width=36 --export-height=36  $hoversvg
+echo "Hover out: $hoverout"
+"/cygdrive/c/Program Files/Inkscape/inkscape.exe" --export-png=$hoverout --export-width=36 --export-height=36 --export-background-opacity 0  $hoversvg
+
+disout=$dest/${filestem}_disabled.png
+echo "Hover out: $disout"
+"/cygdrive/c/Program Files/Inkscape/inkscape.exe" --export-png=$disout --export-width=36 --export-height=36  --export-background-opacity 0 $dissvg

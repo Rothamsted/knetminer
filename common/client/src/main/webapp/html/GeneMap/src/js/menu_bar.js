@@ -128,18 +128,18 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var menuRows = menu.selectAll('div').data( [
         [
-          'ngenes-dropdown',
           'nperrow-spinner'
         ],
         [
           'network-btn',
           'reset-btn',
           'fit-btn',
+          'expand-btn',
           'tag-btn',
           'qtl-btn',
           'export-btn',
           'export-all-btn',
-          'expand-btn'
+          'ngenes-dropdown',
         ],
       ])
       .enter().append('div');
@@ -152,7 +152,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menuItems.attr({
       class: function (d) {
         return d;
-      },
+      }
     });
 
     menu.select('.network-btn')
@@ -164,10 +164,10 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var qtlDropdown = menu.select('.qtl-btn');
     buildDropdown( qtlDropdown, 'qtl-btn', [
-      [ 'Show all QTLs', 'all'],
-      ['Show selected QTLs', 'selected'],
-      ["Don't show QTLs", 'none'] ],
-      config.onQtlBtnClick, 'Show all QTLs');
+      [ 'All QTLs', 'all'],
+      ['Checked QTLs', 'selected'],
+      ["No QTLs", 'none'] ],
+      config.onQtlBtnClick, 'All QTLs');
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
@@ -178,10 +178,10 @@ GENEMAP.MenuBar = function (userConfig) {
       .on('click', myOnResetBtnClick);
 
     var dropdownSpan = menu.select('.ngenes-dropdown');
-    dropdownSpan.text("Max genes to display: ");
+    dropdownSpan.text("");
     buildDropdown( dropdownSpan, 'ngenes-dropdown',
-      [['50', 50], ['100', 100], ['200',200], ['500', 500], ['1000',1000]],
-      config.onSetMaxGenesClick, config.initialMaxGenes);
+      [['50 genes', 50], ['100 genes', 100], ['200 genes',200], ['500 genes', 500], ['1000 genes',1000]],
+      config.onSetMaxGenesClick, config.initialMaxGenes + ' genes');
 
     menu.select('.export-btn')
       .attr( { 'title' : 'export view to png'})
@@ -227,11 +227,8 @@ GENEMAP.MenuBar = function (userConfig) {
     });
 
     menu.select('.expand-btn')
-      .attr( {'title' : 'expand' })
+      .attr( 'title', 'View full screen')
       .on('click', config.onExpandBtnClick);
-
-    var expandEnter = menu.select('.expand-btn').selectAll('a').data(['expand']).enter();
-    expandEnter.append('a').text( function(d){return d});
 
   }
 
