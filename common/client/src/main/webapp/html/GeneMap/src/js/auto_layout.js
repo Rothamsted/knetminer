@@ -117,6 +117,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         labelPosition: {
           height: labelHeight,
           width: cellDimensions.width - cellMargins.left - cellMargins.right,
+          chromosomeWidth: chromosomeWidth,
           x: cellMargins.left,
           y: cellMargins.top,
         },
