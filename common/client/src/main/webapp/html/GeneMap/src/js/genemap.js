@@ -60,12 +60,12 @@ GENEMAP.GeneMap = function (userConfig) {
   var updateDimensions = function() {
     if (expanded){
       var height = $(target).height();
-      config.height = height  - 100;
+      config.height = height  - 50; //Allow space for menu bar
       config.width =  '100%';
     }
   }
 
-  var expandToScreen = function() {
+  var toggleFullScreen = function() {
 
     var d3target = d3.select(target);
 
@@ -85,6 +85,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     updateDimensions();
 
+    closeAllPopovers();
     resetMapZoom();
     drawMap();
   };
@@ -264,6 +265,14 @@ onZoom = function () {
     $(target).off(events)
       .on(events, closeFunction);
 
+
+    $('body').on('click', function(e){
+      if ($(e.target).closest(target).length < 1){
+        if ( expanded == true) {
+          toggleFullScreen();
+        }
+      }
+    });
   }
 
   //--------------------------------------------------
@@ -672,7 +681,7 @@ onZoom = function () {
           .initialNPerRow(config.layout.numberPerRow)
           .onExportBtnClick(exportViewToPng)
           .onExportAllBtnClick(exportAllToPng)
-          .onExpandBtnClick(expandToScreen)
+          .onExpandBtnClick(toggleFullScreen)
         ;
       }
 
