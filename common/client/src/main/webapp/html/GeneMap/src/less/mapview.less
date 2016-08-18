@@ -14,6 +14,24 @@ svg {
   background-color:none;
 }
 
+.fullscreen {
+  position: fixed;
+  width: 90vw;
+  height: 90%;
+  top: 5%;
+  left: 5vw;
+  margin-left: 0px;
+  margin-top: 0px;
+  border-style : solid;
+  border-color : gray;
+  border-width : 5px;
+  border-radius : 15px;
+  padding : 30px;
+  background-color: white;
+  box-sizing : border-box;
+  z-index: 2;
+}
+
 .drawing_outline{
     fill:#fefefe;
     stroke: #ccc;
@@ -25,6 +43,10 @@ svg {
     stroke: #000;
     stroke-width: 0.5;
     vector-effect: non-scaling-stroke;
+}
+
+#logbar {
+  display: none;
 }
 
 .mapview {
@@ -42,6 +64,11 @@ svg {
   cursor: pointer;
 }
 
+.menu-block{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .info-btn {
   background: url(../img/information.png) 0 0 no-repeat;
   .menubtn;
@@ -51,15 +78,15 @@ svg {
 }
 
 .fit-btn {
-  background: url(../img/fit_to_size.png) 0 0 no-repeat;
+  background: url(../img/layout_center.png) 0 0 no-repeat;
   .menubtn;
 }
 .fit-btn:hover {
-  background: url(../img/fit_to_size_hover.png) 0 0 no-repeat;
+  background: url(../img/layout_center_hover.png) 0 0 no-repeat;
 }
 
 .fit-btn.disabled {
-  background: url(../img/fit_to_size_disabled.png) 0 0 no-repeat;
+  background: url(../img/layout_center_disabled.png) 0 0 no-repeat;
   pointer: default;
 }
 
@@ -154,6 +181,25 @@ svg {
 
 .export-all-btn:hover {
   background: url( ../img/save_all_hover.png) 0 0 no-repeat;
+}
+
+.expand-btn {
+  background: url( ../img/fit_to_size.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.expand-btn:hover {
+  background: url( ../img/fit_to_size_hover.png) 0 0 no-repeat;
+}
+
+.advanced-toggle {
+  background: url( ../img/gearwheel.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.advanced-toggle:hover{
+  background: url( ../img/gearwheel_hover.png) 0 0 no-repeat;
+  .menubtn
 }
 
 .btn-genelist-gene-select {

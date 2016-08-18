@@ -695,6 +695,7 @@ public class OndexServiceProvider {
 			//term document frequency
 			double tdf = (double)mapGene2HitConcept.get(geneId).size()/(double)mapGene2Concepts.get(geneId).size();
 			
+			
 			//inverse document frequency
 			double idf = 0;
 			for(int cId : mapGene2HitConcept.get(geneId)){
@@ -703,7 +704,7 @@ public class OndexServiceProvider {
 				idf += Math.log10((double)numGenesInGenome/mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			//take the mean of all idf scores
-			idf = idf / mapGene2HitConcept.get(geneId).size();
+			// idf = idf / mapGene2HitConcept.get(geneId).size();
 			double score = tdf * idf;
 			scoredCandidates.put(graph.getConcept(geneId), score);
 		}
