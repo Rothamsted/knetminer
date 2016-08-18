@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1024px" height="1024px" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 10240 10240" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>layout_center icon</title>
+	<desc>layout_center icon from the IconExperience.com O-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
+	<path id="curve2" fill="#21a2ef" d="M8330 3840l0 320 -1610 0 0 -320 1610 0zm-1610 2240l1610 0 0 320 -1610 0 0 -320zm-320 640l0 1610 -320 0 0 -1610 320 0zm-2240 0l0 1610 -320 0 0 -1610 320 0zm-640 -320l-1610 0 0 -320 1610 0 0 320zm0 -2240l-1610 0 0 -320 1610 0 0 320zm320 -640l0 -1610 320 0 0 1610 -320 0zm2240 0l0 -1610 320 0 0 1610 -320 0z"/>
+	<path id="curve1" fill="#21a2ef" d="M1280 640l640 0 0 640 6400 0 0 -640 640 0 0 640 640 0 0 640 -640 0 0 6400 640 0 0 640 -640 0 0 640 -640 0 0 -640 -6400 0 0 640 -640 0 0 -640 -640 0 0 -640 640 0 0 -6400 -640 0 0 -640 640 0 0 -640zm7040 1280l-6400 0 0 6400 6400 0 0 -6400z"/>
+	<path id="curve0" fill="#21a2ef" d="M3840,3840 6400,3840 6400,6400 3840,6400z"/>
+</svg>

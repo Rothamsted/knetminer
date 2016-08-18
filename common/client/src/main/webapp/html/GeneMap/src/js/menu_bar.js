@@ -5,12 +5,14 @@ GENEMAP.MenuBar = function (userConfig) {
     onNetworkBtnClick: $.noop,
     onFitBtnClick: $.noop,
     onTagBtnClick: $.noop,
+    onLabelBtnClick: $.noop,
     onQtlBtnClick: $.noop,
     onResetBtnClick: $.noop,
     onSetMaxGenesClick : $.noop,
     onSetNumberPerRowClick : $.noop,
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
+    onExpandBtnClick : $.noop,
     initialMaxGenes : 1000,
     initialNPerRow : 10,
   };
@@ -125,22 +127,27 @@ GENEMAP.MenuBar = function (userConfig) {
     var menu = d3.select(target).selectAll('.genemap-menu').data([null]);
     menu.enter().append('div').classed('genemap-menu', true);
 
-    var menuRows = menu.selectAll('div').data( [
-        [
-          'ngenes-dropdown',
-          'nperrow-spinner'
-        ],
+
+    var menuRows = menu.selectAll('span').data( [
         [
           'network-btn',
+        ],[
           'reset-btn',
           'fit-btn',
-          'tag-btn',
+          'expand-btn',
+        ],[
+          //'tag-btn',
+          'label-btn',
           'qtl-btn',
+          'ngenes-dropdown',
+        ],[
           'export-btn',
-          'export-all-btn'
-        ],
+          'advanced-toggle'
+        ]
       ])
-      .enter().append('div');
+      .enter()
+      .append('span')
+      .classed('menu-block', true)
 
     var menuItems = menuRows.selectAll('span')
       .data(function(d,i){ return d;})
@@ -150,7 +157,7 @@ GENEMAP.MenuBar = function (userConfig) {
     menuItems.attr({
       class: function (d) {
         return d;
-      },
+      }
     });
 
     menu.select('.network-btn')
@@ -160,12 +167,19 @@ GENEMAP.MenuBar = function (userConfig) {
     menu.select('.tag-btn')
       .on('click', myOnTagBtnClick);
 
+    var labelDropdown = menu.select('.label-btn');
+    buildDropdown( labelDropdown, 'label-btn', [
+        [ 'Auto labels', 'auto'],
+        ['Checked labels', 'show'],
+        ["No labels", 'hide'] ],
+      config.onLabelBtnClick, 'Auto labels');
+
     var qtlDropdown = menu.select('.qtl-btn');
     buildDropdown( qtlDropdown, 'qtl-btn', [
-      [ 'Show all QTLs', 'all'],
-      ['Show selected QTLs', 'selected'],
-      ["Don't show QTLs", 'none'] ],
-      config.onQtlBtnClick, 'Show all QTLs');
+      [ 'All QTLs', 'all'],
+      ['Checked QTLs', 'selected'],
+      ["No QTLs", 'none'] ],
+      config.onQtlBtnClick, 'All QTLs');
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
@@ -176,23 +190,65 @@ GENEMAP.MenuBar = function (userConfig) {
       .on('click', myOnResetBtnClick);
 
     var dropdownSpan = menu.select('.ngenes-dropdown');
-    dropdownSpan.text("Max genes to display: ");
+    dropdownSpan.text("");
     buildDropdown( dropdownSpan, 'ngenes-dropdown',
-      [['50', 50], ['100', 100], ['200',200], ['500', 500], ['1000',1000]],
-      config.onSetMaxGenesClick, config.initialMaxGenes);
+      [['50 genes', 50], ['100 genes', 100], ['200 genes',200], ['500 genes', 500], ['1000 genes',1000]],
+      config.onSetMaxGenesClick, config.initialMaxGenes + ' genes');
 
     menu.select('.export-btn')
       .attr( { 'title' : 'export view to png'})
       .on('click', config.onExportBtnClick);
 
-    menu.select('.export-all-btn')
-      .attr( { 'title' : 'export all to png'})
-      .on('click', config.onExportAllBtnClick);
+    menu.select('.expand-btn')
+      .attr( 'title', 'View full screen')
+      .on('click', config.onExpandBtnClick);
 
-    var spinnerSpan = menu.select('.nperrow-spinner')
+    menu.select('.advanced-toggle')
+      .attr( 'title', 'Show advanced options')
+      .on('click', function(){
+        $('.genemap-advanced-menu').modalPopover('toggle');
+      } );
+
+    var advancedMenu = d3.select(target).selectAll('.genemap-advanced-menu').data([null]);
+    popoverDiv = advancedMenu.enter()
+      .append('div')
+      .classed('genemap-advanced-menu', true)
+      .classed('popover', true)
+
+    popoverDiv.append('div')
+      .attr( {'class' : 'arrow'})
+
+    popoverHeading = popoverDiv.append('h3')
+      .attr( {'class' : 'popover-title'}).text('Advanced options');
+
+    popoverHeading
+      .append('button')
+      .attr( {'class' : 'close'})
+    .on('click', function() {
+      $('.genemap-advanced-menu').modalPopover('toggle');
+    })
+    .append('span')
+     .html('&times')
+
+    popoverDiv
+      .append('div')
+      .classed('popover-content', true)
+
+    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
+      [
+        'nperrow-spinner',
+        'export-all-btn',
+      ] )
+    advancedMenuItems.enter()
+      .append('div')
+      .append('span')
+      .attr( 'class', function(d){return d;});
+
+    var spinnerSpan = advancedMenu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
-    enterSpinner .append('span')
+    enterSpinner
+      .append('span')
       .attr( { for : function(d){return d}, })
       .text('Num per row: ');
 
@@ -222,6 +278,19 @@ GENEMAP.MenuBar = function (userConfig) {
 
     $('#nPerRowSpinner').on('change', function(event){
       config.onSetNumberPerRowClick( $('#nPerRowSpinner').val());
+    });
+
+    advancedMenu.select('.export-all-btn')
+      .attr( { 'title' : 'export all to png'})
+      .on('click', config.onExportAllBtnClick);
+
+    //ACTIVATE POPOVER
+    $('.genemap-advanced-menu').modalPopover( {
+      target: $('.advanced-toggle'),
+      parent: $('.advanced-toggle'),
+      'modal-position': 'relative',
+      placement: "right",
+      boundingSize: config.drawing,
     });
 
 
@@ -254,6 +323,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onTagBtnClick = value;
+    return my;
+  };
+
+  my.onLabelBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onLabelBtnClick;
+    }
+
+    config.onLabelBtnClick = value;
     return my;
   };
 
@@ -335,6 +413,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onExportAllBtnClick = value;
+    return my;
+  }
+
+  my.onExpandBtnClick = function (value) {
+    if (!arguments.length) {
+      return config.onExpandBtnClick;
+    }
+
+    config.onExpandBtnClick = value;
     return my;
   }
 
