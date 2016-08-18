@@ -52,73 +52,45 @@ GENEMAP.MenuBar = function (userConfig) {
       return;
     }
 
+    $('#select-label-btn').selectpicker('val','Auto labels').change();
+    $('#select-qtl-btn').selectpicker('val','All QTLs').change();
     config.onResetBtnClick();
   };
 
   var buildDropdown = function(selection, id, data, callback, initialValue){
-    var dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
 
-    var dropdownSpanEnter = dropDown.enter();
+    var name = 'select-' + id;
 
-    var dropdown = dropdownSpanEnter
-      .append('span') .attr({ 'class': 'btn-group'});
+    var selectElement = selection.selectAll('select').data([null]);
 
-    var dropdownButtonAttr = {
-      'class' : 'menu-dropdown btn btn-default dropdown-toggle' ,
-      'id' : id,
-      'type' : "button",
-      'data-toggle' : "dropdown",
-      'aria-haspopup' : 'true'};
-
-    var maxLabelWidth = data.reduce( function(max, d){
-      return Math.max(max, d[0].toString().length)
-    }, 0);
-
-    button = dropdown
-      .append('button').attr( dropdownButtonAttr)
-      .style( {width: (0.4*maxLabelWidth + 4) + 'em'});
-
-    button.append('span')
+    selectElement.enter()
+      .append('select')
       .attr( {
-        class: 'title'
-      }).text(initialValue);
-
-    button.append( 'span')
-      .attr( {
-        'class':'caret'
-      }).style({
-      "position": "absolute",
-      "right": "0.5em",
-      "top" : "45%"});
-
-    dropdown
-      .insert('ul')
-      .attr( {
-        'class': 'dropdown-menu'
-        , 'aria-labelledby': id
+        'id': name,
+        'name':  name,
+        'class' : 'myselectpicker'
       });
 
-    dropdownItems = dropdown
-      .select('.dropdown-menu')
-      .selectAll('.dropdown-item')
-      .data(data);
+    var options = selectElement.selectAll('option').data(data);
 
-    dropdownItems.enter()
-      .append('li')
-      .on('click', function(d){
-        dropdown
-          .select('span.title')
-          .text(d[0]);
-        callback(d[1]);
+    options.enter()
+      .append('option')
+      .attr('data-token', function(d){
+        return d[1];
       })
-      .append('a')
-      .attr({
-        'class': 'dropdown-item',
-        'href' : '#'})
-      .text(function(d){return d[0]} )
-      .on('click', function(e){
-        d3.event.preventDefault();
+      .text(function(d){
+        return d[0];
       });
+
+    var mySelectPicker = $('#'+name).selectpicker({
+      'width' : '130px'
+    });
+
+    mySelectPicker.on('change', function(e){
+      var selectedOption = mySelectPicker.find('option:selected');
+      var selectedToken = selectedOption.data().token;
+      callback(selectedToken);
+    });
 
   }
 

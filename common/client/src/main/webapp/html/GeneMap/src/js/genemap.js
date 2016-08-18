@@ -394,7 +394,7 @@ onZoom = function () {
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
 
-  // togels the global label visibility, from 'auto', to 'show' and to 'hide'
+  // toggle the global label visibility, from 'auto', to 'show' and to 'hide'
   var toggleLableVisibility = function () {
     var oldState = menuManager.getTagButtonState();
     var newState;
