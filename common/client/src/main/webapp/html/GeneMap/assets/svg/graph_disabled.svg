@@ -14,9 +14,9 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="graph_disabled.svg"
+   sodipodi:docname="graph.svg"
    style="clip-rule:evenodd;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
-   inkscape:export-filename="C:\code\qtl\common\client\src\main\webapp\html\GeneMap\assets\img\graph_disabled.png"
+   inkscape:export-filename="C:\code\qtl\common\client\src\main\webapp\html\GeneMap\assets\img\graph_no_shadow.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"><metadata
      id="metadata20"><rdf:RDF><cc:Work
@@ -36,7 +36,7 @@
      id="namedview16"
      showgrid="false"
      inkscape:zoom="14.707821"
-     inkscape:cx="28.298537"
+     inkscape:cx="38.463197"
      inkscape:cy="25.998186"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
