@@ -1004,7 +1004,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
  	  // Preloader for the new Network Viewer (KNETviewer).
 	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
-          console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
+         // console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
           generateCyJSNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
 	 }
 }
