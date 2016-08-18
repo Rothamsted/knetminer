@@ -6,7 +6,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
-    onExpandClusterFunction: $.noop(),
+    onExpandClusterunction: $.noop(),
     longestChromosome: 100,
     layout: {
       width: 10,
@@ -32,7 +32,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
     log.trace('setupGeneAnnotations');
 
-   var y = buildYScale();
+    var y = buildYScale();
 
     //Data join
     // Use a key function so that the correct mapping between graphical objects
@@ -126,24 +126,21 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       strokeWidth = 0.5 / config.scale;
     }
 
-     geneAnnotations.select('path.link')
+    geneAnnotations.select('path.link')
       .style( "opacity", function(d){
         return (d.data.visible || d.data.selected )
           ? 1
           : ( d.data.normedScore
-            ? d.data.normedScore
-            : d.data.importance); }
+          ? d.data.normedScore
+          : d.data.importance); }
       )
       .style( "stroke-width" , function(d) {
         return strokeWidth
       } )
-       .style( "stroke" , function (d){
-         return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
-       )
+      .style( "stroke" , function (d){
+        return (d.data.visible || d.data.selected ) ?  d.data.color : 'gray'; }
+      )
     ;
-
-
-
 
     geneAnnotations.select('text')
       .style( 'font-size', function(d){
@@ -153,7 +150,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
         return d.data.selected ? 'bold' : 'normal'} )
 
       .style( 'opacity', function(d){
-        return ( d.data.visible || d.data.selected ) ? 1 : d.data.importance })
+        return (d.data.visible || d.data.selected )
+          ? 1
+          : ( d.data.normedScore
+          ? d.data.normedScore
+          : d.data.importance); }
+      )
 
       .style( 'fill', function (d) {
         return (d.data.visible || d.data.selected) ? d.data.color : null; })
@@ -168,8 +170,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       .transition().duration(300)
       .attr({
         x: function (d) { return d.x + 0.1 * config.annotationLabelSize; },
-         y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
-  })
+        y: function (d) { return d.y + 0.4 * config.annotationLabelSize; },
+      })
     ;
 
     geneAnnotations.select('path.link')
@@ -199,145 +201,221 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
     //right click to display popover
     geneAnnotations
-      .on('contextmenu', function(d){
-        log.trace('Gene Annotation Context Menu');
-        log.trace(d);
-        d3.select('#clusterPopover').attr( 'class' , 'popover');
+      .on('contextmenu', geneAnnotationsPopoverFunction
+      );
 
-        //POPOVER TITLE
-        popoverTitle = d3.select('#clusterPopover')
-          .select('.popover-title');
-
-        //clear
-        popoverTitle.selectAll('*').remove();
-        popoverTitle.text("");
-
-        //populate
-        popoverTitle
-          .append('a')
-          .attr( {'href' : d.data.link } )
-          .text(d.data.label);
-
-        //POPOVER CONTENT
-        popoverContent = d3.select('#clusterPopover').select('.popover-content');
-
-        //clear
-        popoverContent.selectAll('*').remove();
-        popoverContent.text("");
-
-        //populate
-        popoverContent.append('p')
-          .text( 'Chromosome ' + d.data.chromosome +  ': ' + d.data.start + '-' + d.data.end);
-
-        if(d.data.score){
-        popoverContent.append('p')
-          .text( 'Score: ' + parseFloat(d.data.score).toFixed(3) );
-        }
-
-        popoverContent.append('hr');
-
-        var footer = popoverContent
-          .append('p')
-          .style( 'float', 'right')
-          ;
-
-        var updateFooter = function(){
-
-          footerLinks = footer.selectAll('a')
-            .data(['show', 'hide', 'auto']);
-
-          footerLinks.enter()
-            .append('a')
-            .attr( 'href', '#')
-            .text(function(l){
-              return l; } )
-            .classed('btn btn-small', true)
-            .on('click', function(l){
-              if (l == 'show'){
-                d.data.visible = true;
-              }
-              else if ( l == 'hide'){
-                d.data.visible = false;
-                d.data.hidden = true;
-              }
-              else if ( l == 'auto'){
-                d.data.visible = false;
-                d.data.hidden = false;
-              }
-              config.onAnnotationSelectFunction();
-              d3.event.preventDefault();
-              updateFooter();
-            });
-
-          footerLinks.classed('disabled',
-            function(l){
-              return  false
-                || ( (l == 'show') && ( d.data.visible) )
-                || ( (l == 'hide') && ( d.data.hidden && !d.data.visible) )
-                || ( (l == 'auto') && (!d.data.hidden && !d.data.visible) ) ;
-          });
-        }
-
-        updateFooter();
-
-
-        //footer.append( 'a')
-        //  .attr( 'href', '#')
-        //  .text('show')
-        //  .classed('btn', true)
-        //  .classed('disabled',
-        //    d.data.visible == true )
-        //  .on('click', function(event){
-        //    d.data.visible = true;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
-        //
-        //footer.append( 'a')
-        //  .attr( 'href', '#')
-        //  .text('hide')
-        //  .classed('btn', true)
-        //  .classed('disabled',
-        //    (d.data.visible == false) && (d.data.hidden == true))
-        //  .on('click', function(event){
-        //    d.data.visible = false;
-        //    d.data.hidden = true;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
-        //
-        //footer.append( 'a')
-        //  .text('auto')
-        //  .attr( 'href', '#')
-        //  .classed('btn btn-small', true)
-        //  .classed('disabled',
-        //    (d.data.visible == false) && (d.data.hidden == false))
-        //  .on('click', function(event){
-        //    d.data.visible = false;
-        //    d.data.hidden = false;
-        //    config.onAnnotationSelectFunction();
-        //    d3.event.preventDefault();
-        //  });
-
-        //ACTIVATE POPOVER
-        $('#clusterPopover').modalPopover( {
-          target: $(this),
-          parent: $(this),
-          'modal-position': 'relative',
-          placement: "right",
-          boundingSize: config.drawing,
-        });
-        $('#clusterPopover').modalPopover('show');
-
-        $('#clusterPopover').on('mousedown mousewheel', function(event){
-          log.info('popover click');
-          event.stopPropagation();
-        });
-
-      });
 
     var exitGroup = geneAnnotations.exit()
     exitGroup.remove();
+  };
+
+  var genesListContent = function(popoverContent, clusterNode) {
+    //clear
+    popoverContent.selectAll('*').remove();
+    popoverContent.text("");
+
+    var cluster = clusterNode.data;
+    var genesList = cluster.genesList;
+
+    var genesGroup = popoverContent
+      .selectAll('p')
+      .data(genesList);
+
+    var genesEnterGroup = genesGroup.enter()
+
+    var newRow = genesEnterGroup.append('p');
+
+    newRow.append('span').classed('genelabel', true)
+    newRow.append('div').classed('btn-group', true)
+    ;
+
+    var updateRow = function( row, gene){
+      log.info(gene);
+      row.select('span.genelabel')
+        .text(function(gene){
+          return gene.label;
+        })
+        .style( 'font-weight', function(gene){
+          return gene.selected ? 'bold' : 'normal'} )
+
+        .style( 'opacity', function(gene){
+          return (gene.visible || gene.selected )
+            ? 1
+            : ( gene.normedScore
+            ? gene.normedScore
+            : gene.importance); })
+
+        .style( 'color', function (d) {
+          return (gene.visible || gene.selected) ? gene.color : null; })
+      ;
+
+      var footer = row.select('div.btn-group');
+
+      footerLinks = footer.selectAll('a')
+        .data(['show', 'hide', 'auto']);
+
+      footerLinks.enter()
+        .append('a')
+        .attr( 'href', '#')
+        .text(function(l){
+          return l; } )
+        .classed('btn btn-small', true)
+        .on('click', function(l){
+          if (l == 'show'){
+            gene.visible = true;
+          }
+          else if ( l == 'hide'){
+            gene.visible = false;
+            gene.hidden = true;
+          }
+          else if ( l == 'auto'){
+            gene.visible = false;
+            gene.hidden = false;
+          }
+          config.onAnnotationSelectFunction();
+          d3.event.preventDefault();
+          updateRow(row, gene);
+        });
+
+      footerLinks.classed('disabled',
+        function(l){
+          return  false
+            || ( (l == 'show') && ( gene.visible) )
+            || ( (l == 'hide') && ( gene.hidden && !gene.visible) )
+            || ( (l == 'auto') && (!gene.hidden && !gene.visible) ) ;
+        });
+    }
+
+    genesGroup
+      .each(function(gene){
+        var row = d3.select(this);
+        log.info( row, gene);
+        updateRow(row, gene );
+      });
+
+
+  }
+
+  var geneContent = function(popoverContent, node){
+
+    //POPOVER CONTENT
+
+    //clear
+    popoverContent.selectAll('*').remove();
+    popoverContent.text("");
+
+    //populate
+    popoverContent.append('p')
+      .text( 'Chromosome ' + node.data.chromosome +  ': ' + node.data.start + '-' + node.data.end);
+
+    if(node.data.score){
+      popoverContent.append('p')
+        .text( 'Score: ' + parseFloat(node.data.score).toFixed(3) );
+    }
+
+    popoverContent.append('hr');
+
+    var footer = popoverContent
+      .append('p')
+      .style( 'float', 'right')
+      ;
+
+    var updateFooter = function(){
+
+      footerLinks = footer.selectAll('a')
+        .data(['show', 'hide', 'auto']);
+
+      footerLinks.enter()
+        .append('a')
+        .attr( 'href', '#')
+        .text(function(l){
+          return l; } )
+        .classed('btn btn-small', true)
+        .on('click', function(l){
+          if (l == 'show'){
+            node.data.visible = true;
+          }
+          else if ( l == 'hide'){
+            node.data.visible = false;
+            node.data.hidden = true;
+          }
+          else if ( l == 'auto'){
+            node.data.visible = false;
+            node.data.hidden = false;
+          }
+          config.onAnnotationSelectFunction();
+          d3.event.preventDefault();
+          updateFooter();
+        });
+
+      footerLinks.classed('disabled',
+        function(l){
+          return  false
+            || ( (l == 'show') && ( node.data.visible) )
+            || ( (l == 'hide') && ( node.data.hidden && !node.data.visible) )
+            || ( (l == 'auto') && (!node.data.hidden && !node.data.visible) ) ;
+        });
+    }
+
+    updateFooter();
+  }
+
+  var geneAnnotationsPopoverFunction = function(d){
+
+    var cluster = d.data.type == 'geneslist';
+
+    log.trace('Gene Annotation Context Menu');
+    d3.select('#clusterPopover').attr( 'class' , 'popover');
+
+    //POPOVER TITLE
+    popoverTitle = d3.select('#clusterPopover')
+      .select('.popover-title');
+
+    //clear
+    popoverTitle.selectAll('*').remove();
+    popoverTitle.text("");
+
+    //populate
+    if ( cluster) {
+      popoverTitle
+        .append('span')
+        .text('Cluster');
+    }
+    else{
+      popoverTitle
+        .append('a')
+        .attr( {'href' : d.data.link } )
+        .text(d.data.label);
+    }
+
+    popoverContent = d3.select('#clusterPopover').select('.popover-content');
+    if ( cluster ){
+      genesListContent(popoverContent, d);
+    }
+    else {
+      geneContent(popoverContent, d);
+    }
+
+    //To line up the popover correctly,
+    // we need to use the text as the target,
+    //not the whole group
+    var target = d3.select(this).select('text');
+
+    //ACTIVATE POPOVER
+    $('#clusterPopover').modalPopover( {
+      target: $(target[0]),
+      parent: $(target[0]),
+      'modal-position': 'relative',
+      placement: "right",
+      boundingSize: config.drawing,
+    });
+    $('#clusterPopover').modalPopover('show');
+
+    $('#clusterPopover').on('mousedown mousewheel', function(event){
+      log.trace('popover click');
+      event.stopPropagation();
+    });
+
   };
 
   // draw a border around the annotation target element

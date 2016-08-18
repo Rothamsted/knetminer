@@ -10,7 +10,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
     height: 600,
     numberPerRow: 7/*10*/,
     margin: { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 },
-    cellMargin: { top: 0.05, left: 0.05, bottom: 0.05, right: 0.05 },
+    cellMargin: { top: 0.05, left: 0.05, bottom: 0.10, right: 0.05 },
     labelHeight: 0.02,
     chromosomeAspectRatio: 0.04,
     scale: 1,
@@ -19,7 +19,7 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         size: 3,
         show: true,
         showThreshold: 8,
-        maxSize: 15,
+        maxSize: 14,
       },
       marker: {
         size: 6,
@@ -83,9 +83,10 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
 
       // calculate the chromosome label height
       var labelHeight = config.labelHeight * cellDimensions.height;
+      var sizeLabelHeight = config.labelHeight * cellDimensions.height;
 
       // calculate the chromosome heightRatio
-      var chromosomeHeight = cellDimensions.height - labelHeight - cellMargins.top - cellMargins.bottom;
+      var chromosomeHeight = cellDimensions.height - labelHeight - sizeLabelHeight - cellMargins.top - cellMargins.bottom;
 
       // calculate the chromosome width
       var chromosomeWidth = chromosomeHeight * config.chromosomeAspectRatio;
@@ -116,12 +117,21 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         labelPosition: {
           height: labelHeight,
           width: cellDimensions.width - cellMargins.left - cellMargins.right,
+          chromosomeWidth: chromosomeWidth,
           x: cellMargins.left,
           y: cellMargins.top,
+        },
+        sizeLabelPosition:{
+          cellHeight:  chromosomeHeight,
+          height: sizeLabelHeight,
+          width: cellDimensions.width - cellMargins.left - cellMargins.right,
+          x: cellMargins.left,
+          y: cellMargins.top + labelHeight,
         },
         qtlAnnotationPosition: {
           height: chromosomeHeight,
           width: annotationWidth,
+          chromosomeWidth: chromosomeWidth,
           x: cellMargins.left,
           y: cellMargins.top + labelHeight,
         },
@@ -145,6 +155,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
         cellLayout.geneAnnotationPosition.width = annotationWidth * 1.5;
         cellLayout.labelPosition.x = cellMargins.left + 0.5 * annotationWidth;
         cellLayout.labelPosition.width = chromosomeWidth;
+        cellLayout.sizeLabelPosition.x = cellMargins.left + 0.5 * annotationWidth;
+        cellLayout.sizeLabelPosition.width = chromosomeWidth;
       }
 
       // decorate the genome with the layout information
