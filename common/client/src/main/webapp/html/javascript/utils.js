@@ -608,7 +608,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 	 					addClass="tooltip-static";
 	 				}
 	 				else if(target == 'hintSortableTable'){
-	 					message = 'This opens the Ondex Web java applet and displays a sub-network of the large Ondex knowledgebase that only contains the selected genes (light blue triangles) and the relevant evidence network.';
+	 					message = 'This opens KNETviewer and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
 	 					//message = 'Sort multiple columns simultaneously by holding down the shift key and clicking column headers! ';
 	 				}
 
@@ -1074,7 +1074,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		if(candidate_genes.length > 2) {
 		        table =  '';
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-				table = table + 'Select gene(s) and click "Show Network" button to see the Ondex network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+				table = table + 'Select gene(s) and click "View Network" button to see the Ondex network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
