@@ -550,7 +550,11 @@ onZoom = function () {
       class: 'mapview',
     });
 
-    logSpan = mapContainer.append('div').append('span').classed('logger', 'true');
+    logSpan = mapContainer.append('div').append('span')
+      .attr( {
+        'class' :'logger',
+        'id' : 'logbar'
+      });
 
 
     GENEMAP.vectorEffectSupport = 'vectorEffect' in svg[0][0].style;
@@ -755,6 +759,14 @@ onZoom = function () {
       });
     }
   };
+
+  my.loggingOn = function() {
+    logSpan.style('display', 'initial');
+  }
+
+  my.loggingOff = function() {
+    logSpan.style('display', 'none');
+  }
 
   return my;
 };
