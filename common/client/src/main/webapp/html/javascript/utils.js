@@ -608,7 +608,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 	 					addClass="tooltip-static";
 	 				}
 	 				else if(target == 'hintSortableTable'){
-	 					message = 'This opens the Ondex Web java applet and displays a sub-network of the large Ondex knowledgebase that only contains the selected genes (light blue triangles) and the relevant evidence network.';
+	 					message = 'This opens KNETviewer and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
 	 					//message = 'Sort multiple columns simultaneously by holding down the shift key and clicking column headers! ';
 	 				}
 
@@ -1074,7 +1074,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		if(candidate_genes.length > 2) {
 		        table =  '';
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-				table = table + 'Select gene(s) and click "Show Network" button to see the Ondex network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+				table = table + 'Select gene(s) and click "View Network" button to see the Ondex network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
@@ -1085,7 +1085,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
-				table = table + '<div id="selectUser">Known targets:<input type="radio" name="radio_Targets" value="radio_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="radio" name="radio_Targets" value="radio_Novel" title="Click to select Targets without existing evidence." /></div>';
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." /></div>';
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1102,7 +1102,9 @@ function createGenesTable(tableUrl, keyword, rows){
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';
 				table = table + '<th width="85">'+values[7]+'</th>';
+				if(reference_genome == true){ //QTL
 				table = table + '<th width="70">'+values[8]+'</th>';
+                                }
 				table = table + '<th width="220">'+values[9]+'</th>';
 				table = table + '<th width="70">Select</th>';
 				table = table + '</tr>';
@@ -1130,7 +1132,8 @@ function createGenesTable(tableUrl, keyword, rows){
                                     if(gene_Name.length > values[2].length) {
                                        gene_Name= values[2];
                                       }
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+                                    // gene_Name to display in Gene View table.
+                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
 
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
@@ -1148,7 +1151,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var usersList = '<td>'+values[7]+'</td>';
 
 				    //QTL coloum with information box
-				    var withinQTL = '<td>';
+				if(reference_genome == true){
+					var withinQTL = '<td>';
 				    if(values[8].length > 1){
 				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
@@ -1203,7 +1207,10 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	withinQTL = withinQTL+'0';
 				    }
 				    withinQTL = withinQTL + '</td>';
-
+                                  }
+                                  else{
+				       var withinQTL='';
+                                      }
 
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
@@ -1325,20 +1332,20 @@ function createGenesTable(tableUrl, keyword, rows){
     		 * Select all KNOWN targets: find all targets with existing Evidence & check them.
     		 * Select all NOVEL targets: find all targets with no Evidence & check them.
     		 */
-    		$('input:radio[name="radio_Targets"]').bind("click", {x: candidate_genes}, function(e) {
+    		$('input:checkbox[name="checkbox_Targets"]').bind("click", {x: candidate_genes}, function(e) {
     			var numResults = candidate_genes.length-2;
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
 	    			if(values[7] === "yes") {
-//                                   console.log("Evidences: "+ values[9]);
                                    console.log("Known/ Novel Targets chosen: "+ $(this).val());
-                                   // Check which radio button option was selected.
-                                   if($(this).val() === "radio_Known") { // Select Known Targets.
+//                                   console.log("Evidences: "+ values[9] +"; checked: "+ $(this).prop('checked'));
+                                   // Check which checkbox button option was selected.
+                                   if($(this).val() === "checkbox_Known") { // Select Known Targets.
 				      if(values[9].length > 0) {
 	    			         $("#checkboxGene_"+i).prop('checked', $(this).prop('checked'));
                                         }
                                      }
-                                   else if($(this).val() === "radio_Novel") { // Select Novel Targets.
+                                   else if($(this).val() === "checkbox_Novel") { // Select Novel Targets.
 				           if(values[9].length === 0) {
 	    			              $("#checkboxGene_"+i).prop('checked', $(this).prop('checked'));
                                              }
