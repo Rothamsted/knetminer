@@ -92,7 +92,7 @@ public class OndexServiceProvider {
 	/**
 	 * ChromosomeID mapping for different datasets
 	 */
-	BidiMap<Integer, String> chromBidiMap = new DualHashBidiMap<Integer, String>();
+//	BidiMap<Integer, String> chromBidiMap = new DualHashBidiMap<Integer, String>();
 
 	/**
 	 * GraphTraverser will be initiated with a state machine
@@ -158,19 +158,19 @@ public class OndexServiceProvider {
 
 		System.out.println("QTLNetMiner configured for taxonomy id: " + taxID);
 
-		// load chromosomes configuration from file
-		URL configUrl = Thread.currentThread().getContextClassLoader()
-				.getResource("chromosomes.xml");
-		try {
-			chromConfig.loadFromXML(configUrl.openStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// add to bi-directional map
-		for (String key : chromConfig.stringPropertyNames()) {
-			chromBidiMap.put(Integer.valueOf(key), chromConfig.getProperty(key));
-		}
+//		// load chromosomes configuration from file
+//		URL configUrl = Thread.currentThread().getContextClassLoader()
+//				.getResource("chromosomes.xml");
+//		try {
+//			chromConfig.loadFromXML(configUrl.openStream());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		// add to bi-directional map
+//		for (String key : chromConfig.stringPropertyNames()) {
+//			chromBidiMap.put(Integer.valueOf(key), chromConfig.getProperty(key));
+//		}
 
 	}
 
@@ -695,6 +695,7 @@ public class OndexServiceProvider {
 			//term document frequency
 			double tdf = (double)mapGene2HitConcept.get(geneId).size()/(double)mapGene2Concepts.get(geneId).size();
 			
+			
 			//inverse document frequency
 			double idf = 0;
 			for(int cId : mapGene2HitConcept.get(geneId)){
@@ -703,7 +704,7 @@ public class OndexServiceProvider {
 				idf += Math.log10((double)numGenesInGenome/mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			//take the mean of all idf scores
-			idf = idf / mapGene2HitConcept.get(geneId).size();
+			// idf = idf / mapGene2HitConcept.get(geneId).size();
 			double score = tdf * idf;
 			scoredCandidates.put(graph.getConcept(geneId), score);
 		}
@@ -765,13 +766,13 @@ public class OndexServiceProvider {
 	public Set<ONDEXConcept> searchQTLs(List<QTL> qtls) {
 		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();		
 		
-		int chrQTL, startQTL, endQTL;
+		String chrQTL;
+		int startQTL, endQTL;
 		for(QTL qtl : qtls) {
 			try {
-				chrQTL = qtl.getChrIndex();
+				chrQTL = qtl.getChrName();
 				startQTL = Integer.parseInt(qtl.getStart());
 				endQTL = Integer.parseInt(qtl.getEnd());
-				String locQTL = qtl.getChrName();
 				// swap start with stop if start larger than stop
 				if (startQTL > endQTL) {
 					int tmp = startQTL;
@@ -782,19 +783,18 @@ public class OndexServiceProvider {
 				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
 				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-				AttributeName attLocation = graph.getMetaData().getAttributeName("Location");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 				
 				for (ONDEXConcept c : genes) {
-					int  chrGene = 0;
+					String  chrGene = null;
 					double startGene = 0;
 					if (c.getAttribute(attTAXID) == null ||
 							!taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
 						continue;
 					}
 					if (c.getAttribute(attChromosome) != null) {
-						chrGene = (Integer) c.getAttribute(attChromosome).getValue();
+						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
 					
 					if (attCM != null) {
@@ -805,19 +805,12 @@ public class OndexServiceProvider {
 					else if (c.getAttribute(attBegin) != null) {
 						startGene = (double) ((Integer) c.getAttribute(attBegin).getValue());
 					}				 
-					if(chrGene != 0 && startGene != 0) {
-						
-						//TODO re-factor
-						if (attLocation != null && c.getAttribute(attLocation) != null) {
-							String locGene = c.getAttribute(attLocation).getValue().toString();
-							if (locQTL.equalsIgnoreCase(locGene) && startGene >= startQTL && startGene <= endQTL) {
-								concepts.add(c);
-							}
-						}else{
-							if (chrQTL == chrGene && startGene >= startQTL && startGene <= endQTL) {
-								concepts.add(c);
-							}
+					if(chrGene != null && startGene != 0) {
+								
+						if (chrQTL.equals(chrGene) && startGene >= startQTL && startGene <= endQTL) {
+							concepts.add(c);
 						}
+						
 					}								
 				}
 			}
@@ -1423,7 +1416,6 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> usersUnrelatedGenes = hits.getUsesrUnrelatedGenes();
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
-		AttributeName attLocation = md.getAttributeName("Location");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1454,16 +1446,13 @@ public class OndexServiceProvider {
 		for (ONDEXConcept c : genes) {
 			
 			// only genes that are on chromosomes (not scaffolds)
-			// can be displayed in GViewer
+			// can be displayed in Map View
 			if (c.getAttribute(attChr) == null 
-					|| Integer.valueOf(c.getAttribute(attChr).getValue().toString()) == 0)
+					|| c.getAttribute(attChr).getValue().toString().equals("U"))
 				continue;
 			
 			String chr = c.getAttribute(attChr).getValue().toString();
-			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-			if(attLocation != null && c.getAttribute(attLocation) != null) {
-				chrLatin = c.getAttribute(attLocation).getValue().toString();
-			}
+
 			int end = 0; c.getAttribute(attEnd).getValue();
 			
 			int beg = 0;
@@ -1514,7 +1503,7 @@ public class OndexServiceProvider {
 
 			// Genes
 			sb.append("<feature id=\"" + id + "\">\n");
-			sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+			sb.append("<chromosome>" + chr + "</chromosome>\n");
 			sb.append("<start>" + beg + "</start>\n");
 			sb.append("<end>" + end + "</end>\n");
 			sb.append("<type>gene</type>\n");
@@ -1527,14 +1516,14 @@ public class OndexServiceProvider {
 			}
 			sb.append("<label>" + name + "</label>\n");
 			sb.append("<link>" + uri + "</link>\n");
-                        // Add 'score' tag as well.
-                        Double score= 0.0;
+            // Add 'score' tag as well.
+            Double score= 0.0;
 			if(scoredCandidates != null){
 			   if(scoredCandidates.get(c) != null){
 			      score = scoredCandidates.get(c); // fetch score
 			     }
 			  }
-                        sb.append("<score>"+ score +"</score>\n"); // score
+            sb.append("<score>"+ score +"</score>\n"); // score
 			sb.append("</feature>\n");
 		
 			if (id++ > maxGenes)
@@ -1622,7 +1611,7 @@ public class OndexServiceProvider {
 
 		// display user QTLs
 		for (QTL region : userQtl) {
-			int chr = region.getChrIndex();
+			String chr = region.getChrName();
 			int start = Integer.valueOf(region.getStart());
 			int end = Integer.valueOf(region.getEnd());
 			
@@ -1632,18 +1621,18 @@ public class OndexServiceProvider {
 				end = end * 1000000;
 			}
 			String label = region.getLabel();
-			String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
+			
 			
 			if(label.length() == 0){
 				label = "QTL";
 			}
 //			String query = "mode=network&keyword=" + keyword+"&qtl1="+chrLatin+":"+start+":"+end;
                         // Replace '&' with '&amp;' to make it comptaible with the new d3.js-based Map View.
-			String query = "mode=network&amp;keyword=" + keyword+"&amp;qtl1="+chrLatin+":"+start+":"+end;
+			String query = "mode=network&amp;keyword=" + keyword+"&amp;qtl1="+chr+":"+start+":"+end;
 			String uri = "OndexServlet?" + query;
 			
 			sb.append("<feature>\n");
-			sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+			sb.append("<chromosome>" + chr + "</chromosome>\n");
 			sb.append("<start>" + start + "</start>\n");
 			sb.append("<end>" + end + "</end>\n");
 			sb.append("<type>qtl</type>\n");
@@ -1681,8 +1670,7 @@ public class OndexServiceProvider {
 				}
 			}
 			
-			int chrQTL = (Integer) qtl.getAttribute(attChr).getValue();
-			String chrLatin = chromBidiMap.get(Integer.valueOf(chrQTL));
+			String chrQTL = qtl.getAttribute(attChr).getValue().toString();
 			int startQTL = (Integer) qtl.getAttribute(attBeg).getValue();
 			int endQTL = (Integer) qtl.getAttribute(attEnd).getValue();
 			String acc = qtl.getConceptName().getName().replaceAll("\"", "");
@@ -1702,7 +1690,7 @@ public class OndexServiceProvider {
 			}
 			
 			sb.append("<feature>\n");
-			sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
+			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
 			sb.append("<start>" + startQTL + "</start>\n");
 			sb.append("<end>" + endQTL + "</end>\n");
 			sb.append("<type>qtl</type>\n");
@@ -1779,8 +1767,6 @@ public class OndexServiceProvider {
 		
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChromosome = md.getAttributeName("Chromosome");
-		AttributeName attLocation = md.getAttributeName("Location");
-		AttributeName attScaf = md.getAttributeName("Scaffold");
 		AttributeName attTrait = md.getAttributeName("Trait");
 		AttributeName attBegin = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1810,19 +1796,16 @@ public class OndexServiceProvider {
 						break;
 					}
 				}
-				int chr = 0;
+				String chr = null;
 				String loc = "";
 				String beg = "NA";
 				double begCM = 0.00;
 				int begBP = 0;
 				
 				if(gene.getAttribute(attChromosome) != null) {
-					chr = (Integer) gene.getAttribute(attChromosome).getValue();
+					chr = gene.getAttribute(attChromosome).getValue().toString();
 				}
 				
-				if(attLocation != null && gene.getAttribute(attLocation) != null) {
-					loc = gene.getAttribute(attLocation).getValue().toString();
-				}
 				
 				if(attCM != null && gene.getAttribute(attCM) != null) {
 					begCM = (Double) gene.getAttribute(attCM).getValue();
@@ -1906,13 +1889,12 @@ public class OndexServiceProvider {
 //				
 				if(!qtls.isEmpty()){
 					for(QTL loci : qtls) {
-						Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+						String qtlChrom = loci.getChrName();
 						Long qtlStart = Long.parseLong(loci.getStart());
 						Long qtlEnd = Long.parseLong(loci.getEnd());
-						String qtlChrName = loci.getChrName();
 						
 						//FIXME re-factor chromosome string
-						if((qtlChrName.equals(loc) || qtlChrom == chr) && begCM >= qtlStart && begCM <= qtlEnd){
+						if(qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd){
 							if (infoQTL == "")
 								infoQTL += loci.getLabel() + "//" + loci.getTrait();
 							else
@@ -1985,19 +1967,10 @@ public class OndexServiceProvider {
 					continue;
 				}
 				
-				//TODO
-				if(attLocation != null && gene.getAttribute(attLocation) != null) {
-					String location = "0";
-					String foo = gene.getAttribute(attLocation).getValue().toString();
-					if(foo.length() <= 3 && !foo.equals("NA")){
-						location = gene.getAttribute(attLocation).getValue().toString();
-					}
-					out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + location + "\t"
+
+				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
 							+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
-				}else{
-					out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t"
-							+ beg + "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" +isInList + "\t" + infoQTL + "\t" + evidence + "\n");
-				}
+				
 				
 				
 			}
@@ -2024,7 +1997,6 @@ public class OndexServiceProvider {
 		
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
-		AttributeName attScaf = md.getAttributeName("Scaffold");
 		AttributeName attTrait = md.getAttributeName("Trait");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
@@ -2077,15 +2049,13 @@ public class OndexServiceProvider {
 //						}
 					}
 					
-					int chr = 0;
+					String chr = null;
 					double beg = 0.0;
 					
 					if (gene.getAttribute(attChr) != null) {
-						chr = (Integer) gene.getAttribute(attChr).getValue();
+						chr = gene.getAttribute(attChr).getValue().toString();
 					}			
-					else if (gene.getAttribute(attScaf) != null) {
-						chr = (Integer) gene.getAttribute(attScaf).getValue();
-					} 
+ 
 					if (gene.getAttribute(attBeg) != null) {
 						beg = (Integer) gene.getAttribute(attBeg).getValue();
 					}
@@ -2100,11 +2070,11 @@ public class OndexServiceProvider {
 					
 					if(!qtls.isEmpty()){
 						for(QTL loci : qtls) {
-							Integer qtlChrom = chromBidiMap.inverseBidiMap().get(loci.getChrName());
+							String qtlChrom = loci.getChrName();
 							Long qtlStart = Long.parseLong(loci.getStart());
 							Long qtlEnd = Long.parseLong(loci.getEnd());
 							
-							if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
+							if(qtlChrom.equals(chr) && beg >= qtlStart && beg <= qtlEnd){
 								
 								numberOfQTL++;
 //								if (infoQTL == "")
@@ -2571,7 +2541,6 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attChr = graph.getMetaData().getAttributeName("Chromosome");
-		AttributeName attLocation = graph.getMetaData().getAttributeName("Location");
 		AttributeName attBeg = graph.getMetaData().getAttributeName("BEGIN");
 		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -2585,47 +2554,26 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 					&& gene.getAttribute(attBeg) != null) {
 				
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
-				Integer geneChr = (Integer) gene.getAttribute(attChr).getValue();
+				String geneChr = gene.getAttribute(attChr).getValue().toString();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
 				
-				//for wheat & barley
-				if(attLocation != null && gene.getAttribute(attLocation) != null){
-					String geneLoc = gene.getAttribute(attLocation).getValue().toString();
-					if (attCM != null) {
-						if (gene.getAttribute(attCM) != null) {
-							Double geneCM = (Double) gene.getAttribute(attCM).getValue();
-							
-							//check if taxid, chromosome and start meet criteria
-							if(taxID.contains(geneTaxID) && geneLoc.equals(chr) && geneCM >= start && geneCM <= end && start < end){
-								geneCount++;
-							}
-						}
-					}
-					else {
+				if (attCM != null) {
+					if (gene.getAttribute(attCM) != null) {
+						Double geneCM = (Double) gene.getAttribute(attCM).getValue();
+						
 						//check if taxid, chromosome and start meet criteria
-						if(taxID.contains(geneTaxID) && geneLoc.equals(chr) && geneBeg >= start && geneBeg <= end && start < end){
-							geneCount++;
-						}
-					}
-					
-				}else{
-					if (attCM != null) {
-						if (gene.getAttribute(attCM) != null) {
-							Double geneCM = (Double) gene.getAttribute(attCM).getValue();
-							
-							//check if taxid, chromosome and start meet criteria
-							if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneCM >= start && geneCM <= end && start < end){
-								geneCount++;
-							}
-						}
-					}
-					else {
-						//check if taxid, chromosome and start meet criteria
-						if(taxID.contains(geneTaxID) && geneChr == chromBidiMap.inverseBidiMap().get(chr) && geneBeg >= start && geneBeg <= end && start < end){
+						if(taxID.contains(geneTaxID) && geneChr.equals(chr) && geneCM >= start && geneCM <= end && start < end){
 							geneCount++;
 						}
 					}
 				}
+				else {
+					//check if taxid, chromosome and start meet criteria
+					if(taxID.contains(geneTaxID) && geneChr.equals(chr) && geneBeg >= start && geneBeg <= end && start < end){
+						geneCount++;
+					}
+				}
+				
 			}
 		}	
 		
@@ -2768,13 +2716,13 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 		
 		for(ONDEXConcept gene : genes){
 			
-			int chr = 0;
+			String chr = null;
 			double beg = 0.0;
 			double begCM = 0.0;
 			int begBP = 0;
 			
 			if(gene.getAttribute(attChromosome) != null) {
-				chr = (Integer) gene.getAttribute(attChromosome).getValue();
+				chr = gene.getAttribute(attChromosome).getValue().toString();
 			}			
 
 			if(attCM != null && gene.getAttribute(attCM) != null) {
@@ -2791,12 +2739,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
 				beg = begBP;
 			
 			for (ONDEXConcept q : qtls) {
-				int chrQTL = (Integer) q.getAttribute(attChromosome).getValue();
+				String chrQTL = q.getAttribute(attChromosome).getValue().toString();
 				int startQTL = (Integer) q.getAttribute(attBegin).getValue();
 				int endQTL = (Integer) q.getAttribute(attEnd).getValue();
 				
 				
-				if((chrQTL == chr) && (beg >= startQTL) && (beg <= endQTL)){
+				if(chrQTL.equals(chr) && (beg >= startQTL) && (beg <= endQTL)){
 					
 					if(!mapGene2QTL.containsKey(gene.getId())){
 						Set<Integer> setQTL = new HashSet<Integer>();														

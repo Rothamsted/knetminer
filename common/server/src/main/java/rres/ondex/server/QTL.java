@@ -2,16 +2,14 @@ package rres.ondex.server;
 
 public class QTL {
 	
-	public int chrIndex;
 	public String chrName;
 	public String start;
 	public String end;
 	public String label;
 	public String significance;
 	public String trait;
-	//test3
-	public QTL(int chrIndex, String chrName, String start, String end, String label, String significance, String trait) {
-		this.chrIndex = chrIndex;
+	
+	public QTL(String chrName, String start, String end, String label, String significance, String trait) {
 		this.chrName = chrName;
 		this.start = start;
 		this.end = end;
@@ -19,12 +17,7 @@ public class QTL {
 		this.significance = significance;
 		this.trait = trait;
 	}
-	public int getChrIndex(){
-		return chrIndex;
-	}
-	public void setChrIndex(int chrIndex){
-		this.chrIndex = chrIndex;
-	}
+
 	public String getChrName(){
 		return chrName;
 	}
