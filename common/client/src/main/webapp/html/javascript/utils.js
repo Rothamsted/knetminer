@@ -1102,7 +1102,9 @@ function createGenesTable(tableUrl, keyword, rows){
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';
 				table = table + '<th width="85">'+values[7]+'</th>';
+				if(reference_genome == true){ //QTL
 				table = table + '<th width="70">'+values[8]+'</th>';
+                                }
 				table = table + '<th width="220">'+values[9]+'</th>';
 				table = table + '<th width="70">Select</th>';
 				table = table + '</tr>';
@@ -1130,7 +1132,8 @@ function createGenesTable(tableUrl, keyword, rows){
                                     if(gene_Name.length > values[2].length) {
                                        gene_Name= values[2];
                                       }
-				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+                                    // gene_Name to display in Gene View table.
+                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
 
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
@@ -1148,7 +1151,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				    var usersList = '<td>'+values[7]+'</td>';
 
 				    //QTL coloum with information box
-				    var withinQTL = '<td>';
+				if(reference_genome == true){
+					var withinQTL = '<td>';
 				    if(values[8].length > 1){
 				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
@@ -1203,7 +1207,10 @@ function createGenesTable(tableUrl, keyword, rows){
 				    	withinQTL = withinQTL+'0';
 				    }
 				    withinQTL = withinQTL + '</td>';
-
+                                  }
+                                  else{
+				       var withinQTL='';
+                                      }
 
 					// Foreach evidence show the images - start
 					var evidence = '<td>';
