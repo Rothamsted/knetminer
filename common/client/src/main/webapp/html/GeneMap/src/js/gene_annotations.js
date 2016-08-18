@@ -209,100 +209,133 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     exitGroup.remove();
   };
 
-  var genesListContent = function(popoverContent, clusterNode) {
-    //clear
-    popoverContent.selectAll('*').remove();
-    popoverContent.text("");
+  var updateRow = function( row, gene){
+    row.select('span.genelabel')
+      .text(function(gene){
+        return gene.label;
+      })
+      .style( 'font-weight', function(gene){
+        return gene.selected ? 'bold' : 'normal'} )
 
-    var cluster = clusterNode.data;
-    var genesList = cluster.genesList;
+      .style( 'opacity', function(gene){
+        return (gene.visible || gene.selected )
+          ? 1
+          : ( gene.normedScore
+          ? gene.normedScore
+          : gene.importance); })
+
+      .style( 'color', function (d) {
+        return (gene.visible || gene.selected) ? gene.color : null; })
+    ;
+
+    var footer = row.select('div.btn-group');
+
+    footerLinks = footer.selectAll('a')
+      .data(['show', 'hide', 'auto']);
+
+    footerLinks.classed('disabled',
+      function(l){
+        return  false
+          || ( (l == 'show') && ( gene.visible) )
+          || ( (l == 'hide') && ( gene.hidden && !gene.visible) )
+          || ( (l == 'auto') && (!gene.hidden && !gene.visible) ) ;
+      });
+  }
+
+  var genesListContent = function(popoverTitle, popoverContent, node) {
+    var genesList = node.data.genesList;
 
     var genesGroup = popoverContent
       .selectAll('p')
       .data(genesList);
 
+    var statusMap = {
+      'show' : function(gene){
+        gene.visible = true;
+      },
+      'hide' : function(gene) {
+        gene.visible = false;
+        gene.hidden = true;
+      },
+      'auto' : function(gene){
+        gene.visible = false;
+        gene.hidden = false;
+      }
+    };
+
+    popoverTitle
+      .append('span')
+      .text('Cluster');
+
+    links = popoverTitle
+      .append('div.btn-group')
+      .selectAll('a')
+      .data(['show', 'hide', 'auto'])
+
+    links.enter()
+      .append('a')
+      .attr( 'href', '#')
+      .text( function(l){ return l;})
+      .classed( 'btn btn-small', true)
+      .on( 'click', function(l){
+        var statusFunction = statusMap[l];
+        genesList.forEach( statusFunction);
+
+        genesGroup
+          .each( function(gene){
+            var row = d3.select(this);
+            updateRow(row, gene );
+          });
+
+        d3.event.preventDefault();
+        config.onAnnotationSelectFunction();
+      });
+
     var genesEnterGroup = genesGroup.enter()
-
     var newRow = genesEnterGroup.append('p');
-
     newRow.append('span').classed('genelabel', true)
     newRow.append('div').classed('btn-group', true)
     ;
 
-    var updateRow = function( row, gene){
-      log.info(gene);
-      row.select('span.genelabel')
-        .text(function(gene){
-          return gene.label;
-        })
-        .style( 'font-weight', function(gene){
-          return gene.selected ? 'bold' : 'normal'} )
+    genesGroup
+      .each(function(gene) {
+        var row = d3.select(this);
+        var footer = row.select('div.btn-group');
 
-        .style( 'opacity', function(gene){
-          return (gene.visible || gene.selected )
-            ? 1
-            : ( gene.normedScore
-            ? gene.normedScore
-            : gene.importance); })
+        footerLinks = footer.selectAll('a')
+          .data(['show', 'hide', 'auto']);
 
-        .style( 'color', function (d) {
-          return (gene.visible || gene.selected) ? gene.color : null; })
-      ;
-
-      var footer = row.select('div.btn-group');
-
-      footerLinks = footer.selectAll('a')
-        .data(['show', 'hide', 'auto']);
-
-      footerLinks.enter()
-        .append('a')
-        .attr( 'href', '#')
-        .text(function(l){
-          return l; } )
-        .classed('btn btn-small', true)
-        .on('click', function(l){
-          if (l == 'show'){
-            gene.visible = true;
-          }
-          else if ( l == 'hide'){
-            gene.visible = false;
-            gene.hidden = true;
-          }
-          else if ( l == 'auto'){
-            gene.visible = false;
-            gene.hidden = false;
-          }
-          config.onAnnotationSelectFunction();
-          d3.event.preventDefault();
-          updateRow(row, gene);
-        });
-
-      footerLinks.classed('disabled',
-        function(l){
-          return  false
-            || ( (l == 'show') && ( gene.visible) )
-            || ( (l == 'hide') && ( gene.hidden && !gene.visible) )
-            || ( (l == 'auto') && (!gene.hidden && !gene.visible) ) ;
-        });
-    }
+        footerLinks.enter()
+          .append('a')
+          .attr( 'href', '#')
+          .text(function(l){
+            return l; } )
+          .classed('btn btn-small', true)
+          .on('click', function(l){
+            var statusFunction = statusMap[l];
+            statusFunction(gene);
+            config.onAnnotationSelectFunction();
+            d3.event.preventDefault();
+            updateRow(row, gene);
+          });
+      });
 
     genesGroup
       .each(function(gene){
         var row = d3.select(this);
-        log.info( row, gene);
         updateRow(row, gene );
       });
-
-
   }
 
-  var geneContent = function(popoverContent, node){
+  var geneContent = function(popoverTitle, popoverContent, node){
+
+    //POPOVER TITLE
+    popoverTitle
+      .append('a')
+      .attr( {'href' : node.data.link } )
+      .text(node.data.label);
 
     //POPOVER CONTENT
-
-    //clear
-    popoverContent.selectAll('*').remove();
-    popoverContent.text("");
 
     //populate
     popoverContent.append('p')
@@ -362,38 +395,31 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
   var geneAnnotationsPopoverFunction = function(d){
 
-    var cluster = d.data.type == 'geneslist';
+    var isCluster = d.data.type == 'geneslist';
 
     log.trace('Gene Annotation Context Menu');
     d3.select('#clusterPopover').attr( 'class' , 'popover');
 
-    //POPOVER TITLE
     popoverTitle = d3.select('#clusterPopover')
       .select('.popover-title');
+
+    popoverContent = d3.select('#clusterPopover')
+      .select('.popover-content');
 
     //clear
     popoverTitle.selectAll('*').remove();
     popoverTitle.text("");
 
+    popoverContent.selectAll('*').remove();
+    popoverContent.text("");
+
+    //POPOVER TITLE
     //populate
-    if ( cluster) {
-      popoverTitle
-        .append('span')
-        .text('Cluster');
+    if ( isCluster) {
+      genesListContent(popoverTitle, popoverContent, d);
     }
     else{
-      popoverTitle
-        .append('a')
-        .attr( {'href' : d.data.link } )
-        .text(d.data.label);
-    }
-
-    popoverContent = d3.select('#clusterPopover').select('.popover-content');
-    if ( cluster ){
-      genesListContent(popoverContent, d);
-    }
-    else {
-      geneContent(popoverContent, d);
+      geneContent(popoverTitle, popoverContent, d);
     }
 
     //To line up the popover correctly,
