@@ -31,6 +31,7 @@ GENEMAP.AnnotationXMLReader = function () {
       label: _getValue(elt, 'label'),
       link:  _getValue(elt, 'link'),
       score: _getValue(elt, 'score'),
+      pvalue: _getValue(elt, 'pvalue'),
       selected: false,
     };
   };

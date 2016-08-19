@@ -240,13 +240,12 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
       });
 
       var fontSize = 14 / config.scale;
-      var bandWidth =  Math.max(0.3 * config.layout.chromosomeWidth, 3.2) / Math.pow(config.scale, 0.6);
+      var bandWidth =  0.3 * config.layout.chromosomeWidth ;
 
       displayNodes.forEach( function(node){
         node.displayLabel = true;
         node.screenLabel = node.label;
         node.fontSize = Math.min(fontSize, 2 * bandWidth) ;
-        log.info(node.fontSize);
       });
 
       displayNodes = positioner.sortQTLAnnotationsWithLabels(
