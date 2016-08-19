@@ -57,6 +57,10 @@ GENEMAP.MenuBar = function (userConfig) {
     config.onResetBtnClick();
   };
 
+  var myOnExpandBtnClick = function () {
+    config.onExpandBtnClick();
+  }
+
   var buildDropdown = function(selection, id, data, callback, initialValue){
 
     var name = 'select-' + id;
@@ -170,8 +174,8 @@ GENEMAP.MenuBar = function (userConfig) {
       .on('click', config.onExportBtnClick);
 
     menu.select('.expand-btn')
-      .attr( 'title', 'View full screen')
-      .on('click', config.onExpandBtnClick);
+      .attr( 'title', 'Toggle full screen')
+      .on('click', myOnExpandBtnClick);
 
     menu.select('.advanced-toggle')
       .attr( 'title', 'Show advanced options')
