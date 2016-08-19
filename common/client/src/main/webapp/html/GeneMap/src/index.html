@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- build:css styles/genemap-lib.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/genemap.css -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+    <style>
+      svg {
+        border: 1px solid black;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+
+      #map {
+        width: 750px;
+        height: 450px;
+        margin-left: 100px;
+        margin-top: 50px;
+      }
+
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <span>Basemap:</span>
+
+    <select id="basemap-file" onchange="redraw(false);">
+      <option value='arabidopsis'>Arabidopsis</option>
+      <option value='arabidopsis2'>Arabidopsis2</option>
+      <option value='barley'>Barley</option>
+      <option value='boleracea'>Boleracea</option>
+      <option value='chicken'>Chicken</option>
+      <option value='cow'>Cow</option>
+      <option value='cow_milk'>Cow - Milk</option>
+      <option value='cow_weight'>Cow - Weight</option>
+      <option value='maize'>Maize</option>
+      <option selected="selected" value='poplar'>Poplar</option>
+      <option value='poplar2'>Poplar2</option>
+      <option value='pig'>Pig</option>
+      <option value='potato'>Potato</option>
+      <option value='wheat'>Wheat</option>
+      <option value='wheat2'>Wheat2</option>
+      <option value='wheat3'>Wheat3</option>
+      <option value='wheat4'>Wheat4</option>
+      <option value='simple'>Simple</option>
+    </select>
+
+    <span>Show Qtl Labels</span>
+    <select id="show-qtl-labels" onchange="updateLabel();">
+      <option value='show'>Show</option>
+      <option value='hide'>Hide</option>
+      <option value='auto' selected='selected'>Auto</option>
+    </select>
+
+
+    <span>Num Per Row:</span>
+
+    <input id="chromosome_per_row" type="number" min="1" value="10" style="width:30px;" onclick="redraw();"/>
+    <input id="chk-annotations" type="checkbox" checked="true" onclick="redraw();"> Include Annotations
+    <button onclick="redraw(false)">Draw</button>
+    <button onclick="redraw(true)">Reset Zoom</button>
+    <button onclick="save()">Save</button>
+
+
+    <div id ="wrapper" style = "position: relative; margin-left: auto; margin-right: auto; width: 90%; max-width: 960px; display: block">
+
+      <p class="lorem-ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan vitae arcu sit amet elementum. Cras
+        imperdiet urna nec orci tempor pulvinar. Curabitur mauris nunc, lacinia et mattis eu, congue sit amet libero.
+        Integer eu hendrerit felis, non ultricies metus. Donec venenatis magna ut dui volutpat, a varius mauris
+        pharetra. Nunc lacinia erat mi, a aliquet massa ullamcorper eu. Suspendisse auctor nunc vel nibh commodo
+        tincidunt. Quisque nec vestibulum turpis, sit amet posuere lacus. Quisque pretium rutrum urna non sollicitudin.
+        Nam nec dui consequat, sollicitudin magna porttitor, sollicitudin risus.</p>
+
+      <p class="lorem-ipsum">Sed auctor, nisi quis volutpat egestas, massa libero consectetur velit, ac porta erat tellus a enim. Aliquam
+        maximus pharetra tempus. Pellentesque eu finibus ligula, sed accumsan quam. Sed volutpat, nibh et pellentesque
+        rhoncus, metus nisi faucibus enim, sed bibendum ligula sapien et lorem. Donec eget hendrerit orci. Ut et velit
+        at eros efficitur molestie eu sit amet augue. Donec malesuada finibus mi at vehicula. Sed blandit felis ex, eu
+        volutpat justo posuere ac. Suspendisse euismod posuere enim at ullamcorper. Vestibulum egestas mauris eget
+        imperdiet iaculis. Nulla consequat eu libero eget mollis. Sed facilisis nisl at velit condimentum porttitor
+        vitae a ex. Maecenas sollicitudin, nisl vitae pharetra vestibulum, massa mauris sodales ligula, in scelerisque
+        odio ligula ac felis. Phasellus bibendum non turpis nec vestibulum. Sed sed placerat libero.</p>
+
+
+
+      <div id="map" class='bootstrap'>
+    </div>
+
+      <p class="lorem-ipsum">Suspendisse consequat tristique posuere. Aliquam nisl orci, tincidunt a ligula non, volutpat elementum eros.
+        Sed sit amet mattis enim. Integer molestie nisi lacus, at accumsan mauris efficitur a. Praesent in vestibulum
+        lacus. Nunc malesuada dignissim pellentesque. Etiam congue dolor sit amet felis tristique, at scelerisque nulla
+        congue. Maecenas varius nunc eu diam sagittis, ut sollicitudin arcu rhoncus. Morbi pretium aliquam est vel
+        faucibus. Sed rhoncus vel odio a lacinia. Cras ultricies lacus lacus, sit amet cursus odio ornare a. Quisque
+        finibus hendrerit est, id viverra lorem fringilla eu. In ut nibh mollis, placerat eros eu, iaculis ligula. Ut
+        hendrerit ante sed urna tincidunt volutpat. Cras velit mauris, aliquam ac pretium non, sagittis nec libero. Sed
+        efficitur rhoncus lacus, eleifend finibus neque ultricies at.</p>
+
+      <p class="lorem-ipsum">Sed ultrices quis odio id faucibus. Integer eu sapien in dui blandit dignissim. Nam volutpat massa libero,
+        vitae mollis nulla ornare nec. Etiam fringilla ex ut dolor placerat consequat. Nullam tincidunt mi quam, ac
+        pharetra dolor condimentum nec. Morbi ut ligula sed metus interdum aliquam. Morbi non enim blandit, venenatis
+        turpis eget, fringilla ligula. Maecenas tempus vel erat ac ultrices. Cras pharetra nisl aliquam augue luctus, eu
+        ultrices tortor scelerisque. Duis nec accumsan dolor. Curabitur aliquet pellentesque dui, in ornare mi.</p>
+
+      <p class="lorem-ipsum">Nullam vestibulum magna quis mattis porttitor. Fusce eu pellentesque diam, a scelerisque augue. Praesent eu
+        accumsan sapien. Nunc vel mollis elit. Vivamus non venenatis diam. Nam eget dui a odio varius malesuada. Nullam
+        vel facilisis velit. Aliquam accumsan, quam id ullamcorper tincidunt, enim tortor euismod quam, at dictum urna
+        dui nec arcu. Integer bibendum lorem nec bibendum commodo. Nam consectetur convallis ipsum, non tincidunt risus
+        vehicula ac. Etiam tristique porttitor tortor, sit amet interdum risus ultricies eget. Nunc fermentum diam ante,
+        condimentum sodales risus posuere interdum. Cras facilisis arcu at tortor tempor condimentum. Nulla id dapibus
+        tortor. Nunc sed ante eget justo luctus laoreet.</p>
+    </div>
+
+
+    <!-- build:js js/genemap-lib.js -->
+    <!-- bower:js -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js js/genemap.js -->
+    <!-- inject:js -->
+    <!--endinject -->
+    <!-- endbuild -->
+
+    <script>
+  log.setDefaultLevel( "info");
+
+  // stub for the global function defined in utils.js that handles opening the network view
+  function generateCyJSNetwork(url, list) {
+    log.info('generateCyJSNetwork call with url=' + url + ' list = ' + list.list);
+  }
+
+  function save() {
+    var html = d3.select('#map').select('svg')
+          .attr('version', 1.1)
+          .attr('xmlns', 'http://www.w3.org/2000/svg')
+          .node().parentNode.innerHTML;
+
+    saveAs(new Blob([html], { type:'application/svg+xml' }), 'genome.svg');
+  }
+
+  function updateLabel() {
+    var geneLabelSelect = document.getElementById('show-gene-labels');
+    var geneValue = geneLabelSelect.options[geneLabelSelect.selectedIndex].value;
+
+    chart.setGeneLabels(geneValue);
+
+    var qtlLabelSelect = document.getElementById('show-qtl-labels');
+    var qtlValue = qtlLabelSelect.options[qtlLabelSelect.selectedIndex].value;
+
+    chart.setQtlLabels(qtlValue);
+    chart.redraw('#map');
+  }
+
+  //var chart = GENEMAP.GeneMap().width('100%').height('100%');
+  var chart = GENEMAP.GeneMap().width(700).height(400);
+
+  var redraw = function (resetZoom) {
+    var sel = document.getElementById('basemap-file');
+    var option = sel.options[sel.selectedIndex].value;
+
+    if (option === 'cow_milk' || option === 'cow_weight') {
+      option = 'cow';
+    }
+
+    var file = 'basemap/' + option + '.xml';
+
+    var numberPerRow = +document.getElementById('chromosome_per_row').value;
+    chart.layout().numberPerRow = numberPerRow;
+
+    if (resetZoom) {
+      chart.resetZoom();
+    }
+
+    document.getElementById('show-qtl-labels').options[2].selected = true;
+
+    var annotationFile = null;
+    var includeAnnotations = document.getElementById('chk-annotations').checked;
+
+    if (includeAnnotations) {
+      annotationFile = 'annotations/' + sel.options[sel.selectedIndex].value + '.xml';
+    }
+
+    chart.draw('#map', file, annotationFile);
+  };
+
+  $(function () {
+
+    // redraw on window resize
+    var resize = function () {
+      chart.redraw('#map');
+    };
+
+    d3.select(window).on('resize', resize);
+
+    redraw();
+  });
+
+    </script>
+
+  </body>
+</html>
