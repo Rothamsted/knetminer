@@ -834,6 +834,7 @@ public class OndexServiceProvider {
 		
 		//no Trait-QTL relations found
 		if(ccTrait == null && (ccQTL == null || ccSNP==null)) {
+                    System.out.println("no Trait-QTL relations found...");
 			return new HashSet<ONDEXConcept>();
 		}
 		
@@ -864,8 +865,9 @@ public class OndexServiceProvider {
 //			}
 		}
 		else {
+			System.out.println("Traits found...");
 			//be careful with the choice of analyzer: ConceptClasses are not indexed in lowercase letters which let the StandardAnalyzer crash
-			Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+                        Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
 			Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
 
 			String fieldCC = getFieldName("ConceptClass", null);
@@ -893,6 +895,7 @@ public class OndexServiceProvider {
 					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)
 							|| r.getFromConcept().getOfType().equals(ccSNP) || r.getToConcept().getOfType().equals(ccSNP)){
 						//QTL-->Trait or SNP-->Trait
+                                                System.out.println("QTL-->Trait or SNP-->Trait");
 						ONDEXConcept conQTL = r.getFromConcept();
 						results.add(conQTL);
 //						if(conQTL.getAttribute(attChromosome) != null){
@@ -1664,9 +1667,9 @@ public class OndexServiceProvider {
 		for(ONDEXConcept qtl : qtlDB){
 			
 			//to cope with large number of QTL in AnimalQTLdb
-			if(qtlDB.size() > 500){
+			if(qtlDB.size() > 500 && attSig != null && qtl.getAttribute(attSig) != null){
 				//skip non significant QTL
-				if(attSig == null || qtl.getAttribute(attSig) == null || !qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
+				if(!qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
 					continue;
 				}
 				//TODO: Do similar filtering for SNP and p-value.
@@ -1692,6 +1695,8 @@ public class OndexServiceProvider {
 			
 			//TODO get p-value of SNP-Trait relations
 			
+			double pvalue = Math.random();
+			
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
 			sb.append("<start>" + startQTL + "</start>\n");
@@ -1704,7 +1709,7 @@ public class OndexServiceProvider {
 			else if(type.equals("SNP")){
 				sb.append("<type>snp</type>\n");
 				sb.append("<color>0x00A5FF</color>\n"); // Blue
-				sb.append("<pvalue></pvalue>");
+				sb.append("<pvalue>"+pvalue+"</pvalue>");
 				sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v="+acc + "</link>\n");
 			}
 						
