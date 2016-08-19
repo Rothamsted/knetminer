@@ -695,7 +695,6 @@ public class OndexServiceProvider {
 			//term document frequency
 			double tdf = (double)mapGene2HitConcept.get(geneId).size()/(double)mapGene2Concepts.get(geneId).size();
 			
-			
 			//inverse document frequency
 			double idf = 0;
 			for(int cId : mapGene2HitConcept.get(geneId)){
@@ -704,7 +703,7 @@ public class OndexServiceProvider {
 				idf += Math.log10((double)numGenesInGenome/mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			//take the mean of all idf scores
-			// idf = idf / mapGene2HitConcept.get(geneId).size();
+			//idf = idf / mapGene2HitConcept.get(geneId).size();
 			double score = tdf * idf;
 			scoredCandidates.put(graph.getConcept(geneId), score);
 		}
@@ -831,9 +830,10 @@ public class OndexServiceProvider {
 		
 		ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
 		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
+		ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
 		
 		//no Trait-QTL relations found
-		if(ccTrait == null && ccQTL == null) {
+		if(ccTrait == null && (ccQTL == null || ccSNP==null)) {
 			return new HashSet<ONDEXConcept>();
 		}
 		
@@ -890,8 +890,9 @@ public class OndexServiceProvider {
 				Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
 				for(ONDEXRelation r : rels){
 					//get QTL concept
-					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)){
-						//QTL-->Trait
+					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)
+							|| r.getFromConcept().getOfType().equals(ccSNP) || r.getToConcept().getOfType().equals(ccSNP)){
+						//QTL-->Trait or SNP-->Trait
 						ONDEXConcept conQTL = r.getFromConcept();
 						results.add(conQTL);
 //						if(conQTL.getAttribute(attChromosome) != null){
@@ -1668,20 +1669,20 @@ public class OndexServiceProvider {
 				if(attSig == null || qtl.getAttribute(attSig) == null || !qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
 					continue;
 				}
+				//TODO: Do similar filtering for SNP and p-value.
 			}
 			
+			String type = qtl.getOfType().getId();
 			String chrQTL = qtl.getAttribute(attChr).getValue().toString();
 			int startQTL = (Integer) qtl.getAttribute(attBeg).getValue();
 			int endQTL = (Integer) qtl.getAttribute(attEnd).getValue();
 			String acc = qtl.getConceptName().getName().replaceAll("\"", "");
 			
-			String traitDesc = null;
+			String label = null;
 			if(attTrait != null && qtl.getAttribute(attTrait) != null)
-				traitDesc = qtl.getAttribute(attTrait).getValue().toString();
+				label = qtl.getAttribute(attTrait).getValue().toString();
 			else
-				traitDesc = acc;
-			
-			String uri = "http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id="+acc;
+				label = acc;
 			
 			//TODO check of MODE is CM/BP
 			if(attCM != null){
@@ -1689,14 +1690,26 @@ public class OndexServiceProvider {
 				endQTL = endQTL * 1000000;
 			}
 			
+			//TODO get p-value of SNP-Trait relations
+			
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
 			sb.append("<start>" + startQTL + "</start>\n");
 			sb.append("<end>" + endQTL + "</end>\n");
-			sb.append("<type>qtl</type>\n");
-			sb.append("<color>0xFFA500</color>\n"); // Orange			
-			sb.append("<label>" + traitDesc + "</label>\n");
-			sb.append("<link>" + uri + "</link>\n");
+			if(type.equals("QTL")){
+				sb.append("<type>qtl</type>\n");
+				sb.append("<color>0xFFA500</color>\n"); // Orange
+				sb.append("<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id="+acc + "</link>\n");
+			}	
+			else if(type.equals("SNP")){
+				sb.append("<type>snp</type>\n");
+				sb.append("<color>0x00A5FF</color>\n"); // Blue
+				sb.append("<pvalue></pvalue>");
+				sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v="+acc + "</link>\n");
+			}
+						
+			sb.append("<label>" + label + "</label>\n");
+			
 			sb.append("</feature>\n");
 			
 		}
@@ -2462,7 +2475,12 @@ public boolean writeSynonymTable(String keyword, String fileName) throws ParseEx
                 else if(ct == "Phenotype"){
 			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
 			cn = c.getAttribute(att).getValue().toString().trim();
-		}else{
+		}
+                else if(ct == "Trait"){
+        			AttributeName att = graph.getMetaData().getAttributeName("Study");
+        			cn = c.getAttribute(att).getValue().toString().trim();
+        		}
+                else{
 			if(getShortestPreferedName(cns) != ""){
 				cn = getShortestPreferedName(cns);
 			} else {
