@@ -152,7 +152,6 @@ public class ClientWorker implements Runnable {
 		for(String region : qtlString){
 			String[] r =  region.split(":"); 
 			String chrName;
-			int chrIndex;
 			float start, end;
 			String label = "";
 			try {			
@@ -165,8 +164,7 @@ public class ClientWorker implements Runnable {
 					}
 					if(start < end) {
 						validQTL = true;
-						chrIndex = ondexProvider.chromBidiMap.inverseBidiMap().get(chrName);
-						QTL qtl = new QTL(chrIndex, chrName, r[1], r[2], label, "significant", label); //set "trait" equal to qtl (=label)
+						QTL qtl = new QTL(chrName, r[1], r[2], label, "significant", label); //set "trait" equal to qtl (=label)
 						qtls.add(qtl);
 					}
 				}

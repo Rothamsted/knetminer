@@ -69,39 +69,33 @@
         height = bbox.height * ctm.d;
       }
 
-      return { width: width, height: height};
+      var result ={ width: width, height: height};
+
+      return  result;
     },
 
     show: function () {
 
       for( var round = 0 ; round < 2 ; round ++ ){
 
-
         //dialog is the popup box we are creating
         var $dialog = this.$element;
         $dialog.css({ top: 0, left: 0, display: 'block', 'z-index': 1050 });
 
-
-        var actualWidth = $dialog[0].offsetWidth;
-        var actualHeight = $dialog[0].offsetHeight;
-
+        var dialogWidth = $dialog[0].offsetWidth;
+        var dialogHeight = $dialog[0].offsetHeight;
 
         //parent is the element we are creating the popup box next to
         //We're using the updated position function from jquery-ui
         var parent = this.$parent;
 
+        var parentPosition;
         var positionDirective = {
           my: 'left top', at: 'left top', of: parent,
           collision: 'none',
           using: function( hash, feedback){
-              pos = hash;
+              parentPosition = hash;
           }
-        };
-
-        var pos;
-        positionDirective.using =
-          function( hash, feedback){
-          pos = hash;
         };
 
         $dialog
@@ -109,16 +103,11 @@
 
         var parentDimensions = this.getDimensions( $(parent));
 
-        pos = _.merge({}, pos, parentDimensions);
+        parentPosition = _.merge({}, parentPosition, parentDimensions);
 
         var placement = typeof this.options.placement == 'function' ?
           this.options.placement.call(this, $tip[0], this.$element[0]) :
           this.options.placement;
-
-        var boundingBox = this.options.boundingSize
-          ? this.options.boundingSize[0][0].getBoundingClientRect()
-          : null;
-
 
         var boundLeftPos = null;
         var boundRightPos = null;
@@ -149,30 +138,30 @@
 
         var arrowMargin = 10;
 
-
         var tp;
         switch (placement) {
           case 'bottom':
-            tp = { top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 }
+            tp = { top: parentPosition.top + parentPosition.height, left: parentPosition.left + parentPosition.width / 2 - dialogWidth / 2 }
             break;
           case 'top':
-            tp = { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 }
+            tp = { top: parentPosition.top - dialogHeight, left: parentPosition.left + parentPosition.width / 2 - dialogWidth / 2 }
             break;
           case 'left':
-            var left = pos.left - actualWidth
+            var left = parentPosition.left - dialogWidth
             if ( boundRightPos){
               left = Math.max( left, boundRightPos.left) - arrowMargin;
             }
-            tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
+            tp = { top: parentPosition.top + parentPosition.height / 2 - dialogHeight / 2, left: left }
             break;
           case 'right':
-            var left = pos.left + pos.width;
+            var left = parentPosition.left + parentPosition.width;
             if ( boundLeftPos){
               left = Math.min( left, boundLeftPos.left) + arrowMargin;
             }
-            tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: left }
+            tp = { top: parentPosition.top + parentPosition.height / 2 - dialogHeight / 2, left: left }
             break;
         }
+
 
         $dialog
           .css(tp)
