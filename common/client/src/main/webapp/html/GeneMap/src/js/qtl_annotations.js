@@ -46,6 +46,44 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
   };
 
+  var setupSNPAnnotations = function (annotationsGroup, chromosome) {
+    //--SNPS------------------------------
+
+    var tranSpeed = 500;
+    var snps = chromosome.annotations.snps
+    var y = buildYScale();
+
+    var snpsAnnotations = annotationsGroup.selectAll('rect.snp-annotation').data(snps, function(d){
+      return d.id});
+
+    var snpX = config.layout.width - 0.2 * config.layout.chromosomeWidth;
+    var snpY = function(d){ return y(d.midpoint) - Math.max(1 / config.scale, y(10));}
+    var snpHeight = Math.max( 2 / config.scale, y(10));
+    var snpWidth = 0.2 * config.layout.chromosomeWidth;
+
+    snpsAnnotations
+      .attr({
+        x: snpX,
+        y: snpY,
+        width: snpWidth,
+        height: snpHeight,
+      });
+
+    snpsAnnotations.enter()
+      .append( 'rect')
+      .attr( {
+        fill: function(d){ return  '#222277'},
+        opacity: function(d){return 0.5},
+        class: 'snp-annotation',
+
+        x: snpX,
+        y: snpY,
+        width: snpWidth,
+        height: snpHeight,
+      });
+
+    snpsAnnotations.exit().remove();
+  }
 
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
@@ -64,15 +102,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       gap = gap * 1.5 ;
     }
 
-    //if (labelsToDisplay) {
-    //  if (config.scale < 8){
-    //    gap = config.layout.width * config.gapPercentage * 1.5;
-    //  }
-    //  else {
-    //    gap = config.layout.width * config.gapPercentage * 1.5 * Math.pow(8, 0.6) / Math.pow(config.scale, 0.6);
-    //  }
-    //}
-
     var xLabel = function (d) {
       return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
     };
@@ -80,6 +109,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var xStart = function (d) {
       return config.layout.width - d.position * (gap + bandWidth);
     };
+
+
 
     //--BOXES-----------------------------
     //Here we handle the actual rectangles but not the labels
@@ -549,6 +580,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
+      //QTLs
       var qtlAnnotationGroup = d3.select(this).selectAll('.qtl-annotations').data([d]);
 
       qtlAnnotationGroup.enter()
@@ -564,7 +596,21 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         drawBorder(qtlAnnotationGroup);
       }
 
+      //SNPs
       qtlAnnotationGroup.exit().remove();
+
+      var snpAnnotationGroup = d3.select(this).selectAll('.snp-annotations').data([d]);
+
+      snpAnnotationGroup.enter()
+        .append('g').attr('class', 'snp-annotations');
+
+      snpAnnotationGroup.attr({
+        transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
+      });
+
+      setupSNPAnnotations(snpAnnotationGroup, d);
+
+      snpAnnotationGroup.exit().remove();
     });
   }
 

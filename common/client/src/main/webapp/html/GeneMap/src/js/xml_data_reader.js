@@ -24,6 +24,7 @@ GENEMAP.XmlDataReader = function () {
         allGenes: [],
         genes: [],
         qtls: [],
+        snps: []
       };
 
       chromosome.bands.forEach(function (band) {
@@ -60,6 +61,12 @@ GENEMAP.XmlDataReader = function () {
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
+      //var snps = chromosomeAnnotations.filter(
+      //  function (e) { return e.type.toLowerCase() === 'snp'; });
+
+      var snps = qtls.filter(
+        function (d) { return (d.end - d.start) < 1000000 ;} );
+
       //Build qtl index
       qtls.forEach( function(qtl, index){
         qtl.id = chromosome.number + '_' + index;
@@ -91,6 +98,7 @@ GENEMAP.XmlDataReader = function () {
         genes: genes,
         allGenes: allGenes,
         qtls: qtls,
+        snps: snps,
       };
     });
 
