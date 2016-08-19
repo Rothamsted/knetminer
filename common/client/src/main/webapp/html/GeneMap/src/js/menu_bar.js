@@ -288,10 +288,9 @@ GENEMAP.MenuBar = function (userConfig) {
       target: $('.advanced-toggle'),
       parent: $('.advanced-toggle'),
       'modal-position': 'relative',
-      placement: "right",
+      placement: "bottom",
       boundingSize: config.drawing,
     });
-
 
   }
 
