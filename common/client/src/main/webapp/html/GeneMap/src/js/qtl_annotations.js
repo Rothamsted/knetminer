@@ -52,7 +52,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
     var tranSpeed = 500;
     var snps = chromosome.annotations.snps.filter( function(d){
-      return d.pvalue < config.maxSnpPValue;
+      return !( d.pvalue > config.maxSnpPValue);
     });
 
     var y = buildYScale();
