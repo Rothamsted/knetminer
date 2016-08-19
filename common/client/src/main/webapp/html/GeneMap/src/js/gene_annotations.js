@@ -6,7 +6,7 @@ GENEMAP.GeneAnnotations = function (userConfig) {
     border: false,
     labelRectangles: false,
     onAnnotationSelectFunction: $.noop(),
-    onExpandClusterunction: $.noop(),
+    onExpandClusterFunction: $.noop(),
     longestChromosome: 100,
     layout: {
       width: 10,
@@ -23,10 +23,8 @@ GENEMAP.GeneAnnotations = function (userConfig) {
 
   var config = _.merge({}, defaultConfig, userConfig);
 
-  //Configure popup
-  var popupConfig = _.pick( config, ['onAnnotationSelectFunction', 'drawing'])
-  popupConfig.popoverId = '#clusterPopover';
-  var geneAnnotationPopup = GENEMAP.GeneAnnotationPopup( popupConfig );
+  var geneAnnotationPopup = null;
+
 
   var buildYScale = function () {
     return d3.scale.linear().range([0, config.layout.height]).domain([0, config.longestChromosome]);
@@ -35,6 +33,12 @@ GENEMAP.GeneAnnotations = function (userConfig) {
   // adds the gene annotations to the annotations group within it, uses the data
   // bound to the annotationsGroup to generate the annotation elements
   var setupGeneAnnotations = function (annotationGroup, chromosome) {
+
+    //Configure popup
+    var popupConfig = _.pick( config, ['onAnnotationSelectFunction', 'drawing']);
+    config.popoverId = '#clusterPopover';
+    geneAnnotationPopup = GENEMAP.GeneAnnotationPopup( config );
+
     log.trace('setupGeneAnnotations');
 
     var y = buildYScale();
@@ -194,6 +198,9 @@ GENEMAP.GeneAnnotations = function (userConfig) {
       if (d.data.type == "gene") {
         log.info('gene annotation click');
         d.data.selected = !d.data.selected;
+        if (d.data.selected){
+          d.data.visible = true;
+       }
         config.onAnnotationSelectFunction();
       }
 
