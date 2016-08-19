@@ -1667,9 +1667,9 @@ public class OndexServiceProvider {
 		for(ONDEXConcept qtl : qtlDB){
 			
 			//to cope with large number of QTL in AnimalQTLdb
-			if(qtlDB.size() > 500){
+			if(qtlDB.size() > 500 && attSig != null && qtl.getAttribute(attSig) != null){
 				//skip non significant QTL
-				if(attSig == null || qtl.getAttribute(attSig) == null || !qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
+				if(!qtl.getAttribute(attSig).getValue().toString().equalsIgnoreCase("significant")){
 					continue;
 				}
 				//TODO: Do similar filtering for SNP and p-value.
@@ -1695,6 +1695,8 @@ public class OndexServiceProvider {
 			
 			//TODO get p-value of SNP-Trait relations
 			
+			double pvalue = Math.random();
+			
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
 			sb.append("<start>" + startQTL + "</start>\n");
@@ -1707,7 +1709,7 @@ public class OndexServiceProvider {
 			else if(type.equals("SNP")){
 				sb.append("<type>snp</type>\n");
 				sb.append("<color>0x00A5FF</color>\n"); // Blue
-				sb.append("<pvalue></pvalue>");
+				sb.append("<pvalue>"+pvalue+"</pvalue>");
 				sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v="+acc + "</link>\n");
 			}
 						
