@@ -91,6 +91,9 @@ GENEMAP.MenuBar = function (userConfig) {
       'width' : '130px'
     });
 
+    mySelectPicker.selectpicker('val', initialValue);
+    mySelectPicker.selectpicker('refresh');
+
     mySelectPicker.on('change', function(e){
       var selectedOption = mySelectPicker.find('option:selected');
       var selectedToken = selectedOption.data().token;
