@@ -103,16 +103,14 @@ GENEMAP.MenuBar = function (userConfig) {
     var menuRows = menu.selectAll('span').data( [
         [
           'network-btn',
-        ],[
-          'reset-btn',
-          'fit-btn',
           'expand-btn',
+          'reset-btn',
         ],[
-          //'tag-btn',
           'label-btn',
-          'qtl-btn',
           'ngenes-dropdown',
+          'qtl-btn',
         ],[
+          'fit-btn',
           'export-btn',
           'advanced-toggle'
         ]
