@@ -7,6 +7,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     onExpandClusterFunction: $.noop(),
     onLabelSelectFunction: $.noop(),
     maxAnnotationLayers: 3,
+    maxSnpPValue: 1.0,
     svg: null,
   };
 
@@ -102,6 +103,7 @@ GENEMAP.ChromosomeCell = function (userConfig) {
         .annotationLabelSize(layout.annotations.label.size)
         .annotationMarkerSize(layout.annotations.marker.size)
         .showAnnotationLabels(layout.annotations.label.show)
+        .maxSnpPValue( config.maxSnpPValue)
         .drawing(config.svg)
         .scale( layout.scale);
 
@@ -154,6 +156,15 @@ GENEMAP.ChromosomeCell = function (userConfig) {
     }
 
     config.maxAnnotationLayers = value;
+    return my;
+  };
+
+  my.maxSnpPValue = function (value) {
+    if (!arguments.length) {
+      return config.maxSnpPValue;
+    }
+
+    config.maxSnpPValue = value;
     return my;
   };
 

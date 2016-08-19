@@ -13,6 +13,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
     onExpandBtnClick : $.noop,
+    maxSnpPValueProperty : $.noop,
     initialMaxGenes : 1000,
     initialNPerRow : 10,
   };
@@ -52,73 +53,49 @@ GENEMAP.MenuBar = function (userConfig) {
       return;
     }
 
+    $('#select-label-btn').selectpicker('val','Auto labels').change();
+    $('#select-qtl-btn').selectpicker('val','All QTLs').change();
     config.onResetBtnClick();
   };
 
+  var myOnExpandBtnClick = function () {
+    config.onExpandBtnClick();
+  }
+
   var buildDropdown = function(selection, id, data, callback, initialValue){
-    var dropDown = selection.attr( {'class': 'menu-dropdown bootstrap'}).selectAll('.btn-group').data([null]);
+    var name = 'select-' + id;
 
-    var dropdownSpanEnter = dropDown.enter();
+    var selectElement = selection.selectAll('select').data([null]);
 
-    var dropdown = dropdownSpanEnter
-      .append('span') .attr({ 'class': 'btn-group'});
 
-    var dropdownButtonAttr = {
-      'class' : 'menu-dropdown btn btn-default dropdown-toggle' ,
-      'id' : id,
-      'type' : "button",
-      'data-toggle' : "dropdown",
-      'aria-haspopup' : 'true'};
-
-    var maxLabelWidth = data.reduce( function(max, d){
-      return Math.max(max, d[0].toString().length)
-    }, 0);
-
-    button = dropdown
-      .append('button').attr( dropdownButtonAttr)
-      .style( {width: (0.4*maxLabelWidth + 4) + 'em'});
-
-    button.append('span')
+    selectElement.enter()
+      .append('select')
       .attr( {
-        class: 'title'
-      }).text(initialValue);
-
-    button.append( 'span')
-      .attr( {
-        'class':'caret'
-      }).style({
-      "position": "absolute",
-      "right": "0.5em",
-      "top" : "45%"});
-
-    dropdown
-      .insert('ul')
-      .attr( {
-        'class': 'dropdown-menu'
-        , 'aria-labelledby': id
+        'id': name,
+        'name':  name,
+        'class' : 'myselectpicker'
       });
 
-    dropdownItems = dropdown
-      .select('.dropdown-menu')
-      .selectAll('.dropdown-item')
-      .data(data);
+    var options = selectElement.selectAll('option').data(data);
 
-    dropdownItems.enter()
-      .append('li')
-      .on('click', function(d){
-        dropdown
-          .select('span.title')
-          .text(d[0]);
-        callback(d[1]);
+    options.enter()
+      .append('option')
+      .attr('data-token', function(d){
+        return d[1];
       })
-      .append('a')
-      .attr({
-        'class': 'dropdown-item',
-        'href' : '#'})
-      .text(function(d){return d[0]} )
-      .on('click', function(e){
-        d3.event.preventDefault();
+      .text(function(d){
+        return d[0];
       });
+
+    var mySelectPicker = $('#'+name).selectpicker({
+      'width' : '130px'
+    });
+
+    mySelectPicker.on('change', function(e){
+      var selectedOption = mySelectPicker.find('option:selected');
+      var selectedToken = selectedOption.data().token;
+      callback(selectedToken);
+    });
 
   }
 
@@ -131,16 +108,14 @@ GENEMAP.MenuBar = function (userConfig) {
     var menuRows = menu.selectAll('span').data( [
         [
           'network-btn',
-        ],[
-          'reset-btn',
-          'fit-btn',
           'expand-btn',
+          'reset-btn',
         ],[
-          //'tag-btn',
           'label-btn',
-          'qtl-btn',
           'ngenes-dropdown',
+          'qtl-btn',
         ],[
+          'fit-btn',
           'export-btn',
           'advanced-toggle'
         ]
@@ -200,8 +175,8 @@ GENEMAP.MenuBar = function (userConfig) {
       .on('click', config.onExportBtnClick);
 
     menu.select('.expand-btn')
-      .attr( 'title', 'View full screen')
-      .on('click', config.onExpandBtnClick);
+      .attr( 'title', 'Toggle full screen')
+      .on('click', myOnExpandBtnClick);
 
     menu.select('.advanced-toggle')
       .attr( 'title', 'Show advanced options')
@@ -238,19 +213,44 @@ GENEMAP.MenuBar = function (userConfig) {
       [
         'nperrow-spinner',
         'export-all-btn',
-      ] )
+        'max-snp-pvalue'
+      ] );
+
     advancedMenuItems.enter()
       .append('div')
       .append('span')
       .attr( 'class', function(d){return d;});
 
+    //PVALUE DROPDOWN
+    var pvalueSpans = advancedMenu.select('.max-snp-pvalue')
+      .selectAll('span').data(['']).enter();
+
+    pvalueSpans
+      .append('span').classed('max-snp-pvalue-text', true)
+      .html('Max SNP p-value:&nbsp');
+
+    pvalueSpans
+      .append('span').classed('max-snp-pvalue-dropdown', true);
+
+    var pvalueDropdown = advancedMenu.select('.max-snp-pvalue-dropdown');
+    pvalueDropdown.text("");
+    buildDropdown( pvalueDropdown, 'max-snp-pvalue-dropdown',
+      [['0.0', 0.0], ['0.1', 0.1], ['0.2', 0.2], ['0.3',0.3],
+        ['0.5', 0.5], ['1.0', 1.0]],
+      config.maxSnpPValueProperty, config.maxSnpPValueProperty());
+
+    config.maxSnpPValueProperty.addListener( function(value){
+      $('#max-snp-pvalue-dropdown').selectpicker( 'val', value);
+    });
+
+    //N PER ROW SPINNER
     var spinnerSpan = advancedMenu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
     enterSpinner
       .append('span')
       .attr( { for : function(d){return d}, })
-      .text('Num per row: ');
+      .html('Num per row:&nbsp;');
 
     enterSpinner
       .append('span')
@@ -266,7 +266,7 @@ GENEMAP.MenuBar = function (userConfig) {
     var $spinner = $(spinner);
 
     $spinner.TouchSpin({
-      min: 0,
+      min: 1,
       max: 20,
       step: 1,
     });
@@ -289,10 +289,9 @@ GENEMAP.MenuBar = function (userConfig) {
       target: $('.advanced-toggle'),
       parent: $('.advanced-toggle'),
       'modal-position': 'relative',
-      placement: "right",
+      placement: "bottom",
       boundingSize: config.drawing,
     });
-
 
   }
 
@@ -422,6 +421,16 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onExpandBtnClick = value;
+    return my;
+  }
+
+
+  my.maxSnpPValueProperty = function (value) {
+    if (!arguments.length) {
+      return config.maxSnpPValueProperty;
+    }
+
+    config.maxSnpPValueProperty = value;
     return my;
   }
 

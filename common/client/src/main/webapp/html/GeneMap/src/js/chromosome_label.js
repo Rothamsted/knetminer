@@ -59,7 +59,7 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
         x: config.layout.width * 0.5,
         y: config.layout.height * 0.5,
       }).style({
-        'font-size': config.layout.chromosomeWidth * 1.2 + 'px',
+        'font-size': Math.max( 14/ config.scale, config.layout.chromosomeWidth * 1.2) + 'px',
       }).text(d.number)
           .on('click', config.onLabelSelectFunction )
       ;
