@@ -703,7 +703,7 @@ public class OndexServiceProvider {
 				idf += Math.log10((double)numGenesInGenome/mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			//take the mean of all idf scores
-			idf = idf / mapGene2HitConcept.get(geneId).size();
+			//idf = idf / mapGene2HitConcept.get(geneId).size();
 			double score = tdf * idf;
 			scoredCandidates.put(graph.getConcept(geneId), score);
 		}
