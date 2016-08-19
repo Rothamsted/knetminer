@@ -190,7 +190,8 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Protein_domain.png></td>" +
 											"<td align=center><img src=html/image/Trait_ontology.png></td>" +
 											"<td align=center><img src=html/image/Molecular_function.png></td>" +
-											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
+											/*"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +*/
+											"<td align=center><img src=html/image/Trait.png></td>" +
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Phenotype</font></td>" +
 											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
@@ -198,7 +199,8 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Protein Domain</font></td>" +
 											"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
 											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
+											/*"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +*/
+											"<td align=center><font size=1.8px>GWAS</font></td>" +
 										"</tr>" +
 									"</table>" +
 								"</div>" +
@@ -1258,7 +1260,8 @@ function createGenesTable(tableUrl, keyword, rows){
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
     		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
 //    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
-    		table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
+    		// DISABLED: Old Network View (via Ondex Web Java applet)
+            // table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
 
     		table = table + legendHtmlContainer; // add legend
 
