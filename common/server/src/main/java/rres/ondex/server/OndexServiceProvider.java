@@ -834,6 +834,7 @@ public class OndexServiceProvider {
 		
 		//no Trait-QTL relations found
 		if(ccTrait == null && (ccQTL == null || ccSNP==null)) {
+                    System.out.println("no Trait-QTL relations found...");
 			return new HashSet<ONDEXConcept>();
 		}
 		
@@ -864,8 +865,9 @@ public class OndexServiceProvider {
 //			}
 		}
 		else {
+			System.out.println("Traits found...");
 			//be careful with the choice of analyzer: ConceptClasses are not indexed in lowercase letters which let the StandardAnalyzer crash
-			Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+                        Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
 			Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
 
 			String fieldCC = getFieldName("ConceptClass", null);
@@ -893,6 +895,7 @@ public class OndexServiceProvider {
 					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)
 							|| r.getFromConcept().getOfType().equals(ccSNP) || r.getToConcept().getOfType().equals(ccSNP)){
 						//QTL-->Trait or SNP-->Trait
+                                                System.out.println("QTL-->Trait or SNP-->Trait");
 						ONDEXConcept conQTL = r.getFromConcept();
 						results.add(conQTL);
 //						if(conQTL.getAttribute(attChromosome) != null){
