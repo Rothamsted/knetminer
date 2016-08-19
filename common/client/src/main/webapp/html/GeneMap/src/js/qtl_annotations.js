@@ -17,6 +17,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
+    maxSnpPValue: 1.0,
     drawing: null,
     scale:1,
   };
@@ -46,21 +47,129 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
   };
 
+  var setupSNPAnnotations = function (annotationsGroup, chromosome) {
+    //--SNPS------------------------------
+
+    var tranSpeed = 500;
+    var snps = chromosome.annotations.snps.filter( function(d){
+      return !( d.pvalue > config.maxSnpPValue);
+    });
+
+    var y = buildYScale();
+
+    var snpsAnnotations = annotationsGroup.selectAll('rect.snp-annotation').data(snps, function(d){
+      return d.id});
+
+    var snpThickness =  4;
+    var snpX = config.layout.width - 0.2 * config.layout.chromosomeWidth;
+    var snpY = function(d){ return y(d.midpoint) - 0.5 *  Math.max(snpThickness / config.scale, y(10));}
+    var snpHeight = Math.max( snpThickness / config.scale, y(10));
+    var snpWidth = 0.2 * config.layout.chromosomeWidth;
+
+    snpsAnnotations
+      .attr({
+        x: snpX,
+        y: snpY,
+        width: snpWidth,
+        height: snpHeight,
+      });
+
+    function rgb( r, g, b){
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    snpsAnnotations.enter()
+      .append( 'rect')
+      .attr( {
+        fill: function(d){ return  rgb(Math.round(d.pvalue * 84), 10, 100) },
+        opacity: function(d){return 0.5 + 0.4 * d.pvalue },
+        class: 'snp-annotation',
+
+        x: snpX,
+        y: snpY,
+        width: snpWidth,
+        height: snpHeight,
+      });
+
+    snpsAnnotations.exit().remove();
+
+    //POPOVER HANDLING
+
+    snpsAnnotations
+      .on('contextmenu', function(d){
+        log.trace('SNP Context Menu');
+
+        var popover = d3.select( '#clusterPopover');
+        popover.attr( 'class', 'popover');
+
+        //CLEAR ALL
+        var popoverTitle = popover.select('.popover-title');
+        popoverTitle.selectAll('*').remove();
+        popoverTitle.text("");
+
+        var popoverContentElement = popover.select('.popover-content');
+        popoverContentElement.selectAll('*').remove();
+        popoverContentElement.text("");
+
+        //POPOVER TITLE
+        popoverTitle
+          .append('span')
+          .text( 'SNP: ')
+
+        popoverTitle
+          .append('a')
+          .attr('href', d.link)
+          .text(d.label)
+        ;
+
+        //POPOVER CONTENT
+
+        var popoverContent = popoverContentElement
+          .selectAll('p').data([
+            ['Chromsome ' + chromosome.number , d.midpoint],
+            ['p-value', Number(d.pvalue).toFixed(2)],
+          ]);
+
+        var popoverContentEnter = popoverContent.enter();
+
+        popoverContentEnter
+          .append('p')
+          .classed( 'popover-annotation', true)
+          .text(function(d){
+            return d[0]  + ':' + d[1]
+          });
+
+        //Apply the boostrap popover function
+        $clusterPopover = $('#clusterPopover');
+
+        $clusterPopover
+          .modalPopover( {
+            target: $(this),
+            $parent: $(this),
+            'modal-position': 'body',
+            placement: "left",
+            boundingSize: config.drawing,
+          });
+
+        $clusterPopover
+          .modalPopover('show');
+
+        $clusterPopover
+          .on('mousedown mousewheel', function(event){
+            log.info('popover click');
+            event.stopPropagation();
+          });
+      });
+  }
 
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
 
     var tranSpeed = 500;
     var y = buildYScale();
     var xEnd = config.layout.width;
-    //var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
-    //var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
 
-    //var bandWidth =  3.2 / Math.pow(config.scale, 0.6);
-    //var gap = 1.7 / Math.pow(config.scale, 0.6);
-
-    var bandWidth =  Math.max(0.3 * config.layout.chromosomeWidth, 3.2) / Math.pow(config.scale, 0.6);
-    var gap = Math.max(0.8 * config.layout.chromosomeWidth, 1.7 ) / Math.pow(config.scale, 0.6);
-
+    var bandWidth = 0.3 * config.layout.chromosomeWidth ;
+    var gap = 0.4 * config.layout.chromosomeWidth ;
 
     var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
         return node.displayLabel;
@@ -70,15 +179,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       gap = gap * 1.5 ;
     }
 
-    //if (labelsToDisplay) {
-    //  if (config.scale < 8){
-    //    gap = config.layout.width * config.gapPercentage * 1.5;
-    //  }
-    //  else {
-    //    gap = config.layout.width * config.gapPercentage * 1.5 * Math.pow(8, 0.6) / Math.pow(config.scale, 0.6);
-    //  }
-    //}
-
     var xLabel = function (d) {
       return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
     };
@@ -86,6 +186,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var xStart = function (d) {
       return config.layout.width - d.position * (gap + bandWidth);
     };
+
+
 
     //--BOXES-----------------------------
     //Here we handle the actual rectangles but not the labels
@@ -174,23 +276,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         height: function (d) { return y(d.end) - y(d.start); }
       });
 
+
     qtlAnnotations.select('rect.qtl-selector')
       .style({
         fill: function (d) { return d.color; },
-      })
-      .on('mouseenter', function(d) {
-        d.hover = true;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('mouseout', function(d) {
-        d.hover = false;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('click', function(d){
-        d.hover = !d.hover;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      ;
+      }) ;
+
 
     debugQtlLableBoxes = false;
 
@@ -320,20 +411,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         }
       }});
 
-    qtlAnnotations.select( 'g.qtl-count-group')
-      .on('mouseenter', function(d) {
-        d.hover = true;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('mouseout', function(d) {
-        d.hover = false;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('click', function(d){
-        d.hover = !d.hover;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-    ;
 
     qtlAnnotations.select( 'circle.qtl-count')
       .attr({
@@ -419,6 +496,28 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return d.screenLabel;
       });
 
+
+    //MOUSEOVER HANDLING
+
+    var attachMouseOver = function(selection){
+      selection
+        .on('mouseenter', function(d) {
+          d.hover = true;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        })
+        .on('mouseout', function(d) {
+          d.hover = false;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        })
+        .on('click', function(d){
+          d.hover = !d.hover;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        });
+    };
+
+    attachMouseOver( qtlAnnotations.select('rect.qtl-selector'));
+    attachMouseOver( qtlAnnotations.select('circle.qtl-count'));
+    attachMouseOver( qtlAnnotations.select('text.qtl-count'));
 
     //POPOVER HANDLING
 
@@ -555,6 +654,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
   function my(selection) {
     selection.each(function (d) {
 
+      //QTLs
       var qtlAnnotationGroup = d3.select(this).selectAll('.qtl-annotations').data([d]);
 
       qtlAnnotationGroup.enter()
@@ -570,7 +670,21 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         drawBorder(qtlAnnotationGroup);
       }
 
+      //SNPs
       qtlAnnotationGroup.exit().remove();
+
+      var snpAnnotationGroup = d3.select(this).selectAll('.snp-annotations').data([d]);
+
+      snpAnnotationGroup.enter()
+        .append('g').attr('class', 'snp-annotations');
+
+      snpAnnotationGroup.attr({
+        transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
+      });
+
+      setupSNPAnnotations(snpAnnotationGroup, d);
+
+      snpAnnotationGroup.exit().remove();
     });
   }
 
@@ -643,6 +757,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
     config.showAnnotationLabels = value;
+    return my;
+  };
+
+  my.maxSnpPValue = function (value) {
+    if (!arguments.length) {
+      return config.maxSnpPValue;
+    }
+
+    config.maxSnpPValue = value;
     return my;
   };
 
