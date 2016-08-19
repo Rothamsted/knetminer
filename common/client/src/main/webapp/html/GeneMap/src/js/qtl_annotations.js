@@ -74,11 +74,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         height: snpHeight,
       });
 
+    function rgb( r, g, b){
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
     snpsAnnotations.enter()
       .append( 'rect')
       .attr( {
-        fill: function(d){ return  '#222277'},
-        opacity: function(d){return 0.5},
+        fill: function(d){ return  rgb(Math.round(d.pvalue * 84), 10, 100) },
+        opacity: function(d){return 0.5 + 0.4 * d.pvalue },
         class: 'snp-annotation',
 
         x: snpX,
@@ -100,18 +104,31 @@ GENEMAP.QtlAnnotations = function (userConfig) {
 
         //CLEAR ALL
         var popoverTitle = popover.select('.popover-title');
+        popoverTitle.selectAll('*').remove();
+        popoverTitle.text("");
+
         var popoverContentElement = popover.select('.popover-content');
         popoverContentElement.selectAll('*').remove();
         popoverContentElement.text("");
 
         //POPOVER TITLE
         popoverTitle
-          .text( 'SNP: ' + d.midpoint  )
+          .append('span')
+          .text( 'SNP: ')
+
+        popoverTitle
+          .append('a')
+          .attr('href', d.link)
+          .text(d.label)
+        ;
 
         //POPOVER CONTENT
 
         var popoverContent = popoverContentElement
-          .selectAll('p').data([d]);
+          .selectAll('p').data([
+            ['Chromsome ' + chromosome.number , d.midpoint],
+            ['p-value', Number(d.pvalue).toFixed(2)],
+          ]);
 
         var popoverContentEnter = popoverContent.enter();
 
@@ -119,7 +136,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           .append('p')
           .classed( 'popover-annotation', true)
           .text(function(d){
-            return d.label;
+            return d[0]  + ':' + d[1]
           });
 
         //Apply the boostrap popover function

@@ -61,11 +61,11 @@ GENEMAP.XmlDataReader = function () {
       var qtls = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'qtl'; });
 
-      //var snps = chromosomeAnnotations.filter(
-      //  function (e) { return e.type.toLowerCase() === 'snp'; });
+      var snps = chromosomeAnnotations.filter(
+        function (e) { return e.type.toLowerCase() === 'snp'; });
 
-      var snps = qtls.filter(
-        function (d) { return (d.end - d.start) < 1000000 ;} );
+      //var snps = qtls.filter(
+      //  function (d) { return (d.end - d.start) < 1000000 ;} );
 
       //Build qtl index
       qtls.forEach( function(qtl, index){
