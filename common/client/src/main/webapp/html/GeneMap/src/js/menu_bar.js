@@ -240,7 +240,7 @@ GENEMAP.MenuBar = function (userConfig) {
     var $spinner = $(spinner);
 
     $spinner.TouchSpin({
-      min: 0,
+      min: 1,
       max: 20,
       step: 1,
     });
