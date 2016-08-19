@@ -56,9 +56,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var snpsAnnotations = annotationsGroup.selectAll('rect.snp-annotation').data(snps, function(d){
       return d.id});
 
+    var snpThickness =  4;
     var snpX = config.layout.width - 0.2 * config.layout.chromosomeWidth;
-    var snpY = function(d){ return y(d.midpoint) - Math.max(1 / config.scale, y(10));}
-    var snpHeight = Math.max( 2 / config.scale, y(10));
+    var snpY = function(d){ return y(d.midpoint) - 0.5 *  Math.max(snpThickness / config.scale, y(10));}
+    var snpHeight = Math.max( snpThickness / config.scale, y(10));
     var snpWidth = 0.2 * config.layout.chromosomeWidth;
 
     snpsAnnotations
@@ -83,6 +84,61 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       });
 
     snpsAnnotations.exit().remove();
+
+    //POPOVER HANDLING
+
+    snpsAnnotations
+      .on('contextmenu', function(d){
+        log.trace('SNP Context Menu');
+
+        var popover = d3.select( '#clusterPopover');
+        popover.attr( 'class', 'popover');
+
+        //CLEAR ALL
+        var popoverTitle = popover.select('.popover-title');
+        var popoverContentElement = popover.select('.popover-content');
+        popoverContentElement.selectAll('*').remove();
+        popoverContentElement.text("");
+
+        //POPOVER TITLE
+        popoverTitle
+          .text( 'SNP: ' + d.midpoint  )
+
+        //POPOVER CONTENT
+
+        var popoverContent = popoverContentElement
+          .selectAll('p').data([d]);
+
+        var popoverContentEnter = popoverContent.enter();
+
+        popoverContentEnter
+          .append('p')
+          .classed( 'popover-annotation', true)
+          .text(function(d){
+            return d.label;
+          });
+
+        //Apply the boostrap popover function
+        $clusterPopover = $('#clusterPopover');
+
+        $clusterPopover
+          .modalPopover( {
+            target: $(this),
+            $parent: $(this),
+            'modal-position': 'body',
+            placement: "left",
+            boundingSize: config.drawing,
+          });
+
+        $clusterPopover
+          .modalPopover('show');
+
+        $clusterPopover
+          .on('mousedown mousewheel', function(event){
+            log.info('popover click');
+            event.stopPropagation();
+          });
+      });
   }
 
   var setupQTLAnnotations = function (annotationsGroup, chromosome) {
@@ -199,23 +255,12 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         height: function (d) { return y(d.end) - y(d.start); }
       });
 
+
     qtlAnnotations.select('rect.qtl-selector')
       .style({
         fill: function (d) { return d.color; },
-      })
-      .on('mouseenter', function(d) {
-        d.hover = true;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('mouseout', function(d) {
-        d.hover = false;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('click', function(d){
-        d.hover = !d.hover;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      ;
+      }) ;
+
 
     debugQtlLableBoxes = false;
 
@@ -345,20 +390,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         }
       }});
 
-    qtlAnnotations.select( 'g.qtl-count-group')
-      .on('mouseenter', function(d) {
-        d.hover = true;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('mouseout', function(d) {
-        d.hover = false;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-      .on('click', function(d){
-        d.hover = !d.hover;
-        setupQTLAnnotations(annotationsGroup, chromosome);
-      })
-    ;
 
     qtlAnnotations.select( 'circle.qtl-count')
       .attr({
@@ -444,6 +475,28 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         return d.screenLabel;
       });
 
+
+    //MOUSEOVER HANDLING
+
+    var attachMouseOver = function(selection){
+      selection
+        .on('mouseenter', function(d) {
+          d.hover = true;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        })
+        .on('mouseout', function(d) {
+          d.hover = false;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        })
+        .on('click', function(d){
+          d.hover = !d.hover;
+          setupQTLAnnotations(annotationsGroup, chromosome);
+        });
+    };
+
+    attachMouseOver( qtlAnnotations.select('rect.qtl-selector'));
+    attachMouseOver( qtlAnnotations.select('circle.qtl-count'));
+    attachMouseOver( qtlAnnotations.select('text.qtl-count'));
 
     //POPOVER HANDLING
 
