@@ -26,6 +26,7 @@
         <!-- <link rel="stylesheet" type="text/css" href="html/css/style.css"/> -->
         
         <!-- GeneMap -->
+        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
