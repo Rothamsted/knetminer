@@ -57,16 +57,28 @@ svg {
   cursor: grabbing;
 }
 
-.menubtn {
-  height: 36px;
-  width: 36px;
-  display: inline-block;
-  cursor: pointer;
+.genemap-menu {
+  margin-top: 20px;
+}
+
+.fullscreen .genemap-menu {
+  margin-top: 0px;
+}
+
+.genemap-menu .menu-block .btn-group {
+  vertical-align: initial;
 }
 
 .menu-block{
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.menubtn {
+  height: 36px;
+  width: 36px;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .info-btn {
@@ -134,15 +146,7 @@ svg {
 }
 
 .qtl-btn {
-  .menubtn;
  align: middle;
-}
-
-.qtl-btn {
-  background: url(../img/fence.png) 0 0 no-repeat;
-}
-.qtl-btn:hover {
-  background: url(../img/fence_hover.png) 0 0 no-repeat;
 }
 
 .btn-infobox-label {
@@ -190,6 +194,15 @@ svg {
 
 .expand-btn:hover {
   background: url( ../img/fit_to_size_hover.png) 0 0 no-repeat;
+}
+
+.fullscreen .expand-btn{
+  background: url( ../img/minimize.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.fullscreen .expand-btn:hover {
+  background: url( ../img/minimize_hover.png) 0 0 no-repeat;
 }
 
 .advanced-toggle {

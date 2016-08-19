@@ -2,6 +2,35 @@ var GENEMAP = GENEMAP || {};
 
  GENEMAP.vectorEffectSupport = true;
 
+GENEMAP.Listener = function(val){
+  var value = val;
+  var listeners = []
+
+  var my = function(val){
+    if (!arguments.length) {
+      return value;
+    }
+
+    value = val
+    listeners.forEach(function(listener){
+      listener(value) ;
+    })
+  };
+
+  my.addListener = function(listener){
+    listeners.push(listener);
+    return my;
+  };
+
+  my.removeListener = function(listener){
+    _.pull( listeners, listener);
+    return my;
+  };
+
+
+  return my;
+};
+
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
     width: '800',
@@ -15,6 +44,7 @@ GENEMAP.GeneMap = function (userConfig) {
     pngScale: 2,
     contentBorder: false,
     nGenesToDisplay: 1000,
+    maxSnpPValue: 1.0,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -60,12 +90,12 @@ GENEMAP.GeneMap = function (userConfig) {
   var updateDimensions = function() {
     if (expanded){
       var height = $(target).height();
-      config.height = height  - 100;
+      config.height = height  - 50; //Allow space for menu bar
       config.width =  '100%';
     }
   }
 
-  var expandToScreen = function() {
+  var toggleFullScreen = function() {
 
     var d3target = d3.select(target);
 
@@ -85,6 +115,7 @@ GENEMAP.GeneMap = function (userConfig) {
 
     updateDimensions();
 
+    closeAllPopovers();
     resetMapZoom();
     drawMap();
   };
@@ -244,6 +275,8 @@ onZoom = function () {
   // close all open popovers
   var closeAllPopovers = function (event) {
     $('#clusterPopover').modalPopover('hide');
+
+    $('.genemap-advanced-menu').modalPopover('hide');
   }
   //Intercept mouse events
 
@@ -252,6 +285,10 @@ onZoom = function () {
     var closeFunction = function(event){
       //Exceptions - don't close the popopver we are trying to interact with
       if (event.target.tagName.toLowerCase() === 'a') {
+        return;
+      }
+
+      if ($(event.target).closest('.genemap-advanced-menu').length > 0){
         return;
       }
       //all other cases
@@ -264,6 +301,14 @@ onZoom = function () {
     $(target).off(events)
       .on(events, closeFunction);
 
+
+    $('body').on('click', function(e){
+      if ($(e.target).closest(target).length < 1){
+        if ( expanded == true) {
+          toggleFullScreen();
+        }
+      }
+    });
   }
 
   //--------------------------------------------------
@@ -385,7 +430,7 @@ onZoom = function () {
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
   };
 
-  // togels the global label visibility, from 'auto', to 'show' and to 'hide'
+  // toggle the global label visibility, from 'auto', to 'show' and to 'hide'
   var toggleLableVisibility = function () {
     var oldState = menuManager.getTagButtonState();
     var newState;
@@ -637,6 +682,7 @@ onZoom = function () {
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onLabelSelectFunction(onToggleLabelSelect)
       .maxAnnotationLayers( config.layout.maxAnnotationLayers)
+      .maxSnpPValue( config.maxSnpPValue)
       .svg(svg);
 
     container.call(cellDrawer);
@@ -672,7 +718,8 @@ onZoom = function () {
           .initialNPerRow(config.layout.numberPerRow)
           .onExportBtnClick(exportViewToPng)
           .onExportAllBtnClick(exportAllToPng)
-          .onExpandBtnClick(expandToScreen)
+          .onExpandBtnClick(toggleFullScreen)
+          .maxSnpPValueProperty(my.maxSnpPValue)
         ;
       }
 
@@ -743,6 +790,15 @@ onZoom = function () {
       setGeneLabelState(value);
     }
   };
+
+  my.maxSnpPValue = GENEMAP.Listener(config.maxSnpPValue)
+    .addListener( function(val){
+      config.maxSnpPValue = val;
+      computeGeneLayout();
+      drawMap();
+    })
+  ;
+
 
   my.setQtlLabels = function (value) {
     if (target) {
