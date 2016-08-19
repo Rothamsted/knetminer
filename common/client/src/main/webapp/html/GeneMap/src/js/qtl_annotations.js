@@ -17,6 +17,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     annotationMarkerSize: 5,
     annotationLabelSize: 5,
     showAnnotationLabels: true,
+    maxSnpPValue: 1.0,
     drawing: null,
     scale:1,
   };
@@ -50,7 +51,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     //--SNPS------------------------------
 
     var tranSpeed = 500;
-    var snps = chromosome.annotations.snps
+    var snps = chromosome.annotations.snps.filter( function(d){
+      return d.pvalue < config.maxSnpPValue;
+    });
+
     var y = buildYScale();
 
     var snpsAnnotations = annotationsGroup.selectAll('rect.snp-annotation').data(snps, function(d){
@@ -736,6 +740,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
 
     config.showAnnotationLabels = value;
+    return my;
+  };
+
+  my.maxSnpPValue = function (value) {
+    if (!arguments.length) {
+      return config.maxSnpPValue;
+    }
+
+    config.maxSnpPValue = value;
     return my;
   };
 

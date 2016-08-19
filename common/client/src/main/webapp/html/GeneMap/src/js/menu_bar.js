@@ -13,6 +13,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
     onExpandBtnClick : $.noop,
+    maxSnpPValueProperty : $.noop,
     initialMaxGenes : 1000,
     initialNPerRow : 10,
   };
@@ -62,10 +63,10 @@ GENEMAP.MenuBar = function (userConfig) {
   }
 
   var buildDropdown = function(selection, id, data, callback, initialValue){
-
     var name = 'select-' + id;
 
     var selectElement = selection.selectAll('select').data([null]);
+
 
     selectElement.enter()
       .append('select')
@@ -212,19 +213,43 @@ GENEMAP.MenuBar = function (userConfig) {
       [
         'nperrow-spinner',
         'export-all-btn',
-      ] )
+        'max-snp-pvalue'
+      ] );
+
     advancedMenuItems.enter()
       .append('div')
       .append('span')
       .attr( 'class', function(d){return d;});
 
+    //PVALUE DROPDOWN
+    var pvalueSpans = advancedMenu.select('.max-snp-pvalue')
+      .selectAll('span').data(['']).enter();
+
+    pvalueSpans
+      .append('span').classed('max-snp-pvalue-text', true)
+      .html('Max SNP p-value:&nbsp');
+
+    pvalueSpans
+      .append('span').classed('max-snp-pvalue-dropdown', true);
+
+    var pvalueDropdown = advancedMenu.select('.max-snp-pvalue-dropdown');
+    pvalueDropdown.text("");
+    buildDropdown( pvalueDropdown, 'max-snp-pvalue-dropdown',
+      [['0.1', 0.1], ['0.2', 0.2], ['0.3',0.3]],
+      config.maxSnpPValueProperty, config.maxSnpPValueProperty());
+
+    config.maxSnpPValueProperty.addListener( function(value){
+      $('#max-snp-pvalue-dropdown').selectpicker( 'val', value);
+    });
+
+    //N PER ROW SPINNER
     var spinnerSpan = advancedMenu.select('.nperrow-spinner')
     var enterSpinner = spinnerSpan.selectAll('input').data(['nPerRowSpinner']).enter();
 
     enterSpinner
       .append('span')
       .attr( { for : function(d){return d}, })
-      .text('Num per row: ');
+      .html('Num per row:&nbsp;');
 
     enterSpinner
       .append('span')
@@ -396,6 +421,16 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.onExpandBtnClick = value;
+    return my;
+  }
+
+
+  my.maxSnpPValueProperty = function (value) {
+    if (!arguments.length) {
+      return config.maxSnpPValueProperty;
+    }
+
+    config.maxSnpPValueProperty = value;
     return my;
   }
 

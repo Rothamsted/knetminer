@@ -2,6 +2,35 @@ var GENEMAP = GENEMAP || {};
 
  GENEMAP.vectorEffectSupport = true;
 
+GENEMAP.Listener = function(val){
+  var value = val;
+  var listeners = []
+
+  var my = function(val){
+    if (!arguments.length) {
+      return value;
+    }
+
+    value = val
+    listeners.forEach(function(listener){
+      listener(value) ;
+    })
+  };
+
+  my.addListener = function(listener){
+    listeners.push(listener);
+    return my;
+  };
+
+  my.removeListener = function(listener){
+    _.pull( listeners, listener);
+    return my;
+  };
+
+
+  return my;
+};
+
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
     width: '800',
@@ -15,6 +44,7 @@ GENEMAP.GeneMap = function (userConfig) {
     pngScale: 2,
     contentBorder: false,
     nGenesToDisplay: 1000,
+    maxSnpPValue: 1.0,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -646,6 +676,7 @@ onZoom = function () {
       .onAnnotationSelectFunction(onAnnotationSelectionChanged)
       .onLabelSelectFunction(onToggleLabelSelect)
       .maxAnnotationLayers( config.layout.maxAnnotationLayers)
+      .maxSnpPValue( config.maxSnpPValue)
       .svg(svg);
 
     container.call(cellDrawer);
@@ -682,6 +713,7 @@ onZoom = function () {
           .onExportBtnClick(exportViewToPng)
           .onExportAllBtnClick(exportAllToPng)
           .onExpandBtnClick(toggleFullScreen)
+          .maxSnpPValueProperty(my.maxSnpPValue)
         ;
       }
 
@@ -752,6 +784,15 @@ onZoom = function () {
       setGeneLabelState(value);
     }
   };
+
+  my.maxSnpPValue = GENEMAP.Listener(config.maxSnpPValue)
+    .addListener( function(val){
+      config.maxSnpPValue = val;
+      computeGeneLayout();
+      drawMap();
+    })
+  ;
+
 
   my.setQtlLabels = function (value) {
     if (target) {
