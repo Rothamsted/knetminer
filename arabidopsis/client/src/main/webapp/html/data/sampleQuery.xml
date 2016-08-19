@@ -2,7 +2,7 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>Grain colour</description>
+		<description>Petal size QTL</description>
 		<term>"cell size" OR "cell division" OR "cell cycle"</term>
 		<withinRegion>true</withinRegion>
 		<region>
