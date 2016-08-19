@@ -246,7 +246,6 @@ GENEMAP.QTLAnnotationLayout = function (userConfig) {
         node.displayLabel = true;
         node.screenLabel = node.label;
         node.fontSize = Math.min(fontSize, 2 * bandWidth) ;
-        log.info(node.fontSize);
       });
 
       displayNodes = positioner.sortQTLAnnotationsWithLabels(

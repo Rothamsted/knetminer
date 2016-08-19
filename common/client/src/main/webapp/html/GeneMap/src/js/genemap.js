@@ -275,6 +275,8 @@ onZoom = function () {
   // close all open popovers
   var closeAllPopovers = function (event) {
     $('#clusterPopover').modalPopover('hide');
+
+    $('.genemap-advanced-menu').modalPopover('hide');
   }
   //Intercept mouse events
 
@@ -283,6 +285,10 @@ onZoom = function () {
     var closeFunction = function(event){
       //Exceptions - don't close the popopver we are trying to interact with
       if (event.target.tagName.toLowerCase() === 'a') {
+        return;
+      }
+
+      if ($(event.target).closest('.genemap-advanced-menu').length > 0){
         return;
       }
       //all other cases
