@@ -89,7 +89,8 @@ GENEMAP.AutoLayoutDecorator = function (userConfig) {
       var chromosomeHeight = cellDimensions.height - labelHeight - sizeLabelHeight - cellMargins.top - cellMargins.bottom;
 
       // calculate the chromosome width
-      var chromosomeWidth = chromosomeHeight * config.chromosomeAspectRatio;
+      //maintain aspect ratio until the chromosome starts looking really wide, then start growing the width more slowly
+      var chromosomeWidth = Math.min( 65 / config.scale, chromosomeHeight * config.chromosomeAspectRatio);
 
       // calculate the total annotations widthRatio
       var totalAnnotations = cellDimensions.width - chromosomeWidth - cellMargins.left - cellMargins.right;

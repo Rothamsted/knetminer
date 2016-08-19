@@ -52,15 +52,9 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     var tranSpeed = 500;
     var y = buildYScale();
     var xEnd = config.layout.width;
-    //var bandWidth =  config.layout.width * config.bandWidthPercentage / Math.pow(config.scale, 0.6);
-    //var gap = config.layout.width * config.gapPercentage / Math.pow(config.scale, 0.6);
 
-    //var bandWidth =  3.2 / Math.pow(config.scale, 0.6);
-    //var gap = 1.7 / Math.pow(config.scale, 0.6);
-
-    var bandWidth =  Math.max(0.3 * config.layout.chromosomeWidth, 3.2) / Math.pow(config.scale, 0.6);
-    var gap = Math.max(0.8 * config.layout.chromosomeWidth, 1.7 ) / Math.pow(config.scale, 0.6);
-
+    var bandWidth = 0.3 * config.layout.chromosomeWidth ;
+    var gap = 0.4 * config.layout.chromosomeWidth ;
 
     var labelsToDisplay = chromosome.layout.qtlNodes.some( function(node){
         return node.displayLabel;
