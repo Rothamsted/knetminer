@@ -21,6 +21,8 @@
 188^	Reaction
 19^	Path
 20	SNP
+21^	Trait
+
 
 #Transitions
 1-10	enc
@@ -51,7 +53,7 @@
 9-9	physical	8
 9-13	has_observ_pheno
 9-20	has_variation
-20-13	associated_with
+20-21	associated_with
 11-3	has_function
 11-4	participates_in
 11-5	located_in
