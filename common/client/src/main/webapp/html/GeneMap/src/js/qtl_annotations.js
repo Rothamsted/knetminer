@@ -84,7 +84,6 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         fill: function(d){ return  rgb(Math.round(d.pvalue * 84), 10, 100) },
         opacity: function(d){return 0.5 + 0.4 * d.pvalue },
         class: 'snp-annotation',
-
         x: snpX,
         y: snpY,
         width: snpWidth,
