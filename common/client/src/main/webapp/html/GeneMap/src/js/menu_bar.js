@@ -215,8 +215,8 @@ GENEMAP.MenuBar = function (userConfig) {
     var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
       [
         'nperrow-spinner',
+        'max-snp-pvalue',
         'export-all-btn',
-        'max-snp-pvalue'
       ] );
 
     advancedMenuItems.enter()
@@ -224,26 +224,47 @@ GENEMAP.MenuBar = function (userConfig) {
       .append('span')
       .attr( 'class', function(d){return d;});
 
-    //PVALUE DROPDOWN
-    var pvalueSpans = advancedMenu.select('.max-snp-pvalue')
-      .selectAll('span').data(['']).enter();
+    //PVALUE INPUT
 
-    pvalueSpans
-      .append('span').classed('max-snp-pvalue-text', true)
+    var pvalueSpans = advancedMenu.select('.max-snp-pvalue')
+      .selectAll('form').data(['']).enter();
+
+    var pvalueForm = pvalueSpans.append('form')
+      .classed('bootstrap', true)
+      .attr({
+        'id': 'snp-pvalue-form',
+        'class': 'bootstrap form-inline'
+      });
+
+    pvalueForm
+      .append('label').attr({
+      'id': 'max-snp-pvalue-text',
+      'for' : 'max-snp-pvalue-input',
+    })
       .html('Max SNP p-value:&nbsp');
 
-    pvalueSpans
-      .append('span').classed('max-snp-pvalue-dropdown', true);
+    pvalueForm
+      .append('input').attr({
+      'class' : 'form-control',
+      'id': 'max-snp-pvalue-input',
+      'type': 'text',
+      'value': config.maxSnpPValueProperty(),
+    });
 
-    var pvalueDropdown = advancedMenu.select('.max-snp-pvalue-dropdown');
-    pvalueDropdown.text("");
-    buildDropdown( pvalueDropdown, 'max-snp-pvalue-dropdown',
-      [['0.0', 0.0], ['0.1', 0.1], ['0.2', 0.2], ['0.3',0.3],
-        ['0.5', 0.5], ['1.0', 1.0]],
-      config.maxSnpPValueProperty, config.maxSnpPValueProperty());
+    pvalueForm
+      .append('button')
+      .attr({
+        'class' : 'btn btn-default',
+        'type' : 'submit'})
+      .text('Set');
+
+      $('#snp-pvalue-form').submit( function(e){
+        config.maxSnpPValueProperty($('#max-snp-pvalue-input').val());
+        e.preventDefault();
+      });
 
     config.maxSnpPValueProperty.addListener( function(value){
-      $('#max-snp-pvalue-dropdown').selectpicker( 'val', value);
+      $('#max-snp-pvalue-input').val(value);
     });
 
     //N PER ROW SPINNER
@@ -252,6 +273,7 @@ GENEMAP.MenuBar = function (userConfig) {
 
     enterSpinner
       .append('span')
+      .append('label').classed('bootstrap', true)
       .attr( { for : function(d){return d}, })
       .html('Num per row:&nbsp;');
 
