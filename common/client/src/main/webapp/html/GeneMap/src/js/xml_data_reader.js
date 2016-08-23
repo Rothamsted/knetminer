@@ -64,8 +64,10 @@ GENEMAP.XmlDataReader = function () {
       var snps = chromosomeAnnotations.filter(
         function (e) { return e.type.toLowerCase() === 'snp'; });
 
-      //var snps = qtls.filter(
-      //  function (d) { return (d.end - d.start) < 1000000 ;} );
+      //Build snps index
+      snps.forEach( function(snp,index){
+       snp.id = chromosome.number + '_'  + index;
+      } );
 
       //Build qtl index
       qtls.forEach( function(qtl, index){
