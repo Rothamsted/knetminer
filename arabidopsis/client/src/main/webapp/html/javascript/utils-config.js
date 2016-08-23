@@ -1,5 +1,6 @@
 var data_url = "https://ondex.rothamsted.ac.uk/arabidopsis_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/arabidopsis_data/"; // now, using HTTP instead of HTTPS
+//var data_url = "http://maize-dev.rothamsted.ac.uk/arabidopsis_data/"; // test
 var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = "Arabidopsis Genome";
 var reference_genome = true; //true if you are providing a reference genome

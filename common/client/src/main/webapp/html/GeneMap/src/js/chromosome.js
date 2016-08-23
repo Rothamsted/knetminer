@@ -50,8 +50,8 @@ GENEMAP.Chromosome = function (userConfig) {
     var chromosomeShape = {
       width: config.layout.width,
       height: height,
-      rx: config.layout.height * 0.01,
-      ry: config.layout.height * 0.01,
+      rx: Math.min(config.layout.width * 0.25, config.layout.height* 0.01),
+      ry: Math.min(config.layout.width * 0.25, config.layout.height* 0.01),
     };
 
     chromosomeGroup.select('.mask_rect').attr(chromosomeShape);
