@@ -463,12 +463,6 @@ onZoom = function () {
     drawMap();
   }
 
-  var onSetNGenestoDisplay = function( nGenes) {
-    config.nGenesToDisplay = nGenes;
-    resetClusters();
-    computeGeneLayout();
-    drawMap();
-  }
 
   var onSetNumberPerRow = function( numberPerRow) {
     log.trace('Number per row:', numberPerRow );
@@ -712,7 +706,6 @@ onZoom = function () {
           .onQtlBtnClick(onToggleQTLDisplay)
           .onNetworkBtnClick(openNetworkView)
           .onResetBtnClick(resetLabels)
-          .onSetMaxGenesClick(onSetNGenestoDisplay)
           .onSetNumberPerRowClick(onSetNumberPerRow)
           .initialMaxGenes(config.nGenesToDisplay)
           .initialNPerRow(config.layout.numberPerRow)
@@ -720,6 +713,7 @@ onZoom = function () {
           .onExportAllBtnClick(exportAllToPng)
           .onExpandBtnClick(toggleFullScreen)
           .maxSnpPValueProperty(my.maxSnpPValue)
+          .nGenesToDisplayProperty(my.nGenesToDisplay)
         ;
       }
 
@@ -774,6 +768,7 @@ onZoom = function () {
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
+      my.nGenesToDisplay(1000);
       resetMapZoom();
     });
   };
@@ -791,6 +786,12 @@ onZoom = function () {
     }
   };
 
+  //PROPERTIES---------
+  //Use these as public methods to set config values e.g.:
+  //my.maxSnpPValue(0.5);
+  //Attach listeners to be notified whenever the value changes e.g:
+  //my.maxSnpPValue.AddListener(function(pvalue){log.info(pvalue)});
+
   my.maxSnpPValue = GENEMAP.Listener(config.maxSnpPValue)
     .addListener( function(val){
       config.maxSnpPValue = val;
@@ -799,6 +800,14 @@ onZoom = function () {
     })
   ;
 
+  my.nGenesToDisplay = GENEMAP.Listener(config.nGenesToDisplay)
+    .addListener( function( nGenes) {
+      log.info( 'Setting nGenes to ', nGenes);
+      config.nGenesToDisplay = nGenes;
+      resetClusters();
+      computeGeneLayout();
+      drawMap();
+    } );
 
   my.setQtlLabels = function (value) {
     if (target) {
