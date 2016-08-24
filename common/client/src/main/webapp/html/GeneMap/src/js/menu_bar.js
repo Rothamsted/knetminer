@@ -8,12 +8,12 @@ GENEMAP.MenuBar = function (userConfig) {
     onLabelBtnClick: $.noop,
     onQtlBtnClick: $.noop,
     onResetBtnClick: $.noop,
-    onSetMaxGenesClick : $.noop,
     onSetNumberPerRowClick : $.noop,
     onExportBtnClick : $.noop,
     onExportAllBtnClick : $.noop,
     onExpandBtnClick : $.noop,
     maxSnpPValueProperty : $.noop,
+    nGenesToDisplayProperty : $.noop,
     initialMaxGenes : 1000,
     initialNPerRow : 10,
   };
@@ -170,8 +170,19 @@ GENEMAP.MenuBar = function (userConfig) {
     var dropdownSpan = menu.select('.ngenes-dropdown');
     dropdownSpan.text("");
     buildDropdown( dropdownSpan, 'ngenes-dropdown',
-      [['50 genes', 50], ['100 genes', 100], ['200 genes',200], ['500 genes', 500], ['1000 genes',1000]],
-      config.onSetMaxGenesClick, config.initialMaxGenes + ' genes');
+      [
+        ['1000 genes', 1000],
+        ['500 genes', 500],
+        ['200 genes', 200],
+        ['100 genes', 100],
+        ['50 genes', 50],
+      ],
+      config.nGenesToDisplayProperty, config.nGenesToDisplayProperty() + ' genes');
+
+    config.nGenesToDisplayProperty.addListener( function(ngenes){
+      $('#select-ngenes-dropdown')
+        .selectpicker('val', [ngenes + ' genes', ngenes] )
+    });
 
     menu.select('.export-btn')
       .attr( { 'title' : 'export view to png'})
@@ -386,15 +397,6 @@ GENEMAP.MenuBar = function (userConfig) {
     return my;
   };
 
-  my.onSetMaxGenesClick = function (value) {
-    if (!arguments.length) {
-      return config.onSetMaxGenesClick;
-    }
-
-    config.onSetMaxGenesClick = value;
-    return my;
-  };
-
   my.onSetNumberPerRowClick = function (value) {
     if (!arguments.length) {
       return config.onSetNumberPerRowClick;
@@ -456,6 +458,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.maxSnpPValueProperty = value;
+    return my;
+  }
+
+  my.nGenesToDisplayProperty = function (value) {
+    if (!arguments.length) {
+      return config.nGenesToDisplayProperty;
+    }
+
+    config.nGenesToDisplayProperty = value;
     return my;
   }
 
