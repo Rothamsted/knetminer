@@ -895,7 +895,7 @@ public class OndexServiceProvider {
 					if(r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)
 							|| r.getFromConcept().getOfType().equals(ccSNP) || r.getToConcept().getOfType().equals(ccSNP)){
 						//QTL-->Trait or SNP-->Trait
-                                                System.out.println("QTL-->Trait or SNP-->Trait");
+                                                //System.out.println("QTL-->Trait or SNP-->Trait");
 						ONDEXConcept conQTL = r.getFromConcept();
 						results.add(conQTL);
 //						if(conQTL.getAttribute(attChromosome) != null){
@@ -1663,7 +1663,7 @@ public class OndexServiceProvider {
 //			System.out.println(qtlDB.size() + " QTLs are significant.");
 //		}
 		
-		
+		System.out.println("If SNPs found, add to GViewer.xml...");
 		for(ONDEXConcept qtl : qtlDB){
 			
 			//to cope with large number of QTL in AnimalQTLdb
@@ -1693,7 +1693,7 @@ public class OndexServiceProvider {
 				endQTL = endQTL * 1000000;
 			}
 			
-			//TODO get p-value of SNP-Trait relations
+                        //TODO get p-value of SNP-Trait relations
 			
 			double pvalue = Math.random();
 			
