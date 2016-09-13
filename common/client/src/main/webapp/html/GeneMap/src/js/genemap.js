@@ -46,6 +46,7 @@ GENEMAP.GeneMap = function (userConfig) {
     initialMaxGenes: 200,
     nGenesToDisplay: 200,
     maxSnpPValue: 1.0,
+    annotationLabelSize: 13,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -535,6 +536,7 @@ onZoom = function () {
         autoLabels: autoLabels,
         manualLabels: manualLabels,
         nGenesToDisplay: config.nGenesToDisplay,
+        displayedFontSize: config.annotationLabelSize,
       }
     );
 
@@ -715,6 +717,7 @@ onZoom = function () {
           .onExpandBtnClick(toggleFullScreen)
           .maxSnpPValueProperty(my.maxSnpPValue)
           .nGenesToDisplayProperty(my.nGenesToDisplay)
+          .annotationLabelSizeProperty(my.annotationLabelSize)
         ;
       }
 
@@ -809,6 +812,15 @@ onZoom = function () {
       computeGeneLayout();
       drawMap();
     } );
+
+  my.annotationLabelSize = GENEMAP.Listener(config.annotationLabelSize)
+    .addListener( function(labelSize) {
+      log.info( 'Setting annotation label size to', labelSize);
+      config.annotationLabelSize = labelSize;
+      resetClusters();
+      computeGeneLayout();
+      drawMap();
+    })
 
   my.setQtlLabels = function (value) {
     if (target) {

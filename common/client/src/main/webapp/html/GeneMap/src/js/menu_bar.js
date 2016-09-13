@@ -14,6 +14,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onExpandBtnClick : $.noop,
     maxSnpPValueProperty : $.noop,
     nGenesToDisplayProperty : $.noop,
+    annotationLabelSizeProperty : $.noop,
     initialMaxGenes : 200,
     initialNPerRow : 10,
   };
@@ -223,16 +224,16 @@ GENEMAP.MenuBar = function (userConfig) {
       .append('div')
       .classed('popover-content', true)
 
-    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
+    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('div').data(
       [
         'nperrow-spinner',
         'max-snp-pvalue',
+        'labelsize',
         'export-all-btn',
       ] );
 
     advancedMenuItems.enter()
       .append('div')
-      .append('span')
       .attr( 'class', function(d){return d;});
 
     //PVALUE INPUT
@@ -319,6 +320,36 @@ GENEMAP.MenuBar = function (userConfig) {
     advancedMenu.select('.export-all-btn')
       .attr( { 'title' : 'export all to png'})
       .on('click', config.onExportAllBtnClick);
+
+    advancedMenu.select('.labelsize').selectAll('span')
+      .data(['labelsize-label', 'labelsize-dropdown'])
+      .enter()
+      .append('span')
+      .attr( {'class': function(d){return d;} });
+
+    advancedMenu.select('.labelsize-label')
+      .classed( 'bootstrap', true);
+
+    advancedMenu.select('.labelsize-label').selectAll('label').data([''])
+      .enter()
+      .append('label')
+      .text('Label size:');
+
+    var labelSizeDropdown = advancedMenu.select('.labelsize-dropdown');
+    labelSizeDropdown.text("");
+    buildDropdown( labelSizeDropdown, 'labelsize-dropdown',
+      [
+        ['10', 10],
+        ['15', 15],
+        ['20', 20],
+        ['25', 25],
+      ],
+      config.annotationLabelSizeProperty, config.annotationLabelSizeProperty());
+
+    config.annotationLabelSizeProperty.addListener( function(labelSize){
+      $('#select-labelsize-dropdown')
+        .selectpicker('val', [labelSize, labelSize] );
+    });
 
     //ACTIVATE POPOVER
     $('.genemap-advanced-menu').modalPopover( {
@@ -467,6 +498,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.nGenesToDisplayProperty = value;
+    return my;
+  }
+
+  my.annotationLabelSizeProperty = function (value) {
+    if (!arguments.length) {
+      return config.annotationLabelSizeProperty;
+    }
+
+    config.annotationLabelSizeProperty = value;
     return my;
   }
 
