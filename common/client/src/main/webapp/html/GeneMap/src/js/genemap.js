@@ -43,7 +43,8 @@ GENEMAP.GeneMap = function (userConfig) {
     },
     pngScale: 2,
     contentBorder: false,
-    nGenesToDisplay: 1000,
+    initialMaxGenes: 200,
+    nGenesToDisplay: 200,
     maxSnpPValue: 1.0,
 
     // the extra area outside of the content that the user can pan overflow
@@ -768,7 +769,7 @@ onZoom = function () {
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
-      my.nGenesToDisplay(1000);
+      my.nGenesToDisplay(config.initialMaxGenes);
       resetMapZoom();
     });
   };

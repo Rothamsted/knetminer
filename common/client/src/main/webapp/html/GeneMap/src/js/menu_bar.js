@@ -14,7 +14,7 @@ GENEMAP.MenuBar = function (userConfig) {
     onExpandBtnClick : $.noop,
     maxSnpPValueProperty : $.noop,
     nGenesToDisplayProperty : $.noop,
-    initialMaxGenes : 1000,
+    initialMaxGenes : 200,
     initialNPerRow : 10,
   };
 
@@ -171,11 +171,11 @@ GENEMAP.MenuBar = function (userConfig) {
     dropdownSpan.text("");
     buildDropdown( dropdownSpan, 'ngenes-dropdown',
       [
-        ['1000 genes', 1000],
-        ['500 genes', 500],
-        ['200 genes', 200],
-        ['100 genes', 100],
         ['50 genes', 50],
+        ['100 genes', 100],
+        ['200 genes', 200],
+        ['500 genes', 500],
+        ['1000 genes', 1000],
       ],
       config.nGenesToDisplayProperty, config.nGenesToDisplayProperty() + ' genes');
 
