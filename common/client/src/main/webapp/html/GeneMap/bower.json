@@ -1,0 +1,47 @@
+{
+  "name": "gene-map",
+  "description": "",
+  "main": "genemap.js",
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.12.0",
+    "bootstrap": "^3.3.6",
+    "d3": "3.4.13",
+    "lodash": "^4.5.1",
+    "es6-promise": "^3.2.1",
+    "d3.promise": "^1.1.0",
+    "labella": "^1.1.1",
+    "file-saver.js": "^1.20150507.2",
+    "simple-statistics": "v1.0.1",
+    "loglevel": "~1.4.1",
+    "saveSvgAsPng": "https://github.com/exupero/saveSvgAsPng.git#~1.0.1",
+    "bootstrap-touchspin": "~3.1.1",
+    "es6-shim": "~0.35.1",
+    "es5-shim": "^4.5.9",
+    "jquery-ui": "^1.12.0",
+    "array-includes": "^1.0.0",
+    "bootstrap-select": "^1.11.0"
+  },
+  "overrides": {
+    "bootstrap-touchspin": {
+      "main": [
+        "dist/jquery.bootstrap-touchspin.min.js",
+        "dist/jquery.bootstrap-touchspin.min.css"
+      ]
+    }
+  },
+  "devDependencies": {
+    "jasmine-core": "jasmine#^2.4.1",
+    "jasmine-collection-matchers": "^0.1.2"
+  }
+}
