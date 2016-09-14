@@ -81,8 +81,8 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     snpsAnnotations.enter()
       .append( 'rect')
       .attr( {
-        fill: function(d){ return  rgb(Math.round(d.pvalue * 84), 10, 100) },
-        opacity: function(d){return 0.5 + 0.4 * d.pvalue },
+        fill: function(d){ return d.color; },
+        opacity: function(d){return  d.importance},
         class: 'snp-annotation',
         x: snpX,
         y: snpY,
@@ -135,7 +135,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           .append('p')
           .classed( 'popover-annotation', true)
           .text(function(d){
-            return d[0]  + ':' + d[1]
+            return d[0]  + ': ' + d[1]
           });
 
         //Apply the boostrap popover function
