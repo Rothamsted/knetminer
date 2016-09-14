@@ -47,23 +47,10 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     }
   };
 
-  var setupSNPAnnotations = function (annotationsGroup, chromosome) {
+  var setupSNPAnnotations = function (annotationsGroup, chromosome, snps, traits) {
     //--SNPS------------------------------
 
-    var tranSpeed = 500;
-    var snps = chromosome.annotations.snps.filter( function(d){
-      return !( d.pvalue > config.maxSnpPValue);
-    });
-
-    // Get list of unique traits
-    var traitSet  = new Set();
-    snps.map( function(snp){
-      traitSet.add(snp.trait);
-    });
-
-    var traits = Array.from(traitSet);
-
-    //Generate an index for each trait
+   //Generate an index for each trait
     var traitPos = {};
     traits.map( function(trait, index){
       traitPos[trait] = index;
@@ -265,7 +252,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
     qtlAnnotations.select('rect.qtl-hoverbox').attr({
       x: function(d) { return xStart(d)},
       y: function (d) { return y(d.start);},
-      width: function(d) { return  d.position * (gap + bandWidth) + config.chromosomeWidth; },
+      width: function(d) { return  d.position * (gap + bandWidth) + config.chromosomeWidth + snpsOffset; },
       height: function(d){ return y(d.end) -y (d.start)} ,
       fill: function(d){ return d.color; },
       visibility: function(d){return d.hover ? 'visible' : 'hidden' },
@@ -671,7 +658,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       traitSet.add(snp.trait);
     });
 
-    var traits = Array.from(traitSet);
+    var traits = Array.from(traitSet).sort();
     return traits;
   }
 
@@ -716,7 +703,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
       });
 
-      setupSNPAnnotations(snpAnnotationGroup, d);
+      setupSNPAnnotations(snpAnnotationGroup, d, snps, snpsTraits);
 
       snpAnnotationGroup.exit().remove();
     });

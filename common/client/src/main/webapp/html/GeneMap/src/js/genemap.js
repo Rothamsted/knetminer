@@ -157,6 +157,11 @@ GENEMAP.GeneMap = function (userConfig) {
 
   // reset the maps pan and zoom to the initial state
   var resetMapZoom = function () {
+    if ( zoom.scale() == 1 && _.isEqual(zoom.translate(), [0,0])){
+      //No need to do anything
+      return;
+    }
+
     zoom.translate([0, 0]);
     zoom.scale(1);
     container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
@@ -772,7 +777,7 @@ onZoom = function () {
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
-      my.nGenesToDisplay(config.initialMaxGenes);
+      //my.nGenesToDisplay(config.initialMaxGenes);
       resetMapZoom();
     });
   };
