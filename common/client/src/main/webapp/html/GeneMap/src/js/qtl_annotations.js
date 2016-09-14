@@ -55,13 +55,27 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       return !( d.pvalue > config.maxSnpPValue);
     });
 
+    // Get list of unique traits
+    var traitSet  = new Set();
+    snps.map( function(snp){
+      traitSet.add(snp.trait);
+    });
+
+    var traits = Array.from(traitSet);
+
+    //Generate an index for each trait
+    var traitPos = {};
+    traits.map( function(trait, index){
+      traitPos[trait] = index;
+    });
+
     var y = buildYScale();
 
     var snpsAnnotations = annotationsGroup.selectAll('rect.snp-annotation').data(snps, function(d){
       return d.id});
 
     var snpThickness =  4;
-    var snpX = config.layout.width - 0.2 * config.layout.chromosomeWidth;
+    var snpX = function(d) { return config.layout.width - 0.2 * config.layout.chromosomeWidth * (1 + traitPos[d.trait])};
     var snpY = function(d){ return y(d.midpoint) - 0.5 *  Math.max(snpThickness / config.scale, y(10));}
     var snpHeight = Math.max( snpThickness / config.scale, y(10));
     var snpWidth = 0.2 * config.layout.chromosomeWidth;
@@ -161,7 +175,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       });
   }
 
-  var setupQTLAnnotations = function (annotationsGroup, chromosome) {
+  var setupQTLAnnotations = function (annotationsGroup, chromosome, nSnpsTraits) {
 
     var tranSpeed = 500;
     var y = buildYScale();
@@ -178,12 +192,14 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       gap = gap * 1.5 ;
     }
 
+    var snpsOffset = nSnpsTraits * 0.2 * config.layout.chromosomeWidth;
+
     var xLabel = function (d) {
-      return config.layout.width - (d.labelPosition ) * (gap + bandWidth);
+      return config.layout.width - (d.labelPosition ) * (gap + bandWidth) - snpsOffset;
     };
 
     var xStart = function (d) {
-      return config.layout.width - d.position * (gap + bandWidth);
+      return config.layout.width - d.position * (gap + bandWidth) - snpsOffset;
     };
 
 
@@ -502,15 +518,15 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       selection
         .on('mouseenter', function(d) {
           d.hover = true;
-          setupQTLAnnotations(annotationsGroup, chromosome);
+          setupQTLAnnotations(annotationsGroup, chromosome, nSnpsTraits);
         })
         .on('mouseout', function(d) {
           d.hover = false;
-          setupQTLAnnotations(annotationsGroup, chromosome);
+          setupQTLAnnotations(annotationsGroup, chromosome, nSnpsTraits);
         })
         .on('click', function(d){
           d.hover = !d.hover;
-          setupQTLAnnotations(annotationsGroup, chromosome);
+          setupQTLAnnotations(annotationsGroup, chromosome, nSnpsTraits);
         });
     };
 
@@ -648,10 +664,29 @@ GENEMAP.QtlAnnotations = function (userConfig) {
       });
   };
 
+  var getSnpsTraits = function (snps){
+    // Get list of unique traits
+    var traitSet  = new Set();
+    snps.map( function(snp){
+      traitSet.add(snp.trait);
+    });
+
+    var traits = Array.from(traitSet);
+    return traits;
+  }
+
+
   // An SVG representation of a chromosome with banding data. This won't create an SVG
   // element, it expects that to already have been created.
   function my(selection) {
     selection.each(function (d) {
+
+      //Do some processing of the SNPs to work out how much space we need
+      var snps = d.annotations.snps.filter( function(d){
+        return !( d.pvalue > config.maxSnpPValue);
+      });
+
+      var snpsTraits = getSnpsTraits(snps);
 
       //QTLs
       var qtlAnnotationGroup = d3.select(this).selectAll('.qtl-annotations').data([d]);
@@ -663,7 +698,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
         transform: 'translate(' + config.layout.x + ',' + config.layout.y + ')',
       });
 
-      setupQTLAnnotations(qtlAnnotationGroup, d);
+      setupQTLAnnotations(qtlAnnotationGroup, d, snpsTraits.length);
 
       if (config.border) {
         drawBorder(qtlAnnotationGroup);

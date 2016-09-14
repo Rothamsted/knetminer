@@ -48490,4 +48490,22 @@
 <pvalue>3.207155E-5</pvalue><link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=ENSVATH00800117</link>
 <label>ENSVATH00800117</label>
 </feature>
+<feature>
+<chromosome>4</chromosome>
+<start>10000000</start>
+<end>12000000</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>TEST QTL 1</label>
+<link>testlink</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>11000000</start>
+<end>13000000</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>TEST QTL 2</label>
+<link>testlink</link>
+</feature>
 </genome>
