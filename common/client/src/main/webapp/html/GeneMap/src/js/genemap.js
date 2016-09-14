@@ -777,8 +777,9 @@ onZoom = function () {
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
       log.info('drawing genome to target');
       d3.select(target).datum(data).call(my);
-      //my.nGenesToDisplay(config.initialMaxGenes);
+      my.nGenesToDisplay(config.initialMaxGenes);
       resetMapZoom();
+      updateKey(keySpan, genome)
     });
   };
 
@@ -818,10 +819,13 @@ onZoom = function () {
   my.nGenesToDisplay = GENEMAP.Listener(config.nGenesToDisplay)
     .addListener( function( nGenes) {
       log.info( 'Setting nGenes to ', nGenes);
+      var oldValue = config.nGenesToDisplay;
       config.nGenesToDisplay = nGenes;
-      resetClusters();
-      computeGeneLayout();
-      drawMap();
+      if (nGenes !=  oldValue) {
+        resetClusters();
+        computeGeneLayout();
+        drawMap();
+      }
     } );
 
   my.annotationLabelSize = GENEMAP.Listener(config.annotationLabelSize)
