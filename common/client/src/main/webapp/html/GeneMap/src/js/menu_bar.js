@@ -201,7 +201,7 @@ GENEMAP.MenuBar = function (userConfig) {
       } );
 
     var helpURL = 'https://github.com/francis-newson-tessella/QTLNetMiner/'
-    +'tree/QTLNM-47-Map-view-enhancements/'
+    +'tree/QTLNM-47-MVE/'
     +'common/client/src/main/webapp/html/GeneMap/docs';
 
     menu.select('.help-btn')
