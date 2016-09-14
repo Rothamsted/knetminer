@@ -128,6 +128,7 @@ GENEMAP.QtlAnnotations = function (userConfig) {
           .selectAll('p').data([
             ['Chromsome ' + chromosome.number , d.midpoint],
             ['p-value', Number(d.pvalue).toExponential()],
+            ['Trait', d.trait],
           ]);
 
         var popoverContentEnter = popoverContent.enter();
