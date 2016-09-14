@@ -45,7 +45,7 @@ GENEMAP.GeneMap = function (userConfig) {
     contentBorder: false,
     initialMaxGenes: 200,
     nGenesToDisplay: 200,
-    maxSnpPValue: 1.0,
+    maxSnpPValue: 1e-5,
     annotationLabelSize: 13,
 
     // the extra area outside of the content that the user can pan overflow
@@ -64,7 +64,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var container; // the g container that performs the zooming
 
   var logSpan;
-  var keySpan;
+  var legendSpan;
 
   var zoom; // the zoom behaviour
   var onZoom;
@@ -93,7 +93,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var updateDimensions = function() {
     if (expanded){
       var height = $(target).height();
-      config.height = height  - 50; //Allow space for menu bar
+      config.height = height  - 80; //Allow space for menu bar
       config.width =  '100%';
     }
   }
@@ -588,28 +588,32 @@ GENEMAP.GeneMap = function (userConfig) {
     geneAnnotationLayout.computeNormalisedGeneScores(genome.chromosomes);
   }
 
-  var updateKey = function(keyTarget, genome){
-
+  var updateLegend = function(keyTarget, genome){
     var traitSet = new Set();
     var traitColors = [];
     genome.chromosomes.forEach( function(chromosome) {
       chromosome.annotations.snps.forEach( function(snp) {
+
         if( ! traitSet.has(snp.trait)){
+          if (snp.trait != null){
           traitColors.push( {trait: snp.trait, color: snp.color});
+          }
         }
+
         traitSet.add( snp.trait );
+
       });
     });
 
-    var keyGroup = keyTarget.selectAll('span').data( traitColors);
-
     if( traitColors.length > 0){
 
-      keyTarget.text('SNP key: ');
+      keyTarget.text('SNP legend: ');
     }
     else {
       keyTarget.text('');
     }
+
+    var keyGroup = keyTarget.selectAll('span').data( traitColors);
 
     var keyGroupSpan = keyGroup.enter()
       .append('span')
@@ -642,7 +646,7 @@ GENEMAP.GeneMap = function (userConfig) {
         'id' : 'logbar'
       });
 
-    keySpan = mapContainer.append('div').append('span')
+    legendSpan = mapContainer.append('div')
       .attr( {
         'class' :'key',
         'id' : 'keybar'
@@ -824,7 +828,7 @@ GENEMAP.GeneMap = function (userConfig) {
       d3.select(target).datum(data).call(my);
       my.nGenesToDisplay(config.initialMaxGenes);
       resetMapZoom();
-      updateKey(keySpan, genome)
+      updateLegend(legendSpan, genome)
     });
   };
 
