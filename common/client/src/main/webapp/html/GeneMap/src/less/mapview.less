@@ -257,9 +257,16 @@ svg {
 }
 
 .colorbox {
-  width: 10px;
-  height: 10px;
+  svg {
+    width: 10px;
+    height: 10px;
+    border: none;
+  }
   margin-left: 10px;
   margin-right: 2px;
-  display: inline-block;
+}
+
+#keybar {
+  max-height: 80px;
+  overflow-y: auto;
 }

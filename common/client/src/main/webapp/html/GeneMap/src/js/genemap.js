@@ -612,11 +612,14 @@ GENEMAP.GeneMap = function (userConfig) {
     }
 
     var keyGroupSpan = keyGroup.enter()
-      .append('span');
+      .append('span')
+      .classed( 'key-item', true);
 
-    keyGroupSpan.append('span')
+    keyGroupSpan
+      .append('span')
+      .style( 'background-color', function(d){return d.color})
       .classed('colorbox', true)
-      .style( 'background-color', function(d){return d.color});
+      .append('svg');
 
     keyGroupSpan.append('span')
       .text( function(d){return d.trait});
