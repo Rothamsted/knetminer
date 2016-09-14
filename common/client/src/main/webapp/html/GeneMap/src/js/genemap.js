@@ -798,7 +798,13 @@ onZoom = function () {
 
   my.maxSnpPValue = GENEMAP.Listener(config.maxSnpPValue)
     .addListener( function(val){
-      config.maxSnpPValue = val;
+      var num = Number(val);
+      log.info( 'Setting max PValue for SNPs to', val, '(', num, ')');
+      if ( isNaN(num)){
+        log.info( "Can't parse max PValue")
+        my.maxSnpPValue(config.maxSnpPValue);
+      }
+      config.maxSnpPValue = Number(val);
       computeGeneLayout();
       drawMap();
     })
