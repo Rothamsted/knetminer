@@ -1,6 +1,6 @@
 var GENEMAP = GENEMAP || {};
 
- GENEMAP.vectorEffectSupport = true;
+GENEMAP.vectorEffectSupport = true;
 
 GENEMAP.Listener = function(val){
   var value = val;
@@ -64,6 +64,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var container; // the g container that performs the zooming
 
   var logSpan;
+  var keySpan;
 
   var zoom; // the zoom behaviour
   var onZoom;
@@ -221,44 +222,44 @@ GENEMAP.GeneMap = function (userConfig) {
   }
 
 // called whenever a zoom event occurss
-onZoom = function () {
-  var translate = d3.event.translate;
+  onZoom = function () {
+    var translate = d3.event.translate;
 
-  if (genome) {
-    var bbox = svg.node().getBoundingClientRect();
+    if (genome) {
+      var bbox = svg.node().getBoundingClientRect();
 
-    // padding the size of the drawing with by a factor of config.extraPanArea * the bbox.
-    // Setting this value to 0.5 will allow you to center on any point of the drawing at every zoom level.
-    // Margins aren't taken into account when calcuating the pannable padding.
-    var minx = -genome.drawing.width * d3.event.scale + bbox.width * (1 - config.extraPanArea) +
-      genome.drawing.margin.right * d3.event.scale;
+      // padding the size of the drawing with by a factor of config.extraPanArea * the bbox.
+      // Setting this value to 0.5 will allow you to center on any point of the drawing at every zoom level.
+      // Margins aren't taken into account when calcuating the pannable padding.
+      var minx = -genome.drawing.width * d3.event.scale + bbox.width * (1 - config.extraPanArea) +
+        genome.drawing.margin.right * d3.event.scale;
 
-    var maxx = bbox.width * config.extraPanArea - (genome.drawing.margin.left * d3.event.scale);
-    translate[0] = _.clamp(translate[0], minx, maxx);
+      var maxx = bbox.width * config.extraPanArea - (genome.drawing.margin.left * d3.event.scale);
+      translate[0] = _.clamp(translate[0], minx, maxx);
 
-    var miny = -genome.drawing.height * d3.event.scale + bbox.height * (1 - config.extraPanArea) +
-      genome.drawing.margin.bottom * d3.event.scale;
+      var miny = -genome.drawing.height * d3.event.scale + bbox.height * (1 - config.extraPanArea) +
+        genome.drawing.margin.bottom * d3.event.scale;
 
-    var maxy = bbox.height * config.extraPanArea - (genome.drawing.margin.top * d3.event.scale);
-    translate[1] = _.clamp(translate[1], miny, maxy);
-  }
+      var maxy = bbox.height * config.extraPanArea - (genome.drawing.margin.top * d3.event.scale);
+      translate[1] = _.clamp(translate[1], miny, maxy);
+    }
 
-  zoom.translate(translate);
+    zoom.translate(translate);
 
-  // re-draw the map if scale has changed
-  if( zoom.scale() != lastZoomScale){
-    log.trace( "New zoom");
-    computeGeneLayout();
-    drawMap();
-  }
-  lastZoomScale = zoom.scale();
+    // re-draw the map if scale has changed
+    if( zoom.scale() != lastZoomScale){
+      log.trace( "New zoom");
+      computeGeneLayout();
+      drawMap();
+    }
+    lastZoomScale = zoom.scale();
 
-  menuManager.setFitButtonEnabled(hasMapMoved());
-  container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
+    menuManager.setFitButtonEnabled(hasMapMoved());
+    container.attr('transform', 'translate(' + zoom.translate() + ')scale(' + d3.event.scale + ')');
 
-  logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
-    +  ']  zoom:'  + zoom.scale().toFixed(2) );
-};
+    logSpan.text( 'translate: [ ' + zoom.translate()[0].toFixed(1) + ',' + zoom.translate()[1].toFixed(1)
+      +  ']  zoom:'  + zoom.scale().toFixed(2) );
+  };
 
   //--------------------------------------------------
   //EVENT HANDLERS
@@ -490,8 +491,8 @@ onZoom = function () {
       showSelectedQTLs = 'true';
     }
     else{
-        showAllQTLs = false;
-    showSelectedQTLs = false;
+      showAllQTLs = false;
+      showSelectedQTLs = false;
     }
     resetQtls();
     computeGeneLayout();
@@ -587,6 +588,41 @@ onZoom = function () {
     geneAnnotationLayout.computeNormalisedGeneScores(genome.chromosomes);
   }
 
+  var updateKey = function(keyTarget, genome){
+
+    var traitSet = new Set();
+    var traitColors = [];
+    genome.chromosomes.forEach( function(chromosome) {
+      chromosome.annotations.snps.forEach( function(snp) {
+        if( ! traitSet.has(snp.trait)){
+          traitColors.push( {trait: snp.trait, color: snp.color});
+        }
+        traitSet.add( snp.trait );
+      });
+    });
+
+    var keyGroup = keyTarget.selectAll('span').data( traitColors);
+
+    if( traitColors.length > 0){
+
+      keyTarget.text('SNP key: ');
+    }
+    else {
+      keyTarget.text('');
+    }
+
+    var keyGroupSpan = keyGroup.enter()
+      .append('span');
+
+    keyGroupSpan.append('span')
+      .classed('colorbox', true)
+      .style( 'background-color', function(d){return d.color});
+
+    keyGroupSpan.append('span')
+      .text( function(d){return d.trait});
+
+    keyGroup.exit().remove();
+  };
 
   // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {
@@ -601,6 +637,12 @@ onZoom = function () {
       .attr( {
         'class' :'logger',
         'id' : 'logbar'
+      });
+
+    keySpan = mapContainer.append('div').append('span')
+      .attr( {
+        'class' :'key',
+        'id' : 'keybar'
       });
 
 
