@@ -121,7 +121,8 @@ GENEMAP.MenuBar = function (userConfig) {
         ],[
           'fit-btn',
           'export-btn',
-          'advanced-toggle'
+          'advanced-toggle',
+          'help-btn'
         ]
       ])
       .enter()
@@ -186,7 +187,7 @@ GENEMAP.MenuBar = function (userConfig) {
     });
 
     menu.select('.export-btn')
-      .attr( { 'title' : 'export view to png'})
+      .attr( { 'title' : 'Export view to png'})
       .on('click', config.onExportBtnClick);
 
     menu.select('.expand-btn')
@@ -197,6 +198,16 @@ GENEMAP.MenuBar = function (userConfig) {
       .attr( 'title', 'Show advanced options')
       .on('click', function(){
         $('.genemap-advanced-menu').modalPopover('toggle');
+      } );
+
+    var helpURL = 'https://github.com/francis-newson-tessella/QTLNetMiner/'
+    +'tree/QTLNM-47-Map-view-enhancements/'
+    +'common/client/src/main/webapp/html/GeneMap/docs';
+
+    menu.select('.help-btn')
+      .attr( { 'title': 'help'})
+      .on('click', function(){
+        window.open( helpURL, '_blank');
       } );
 
     var advancedMenu = d3.select(target).selectAll('.genemap-advanced-menu').data([null]);
