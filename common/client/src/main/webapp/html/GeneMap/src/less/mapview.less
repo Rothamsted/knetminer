@@ -1,0 +1,243 @@
+@color_blue: #1171a3;
+
+.lorem-ipsum {
+  color: #eceadf;
+}
+
+.style-test {
+  transform-ordigin: center bottom;
+  color: @color_blue;
+  height: 200px;
+}
+
+svg {
+  background-color:none;
+}
+
+.fullscreen {
+  position: fixed;
+  width: 90vw;
+  height: 90%;
+  top: 5%;
+  left: 5vw;
+  margin-left: 0px;
+  margin-top: 0px;
+  border-style : solid;
+  border-color : gray;
+  border-width : 5px;
+  border-radius : 15px;
+  padding : 30px;
+  background-color: white;
+  box-sizing : border-box;
+  z-index: 2;
+}
+
+.drawing_outline{
+    fill:#fefefe;
+    stroke: #ccc;
+    stroke-width: 0.5;
+}
+
+.drawing_margin {
+    fill:none;
+    stroke: #000;
+    stroke-width: 0.5;
+    vector-effect: non-scaling-stroke;
+}
+
+#logbar {
+  display: none;
+}
+
+.mapview {
+  cursor: grab;
+}
+
+.mapview.dragging {
+  cursor: grabbing;
+}
+
+.genemap-menu {
+  margin-top: 20px;
+}
+
+.fullscreen .genemap-menu {
+  margin-top: 0px;
+}
+
+.genemap-menu .menu-block .btn-group {
+  vertical-align: initial;
+}
+
+.menu-block{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.menubtn {
+  height: 36px;
+  width: 36px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.info-btn {
+  background: url(../img/information.png) 0 0 no-repeat;
+  .menubtn;
+}
+.info-btn:hover {
+  background: url(../img/information_hover.png) 0 0 no-repeat;
+}
+
+.fit-btn {
+  background: url(../img/layout_center.png) 0 0 no-repeat;
+  .menubtn;
+}
+.fit-btn:hover {
+  background: url(../img/layout_center_hover.png) 0 0 no-repeat;
+}
+
+.fit-btn.disabled {
+  background: url(../img/layout_center_disabled.png) 0 0 no-repeat;
+  pointer: default;
+}
+
+.network-btn {
+  background: url(../img/graph.png) 0 0 no-repeat;
+  .menubtn;
+}
+.network-btn:hover {
+  background: url(../img/graph_hover.png) 0 0 no-repeat;
+}
+
+.network-btn.disabled {
+  background: url(../img/graph_disabled.png) 0 0 no-repeat;
+  cursor: default;
+}
+
+.tag-btn {
+  .menubtn;
+}
+
+.tag-btn.auto-label {
+  background: url(../img/tag_auto.png) 0 0 no-repeat;
+}
+.tag-btn.show-label {
+  background: url(../img/tag_show.png) 0 0 no-repeat;
+}
+.tag-btn.hide-label {
+  background: url(../img/tag_hide.png) 0 0 no-repeat;
+}
+.tag-btn.manual-label {
+  background: url(../img/tag_manual.png) 0 0 no-repeat;
+}
+
+.tag-btn.auto-label:hover {
+  background: url(../img/tag_auto_hover.png) 0 0 no-repeat;
+}
+.tag-btn.show-label:hover {
+  background: url(../img/tag_show_hover.png) 0 0 no-repeat;
+}
+.tag-btn.hide-label:hover {
+  background: url(../img/tag_hide_hover.png) 0 0 no-repeat;
+}
+.tag-btn.manual-label:hover {
+  background: url(../img/tag_manual_hover.png) 0 0 no-repeat;
+}
+
+.qtl-btn {
+ align: middle;
+}
+
+.btn-infobox-label {
+  .menubtn;
+}
+
+.btn-infobox-label.show-label {
+  background: url(../img/tag_show.png) 0 0 no-repeat;
+}
+.btn-infobox-label.hide-label {
+  background: url(../img/tag_hide.png) 0 0 no-repeat;
+}
+
+.reset-btn {
+  background: url( ../img/reset_selection.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.reset-btn:hover {
+  background: url( ../img/reset_selection_hover.png) 0 0 no-repeat;
+}
+
+.export-btn {
+  background: url( ../img/save.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.export-btn:hover {
+  background: url( ../img/save_hover.png) 0 0 no-repeat;
+}
+
+.export-all-btn {
+  background: url( ../img/save_all.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.export-all-btn:hover {
+  background: url( ../img/save_all_hover.png) 0 0 no-repeat;
+}
+
+.expand-btn {
+  background: url( ../img/fit_to_size.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.expand-btn:hover {
+  background: url( ../img/fit_to_size_hover.png) 0 0 no-repeat;
+}
+
+.fullscreen .expand-btn{
+  background: url( ../img/minimize.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.fullscreen .expand-btn:hover {
+  background: url( ../img/minimize_hover.png) 0 0 no-repeat;
+}
+
+.advanced-toggle {
+  background: url( ../img/gearwheel.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.advanced-toggle:hover{
+  background: url( ../img/gearwheel_hover.png) 0 0 no-repeat;
+  .menubtn
+}
+
+.btn-genelist-gene-select {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.menu-dropdown {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.nperrow-spinner {
+  display: inline-block;
+
+  span {
+    line-height: 34px;
+    height: 34px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+}
+
+#snp-pvalue-form {
+ input  {
+   width : 4em;
+ }
+}
