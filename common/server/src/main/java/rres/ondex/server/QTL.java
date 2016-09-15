@@ -7,10 +7,10 @@ public class QTL {
 	public Integer end;
 	public String label;
 	public String significance;
-	public Double pValue;
+	public Float pValue;
 	public String trait;
 	
-	public QTL(String chromosome, String type, Integer start, Integer end, String label, String significance, Double pValue, String trait) {
+	public QTL(String chromosome, String type, Integer start, Integer end, String label, String significance, Float pValue, String trait) {
 		this.type = type;
 		this.chromosome = chromosome;
 		this.start = start;
@@ -37,11 +37,11 @@ public class QTL {
 		this.chromosome = chromosome;
 	}
 
-	public Double getpValue() {
+	public Float getpValue() {
 		return pValue;
 	}
 
-	public void setpValue(Double pValue) {
+	public void setpValue(Float pValue) {
 		this.pValue = pValue;
 	}
 	

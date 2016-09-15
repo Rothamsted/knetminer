@@ -892,7 +892,7 @@ public class OndexServiceProvider {
 				if (attTrait != null && q.getAttribute(attTrait) != null) {
 					trait = q.getAttribute(attTrait).getValue().toString();
 				}
-				results.add(new QTL(type, chrName, start, end, label, "", 1.0, trait));
+				results.add(new QTL(type, chrName, start, end, label, "", 1.0f, trait));
 			}
 		} else {
 			// be careful with the choice of analyzer: ConceptClasses are not
@@ -935,12 +935,12 @@ public class OndexServiceProvider {
 							Integer end = (Integer) conQTL.getAttribute(attEnd).getValue();
 							String label = conQTL.getConceptName().getName();
 							String significance = "";
-							if (conQTL.getAttribute(attSignificance) != null) {
+							if (attSignificance != null && conQTL.getAttribute(attSignificance) != null) {
 								significance = conQTL.getAttribute(attSignificance).getValue().toString();
 							}
-							Double pValue = 1.0;
-							if (r.getAttribute(attPvalue) != null) {
-								pValue = (Double) r.getAttribute(attPvalue).getValue();
+							Float pValue = 1.0f;
+							if (attPvalue != null && r.getAttribute(attPvalue) != null) {
+								pValue = (Float) r.getAttribute(attPvalue).getValue();
 							}
 							String trait = c.getConceptName().getName();
 							results.add(new QTL(chrName, type, start, end, label, "", pValue, trait));
@@ -1715,7 +1715,7 @@ public class OndexServiceProvider {
 					index = 0;
 				}
 			}
-			Double pvalue = loci.getpValue();
+			Float pvalue = loci.getpValue();
 			String color = trait2color.get(trait);
 
 			// TODO check of MODE is CM/BP
