@@ -152,7 +152,7 @@ public class ClientWorker implements Runnable {
 		for(String region : qtlString){
 			String[] r =  region.split(":"); 
 			String chrName;
-			float start, end;
+			Integer start, end;
 			String label = "";
 			try {			
 				if(r.length == 3 || r.length == 4){	
@@ -164,7 +164,7 @@ public class ClientWorker implements Runnable {
 					}
 					if(start < end) {
 						validQTL = true;
-						QTL qtl = new QTL(chrName, r[1], r[2], label, "significant", label); //set "trait" equal to qtl (=label)
+						QTL qtl = new QTL(chrName, "QTL", start, end, label, "significant", null, label); //set "trait" equal to qtl (=label)
 						qtls.add(qtl);
 					}
 				}
@@ -376,7 +376,7 @@ public class ClientWorker implements Runnable {
 					}
 					
 					// Gene table file
-					boolean txtIsCreated = ondexProvider.writeTableOut(
+					boolean txtIsCreated = ondexProvider.writeGeneTable(
 							genes, userGenes, qtl,
 							MultiThreadServer.props.getProperty("DataPath")
 							+ fileGeneTable, listMode);
