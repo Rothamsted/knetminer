@@ -48,7 +48,7 @@ GENEMAP.XmlDataReader = function () {
       .filter( function (e)
       { return e.type.toLowerCase() === 'gene'; })
       .forEach( function(gene, index) {
-      gene.globalIndex = index;
+        gene.globalIndex = index;
       });
 
     genome.chromosomes.forEach(function (chromosome) {
@@ -65,8 +65,13 @@ GENEMAP.XmlDataReader = function () {
         function (e) { return e.type.toLowerCase() === 'snp'; });
 
       //Build snps index
+      var minSnpPValue = snps.reduce( function(cur, snp){
+        return Math.min(cur, snp.pvalue);
+      }, 1);
+
       snps.forEach( function(snp,index){
-       snp.id = chromosome.number + '_'  + index;
+        snp.id = chromosome.number + '_'  + index;
+        snp.importance =  Math.log(snp.pvalue) / Math.log(minSnpPValue);
       } );
 
       //Build qtl index

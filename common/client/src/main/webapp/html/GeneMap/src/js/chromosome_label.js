@@ -85,7 +85,7 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
 
       var yPosition = config.sizeLayout.y + ( config.sizeLayout.cellHeight  * d.length / config.longestChromosome );
 
-      var fontSize = config.labelSize / Math.min( 6, config.scale) +
+      var fontSize = 1.2 * config.labelSize / Math.min( 5, config.scale) + 'px';
 
       sizeLabelGroup.attr({
         transform: 'translate(' + config.sizeLayout.x + ',' + yPosition + ')',
@@ -97,7 +97,7 @@ GENEMAP.ChromosomeLabel = function (userConfig) {
         y: 0 ,
         dy: '1em' ,
       }).style({
-        'font-size': config.labelSize / Math.min(6, config.scale)  + 'px',
+        'font-size':  fontSize,
       }).text( formatSize(d.length))
       ;
 
