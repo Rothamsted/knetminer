@@ -1412,7 +1412,8 @@ function createEvidenceTable(tableUrl){
 				table = table + '<thead>';
 				table = table + '<tr>';
 				var header = evidenceTable[0].split("\t");
-				table = table + '<th width="60">Actions</th>';
+//				table = table + '<th width="60">Actions</th>';
+				table = table + '<th width="60">Exclude</th>';
 				table = table + '<th width="50">'+header[0]+'</th>';
 				table = table + '<th width="212">'+header[1]+'</th>'
 				table = table + '<th width="78">'+header[2]+'</th>';
