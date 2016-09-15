@@ -22,6 +22,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
     nClusters: 6,
     nGenesToDisplay: 1000,
     maxAnnotationLayers: 3,
+    displayedFontSize: 13,
     scale: 1,
   };
 
@@ -42,7 +43,7 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
 
   var calculatePossibleRows = function(scale, availableWidth, labelLength, minDisplayedFontSize ){
 
-    var fontCoordRatio = 3.5;
+    var fontCoordRatio = 4.0;
 
     //Try 2 rows:
     var spaceForLabel = availableWidth / 3;
@@ -162,8 +163,8 @@ GENEMAP.GeneAnnotationLayout = function (userConfig) {
       return Math.max(cur, gene.label.length)
     }, 0);
 
-    var minDisplayedFontSize = 12;
-    var maxDisplayedFontSize = 14;
+    var minDisplayedFontSize = 1.1 * config.displayedFontSize;
+    var maxDisplayedFontSize = 0.9 * config.displayedFontSize;
 
     //How many rows of labels do we show?
     var nrows = calculatePossibleRows(config.scale, availableWidth, labelLength, minDisplayedFontSize);
