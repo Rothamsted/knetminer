@@ -16,15 +16,15 @@ dest=$( echo $folder | sed 's/svg/img/' )
 
 
 echo "Modifying original in place:"
-sed -e 's/fill="#[0-9]\+"/fill="#444444"/g' -e 's/fill:#[0-9]\+/fill:#444444/g' < $inputfile > tmp && mv tmp $inputfile
+sed -e 's/fill="#[0-9A-F]\+"/fill="#444444"/g' -e 's/fill:#[0-9]\+/fill:#444444/g' < $inputfile > tmp && mv tmp $inputfile
 
 hoversvg=$folder/${filestem}_hover.svg
 echo "Creating hover version at $hoversvg"
-sed -e 's/fill="#[0-9]\+"/fill="#21a2ef"/g' -e 's/fill:#[0-9]\+/fill:#21a2ef/g' $inputfile > $hoversvg
+sed -e 's/fill="#[0-9A-F]\+"/fill="#21a2ef"/g' -e 's/fill:#[0-9]\+/fill:#21a2ef/g' $inputfile > $hoversvg
 
 dissvg=$folder/${filestem}_disabled.svg
 echo "Creating disabled version at $dissvg"
-sed -e 's/fill="#[0-9]\+"/fill="#cccccc"/g' -e 's/fill:#[0-9]\+/fill:#cccccc/g' < $inputfile > $dissvg
+sed -e 's/fill="#[0-9A-F]\+"/fill="#cccccc"/g' -e 's/fill:#[0-9]\+/fill:#cccccc/g' < $inputfile > $dissvg
 
 origout=$dest/${filestem}.png
 echo "Orig out: $origout"
