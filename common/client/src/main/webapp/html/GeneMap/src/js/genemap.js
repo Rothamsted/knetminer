@@ -43,8 +43,10 @@ GENEMAP.GeneMap = function (userConfig) {
     },
     pngScale: 2,
     contentBorder: false,
-    nGenesToDisplay: 1000,
-    maxSnpPValue: 1.0,
+    initialMaxGenes: 200,
+    nGenesToDisplay: 200,
+    maxSnpPValue: 1e-5,
+    annotationLabelSize: 13,
 
     // the extra area outside of the content that the user can pan overflow
     // as a proportion of the content. The content doesn't include the margins.
@@ -62,6 +64,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var container; // the g container that performs the zooming
 
   var logSpan;
+  var legendSpan;
 
   var zoom; // the zoom behaviour
   var onZoom;
@@ -90,7 +93,7 @@ GENEMAP.GeneMap = function (userConfig) {
   var updateDimensions = function() {
     if (expanded){
       var height = $(target).height();
-      config.height = height  - 50; //Allow space for menu bar
+      config.height = height  - 80; //Allow space for menu bar
       config.width =  '100%';
     }
   }
@@ -579,6 +582,48 @@ onZoom = function () {
     geneAnnotationLayout.computeNormalisedGeneScores(genome.chromosomes);
   }
 
+  var updateLegend = function(keyTarget, genome){
+    var traitSet = new Set();
+    var traitColors = [];
+    genome.chromosomes.forEach( function(chromosome) {
+      chromosome.annotations.snps.forEach( function(snp) {
+
+        if( ! traitSet.has(snp.trait)){
+          if (snp.trait != null){
+          traitColors.push( {trait: snp.trait, color: snp.color});
+          }
+        }
+
+        traitSet.add( snp.trait );
+
+      });
+    });
+
+    if( traitColors.length > 0){
+
+      keyTarget.text('SNP legend: ');
+    }
+    else {
+      keyTarget.text('');
+    }
+
+    var keyGroup = keyTarget.selectAll('span').data( traitColors);
+
+    var keyGroupSpan = keyGroup.enter()
+      .append('span')
+      .classed( 'key-item', true);
+
+    keyGroupSpan
+      .append('span')
+      .style( 'background-color', function(d){return d.color})
+      .classed('colorbox', true)
+      .append('svg');
+
+    keyGroupSpan.append('span')
+      .text( function(d){return d.trait});
+
+    keyGroup.exit().remove();
+  };
 
   // builds the basic chart components, should only be called once
   var constructSkeletonChart = function (mapContainer) {
@@ -593,6 +638,12 @@ onZoom = function () {
       .attr( {
         'class' :'logger',
         'id' : 'logbar'
+      });
+
+    legendSpan = mapContainer.append('div')
+      .attr( {
+        'class' :'key',
+        'id' : 'keybar'
       });
 
 
@@ -770,6 +821,7 @@ onZoom = function () {
       d3.select(target).datum(data).call(my);
       my.nGenesToDisplay(1000);
       resetMapZoom();
+      updateLegend(legendSpan, genome)
     });
   };
 

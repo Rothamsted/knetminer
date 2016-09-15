@@ -116,7 +116,6 @@ GENEMAP.MenuBar = function (userConfig) {
         ],[
           'label-btn',
           'ngenes-dropdown',
-          'qtl-btn',
         ],[
           'fit-btn',
           'export-btn',
@@ -152,12 +151,6 @@ GENEMAP.MenuBar = function (userConfig) {
         ["No labels", 'hide'] ],
       config.onLabelBtnClick, 'Auto labels');
 
-    var qtlDropdown = menu.select('.qtl-btn');
-    buildDropdown( qtlDropdown, 'qtl-btn', [
-      [ 'All QTLs', 'all'],
-      ['Checked QTLs', 'selected'],
-      ["No QTLs", 'none'] ],
-      config.onQtlBtnClick, 'All QTLs');
 
     menu.select('.fit-btn')
       .attr( 'title', 'Reset pan and zoom')
@@ -198,6 +191,16 @@ GENEMAP.MenuBar = function (userConfig) {
         $('.genemap-advanced-menu').modalPopover('toggle');
       } );
 
+    var helpURL = 'https://github.com/francis-newson-tessella/QTLNetMiner/'
+    +'tree/QTLNM-47-MVE/'
+    +'common/client/src/main/webapp/html/GeneMap/docs';
+
+    menu.select('.help-btn')
+      .attr( { 'title': 'help'})
+      .on('click', function(){
+        window.open( helpURL, '_blank');
+      } );
+
     var advancedMenu = d3.select(target).selectAll('.genemap-advanced-menu').data([null]);
     popoverDiv = advancedMenu.enter()
       .append('div')
@@ -225,6 +228,7 @@ GENEMAP.MenuBar = function (userConfig) {
 
     var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
       [
+        'qtl-btn',
         'nperrow-spinner',
         'max-snp-pvalue',
         'export-all-btn',
@@ -234,6 +238,15 @@ GENEMAP.MenuBar = function (userConfig) {
       .append('div')
       .append('span')
       .attr( 'class', function(d){return d;});
+
+    // QTL DROPDOWN
+
+    var qtlDropdown = advancedMenu.select('.qtl-btn');
+    buildDropdown( qtlDropdown, 'qtl-btn', [
+        [ 'All QTLs', 'all'],
+        ['Checked QTLs', 'selected'],
+        ["No QTLs", 'none'] ],
+      config.onQtlBtnClick, 'All QTLs');
 
     //PVALUE INPUT
 
