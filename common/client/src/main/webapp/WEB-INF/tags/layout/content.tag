@@ -113,7 +113,7 @@
         	<div class="button_filler"></div>
         </div>
         <div id="tabviewer_content">
-            <div id="resultsTable" class="resultViewer" style="display:none;" ></div>
+            <div id="resultsTable" class="resultViewer"></div>
             <!--<div id="pGViewer" class="resultViewer">
                 <center>
                     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle">
@@ -133,7 +133,7 @@
                 </center>
             </div>
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
-	    <div id="genemap-tab" class="resultViewer">
+	    <div id="genemap-tab" class="resultViewer" style="display:none;" >
                 <div id="genemap" class="bootstrap"> </div>
 	    </div>
             <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
