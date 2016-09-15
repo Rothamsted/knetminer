@@ -14,7 +14,8 @@ GENEMAP.MenuBar = function (userConfig) {
     onExpandBtnClick : $.noop,
     maxSnpPValueProperty : $.noop,
     nGenesToDisplayProperty : $.noop,
-    initialMaxGenes : 1000,
+    annotationLabelSizeProperty : $.noop,
+    initialMaxGenes : 200,
     initialNPerRow : 10,
   };
 
@@ -119,7 +120,8 @@ GENEMAP.MenuBar = function (userConfig) {
         ],[
           'fit-btn',
           'export-btn',
-          'advanced-toggle'
+          'advanced-toggle',
+          'help-btn'
         ]
       ])
       .enter()
@@ -164,11 +166,11 @@ GENEMAP.MenuBar = function (userConfig) {
     dropdownSpan.text("");
     buildDropdown( dropdownSpan, 'ngenes-dropdown',
       [
-        ['1000 genes', 1000],
-        ['500 genes', 500],
-        ['200 genes', 200],
-        ['100 genes', 100],
         ['50 genes', 50],
+        ['100 genes', 100],
+        ['200 genes', 200],
+        ['500 genes', 500],
+        ['1000 genes', 1000],
       ],
       config.nGenesToDisplayProperty, config.nGenesToDisplayProperty() + ' genes');
 
@@ -178,7 +180,7 @@ GENEMAP.MenuBar = function (userConfig) {
     });
 
     menu.select('.export-btn')
-      .attr( { 'title' : 'export view to png'})
+      .attr( { 'title' : 'Export view to png'})
       .on('click', config.onExportBtnClick);
 
     menu.select('.expand-btn')
@@ -226,17 +228,17 @@ GENEMAP.MenuBar = function (userConfig) {
       .append('div')
       .classed('popover-content', true)
 
-    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('span').data(
+    var advancedMenuItems = advancedMenu.select('.popover-content').selectAll('div').data(
       [
         'qtl-btn',
         'nperrow-spinner',
         'max-snp-pvalue',
+        'labelsize',
         'export-all-btn',
       ] );
 
     advancedMenuItems.enter()
       .append('div')
-      .append('span')
       .attr( 'class', function(d){return d;});
 
     // QTL DROPDOWN
@@ -332,6 +334,36 @@ GENEMAP.MenuBar = function (userConfig) {
     advancedMenu.select('.export-all-btn')
       .attr( { 'title' : 'export all to png'})
       .on('click', config.onExportAllBtnClick);
+
+    advancedMenu.select('.labelsize').selectAll('span')
+      .data(['labelsize-label', 'labelsize-dropdown'])
+      .enter()
+      .append('span')
+      .attr( {'class': function(d){return d;} });
+
+    advancedMenu.select('.labelsize-label')
+      .classed( 'bootstrap', true);
+
+    advancedMenu.select('.labelsize-label').selectAll('label').data([''])
+      .enter()
+      .append('label')
+      .text('Label size:');
+
+    var labelSizeDropdown = advancedMenu.select('.labelsize-dropdown');
+    labelSizeDropdown.text("");
+    buildDropdown( labelSizeDropdown, 'labelsize-dropdown',
+      [
+        ['10', 10],
+        ['15', 15],
+        ['20', 20],
+        ['25', 25],
+      ],
+      config.annotationLabelSizeProperty, config.annotationLabelSizeProperty());
+
+    config.annotationLabelSizeProperty.addListener( function(labelSize){
+      $('#select-labelsize-dropdown')
+        .selectpicker('val', [labelSize, labelSize] );
+    });
 
     //ACTIVATE POPOVER
     $('.genemap-advanced-menu').modalPopover( {
@@ -480,6 +512,15 @@ GENEMAP.MenuBar = function (userConfig) {
     }
 
     config.nGenesToDisplayProperty = value;
+    return my;
+  }
+
+  my.annotationLabelSizeProperty = function (value) {
+    if (!arguments.length) {
+      return config.annotationLabelSizeProperty;
+    }
+
+    config.annotationLabelSizeProperty = value;
     return my;
   }
 
