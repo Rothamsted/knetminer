@@ -422,17 +422,22 @@ GENEMAP.GeneMap = function (userConfig) {
 
   // click handler for the network view button
   var openNetworkView = function () {
+      var gl;
 
     //extract labels for all selected genes on all chromosomes
     var selectedLabels = _.flatMap(genome.chromosomes.map( function(chromosome){
       return chromosome.annotations.genes.filter( function(gene){
         return gene.selected
       }).map( function(gene){
-        return gene.label; }) ; }
+        // Use list='' from url (link) instead of gene label.
+        var geneURI= gene.link;
+        var geneLink= geneURI.substring(geneURI.indexOf("list="), geneURI.length).split("=")[1];
+        return /*gene.label*/geneLink; }) ; }
     ) );
 
     var url = 'OndexServlet?mode=network&keyword='+$('#keywords').val();
     //console.log("GeneMap: Launch Network for url: "+ url);
+    //console.log("selectedLabels: "+ selectedLabels);
 
     log.info('selected labels: ' + selectedLabels);
     generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
