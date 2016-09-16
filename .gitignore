@@ -6,5 +6,4 @@ stderr.log
 stdout.log
 *swp
 .vagrant/
-poplar-server/
 common/client/nb-configuration.xml
