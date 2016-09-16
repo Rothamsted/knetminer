@@ -1521,6 +1521,8 @@ public class OndexServiceProvider {
 				name = acc.getAccession();
 				// }
 			}
+			
+			String label = getDefaultNameForGroupOfConcepts(c);
 
 			// String query = "mode=network&keyword=" + keyword+"&list="+name;
 			// Replace '&' with '&amp;' to make it comptaible with the new
@@ -1541,7 +1543,7 @@ public class OndexServiceProvider {
 			} else {
 				sb.append("<color>0xFF0000</color>\n"); // Red
 			}
-			sb.append("<label>" + name + "</label>\n");
+			sb.append("<label>" + label + "</label>\n");
 			sb.append("<link>" + uri + "</link>\n");
 			// Add 'score' tag as well.
 			Double score = 0.0;
