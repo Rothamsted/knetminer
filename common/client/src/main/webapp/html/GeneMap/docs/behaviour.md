@@ -21,14 +21,16 @@ These sections provide more background information on how the visualisation is d
 
 - *Chromosome length*: The length of the gene in base pairs.
 
-- *Gene bands*: Horizontal lines across the chromosome at representing genes.
+- *Gene bands*: Horizontal lines across the chromosome representing genes.
 
 - *Gene labels*: The name of each gene can optionally be displayed with a line joining it to the corresponding gene band. 
 When there are too many labels to fit on screen, groups of labels are replaced by a single label indicating the number of labels.
 
 - *QTLs*: A rectangle is displayed for each QTL with a label where space permits.
  When there are too many QTLs to display on screen, the QTLs are grouped and a the total number of QTLs in the group is displayed.
- 
+
+- *SNPs*: A short horizontal line on the left of the chromosome is displayed for each SNP. Multiple horizontal lines next to each other represent SNPs associated to different traits. The SNP colors are described in the legend below the plot.
+
 ## Annotation Visibility and Selections
 
 Gene labels and QTLs are not always displayed.
@@ -51,11 +53,11 @@ Whether or not an individual gene is displayed depends on both its individual vi
 
 ### QTLs
 
-QTLs an be `checked` or `unchecked`.
+QTLs can be `checked` or `unchecked`.
 
 The global QTL visibility settings are:
 
-- *All QTLs* : Display all QTLs, grouped if necessary
+- *All QTLs*: Display all QTLs, grouped if necessary
 - *Checked QTLs*: Display only `checked` QTLs, with no grouping
 - *No QTLs*: Don't display any QTLs.
 
@@ -77,6 +79,8 @@ When the mouse is not over any feature:
 
 As the viewport is zoomed, more gene labels are automatically displayed
  and the QTLs are unclustered to take advantage of the increased space available.
+ 
+Click on a chromsome label to show only that chromosome. Click the label again to show all chromosomes.
 
 #### Genes
 
@@ -85,18 +89,25 @@ As the viewport is zoomed, more gene labels are automatically displayed
 - *Left click on gene label*: Select gene for use in network view.
 - *Right click on gene or cluster label*: Display popup.
 
-Click on a chromsome label to show only that chromosome. Click the label again to who all chromosomes.
 
 ##### Genes Popup
-Click gene name to create oxl file.
-Click `show`, `hide` or `auto` to specify visibility.
+- Click gene name to create oxl file.
+- Click `show`, `hide` or `auto` to specify visibility.
 
 #### QTLs
 
 - *Right click on QTL (or QTL group)*: Display popup.
 
 ##### QTL Popup
-Click check box to make QTL appear when global view setting is set to *Checked QTLs*.
+- Click check box to make QTL appear when global view setting is set to *Checked QTLs*.
+
+#### SNPs
+
+- *Right click on SNP*: Display popup.
+
+##### SNP Popup
+- Click the link to go to external website with more information about the SNP.
+
 
 #### Menu buttons
 
@@ -105,11 +116,16 @@ Click check box to make QTL appear when global view setting is set to *Checked Q
 - ![Reset pan and zoom](img/layout_center.png)*Reset pan and zoom*
 - ![View full screen](img/fit_to_size.png)*View full screen*: Increase genemap size and overlay on top of any other content.
  Click again or click outside the genemap to restore the original size.
-- [Dropdown menu] *Set global QTL visibility*
 - [Dropdown menu] *Set global gene label visibility*
 - [Dropdown menu] *Set number of genes to display*: This affects both gene bands and labels.
 - ![Export](img/save.png)*Export view to png*: By default, the image is created with 2x the on-screen resolution.
 - ![Advanced](img/gearwheel.png)*Advanced options*
+Under Advanced options you can
+- [Dropdown menu] *Set global QTL visibility* 
+- Set number of chromosomes per row
+- Filter SNPs based on p-value threshold (default 0.00001)
+- Set gene and QTL label size
+- Export entire map
 
 
 ## Color
@@ -125,7 +141,7 @@ If importance values are not available but the genes are ranked by importance, t
 where `max_opacity = 0.9`, `opacity_falloff = 3.5`.
  This function falls off sharply initially so that the first few genes are clearly distinguished, then it tends to 0.5.
 
-For genes which have been set to `show`, the color is taken directly from the source data.
+For genes which have been set to `show`, the label color is taken directly from the source data.
 The colours are green, orange and red for the top, middle and bottom thirds of the genes ranked by importance.
 
 ## Layout
@@ -188,7 +204,7 @@ which aims to minimise the within-group sum-of-squared-deviations.
  In any case, zooming in usually fixes any layout problems because
  there will eventually be enough space to display all labels in one column.
  
- After any clustering as been applied, the label positions are recalculated using labella again.
+ After any clustering has been applied, the label positions are recalculated using labella again.
 
 ##### Draw (with animation)
 Once the label positions have been calculated, they are drawn to screen using the [d3](d3js.org) library
@@ -235,7 +251,7 @@ The QTL clusters are positioned by grouping them into lanes
 ##### Label QTLs
 
 Once the QTL clusters have been laid out, 
-the clusters which which contain only a single QTL can be annotated with the label for that QTL.
+the clusters which contain only a single QTL can be annotated with the label for that QTL.
 If the labels take up more space than the QTL itself then the labels may overlap (even though the QTLs didn't).
 In this case, only first label in a lane is drawn.
 
@@ -291,7 +307,7 @@ so that when zoomed out, the title is still legible and when zoomed in, the titl
 
 #### Implementation note
 
-Panning and zooming is achieved by applied by applying a transform to the svg element.
+Panning and zooming is achieved by applying a transform to the svg element.
 This means that all elements get automatically scaled when the user zooms in,
 so in order to display an element at fixed on-screen size, 
 the element size in the code must be divided by the current zoom-scale.
