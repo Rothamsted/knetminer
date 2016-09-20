@@ -78,3 +78,6 @@ There are a limited number of rendering options available on the chart object, t
 
  - D3 doesn't seem to be very good about raising errors when it can't read an XML file, if you are having problems check the XML files being read are valid (no extra & characters for example). This should be easy enough to do by trying to open the XML file in a browser.
  - Check the head contains the `<meta charset="UTF-8">` tag as d3 uses UTF8.
+
+## To test Genomap.js:
+After running, ```npm install```, ```bower install``` and ```gulp optimise``` in genomap.js directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
