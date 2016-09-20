@@ -80,4 +80,4 @@ There are a limited number of rendering options available on the chart object, t
  - Check the head contains the `<meta charset="UTF-8">` tag as d3 uses UTF8.
 
 ## To test Genomap.js:
-After running, ```npm install```, ```bower install``` and ```gulp optimise``` in genomap.js directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
+After running, ```npm install```, ```bower install``` and ```gulp optimise``` in /GeneMap directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
