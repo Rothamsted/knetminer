@@ -479,7 +479,7 @@ body:after{
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:11px; color:#9B9B9B;}
 
-#NetworkCanvas{position:relative;padding-bottom:20px;float:left;}
+#NetworkCanvas{position:relative;float:left;width: 850px/*98%*/; height: 600px/*900*/ /*98%*/; padding-bottom: 80px; /*5px;*/}
 #Network_frame{border:none;}
 
 /* Evidence View */

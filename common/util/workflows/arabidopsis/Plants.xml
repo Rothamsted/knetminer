@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ondex version="3.0">
+  <Workflow>
+    <Graph name="memorygraph">
+      <Arg name="GraphName">default</Arg>
+      <Arg name="graphId">default</Arg>
+    </Graph>
+    <Parser name="uniprot">
+      <Arg name="InputFile">qtlnetminer/references/UniProt/Plants.xml.gz</Arg>
+      <Arg name="GoFile">qtlnetminer/ontologies/go-basic.obo</Arg>
+      <Arg name="DbRefAcc">false</Arg>
+      <Arg name="TagInformation">true</Arg>
+      <Arg name="HideLargeScaleRef">true</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+    <Parser name="medline">
+      <Arg name="ImportCitedPMIDs">true</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+    <Mapping name="lowmemoryaccessionbased">
+      <Arg name="IgnoreAmbiguity">false</Arg>
+      <Arg name="RelationType">collapse_me</Arg>
+      <Arg name="WithinDataSourceMapping">true</Arg>
+      <Arg name="graphId">default</Arg>
+      <Arg name="ConceptClassRestriction">Publication</Arg>
+    </Mapping>
+    <Transformer name="relationcollapser">
+      <Arg name="CloneAttributes">true</Arg>
+      <Arg name="CopyTagReferences">true</Arg>
+      <Arg name="graphId">default</Arg>
+      <Arg name="RelationType">collapse_me</Arg>
+    </Transformer>
+    <Export name="oxl">
+      <Arg name="pretty">true</Arg>
+      <Arg name="ExportIsolatedConcepts">true</Arg>
+      <Arg name="GZip">true</Arg>
+      <Arg name="ExportFile">qtlnetminer/references/UniProt/Plants.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Export>
+    <Export name="graphinfo">
+      <Arg name="ExportFile">qtlnetminer/references/UniProt/Plants_Report.xml</Arg>
+      <Arg name="graphId">default</Arg>
+    </Export>
+  </Workflow>
+</Ondex>
+
