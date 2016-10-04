@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ondex version="3.0">
+  <Workflow>
+    <Graph name="memorygraph">
+      <Arg name="GraphName">default</Arg>
+      <Arg name="graphId">default</Arg>
+    </Graph>
+    <Parser name="gaf">
+      <Arg name="InputFile">qtlnetminer/organisms/Arabidopsis/Gene-GO/gene_association.tair.gz</Arg>
+      <Arg name="TranslationFile">qtlnetminer/organisms/Arabidopsis/Gene-GO/GAF2Ondex.txt</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+<!--	
+    <Filter name="conceptclass">
+      <Arg name="Exclude">true</Arg>
+      <Arg name="graphId">default</Arg>
+      <Arg name="TargetConceptClass">RNA</Arg>
+    </Filter>
+    <Filter name="unconnected">
+      <Arg name="RemoveTagDependencies">false</Arg>
+      <Arg name="graphId">default</Arg>
+    </Filter>
+-->    
+	<Export name="oxl">
+      <Arg name="pretty">true</Arg>
+      <Arg name="ExportIsolatedConcepts">true</Arg>
+      <Arg name="GZip">true</Arg>
+      <Arg name="ExportFile">qtlnetminer/organisms/Arabidopsis/Gene-GO/Gene-GO.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Export>
+  </Workflow>
+</Ondex>
+
