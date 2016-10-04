@@ -133,12 +133,118 @@
                 </center>
             </div>
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
+            <!-- new GeneMap -->
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" >
                 <div id="genemap" class="bootstrap"> </div>
 	    </div>
             <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
-            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+        <!--    <div id="NetworkCanvas" class="resultViewer" style="display:none;">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
+            </div> -->
+            <!-- new Network Viewer -->
+            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+                    <div id="knet-viewer" style="display:none;">
+                        <!-- Item Info pane -->
+                        <div id="itemInfo" class="infoDiv" style="display:none;">
+                            <table id="itemInfo_Table" class="infoTable" cellspacing=1>
+                                <thead>
+                                    <th>Item Info:</th>
+                                    <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <!-- KNETviewer Menubar -->
+                        <div id="knetviewer-menu">
+                            <input type="image" id="maximizeOverlay" src="html/KNETviewer/image/maximizeOverlay.png" title="Toggle full screen" onclick="OnMaximizeClick();" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="showAll" src="html/KNETviewer/image/showAll.png" onclick="showAll();" title="Show all the concept & relations in the Network" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="relayoutNetwork" src="html/KNETviewer/image/relayoutNetwork.png" onclick="rerunLayout();" title="Re-run the Layout" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <span class="knet-dropdowns">
+                                <select id="layouts_dropdown" class="knet-dropdowns" onChange="rerunLayout();" title="Select network layout">
+                                    <option value="Cose_layout" selected="selected" title="using CoSE layout algorithm (useful for larger networks with clustering)">CoSE layout</option>
+                                    <option value="ngraph_force_layout" title="using ngraph_force layout (works well on planar graphs)">Force layout</option>
+                                    <option value="Circle_layout">Circular layout</option>
+                                    <option value="Concentric_layout">Concentric layout</option>
+                                    <option value="Cose_Bilkent_layout" title="using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)">CoSE-Bilkent layout</option>
+                                </select>
+                                <!--Animation:<input type="checkbox" name="layoutAnimation_Chkbx" id="animateLayout" value="Enable Layout Animation" onclick="setLayoutAnimationSetting();" checked title="Check to enable layout Animation and uncheck to disable."> -->
+                                <select id="changeLabelVisibility" class="knet-dropdowns" onChange="showHideLabels(this.value);" title="Select label visibility">
+                                    <option value="None" selected="selected">Labels: None</option>
+                                    <option value="Concepts">Labels: Concepts</option>
+                                    <option value="Relations">Labels: Relations</option>
+                                    <option value="Both">Labels: Both</option>
+                                </select>
+                                <select id="changeLabelFont" class="knet-dropdowns" onChange="changeLabelFontSize(this.value);" title="Select label font size">
+                                    <option value="8">Label size: 8px</option>
+                                    <option value="12">Label size: 12px</option>
+                                    <option value="16" selected="selected">Label size: 16px</option>
+                                    <option value="20">Label size: 20px</option>
+                                    <option value="24">Label size: 24px</option>
+                                    <option value="28">Label size: 28px</option>
+                                    <option value="32">Label size: 32px</option>
+                                    <option value="36">Label size: 36px</option>
+                                    <option value="40">Label size: 40px</option>
+                                </select>
+			    </span>
+                            <input type="image" id="resetNetwork" src="html/KNETviewer/image/resetNetwork.png" onclick="resetGraph();" title="Reposition (reset and re-fit) the graph" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="savePNG" src="html/KNETviewer/image/savePNG.png" onclick="exportAsImage();" title="Export the network as a .png image" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <!-- <input type="text" id="knet_txtSearch" class="knet-dropdowns" placeholder="Search..." /> <input type="image" id="searchNetwork" value="Search" src="html/KNETviewer/image/searchNetwork.png" value="Search" onclick="findConcept($('#knet_txtSearch').val());" title="Search for concept by name" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
+                            <input type="image" id="saveJSON" src="html/KNETviewer/image/saveJSON.png" onclick="exportAsJson();" title="Export the network in JSON format" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="helpURL" src="html/KNETviewer/image/help.png" onclick="openKnetHelpPage();" title="Go to help documentation" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+			    <!-- Button to launch advanced menu -->
+                            <!-- <input type="image" id="knetAdvancedMenu" src="html/KNETviewer/image/gearAdvanced.png" onclick="$('.knet-advanced-menu').modalPopover('toggle');" title="Open advanced menu" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
+                        </div>
+                        <!-- The core cytoscapeJS container -->
+                        <div id="cy"></div>
+                        <br/>
+                        <!-- dynamically updated Legend to show number of shown/ hidden concepts; and by type -->
+			<div id="countsLegend"><span>KNETviewer</span></div>
+                        <!-- popup dialog -->
+                        <div id="infoDialog"></div>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div id="legend_container">
+                        <table id="legend_frame" cellspacing=1>
+                            <tr><td align=center><img src="html/KNETviewer/image/Gene.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Protein.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Pathway.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Compound.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Enzyme.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Reaction.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/QTL.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Publication.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Gene</font></td>
+                                <td align=center><font size=1.8px>Protein</font></td>
+                                <td align=center><font size=1.8px>Pathway</font></td>
+                                <td align=center><font size=1.8px>SNP</font></td>
+                                <td align=center><font size=1.8px>Enzyme</font></td>
+                                <td align=center><font size=1.8px>Reaction</font></td>
+                                <td align=center><font size=1.8px>QTL</font></td>
+                                <td align=center><font size=1.8px>Publication</font></td>
+                            </tr><tr>
+                                <td align=center></td></tr><tr>
+                                <td align=center><img src="html/KNETviewer/image/Phenotype.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Biological_process.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Cellular_component.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Protein_domain.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Trait_ontology.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Molecular_function.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Trait.png"></td>
+                                <td align=center><img src="html/KNETviewer/image/Enzyme_classification.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Phenotype</font></td>
+                                <td align=center><font size=1.8px>Biol. Process</font></td>
+                                <td align=center><font size=1.8px>Cell. Component</font></td>
+                                <td align=center><font size=1.8px>Protein Domain</font></td>
+                                <td align=center><font size=1.8px>Trait Ontology</font></td>
+                                <td align=center><font size=1.8px>Mol. Function</font></td>
+                                <td align=center><font size=1.8px>Trait</font></td>
+                                <td align=center><font size=1.8px>Enzyme Classification</font></td>
+                            </tr>
+                        </table>
+                    </div>
             </div>
         </div>
 	</div>

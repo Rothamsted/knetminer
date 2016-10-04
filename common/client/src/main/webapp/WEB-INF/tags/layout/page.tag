@@ -23,19 +23,49 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <!-- <link rel="stylesheet" type="text/css" href="html/css/style.css"/> -->
-        
         <!-- GeneMap -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+        <!-- KNETviewer -->
+        <link href="html/KNETviewer/css/knet-style.css" rel="stylesheet" /> <!-- Network Viewer stylesheet -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+        <!-- jQuery-UI: CSS for dropdowns -->
+    <!--    <link href="html/KNETviewer/css/jquery-ui.css" rel="stylesheet" /> -->
+        <!-- jQuery MaskLoader: for progress overlay -->
+        <link href="html/KNETviewer/css/maskloader.css" rel="stylesheet">
+
+        <!-- GeneMap -->
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
+        <!-- KNETviewer -->
+    <!--    <script src="html/KNETviewer/libs/jquery-1.11.2.min.js"></script> --> <!-- already loaded by GeneMap -->
+        <script src="html/KNETviewer/libs/cytoscapejs_2.4.0/cytoscape.min.js"></script>
+        <!-- jQuery-UI: now: for ItemInfo easing, future: dropdowns & modal dialogs -->
+        <script src="html/KNETviewer/libs/jquery-ui.js"></script>
+        <script src="html/KNETviewer/libs/cytoscape-cxtmenu.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
+        <script src="html/KNETviewer/libs/cytoscape-qtip.js"></script>
+        <script src="html/KNETviewer/libs/jquery.maskloader.js"></script>
+        <script src="html/KNETviewer/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
+        <script src="html/KNETviewer/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>
+        <!-- URL mappings config file used for generating url's in Item Info table -->
+        <script type="text/javascript" src="html/KNETviewer/config/url_mappings.json"></script>
+        <script src="html/KNETviewer/javascript/knet-maskLoader.js"></script>
+        <script src="html/KNETviewer/javascript/knet-layouts-defaultParams.js"></script>
+        <script src="html/KNETviewer/javascript/knet-layouts.js"></script>
+        <script src="html/KNETviewer/javascript/knet-menu.js"></script>
+        <script src="html/KNETviewer/javascript/knet-counts-legend.js"></script>
+        <script src="html/KNETviewer/javascript/knet-container.js"></script>
+        <script src="html/KNETviewer/javascript/knet-toggleFullScreen.js"></script>
+        <script src="html/KNETviewer/javascript/knet-itemInfo.js"></script>
+        <script src="html/KNETviewer/javascript/knet-generator.js"></script>
+        
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
     <!--    <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script> -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
-       	<script type="text/javascript" src="html/javascript/dtjava.js"></script>
+    <!--   	<script type="text/javascript" src="html/javascript/dtjava.js"></script> -->
 
         <jsp:invoke fragment="extraHeader"/>
     </head>
