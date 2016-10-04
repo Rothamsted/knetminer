@@ -1,6 +1,13 @@
 
 # Installation Guide
 
+### First time install
+- Install Node.js (https://nodejs.org/en/download/)
+- Install Git (https://git-scm.com/)
+- Install bower: `npm install -g bower`
+- Install gulp: `npm install -g gulp`
+
+
 ### Building the compressed and minified files
 
 The required files 'genemap.js', 'genemap-lib.js', 'genemap-lib.css' and 'genemap.css' as well as the images are found in the 'dist' directory, which isnt currently checked into version control. They will need to be recompiled before they can be used, to do this you can use the following steps. Once after checkout go to the `GeneMap` directory and run:
@@ -78,3 +85,6 @@ There are a limited number of rendering options available on the chart object, t
 
  - D3 doesn't seem to be very good about raising errors when it can't read an XML file, if you are having problems check the XML files being read are valid (no extra & characters for example). This should be easy enough to do by trying to open the XML file in a browser.
  - Check the head contains the `<meta charset="UTF-8">` tag as d3 uses UTF8.
+
+## To test Genomap.js:
+After running, ```npm install```, ```bower install``` and ```gulp optimise``` in /GeneMap directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
