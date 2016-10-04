@@ -11,7 +11,7 @@
 # Most of the downloads simply user cURL to download the files however the pubmed data requires a
 # more complex procedure to do so as an unattended script.
 #
-# Some links break and need to be adjusted if the database release changes
+# Some download links break and need to be adjusted if the database release changes
 # BioGrid version: 3.4.140
 # Ensembl Release: 32
 # AraCyc version: 14
@@ -146,6 +146,20 @@ echo "Create Homology"
 mkdir $HOMOLOGY_DIR/$DATE
 
 
+########  Update GFF3 and FASTA  ########
+
+curl ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.32.gff3.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.32.gff3.gz"
+gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.32.gff3.gz > $ARABIDOPSIS_DIR/$DATE/genes.gff3
+
+curl ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz"
+gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz > $ARABIDOPSIS_DIR/$DATE/pep.all.fa
+
+
+######## Update Gene-SNP-Phenotype #######
+
+## TODO: User BioMart Perl API  ##
+
+
 
 ########  Update Ontologies and Annotations  ########
 
@@ -215,6 +229,8 @@ echo
 [ -f $ONTO_DIR/to-basic.obo ] && rm $ONTO_DIR/to-basic.obo
 [ -f $UNIPROTKB_DIR/Plants.xml.gz ] && rm $UNIPROTKB_DIR/Plants.xml.gz
 [ -f $UNIPROTKB_DIR/Plants.fasta ] && rm $UNIPROTKB_DIR/Plants.fasta
+[ -f $ARABIDOPSIS_DIR/Gene-Protein/genes.gff3 ] && rm $ARABIDOPSIS_DIR/Gene-Protein/genes.gff3
+[ -f $ARABIDOPSIS_DIR/Gene-Protein/pep.all.fa ] && rm $ARABIDOPSIS_DIR/Gene-Protein/pep.all.fa
 [ -f $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz ] && rm $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz
 [ -f $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz ] && rm $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz
 [ -f $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl ] && rm $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl
@@ -232,6 +248,8 @@ cp $ONTO_DIR/$DATE/ec2go.txt $ONTO_DIR/ec2go.txt
 cp $ONTO_DIR/$DATE/to-basic.obo $ONTO_DIR/to-basic.obo
 cp $UNIPROTKB_DIR/$DATE/Plants.xml.gz $UNIPROTKB_DIR/Plants.xml.gz
 cp $UNIPROTKB_DIR/$DATE/Plants.fasta $UNIPROTKB_DIR/Plants.fasta
+cp $ARABIDOPSIS_DIR/$DATE/genes.gff3 $ARABIDOPSIS_DIR/Gene-Protein/genes.gff3
+cp $ARABIDOPSIS_DIR/$DATE/pep.all.fa $ARABIDOPSIS_DIR/Gene-Protein/pep.all.fa
 cp $ARABIDOPSIS_DIR/$DATE/gene_association.tair.gz $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz
 cp $ARABIDOPSIS_DIR/$DATE/Uniprot-Arabidopsis.xml.gz $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz
 cp $ARABIDOPSIS_DIR/$DATE/biopax-level2.owl $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl
@@ -245,6 +263,7 @@ perl -i -pne 's/sp\|(.*)\|.*? /$1 /g' $UNIPROTKB_DIR/Plants.fasta
 # /home/old_pear_apps/decypher_g1/bin/dc_run -parameters /home/data/qtlnetminer/ondex-mini/qtlnetminer/homology/Decypher/DecypherConfig_Plants -query /home/data/qtlnetminer/ondex-mini/qtlnetminer/organisms/Brassica/Gene-Protein/Brassica_oleracea.v2.1.26.pep.all.fa -database UniProt-Plants-$DATE -max_scores 10 -max_alignments 10 > /home/data/qtlnetminer/ondex-mini/qtlnetminer/homology/Decypher/Boleracea_UniProtPlants_Decypher-SW.tab
 /home/old_pear_apps/decypher_g1/bin/dc_run -parameters $HOMOLOGY_DIR/Decypher/DecypherConfig_Plants -query $ARABIDOPSIS_DIR/Gene-Protein/pep.all.fa -database UniProt-Plants-$DATE -max_scores 10 -max_alignments 10 > $HOMOLOGY_DIR/$DATE/Arabidopsis_UniProtPlants_Decypher-SW.tab
 
+# Update this network needs Ondex GUI
 cp $HOMOLOGY_DIR/$DATE/Arabidopsis_UniProtPlants_Decypher-SW.tab $HOMOLOGY_DIR/Decypher/Arabidopsis_UniProtPlants_Decypher-SW.tab
 
 ###########  Update Pubmed Data  ############
