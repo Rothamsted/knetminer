@@ -422,7 +422,6 @@ GENEMAP.GeneMap = function (userConfig) {
 
   // click handler for the network view button
   var openNetworkView = function () {
-      var gl;
 
     //extract labels for all selected genes on all chromosomes
     var selectedLabels = _.flatMap(genome.chromosomes.map( function(chromosome){
