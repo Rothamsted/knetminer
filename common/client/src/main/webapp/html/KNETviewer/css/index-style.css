@@ -1,0 +1,112 @@
+html{
+	height: 101%;
+}
+body {
+	margin:0px;padding:0px;background:#EEEEEE; 
+	font-size:12px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* General Styles */
+#wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../image/background.png) center;padding:0px 30px;  }
+
+.button {
+	height:25px;
+	font-size:14px;
+	cursor:pointer;
+}
+
+/* Tab Window */
+.button_off {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif; background:url(../image/button_off.png) no-repeat}
+.button_off a {color:#518FC8;text-decoration:none;}
+.button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif; background:url(../image/button_on.png) no-repeat;border-bottom:1px solid #C6C5C5}
+.button_on a {color:#FFF;text-decoration:none;}
+.button_on:hover {background:url(../image/button_over.png) no-repeat;}
+.button_filler {border-bottom: 4px solid #CCCCCC;clear: left;height: 1px;position: relative;width: 754px;}
+
+#tabviewer_buttons {text-align:center;}
+
+#tabviewer_content {min-height:350px;
+                    /*border: 1px dashed;*/
+                   }
+
+/* style attributes for the KNETviewer */
+#NetworkCanvas {width: 950px/*98%*/; height: 600px/*900*/ /*98%*/; position:relative; float:left; /*border: 1px solid; padding-bottom:5px;*/ }
+
+div#networkButton {
+	width:101%;
+	height:/*30*/70px;
+	margin-top:8px;
+}
+div#networkButton input[type="button"] {
+	float:right;
+	margin-right:10px;
+	margin-top:10px;
+}
+
+
+#buttonBox {
+	position: relative;
+	height: 50px;
+	margin-top:5px;
+	text-align: right
+}
+
+/*
+ * network Buttons
+ */
+ .networkButtons {
+	height: 36px;
+	width: 36px;
+	margin-left: 3px;
+	margin-right: 3px;
+	display: inline-block;
+}
+
+#knet-viewer {
+    width: 90%;
+    height: 90%;
+	padding-left: 10px;
+    /*border: 1px dashed grey;*/
+}
+
+/*
+ * maximise Overlay/ full screen
+ */
+ /*#knet-viewer*/
+ .full_screen {
+  position: fixed; 
+  width: 90%; /*90vw;*/ /*900px;*/
+  height: 90%; /*550px;*/
+  top: 5%; 
+  left: 5vw; 
+  margin-left: 0px;
+  margin-top: 0px;
+  border-style : solid;
+  border-color : gray;
+  border-width : 5px;
+  border-radius : /*15*/5px;
+  /*padding : 30px;*/
+  background-color: white;
+  box-sizing : border-box;
+  z-index: 2; 
+ }
+
+ #knetviewer-menu {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/*.full_screen #knetviewer-menu {
+  margin-top: 0px;
+}*/
+
+ /* KNETviewer dropdowns */
+ .knet-dropdowns {
+  /*display: inline;*/
+  margin-top:5px;
+  height: 30px; /*25px;*/
+  font-size: 15px;
+  vertical-align:top;
+ }
+ 
