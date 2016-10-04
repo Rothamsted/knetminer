@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ondex version="3.0">
+  <Workflow>
+    <Graph name="memorygraph">
+      <Arg name="GraphName">default</Arg>
+      <Arg name="graphId">default</Arg>
+    </Graph>
+    <Parser name="oxl">
+      <Arg name="InputFile">qtlnetminer/organisms/Arabidopsis/Arabidopsis_TM.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+    <Parser name="oxl">
+      <Arg name="InputFile">qtlnetminer/references/UniProt/Plants.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+	<!-- Created in Ondex Console -->
+    <Parser name="oxl">
+      <Arg name="InputFile">qtlnetminer/homology/Decypher/Arabidopsis_Plants.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+    <Parser name="oxl">
+      <Arg name="InputFile">qtlnetminer/references/yeast/yeast.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Parser>
+    <Mapping name="lowmemoryaccessionbased">
+      <Arg name="IgnoreAmbiguity">false</Arg>
+      <Arg name="RelationType">collapse_me</Arg>
+      <Arg name="WithinDataSourceMapping">false</Arg>
+      <Arg name="graphId">default</Arg>
+      <Arg name="ConceptClassRestriction">BioProc</Arg>
+      <Arg name="ConceptClassRestriction">MolFunc</Arg>
+      <Arg name="ConceptClassRestriction">CelComp</Arg>
+	  <Arg name="ConceptClassRestriction">EC</Arg>
+	  <Arg name="ConceptClassRestriction">Publication</Arg>
+      <Arg name="ConceptClassRestriction">Protein</Arg>
+      <Arg name="DataSourceRestriction">TAIR</Arg>
+      <Arg name="DataSourceRestriction">UNIPROTKB</Arg>	  
+      <Arg name="DataSourceRestriction">GO</Arg>
+	  <Arg name="DataSourceRestriction">EC</Arg>
+	  <Arg name="DataSourceRestriction">NLM</Arg>
+    </Mapping>
+    <Transformer name="relationcollapser">
+      <Arg name="CloneAttributes">true</Arg>
+      <Arg name="CopyTagReferences">true</Arg>
+      <Arg name="graphId">default</Arg>
+      <Arg name="RelationType">collapse_me</Arg>
+    </Transformer>
+    <Mapping name="external2go">
+      <Arg name="InputFile">qtlnetminer/ontologies/ec2go.txt</Arg>
+      <Arg name="fromCV">EC</Arg>
+      <Arg name="fromConceptClass">EC</Arg>
+      <Arg name="graphId">default</Arg>
+    </Mapping>
+    <Export name="oxl">
+      <Arg name="pretty">true</Arg>
+      <Arg name="ExportIsolatedConcepts">true</Arg>
+      <Arg name="GZip">true</Arg>
+      <Arg name="ExportFile">qtlnetminer/xnets/aranet/ArabidopsisKNET.oxl</Arg>
+      <Arg name="graphId">default</Arg>
+    </Export>
+    <Export name="graphinfo">
+      <Arg name="ExportFile">qtlnetminer/xnets/aranet/ArabidopsisKNET_Report.xml</Arg>
+      <Arg name="graphId">default</Arg>
+    </Export>
+  </Workflow>
+</Ondex>
+
