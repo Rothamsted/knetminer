@@ -238,8 +238,8 @@ cy.elements().qtip({
                 cy.nodes().forEach(function( ele ) {
                  if(ele.data('conceptType') === thisConceptType) {
                     //ele.hide();
-			        ele.removeClass('ShowItAll');
-					ele.addClass('HideThis');
+                    ele.removeClass('ShowItAll');
+                    ele.addClass('HideThis');
                    }
                 });
                 // Relayout the graph.
@@ -251,8 +251,8 @@ cy.elements().qtip({
                 cy.edges().forEach(function( ele ) {
                  if(ele.data('label') === thisRelationType) {
                     //ele.hide();
-			        ele.removeClass('ShowItAll');
-					ele.addClass('HideIt');
+                    ele.removeClass('ShowItAll');
+                    ele.addClass('HideIt');
                    }
                 });
                 // Relayout the graph.

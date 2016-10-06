@@ -648,6 +648,22 @@ body:after{
 	padding: 10px 10px 10px 10px;
 }
 
+      /* Network View Legend */
+      #networkLegend_container {
+          position: relative;
+          margin: auto;
+          width: 500px;
+          height: 80px;
+		  padding-top: 10px;
+      }
+      
+      #networkLegend_frame {
+          border: 1px solid gray; 
+          padding: 10px; 
+          border-radius: 6px;
+          left:30px;
+      }
+      
 
 #genemap {
 	width: 750px;
