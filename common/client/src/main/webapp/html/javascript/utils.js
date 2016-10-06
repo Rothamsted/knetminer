@@ -958,7 +958,7 @@ function generateCyJSNetwork(url,list){
 //         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
           */
   
-         $(/*"#knetviewer-menu"*/"#knet-viewer").css("display","block"); // show the KNETviewer menubar.
+         $(/*"#knetmaps-menu"*/"#knet-maps").css("display","block"); // show the KNETviewer menubar.
 
          activateButton('NetworkCanvas');
 
