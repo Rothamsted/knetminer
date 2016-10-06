@@ -5,7 +5,7 @@
         CSS for the Network Viewer, in tab.
 */
 
-#knet-viewer {
+#knet-maps {
     width: 90% ;/*98%;*/
     height: 90%;
 	padding-left: 10px;
@@ -15,7 +15,7 @@
 /*
  * maximise Overlay/ full screen
  */
- /*#knet-viewer*/
+ /*#knet-maps*/
  .full_screen {
   position: fixed; 
   width: 90vw; /*90%;*/ /*900px;*/
@@ -34,12 +34,12 @@
   z-index: 2; 
  }
 
- #knetviewer-menu {
+ #knetmaps-menu {
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
-/*.full_screen #knetviewer-menu {
+/*.full_screen #knetmaps-menu {
   margin-top: 0px;
 }*/
 
@@ -167,22 +167,6 @@
        margin-bottom: 1%;
       }
 
-      /* Legend */
-      #legend_container {
-          position: relative;
-          margin: auto;
-          width: 500px;
-          height: 80px;
-		  padding-top: 10px;
-      }
-      
-      #legend_frame {
-          border: 1px solid gray; 
-          padding: 10px; 
-          border-radius: 6px;
-		  left:30px;
-      }
-      
       /* Item Info. dialog box */
        .ui-widget-header,.ui-state-default, ui-button {
           background: #277da7; /*#b9cd6d;*/

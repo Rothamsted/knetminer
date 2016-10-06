@@ -23,7 +23,7 @@ function onHover(thisBtn) {
 //   /*cy*/$('#cy').cytoscape('get').fit();
   }
   
-  // Open advanced KNETviewer (using Twitter Bootstrap) menu.
+  // Open advanced KnetMaps (using Twitter Bootstrap) menu.
   
   // Layouts dropdown: onChange
   /*$("#layouts_dropdown").selectmenu({
