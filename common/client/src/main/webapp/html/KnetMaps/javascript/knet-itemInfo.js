@@ -82,7 +82,7 @@
                         if(co_name !== "") {
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            all_concept_names= all_concept_names + co_name +
-                                   " <a><img src='html/KNETviewer/image/labelEye.png' alt='Use' id='"+ co_name +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>" +"<br/>";
+                                   " <a><img src='html/KnetMaps/image/labelEye.png' alt='Use' id='"+ co_name +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>" +"<br/>";
                           }
                        }
                     cell2.innerHTML= all_concept_names; // all synonyms.
@@ -153,7 +153,7 @@
                               }
                             }
                         // Display concept accessions along with an eye icon to use them as preferred concept name.
-                        co_acc= co_acc +" <a><img src='html/KNETviewer/image/labelEye.png' alt='Use' id='"+ accession +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>";
+                        co_acc= co_acc +" <a><img src='html/KnetMaps/image/labelEye.png' alt='Use' id='"+ accession +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>";
                         cell1.innerHTML= accessionID;
                         cell2.innerHTML= co_acc;
                        }
