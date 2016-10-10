@@ -946,6 +946,7 @@ function generateCyJSNetwork(url,list){
 //    console.log("generateCyJSNetwork>> jsonFile: "+ jsonFile);
 
     try {
+        /*
          if(cyjs_networkView && !cyjs_networkView.closed) {
             // If the window is already open, close the window to reopen it later using new JSON dataset (file).
             cyjs_networkView.close();
@@ -955,10 +956,24 @@ function generateCyJSNetwork(url,list){
          // Pass the JSON file path to a global variable in the new window.
          cyjs_networkView.jsonFile= jsonFile;
 //         console.log("OpenNewWindow>> cyjs_networkView.jsonFile= "+ cyjs_networkView.jsonFile);
+          */
+  
+         $(/*"#knetmaps-menu"*/"#knet-maps").css("display","block"); // show the KNETviewer menubar.
 
-	  // Remove the preloader for the new Network Viewer
-	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-	  $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+         activateButton('NetworkCanvas');
+
+         // Show KNETviewer maskloader.
+         showNetworkLoader();
+
+         // Generate the Network Graph after the page load event.
+         generateNetworkGraph(jsonFile);
+        
+         // Remove KNETviewer maskloader.
+         removeNetworkLoader();
+
+         // Remove the preloader message in Gene View, for the Network Viewer
+         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
         }
     catch(err) {
           var errorMsg= err.stack;
