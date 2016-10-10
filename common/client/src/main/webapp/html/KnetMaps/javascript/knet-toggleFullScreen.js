@@ -4,7 +4,7 @@
      var currentEles_jsons= cy_target.elements().jsons();
      var currentStylesheet_json= cy_target.style().json(); //cy_target.style().json();
      if(!$('#knet-maps').hasClass('full_screen')) {
-        $('#maximizeOverlay').attr('src', 'html/KNETviewer/image/minimizeOverlay.png'); // toggle image
+        $('#maximizeOverlay').attr('src', 'html/KnetMaps/image/minimizeOverlay.png'); // toggle image
   	// Maximize
         $('#knet-maps').addClass('full_screen');
 
@@ -15,7 +15,7 @@
 	showHideLabels($('#changeLabelVisibility').val());
        }
        else {
-        $('#maximizeOverlay').attr('src', 'html/KNETviewer/image/maximizeOverlay.png'); // toggle image
+        $('#maximizeOverlay').attr('src', 'html/KnetMaps/image/maximizeOverlay.png'); // toggle image
   	// Minimize
         $('#knet-maps').removeClass('full_screen');
 
