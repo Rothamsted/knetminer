@@ -156,9 +156,9 @@
                         </div>
                         <!-- KnetMaps Menubar -->
                         <div id="knetmaps-menu">
-                            <input type="image" id="maximizeOverlay" src="html/KnetMaps/image/maximizeOverlay.png" title="Toggle full screen" onclick="OnMaximizeClick();" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
-                            <input type="image" id="showAll" src="html/KnetMaps/image/showAll.png" onclick="showAll();" title="Show all the concept & relations in the Network" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
-                            <input type="image" id="relayoutNetwork" src="html/KnetMaps/image/relayoutNetwork.png" onclick="rerunLayout();" title="Re-run the Layout" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="maximizeOverlay" src="html/KNETviewer/image/maximizeOverlay.png" title="Toggle full screen" onclick="OnMaximizeClick();" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="showAll" src="html/KNETviewer/image/showAll.png" onclick="showAll();" title="Show all the concept & relations in the Network" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="relayoutNetwork" src="html/KNETviewer/image/relayoutNetwork.png" onclick="rerunLayout();" title="Re-run the Layout" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
                             <span class="knet-dropdowns">
                                 <select id="layouts_dropdown" class="knet-dropdowns" onChange="rerunLayout();" title="Select network layout">
                                     <option value="Cose_layout" selected="selected" title="using CoSE layout algorithm (useful for larger networks with clustering)">CoSE layout</option>
@@ -186,13 +186,13 @@
                                     <option value="40">Label size: 40px</option>
                                 </select>
 			    </span>
-                            <input type="image" id="resetNetwork" src="html/KnetMaps/image/resetNetwork.png" onclick="resetGraph();" title="Reposition (reset and re-fit) the graph" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
-                            <input type="image" id="savePNG" src="html/KnetMaps/image/savePNG.png" onclick="exportAsImage();" title="Export the network as a .png image" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
-                            <!-- <input type="text" id="knet_txtSearch" class="knet-dropdowns" placeholder="Search..." /> <input type="image" id="searchNetwork" value="Search" src="html/KnetMaps/image/searchNetwork.png" value="Search" onclick="findConcept($('#knet_txtSearch').val());" title="Search for concept by name" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
-                            <input type="image" id="saveJSON" src="html/KnetMaps/image/saveJSON.png" onclick="exportAsJson();" title="Export the network in JSON format" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
-                            <input type="image" id="helpURL" src="html/KnetMaps/image/help.png" onclick="openKnetHelpPage();" title="Go to help documentation" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="resetNetwork" src="html/KNETviewer/image/resetNetwork.png" onclick="resetGraph();" title="Reposition (reset and re-fit) the graph" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="savePNG" src="html/KNETviewer/image/savePNG.png" onclick="exportAsImage();" title="Export the network as a .png image" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <!-- <input type="text" id="knet_txtSearch" class="knet-dropdowns" placeholder="Search..." /> <input type="image" id="searchNetwork" value="Search" src="html/KNETviewer/image/searchNetwork.png" value="Search" onclick="findConcept($('#knet_txtSearch').val());" title="Search for concept by name" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
+                            <input type="image" id="saveJSON" src="html/KNETviewer/image/saveJSON.png" onclick="exportAsJson();" title="Export the network in JSON format" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
+                            <input type="image" id="helpURL" src="html/KNETviewer/image/help.png" onclick="openKnetHelpPage();" title="Go to help documentation" onmouseover="onHover($(this));" onmouseout="offHover($(this));">
 			    <!-- Button to launch advanced menu -->
-                            <!-- <input type="image" id="knetAdvancedMenu" src="html/KnetMaps/image/gearAdvanced.png" onclick="$('.knet-advanced-menu').modalPopover('toggle');" title="Open advanced menu" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
+                            <!-- <input type="image" id="knetAdvancedMenu" src="html/KNETviewer/image/gearAdvanced.png" onclick="$('.knet-advanced-menu').modalPopover('toggle');" title="Open advanced menu" onmouseover="onHover($(this));" onmouseout="offHover($(this));"> -->
                         </div>
                         <!-- The core cytoscapeJS container -->
                         <div id="cy"></div>
