@@ -1,0 +1,22 @@
+pp = new PathParser(getActiveGraph(), new DelimitedFileReader("N:/ondex-mini/qtlnetminer/homology/Decypher/Arabidopsis_UniProtPlants_Decypher-SW.tab", "\\t+", 1));
+
+c1 = pp.newConceptPrototype(defAccession(1,"UNIPROTKB",false), defDataSource("Decypher"), defCC("Protein"));
+
+c2 = pp.newConceptPrototype(defAccession(0,"TAIR",false), defDataSource("Decypher"), defCC("Protein"));
+
+pp.newRelationPrototype(c2, c1, defRT("h_s_s"), defEvidence("Decypher-SW")
+, defAttribute("Smith-Waterman", "ALGORITHM", "TEXT", false)
+, defAttribute(2, "SCORE", "NUMBER", false)
+, defAttribute(3, "E-VALUE", "NUMBER", false)
+, defAttribute(4, "PERCENTALIGNMENT", "NUMBER", false)
+, defAttribute(5, "PERCENTQUERY", "NUMBER", false)
+, defAttribute(6, "PERCENTTARGET", "NUMBER", false)
+, defAttribute(7, "QUERYSTART", "NUMBER", false)
+, defAttribute(8, "QUERYEND", "NUMBER", false)
+, defAttribute(9, "TARGETSTART", "NUMBER", false)
+, defAttribute(10, "TARGETEND", "NUMBER", false)
+, defAttribute(11, "QUERYLENGTH", "NUMBER", false)
+, defAttribute(12, "TARGETLENGTH", "NUMBER", false)
+);
+
+s = pp.parse();
