@@ -1197,7 +1197,7 @@ public class OndexServiceProvider {
 						}
 					}
 					
-					// hide path to publication if more than X publications exist in the subgraph 
+					// Hides the whole path from gene to publication if more than X publications exist in the subgraph 
 					// the visible network is otherwise too large
 					// TODO: Instead of choosing X arbitrary publications, show the most specific or latest publications
 					if(keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && numVisiblePublication > 20){
