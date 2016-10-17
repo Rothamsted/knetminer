@@ -1,0 +1,10 @@
+pp = new PathParser(getActiveGraph(), new DelimitedFileReader("N:/ondex-mini/qtlnetminer/references/yeast/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt", "\\t+", 1));
+c1 = pp.newConceptPrototype(defAccession(5,"SGD",false), defCC("Protein"), defDataSource("BIOGRID"));
+c2 = pp.newConceptPrototype(defAccession(6,"SGD",false), defCC("Protein"), defDataSource("BIOGRID"));
+c3 = pp.newConceptPrototype(defAccession(14,"NLM",false), defCC("Publication"), defDataSource("BIOGRID"));
+
+pp.newRelationPrototype(c1, c2, defRT(12), defAttribute(11, "Experimental_System", "TEXT", "false"), defAttribute(14, "PubMed", "TEXT", "false"), defAttribute(13, "Author", "TEXT", "false"), defAttribute(17, "Throughput", "TEXT", "false"));
+pp.newRelationPrototype(c1, c3, defRT("pub_in"));
+pp.newRelationPrototype(c2, c3, defRT("pub_in"));
+
+pp.parse();

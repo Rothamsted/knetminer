@@ -1162,6 +1162,8 @@ public class OndexServiceProvider {
 		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
 
 		ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
+		
+		int numVisiblePublication = 0;
 
 		for (List<EvidencePathNode> paths : results.values()) {
 			for (EvidencePathNode path : paths) {
@@ -1182,16 +1184,28 @@ public class OndexServiceProvider {
 				ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
 				if (luceneResults.containsKey(keywordCon)) {
-					// annotate the semantic motif in the new Ondex graph
-					highlightPath(path, graphCloner);
-
+					
 					ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
-					// if keyword provided, annotate the
-
+					
+					// highlight the keyword in any concept attribute values
 					if (!keywordConcepts.contains(cloneCon)) {
 						OndexSearch.highlight(cloneCon, keyword);
 						keywordConcepts.add(cloneCon);
+						
+						if(keywordCon.getOfType().getId().equalsIgnoreCase("Publication")){
+							numVisiblePublication++;
+						}
 					}
+					
+					// Hides the whole path from gene to publication if more than X publications exist in the subgraph 
+					// the visible network is otherwise too large
+					// TODO: Instead of choosing X arbitrary publications, show the most specific or latest publications
+					if(keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && numVisiblePublication > 20){
+						continue;
+					}
+					
+					// annotate the semantic motif in the new Ondex graph
+					highlightPath(path, graphCloner);
 				}
 
 				ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);

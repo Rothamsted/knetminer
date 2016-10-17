@@ -12,7 +12,7 @@
     </Parser>
 	<!-- Created in Ondex Console -->
     <Parser name="oxl">
-      <Arg name="InputFile">qtlnetminer/references/yeast/Sc_interactions_biogrid_3.4.139.oxl</Arg>
+      <Arg name="InputFile">qtlnetminer/references/yeast/Sc_interactions_biogrid.oxl</Arg>
       <Arg name="graphId">default</Arg>
     </Parser>
     <Parser name="uniprot">
