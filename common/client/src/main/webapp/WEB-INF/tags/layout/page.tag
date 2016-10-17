@@ -29,9 +29,6 @@
         <!-- KnetMaps -->
         <link href="html/KnetMaps/css/knet-style.css" rel="stylesheet" /> <!-- Network Viewer stylesheet -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
-        <!-- jQuery-UI: CSS for dropdowns -->
-    <!--    <link href="html/KnetMaps/css/jquery-ui.css" rel="stylesheet" /> -->
-        <!-- jQuery MaskLoader: for progress overlay -->
         <link href="html/KnetMaps/css/maskloader.css" rel="stylesheet">
 
         <!-- GeneMap -->
@@ -41,12 +38,12 @@
         <!-- KnetMaps -->
     <!--    <script src="html/KnetMaps/libs/jquery-1.11.2.min.js"></script> --> <!-- already loaded by GeneMap -->
         <script src="html/KnetMaps/libs/cytoscapejs_2.4.0/cytoscape.min.js"></script>
-        <!-- jQuery-UI: now: for ItemInfo easing, future: dropdowns & modal dialogs -->
         <script src="html/KnetMaps/libs/jquery-ui.js"></script>
         <script src="html/KnetMaps/libs/cytoscape-cxtmenu.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
         <script src="html/KnetMaps/libs/cytoscape-qtip.js"></script>
         <script src="html/KnetMaps/libs/jquery.maskloader.js"></script>
+        <!-- Layouts -->
         <script src="html/KnetMaps/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <script src="html/KnetMaps/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>
         <!-- URL mappings config file used for generating url's in Item Info table -->
