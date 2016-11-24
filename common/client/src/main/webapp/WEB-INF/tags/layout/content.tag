@@ -133,12 +133,73 @@
                 </center>
             </div>
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
+            <!-- new GeneMap -->
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" >
                 <div id="genemap" class="bootstrap"> </div>
 	    </div>
             <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
-            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+        <!--    <div id="NetworkCanvas" class="resultViewer" style="display:none;">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
+            </div> -->
+            <!-- new Network Viewer -->
+            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+                    <!-- KnetMaps -->
+                    <div id="knet-maps" style="display:none;">
+                        <div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info panel -->
+                            <table id="itemInfo_Table" class="infoTable" cellspacing=1>
+                                <thead><th>Item Info:</th>
+                                    <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th>
+                                </thead><tbody></tbody></table>
+                        </div>
+                        <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
+                        <!-- The core cytoscapeJS container -->
+                        <div id="cy"></div><br/>
+                        <!-- dynamically updated Legend to show number of shown/ hidden concepts; and by type -->
+			<div id="countsLegend"><span>KnetMaps</span></div>
+                        <div id="infoDialog"></div> <!-- popup dialog -->
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div id="networkLegend_container">
+                        <table id="networkLegend_frame" cellspacing=1>
+                            <tr><td align=center><img src="html/image/knet_legend/Gene.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Protein.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Pathway.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Compound.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Enzyme.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Reaction.png"></td>
+                                <td align=center><img src="html/image/knet_legend/QTL.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Publication.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Gene</font></td>
+                                <td align=center><font size=1.8px>Protein</font></td>
+                                <td align=center><font size=1.8px>Pathway</font></td>
+                                <td align=center><font size=1.8px>SNP</font></td>
+                                <td align=center><font size=1.8px>Enzyme</font></td>
+                                <td align=center><font size=1.8px>Reaction</font></td>
+                                <td align=center><font size=1.8px>QTL</font></td>
+                                <td align=center><font size=1.8px>Publication</font></td>
+                            </tr><tr><td align=center></td></tr>
+                            <tr><td align=center><img src="html/image/knet_legend/Phenotype.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Biological_process.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Cellular_component.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Protein_domain.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Trait_ontology.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Molecular_function.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Trait.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Enzyme_classification.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Phenotype</font></td>
+                                <td align=center><font size=1.8px>Biol. Process</font></td>
+                                <td align=center><font size=1.8px>Cell. Component</font></td>
+                                <td align=center><font size=1.8px>Protein Domain</font></td>
+                                <td align=center><font size=1.8px>Trait Ontology</font></td>
+                                <td align=center><font size=1.8px>Mol. Function</font></td>
+                                <td align=center><font size=1.8px>Trait</font></td>
+                                <td align=center><font size=1.8px>Enzyme Classification</font></td>
+                            </tr>
+                        </table>
+                    </div>
             </div>
         </div>
 	</div>

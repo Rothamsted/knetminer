@@ -1,6 +1,13 @@
 
 # Installation Guide
 
+### First time install
+- Install Node.js (https://nodejs.org/en/download/)
+- Install Git (https://git-scm.com/)
+- Install bower: `npm install -g bower`
+- Install gulp: `npm install -g gulp`
+
+
 ### Building the compressed and minified files
 
 The required files 'genemap.js', 'genemap-lib.js', 'genemap-lib.css' and 'genemap.css' as well as the images are found in the 'dist' directory, which isnt currently checked into version control. They will need to be recompiled before they can be used, to do this you can use the following steps. Once after checkout go to the `GeneMap` directory and run:
