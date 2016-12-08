@@ -12,23 +12,33 @@
 				<li>
 					<div id="keyword_search">
 						<ul>
-							<li><input id="keywords" name="keywords" type="text" /></li>
-							<li><input type="submit" id="keywordsSubmit" value="Search" class="button" disabled/></li>
+							<li><input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
+							<span style="vertical-align:middle;">
+							<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
+							</span></li>
 							<li><div id="loadingDiv"></div></li>
-							<li><span id="hintEgKeywords" class="hint hint-small"></span></li>
-							<div id="eg_keywords_hidden" style="display:none;">
-								${eg_keywords}
-							</div>
-
 						</ul>
-						<div id="matchesResultDiv">Please, start typing your query</div>
+						<div id="matchesResultDiv"></div>
+						<div id="eg_keywords_hidden" style="display:none;">
+							${eg_keywords}
+						</div>
+						
 					</div>
-				</li>
+					<div id="info" class="details">
+	<div id="info-text">
+        <div style="height: 35px;"><h3>Example queries</h3> 
+        <a class="close"  href="#info" title="close">close</a>	
+        </div>
+        <div id="eg_keywords_hidden">${eg_keywords}
+       <!-- disabled: <a href:'javascript;'="" class="exampleQuery" id="exampleQuery0">Example 1</a> - Disease resistance<br>
+        <a href:'javascript;'="" class="exampleQuery" id="exampleQuery1">Example 2</a> - Xylan or Cell wall -->
+        </div>
+    </div>
+  </div>
 				<li>
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
-						<span id="hintQuerySuggestor" class="hint hint-small"></span>
 						<span id="suggestor_invite"></span>
-						<hr />
+						<hr width="45%" align="left">
 					<div id="suggestor_search">
 						<div id="suggestor_search_area" style="display:none;">
 							<div id="suggestor_terms"> </div>
@@ -39,14 +49,8 @@
 				<li id="genomeorqtlsearchbox" style="display:none;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
-					<span id="hintSearchQtlGenome" class="hint hint-small"></span>
-					<hr />
+					<hr width="45%" align="left">
 					<div id="region_search_area" style="display:none;">
-						<div class="rightnav">
-							Search:<br />
-							<input type="radio" name="search_mode" value="genome" checked="checked" />whole-genome<br />
-							<input type="radio" name="search_mode" value="qtl" />within region<br />
-						</div>
 						<table id="regions_table">
 							<tr>
 								<td><label>Chromosome</label></td>
@@ -75,33 +79,30 @@
 								</td>
 							</tr>
 						</table>
+						<div class="rightnav">				
+							<input type="radio" name="search_mode" value="genome" checked="checked">whole-genome
+							<input type="radio" name="search_mode" value="qtl">within region<br>
+						</div>
 					</div>
 				</li>
-				<li>
+				<li style="padding-top:20px;">
 					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
-						<span id="hintEnterGenes" class="hint hint-small"></span>
-						<hr />
+						<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display:none;">
+							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
 							<div class="rightnav_genelist">
-								<input type="radio" name="list_mode" value="GLrestrict" checked="checked" />
-								<span class="textBlock">
-									Map gene list to results of keywords and Genome/QTL Search<br />
-								</span>
-								<input type="radio" name="list_mode" value="GL" />
-								<span class="textBlock">
-									Map gene list without restrictions
-								</span>
+								<input type="radio" name="list_mode" value="GLrestrict" checked="checked">Intersection								
+								<input type="radio" name="list_mode" value="GL">Union </br>
 							</div>
-							<textarea id="list_of_genes" cols="30" rows="7"></textarea>
 						</div>
 					</div>
 				</li>
 			</ul>
 		</form>
 	</div>
+	
 	<div id="pGViewer_title"></div>
-	<div id = "assembly">${assembly}</div>
 	<div id="tabviewer">
 
     	<div id="tabviewer_buttons">
@@ -110,7 +111,7 @@
 		<div class="menu_button button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="menu_button button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
-        	<div class="button_filler"></div>
+        
         </div>
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
@@ -133,12 +134,72 @@
                 </center>
             </div>
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
+            <!-- new GeneMap -->
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" >
                 <div id="genemap" class="bootstrap"> </div>
 	    </div>
             <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
-            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+        <!--    <div id="NetworkCanvas" class="resultViewer" style="display:none;">
             	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
+            </div> -->
+            <!-- new Network Viewer -->
+            <div id="NetworkCanvas" class="resultViewer" style="display:none;">
+                    <!-- KnetMaps -->
+                    <div id="knet-maps" style="display:none;">
+                        <div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info panel -->
+                            <table id="itemInfo_Table" class="infoTable" cellspacing=1>
+                                <thead><th>Item Info:</th>
+                                    <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th>
+                                </thead><tbody></tbody></table>
+                        </div>
+                        <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
+                        <!-- The core cytoscapeJS container -->
+                        <div id="cy"></div><br/>
+                        <!-- dynamically updated Legend to show number of shown/ hidden concepts; and by type -->
+			<div id="countsLegend" style="width: 350px; margin: auto;"><span>KnetMaps</span></div>
+                        <div id="infoDialog"></div> <!-- popup dialog -->
+                    </div>
+                    
+                    <!-- Legend -->
+                    <table id="networkLegend_frame" cellspacing=1>
+                            <tr><td align=center><img src="html/image/knet_legend/Gene.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Protein.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Pathway.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Compound.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Enzyme.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Reaction.png"></td>
+                                <td align=center><img src="html/image/knet_legend/QTL.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Publication.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Gene</font></td>
+                                <td align=center><font size=1.8px>Protein</font></td>
+                                <td align=center><font size=1.8px>Pathway</font></td>
+                                <td align=center><font size=1.8px>SNP</font></td>
+                                <td align=center><font size=1.8px>Enzyme</font></td>
+                                <td align=center><font size=1.8px>Reaction</font></td>
+                                <td align=center><font size=1.8px>QTL</font></td>
+                                <td align=center><font size=1.8px>Publication</font></td>
+                            </tr><tr><td align=center></td></tr>
+                            <tr><td align=center><img src="html/image/knet_legend/Phenotype.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Biological_process.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Cellular_component.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Protein_domain.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Trait_ontology.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Molecular_function.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Trait.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Enzyme_classification.png"></td>
+                            </tr><tr>
+                                <td align=center><font size=1.8px>Phenotype</font></td>
+                                <td align=center><font size=1.8px>Biol. Process</font></td>
+                                <td align=center><font size=1.8px>Cell. Component</font></td>
+                                <td align=center><font size=1.8px>Protein Domain</font></td>
+                                <td align=center><font size=1.8px>Trait Ontology</font></td>
+                                <td align=center><font size=1.8px>Mol. Function</font></td>
+                                <td align=center><font size=1.8px>Trait</font></td>
+                                <td align=center><font size=1.8px>Enzyme Classification</font></td>
+                            </tr>
+                        </table>
+                    </div>
             </div>
         </div>
 	</div>
