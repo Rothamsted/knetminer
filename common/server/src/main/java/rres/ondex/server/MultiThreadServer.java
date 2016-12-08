@@ -114,7 +114,7 @@ public class MultiThreadServer {
 		
 		ondexServiceProvider.setReferenceGenome(referenceGenome);
 		ondexServiceProvider.setTaxId(taxIDs);
-		ondexServiceProvider.setExportVisible(Boolean.getBoolean(export_visible_network));
+		ondexServiceProvider.setExportVisible(Boolean.parseBoolean(export_visible_network));
 		ondexServiceProvider.loadConfig();
 		ondexServiceProvider.createGraph(fileName);		
 
