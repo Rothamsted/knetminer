@@ -15,7 +15,7 @@ Functions for show and hide structures when a button is pressed
 function escapeJquerySelectors(exp){
 	return exp.replace(/[!"#$%&'()*+,.\/:;<=>?@\[\\\]^`{|}~]/g, '\\$&');
 }
-
+//test
 function showSynonymTable(option,tabBoxRelated){
 $('.suggestorTable:visible').fadeOut(0,function(){
 		option = escapeJquerySelectors(option);
