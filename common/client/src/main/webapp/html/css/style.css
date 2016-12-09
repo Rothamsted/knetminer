@@ -194,7 +194,7 @@ div#list_search {
 	position:relative;
 }
 
-/*Info box*/
+/*Info box for example queries*/
 .details {
 	float: right;
     background-color: rgba(117, 119, 119, 0.14);
@@ -202,8 +202,8 @@ div#list_search {
     -webkit-border-radius: 18px;
     -o-border-radius: 18px;
     border-radius: 18px;
-    margin-top: 25px;
-    margin-right: 15px;
+   /* margin-top: 25px;*/
+    margin-right: /*15*/10px;
 }
 
 .details h3 {
@@ -235,6 +235,7 @@ div#list_search {
 	margin-left: -85px; 
 	padding:3px;
 }
+/* example queries div */
 #info-text {
 	padding:10px;
 	}
