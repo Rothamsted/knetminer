@@ -16,6 +16,6 @@
 	<query>
 		<name>Example 2</name>
 		<description>Xylan or Cell wall</description>
-		<term>Xylan OR cell wall</term>
+		<term>Xylan OR "cell wall"</term>
 	</query>
 </sampleQueries>
