@@ -7,3 +7,5 @@ var reference_genome = true;
 var multiorganisms = false;
 // adjusts scaling in the GViewer in case the first chromosome is not the longest.
 var longest_chr= 35000000/*32079331*/;
+var species_name = 'Drosophila melanogaster';
+

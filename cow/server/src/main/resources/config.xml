@@ -7,4 +7,5 @@
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
 	<entry key="SpeciesTaxId">9913</entry>
 	<entry key="reference_genome">true</entry>	
+	<entry key="export_visible_network">false</entry>
 </properties>

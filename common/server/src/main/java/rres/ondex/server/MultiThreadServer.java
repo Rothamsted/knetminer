@@ -110,8 +110,11 @@ public class MultiThreadServer {
 		String taxID = props.getProperty("SpeciesTaxId");
 		List<String> taxIDs = Arrays.asList(taxID.split(","));
 		
+		String export_visible_network = props.getProperty("export_visible_network");
+		
 		ondexServiceProvider.setReferenceGenome(referenceGenome);
 		ondexServiceProvider.setTaxId(taxIDs);
+		ondexServiceProvider.setExportVisible(Boolean.parseBoolean(export_visible_network));
 		ondexServiceProvider.loadConfig();
 		ondexServiceProvider.createGraph(fileName);		
 

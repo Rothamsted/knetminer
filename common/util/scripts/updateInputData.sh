@@ -13,7 +13,7 @@
 #
 # Some download links break and need to be adjusted if the database release changes
 # BioGrid version: 3.4.141
-# Ensembl Release: 32
+# Ensembl Release: 33
 # AraCyc version: 14
 #
 #      #################  Pubmed Update Procedure  ##################
@@ -148,8 +148,8 @@ mkdir $HOMOLOGY_DIR/$DATE
 
 ########  Update GFF3 and FASTA  ########
 
-curl ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.32.gff3.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.32.gff3.gz"
-gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.32.gff3.gz > $ARABIDOPSIS_DIR/$DATE/genes.gff3
+curl ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.33.gff3.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.33.gff3.gz"
+gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.33.gff3.gz > $ARABIDOPSIS_DIR/$DATE/genes.gff3
 
 curl ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz"
 gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz > $ARABIDOPSIS_DIR/$DATE/pep.all.fa
@@ -189,8 +189,7 @@ curl "ftp://ftp.plantcyc.org/tmp/private/plantcyc/aracyc.tar.gz" -o "$ARABIDOPSI
 tar -O -zxvf $ARABIDOPSIS_DIR/$DATE/aracyc.tar.gz aracyc/14.0/data/biopax-level2.owl > $ARABIDOPSIS_DIR/$DATE/biopax-level2.owl
 echo
 echo -e $TXT_COL"Downloading BioGrid data"$TXT_COL_RST
-curl "http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.141/BIOGRID-ORGANISM-3.4.141.tab2.zip" \
-	-o "$ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip"
+curl "http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.141/BIOGRID-ORGANISM-3.4.141.tab2.zip" -o "$ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip"
 unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt -d $ARABIDOPSIS_DIR/$DATE
 unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt -d $YEAST_DIR/$DATE
 echo
@@ -269,7 +268,7 @@ cp $HOMOLOGY_DIR/$DATE/Arabidopsis_UniProtPlants_Decypher-SW.tab $HOMOLOGY_DIR/D
 ###########  Update Pubmed Data  ############
 
 # ncbi e-utils address
-NCBIADDR="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+NCBIADDR="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
 URL=$NCBIADDR"esearch.fcgi?db=pubmed&term="$QUERY"&usehistory=y"
 
 
