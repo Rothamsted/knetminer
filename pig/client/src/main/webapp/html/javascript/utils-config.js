@@ -4,4 +4,4 @@ var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Pig genome';
 var reference_genome = true;
 var multiorganisms = false;
-var species_name = 'Pig (Sus scrofa)';
+var species_name = 'Sus scrofa';
