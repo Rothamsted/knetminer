@@ -8,4 +8,5 @@
 	<!--  <entry key="SpeciesTaxId">4113,4081</entry> -->
 	<entry key="SpeciesTaxId">4113,4081</entry>
 	<entry key="reference_genome">false</entry>	
+	<entry key="export_visible_network">false</entry>
 </properties>
