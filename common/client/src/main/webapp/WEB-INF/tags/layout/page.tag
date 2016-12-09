@@ -11,6 +11,7 @@
 <%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
+<%@ attribute name="species_name" fragment="false" description="species_name" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
@@ -44,6 +45,7 @@
         <script src="html/KnetMaps/libs/cytoscape-qtip.js"></script>
         <script src="html/KnetMaps/libs/jquery.maskloader.js"></script>
         <!-- Layouts -->
+        <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
         <script src="html/KnetMaps/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <script src="html/KnetMaps/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>
         <!-- URL mappings config file used for generating url's in Item Info table -->
@@ -63,7 +65,9 @@
     <!--    <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script> -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
     <!--   	<script type="text/javascript" src="html/javascript/dtjava.js"></script> -->
-
+		
+		 <script src="https://use.fontawesome.com/a90751c39e.js"></script>
+		
         <jsp:invoke fragment="extraHeader"/>
     </head>
     <body>

@@ -281,6 +281,9 @@ function evidencePath(id){
 
 $(document).ready(
 		function(){
+			// add species name to header
+			$('#species_header').text(species_name); // set/ update species name from utils_config.js
+			
 			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
 			if(reference_genome == true){
 				$('#genomeorqtlsearchbox').show();
@@ -300,6 +303,7 @@ $(document).ready(
 					$('#genemap-tab').hide();
 			}
 			$("#keywords").focus();
+			$('#tabviewer').hide(); // hide by default
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
 //                            if(e.which !== 13){	//this stops matchCouter being called when the enter key is used to perform a search.
@@ -581,7 +585,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    		 				$("#advanced_search").click();
 		    		 			}
 		    	 			}
-
+							
 		    	 			matchCounter(); // updates number of matched documents and genes counter
                                                 // Refresh the Query Suggester, if it's already open.
 	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
@@ -713,6 +717,7 @@ function searchKeyword(){
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
 	}
 	else{
+		$('#tabviewer').show(); // show Tab buttons and viewer
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
 
 		$.ajax({
