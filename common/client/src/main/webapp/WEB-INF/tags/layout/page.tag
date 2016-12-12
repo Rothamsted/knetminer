@@ -11,6 +11,7 @@
 <%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
+<%@ attribute name="species_name" fragment="false" description="species_name" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
@@ -44,6 +45,7 @@
         <script src="html/KnetMaps/libs/cytoscape-qtip.js"></script>
         <script src="html/KnetMaps/libs/jquery.maskloader.js"></script>
         <!-- Layouts -->
+        <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
         <script src="html/KnetMaps/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <script src="html/KnetMaps/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>
         <!-- URL mappings config file used for generating url's in Item Info table -->
@@ -63,8 +65,22 @@
     <!--    <script type="text/javascript" src="html/GViewer/javascript/JavaScriptFlashGateway.js"></script> -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
     <!--   	<script type="text/javascript" src="html/javascript/dtjava.js"></script> -->
-
+		
+	<script src="https://use.fontawesome.com/a90751c39e.js"></script>
+	
         <jsp:invoke fragment="extraHeader"/>
+        
+        <!-- Google Analytics -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+                
+            ga('create', 'UA-88753233-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <!-- end Google Analytics -->
     </head>
     <body>
         <!-- Main -->
