@@ -4,3 +4,4 @@ var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Maize genome';
 var reference_genome = true;
 var multiorganisms = false;
+var species_name = 'Zea mays';

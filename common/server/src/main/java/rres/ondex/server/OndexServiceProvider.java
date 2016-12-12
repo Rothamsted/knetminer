@@ -62,6 +62,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
+import net.sourceforge.ondex.exception.type.WrongArgumentException;
 import net.sourceforge.ondex.export.oxl.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
@@ -147,6 +148,8 @@ public class OndexServiceProvider {
 	 * true if a reference genome is provided
 	 */
 	boolean referenceGenome;
+
+	boolean export_visible_network;
 
 	/**
 	 * Loads configuration for chromosomes and initialises map
@@ -445,6 +448,29 @@ public class OndexServiceProvider {
 
 		ONDEXGraph graph2 = new MemoryONDEXGraph("FilteredGraphUnconnected");
 		uFilter.copyResultsToNewGraph(graph2);
+		
+//		// Attribute Value Filter
+//		net.sourceforge.ondex.filter.attributevalue.Filter visFilter = new net.sourceforge.ondex.filter.attributevalue.Filter();
+//		ONDEXPluginArguments visFA = new ONDEXPluginArguments(visFilter.getArgumentDefinitions());
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.ATTRNAME_ARG, "size");
+//		//Not sure if "true" needs to be string or boolean
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.VALUE_ARG, "0");
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.OPERATOR_ARG, ">");
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.INCLUDING_ARG, true);
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.IGNORE_ARG, true);
+//
+//		visFilter.setArguments(visFA);
+//		visFilter.setONDEXGraph(graph2);
+//		try {
+//			visFilter.start();
+//		} catch (WrongArgumentException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//
+//		ONDEXGraph graph3 = new MemoryONDEXGraph("FilteredGraph");
+//		visFilter.copyResultsToNewGraph(graph3);
+		
 
 		// oxl export
 		Export export = new Export();
@@ -1266,8 +1292,36 @@ public class OndexServiceProvider {
 		// keywordConcepts.size()
 		// + " concepts.");
 		System.out.println("Number of candidate genes " + candidateGenes.size());
-
+		
+		if(export_visible_network){
+		
+			ONDEXGraphMetaData md = subGraph.getMetaData();
+			AttributeName attSize = md.getAttributeName("size");
+			Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
+			Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
+			
+			ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
+			ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
+	
+			ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
+	
+			for (ONDEXConcept c : itc) {
+				graphCloner2.cloneConcept(c);
+			}
+			for (ONDEXRelation r : itr) {
+				graphCloner2.cloneRelation(r);
+			}
+			
+			ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
+			
+			subGraph = filteredGraph;
+		
+		}
+		
 		return subGraph;
+		
+		
+		
 	}
 
 	/**
@@ -2600,6 +2654,11 @@ public class OndexServiceProvider {
 	public void setTaxId(List<String> id) {
 		this.taxID = id;
 	}
+	
+	public void setExportVisible(boolean export_visible_network) {
+		this.export_visible_network = export_visible_network;
+		
+	}
 
 	public List<String> getTaxId() {
 		return this.taxID;
@@ -2848,6 +2907,8 @@ public class OndexServiceProvider {
 		genes.retainAll(genesQTL);
 		return genes;
 	}
+
+
 }
 
 class ValueComparator implements Comparator {

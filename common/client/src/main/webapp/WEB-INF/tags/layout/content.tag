@@ -26,13 +26,12 @@
 					</div>
 					<div id="info" class="details">
 	<div id="info-text">
-        <div style="height: 35px;"><h3>Example queries</h3> 
+        <div style="height: 10px;"><h3>Example queries</h3> 
         <a class="close"  href="#info" title="close">close</a>	
         </div>
-        <div id="eg_keywords_hidden">${eg_keywords}
        <!-- disabled: <a href:'javascript;'="" class="exampleQuery" id="exampleQuery0">Example 1</a> - Disease resistance<br>
         <a href:'javascript;'="" class="exampleQuery" id="exampleQuery1">Example 2</a> - Xylan or Cell wall -->
-        </div>
+        <div id="eg_queries"></div>
     </div>
   </div>
 				<li>

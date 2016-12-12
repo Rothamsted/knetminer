@@ -24,6 +24,7 @@
 		<module>cicer</module>
 		<module>maize</module>
 		<module>drosophilla</module>
+		<module>sviminalis</module>
 	</modules>
 
 	<reporting>
