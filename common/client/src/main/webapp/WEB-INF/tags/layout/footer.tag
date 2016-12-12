@@ -11,7 +11,6 @@
         <p style="font-style:normal;">keywan.hassani-pak@rothamsted.ac.uk </p>
         <div class="twitter-buttons">
         <a href="https://twitter.com/KnetMiner" class="twitter-follow-button" data-show-count="false">Follow @KnetMiner</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-        <a href="https://twitter.com/intent/tweet?screen_name=KnetMiner" class="twitter-mention-button" data-show-count="false">Tweet to @KnetMiner</a>
            </div>
            <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>   
  	</li>
