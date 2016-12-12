@@ -265,7 +265,8 @@ div#loadingNetwork_Div {
 	height:20px;
 	padding-top:13px;
 	padding-right:5px;
-	color:#D56048;
+	color:darkorange;
+	font-size:14px;
 }
 div#loadingNetwork_Div img {
 	float:right;
