@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript" src="javascript/jquery-1.4.1.js"></script>
+<script type="text/javascript" src="javascript/dtjava.js"></script>
+<script type="text/javascript" src="javascript/utils-config.js"></script>  
+<script type="text/javascript" src="javascript/showNetworkStats.js"></script>  
+
+<meta name="description" content="QTLNetMiner - Mining and prioritizing candidate genes in integrated Ondex networks for plant and animal genomes.">
+<meta name="Keywords" content="QTLNetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Salix viminalis Release Notes</title>
+<style type="text/css">
+body {margin:0px;padding:0px;background:#EEEEEE; font-family:Verdana, Arial, Helvetica, sans-serif;}
+a {text-decoration:none; color:#666666;}
+a img {text-decoration:none; border:0px;}
+#wrapper {position:relative;margin:auto;width:960px; height:100%; background-color:#FFFFFF;background:url(../html/image/background.png) center;padding:0px 30px;  } /* padding:0px 17px 0px 17px;background-image:url(../html/image/wrapper_bg.png); */
+#header {position:relative; height:125px;clear:left;}
+#header #qtlLogo {position:absolute; top:25px; left:30px;}
+#header #OrgLogo {position:absolute; top:6px; right:40px;}
+#header #motto {position:absolute; top:110px; left:30px; font-size:12px;}
+#header_spacer {position:relative; height:35px;width:960px; background:url(../html/image/divisor_header.png) repeat-x ;clear:left;}
+#content {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:justify;}
+#content span {width:930px;clear:left;}
+#content .divisor {position:relative; width:960px;height:17px;clear:left;}
+#content .title {font-size:24px;}
+#content img {position:absolute;}
+#footer_spacer {position:relative; height:2px;width:960px; background:url(../html/image/divisor_footer.png) repeat-x ;clear:left;}
+#footer {position:relative; width:900px;padding:30px;clear:left; font-size:14px; text-align:center; height:70px;}
+#footer #left_footer {position:absolute;left:8px;top:5px;text-align:left;font-size:10px;}
+#footer #right_footer {position:absolute;right:8px;top:5px;text-align:right;font-size:10px;}
+</style>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+	<div id="header">
+    	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner"><img src="../html/image/qtl_logo.png" id="qtlLogo" /></a>
+        <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerSviminalis"><img src="../html/image/organism.png" id="OrgLogo" height="120"/></a>
+        <span id="motto">A tool for the discovery of candidate genes controlling complex traits.</span>
+    </div>
+    <div id="header_spacer"></div>
+    <div id="content">
+    	<div class="divisor">&nbsp;</div>
+        	<span class="title"><strong>Salix viminalis Release Notes</strong></span>
+        <div class="divisor">&nbsp;</div>
+    	<span>
+
+
+<p id="network_stats">The final Salix viminalis information network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
+
+<ul>
+
+	<p><strong>Datasets used for integration</strong></p>
+	<ul>
+		<li>Gene</li>
+		<ul>
+			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>
+		</ul>
+    	<li>Protein</li>
+    	<ul>
+    		<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz">Athaliana_167_protein.fa</a></li>
+			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz">Athaliana_167_cds.fa</a></li>
+			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_synonym.txt">Athaliana_167_synonym.txt</a></li>
+			<li>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A3702+AND+database%3A%28type%3Atair%29&sort=score">taxonomy:3702 AND database:(type:tair)</a></li>
+		</ul>
+    	<li>Gene Ontology</li>
+		<ul>
+			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Sviminalis/Gene-GO/GAF2Ondex.txt">GAF2Ondex.txt</a></li>
+			<li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">gene_association.tair.gz</a></li>
+		</ul>
+		<li>Gene Pathway</li>
+		<ul>
+			<li><a href="http://www.plantcyc.org/downloads/data_downloads.faces">Plant Metabolic Network AraCyc 11.5</a></li>
+		</ul>
+		<li>Gene Phenotype</li>
+		<ul>
+			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Germplasm_Phenotype_20130122">Phenotypes</a></li>
+		</ul>
+		<li>Gene PPI</li>
+		<ul>
+			<li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/nbrowse_interactions">Protein interactions</a></li>
+		</ul>
+		<li>Gene Publication</li>
+		<ul>
+			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">Locus_Published_20130305.txt</a></li>
+		</ul>
+		<li>Text Mining</li>
+		<ul>
+ 			<li><a href="http://www.berkeleybop.org/ontologies/to/to.obo">to.obo</a></li>
+ 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/pubmed/pubmed_result_arabidopsis_20140525.xml">pubmed_result.xml</a> for query: arabidopsis</li>
+		</ul>
+    	<li>References</li>
+    	<ul>
+			<li>Sviminalis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerSviminalis/html/release.html">Salix Viminalis</a></li>
+			<li>Plants (UniProt) - Information of well observed plant organisms excluding Salix Viminalis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
+    	</ul>
+    	<li>Homology</li>
+    	<ul>
+		<li>Decypher</li>
+    	</ul>
+    	<li>Ontologies</li>
+    	<ul>
+    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
+    	</ul>
+	</ul>
+
+  	<p><strong>Networks</strong></p>
+	
+	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
+	<ul>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Sviminalis/">Organism</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/aranet/">Final Network</a></li>
+	</ul>
+</ul>
+
+        </span>
+    </div>
+<div id="footer_spacer"></div>
+<div id="footer">
+	<div id="left_footer">
+    	<a target="_blank" href="http://www.rothamsted.ac.uk"><img src="../html/image/rothamsted_logo.png" /></a><br />
+    	Developed at Rothamsted Research (<a target="_blank" href="http://www.rothamsted.ac.uk/applied-bioinformatics">Applied Bioinformatics Group</a>)<br />
+        Contact: keywan.hassani-pak@rothamsted.ac.uk
+    </div>
+    <div id="right_footer">
+<!--    	<a target="_blank" href="http://www.bbsrc.ac.uk"><img src="../html/image/bbsrc_anniversary_logo.png"/></a><br/> -->
+    	<a target="_blank" href="http://www.bbsrc.ac.uk"><img src="../html/image/bbsrc_logo.png"/></a><br/>
+        This work was supported by<br /> 
+        BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1<br />
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>
