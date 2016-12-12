@@ -5,3 +5,5 @@ var species = 'C. arietinum';
 var reference_genome = true;
 var multiorganisms = false;
 var longest_chr = 64984695;
+var species_name = 'Cicer arietinum';
+

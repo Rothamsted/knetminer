@@ -3,6 +3,6 @@
 <properties>
 	<comment>Contains OndexServlet configuration values</comment>
     	<entry key="ServerHost">localhost</entry>
-    	<!--<entry key="ServerHost">qtlnetminer-test</entry> -->
+    <!--	<entry key="ServerHost">qtlnetminer-test</entry> -->
 	<entry key="ServerPort">8189</entry>
 </properties>

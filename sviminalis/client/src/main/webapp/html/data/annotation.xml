@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+	<feature id="1">
+		<chromosome>2</chromosome>	
+		<start>11160000</start>
+		<end>11280000</end>
+		<type>qtl</type>
+		<color>0xFFCC00</color>
+		<label>GSA: gravitropic set point angle</label>
+		<link>OndexServlet?loci=2:11160000:11280000:gravity|gravitropic:allMotifs&amp;keyword=gravity|gravitropic</link>
+	</feature>
+	<feature id="2">
+		<chromosome>2</chromosome>	
+		<start>7000000</start>
+		<end>17000000</end>
+		<type>qtl</type>
+		<color>0xFF3300</color>
+		<label>GSA: gravitropic set point angle</label>
+		<link>OndexServlet?loci=2:7000000:17000000:gravity|gravitropic:allMotifs&amp;keyword=gravity|gravitropic</link>
+	</feature>
+	<feature id="3">
+		<chromosome>4</chromosome>	
+		<start>9920000</start>
+		<end>10180000</end>
+		<type>qtl</type>
+		<color>0x33FFFF</color>
+		<label>Petal and Cell Size</label>
+		<link>OndexServlet?loci=4:9920000:10180000:cell size control|cell division control|cell cycle control|cell division cycle|petal:allMotifs&amp;keyword=cell size control|cell division control|cell cycle control|cell division cycle|petal</link>
+	</feature>		
+</genome>

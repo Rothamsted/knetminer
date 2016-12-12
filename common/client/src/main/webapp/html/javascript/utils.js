@@ -283,7 +283,7 @@ $(document).ready(
 		function(){
 			// add species name to header
 			$('#species_header').text(species_name); // set/ update species name from utils_config.js
-			
+                        
 			//shows the genome or qtl search box and chromosome viewer if there is a reference genome
 			if(reference_genome == true){
 				$('#genomeorqtlsearchbox').show();
@@ -445,7 +445,7 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    //Match counter
 			//$("#keywords").keyup(matchCounter());
 		 	// Tooltip
-		     var sampleQueryButtons = "<strong>Example queries</strong>";
+		     var sampleQueryButtons = "";//"<strong>Example queries</strong>";
 
 		    	$.ajax({
 		    		type: 'GET',
@@ -511,6 +511,8 @@ console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
 		    				sampleQueryButtons += "</br><a href:'javascript;' class='exampleQuery' id='exampleQuery"+i+"'>"+sampleQueries[i].name+"</button></a>"+desc;
 		    	 			//$("#exampleSelect").append("<option value="+i+">"+sampleQueries[i].term+"</option>");
 		    	 		}
+                                        // add example queries to page
+                                        $('#eg_queries').html(sampleQueryButtons);
 
 		    			// set an event handler to populate the search fields when one of the example queries is clicked
 							$('body').on('click', '.exampleQuery', function() {

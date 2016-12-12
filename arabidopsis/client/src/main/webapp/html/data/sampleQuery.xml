@@ -2,6 +2,11 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
+		<description>FLC gene expression</description>
+		<term>flowering FLC</term>
+	</query>
+	<query>
+		<name>Example 2</name>
 		<description>Petal size QTL</description>
 		<term>"cell size" OR "cell division" OR "cell cycle"</term>
 		<withinRegion>true</withinRegion>
@@ -14,8 +19,8 @@
                 <gene>At4g18330</gene>
 	</query>	
 	<query>
-		<name>Example 2</name>
-		<description>Xylan or Cell wall</description>
-		<term>Xylan OR cell wall</term>
+		<name>Example 3</name>
+		<description>Dormancy</description>
+		<term>dormancy OR anthocyanin</term>
 	</query>
 </sampleQueries>
