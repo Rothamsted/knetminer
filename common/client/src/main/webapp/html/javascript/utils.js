@@ -974,6 +974,7 @@ function populateKnetMenu() {
  var knet_menu= "<input type='image' id='maximizeOverlay' src='html/KnetMaps/image/maximizeOverlay.png' title='Toggle full screen' onclick='OnMaximizeClick();' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
                     "<input type='image' id='showAll' src='html/KnetMaps/image/showAll.png' onclick='showAll();' title='Show all the concept & relations in the Network' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
                     "<input type='image' id='relayoutNetwork' src='html/KnetMaps/image/relayoutNetwork.png' onclick='rerunLayout();' title='Re-run the Layout' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
+                    "<input type='image' id='openItemInfoBtn' src='html/KnetMaps/image/openItemInfoBtn.png' onclick='openItemInfoPane();' title='Show Item Info' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
                     "<span class='knet-dropdowns'>"+
                         "<select id='layouts_dropdown' class='knet-dropdowns' onChange='rerunLayout();' title='Select network layout'>"+
                             "<option value='Cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"+
