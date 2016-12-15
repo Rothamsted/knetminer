@@ -90,9 +90,9 @@
 					<div id="list_search">
 						<div id="advanced_search_area" style="display:none;">
 							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
-							<div class="rightnav_genelist">
-								<input type="radio" name="list_mode" value="GLrestrict" checked="checked">Intersection								
-								<input type="radio" name="list_mode" value="GL">Union </br>
+							<div class="rightnav_genelist" style="display:none">
+								<input type="radio" name="list_mode" value="GLrestrict">Intersection								
+								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
 							</div>
 						</div>
 					</div>
