@@ -19,18 +19,16 @@
 							<li><div id="loadingDiv"></div></li>
 						</ul>
 						<div id="matchesResultDiv"></div>
-						<div id="eg_keywords_hidden" style="display:none;">
+					    <!-- <div id="eg_keywords_hidden" style="display:none;">
 							${eg_keywords}
-						</div>
+						</div> -->
 						
 					</div>
 					<div id="info" class="details">
 	<div id="info-text">
         <div style="height: 10px;"><h3>Example queries</h3> 
-        <a class="close"  href="#info" title="close"><img src="html/image/close_button.png"/></a>
+        <a class="close" href="#info" title="close"><img src="html/image/close_button.png"/></a>	
         </div>
-       <!-- disabled: <a href:'javascript;'="" class="exampleQuery" id="exampleQuery0">Example 1</a> - Disease resistance<br>
-        <a href:'javascript;'="" class="exampleQuery" id="exampleQuery1">Example 2</a> - Xylan or Cell wall -->
         <div id="eg_queries"></div>
     </div>
   </div>
@@ -90,10 +88,10 @@
 					<div id="list_search">
 						<div id="advanced_search_area" style="display:none;">
 							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
-							<!-- <div class="rightnav_genelist" style="display:none">
-								<input type="radio" name="list_mode" value="GL" checked="checked">Union
-                                                                <input type="radio" name="list_mode" value="GLrestrict">Intersection <br/>
-							</div> -->
+							<div class="rightnav_genelist" style="display:none">
+								<input type="radio" name="list_mode" value="GLrestrict">Intersection								
+								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
+							</div>
 						</div>
 					</div>
 				</li>
