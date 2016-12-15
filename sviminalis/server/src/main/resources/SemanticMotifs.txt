@@ -15,8 +15,6 @@
 13	Reaction
 133^	Reaction
 14^	Path
-15	SNP
-16^	Trait
 
 #Transitions
 1-2	pub_in
@@ -28,8 +26,6 @@
 1-11	cooc_wi
 1-8	genetic
 1-8	physical
-1-15	has_variation
-15-16	associated_with
 
 1-9	genetic
 1-9	physical
