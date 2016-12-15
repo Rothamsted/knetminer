@@ -27,7 +27,7 @@
 					<div id="info" class="details">
 	<div id="info-text">
         <div style="height: 10px;"><h3>Example queries</h3> 
-        <a class="close"  href="#info" title="close">close</a>	
+        <a class="close"  href="#info" title="close"><img src="html/image/close_button.png"/></a>
         </div>
        <!-- disabled: <a href:'javascript;'="" class="exampleQuery" id="exampleQuery0">Example 1</a> - Disease resistance<br>
         <a href:'javascript;'="" class="exampleQuery" id="exampleQuery1">Example 2</a> - Xylan or Cell wall -->
