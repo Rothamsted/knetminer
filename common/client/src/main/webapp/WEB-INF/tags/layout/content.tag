@@ -148,7 +148,8 @@
                         <div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info panel -->
                             <table id="itemInfo_Table" class="infoTable" cellspacing=1>
                                 <thead><th>Item Info:</th>
-                                    <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th>
+                                   <!-- <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th> -->
+                                    <th><input type="image" id="btnCloseItemInfoPane" src="html/KnetMaps/image/close-icon.png" onclick="closeItemInfoPane();">Close</button></th>
                                 </thead><tbody></tbody></table>
                         </div>
                         <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
