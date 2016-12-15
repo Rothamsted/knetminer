@@ -10,6 +10,10 @@ function onHover(thisBtn) {
     $(thisBtn).attr('src', img.replace('_hover.png','.png'));
  }
 
+function popupItemInfo() {
+ openItemInfoPane();
+ showItemInfo(this);
+}
    // Go to Help docs.
   function openKnetHelpPage() {
    var helpURL = 'https://github.com/KeywanHP/QTLNetMiner/wiki/New-QTLNetMiner-Network-Viewer';

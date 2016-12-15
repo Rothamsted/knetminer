@@ -1,4 +1,4 @@
-var data_url = "https://ondex.rothamsted.ac.uk/wheat_data/";
+var data_url = "http://knetminer.rothamsted.ac.uk/wheat_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/wheat_data/"; // now, using HTTP instead of HTTPS
 var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Wheat Genome (IWGSP1, MIPSv2.1)';
