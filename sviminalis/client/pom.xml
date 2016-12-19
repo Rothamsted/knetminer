@@ -14,7 +14,7 @@
 	<name>QTLNetMiner Sviminalis client</name>
 
 	<build>
-		<finalName>QTLNetMinerArabidopsis</finalName>
+		<finalName>Salix_viminalis</finalName>
 
 		<plugins>
 			<plugin>
