@@ -800,19 +800,8 @@ function searchKeyword(){
 					// Setup the mapview component
 					var basemap = "html/data/basemap.xml";
 					var annotations = data_url + splitedResponse[1];
-                                        // create new basemap with bands for genes and pass it as well to the Map Viewer.
-                                        //
-//					console.log("Search response= "+ response +"\n");
-//					console.log("splitedResponse[:]= "+ splitedResponse);
-//					console.log("splitedResponse[0]= "+ splitedResponse[0]);
-//					console.log("splitedResponse[1]= "+ splitedResponse[1]);
-//					console.log("splitedResponse[2]= "+ splitedResponse[2]);
-//					console.log("splitedResponse[3]= "+ splitedResponse[3]);
-//					console.log("results(splitedResponse[4])= "+ results +", candidateGenes= "+ candidateGenes);
-//					console.log("docSize(splitedResponse[5])= "+ splitedResponse);
-//					console.log("totalDocSize(splitedResponse[6])= "+ splitedResponse);
-//					console.log("annotations= "+ annotations);
 
+                                        // create new basemap with bands for genes and pass it as well to the Map Viewer.
 					genemap.draw('#genemap', basemap, annotations);
 
 					//Collapse Suggestor view
