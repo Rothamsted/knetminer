@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.wheat</groupId>
 	<artifactId>wheat-server</artifactId>
-	<name>QTLNetMiner Wheat server</name>
+	<name>KnetMiner Wheat server</name>
 
 	<build>
 		<plugins>

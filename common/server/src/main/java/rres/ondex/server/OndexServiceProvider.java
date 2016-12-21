@@ -840,6 +840,7 @@ public class OndexServiceProvider {
 				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
 				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+				AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 
@@ -853,6 +854,10 @@ public class OndexServiceProvider {
 					if (c.getAttribute(attChromosome) != null) {
 						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
+                                        if(c.getAttribute(attLoc) != null) {
+                                           /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                           chrGene= c.getAttribute(attLoc).getValue().toString();
+                                          }
 
 					if (attCM != null) {
 						if (c.getAttribute(attCM) != null) {
@@ -1511,6 +1516,7 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> usersUnrelatedGenes = hits.getUsesrUnrelatedGenes();
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
+		AttributeName attLoc = md.getAttributeName("Location"); // for String chromomes (e.g, in Wheat)
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1545,7 +1551,13 @@ public class OndexServiceProvider {
 			if (c.getAttribute(attChr) == null || c.getAttribute(attChr).getValue().toString().equals("U"))
 				continue;
 
-			String chr = c.getAttribute(attChr).getValue().toString();
+			String chr= c.getAttribute(attChr).getValue().toString();
+                        /* To handle String chromosome names (e.eg, in Wheat where client-side Gene View 
+                         * uses location '1A', etc. instead of chrosome '1', etc. 
+                        */
+                        if(c.getAttribute(attLoc).getValue().toString() != null) {
+                           chr= c.getAttribute(attLoc).getValue().toString();
+                          }
 
 			int end = 0;
 			c.getAttribute(attEnd).getValue();
@@ -2688,6 +2700,7 @@ public class OndexServiceProvider {
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attChr = graph.getMetaData().getAttributeName("Chromosome");
+		AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 		AttributeName attBeg = graph.getMetaData().getAttributeName("BEGIN");
 		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -2702,6 +2715,10 @@ public class OndexServiceProvider {
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 				String geneChr = gene.getAttribute(attChr).getValue().toString();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
+                                if(gene.getAttribute(attLoc) != null) {
+                                   /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                   geneChr= gene.getAttribute(attLoc).getValue().toString();
+                                  }
 
 				if (attCM != null) {
 					if (gene.getAttribute(attCM) != null) {

@@ -1,4 +1,5 @@
 //var data_url = "http://knetminer.rothamsted.ac.uk/sviminalis_data/";
+//var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/sviminalis_data/"; // now, using HTTP instead of HTTPS
 var data_url = "http://maize-dev.rothamsted.ac.uk/sviminalis_data/"; // now, using HTTP instead of HTTPS
 var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = "Sviminalis Genome";

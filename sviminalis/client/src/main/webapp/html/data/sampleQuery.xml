@@ -2,20 +2,14 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>FLC gene expression</description>
-		<term>flowering FLC</term>
+		<description>Tension Wood</description>
+		<term>"tension wood"</term>
 	</query>
 	<query>
 		<name>Example 2</name>
-		<description>Petal size QTL</description>
-		<term>"cell size" OR "cell division" OR "cell cycle"</term>
-		<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>4</chromosome>
-			<start>9920000</start>
-			<end>10180000</end>
-			<label>Petal size</label>
-		</region>
-                <gene>At4g18330</gene>
+		<description>Cytochrome</description>
+		<term>"cytochrome"</term>
+                <gene>SALVI40686_v1_000231040</gene>
+                <gene>SALVI40686_v1_000231050</gene>
 	</query>	
 </sampleQueries>
