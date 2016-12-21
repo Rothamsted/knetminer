@@ -11,10 +11,10 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.wheat</groupId>
 	<artifactId>wheat-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Wheat client</name>
+	<name>KnetMiner Wheat client</name>
 
 	<build>
-		<finalName>QTLNetMinerWheat</finalName>
+		<finalName>Triticum_aestivum</finalName>
 
 		<plugins>
 			<plugin>
