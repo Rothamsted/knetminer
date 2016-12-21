@@ -4,8 +4,13 @@
 <%@ attribute name="image" required="false" description="Image" %>
 
 <div id="header">
-	<a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/"><img src="html/image/qtl_logo.png" id="qtlLogo" /></a>
-    <img id="organism" src="html/image/organism.png" height="120" />
-    <span id="motto">A tool for the discovery of candidate genes controlling complex traits.</span>
-</div>
-<div id="header_spacer"></div>    
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">	
+    	<a href="http://knetminer.rothamsted.ac.uk/" title="KnetMiner Home"><img class="logo-top" src="html/image/logo-regular.png" alt="Logo" height="50" style="padding-left:10px;"></a> 		     
+ 		<div id="species_header"></div>
+		
+		<a id="release_icon" target="_blank" href="html/release.html" title="Release Notes"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>  
+
+ 
+ </nav>  <!-- end navbar -->
+</div>	<!-- end header -->
+  

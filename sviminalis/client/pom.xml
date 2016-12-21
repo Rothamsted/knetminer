@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<artifactId>sviminalis</artifactId>
+		<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
+		<version>0.5.0-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>uk.ac.rothamsted.qtlnetminer.sviminalis</groupId>
+	<artifactId>sviminalis-client</artifactId>
+	<packaging>war</packaging>
+	<name>KnetMiner Sviminalis client</name>
+
+	<build>
+		<finalName>Salix_viminalis</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
+									<artifactId>common-client</artifactId>
+									<version>${project.version}</version>
+									<classifier>gviewer</classifier>
+									<type>zip</type>
+									<overWrite>false</overWrite>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
+			<artifactId>common-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

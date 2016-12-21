@@ -62,6 +62,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
+import net.sourceforge.ondex.exception.type.WrongArgumentException;
 import net.sourceforge.ondex.export.oxl.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
@@ -147,6 +148,8 @@ public class OndexServiceProvider {
 	 * true if a reference genome is provided
 	 */
 	boolean referenceGenome;
+
+	boolean export_visible_network;
 
 	/**
 	 * Loads configuration for chromosomes and initialises map
@@ -445,6 +448,29 @@ public class OndexServiceProvider {
 
 		ONDEXGraph graph2 = new MemoryONDEXGraph("FilteredGraphUnconnected");
 		uFilter.copyResultsToNewGraph(graph2);
+		
+//		// Attribute Value Filter
+//		net.sourceforge.ondex.filter.attributevalue.Filter visFilter = new net.sourceforge.ondex.filter.attributevalue.Filter();
+//		ONDEXPluginArguments visFA = new ONDEXPluginArguments(visFilter.getArgumentDefinitions());
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.ATTRNAME_ARG, "size");
+//		//Not sure if "true" needs to be string or boolean
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.VALUE_ARG, "0");
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.OPERATOR_ARG, ">");
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.INCLUDING_ARG, true);
+//		visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.IGNORE_ARG, true);
+//
+//		visFilter.setArguments(visFA);
+//		visFilter.setONDEXGraph(graph2);
+//		try {
+//			visFilter.start();
+//		} catch (WrongArgumentException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//
+//		ONDEXGraph graph3 = new MemoryONDEXGraph("FilteredGraph");
+//		visFilter.copyResultsToNewGraph(graph3);
+		
 
 		// oxl export
 		Export export = new Export();
@@ -814,6 +840,7 @@ public class OndexServiceProvider {
 				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
 				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+				AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 
@@ -827,6 +854,10 @@ public class OndexServiceProvider {
 					if (c.getAttribute(attChromosome) != null) {
 						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
+                                        if(c.getAttribute(attLoc) != null) {
+                                           /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                           chrGene= c.getAttribute(attLoc).getValue().toString();
+                                          }
 
 					if (attCM != null) {
 						if (c.getAttribute(attCM) != null) {
@@ -1266,8 +1297,36 @@ public class OndexServiceProvider {
 		// keywordConcepts.size()
 		// + " concepts.");
 		System.out.println("Number of candidate genes " + candidateGenes.size());
-
+		
+		if(export_visible_network){
+		
+			ONDEXGraphMetaData md = subGraph.getMetaData();
+			AttributeName attSize = md.getAttributeName("size");
+			Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
+			Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
+			
+			ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
+			ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
+	
+			ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
+	
+			for (ONDEXConcept c : itc) {
+				graphCloner2.cloneConcept(c);
+			}
+			for (ONDEXRelation r : itr) {
+				graphCloner2.cloneRelation(r);
+			}
+			
+			ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
+			
+			subGraph = filteredGraph;
+		
+		}
+		
 		return subGraph;
+		
+		
+		
 	}
 
 	/**
@@ -1457,6 +1516,7 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> usersUnrelatedGenes = hits.getUsesrUnrelatedGenes();
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
+		AttributeName attLoc = md.getAttributeName("Location"); // for String chromomes (e.g, in Wheat)
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attEnd = md.getAttributeName("END");
 		AttributeName attCM = md.getAttributeName("cM");
@@ -1491,7 +1551,13 @@ public class OndexServiceProvider {
 			if (c.getAttribute(attChr) == null || c.getAttribute(attChr).getValue().toString().equals("U"))
 				continue;
 
-			String chr = c.getAttribute(attChr).getValue().toString();
+			String chr= c.getAttribute(attChr).getValue().toString();
+                        /* To handle String chromosome names (e.eg, in Wheat where client-side Gene View 
+                         * uses location '1A', etc. instead of chrosome '1', etc. 
+                        */
+                        if(c.getAttribute(attLoc).getValue().toString() != null) {
+                           chr= c.getAttribute(attLoc).getValue().toString();
+                          }
 
 			int end = 0;
 			c.getAttribute(attEnd).getValue();
@@ -2600,6 +2666,11 @@ public class OndexServiceProvider {
 	public void setTaxId(List<String> id) {
 		this.taxID = id;
 	}
+	
+	public void setExportVisible(boolean export_visible_network) {
+		this.export_visible_network = export_visible_network;
+		
+	}
 
 	public List<String> getTaxId() {
 		return this.taxID;
@@ -2629,6 +2700,7 @@ public class OndexServiceProvider {
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attChr = graph.getMetaData().getAttributeName("Chromosome");
+		AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 		AttributeName attBeg = graph.getMetaData().getAttributeName("BEGIN");
 		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -2643,6 +2715,10 @@ public class OndexServiceProvider {
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 				String geneChr = gene.getAttribute(attChr).getValue().toString();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
+                                if(gene.getAttribute(attLoc) != null) {
+                                   /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                   geneChr= gene.getAttribute(attLoc).getValue().toString();
+                                  }
 
 				if (attCM != null) {
 					if (gene.getAttribute(attCM) != null) {
@@ -2848,6 +2924,8 @@ public class OndexServiceProvider {
 		genes.retainAll(genesQTL);
 		return genes;
 	}
+
+
 }
 
 class ValueComparator implements Comparator {
