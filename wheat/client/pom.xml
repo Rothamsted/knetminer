@@ -14,7 +14,7 @@
 	<name>KnetMiner Wheat client</name>
 
 	<build>
-		<finalName>Triticum_aestivum</finalName>
+		<finalName>QTLNetMinerWheat</finalName>
 
 		<plugins>
 			<plugin>
