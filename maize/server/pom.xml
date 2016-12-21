@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.maize</groupId>
 	<artifactId>maize-server</artifactId>
-	<name>QTLNetMiner Maize server</name>
+	<name>KnetMiner Maize server</name>
 
 	<build>
 		<plugins>

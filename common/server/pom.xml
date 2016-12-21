@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
 	<artifactId>common-server</artifactId>
-	<name>QTLNetMiner Common server</name>
+	<name>KnetMiner Common server</name>
 
 	<dependencies>
 

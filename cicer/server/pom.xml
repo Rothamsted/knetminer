@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.cicer</groupId>
 	<artifactId>cicer-server</artifactId>
-	<name>QTLNetMiner Cicer server</name>
+	<name>KnetMiner Cicer server</name>
 
 	<build>
 		<plugins>

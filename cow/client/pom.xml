@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.cow</groupId>
 	<artifactId>cow-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Cow client</name>
+	<name>KnetMiner Cow client</name>
 
 	<build>
 		<finalName>QTLNetMinerCow</finalName>

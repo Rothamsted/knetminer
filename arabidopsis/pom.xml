@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>arabidopsis</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Arabidopsis</name>
+	<name>KnetMiner Arabidopsis</name>
 	
 	<modules>
 		<module>client</module>

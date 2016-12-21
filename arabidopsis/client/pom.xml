@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.arabidopsis</groupId>
 	<artifactId>arabidopsis-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Arabidopsis client</name>
+	<name>KnetMiner Arabidopsis client</name>
 
 	<build>
 		<finalName>QTLNetMinerArabidopsis</finalName>

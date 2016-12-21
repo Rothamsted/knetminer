@@ -10,8 +10,8 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>common</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Common</name>
-	<description>Provides functionality shared between all organism specific QTLNetMiner implementations.</description>
+	<name>KnetMiner Common</name>
+	<description>Provides functionality shared between all organism specific KnetMiner implementations.</description>
 	
 	<modules>
 		<module>client</module>

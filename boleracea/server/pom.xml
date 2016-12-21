@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.boleracea</groupId>
 	<artifactId>boleracea-server</artifactId>
-	<name>QTLNetMiner B. oleracea server</name>
+	<name>KnetMiner B. oleracea server</name>
 
 	<build>
 		<plugins>
