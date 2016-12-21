@@ -840,6 +840,7 @@ public class OndexServiceProvider {
 				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
 				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+				AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
 
@@ -853,6 +854,10 @@ public class OndexServiceProvider {
 					if (c.getAttribute(attChromosome) != null) {
 						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
+                                        if(c.getAttribute(attLoc) != null) {
+                                           /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                           chrGene= c.getAttribute(attLoc).getValue().toString();
+                                          }
 
 					if (attCM != null) {
 						if (c.getAttribute(attCM) != null) {
@@ -2695,6 +2700,7 @@ public class OndexServiceProvider {
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attChr = graph.getMetaData().getAttributeName("Chromosome");
+		AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 		AttributeName attBeg = graph.getMetaData().getAttributeName("BEGIN");
 		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
 		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -2709,6 +2715,10 @@ public class OndexServiceProvider {
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 				String geneChr = gene.getAttribute(attChr).getValue().toString();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
+                                if(gene.getAttribute(attLoc) != null) {
+                                   /* if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap */
+                                   geneChr= gene.getAttribute(attLoc).getValue().toString();
+                                  }
 
 				if (attCM != null) {
 					if (gene.getAttribute(attCM) != null) {
