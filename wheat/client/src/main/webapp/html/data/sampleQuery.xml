@@ -30,7 +30,7 @@
 		<name>Example 1</name>
 		<description>Grain colour</description>
 		<term>color OR flavon* OR proanthocyanidin</term>
-		<withinRegion>true</withinRegion>
+	<!--	<withinRegion>true</withinRegion>
 		<region>
 			<chromosome>2B</chromosome>
 			<start>30</start>
@@ -62,13 +62,13 @@
 		<gene>Traes_3DL_247F72C8D</gene>
 		<gene>Traes_4AL_FCF851DFF</gene>
 		<gene>Traes_2AL_B23D14FEF</gene>
-		<gene>Traes_5AL_120F47252</gene>
+		<gene>Traes_5AL_120F47252</gene> -->
 	</query>
 	<query>
 		<name>Example 2</name>
 		<description>Pre-harvest sprouting</description>
 		<term>"seed germination" OR "seed dormancy"</term>
-                <mapGLWithoutRestriction>true</mapGLWithoutRestriction>
+        <!--        <mapGLWithoutRestriction>true</mapGLWithoutRestriction>
                 <gene>TRAES_4DS_8C9BC2BFA</gene>
                 <gene>TRAES_7AS_556F7B49E</gene>
                 <gene>TRAES_2DS_8827E95F0</gene>
@@ -109,13 +109,13 @@
                 <gene>TRAES_3B_7A9E4CA37</gene>
                 <gene>TRAES_2DL_83168C1E0</gene>
                 <gene>TRAES_2BL_5A50FDA1A</gene>
-                <gene>TRAES_2AL_9D78F85E2</gene>
+                <gene>TRAES_2AL_9D78F85E2</gene> -->
 	</query>
 	<query>
 		<name>Example 3</name>
 		<description>Grain colour + PHS</description>
 		<term>dormancy OR color OR flavon* OR proanthocyanidin</term>
-                <mapGLWithoutRestriction>false</mapGLWithoutRestriction>
+        <!--        <mapGLWithoutRestriction>false</mapGLWithoutRestriction>
                 <gene>TRAES_4DS_8C9BC2BFA</gene>
                 <gene>TRAES_7AS_556F7B49E</gene>
                 <gene>TRAES_2DS_8827E95F0</gene>
@@ -131,18 +131,18 @@
                 <gene>TRAES_7AL_8D7C375FF</gene>
                 <gene>TRAES_3B_0B9FADF42</gene>
                 <gene>TRAES_2DL_C0E026879</gene>
-                <gene>TRAES_3B_82E1F5484</gene>
+                <gene>TRAES_3B_82E1F5484</gene> -->
 	</query>
 	<query>
 		<name>Example 4</name>
 		<description>Grain size QTL</description>
 		<term>"seed size" OR "grain size" OR "grain weight" OR TGW OR "grain width"</term>
-		<withinRegion>true</withinRegion>
+	<!--	<withinRegion>true</withinRegion>
 		<region>
 			<chromosome>5A</chromosome>
 			<start>16</start>
 			<end>53</end>
 			<label>QTL1</label>
-		</region>
+		</region>-->
 	</query>
 </sampleQueries>
