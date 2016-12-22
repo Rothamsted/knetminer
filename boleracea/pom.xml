@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>boleracea</artifactId>
 	<packaging>pom</packaging>
-  <name>QTLNetMiner B. oleracea</name>
+  <name>KnetMiner B. oleracea</name>
 
 	<modules>
 		<module>client</module>

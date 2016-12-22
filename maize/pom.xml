@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>maize</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Maize</name>
+	<name>KnetMiner Maize</name>
 	
 	<modules>
 		<module>client</module>

@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>poplar</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Poplar</name>
+	<name>KnetMiner Poplar</name>
 
 	<modules>
 		<module>client</module>

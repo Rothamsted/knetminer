@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.arabidopsis</groupId>
 	<artifactId>arabidopsis-server</artifactId>
-	<name>QTLNetMiner Arabidopsis server</name>
+	<name>KnetMiner Arabidopsis server</name>
 
 	<build>
 		<plugins>
