@@ -3,11 +3,11 @@
 	<query>
 		<name>Example 1</name>
 		<description>Disease resistance</description>
-		<term>Disease resistance</term>
+		<term>"disease resistance"</term>
 	</query>	
 	<query>
 		<name>Example 2</name>
 		<description>Obesity</description>
-		<term>fat deposition or obesity</term>
+		<term>"fat deposition" or obesity</term>
 	</query>
 </sampleQueries>
