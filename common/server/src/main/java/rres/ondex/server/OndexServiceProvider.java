@@ -854,6 +854,7 @@ public class OndexServiceProvider {
 					if (c.getAttribute(attChromosome) != null) {
 						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
+                        // TEMPORARY FIX, to be disabled for new .oxl species networks that have string 'Chrosmosome' (instead of the older integer Chromosome) & don't have a string 'Location' attribute.
                                     /*    if(c.getAttribute(attLoc) != null) {
                                            // if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap.
                                            chrGene= c.getAttribute(attLoc).getValue().toString();
@@ -1552,10 +1553,10 @@ public class OndexServiceProvider {
 				continue;
 
 			String chr= c.getAttribute(attChr).getValue().toString();
+            // TEMPORARY FIX, to be disabled for new .oxl species networks that have string 'Chrosmosome' (instead of the older integer Chromosome) & don't have a string 'Location' attribute.
                         /* To handle String chromosome names (e.eg, in Wheat where client-side Gene View 
-                         * uses location '1A', etc. instead of chrosome '1', etc. 
-                        */
-                        /*if(c.getAttribute(attLoc).getValue().toString() != null) {
+                         * uses location '1A', etc. instead of chrosome '1', etc. */
+                    /*    if(c.getAttribute(attLoc).getValue().toString() != null) {
                            chr= c.getAttribute(attLoc).getValue().toString();
                           }*/
 
@@ -2715,6 +2716,7 @@ public class OndexServiceProvider {
 				String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 				String geneChr = gene.getAttribute(attChr).getValue().toString();
 				Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
+            // TEMPORARY FIX, to be disabled for new .oxl species networks that have string 'Chrosmosome' (instead of the older integer Chromosome) & don't have a string 'Location' attribute.
                             /*    if(gene.getAttribute(attLoc) != null) {
                                    // if String Location exists, use that instead of integer Chromosome as client-side may use String Location in basemap.
                                    geneChr= gene.getAttribute(attLoc).getValue().toString();
