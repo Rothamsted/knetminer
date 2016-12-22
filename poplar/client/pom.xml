@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.poplar</groupId>
 	<artifactId>poplar-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Poplar client</name>
+	<name>KnetMiner Poplar client</name>
 
 	<build>
 		<finalName>QTLNetMinerPoplar</finalName>

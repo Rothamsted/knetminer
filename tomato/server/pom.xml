@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.tomato</groupId>
 	<artifactId>tomato-server</artifactId>
-	<name>QTLNetMiner Tomato server</name>
+	<name>KnetMiner Tomato server</name>
 
 	<build>
 		<plugins>

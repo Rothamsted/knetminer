@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.rice</groupId>
 	<artifactId>rice-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Rice client</name>
+	<name>KnetMiner Rice client</name>
 
 	<build>
 		<finalName>QTLNetMinerBarley</finalName>

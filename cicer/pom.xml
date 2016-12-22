@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>cicer</artifactId>
 	<packaging>pom</packaging>
-  <name>QTLNetMiner Cicer</name>
+  <name>KnetMiner Cicer</name>
 
 	<modules>
 		<module>client</module>

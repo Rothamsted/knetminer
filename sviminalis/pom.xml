@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>sviminalis</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Sviminalis</name>
+	<name>KnetMiner Sviminalis</name>
 	
 	<modules>
 		<module>client</module>

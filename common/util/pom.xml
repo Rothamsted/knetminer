@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
 	<artifactId>common-util</artifactId>
 	<packaging>jar</packaging>
-	<name>QTLNetMiner Common util</name>
+	<name>KnetMiner Common util</name>
 
 	<build>
 		<plugins>

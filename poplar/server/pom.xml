@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.poplar</groupId>
 	<artifactId>poplar-server</artifactId>
-	<name>QTLNetMiner Poplar server</name>
+	<name>KnetMiner Poplar server</name>
 
 	<build>
 		<plugins>

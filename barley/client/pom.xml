@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.barley</groupId>
 	<artifactId>barley-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Barley client</name>
+	<name>KnetMiner Barley client</name>
 
 	<build>
 		<finalName>QTLNetMinerBarley</finalName>

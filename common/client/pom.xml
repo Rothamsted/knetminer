@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
 	<artifactId>common-client</artifactId>
 	<packaging>jar</packaging>
-	<name>QTLNetMiner Common client</name>
+	<name>KnetMiner Common client</name>
 
 	<build>
 		<plugins>

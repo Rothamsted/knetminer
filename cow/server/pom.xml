@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.cow</groupId>
 	<artifactId>cow-server</artifactId>
-	<name>QTLNetMiner Cow server</name>
+	<name>KnetMiner Cow server</name>
 
 	<build>
 		<plugins>
