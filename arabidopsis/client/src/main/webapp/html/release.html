@@ -35,57 +35,86 @@
 
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-		<li>Gene</li>
+		<li>Gene- Protein [Ensembl]</li>
 		<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>
+			<!--<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>-->
+			<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.32.gff3.gz">Arabidopsis_thaliana.TAIR10.32.gff3</a></li>
+                        <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
 		</ul>
-    	<li>Protein</li>
+    	<li>Gene-SNP-Phenotype [Ensembl]</li>
     	<ul>
-    		<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz">Athaliana_167_protein.fa</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz">Athaliana_167_cds.fa</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_synonym.txt">Athaliana_167_synonym.txt</a></li>
-			<li>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A3702+AND+database%3A%28type%3Atair%29&sort=score">taxonomy:3702 AND database:(type:tair)</a></li>
-		</ul>
-    	<li>Gene Ontology</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/Gene-GO/GAF2Ondex.txt">GAF2Ondex.txt</a></li>
-			<li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">gene_association.tair.gz</a></li>
-		</ul>
-		<li>Gene Pathway</li>
-		<ul>
-			<li><a href="http://www.plantcyc.org/downloads/data_downloads.faces">Plant Metabolic Network AraCyc 11.5</a></li>
-		</ul>
-		<li>Gene Phenotype</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Germplasm_Phenotype_20130122">Phenotypes</a></li>
-		</ul>
-		<li>Gene PPI</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/nbrowse_interactions">Protein interactions</a></li>
-		</ul>
-		<li>Gene Publication</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">Locus_Published_20130305.txt</a></li>
-		</ul>
-		<li>Text Mining</li>
-		<ul>
- 			<li><a href="http://www.berkeleybop.org/ontologies/to/to.obo">to.obo</a></li>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/pubmed/pubmed_result_arabidopsis_20140525.xml">pubmed_result.xml</a> for query: arabidopsis</li>
-		</ul>
-    	<li>References</li>
+            <li>Arabidopsis GWAS data for 107 phenotypes. Phenotypes are grouped into the four categories flowering, developmental, defense and ionomics. For more information see [Atwell et al, 2010, Nature] (http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html) and [supplementary information] (http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf).</li>
+            <li>Data was downloaded from <a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_snp.default.snp.refsnp_id|athaliana_eg_snp.default.snp.associated_variant_risk_allele|athaliana_eg_snp.default.snp.distance_to_transcript|athaliana_eg_snp.default.snp.chr_name|athaliana_eg_snp.default.snp.chrom_start|athaliana_eg_snp.default.snp.ensembl_gene_stable_id|athaliana_eg_snp.default.snp.consequence_type_tv|athaliana_eg_snp.default.snp.phenotype_name|athaliana_eg_snp.default.snp.phenotype_description|athaliana_eg_snp.default.snp.p_value&FILTERS=athaliana_eg_snp.default.filters.phenotype_significance.'1'|athaliana_eg_snp.default.filters.distance_to_transcript.'1000'&VISIBLEPANEL=resultspanel">Ensembl Biomart</a></li>
+            <li>SNP-Phenotype relations (122,919 relations) of significant SNPs (as defined by Ensembl, p-value<0.05?) linked to 107 phenotypes; on average 1,150 SNPs per phenotype.</li>
+            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (96,047 relations)</li>
+            <li>#SNP=66,816 | #Gene=27,502 | #Phenotype=107</li>
+            <li>To see it live, go to <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/">KnetMiner Arabidopsis</a> and search for <i>dormancy</i>, then switch to Map View.</li>
+        </ul>
+    	<li>Gene-GO [GOA]</li>
     	<ul>
-			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
-    	</ul>
-    	<li>Homology</li>
+            <li>Include all evidence types</li>
+            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a>)</li>
+            <li>Ondex GAF parser requires additional mapping file of feature type -> Ondex Concept Class</li>
+        </ul>
+    	<li>Gene-Gene Interactions [BioGRID]</li>
     	<ul>
-		<li>Decypher</li>
-    	</ul>
-    	<li>Ontologies</li>
+            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.141/BIOGRID-ORGANISM-3.4.141.tab2.zip"></a>TAB</li>
+            <li>Version 3.4.141</li>
+            <li>Concepts: 9514 [Gene] | 2270 [Publication]</li>
+            <li>Relations: 271 [genetic] | 37600 [physical] | 19849 [pub_in]</li>
+        </ul>
+    	<li>Gene-Phenotype [TAIR]</li>
     	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-    	</ul>
-	</ul>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt"></a>TAB</li>
+        </ul>
+    	<li>Publications [PubMed]</li>
+    	<ul>
+            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana"></a>XML</li>
+            <li>57,600 PubMed abstracts</li>
+            <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
+        </ul>
+    	<li>Gene-Publication [GOA, TAIR]</li>
+    	<ul>
+            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz"></a>GAF 2.0</li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt"></a>TAB</li>
+        </ul>
+    	<li>Protein-Publication [UniProtKB]</li>
+    	<ul>
+            <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml"></a>At proteome XML</li>
+            <li>relations (pub_in): 34,884</li>
+            <li>concepts (Publication): 11,550</li>
+        </ul>
+    	<li>Protein-Pathway [AraCyc]</li>
+    	<ul>
+            <li>AraCyc Release 14</li>
+            <li>biopax-level2.owl</li>
+            <li>Translation.tab</li>
+        </ul>
+    	<li>Gene-TO [Text Mining]</li>
+    	<ul>
+            <li>Created 27k Gene-TO sentence based co-occurrences in PubMed abstracts</li>
+        </ul>
+    	<li>Sequence alignments to other Plants</li>
+    	<ul>
+            <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
+                <ul><li>Concepts: 21903 [Protein]</li>
+                    <li>Relations: 74359 [h_s_s]</li>
+                </ul>
+            </li>
+            <li>Protein-GO [UniProtKB]</li>
+            <li>Protein-Publication [UniProtKB]</li>
+        </ul>
+    	<li>Orthologs in Yeast</li>
+    	<ul>
+            <li>Protein@Arabidopsis-Protein@Yeast::UniProtKB-SP [Inparanoid]</li>
+            <li>Protein-GO [UniProtKB]</li>
+            <li>Protein-Publication [UniProtKB]</li>
+            <li>Protein-Protein Interaction [BioGRID]:
+                <ul><li>Concepts: 6247 [Protein] | 13502 [Publication]</li>
+                    <li>Relations: 178589 [genetic] | 94061 [genetic] | 145924 [pub_in]</li>
+                </ul>
+            </li>
+        </ul>
 
   	<p><strong>Networks</strong></p>
 	
