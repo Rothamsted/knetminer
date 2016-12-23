@@ -6,7 +6,7 @@
 <meta name="description" content="KnetMiner - Mining and prioritizing candidate genes in integrated knowledge networks for plant and animal genomes.">
 <meta name="Keywords" content="KnetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Salix viminalis Release Notes</title>
+<title>Willow Release Notes</title>
 
 <script type="text/javascript" src="javascript/releaseNotes/jquery-1.11.2.min.js"></script>
 <!-- <script type="text/javascript" src="javascript/dtjava.js"></script> -->
@@ -30,63 +30,30 @@
 </div>	<!-- end header -->
   
 <div id="release-content">
-<h1 class="release-title">Salix viminalis Release Notes</h1>
-<p id="network_stats">The final Salix viminalis information network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
+<h1 class="release-title">Willow Release Notes</h1>
+<p id="network_stats">The final Willow (Salix viminalis) information network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
 
 <ul>
 
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-		<li>Gene</li>
+            <li>Gene-Protein</li>
 		<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>
+                    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Willow/Gene-Protein/">Salix_viminalis_40686_TGAC_v1.gff3</a></li>
+                    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Willow/Gene-Protein/">Salix_viminalis_40686_TGAC_v1.pep.fa</a></li>
 		</ul>
-    	<li>Protein</li>
-    	<ul>
-    		<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_protein.fa.gz">Athaliana_167_protein.fa</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_cds.fa.gz">Athaliana_167_cds.fa</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_synonym.txt">Athaliana_167_synonym.txt</a></li>
-			<li>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A3702+AND+database%3A%28type%3Atair%29&sort=score">taxonomy:3702 AND database:(type:tair)</a></li>
-		</ul>
-    	<li>Gene Ontology</li>
+            <li>Protein Domain</li>
 		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Sviminalis/Gene-GO/GAF2Ondex.txt">GAF2Ondex.txt</a></li>
-			<li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">gene_association.tair.gz</a></li>
+                    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Willow/Protein_Domain/">Salix_viminalis_protDomain.tsv</a></li>
 		</ul>
-		<li>Gene Pathway</li>
+            <li>Hierarchical Groups</li>
 		<ul>
-			<li><a href="http://www.plantcyc.org/downloads/data_downloads.faces">Plant Metabolic Network AraCyc 11.5</a></li>
+                    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Willow/HierarchicalGroups/">OMA (orthoxml)</a></li>
 		</ul>
-		<li>Gene Phenotype</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Germplasm_Phenotype_20130122">Phenotypes</a></li>
-		</ul>
-		<li>Gene PPI</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/Proteins/nbrowse_interactions">Protein interactions</a></li>
-		</ul>
-		<li>Gene Publication</li>
-		<ul>
-			<li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">Locus_Published_20130305.txt</a></li>
-		</ul>
-		<li>Text Mining</li>
-		<ul>
- 			<li><a href="http://www.berkeleybop.org/ontologies/to/to.obo">to.obo</a></li>
- 			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/pubmed/pubmed_result_arabidopsis_20140525.xml">pubmed_result.xml</a> for query: arabidopsis</li>
-		</ul>
-    	<li>References</li>
-    	<ul>
-			<li>Sviminalis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerSviminalis/html/release.html">Salix Viminalis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Salix Viminalis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
-    	</ul>
-    	<li>Homology</li>
-    	<ul>
-		<li>Decypher</li>
-    	</ul>
-    	<li>Ontologies</li>
-    	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-    	</ul>
+            <li>Homology</li>
+                <ul>
+                    <li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/Decypher/">Decypher</a></li>
+                </ul>
 	</ul>
 
   	<p><strong>Networks</strong></p>
@@ -96,7 +63,7 @@
 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Sviminalis/">Organism</a></li>
 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
 	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/aranet/">Final Network</a></li>
+	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/sviminalisnet/">Final Network</a></li>
 	</ul>
 </ul>
 
