@@ -537,9 +537,11 @@ body:after{
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	padding-bottom:10px;
+	/*padding-bottom:10px;*/
 	position: absolute;
-    width: 100%;
+        width: 100%;
+        display: table-row;
+        height: 250px;
 	}
 .contact-footer p {
 	font-size:12px;
