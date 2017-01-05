@@ -1,5 +1,5 @@
 html{
-	height: 101%;
+	height: 100%;
 }
 body {
 	margin:0px;padding:0px;background:#EEEEEE;
@@ -11,6 +11,7 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    height: 100%;
 }
 
 h2 {
@@ -32,10 +33,9 @@ a img {
 .redText {
 	color:red;
 }
-
 #release_icon {
 	float: right; 
-	padding-right: /*50*/20px; 
+	padding-right: 50px; 
 	padding-top: 18px; 
 	font-size: 22px;
 }
@@ -83,15 +83,15 @@ a:hover {
 div#wrapper {
 	width:960px;
 	/*background-color:#484747;*/
-	/*margin-top:10px;
+	margin-top:10px;
 	margin-bottom:10px;
 	margin-left:auto;
 	margin-right:auto;
 	padding:0px;
 }
+
 div#header {
 	margin:0px;
-	text-align:center;
 }
 div#header_menu {
 	float:right;
@@ -156,7 +156,6 @@ div#content {
 	padding-top: 100px;
     height: auto;
     padding-bottom: 30px;
-    min-height: 680px;
 }
 
 ul#main_list {
@@ -209,8 +208,8 @@ div#list_search {
     -webkit-border-radius: 18px;
     -o-border-radius: 18px;
     border-radius: 18px;
-   /* margin-top: 25px;*/
-    margin-right: /*15*/25px;
+    margin-top: 25px;
+    margin-right: 15px;
 }
 
 .details h3 {
@@ -222,7 +221,7 @@ div#list_search {
 }
 
 .close {
-    left: 210px;
+	left: 215px;
     position: relative;
     top: -42px;
 }
@@ -230,6 +229,7 @@ div#list_search {
 #info-text {
 	padding:10px;
 	}
+
 
 div#loadingDiv {
 	width:30px;
@@ -517,7 +517,7 @@ body:after{
 #legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}
 
 /* General Styles */
-#wrapper {position:relative;margin:auto; height:100%;}
+#wrapper {position:relative;margin:auto; min-height:100%;}
 
 /* Header  */
 #header {position:relative;clear:left;}
@@ -537,11 +537,9 @@ body:after{
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	/*padding-bottom:10px;*/
-	position: absolute;
-        width: 100%;
-        display: table-row;
-        height: 250px;
+	position: relative;
+    width: 100%;
+    height: 250px;
 	}
 .contact-footer p {
 	font-size:12px;
@@ -553,7 +551,7 @@ body:after{
 .contact-footer ul li{
 	display:inline;
 	float:left;
-	padding-top:30px;
+	padding-top:20px;
 }
 .foot {
 		text-align:center;
