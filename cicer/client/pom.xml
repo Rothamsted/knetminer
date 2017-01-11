@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.cicer</groupId>
 	<artifactId>cicer-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Cicer client</name>
+	<name>KnetMiner Cicer client</name>
 
 	<build>
 		<finalName>QTLNetMinerCicer</finalName>

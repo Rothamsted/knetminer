@@ -120,3 +120,12 @@ a.contact-button :hover {
 	color:darkorange;
 	text-decoration:none;
 	}
+
+ #species_header {
+    float: right;
+    color: white;
+    font-size: 20px;
+    font-style: italic;
+    padding-right: 20px;
+    padding-top: 15px;
+}

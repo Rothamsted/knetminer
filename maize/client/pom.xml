@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.maize</groupId>
 	<artifactId>maize-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Maize client</name>
+	<name>KnetMiner Maize client</name>
 
 	<build>
 		<finalName>QTLNetMinerMaize</finalName>

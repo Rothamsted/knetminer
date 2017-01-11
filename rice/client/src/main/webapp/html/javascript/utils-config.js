@@ -1,4 +1,4 @@
-var data_url = "http://ondex.rothamsted.ac.uk/barley_data/";
+var data_url = "http://knetminer.rothamsted.ac.uk/barley_data/";
 var applet_url = "http://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Barley Genome';
 var reference_genome = true;

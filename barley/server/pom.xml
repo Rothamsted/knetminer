@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.barley</groupId>
 	<artifactId>barley-server</artifactId>
-	<name>QTLNetMiner Barley Server</name>
+	<name>KnetMiner Barley Server</name>
 
 	<build>
 		<plugins>

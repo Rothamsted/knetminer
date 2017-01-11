@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.rothamsted.qtlnetminer.rice</groupId>
 	<artifactId>rice-server</artifactId>
-	<name>QTLNetMiner Rice server</name>
+	<name>KnetMiner Rice server</name>
 
 	<build>
 		<plugins>

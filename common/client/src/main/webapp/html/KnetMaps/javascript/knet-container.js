@@ -197,7 +197,7 @@ cy.elements().qtip({
     selector: '*',
     commands: [ // an array of commands to list in the menu
         {
-         content: 'Item Info',
+         content: 'Show Info',
          select: function() {
              // Show Item Info Pane.
              openItemInfoPane();

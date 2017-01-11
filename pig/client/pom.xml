@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.pig</groupId>
 	<artifactId>pig-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Pig client</name>
+	<name>KnetMiner Pig client</name>
 
 	<build>
 		<finalName>QTLNetMinerPig</finalName>

@@ -11,10 +11,10 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.sviminalis</groupId>
 	<artifactId>sviminalis-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Sviminalis client</name>
+	<name>KnetMiner Sviminalis client</name>
 
 	<build>
-		<finalName>QTLNetMinerArabidopsis</finalName>
+		<finalName>Salix_viminalis</finalName>
 
 		<plugins>
 			<plugin>

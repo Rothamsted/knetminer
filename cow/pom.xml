@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>cow</artifactId>
 	<packaging>pom</packaging>
-	<name>QTLNetMiner Cow</name>
+	<name>KnetMiner Cow</name>
 	
 	<modules>
 		<module>client</module>

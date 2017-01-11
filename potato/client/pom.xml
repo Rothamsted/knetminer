@@ -11,7 +11,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.potato</groupId>
 	<artifactId>potato-client</artifactId>
 	<packaging>war</packaging>
-	<name>QTLNetMiner Potato client</name>
+	<name>KnetMiner Potato client</name>
 
 	<build>
 		<finalName>QTLNetMinerPotato</finalName>
