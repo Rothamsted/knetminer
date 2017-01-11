@@ -1,5 +1,5 @@
 html{
-	height: 101%;
+	height: 100%;
 }
 body {
 	margin:0px;padding:0px;background:#EEEEEE;
@@ -11,6 +11,7 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    height: 100%;
 }
 
 h2 {
@@ -32,10 +33,9 @@ a img {
 .redText {
 	color:red;
 }
-
 #release_icon {
 	float: right; 
-	padding-right: /*50*/20px; 
+	padding-right: 50px; 
 	padding-top: 18px; 
 	font-size: 22px;
 }
@@ -89,9 +89,9 @@ div#wrapper {
 	margin-right:auto;
 	padding:0px;
 }
+
 div#header {
 	margin:0px;
-	text-align:center;
 }
 div#header_menu {
 	float:right;
@@ -155,8 +155,7 @@ div#leftnav {
 div#content {
 	padding-top: 100px;
     height: auto;
-    padding-bottom: 30px;
-    min-height: 680px;
+    padding-bottom: 10px;
 }
 
 ul#main_list {
@@ -209,8 +208,8 @@ div#list_search {
     -webkit-border-radius: 18px;
     -o-border-radius: 18px;
     border-radius: 18px;
-   /* margin-top: 25px;*/
-    margin-right: /*15*/25px;
+    margin-top: 25px;
+    margin-right: 15px;
 }
 
 .details h3 {
@@ -222,7 +221,7 @@ div#list_search {
 }
 
 .close {
-    left: 210px;
+	left: 215px;
     position: relative;
     top: -42px;
 }
@@ -230,6 +229,7 @@ div#list_search {
 #info-text {
 	padding:10px;
 	}
+
 
 div#loadingDiv {
 	width:30px;
@@ -517,7 +517,7 @@ body:after{
 #legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}
 
 /* General Styles */
-#wrapper {position:relative;margin:auto; height:100%;}
+#wrapper {position:relative;margin:auto; min-height:100%;}
 
 /* Header  */
 #header {position:relative;clear:left;}
@@ -537,21 +537,27 @@ body:after{
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	padding-bottom:10px;
-	position: absolute;
+	position: relative;
     width: 100%;
+    height: 150px;
 	}
+@media (max-width:1490px){
+	.contact-footer {
+		height:200px;
+	}
+}
 .contact-footer p {
 	font-size:12px;
 	color:white;
 	}
 .contact-footer ul {
 	overflow:hidden;
+	margin-bottom:0px;
 }
 .contact-footer ul li{
 	display:inline;
 	float:left;
-	padding-top:30px;
+	padding-top:20px;
 }
 .foot {
 		text-align:center;
@@ -655,7 +661,7 @@ a.contact-button :hover {
 #matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:15px; padding-top:15px;}
 #genemap-tab {position: relative;width: 90%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
 
-#NetworkCanvas{position:relative;float:left;width: 850px/*98%*/; height: 600px/*900*/ /*98%*/; padding-bottom: 80px; /*5px;*/}
+#NetworkCanvas{position:relative;float:left;width: 850px/*98%*/; height: 600px/*900*/ /*98%*/; padding-bottom: 70px; /*5px;*/}
 #Network_frame{border:none;}
 
 /* Evidence View */
