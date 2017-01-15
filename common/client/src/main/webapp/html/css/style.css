@@ -208,7 +208,7 @@ div#list_search {
     -webkit-border-radius: 18px;
     -o-border-radius: 18px;
     border-radius: 18px;
-    margin-top: 25px;
+    margin-top: /*10*/25px;
     margin-right: 15px;
 }
 
