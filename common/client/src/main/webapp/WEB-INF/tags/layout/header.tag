@@ -2,7 +2,6 @@
 
 <%@ attribute name="species" required="false" description="Species" %>
 <%@ attribute name="image" required="false" description="Image" %>
-<link rel="shortcut icon" href="/favicon.ico" >
 
 <div id="header">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">	

@@ -32,6 +32,8 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
         <link href="html/KnetMaps/css/maskloader.css" rel="stylesheet">
 
+        <link rel="shortcut icon" href="/favicon.ico" >
+
         <!-- GeneMap -->
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
