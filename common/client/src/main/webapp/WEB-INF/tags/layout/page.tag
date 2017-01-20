@@ -23,6 +23,9 @@
         <meta name="keywords" content="${keywords}" />
         <meta name="description" content="${description}" />
         <title>${title}</title>
+        <!-- favicon added -->
+        <link rel="shortcut icon" href="html/image/favicon.ico" >
+
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
         <!-- GeneMap -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
@@ -31,8 +34,6 @@
         <link href="html/KnetMaps/css/knet-style.css" rel="stylesheet" /> <!-- Network Viewer stylesheet -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
         <link href="html/KnetMaps/css/maskloader.css" rel="stylesheet">
-
-        <link rel="shortcut icon" href="/favicon.ico" >
 
         <!-- GeneMap -->
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
