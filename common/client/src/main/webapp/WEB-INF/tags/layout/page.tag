@@ -23,6 +23,9 @@
         <meta name="keywords" content="${keywords}" />
         <meta name="description" content="${description}" />
         <title>${title}</title>
+        <!-- favicon added -->
+        <link rel="shortcut icon" href="html/image/favicon.ico" >
+
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
         <!-- GeneMap -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>

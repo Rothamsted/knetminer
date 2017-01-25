@@ -144,8 +144,7 @@ cy.elements().qtip({
                   this.data('annotation');
         }
       else if(this.isEdge()) {
-              qtipMsg= "Relation: "+ this.data('label') +", From: "+ this.data('source') +", To: "+ 
-                      this.data('target');
+              qtipMsg= "Relation: "+ this.data('label');
              }
       }
       catch(err) { qtipMsg= "Selected element is neither a Concept nor a Relation"; }
@@ -174,8 +173,7 @@ cy.elements().qtip({
 //       showItemInfo(thisElement);
       }
       else if(thisElement.isEdge()) {
-              info= "Relation selected: "+ thisElement.data('label') +", From: "+ 
-                      thisElement.data('source') +", To: "+ thisElement.data('target');
+              info= "Relation selected: "+ thisElement.data('label');
              }
        // Also update the Item Info table & display it.
 //       showItemInfo(thisElement);
