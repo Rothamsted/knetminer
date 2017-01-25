@@ -241,7 +241,6 @@ public class OndexServiceProvider {
 			int totalConcepts = graph.getConcepts().size();
 			int totalRelations = graph.getRelations().size();
 			int geneEvidenceConcepts = mapConcept2Genes.size();
-
 			minValues = mapGene2Concepts.get(mapGene2Concepts.keySet().toArray()[0]).size(); // initial
 																								// value
 			/*
@@ -253,11 +252,8 @@ public class OndexServiceProvider {
 			while (iterator.hasNext()) {
 				Map.Entry mEntry = (Map.Entry) iterator.next();
 				HashSet<Integer> value = (HashSet<Integer>) mEntry.getValue(); // Value
-																				// (as
-																				// a
-																				// HashSet<Integer>).
+                                																				// HashSet<Integer>).
 				int number_of_values = value.size(); // size of the values
-														// HashSet for this Key.
 
 				if (number_of_values < minValues) {
 					minValues = number_of_values;
@@ -281,8 +277,8 @@ public class OndexServiceProvider {
 			 * System.out.println("2) Total concepts: "+ totalConcepts);
 			 * System.out.println("3) Total Relations: "+ totalRelations);
 			 * System.out.println("4) Concept2Gene #mappings: "+
-			 * geneEvidenceConcepts); System.out.
-			 * println("5) Min., Max., Average size of gene-evidence networks: "
+			 * geneEvidenceConcepts); 
+                         * System.out.println("5) Min., Max., Average size of gene-evidence networks: "
 			 * + minValues +", "+ maxValues +", "+ avgValues);
 			 */
 
@@ -299,6 +295,28 @@ public class OndexServiceProvider {
 			sb.append("<maxSize>").append(maxValues).append("</maxSize>\n");
 			sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
 			sb.append("</evidenceNetworkSizes>\n");
+
+                        // Display table breakdown of all conceptClasses in network
+			sb.append("<conceptClasses>\n");
+                        Set<ConceptClass> conceptClasses= graph.getMetaData().getConceptClasses(); // get all concept classes
+                        Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+                        for (ConceptClass con_class : sorted_conceptClasses) {
+                             if(graph.getConceptsOfConceptClass(con_class).size() >0) {
+                                String conID= con_class.getId();
+                                int con_count= graph.getConceptsOfConceptClass(con_class).size();
+                                if(conID.equalsIgnoreCase("Path")) {
+                                   conID= "Pathway";
+                                  }
+                                else if(conID.equalsIgnoreCase("Comp")) {
+                                   conID= "Comp (SNP)";
+                                  }
+                                else if(conID.equalsIgnoreCase("Gene")) {
+                                   con_count= numGenesInGenome;
+                                  }
+			        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+                               }
+                            }
+			sb.append("</conceptClasses>\n");
 			sb.append("</stats>");
 
 			// Update the file storing the latest Stats data.
