@@ -295,24 +295,29 @@ public class OndexServiceProvider {
 			sb.append("<maxSize>").append(maxValues).append("</maxSize>\n");
 			sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
 			sb.append("</evidenceNetworkSizes>\n");
-			sb.append("</stats>");
 
                         // Display table breakdown of all conceptClasses in network
 			sb.append("<conceptClasses>\n");
-                        Set<ConceptClass> conceptClasses= (TreeSet<ConceptClass>) graph.getMetaData().getConceptClasses();
-                        for (ConceptClass con_class : conceptClasses) {
+                        Set<ConceptClass> conceptClasses= graph.getMetaData().getConceptClasses(); // get all concept classes
+                        Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+                        for (ConceptClass con_class : sorted_conceptClasses) {
                              if(graph.getConceptsOfConceptClass(con_class).size() >0) {
                                 String conID= con_class.getId();
+                                int con_count= graph.getConceptsOfConceptClass(con_class).size();
                                 if(conID.equalsIgnoreCase("Path")) {
                                    conID= "Pathway";
                                   }
                                 else if(conID.equalsIgnoreCase("Comp")) {
-                                   conID= "SNP";
+                                   conID= "Comp (SNP)";
                                   }
-			        sb.append("<cc_count>").append(con_class.getId()).append("=").append(graph.getConceptsOfConceptClass(con_class).size()).append("</cc_count>\n");
+                                else if(conID.equalsIgnoreCase("Gene")) {
+                                   con_count= numGenesInGenome;
+                                  }
+			        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
                                }
                             }
-			sb.append("</conceptClasses>");
+			sb.append("</conceptClasses>\n");
+			sb.append("</stats>");
 
 			// Update the file storing the latest Stats data.
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
