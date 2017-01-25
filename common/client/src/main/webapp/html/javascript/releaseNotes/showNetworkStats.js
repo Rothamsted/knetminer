@@ -43,8 +43,19 @@ function fetchStats() {
                         "<li>Max.: "+ maxValues +"</li>"+
                         "<li>Average: "+ avgValues +"</li></ul>"+
                         "</li></ul>";
-//console.log("stats: "+ statsText);
-                $("#network_stats").append(statsText);
+                
+                // Tabular breakdown of all conceptTypes and their count.
+                var cc_table="Detailed breakdown:<br><table style='border-collapse: collapse;'><tr>"+
+                        "<th style='border: 1px solid #dddddd; text-align: left;'>Concept Type</th>"+
+                        "<th style='border: 1px solid #dddddd; text-align: left;'>count</th></tr>";
+                for(var i=11; i < resp.length-2; i++) {
+                    var cc= fetchValue(resp[i]).split("=");
+                    cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>"+cc[0]+
+                            "</td><td style='border: 1px solid #dddddd; text-align: left;'>"+cc[1]+"</td></tr>";
+                   }
+                cc_table +="</table>";
+
+                $("#network_stats").append(statsText + cc_table);
 	}
       });
     }

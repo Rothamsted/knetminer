@@ -173,13 +173,17 @@
                 cell1= row.insertCell(0);
                 cell2= row.insertCell(1);
                 cell1.innerHTML= "From:";
-                cell2.innerHTML= selectedElement.data('source'); // relation source ('fromConcept').
+            //    cell2.innerHTML= selectedElement.data('source'); // relation source ('fromConcept').
+                var fromID= selectedElement.data('source'); // relation source ('fromConcept').
+                cell2.innerHTML= "("+ cy.$('#'+fromID).data('conceptType').toLowerCase() +") "+ cy.$('#'+fromID).data('value'); // relation source ('fromConcept').
                 // Relation 'target'.
                 row= table.insertRow(2);
                 cell1= row.insertCell(0);
                 cell2= row.insertCell(1);
                 cell1.innerHTML= "To:";
-                cell2.innerHTML= selectedElement.data('target'); // relation target ('toConcept').
+//                cell2.innerHTML= selectedElement.data('target'); // relation target ('toConcept').
+                var toID= selectedElement.data('target'); // relation source ('toConcept').
+                cell2.innerHTML= "("+ cy.$('#'+toID).data('conceptType').toLowerCase() +") "+ cy.$('#'+toID).data('value'); // relation source ('toConcept').
                 // Get all metadata for this relation from the metadataJSON variable.
                 for(var j=0; j < metadataJSON.ondexmetadata.relations.length; j++) {
                     if(selectedElement.id() === metadataJSON.ondexmetadata.relations[j].id) {

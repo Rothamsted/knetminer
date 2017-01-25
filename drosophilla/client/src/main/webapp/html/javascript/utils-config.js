@@ -1,8 +1,8 @@
 // var data_url = "http://knetminer.rothamsted.ac.uk/drosophilla_data/";
-//var data_url = "http://babvs43.rothamsted.ac.uk/drosophilla_data/";
-var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/drosophilla_data/"; // now, using HTTP instead of HTTPS
+var data_url = "http://babvs43.rothamsted.ac.uk/drosophilla_data/";
+//var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/drosophilla_data/"; // now, using HTTP instead of HTTPS
 var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
-var species = 'Drosophilla melanogaster genome';
+var species = 'Drosophila melanogaster genome';
 var reference_genome = true;
 var multiorganisms = false;
 // adjusts scaling in the GViewer in case the first chromosome is not the longest.
