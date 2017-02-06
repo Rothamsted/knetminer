@@ -31,7 +31,7 @@
             cell1.innerHTML= "Concept Type:";
             cell2.innerHTML= selectedElement.data('conceptType'); // concept Type
             // Concept 'value'.
-            row= table.insertRow(1);
+    /*        row= table.insertRow(1);
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "Value:";
@@ -41,9 +41,9 @@
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "PID:";
-            cell2.innerHTML= selectedElement.data('pid');
+            cell2.innerHTML= selectedElement.data('pid');*/
             // Concept 'Annotation'.
-            row= table.insertRow(3);
+            row= table.insertRow(1/*3*/);
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "Annotation:";
@@ -93,7 +93,8 @@
                     cell1.innerHTML= "<b>Attributes:</b>"; // sub-heading
                     for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].attributes.length; k++) {
                         if((metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "size")
-                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "visible")) {
+                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "visible")
+                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "flagged")) {
                             row= table.insertRow(table.rows.length/* - 1*/); // new row.
                             cell1= row.insertCell(0);
                             cell2= row.insertCell(1);
@@ -166,7 +167,7 @@
                 var cell1= row.insertCell(0);
                 var cell2= row.insertCell(1);
                 // Store the necessary data in the cells.
-                cell1.innerHTML= "Relation Label:";
+                cell1.innerHTML= "Type:";
                 cell2.innerHTML= selectedElement.data('label'); // relation label
                 // Relation 'source'.
                 row= table.insertRow(1);
