@@ -1165,7 +1165,7 @@ function createGenesTable(tableUrl, keyword, rows){
                                     if(gene_Name.length > values[2].length) {
                                        gene_Name= values[2];
                                       }
-                                    // gene_Name to display in Gene View table.
+                                    // gene_Name to display in Gene View table (under Accession).
                                     var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
 
 				    if(multiorganisms == true){
@@ -1180,12 +1180,12 @@ function createGenesTable(tableUrl, keyword, rows){
 						var chr = '';
 						var start = '';
 					}
-				    var score = '<td>'+values[6]+'</td>';
-				    var usersList = '<td>'+values[7]+'</td>';
+				    var score = '<td>'+values[6]+'</td>'; // score
+				    var usersList = '<td>'+values[7]+'</td>'; // is it in user's list
 
-				    //QTL coloum with information box
-				if(reference_genome == true){
-					var withinQTL = '<td>';
+				// QTL column with information box
+				if(reference_genome == true) {
+                                    var withinQTL = '<td>';
 				    if(values[8].length > 1){
 				    	var withinQTLs = values[8].split("||");
 				    	//Shows the icons
@@ -1245,7 +1245,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				       var withinQTL='';
                                       }
 
-					// Foreach evidence show the images - start
+					// For each evidence show the images - start
 					var evidence = '<td>';
 					var values_evidence = values[9];
 					var evidences = values_evidence.split("||");
@@ -1470,8 +1470,8 @@ function createEvidenceTable(tableUrl){
 					if(values[0] !== "Trait") {
                                           table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
                                           }
-                                        else { // For Trait, display tooltip text as GWAS instead.
-					  table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="GWAS"></div></td>';
+                                        else { // For Trait, display tooltip text as GWAS instead & also sort as GWAS.
+					  table = table + '<td type-sort-value=GWAS"' + '"><div class="evidence_item evidence_item_'+values[0]+'" title="GWAS"></div></td>';
                                          }
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
