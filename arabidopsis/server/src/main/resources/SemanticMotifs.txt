@@ -17,6 +17,7 @@
 14^	Path
 15	SNP
 16^	Trait
+17^	ProtDomain
 
 #Transitions
 1-2	pub_in
@@ -60,7 +61,7 @@
 10-3	has_function
 10-4	participates_in
 10-5	located_in
-
+10-17	has_domain
 
 10-12	is_a
 10-122	is_a
