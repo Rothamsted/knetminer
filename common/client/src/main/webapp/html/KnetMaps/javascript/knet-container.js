@@ -139,12 +139,14 @@ cy.elements().qtip({
      var qtipMsg= "";
      try {
       if(this.isNode()) {
-         qtipMsg= "Concept: "+ this.data('value') +", type: "+ this.data('conceptType') +", PID: "+ 
-                  this.data('pid') +" , flagged: "+ this.data('flagged') +"<br>"+"Annotation: "+ 
-                  this.data('annotation');
+         qtipMsg= "<b>Concept:</b> "+ this.data('value') +", <b>Type:</b> "+ this.data('conceptType');
         }
       else if(this.isEdge()) {
-              qtipMsg= "Relation: "+ this.data('label');
+              qtipMsg= "<b>Relation:</b> "+ this.data('label');
+              var fromID= this.data('source'); // relation source ('fromConcept')
+              qtipMsg= qtipMsg +", <b>From:</b> "+ cy.$('#'+fromID).data('value') +" ("+ cy.$('#'+fromID).data('conceptType').toLowerCase() +"), ";
+              var toID= this.data('target'); // relation source ('toConcept')
+              qtipMsg= qtipMsg +"<b>To:</b> "+ cy.$('#'+toID).data('value') +" ("+ cy.$('#'+toID).data('conceptType').toLowerCase() +")";
              }
       }
       catch(err) { qtipMsg= "Selected element is neither a Concept nor a Relation"; }
@@ -167,16 +169,15 @@ cy.elements().qtip({
     var info= "";
     try {
     if(thisElement.isNode()) {
-       info= "Concept selected: "+ thisElement.data('value') +", type: "+ thisElement.data('conceptType')
-               +", PID: "+ thisElement.data('pid');
-       // Also update the Item Info table & display it.
-//       showItemInfo(thisElement);
+       info= "<b>Concept:</b> "+ thisElement.data('value') +", <b>Type:</b> "+ thisElement.data('conceptType');
       }
       else if(thisElement.isEdge()) {
-              info= "Relation selected: "+ thisElement.data('label');
+              info= "<b>Relation:</b> "+ this.data('label');
+              var fromID= this.data('source'); // relation source ('fromConcept')
+              info= info +", <b>From:</b> "+ cy.$('#'+fromID).data('value') +" ("+ cy.$('#'+fromID).data('conceptType').toLowerCase() +"), ";
+              var toID= this.data('target'); // relation source ('toConcept')
+              info= info +"<b>To:</b> "+ cy.$('#'+toID).data('value') +" ("+ cy.$('#'+toID).data('conceptType').toLowerCase() +")";
              }
-       // Also update the Item Info table & display it.
-//       showItemInfo(thisElement);
       }
       catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
     console.log(info);

@@ -1789,7 +1789,12 @@ public class OndexServiceProvider {
 		// System.out.println(qtlDB.size() + " QTLs are significant.");
 		// }
 
-		String[] colorHex = {"0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066"};
+		String[] colorHex = {"#0000FF", "#00FF00", "#00FFFF", "#FF0000", 
+                "#FF00FF", "#FFFF00", "#0000AA", "#00FFAA", "#00AA00", "#00AAFF", 
+                "#00AAAA", "#FF00AA", "#FFFFAA", "#FFAA00", "#FFAAFF", "#FFAAAA", 
+                "#AA0000", "#AA00FF", "#AA00AA", "#AAFF00", "#AAFFFF", "#AAFFAA",
+                "#AAAA00", "#AAAAFF", "#AAAAAA", "#000055", "#00FF55", "#00AA55",
+                "#005500", "#0055FF"};
 //	  0xFFB300, # Vivid Yellow
 //    0x803E75, # Strong Purple
 //    0xFF6800, # Vivid Orange
