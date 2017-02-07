@@ -60,7 +60,7 @@
       /* CytoscapeJS "core" container */
       #cy {
         height: 85%; /*98%;*/ /*750px;*/
-        width: 98%; /*450px;*/
+        width: /*98*/95%; /*450px;*/
         position: relative;
         background: white;
         border: 1px solid black;
@@ -83,10 +83,10 @@
        /*display:none;*/
 /*       position: fixed; background-color: white; top:100px; right:0; z-index:1; width: 350px; height:550px;*/
        position: absolute; right: 0; z-index: 5; width: 30%; height:/*88*/90%; background-color: white; 
-       border: 1px dashed black;
-       margin-top: 1px;
-       margin-bottom: 1px;
-       resize: horizontal; max-width: 90%;
+       border: 2px /*dashed black*/solid #444444;
+       margin-top: /*1*/2px;
+       margin-bottom: /*1*/2px;
+       resize: horizontal; max-width: /*90*/60%;
       }
 
       #itemInfo_Table {
