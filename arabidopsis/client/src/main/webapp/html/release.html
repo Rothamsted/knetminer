@@ -39,6 +39,7 @@
 	<ul>
 		<li>Gene- Protein [Ensembl]</li>
 		<ul>
+                        <li>In total 32k Arabidopsis genes (including protein-coding and non-coding RNAs) and 35k proteins including alternative splice variants.</li>
 			<!--<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>-->
 			<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.32.gff3.gz">Arabidopsis_thaliana.TAIR10.32.gff3</a></li>
                         <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
@@ -58,35 +59,36 @@
     	<ul>
             <li>Include all evidence types</li>
             <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a>)</li>
-            <li>Ondex GAF parser requires additional mapping file of feature type -> Ondex Concept Class</li>
+            <li>Ondex GAF parser requires additional mapping file of feature type -> <i>Ondex Concept Class</i></li>
         </ul>
     	<li>Gene-Gene Interactions [BioGRID]</li>
     	<ul>
-            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.141/BIOGRID-ORGANISM-3.4.141.tab2.zip"></a>TAB</li>
-            <li>Version 3.4.141</li>
-            <li>Concepts: 9514 [Gene] | 2270 [Publication]</li>
-            <li>Relations: 271 [genetic] | 37600 [physical] | 19849 [pub_in]</li>
+            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.144/BIOGRID-ORGANISM-3.4.144.tab2.zip">TAB</a></li>
+            <li>Version 3.4.144</li>
+            <li>Concepts: 9538 [Gene] | 2326 [Publication]</li>
+            <li>Relations: 299 [genetic] | 37756 [physical] | 20044 [pub_in]</li>
         </ul>
     	<li>Gene-Phenotype [TAIR]</li>
     	<ul>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt"></a>TAB</li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">TAB</a></li>
         </ul>
     	<li>Publications [PubMed]</li>
     	<ul>
-            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana"></a>XML</li>
+            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana">XML</a></li>
             <li>57,600 PubMed abstracts</li>
             <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
         </ul>
     	<li>Gene-Publication [GOA, TAIR]</li>
     	<ul>
-            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz"></a>GAF 2.0</li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt"></a>TAB</li>
+            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a></li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt">TAB</a></li>
         </ul>
-    	<li>Protein-Publication [UniProtKB]</li>
+    	<li>Protein-Publication [UniProtKB, TAIR]</li>
     	<ul>
-            <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml"></a>At proteome XML</li>
-            <li>relations (pub_in): 34,884</li>
-            <li>concepts (Publication): 11,550</li>
+            <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml">At proteome XML</a></li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
+            <li>relations (pub_in): 65,780</li>
+            <li>concepts (Publication): 15,892</li>
         </ul>
     	<li>Protein-Pathway [AraCyc]</li>
     	<ul>
@@ -101,8 +103,8 @@
     	<li>Sequence alignments to other Plants</li>
     	<ul>
             <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
-                <ul><li>Concepts: 21903 [Protein]</li>
-                    <li>Relations: 74359 [h_s_s]</li>
+                <ul><li>Concepts: 26663 [Protein]</li>
+                    <li>Relations: 100947 [h_s_s]</li>
                 </ul>
             </li>
             <li>Protein-GO [UniProtKB]</li>
@@ -114,8 +116,8 @@
             <li>Protein-GO [UniProtKB]</li>
             <li>Protein-Publication [UniProtKB]</li>
             <li>Protein-Protein Interaction [BioGRID]:
-                <ul><li>Concepts: 6247 [Protein] | 13502 [Publication]</li>
-                    <li>Relations: 178589 [genetic] | 94061 [genetic] | 145924 [pub_in]</li>
+                <ul><li>Concepts: 6366 [Protein] | 13725 [Publication]</li>
+                    <li>Relations: 462411 [genetic] | 97205 [genetic] | 155615 [pub_in]</li>
                 </ul>
             </li>
         </ul>
