@@ -25,6 +25,7 @@
 		<module>maize</module>
 		<module>drosophilla</module>
 		<module>sviminalis</module>
+		<module>humanDisease</module>
 	</modules>
 
 	<reporting>
