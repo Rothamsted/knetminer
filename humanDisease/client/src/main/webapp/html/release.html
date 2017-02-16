@@ -33,105 +33,31 @@
 <h1 class="release-title">DiseaseKnetMiner Human Release Notes</h1>
 <p id="network_stats" class="release-title">The final DiseaseKnetMiner Human knowledge network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
 
-<b><i>Yet to be updated...<i></b>
 <ul>
-
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-		<li>Gene- Protein [Ensembl]</li>
-		<ul>
-                        <li>In total 32k Arabidopsis genes (including protein-coding and non-coding RNAs) and 35k proteins including alternative splice variants.</li>
-			<!--<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>-->
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.32.gff3.gz">Arabidopsis_thaliana.TAIR10.32.gff3</a></li>
-                        <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
-		</ul>
-    	<li>Gene-SNP-Phenotype [Ensembl]</li>
-    	<ul>
-            <li>Arabidopsis GWAS data for 107 phenotypes.</li>
-            <li>Phenotypes are grouped into the four categories: flowering, developmental, defense and ionomics.</li>
-            <li>For more information see <a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a></li>
-            <li>Data was downloaded from <a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_snp.default.snp.refsnp_id|athaliana_eg_snp.default.snp.associated_variant_risk_allele|athaliana_eg_snp.default.snp.distance_to_transcript|athaliana_eg_snp.default.snp.chr_name|athaliana_eg_snp.default.snp.chrom_start|athaliana_eg_snp.default.snp.ensembl_gene_stable_id|athaliana_eg_snp.default.snp.consequence_type_tv|athaliana_eg_snp.default.snp.phenotype_name|athaliana_eg_snp.default.snp.phenotype_description|athaliana_eg_snp.default.snp.p_value&FILTERS=athaliana_eg_snp.default.filters.phenotype_significance.'1'|athaliana_eg_snp.default.filters.distance_to_transcript.'1000'&VISIBLEPANEL=resultspanel">Ensembl Biomart</a></li>
-            <li>SNP-Phenotype relations (122,919 relations) of significant SNPs (as defined by Ensembl, p-value<0.05?) linked to 107 phenotypes; on average 1,150 SNPs per phenotype.</li>
-            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (96,047 relations)</li>
-            <li>#SNP=66,816 | #Gene=27,502 | #Phenotype=107</li>
-            <li>To see it live, go to <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/">KnetMiner Arabidopsis</a> and search for <i>dormancy</i>, then switch to Map View.</li>
-        </ul>
-    	<li>Gene-GO [GOA]</li>
-    	<ul>
-            <li>Include all evidence types</li>
-            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a>)</li>
-            <li>Ondex GAF parser requires additional mapping file of feature type -> <i>Ondex Concept Class</i></li>
-        </ul>
-    	<li>Gene-Gene Interactions [BioGRID]</li>
-    	<ul>
-            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.144/BIOGRID-ORGANISM-3.4.144.tab2.zip">TAB</a></li>
-            <li>Version 3.4.144</li>
-            <li>Concepts: 9538 [Gene] | 2326 [Publication]</li>
-            <li>Relations: 299 [genetic] | 37756 [physical] | 20044 [pub_in]</li>
-        </ul>
-    	<li>Gene-Phenotype [TAIR]</li>
-    	<ul>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">TAB</a></li>
-        </ul>
-    	<li>Publications [PubMed]</li>
-    	<ul>
-            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana">XML</a></li>
-            <li>57,600 PubMed abstracts</li>
-            <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
-        </ul>
-    	<li>Gene-Publication [GOA, TAIR]</li>
-    	<ul>
-            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a></li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt">TAB</a></li>
-        </ul>
-    	<li>Protein-Publication [UniProtKB, TAIR]</li>
-    	<ul>
-            <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml">At proteome XML</a></li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
-            <li>relations (pub_in): 65,780</li>
-            <li>concepts (Publication): 15,892</li>
-        </ul>
-    	<li>Protein-Pathway [AraCyc]</li>
-    	<ul>
-            <li>AraCyc Release 14</li>
-            <li>biopax-level2.owl</li>
-            <li>Translation.tab</li>
-        </ul>
-    	<li>Gene-TO [Text Mining]</li>
-    	<ul>
-            <li>Created 27k Gene-TO sentence based co-occurrences in PubMed abstracts</li>
-        </ul>
-    	<li>Sequence alignments to other Plants</li>
-    	<ul>
-            <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
-                <ul><li>Concepts: 26663 [Protein]</li>
-                    <li>Relations: 100947 [h_s_s]</li>
-                </ul>
-            </li>
-            <li>Protein-GO [UniProtKB]</li>
-            <li>Protein-Publication [UniProtKB]</li>
-        </ul>
-    	<li>Orthologs in Yeast</li>
-    	<ul>
-            <li>Protein@Arabidopsis-Protein@Yeast::UniProtKB-SP [Inparanoid]</li>
-            <li>Protein-GO [UniProtKB]</li>
-            <li>Protein-Publication [UniProtKB]</li>
-            <li>Protein-Protein Interaction [BioGRID]:
-                <ul><li>Concepts: 6366 [Protein] | 13725 [Publication]</li>
-                    <li>Relations: 462411 [genetic] | 97205 [genetic] | 155615 [pub_in]</li>
-                </ul>
-            </li>
-        </ul>
-
-  	<p><strong>Networks</strong></p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/aranet/">Final Network</a></li>
-	</ul>
+	    <li>Gene-Protein [Ensembl]</li>
+	    <ul>
+		<li><a href="http://www.ensembl.org/biomart/martview/900576e0a8c20c86a4284aa6d6b241a4">Ensembl BioMart</a></li>
+	    </ul>
+	    <li>Disease [OMIM]</li>
+	    <ul>
+		<li><a href="http://www.omim.org/search/?index=entry&start=1&search=alzheimer+parkinson+huntington&sort=score+desc%2C+prefix_sort+desc&limit=10&field=title&prefix=%23">Alzheimer, Parkinson, Huntington diseases</a></li>
+	    </ul>
+	    <li>Drug-Target Interactions [DrugBank]</li>
+	    <li>Protein-Protein Interactions [IntAct]</li>
+	    <ul>
+		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:alzheimers%22">Alzheimer Disease</a></li>
+		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:parkinsons%22">Parkinson Disease</a></li>
+	    </ul>	    
+	    <li>Protein-Publication [UniprotKB]</li>
+	    <ul>
+		<li><a href="http://www.uniprot.org/uniprot/?query=yourlist:M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P&sort=yourlist:M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P&columns=yourlist(M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P),isomap(M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P),id,entry%20name,reviewed,protein%20names,genes,organism,length">UniprotKB</a></li>
+	    </ul>
+	    <li>Gene Ontology</li>
+	    <ul>
+		<li><a href="http://geneontology.org/ontology/go-basic.obo">GO</a></li>
+	    </ul>
 </ul>
 
 </div>        <!-- end div release-content  -->
