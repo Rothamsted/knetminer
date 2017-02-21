@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Neurodegenerative Disease</description>
+		<term>"Alzheimer Disease" OR "Huntington Disease" OR "Parkinson-Dementia" OR Heparin</term>
+                <gene>ENSG00000186868</gene>
+		<gene>ENSG00000171867</gene>
+		<gene>ENSG00000142192</gene>
+	</query>	
+
+</sampleQueries>

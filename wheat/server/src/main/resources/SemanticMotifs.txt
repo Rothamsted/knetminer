@@ -27,6 +27,7 @@
 #Transitions
 1-10	enc
 1-7	enc
+1-20	has_variation
 10-10	h_s_s	5
 10-7	h_s_s	5
 10-10	ortho	5
