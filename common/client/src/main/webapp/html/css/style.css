@@ -490,6 +490,8 @@ span.hint-big:hover {
 .evidence_item_TO {background:url(../image/Trait_ontology.png) no-repeat;}
 .evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
 .evidence_item_Trait {background:url(../image/Trait.png) no-repeat;}
+.evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
+.evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
