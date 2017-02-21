@@ -112,34 +112,12 @@
         </div>
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
-            <!--<div id="pGViewer" class="resultViewer">
-                <center>
-                    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle">
-                        <param name="allowScriptAccess" value="sameDomain" />
-                        <param name="movie" value="html/GViewer/GViewer2.swf" />
-                        <param name="quality" value="high" />
-                        <param name="bgcolor" value="#FFFFFF" />
-                        <param name="wmode" value="transparent">
-                        <param name="FlashVars" value="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&" />
-                        <embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high"
-                            bgcolor="#FFFFFF" width="600" height="600" name="GViewer2"
-                            align="middle" allowScriptAccess="sameDomain"
-                            type="application/x-shockwave-flash"
-                            FlashVars="&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=html/data/annotation.xml&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&featureLinkTarget=network&"
-                            pluginspage="http://www.macromedia.com/go/getflashplayer" />
-                    </object>
-                </center>
-            </div>
-	    <div id="genemap-tab" class="resultViewer" style="display:none;" > -->
-            <!-- new GeneMap -->
+            <!-- new GeneoMaps.js -->
 	    <div id="genemap-tab" class="resultViewer" style="display:none;" >
                 <div id="genemap" class="bootstrap"> </div>
 	    </div>
             <div id="evidenceTable" class="resultViewer" style="display:none;" ></div>
-        <!--    <div id="NetworkCanvas" class="resultViewer" style="display:none;">
-            	<iframe id="Network_frame" name="Network_frame" width="760" height="800" style="border:none"></iframe>
-            </div> -->
-            <!-- new Network Viewer -->
+            <!-- new KnetMaps.js -->
             <div id="NetworkCanvas" class="resultViewer" style="display:none;">
                     <!-- KnetMaps -->
                     <div id="knet-maps" style="display:none;">
@@ -168,6 +146,7 @@
                                 <td align=center><img src="html/image/knet_legend/Reaction.png"></td>
                                 <td align=center><img src="html/image/knet_legend/QTL.png"></td>
                                 <td align=center><img src="html/image/knet_legend/Publication.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Disease.png"></td>
                             </tr><tr>
                                 <td align=center><font size=1.8px>Gene</font></td>
                                 <td align=center><font size=1.8px>Protein</font></td>
@@ -177,6 +156,7 @@
                                 <td align=center><font size=1.8px>Reaction</font></td>
                                 <td align=center><font size=1.8px>QTL</font></td>
                                 <td align=center><font size=1.8px>Publication</font></td>
+                                <td align=center><font size=1.8px>Disease</font></td>
                             </tr><tr><td align=center></td></tr>
                             <tr><td align=center><img src="html/image/knet_legend/Phenotype.png"></td>
                                 <td align=center><img src="html/image/knet_legend/Biological_process.png"></td>
@@ -186,6 +166,7 @@
                                 <td align=center><img src="html/image/knet_legend/Molecular_function.png"></td>
                                 <td align=center><img src="html/image/knet_legend/Trait.png"></td>
                                 <td align=center><img src="html/image/knet_legend/Enzyme_classification.png"></td>
+                                <td align=center><img src="html/image/knet_legend/Drug.png"></td>
                             </tr><tr>
                                 <td align=center><font size=1.8px>Phenotype</font></td>
                                 <td align=center><font size=1.8px>Biol. Process</font></td>
@@ -195,6 +176,7 @@
                                 <td align=center><font size=1.8px>Mol. Function</font></td>
                                 <td align=center><font size=1.8px>Trait</font></td>
                                 <td align=center><font size=1.8px>Enzyme Classification</font></td>
+                                <td align=center><font size=1.8px>Drug</font></td>
                             </tr>
                         </table>
                     </div>

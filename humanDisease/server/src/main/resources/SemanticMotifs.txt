@@ -1,0 +1,35 @@
+#Finite States *=start state ^=end state
+1*	Gene
+2^	Publication
+3^	MolFunc
+4^	BioProc
+5^ 	CelComp
+6^	Disease
+7^	Protein
+10	Protein
+11^	Drug
+12	Drug
+18^	EC
+
+#Transitions
+1-7	enc
+1-10	enc
+
+10-7	it_wi	6	d
+10-10	it_wi	6	d
+
+10-7	cooc_wi	6	d
+10-10	cooc_wi	6	d
+
+10-2	pub_in
+10-3	has_function
+10-4	participates_in
+10-5	located_in
+10-18	cat_c
+10-6	inv_in
+10-11	has_target
+10-11	cooc_wi
+10-12	has_target
+10-12	cooc_wi
+10-2	occ_in
+12-2	occ_in
