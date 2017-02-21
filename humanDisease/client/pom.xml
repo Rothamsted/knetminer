@@ -14,7 +14,7 @@
 	<name>DiseaseKnetMiner Human client</name>
 
 	<build>
-		<finalName>QTLNetMinerHumanDisease</finalName>
+		<finalName>DiseaseKnetMiner-Human</finalName>
 
 		<plugins>
 			<plugin>

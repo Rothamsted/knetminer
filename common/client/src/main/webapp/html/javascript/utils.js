@@ -173,6 +173,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Enzyme.png></td>" +
 											"<td align=center><img src=html/image/Reaction.png></td>" +
 											"<td align=center><img src=html/image/Publication.png></td>" +
+											"<td align=center><img src=html/image/Disease.png></td>" +
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Gene</font></td>" +
 											"<td align=center><font size=1.8px>Protein</font></td>" +
@@ -181,6 +182,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Enzyme</font></td>" +
 											"<td align=center><font size=1.8px>Reaction</font></td>" +
 											"<td align=center><font size=1.8px>Publication</font></td>" +
+											"<td align=center><font size=1.8px>Disease</font></td>" +
 										"</tr><tr>" +
 											"<td align=center></td>" +
 										"</tr><tr>" +
@@ -192,6 +194,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Molecular_function.png></td>" +
 											/*"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +*/
 											"<td align=center><img src=html/image/Trait.png></td>" +
+											"<td align=center><img src=html/image/Drug.png></td>" +
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Phenotype</font></td>" +
 											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
@@ -201,6 +204,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
 											/*"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +*/
 											"<td align=center><font size=1.8px>GWAS</font></td>" +
+											"<td align=center><font size=1.8px>Drug</font></td>" +
 										"</tr>" +
 									"</table>" +
 								"</div>" +
