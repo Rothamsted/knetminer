@@ -1816,7 +1816,7 @@ public class OndexServiceProvider {
 			if(!trait2color.containsKey(trait)){
 				trait2color.put(trait, colorHex[index]);
 				index++;
-				if(index > colorHex.length){
+				if(index == colorHex.length){
 					index = 0;
 				}
 			}
