@@ -9,6 +9,8 @@
 10	Protein
 11^	Drug
 12	Drug
+13	SNP
+14^	Trait
 18^	EC
 
 #Transitions
@@ -33,3 +35,6 @@
 10-12	cooc_wi
 10-2	occ_in
 12-2	occ_in
+
+1-13	has_variation
+13-14	associated_with
