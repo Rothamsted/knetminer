@@ -1,7 +1,5 @@
-//var data_url = "https://ondex.rothamsted.ac.uk/humanDisease_data/";
-//var data_url = "http://knetminer.rothamsted.ac.uk/humanDisease_data/";
-var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/humanDisease_data/"; // now, using HTTP instead of HTTPS
-//var data_url = "http://maize-dev.rothamsted.ac.uk/humanDisease_data/"; // test on maize-dev
+//var data_url = "http://knetminer.rothamsted.ac.uk/humanDisease_data/"; // now, using HTTP instead of HTTPS
+var data_url = "http://babvs49.rothamsted.ac.uk/humanDisease_data/";
 var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = "DiseaseKnetMiner Human";
 var reference_genome = true; //true if you are providing a reference genome
