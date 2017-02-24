@@ -39,6 +39,7 @@ var url_mappings= {
      {"cv": "SOYCYC", "weblink": "http://www.soybase.org:8082/SOY/NEW-IMAGE?type=REACTION&object=", "cc_restriction": "Reaction"},
      {"cv": "TAIR", "weblink": "http://www.arabidopsis.org/servlets/TairObject?type=locus&name=", "cc_restriction": ""},
      {"cv": "TX", "weblink": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=", "cc_restriction": ""},
-     {"cv": "UNIPROTKB", "weblink": "http://www.uniprot.org/uniprot/", "cc_restriction": ""}
+     {"cv": "UNIPROTKB", "weblink": "http://www.uniprot.org/uniprot/", "cc_restriction": ""},
+     {"cv": "DrugBank", "weblink": "https://www.drugbank.ca/drugs/", "cc_restriction": ""}
  ]
 };

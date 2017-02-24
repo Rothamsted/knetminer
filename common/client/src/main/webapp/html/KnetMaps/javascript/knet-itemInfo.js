@@ -88,7 +88,7 @@
                         //   console.log("*synonym: "+ coname_Synonym +"\n \t id: "+ synonymID);
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            var dispSynonym= coname_Synonym +
-                                   ' <a><img src="image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
+                                   ' <a><img src="html/KnetMaps/image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
                            all_concept_names= all_concept_names + dispSynonym;
                           }
                        }
@@ -118,6 +118,17 @@
                                      }
                                   }
                               }
+                            else if(attrName === "URL") {
+                                    attrName="URL(s)";
+                                    var urlAttrValue= attrValue;
+                                    attrValue= "";
+                                    urlAttrValue= urlAttrValue.replace(/\s/g,''); // remove spaces, if any
+                                    var urls= urlAttrValue.split(",");
+                                    urls.forEach(function(entry,index) {
+                                         attrValue= attrValue +"<a href=\""+ entry +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ entry +"</a><br/>";
+                                        });
+                                    attrValue= attrValue.substring(0,attrValue.length-1);
+                                   }
                             // For Aminoacid sequence (AA).
                             else if(attrName === "AA") {
                                     attrName= "Aminoacid sequence (AA)";
@@ -239,7 +250,7 @@
 //  myLayout.show('east', true); // to unhide (show) and open the pane.
 //  myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
 
-  // $("#itemInfo").css("display","block"); // show the Item Infon div
+  // $("#itemInfo").css("display","block"); // show the Item Info div
   var effect = 'slide';
   // Set the options for the effect type chosen
   var options = { direction: 'right' };
