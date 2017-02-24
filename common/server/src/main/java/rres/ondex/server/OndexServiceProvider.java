@@ -978,7 +978,7 @@ public class OndexServiceProvider {
                                                 //System.out.println("QTL-->Trait or SNP-->Trait");
 						ONDEXConcept conQTL = r.getFromConcept();
 						// results.add(conQTL);
-						if (conQTL.getAttribute(attChromosome) != null) {
+						if (conQTL.getAttribute(attChromosome) != null && conQTL.getAttribute(attBegin) != null && conQTL.getAttribute(attEnd) != null) {
 							String type = conQTL.getOfType().getId();
 							String chrName = conQTL.getAttribute(attChromosome).getValue().toString();
 							Integer start = (Integer) conQTL.getAttribute(attBegin).getValue();
