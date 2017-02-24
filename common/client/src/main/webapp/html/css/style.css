@@ -6,7 +6,7 @@ body {
 	font-size:16px;
 	font-family: 'Play', sans-serif;
 	min-width: 960px;
-	background: url(../image/Arabidopsis.jpg) no-repeat center center fixed;
+	background: url(../image/background.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
