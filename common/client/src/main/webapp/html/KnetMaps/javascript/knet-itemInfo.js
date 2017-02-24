@@ -88,7 +88,7 @@
                         //   console.log("*synonym: "+ coname_Synonym +"\n \t id: "+ synonymID);
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            var dispSynonym= coname_Synonym +
-                                   ' <a><img src="image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
+                                   ' <a><img src="html/KnetMaps/image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
                            all_concept_names= all_concept_names + dispSynonym;
                           }
                        }
@@ -250,7 +250,7 @@
 //  myLayout.show('east', true); // to unhide (show) and open the pane.
 //  myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
 
-  // $("#itemInfo").css("display","block"); // show the Item Infon div
+  // $("#itemInfo").css("display","block"); // show the Item Info div
   var effect = 'slide';
   // Set the options for the effect type chosen
   var options = { direction: 'right' };
