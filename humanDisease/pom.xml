@@ -10,7 +10,7 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
 	<artifactId>humanDisease</artifactId>
 	<packaging>pom</packaging>
-	<name>DiseaseKnetMiner Human</name>
+	<name>KnetMiner HumanDisease</name>
 	
 	<modules>
 		<module>client</module>

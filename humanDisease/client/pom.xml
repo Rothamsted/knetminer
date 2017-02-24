@@ -11,10 +11,10 @@
 	<groupId>uk.ac.rothamsted.qtlnetminer.humanDisease</groupId>
 	<artifactId>humanDisease-client</artifactId>
 	<packaging>war</packaging>
-	<name>DiseaseKnetMiner Human client</name>
+	<name>KnetMiner HumanDisease client</name>
 
 	<build>
-		<finalName>DiseaseKnetMiner-Human</finalName>
+		<finalName>KnetMinerHumanDisease</finalName>
 
 		<plugins>
 			<plugin>
