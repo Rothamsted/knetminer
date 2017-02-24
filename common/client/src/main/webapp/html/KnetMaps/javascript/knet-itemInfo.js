@@ -78,11 +78,18 @@
                     cell2= row.insertCell(1);
                     cell1.innerHTML= "<b>Synonyms:</b>";
                     for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].conames.length; k++) {
-                        co_name= metadataJSON.ondexmetadata.concepts[j].conames[k].name;
-                        if(co_name !== "") {
+                        var coname_Synonym= metadataJSON.ondexmetadata.concepts[j].conames[k].name;
+                        var synonymID= coname_Synonym;
+                        if(coname_Synonym !== "") {
+                           if(synonymID.indexOf('<span') > -1) { // For html content within text, use html tags.
+                              synonymID= '<html>'+ synonymID +'</html>';
+                              synonymID= jQuery(synonymID).text(); // filter out html content from id field.
+                             }
+                        //   console.log("*synonym: "+ coname_Synonym +"\n \t id: "+ synonymID);
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
-                           all_concept_names= all_concept_names + co_name +
-                                   " <a><img src='html/KnetMaps/image/labelEye.png' alt='Use' id='"+ co_name +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>" +"<br/>";
+                           var dispSynonym= coname_Synonym +
+                                   ' <a><img src="image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
+                           all_concept_names= all_concept_names + dispSynonym;
                           }
                        }
                     cell2.innerHTML= all_concept_names; // all synonyms.
@@ -322,7 +329,8 @@
      var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
      cy.nodes().forEach(function(ele) {
       if(ele.selected()) {
-         console.log("Selected concept: "+ ele.data('displayValue')/*ele.data('value')*/ +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
+         if(new_conceptName.length> 30) { new_conceptName= new_conceptName.substr(0,29)+'...'; }
+    //     console.log("Selected concept: "+ ele.data('displayValue')/*ele.data('value')*/ +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
          /*ele.data('Value', new_conceptName);*/
          ele.data('displayValue', new_conceptName);
          if(ele.style('text-opacity') === '0') {
