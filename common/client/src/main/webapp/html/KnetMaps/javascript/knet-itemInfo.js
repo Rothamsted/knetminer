@@ -118,6 +118,17 @@
                                      }
                                   }
                               }
+                            else if(attrName === "URL") {
+                                    attrName="URL(s)";
+                                    var urlAttrValue= attrValue;
+                                    attrValue= "";
+                                    urlAttrValue= urlAttrValue.replace(/\s/g,''); // remove spaces, if any
+                                    var urls= urlAttrValue.split(",");
+                                    urls.forEach(function(entry,index) {
+                                         attrValue= attrValue +"<a href=\""+ entry +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ entry +"</a><br/>";
+                                        });
+                                    attrValue= attrValue.substring(0,attrValue.length-1);
+                                   }
                             // For Aminoacid sequence (AA).
                             else if(attrName === "AA") {
                                     attrName= "Aminoacid sequence (AA)";
