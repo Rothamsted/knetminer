@@ -161,10 +161,8 @@ function initializeNetworkView() {
 
 // On startup
 $(function() { // on dom ready
-
   // load the cytoscapeJS network
   load_reload_Network(networkJSON, networkStylesheet/*, true*/);
-
 }); // on dom ready
 }
 
