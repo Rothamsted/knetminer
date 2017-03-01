@@ -17,8 +17,8 @@
 1-7	enc
 1-10	enc
 
-10-7	it_wi	5	d
-10-10	it_wi	5	d
+10-7	it_wi	6	d
+10-10	it_wi	6	d
 
 10-2	pub_in
 10-3	has_function
@@ -30,6 +30,8 @@
 10-11	cooc_wi
 10-12	has_target
 10-12	cooc_wi
+10-10	xref
+10-7	xref
 
 1-13	has_variation
 13-14	associated_with
