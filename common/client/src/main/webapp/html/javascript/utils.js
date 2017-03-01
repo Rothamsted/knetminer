@@ -935,7 +935,6 @@ function generateCyJSNetwork(url,list){
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
     $.post(url, list, function(response, textStatus) {
     var oxl = response.split(":")[1];
-
     // Network Graph: JSON file.
     var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
@@ -943,13 +942,13 @@ function generateCyJSNetwork(url,list){
          $("#knet-maps").css("display","block"); // show the KNETviewer menubar.
          activateButton('NetworkCanvas');
 
-         // Show KNETviewer maskloader.
+         // Show KnetMaps maskloader.
          showNetworkLoader();
 
-         // Generate the Network Graph after the page load event.
+         // Generate the Network after the page load event.
          generateNetworkGraph(jsonFile);
         
-         // Remove KNETviewer maskloader.
+         // Remove KnetMaps maskloader.
          removeNetworkLoader();
          // Remove the preloader message in Gene View, for the Network Viewer
          $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');

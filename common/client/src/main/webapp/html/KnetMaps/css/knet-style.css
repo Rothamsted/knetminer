@@ -1,14 +1,13 @@
 /* 
-    Created on : 03-Oct-2016
+    Last Modified on : 27-Feb-2017
     Author     : Ajit Singh
-    Description:
-        CSS for the Network Viewer, in tab.
+    Description: CSS for KnetMaps
 */
 
 #knet-maps {
-    width: 90% ;/*98%;*/
+    /*width: 90%;*/
     height: 90%;
-	padding-left: 10px;
+    padding-left: 10px;
     /*border: 1px dashed grey;*/
 }
 
@@ -18,7 +17,7 @@
  /*#knet-maps*/
  .full_screen {
   position: fixed; 
-  width: 90vw; /*90%;*/ /*900px;*/
+  width: 90%; /*90vw;*/ /*900px;*/
   height: 90%; /*550px;*/
   top: 5%; 
   left: 5vw; 
@@ -59,30 +58,30 @@
       
       /* CytoscapeJS "core" container */
       #cy {
-        height: 85%; /*98%;*/ /*750px;*/
-        width: /*98*/95%; /*450px;*/
+        height: 80%/*85%;*/; /*750px;*/
+        width: 95%/*98*/; /*450px;*/
         position: relative;
         background: white;
         border: 1px solid black;
-		/*overflow: hidden;
+        /*overflow: hidden;
         margin: auto;*/
         /*margin-top: 10px;*/
        }
 
-   #countsLegend {
+   #statsLegend {
      height: 20px;
      /*overflow-y: auto;*/
-     font-size: 12px;
-	 font-weight: bold;
-	 color: darkBlue;
+     font-size: 14px;
+     font-weight: bold;
+     color: darkBlue;
      /*margin-bottom: 25px;
-	 position: absolute;*/
+     position: absolute;*/
    }
 
       #itemInfo {
        /*display:none;*/
 /*       position: fixed; background-color: white; top:100px; right:0; z-index:1; width: 350px; height:550px;*/
-       position: absolute; right: 0; z-index: 5; width: 30%; height:/*88*/90%; background-color: white; 
+       position: absolute; right: 0; z-index: 5; width: 30%; height:/*88*/85%; background-color: white; 
        border: 2px /*dashed black*/solid #444444;
        margin-top: /*1*/2px;
        margin-bottom: /*1*/2px;
@@ -111,11 +110,11 @@
 
       div.infoDiv table {
         width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
-	    border:none;
-	    border-spacing: 0px;
-	    background-color: transparent;
-	    border: 1px solid #C2C2C2;
-	    border-collapse: collapse;
+        border:none;
+	border-spacing: 0px;
+	background-color: transparent;
+	border: 1px solid #C2C2C2;
+	border-collapse: collapse;
         /* Table not visible, by default. */
         display: none;
       }
@@ -172,7 +171,7 @@
           background: #277da7; /*#b9cd6d;*/
           border: 1px solid black;
           color: #FFFFFF;
-		  font-weight: bold;
+          font-weight: bold;
          }
 
        .ui-widget-content {
@@ -191,4 +190,12 @@
        font-size: 12px;
       }
 
+/* Interactive Legend */
+#knetLegend {
+    border: 1px dotted gray;
+    width: 90%; margin: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+	background: white;
+}
       
