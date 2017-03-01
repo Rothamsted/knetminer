@@ -10,9 +10,10 @@ var url_mappings= {
      {"cv": "EC", "weblink": "http://www.expasy.org/enzyme/", "cc_restriction": ""},
      {"cv": "EMBL", "weblink": "http://www.ebi.ac.uk/ena/data/view/", "cc_restriction": ""},
      {"cv": "ENSEMBL", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
+     {"cv": "ENSV", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
      {"cv": "GENB", "weblink": "http://www.ncbi.nlm.nih.gov/sites/entrez?db=nuccore&cmd=search&term=", "cc_restriction": ""},
      {"cv": "GENOSCOPE", "weblink": "http://www.genoscope.cns.fr/brassicanapus/cgi-bin/gbrowse/colza/?name=", "cc_restriction": ""},
-     {"cv": "GO", "weblink": "http://www.ebi.ac.uk/QuickGO/GTerm?id=", "cc_restriction": ""},
+     {"cv": "GO", "weblink": "http://www.ebi.ac.uk/QuickGO-Beta/term/", "cc_restriction": ""},
      {"cv": "INTACT", "weblink": "http://www.ebi.ac.uk/intact/pages/interactions/interactions.xhtml?query=", "cc_restriction": ""},
      {"cv": "IPRO", "weblink": "http://www.ebi.ac.uk/interpro/IEntry?ac=", "cc_restriction": ""},
      {"cv": "KEGG", "weblink": "http://www.genome.jp/dbget-bin/www_bget?cpd:", "cc_restriction": "Comp"},
@@ -41,5 +42,10 @@ var url_mappings= {
      {"cv": "TX", "weblink": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=", "cc_restriction": ""},
      {"cv": "UNIPROTKB", "weblink": "http://www.uniprot.org/uniprot/", "cc_restriction": ""},
      {"cv": "DrugBank", "weblink": "https://www.drugbank.ca/drugs/", "cc_restriction": ""}
- ]
+ ],
+  "comment2": "For humanDisease instance, replace the ENSEMBL, ENSV url's above with the 2 url's below. This is a temporary fix until we rename DataSources to be ENSEMBL_HUMAN, ENSEMBL_WHEAT, etc.",
+  "human_acc": [
+     {"cv": "ENSEMBL", "weblink": "http://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=", "cc_restriction": ""},
+     {"cv": "ENSV", "weblink": "http://www.ensembl.org/Homo_sapiens/Variation/Explore?db=core;v=", "cc_restriction": ""},
+  ]
 };
