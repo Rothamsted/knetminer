@@ -1,11 +1,11 @@
 function onHover(thisBtn) {
-	 var img= $(thisBtn).attr('src');
+    var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'_hover.png');
     $(thisBtn).attr('src', img.replace('.png','_hover.png'));
  }
 
  function offHover(thisBtn) {
-	 var img= $(thisBtn).attr('src');
+     var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'.png');
     $(thisBtn).attr('src', img.replace('_hover.png','.png'));
  }
