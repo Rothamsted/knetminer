@@ -8,7 +8,7 @@
 <meta name="description" content="KnetMiner - Mining and prioritizing candidate genes in integrated knowledge networks for plant and animal genomes.">
 <meta name="Keywords" content="KnetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>KnetMiner HumanDisease Release Notes</title>
+<title>Human Disease Release Notes</title>
 
 <script type="text/javascript" src="javascript/releaseNotes/jquery-1.11.2.min.js"></script>
 <!-- <script type="text/javascript" src="javascript/dtjava.js"></script> -->
@@ -24,43 +24,58 @@
 <div id="header">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">	  
     	<a href="http://knetminer.rothamsted.ac.uk/" title="KnetMiner Home"><img class="logo-top" src="../html/image/logo-regular.png" alt="Logo" height="50" style="padding-left:10px;"></a>
- 	<div id="species_header">KnetMiner HumanDisease</div>
+ 	<div id="species_header">Human Disease</div>
 
  </nav>  <!-- end navbar -->
 </div>	<!-- end header -->
   
 <div id="release-content">
-<h1 class="release-title">KnetMiner HumanDisease Release Notes</h1>
-<p id="network_stats" class="release-title">The final KnetMiner HumanDisease knowledge network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
+<h1 class="release-title">Human Disease Release Notes</h1>
+<p id="network_stats" class="release-title">The final Human Disease knowledge network contains:<!--<strong>219,033 concepts</strong> and <strong>817,619 relations</strong>.--></p>
 
 <ul>
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
 	    <li>Gene-Protein [Ensembl]</li>
 	    <ul>
-		<li><a href="http://www.ensembl.org/biomart/martview/a5c0a36bdbe695bf25d07a9dfff5fd7b?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.feature_page.ensembl_gene_id|hsapiens_gene_ensembl.default.feature_page.external_gene_name|hsapiens_gene_ensembl.default.feature_page.uniprot_swissprot|hsapiens_gene_ensembl.default.feature_page.chromosome_name|hsapiens_gene_ensembl.default.feature_page.start_position|hsapiens_gene_ensembl.default.feature_page.end_position&FILTERS=hsapiens_gene_ensembl.default.filters.with_uniprotswissprot.only|hsapiens_gene_ensembl.default.filters.ensembl_gene_id.%22ENSG00000137845,ENSG00000159082,ENSG00000115317,ENSG00000185345,ENSG00000184381,ENSG00000116675,ENSG00000138246,ENSG00000130203,ENSG00000198888,ENSG00000198763,ENSG00000177628,ENSG00000171867,ENSG00000142192,ENSG00000154277,ENSG00000186868,ENSG00000112592,ENSG00000145335,ENSG00000197386,ENSG00000080815,ENSG00000143801,ENSG00000114867,ENSG00000188906,ENSG00000204120,ENSG00000105223,ENSG00000154118,ENSG00000137642,ENSG00000069329,ENSG00000116288,ENSG00000158828,ENSG00000159363,ENSG00000106617,ENSG00000100225,ENSG00000064692%22&VISIBLEPANEL=resultspanel">Ensembl BioMart</a></li>
+		<li>A subset of 33 genes associated with Alzheimer, Parkinson and Huntington diseases was used.</li>
+		<li><a href="ftp://ftp.ensembl.org/pub/release-87/gff3/homo_sapiens/Homo_sapiens.GRCh38.87.gff3.gz">Homo_sapiens.GRCh38.87.gff3</a></li>
+		<li><a href="ftp://ftp.ensembl.org/pub/release-87/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz">Homo_sapiens.GRCh38.pep.all.fa</a></li>
+		<li><a href="http://www.ensembl.org/biomart/martview/545ac6d700f509ddc37b21d3b5c5b56e?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.feature_page.ensembl_gene_id|hsapiens_gene_ensembl.default.feature_page.ensembl_peptide_id&FILTERS=hsapiens_gene_ensembl.default.filters.transcript_biotype.%22protein_coding%22|hsapiens_gene_ensembl.default.filters.ensembl_gene_id.%22ENSG00000064692,ENSG00000069329,ENSG00000080815,ENSG00000100225,ENSG00000105223,ENSG00000106617,ENSG00000112592,ENSG00000114867,ENSG00000115317,ENSG00000116288,ENSG00000116675,ENSG00000130203,ENSG00000137642,ENSG00000137845,ENSG00000138246,ENSG00000142192,ENSG00000143801,ENSG00000145335,ENSG00000154118,ENSG00000154277,ENSG00000158828,ENSG00000159082,ENSG00000159363,ENSG00000171867,ENSG00000177628,ENSG00000184381,ENSG00000185345,ENSG00000186868,ENSG00000188906,ENSG00000197386,ENSG00000198763,ENSG00000198888,ENSG00000204120%22&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+		<li><a href="http://www.ensembl.org/biomart/martview/470f57cf3ae9d382b1aeece14f2d9aa8?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.feature_page.ensembl_peptide_id|hsapiens_gene_ensembl.default.feature_page.uniprot_swissprot&FILTERS=hsapiens_gene_ensembl.default.filters.with_uniprotswissprot.only|hsapiens_gene_ensembl.default.filters.ensembl_gene_id.%22ENSG00000137845,ENSG00000159082,ENSG00000115317,ENSG00000185345,ENSG00000184381,ENSG00000116675,ENSG00000138246,ENSG00000130203,ENSG00000198888,ENSG00000198763,ENSG00000177628,ENSG00000171867,ENSG00000142192,ENSG00000154277,ENSG00000186868,ENSG00000112592,ENSG00000145335,ENSG00000197386,ENSG00000080815,ENSG00000143801,ENSG00000114867,ENSG00000188906,ENSG00000204120,ENSG00000105223,ENSG00000154118,ENSG00000137642,ENSG00000069329,ENSG00000116288,ENSG00000158828,ENSG00000159363,ENSG00000106617,ENSG00000100225,ENSG00000064692%22&VISIBLEPANEL=resultspanel">Uniprot-Ensembl Protein Links</a></li>
+		<li><a href="http://www.ensembl.org/biomart/martview/1c6cd81977925e28dc2613384555da74?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.feature_page.ensembl_gene_id|hsapiens_gene_ensembl.default.feature_page.external_gene_name&FILTERS=hsapiens_gene_ensembl.default.filters.uniprot_swissprot.%22P42858,P04156,P49768,P05067,Q92673,P02649,P20226,Q8WXH2,O14672,Q8IV08,P49810,O60260,P04062,Q9BXM7,Q9Y6H5,Q6Y7W6,O75061,O43426,O43464,O75165,P09936,O60733,Q96QK1,Q04637,Q9NQ11,P10636,Q5S007,Q99497,Q9Y3I1,Q9UGJ0,P03886,P03891,P37840%22|hsapiens_gene_ensembl.default.filters.chromosome_name.%221,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,MT,X,Y%22&VISIBLEPANEL=resultspanel">Gene Names</a></li>
 	    </ul>
 	    <li>Disease [OMIM]</li>
 	    <ul>
-		<li><a href="http://www.omim.org/search/?index=entry&start=1&search=alzheimer+parkinson+huntington&sort=score+desc%2C+prefix_sort+desc&limit=10&field=title&prefix=%23">Alzheimer, Parkinson, Huntington diseases</a></li>
+		<li><a href="http://www.omim.org/search/?index=entry&start=1&search=alzheimer+parkinson+huntington&sort=score+desc%2C+prefix_sort+desc&limit=10&field=title&prefix=%23">Alzheimer, Parkinson and Huntington diseases</a></li>
 	    </ul>
 	    <li>Drug-Target Interactions [DrugBank]</li>
+	    <ul>
+		<li><a href="https://www.drugbank.ca/">DrugBank</a></li>
+	    </ul>
 	    <li>Protein-Protein Interactions [IntAct]</li>
 	    <ul>
-		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:alzheimers%22">Alzheimer Disease</a></li>
-		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:parkinsons%22">Parkinson Disease</a></li>
+		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:alzheimers%22">Alzheimer's Disease</a></li>
+		<li><a href="http://www.ebi.ac.uk/intact/query/annot:%22dataset:parkinsons%22">Parkinson's Disease</a></li>
 	    </ul>	    
 	    <li>Protein-Publication [UniprotKB]</li>
 	    <ul>
-		<li><a href="http://www.uniprot.org/uniprot/?query=yourlist:M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P&sort=yourlist:M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P&columns=yourlist(M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P),isomap(M20170216F725F458AC8690F874DD868E4ED79B88A35AA8P),id,entry%20name,reviewed,protein%20names,genes,organism,length">UniprotKB</a></li>
+		<li><a href="http://www.uniprot.org/uploadlists/">UniprotKB</a></li>
+		<li>Downloaded proteins involved in disease using MIM identifiers.</li>
 	    </ul>
 	    <li>Gene Ontology</li>
 	    <ul>
-		<li><a href="http://geneontology.org/ontology/go-basic.obo">GO</a></li>
+		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/go-basic.obo">GO</a></li>
 	    </ul>
 	    <li>Gene-SNP-Phenotype [NHGRI-EBI]</li>
 	    <ul>
-		<li>Data was downloaded from <a href="https://www.ebi.ac.uk/gwas/api/search/downloads/alternative">NHGRI-EBI GWAS Catalog</a></li>
+		<li>Data was downloaded from <a href="ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/2017/02/21/gwas-catalog-associations_ontology-annotated.tsv">NHGRI-EBI GWAS Catalog</a></li>
+	    </ul>
+	    <li>Homology [Ensembl]</li>
+	    <ul>
+		<li><a href="http://www.ensembl.org/biomart/martview/b3182b879f18010151aa0babf68ca92f?VIRTUALSCHEMANAME=default&ATTRIBUTES=hsapiens_gene_ensembl.default.homologs.ensembl_peptide_id|hsapiens_gene_ensembl.default.homologs.mmusculus_homolog_ensembl_peptide|hsapiens_gene_ensembl.default.homologs.mmusculus_homolog_orthology_type|hsapiens_gene_ensembl.default.homologs.mmusculus_homolog_perc_id|hsapiens_gene_ensembl.default.homologs.mmusculus_homolog_perc_id_r1&FILTERS=hsapiens_gene_ensembl.default.filters.transcript_biotype.%22protein_coding%22|hsapiens_gene_ensembl.default.filters.ensembl_gene_id.%22ENSG00000137845,ENSG00000159082,ENSG00000115317,ENSG00000185345,ENSG00000184381,ENSG00000116675,ENSG00000138246,ENSG00000130203,ENSG00000198888,ENSG00000198763,ENSG00000177628,ENSG00000171867,ENSG00000142192,ENSG00000154277,ENSG00000186868,ENSG00000112592,ENSG00000145335,ENSG00000197386,ENSG00000080815,ENSG00000143801,ENSG00000114867,ENSG00000188906,ENSG00000204120,ENSG00000105223,ENSG00000154118,ENSG00000137642,ENSG00000069329,ENSG00000116288,ENSG00000158828,ENSG00000159363,ENSG00000106617,ENSG00000100225,ENSG00000064692%22&VISIBLEPANEL=resultspanel">BioMart</a> Homologs Human-Mouse</li>
+		<li><a href="http://www.ensembl.org/biomart/martview/1054dc59a3b949c5cf885954348b4244?VIRTUALSCHEMANAME=default&ATTRIBUTES=mmusculus_gene_ensembl.default.feature_page.ensembl_peptide_id|mmusculus_gene_ensembl.default.feature_page.uniprot_sptrembl|mmusculus_gene_ensembl.default.feature_page.uniprot_swissprot&FILTERS=mmusculus_gene_ensembl.default.filters.ensembl_peptide_id.%22ENSMUSP00000005406,ENSMUSP00000026357,ENSMUSP00000027475,ENSMUSP00000030536,ENSMUSP00000030784,ENSMUSP00000031131,ENSMUSP00000034131,ENSMUSP00000035170,ENSMUSP00000039648,ENSMUSP00000052584,ENSMUSP00000058613,ENSMUSP00000063839,ENSMUSP00000078945,ENSMUSP00000080991,ENSMUSP00000080992,ENSMUSP00000087073,ENSMUSP00000088833,ENSMUSP00000097919,ENSMUSP00000098786,ENSMUSP00000101299,ENSMUSP00000102546,ENSMUSP00000106735,ENSMUSP00000109907,ENSMUSP00000111120,ENSMUSP00000112942,ENSMUSP00000113308,ENSMUSP00000120840,ENSMUSP00000124317,ENSMUSP00000130660,ENSMUSP00000133302,ENSMUSP00000134672,ENSMUSP00000137367,ENSMUSP00000140587%22&VISIBLEPANEL=resultspanel">BioMart Mouse-Uniprot</a></li>
+		<li>Downloaded Mouse Homolog proteins from <a href="http://www.uniprot.org/uploadlists/">UniprotKB</a></li>
 	    </ul>
 </ul>
 
