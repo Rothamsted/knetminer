@@ -3,7 +3,7 @@
 	var cy= $('#cy').cytoscape('get');
 	var totalNodes= cy.nodes().size();
 	var nodes_shown= cy.$(':visible').nodes().size();
-	var cyLegend= "Network: Concepts: "+ nodes_shown +" ("+ totalNodes +")";
+	var cyLegend= "Concepts: "+ nodes_shown +" ("+ totalNodes +")";
 
 	var totalEdges= cy.edges().size();
 	var edges_shown= cy.$(':visible').edges().size();
