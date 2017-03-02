@@ -31,7 +31,7 @@
             cell1.innerHTML= "Concept Type:";
             cell2.innerHTML= selectedElement.data('conceptType'); // concept Type
             // Concept 'value'.
-    /*        row= table.insertRow(1);
+        /*    row= table.insertRow(1);
             cell1= row.insertCell(0);
             cell2= row.insertCell(1);
             cell1.innerHTML= "Value:";
@@ -166,6 +166,7 @@
                         for(var u=0; u < url_mappings.html_acc.length; u++) {
                             if(url_mappings.html_acc[u].cv === accessionID) {
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
+                               coAccUrl= coAccUrl.replace(/\s/g,''); // remove spaces, if any
                                // open attribute url in new blank tab.
 //                               attrValue= "<a href=\""+ coAccUrl +"\" target=\"_blank\">"+ co_acc +"</a>";
                                co_acc= "<a href=\""+ coAccUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ co_acc +"</a>";
@@ -268,20 +269,18 @@
  });*/
  
  function closeItemInfoPane() {
-  //   console.log("Close ItemInfo pane...");
-     $("#itemInfo").hide();
+  $("#itemInfo").hide();
  }
 
   // Remove shadow effect from nodes, if it exists.
   function removeNodeBlur(ele) {
     var thisElement= ele;
     try {
-      if(thisElement.hasClass('BlurNode')) {
-         // Remove any shadow created around the node.
-         thisElement.removeClass('BlurNode');
-        }
 /*      thisElement.neighborhood().nodes().style({'opacity': '1'});
       thisElement.neighborhood().edges().style({'opacity': '1'});*/
+      if(thisElement.hasClass('BlurNode')) { // Remove any shadow created around the node.
+         thisElement.removeClass('BlurNode');
+        }
      }
     catch(err) {
           console.log("Error occurred while removing Shadow from concepts with connected, hidden elements. \n"+"Error Details: "+ err.stack);
@@ -294,11 +293,15 @@
     // Remove css style changes occurring from a 'tapdragover' ('mouseover') event.
 //    resetRelationCSS(selectedNode);
 
-    // Show concept neighborhood.
 //    selectedNode.neighborhood().nodes().show();
 //    selectedNode.neighborhood().edges().show();
-    selectedNode.connectedEdges().connectedNodes().show();
-    selectedNode.connectedEdges().show();
+    // Show concept neighborhood.
+//    selectedNode.connectedEdges().connectedNodes().show(); // DISABLED 27/02/17
+    selectedNode.connectedEdges().connectedNodes().removeClass('HideEle');
+    selectedNode.connectedEdges().connectedNodes().addClass('ShowEle');
+//    selectedNode.connectedEdges().show(); // DISABLED 27/02/17
+    selectedNode.connectedEdges().removeClass('HideEle');
+    selectedNode.connectedEdges().addClass('ShowEle');
 
     // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
     removeNodeBlur(selectedNode);
@@ -341,7 +344,7 @@
      cy.nodes().forEach(function(ele) {
       if(ele.selected()) {
          if(new_conceptName.length> 30) { new_conceptName= new_conceptName.substr(0,29)+'...'; }
-    //     console.log("Selected concept: "+ ele.data('displayValue')/*ele.data('value')*/ +"; \t Use new preferred name (for concept Label): "+ new_conceptName);
+   //      console.log("Selected concept: "+ ele.data('displayValue')/*ele.data('value')*/ +"; \t Use new preferred Name (for Label): "+ new_conceptName);
          /*ele.data('Value', new_conceptName);*/
          ele.data('displayValue', new_conceptName);
          if(ele.style('text-opacity') === '0') {

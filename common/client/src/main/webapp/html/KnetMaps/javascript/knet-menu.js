@@ -1,11 +1,11 @@
 function onHover(thisBtn) {
-	 var img= $(thisBtn).attr('src');
+    var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'_hover.png');
     $(thisBtn).attr('src', img.replace('.png','_hover.png'));
  }
 
  function offHover(thisBtn) {
-	 var img= $(thisBtn).attr('src');
+     var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'.png');
     $(thisBtn).attr('src', img.replace('_hover.png','.png'));
  }
@@ -16,7 +16,7 @@ function popupItemInfo() {
 }
    // Go to Help docs.
   function openKnetHelpPage() {
-   var helpURL = 'https://github.com/KeywanHP/QTLNetMiner/wiki/New-QTLNetMiner-Network-Viewer';
+   var helpURL = 'https://github.com/Rothamsted/knetmaps.js/wiki/KnetMaps.js';
    window.open(helpURL, '_blank');
   }
 
@@ -76,6 +76,9 @@ function popupItemInfo() {
    // Display in a new blank browser tab.
 //   window.open().document.write(exportJson); // for text data
    window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
+
+   /* TO DO: use FileSaverJS to open directly open file downloader & write to local file. */
+   //
   }
   
   // Export the graph as a .png image and allow users to save it.
@@ -89,25 +92,25 @@ function popupItemInfo() {
   }
 
   // Remove hidden effect from nodes/ edges, if hidden.
-  function removeHiddenEffect(ele) {
+/*  function removeHiddenEffect(ele) {
     var thisElement= ele;
     try {
-      if(thisElement.hasClass('HideIt')) {
-         thisElement.removeClass('HideIt');
+      if(thisElement.hasClass('HideEle')) {
+         thisElement.removeClass('HideEle');
         }
      }
     catch(err) {
           console.log("Error occurred while unhiding concepts/ relations. \n"+"Error Details: "+ err.stack);
          }
-  }
+  }*/
 
   // Show all concepts & relations.
   function showAll() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 //   cy.elements('node').show(); // show all nodes using eles.show().
 //   cy.elements('edge').show(); // show all edges using eles.show().
-   cy.elements().removeClass('HideThis');
-   cy.elements().addClass('ShowItAll');
+   cy.elements().removeClass('HideEle');
+   cy.elements().addClass('ShowEle');
 
    // Relayout the graph.
    rerunLayout();
@@ -118,7 +121,7 @@ function popupItemInfo() {
       });
 
    // Refresh network legend.
-   updateCyLegend();
+   updateKnetStats();
   }
   
   // Re-run the entire graph's layout.
@@ -219,27 +222,35 @@ function popupItemInfo() {
   // Show node labels.
   function displayConceptLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   cy.nodes().style({'text-opacity': '1'});
-   cy.edges().style({'text-opacity': '0'});
+//   cy.nodes().style({'text-opacity': '1'});
+//   cy.edges().style({'text-opacity': '0'});
+   cy.nodes().removeClass("LabelOff").addClass("LabelOn");
+   cy.edges().removeClass("LabelOn").addClass("LabelOff");
   }
 
   // Show edge labels.
   function displayRelationLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   cy.nodes().style({'text-opacity': '0'});
-   cy.edges().style({'text-opacity': '1'});
+//   cy.nodes().style({'text-opacity': '0'});
+//   cy.edges().style({'text-opacity': '1'});
+   cy.nodes().removeClass("LabelOn").addClass("LabelOff");
+   cy.edges().removeClass("LabelOff").addClass("LabelOn");
   }
 
   // Show node & edge labels.
   function displayConRelLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   cy.nodes().style({'text-opacity': '1'});
-   cy.edges().style({'text-opacity': '1'});
+//   cy.nodes().style({'text-opacity': '1'});
+//   cy.edges().style({'text-opacity': '1'});
+   cy.nodes().removeClass("LabelOff").addClass("LabelOn");
+   cy.edges().removeClass("LabelOff").addClass("LabelOn");
   }
 
   // Show node labels.
   function hideConRelLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   cy.nodes().style({'text-opacity': '0'});
-   cy.edges().style({'text-opacity': '0'});
+//   cy.nodes().style({'text-opacity': '0'});
+//   cy.edges().style({'text-opacity': '0'});
+   cy.nodes().removeClass("LabelOn").addClass("LabelOff");
+   cy.edges().removeClass("LabelOn").addClass("LabelOff");
   }

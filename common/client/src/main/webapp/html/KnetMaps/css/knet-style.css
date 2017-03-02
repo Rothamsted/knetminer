@@ -1,14 +1,13 @@
 /* 
-    Created on : 03-Oct-2016
+    Last Modified on : 27-Mar-2017
     Author     : Ajit Singh
-    Description:
-        CSS for the Network Viewer, in tab.
+    Description: CSS for KnetMaps
 */
 
 #knet-maps {
-    width: 90% ;/*98%;*/
+    /*width: 90%;*/
     height: 90%;
-	padding-left: 10px;
+    margin-left: 20px;
     /*border: 1px dashed grey;*/
 }
 
@@ -18,11 +17,11 @@
  /*#knet-maps*/
  .full_screen {
   position: fixed; 
-  width: 90vw; /*90%;*/ /*900px;*/
+  width: 90%; /*90vw;*/ /*900px;*/
   height: 90%; /*550px;*/
   top: 5%; 
   left: 5vw; 
-  margin-left: 0px;
+  margin-left: 0px; /*20px;*/
   margin-top: 0px;
   border-style : solid;
   border-color : gray;
@@ -52,29 +51,26 @@
   vertical-align:top; width: 140px;
  }
  
- /* The Center pane */
- .ui-layout-center {
-  overflow-y: scroll;
- }
-      
       /* CytoscapeJS "core" container */
       #cy {
-        height: 85%; /*98%;*/ /*750px;*/
-        width: /*98*/95%; /*450px;*/
+        height: 80%/*85%*/; /*750px;*/
+        width: 95%/*98*/; /*450px;*/
         position: relative;
         background: white;
         border: 1px solid black;
-		/*overflow: hidden;
+        /*overflow: hidden;
         margin: auto;*/
         /*margin-top: 10px;*/
+        margin-bottom: 5px;
+        margin-left: 5px;
        }
 
-   #countsLegend {
+   #statsLegend {
      height: 20px;
      /*overflow-y: auto;*/
-     font-size: 12px;
-	 font-weight: bold;
-	 color: darkBlue;
+     font-size: 16px;
+     font-weight: bold;
+     color: #2A2A2A;
      /*margin-bottom: 25px;
 	 position: absolute;*/
    }
@@ -82,11 +78,11 @@
       #itemInfo {
        /*display:none;*/
 /*       position: fixed; background-color: white; top:100px; right:0; z-index:1; width: 350px; height:550px;*/
-       position: absolute; right: 0; z-index: 5; width: 30%; height:/*88*/90%; background-color: white; 
-       border: 2px /*dashed black*/solid #444444;
-       margin-top: /*1*/2px;
-       margin-bottom: /*1*/2px;
-       resize: horizontal; max-width: /*90*/60%;
+       position: absolute; right: 0; z-index: 5; width: 30%; height:/*85*/80%; background-color: white; 
+       border: 2px solid #444444;
+       /*margin-top: 2px;
+       margin-bottom: 2px;*/
+       resize: horizontal; max-width: 60%;
       }
 
       #itemInfo_Table {
@@ -106,7 +102,7 @@
 	    max-height: 100%; /*95%;*/ /*600px;*/ /*400px;*/    /* must be greater than tbody*/
 	    overflow:auto;
 	    margin:0 auto;
-        border: 1px;
+            border: 1px;
        }
 
       div.infoDiv table {
@@ -191,4 +187,16 @@
        font-size: 12px;
       }
 
+/* Interactive Legend */
+#knetLegend {
+    border: 1px dotted gray;
+    width: 95%; /*margin: auto;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    background: white;
+    font-size: 16px;
+    color: #2A2A2A;
+}
       

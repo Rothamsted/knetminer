@@ -1,4 +1,4 @@
-# Installation Guide
+# Technical Guide
 
 **KnetMaps** is a web application that uses cytoscapeJS, jQuery and other javascript libraries to visualize network graphs and allow users to interact with them. It accepts a JSON dataset from the user as input and visualizes it within a container on your web page.
 
@@ -14,19 +14,19 @@
 A simple way to have **KnetMaps** on your web application (hosted via Apache, Tomcat, etc) is shown in `index.html`, i.e., using the code snippet below. This code in the `<body>` of the `index.html` page will create the KnetMaps menubar, the cytoscapeJS core container, ItemInfo panel and a counts legend:
 ```
 <!-- KnetMaps -->
-   <div id="knet-maps">
-	<div id="itemInfo" class="infoDiv" style="display:none;"><!-- Item Info pane -->
-          <table id="itemInfo_Table" class="infoTable" cellspacing=1>
-	        <thead><th>Item Info:</th><th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button>
-		</th></thead><tbody></tbody></table>
-         </div>
-         <!-- KnetMaps Menubar -->
-         <div id="knetmaps-menu"></div>
-        <!-- The core cytoscapeJS container -->
-        <div id="cy"></div><br/>
-	<div id="countsLegend"><span>KnetMaps</span></div><!-- legend -->
-        <div id="infoDialog"></div><!-- popup dialog -->
-  </div>
+    <div id="knet-maps">
+	    <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
+		<div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info pane -->
+		    <table id="itemInfo_Table" class="infoTable" cellspacing=1><thead><th>Info box:</th>
+			    <th><input type="image" id="btnCloseItemInfoPane" src="image/close-icon.png" onClick="closeItemInfoPane();"></th>
+	    </thead><tbody></tbody></table></div>
+		<div id="cy"></div> <!-- cytoscapeJS container -->
+		<!-- interactive Legend to show all concepts in current network -->
+		<div id="knetLegend" title="Hover over icons to see corresponding Concept type & click an icon to show all such Concepts connected to visible Concepts in this network"><span>Concepts:</span></div>
+		<!-- dynamically updated Stats to show number of shown/ hidden concepts -->
+		<div id="statsLegend" style="width: 350px; margin: auto;"><span>KnetMaps</span></div>
+		<div id="infoDialog"></div> <!-- popup dialog -->
+    </div>
 ```
 
 In the example page: `index.html`, KnetMaps is launched by default when the page loads using a dataset selected from the dropdown menu and is later invoked whenever users select a new dataset to visualize from the dropdown menu (invoked via the `onchange` event of the dropdown menu). The `launchNetwork(datasetName)` method in `launchNetwork.js` populates the menubar, loads the JSON dataset object and initializes the cytoscapeJS container.
@@ -271,3 +271,86 @@ Examples of **network stylesheet** customization to define attributes for nodes 
 ```
 
 ### Layouts
+**KnetMaps** uses a variety of force-directed layout algirthms to visualize the networks. The current release allows users to choose between the following layouts:
+- Cose (default)
+- ngraph-Force
+- Circle
+- Concentric
+- Cose-Bilkent
+
+![KnetMaps_menu](KnetMaps_menu.png)
+
+The layouts are configured in `javascript/knet-layouts-defaultParams.js` and implemented in `javascript/knet-layouts.js`. The configuration can be modified by altering the various parameters, which varies based on the complexity of the layout. For example, the `circle` layout uses relatively simple configuration as shown below:
+```
+var circleNetworkLayout= {
+      name: 'circle',
+      padding: 10/*30*/, avoidOverlap: true, boundingBox: undefined, handleDisconnected: true,
+      animate: animate_layout, fit: true, counterclockwise: false,
+      radius: 3/*undefined*/,
+//      startAngle: 3/2 * Math.PI,
+      rStepSize: 2
+   };
+```
+
+While `Cose` layout uses a wider range of complex parameters which can be set as detailed here:
+```
+ var coseNetworkLayout= {
+  name: 'cose',
+  // Called on `layoutready`
+  ready: function(){ },
+  // Called on `layoutstop`
+  stop: function(){ },
+
+  // Whether to animate while running the layout
+  animate: animate_layout/*true*/,
+  // The layout animates only after this many milliseconds
+  // (prevents flashing on fast runs)
+  animationThreshold: 250,
+  // Number of iterations between consecutive screen positions update (0 -> only updated on the end)
+  refresh: 20,
+
+  // Whether to fit the network view after when done
+  fit: true,
+  // Padding on fit
+  padding: 30,
+
+  // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+  boundingBox: undefined,
+
+  // Randomize the initial positions of the nodes (true) or use existing positions (false)
+  randomize: /*false*/true,
+
+  // Extra spacing between components in non-compound graphs
+  componentSpacing: 100,
+
+  // Node repulsion (non overlapping) multiplier
+  nodeRepulsion: 400000,
+  // Node repulsion (overlapping) multiplier
+  nodeOverlap: 10,
+
+  // Ideal edge (non nested) length
+  idealEdgeLength: 10,
+  // Divisor to compute edge forces
+  edgeElasticity: 100,
+  // Nesting factor (multiplier) to compute ideal edge length for nested edges
+  nestingFactor: 5,
+
+  // Gravity force (constant)
+  gravity: 80,
+
+  // Maximum number of iterations to perform
+  numIter: 1000,
+  // For enabling tiling, to prevent stacked nodes bug
+  //tile: true,
+  
+  // Initial temperature (maximum node displacement)
+  initialTemp: 200,
+  // Cooling factor (how the temperature is reduced between consecutive iterations
+  coolingFactor: 0.95,
+  // Lower temperature threshold (below this point the layout will end)
+  minTemp: 1.0,
+
+  // Whether to use threading to speed up the layout
+  useMultitasking: true
+ };
+```

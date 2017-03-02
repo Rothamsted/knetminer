@@ -1,12 +1,12 @@
 
 // initialize and generate the network
 function generateNetworkGraph(json_File) {
-   console.log("Dataset file path: "+ json_File);
+   //console.log("Dataset file path: "+ json_File);
 
     // Include this file's contents on the page at runtime using jQuery and a callback function.
 /*   $.getScript(json_File, function() {*/
    jQuery.getScript(json_File, function() {
-     console.log(json_File +" file included...");
+//     console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
      initializeNetworkView();
 
@@ -15,9 +15,11 @@ function generateNetworkGraph(json_File) {
 
      // Set the default layout.
 //     setDefaultLayout();
+     // update network stats <div>.
+     updateKnetStats();
 
-     // update "cy" legend with some stats.
-     updateCyLegend();
+     // dynamically populate interactive concept legend.
+     populateConceptLegend();
    });
   }
 
@@ -28,9 +30,7 @@ function initializeNetworkView() {
 //   var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
 
    // Define the stylesheet to be used for nodes & edges in the cytoscape.js container.
-   var networkStylesheet= cytoscape.stylesheet()
-      .selector('node')
-        .css({
+   var networkStylesheet= cytoscape.stylesheet().selector('node').css({
           'content': 'data(displayValue)',
                      /*function(ele) {
                       var label= '';
@@ -38,9 +38,7 @@ function initializeNetworkView() {
                          var txtLabel= '<html>'+ ele.data('value') +'</html>';
                          label= jQuery(txtLabel).text();
                         }
-                      else {
-                         label= ele.data('value');
-                        }
+                      else { label= ele.data('value'); }
                       // Trim the label's length.
                       if(label.length> 30) { label= label.substr(0,29)+'...'; }
                       return label;
@@ -49,20 +47,14 @@ function initializeNetworkView() {
           'text-background-color': 'data(conceptTextBGcolor)',//'black',
                    /*function(ele) { // text background color
                     var labelColor= '';
-                    if(ele.data('value').indexOf('<span') > -1) {
-                       labelColor= 'gold';
-                      }
-                    else {
-                       labelColor= 'black';
-                      }
+                    if(ele.data('value').indexOf('<span') > -1) { labelColor= 'gold'; }
+                    else { labelColor= 'black'; }
                     return labelColor;
                    },*/
           'text-background-opacity': 'data(conceptTextBGopacity)',//'0', // default: '0' (disabled).
                    /*function(ele) { // text background opacity
                     var textBackgroundOpacity= '0';
-                    if(ele.data('value').indexOf('<span') > -1) {
-                       textBackgroundOpacity= '1';
-                      }
+                    if(ele.data('value').indexOf('<span') > -1) { textBackgroundOpacity= '1'; }
                     return textBackgroundOpacity;
                    },*/
           'text-wrap': 'wrap', // for manual and/or autowrapping the label text.
@@ -116,8 +108,7 @@ function initializeNetworkView() {
           'display': 'data(conceptDisplay)', // display: 'element' (show) or 'none' (hide).
           'text-opacity': '0' // to make the label invisible by default.
          })
-      .selector('edge')
-        .css({
+      .selector('edge').css({
           'content': 'data(label)', // label for edges (arrows).
           'font-size': '16px',
 //          'min-zoomed-font-size': '8px',
@@ -133,40 +124,72 @@ function initializeNetworkView() {
           'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
           'text-opacity': '0' // to make the label invisible by default.
         })
-      .selector('.highlighted')
-        .css({
+      .selector('.highlighted').css({
           'background-color': '#61bffc',
           'line-color': '#61bffc',
           'target-arrow-color': '#61bffc',
           'transition-property': 'background-color, line-color, target-arrow-color',
           'transition-duration': '0.5s'
         })
-      .selector(':selected')
-        .css({ // settings for highlighting nodes in case of single click or Shift+click multi-select event.
+      .selector(':selected').css({ // settings for highlighting nodes in case of single click or Shift+click multi-select event.
           'border-width': '4px',
           'border-color': '#CCCC33' // '#333'
         })
-      .selector('.BlurNode')
-        .css({ // settings for using shadow effect on nodes when they have hidden, connected nodes.
+      .selector('.BlurNode').css({ // settings for using shadow effect on nodes when they have hidden, connected nodes.
               'shadow-blur': '25', // disable for larger network graphs, use x & y offset(s) instead.
               'shadow-color': 'black', // 'data(conceptColor)',
               'shadow-opacity': '0.9'
-        }).selector('.HideThis')
-        .css({ // settings to hide node or edge
+        })
+      .selector('.HideEle').css({ // settings to hide node/ edge
               'display': 'none'
-        }).selector('.ShowItAll')
-        .css({ // settings to show all nodes and edges
+        })
+      .selector('.ShowEle').css({ // settings to show node/ edge
               'display': 'element'
+        })
+      .selector('.LabelOn').css({ // settings to show Label on node/ edge
+              'text-opacity': '1'
+        })
+      .selector('.LabelOff').css({ // settings to show Label on node/ edge
+              'text-opacity': '0'
         });
 
 // On startup
 $(function() { // on dom ready
-
   // load the cytoscapeJS network
   load_reload_Network(networkJSON, networkStylesheet/*, true*/);
-
+  
+  append_visibility_and_label_classes(); // to all network nodes/ edges.
 }); // on dom ready
 }
+
+ function append_visibility_and_label_classes() {
+  var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+
+    cy.nodes().forEach(function( conc ) { // for concepts
+       // Add relevant Concept visibility class
+       if(conc.data('conceptDisplay') === 'element') {
+          conc.addClass('ShowEle');
+         }
+       else {
+         conc.addClass('HideEle');
+        }
+       // Add relevant label visibility class
+       if(conc.style('text-opacity') === '0') { conc.addClass('LabelOff'); }
+       else { conc.addClass('LabelOn'); }
+    });
+    cy.edges().forEach(function( rel ) { // for relations
+       // Add relevant Relation visibility class
+       if(rel.data('relationDisplay') === 'element') {
+          rel.addClass('ShowEle');
+         }
+       else {
+         rel.addClass('HideEle');
+        }
+       // Add relevant label visibility class
+       if(rel.style('text-opacity') === '0') { rel.addClass('LabelOff'); }
+       else { rel.addClass('LabelOn'); }
+    });
+ }
 
   // Show concept neighbourhood.
 /*  function showNeighbourhood() {
