@@ -130,10 +130,9 @@
                                 </thead><tbody></tbody></table>
                         </div>
                         <!-- The core cytoscapeJS container -->
-                        <div id="cy"></div><br/>
+                        <div id="cy"></div>
                         <!-- interactive, dynamic Legend to show all concept of a particular type -->
                         <div id="knetLegend" title="Hover over icons to see corresponding Concept type & click an icon to show all such Concepts connected to visible Concepts in this network"><span>Concepts:</span></div>
-                        <br/>
                         <!-- dynamically updated Legend to show number of shown/ hidden concepts -->
                         <div id="statsLegend" style="width: 350px; margin: auto;"><span>KnetMaps</span></div>
                         <div id="infoDialog"></div> <!-- popup dialog -->
