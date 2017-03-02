@@ -7,7 +7,7 @@
 #knet-maps {
     /*width: 90%;*/
     height: 90%;
-    padding-left: 10px;
+    margin-left: 20px;
     /*border: 1px dashed grey;*/
 }
 
@@ -21,7 +21,7 @@
   height: 90%; /*550px;*/
   top: 5%; 
   left: 5vw; 
-  margin-left: 0px;
+  margin-left: 0px; /*20px;*/
   margin-top: 0px;
   border-style : solid;
   border-color : gray;
@@ -51,14 +51,9 @@
   vertical-align:top; width: 140px;
  }
  
- /* The Center pane */
- .ui-layout-center {
-  overflow-y: scroll;
- }
-      
       /* CytoscapeJS "core" container */
       #cy {
-        height: 80%/*85%;*/; /*750px;*/
+        height: 80%/*85%*/; /*750px;*/
         width: 95%/*98*/; /*450px;*/
         position: relative;
         background: white;
@@ -66,16 +61,17 @@
         /*overflow: hidden;
         margin: auto;*/
         /*margin-top: 10px;*/
+        margin-bottom: 5px;
        }
 
    #statsLegend {
      height: 20px;
      /*overflow-y: auto;*/
      font-size: 14px;
-     font-weight: bold;
-     color: darkBlue;
+	 font-weight: bold;
+	 color: darkBlue;
      /*margin-bottom: 25px;
-     position: absolute;*/
+	 position: absolute;*/
    }
 
       #itemInfo {
@@ -105,16 +101,16 @@
 	    max-height: 100%; /*95%;*/ /*600px;*/ /*400px;*/    /* must be greater than tbody*/
 	    overflow:auto;
 	    margin:0 auto;
-        border: 1px;
+            border: 1px;
        }
 
       div.infoDiv table {
         width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
-        border:none;
-	border-spacing: 0px;
-	background-color: transparent;
-	border: 1px solid #C2C2C2;
-	border-collapse: collapse;
+	    border:none;
+	    border-spacing: 0px;
+	    background-color: transparent;
+	    border: 1px solid #C2C2C2;
+	    border-collapse: collapse;
         /* Table not visible, by default. */
         display: none;
       }
@@ -171,7 +167,7 @@
           background: #277da7; /*#b9cd6d;*/
           border: 1px solid black;
           color: #FFFFFF;
-          font-weight: bold;
+		  font-weight: bold;
          }
 
        .ui-widget-content {
@@ -193,9 +189,10 @@
 /* Interactive Legend */
 #knetLegend {
     border: 1px dotted gray;
-    width: 90%; margin: auto;
+    width: 95%; /*margin: auto;*/
     padding-top: 5px;
     padding-bottom: 5px;
-	background: white;
+    margin-bottom: 5px;
+    background: white;
 }
       
