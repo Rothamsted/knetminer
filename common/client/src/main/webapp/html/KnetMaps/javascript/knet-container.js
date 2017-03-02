@@ -212,7 +212,7 @@ cy.elements().qtip({
              if(this.isNode()) {
                 showLinks(this);
                 // Refresh network legend.
-                updateCyLegend();
+                updateKnetStats();
                }
            }
         },
@@ -224,7 +224,7 @@ cy.elements().qtip({
              this.removeClass('ShowEle');
              this.addClass('HideEle');
              // Refresh network legend.
-             updateCyLegend();
+             updateKnetStats();
             }
         },
 
