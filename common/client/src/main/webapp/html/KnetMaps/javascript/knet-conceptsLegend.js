@@ -22,7 +22,7 @@
       for(var con in conceptsHashmap) { console.log(con +": "+ conceptsHashmap[con]); }*/
 
       // update knetLegend.
-      var knetLegend= '<b><u>Concepts</u> (show connected):</b> ';
+      var knetLegend= '<b>Interactive Legend:</b>&nbsp;&nbsp;&nbsp;';
    //   var cnt= 0;
       // Show concept Type icons (with total count displayed alongside).
       for(var con in conceptsHashmap) {
