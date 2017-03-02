@@ -30,6 +30,10 @@
 10-11	cooc_wi
 10-12	has_target
 10-12	cooc_wi
+10-10	xref
+10-7	xref
+10-10	ortho	5
+10-7	ortho	5
 
 1-13	has_variation
 13-14	associated_with
