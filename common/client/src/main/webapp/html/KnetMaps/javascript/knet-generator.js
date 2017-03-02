@@ -6,7 +6,7 @@ function generateNetworkGraph(json_File) {
     // Include this file's contents on the page at runtime using jQuery and a callback function.
 /*   $.getScript(json_File, function() {*/
    jQuery.getScript(json_File, function() {
-     console.log(json_File +" file included...");
+//     console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
      initializeNetworkView();
 
