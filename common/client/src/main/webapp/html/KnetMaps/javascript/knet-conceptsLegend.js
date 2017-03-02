@@ -26,7 +26,7 @@
    //   var cnt= 0;
       // Show concept Type icons (with total count displayed alongside).
       for(var con in conceptsHashmap) {
-          knetLegend= knetLegend +'<input type="image" id="'+ con +/*'" class="knetLegend_'+ con +*/'" title="Show All '+ con +'(s)" src="html/knetmaps_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ conceptsHashmap[con] +'&nbsp;&nbsp;&nbsp;';
+          knetLegend= knetLegend +'<input type="image" id="'+ con +/*'" class="knetLegend_'+ con +*/'" title="Show All '+ con +'(s)" src="html/KnetMaps/image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ conceptsHashmap[con] +'&nbsp;&nbsp;&nbsp;';
         /*  cnt= cnt+1;
           if(cnt%10===0) { knetLegend= knetLegend +'<br/>'; }*/
          }
