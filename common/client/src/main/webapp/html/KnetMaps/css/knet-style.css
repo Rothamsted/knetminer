@@ -1,5 +1,5 @@
 /* 
-    Last Modified on : 27-Feb-2017
+    Last Modified on : 27-Mar-2017
     Author     : Ajit Singh
     Description: CSS for KnetMaps
 */
@@ -62,14 +62,15 @@
         margin: auto;*/
         /*margin-top: 10px;*/
         margin-bottom: 5px;
+        margin-left: 5px;
        }
 
    #statsLegend {
      height: 20px;
      /*overflow-y: auto;*/
-     font-size: 14px;
-	 font-weight: bold;
-	 color: darkBlue;
+     font-size: 16px;
+     font-weight: bold;
+     color: #2A2A2A;
      /*margin-bottom: 25px;
 	 position: absolute;*/
    }
@@ -77,11 +78,11 @@
       #itemInfo {
        /*display:none;*/
 /*       position: fixed; background-color: white; top:100px; right:0; z-index:1; width: 350px; height:550px;*/
-       position: absolute; right: 0; z-index: 5; width: 30%; height:/*88*/85%; background-color: white; 
-       border: 2px /*dashed black*/solid #444444;
-       margin-top: /*1*/2px;
-       margin-bottom: /*1*/2px;
-       resize: horizontal; max-width: /*90*/60%;
+       position: absolute; right: 0; z-index: 5; width: 30%; height:/*85*/80%; background-color: white; 
+       border: 2px solid #444444;
+       /*margin-top: 2px;
+       margin-bottom: 2px;*/
+       resize: horizontal; max-width: 60%;
       }
 
       #itemInfo_Table {
@@ -193,6 +194,9 @@
     padding-top: 5px;
     padding-bottom: 5px;
     margin-bottom: 5px;
+    margin-left: 5px;
     background: white;
+    font-size: 16px;
+    color: #2A2A2A;
 }
       
