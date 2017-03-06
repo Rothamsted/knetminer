@@ -695,7 +695,6 @@ function searchKeyword(){
 	var list = $("#list_of_genes").val();
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
-
 	if(list.length > 0){
 		request = request+"&listMode="+listMode;
 	}
@@ -1311,7 +1310,9 @@ function createGenesTable(tableUrl, keyword, rows){
 
     		document.getElementById('resultsTable').innerHTML = table;
 
-    		$("#numGenes").val(rows);
+    		// Reset no. of rows
+            //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
+
     		/*
     		 * click Handler for viewing a network.
     		 */
