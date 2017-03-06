@@ -7,6 +7,7 @@
     var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
 /*    console.log("Display Item Info. for id: "+ selectedElement.id() +", isNode ?= "+ 
             selectedElement.isNode() +", isEdge ?= "+ selectedElement.isEdge());*/
+    var createExpressionEntries= false;
     try {
          var cy= $('#cy').cytoscape('get');
          // Display the Item Info table in its parent div.
@@ -101,7 +102,8 @@
                     for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].attributes.length; k++) {
                         if((metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "size")
                             && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "visible")
-                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "flagged")) {
+                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "flagged")
+                            && (!(metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname.includes("exp_")))) {
                             row= table.insertRow(table.rows.length/* - 1*/); // new row.
                             cell1= row.insertCell(0);
                             cell2= row.insertCell(1);
@@ -150,6 +152,9 @@
                             cell1.innerHTML= attrName;
                             cell2.innerHTML= attrValue;
                            }
+                         if(metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname.includes("exp_")) { // write gene expression data later, if exists
+                            createExpressionEntries= true;
+                           }
                         }
 
                     // Get concept accessions.
@@ -177,6 +182,25 @@
                         cell1.innerHTML= accessionID;
                         cell2.innerHTML= co_acc;
                        }
+                    // Add Gene Expression data, if exists.
+                    if(createExpressionEntries) {
+                       // Create Expression header
+                       row= table.insertRow(table.rows.length); // new row.
+                       cell1= row.insertCell(0);
+                       cell1.innerHTML= "<b>Gene Expression:</b>"; // sub-heading
+                       for(var k=0; k < metadataJSON.ondexmetadata.concepts[j].attributes.length; k++) {
+                           if(metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname.includes("exp_")) {
+                              // Insert Gene Expression Data
+                              row= table.insertRow(table.rows.length/* - 1*/); // new row.
+                              cell1= row.insertCell(0);
+                              cell2= row.insertCell(1);
+                              attrName= metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname;
+                              attrValue= metadataJSON.ondexmetadata.concepts[j].attributes[k].value;
+                              cell1.innerHTML= attrName;
+                              cell2.innerHTML= attrValue;
+                             }
+                          }
+                      }
                    }
                }
            }
