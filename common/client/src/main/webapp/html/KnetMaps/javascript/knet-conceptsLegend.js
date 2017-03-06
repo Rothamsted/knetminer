@@ -22,14 +22,43 @@
       for(var con in conceptsHashmap) { console.log(con +": "+ conceptsHashmap[con]); }*/
 
       // update knetLegend.
-      var knetLegend= '<b>Interactive Legend:</b>&nbsp;&nbsp;&nbsp;';
-   //   var cnt= 0;
+//      var knetLegend= '<b>Interactive Legend:</b>&nbsp;&nbsp;&nbsp;';
+      var knetLegend= '<div class="knetInteractiveLegend"><div class="knetLegend_row">'+'<div class="knetLegend_cell"><b>Interactive Legend:</b></div>';
+    //  var cnt= 0;
       // Show concept Type icons (with total count displayed alongside).
       for(var con in conceptsHashmap) {
-          knetLegend= knetLegend +'<input type="image" id="'+ con +/*'" class="knetLegend_'+ con +*/'" title="Show All '+ con +'(s)" src="html/KnetMaps/image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ conceptsHashmap[con] +'&nbsp;&nbsp;&nbsp;';
+//          knetLegend= knetLegend +'<input type="image" id="'+ con +/*'" class="knetLegend_'+ con +*/'" title="Show All '+ con +'(s)" src="./image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ conceptsHashmap[con] +'&nbsp;&nbsp;&nbsp;';
+          var conText= con;
+		  if(conText === "Biological_Process") {
+			 conText= "BioProc";
+		    }
+		  else if(conText === "Molecular_Function") {
+			      conText= "MolFunc";
+		      }
+		  else if(conText === "Cellular_Component") {
+			      conText= "CellComp";
+		      }
+		  else if(conText === "Trait Ontology") {
+			      conText= "TO";
+		      }
+		  else if(conText === "Trait") {
+			      conText= "GWAS";
+		      }
+		  else if(conText === "Enzyme Classification") {
+			      conText= "EC";
+		      }
+		  else if(conText === "Protein Domain") {
+			      conText= "Domain";
+		      }
+          knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="image" id="'+ con +'" title="Show All '+ con +'(s)" src="html/KnetMaps/image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ 
+		                conceptsHashmap[con] +'<span class="icon_caption">'+ conText +'</span></div>';
         /*  cnt= cnt+1;
-          if(cnt%10===0) { knetLegend= knetLegend +'<br/>'; }*/
+          if(cnt%12===0) { 
+		    // knetLegend= knetLegend +'<br/>';
+			 knetLegend= knetLegend +'</div><div class="knetLegend_row">';
+			}*/
          }
+        knetLegend= knetLegend +'</div></div>';
 	$('#knetLegend').html(knetLegend); // update knetLegend
    }
 

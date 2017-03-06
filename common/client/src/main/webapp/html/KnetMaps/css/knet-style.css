@@ -187,16 +187,35 @@
        font-size: 12px;
       }
 
-/* Interactive Legend */
-#knetLegend {
-    border: 1px dotted gray;
-    width: 95%; /*margin: auto;*/
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    background: white;
-    font-size: 16px;
-    color: #2A2A2A;
-}
-      
+     /* Interactive Legend */
+     #knetLegend {
+      border: 1px dotted gray;
+      width: 95%; /*margin: auto;*/
+    /*  padding-top: 5px;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      margin-left: 5px;*/
+      margin-left: 5px;
+      background: white;
+      font-size: 14px;
+      color: #2A2A2A;
+	  display: table/*table-row*/;
+     }
+
+     .knetLegend_row {
+      display: table-row;
+     }
+
+     .knetLegend_cell {
+      display: table-cell;
+      width: 50px;
+      height: 30px;
+      text-align: center;
+    /*  border: 1px solid blue;*/
+      padding: 5px;
+     }
+
+     .icon_caption {
+      display: block;/*float:left;*/
+	  font-size: 12px;
+     }      
