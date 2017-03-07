@@ -38,6 +38,7 @@
 10-7	ortho	5
 10-17	enc
 17-16	differentially_expressed
+17-13	has_variation
 
 1-13	has_variation
 13-14	associated_with
