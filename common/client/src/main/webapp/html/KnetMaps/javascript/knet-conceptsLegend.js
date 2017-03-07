@@ -8,6 +8,7 @@
              conceptTypes.push(ele.data('conceptType'));
             }
       });
+//      conceptTypes.sort(); // sort alpabetically, fails as "Trait" is displayed as "GWAS"
 //      console.log("\t conceptTypes in this network: "+ conceptTypes +"\n");
 
       var conceptsHashmap= {};
@@ -29,27 +30,27 @@
       for(var con in conceptsHashmap) {
 //          knetLegend= knetLegend +'<input type="image" id="'+ con +/*'" class="knetLegend_'+ con +*/'" title="Show All '+ con +'(s)" src="./image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ conceptsHashmap[con] +'&nbsp;&nbsp;&nbsp;';
           var conText= con;
-		  if(conText === "Biological_Process") {
-			 conText= "BioProc";
-		    }
-		  else if(conText === "Molecular_Function") {
-			      conText= "MolFunc";
-		      }
-		  else if(conText === "Cellular_Component") {
-			      conText= "CellComp";
-		      }
-		  else if(conText === "Trait Ontology") {
-			      conText= "TO";
-		      }
-		  else if(conText === "Trait") {
-			      conText= "GWAS";
-		      }
-		  else if(conText === "Enzyme Classification") {
-			      conText= "EC";
-		      }
-		  else if(conText === "Protein Domain") {
-			      conText= "Domain";
-		      }
+          if(conText === "Biological_Process") {
+             conText= "BioProc";
+            }
+          else if(conText === "Molecular_Function") {
+                  conText= "MolFunc";
+                 }
+	  else if(conText === "Cellular_Component") {
+		  conText= "CellComp";
+		 }
+	  else if(conText === "Trait Ontology") {
+		  conText= "TO";
+		 }
+	  else if(conText === "Trait") {
+		  conText= "GWAS";
+		 }
+	  else if(conText === "Enzyme Classification") {
+		  conText= "EC";
+		 }
+	  else if(conText === "Protein Domain") {
+		  conText= "Domain";
+		 }
           knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="image" id="'+ con +'" title="Show All '+ con +'(s)" src="html/KnetMaps/image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ 
 		                conceptsHashmap[con] +'<span class="icon_caption">'+ conText +'</span></div>';
         /*  cnt= cnt+1;
