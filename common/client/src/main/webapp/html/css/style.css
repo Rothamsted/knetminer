@@ -221,7 +221,7 @@ div#list_search {
 }
 
 .close {
-	left: 215px;
+    /* left: 215px; */ float: right;
     position: relative;
     top: -42px;
 }
