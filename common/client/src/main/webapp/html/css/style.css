@@ -210,6 +210,7 @@ div#list_search {
     border-radius: 18px;
     margin-top: /*10*/25px;
     margin-right: 15px;
+    width: 230px; /* change to relative later */
 }
 
 .details h3 {
@@ -221,7 +222,7 @@ div#list_search {
 }
 
 .close {
-	left: 215px;
+    /* left: 215px; */ float: right;
     position: relative;
     top: -42px;
 }
@@ -492,6 +493,7 @@ span.hint-big:hover {
 .evidence_item_Trait {background:url(../image/Trait.png) no-repeat;}
 .evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
 .evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
+.evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
@@ -514,7 +516,7 @@ body:after{
 .qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
 /* Legend */
-#legend_picture {position:relative;width:100%;padding-top:/*50*/10px;}
+#legend_picture {position:relative;width:100%;padding-top:/*50*/10px; /*background-color:white;*/}
 #legend_picture #legend_container {position:relative;margin:auto;width:500px;height:80px;}
 #legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}
 

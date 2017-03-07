@@ -1789,12 +1789,13 @@ public class OndexServiceProvider {
 		// System.out.println(qtlDB.size() + " QTLs are significant.");
 		// }
 
-		String[] colorHex = {"#0000FF", "#00FF00", "#00FFFF", "#FF0000", 
-                "#FF00FF", "#FFFF00", "#0000AA", "#00FFAA", "#00AA00", "#00AAFF", 
-                "#00AAAA", "#FF00AA", "#FFFFAA", "#FFAA00", "#FFAAFF", "#FFAAAA", 
-                "#AA0000", "#AA00FF", "#AA00AA", "#AAFF00", "#AAFFFF", "#AAFFAA",
-                "#AAAA00", "#AAAAFF", "#AAAAAA", "#000055", "#00FF55", "#00AA55",
-                "#005500", "#0055FF"};
+		String[] colorHex = {"0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
+                    "0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", 
+                "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854", "0xC20061", "0xFF7E3D", 
+                "0x008F8F", "0xFF00AA", "0xFFFFAA", "0xD4A8FF", "0xA8D4FF", "0xFFAAAA", 
+                "0xAA0000", "0xAA00FF", "0xAA00AA", "0xAAFF00", "0xAAFFFF", "0xAAFFAA",
+                "0xAAAA00", "0xAAAAFF", "0xAAAAAA", "0x000055", "0x00FF55", "0x00AA55",
+                "0x005500", "0x0055FF"};
 //	  0xFFB300, # Vivid Yellow
 //    0x803E75, # Strong Purple
 //    0xFF6800, # Vivid Orange
@@ -1815,7 +1816,7 @@ public class OndexServiceProvider {
 			String trait = loci.getTrait();
 			if(!trait2color.containsKey(trait)){
 				trait2color.put(trait, colorHex[index]);
-				index++;
+				index= index+1;
 				if(index == colorHex.length){
 					index = 0;
 				}
@@ -2800,7 +2801,7 @@ public class OndexServiceProvider {
 
 		Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
 		if (ccQTL != null)
-			qtls = graph.getConceptsOfConceptClass(ccQTL);
+                    qtls = graph.getConceptsOfConceptClass(ccQTL);
 
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
 		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
