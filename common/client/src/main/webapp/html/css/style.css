@@ -492,6 +492,7 @@ span.hint-big:hover {
 .evidence_item_Trait {background:url(../image/Trait.png) no-repeat;}
 .evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
 .evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
+.evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
