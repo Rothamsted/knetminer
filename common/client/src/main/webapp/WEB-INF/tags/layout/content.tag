@@ -14,7 +14,8 @@
 						<ul>
 							<li><input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
 							<span style="vertical-align:middle;">
-							<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
+						<!--	<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/> -->
+							<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" onclick="searchKeyword();"/>
 							</span></li>
 							<li><div id="loadingDiv"></div></li>
 						</ul>
@@ -37,13 +38,13 @@
 						<span id="suggestor_invite"></span>
 						<hr width="45%" align="left">
 					<div id="suggestor_search">
-						<div id="suggestor_search_area" style="display:none;">
+						<div id="suggestor_search_area" style="display:none; width:70%;">
 							<div id="suggestor_terms"> </div>
 							<div id="suggestor_tables">You must perform a search for having the suggested terms related with your query</div>
 						</div>
 					</div>
 				</li>
-				<li id="genomeorqtlsearchbox" style="display:none;">
+				<li id="genomeorqtlsearchbox" style="display:none; width:70%;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
 					<hr width="45%" align="left">
@@ -82,7 +83,7 @@
 						</div>
 					</div>
 				</li>
-				<li style="padding-top:20px;">
+				<li style="padding-top:20px; width:70%;">
 					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
 						<hr width="45%" align="left">
 					<div id="list_search">

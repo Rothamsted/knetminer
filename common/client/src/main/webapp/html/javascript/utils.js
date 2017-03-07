@@ -234,7 +234,7 @@ function bracketsAreBalanced(str) {
 function matchCounter(){
 	var keyword = $('#keywords').val();
 	if(keyword.length == 0){
-		$('#matchesResultDiv').html('Please, start typing your query')
+		$('#matchesResultDiv').html('Please, start typing your query');
 	} else {
 		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
 			var searchMode = "counthits";
@@ -310,12 +310,12 @@ $(document).ready(
 			$('#tabviewer').hide(); // hide by default
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
-//                            if(e.which !== 13){	//this stops matchCouter being called when the enter key is used to perform a search.
-                            // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
-                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-			       matchCounter();
+                            //call matchCouter.
+                        //    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+                        // DISABLED for EBI demo, only called when Enter is pressed.
+                            if(e.which === 13) { // only refresh when Enter key is pressed
+                               matchCounter();
       			      }
-
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
                             if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
                                // Refresh the query suggester table as well if it's already open.
