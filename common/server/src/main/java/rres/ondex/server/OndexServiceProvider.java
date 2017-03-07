@@ -1816,7 +1816,6 @@ public class OndexServiceProvider {
 			String trait = loci.getTrait();
 			if(!trait2color.containsKey(trait)){
 				trait2color.put(trait, colorHex[index]);
-System.out.println("trait: "+ trait +", colorHex: "+ colorHex[index] +", index= "+ index);
 				index= index+1;
 				if(index == colorHex.length){
 					index = 0;
