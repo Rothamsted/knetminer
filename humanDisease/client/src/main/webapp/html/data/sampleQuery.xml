@@ -3,7 +3,7 @@
 	<query>
 		<name>Example 1</name>
 		<description>Search Terms</description>
-		<term>cell death</term>              
+		<term>"cell death" OR apoptosis</term>              
 	</query>
 	<query>
 		<name>Example 2</name>
