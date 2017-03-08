@@ -239,7 +239,13 @@
                        cell1.innerHTML= "Evidence:";
                        for(var k=0; k < metadataJSON.ondexmetadata.relations[j].evidences.length; k++) {
                            if(metadataJSON.ondexmetadata.relations[j].evidences[k] !== "") {
-                              relationEvidences= relationEvidences + metadataJSON.ondexmetadata.relations[j].evidences[k] +", ";
+                              var evi= metadataJSON.ondexmetadata.relations[j].evidences[k]; // evidenceType
+                              if(evi.includes("ECO:")) {
+                                 evi= evi.replace(/\s/g,''); // remove spaces, if any
+                                 var evi_url= "http://ols.wordvis.com/q="+ evi; // ECO evidence_type url
+                                 evi= "<a href=\""+ evi_url +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ evi +"</a>";
+                                }
+                              relationEvidences= relationEvidences + evi +", ";
                              }
                           }
                        cell2.innerHTML= relationEvidences.substring(0, relationEvidences.length-2);
