@@ -310,15 +310,17 @@ $(document).ready(
 			$('#tabviewer').hide(); // hide by default
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
-                            //call matchCouter.
+                        // this stops matchCounter being called when the enter or arrow keys are used.
                         //    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                        // DISABLED for EBI demo, only called when Enter is pressed.
+                        /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
                             if(e.which === 13) { // only refresh when Enter key is pressed
                                matchCounter();
       			      }
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
-                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                               // Refresh the query suggester table as well if it's already open.
+                            //if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+                            /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
+                            if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
+                               // Refresh the query suggester table as well, if it's already open.
 			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                                   refreshQuerySuggester();
                                   var keyword = $('#keywords').val();
