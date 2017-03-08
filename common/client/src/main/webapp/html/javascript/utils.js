@@ -311,14 +311,19 @@ $(document).ready(
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
                         // this stops matchCounter being called when the enter or arrow keys are used.
-                        //    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                        /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
-                            if(e.which === 13) { // only refresh when Enter key is pressed
+                /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
+                        /*    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
                                matchCounter();
+      			      }*/
+                            // update matchCounter and QuerySuggestor when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
+                            if(e.which === 13) {
+                               matchCounter();
+                            //   searchKeyword(); // Search
       			      }
+                              
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
+                    /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
                             //if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                            /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
                             if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
                                // Refresh the query suggester table as well, if it's already open.
 			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
@@ -714,6 +719,7 @@ function searchKeyword(){
 		}
 	}
 //console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
+//console.log("Search request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -726,7 +732,11 @@ function searchKeyword(){
 	else{
 		$('#tabviewer').show(); // show Tab buttons and viewer
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
-
+/*                // update matchCounter
+                matchCounter();
+                // refresh Query Suggestor, if already open.
+                if($('#suggestor_search').attr('src') === "html/image/collapse.gif") { refreshQuerySuggester(); }
+*/
 		$.ajax({
 	        url:"OndexServlet?"+request,
 	        type:'POST',
