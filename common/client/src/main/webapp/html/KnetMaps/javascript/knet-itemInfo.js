@@ -132,8 +132,8 @@
                                     attrValue= attrValue.substring(0,attrValue.length-1);
                                    }
                             // For Aminoacid sequence (AA).
-                            else if(attrName === "AA") {
-                                    attrName= "Aminoacid sequence (AA)";
+                            else if(attrName.includes("AA")) {
+                                    attrName= "Aminoacid sequence ("+ attrName +")";
                                     aaSeq= attrValue.match(/.{1,10}/g); // split into string array of 10 characters each.
                                     counter= 0;
                                     // Have monospaced font for AA sequence.
