@@ -164,6 +164,7 @@ ul#main_list {
 
 div#keyword_search  {
 	padding-top:20px;
+        width:75%
 }
 div#keyword_search ul{
 	list-style:none;
@@ -210,7 +211,7 @@ div#list_search {
     border-radius: 18px;
     margin-top: /*10*/25px;
     margin-right: 15px;
-    width: 230px; /* change to relative later */
+    width: /*230px*/25%;
 }
 
 .details h3 {

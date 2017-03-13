@@ -8,10 +8,10 @@
 	<query>
 		<name>Example 2</name>
 		<description>Gene View</description>
-		<term>Alzheimer Parkinson Heparin "cell death"</term>
-		<gene>ENSG00000186868</gene>
-		<gene>ENSG00000171867</gene>
-		<gene>ENSG00000142192</gene>
+		<term>Alzheimer OR Parkinson OR Heparin OR "cell death"</term>
+		<gene>APP</gene>
+		<gene>MAPT</gene>
+		<gene>PRNP</gene>
 	</query>
 	<query>
 		<name>Example 3</name>
