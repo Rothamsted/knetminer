@@ -173,7 +173,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Enzyme.png></td>" +
 											"<td align=center><img src=html/image/Reaction.png></td>" +
 											"<td align=center><img src=html/image/Publication.png></td>" +
-											"<td align=center><img src=html/image/Disease.png></td>" +
+											/*"<td align=center><img src=html/image/Disease.png></td>" +*/
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Gene</font></td>" +
 											"<td align=center><font size=1.8px>Protein</font></td>" +
@@ -182,11 +182,12 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Enzyme</font></td>" +
 											"<td align=center><font size=1.8px>Reaction</font></td>" +
 											"<td align=center><font size=1.8px>Publication</font></td>" +
-											"<td align=center><font size=1.8px>Disease</font></td>" +
+											/*"<td align=center><font size=1.8px>Disease</font></td>" +*/
 										"</tr><tr>" +
 											"<td align=center></td>" +
 										"</tr><tr>" +
-											"<td align=center><img src=html/image/DGES.png></td>" +
+											"<td align=center><img src=html/image/Phenotype.png></td>" +
+											/*"<td align=center><img src=html/image/DGES.png></td>" +*/
 											"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
 											"<td align=center><img src=html/image/Cellular_component.png></td>" +
 											"<td align=center><img src=html/image/Protein_domain.png></td>" +
@@ -194,9 +195,10 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Molecular_function.png></td>" +
 											/*"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +*/
 											"<td align=center><img src=html/image/Trait.png></td>" +
-											"<td align=center><img src=html/image/Drug.png></td>" +
+											/*"<td align=center><img src=html/image/Drug.png></td>" +*/
 										"</tr><tr>" +
-											"<td align=center><font size=1.8px>DGES</font></td>" +
+											"<td align=center><font size=1.8px>Phenotype</font></td>" +
+											/*"<td align=center><font size=1.8px>DGES</font></td>" +*/
 											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
 											"<td align=center><font size=1.8px>Cell. Component</font></td>" +
 											"<td align=center><font size=1.8px>Protein Domain</font></td>" +
@@ -204,7 +206,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
 											/*"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +*/
 											"<td align=center><font size=1.8px>GWAS</font></td>" +
-											"<td align=center><font size=1.8px>Drug</font></td>" +
+											/*"<td align=center><font size=1.8px>Drug</font></td>" +*/
 										"</tr>" +
 									"</table>" +
 								"</div>" +
@@ -310,33 +312,23 @@ $(document).ready(
 			$('#tabviewer').hide(); // hide by default
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
-                            //call matchCouter.
-                        //    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                        // DISABLED for EBI demo, only called when Enter is pressed.
-                            if(e.which === 13) { // only refresh when Enter key is pressed
+                            // this stops matchCounter being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
                                matchCounter();
       			      }
+                            // update matchCounter and QuerySuggestor only when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
+/*                            if(e.which === 13) {
+                               matchCounter();
+                            //   searchKeyword(); // Search
+      			      }*/
+                              
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
                             if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                               // Refresh the query suggester table as well if it's already open.
-			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                        //    if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
+                               // Refresh the query suggester table as well, if it's already open.
+			       if($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
                                   refreshQuerySuggester();
-                                  var keyword = $('#keywords').val();
-/*                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1) {
-                                     // Refresh the Query Suggester tabs (suggestor_terms) to show the newly added tabs in the DOM.
-//                                     ???;
-                                     // Focus on the new tab in the Query Suggester.
-                                     $('#suggestor_terms').children().each(function () {
-console.log("suggesterTerms tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
-                                     });
-//                                     $('.synonymTabButton').each(function () {
-//console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
-//                                     });
-                                     $('#suggestor_terms').children().last().attr('class','buttonSynonym_on');
-console.log("newestTab (children) : "+ $('#suggestor_terms').children().last().attr('id'));
-console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
-                                    }
-*/                                 }
+                                 }
       			      }
 			});
 			// Add QTL region
@@ -690,9 +682,15 @@ function refreshQuerySuggester() {
  */
 function searchKeyword(){
 	var searchMode = getRadioValue(document.gviewerForm.search_mode);
-	var listMode = "GL"; // getRadioValue(document.gviewerForm.list_mode);
+	var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
 	var keyword = escape(trim($("#keywords").val()));
 	var list = $("#list_of_genes").val();
+/*console.log("searchKeyword(): gene_list: "+ list);
+	if(list !== null) {
+	 if(list.length>1) {
+	  listMode='GLrestrict';
+	 }
+	}*/
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
 	if(list.length > 0){
@@ -712,6 +710,7 @@ function searchKeyword(){
 		}
 	}
 //console.log("keyword: "+ $("#keywords").val() +", after Trimming: "+ keyword +", \n request: "+ request);
+//console.log("Search request: "+ request);
 	if(keyword.length < 2) {
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><b>Please provide a keyword</b><br />e.g. '+warning+'</div>');
 	}
@@ -724,7 +723,11 @@ function searchKeyword(){
 	else{
 		$('#tabviewer').show(); // show Tab buttons and viewer
 		$("#loadingDiv").replaceWith('<div id="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
-
+/*                // update matchCounter
+                matchCounter();
+                // refresh Query Suggestor, if already open.
+                if($('#suggestor_search').attr('src') === "html/image/collapse.gif") { refreshQuerySuggester(); }
+*/
 		$.ajax({
 	        url:"OndexServlet?"+request,
 	        type:'POST',
