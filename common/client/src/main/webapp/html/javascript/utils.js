@@ -186,6 +186,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 										"</tr><tr>" +
 											"<td align=center></td>" +
 										"</tr><tr>" +
+											/*"<td align=center><img src=html/image/Phenotype.png></td>" +*/
 											"<td align=center><img src=html/image/DGES.png></td>" +
 											"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
 											"<td align=center><img src=html/image/Cellular_component.png></td>" +
@@ -196,6 +197,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Trait.png></td>" +
 											"<td align=center><img src=html/image/Drug.png></td>" +
 										"</tr><tr>" +
+											/*"<td align=center><font size=1.8px>Phenotype</font></td>" +*/
 											"<td align=center><font size=1.8px>DGES</font></td>" +
 											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
 											"<td align=center><font size=1.8px>Cell. Component</font></td>" +
@@ -310,40 +312,23 @@ $(document).ready(
 			$('#tabviewer').hide(); // hide by default
 			// Calculates the amount of documents to be displayed with the current query
 			$('#keywords').keyup(function(e) {
-                        // this stops matchCounter being called when the enter or arrow keys are used.
-                /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
-                        /*    if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+                            // this stops matchCounter being called when the enter or arrow keys are used.
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
                                matchCounter();
-      			      }*/
-                            // update matchCounter and QuerySuggestor when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
-                            if(e.which === 13) {
+      			      }
+                            // update matchCounter and QuerySuggestor only when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
+/*                            if(e.which === 13) {
                                matchCounter();
                             //   searchKeyword(); // Search
-      			      }
+      			      }*/
                               
                             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
-                    /* DISABLED for EBI demo 2017, only called when Enter is pressed. */
-                            //if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                            if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
+                            if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
+                        //    if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
                                // Refresh the query suggester table as well, if it's already open.
-			       if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+			       if($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
                                   refreshQuerySuggester();
-                                  var keyword = $('#keywords').val();
-/*                                  if(keyword.indexOf(' OR ') != -1 || keyword.indexOf(' AND ') != -1) {
-                                     // Refresh the Query Suggester tabs (suggestor_terms) to show the newly added tabs in the DOM.
-//                                     ???;
-                                     // Focus on the new tab in the Query Suggester.
-                                     $('#suggestor_terms').children().each(function () {
-console.log("suggesterTerms tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
-                                     });
-//                                     $('.synonymTabButton').each(function () {
-//console.log("synonymTabButton tabs: id: "+ $(this).attr('id') +", class: "+ $(this).attr('class'));
-//                                     });
-                                     $('#suggestor_terms').children().last().attr('class','buttonSynonym_on');
-console.log("newestTab (children) : "+ $('#suggestor_terms').children().last().attr('id'));
-console.log("newestTab (last): "+ $('#suggestor_terms div:last').attr('id'));
-                                    }
-*/                                 }
+                                 }
       			      }
 			});
 			// Add QTL region
@@ -697,9 +682,15 @@ function refreshQuerySuggester() {
  */
 function searchKeyword(){
 	var searchMode = getRadioValue(document.gviewerForm.search_mode);
-	var listMode = "GL"; // getRadioValue(document.gviewerForm.list_mode);
+	var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
 	var keyword = escape(trim($("#keywords").val()));
 	var list = $("#list_of_genes").val();
+/*console.log("searchKeyword(): gene_list: "+ list);
+	if(list !== null) {
+	 if(list.length>1) {
+	  listMode='GLrestrict';
+	 }
+	}*/
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
 	if(list.length > 0){
