@@ -10,7 +10,17 @@
 		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()">
 			<ul id="main_list">
 				<li>
-					<div id="keyword_search">
+                                    <!-- Sample Queries -->
+                                    <div id="info" class="details">
+                                        <div id="info-text">
+                                            <div style="height: 10px;"><h3>Example queries</h3>
+                                                <a class="close" href="#info" title="close"><img src="html/image/close_button.png"/></a>
+                                            </div>
+                                            <div id="eg_queries"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="keyword_search">
 						<ul>
 							<li><input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
 							<span style="vertical-align:middle;">
@@ -25,14 +35,6 @@
 						</div> -->
 						
 					</div>
-					<div id="info" class="details">
-	<div id="info-text">
-        <div style="height: 10px;"><h3>Example queries</h3> 
-        <a class="close" href="#info" title="close"><img src="html/image/close_button.png"/></a>	
-        </div>
-        <div id="eg_queries"></div>
-    </div>
-  </div>
 				<li>
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
 						<span id="suggestor_invite"></span>
