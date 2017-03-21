@@ -3,6 +3,7 @@ var genespreadsheet = new Array();
 var genes;
 */
 
+// Map View
 var genemap = GENEMAP.GeneMap().width(750).height(400);
 
 /*
