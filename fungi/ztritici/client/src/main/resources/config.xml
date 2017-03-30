@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains OndexServlet configuration values</comment>
+	<entry key="ServerHost">localhost</entry>
+	<entry key="ServerPort">8081</entry> <!-- 8189: f. graminearum -->
+</properties>
