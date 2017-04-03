@@ -246,7 +246,7 @@ function matchCounter(){
 			$.post(url, '', function(response, textStatus){
 				if(textStatus == "success"){
 					if(response.split('|')[1] == null ){
-						$('#matchesResultDiv').html('<span class="redText">The QTLNetMiner server is currently offline. Please try again later.</span>');
+						$('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
 					}
 					else if (response.split('|')[1] != "0"){
 						$('#matchesResultDiv').html('<b>'+response.split('|')[1]+' documents</b>  and <b>'+response.split('|')[2]+' genes</b> will be found with this query');
@@ -1071,7 +1071,7 @@ function findGenes(id, chr_name, start, end) {
  *
  */
 function contactWindow() {
-	window.open( "html/contact.html", "QTLNetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0" );
+	window.open( "html/contact.html", "KnetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0" );
 }
 
 /*
