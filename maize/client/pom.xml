@@ -14,7 +14,7 @@
 	<name>KnetMiner Maize client</name>
 
 	<build>
-		<finalName>QTLNetMinerMaize</finalName>
+		<finalName>KnetMinerMaize</finalName>
 
 		<plugins>
 			<plugin>
