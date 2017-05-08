@@ -28,6 +28,8 @@
 1-10	enc
 1-7	enc
 
+10-10	equivalent	4
+10-7	equivalent	4
 10-10	h_s_s	4
 10-7	h_s_s	4
 10-10	ortho	4
