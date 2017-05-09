@@ -29,8 +29,14 @@
 9-5	located_in
 9-13	has_observ_pheno
 
-10-10	ortho	5
-10-7	ortho	5
+10-10	ortho	4
+10-7	ortho	4
+10-10	xref	6
+10-7	xref	6
+10-10	physical    6	d
+10-7	physical    6	d
+10-10	genetic	6   d
+10-7	genetic	6   d
 10-2	pub_in
 10-3	has_function
 10-4	participates_in

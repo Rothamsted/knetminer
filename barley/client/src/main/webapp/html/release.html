@@ -33,60 +33,34 @@
 <h1 class="release-title">Barley Release Notes</h1>
 <p id="network_stats">The Barley (<i>Hordeum vulgare</i>) information network contains:<!--<strong>419,506 concepts</strong> and <strong>1,256,181 relations</strong>.--></p> 
 
-<p>The network contains 79,379 barley genes (from MIPS and IPK) of which 26,159 are high and 53,220 are low confidence. 
-Note that 2/3 of the barley genes have been mapped to chromosomes 1-7 and the remaining ones are assigned to chromosome 0.</p>
-
 <ul>
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-    	<li>Gene</li>
+    	<li>Gene-Protein [Ensembl]</li>
     	<ul>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_ProteinSeq.fa">HighConf genes ProteinSeq.fa</a></li>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_LowConf_genes_MIPS_23Mar12_ProteinSeq.fa">LowConf genes ProteinSeq.fa</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/gff3/hordeum_vulgare/Hordeum_vulgare.ASM32608v1.35.gff3.gz">Hordeum_vulgare.ASM32608v1.35.gff3.gz</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/fasta/hordeum_vulgare/pep/Hordeum_vulgare.ASM32608v1.pep.all.fa.gz">Hordeum_vulgare.ASM32608v1.pep.all.fa.gz</a></li>
       	</ul>
-    	<li>Protein</li>
+    	<li>Protein-Domain [Ensembl]</li>
     	<ul>
-     		<li>Gff3 File IPK Gatersleben</li> 	
-		</ul>
-    	<li>Protein-Domain</li>
-    	<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
-			 and <a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_HumReadDesc.txt">HighConf genes HumReadDesc</a></li>
-    		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
-      		 and <a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_PFAMs.txt">HighConf genes PFAM</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_transcript_id|hvulgare_eg_gene.default.feature_page.pfam|hvulgare_eg_gene.default.feature_page.interpro|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=hvulgare_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
     	</ul>
-    	<li>Gene Ontology</li>
-    	<ul>
-      		<li><a href="ftp://ftpmips.helmholtz-muenchen.de/plants/barley/public_data/genes/barley_HighConf_genes_MIPS_23Mar12_IPROScan_GOs.txt">HighConf genes GOs</a></li>
- 		</ul>
-    	<li>References</li>
-    	<ul>
-			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
-    	</ul>
+	<li>Protein-Publication [UniprotKB, Ensembl]</li>
+	<ul>
+	    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:112509&compress=yes&format=xml">Hv UniprotKB-SwissProt</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_transcript_id|hvulgare_eg_gene.default.feature_page.uniprotswissprot&FILTERS=hvulgare_eg_gene.default.filters.with_uniprotswissprot.only&VISIBLEPANEL=resultspanel">Ensembl - UniprotKB mapping</a></li>
+	</ul>
     	<li>Homology</li>
     	<ul>
-    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.homologs.ensembl_gene_id|hvulgare_eg_gene.default.homologs.ensembl_transcript_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|hvulgare_eg_gene.default.homologs.athaliana_eg_orthology_type|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_dn|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ds|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Barley - Arabidopsis</a></li>
-		<li>Decypher</li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=hvulgare_eg_gene.default.homologs.ensembl_transcript_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_orthology_type|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|hvulgare_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=hvulgare_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Barley-Arabidopsis</a></li>
+	    <li>Decypher</li>
     	</ul>
-    	<li>Ontologies</li>
+	<li>References</li>
     	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
+	    <li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
     	</ul>
   	</ul>
-  	
-<!--  	<p><strong>Networks</strong></p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Barley_Mips/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/barnet/">Final Network</a></li>
-	</ul> -->
+
 	
 	<p><strong>History</strong></p>
 	
