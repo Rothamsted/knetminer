@@ -31,52 +31,49 @@
   
 <div id="release-content">
 <h1 class="release-title">Maize Release Notes</h1>
-<p id="network_stats">The Maize (<i>AGPv3</i>) information network contains:<!--<strong>335,882 concepts</strong> and <strong>1,367,956 relations</strong>.--></p>
+<p id="network_stats">The Maize (<i>AGPv4</i>) information network contains:<!--<strong>335,882 concepts</strong> and <strong>1,367,956 relations</strong>.--></p>
 
 <ul>
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-    	<li>Gene (Version: 5b; Coding genes: 39,469)</li>
+    	<li>Gene-Protein [Ensembl]</li>
     	<ul>
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/gff3/zea_mays/Zea_mays.AGPv3.26.gff3.gz">Zea_mays.AGPv3.26.gff3 from Ensembl</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/gff3/zea_mays/Zea_mays.AGPv4.35.gff3.gz">Zea_mays.AGPv4.35.gff3.gz</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/fasta/zea_mays/pep/Zea_mays.AGPv4.pep.all.fa.gz">Zea_mays.AGPv4.pep.all.fa.gz</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_gene_id|zmays_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=zmays_eg_gene.default.filters.biotype.%20protein_coding%20&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.uniprotswissprot&FILTERS=zmays_eg_gene.default.filters.with_uniprotswissprot.only&VISIBLEPANEL=resultspanel">Ensembl - Uniprot-SwissProt Mapping</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.uniprotsptrembl&FILTERS=zmays_eg_gene.default.filters.with_uniprotsptrembl.only&VISIBLEPANEL=resultspanel">Ensembl - Uniprot-TrEMBL Mapping</a></li>
+	    <li><a href="https://www.maizegdb.org/associated_genes?type=all&style=tab">Gene Names</a> from MaizeGDB</li>
+	    <li><a href="ftp://ftp.gramene.org/pub/gramene/CURRENT_RELEASE/data/gff3/zea_mays/gene_id_mapping_v3_to_v4/maize.v3TOv4.geneIDhistory.txt">AGPv3 to AGPv4 ID Mapping</a> from Gramene</li>
       	</ul>
-    	<li>Protein (Version: 5b; Proteins: 63,391)</li>
+    	<li>Protein-Domain [Ensembl]</li>
     	<ul>
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/release-26/plants/fasta/zea_mays/pep/Zea_mays.AGPv3.26.pep.all.fa.gz">Zea_mays.AGPv3.26.pep.all.fa from Ensembl</a></li>
-		</ul>
-    	<li>Protein-Domain</li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.pfam|zmays_eg_gene.default.feature_page.interpro|zmays_eg_gene.default.feature_page.interpro_short_description|zmays_eg_gene.default.feature_page.interpro_description&FILTERS=zmays_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+    	</ul>
+	<li>Protein-Publication [UniProtKB]</li>
     	<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.interpro_id|zmays_eg_gene.default.feature_page.interpro_short_description|zmays_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
-    		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.feature_page.ensembl_peptide_id|zmays_eg_gene.default.feature_page.pfam_pf&FILTERS=zmays_eg_gene.default.filters.with_pfam.only&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
+	    <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000007305&compress=yes&format=xml">Zm Proteome xml</a></li>  
+    	</ul>
+	<li>Publications [PubMed]</li>
+	<ul>
+	    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=zea+mays">XML</a></li>
+	    <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
+	</ul>
+	<li>Gene-TO [Text-Mining]</li>
+	<ul>
+	    <li>Gene-TO sentence based co-occurrences in PubMed abstracts</li>
+	</ul>
+	<li>Homology</li>
+    	<ul>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=zmays_eg_gene.default.homologs.ensembl_peptide_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|zmays_eg_gene.default.homologs.athaliana_eg_homolog_orthology_type|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=zmays_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Maize-Arabidopsis</a></li>
+	    <li>Decypher</li>
     	</ul>
     	<li>References</li>
     	<ul>
-			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information about well reviewed plant proteins excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
+	    <li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
     	</ul>
-    	<li>Homology</li>
-    	<ul>
-    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_26&ATTRIBUTES=zmays_eg_gene.default.homologs.ensembl_peptide_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|zmays_eg_gene.default.homologs.athaliana_eg_orthology_type|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|zmays_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1|zmays_eg_gene.default.homologs.athaliana_eg_homolog_is_tree_compliant&FILTERS=zmays_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Maize - Arabidopsis</a></li>
-		<li>Decypher Tera-Blast of Maize vs. UniProt Plants Reviewed</li>
-    	</ul>
-    	<li>Ontologies & Mappings</li>
-    	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
-    	</ul>
+    	  	
   	</ul>
-  	
-<!--  	<p><strong>Networks</strong></p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Maize/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/maizenet/">Final Network</a></li>
-	</ul> -->
 	
 </ul>
 

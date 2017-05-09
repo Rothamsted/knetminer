@@ -36,55 +36,34 @@
 
 <ul>
 	<p><strong>Datasets used for integration</strong> - Tomato</br>
-	(Datasets used for Potato see Release Notes <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerPotato/html/release.html">here.</a>)</p>
+	(Datasets used for Potato see Release Notes <a href="http://knetminer.rothamsted.ac.uk/Solanum_tuberosum/html/release.html">here.</a>)</p>
 	<ul>
-    	<li>Gene</li>
+    	<li>Gene-Protein [Ensembl]</li>
     	<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_gene.gff3.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_gene.gff3.gz</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/gff3/solanum_lycopersicum/Solanum_lycopersicum.SL2.50.35.gff3.gz">Solanum_lycopersicum.SL2.50.35.gff3.gz</a></li>
+	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/fasta/solanum_lycopersicum/pep/Solanum_lycopersicum.SL2.50.pep.all.fa.gz">Solanum_lycopersicum.SL2.50.pep.all.fa.gz</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_gene_id|slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
       	</ul>
-    	<li>Protein</li>
+    	<li>Protein-Domain [Ensembl]</li>
     	<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_protein.fa.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_protein.fa.gz</a></li>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz">ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Stuberosum/annotation/Stuberosum_206_annotation_info.txt.gz</a></li>	
-		</ul>
-    	<li>Protein-Domain</li>
-    	<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.interpro_id|slycopersicum_eg_gene.default.feature_page.interpro_short_description|slycopersicum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.pfam|slycopersicum_eg_gene.default.feature_page.interpro|slycopersicum_eg_gene.default.feature_page.interpro_short_description|slycopersicum_eg_gene.default.feature_page.interpro_description&FILTERS=slycopersicum_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
     	</ul>
-    	<li>QTL</li>
+	<li>Protein-Publication [UniprotKB, Ensembl]</li>
+	<ul>
+	    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4081compress=yes&format=xml">Sl UniprotKB-SwissProt</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=slycopersicum_eg_gene.default.feature_page.ensembl_transcript_id|slycopersicum_eg_gene.default.feature_page.uniprotswissprot&FILTERS=slycopersicum_eg_gene.default.filters.with_uniprotswissprot.only&VISIBLEPANEL=resultspanel">Ensembl - UniprotKB mapping</a></li>
+	</ul>
+	<li>Homology</li>
     	<ul>
-      		<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/QTL/QTL_200131220.oxl">QTL information</a></li>
- 		</ul>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=slycopersicum_eg_gene.default.homologs.ensembl_transcript_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_orthology_type|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1&FILTERS=slycopersicum_eg_gene.default.filters.with_athaliana_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Tomato-Arabidopsis</a></li>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=slycopersicum_eg_gene.default.homologs.ensembl_transcript_id|slycopersicum_eg_gene.default.homologs.stuberosum_eg_homolog_ensembl_peptide|slycopersicum_eg_gene.default.homologs.stuberosum_eg_homolog_orthology_type|slycopersicum_eg_gene.default.homologs.stuberosum_eg_homolog_perc_id|slycopersicum_eg_gene.default.homologs.stuberosum_eg_homolog_perc_id_r1&FILTERS=slycopersicum_eg_gene.default.filters.with_stuberosum_eg_homolog.only&VISIBLEPANEL=resultspanel">BioMart Homologs Tomato-Potato</a></li>
+	    <li>Decypher</li>
+    	</ul>
     	<li>References</li>
     	<ul>
-			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
-    	</ul>
-    	<li>Homology</li>
-    	<ul>
-    	<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=slycopersicum_eg_gene.default.homologs.ensembl_transcript_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_ensembl_peptide|slycopersicum_eg_gene.default.homologs.athaliana_eg_orthology_type|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_perc_id_r1|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_ds|slycopersicum_eg_gene.default.homologs.athaliana_eg_homolog_dn&FILTERS=&VISIBLEPANEL=resultspanel">BioMart Homologs Tomato - Arabidopsis</a></li>
-		<li>Decypher</li>
-    	</ul>
-    	<li>Ontologies</li>
-    	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
+	    <li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
     	</ul>
   	</ul>
-  	
-<!--  	<p><strong>Networks</strong> - Tomato</br>
-	(Networks used for Potato see Release Notes <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerPotato/html/release.html">here.</a>)</p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Tomato/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/solnet/">Final Network</a></li>
-	</ul> -->
 </ul>
 
 </div>        <!-- end div release-content  -->

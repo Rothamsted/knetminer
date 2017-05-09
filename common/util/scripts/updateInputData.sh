@@ -12,8 +12,8 @@
 # more complex procedure to do so as an unattended script.
 #
 # Some download links break and need to be adjusted if the database release changes
-# BioGrid version: 3.4.141
-# Ensembl Release: 33
+# BioGrid version: 3.4.144
+# Ensembl Release: 34
 # AraCyc version: 14
 #
 #      #################  Pubmed Update Procedure  ##################
@@ -148,8 +148,8 @@ mkdir $HOMOLOGY_DIR/$DATE
 
 ########  Update GFF3 and FASTA  ########
 
-curl ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.33.gff3.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.33.gff3.gz"
-gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.33.gff3.gz > $ARABIDOPSIS_DIR/$DATE/genes.gff3
+curl ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.34.gff3.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.34.gff3.gz"
+gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.34.gff3.gz > $ARABIDOPSIS_DIR/$DATE/genes.gff3
 
 curl ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz -o "$ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz"
 gunzip -c $ARABIDOPSIS_DIR/$DATE/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz > $ARABIDOPSIS_DIR/$DATE/pep.all.fa
@@ -189,9 +189,9 @@ curl "ftp://ftp.plantcyc.org/tmp/private/plantcyc/aracyc.tar.gz" -o "$ARABIDOPSI
 tar -O -zxvf $ARABIDOPSIS_DIR/$DATE/aracyc.tar.gz aracyc/14.0/data/biopax-level2.owl > $ARABIDOPSIS_DIR/$DATE/biopax-level2.owl
 echo
 echo -e $TXT_COL"Downloading BioGrid data"$TXT_COL_RST
-curl "http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.141/BIOGRID-ORGANISM-3.4.141.tab2.zip" -o "$ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip"
-unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt -d $ARABIDOPSIS_DIR/$DATE
-unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt -d $YEAST_DIR/$DATE
+curl "https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.144/BIOGRID-ORGANISM-3.4.144.tab2.zip" -o "$ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip"
+unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.144.tab2.txt -d $ARABIDOPSIS_DIR/$DATE
+unzip $ARABIDOPSIS_DIR/$DATE/biogrid.tab2.zip BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.144.tab2.txt -d $YEAST_DIR/$DATE
 echo
 
 
@@ -233,8 +233,8 @@ echo
 [ -f $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz ] && rm $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz
 [ -f $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz ] && rm $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz
 [ -f $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl ] && rm $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl
-[ -f $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt ] && rm $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt
-[ -f $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt ] && rm $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt
+[ -f $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.144.tab2.txt ] && rm $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.144.tab2.txt
+[ -f $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.144.tab2.txt ] && rm $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.144.tab2.txt
 [ -f $YEAST_DIR/Yeast.xml.gz ] && rm $YEAST_DIR/Yeast.xml.gz
 [ -f $HOMOLOGY_DIR/Decypher/Arabidopsis_UniProtPlants_Decypher-SW ] && rm $HOMOLOGY_DIR/Decypher/Arabidopsis_UniProtPlants_Decypher-SW
 
@@ -252,9 +252,9 @@ cp $ARABIDOPSIS_DIR/$DATE/pep.all.fa $ARABIDOPSIS_DIR/Gene-Protein/pep.all.fa
 cp $ARABIDOPSIS_DIR/$DATE/gene_association.tair.gz $ARABIDOPSIS_DIR/Gene-GO/gene_association.tair.gz
 cp $ARABIDOPSIS_DIR/$DATE/Uniprot-Arabidopsis.xml.gz $ARABIDOPSIS_DIR/uniprot/Uniprot-Arabidopsis.xml.gz
 cp $ARABIDOPSIS_DIR/$DATE/biopax-level2.owl $ARABIDOPSIS_DIR/aracyc/biopax-level2.owl
-cp $ARABIDOPSIS_DIR/$DATE/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.141.tab2.txt
+cp $ARABIDOPSIS_DIR/$DATE/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.144.tab2.txt $ARABIDOPSIS_DIR/biogrid/BIOGRID-ORGANISM-Arabidopsis_thaliana_Columbia-3.4.144.tab2.txt
 cp $YEAST_DIR/$DATE/Yeast.xml.gz $YEAST_DIR/Yeast.xml.gz
-cp $YEAST_DIR/$DATE/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.141.tab2.txt
+cp $YEAST_DIR/$DATE/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.144.tab2.txt $YEAST_DIR/BIOGRID-ORGANISM-Saccharomyces_cerevisiae_S288c-3.4.144.tab2.txt
 
 ##### Update BLAST databases and run Decypher-SW against UniProt ###########
 perl -i -pne 's/sp\|(.*)\|.*? /$1 /g' $UNIPROTKB_DIR/Plants.fasta
@@ -316,7 +316,7 @@ for (( RETSTART=0; RETSTART<$COUNT;  RETSTART+=$RETMAX)) do
 	# remove the closing </pubmedArticleSet> tag from output file
         sed -i '/<\/PubmedArticleSet>/d'  $PUBMED_DIR/$DATE/pubmed_result_arabidopsis.xml
 
-	# remove first three lines including the opening <xml> <dtd> and <pubmedArticleSet> tag and append to output file.
+	# remove all lines upto and including the opening <pubmedArticleSet> tag and appened to output file.
         sed '1, 3d' $PUBMED_DIR/$DATE/pubmed_temp.xml >> $PUBMED_DIR/$DATE/pubmed_result_arabidopsis.xml
 
     else
