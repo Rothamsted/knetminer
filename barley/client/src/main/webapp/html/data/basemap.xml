@@ -49,7 +49,7 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="8" length="115974" number="Pt"> <!-- number="7H" -->
+	<chromosome index="8" length="115974" number="Pt">
 		<band index="1">
 			<start>0</start>
 			<end>115974</end>
