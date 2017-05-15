@@ -48,6 +48,9 @@
 	  else if(conText === "Enzyme Classification") {
 		  conText= "EC";
 		 }
+	  else if(conText === "Quantitative Trait Locus") {
+		  conText= "QTL";
+		 }
 	  else if(conText === "Protein Domain") {
 		  conText= "Domain";
 		 }
