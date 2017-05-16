@@ -1,12 +1,13 @@
 html{
 	height: 100%;
+        /*background-color: #F4F5F7;*/
 }
 body {
-	margin:0px;padding:0px;background:#EEEEEE;
+	margin:0px;padding:0px;
 	font-size:16px;
 	font-family: 'Play', sans-serif;
 	min-width: 960px;
-	background: url(../image/background.jpg) no-repeat center center fixed;
+	background: url("../image/background.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -522,7 +523,7 @@ body:after{
 #legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}
 
 /* General Styles */
-#wrapper {position:relative;margin:auto; min-height:100%; background-color: #F4F5F7;}
+#wrapper {position:relative;margin:auto; min-height:100%;}
 
 /* Header  */
 #header {position:relative;clear:left;}
