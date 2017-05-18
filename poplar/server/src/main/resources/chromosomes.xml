@@ -2,23 +2,23 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>Contains chromosome configuration</comment>
-	<entry key="1">I</entry>
-	<entry key="2">II</entry>
-	<entry key="3">III</entry>
-	<entry key="4">IV</entry>
-	<entry key="5">V</entry>
-	<entry key="6">VI</entry>
-	<entry key="7">VII</entry>
-	<entry key="8">VIII</entry>
-	<entry key="9">IX</entry>
-	<entry key="10">X</entry>
-	<entry key="11">XI</entry>
-	<entry key="12">XII</entry>
-	<entry key="13">XIII</entry>
-	<entry key="14">XIV</entry>
-	<entry key="15">XV</entry>
-	<entry key="16">XVI</entry>
-	<entry key="17">XVII</entry>
-	<entry key="18">XVIII</entry>
-	<entry key="19">XIX</entry>
+	<entry key="1">Chr01</entry>
+	<entry key="2">Chr02</entry>
+	<entry key="3">Chr03</entry>
+	<entry key="4">Chr04</entry>
+	<entry key="5">Chr05</entry>
+	<entry key="6">Chr06</entry>
+	<entry key="7">Chr07</entry>
+	<entry key="8">Chr08</entry>
+	<entry key="9">Chr09</entry>
+	<entry key="10">Chr10</entry>
+	<entry key="11">Chr11</entry>
+	<entry key="12">Chr12</entry>
+	<entry key="13">Chr13</entry>
+	<entry key="14">Chr14</entry>
+	<entry key="15">Chr15</entry>
+	<entry key="16">Chr16</entry>
+	<entry key="17">Chr17</entry>
+	<entry key="18">Chr18</entry>
+	<entry key="19">Chr19</entry>
 </properties>
