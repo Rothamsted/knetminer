@@ -31,61 +31,32 @@
   
 <div id="release-content">
 <h1 class="release-title">Poplar Release Notes</h1>
-<p id="network_stats">The Poplar (<i>Populus trichocarpa v3.0</i>) information network contains:<!--<strong>379,518 concepts</strong> and <strong>1,531,149 relations</strong>.--></p>
+<p id="network_stats">The Poplar (<i>Populus trichocarpa v3.1</i>) information network contains:<!--<strong>379,518 concepts</strong> and <strong>1,531,149 relations</strong>.--></p>
 
 
 <ul>
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-    	<li>Gene and Protein</li>
+    	<li>Gene-Protein [Phytozome]</li>
     	<ul>
-			<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Ptrichocarpa/annotation/">Phytozome dataset for Poplar</a></li>
-      		needed files: annotation_info.txt, cds.fa, defline.txt, gene.gff3, protein.fa, synonym.txt
+	    <li>Populus trichocarpa v3.1</li>
+	    <li>Data was downloaded from <a href="https://phytozome.jgi.doe.gov/pz/portal.html#!info?alias=Org_Ptrichocarpa_er">Phytozome</a></li>
       	</ul>
-    	<li>Protein-Domain</li>
+    	<li>Protein Domain [Phytozome]</li>
     	<ul>
-			<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.interpro_id|hvulgare_eg_gene.default.feature_page.interpro_short_description|hvulgare_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a>
-    		<li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart_22&ATTRIBUTES=hvulgare_eg_gene.default.feature_page.ensembl_peptide_id|hvulgare_eg_gene.default.feature_page.pfam_pf&FILTERS=&VISIBLEPANEL=resultspanel">BioMart PFam Protein Domains</a>
+	    <li><a href="https://phytozome.jgi.doe.gov/biomart/martview?VIRTUALSCHEMANAME=zome_mart&ATTRIBUTES=phytozome.default.features.transcript_name1|phytozome.default.features.pfam_id|phytozome.default.features.pfam_desc&FILTERS=phytozome.default.filters.has_pfam.only|phytozome.default.filters.organism_id.%20210%20&VISIBLEPANEL=resultspanel">BioMart PFAM Protein Domains</a></li>
     	</ul>
-    	<li>Gene Ontology</li>
-    	<ul>
-      		<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Ptrichocarpa/annotation/Ptrichocarpa_210_annotation_info.txt.gz">Gene annotation information</a></li>
- 		</ul>
-		<li>Gene Pathway</li>
-		<ul>
-			<li><a href="http://www.plantcyc.org/downloads/data_downloads.faces">Plant Metabolic Network PoplarCyc 6.0</a></li>
-		</ul>
-		<li>QTL</li>
-		<ul>
-			<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Poplar/QTL/PoplarQTL.txt">Plant Metabolic Network PoplarCyc 6.0</a></li>
-		</ul>
     	<li>References</li>
     	<ul>
-			<li>Arabidopsis (TAIR) see Release notes for <a href="http://ondex.rothamsted.ac.uk/QTLNetMinerArabidopsis/html/release.html">Arabidopsis</a></li>
-			<li>Plants (UniProt) - Information of well observed plant organisms excluding Arabidopsis</br>UniProt: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&sort=score">taxonomy:33090 NOT taxonomy:3702 AND reviewed:yes</a></li>
-    	</ul>
+	    <li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
+	</ul>
     	<li>Homology</li>
     	<ul>
-		<li>Decypher</li>
-    	</ul>
-    	<li>Ontologies</li>
-    	<ul>
-    		<li><a href="ftp://ftp.geneontology.org/pub/go/ontology/obo_format_1_2/gene_ontology.1_2.obo">gene_ontology.1_2.obo</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/interpro2go">interpro2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/pfam2go">pfam2go</a></li>
-      		<li><a href="http://www.geneontology.org/external2go/ec2go">ec2go</a></li>
+	    <li>Decypher</li>
+	    <li>Protein@Poplar-Protein@Arabidopsis-Protein [OMA]</li>
     	</ul>
     </ul>
-  	
-<!--  	<p><strong>Networks</strong></p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/organisms/Poplar/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/poplarnet/">Final Network</a></li>
-	</ul> -->
+
 </ul>
 
 </div>        <!-- end div release-content  -->
