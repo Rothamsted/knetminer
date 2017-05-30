@@ -1410,9 +1410,9 @@ function createGenesTable(tableUrl, keyword, rows){
     		});
                 
                 // bind click event on all candidate_genes checkboxes in Gene View table.
-    		/*$('input:checkbox[name="candidates"]').click(function(e) {
+    		$('input:checkbox[name="candidates"]').click(function(e) {
                     updateSelectedGenesCount(); // update selected genes count
-    		});*/
+    		});
         }
 	});
 }
@@ -1433,7 +1433,7 @@ function containsKey(keyToTest, array){
 
  // update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
  function updateSelectedGenesCount() {
-     console.log("updateSelectedGenesCount check...");
+//     console.log("updateSelectedGenesCount check...");
   var count= $('input:checkbox[name="candidates"]:checked').length;
   $('#selectedGenesCount span').text(count +' gene(s) selected'); // update
  }
