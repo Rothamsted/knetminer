@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genome>
- 	<chromosome index="1" length="11760950" number="1">
+ 	<chromosome index="1" length="11760891" number="1">
 		<band index="1">
 			<start>0</start>
-			<end>11760950</end>
+			<end>11760891</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
@@ -21,10 +21,10 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4" length="9407501" number="4">
+	<chromosome index="4" length="9395062" number="4">
 		<band index="1">
 			<start>0</start>
-			<end>9407501</end>
+			<end>9395062</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
