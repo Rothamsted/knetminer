@@ -1,138 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sampleQueries>
-<!--	<query>
-		<name>Example 1</name>
-		<description>Gene set analysis</description>
-		<term>"grain color" OR flavon* OR proanthocyanidin</term>
-		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>Traes_5DS_3470B5005</gene> 
-		<gene>Traes_2BS_A3FACFBB7</gene> 
-		<gene>Traes_3B_0D6720765</gene> 
-		<gene>Traes_2BL_07EC87598</gene> 
-		<gene>Traes_3B_8901FB437</gene> 
-		<gene>Traes_2DL_416879F3F</gene> 
-		<gene>Traes_5BS_E7DEF21BD1</gene> 
-		<gene>Traes_7AS_D5D81566C</gene> 
-		<gene>Traes_3B_857714A63</gene> 
-		<gene>Traes_7AL_40127A553</gene> 
-		<gene>Traes_3B_6C834B60C</gene> 
-		<gene>Traes_2AL_ED4D3BEC1</gene> 
-		<gene>Traes_7BS_1224E5EB1</gene> 
-		<gene>Traes_4AL_416A78462</gene> 
-		<gene>Traes_6DS_5B0F73A26</gene> 
-		<gene>Traes_1BL_1D865A8CC</gene> 
-		<gene>Traes_3DL_247F72C8D</gene> 
-		<gene>Traes_4AL_FCF851DFF</gene> 
-		<gene>Traes_2AL_B23D14FEF</gene> 
-		<gene>Traes_5AL_120F47252</gene> 
-	</query> -->
 	<query>
 		<name>Example 1</name>
 		<description>Grain colour</description>
 		<term>color OR flavon* OR proanthocyanidin</term>
-	<!--	<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>2B</chromosome>
-			<start>30</start>
-			<end>50</end>
-			<label>QTL1</label>
-		</region>
-		<region>
-			<chromosome>5A</chromosome>
-			<start>50</start>
-			<end>60</end>
-			<label>QTL2</label>
-		</region>
-		<gene>Traes_5DS_3470B5005</gene>
-		<gene>Traes_2BS_A3FACFBB7</gene>
-		<gene>Traes_3B_0D6720765</gene>
-		<gene>Traes_2BL_07EC87598</gene>
-		<gene>Traes_3B_8901FB437</gene>
-		<gene>Traes_2DL_416879F3F</gene>
-		<gene>Traes_5BS_E7DEF21BD1</gene>
-		<gene>Traes_7AS_D5D81566C</gene>
-		<gene>Traes_3B_857714A63</gene>
-		<gene>Traes_7AL_40127A553</gene>
-		<gene>Traes_3B_6C834B60C</gene>
-		<gene>Traes_2AL_ED4D3BEC1</gene>
-		<gene>Traes_7BS_1224E5EB1</gene>
-		<gene>Traes_4AL_416A78462</gene>
-		<gene>Traes_6DS_5B0F73A26</gene>
-		<gene>Traes_1BL_1D865A8CC</gene>
-		<gene>Traes_3DL_247F72C8D</gene>
-		<gene>Traes_4AL_FCF851DFF</gene>
-		<gene>Traes_2AL_B23D14FEF</gene>
-		<gene>Traes_5AL_120F47252</gene> -->
+                <gene>TRIAE_CS42_3B_TGACv1_221579_AA0744810</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_250390_AA0867380</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_250635_AA0871380</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223660_AA0785210</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227836_AA0824850</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_226720_AA0819050</gene>
+                <gene>TRIAE_CS42_2DL_TGACv1_157957_AA0503430</gene>
+                <gene>TRIAE_CS42_2AL_TGACv1_096242_AA0318150</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220828_AA0720680</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_196609_AA0661910</gene>
+                <gene>TRIAE_CS42_2BL_TGACv1_129730_AA0393980</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223709_AA0785910</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227124_AA0821530</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223507_AA0783200</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221573_AA0744600</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220726_AA0717130</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_194355_AA0631600</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252477_AA0890220</gene>
+                <gene>TRIAE_CS42_4AL_TGACv1_289146_AA0965970</gene>
+                <gene>TRIAE_CS42_6BL_TGACv1_499668_AA1588770</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227779_AA0824680</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252608_AA0890990</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221595_AA0745380</gene>
+                <gene>TRIAE_CS42_4AS_TGACv1_306787_AA1013340</gene>
+                <gene>TRIAE_CS42_2DL_TGACv1_158777_AA0526030</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_195027_AA0643690</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223704_AA0785880</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_225141_AA0805390</gene>
+                <gene>TRIAE_CS42_2BS_TGACv1_147037_AA0477000</gene>
+                <gene>TRIAE_CS42_6BL_TGACv1_500719_AA1608720</gene>
+                <gene>TRIAE_CS42_1DL_TGACv1_064799_AA0235760</gene>
+                <gene>TRIAE_CS42_6AL_TGACv1_471142_AA1503370</gene>
+                <gene>TRIAE_CS42_1DL_TGACv1_063545_AA0228500</gene>
+                <gene>TRIAE_CS42_2AS_TGACv1_112825_AA0345780</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_228181_AA0826170</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_249124_AA0838510</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221068_AA0729150</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252477_AA0890210</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220626_AA0712220</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220723_AA0716790</gene>
+                <gene>TRIAE_CS42_U_TGACv1_649448_AA2148630</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_196902_AA0663630</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_249945_AA0858910</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220626_AA0712460</gene>
 	</query>
 	<query>
 		<name>Example 2</name>
 		<description>Pre-harvest sprouting</description>
 		<term>"seed germination" OR "seed dormancy"</term>
-        <!--        <mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-                <gene>TRAES_4DS_8C9BC2BFA</gene>
-                <gene>TRAES_7AS_556F7B49E</gene>
-                <gene>TRAES_2DS_8827E95F0</gene>
-                <gene>TRAES_2BS_A3FACFBB7</gene>
-                <gene>TRAES_2DL_BC7F606B9</gene>
-                <gene>TRAES_2BS_4AC3D17E8</gene>
-                <gene>TRAES_2AL_ED4D3BEC1</gene>
-                <gene>TRAES_2BL_07EC87598</gene>
-                <gene>TRAES_2AS_0EA2792B8</gene>
-                <gene>TRAES_2BS_0FA5E53AD</gene>
-                <gene>TRAES_3B_96D744B6B</gene>
-                <gene>TRAES_3AL_197871859</gene>
-                <gene>TRAES_7AL_8D7C375FF</gene>
-                <gene>TRAES_3B_0B9FADF42</gene>
-                <gene>TRAES_2DL_C0E026879</gene>
-                <gene>TRAES_3B_82E1F5484</gene>
-                <gene>TRAES_6AL_9032339D6</gene>
-                <gene>TRAES_2BL_A06E8F248</gene>
-                <gene>TRAES_6DS_5B0F73A26</gene>
-                <gene>TRAES_2BL_B2B3C624C</gene>
-                <gene>TRAES_4DL_5A3D8F519</gene>
-                <gene>TRAES_2DL_F47B9B20E</gene>
-                <gene>TRAES_2BL_E3C1E6450</gene>
-                <gene>TRAES_2DL_4C86F28DC</gene>
-                <gene>TRAES_2DS_DE2E9E2D5</gene>
-                <gene>TRAES_1AL_19AF54D53</gene>
-                <gene>TRAES_5BL_B2F45B45A</gene>
-                <gene>TRAES_3DL_4D42B475B</gene>
-                <gene>TRAES_2DL_2050A1ADC</gene>
-                <gene>TRAES_2DL_F4216BDB8</gene>
-                <gene>TRAES_3B_05835EDC0</gene>
-                <gene>TRAES_4DL_3E8E652D3</gene>
-                <gene>TRAES_1BS_27474466D</gene>
-                <gene>TRAES_7AS_CC48D0C77</gene>
-                <gene>TRAES_3DL_B9C57507A</gene>
-                <gene>TRAES_3DS_0A0650113</gene>
-                <gene>TRAES_3B_607315E21</gene>
-                <gene>TRAES_3B_7A9E4CA37</gene>
-                <gene>TRAES_2DL_83168C1E0</gene>
-                <gene>TRAES_2BL_5A50FDA1A</gene>
-                <gene>TRAES_2AL_9D78F85E2</gene> -->
+                <gene>TRIAE_CS42_3B_TGACv1_221579_AA0744810</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_250390_AA0867380</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_250635_AA0871380</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223660_AA0785210</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227836_AA0824850</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_226720_AA0819050</gene>
+                <gene>TRIAE_CS42_2DL_TGACv1_157957_AA0503430</gene>
+                <gene>TRIAE_CS42_2AL_TGACv1_096242_AA0318150</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220828_AA0720680</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_196609_AA0661910</gene>
+                <gene>TRIAE_CS42_2BL_TGACv1_129730_AA0393980</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223709_AA0785910</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227124_AA0821530</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223507_AA0783200</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221573_AA0744600</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220726_AA0717130</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_194355_AA0631600</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252477_AA0890220</gene>
+                <gene>TRIAE_CS42_4AL_TGACv1_289146_AA0965970</gene>
+                <gene>TRIAE_CS42_6BL_TGACv1_499668_AA1588770</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_227779_AA0824680</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252608_AA0890990</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221595_AA0745380</gene>
+                <gene>TRIAE_CS42_4AS_TGACv1_306787_AA1013340</gene>
+                <gene>TRIAE_CS42_2DL_TGACv1_158777_AA0526030</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_195027_AA0643690</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_223704_AA0785880</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_225141_AA0805390</gene>
+                <gene>TRIAE_CS42_2BS_TGACv1_147037_AA0477000</gene>
+                <gene>TRIAE_CS42_6BL_TGACv1_500719_AA1608720</gene>
+                <gene>TRIAE_CS42_1DL_TGACv1_064799_AA0235760</gene>
+                <gene>TRIAE_CS42_6AL_TGACv1_471142_AA1503370</gene>
+                <gene>TRIAE_CS42_1DL_TGACv1_063545_AA0228500</gene>
+                <gene>TRIAE_CS42_2AS_TGACv1_112825_AA0345780</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_228181_AA0826170</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_249124_AA0838510</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221068_AA0729150</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_252477_AA0890210</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220626_AA0712220</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220723_AA0716790</gene>
+                <gene>TRIAE_CS42_U_TGACv1_649448_AA2148630</gene>
+                <gene>TRIAE_CS42_3AL_TGACv1_196902_AA0663630</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_249945_AA0858910</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_220626_AA0712460</gene>
 	</query>
 	<query>
 		<name>Example 3</name>
 		<description>Grain colour + PHS</description>
-		<term>dormancy OR color OR flavon* OR proanthocyanidin</term>
-        <!--        <mapGLWithoutRestriction>false</mapGLWithoutRestriction>
-                <gene>TRAES_4DS_8C9BC2BFA</gene>
-                <gene>TRAES_7AS_556F7B49E</gene>
-                <gene>TRAES_2DS_8827E95F0</gene>
-                <gene>TRAES_2BS_A3FACFBB7</gene>
-                <gene>TRAES_2DL_BC7F606B9</gene>
-                <gene>TRAES_2BS_4AC3D17E8</gene>
-                <gene>TRAES_2AL_ED4D3BEC1</gene>
-                <gene>TRAES_2BL_07EC87598</gene>
-                <gene>TRAES_2AS_0EA2792B8</gene>
-                <gene>TRAES_2BS_0FA5E53AD</gene>
-                <gene>TRAES_3B_96D744B6B</gene>
-                <gene>TRAES_3AL_197871859</gene>
-                <gene>TRAES_7AL_8D7C375FF</gene>
-                <gene>TRAES_3B_0B9FADF42</gene>
-                <gene>TRAES_2DL_C0E026879</gene>
-                <gene>TRAES_3B_82E1F5484</gene> -->
-                <gene>TRAES_3AL_197871859</gene>
+		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
+            <!--    <gene>TRAES_3AL_197871859</gene>
                 <gene>TRIAE_CS42_2DS_TGACV1_177302_AA0572700</gene>
                 <gene>TRAES_2BS_0FA5E53AD</gene>
                 <gene>TRIAE_CS42_2AS_TGACv1_112825_AA0345780</gene>
@@ -146,18 +116,23 @@
                 <gene>TRIAE_CS42_7AS_TGACV1_570343_AA1834130</gene>
                 <gene>TRIAE_CS42_3DL_TGACv1_249765_AA0855780</gene>
                 <gene>TRIAE_CS42_3AL_TGACv1_194760_AA0638920</gene>
-                <gene>TRIAE_CS42_3B_TGACV1_220939_AA0724450</gene>
+                <gene>TRIAE_CS42_3B_TGACV1_220939_AA0724450</gene> -->
+                <gene>TRIAE_CS42_3B_TGACv1_227124_AA0821530</gene>
+                <gene>TRAES_2DL_BC7F606B9</gene>
+                <gene>TRIAE_CS42_2AS_TGACv1_112825_AA0345780</gene>
+                <gene>TRAES_2BL_07EC87598</gene>
+                <gene>TRAES_2BS_4AC3D17E8</gene>
+                <gene>TRIAE_CS42_2AL_TGACV1_096242_AA0318150</gene>
+                <gene>TRAES3BF026100070CFD</gene>
+                <gene>TRAES_3AL_197871859</gene>
+                <gene>TRIAE_CS42_3DL_TGACv1_249124_AA0838510</gene>
+                <gene>TRAES_3DL_4D42B475B</gene>
+                <gene>TRIAE_CS42_2DL_TGACV1_158777_AA0526030</gene>
+                <gene>TRIAE_CS42_3B_TGACv1_221068_AA0729150</gene>
 	</query>
 	<query>
 		<name>Example 4</name>
-		<description>Grain size QTL</description>
+		<description>Grain size</description>
 		<term>"seed size" OR "grain size" OR "grain weight" OR TGW OR "grain width"</term>
-	<!--	<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>5A</chromosome>
-			<start>16</start>
-			<end>53</end>
-			<label>QTL1</label>
-		</region>-->
 	</query>
 </sampleQueries>

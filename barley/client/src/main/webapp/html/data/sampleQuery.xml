@@ -6,13 +6,13 @@
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>1H</chromosome>
+			<chromosome>1</chromosome>
 			<start>80</start>
 			<end>110</end>
 			<label>QTL1</label>
 		</region>
 		<region>
-			<chromosome>2H</chromosome>
+			<chromosome>2</chromosome>
 			<start>10</start>
 			<end>30</end>
 			<label>QTL2</label>
@@ -24,13 +24,13 @@
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>1H</chromosome>
+			<chromosome>1</chromosome>
 			<start>80</start>
 			<end>110</end>
 			<label>QTL1</label>
 		</region>
 		<region>
-			<chromosome>2H</chromosome>
+			<chromosome>2</chromosome>
 			<start>10</start>
 			<end>30</end>
 			<label>QTL2</label>

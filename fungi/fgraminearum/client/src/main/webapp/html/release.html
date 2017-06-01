@@ -38,23 +38,29 @@
 	<ul>
 	    <li>Gene-Protein [Ensembl]</li>
 	    <ul>
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/fusarium_graminearum/Fusarium_graminearum.RR.34.gff3.gz">Fusarium_graminearum.RR.34.gff3</a></li>
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/fasta/fusarium_graminearum/pep/Fusarium_graminearum.RR.pep.all.fa.gz">Fusarium_graminearum.RR.pep.all.fa</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.feature_page.ensembl_gene_id|fgraminearum_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=fgraminearum_eg_gene.default.filters.biotype.%20protein_coding%20&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+			<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/fusarium_graminearum/Fusarium_graminearum.RR1.35.gff3.gz">Fusarium_graminearum.RR1.35.gff3</a></li>
+			<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/fasta/fusarium_graminearum/pep/Fusarium_graminearum.RR1.pep.all.fa.gz">Fusarium_graminearum.RR1.pep.all.fa</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=fgraminearum_eg_gene.default.feature_page.ensembl_gene_id|fgraminearum_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+			<li><a href="http://fungidb.org/common/downloads/release-32/FgraminearumPH-1/txt/FungiDB-32_FgraminearumPH-1_GeneAliases.txt">Old Gene Id</a></li>
 	    </ul>
-		<li>Protein Domain [Ensembl]</li>
+	    <li>Protein Domain [Ensembl]</li>
 		<ul>
 			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.feature_page.ensembl_peptide_id|fgraminearum_eg_gene.default.feature_page.pfam_pf|fgraminearum_eg_gene.default.feature_page.interpro_id|fgraminearum_eg_gene.default.feature_page.interpro_short_description|fgraminearum_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
 		</ul>
+	    <li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
+			<ul>
+			    <li>Protein@F.graminearum-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]:</li>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4890&compress=yes&format=xml">Ascomycetes XML</a></li>
+			</ul>
 		<li>Yeast (<i>Saccharomyces cerevisiae</i>)</li>
 		<ul>
 			<li>Gene-Protein [Ensembl]</li>
 			<ul>
-				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.34.gff3.gz">Saccharomyces_cerevisiae.R64-1-1.34.gff3</a></li>
+				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.35.gff3.gz">Saccharomyces_cerevisiae.R64-1-1.35.gff3</a></li>
 				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/fasta/saccharomyces_cerevisiae/pep/Saccharomyces_cerevisiae.R64-1-1.pep.all.fa.gz">Saccharomyces_cerevisiae.R64-1-1.pep.all.fa</a></li>
 				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=scerevisiae_eg_gene.default.feature_page.ensembl_gene_id|scerevisiae_eg_gene.default.feature_page.sgd_gene|scerevisiae_eg_gene.default.feature_page.ensembl_transcript_id|scerevisiae_eg_gene.default.feature_page.sgd_transcript&FILTERS=scerevisiae_eg_gene.default.filters.with_sgd_gene.only&VISIBLEPANEL=resultspanel">Ensembl - SGD Mapping</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=scerevisiae_eg_gene.default.feature_page.ensembl_peptide_id|scerevisiae_eg_gene.default.feature_page.uniprot_swissprot_accession|scerevisiae_eg_gene.default.feature_page.uniprot_sptrembl&FILTERS=&VISIBLEPANEL=resultspanel">Ensembl - UniProtKB Mapping</a></li>
-			</ul>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=scerevisiae_eg_gene.default.feature_page.ensembl_peptide_id|scerevisiae_eg_gene.default.feature_page.uniprotswissprot&FILTERS=scerevisiae_eg_gene.default.filters.with_uniprotswissprot.only&VISIBLEPANEL=resultspanel">Ensembl - UniProtKB-SP Mapping</a></li>
+			</ul>	<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=scerevisiae_eg_gene.default.feature_page.ensembl_peptide_id|scerevisiae_eg_gene.default.feature_page.uniprotsptrembl&FILTERS=scerevisiae_eg_gene.default.filters.with_uniprotsptrembl.only&VISIBLEPANEL=resultspanel">Ensembl - Uniprot-TREmbl Mapping</a></li>
 			<li>Protein Pathway [YeastCyc, UniProtKB]</li>
 			<ul>
 				<li><a href="ftp://ftp.yeastgenome.org/ptools_data/yeast.tar.gz">YeastCyc</a> Release 15</li>
@@ -94,10 +100,10 @@
 		<ul>
 			<li>Gene-Protein [Ensembl, AspGD]</li>
 			<ul>
-				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/aspergillus_nidulans/Aspergillus_nidulans.ASM1142v1.34.gff3.gz">Aspergillus_nidulans.ASM1142v1.34.gff3</a></li>
+				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/aspergillus_nidulans/Aspergillus_nidulans.ASM1142v1.35.gff3.gz">Aspergillus_nidulans.ASM1142v1.35.gff3</a></li>
 				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/fasta/aspergillus_nidulans/pep/Aspergillus_nidulans.ASM1142v1.pep.all.fa.gz">Aspergillus_nidulans.ASM1142v1.pep.all.fa</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=anidulans_eg_gene.default.feature_page.ensembl_gene_id|anidulans_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=anidulans_eg_gene.default.feature_page.ensembl_gene_id|anidulans_eg_gene.default.feature_page.aspgd|anidulans_eg_gene.default.feature_page.ensembl_peptide_id|anidulans_eg_gene.default.feature_page.aspgd_transcript&FILTERS=anidulans_eg_gene.default.filters.with_aspgd_gene.only&VISIBLEPANEL=resultspanel">Ensembl - AspGD Mapping</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=anidulans_eg_gene.default.feature_page.ensembl_gene_id|anidulans_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=anidulans_eg_gene.default.filters.biotype.%20protein_coding%20&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=anidulans_eg_gene.default.feature_page.ensembl_gene_id|anidulans_eg_gene.default.feature_page.ensembl_peptide_id|anidulans_eg_gene.default.feature_page.aspgd_gene&FILTERS=&VISIBLEPANEL=resultspanel">Ensembl - AspGD Mapping</a></li>
 				<li><a href="http://www.aspergillusgenome.org/download/External_id_mappings/gp2protein.aspgd.gz">AspGD - UniProtKB Mapping</a></li>
 			</ul>
 			<li>Protein-Protein Interactions [BioGRID, Ensembl]</li>
@@ -131,9 +137,10 @@
 			<li>Gene-Protein [Ensembl]</li>
 			<ul>
 				<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/fungi/fasta/neurospora_crassa/pep/Neurospora_crassa.NC12.pep.all.fa.gz">Neurospora_crassa.NC12.pep.all.fa</a></li>
-				<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/fungi/gff3/neurospora_crassa/Neurospora_crassa.NC12.34.gff3.gz">Neurospora_crassa.NC12.34.gff3</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_gene_id|ncrassa_eg_gene.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_transcript_id|ncrassa_eg_gene.default.feature_page.uniprot_swissprot_accession|ncrassa_eg_gene.default.feature_page.uniprot_sptrembl&FILTERS=&VISIBLEPANEL=resultspanel">Ensembl - UniProtKB Mapping</a></li>
+				<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/fungi/gff3/neurospora_crassa/Neurospora_crassa.NC12.35.gff3.gz">Neurospora_crassa.NC12.35.gff3</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_gene_id|ncrassa_eg_gene.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_transcript_id|ncrassa_eg_gene.default.feature_page.uniprotswissprot&FILTERS=ncrassa_eg_gene.default.filters.with_uniprotswissprot.only&VISIBLEPANEL=resultspanel">Ensembl - UniProtKB-SP Mapping</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_transcript_id|ncrassa_eg_gene.default.feature_page.uniprotsptrembl&FILTERS=ncrassa_eg_gene.default.filters.with_uniprotsptrembl.only&VISIBLEPANEL=resultspanel">Ensembl - UniProtKB-TREmbl Mapping</a></li>
 			</ul>
 			<li>Protein-Protein Interactions [BioGRID]</li>
 			<ul>
@@ -142,7 +149,7 @@
 			</ul>
 			<li>Protein Domain [Ensembl]</li>
 			<ul>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_peptide_id|ncrassa_eg_gene.default.feature_page.pfam_pf|ncrassa_eg_gene.default.feature_page.interpro_id|ncrassa_eg_gene.default.feature_page.interpro_short_description|ncrassa_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ncrassa_eg_gene.default.feature_page.ensembl_transcript_id|ncrassa_eg_gene.default.feature_page.pfam|ncrassa_eg_gene.default.feature_page.interpro|ncrassa_eg_gene.default.feature_page.interpro_short_description|ncrassa_eg_gene.default.feature_page.interpro_description&FILTERS=ncrassa_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
 			</ul>
 			<li>Protein-Publication [UniProtKB]</li>
 			<ul>
@@ -153,28 +160,33 @@
 		<ul>
 			<li>Gene-Protein [Ensembl]</li>
 			<ul>
-				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/zymoseptoria_tritici/Zymoseptoria_tritici.MG2.34.gff3.gz">Zymoseptoria_tritici.MG2.34.gff3</a></li>
+				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/gff3/zymoseptoria_tritici/Zymoseptoria_tritici.MG2.35.gff3.gz">Zymoseptoria_tritici.MG2.35.gff3</a></li>
 				<li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/fasta/zymoseptoria_tritici/pep/Zymoseptoria_tritici.MG2.pep.all.fa.gz">Zymoseptoria_tritici.MG2.pep.all.fa</a></li>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.feature_page.ensembl_gene_id|ztritici_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=ztritici_eg_gene.default.filters.biotype.%20protein_coding%20&VISIBLEPANEL=resultspanel">Mapping File</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.feature_page.ensembl_gene_id|ztritici_eg_gene.default.feature_page.ensembl_peptide_id&FILTERS=&VISIBLEPANEL=resultspanel">Mapping File</a></li>
 			</ul>
 			<li>Protein Domain [Ensembl]</li>
 			<ul>
-				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.feature_page.ensembl_peptide_id|ztritici_eg_gene.default.feature_page.pfam_pf|ztritici_eg_gene.default.feature_page.interpro_id|ztritici_eg_gene.default.feature_page.interpro_short_description|ztritici_eg_gene.default.feature_page.interpro_description&FILTERS=&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+				<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.feature_page.ensembl_peptide_id|ztritici_eg_gene.default.feature_page.pfam|ztritici_eg_gene.default.feature_page.interpro|ztritici_eg_gene.default.feature_page.interpro_short_description|ztritici_eg_gene.default.feature_page.interpro_description&FILTERS=ztritici_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart InterPro Protein Domains</a></li>
+			</ul>
+			<li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
+			<ul>
+			    <li>Protein@Z.tritici-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]:</li>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4890&compress=yes&format=xml">Ascomycetes XML</a></li>
 			</ul>
 		</ul>
-		<li>Homology [Ensembl]</li>
+		<li>Homology</li>
 		<ul>
-			<li>Data was downloaded from Ensembl BioMart</li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_anidulans_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - A.nidulans</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - N.crassa</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - Yeast</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_fgraminearum_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - Z.tritici</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_anidulans_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - A.nidulans</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - N.crassa</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - Yeast</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=anidulans_eg_gene.default.homologs.ensembl_peptide_id|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=anidulans_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs A.nidulans - N.crassa</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=anidulans_eg_gene.default.homologs.ensembl_peptide_id|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=anidulans_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs A.nidulans - Yeast</a></li>
-			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ncrassa_eg_gene.default.homologs.ensembl_transcript_id|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=ncrassa_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs N.crassa - Yeast</a></li>
+		    <li>Data was downloaded from Ensembl BioMart</li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.anidulans_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_anidulans_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - A.nidulans</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - N.crassa</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=fgraminearum_eg_gene.default.homologs.ensembl_peptide_id|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|fgraminearum_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=fgraminearum_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - Yeast</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.fgraminearum_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_fgraminearum_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs F.graminearum - Z.tritici</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.anidulans_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_anidulans_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - A.nidulans</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - N.crassa</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ztritici_eg_gene.default.homologs.ensembl_peptide_id|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|ztritici_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=ztritici_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs Z.tritici - Yeast</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=anidulans_eg_gene.default.homologs.ensembl_peptide_id|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_ensembl_peptide|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_orthology_type|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id|anidulans_eg_gene.default.homologs.ncrassa_eg_homolog_perc_id_r1&FILTERS=anidulans_eg_gene.default.filters.with_ncrassa_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs A.nidulans - N.crassa</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=anidulans_eg_gene.default.homologs.ensembl_peptide_id|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|anidulans_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=anidulans_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs A.nidulans - Yeast</a></li>
+			<li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungal_mart&ATTRIBUTES=ncrassa_eg_gene.default.homologs.ensembl_transcript_id|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_ensembl_peptide|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_orthology_type|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id|ncrassa_eg_gene.default.homologs.scerevisiae_eg_homolog_perc_id_r1&FILTERS=ncrassa_eg_gene.default.filters.with_scerevisiae_eg_homolog.only&VISIBLEPANEL=resultspanel">Homologs N.crassa - Yeast</a></li>
 		</ul>
 	    
 </ul>
