@@ -1113,7 +1113,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		if(candidate_genes.length > 2) {
 		        table =  '';
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-				table = table + 'Select gene(s) and click "View Network" button to see the Ondex network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+				table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
@@ -1124,7 +1124,8 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<option value="1000">1000</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
-				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." /></div>';
+				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
+                                        '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>'+'</div>';
 				table = table + '<div class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1389,7 +1390,7 @@ function createGenesTable(tableUrl, keyword, rows){
     			for(var i=1; i<=numResults; i++){
 	    			var values = e.data.x[i].split("\t");
 	    			if(values[7] === "yes") {
-                                   console.log("Known/ Novel Targets chosen: "+ $(this).val());
+                                  // console.log("Known/ Novel Targets chosen: "+ $(this).val());
 //                                   console.log("Evidences: "+ values[9] +"; checked: "+ $(this).prop('checked'));
                                    // Check which checkbox button option was selected.
                                    if($(this).val() === "checkbox_Known") { // Select Known Targets.
@@ -1404,6 +1405,13 @@ function createGenesTable(tableUrl, keyword, rows){
                                           }
 	    			}
     			}
+                        // update selected genes count
+                        updateSelectedGenesCount();
+    		});
+                
+                // bind click event on all candidate_genes checkboxes in Gene View table.
+    		$('input:checkbox[name="candidates"]').click(function(e) {
+                    updateSelectedGenesCount(); // update selected genes count
     		});
         }
 	});
@@ -1422,6 +1430,13 @@ function containsKey(keyToTest, array){
 	}
 	return result;
 }
+
+ // update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
+ function updateSelectedGenesCount() {
+//     console.log("updateSelectedGenesCount check...");
+  var count= $('input:checkbox[name="candidates"]:checked').length;
+  $('#selectedGenesCount span').text(count +' gene(s) selected'); // update
+ }
 
 /*
  * Function
