@@ -2,7 +2,7 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>Find candidate genes in QTL</description>
+		<description>Sugar content</description>
 		<term>"sugar content" OR glucose</term>
 		<withinRegion>true</withinRegion>
 		<region>
@@ -21,7 +21,7 @@
 	
 	<query>
 		<name>Example 2</name>
-		<description>QTL + gene list analysis</description>
+		<description>Drought</description>
 		<term>drought OR trehalose</term>
 		<withinRegion>false</withinRegion>
 		<region>
@@ -37,24 +37,19 @@
 			<label>QTL2</label>
 		</region>
 		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>GRMZM2G179349</gene>
-		<gene>GRMZM2G015976</gene>
-		<gene>GRMZM2G021706</gene>
-		<gene>GRMZM2G025459</gene>
-		<gene>GRMZM2G179521</gene>
-		<gene>GRMZM2G061950</gene>
-		<gene>GRMZM2G064993</gene>
-		<gene>GRMZM2G008226</gene>
-		<gene>GRMZM2G014729</gene>
-		<gene>GRMZM2G019183</gene>
-		<gene>GRMZM2G099860</gene>
-		<gene>GRMZM2G112830</gene>
-		<gene>GRMZM2G178546</gene>
-		<gene>GRMZM2G312521</gene>
-		<gene>GRMZM2G366659</gene>
-		<gene>GRMZM2G416836</gene>
-		<gene>GRMZM2G527891</gene>
-		<gene>GRMZM2G836674</gene>
-		<gene>GRMZM2G873594</gene>			
+		<gene>Zm00001d049252</gene>
+		<gene>Zm00001d005687</gene>
+		<gene>Zm00001d037211</gene>
+		<gene>Zm00001d008338</gene>
+		<gene>Zm00001d047110</gene>
+		<gene>Zm00001d022193</gene>
+		<gene>Zm00001d010662</gene>
+		<gene>Zm00001d032311</gene>
+		<gene>Zm00001d028267</gene>
+		<gene>Zm00001d020396</gene>
+		<gene>Zm00001d023673</gene>
+		<gene>Zm00001d017502</gene>
+		<gene>Zm00001d050293</gene>
+		<gene>Zm00001d052060</gene>		
 	</query>
 </sampleQueries>

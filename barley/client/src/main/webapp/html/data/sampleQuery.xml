@@ -4,67 +4,30 @@
 		<name>Example 1</name>
 		<description>Flowering time</description>
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
-		<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>1</chromosome>
-			<start>80</start>
-			<end>110</end>
-			<label>QTL1</label>
-		</region>
-		<region>
-			<chromosome>2</chromosome>
-			<start>10</start>
-			<end>30</end>
-			<label>QTL2</label>
-		</region>
 	</query>	
 	<query>
 		<name>Example 2</name>
-		<description>Flowering time QTL + gene list</description>
+		<description>Flowering QTL</description>
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>1</chromosome>
-			<start>80</start>
-			<end>110</end>
+			<chromosome>3</chromosome>
+			<start>35000000</start>
+			<end>52000000</end>
 			<label>QTL1</label>
 		</region>
-		<region>
-			<chromosome>2</chromosome>
-			<start>10</start>
-			<end>30</end>
-			<label>QTL2</label>
-		</region>
 		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>MLOC_16841.6</gene>
-		<gene>MLOC_52136.1</gene>
-		<gene>AK251124.1</gene>
-		<gene>MLOC_3020.1</gene>
-		<gene>MLOC_81775.1</gene>
-		<gene>AK370374</gene>
-		<gene>MLOC_60791.1</gene>
-		<gene>MLOC_23301.1</gene>
-		<gene>MLOC_49570.1</gene>
-		<gene>MLOC_73186.2</gene>
-		<gene>MLOC_6972.1</gene>
-		<gene>MLOC_49121.2</gene>
-		<gene>MLOC_3999.2</gene>
-		<gene>MLOC_60261.1</gene>
-		<gene>MLOC_68325.1</gene>
-		<gene>MLOC_22599.3</gene>
-		<gene>MLOC_70971.1</gene>
-		<gene>MLOC_63839.1</gene>
-		<gene>MLOC_77497.1</gene>
-		<gene>AK365339</gene>
-		<gene>MLOC_47908.1</gene>
-		<gene>MLOC_81269.2</gene>
-		<gene>MLOC_52136.1</gene>
-		<gene>MLOC_49121.2</gene>
-		<gene>MLOC_18322.1</gene>
-		<gene>AK363778</gene>
-		<gene>MLOC_62549.1</gene>
-		<gene>AK357267</gene>
-		<gene>MLOC_53981.1</gene>
-		<gene>MLOC_44646.1</gene>
+		<gene>MLOC_18291</gene>
+		<gene>MLOC_70638</gene>
+		<gene>MLOC_14118</gene>
+		<gene>MLOC_9834</gene>
+		<gene>MLOC_66422</gene>
+		<gene>MLOC_81154</gene>
+		<gene>MLOC_12732</gene>
+		<gene>MLOC_57021</gene>
+		<gene>MLOC_81684</gene>
+		<gene>MLOC_17065</gene>
+		<gene>MLOC_73670</gene>
+		<gene>MLOC_32526</gene>
 	</query>	
 </sampleQueries>

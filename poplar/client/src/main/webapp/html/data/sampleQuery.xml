@@ -2,17 +2,17 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>Find candidate genes in QTL</description>
+		<description>Lignin content</description>
 		<term>"lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"</term>
 		<withinRegion>false</withinRegion>
 		<region>
-			<chromosome>I</chromosome>
+			<chromosome>Chr01</chromosome>
 			<start>29000000</start>
 			<end>30000000</end>
 			<label>QTL1</label>
 		</region>
 		<region>
-			<chromosome>IX</chromosome>
+			<chromosome>Chr09</chromosome>
 			<start>8000000</start>
 			<end>9000000</end>
 			<label>QTL2</label>
@@ -21,17 +21,17 @@
 	
 	<query>
 		<name>Example 2</name>
-		<description>QTL + gene list analysis</description>
+		<description>Shoot branching</description>
 		<term>"shoot branching" OR strigolactone</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>V</chromosome>
+			<chromosome>Chr05</chromosome>
 			<start>10000000</start>
 			<end>13000000</end>
 			<label>QTL1</label>
 		</region>
 		<region>
-			<chromosome>VI</chromosome>
+			<chromosome>Chr06</chromosome>
 			<start>14000000</start>
 			<end>15000000</end>
 			<label>QTL2</label>
