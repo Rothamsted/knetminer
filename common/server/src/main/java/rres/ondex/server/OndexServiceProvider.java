@@ -161,7 +161,7 @@ public class OndexServiceProvider {
 	public void loadConfig() {
 		Properties chromConfig = new Properties();
 
-		System.out.println("QTLNetMiner configured for taxonomy id: " + taxID);
+		System.out.println("KnetMiner configured for taxonomy id: " + taxID);
 
 		// // load chromosomes configuration from file
 		// URL configUrl = Thread.currentThread().getContextClassLoader()
@@ -924,6 +924,7 @@ public class OndexServiceProvider {
 		AttributeName attPvalue = graph.getMetaData().getAttributeName("PVALUE");
 		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
 		AttributeName attTrait = graph.getMetaData().getAttributeName("Trait");
+		AttributeName attTaxID = graph.getMetaData().getAttributeName("TAXID");
 
 		Set<QTL> results = new HashSet<QTL>();
 
@@ -942,7 +943,11 @@ public class OndexServiceProvider {
 				if (attTrait != null && q.getAttribute(attTrait) != null) {
 					trait = q.getAttribute(attTrait).getValue().toString();
 				}
-				results.add(new QTL(type, chrName, start, end, label, "", 1.0f, trait));
+				String tax_id= "";
+				if (attTaxID != null && q.getAttribute(attTaxID) != null) {
+					tax_id= q.getAttribute(attTaxID).getValue().toString();
+				}
+				results.add(new QTL(type, chrName, start, end, label, "", 1.0f, trait, tax_id));
 			}
 		} else {
 			// be careful with the choice of analyzer: ConceptClasses are not
@@ -993,7 +998,11 @@ public class OndexServiceProvider {
 								pValue = (Float) r.getAttribute(attPvalue).getValue();
 							}
 							String trait = c.getConceptName().getName();
-							results.add(new QTL(chrName, type, start, end, label, "", pValue, trait));
+                                                        String tax_id= "";
+                                                        if (attTaxID != null && r.getAttribute(attTaxID) != null) {
+                                                            tax_id = r.getAttribute(attTaxID).getValue().toString();
+                                                           }
+							results.add(new QTL(chrName, type, start, end, label, "", pValue, trait, tax_id));
 						}
 					}
 				}
@@ -1541,6 +1550,7 @@ public class OndexServiceProvider {
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attSig = md.getAttributeName("Significance");
 		AttributeName attTrait = md.getAttributeName("Trait");
+     //           AttributeName attTAXID = md.getAttributeName("TAXID");
 		ConceptClass ccQTL = md.getConceptClass("QTL");
 		Set<QTL> qtlDB = new HashSet<QTL>();
 		if (ccQTL != null) {
@@ -1831,9 +1841,6 @@ public class OndexServiceProvider {
 			}
 
 			// TODO get p-value of SNP-Trait relations
-
-			
-
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
 			sb.append("<start>" + startQTL + "</start>\n");
@@ -1844,13 +1851,17 @@ public class OndexServiceProvider {
 				sb.append("<trait>" + trait + "</trait>\n");
 				sb.append("<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=" + label + "</link>\n");
 			} else if (type.equals("SNP")) {
+                            // add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID.
+                            if(taxID.contains(loci.getTaxID())) {
+                            //System.out.println("loci.getTaxID()= "+ loci.getTaxID());
 				sb.append("<type>snp</type>\n");
 				sb.append("<color>" + color + "</color>\n");
 				sb.append("<trait>" + trait + "</trait>\n");
 				sb.append("<pvalue>" + pvalue + "</pvalue>");
 				sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label
 						+ "</link>\n");
-			}
+                               }
+                            }
 
 			sb.append("<label>" + label + "</label>\n");
 
