@@ -9,8 +9,9 @@ public class QTL {
 	public String significance;
 	public Float pValue;
 	public String trait;
+        public String taxID;
 	
-	public QTL(String chromosome, String type, Integer start, Integer end, String label, String significance, Float pValue, String trait) {
+	public QTL(String chromosome, String type, Integer start, Integer end, String label, String significance, Float pValue, String trait, String taxID) {
 		this.type = type;
 		this.chromosome = chromosome;
 		this.start = start;
@@ -19,6 +20,7 @@ public class QTL {
 		this.significance = significance;
 		this.pValue = pValue;
 		this.trait = trait;
+                this.taxID= taxID;
 	}
 
 	public String getType() {
@@ -79,4 +81,13 @@ public class QTL {
 	public void setTrait(String trait) {
 		this.trait = trait;
 	}
+
+	public String getTaxID() {
+		return taxID;
+	}
+
+	public void setTaxID(String taxID) {
+		this.taxID = taxID;
+	}
+
 }

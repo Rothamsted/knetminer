@@ -164,7 +164,7 @@ public class ClientWorker implements Runnable {
 					}
 					if(start < end) {
 						validQTL = true;
-						QTL qtl = new QTL(chrName, "QTL", start, end, label, "significant", null, label); //set "trait" equal to qtl (=label)
+						QTL qtl = new QTL(chrName, "QTL", start, end, label, "significant", null, label, null); //set "trait" equal to qtl (=label)
 						qtls.add(qtl);
 					}
 				}
