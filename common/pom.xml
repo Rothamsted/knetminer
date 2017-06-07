@@ -16,6 +16,5 @@
 	<modules>
 		<module>client</module>
 		<module>server</module>
-		<module>util</module>
 	</modules>
 </project>
