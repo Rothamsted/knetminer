@@ -6,19 +6,19 @@
 		<term>ABA OR "Abscisic acid" OR "developmental process" OR "developmental maturation"</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>Chr6</chromosome>
+			<chromosome>6</chromosome>
 			<start>34312220</start>
 			<end>52065731</end>
 			<label>1_Maturity_06</label>
 		</region>
 		<region>
-			<chromosome>Chr6</chromosome>
+			<chromosome>6</chromosome>
 			<start>52304476</start>
 			<end>58264191</end>
 			<label>2_Maturity_06</label>
 		</region>
 		<region>
-			<chromosome>Chr11</chromosome>
+			<chromosome>11</chromosome>
 			<start>814609</start>
 			<end>44218466</end>
 			<label>1_Maturity_11</label>
