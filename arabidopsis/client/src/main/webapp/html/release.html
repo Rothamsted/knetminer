@@ -39,20 +39,19 @@
 	<ul>
 		<li>Gene- Protein [Ensembl]</li>
 		<ul>
-                        <li>In total 32k Arabidopsis genes (including protein-coding and non-coding RNAs) and 35k proteins including alternative splice variants.</li>
-			<!--<li><a href="ftp://ftp.jgi-psf.org/pub/compgen/phytozome/v9.0/Athaliana/annotation/Athaliana_167_gene.gff3.gz">Athaliana_167_gene.gff3</a></li>-->
-			<li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.34.gff3.gz">Arabidopsis_thaliana.TAIR10.34.gff3</a></li>
-                        <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.35.gff3.gz">Arabidopsis_thaliana.TAIR10.35.gff3</a></li>
+                    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/tsv/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.35.uniprot.tsv.gz">Ensembl - UniprotKB Mapping</a></li>
 		</ul>
     	<li>Gene-SNP-Phenotype [Ensembl]</li>
     	<ul>
-            <li>Arabidopsis GWAS data for 107 phenotypes.</li>
+            <li>Arabidopsis GWAS data for 89 phenotypes.</li>
             <li>Phenotypes are grouped into the four categories: flowering, developmental, defense and ionomics.</li>
             <li>For more information see <a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a></li>
             <li>Data was downloaded from <a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_snp.default.snp.refsnp_id|athaliana_eg_snp.default.snp.associated_variant_risk_allele|athaliana_eg_snp.default.snp.distance_to_transcript|athaliana_eg_snp.default.snp.chr_name|athaliana_eg_snp.default.snp.chrom_start|athaliana_eg_snp.default.snp.ensembl_gene_stable_id|athaliana_eg_snp.default.snp.consequence_type_tv|athaliana_eg_snp.default.snp.phenotype_name|athaliana_eg_snp.default.snp.phenotype_description|athaliana_eg_snp.default.snp.p_value&FILTERS=athaliana_eg_snp.default.filters.phenotype_significance.'1'|athaliana_eg_snp.default.filters.distance_to_transcript.'1000'&VISIBLEPANEL=resultspanel">Ensembl Biomart</a></li>
-            <li>SNP-Phenotype relations (122,919 relations) of significant SNPs (as defined by Ensembl, p-value<0.05?) linked to 107 phenotypes; on average 1,150 SNPs per phenotype.</li>
-            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (96,047 relations)</li>
-            <li>#SNP=66,816 | #Gene=27,502 | #Phenotype=107</li>
+            <li>SNP-Phenotype relations (31,817 relations) of significant SNPs (p-value<0.0001) linked to 89 phenotypes; on average 360 SNPs per phenotype.</li>
+            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (22,597 relations)</li>
+            <li>#SNP=14,246 | #Gene=12,080 | #Phenotype=89</li>
             <li>To see it live, go to <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/">KnetMiner Arabidopsis</a> and search for <i>dormancy</i>, then switch to Map View.</li>
         </ul>
     	<li>Gene-GO [GOA]</li>
@@ -63,10 +62,10 @@
         </ul>
     	<li>Gene-Gene Interactions [BioGRID]</li>
     	<ul>
-            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.144/BIOGRID-ORGANISM-3.4.144.tab2.zip">TAB</a></li>
-            <li>Version 3.4.144</li>
-            <li>Concepts: 9538 [Gene] | 2326 [Publication]</li>
-            <li>Relations: 299 [genetic] | 37756 [physical] | 20044 [pub_in]</li>
+            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.148.tab2.zip">TAB</a></li>
+            <li>Version 3.4.148</li>
+            <li>Concepts: 9214 [Gene] | 2359 [Publication]</li>
+            <li>Relations: 303 [genetic] | 37089 [physical] | 19296 [pub_in]</li>
         </ul>
     	<li>Gene-Phenotype [TAIR]</li>
     	<ul>
@@ -87,15 +86,17 @@
     	<ul>
             <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml">At proteome XML</a></li>
             <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
-            <li>relations (pub_in): 65,780</li>
-            <li>concepts (Publication): 15,892</li>
         </ul>
     	<li>Protein-Pathway [AraCyc]</li>
     	<ul>
-            <li>AraCyc Release 14</li>
+            <li>AraCyc Release 15</li>
             <li>biopax-level2.owl</li>
             <li>Translation.tab</li>
         </ul>
+	<li>Protein Domain [Ensembl]</li>
+	<ul>
+	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_gene.default.feature_page.ensembl_transcript_id|athaliana_eg_gene.default.feature_page.pfam|athaliana_eg_gene.default.feature_page.interpro|athaliana_eg_gene.default.feature_page.interpro_short_description|athaliana_eg_gene.default.feature_page.interpro_description&FILTERS=athaliana_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart Interpro Protein Domains</a></li>
+	</ul>
     	<li>Gene-TO [Text Mining]</li>
     	<ul>
             <li>Created 27k Gene-TO sentence based co-occurrences in PubMed abstracts</li>
@@ -103,34 +104,30 @@
     	<li>Sequence alignments to other Plants</li>
     	<ul>
             <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
-                <ul><li>Concepts: 26663 [Protein]</li>
-                    <li>Relations: 100947 [h_s_s]</li>
+                <ul>
+		    <li>Concepts: 26933 [Protein]</li>
+                    <li>Relations: 101619 [h_s_s]</li>
                 </ul>
             </li>
             <li>Protein-GO [UniProtKB]</li>
             <li>Protein-Publication [UniProtKB]</li>
+	    <li><a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&compress=yes&format=xml">UniprotKB-SP Plants XML</a></li>
         </ul>
     	<li>Orthologs in Yeast</li>
     	<ul>
-            <li>Protein@Arabidopsis-Protein@Yeast::UniProtKB-SP [Inparanoid]</li>
+            <li>Protein@Arabidopsis-Protein@Yeast-Protein [OMA]</li>
             <li>Protein-GO [UniProtKB]</li>
             <li>Protein-Publication [UniProtKB]</li>
+	    <li>SGD-UniprotKB [Ensembl] <a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/tsv/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.35.uniprot.tsv.gz">TAB</a></li>
             <li>Protein-Protein Interaction [BioGRID]:
-                <ul><li>Concepts: 6366 [Protein] | 13725 [Publication]</li>
-                    <li>Relations: 462411 [genetic] | 97205 [genetic] | 155615 [pub_in]</li>
+                <ul>
+		    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.148.tab2.zip">TAB</a></li>
+		    <li>Concepts: 6369 [Protein] | 13964 [Publication]</li>
+                    <li>Relations: 463395 [genetic] | 100512 [physical] | 160055 [pub_in]</li>
                 </ul>
             </li>
         </ul>
 
-<!--  	<p><strong>Networks</strong></p>
-	
-	All Ondex workflow files (.xml) and intermediate integration steps (.oxl) are available for download:</br></br>
-	<ul>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/Arabidopsis/">Organism</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/homology/">Homologies</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/references/">References</a></li>
-	<li><a href="http://ondex.rothamsted.ac.uk/QTLNetMiner/releasenotes/xnets/aranet/">Final Network</a></li>
-	</ul> -->
 </ul>
 
 </div>        <!-- end div release-content  -->
