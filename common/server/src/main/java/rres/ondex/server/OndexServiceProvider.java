@@ -945,7 +945,8 @@ public class OndexServiceProvider {
 				}
 				String tax_id= "";
 				if (attTaxID != null && q.getAttribute(attTaxID) != null) {
-					tax_id= q.getAttribute(attTaxID).getValue().toString();
+                                    tax_id= q.getAttribute(attTaxID).getValue().toString();
+                                    //System.out.println("findQTL(): ccTrait=null; concept Type: "+ type +", chrName: "+ chrName +", tax_id= "+ tax_id);
 				}
 				results.add(new QTL(type, chrName, start, end, label, "", 1.0f, trait, tax_id));
 			}
@@ -999,8 +1000,10 @@ public class OndexServiceProvider {
 							}
 							String trait = c.getConceptName().getName();
                                                         String tax_id= "";
-                                                        if (attTaxID != null && r.getAttribute(attTaxID) != null) {
-                                                            tax_id = r.getAttribute(attTaxID).getValue().toString();
+                                                        //System.out.println("findQTL(): conQTL.getAttribute(attTaxID): "+ conQTL.getAttribute(attTaxID) +", value= "+ conQTL.getAttribute(attTaxID).getValue().toString());
+                                                        if (attTaxID != null && conQTL.getAttribute(attTaxID) != null) {
+                                                            tax_id = conQTL.getAttribute(attTaxID).getValue().toString();
+                                                            //System.out.println("findQTL(): conQTL Type: "+ type +", chrName: "+ chrName +", tax_id= "+ tax_id);
                                                            }
 							results.add(new QTL(chrName, type, start, end, label, "", pValue, trait, tax_id));
 						}
@@ -1550,7 +1553,7 @@ public class OndexServiceProvider {
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attSig = md.getAttributeName("Significance");
 		AttributeName attTrait = md.getAttributeName("Trait");
-     //           AttributeName attTAXID = md.getAttributeName("TAXID");
+                AttributeName attTaxID = md.getAttributeName("TAXID");
 		ConceptClass ccQTL = md.getConceptClass("QTL");
 		Set<QTL> qtlDB = new HashSet<QTL>();
 		if (ccQTL != null) {
@@ -1581,7 +1584,7 @@ public class OndexServiceProvider {
 				continue;
 
 			String chr= c.getAttribute(attChr).getValue().toString();
-            // TEMPORARY FIX, to be disabled for new .oxl species networks that have string 'Chrosmosome' (instead of the older integer Chromosome) & don't have a string 'Location' attribute.
+            // TEMPORARY FIX, to be disabled for new .oxl species networks that have string 'Chromosome' (instead of the older integer Chromosome) & don't have a string 'Location' attribute.
                         /* To handle String chromosome names (e.eg, in Wheat where client-side Gene View 
                          * uses location '1A', etc. instead of chrosome '1', etc. */
                     /*    if(c.getAttribute(attLoc).getValue().toString() != null) {
@@ -1815,7 +1818,7 @@ public class OndexServiceProvider {
 //    0x817066, # Medium Gray
 		HashMap<String, String> trait2color = new HashMap<String, String>();
 		int index = 0;
-		
+
 		for (QTL loci : qtlDB) {
 
 			String type = loci.getType();
@@ -1824,6 +1827,8 @@ public class OndexServiceProvider {
 			Integer endQTL = loci.getEnd();
 			String label = loci.getLabel().replaceAll("\"", "");
 			String trait = loci.getTrait();
+                        //System.out.println("writeAnnotationXML() for MapView: type: "+ type +", chrQTL= "+ chrQTL +", label: "+ label +" & loci.TaxID= "+ loci.getTaxID());
+                        
 			if(!trait2color.containsKey(trait)){
 				trait2color.put(trait, colorHex[index]);
 				index= index+1;
@@ -1853,7 +1858,7 @@ public class OndexServiceProvider {
 			} else if (type.equals("SNP")) {
                             // add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID.
                             if(taxID.contains(loci.getTaxID())) {
-                            //System.out.println("loci.getTaxID()= "+ loci.getTaxID());
+                               //System.out.println("SNP: loci.getTaxID()= "+ loci.getTaxID());
 				sb.append("<type>snp</type>\n");
 				sb.append("<color>" + color + "</color>\n");
 				sb.append("<trait>" + trait + "</trait>\n");
