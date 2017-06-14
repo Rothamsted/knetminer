@@ -807,6 +807,7 @@ function searchKeyword(){
 					// Setup the mapview component
 					var basemap = "html/data/basemap.xml";
 					var annotations = data_url + splitedResponse[1];
+                                        console.log("annotations file: "+ annotations);
 
                                         // create new basemap with bands for genes and pass it as well to the Map Viewer.
 					genemap.draw('#genemap', basemap, annotations);
