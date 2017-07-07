@@ -49,20 +49,34 @@
 		</ul>
 	    <li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
 		<ul>
-		    <li>Protein@F.graminearum-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]:</li>
+		    <li>Protein@F.graminearum-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]</li>
 		    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4890&compress=yes&format=xml">Ascomycetes XML</a></li>
 		</ul>
 	    <li>Publications [PubMed]</li>
 	    <ul>
-		<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=fusarium+graminearum+OR+giberella+zeae">XML</a></li>
+		<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=fusarium+graminearum+OR+giberella+zeae">F.graminearum publications XML</a></li>
+		<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=virulence+AND+pathogen*+NOT+virus">XML</a></li>
 		<li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
 	    </ul>
-	    <li>Gene-Phenotype [Text-Mining]</li>
+	    <li>Gene-Phenotype [PHI-base]</li>
+		<ul>
+		    <li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=fgraminearum_eg_gene.default.feature_page.ensembl_gene_id|fgraminearum_eg_gene.default.feature_page.ensembl_transcript_id|fgraminearum_eg_gene.default.feature_page.phi|fgraminearum_eg_gene.default.feature_page.phibase_host|fgraminearum_eg_gene.default.feature_page.phibase_phenotype|fgraminearum_eg_gene.default.feature_page.phibase_condition&FILTERS=fgraminearum_eg_gene.default.filters.phibase_phenotype.%20increased virulence (hypervirulence),lethal,loss of pathogenicity,mixed outcome,reduced virulence,unaffected pathogenicity%20&VISIBLEPANEL=resultspanel">PHI-base Pathogen Phenotypes</a> from Ensembl BioMart</li>
+		</ul>
+	    <li>Protein-Phenotype [PHI-base]</li>
+		<ul>
+		    <li><a href="http://www.phi-base.org/">TAB</a></li>
+		    <li>Sequence alignments to PHI-base Proteins [Decypher]</li>
 			<ul>
-			    <li>Created Gene-Phenotype sentence based co-occurences in PubMed abstracts</li>
-			    <li><a href="http://purl.obolibrary.org/obo/apo.owl">apo.owl</a></li>
-			    <li><a href="http://purl.obolibrary.org/obo/omp.owl">omp.owl</a></li>			    
-			</ul>
+			    <li>Protein@F.graminearum-Protein@PHI-base [Smith-Waterman]</li>
+		        </ul>
+		</ul>
+	    <li>Gene-Phenotype [Text-Mining]</li>
+		<ul>
+		    <li>Created Gene-Phenotype sentence based co-occurences in PubMed abstracts</li>
+		    <li><a href="http://purl.obolibrary.org/obo/apo.owl">apo.owl</a></li>
+		    <li><a href="http://purl.obolibrary.org/obo/omp.owl">omp.owl</a></li>
+		    <li><a href="http://purl.obolibrary.org/obo/fypo.owl">fypo.owl</a></li>			    
+		</ul>
 	    <li>Yeast (<i>Saccharomyces cerevisiae</i>)</li>
 	        <ul>
 		    <li>Gene-Protein [Ensembl]</li>
@@ -175,19 +189,33 @@
 			</ul>
 		    <li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
 			<ul>
-			    <li>Protein@Z.tritici-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]:</li>
+			    <li>Protein@Z.tritici-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]</li>
 			    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4890&compress=yes&format=xml">Ascomycetes XML</a></li>
 			</ul>
 		    <li>Publications [PubMed]</li>
 			<ul>
-			    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=zymoseptoria+tritici+OR+mycospherella+graminicola">XML</a></li>
+			    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=zymoseptoria+tritici+OR+mycospherella+graminicola">Z.tritici publications XML</a></li>
+			    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=virulence+AND+pathogen*+NOT+virus">XML</a></li>
 			    <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
+			</ul>
+		    <li>Gene-Phenotype [PHI-base]</li>
+			<ul>
+			    <li><a href="http://fungi.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=fungi_mart&ATTRIBUTES=ztritici_eg_gene.default.feature_page.ensembl_gene_id|ztritici_eg_gene.default.feature_page.ensembl_transcript_id|ztritici_eg_gene.default.feature_page.phi|ztritici_eg_gene.default.feature_page.phibase_host|ztritici_eg_gene.default.feature_page.phibase_phenotype|ztritici_eg_gene.default.feature_page.phibase_condition&FILTERS=ztritici_eg_gene.default.filters.phibase_phenotype.%20chemistry target: resistance to chemical,chemistry target: sensitivity to chemical,effector (plant avirulence determinant),increased virulence (hypervirulence),loss of pathogenicity,reduced virulence,unaffected pathogenicity%20&VISIBLEPANEL=resultspanel">PHI-base Pathogen Phenotypes</a> from Ensembl BioMart</li>
+			</ul>
+		    <li>Protein-Phenotype [PHI-base]</li>
+			<ul>
+			    <li><a href="http://www.phi-base.org/">TAB</a></li>
+			    <li>Sequence alignments to PHI-base Proteins [Decypher]</li>
+				<ul>
+				    <li>Protein@Z.tritici-Protein@PHI-base [Smith-Waterman]</li>
+				</ul>
 			</ul>
 		    <li>Gene-Phenotype [Text-Mining]</li>
 			<ul>
 			    <li>Created Gene-Phenotype sentence based co-occurences in PubMed abstracts</li>
 			    <li><a href="http://purl.obolibrary.org/obo/apo.owl">apo.owl</a></li>
-			    <li><a href="http://purl.obolibrary.org/obo/omp.owl">omp.owl</a></li>			    
+			    <li><a href="http://purl.obolibrary.org/obo/omp.owl">omp.owl</a></li>
+			    <li><a href="http://purl.obolibrary.org/obo/fypo.owl">fypo.owl</a></li>			    
 			</ul>
 		</ul>
 	    <li>Homology</li>
