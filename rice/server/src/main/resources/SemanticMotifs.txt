@@ -27,6 +27,8 @@
 1-10	enc
 1-7	enc
 1-2	occ_in
+1-13	has_observ_pheno
+1-20	has_variation
 
 10-10	equivalent	4
 10-7	equivalent	4
