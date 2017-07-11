@@ -7,5 +7,5 @@
 	<entry key="ServiceProvider">rres.ondex.server.Main</entry>
 	<entry key="SpeciesTaxId">5518</entry> <!-- 336722: z. tritici -->
 	<entry key="reference_genome">true</entry>
-	<entry key="export_visible_network">true</entry>
+	<entry key="export_visible_network">false</entry>
 </properties>
