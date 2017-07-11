@@ -2651,10 +2651,13 @@ public class OndexServiceProvider {
 			} else {
 				cn = shortest_coname; // use shortest, preferred concept name.
 			}
-		} else if (ct == "Phenotype") {
-			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
-			cn = c.getAttribute(att).getValue().toString().trim();
-		} else if (ct == "Trait") {
+		}	
+//		} else if (ct == "Phenotype") {
+//			AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
+//			cn = c.getAttribute(att).getValue().toString().trim();
+//	
+//		} 
+		else if (ct == "Trait") {
 			AttributeName att = graph.getMetaData().getAttributeName("Study");
 			cn = c.getAttribute(att).getValue().toString().trim();
 		} else {
