@@ -2,11 +2,16 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>Contains chromosome configuration</comment>
-	<entry key="1">1H</entry>
-	<entry key="2">2H</entry>
-	<entry key="3">3H</entry>
-	<entry key="4">4H</entry>
-	<entry key="5">5H</entry>
-	<entry key="6">6H</entry>
-	<entry key="7">7H</entry>
+	<entry key="1">1</entry>
+	<entry key="2">2</entry>
+	<entry key="3">3</entry>
+	<entry key="4">4</entry>
+	<entry key="5">5</entry>
+	<entry key="6">6</entry>
+	<entry key="7">7</entry>
+	<entry key="8">8</entry>
+	<entry key="9">9</entry>
+	<entry key="10">10</entry>
+	<entry key="11">11</entry>
+	<entry key="12">12</entry>
 </properties>
