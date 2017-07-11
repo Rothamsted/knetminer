@@ -17,6 +17,7 @@
 18	Reaction
 19^	Reaction
 20^	Path
+21	Phenotype
 
 
 #Transitions
@@ -53,3 +54,14 @@
 16-18	ca_by
 16-19	ca_by
 18-20	part_of
+
+1-2	occ_in
+9-2	occ_in
+21-2	occ_in
+
+9-13	cooc_wi
+1-13	cooc_wi
+10-13	cooc_wi
+
+1-13	has_observ_pheno
+10-13	has_observ_pheno
