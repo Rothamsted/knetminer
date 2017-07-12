@@ -2657,10 +2657,11 @@ public class OndexServiceProvider {
 //			cn = c.getAttribute(att).getValue().toString().trim();
 //	
 //		} 
-		else if (ct == "Trait") {
-			AttributeName att = graph.getMetaData().getAttributeName("Study");
-			cn = c.getAttribute(att).getValue().toString().trim();
-		} else {
+//		else if (ct == "Trait") {
+//			AttributeName att = graph.getMetaData().getAttributeName("Study");
+//			cn = c.getAttribute(att).getValue().toString().trim();
+//		} 
+		else {
 			if (getShortestPreferedName(cns) != "") {
 				cn = getShortestPreferedName(cns);
 			} else {
