@@ -14,7 +14,7 @@
 	<name>KnetMiner Rice client</name>
 
 	<build>
-		<finalName>QTLNetMinerRice</finalName>
+		<finalName>KnetMinerRice</finalName>
 
 		<plugins>
 			<plugin>
