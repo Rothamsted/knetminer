@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sampleQueries>
 	<query>
-		<name>Example 1</name>
-		<description>Resistance</description>
-		<term>"resistance"</term>
+	    <name>Example 1</name>
+	    <description>Drought</description>
+	    <term>drought</term>
+	    <withinRegion>true</withinRegion>
+		<region>
+			<chromosome>12</chromosome>
+			<start>26000000</start>
+			<end>27500000</end>
+			<label>Drought</label>
+		</region>
+	</query>
+	<query>
+	    <name>Example 2</name>
+	    <description>Anaerobic Germination</description>
+	    <term>"anaerobic germination" OR trehalose-phosphatase OR submergence OR "stem elongation"</term>
+	     <gene>TPP7</gene>
 	</query>	
 </sampleQueries>
