@@ -22,12 +22,17 @@
 19^	Path
 20	SNP
 21^	Trait
+22^	DGES
 
 
 #Transitions
 1-10	enc
 1-7	enc
 1-20	has_variation
+1-2	occ_in
+1-22	differentially_expressed
+1-16	cooc_wi
+
 10-10	h_s_s	4
 10-7	h_s_s	4
 10-10	ortho	4
@@ -44,6 +49,8 @@
 10-12	cat_c
 10-14	has_domain
 10-15	cat_c
+10-16	cooc_wi
+
 9-2	pub_in
 9-3	has_function
 9-4	participates_in
@@ -54,6 +61,8 @@
 9-9	physical	8
 9-13	has_observ_pheno
 9-20	has_variation
+9-22	differentially_expressed
+
 20-21	associated_with
 11-3	has_function
 11-4	participates_in
