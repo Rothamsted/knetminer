@@ -1133,6 +1133,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<tr>';
 				var values = candidate_genes[0].split("\t");
 				table = table + '<th width="100">'+values[1]+'</th>';
+				table = table + '<th width="100" title="Show '+ values[2] +', if not same as '+ values[1]+'">'+values[2]+'</th>'; // added Gene Name to Gene View table
 				if(multiorganisms == true){
 					table = table + '<th width="60">'+values[5]+'</th>';
 				}
@@ -1168,13 +1169,18 @@ function createGenesTable(tableUrl, keyword, rows){
 				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 
 //				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
-				    var gene_Name= values[1];
+				    var gene_Acc= values[1];
+                                    var gene_Name= values[2]; // display both accession & gene name.
                                     // Fetch preferred concept (gene) name and use the shorter name out of the two.
-                                    if(gene_Name.length > values[2].length) {
-                                       gene_Name= values[2];
-                                      }
+                                /*    if(gene_Acc.length > gene_Name.length) {
+                                       gene_Acc= gene_Name;
+                                      }*/
                                     // gene_Name to display in Gene View table (under Accession).
-                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Name+'</a></td>';
+                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Acc+'</a></td>';
+				    var geneName = '<td>'+gene_Name+'</td>'; // geneName
+                                    if(gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
+                                       geneName = '<td></td>'; // don't display geneName, if identical to Accession
+                                      }
 
 				    if(multiorganisms == true){
 						var taxid = '<td><a href="http://www.uniprot.org/taxonomy/'+values[5]+'" target="_blank">'+values[5]+'</a></td>';
@@ -1297,7 +1303,7 @@ function createGenesTable(tableUrl, keyword, rows){
 
 				    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 				    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
-					table = table + gene + taxid + chr + start + score + usersList + withinQTL + evidence + select;
+					table = table + gene + geneName + taxid + chr + start + score + usersList + withinQTL + evidence + select;
 				    table = table + '</tr>';
 				}
 				table = table+'</tbody>';
