@@ -174,7 +174,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Enzyme.png></td>" +
 											"<td align=center><img src=html/image/Reaction.png></td>" +
 											"<td align=center><img src=html/image/Publication.png></td>" +
-											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
+											"<td align=center><img src=html/image/Molecular_function.png></td>" +
 											/*"<td align=center><img src=html/image/Disease.png></td>" +*/
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Gene</font></td>" +
@@ -184,7 +184,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Enzyme</font></td>" +
 											"<td align=center><font size=1.8px>Reaction</font></td>" +
 											"<td align=center><font size=1.8px>Publication</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
+											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
 											/*"<td align=center><font size=1.8px>Disease</font></td>" +*/
 										"</tr><tr>" +
 											"<td align=center></td>" +
@@ -195,7 +195,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Cellular_component.png></td>" +
 											"<td align=center><img src=html/image/Protein_domain.png></td>" +
 											"<td align=center><img src=html/image/Trait_ontology.png></td>" +
-											"<td align=center><img src=html/image/Molecular_function.png></td>" +
+											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
 											"<td align=center><img src=html/image/Trait.png></td>" +
 											/*"<td align=center><img src=html/image/Drug.png></td>" +*/
 										"</tr><tr>" +
@@ -205,7 +205,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Cell. Component</font></td>" +
 											"<td align=center><font size=1.8px>Protein Domain</font></td>" +
 											"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
-											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
+											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
 											"<td align=center><font size=1.8px>GWAS</font></td>" +
 											/*"<td align=center><font size=1.8px>Drug</font></td>" +*/
 										"</tr>" +
