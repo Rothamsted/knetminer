@@ -39,19 +39,19 @@
 	<ul>
 		<li>Gene- Protein [Ensembl]</li>
 		<ul>
-		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.35.gff3.gz">Arabidopsis_thaliana.TAIR10.35.gff3</a></li>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.36.gff3.gz">Arabidopsis_thaliana.TAIR10.36.gff3</a></li>
                     <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
-		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/tsv/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.35.uniprot.tsv.gz">Ensembl - UniprotKB Mapping</a></li>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/tsv/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.36.uniprot.tsv.gz">Ensembl - UniprotKB Mapping</a></li>
 		</ul>
     	<li>Gene-SNP-Phenotype [Ensembl]</li>
     	<ul>
-            <li>Arabidopsis GWAS data for 89 phenotypes.</li>
+            <li>Arabidopsis GWAS data for 92 phenotypes.</li>
             <li>Phenotypes are grouped into the four categories: flowering, developmental, defense and ionomics.</li>
             <li>For more information see <a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a></li>
-            <li>Data was downloaded from <a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_snp.default.snp.refsnp_id|athaliana_eg_snp.default.snp.associated_variant_risk_allele|athaliana_eg_snp.default.snp.distance_to_transcript|athaliana_eg_snp.default.snp.chr_name|athaliana_eg_snp.default.snp.chrom_start|athaliana_eg_snp.default.snp.ensembl_gene_stable_id|athaliana_eg_snp.default.snp.consequence_type_tv|athaliana_eg_snp.default.snp.phenotype_name|athaliana_eg_snp.default.snp.phenotype_description|athaliana_eg_snp.default.snp.p_value&FILTERS=athaliana_eg_snp.default.filters.phenotype_significance.'1'|athaliana_eg_snp.default.filters.distance_to_transcript.'1000'&VISIBLEPANEL=resultspanel">Ensembl Biomart</a></li>
-            <li>SNP-Phenotype relations (31,817 relations) of significant SNPs (p-value<0.0001) linked to 89 phenotypes; on average 360 SNPs per phenotype.</li>
-            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (22,597 relations)</li>
-            <li>#SNP=14,246 | #Gene=12,080 | #Phenotype=89</li>
+            <li>Data was downloaded from <a href="Protein@Rice-Protein@Plants::UniProtKB-SP [Smith-Waterman]">Ensembl Biomart</a></li>
+            <li>SNP-Phenotype relations (27,466 relations) of significant SNPs (p-value<0.0001) linked to 92 phenotypes; on average 300 SNPs per phenotype.</li>
+            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (13,331 relations)</li>
+            <li>#SNP=11,996 | #Gene=8,241 | #Phenotype=92</li>
             <li>To see it live, go to <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/">KnetMiner Arabidopsis</a> and search for <i>dormancy</i>, then switch to Map View.</li>
         </ul>
     	<li>Gene-GO [GOA]</li>
@@ -62,15 +62,15 @@
         </ul>
     	<li>Gene-Gene Interactions [BioGRID]</li>
     	<ul>
-            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.148.tab2.zip">TAB</a></li>
-            <li>Version 3.4.148</li>
-            <li>Concepts: 9214 [Gene] | 2359 [Publication]</li>
-            <li>Relations: 303 [genetic] | 37089 [physical] | 19296 [pub_in]</li>
-	    <li>filter High Throughput interactions for gene AT5G03240</li>
+            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.151.tab2.zip">TAB</a></li>
+            <li>Version 3.4.151</li>
+            <li>Concepts: 9212 [Gene] | 2359 [Publication]</li>
+            <li>Relations: 303 [genetic] | 37083 [physical] | 19295 [pub_in]</li>
+	    <li>filter out High Throughput interactions for gene AT5G03240</li>
         </ul>
     	<li>Gene-Phenotype [TAIR]</li>
     	<ul>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20130305.txt">TAB</a></li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Germplasm_Phenotype_20130122">TAB</a></li>
         </ul>
     	<li>Publications [PubMed]</li>
     	<ul>
@@ -81,7 +81,7 @@
     	<li>Gene-Publication [GOA, TAIR]</li>
     	<ul>
             <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a></li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt">TAB</a></li>
+            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
         </ul>
     	<li>Protein-Publication [UniProtKB, TAIR]</li>
     	<ul>
@@ -96,7 +96,7 @@
         </ul>
 	<li>Protein Domain [Ensembl]</li>
 	<ul>
-	    <li><a href="http://plants.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=plants_mart&ATTRIBUTES=athaliana_eg_gene.default.feature_page.ensembl_transcript_id|athaliana_eg_gene.default.feature_page.pfam|athaliana_eg_gene.default.feature_page.interpro|athaliana_eg_gene.default.feature_page.interpro_short_description|athaliana_eg_gene.default.feature_page.interpro_description&FILTERS=athaliana_eg_gene.default.filters.with_interpro.only&VISIBLEPANEL=resultspanel">BioMart Interpro Protein Domains</a></li>
+	    <li>InterPro Protein Domains from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
 	</ul>
     	<li>Gene-TO [Text Mining]</li>
     	<ul>
@@ -106,8 +106,8 @@
     	<ul>
             <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
                 <ul>
-		    <li>Concepts: 26933 [Protein]</li>
-                    <li>Relations: 101619 [h_s_s]</li>
+		    <li>Concepts: 27112 [Protein]</li>
+                    <li>Relations: 102202 [h_s_s]</li>
                 </ul>
             </li>
             <li>Protein-GO [UniProtKB]</li>
@@ -119,12 +119,13 @@
             <li>Protein@Arabidopsis-Protein@Yeast [OMA]</li>
             <li>Protein-GO [UniProtKB]</li>
             <li>Protein-Publication [UniProtKB]</li>
-	    <li>SGD-UniprotKB [Ensembl] <a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/tsv/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.35.uniprot.tsv.gz">TAB</a></li>
+	    <li>SGD-UniprotKB [Ensembl] <a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/tsv/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.36.uniprot.tsv.gz">TAB</a></li>
             <li>Protein-Protein Interaction [BioGRID]:
                 <ul>
-		    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.148.tab2.zip">TAB</a></li>
-		    <li>Concepts: 6369 [Protein] | 13964 [Publication]</li>
-                    <li>Relations: 463395 [genetic] | 100512 [physical] | 160055 [pub_in]</li>
+		    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.151.tab2.zip">TAB</a></li>
+		    <li>Concepts: 5344 [Protein] | 13954 [Publication]</li>
+                    <li>Relations: 31041 [genetic] | 27773 [physical] | 72752 [pub_in]</li>
+		    <li>filter out High Throughput interactions</li>
                 </ul>
             </li>
         </ul>
