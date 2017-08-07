@@ -308,7 +308,10 @@ public class OndexServiceProvider {
                                    conID= "Pathway";
                                   }
                                 else if(conID.equalsIgnoreCase("Comp")) {
-                                   conID= "Comp (SNP)";
+                                   conID= "Compound";
+                                  }
+                                else if(conID.equalsIgnoreCase("Trait")) {
+                                   conID= "Trait (GWAS)";
                                   }
                                 else if(conID.equalsIgnoreCase("Gene")) {
                                    con_count= numGenesInGenome;
