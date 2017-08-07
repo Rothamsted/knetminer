@@ -310,6 +310,9 @@ public class OndexServiceProvider {
                                 else if(conID.equalsIgnoreCase("Comp")) {
                                    conID= "Comp (SNP)";
                                   }
+                                else if(conID.equalsIgnoreCase("Trait")) {
+                                   conID= "Trait (GWAS)";
+                                  }
                                 else if(conID.equalsIgnoreCase("Gene")) {
                                    con_count= numGenesInGenome;
                                   }
