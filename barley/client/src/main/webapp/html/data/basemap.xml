@@ -1,109 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genome>
- 	<chromosome index="1" length="464124043" number="1"> <!-- number="1H" -->
+ 	<chromosome index="1" length="558535432" number="chr1H">
 		<band index="1">
 			<start>0</start>
-			<end>464124043</end>
+			<end>558535432</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2" length="628342783" number="2"> <!-- number="2H" -->
+	<chromosome index="2" length="768075024" number="chr2H">
 		<band index="1">
 			<start>0</start>
-			<end>628342783</end>
+			<end>768075024</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3" length="564427874" number="3"> <!-- number="3H" -->
+	<chromosome index="3" length="699711114" number="chr3H">
 		<band index="1">
 			<start>0</start>
-			<end>564427874</end>
+			<end>699711114</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4" length="544168226" number="4"> <!-- number="4H" -->
+	<chromosome index="4" length="647060158" number="chr4H">
 		<band index="1">
 			<start>0</start>
-			<end>544168226</end>
+			<end>647060158</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5" length="561411686" number="5"> <!-- number="5H" -->
+	<chromosome index="5" length="670030160" number="chr5H">
 		<band index="1">
 			<start>0</start>
-			<end>561411686</end>
+			<end>670030160</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="6" length="538755036" number="6"> <!-- number="6H" -->
+	<chromosome index="6" length="583380513" number="chr6H">
 		<band index="1">
 			<start>0</start>
-			<end>538755036</end>
+			<end>583380513</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="7" length="601597413" number="7"> <!-- number="7H" -->
+	<chromosome index="7" length="657224000" number="chr7H">
 		<band index="1">
 			<start>0</start>
-			<end>601597413</end>
+			<end>657224000</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="8" length="115974" number="Pt">
+	<chromosome index="8" length="249774706" number="chrUn">
+		<band index="1">
+			<start>0</start>
+			<end>249774706</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>	
+	<chromosome index="9" length="115974" number="Pt">
 		<band index="1">
 			<start>0</start>
 			<end>115974</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	
-<!-- 	<chromosome index="1" length="133" number="1H">
-		<band index="1">
-			<start>0</start>
-			<end>133</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="2" length="150" number="2H">
-		<band index="1">
-			<start>0</start>
-			<end>150</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="3" length="155" number="3H">
-		<band index="1">
-			<start>0</start>
-			<end>155</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="4" length="116" number="4H">
-		<band index="1">
-			<start>0.637393768</start>
-			<end>116</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="5" length="170" number="5H">
-		<band index="1">
-			<start>0</start>
-			<end>170</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="6" length="127" number="6H">
-		<band index="1">
-			<start>0</start>
-			<end>127</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="7" length="141" number="7H">
-		<band index="1">
-			<start>0</start>
-			<end>141</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome> -->
 </genome>
