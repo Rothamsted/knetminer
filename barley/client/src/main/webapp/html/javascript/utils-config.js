@@ -1,6 +1,6 @@
 var data_url = "http://knetminer.rothamsted.ac.uk/barley_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/barley_data/"; // now, using HTTP instead of HTTPS
-//var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
+//var data_url = "http://maize-dev.rothamsted.ac.uk/barley_data/";
 var species = 'Barley Genome';
 var reference_genome = true;
 var multiorganisms = false;

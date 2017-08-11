@@ -5,7 +5,7 @@
 		<description>Flowering time</description>
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
 	</query>	
-	<query>
+<!--	<query>
 		<name>Example 2</name>
 		<description>Flowering QTL</description>
 		<term>PRR7 OR "flowering time" OR "circadian clock"</term>
@@ -29,5 +29,5 @@
 		<gene>MLOC_17065</gene>
 		<gene>MLOC_73670</gene>
 		<gene>MLOC_32526</gene>
-	</query>	
+	</query>	-->
 </sampleQueries>
