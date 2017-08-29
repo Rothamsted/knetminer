@@ -2,7 +2,7 @@
 
 <div class="contact-footer"> 
 <ul>                       		
-      <li style="float: left; width: 23%;"><a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="images/rothamsted_logo.png" width="80" height="80"/></a>  <!--width="63.6" height="85.5"/> -->
+      <li style="float: left; width: 23%;"><a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="images/rothamsted_logo.png" width="90" height="90"/></a>  <!--width="63.6" height="85.5"/> -->
        <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk" class="logos"><img class="bbsrc-logo" src="html/image/bbsrc_logo.png" width="194" height="78"/></a></li>
       <li style="float: left; width: 50%; margin: 0px 2%;"><img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" with="201.5" height="66.3">
         <p id="text-logo">Supported by BBSRC SABR and TRDF awards BB/F006039/1 and BB/I023860/1</p>  </li> 
