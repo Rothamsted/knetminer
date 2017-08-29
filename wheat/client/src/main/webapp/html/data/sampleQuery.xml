@@ -135,4 +135,9 @@
 		<description>Grain size</description>
 		<term>"seed size" OR "grain size" OR "grain weight" OR TGW OR "grain width"</term>
 	</query>
+	<query>
+		<name>Example 5</name>
+		<description>Resistance</description>
+		<term>"adult stripe rust" OR resistan*</term>
+	</query>
 </sampleQueries>
