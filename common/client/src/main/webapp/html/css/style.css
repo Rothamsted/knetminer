@@ -574,7 +574,7 @@ body:after{
 	}
 .logos img{
 	padding-top:5px;
-	    padding-left: 10px;
+	    padding-left: /*10*/1px;
 	}
 	
 .knetminer-logo {
