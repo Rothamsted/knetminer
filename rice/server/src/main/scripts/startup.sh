@@ -1,3 +1,3 @@
 #!/bin/sh -e
 umask 022
-nohup /usr/java/latest/bin/java -Xmx8G -jar qtlnetminer-server.jar RiceKNET_201707.oxl >> stdout.log 2>> stderr.log &
+nohup /usr/java/latest/bin/java -Xmx8G -jar qtlnetminer-server.jar RiceKNET.oxl >> stdout.log 2>> stderr.log &
