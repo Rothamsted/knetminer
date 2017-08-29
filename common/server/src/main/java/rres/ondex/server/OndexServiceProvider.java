@@ -1995,7 +1995,8 @@ public class OndexServiceProvider {
 					}
 				}
 
-				String geneName = getDefaultNameForConcept(gene);
+				// use shortest preferred concept name
+                                String geneName = getShortestPreferedName(gene.getConceptNames());
 
 				String isInList = "no";
 				if (userGenes != null && userGeneIds.contains(gene.getId())) {
