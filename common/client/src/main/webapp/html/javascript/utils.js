@@ -1143,7 +1143,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				}
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';
-				table = table + '<th width="85">'+values[7]+'</th>';
+				table = table + '<th width="85">'+values[7]+'</th>'; // user yes/no
 				if(reference_genome == true){ //QTL
 				table = table + '<th width="70">'+values[8]+'</th>';
                                 }
@@ -1366,7 +1366,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		$("#tablesorter").tablesorter({
     	        headers: {
     	            // do not sort "select" column
-    	        	5: {sorter:"digit"},
+                /*  5: {sorter:"digit"},*/
     	            8: {sorter: false}
     	        }
     	    });
