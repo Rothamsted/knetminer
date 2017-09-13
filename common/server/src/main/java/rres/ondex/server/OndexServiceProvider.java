@@ -1910,7 +1910,6 @@ public class OndexServiceProvider {
 
 		Set<Integer> userGeneIds = new HashSet<Integer>();
 		if (userGenes != null) {
-
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
 
 			// is conversion into integer sets needed because comparing the
@@ -1925,7 +1924,6 @@ public class OndexServiceProvider {
 					candidates.add(c);
 				}
 			}
-
 		} else {
 			System.out.println("No user gene list defined.");
 		}
@@ -1940,8 +1938,9 @@ public class OndexServiceProvider {
 		AttributeName attBegin = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attTAXID = md.getAttributeName("TAXID");
-		AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
-		ConceptClass ccSNP = md.getConceptClass("SNP");
+                // Removed ccSNP from Geneview table (12/09/2017)
+//		AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
+//		ConceptClass ccSNP = md.getConceptClass("SNP");
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
@@ -2099,7 +2098,8 @@ public class OndexServiceProvider {
 					}
 				}
 
-				if (ccSNP != null) {
+                                // Removed ccSNP from Geneview table (12/09/2017)
+			/*	if (ccSNP != null) {
 					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(gene);
 					for (ONDEXRelation rel : rels) {
 						if (rel.getOfType().getId().equals("has_variation")) {
@@ -2118,9 +2118,9 @@ public class OndexServiceProvider {
 						}
 					}
 
-				}
+				}*/
 
-				// create output string
+				// create output string for evidences column in GeneView table
 				String evidence = "";
 				for (String ccId : cc2name.keySet()) {
 					evidence += cc2name.get(ccId) + "||";
@@ -2135,8 +2135,19 @@ public class OndexServiceProvider {
 					continue;
 				}
 
-				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+			/*	out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n"); */
+                                if(userGenes != null) {
+                                   // if GeneList was provided by the user, display only those genes.
+                                   if(isInList.equals("yes")) {
+                                      out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+                                   }
+                                }
+                                else { // default
+                                    out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+                                }
 
 			}
 			out.close();

@@ -376,7 +376,7 @@ public class ClientWorker implements Runnable {
 					}
 					
 					// Gene table file
-					boolean txtIsCreated = ondexProvider.writeGeneTable(
+                                        boolean txtIsCreated = ondexProvider.writeGeneTable(
 							genes, userGenes, qtl,
 							MultiThreadServer.props.getProperty("DataPath")
 							+ fileGeneTable, listMode);
