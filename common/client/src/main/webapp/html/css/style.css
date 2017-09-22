@@ -496,10 +496,12 @@ span.hint-big:hover {
 .evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
 .evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
 .evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
+.evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
+.evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
-	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png);
+	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png)  url(../image/Trait.png) url(../image/Drug.png) url(../image/Disease.png) url(../image/DGES.png) url(../image/QTL.png) url(../image/Scaffold.png);
 	display:none;
 }
 
