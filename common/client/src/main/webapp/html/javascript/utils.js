@@ -1110,15 +1110,18 @@ function createGenesTable(tableUrl, keyword, rows){
 
     		var candidate_genes = text.split("\n");
     		var results = candidate_genes.length-2;
-
+                
     		if(candidate_genes.length > 2) {
 		        table =  '';
+                        // Gene View: interactive summary legend for evidence types.
+			var interactive_summary_Legend= getInteractiveSummaryLegend(text);
+                        
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
 				table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
-				table = table + '<option value="50">50</option>';
+				table = table + '<option value="50" selected="true">50</option>';
 				table = table + '<option value="100">100</option>';
 				table = table + '<option value="200">200</option>';
 				table = table + '<option value="500">500</option>';
@@ -1128,12 +1131,13 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
                                         '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>'+'</div>';
                                 // dynamic Evidence Summary to be displayed above Gene View table
-                                table = table + '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type"></div>';
+                            //  table = table + '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type"></div>';
+				table = table + interactive_summary_Legend;
 				table = table + '<div id= "geneViewTable" class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
-				var values = candidate_genes[0].split("\t");
+                            var values = candidate_genes[0].split("\t");
 				table = table + '<th width="100">'+values[1]+'</th>';
 				table = table + '<th width="100" title="Show '+ values[2] +', if not same as '+ values[1]+'">'+values[2]+'</th>'; // added Gene Name to Gene View table
 				if(multiorganisms == true){
@@ -1324,12 +1328,6 @@ function createGenesTable(tableUrl, keyword, rows){
 
     		document.getElementById('resultsTable').innerHTML = table;
                 
-                // display dynamic Evidence Summary legend above the Gene View table as well.
-                var evidences_legend= $("#evidenceSummary1").html();
-console.log("EvidenceView_summaryLegend: "+ evidences_legend);
-                $("#evidenceSummary2").html(evidences_legend);
-console.log("GeneView_summaryLegend: "+ $("#evidenceSummary2").html());
-
     		// Reset no. of rows
             //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
 
@@ -1375,6 +1373,7 @@ console.log("GeneView_summaryLegend: "+ $("#evidenceSummary2").html());
     	        headers: {
     	            // do not sort "select" column
                 /*  5: {sorter:"digit"},*/
+                  4: {sorter:"digit"}, /* sort by SCORE column by default */
     	            8: {sorter: false}
     	        }
     	    });
@@ -1431,43 +1430,6 @@ console.log("GeneView_summaryLegend: "+ $("#evidenceSummary2").html());
         }
 	});
 }
-
- /*
-  * Function
-  * Filter visible table by selected Concept Type
-  */
- function filterTableByType(key){
-  console.log("filterTableByType: "+ key);
-  // Check which Tab user is on: Gene View or Evidence View
-  if ($('#resultsTable').css('display') == 'block') {
-      console.log("filter Gene View");
-      // get tbody
-//      $('#geneViewTable').children('tbody');
-     }
-  else if ($('#evidenceTable').css('display') == 'block') {
-      console.log("filter Evidence View");
-      // get tbody
-//      $('#evidenceViewTable').children('tbody');
-     }
-  // Pending
- }
-
- /*
-  * Function
-  * Filter visible table by selected Concept Type
-  */
- function revertTable(key){
-  console.log("Revert to original table...");
-  // Check which Tab user is on: Gene View or Evidence View
-  if ($('#resultsTable').css('display') == 'block') {
-      console.log("revert Gene View");
-     }
-  else if ($('#evidenceTable').css('display') == 'block') {
-      console.log("revert Evidence View");
-     }
-  // Pending
-  console.log("Redraw legend...");
- }
 
 /*
  * Function
