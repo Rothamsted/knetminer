@@ -676,6 +676,9 @@ a.contact-button :hover {
 .evidenceSummary {position:relative; width:100%;}
 .evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
 
+/* Gene View: interactive evidence summary filter */
+#evidenceSummary2 {cursor:pointer;}
+
 /* Suggestor box */
 /* #suggestor_search_area {} */
 .preloader_wrapper {width: 100%;position: relative;}
