@@ -807,7 +807,7 @@ function searchKeyword(){
 					// Setup the mapview component
 					var basemap = "html/data/basemap.xml";
 					var annotations = data_url + splitedResponse[1];
-                                        console.log("annotations file: "+ annotations);
+                                    //    console.log("annotations file: "+ annotations);
 
                                         // create new basemap with bands for genes and pass it as well to the Map Viewer.
 					genemap.draw('#genemap', basemap, annotations);
@@ -1130,9 +1130,9 @@ function createGenesTable(tableUrl, keyword, rows){
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
 				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
                                         '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>'+'</div>';
-                                // dynamic Evidence Summary to be displayed above Gene View table
-                            //  table = table + '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type"></div>';
-				table = table + interactive_summary_Legend;
+				// dynamic Evidence Summary to be displayed above Gene View table
+			//	table = table + interactive_summary_Legend;
+				table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes"></div>';
 				table = table + '<div id= "geneViewTable" class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1379,8 +1379,16 @@ function createGenesTable(tableUrl, keyword, rows){
     	    });
 
     		$("#numGenes").change(function(e){
-    			printGenesTable(text);	//if number of genes to show changes redraw table.
+    			printGenesTable(text);	//if number of genes to show changes, redraw table.
     		});
+                
+		/*
+		 * Revert Evidence Filtering changes
+		 */
+                $("#revertGeneView").click(function(e) {
+                //    console.log("Revert Gene View... text:"+ text);
+                    printGenesTable(text); // redraw table
+        	});
 
     		/*
     		 * if select all targets is checked find all targets and check them.
