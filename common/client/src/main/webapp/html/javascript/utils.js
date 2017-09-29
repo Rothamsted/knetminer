@@ -1482,7 +1482,7 @@ function createEvidenceTable(tableUrl){
 				table = '';
 				table = table + '<p></p>';
 //				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a></p><br />';
-				table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
+				table = table + '<div id="evidenceSummary1" class="evidenceSummary"></div>';
 				table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
 				table = table + '<table id="tablesorterEvidence" class="tablesorter">';
 				table = table + '<thead>';
@@ -1521,7 +1521,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>'; // user genes
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
@@ -1579,10 +1579,10 @@ function createEvidenceTable(tableUrl){
 				for(key in summaryArr){
                                     var contype= key.trim();
 					if (key !== "Trait") {
-                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick="filterTableByType("'+contype+'");" title="'+key+'"></div>'+summaryArr[key]+'</div>';
+                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
                                            }
                                          else { // For Trait, display tooltip text as GWAS instead.
-                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick="filterTableByType("'+contype+'");" title="GWAS"></div>'+summaryArr[key]+'</div>';
+                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
                                            }
 
 				}
