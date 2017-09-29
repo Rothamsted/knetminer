@@ -83,12 +83,12 @@
  function filterTableByType(key) {
  // console.log("filterTableByType: "+ key);
   // Check which Tab user is on: Gene View or Evidence View
-  if ($('#resultsTable').css('display') == 'block') {
+  if ($('#resultsTable').css('display') === 'block') {
       // get tbody
     //  $('#tablesorter').children('tbody');
 	  var gvTable= /*$('#tablesorter');*/ document.getElementById("tablesorter");
 	  var rowLength= gvTable.rows.length;
-	//  console.log("rows= "+ rowLength +", columns= "+ gvTable.rows[0].cells.length);
+//	  console.log("rows= "+ rowLength +", columns= "+ gvTable.rows[0].cells.length);
 	  for(var i=1; i < rowLength; i++) { // i=1 to skip title row
 	      var currentRow= gvTable.rows.item(i);
 	      // get cells of current row
@@ -97,7 +97,7 @@
 		  var gene_evidences= gv_cells.item(gv_cells.length-2).innerHTML; // Evidences
   	      // if this Accession doesn't have key in evidences, hide the row.
 		  if(!gene_evidences.includes(key)) {
-		//  console.log("gene_acc: "+ gene_acc +"; evidences: "+ gene_evidences);
+//		  console.log("gene_acc: "+ gene_acc +"; evidences: "+ gene_evidences);
 		     // hide row
 			 currentRow.style.display= 'none';
 		    }
