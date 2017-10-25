@@ -2953,7 +2953,7 @@ public class OndexServiceProvider {
 		
 		if ( mapGene2Concepts == null ) {
 			System.out.println ( "WARN: mapGene2Concepts is null" );
-			mapConcept2Genes = new HashMap<> ();
+			mapGene2Concepts = new HashMap<> ();
 		}
 		else
 			System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
