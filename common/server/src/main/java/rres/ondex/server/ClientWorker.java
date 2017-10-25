@@ -19,10 +19,11 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 
 import org.apache.lucene.queryParser.ParseException;
+//import org.apache.lucene.queryparser.classic.ParseException;
 
 /**
- * @author huf
- * @date 10-03-2010
+ * @author huf, singha
+ * @date 10-03-2010, 10-03-2017
  * 
  */
 public class ClientWorker implements Runnable {
@@ -376,7 +377,7 @@ public class ClientWorker implements Runnable {
 					}
 					
 					// Gene table file
-					boolean txtIsCreated = ondexProvider.writeGeneTable(
+                                        boolean txtIsCreated = ondexProvider.writeGeneTable(
 							genes, userGenes, qtl,
 							MultiThreadServer.props.getProperty("DataPath")
 							+ fileGeneTable, listMode);

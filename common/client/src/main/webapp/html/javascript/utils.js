@@ -163,7 +163,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
  * String containing the legend for all the tables and the network view.
  *
  */
-var legendHtmlContainer = 	"<div id=legend_picture>" +
+/*var legendHtmlContainer = 	"<div id=legend_picture>" +
 								"<div id=legend_container>" +
 									"<table id=legend_frame cellspacing=1>" +
 										"<tr>" +
@@ -175,7 +175,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Reaction.png></td>" +
 											"<td align=center><img src=html/image/Publication.png></td>" +
 											"<td align=center><img src=html/image/Molecular_function.png></td>" +
-											/*"<td align=center><img src=html/image/Disease.png></td>" +*/
+											//"<td align=center><img src=html/image/Disease.png></td>" +
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Gene</font></td>" +
 											"<td align=center><font size=1.8px>Protein</font></td>" +
@@ -185,7 +185,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Reaction</font></td>" +
 											"<td align=center><font size=1.8px>Publication</font></td>" +
 											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
-											/*"<td align=center><font size=1.8px>Disease</font></td>" +*/
+											//"<td align=center><font size=1.8px>Disease</font></td>" +
 										"</tr><tr>" +
 											"<td align=center></td>" +
 										"</tr><tr>" +
@@ -197,7 +197,7 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><img src=html/image/Trait_ontology.png></td>" +
 											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
 											"<td align=center><img src=html/image/Trait.png></td>" +
-											/*"<td align=center><img src=html/image/Drug.png></td>" +*/
+											//"<td align=center><img src=html/image/Drug.png></td>" +
 										"</tr><tr>" +
 											"<td align=center><font size=1.8px>Phenotype</font></td>" +
 											"<td align=center><font size=1.8px>DGES</font></td>" +
@@ -207,11 +207,11 @@ var legendHtmlContainer = 	"<div id=legend_picture>" +
 											"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
 											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
 											"<td align=center><font size=1.8px>GWAS</font></td>" +
-											/*"<td align=center><font size=1.8px>Drug</font></td>" +*/
+											//"<td align=center><font size=1.8px>Drug</font></td>" +
 										"</tr>" +
 									"</table>" +
 								"</div>" +
-							"</div>";
+							"</div>";*/ // DISABLED
 /*
  * Function to check the brackets in a string are balanced
  *
@@ -792,11 +792,11 @@ function searchKeyword(){
 						}
 					}
 
-					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
+					var genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
 				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
-					if(candidateGenes > 100){
-						candidateGenes = 100;
-						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
+					if(candidateGenes > 1000){
+						candidateGenes = 1000;
+						genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}
 
 				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
@@ -807,7 +807,7 @@ function searchKeyword(){
 					// Setup the mapview component
 					var basemap = "html/data/basemap.xml";
 					var annotations = data_url + splitedResponse[1];
-                                        console.log("annotations file: "+ annotations);
+                                    //    console.log("annotations file: "+ annotations);
 
                                         // create new basemap with bands for genes and pass it as well to the Map Viewer.
 					genemap.draw('#genemap', basemap, annotations);
@@ -943,7 +943,7 @@ function generateCyJSNetwork(url,list){
     var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
     try {
-         $("#knet-maps").css("display","block"); // show the KNETviewer menubar.
+         $("#knet-maps").css("display","block"); // show the KnetMaps menubar.
          activateButton('NetworkCanvas');
 
          // Show KnetMaps maskloader.
@@ -1104,34 +1104,45 @@ function createGenesTable(tableUrl, keyword, rows){
         error: function(){
         },
         success: function printGenesTable(text){
-        	if($("#numGenes").length){
+           //     $("#loadingDiv_GeneView").css("display","block"); // notify
+            	if($("#numGenes").length){
         		rows = $("#numGenes").val();
         	}
-
     		var candidate_genes = text.split("\n");
     		var results = candidate_genes.length-2;
-
+                //console.log("GeneView table entries= "+ results);
+                
     		if(candidate_genes.length > 2) {
 		        table =  '';
+                        // Gene View: interactive summary legend for evidence types.
+			var interactive_summary_Legend= getInteractiveSummaryLegend(text);
+                        
 				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
 				table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
-				table = table + '<option value="50">50</option>';
-				table = table + '<option value="100">100</option>';
-				table = table + '<option value="200">200</option>';
+				//table = table + '<select value="'+results+'" id="numGenes">';
+                                table = table + '<option value="1000">1000</option>';
 				table = table + '<option value="500">500</option>';
-				table = table + '<option value="1000">1000</option>';
+				table = table + '<option value="200">200</option>';
+				table = table + '<option value="100">100</option>';
+				table = table + '<option value="50">50</option>';
+                                table = table + '<option value="'+results+'">All ('+results+')</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
 				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
                                         '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>'+'</div>';
-				table = table + '<div class = "scrollTable">';
+                                table = table +'<br>';
+				// dynamic Evidence Summary to be displayed above Gene View table
+			//	table = table + interactive_summary_Legend;
+				table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + 
+                                        '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes">'+'</div>';
+				table = table + '<div id= "geneViewTable" class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
-				var values = candidate_genes[0].split("\t");
+                            var values = candidate_genes[0].split("\t");
 				table = table + '<th width="100">'+values[1]+'</th>';
 				table = table + '<th width="100" title="Show '+ values[2] +', if not same as '+ values[1]+'">'+values[2]+'</th>'; // added Gene Name to Gene View table
 				if(multiorganisms == true){
@@ -1143,7 +1154,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				}
 				//table = table + '<th width="70">'+values[5]+'</th>';
 				table = table + '<th width="70">'+values[6]+'</th>';
-				table = table + '<th width="85">'+values[7]+'</th>'; // user yes/no
+			//	table = table + '<th width="85">'+values[7]+'</th>'; // user yes/no; DISABLED (13/09/17)
 				if(reference_genome == true){ //QTL
 				table = table + '<th width="70">'+values[8]+'</th>';
                                 }
@@ -1152,6 +1163,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '</tr>';
 				table = table + '</thead>';
 				table = table + '<tbody class="scrollTable">';
+                                console.log("GeneView: display "+ rows +" (from "+ results +") results.");
 
 				//this loop iterates over the full table and prints the
 				//first n rows + the user provided genes
@@ -1160,7 +1172,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				for(var i=1; i<=results; i++) {
 					var values = candidate_genes[i].split("\t");
 
-					if(i>rows && values[7]=="no"){
+					if(i>rows /*&& values[7]=="no"*/){
 						continue;
 					}
 		        	table = table + '<tr>';
@@ -1195,7 +1207,7 @@ function createGenesTable(tableUrl, keyword, rows){
 						var start = '';
 					}
 				    var score = '<td>'+values[6]+'</td>'; // score
-				    var usersList = '<td>'+values[7]+'</td>'; // is it in user's list
+				//    var usersList = '<td>'+values[7]+'</td>'; // is it in user's list; DISABLED (13/09/17)
 
 				// QTL column with information box
 				if(reference_genome == true) {
@@ -1294,8 +1306,8 @@ function createGenesTable(tableUrl, keyword, rows){
 
 								evidence = evidence+'<p>'+evidenceValue+'</p>';
 							}
-							evidence = evidence+'</div>';
-							evidence = evidence+'</div>';
+						       evidence = evidence+'</div>';
+						       evidence = evidence+'</div>';
 						}
 					}
 					evidence = evidence+'</td>';
@@ -1303,25 +1315,26 @@ function createGenesTable(tableUrl, keyword, rows){
 
 				    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 				    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
-					table = table + gene + geneName + taxid + chr + start + score + usersList + withinQTL + evidence + select;
+					table = table + gene + geneName + taxid + chr + start + score + /*usersList +*/ withinQTL + evidence + select;
 				    table = table + '</tr>';
 				}
-				table = table+'</tbody>';
+                        table = table+'</tbody>';
 		        table = table+'</table></div>';
 		        table = table + '</form>';
     		}
 
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="button" type="button" value="View Network" title="Display the network in KnetMaps">';
 //    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		// DISABLED below: Old Network View (via Ondex Web Java applet)
             //    table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
                 table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
-    		table = table + legendHtmlContainer; // add legend
+    	//	table = table + legendHtmlContainer; // add legend; DISABLED
 
     		document.getElementById('resultsTable').innerHTML = table;
-
+//                $("#loadingDiv_GeneView").css("display","none"); // clear
+                
     		// Reset no. of rows
             //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
 
@@ -1367,13 +1380,26 @@ function createGenesTable(tableUrl, keyword, rows){
     	        headers: {
     	            // do not sort "select" column
                 /*  5: {sorter:"digit"},*/
+                  4: {sorter:"digit"}, /* sort by SCORE column by default */
     	            8: {sorter: false}
     	        }
     	    });
 
-    		$("#numGenes").change(function(e){
-    			printGenesTable(text);	//if number of genes to show changes redraw table.
+    	    	$("#numGenes").change(function(e){
+                  //  $("#loadingDiv_GeneView").css("display","block"); // notify
+                    printGenesTable(text);	//if number of genes to show changes, redraw table.
+                  //  $("#loadingDiv_GeneView").css("display","none"); // clear
     		});
+                
+		/*
+		 * Revert Evidence Filtering changes
+		 */
+                $("#revertGeneView").click(function(e) {
+                 //   $("#loadingDiv_GeneView").css("display","block"); // notify
+                //    console.log("Revert Gene View... text:"+ text);
+                    printGenesTable(text); // redraw table
+                 //   $("#loadingDiv_GeneView").css("display","none"); // clear
+        	});
 
     		/*
     		 * if select all targets is checked find all targets and check them.
@@ -1467,8 +1493,8 @@ function createEvidenceTable(tableUrl){
 				table = '';
 				table = table + '<p></p>';
 //				table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a></p><br />';
-				table = table + '<div id="evidenceSummary"></div>';
-				table = table + '<div class = "scrollTable">';
+				table = table + '<div id="evidenceSummary1" class="evidenceSummary"></div>';
+				table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
 				table = table + '<table id="tablesorterEvidence" class="tablesorter">';
 				table = table + '<thead>';
 				table = table + '<tr>';
@@ -1506,7 +1532,7 @@ function createEvidenceTable(tableUrl){
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KNETviewer" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
+					table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
 					table = table + '<td>'+values[4]+'</td>'; // user genes
 					table = table + '<td>'+values[5]+'</td>';
 					table = table + '</tr>';
@@ -1522,7 +1548,7 @@ function createEvidenceTable(tableUrl){
 				table = table + '</div>';
                                 // Insert a preloader to be used for the new Network Viewer (KNETviewer).
 				table = table + '<div id="loadingNetwork_Div"></div>';
-				table = table + legendHtmlContainer;
+			//	table = table + legendHtmlContainer; // add legend; DISABLED
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 
 				$('#evidenceTable').html(table);
@@ -1562,8 +1588,9 @@ function createEvidenceTable(tableUrl){
                 });
 				//Shows the evidence summary box
 				for(key in summaryArr){
+                                    var contype= key.trim();
 					if (key !== "Trait") {
-                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="'+key+'"></div>'+summaryArr[key]+'</div>';
+                                            summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
                                            }
                                          else { // For Trait, display tooltip text as GWAS instead.
                                             summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
@@ -1571,10 +1598,11 @@ function createEvidenceTable(tableUrl){
 
 				}
 
-				$('#evidenceSummary').html(summaryText);
+                                // display dynamic Evidence Summary legend above Evidence View.
+				$("#evidenceSummary1").html(summaryText);
 			}
 		}
-	})
+	});
 }
 
 /*
