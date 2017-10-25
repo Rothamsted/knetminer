@@ -221,7 +221,8 @@ public class ClientWorker implements Runnable {
 				ONDEXGraph subGraph = ondexProvider.evidencePath(evidenceOndexID);
 				
 				long timestamp = System.currentTimeMillis();
-				String fileName = timestamp+"evidencePath.oxl";
+				//String fileName = timestamp+"evidencePath.oxl";
+				String fileName = timestamp+"evidencePath.json"; // Evidence oxl File for Network View (KnetMaps)
 				String exportPath = MultiThreadServer.props.getProperty("DataPath");	
 				String request = "";
 				// Export graph
@@ -275,7 +276,8 @@ public class ClientWorker implements Runnable {
 		
 		// File name
 		long timestamp = System.currentTimeMillis();
-		String fileName = "result_"+timestamp+".oxl";
+		//String fileName = "result_"+timestamp+".oxl";
+		String fileName = "result_"+timestamp+".json"; // File for Network View (KnetMaps)
 		String exportPath = MultiThreadServer.props.getProperty("DataPath");			
 		
 		System.out.println("Call applet! Search genes "+list.size());

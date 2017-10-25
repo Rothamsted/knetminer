@@ -938,9 +938,10 @@ function generateCyJSNetwork(url,list){
     
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
     $.post(url, list, function(response, textStatus) {
-    var oxl = response.split(":")[1];
+    //var oxl = response.split(":")[1];
     // Network Graph: JSON file.
-    var network_json= oxl.replace(".oxl", ".json"); // JSON file path
+    //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
+    var network_json= response.split(":")[1];
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
     try {
          $("#knet-maps").css("display","block"); // show the KnetMaps menubar.
