@@ -132,13 +132,14 @@
                 <configuration>
                     <forkMode>always</forkMode>
                     <forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
-                    <argLine>-Xms1G -Xmx1G -Dondex.dir=${basedir}/data</argLine>
+                    <argLine>-Xms4G -Xmx4G -Dondex.dir=${basedir}/data</argLine>
                     <excludes>
                         <exclude>net/sourceforge/ondex/apps/*</exclude>
                     </excludes>
                     <failIfNoTests>false</failIfNoTests>
                     <enableAssertions>true</enableAssertions>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                    <useFile>false</useFile>                    
                     <!--testFailureIgnore>true</testFailureIgnore -->
                 </configuration>
             </plugin>
