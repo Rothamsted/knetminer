@@ -14,12 +14,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryparser.classic.ParseException;
+
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-
-//import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryparser.classic.ParseException;
 
 /**
  * @author huf, singha

@@ -28,12 +28,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.lucene.analysis.Analyzer;
+//import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+//import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryparser.classic.ParseException;
+//import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
@@ -66,20 +79,6 @@ import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
-
-import org.apache.lucene.analysis.Analyzer;
-//import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-//import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryparser.classic.ParseException;
-//import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-//import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -653,7 +652,7 @@ public class OndexServiceProvider {
 		String crossTypesNotQuery = "";
 		ScoredHits<ONDEXConcept> NOTList = null;
 		if (NOTQuery != "") {
-			crossTypesNotQuery = "tConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
+			crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
 					+ NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
 					+ NOTQuery + ")";
 			String fieldNameNQ = getFieldName("ConceptName", null);
@@ -737,8 +736,15 @@ public class OndexServiceProvider {
 		return hit2score;
 	}
 
-	public ArrayList<ONDEXConcept> getScoredGenes(HashMap<ONDEXConcept, Float> hit2score) throws IOException {
-
+	
+	public ArrayList<ONDEXConcept> getScoredGenes( Map<ONDEXConcept, Float> hit2score) throws IOException
+	{
+		return new ArrayList<> ( this.getScoredGenesMap ( hit2score ).keySet () );
+	}
+	
+	
+	public SortedMap<ONDEXConcept, Double> getScoredGenesMap( Map<ONDEXConcept, Float> hit2score ) throws IOException 
+	{
 		ArrayList<ONDEXConcept> candidateGenes = new ArrayList<ONDEXConcept>();
 		scoredCandidates = new HashMap<ONDEXConcept, Double>();
 		ValueComparator comparator = new ValueComparator(scoredCandidates);
@@ -791,9 +797,8 @@ public class OndexServiceProvider {
 		}
 
 		sortedCandidates.putAll(scoredCandidates);
-		candidateGenes = new ArrayList<ONDEXConcept>(sortedCandidates.keySet());
 
-		return candidateGenes;
+		return sortedCandidates;
 	}
 
 	// /**
@@ -2945,8 +2950,20 @@ public class OndexServiceProvider {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
-		System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
+		
+		if ( mapGene2Concepts == null ) {
+			System.out.println ( "WARN: mapGene2Concepts is null" );
+			mapConcept2Genes = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
+		
+		if ( mapConcept2Genes == null ) {
+			System.out.println ( "WARN: mapConcept2Genes is null" );
+			mapConcept2Genes = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
 		System.out.println("Create Gene2QTL map now...");
 
