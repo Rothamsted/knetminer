@@ -792,11 +792,11 @@ function searchKeyword(){
 						}
 					}
 
-					var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
+					var genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
 				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
-					if(candidateGenes > 100){
-						candidateGenes = 100;
-						var genomicViewTitle = '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
+					if(candidateGenes > 1000){
+						candidateGenes = 1000;
+						genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}
 
 				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
@@ -943,7 +943,7 @@ function generateCyJSNetwork(url,list){
     var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
     try {
-         $("#knet-maps").css("display","block"); // show the KNETviewer menubar.
+         $("#knet-maps").css("display","block"); // show the KnetMaps menubar.
          activateButton('NetworkCanvas');
 
          // Show KnetMaps maskloader.
@@ -1104,12 +1104,13 @@ function createGenesTable(tableUrl, keyword, rows){
         error: function(){
         },
         success: function printGenesTable(text){
-        	if($("#numGenes").length){
+           //     $("#loadingDiv_GeneView").css("display","block"); // notify
+            	if($("#numGenes").length){
         		rows = $("#numGenes").val();
         	}
-
     		var candidate_genes = text.split("\n");
     		var results = candidate_genes.length-2;
+                //console.log("GeneView table entries= "+ results);
                 
     		if(candidate_genes.length > 2) {
 		        table =  '';
@@ -1121,18 +1122,22 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '<form name="checkbox_form">';
 				table = table + 'Max number of genes to show: ';
 				table = table + '<select value="'+rows+'" id="numGenes">';
-				table = table + '<option value="50" selected="true">50</option>';
-				table = table + '<option value="100">100</option>';
-				table = table + '<option value="200">200</option>';
+				//table = table + '<select value="'+results+'" id="numGenes">';
+                                table = table + '<option value="1000">1000</option>';
 				table = table + '<option value="500">500</option>';
-				table = table + '<option value="1000">1000</option>';
+				table = table + '<option value="200">200</option>';
+				table = table + '<option value="100">100</option>';
+				table = table + '<option value="50">50</option>';
+                                table = table + '<option value="'+results+'">All ('+results+')</option>';
 				table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
 				table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
                                         '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>'+'</div>';
+                                table = table +'<br>';
 				// dynamic Evidence Summary to be displayed above Gene View table
 			//	table = table + interactive_summary_Legend;
-				table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes"></div>';
+				table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + 
+                                        '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes">'+'</div>';
 				table = table + '<div id= "geneViewTable" class = "scrollTable">';
 				table = table + '<table id = "tablesorter" class="tablesorter">';
 				table = table + '<thead>';
@@ -1158,6 +1163,7 @@ function createGenesTable(tableUrl, keyword, rows){
 				table = table + '</tr>';
 				table = table + '</thead>';
 				table = table + '<tbody class="scrollTable">';
+                                console.log("GeneView: display "+ rows +" (from "+ results +") results.");
 
 				//this loop iterates over the full table and prints the
 				//first n rows + the user provided genes
@@ -1318,7 +1324,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		}
 
     		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
-    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class = "button" type = "button" value = "View Network" title = "Display the network graph in the new KNETviewer">';
+    		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="button" type="button" value="View Network" title="Display the network in KnetMaps">';
 //    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
     		// DISABLED below: Old Network View (via Ondex Web Java applet)
             //    table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
@@ -1327,6 +1333,7 @@ function createGenesTable(tableUrl, keyword, rows){
     	//	table = table + legendHtmlContainer; // add legend; DISABLED
 
     		document.getElementById('resultsTable').innerHTML = table;
+//                $("#loadingDiv_GeneView").css("display","none"); // clear
                 
     		// Reset no. of rows
             //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
@@ -1378,16 +1385,20 @@ function createGenesTable(tableUrl, keyword, rows){
     	        }
     	    });
 
-    		$("#numGenes").change(function(e){
-    			printGenesTable(text);	//if number of genes to show changes, redraw table.
+    	    	$("#numGenes").change(function(e){
+                  //  $("#loadingDiv_GeneView").css("display","block"); // notify
+                    printGenesTable(text);	//if number of genes to show changes, redraw table.
+                  //  $("#loadingDiv_GeneView").css("display","none"); // clear
     		});
                 
 		/*
 		 * Revert Evidence Filtering changes
 		 */
                 $("#revertGeneView").click(function(e) {
+                 //   $("#loadingDiv_GeneView").css("display","block"); // notify
                 //    console.log("Revert Gene View... text:"+ text);
                     printGenesTable(text); // redraw table
+                 //   $("#loadingDiv_GeneView").css("display","none"); // clear
         	});
 
     		/*
