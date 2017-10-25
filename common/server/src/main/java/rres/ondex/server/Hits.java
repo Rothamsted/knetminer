@@ -7,12 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.queryParser.ParseException;
+//import org.apache.lucene.queryparser.classic.ParseException;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 
 /**
  * 
- * @author zorc, pakk
+ * @author zorc, pakk, singha
  *
  */
 public class Hits {	

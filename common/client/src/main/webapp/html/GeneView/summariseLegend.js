@@ -81,9 +81,10 @@
   * Filter visible table by selected Concept Type
   */
  function filterTableByType(key) {
- // console.log("filterTableByType: "+ key);
+  console.log("filterTableByType: "+ key);
   // Check which Tab user is on: Gene View or Evidence View
   if ($('#resultsTable').css('display') === 'block') {
+//      $("#loadingDiv_GeneView").css("display","block"); // notify
       // get tbody
     //  $('#tablesorter').children('tbody');
 	  var gvTable= /*$('#tablesorter');*/ document.getElementById("tablesorter");
@@ -93,7 +94,7 @@
 	      var currentRow= gvTable.rows.item(i);
 	      // get cells of current row
 		  var gv_cells = currentRow.cells;
-		  var gene_acc= gv_cells.item(0).innerHTML; // Accession
+	//	  var gene_acc= gv_cells.item(0).innerHTML; // Accession
 		  var gene_evidences= gv_cells.item(gv_cells.length-2).innerHTML; // Evidences
   	      // if this Accession doesn't have key in evidences, hide the row.
 		  if(!gene_evidences.includes(key)) {
@@ -102,5 +103,6 @@
 			 currentRow.style.display= 'none';
 		    }
 	     }
+//      $("#loadingDiv_GeneView").css("display","none"); // // clear
      }
  }

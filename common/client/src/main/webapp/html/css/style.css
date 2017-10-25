@@ -292,7 +292,7 @@ div#region_search_area input[type="text"], select {
 }
 
 #numGenes {
-	width: 60px;
+	width: /*60*/100px;
 }
 #selectUser {
 	float:right;
@@ -677,7 +677,8 @@ a.contact-button :hover {
 .evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
 
 /* Gene View: interactive evidence summary filter */
-#evidenceSummary2 {cursor:pointer;}
+#evidenceSummary2 {cursor:pointer; padding-top:5px; padding-bottom:5px;}
+#loadingDiv_GeneView {float:right; color:darkOrange; font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
 
 /* Suggestor box */
 /* #suggestor_search_area {} */
