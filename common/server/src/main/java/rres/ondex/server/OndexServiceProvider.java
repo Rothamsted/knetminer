@@ -19,7 +19,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,20 +61,21 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
-import net.sourceforge.ondex.exception.type.WrongArgumentException;
 import net.sourceforge.ondex.export.oxl.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 
-import org.apache.commons.collections15.BidiMap;
-import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
+//import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
+//import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+//import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
@@ -85,7 +85,7 @@ import org.apache.lucene.util.Version;
  * Parent class to all ondex service provider classes implementing organism
  * specific searches.
  * 
- * @author taubertj, pakk
+ * @author taubertj, pakk, singha
  * 
  */
 public class OndexServiceProvider {
@@ -644,6 +644,7 @@ public class OndexServiceProvider {
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		//Analyzer analyzer = new StandardAnalyzer();
 
 		String keyword = keywords;
 
@@ -657,6 +658,7 @@ public class OndexServiceProvider {
 					+ NOTQuery + ")";
 			String fieldNameNQ = getFieldName("ConceptName", null);
 			QueryParser parserNQ = new QueryParser(Version.LUCENE_36, fieldNameNQ, analyzer);
+                        //QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
 			Query qNQ = parserNQ.parse(crossTypesNotQuery);
 			NOTList = lenv.searchTopConcepts(qNQ, 2000);
 		}
@@ -680,6 +682,7 @@ public class OndexServiceProvider {
 
 			String fieldName = getFieldName("ConceptAttribute", att.getId());
 			QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
+			//QueryParser parser = new QueryParser(fieldName, analyzer);
 			Query qAtt = parser.parse(keyword);
 			ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
 			mergeHits(hit2score, sHits, NOTList);
@@ -692,6 +695,7 @@ public class OndexServiceProvider {
 			// false, dsAcc);
 			String fieldName = getFieldName("ConceptAccessions", dsAc);
 			QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
+			//QueryParser parser = new QueryParser(fieldName, analyzer);
 			Query qAccessions = parser.parse(keyword);
 			ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
 			mergeHits(hit2score, sHitsAcc, NOTList);
@@ -702,6 +706,7 @@ public class OndexServiceProvider {
 		// LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
 		String fieldNameCN = getFieldName("ConceptName", null);
 		QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN, analyzer);
+		//QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
 		Query qNames = parserCN.parse(keyword);
 		ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
 		mergeHits(hit2score, sHitsNames, NOTList);
@@ -711,6 +716,7 @@ public class OndexServiceProvider {
 		// LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
 		String fieldNameD = getFieldName("Description", null);
 		QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD, analyzer);
+		//QueryParser parserD = new QueryParser(fieldNameD, analyzer);
 		Query qDesc = parserD.parse(keyword);
 		ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
 		mergeHits(hit2score, sHitsDesc, NOTList);
@@ -720,6 +726,7 @@ public class OndexServiceProvider {
 		// LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
 		String fieldNameCA = getFieldName("Annotation", null);
 		QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA, analyzer);
+		//QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
 		Query qAnno = parserCA.parse(keyword);
 		ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
 		mergeHits(hit2score, sHitsAnno, NOTList);
@@ -957,19 +964,27 @@ public class OndexServiceProvider {
 			// be careful with the choice of analyzer: ConceptClasses are not
 			// indexed in lowercase letters which let the StandardAnalyzer crash
 			Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+			//Analyzer analyzerSt = new StandardAnalyzer();
 			Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
+			//Analyzer analyzerWS = new WhitespaceAnalyzer();
 
 			String fieldCC = getFieldName("ConceptClass", null);
 			QueryParser parserCC = new QueryParser(Version.LUCENE_36, fieldCC, analyzerWS);
+			//QueryParser parserCC = new QueryParser(fieldCC, analyzerWS);
 			Query cC = parserCC.parse("Trait");
 
 			String fieldCN = getFieldName("ConceptName", null);
 			QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldCN, analyzerSt);
+			//QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
 			Query cN = parserCN.parse(keyword);
 
 			BooleanQuery finalQuery = new BooleanQuery();
 			finalQuery.add(cC, Occur.MUST);
 			finalQuery.add(cN, Occur.MUST);
+                        /*BooleanQuery finalQuery = new BooleanQuery.Builder()
+                                .add(cC, BooleanClause.Occur.MUST)
+                                .add(cN, BooleanClause.Occur.MUST)
+                                .build();*/
 			System.out.println("QTL search query: " + finalQuery.toString());
 
 			ScoredHits<ONDEXConcept> hits = lenv.searchTopConcepts(finalQuery, 100);
@@ -1910,7 +1925,6 @@ public class OndexServiceProvider {
 
 		Set<Integer> userGeneIds = new HashSet<Integer>();
 		if (userGenes != null) {
-
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
 
 			// is conversion into integer sets needed because comparing the
@@ -1925,7 +1939,6 @@ public class OndexServiceProvider {
 					candidates.add(c);
 				}
 			}
-
 		} else {
 			System.out.println("No user gene list defined.");
 		}
@@ -1940,8 +1953,9 @@ public class OndexServiceProvider {
 		AttributeName attBegin = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
 		AttributeName attTAXID = md.getAttributeName("TAXID");
-		AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
-		ConceptClass ccSNP = md.getConceptClass("SNP");
+                // Removed ccSNP from Geneview table (12/09/2017)
+//		AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
+//		ConceptClass ccSNP = md.getConceptClass("SNP");
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
@@ -2099,7 +2113,8 @@ public class OndexServiceProvider {
 					}
 				}
 
-				if (ccSNP != null) {
+                                // Removed ccSNP from Geneview table (12/09/2017)
+			/*	if (ccSNP != null) {
 					Set<ONDEXRelation> rels = graph.getRelationsOfConcept(gene);
 					for (ONDEXRelation rel : rels) {
 						if (rel.getOfType().getId().equals("has_variation")) {
@@ -2118,9 +2133,9 @@ public class OndexServiceProvider {
 						}
 					}
 
-				}
+				}*/
 
-				// create output string
+				// create output string for evidences column in GeneView table
 				String evidence = "";
 				for (String ccId : cc2name.keySet()) {
 					evidence += cc2name.get(ccId) + "||";
@@ -2135,8 +2150,19 @@ public class OndexServiceProvider {
 					continue;
 				}
 
-				out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+			/*	out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n"); */
+                                if(userGenes != null) {
+                                   // if GeneList was provided by the user, display only those genes.
+                                   if(isInList.equals("yes")) {
+                                      out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+                                   }
+                                }
+                                else { // default
+                                    out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+                                }
 
 			}
 			out.close();
@@ -2391,6 +2417,7 @@ public class OndexServiceProvider {
 			for (int k = synonymKeys.length - 1; k >= 0; k--) {
 				String key = synonymKeys[k];
 				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+				//Analyzer analyzer = new StandardAnalyzer();
 				Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
 				FloatValueComparator comparator = new FloatValueComparator(synonymsList);
 				TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
@@ -2404,6 +2431,7 @@ public class OndexServiceProvider {
 				// search concept names
 				String fieldNameCN = getFieldName("ConceptName", null);
 				QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN, analyzer);
+				//QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
 				Query qNames = parserCN.parse(key);
 				ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/* 100 */);
 				/*

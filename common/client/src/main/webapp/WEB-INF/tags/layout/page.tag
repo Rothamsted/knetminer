@@ -67,6 +67,7 @@
         <script src="html/KnetMaps/javascript/knet-generator.js"></script>
         
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
+        <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script> <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
 		

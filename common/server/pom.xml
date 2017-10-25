@@ -36,9 +36,14 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>lucene</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>0.6.0-SNAPSHOT</version><!--1.2.1-SNAPSHOT-->
 			<scope>compile</scope>
 		</dependency>
+                <!--<dependency>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-analyzers-common</artifactId>
+                    <version>6.6.0</version>
+                </dependency>-->
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>generic</artifactId>

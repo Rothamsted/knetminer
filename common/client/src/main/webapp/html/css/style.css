@@ -292,7 +292,7 @@ div#region_search_area input[type="text"], select {
 }
 
 #numGenes {
-	width: 60px;
+	width: /*60*/100px;
 }
 #selectUser {
 	float:right;
@@ -334,7 +334,7 @@ div#footer {
 */
 div.scrollTable {
 	width:100%;       /* table width will be 99% of this*/
-	max-height:400px;    /* must be greater than tbody*/
+	max-height:/*400*/600px;    /* must be greater than tbody*/
 	overflow:auto;
 	margin:0 auto;
 }
@@ -496,10 +496,12 @@ span.hint-big:hover {
 .evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
 .evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
 .evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
+.evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
+.evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
-	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png);
+	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png)  url(../image/Trait.png) url(../image/Drug.png) url(../image/Disease.png) url(../image/DGES.png) url(../image/QTL.png) url(../image/Scaffold.png);
 	display:none;
 }
 
@@ -518,9 +520,9 @@ body:after{
 .qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
 /* Legend */
-#legend_picture {position:relative;width:100%;padding-top:/*50*/10px; /*background-color:white;*/}
+/*#legend_picture {position:relative;width:100%;padding-top:10px;}
 #legend_picture #legend_container {position:relative;margin:auto;width:500px;height:80px;}
-#legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}
+#legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}*/
 
 /* General Styles */
 #wrapper {position:relative;margin:auto; min-height:100%;}
@@ -671,8 +673,12 @@ a.contact-button :hover {
 #Network_frame{border:none;}
 
 /* Evidence View */
-#evidenceSummary {position:relative; width:100%}
-#evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
+.evidenceSummary {position:relative; width:100%;}
+.evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
+
+/* Gene View: interactive evidence summary filter */
+#evidenceSummary2 {cursor:pointer; padding-top:5px; padding-bottom:5px;}
+#loadingDiv_GeneView {float:right; color:darkOrange; font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
 
 /* Suggestor box */
 /* #suggestor_search_area {} */

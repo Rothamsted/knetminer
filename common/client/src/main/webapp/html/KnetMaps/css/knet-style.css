@@ -199,6 +199,7 @@
       background: white;
       font-size: 14px;
       color: #2A2A2A;
+      cursor:pointer;
 	  display: table/*table-row*/;
      }
 
