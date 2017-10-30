@@ -86,9 +86,9 @@
             <url>http://www.gnu.org/licenses/gpl.html</url>
         </license>
     </licenses>
-    <description>QTLNetMiner is a platform for fast candidate gene discovery using data mining techniques.
+    <description>KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
     </description>
-    <url>http://ondex.rothamsted.ac.uk/QTLNetMiner/</url>
+    <url>http://knetminer.rothamsted.ac.uk/</url>
 
     <ciManagement>
         <system>hudson</system>
@@ -101,9 +101,9 @@
     </organization>
 
     <scm>
-        <connection>scm:git:https://github.com/KeywanHP/QTLNetMiner</connection>
-        <developerConnection>scm:git:https://github.com/KeywanHP/QTLNetMiner</developerConnection>
-        <url>https://github.com/KeywanHP/QTLNetMiner</url>
+        <connection>scm:git:https://github.com/Rothamsted/knetminer</connection>
+        <developerConnection>scm:git:https://github.com/Rothamsted/knetminer</developerConnection>
+        <url>https://github.com/Rothamsted/knetminer</url>
     </scm>
 
     <distributionManagement>
