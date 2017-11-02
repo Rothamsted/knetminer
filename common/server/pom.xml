@@ -18,19 +18,19 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>tools</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>workflow-api</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>memory</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -47,19 +47,19 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>generic</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>oxl</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
-			<version>1.1.1-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 1.1.1-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 
