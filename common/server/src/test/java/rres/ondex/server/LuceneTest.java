@@ -68,7 +68,11 @@ public class LuceneTest
 	public void testLuceneGeneSearch () throws Exception
 	{
 		// String oxlPath = "target/test-classes/text_mining_test_case.oxl";
-		String oxlPath = "/Users/brandizi/Documents/Work/RRes/ondex_data/knet_miner_data/WheatKNET.oxl";
+		//String oxlPath = "/Users/brandizi/Documents/Work/RRes/ondex_data/knet_miner_data/WheatKNET.oxl";
+                
+                // Using WheatKNet .oxl test file located under src/test/resources/.
+                ClassLoader classLoader= getClass().getClassLoader();
+                String oxlPath= new File(classLoader.getResource("WheatKNET.oxl").getFile()).getPath();
 				
 		OndexServiceProvider ondexServiceProvider = this.startServiceProvider ( oxlPath );
 		
