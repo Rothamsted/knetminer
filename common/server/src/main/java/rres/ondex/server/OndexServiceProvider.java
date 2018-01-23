@@ -216,10 +216,10 @@ public class OndexServiceProvider {
 			}
 		}
 
-		System.out.println("Done. Waiting for queries...");
-
 		// Write Stats about the created Ondex graph & its mappings to a file.
 		displayGraphStats(MultiThreadServer.props.getProperty("DataPath"));
+                
+		System.out.println("Done. Waiting for queries...");
 	}
 
 	/*
@@ -1973,7 +1973,7 @@ public class OndexServiceProvider {
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n");
+			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\n");
 			int i = 0;
 			for (ONDEXConcept gene : candidates) {
 				i++;
@@ -2126,6 +2126,7 @@ public class OndexServiceProvider {
 						cc2name.put(ccId, act_name);
 					}
 				}
+                                int evidences_linked= luceneHits.size(); // no. of evidences linked per gene
 
                                 // Removed ccSNP from Geneview table (12/09/2017)
 			/*	if (ccSNP != null) {
@@ -2170,12 +2171,12 @@ public class OndexServiceProvider {
                                    // if GeneList was provided by the user, display only those genes.
                                    if(isInList.equals("yes")) {
                                       out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\n");
                                    }
                                 }
                                 else { // default
                                     out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked + "\n");
                                 }
 
 			}
