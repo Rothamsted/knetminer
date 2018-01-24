@@ -788,6 +788,7 @@ public class OndexServiceProvider {
 			// reflects how important a term is to a gene in a collection
 			// (genome)
 
+                    // KnetScore, calculated using IGF & EDF.
 			// term document frequency
 			double tdf = (double) mapGene2HitConcept.get(geneId).size() / (double) mapGene2Concepts.get(geneId).size();
 
