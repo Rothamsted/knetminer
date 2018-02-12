@@ -114,6 +114,11 @@ public class OndexServiceProvider {
 	static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 
 	/**
+	 * HashMap of geneID -> endNodeID_pathLength
+	 */
+	static HashMap<String, Integer> mapGene2PathLength;
+        
+	/**
 	 * Query-dependent mapping between genes and concepts that contain query
 	 * terms
 	 */
@@ -1974,7 +1979,7 @@ public class OndexServiceProvider {
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\n");
+			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
 			int i = 0;
 			for (ONDEXConcept gene : candidates) {
 				i++;
@@ -2111,8 +2116,10 @@ public class OndexServiceProvider {
 					luceneHits = new HashSet<Integer>();
 				}
 
+                                Set<Integer> evidencesIDs= new HashSet<Integer>();
 				for (int hitID : luceneHits) {
 					ONDEXConcept c = graph.getConcept(hitID);
+                                        evidencesIDs.add(c.getId()); // retain all evidences' ID's
 					String ccId = c.getOfType().getId();
 					String name = getDefaultNameForGroupOfConcepts(c);
 					// All publications will have the format PMID:15487445
@@ -2165,6 +2172,14 @@ public class OndexServiceProvider {
 				if (luceneHits.isEmpty() && listMode.equals("GLrestrict")) {
 					continue;
 				}
+                                
+                                String all_evidences= "";
+                                for(int ev_id: evidencesIDs) {
+                                    // comma-separated ID's for all evidences for a geneID
+                                    all_evidences= all_evidences + String.valueOf(ev_id) +",";
+                                   }
+                                all_evidences= all_evidences.substring(0, all_evidences.length()-1);
+                                //System.out.println("GeneTable.tab: evidenceIDs: "+ all_evidences);
 
 			/*	out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n"); */
@@ -2172,12 +2187,12 @@ public class OndexServiceProvider {
                                    // if GeneList was provided by the user, display only those genes.
                                    if(isInList.equals("yes")) {
                                       out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\t"+ all_evidences +"\n");
                                    }
                                 }
                                 else { // default
                                     out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked + "\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\t"+ all_evidences + "\n");
                                 }
 
 			}
@@ -2857,6 +2872,7 @@ public class OndexServiceProvider {
 		System.out.println("Populate HashMaps");
 		File file1 = new File("mapConcept2Genes");
 		File file2 = new File("mapGene2Concepts");
+                System.out.println("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
@@ -2888,6 +2904,8 @@ public class OndexServiceProvider {
 
 			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
 			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+			mapGene2PathLength = new HashMap<String, Integer>();
+                        System.out.println("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
 			for (List<EvidencePathNode> paths : results.values()) {
 				for (EvidencePathNode path : paths) {
 
@@ -2896,6 +2914,16 @@ public class OndexServiceProvider {
 
 					// add all semantic motifs to the new graph
 					Set<ONDEXConcept> concepts = path.getAllConcepts();
+                                        
+                                        // Extract pathLength and endNode ID.
+                                        int pathLength= path.getLength(); // get Path Length
+                                        ONDEXConcept con= (ONDEXConcept) path.getConceptsInPositionOrder().get(path.getConceptsInPositionOrder().size() - 1);
+                                        int lastConID = con.getId(); // endNode ID.
+                                        String gpl_key= String.valueOf(gene.getId()) +"//"+ String.valueOf(lastConID);
+                                        if(!mapGene2PathLength.containsKey(gpl_key)) {
+                                           //System.out.println(gpl_key +": "+ pathLength);
+                                           mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
+                                        }
 
 					// GENE 2 CONCEPT
 					if (!mapGene2Concepts.containsKey(gene.getId())) {
@@ -2976,6 +3004,13 @@ public class OndexServiceProvider {
 		else
 			System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
+		if ( mapGene2PathLength == null ) {
+			System.out.println ( "WARN: Gene2PathLength is null" );
+			mapGene2PathLength = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
+                
 		System.out.println("Create Gene2QTL map now...");
                 
 		mapGene2QTL = new HashMap<Integer, Set<Integer>>();
@@ -3039,20 +3074,14 @@ public class OndexServiceProvider {
         try {
             String g2c_fileName = fileUrl + "gene2evidences.tab.gz"; // gene2evidences.tab
 	    String c2g_fileName = fileUrl + "evidence2genes.tab.gz"; // evidence2genes.tab
+	    String g2pl_fileName = fileUrl + "gene2PathLength.tab.gz"; // gene2PathLength.tab
 
-	    // Also, create timetamped file copies.
-        /*    long timestamp = System.currentTimeMillis();
-            String g2c_fileName_bk = fileUrl + timestamp + "_gene2evidences.tab";
-	    String c2g_fileName_bk = fileUrl + timestamp + "_evidence2genes.tab";*/
-            
             System.out.println("Print mapGene2Concepts Stats in a new .tab file: "+ g2c_fileName);
             // Generate mapGene2Concepts HashMap contents in a new .tab file
             //BufferedWriter out1= new BufferedWriter(new FileWriter(g2c_fileName));
-            
             BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2c_fileName))));
             //GZIPOutputStream gzip= new GZIPOutputStream(new FileOutputStream(new File(g2c_fileName))); // gzip the file.
             //BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(gzip, "UTF-8"));
-            
             out1.write("Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" +"EvidenceIDs" +"\n");
             for (Map.Entry mEntry : mapGene2Concepts.entrySet()) { // for each <K,V> entry
                 int geneID= (Integer) mEntry.getKey();
@@ -3070,11 +3099,7 @@ public class OndexServiceProvider {
             System.out.println("Print mapConcept2Genes Stats in a new .tab file: "+ c2g_fileName);
             // Generate mapConcept2Genes HashMap contents in a new .tab file
             //BufferedWriter out2= new BufferedWriter(new FileWriter(c2g_fileName));
-            
             BufferedWriter out2= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(c2g_fileName))));
-            //GZIPOutputStream gzip2= new GZIPOutputStream(new FileOutputStream(new File(c2g_fileName))); // gzip the file.
-            //BufferedWriter out2= new BufferedWriter(new OutputStreamWriter(gzip2, "UTF-8"));
-            
             out2.write("Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" +"GeneIDs" +"\n");
             for (Map.Entry mapEntry : mapConcept2Genes.entrySet()) { // for each <K,V> entry
                 int eviID= (Integer) mapEntry.getKey();
@@ -3088,6 +3113,22 @@ public class OndexServiceProvider {
                 out2.write(evi_txt); // write contents.
                }
             out2.close();
+            
+            // Generate gene2PathLength .tab file
+            System.out.println("Print mapGene2PathLength Stats in a new .tab file: "+ g2pl_fileName);
+            BufferedWriter out3= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2pl_fileName))));
+            out3.write("Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" +"\n");
+            /*for(String key : mapGene2PathLength.keySet()) {
+                out3.write(key +"\t"+ mapGene2PathLength.get(key) +"\n"); // write contents.
+               }*/
+            for (Map.Entry plEntry : mapGene2PathLength.entrySet()) { // for each <K,V> entry
+                String key= plEntry.getKey().toString();
+                int pl= (Integer) plEntry.getValue();
+                String pl_txt= key +"\t"+ pl +"\n";
+                //System.out.println("mapGene2PathLength: "+ pl_txt);
+                out3.write(pl_txt); // write contents.
+               }
+            out3.close();
            }
         catch (Exception ex) {
             ex.printStackTrace();
