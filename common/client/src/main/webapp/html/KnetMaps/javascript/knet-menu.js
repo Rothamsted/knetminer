@@ -73,12 +73,14 @@ function popupItemInfo() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    var exportJson= cy.json(); // get JSON object for the network graph.
 
-   // Display in a new blank browser tab.
-//   window.open().document.write(exportJson); // for text data
-   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
+   // Display in a new blank browser tab, e.g, window.open().document.write("text"); // for text data
+//   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
 
-   /* TO DO: use FileSaverJS to open directly open file downloader & write to local file. */
-   //
+   // use FileSaver.js to save using file downloader
+ //  var kNet_json_Blob= new Blob([JSON.stringify(exportJson)], {type: "text/plain;charset=utf-8"});
+ //  saveAs(kNet_json_Blob, "kNetwork.cyjs.json");
+   var kNet_json= new File([JSON.stringify(exportJson)], "kNetwork.cyjs.json", {type: "text/plain;charset=utf-8"});
+   saveAs(kNet_json);
   }
   
   // Export the graph as a .png image and allow users to save it.
@@ -86,9 +88,19 @@ function popupItemInfo() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    // Export as .png image
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
-
-   // Display the exported image in a new blank browser window instead of having it in the same window.
+   // Display the exported image in a new window.
    window.open(png64,'Image','width=1200px,height=600px,resizable=1');
+
+   // use FileSaver.js to save using file downloader; fails (creates corrupted png)
+   /*cy_image= new Image();
+   cy_image.src=png64;
+   var canvas= document.getElementById('my-canvas'); // use canvas
+   context= canvas.getContext('2d');
+   context.drawImage(cy_image, 0,0); // draw image on canvas
+   // convert canvas to Blob & save using FileSaver.js.
+   canvas.toBlob(function(blob) {
+     saveAs(blob, "kNetwork.png");
+     }, "image/png");*/
   }
 
   // Remove hidden effect from nodes/ edges, if hidden.

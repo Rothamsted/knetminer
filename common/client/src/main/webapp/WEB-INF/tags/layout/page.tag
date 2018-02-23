@@ -49,6 +49,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
         <script src="html/KnetMaps/libs/cytoscape-qtip.js"></script>
         <script src="html/KnetMaps/libs/jquery.maskloader.js"></script>
+        <script src="html/KnetMaps/libs/FileSaver.min.js"></script>
         <!-- Layouts -->
         <script src="html/KnetMaps/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <script src="html/KnetMaps/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>

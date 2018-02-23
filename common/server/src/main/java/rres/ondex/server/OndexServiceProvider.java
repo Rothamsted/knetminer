@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,12 +29,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.zip.GZIPOutputStream;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.lucene.analysis.Analyzer;
+//import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+//import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryparser.classic.ParseException;
+//import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
@@ -67,18 +82,6 @@ import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 
-import org.apache.lucene.analysis.Analyzer;
-//import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-//import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryparser.classic.ParseException;
-//import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-
 /**
  * Parent class to all ondex service provider classes implementing organism
  * specific searches.
@@ -110,6 +113,11 @@ public class OndexServiceProvider {
 	static HashMap<Integer, Set<Integer>> mapGene2Concepts;
 	static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 
+	/**
+	 * HashMap of geneID -> endNodeID_pathLength
+	 */
+	static HashMap<String, Integer> mapGene2PathLength;
+        
 	/**
 	 * Query-dependent mapping between genes and concepts that contain query
 	 * terms
@@ -213,15 +221,16 @@ public class OndexServiceProvider {
 			}
 		}
 
-		System.out.println("Done. Waiting for queries...");
-
 		// Write Stats about the created Ondex graph & its mappings to a file.
 		displayGraphStats(MultiThreadServer.props.getProperty("DataPath"));
+                
+		System.out.println("Done. Waiting for queries...");
 	}
 
 	/*
 	 * Generate Stats about the created Ondex graph and its mappings:
 	 * mapConcept2Genes & mapGene2Concepts.
+         * author singha
 	 */
 	private void displayGraphStats(String fileUrl) {
 		// Update the Network Stats file that holds the latest Stats
@@ -329,6 +338,12 @@ public class OndexServiceProvider {
 			BufferedWriter out2 = new BufferedWriter(new FileWriter(newFileName));
 			out2.write(sb.toString()); // write contents.
 			out2.close();
+                        
+                        /* generate gene2evidence .tab file with contents of the mapGenes2Concepts HashMap &
+                         * evidence2gene .tab file with contents of the mapConcepts2Genes HashMap
+                        */
+                        generateGeneEvidenceStats(fileUrl);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -651,7 +666,7 @@ public class OndexServiceProvider {
 		String crossTypesNotQuery = "";
 		ScoredHits<ONDEXConcept> NOTList = null;
 		if (NOTQuery != "") {
-			crossTypesNotQuery = "tConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
+			crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
 					+ NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
 					+ NOTQuery + ")";
 			String fieldNameNQ = getFieldName("ConceptName", null);
@@ -735,8 +750,15 @@ public class OndexServiceProvider {
 		return hit2score;
 	}
 
-	public ArrayList<ONDEXConcept> getScoredGenes(HashMap<ONDEXConcept, Float> hit2score) throws IOException {
-
+	
+	public ArrayList<ONDEXConcept> getScoredGenes( Map<ONDEXConcept, Float> hit2score) throws IOException
+	{
+		return new ArrayList<> ( this.getScoredGenesMap ( hit2score ).keySet () );
+	}
+	
+	
+	public SortedMap<ONDEXConcept, Double> getScoredGenesMap( Map<ONDEXConcept, Float> hit2score ) throws IOException 
+	{
 		ArrayList<ONDEXConcept> candidateGenes = new ArrayList<ONDEXConcept>();
 		scoredCandidates = new HashMap<ONDEXConcept, Double>();
 		ValueComparator comparator = new ValueComparator(scoredCandidates);
@@ -771,6 +793,7 @@ public class OndexServiceProvider {
 			// reflects how important a term is to a gene in a collection
 			// (genome)
 
+                    // KnetScore, calculated using IGF & EDF.
 			// term document frequency
 			double tdf = (double) mapGene2HitConcept.get(geneId).size() / (double) mapGene2Concepts.get(geneId).size();
 
@@ -789,9 +812,8 @@ public class OndexServiceProvider {
 		}
 
 		sortedCandidates.putAll(scoredCandidates);
-		candidateGenes = new ArrayList<ONDEXConcept>(sortedCandidates.keySet());
 
-		return candidateGenes;
+		return sortedCandidates;
 	}
 
 	// /**
@@ -976,9 +998,9 @@ public class OndexServiceProvider {
 			QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
 			Query cN = parserCN.parse(keyword);
 
-			//BooleanQuery finalQuery = new BooleanQuery();
-			//finalQuery.add(cC, Occur.MUST);
-			//finalQuery.add(cN, Occur.MUST);
+			/*BooleanQuery finalQuery = new BooleanQuery();
+			finalQuery.add(cC, Occur.MUST);
+			finalQuery.add(cN, Occur.MUST);*/
                         BooleanQuery finalQuery = new BooleanQuery.Builder()
                                 .add(cC, BooleanClause.Occur.MUST)
                                 .add(cN, BooleanClause.Occur.MUST)
@@ -1957,7 +1979,7 @@ public class OndexServiceProvider {
 
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n");
+			out.write("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
 			int i = 0;
 			for (ONDEXConcept gene : candidates) {
 				i++;
@@ -2094,8 +2116,10 @@ public class OndexServiceProvider {
 					luceneHits = new HashSet<Integer>();
 				}
 
+                                Set<Integer> evidencesIDs= new HashSet<Integer>();
 				for (int hitID : luceneHits) {
 					ONDEXConcept c = graph.getConcept(hitID);
+                                        evidencesIDs.add(c.getId()); // retain all evidences' ID's
 					String ccId = c.getOfType().getId();
 					String name = getDefaultNameForGroupOfConcepts(c);
 					// All publications will have the format PMID:15487445
@@ -2110,6 +2134,7 @@ public class OndexServiceProvider {
 						cc2name.put(ccId, act_name);
 					}
 				}
+                                int evidences_linked= luceneHits.size(); // no. of evidences linked per gene
 
                                 // Removed ccSNP from Geneview table (12/09/2017)
 			/*	if (ccSNP != null) {
@@ -2147,6 +2172,14 @@ public class OndexServiceProvider {
 				if (luceneHits.isEmpty() && listMode.equals("GLrestrict")) {
 					continue;
 				}
+                                
+                                String all_evidences= "";
+                                for(int ev_id: evidencesIDs) {
+                                    // comma-separated ID's for all evidences for a geneID
+                                    all_evidences= all_evidences + String.valueOf(ev_id) +",";
+                                   }
+                                all_evidences= all_evidences.substring(0, all_evidences.length()-1);
+                                //System.out.println("GeneTable.tab: evidenceIDs: "+ all_evidences);
 
 			/*	out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n"); */
@@ -2154,12 +2187,12 @@ public class OndexServiceProvider {
                                    // if GeneList was provided by the user, display only those genes.
                                    if(isInList.equals("yes")) {
                                       out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\t"+ all_evidences +"\n");
                                    }
                                 }
                                 else { // default
                                     out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n");
+						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"+ evidences_linked +"\t"+ all_evidences + "\n");
                                 }
 
 			}
@@ -2839,6 +2872,7 @@ public class OndexServiceProvider {
 		System.out.println("Populate HashMaps");
 		File file1 = new File("mapConcept2Genes");
 		File file2 = new File("mapGene2Concepts");
+                System.out.println("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
@@ -2870,6 +2904,8 @@ public class OndexServiceProvider {
 
 			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
 			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+			mapGene2PathLength = new HashMap<String, Integer>();
+                        System.out.println("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
 			for (List<EvidencePathNode> paths : results.values()) {
 				for (EvidencePathNode path : paths) {
 
@@ -2878,6 +2914,16 @@ public class OndexServiceProvider {
 
 					// add all semantic motifs to the new graph
 					Set<ONDEXConcept> concepts = path.getAllConcepts();
+                                        
+                                        // Extract pathLength and endNode ID.
+                                        int pathLength= path.getLength(); // get Path Length
+                                        ONDEXConcept con= (ONDEXConcept) path.getConceptsInPositionOrder().get(path.getConceptsInPositionOrder().size() - 1);
+                                        int lastConID = con.getId(); // endNode ID.
+                                        String gpl_key= String.valueOf(gene.getId()) +"//"+ String.valueOf(lastConID);
+                                        if(!mapGene2PathLength.containsKey(gpl_key)) {
+                                           //System.out.println(gpl_key +": "+ pathLength);
+                                           mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
+                                        }
 
 					// GENE 2 CONCEPT
 					if (!mapGene2Concepts.containsKey(gene.getId())) {
@@ -2920,7 +2966,7 @@ public class OndexServiceProvider {
 				s = new ObjectOutputStream(f);
 				s.writeObject(mapGene2Concepts);
 				s.close();
-
+                                
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -2943,11 +2989,30 @@ public class OndexServiceProvider {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
-		System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
+                
+		if ( mapGene2Concepts == null ) {
+			System.out.println ( "WARN: mapGene2Concepts is null" );
+			mapGene2Concepts = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
+		
+		if ( mapConcept2Genes == null ) {
+			System.out.println ( "WARN: mapConcept2Genes is null" );
+			mapConcept2Genes = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
+		if ( mapGene2PathLength == null ) {
+			System.out.println ( "WARN: Gene2PathLength is null" );
+			mapGene2PathLength = new HashMap<> ();
+		}
+		else
+			System.out.println("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
+                
 		System.out.println("Create Gene2QTL map now...");
-
+                
 		mapGene2QTL = new HashMap<Integer, Set<Integer>>();
 
 		for (ONDEXConcept gene : genes) {
@@ -3001,6 +3066,74 @@ public class OndexServiceProvider {
 		return genes;
 	}
 
+    /* generate gene2evidence .tab file with contents of the mapGenes2Concepts HashMap &
+     * evidence2gene .tab file with contents of the mapConcepts2Genes HashMap
+     * author singha
+     */
+    private void generateGeneEvidenceStats(String fileUrl) {
+        try {
+            String g2c_fileName = fileUrl + "gene2evidences.tab.gz"; // gene2evidences.tab
+	    String c2g_fileName = fileUrl + "evidence2genes.tab.gz"; // evidence2genes.tab
+	    String g2pl_fileName = fileUrl + "gene2PathLength.tab.gz"; // gene2PathLength.tab
+
+            System.out.println("Print mapGene2Concepts Stats in a new .tab file: "+ g2c_fileName);
+            // Generate mapGene2Concepts HashMap contents in a new .tab file
+            //BufferedWriter out1= new BufferedWriter(new FileWriter(g2c_fileName));
+            BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2c_fileName))));
+            //GZIPOutputStream gzip= new GZIPOutputStream(new FileOutputStream(new File(g2c_fileName))); // gzip the file.
+            //BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(gzip, "UTF-8"));
+            out1.write("Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" +"EvidenceIDs" +"\n");
+            for (Map.Entry mEntry : mapGene2Concepts.entrySet()) { // for each <K,V> entry
+                int geneID= (Integer) mEntry.getKey();
+                HashSet<Integer> conIDs = (HashSet<Integer>) mEntry.getValue(); // Set<Integer> value
+                String txt= geneID + "\t" + conIDs.size() + "\t";
+                Iterator itr= conIDs.iterator();
+                while(itr.hasNext()) {
+                    txt= txt + itr.next().toString() +",";
+                   }
+                txt= txt.substring(0,txt.length()-1) +"\n"; // omit last comma character
+                out1.write(txt); // write contents.
+            }
+            out1.close();
+
+            System.out.println("Print mapConcept2Genes Stats in a new .tab file: "+ c2g_fileName);
+            // Generate mapConcept2Genes HashMap contents in a new .tab file
+            //BufferedWriter out2= new BufferedWriter(new FileWriter(c2g_fileName));
+            BufferedWriter out2= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(c2g_fileName))));
+            out2.write("Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" +"GeneIDs" +"\n");
+            for (Map.Entry mapEntry : mapConcept2Genes.entrySet()) { // for each <K,V> entry
+                int eviID= (Integer) mapEntry.getKey();
+                HashSet<Integer> geneIDs = (HashSet<Integer>) mapEntry.getValue(); // Set<Integer> value
+                String evi_txt= eviID + "\t" + geneIDs.size() + "\t";
+                Iterator iter= geneIDs.iterator();
+                while(iter.hasNext()) {
+                    evi_txt= evi_txt + iter.next().toString() +",";
+                   }
+                evi_txt= evi_txt.substring(0,evi_txt.length()-1) +"\n"; // omit last comma character
+                out2.write(evi_txt); // write contents.
+               }
+            out2.close();
+            
+            // Generate gene2PathLength .tab file
+            System.out.println("Print mapGene2PathLength Stats in a new .tab file: "+ g2pl_fileName);
+            BufferedWriter out3= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2pl_fileName))));
+            out3.write("Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" +"\n");
+            /*for(String key : mapGene2PathLength.keySet()) {
+                out3.write(key +"\t"+ mapGene2PathLength.get(key) +"\n"); // write contents.
+               }*/
+            for (Map.Entry plEntry : mapGene2PathLength.entrySet()) { // for each <K,V> entry
+                String key= plEntry.getKey().toString();
+                int pl= (Integer) plEntry.getValue();
+                String pl_txt= key +"\t"+ pl +"\n";
+                //System.out.println("mapGene2PathLength: "+ pl_txt);
+                out3.write(pl_txt); // write contents.
+               }
+            out3.close();
+           }
+        catch (Exception ex) {
+            ex.printStackTrace();
+           }
+    }
 
 }
 
