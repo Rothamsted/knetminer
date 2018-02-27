@@ -35,6 +35,18 @@
    eles.layout(circleNetworkLayout); // run the Circle layout.
   }
 
+  // Set Euler layout.
+  function setEulerLayout(eles) {
+   //console.log("setEulerLayout()>> animate_layout= "+ animate_layout);
+   eles.layout(eulerNetworkLayout)/*.run()*/; // run the Euler layout.
+  }
+
+  // Set Random layout.
+  function setRandomLayout(eles) {
+   //console.log("setRandomLayout()>> animate_layout= "+ animate_layout);
+   eles.layout(randomNetworkLayout)/*.run()*/; // run the Random layout.
+  }
+  
   // Set Concentric layout.
   function setConcentricLayout(eles) {
    //console.log("setConcentricLayout()>> animate_layout= "+ animate_layout);
