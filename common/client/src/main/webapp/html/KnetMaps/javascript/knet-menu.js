@@ -1,19 +1,20 @@
 function onHover(thisBtn) {
-    var img= $(thisBtn).attr('src');
+	 var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'_hover.png');
     $(thisBtn).attr('src', img.replace('.png','_hover.png'));
  }
 
  function offHover(thisBtn) {
-     var img= $(thisBtn).attr('src');
+	 var img= $(thisBtn).attr('src');
 //    $("#"+img).attr('src', 'image/'+img+'.png');
     $(thisBtn).attr('src', img.replace('_hover.png','.png'));
  }
 
-function popupItemInfo() {
+ function popupItemInfo() {
  openItemInfoPane();
  showItemInfo(this);
 }
+
    // Go to Help docs.
   function openKnetHelpPage() {
    var helpURL = 'https://github.com/Rothamsted/knetmaps.js/wiki/KnetMaps.js';
@@ -22,55 +23,13 @@ function popupItemInfo() {
 
   // Reset: Re-position the network graph.
   function resetGraph() {
-   //console.log("resetGraph...");
-   /*cy*/$('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
-//   /*cy*/$('#cy').cytoscape('get').fit();
+   $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
   }
   
-  // Open advanced KnetMaps (using Twitter Bootstrap) menu.
-  
-  // Layouts dropdown: onChange
-  /*$("#layouts_dropdown").selectmenu({
-	change: function( event, data ) {
-         console.log("layouts_dropdown:"+ data.item.value);
-		 rerunLayout();
-       }
-   });
-  
-  // Label visibility  dropdown: onChange
-  $("#changeLabelVisibility").selectmenu();
-  $("#changeLabelVisibility").on( "selectmenuchange", function( event, data ) {console.log("changeLabelVisibility:"+ data.item.value);
-		 showHideLabels(this.value);} );
-
-  // Label font dropdown: onChange
-  $("#changeLabelFont").selectmenu({
-	change: function( event, data ) {
-         console.log("changeLabelFont:"+ data.item.value);
-		 changeLabelFontSize(this.value);
-       }
-   });*/
-
-   // Search the graph for a concept using BFS: breadthfirst search
-  function findConcept(conceptName) {
-   console.log("Search for concept value: "+ conceptName);
-   var foundID;
-   var cy= $('#cy').cytoscape('get');
-   cy.nodes().forEach(function( ele ) {
-       if(ele.data('conceptDisplay') === 'element') {
-          if(ele.data('value').indexOf(conceptName) > -1) {
-             console.log("Search found: "+ ele.data('value'));
-             foundID= ele.id(); // the found node
-
-             // select the matched concept.
-             cy.$('#'+foundID).select();
-            }
-        }
-      });
-  }
-
  // Export the graph as a JSON object in a new Tab and allow users to save it.
   function exportAsJson() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+
    var exportJson= cy.json(); // get JSON object for the network graph.
 
    // Display in a new blank browser tab, e.g, window.open().document.write("text"); // for text data
@@ -86,21 +45,34 @@ function popupItemInfo() {
   // Export the graph as a .png image and allow users to save it.
   function exportAsImage() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+
    // Export as .png image
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
+
    // Display the exported image in a new window.
-   window.open(png64,'Image','width=1200px,height=600px,resizable=1');
+   //window.open(png64, 'Image', 'width=1200px,height=600px,resizable=1'); // Blocked on some browsers
 
    // use FileSaver.js to save using file downloader; fails (creates corrupted png)
    /*cy_image= new Image();
-   cy_image.src=png64;
-   var canvas= document.getElementById('my-canvas'); // use canvas
-   context= canvas.getContext('2d');
-   context.drawImage(cy_image, 0,0); // draw image on canvas
+   cy_image.src= png64;
+   var knet_canvas= document.getElementById('cy'); // use canvas
+   knet_context= knet_canvas.getContext('2d');
+   knet_context.drawImage(cy_image, 0,0); // draw image on canvas
    // convert canvas to Blob & save using FileSaver.js.
-   canvas.toBlob(function(blob) {
-     saveAs(blob, "kNetwork.png");
+   knet_canvas.toBlob(function(blob) {
+     saveAs(knet_blob, "kNetwork.png");
      }, "image/png");*/
+
+   // Use IFrame to open png image in a new browser tab
+   var cy_width= $('#cy').width();
+   var cy_height= $('#cy').height();
+   var knet_iframe_style= "border:1px solid black; top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
+   var knet_iframe = '<iframe src="'+ png64 +'" frameborder="0" style="'+ knet_iframe_style +'" allowfullscreen></iframe>';
+   var pngTab= window.open();
+   pngTab.document.open();
+   pngTab.document.write(knet_iframe);
+   pngTab.document.title="kNet_png";
+   pngTab.document.close();
   }
 
   // Remove hidden effect from nodes/ edges, if hidden.
@@ -143,7 +115,7 @@ function popupItemInfo() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    var selected_elements= cy.$(':visible'); // get only the visible elements.
 
-  // Re-run the graph's layout, but only on the visible elements.
+   // Re-run the graph's layout, but only on the visible elements.
    rerunGraphLayout(selected_elements);
    
    // Reset the graph/ viewport.
@@ -155,20 +127,26 @@ function popupItemInfo() {
    //  var ld= document.getElementById("layouts_dropdown");
    var ld_selected= /*ld.options[ld.selectedIndex].value*/$('#layouts_dropdown').val();
    //console.log("layouts_dropdown selectedOption: "+ ld_selected)
-   if(ld_selected === "Circle_layout") {
+   if(ld_selected === "circle_layout") {
            setCircleLayout(eles);
           }
-   else if(ld_selected === "Cose_layout") {
+   else if(ld_selected === "cose_layout") {
            setCoseLayout(eles);
           }
-   else if(ld_selected === "Cose_Bilkent_layout") {
+   else if(ld_selected === "coseBilkent_layout") {
            setCoseBilkentLayout(eles);
           }
-   else if(ld_selected === "Concentric_layout") {
+   else if(ld_selected === "concentric_layout") {
            setConcentricLayout(eles);
           }
    else if(ld_selected === "ngraph_force_layout") {
            setNgraphForceLayout(eles);
+          }
+   else if(ld_selected === "euler_layout") {
+           setEulerLayout(eles);
+          }
+   else if(ld_selected === "random_layout") {
+           setRandomLayout(eles);
           }
    //console.log("Re-run layout complete...");
   }
@@ -185,34 +163,6 @@ function popupItemInfo() {
           console.log("Error occurred while altering label font size. \n"+"Error Details: "+ err.stack);
          }
   }
-
-/*
-  // Show all node labels.
-  function showConceptLabels() {
-   var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   if(document.getElementById("show_ConceptLabels").checked) {
-      console.log("Show Concept labels...");
-      cy.nodes().style({'text-opacity': '1'});
-     }
-   else {
-      console.log("Hide Concept labels...");
-      cy.nodes().style({'text-opacity': '0'});
-     }
-  }
-
-  // Show all edge labels.
-  function showRelationLabels() {
-   var cy= $('#cy').cytoscape('get'); // reference to `cy`
-   if(document.getElementById("show_RelationLabels").checked) {
-      console.log("Show Relation labels...");
-      cy.edges().style({'text-opacity': '1'});
-     }
-   else {
-      console.log("Hide Relation labels...");
-      cy.edges().style({'text-opacity': '0'});
-     }
-  }
-*/
 
   // Show/ Hide labels for concepts and relations.
   function showHideLabels(val) {
