@@ -18,48 +18,48 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>tools</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>workflow-api</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>memory</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>lucene</artifactId>
-			<version>0.6.0-SNAPSHOT</version><!--1.2.1-SNAPSHOT-->
+			<version>1.2.1-SNAPSHOT</version><!--0.6.0-SNAPSHOT-->
 			<scope>compile</scope>
 		</dependency>
-                <!--<dependency>
+                <dependency>
                     <groupId>org.apache.lucene</groupId>
                     <artifactId>lucene-analyzers-common</artifactId>
                     <version>6.6.0</version>
-                </dependency>-->
+                </dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>generic</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>oxl</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
-			<version>1.1.1-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version><!-- 1.1.1-SNAPSHOT -->
 			<scope>compile</scope>
 		</dependency>
 
@@ -77,12 +77,61 @@
 			<version>4.0.6</version>
 			<scope>compile</scope>
 		</dependency>
-	 <dependency>
-	  <groupId>net.sourceforge.ondex.modules</groupId>
-	  <artifactId>cyjs_json</artifactId>
-	  <version>1.1.1-SNAPSHOT</version>
-	  <scope>compile</scope>
-	 </dependency>
+
+	<dependency>
+	  <groupId>ch.qos.logback</groupId>
+	  <artifactId>logback-classic</artifactId>
+	  <version>1.2.3</version>
+	  <scope>test</scope>
+	</dependency>
+
 	</dependencies>
+
+
+	<build>
+		<plugins>
+	    
+	    <plugin>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	      <version>2.1</version>
+	      <configuration>
+	        <source>1.8</source>
+	        <target>1.8</target>
+	        <showWarnings>true</showWarnings>
+	        <showDeprecation>true</showDeprecation>
+	        <maxmem>2000m</maxmem>
+	        <encoding>UTF-8</encoding>
+	        <fork>true</fork>
+	      </configuration>
+	    </plugin>
+	    
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <forkMode>always</forkMode>
+              <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
+              <argLine>-Xms12G -Xmx12G -Dondex.dir=data</argLine>
+              <excludes>
+                <exclude>net/sourceforge/ondex/apps/*</exclude>
+              </excludes>
+              <failIfNoTests>false</failIfNoTests>
+              <enableAssertions>true</enableAssertions>
+              <redirectTestOutputToFile>false</redirectTestOutputToFile>
+              <useFile>false</useFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	    
+	    
+		</plugins>
+	</build>
 
 </project>

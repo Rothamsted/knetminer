@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
