@@ -31,6 +31,7 @@ function onHover(thisBtn) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    var exportJson= cy.json(); // get JSON object for the network graph.
+   console.log("Save network JSON as: kNetwork.cyjs.json");
 
    // Display in a new blank browser tab, e.g, window.open().document.write("text"); // for text data
 //   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
@@ -39,7 +40,8 @@ function onHover(thisBtn) {
  //  var kNet_json_Blob= new Blob([JSON.stringify(exportJson)], {type: "text/plain;charset=utf-8"});
  //  saveAs(kNet_json_Blob, "kNetwork.cyjs.json");
    var kNet_json= new File([JSON.stringify(exportJson)], "kNetwork.cyjs.json", {type: "text/plain;charset=utf-8"});
-   saveAs(kNet_json);
+   //saveAs(kNet_json);
+   saveAs(kNet_json, "kNetwork.cyjs.json");
   }
   
   // Export the graph as a .png image and allow users to save it.
@@ -48,6 +50,7 @@ function onHover(thisBtn) {
 
    // Export as .png image
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
+   console.log("Export network PNG as: kNetwork.png");
 
    // Display the exported image in a new window.
    //window.open(png64, 'Image', 'width=1200px,height=600px,resizable=1'); // Blocked on some browsers
