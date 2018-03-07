@@ -37,11 +37,10 @@ function onHover(thisBtn) {
 //   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
 
    // use FileSaver.js to save using file downloader
- //  var kNet_json_Blob= new Blob([JSON.stringify(exportJson)], {type: "text/plain;charset=utf-8"});
- //  saveAs(kNet_json_Blob, "kNetwork.cyjs.json");
-   var kNet_json= new File([JSON.stringify(exportJson)], "kNetwork.cyjs.json", {type: "text/plain;charset=utf-8"});
+   //var kNet_json= new File([JSON.stringify(exportJson)], "kNetwork.cyjs.json", {type: "text/plain;charset=utf-8"});
    //saveAs(kNet_json);
-   saveAs(kNet_json, "kNetwork.cyjs.json");
+   var kNet_json_Blob= new Blob([JSON.stringify(exportJson)], {type: 'application/javascript;charset=utf-8'});
+   saveAs(kNet_json_Blob, "kNetwork.cyjs.json");
   }
   
   // Export the graph as a .png image and allow users to save it.
@@ -50,6 +49,7 @@ function onHover(thisBtn) {
 
    // Export as .png image
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
+   //var png64= cy.png({ bg: white, full: true });
    console.log("Export network PNG as: kNetwork.png");
 
    // Display the exported image in a new window.
@@ -69,7 +69,8 @@ function onHover(thisBtn) {
    // Use IFrame to open png image in a new browser tab
    var cy_width= $('#cy').width();
    var cy_height= $('#cy').height();
-   var knet_iframe_style= "border:1px solid black; top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
+   //var knet_iframe_style= "border:1px solid black; top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
+   var knet_iframe_style= "top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
    var knet_iframe = '<iframe src="'+ png64 +'" frameborder="0" style="'+ knet_iframe_style +'" allowfullscreen></iframe>';
    var pngTab= window.open();
    pngTab.document.open();
