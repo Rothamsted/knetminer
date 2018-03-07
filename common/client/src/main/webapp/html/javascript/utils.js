@@ -974,11 +974,13 @@ function populateKnetMenu() {
                     "<input type='image' id='openItemInfoBtn' src='html/KnetMaps/image/openItemInfoBtn.png' onclick='popupItemInfo();' title='Show Info box' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
                     "<span class='knet-dropdowns'>"+
                         "<select id='layouts_dropdown' class='knet-dropdowns' onChange='rerunLayout();' title='Select network layout'>"+
-                            "<option value='Cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"+
+                            "<option value='cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"+
                             "<option value='ngraph_force_layout' title='using ngraph_force layout (works well on planar graphs)'>Force layout</option>"+
-                            "<option value='Circle_layout'>Circular layout</option>"+
-                            "<option value='Concentric_layout'>Concentric layout</option>"+
-                            "<option value='Cose_Bilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"+
+                            "<option value='circle_layout'>Circular layout</option>"+
+                            "<option value='concentric_layout'>Concentric layout</option>"+
+                            "<option value='coseBilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"+
+                        /*    "<option value='euler_layout'>Euler layout</option>"+
+                            "<option value='random_layout'>Random layout</option>"+*/
                         "</select>"+
                         "<select id='changeLabelVisibility' class='knet-dropdowns' onChange='showHideLabels(this.value);' title='Select label visibility'>"+
                             "<option value='None' selected='selected'>Labels: None</option>"+
