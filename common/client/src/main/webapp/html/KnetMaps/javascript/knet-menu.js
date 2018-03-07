@@ -71,7 +71,7 @@ function onHover(thisBtn) {
    var pngTab= window.open();
    pngTab.document.open();
    pngTab.document.write(knet_iframe);
-   pngTab.document.title="kNet_png";
+   pngTab.document.title="kNetwork_png";
    pngTab.document.close();
   }
 
