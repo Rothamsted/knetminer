@@ -23,6 +23,9 @@
 20	SNP
 21^	Trait
 22^	DGES
+23	CoExpCluster
+24	PlantOntologyTerm
+25	CoExpStudy
 
 
 #Transitions
@@ -32,6 +35,9 @@
 1-2	occ_in
 1-22	differentially_expressed
 1-16	cooc_wi
+1-23	part_of
+1-9	regulates	2
+1-9	homeolog	2
 
 10-10	h_s_s	4
 10-7	h_s_s	4
@@ -75,3 +81,7 @@
 17-18	ca_by
 17-188	ca_by
 18-19	part_of
+
+23-24	enriched_for
+23-25	part_of
+23-4	enriched_for
