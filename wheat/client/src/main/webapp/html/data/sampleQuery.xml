@@ -88,18 +88,18 @@
 		<name>Example 3</name>
 		<description>Grain colour + PHS</description>
 		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
-                <gene>TRIAE_CS42_3B_TGACv1_227124_AA0821530</gene>
-                <gene>TRAES_2DL_BC7F606B9</gene>
-                <gene>TRIAE_CS42_2AS_TGACv1_112825_AA0345780</gene>
-                <gene>TRAES_2BL_07EC87598</gene>
-                <gene>TRAES_2BS_4AC3D17E8</gene>
-                <gene>TRIAE_CS42_2AL_TGACV1_096242_AA0318150</gene>
-                <gene>TRAES3BF026100070CFD</gene>
-                <gene>TRAES_3AL_197871859</gene>
-                <gene>TRIAE_CS42_3DL_TGACv1_249124_AA0838510</gene>
-                <gene>TRAES_3DL_4D42B475B</gene>
-                <gene>TRIAE_CS42_2DL_TGACV1_158777_AA0526030</gene>
-                <gene>TRIAE_CS42_3B_TGACv1_221068_AA0729150</gene>
+                <gene>TraesCS3B01G007400</gene>
+                <gene>TraesCS2A01G025700</gene>
+                <gene>TraesCS2D01G530600</gene>
+                <gene>TraesCS2A01G527700</gene>
+                <gene>TraesCS2B01G558400</gene>
+                <gene>TraesCS2B01G038700</gene>
+                <gene>TraesCS3B01G257900</gene>
+                <gene>TraesCS3A01G226600</gene>
+                <gene>TraesCS3D01G224600</gene>
+                <gene>TraesCS3D01G468400</gene>
+                <gene>TraesCS3B01G280700</gene>
+                <gene>TraesCS2D01G493400</gene>
 	</query>
 	<query>
 		<name>Example 4</name>
