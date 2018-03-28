@@ -42,6 +42,9 @@
 	  else if(conText === "Trait Ontology") {
 		  conText= "TO";
 		 }
+		  else if(conText === "PlantOntologyTerm") {
+			      conText= "PO";
+		      }
 	  else if(conText === "Trait") {
 		  conText= "GWAS";
 		 }
