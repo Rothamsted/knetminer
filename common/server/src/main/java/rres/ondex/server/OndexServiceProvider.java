@@ -2178,9 +2178,10 @@ public class OndexServiceProvider {
                                     // comma-separated ID's for all evidences for a geneID
                                     all_evidences= all_evidences + String.valueOf(ev_id) +",";
                                    }
-                                all_evidences= all_evidences.substring(0, all_evidences.length()-1);
-                                //System.out.println("GeneTable.tab: evidenceIDs: "+ all_evidences);
-
+                                if(!all_evidences.equals("")) {
+                                    all_evidences= all_evidences.substring(0, all_evidences.length()-1);
+                                    //System.out.println("GeneTable.tab: evidenceIDs: "+ all_evidences);
+                                   }
 			/*	out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\n"); */
                                 if(userGenes != null) {
