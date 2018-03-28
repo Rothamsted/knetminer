@@ -267,7 +267,7 @@ function matchCounter(){
  * 
  */		
 function evidencePath(id){	
-	// Preloader for the new Network Viewer (KNETviewer).
+	// Preloader for KnetMaps
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	var searchMode = "evidencepath";
@@ -613,7 +613,7 @@ $(document).ready(
 	 					addClass="tooltip-static";
 	 				}
 	 				else if(target == 'hintSortableTable'){
-	 					message = 'This opens KNETviewer and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
+	 					message = 'This opens KnetMaps and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
 	 					//message = 'Sort multiple columns simultaneously by holding down the shift key and clicking column headers! ';
 	 				}
 
@@ -1043,7 +1043,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
 	}
         else {
- 	  // Preloader for the new Network Viewer (KNETviewer).
+ 	  // Preloader for KnetMaps
 	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
          // console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
@@ -1184,13 +1184,14 @@ function createGenesTable(tableUrl, keyword, rows){
 
 //				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
 				    var gene_Acc= values[1];
+                                    gene_Acc= gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
                                     var gene_Name= values[2]; // display both accession & gene name.
                                     // Fetch preferred concept (gene) name and use the shorter name out of the two.
                                 /*    if(gene_Acc.length > gene_Name.length) {
                                        gene_Acc= gene_Name;
                                       }*/
                                     // gene_Name to display in Gene View table (under Accession).
-                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display in the new KNETviewer" id="viewGeneNetwork_'+i+'">'+gene_Acc+'</a></td>';
+                                    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_'+i+'">'+gene_Acc+'</a></td>';
 				    var geneName = '<td>'+gene_Name+'</td>'; // geneName
                                     if(gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
                                        geneName = '<td></td>'; // don't display geneName, if identical to Accession
@@ -1345,7 +1346,7 @@ function createGenesTable(tableUrl, keyword, rows){
     		 */
     		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
     			e.preventDefault();
- 	                // Preloader for the new Network Viewer (KNETviewer).
+ 	                // Preloader for the new Network Viewer (KnetMaps).
 	                $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
@@ -1548,7 +1549,7 @@ function createEvidenceTable(tableUrl){
 				table = table + '</tbody>';
 				table = table + '</table>';
 				table = table + '</div>';
-                                // Insert a preloader to be used for the new Network Viewer (KNETviewer).
+                                // Insert a preloader to be used for KnetMaps
 				table = table + '<div id="loadingNetwork_Div"></div>';
 			//	table = table + legendHtmlContainer; // add legend; DISABLED
 //				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
