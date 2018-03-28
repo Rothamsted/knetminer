@@ -26,6 +26,7 @@
 23	CoExpCluster
 24	PlantOntologyTerm
 25	CoExpStudy
+26^	SNPEffect
 
 
 #Transitions
@@ -38,6 +39,7 @@
 1-23	part_of
 1-9	regulates	2
 1-9	homeolog	2
+1-20	has_mutant
 
 10-10	h_s_s	4
 10-7	h_s_s	4
@@ -70,6 +72,8 @@
 9-22	differentially_expressed
 
 20-21	associated_with
+20-26	leads_to
+
 11-3	has_function
 11-4	participates_in
 11-5	located_in
