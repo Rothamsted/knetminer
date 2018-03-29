@@ -76,7 +76,8 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
-import net.sourceforge.ondex.export.oxl.Export;
+//import net.sourceforge.ondex.export.oxl.Export;
+import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
@@ -464,7 +465,7 @@ public class OndexServiceProvider {
 	 */
 	public boolean exportGraph(ONDEXGraph og, String exportPath) throws InvalidPluginArgumentException {
 
-		boolean fileIsCreated = false;
+		//boolean fileIsCreated = false;
 		boolean jsonFileIsCreated = false;
 
 		// Unconnected filter
@@ -507,7 +508,8 @@ public class OndexServiceProvider {
 		
 
 		// oxl export
-		Export export = new Export();
+                // disabled (25/10/17)
+		/*Export export = new Export();
 		export.setLegacyMode(true);
 		ONDEXPluginArguments ea = new ONDEXPluginArguments(export.getArgumentDefinitions());
 		ea.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
@@ -531,20 +533,19 @@ public class OndexServiceProvider {
 		while (!fileIsCreated) {
 			fileIsCreated = checkFileExist(exportPath);
 		}
-		System.out.println("OXL file created:" + exportPath);
+		System.out.println("OXL file created:" + exportPath);*/
 
 		// Export the graph as JSON too, using the Ondex JSON Exporter plugin.
-		net.sourceforge.ondex.export.cyjsJson.Export jsonExport = new net.sourceforge.ondex.export.cyjsJson.Export();
+		Export jsonExport= new Export();
 		// JSON output file.
-		String jsonExportPath = exportPath.substring(0, exportPath.length() - 4) + ".json";
+		//String jsonExportPath = exportPath.substring(0, exportPath.length() - 4) + ".json";
 		try {
 			ONDEXPluginArguments epa = new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
-			epa.setOption(FileArgumentDefinition.EXPORT_FILE, jsonExportPath);
+			epa.setOption(FileArgumentDefinition.EXPORT_FILE, /*jsonExportPath*/exportPath);
 
 			System.out.println("JSON Export file: " + epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
 
 			jsonExport.setArguments(epa);
-			// jsonExport.setONDEXGraph(graph);
 			jsonExport.setONDEXGraph(graph2);
 			System.out.println("Export JSON data: Total concepts= " + graph2.getConcepts().size() + " , Relations= "
 					+ graph2.getRelations().size());
@@ -558,11 +559,11 @@ public class OndexServiceProvider {
 
 		// Check if .json file also exists
 		while (!jsonFileIsCreated) {
-			jsonFileIsCreated = checkFileExist(jsonExportPath);
+			jsonFileIsCreated = checkFileExist(/*jsonExportPath*/exportPath);
 		}
-		System.out.println("JSON file created:" + jsonExportPath);
+		System.out.println("Network JSON file created:" + /*jsonExportPath*/exportPath);
 
-		return fileIsCreated;
+		return /*fileIsCreated*/jsonFileIsCreated;
 	}
 
 	// JavaScript Document
@@ -795,20 +796,20 @@ public class OndexServiceProvider {
 
                     // KnetScore, calculated using IGF & EDF.
 			// term document frequency
-			double tdf = (double) mapGene2HitConcept.get(geneId).size() / (double) mapGene2Concepts.get(geneId).size();
+			double normFactor = (double) /*mapGene2HitConcept.get(geneId).size() */ 1 / (double) mapGene2Concepts.get(geneId).size();
 
 			// inverse document frequency
-			double idf = 0;
+			double weighted_evidence_sum = 0;
 			for (int cId : mapGene2HitConcept.get(geneId)) {
 				// use a weight that is the initial lucene tf-idf score of hit
 				// concept
 				float luceneScore = hit2score.get(graph.getConcept(cId));
-				idf += Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size()) * luceneScore;
+				weighted_evidence_sum += Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			// take the mean of all idf scores
 			// idf = idf / mapGene2HitConcept.get(geneId).size();
-			double score = tdf * idf;
-			scoredCandidates.put(graph.getConcept(geneId), score);
+			double knetScore = normFactor * weighted_evidence_sum;
+			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 
 		sortedCandidates.putAll(scoredCandidates);
