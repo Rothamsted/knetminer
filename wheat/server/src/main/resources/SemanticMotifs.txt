@@ -24,8 +24,8 @@
 21^	Trait
 22^	DGES
 23	CoExpCluster
-24	PlantOntologyTerm
-25	CoExpStudy
+24^	PlantOntologyTerm
+25^	CoExpStudy
 26^	SNPEffect
 
 
