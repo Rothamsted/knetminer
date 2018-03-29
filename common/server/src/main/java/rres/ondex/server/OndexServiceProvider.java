@@ -796,20 +796,20 @@ public class OndexServiceProvider {
 
                     // KnetScore, calculated using IGF & EDF.
 			// term document frequency
-			double tdf = (double) mapGene2HitConcept.get(geneId).size() / (double) mapGene2Concepts.get(geneId).size();
+			double normFactor = (double) /*mapGene2HitConcept.get(geneId).size() */ 1 / (double) mapGene2Concepts.get(geneId).size();
 
 			// inverse document frequency
-			double idf = 0;
+			double weighted_evidence_sum = 0;
 			for (int cId : mapGene2HitConcept.get(geneId)) {
 				// use a weight that is the initial lucene tf-idf score of hit
 				// concept
 				float luceneScore = hit2score.get(graph.getConcept(cId));
-				idf += Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size()) * luceneScore;
+				weighted_evidence_sum += Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size()) * luceneScore;
 			}
 			// take the mean of all idf scores
 			// idf = idf / mapGene2HitConcept.get(geneId).size();
-			double score = tdf * idf;
-			scoredCandidates.put(graph.getConcept(geneId), score);
+			double knetScore = normFactor * weighted_evidence_sum;
+			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 
 		sortedCandidates.putAll(scoredCandidates);
