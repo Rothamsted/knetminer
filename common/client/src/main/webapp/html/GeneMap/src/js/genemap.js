@@ -38,7 +38,7 @@ GENEMAP.GeneMap = function (userConfig) {
     svgDefsFile: './assets/sprite-defs.svg',
     layout: {
       margin: { top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 },
-      numberPerRow: 6,
+      numberPerRow: /*6*/7,
       maxAnnotationLayers: 3,
     },
     pngScale: 2,
