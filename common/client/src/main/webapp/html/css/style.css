@@ -498,6 +498,10 @@ span.hint-big:hover {
 .evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
 .evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
 .evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
+.evidence_item_CoExpCluster {background:url(../image/CoExpCluster.png) no-repeat;}
+.evidence_item_CoExpStudy {background:url(../image/CoExpStudy.png) no-repeat;}
+.evidence_item_PlantOntologyTerm {background:url(../image/PlantOntologyTerm.png) no-repeat;}
+.evidence_item_SnpEffect {background:url(../image/SnpEffect.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
