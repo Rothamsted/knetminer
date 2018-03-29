@@ -2,25 +2,26 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>Contains chromosome configuration</comment>
-	<entry key="1">1A</entry>
-	<entry key="2">1B</entry>
-	<entry key="3">1D</entry>
-	<entry key="4">2A</entry>
-	<entry key="5">2B</entry>
-	<entry key="6">2D</entry>
-	<entry key="7">3A</entry>
-	<entry key="8">3B</entry>
-	<entry key="9">3D</entry>
-	<entry key="10">4A</entry>
-	<entry key="11">4B</entry>
-	<entry key="12">4D</entry>
-	<entry key="13">5A</entry>
-	<entry key="14">5BV</entry>
-	<entry key="15">5D</entry>
-	<entry key="16">6A</entry>
-	<entry key="17">6B</entry>
-	<entry key="18">6D</entry>
-	<entry key="19">7A</entry>
-	<entry key="20">7B</entry>
-	<entry key="21">7D</entry>
+	<entry key="1">chr1A</entry>
+	<entry key="2">chr2A</entry>
+	<entry key="3">chr3A</entry>
+	<entry key="4">chr4A</entry>
+	<entry key="5">chr5A</entry>
+	<entry key="6">chr6A</entry>
+	<entry key="7">chr7A</entry>
+	<entry key="8">chr1B</entry>
+	<entry key="9">chr2B</entry>
+	<entry key="10">chr3B</entry>
+	<entry key="11">chr4B</entry>
+	<entry key="12">chr5B</entry>
+	<entry key="13">chr6B</entry>
+	<entry key="14">chr7B</entry>
+	<entry key="15">chr1D</entry>
+	<entry key="16">chr2D</entry>
+	<entry key="17">chr3D</entry>
+	<entry key="18">chr4D</entry>
+	<entry key="19">chr5D</entry>
+	<entry key="20">chr6D</entry>
+	<entry key="21">chr7D</entry>
+	<entry key="22">chrUn</entry>
 </properties>

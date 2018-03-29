@@ -165,7 +165,7 @@ ul#main_list {
 
 div#keyword_search  {
 	padding-top:20px;
-        width:75%
+        width:70%;
 }
 div#keyword_search ul{
 	list-style:none;
@@ -231,6 +231,7 @@ div#list_search {
 
 #info-text {
 	padding:10px;
+        /*font-size:15px;*/
 	}
 
 
@@ -498,6 +499,10 @@ span.hint-big:hover {
 .evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
 .evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
 .evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
+.evidence_item_CoExpCluster {background:url(../image/CoExpCluster.png) no-repeat;}
+.evidence_item_CoExpStudy {background:url(../image/CoExpStudy.png) no-repeat;}
+.evidence_item_PlantOntologyTerm {background:url(../image/PlantOntologyTerm.png) no-repeat;}
+.evidence_item_SNPEffect {background:url(../image/SNPEffect.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{

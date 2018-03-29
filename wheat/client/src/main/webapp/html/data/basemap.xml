@@ -1,151 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genome>
- 	<chromosome index="1" length="171000000" number="1A">
+	<chromosome index="1" length="594002067" number="chr1A">
 		<band index="1">
 			<start>0</start>
-			<end>171000000</end>
+			<end>594002067</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>	
+	<chromosome index="2" length="780782773" number="chr2A">
+		<band index="1">
+			<start>0</start>
+			<end>780782773</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4" length="123000000" number="2A">
+	<chromosome index="3" length="750752759" number="chr3A">
 		<band index="1">
 			<start>0</start>
-			<end>123000000</end>
+			<end>750752759</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="7" length="207000000" number="3A">
+	<chromosome index="4" length="744539031" number="chr4A">
 		<band index="1">
 			<start>0</start>
-			<end>207000000</end>
+			<end>744539031</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="10" length="142000000" number="4A">
+	<chromosome index="5" length="709760750" number="chr5A">
 		<band index="1">
 			<start>0</start>
-			<end>142000000</end>
+			<end>709760750</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="13" length="128000000" number="5A">
+	<chromosome index="6" length="617935868" number="chr6A">
 		<band index="1">
 			<start>0</start>
-			<end>128000000</end>
+			<end>617935868</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="16" length="135000000" number="6A">
+	<chromosome index="7" length="736698113" number="chr7A">
 		<band index="1">
 			<start>0</start>
-			<end>135000000</end>
+			<end>736698113</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="19" length="185000000" number="7A">
+	<chromosome index="8" length="689851782" number="chr1B">
 		<band index="1">
 			<start>0</start>
-			<end>185000000</end>
+			<end>689851782</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2" length="149000000" number="1B">
+	<chromosome index="9" length="801255821" number="chr2B">
 		<band index="1">
 			<start>0</start>
-			<end>149000000</end>
+			<end>801255821</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5" length="157000000" number="2B">
+	<chromosome index="10" length="830807144" number="chr3B">
 		<band index="1">
 			<start>0</start>
-			<end>157000000</end>
+			<end>830807144</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="8" length="162000000" number="3B">
+	<chromosome index="11" length="673535148" number="chr4B">
 		<band index="1">
 			<start>0</start>
-			<end>162000000</end>
+			<end>673535148</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="11" length="130000000" number="4B">
+	<chromosome index="12" length="713141068" number="chr5B">
 		<band index="1">
 			<start>0</start>
-			<end>130000000</end>
+			<end>713141068</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="14" length="172000000" number="5B">
+	<chromosome index="13" length="720985981" number="chr6B">
 		<band index="1">
 			<start>0</start>
-			<end>172000000</end>
+			<end>720985981</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="17" length="140000000" number="6B">
+	<chromosome index="14" length="750611715" number="chr7B">
 		<band index="1">
 			<start>0</start>
-			<end>140000000</end>
+			<end>750611715</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="20" length="180000000" number="7B">
+	<chromosome index="15" length="495424774" number="chr1D">
 		<band index="1">
 			<start>0</start>
-			<end>180000000</end>
+			<end>495424774</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3" length="155000000" number="1D">
+	<chromosome index="16" length="651824161" number="chr2D">
 		<band index="1">
 			<start>0</start>
-			<end>155000000</end>
+			<end>651824161</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="6" length="105000000" number="2D">
+	<chromosome index="17" length="615481197" number="chr3D">
 		<band index="1">
 			<start>0</start>
-			<end>105000000</end>
+			<end>615481197</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="9" length="160000000" number="3D">
+	<chromosome index="18" length="509854941" number="chr4D">
 		<band index="1">
 			<start>0</start>
-			<end>160000000</end>
+			<end>509854941</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="12" length="67000000" number="4D">
+	<chromosome index="19" length="566052010" number="chr5D">
 		<band index="1">
 			<start>0</start>
-			<end>67000000</end>
+			<end>566052010</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="15" length="226000000" number="5D">
+	<chromosome index="20" length="473517451" number="chr6D">
 		<band index="1">
 			<start>0</start>
-			<end>226000000</end>
+			<end>473517451</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="18" length="161000000" number="6D">
+	<chromosome index="21" length="638668735" number="chr7D">
 		<band index="1">
 			<start>0</start>
-			<end>161000000</end>
+			<end>638668735</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="21" length="194000000" number="7D">
+	<chromosome index="22" length="480868267" number="chrUn">
 		<band index="1">
 			<start>0</start>
-			<end>194000000</end>
+			<end>480868267</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	
 </genome>
