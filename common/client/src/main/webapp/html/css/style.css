@@ -165,7 +165,7 @@ ul#main_list {
 
 div#keyword_search  {
 	padding-top:20px;
-        width:75%
+        width:70%;
 }
 div#keyword_search ul{
 	list-style:none;
@@ -231,6 +231,7 @@ div#list_search {
 
 #info-text {
 	padding:10px;
+        /*font-size:15px;*/
 	}
 
 
