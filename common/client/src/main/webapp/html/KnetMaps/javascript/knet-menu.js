@@ -1,12 +1,10 @@
 function onHover(thisBtn) {
 	 var img= $(thisBtn).attr('src');
-//    $("#"+img).attr('src', 'image/'+img+'_hover.png');
     $(thisBtn).attr('src', img.replace('.png','_hover.png'));
  }
 
  function offHover(thisBtn) {
 	 var img= $(thisBtn).attr('src');
-//    $("#"+img).attr('src', 'image/'+img+'.png');
     $(thisBtn).attr('src', img.replace('_hover.png','.png'));
  }
 
@@ -31,14 +29,9 @@ function onHover(thisBtn) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    var exportJson= cy.json(); // get JSON object for the network graph.
-   console.log("Save network JSON as: kNetwork.cyjs.json");
-
-   // Display in a new blank browser tab, e.g, window.open().document.write("text"); // for text data
-//   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
+   //console.log("Save network JSON as: kNetwork.cyjs.json");
 
    // use FileSaver.js to save using file downloader
-   //var kNet_json= new File([JSON.stringify(exportJson)], "kNetwork.cyjs.json", {type: "text/plain;charset=utf-8"});
-   //saveAs(kNet_json);
    var kNet_json_Blob= new Blob([JSON.stringify(exportJson)], {type: 'application/javascript;charset=utf-8'});
    saveAs(kNet_json_Blob, "kNetwork.cyjs.json");
   }
@@ -49,22 +42,7 @@ function onHover(thisBtn) {
 
    // Export as .png image
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
-   //var png64= cy.png({ bg: white, full: true });
-   console.log("Export network PNG as: kNetwork.png");
-
-   // Display the exported image in a new window.
-   //window.open(png64, 'Image', 'width=1200px,height=600px,resizable=1'); // Blocked on some browsers
-
-   // use FileSaver.js to save using file downloader; fails (creates corrupted png)
-   /*cy_image= new Image();
-   cy_image.src= png64;
-   var knet_canvas= document.getElementById('cy'); // use canvas
-   knet_context= knet_canvas.getContext('2d');
-   knet_context.drawImage(cy_image, 0,0); // draw image on canvas
-   // convert canvas to Blob & save using FileSaver.js.
-   knet_canvas.toBlob(function(blob) {
-     saveAs(knet_blob, "kNetwork.png");
-     }, "image/png");*/
+   //console.log("Export network PNG as: kNetwork.png");
 
    // Use IFrame to open png image in a new browser tab
    var cy_width= $('#cy').width();
@@ -79,24 +57,9 @@ function onHover(thisBtn) {
    pngTab.document.close();
   }
 
-  // Remove hidden effect from nodes/ edges, if hidden.
-/*  function removeHiddenEffect(ele) {
-    var thisElement= ele;
-    try {
-      if(thisElement.hasClass('HideEle')) {
-         thisElement.removeClass('HideEle');
-        }
-     }
-    catch(err) {
-          console.log("Error occurred while unhiding concepts/ relations. \n"+"Error Details: "+ err.stack);
-         }
-  }*/
-
   // Show all concepts & relations.
   function showAll() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-//   cy.elements('node').show(); // show all nodes using eles.show().
-//   cy.elements('edge').show(); // show all edges using eles.show().
    cy.elements().removeClass('HideEle');
    cy.elements().addClass('ShowEle');
 
@@ -114,7 +77,6 @@ function onHover(thisBtn) {
   
   // Re-run the entire graph's layout.
   function rerunLayout() {
-   //console.log("rerunLayout...");
    // Get the cytoscape instance as a Javascript object from JQuery.
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
    var selected_elements= cy.$(':visible'); // get only the visible elements.
@@ -128,9 +90,7 @@ function onHover(thisBtn) {
 
   // Re-run the graph's layout, but only on the visible elements.
   function rerunGraphLayout(eles) {
-   //  var ld= document.getElementById("layouts_dropdown");
-   var ld_selected= /*ld.options[ld.selectedIndex].value*/$('#layouts_dropdown').val();
-   //console.log("layouts_dropdown selectedOption: "+ ld_selected)
+   var ld_selected= $('#layouts_dropdown').val();
    if(ld_selected === "circle_layout") {
            setCircleLayout(eles);
           }
@@ -146,13 +106,6 @@ function onHover(thisBtn) {
    else if(ld_selected === "ngraph_force_layout") {
            setNgraphForceLayout(eles);
           }
-   else if(ld_selected === "euler_layout") {
-           setEulerLayout(eles);
-          }
-   else if(ld_selected === "random_layout") {
-           setRandomLayout(eles);
-          }
-   //console.log("Re-run layout complete...");
   }
 
   // Update the label font size for all the concepts and relations.
@@ -170,7 +123,6 @@ function onHover(thisBtn) {
 
   // Show/ Hide labels for concepts and relations.
   function showHideLabels(val) {
-   //console.log("cy.hideLabelsOnViewport= "+ $('#cy').cytoscape('get').hideLabelsOnViewport);
    if(val === "Concepts") {
       displayConceptLabels();
      }
@@ -188,8 +140,6 @@ function onHover(thisBtn) {
   // Show node labels.
   function displayConceptLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-//   cy.nodes().style({'text-opacity': '1'});
-//   cy.edges().style({'text-opacity': '0'});
    cy.nodes().removeClass("LabelOff").addClass("LabelOn");
    cy.edges().removeClass("LabelOn").addClass("LabelOff");
   }
@@ -197,8 +147,6 @@ function onHover(thisBtn) {
   // Show edge labels.
   function displayRelationLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-//   cy.nodes().style({'text-opacity': '0'});
-//   cy.edges().style({'text-opacity': '1'});
    cy.nodes().removeClass("LabelOn").addClass("LabelOff");
    cy.edges().removeClass("LabelOff").addClass("LabelOn");
   }
@@ -206,8 +154,6 @@ function onHover(thisBtn) {
   // Show node & edge labels.
   function displayConRelLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-//   cy.nodes().style({'text-opacity': '1'});
-//   cy.edges().style({'text-opacity': '1'});
    cy.nodes().removeClass("LabelOff").addClass("LabelOn");
    cy.edges().removeClass("LabelOff").addClass("LabelOn");
   }
@@ -215,8 +161,6 @@ function onHover(thisBtn) {
   // Show node labels.
   function hideConRelLabels() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
-//   cy.nodes().style({'text-opacity': '0'});
-//   cy.edges().style({'text-opacity': '0'});
    cy.nodes().removeClass("LabelOn").addClass("LabelOff");
    cy.edges().removeClass("LabelOn").addClass("LabelOff");
   }

@@ -1,8 +1,6 @@
 /**
- * @name Network View layouts
- * @description code for Network View using CytoscapeJS layouts such as breadthfirst, grid, cose, circle 
- * & concentric & third party layout algorithms such as WebCola, arbor, springy, spread & dagre (tree).
- * @returns
+ * @name Network layouts
+ * @description using cytoscapeJS layouts & 3rd party layout algorithms.
  **/
    var animate_layout= true; // global variable for layout animation setting (default: true).
 
@@ -13,50 +11,32 @@
     else {
      animate_layout= false;
     }
-    console.log("setLayoutAnimationSetting()>> checkbox checked: "+ document.getElementById("animateLayout").checked +" --> animate_layout= "+ animate_layout);
    }
 
   // Set Cose layout.
   /* Useful for larger networks with clustering. */
   function setCoseLayout(eles) {
-   //console.log("setCoseLayout()>> animate_layout= "+ animate_layout);
    eles.layout(coseNetworkLayout); // run the CoSE layout algorithm.
   }
 
   // Set Force layout.
   function setNgraphForceLayout(eles) {
-   //console.log("setNgraphForceLayout()>> animate_layout= "+ animate_layout);
    eles.layout(ngraph_forceNetworkLayout); // run the Force layout.
   }
 
   // Set Circle layout.
   function setCircleLayout(eles) {
-   //console.log("setCircleLayout()>> animate_layout= "+ animate_layout);
    eles.layout(circleNetworkLayout); // run the Circle layout.
   }
 
-  // Set Euler layout.
-  function setEulerLayout(eles) {
-   //console.log("setEulerLayout()>> animate_layout= "+ animate_layout);
-   eles.layout(eulerNetworkLayout)/*.run()*/; // run the Euler layout.
-  }
-
-  // Set Random layout.
-  function setRandomLayout(eles) {
-   //console.log("setRandomLayout()>> animate_layout= "+ animate_layout);
-   eles.layout(randomNetworkLayout)/*.run()*/; // run the Random layout.
-  }
-  
   // Set Concentric layout.
   function setConcentricLayout(eles) {
-   //console.log("setConcentricLayout()>> animate_layout= "+ animate_layout);
    eles.layout(concentricNetworkLayout); // run the Concentric layout.
   }
 
   // Set CoSE-Bilkent layout.
   /* with node clustering, but performance-intensive for larger networks */
   function setCoseBilkentLayout(eles) {
-   //console.log("setCoseLayout()>> animate_layout= "+ animate_layout);
    eles.layout(coseBilkentNetworkLayout);
   }
 

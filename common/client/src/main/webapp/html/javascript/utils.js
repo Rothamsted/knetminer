@@ -3,12 +3,8 @@ var genespreadsheet = new Array();
 var genes;
 */
 
-// Map View
+// Map View (Genomaps) initialisation
 var genemap = GENEMAP.GeneMap().width(750).height(400);
-
-/*
-Functions for show and hide structures when a button is pressed
-*/
 
 /*
  * Function to escape special characters from a string for use in jquery selector
@@ -17,6 +13,9 @@ function escapeJquerySelectors(exp){
 	return exp.replace(/[!"#$%&'()*+,.\/:;<=>?@\[\\\]^`{|}~]/g, '\\$&');
 }
 
+/*
+ * Query Suggestor
+ */
 function showSynonymTable(option,tabBoxRelated){
 $('.suggestorTable:visible').fadeOut(0,function(){
 		option = escapeJquerySelectors(option);
@@ -65,7 +64,7 @@ $('.resultViewer:visible').fadeOut(0,function(){
 	});
 }
 /*
-Functions for Add, Remove or Replace terms from the query search box
+ * Functions to Add, Remove or Replace terms from the query search box
 */
 function addKeyword(keyword, from, target){
 	query = $('#'+target).val();
@@ -160,61 +159,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 }
 
 /*
- * String containing the legend for all the tables and the network view.
- *
- */
-/*var legendHtmlContainer = 	"<div id=legend_picture>" +
-								"<div id=legend_container>" +
-									"<table id=legend_frame cellspacing=1>" +
-										"<tr>" +
-											"<td align=center><img src=html/image/Gene.png></td>" +
-											"<td align=center><img src=html/image/Protein.png></td>" +
-											"<td align=center><img src=html/image/Pathway.png></td>" +
-											"<td align=center><img src=html/image/Compound.png></td>" +
-											"<td align=center><img src=html/image/Enzyme.png></td>" +
-											"<td align=center><img src=html/image/Reaction.png></td>" +
-											"<td align=center><img src=html/image/Publication.png></td>" +
-											"<td align=center><img src=html/image/Molecular_function.png></td>" +
-											//"<td align=center><img src=html/image/Disease.png></td>" +
-										"</tr><tr>" +
-											"<td align=center><font size=1.8px>Gene</font></td>" +
-											"<td align=center><font size=1.8px>Protein</font></td>" +
-											"<td align=center><font size=1.8px>Pathway</font></td>" +
-											"<td align=center><font size=1.8px>SNP</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme</font></td>" +
-											"<td align=center><font size=1.8px>Reaction</font></td>" +
-											"<td align=center><font size=1.8px>Publication</font></td>" +
-											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
-											//"<td align=center><font size=1.8px>Disease</font></td>" +
-										"</tr><tr>" +
-											"<td align=center></td>" +
-										"</tr><tr>" +
-											"<td align=center><img src=html/image/Phenotype.png></td>" +
-											"<td align=center><img src=html/image/DGES.png></td>" +
-											"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
-											"<td align=center><img src=html/image/Cellular_component.png></td>" +
-											"<td align=center><img src=html/image/Protein_domain.png></td>" +
-											"<td align=center><img src=html/image/Trait_ontology.png></td>" +
-											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
-											"<td align=center><img src=html/image/Trait.png></td>" +
-											//"<td align=center><img src=html/image/Drug.png></td>" +
-										"</tr><tr>" +
-											"<td align=center><font size=1.8px>Phenotype</font></td>" +
-											"<td align=center><font size=1.8px>DGES</font></td>" +
-											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
-											"<td align=center><font size=1.8px>Cell. Component</font></td>" +
-											"<td align=center><font size=1.8px>Protein Domain</font></td>" +
-											"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
-											"<td align=center><font size=1.8px>GWAS</font></td>" +
-											//"<td align=center><font size=1.8px>Drug</font></td>" +
-										"</tr>" +
-									"</table>" +
-								"</div>" +
-							"</div>";*/ // DISABLED
-/*
  * Function to check the brackets in a string are balanced
- *
  */
 function bracketsAreBalanced(str) {
 	var count = 0;
@@ -231,8 +176,7 @@ function bracketsAreBalanced(str) {
 }
 
 /*
- * Function to get the number of matches
- *
+ * Function to get the number of matches while user types
  */
 function matchCounter(){
 	var keyword = $('#keywords').val();
@@ -263,8 +207,7 @@ function matchCounter(){
 }
 
 /*
- * Function to get the network of all genes related to a given evidence
- * 
+ * Function to get the network of all genes related to a given evidence term
  */		
 function evidencePath(id){	
 	// Preloader for KnetMaps
@@ -274,8 +217,7 @@ function evidencePath(id){
 	var keyword = id;
 	var request = "mode="+searchMode+"&keyword="+keyword;
 	var url = 'OndexServlet?'+request;
-//	generateNetwork(url,'');
-        // Generate the Network Graph using the new Network Viewer.
+        // generate the Network using KnetMaps
         generateCyJSNetwork(url,'');
 }
 
@@ -482,8 +424,7 @@ $(document).ready(
 		    			});
 
 	    				/*
-	    				 * Object structure for parsed XML data
-	    				 *
+	    				 * Object structure for parsed XML data:
 	    				 * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
 	    				 * 		> name				= STRING - Name of the example query
 	    				 * 		> description		= STRING - short description of the example query
@@ -496,7 +437,6 @@ $(document).ready(
 	    				 * 			> label		 	= STRING - region label
 	    				 * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
 	    				 * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
-	    				 *
 	    				 */
 
 		    			// Create a string of html with a button for each of the example queries.
@@ -614,7 +554,6 @@ $(document).ready(
 	 				}
 	 				else if(target == 'hintSortableTable'){
 	 					message = 'This opens KnetMaps and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
-	 					//message = 'Sort multiple columns simultaneously by holding down the shift key and clicking column headers! ';
 	 				}
 
 					$('div.tooltip').remove();
@@ -662,8 +601,6 @@ $(document).ready(
 		
 function refreshQuerySuggester() {
   $('#suggestor_terms').html('');
-  // Add "..." preloader bar (gif image) for suggestor tables.
-//  $('#suggestor_tables').html('<div class="preloader_wrapper"><img src="html/image/preloader_bar.gif" alt="Loading, please wait..." class="preloader_bar" /></div>');
   // Create the Synonym table.
   var searchMode = "synonyms";
   var keyword = $('#keywords').val();
@@ -686,11 +623,9 @@ function searchKeyword(){
 	var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
 	var keyword = escape(trim($("#keywords").val()));
 	var list = $("#list_of_genes").val();
-/*console.log("searchKeyword(): gene_list: "+ list);
-	if(list !== null) {
+/*	if(list !== null) {
 	 if(list.length>1) {
-	  listMode='GLrestrict';
-	 }
+	  listMode='GLrestrict'; }
 	}*/
 	var regions = document.getElementById('regions_table').rows.length -2;
 	var request = "keyword="+keyword+"&mode="+searchMode;
@@ -758,11 +693,6 @@ function searchKeyword(){
 							}
 						}
 
-					/*	var genomicView = '<div id="pGViewer" class="resultViewer">';
-						var gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL=&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-						genomicView = genomicView + gviewer_html;
-						$("#pGViewer").replaceWith(genomicView); */
-
 						//Collapse Suggestor view
 						$('#suggestor_search').attr('src', 'html/image/expand.gif');
 				 		$('#suggestor_search_area').slideUp(500);
@@ -793,18 +723,14 @@ function searchKeyword(){
 					}
 
 					var genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>'
-				//	var genomicView = '<div id="pGViewer" class="resultViewer">';
 					if(candidateGenes > 1000){
 						candidateGenes = 1000;
 						genomicViewTitle= '<div id="pGViewer_title">In total <b>'+results+' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>'+docSize+' documents</b> related with genes ('+totalDocSize+' documents in total)<br /></div>';
 					}
 
-				//	gviewer_html = '<center><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="600" height="600" id="GViewer2" align="middle"><param name="wmode" value="transparent"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="html/GViewer/GViewer2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#FFFFFF" /><param name="FlashVars" value="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1]+'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&browserURL=OndexServlet?position=Chr&" /><embed style="width:700px; height:550px;" id="embed" src="html/GViewer/GViewer2.swf" quality="high" bgcolor="#FFFFFF" width="600" height="600" name="GViewer2" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" FlashVars="'+longestChromosomeLength+'&lcId=1234567890&baseMapURL=html/data/basemap.xml&annotationURL='+data_url+splitedResponse[1] +'&dimmedChromosomeAlpha=40&bandDisplayColor=0x0099FF&wedgeDisplayColor=0xCC0000&titleBarText=&browserURL=OndexServlet?position=Chr&"  pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></center></div>';
-				//	genomicView = genomicView + gviewer_html;
 					$("#pGViewer_title").replaceWith(genomicViewTitle);
-				//	$("#pGViewer").replaceWith(genomicView);
 
-					// Setup the mapview component
+					// Setup the Map View component (Genomaps)
 					var basemap = "html/data/basemap.xml";
 					var annotations = data_url + splitedResponse[1];
                                     //    console.log("annotations file: "+ annotations);
@@ -827,110 +753,7 @@ function searchKeyword(){
 
 /*
  * Function
- *
- */
-function generateNetwork(url,list){
-	//OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
-	$.post(url, list, function(response, textStatus){
-	var oxl = response.split(":")[1];
-
-	var output ="<div id='buttonBox'>" +
-        			"<a title='Maximise' href='javascript:;' id='maximiseNetwork' class='networkButtons' type='button'></a>" +
-        			"<a title='Download network' href="+data_url + oxl +" target=_blank id='downloadNetworkTab' class='networkButtons' type='button'></a>" +
-	        		"<a title='Open in new window' href='javascript:;' id='newNetworkWindow' class='networkButtons' type='button'></a>" +
-	        		"<span id='networkViewerHelp' class='networkButtons hint-big' title='Network Viewer Help'></span>" +
-	        	"</div>" +
-
-        		"<div id='modalShadow'></div>" +
-        		"<div class='modalBox'>" +	//placeholder to stop page length changing when modalBox is opened.
-	        		"<div id='modalBox' class='modalBox'>" +	//modal box is moved to center of window and resizes with it
-	        			"<a title='Restore' href='javascript:;' id='restoreNetwork' class='networkButtons'></a>" +
-		        		"<div id='OndexWebContainer'>" +
-			        		"<div id='OndexWebApplet'></div>" +
-		        		"</div>" +
-		        		legendHtmlContainer +
-	        		"</div>" +
-				"</div>" +
-				"<div id='networkHelpBox'>" +
-				"<h2>Network Viewer Help</h2>" +
-				"<ul>" +
-				"<li>The Ondex knowledge network has been generated and is displayed in the Ondex Web applet. Alternatively it can be downloaded and opened in the Ondex desktop application</li>" +
- 				"<li>If you see an error and the network is not loading make sure <a href=http://www.java.com/en/download target=_blank>Java7 Update55+</a> is installed and <a href=http://ondex.rothamsted.ac.uk target=_blank>http://ondex.rothamsted.ac.uk</a> is added to the Exception Site List in the java control panel.</li>" +
- 				"</div>";
-
-
-
-    //output += legendHtmlContainer;
-
-	$('#NetworkCanvas').html(output);
-
-
-	var appletSettings = {
-		id: 'OndexWeb',
-		url: applet_url+'OndexWeb.jnlp',
-		width : '100%',
-		height : '100%',
-		placeholder:'OndexWebApplet',
-		params:
-		{
-			loadappearance : true,
-			filename : data_url+oxl
-		}
-	};
-
-	dtjava.embed(appletSettings, { jvm: "1.6+" }, {});
-
-	$('#networkViewerHelp').click(function() {
-		$('#networkHelpBox').slideToggle(300);
-	});
-
-	$('#networkHelpBox').click(function() {
-		$('#networkHelpBox').slideToggle(300);
-	})
-
-	$("#newNetworkWindow").click(function(){
-		var w = window.open('html/networkViewer.html?oxl='+oxl,'NetworkWindow','resizable=yes,dependent=yes,status=no,toolbar=no,menubar=no,scrollbars=no,menubar=no');
-	});
-
-	$('#maximiseNetwork').click(function() {
-		$('#modalBox').addClass("modalBoxVisible");
-		//$('#restoreNetwork').show();
-		$('#modalShadow').show();
-	});
-
-	function closeModalBox(){
-		$('#modalBox').removeClass("modalBoxVisible");
-		//$('#restoreNetwork').hide();
-		$('#modalShadow').hide();
-	}
-
-	$('#restoreNetwork, #modalShadow, #legend_picture').click(function(){
-			closeModalBox();
-	}).find('#legend_frame').click(function (e) {
-		  e.stopPropagation();
-	});
-
-	$('#modalShadow').click(function(){
-			closeModalBox();
-	});
-
-
-	$(document).keyup(function(e) {
-        if (e.keyCode == 27){
-        	closeModalBox();
-        }
-	});
-
-
-	activateButton('NetworkCanvas');
-
-
-	});
-}
-
-/*
- * Function
- * Generates the new lightweight Network graph, using cytoscapeJS.
+ * Generates the network in KnetMaps.
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,list){
@@ -938,9 +761,9 @@ function generateCyJSNetwork(url,list){
     
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
     $.post(url, list, function(response, textStatus) {
-    //var oxl = response.split(":")[1];
+    //var oxl = response.split(":")[1]; // omit OXL generation
     // Network Graph: JSON file.
-    //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
+    //var network_json= oxl.replace(".oxl", ".json"); // file path of JSON response generated
     var network_json= response.split(":")[1];
     var jsonFile= data_url + network_json; // the JSON file generated on the server.
     try {
@@ -979,8 +802,6 @@ function populateKnetMenu() {
                             "<option value='circle_layout'>Circular layout</option>"+
                             "<option value='concentric_layout'>Concentric layout</option>"+
                             "<option value='coseBilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"+
-                        /*    "<option value='euler_layout'>Euler layout</option>"+
-                            "<option value='random_layout'>Random layout</option>"+*/
                         "</select>"+
                         "<select id='changeLabelVisibility' class='knet-dropdowns' onChange='showHideLabels(this.value);' title='Select label visibility'>"+
                             "<option value='None' selected='selected'>Labels: None</option>"+
@@ -1006,25 +827,6 @@ function populateKnetMenu() {
                     "<input type='image' id='helpURL' src='html/KnetMaps/image/help.png' onclick='openKnetHelpPage();' title='Go to help documentation' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>";
 
  $('#knetmaps-menu').html(knet_menu);
-}
-
-/*
- * Function
- *
- */
-function generateMultiGeneNetwork(keyword) {
-	var candidatelist = "";
-	var cb_list = document.checkbox_form.candidates;
-	for (var i=0; i < cb_list.length; i++) {
-		if(cb_list[i].checked) {
-			candidatelist += cb_list[i].value + "\n";
-		}
-	}
-	if(candidatelist == "") {
-		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
-	} else {
-			generateNetwork('OndexServlet?mode=network&keyword='+keyword, {list : candidatelist});
-	}
 }
 
 /*
@@ -1080,7 +882,6 @@ function contactWindow() {
 
 /*
  * Function
- *
  */
 function getRadioValue(radio) {
 	var radioValue;
@@ -1094,7 +895,7 @@ function getRadioValue(radio) {
 
 /*
  * Function
- *
+ * generate Gene View table for user search
  */
 function createGenesTable(tableUrl, keyword, rows){
 	var table = "";
@@ -1179,9 +980,6 @@ function createGenesTable(tableUrl, keyword, rows){
 						continue;
 					}
 		        	table = table + '<tr>';
-
-				    //var appletQuery = 'OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword;
-				    //var gene = '<td><a href = "javascript:;" onClick="generateNetwork(\''+appletQuery+'\',null);">'+values[1]+'</a></td>';
 
 //				    var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" id="viewGeneNetwork_'+i+'">'+values[1]+'</a></td>';
 				    var gene_Acc= values[1];
@@ -1327,14 +1125,8 @@ function createGenesTable(tableUrl, keyword, rows){
 		        table = table + '</form>';
     		}
 
-    		//'<div id="networkButton"><input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "Show Network" onClick="generateMultiGeneNetwork(\''+keyword+'\');"></insert><div id="loadingNetworkDiv"></div></div>'+
     		table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="button" type="button" value="View Network" title="Display the network in KnetMaps">';
-//    		table = table + '<input id="generateMultiGeneNetworkButton" class = "button" type = "button" value = "View in Ondex Web (requires Java)" title = "Display the network graph using the Ondex Web Java application"></insert><div id="loadingNetworkDiv"></div></div>';
-    		// DISABLED below: Old Network View (via Ondex Web Java applet)
-            //    table = table + '<a href="javascript:;" id="generateMultiGeneNetworkButton">View in Ondex Web<br>(requires Java)</a></insert><div id="loadingNetworkDiv"></div></div>';
                 table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
-
-    	//	table = table + legendHtmlContainer; // add legend; DISABLED
 
     		document.getElementById('resultsTable').innerHTML = table;
 //                $("#loadingDiv_GeneView").css("display","none"); // clear
@@ -1343,7 +1135,7 @@ function createGenesTable(tableUrl, keyword, rows){
             //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
 
     		/*
-    		 * click Handler for viewing a network.
+    		 * click Handler for viewing a network in KnetMaps.
     		 */
     		$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
     			e.preventDefault();
@@ -1352,8 +1144,7 @@ function createGenesTable(tableUrl, keyword, rows){
 
     			var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
     			var values = e.data.x[geneNum].split("\t");
-//    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
-                        // Generate Network using the new Network Viewer.
+                        // Generate Network in KnetMaps.
                         generateCyJSNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
     		});
 
@@ -1370,10 +1161,6 @@ function createGenesTable(tableUrl, keyword, rows){
     			e.preventDefault();
     			var targetname = $(e.target).attr("id").replace("close_","");
     			$("#"+targetname).slideUp(100);
-        	});
-
-        	$("#generateMultiGeneNetworkButton").click(function(e) {
-        		generateMultiGeneNetwork(keyword);
         	});
 
                 $("#new_generateMultiGeneNetworkButton").click(function(e) {
@@ -1400,23 +1187,9 @@ function createGenesTable(tableUrl, keyword, rows){
 		 */
                 $("#revertGeneView").click(function(e) {
                  //   $("#loadingDiv_GeneView").css("display","block"); // notify
-                //    console.log("Revert Gene View... text:"+ text);
                     printGenesTable(text); // redraw table
                  //   $("#loadingDiv_GeneView").css("display","none"); // clear
         	});
-
-    		/*
-    		 * if select all targets is checked find all targets and check them.
-    		 */
-              /*$('input[name="chkusr"]').bind("click", {x: candidate_genes}, function(e) {
-    			var numResults = candidate_genes.length-2;
-    			for(var i=1; i<=numResults; i++){
-	    			var values = e.data.x[i].split("\t");
-	    			if(values[7] == "yes"){
-	    				$("#checkboxGene_"+i).attr('checked', $(this).attr('checked'));
-	    			}
-    			}
-    		});*/
 
     		/*
     		 * Select all KNOWN targets: find all targets with existing Evidence & check them.
@@ -1456,7 +1229,6 @@ function createGenesTable(tableUrl, keyword, rows){
 
 /*
  * Function
- *
  */
 function containsKey(keyToTest, array){
 	result = false;
@@ -1477,7 +1249,7 @@ function containsKey(keyToTest, array){
 
 /*
  * Function
- *
+ * generate Evidence View table for user search results
  */
 function createEvidenceTable(tableUrl){
 	var table = "";
@@ -1552,8 +1324,6 @@ function createEvidenceTable(tableUrl){
 				table = table + '</div>';
                                 // Insert a preloader to be used for KnetMaps
 				table = table + '<div id="loadingNetwork_Div"></div>';
-			//	table = table + legendHtmlContainer; // add legend; DISABLED
-//				'<div id="legend_picture"><div id="legend_container"><img src="html/image/evidence_legend.png" /></div></div>';
 
 				$('#evidenceTable').html(table);
 
@@ -1571,7 +1341,7 @@ function createEvidenceTable(tableUrl){
 				});
 
 				/*
-				 * click handler for generating the evidence path network
+				 * click handler for generating the evidence path network in KnetMaps
 				 */
 				$(".generateEvidencePath").bind("click", {x: evidenceTable}, function(e) {
 	    			e.preventDefault();
@@ -1611,7 +1381,7 @@ function createEvidenceTable(tableUrl){
 
 /*
  * Function
- *
+ * Query Suggestor terms
  */
 function createSynonymTable(tableUrl){
 	var table = "";
@@ -1650,13 +1420,11 @@ function createSynonymTable(tableUrl){
 						table =  table +tabsBox+'</div>';
 						//Includes the tables
 						for (var i = 0; i < aTable.length; i++) {
-
 							if(aTableLenght[i] < minRowsInTable){
 								for(var rows = aTableLenght[i]; rows < minRowsInTable ; rows++){
 									aTable[i] = aTable[i] +'<tr><td>&nbsp;</td><td>&nbsp;</td></tr>'
 								}
 							}
-
 						  table =  table + aTable[i]+'</table>';
 						}
 					//New Term
@@ -1706,7 +1474,6 @@ function createSynonymTable(tableUrl){
 								else
 									tablevisibility = 'style="display:none;"';
 
-								//tableHeader = '<table id="tablesorterSynonym'+termName+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
 								tableHeader = '<table id="tablesorterSynonym'+termName+'_'+countConcepts+'" class="suggestorTable" '+tablevisibility+'>';
 
 								aTable.push(tableHeader);
@@ -1732,14 +1499,11 @@ function createSynonymTable(tableUrl){
 							conceptIndex = aNewConcepts.indexOf(values[1]);
 							row = '<tr>';
 							row = row + '<td width="390">'+values[0]+'</td>'
-							//row = row + '<td width="80"><a  href="javascript:;" onclick="addKeyword(\''+values[0]+'\', \'synonymstable_add_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword" title="Add term"></div></a> <a href="javascript:;" onclick="excludeKeyword(\''+values[0]+'\', \'synonymstable_exclude_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword" title="Exclude term"></div></a> <a href="javascript:;" onclick="replaceKeyword(\''+originalTermName+'\',\''+values[0]+'\', \'synonymstable_replace_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword" title="Replace term"></div></a></td>';
 							row = row + '<td width="80">';
 							row = row + '<div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword synonymTableEvent" title="Add term"></div>';
 							row = row + '<div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword synonymTableEvent" title="Exclude term"></div>';
 							row = row + '<div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword synonymTableEvent" title="Replace term"></div></td>';
 
-							//row = row + '<th width="78"><div class="evidence_item evidence_item_'+values[1]+'" title="'+values[1]+'"></div></th>';
-							//row = row + '<th width="60">'+values[2]+'</th>';
 							row = row + '</tr>';
 							aTable[conceptIndex] = aTable[conceptIndex] + row;
 							aTableLenght[conceptIndex] = aTableLenght[conceptIndex] + 1;
@@ -1827,7 +1591,6 @@ function createSynonymTable(tableUrl){
 
 /*
  * Function
- *
  */
 function trim(text) {
     return text.replace(/^\s+|\s+$/g, "");
@@ -1835,7 +1598,6 @@ function trim(text) {
 
 /*
  * Google Analytics
- *
  */
 var _gaq = _gaq || [];
  _gaq.push(['_setAccount', 'UA-26111300-1']);

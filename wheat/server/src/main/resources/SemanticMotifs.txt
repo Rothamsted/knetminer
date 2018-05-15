@@ -38,6 +38,7 @@
 1-16	cooc_wi
 1-23	part_of
 1-9	regulates	2
+1-8	regulates	2
 1-8	homeolog	2
 1-9	homeolog	2
 1-20	has_mutant
