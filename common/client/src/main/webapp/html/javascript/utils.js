@@ -826,8 +826,6 @@ function searchKeyword(){
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,requestParams){
-    populateKnetMenu(); // initialize the KnetMaps menubar, if needed.
-    
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
     $.post(url, requestParams).success(function(data) {
     //var oxl = response.split(":")[1];
@@ -835,6 +833,8 @@ function generateCyJSNetwork(url,requestParams){
     //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     var network_json= data.graph;
     try {
+    	 populateKnetMenu(); // initialize the KnetMaps menubar, if needed.
+    
          $("#knet-maps").css("display","block"); // show the KnetMaps menubar.
          activateButton('NetworkCanvas');
 

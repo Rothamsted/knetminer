@@ -1,4 +1,3 @@
-
 // initialize and generate the network
 function generateNetworkGraph(json_File) {
    //console.log("Dataset file path: "+ json_File);
