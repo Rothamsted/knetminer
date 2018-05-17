@@ -33,6 +33,7 @@ GENEMAP.Listener = function(val){
 
 GENEMAP.GeneMap = function (userConfig) {
   var defaultConfig = {
+	apiUrl: '/',
     width: '800',
     height: '500',
     svgDefsFile: './assets/sprite-defs.svg',
@@ -434,7 +435,7 @@ GENEMAP.GeneMap = function (userConfig) {
         return /*gene.label*/geneLink; }) ; }
     ) );
 
-    var url = 'OndexServlet?mode=network&keyword='+$('#keywords').val();
+    var url = config.apiUrl+'/network?keyword='+$('#keywords').val();
     //console.log("GeneMap: Launch Network for url: "+ url);
     //console.log("selectedLabels: "+ selectedLabels);
 
@@ -820,20 +821,25 @@ GENEMAP.GeneMap = function (userConfig) {
 
   my.draw = function (outerTargetId, basemapPath, annotationPath) {
     var reader = GENEMAP.XmlDataReader();
-    var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
-
-    outerTarget.enter()
-      .append('div').attr( 'id', function(d){ return d;});
-
-    target = d3.select(outerTargetId).select('#genemap-target')[0][0];
-
+    
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
-      log.info('drawing genome to target');
-      d3.select(target).datum(data).call(my);
-      my.nGenesToDisplay(config.initialMaxGenes);
-      resetMapZoom();
-      updateLegend(legendSpan, genome)
+      my.drawRaw(outerTargetId, data);
     });
+  };
+  
+  my.drawRaw = function (outerTargetId, data) {
+	    var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
+
+	    outerTarget.enter()
+	      .append('div').attr( 'id', function(d){ return d;});
+
+	    target = d3.select(outerTargetId).select('#genemap-target')[0][0];
+
+		log.info('drawing genome to target');
+		d3.select(target).datum(data).call(my);
+		my.nGenesToDisplay(config.initialMaxGenes);
+		resetMapZoom();
+		updateLegend(legendSpan, genome);
   };
 
   my.redraw = function (outerTarget) {

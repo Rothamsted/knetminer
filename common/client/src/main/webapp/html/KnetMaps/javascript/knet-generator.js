@@ -23,6 +23,12 @@ function generateNetworkGraph(json_File) {
    });
   }
 
+//initialize and generate the network
+function generateNetworkGraphRaw(json_blob) {
+   //console.log("Dataset file path: "+ json_File);
+	eval(json_blob+' initializeNetworkView(); blurNodesWithHiddenNeighborhood(); updateKnetStats(); populateConceptLegend();');
+  }
+
 // initialize the network
 function initializeNetworkView() {
    var networkJSON= graphJSON; // using the dynamically included graphJSON object directly.

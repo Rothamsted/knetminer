@@ -1,4 +1,5 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/arabidopsis_data/";
+var api_url = "http://localhost:8080/server-example/arabidopsis/";
+//var api_url = "http://knetminer.rothamsted.ac.uk/arabidopsis/"; 
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/arabidopsis_data/"; // test
 //var data_url = "http://maize-dev.rothamsted.ac.uk/arabidopsis_data/"; // test
 var species = "Arabidopsis Genome";
