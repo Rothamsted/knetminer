@@ -39,6 +39,6 @@
 		<!-- End list of data sources -->
 	</dependencies>
 	<build>
-		<finalName>server-example</finalName> <!-- Change me -->
+		<finalName>server-example</finalName> <!--  Change me -->
 	</build>
 </project>

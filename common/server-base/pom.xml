@@ -6,7 +6,7 @@
 	<artifactId>server-base</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>KnetMiner base data source</name>
+	<name>KnetMiner base server</name>
 	<url>http://maven.apache.org</url>
 	<parent>
 		<artifactId>common</artifactId>
@@ -58,7 +58,4 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<finalName>server-base</finalName>
-	</build>
 </project>

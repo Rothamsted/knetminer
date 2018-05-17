@@ -3,3 +3,9 @@ target/
 .classpath
 .project
 .settings
+stderr.log
+stdout.log
+*swp
+.vagrant/
+common/client/nb-configuration.xml
+*.oxl

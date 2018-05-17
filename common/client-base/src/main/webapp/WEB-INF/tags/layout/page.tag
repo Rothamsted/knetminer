@@ -54,7 +54,7 @@
         <script src="html/KnetMaps/libs/cose_bilkent/cytoscape-cose-bilkent.js"></script>
         <script src="html/KnetMaps/libs/ngraph_forceLayout/cytoscape-ngraph.forcelayout.js"></script>
         <!-- URL mappings config file used for generating url's in Item Info table -->
-        <script type="text/javascript" src="html/KnetMaps/config/url_mappings.json"></script>
+        <script type="text/javascript" src="html/KnetMaps/config/url_mappings.js"></script>
         <!-- KnetMaps code -->
         <script src="html/KnetMaps/javascript/knet-maskLoader.js"></script>
         <script src="html/KnetMaps/javascript/knet-layouts-defaultParams.js"></script>
