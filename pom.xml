@@ -54,7 +54,7 @@
 					<linkXref>true</linkXref>
 					<sourceEncoding>ISO-8859-1</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.6</targetJdk>
+					<targetJdk>1.8</targetJdk>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -105,7 +105,7 @@
         <developerConnection>scm:git:https://github.com/Rothamsted/knetminer</developerConnection>
         <url>https://github.com/Rothamsted/knetminer</url>
     </scm>
-
+ 
     <distributionManagement>
         <repository>
             <id>releases</id>
@@ -257,7 +257,7 @@
     </build>
 
     <properties>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <target.dir>target</target.dir>
         <nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
         <!--Plugin Properties -->
@@ -339,6 +339,7 @@
     </profiles>
 
     <repositories>
+       <repository><id>public</id><name>Public repository</name><url>http://central.maven.org/maven2/</url></repository>
         <repository>
             <id>ondex_repro</id>
             <name>ondex_repro</name>
@@ -349,7 +350,7 @@
             <name>nexus.repro</name>
             <url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
 <!--            <url>${nexus.repro}/content/groups/public-snapshots</url> -->
-        </repository>
+        </repository> 
     </repositories>
 
     <pluginRepositories>
@@ -366,12 +367,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>provided</scope>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -381,12 +376,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
-            </dependency>
-
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>   
             </dependency>
 
             <dependency>

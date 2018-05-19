@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains MultiThreadServer configuration values</comment>
+	<entry key="DataPath">/Users/holland/</entry>
+	<entry key="DataFile">/Users/holland/ArabidopsisKNET.oxl</entry>
+	<entry key="SpeciesTaxId">3702</entry>
+	<entry key="reference_genome">true</entry>
+	<entry key="export_visible_network">true</entry>
+</properties>

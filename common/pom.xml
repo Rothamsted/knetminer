@@ -14,7 +14,10 @@
 	<description>Provides functionality shared between all organism specific KnetMiner implementations.</description>
 	
 	<modules>
-		<module>client</module>
-		<module>server</module>
+		<module>client-base</module>
+		<module>server-base</module>
+		<module>server-datasource-api</module>
+		<module>server-datasource-ondexlocal</module>
+		<module>server-example</module>
 	</modules>
 </project>

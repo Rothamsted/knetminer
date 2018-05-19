@@ -1,7 +1,8 @@
+bin/
 target/
-.project
-.settings/
 .classpath
+.project
+.settings
 stderr.log
 stdout.log
 *swp
