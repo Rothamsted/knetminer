@@ -37,6 +37,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-datasource-api</artifactId>
 			<version>1.0.0-SNAPSHOT</version>

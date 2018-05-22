@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 //import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -17,14 +19,13 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  *
  */
 public class Hits {	
+    protected final Logger log = LogManager.getLogger(getClass());
 	
 	OndexServiceProvider ondexProvider;
 	HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
 	int luceneDocumentsLinked;
 	int numConnectedGenes;
 	ArrayList<ONDEXConcept> sortedCandidates;
-	Set<ONDEXConcept> usersGenes;
-	Set<ONDEXConcept> usersGenesRelated;
 	String keyword = "";
 	
 	
@@ -34,19 +35,19 @@ public class Hits {
 		try {
 			this.luceneConcepts = ondexProvider.searchLucene(keyword);
 			//remove from constructor if it slows down search noticeably
-			countLinkedGenes();
+			this.countLinkedGenes();
 		} 
 		catch (IOException e) {			
-			e.printStackTrace();
+			log.error("Hits failed", e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Hits failed", e);
 		}
 	}
 	
 	public void countLinkedGenes(){
 		int linkedDocs = 0;
 		Set<Integer> uniqGenes = new HashSet<Integer>();
+		log.info("Matching Lucene concepts: "+luceneConcepts.keySet().size());
 		for(ONDEXConcept lc : luceneConcepts.keySet()){
 			Integer luceneOndexId = lc.getId();
 			//Checks if the document is related to a gene
@@ -57,9 +58,9 @@ public class Hits {
 			uniqGenes.addAll(OndexServiceProvider.mapConcept2Genes.get(luceneOndexId));	
 		}
 		
+		log.info("Matching unique genes: "+uniqGenes.size());
 		this.numConnectedGenes = uniqGenes.size();
 		this.luceneDocumentsLinked = linkedDocs;
-			
 	}
 	
 	public int getLuceneDocumentsLinked() {
@@ -73,52 +74,14 @@ public class Hits {
 	public HashMap<ONDEXConcept, Float> getLuceneConcepts(){
 		return this.luceneConcepts;
 	}
-	public void setLuceneConcepts(HashMap<ONDEXConcept, Float> luceneConcepts){
-		this.luceneConcepts = luceneConcepts;
-	}
+
 	public ArrayList<ONDEXConcept> getSortedCandidates(){
 		try {
 			this.sortedCandidates = ondexProvider.getScoredGenes(luceneConcepts);
 		} 
 		catch (IOException e) {			
-			e.printStackTrace();
+			log.error("Candidate sorting failed", e);
 		}
 		return this.sortedCandidates;
-	}
-	
-	public void setSortedCandidates(ArrayList<ONDEXConcept> sortedCandidates){		
-		this.sortedCandidates = sortedCandidates;				
-	}	
-	public void setUsersGenes(Set<ONDEXConcept> usersGenes){	
-		this.usersGenes = usersGenes;
-		this.usersGenesRelated = usersGenes;
-		
-		//this should work but it removes not related genes from usersGenes		
-//		Set<ONDEXConcept> temp = usersGenes;
-//		temp.retainAll(sortedCandidates);
-//		this.usersGenesRelated = temp;
-//		System.out.println("Number of user provided genes linked to query: "+usersGenesRelated.size());
-//		
-		//old version
-//		if(usersGenes != null && usersGenes.size() > 0){	
-//			this.usersGenesRelated = ondexProvider.searchList(usersGenes, keyword);
-//			
-//			//this.sortedCandidates.removeAll(this.usersGenesRelated);
-//			System.out.println("we found related: "+usersGenesRelated.size());
-//		}
-	}	
-	public Set<ONDEXConcept> getUsersGenes(){	
-		return this.usersGenes;
-	}
-	public Set<ONDEXConcept> getUsersRelatedGenes(){
-		return this.usersGenesRelated;
-	}
-	public Set<ONDEXConcept> getUsesrUnrelatedGenes(){	
-		if(usersGenes != null && usersGenes.size() > 0){
-			Set<ONDEXConcept> tmp = this.usersGenes;
-			tmp.removeAll(usersGenesRelated);
-			return tmp;
-		}
-		else return null;
 	}
 }

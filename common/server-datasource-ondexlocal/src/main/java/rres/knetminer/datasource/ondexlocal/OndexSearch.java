@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sourceforge.ondex.core.Attribute;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptName;
@@ -17,6 +20,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  * @author keywan
  */
 public class OndexSearch {
+    protected final Logger log = LogManager.getLogger(getClass());
 
 	/**
 	 * Searches different fields of a concept for a query or pattern

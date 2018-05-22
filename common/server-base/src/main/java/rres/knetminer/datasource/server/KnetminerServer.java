@@ -2,11 +2,14 @@ package rres.knetminer.datasource.server;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ import rres.knetminer.datasource.api.QTL;
 @RestController
 @RequestMapping("/")
 public class KnetminerServer {
+    protected final Logger log = LogManager.getLogger(getClass());
 
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
@@ -37,6 +41,7 @@ public class KnetminerServer {
 		for (KnetminerDataSource dataSource : this.dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
 				this.dataSourceCache.put(ds, dataSource);
+				log.info("Mapped /"+ds+" to "+dataSource.getClass().getName());
 			}
 		}
 	}
@@ -81,20 +86,32 @@ public class KnetminerServer {
 		}
 		KnetminerDataSource dataSource = this.dataSourceCache.get(ds);
 		if (dataSource == null) {
+			log.info("Invalid data source requested: /"+ds);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
 		}
 		try {
+			if (log.isDebugEnabled()) {
+				String paramsStr = 	"Keyword:"+request.getKeyword()+
+									" , List:"+Arrays.toString(request.getList().toArray())+
+									" , ListMode:"+request.getListMode()+
+									" , QTLs:"+Arrays.toString(request.getQtls().toArray());
+				log.debug("Calling "+mode+" with "+paramsStr);
+			}
 			KnetminerResponse response;
 			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
 			response = (KnetminerResponse) method.invoke(dataSource, ds, request);
 			return new ResponseEntity<KnetminerResponse>(response, HttpStatus.OK);
 		} catch (NoSuchMethodException e) {
+			log.info("Invalid mode requested: "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
 		} catch (IllegalArgumentException e) {
+			log.info("Invalid parameters passed to "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.BAD_REQUEST);
 		} catch (Error e) {
+			log.info("Error while running "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
+			log.info("Exception while running "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

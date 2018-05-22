@@ -42,12 +42,16 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 		this.ondexServiceProvider = new OndexServiceProvider();
 		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(props.getProperty("reference_genome")));
+		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
 		this.ondexServiceProvider.setTaxId(Arrays.asList(props.getProperty("SpeciesTaxId").split(",")));
+		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(props.getProperty("export_visible_network")));
+		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
 		try {
 			this.ondexServiceProvider.createGraph(props.getProperty("DataPath"), props.getProperty("DataFile"),
 					semanticMotifsPath);
 		} catch (Exception e) {
+			log.error("Failed to create Ondex graph", e);
 			throw new Error(e);
 		}
 	}
@@ -67,6 +71,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			response.setSynonyms(this.ondexServiceProvider.writeSynonymTable(request.getKeyword()));
 			return response;
 		} catch (ParseException e) {
+			log.error("Failed to count synonyms", e);
 			throw new Error(e);
 		}
 	}
@@ -81,6 +86,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		if (loci.length > 2) {
 			end = Integer.parseInt(loci[2]);
 		}
+		log.info("Counting loci "+chr+":"+start+":"+end);
 		CountLociResponse response = new CountLociResponse();
 		response.setGeneCount(this.ondexServiceProvider.getGeneCount(chr, start, end));
 		return response;
@@ -104,31 +110,21 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		Set<ONDEXConcept> userGenes = null;
 		if (request.getList() != null && request.getList().size() > 0) {
 			userGenes = this.ondexServiceProvider.searchGenes(request.getList());
-			System.out.println("Number of user provided genes: " + userGenes.size());
+			log.info("Number of user provided genes: " + userGenes.size());
 		}
 
 		// Genome search
-		System.out.println("Search mode: " + response.getClass().getName());
+		log.info("Search mode: " + response.getClass().getName());
 		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		if (response.getClass().equals(GenomeResponse.class)) {
 			genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-			System.out.println("Number of genes " + genes.size());
+			log.info("Number of genes " + genes.size());
 		} else if (response.getClass().equals(QtlResponse.class)) {
 			genes = qtlnetminerResults.getSortedCandidates();
-			System.out.println("Number of genes " + genes.size());
+			log.info("Number of genes " + genes.size());
 			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtls());
-			System.out.println("Genes after QTL filter: " + genes.size());
-		}
-		if (request.getList().size() > 0) {
-			Set<ONDEXConcept> userList = this.ondexServiceProvider.searchGenes(request.getList());
-			if (response.getClass().equals(QtlResponse.class) && request.getListMode().equals("GLrestrict")) {
-				ArrayList<ONDEXConcept> userListArray = new ArrayList<ONDEXConcept>(userList);
-				userListArray = this.ondexServiceProvider.filterQTLs(userListArray, request.getQtls());
-				userList = new HashSet<ONDEXConcept>(userListArray);
-				System.out.println("Number of user provided genes within QTL: " + userList.size());
-			}
-			qtlnetminerResults.setUsersGenes(userList);
+			log.info("Genes after QTL filter: " + genes.size());
 		}
 
 		if (genes.size() > 0) {
@@ -136,20 +132,20 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
 				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtls(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
-				System.out.println("1.) Gviewer annotation ");
+				log.debug("1.) Gviewer annotation ");
 			} else {
-				System.out.println("1.) No reference genome for Gviewer annotation ");
+				log.debug("1.) No reference genome for Gviewer annotation ");
 			}
 
 			// Gene table file
 			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtls(),
 					request.getListMode());
-			System.out.println("2.) Gene table ");
+			log.debug("2.) Gene table ");
 
 			// Evidence table file
 			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtls());
-			System.out.println("3.) Evidence table ");
+			log.debug("3.) Evidence table ");
 
 			// Document count (only related with genes)
 			int docSize = this.ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
@@ -172,7 +168,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
 
-		System.out.println("Call applet! Search genes " + request.getList().size());
+		log.info("Call applet! Search genes " + request.getList().size());
 
 		// Search Genes
 		if (!request.getList().isEmpty()) {
@@ -192,6 +188,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		try {
 			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
 		} catch (InvalidPluginArgumentException e) {
+			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
 		return response;
@@ -206,6 +203,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		try {
 			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
 		} catch (InvalidPluginArgumentException e) {
+			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
 		return response;

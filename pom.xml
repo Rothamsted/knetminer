@@ -197,6 +197,7 @@
 		<java.version>1.6</java.version>
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
 
+		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
 		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
 		<maven.war.plugin.version>2.4</maven.war.plugin.version>
@@ -366,6 +367,17 @@
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-analyzers-common</artifactId>
 				<version>${lucene.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<dependency>

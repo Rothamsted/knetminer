@@ -1,7 +1,14 @@
 package rres.knetminer.datasource.api;
 
+import java.util.Arrays;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 @KnetminerDataSourceProvider
 public abstract class KnetminerDataSource {
+    protected final Logger log = LogManager.getLogger(getClass());
+
 	/*
 	 * Request to refresh the “MatchCounter” (as user types search keywords, e.g,
 	 * stating “826 documents and 7248 genes will be found with this query”):
@@ -57,6 +64,7 @@ public abstract class KnetminerDataSource {
 	
 	public void setDataSourceNames(String[] dataSourceNames) {
 		this.dataSourceNames = dataSourceNames;
+		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
 
 	/*
