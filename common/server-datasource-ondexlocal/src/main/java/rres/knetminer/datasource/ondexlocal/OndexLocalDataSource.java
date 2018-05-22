@@ -28,8 +28,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	private OndexServiceProvider ondexServiceProvider;
 
-	public OndexLocalDataSource(String[] dsNames, String configXmlPath, String semanticMotifsPath) {
-		this.setDataSourceNames(dsNames);
+	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
+		this.setDataSourceNames(new String[] {dsName});
 
 		Properties props = new Properties();
 		// Config.xml is provided by the implementing abstract class in its
@@ -52,7 +52,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 	}
 
-	public CountHitsResponse countHits(KnetminerRequest request) throws IllegalArgumentException {
+	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
@@ -61,7 +61,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public SynonymsResponse synonyms(KnetminerRequest request) throws IllegalArgumentException {
+	public SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		try {
 			SynonymsResponse response = new SynonymsResponse();
 			response.setSynonyms(this.ondexServiceProvider.writeSynonymTable(request.getKeyword()));
@@ -71,7 +71,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 	}
 
-	public CountLociResponse countLoci(KnetminerRequest request) throws IllegalArgumentException {
+	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		String[] loci = request.getKeyword().split("-");
 		String chr = loci[0];
 		int start = 0, end = 0;
@@ -86,19 +86,19 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public GenomeResponse genome(KnetminerRequest request) throws IllegalArgumentException {
+	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		GenomeResponse response = new GenomeResponse();
 		this._keyword(response, request);
 		return response;
 	}
 
-	public QtlResponse qtl(KnetminerRequest request) throws IllegalArgumentException {
+	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		QtlResponse response = new QtlResponse();
 		this._keyword(response, request);
 		return response;
 	}
 
-	public <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
+	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
 			throws IllegalArgumentException {
 		// Find genes from the user's list
 		Set<ONDEXConcept> userGenes = null;
@@ -169,7 +169,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public NetworkResponse network(KnetminerRequest request) throws IllegalArgumentException {
+	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
 
 		System.out.println("Call applet! Search genes " + request.getList().size());
@@ -197,7 +197,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public EvidencePathResponse evidencePath(KnetminerRequest request) throws IllegalArgumentException {
+	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
 		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID);
 

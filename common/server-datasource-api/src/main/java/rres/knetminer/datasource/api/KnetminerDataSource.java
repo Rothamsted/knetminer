@@ -66,17 +66,17 @@ public abstract class KnetminerDataSource {
 	 * throwing an exception sub-classed from Error.
 	 */
 
-	public abstract CountHitsResponse countHits(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract SynonymsResponse synonyms(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract CountLociResponse countLoci(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract GenomeResponse genome(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract QtlResponse qtl(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract NetworkResponse network(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract EvidencePathResponse evidencePath(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }

@@ -707,7 +707,7 @@ public class OndexServiceProvider {
 	}
 
 	public ArrayList<ONDEXConcept> getScoredGenes(Map<ONDEXConcept, Float> hit2score) throws IOException {
-		return new ArrayList<>(this.getScoredGenesMap(hit2score).keySet());
+		return new ArrayList<ONDEXConcept>(this.getScoredGenesMap(hit2score).keySet());
 	}
 
 	public SortedMap<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
@@ -2916,19 +2916,19 @@ public class OndexServiceProvider {
 
 		if (mapGene2Concepts == null) {
 			System.out.println("WARN: mapGene2Concepts is null");
-			mapGene2Concepts = new HashMap<>();
+			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
 		} else
 			System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
 
 		if (mapConcept2Genes == null) {
 			System.out.println("WARN: mapConcept2Genes is null");
-			mapConcept2Genes = new HashMap<>();
+			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
 		} else
 			System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
 		if (mapGene2PathLength == null) {
 			System.out.println("WARN: Gene2PathLength is null");
-			mapGene2PathLength = new HashMap<>();
+			mapGene2PathLength = new HashMap<String, Integer>();
 		} else
 			System.out.println("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
 

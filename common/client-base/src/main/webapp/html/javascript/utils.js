@@ -240,7 +240,7 @@ function matchCounter(){
 		$('#matchesResultDiv').html('Please, start typing your query');
 	} else {
 		if((keyword.length > 2) && ((keyword.split('"').length - 1)%2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length-1) != ' ') && (keyword.charAt(keyword.length-1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')  ){
-			var searchMode = "counthits";
+			var searchMode = "countHits";
 			var request = "/"+searchMode+"?keyword="+keyword;
 			var url = api_url+request;
 			$.get(url, '').done(function( data ) {
@@ -267,7 +267,7 @@ function evidencePath(id){
 	// Preloader for KnetMaps
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
-	var url = api_url+'/evidencepath';
+	var url = api_url+'/evidencePath';
 //	generateNetwork(url,'');
         // Generate the Network Graph using the new Network Viewer.
         generateCyJSNetwork(url,{keyword:id});
@@ -931,7 +931,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
  */
 function findGenes(id, chr_name, start, end) {
 	if(chr_name != "" && start != "" && end != ""){
-		var searchMode = "countloci";
+		var searchMode = "countLoci";
 		var keyword = chr_name+"-"+start+"-"+end;
 		var request = "/"+searchMode+"?keyword="+keyword;
 		var url = api_url+request;
