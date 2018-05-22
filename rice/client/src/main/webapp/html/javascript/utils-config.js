@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/rice_data/";
+var api_url = "http://knetminer.rothamsted.ac.uk/rice_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/rice_data/";
 var species = 'Rice Genome';
 var reference_genome = true;

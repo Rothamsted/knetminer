@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/poplar_data/";
+var api_url = "http://knetminer.rothamsted.ac.uk/poplar_data/";
 //var data_url = "http://knetminer-poplar.rothamsted.ac.uk/poplar_data/";
 // var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/poplar_data/"; // now, using HTTP instead of HTTPS
 var species = 'Poplar Genome';
