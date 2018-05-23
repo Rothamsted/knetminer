@@ -4,14 +4,17 @@ GENEMAP.vectorEffectSupport = true;
 
 GENEMAP.Listener = function(val){
   var value = val;
-  var listeners = []
+  var listeners = [];
 
   var my = function(val){
     if (!arguments.length) {
       return value;
     }
+    if (val==value) {
+      return value;
+    }
 
-    value = val
+    value = val;
     listeners.forEach(function(listener){
       listener(value) ;
     })
@@ -823,23 +826,31 @@ GENEMAP.GeneMap = function (userConfig) {
     var reader = GENEMAP.XmlDataReader();
     
     reader.readXMLData(basemapPath, annotationPath).then(function (data) {
-      my.drawRaw(outerTargetId, data);
+	    my._draw(outerTargetId, data);
     });
   };
   
-  my.drawRaw = function (outerTargetId, data) {
-	    var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
+  my.drawFromRawXML = function(outerTargetId, basemapXMLString, annotationXMLString) {
+    var reader = GENEMAP.XmlDataReader();
 
-	    outerTarget.enter()
-	      .append('div').attr( 'id', function(d){ return d;});
+    reader.readXMLDataFromRawXML(basemapXMLString, annotationXMLString).then(function (data) {
+    	my._draw(outerTargetId, data);
+    });
+  };
+  
+  my._draw = function(outerTargetId, data) {
+	  var outerTarget = d3.select(outerTargetId).selectAll('div').data(['genemap-target']);
 
-	    target = d3.select(outerTargetId).select('#genemap-target')[0][0];
+	  outerTarget.enter()
+	    .append('div').attr( 'id', function(d){ return d;});
 
-		log.info('drawing genome to target');
-		d3.select(target).datum(data).call(my);
-		my.nGenesToDisplay(config.initialMaxGenes);
-		resetMapZoom();
-		updateLegend(legendSpan, genome);
+	  target = d3.select(outerTargetId).select('#genemap-target')[0][0];
+
+	  log.info('drawing genome to target');
+	  d3.select(target).datum(data).call(my);
+	  my.nGenesToDisplay(config.initialMaxGenes);
+	  resetMapZoom();
+	  updateLegend(legendSpan, genome);
   };
 
   my.redraw = function (outerTarget) {

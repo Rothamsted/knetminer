@@ -123,14 +123,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		} else if (response.getClass().equals(QtlResponse.class)) {
 			genes = qtlnetminerResults.getSortedCandidates();
 			log.info("Number of genes " + genes.size());
-			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtls());
+			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
 			log.info("Genes after QTL filter: " + genes.size());
 		}
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
-				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtls(),
+				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
 				log.debug("1.) Gviewer annotation ");
 			} else {
@@ -138,13 +138,13 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			}
 
 			// Gene table file
-			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtls(),
+			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtl(),
 					request.getListMode());
 			log.debug("2.) Gene table ");
 
 			// Evidence table file
 			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
-					userGenes, request.getQtls());
+					userGenes, request.getQtl());
 			log.debug("3.) Evidence table ");
 
 			// Document count (only related with genes)
@@ -176,8 +176,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 
 		// Search Regions
-		if (!request.getQtls().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtls()));
+		if (!request.getQtl().isEmpty()) {
+			genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
 		}
 
 		// Find Semantic Motifs

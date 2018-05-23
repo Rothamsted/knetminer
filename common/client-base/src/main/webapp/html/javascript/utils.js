@@ -679,7 +679,7 @@ function refreshQuerySuggester() {
 function searchKeyword(){
 	var searchMode = getRadioValue(document.gviewerForm.search_mode);
 	var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
-	var keyword = escape(trim($("#keywords").val()));
+	var keyword = trim($("#keywords").val());
 	var list = $("#list_of_genes").val().split('\n');
 	for (var i = 0; i < list.length; i++) { // remove empty lines
 	    if (!list[i].trim()) {         
@@ -736,9 +736,13 @@ function searchKeyword(){
 */
 		$.post({
 	        url:api_url+request,
-	        async: true,
-	        timeout: 1000000,
-	        data:requestParams})
+	        timeout: 1000000,  
+	        headers: {          
+	            "Accept": "application/json; charset=utf-8",         
+	            "Content-Type": "application/json; charset=utf-8"   
+	          }, 
+	        datatype: "json",
+	        data: JSON.stringify(requestParams)})
         .fail(function(errorlog){
 				alert("An error has ocurred "+errorlog);
 	        })
@@ -781,6 +785,7 @@ function searchKeyword(){
 					var candidateGenes = data.geneCount;
 					var docSize = data.docSize;
 					var totalDocSize = data.totalDocSize;
+					var results = data.geneCount;
 
 					var longestChromosomeLength="";
 					if (typeof longest_chr != "undefined") {
@@ -802,11 +807,11 @@ function searchKeyword(){
 				//	$("#pGViewer").replaceWith(genomicView);
 
 					// Setup the mapview component
-					var annotations = data.GViewer;
+					var baseMap = data.GViewer;
                    //    console.log("annotations file: "+ annotations);
 
                   // create new basemap with bands for genes and pass it as well to the Map Viewer.
-					genemap.drawRaw('#genemap', annotations);
+					genemap.drawFromRawXML('#genemap', baseMap);
 
 					//Collapse Suggestor view
 					$('#suggestor_search').attr('src', 'html/image/expand.gif');
@@ -827,11 +832,19 @@ function searchKeyword(){
  */
 function generateCyJSNetwork(url,requestParams){
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
-    $.post(url, requestParams).success(function(data) {
+	$.post({
+        url:url,
+        timeout: 1000000,
+        headers: {          
+            "Accept": "application/json; charset=utf-8",         
+            "Content-Type": "application/json; charset=utf-8"   
+          }, 
+        datatype: "json",
+        data: JSON.stringify(requestParams)})
+    .success(function(data) {
     //var oxl = response.split(":")[1];
     // Network Graph: JSON file.
     //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
-    var network_json= data.graph;
     try {
     	 populateKnetMenu(); // initialize the KnetMaps menubar, if needed.
     
@@ -842,7 +855,7 @@ function generateCyJSNetwork(url,requestParams){
          showNetworkLoader();
 
          // Generate the Network after the page load event.
-         generateNetworkGraphRaw(network_json);
+         generateNetworkGraphRaw(data.graph);
         
          // Remove KnetMaps maskloader.
          removeNetworkLoader();
@@ -921,7 +934,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
 
          // console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
-          generateCyJSNetwork(api_url+'/network', {keyword:keyword, list:candidateList});
+          generateCyJSNetwork(api_url+'/network', {keyword:keyword, list:candidatelist});
 	 }
 }
 
@@ -982,8 +995,8 @@ var table = "";
                 // Gene View: interactive summary legend for evidence types.
 	var interactive_summary_Legend= getInteractiveSummaryLegend(text);
                 
-		table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-		table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+		//table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
+		table = table + '<p class="margin_left">Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 		table = table + '<form name="checkbox_form">';
 		table = table + 'Max number of genes to show: ';
 		table = table + '<select value="'+rows+'" id="numGenes">';

@@ -25,12 +25,16 @@ function generateNetworkGraph(json_File) {
 //initialize and generate the network
 function generateNetworkGraphRaw(json_blob) {
    //console.log("Dataset file path: "+ json_File);
-	eval(json_blob+' initializeNetworkView(); blurNodesWithHiddenNeighborhood(); updateKnetStats(); populateConceptLegend();');
+	eval(json_blob+'; initializeNetworkView(graphJSON, allGraphData); blurNodesWithHiddenNeighborhood(); updateKnetStats(); populateConceptLegend();');
   }
 
-// initialize the network
+//initialize the network
 function initializeNetworkView() {
-   var networkJSON= graphJSON; // using the dynamically included graphJSON object directly.
+	return initializeNetworkViewFromJson(graphJSON, allGraphData); // using the dynamically included graphJSON and allGraphData objects directly.
+}
+
+// initialize the network
+function initializeNetworkView(networkJSON, metadataJSON) {
    // modify for networkJSON to read JSON object from file and retain contents from "elements" section for nodes and edges info.
 //   var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
 

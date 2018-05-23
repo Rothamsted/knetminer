@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -178,7 +179,7 @@ public class OndexServiceProvider {
 		graph = new MemoryONDEXGraph("OndexKB");
 
 		loadOndexKBGraph(graphFileName);
-		indexOndexGraph();
+		indexOndexGraph(dataPath);
 
 		log.info("Loading semantic motifs from "+smFileName);
 		StateMachine sm = loadSemanticMotifs(smFileName);
@@ -186,7 +187,7 @@ public class OndexServiceProvider {
 		// create a crawler using our semantic motifs
 		gt = new GraphTraverser(sm);
 
-		populateHashMaps();
+		populateHashMaps(dataPath);
 
 		// determine number of genes in given species (taxid)
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
@@ -348,11 +349,11 @@ public class OndexServiceProvider {
 	/**
 	 * Indexes Ondex Graph
 	 */
-	private void indexOndexGraph() {
+	private void indexOndexGraph(String dataPath) {
 		try {
 			// index the Ondex graph
 			File file = null;
-			file = new File("index");
+			file = Paths.get(dataPath, "index").toFile();
 			log.debug("Building Lucene Index: " + file.getAbsolutePath());
 			if (!file.exists())
 				lenv = new LuceneEnv(file.getAbsolutePath(), true);
@@ -670,8 +671,8 @@ public class OndexServiceProvider {
 		ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
 		mergeHits(hit2score, sHitsAnno, NOTList);
 
-		System.out.println("Query: " + qAnno.toString(fieldNameCA));
-		System.out.println("Annotation hits: " + sHitsAnno.getOndexHits().size());
+		log.info("Query: " + qAnno.toString(fieldNameCA));
+		log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
 
 		return hit2score;
 	}
@@ -685,7 +686,7 @@ public class OndexServiceProvider {
 		ValueComparator<ONDEXConcept> comparator = new ValueComparator<ONDEXConcept>(scoredCandidates);
 		TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
 
-		System.out.println("total hits from lucene: " + hit2score.keySet().size());
+		log.info("total hits from lucene: " + hit2score.keySet().size());
 
 		// 1st step: create map of genes to concepts that contain query terms
 		mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
@@ -797,9 +798,14 @@ public class OndexServiceProvider {
 	 * 
 	 * @return Set<ONDEXConcept> concepts
 	 */
-	public Set<ONDEXConcept> searchQTLs(List<QTL> qtls) {
+	public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr) {
 		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();
 
+		List<QTL> qtls = new ArrayList<QTL>();
+		for (String qtlStr : qtlsStr) {
+			qtls.add(QTL.fromString(qtlStr));
+		}
+		
 		String chrQTL;
 		int startQTL, endQTL;
 		for (QTL qtl : qtls) {
@@ -1037,7 +1043,7 @@ public class OndexServiceProvider {
 						&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
 
 					// search gene accessions, names, attributes
-					if (OndexSearch.find(gene, query, false)) {
+					if (OndexSearch.find(gene, query)) {
 						hits.add(gene);
 					}
 				}
@@ -1046,68 +1052,6 @@ public class OndexServiceProvider {
 		} else {
 			return null;
 		}
-	}
-
-	public ONDEXGraph findSemanticMotifsOld(Set<ONDEXConcept> seed, String regex) {
-
-		log.debug("Method findSemanticMotifs: " + seed.size());
-		// the results give us a map of every starting concept to every valid
-		// path
-		Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
-
-		Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
-		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
-
-		if (regex != null) {
-			log.debug("Keyword is: " + regex);
-		}
-		// create new graph to return
-		ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
-		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
-
-		ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
-
-		for (List<EvidencePathNode> paths : results.values()) {
-			for (EvidencePathNode path : paths) {
-
-				// add all semantic motifs to the new graph
-				Set<ONDEXConcept> concepts = path.getAllConcepts();
-				Set<ONDEXRelation> relations = path.getAllRelations();
-				for (ONDEXConcept c : concepts) {
-					graphCloner.cloneConcept(c);
-				}
-				for (ONDEXRelation r : relations) {
-					graphCloner.cloneRelation(r);
-				}
-
-				// search last concept of semantic motif for keyword
-				int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-				ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
-				ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-
-				ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
-				// if keyword provided, annotate the
-				if (OndexSearch.find(cloneCon, regex, false)) {
-					candidateGenes.add(gene);
-					if (!keywordConcepts.contains(cloneCon)) {
-						keywordConcepts.add(cloneCon);
-						// only highlight keywords once
-						OndexSearch.find(cloneCon, regex, true);
-					}
-
-					// annotate the semantic motif in the new Ondex graph
-					highlightPath(path, graphCloner);
-				}
-			}
-		}
-
-		ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
-
-		log.debug("Number of seed genes: " + seed.size());
-		log.debug("Keyword(s) were found in " + keywordConcepts.size() + " concepts.");
-		log.debug("Number of candidate genes " + candidateGenes.size());
-
-		return subGraph;
 	}
 
 	/**
@@ -1184,7 +1128,7 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
 
 		if (keyword != null) {
-			System.out.println("Keyword is: " + keyword);
+			log.info("Keyword is: " + keyword);
 		}
 		// create new graph to return
 		ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
@@ -1218,7 +1162,6 @@ public class OndexServiceProvider {
 
 					// highlight the keyword in any concept attribute values
 					if (!keywordConcepts.contains(cloneCon)) {
-						OndexSearch.highlight(cloneCon, keyword);
 						keywordConcepts.add(cloneCon);
 
 						if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -1503,8 +1446,13 @@ public class OndexServiceProvider {
 	 * @param keyword
 	 *            user-specified keyword
 	 */
-	public String writeAnnotationXML(ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<QTL> userQtl,
+	public String writeAnnotationXML(ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
 			String keyword, int maxGenes, Hits hits, String listMode) {
+		List<QTL> userQtl = new ArrayList<QTL>();
+		for (String qtlStr : userQtlStr) {
+			userQtl.add(QTL.fromString(qtlStr));
+		}
+		
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		// AttributeName attLoc = md.getAttributeName("Location"); // for String
@@ -1849,8 +1797,13 @@ public class OndexServiceProvider {
 	 * @param listMode
 	 * @return
 	 */
-	public String writeGeneTable(ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<QTL> qtls,
+	public String writeGeneTable(ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
 			String listMode) {
+		List<QTL> qtls = new ArrayList<QTL>();
+		for (String qtlStr : qtlsStr) {
+			qtls.add(QTL.fromString(qtlStr));
+		}
+		
 		Set<Integer> userGeneIds = new HashSet<Integer>();
 		if (userGenes != null) {
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
@@ -2115,12 +2068,17 @@ public class OndexServiceProvider {
 	 */
 
 	public String writeEvidenceTable(HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
-			List<QTL> qtls) {
+			List<String> qtlsStr) {
 
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
+		
+		List<QTL> qtls = new ArrayList<QTL>();
+		for (String qtlStr : qtlsStr) {
+			qtls.add(QTL.fromString(qtlStr));
+		}
 
 		StringBuffer out = new StringBuffer();
 		// writes the header of the table
@@ -2676,11 +2634,12 @@ public class OndexServiceProvider {
 	 * genes presented in their motifs
 	 * 
 	 */
-	public void populateHashMaps() {
-		System.out.println("Populate HashMaps");
-		File file1 = new File("mapConcept2Genes");
-		File file2 = new File("mapGene2Concepts");
-		System.out.println("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
+	public void populateHashMaps(String dataPath) {
+		log.info("Populate HashMaps");
+		File file1 = Paths.get(dataPath, "mapConcept2Genes").toFile();
+		File file2 = Paths.get(dataPath, "mapGene2Concepts").toFile();
+		File file3 = Paths.get(dataPath, "mapGene2PathLength").toFile();
+		log.info("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
 
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 		AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
@@ -2704,7 +2663,7 @@ public class OndexServiceProvider {
 			}
 		}
 
-		if (!file1.exists() || !file2.exists()) {
+		if (!file1.exists() || !file2.exists() || !file3.exists()) {
 
 			// the results give us a map of every starting concept to every
 			// valid path
@@ -2713,7 +2672,7 @@ public class OndexServiceProvider {
 			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
 			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
 			mapGene2PathLength = new HashMap<String, Integer>();
-			System.out.println("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
+			log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
 			for (List<EvidencePathNode> paths : results.values()) {
 				for (EvidencePathNode path : paths) {
 
@@ -2776,6 +2735,11 @@ public class OndexServiceProvider {
 				s.writeObject(mapGene2Concepts);
 				s.close();
 
+				f = new FileOutputStream(file3);
+				s = new ObjectOutputStream(f);
+				s.writeObject(mapGene2PathLength);
+				s.close();
+
 			} catch (Exception e) {
 				log.error("Failed to write files", e);
 			}
@@ -2794,8 +2758,13 @@ public class OndexServiceProvider {
 				mapGene2Concepts = (HashMap<Integer, Set<Integer>>) s.readObject();
 				s.close();
 
+				f = new FileInputStream(file3);
+				s = new ObjectInputStream(f);
+				mapGene2PathLength = (HashMap<String, Integer>) s.readObject();
+				s.close();
+
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Failed to read files", e);
 			}
 		}
 
@@ -2803,13 +2772,13 @@ public class OndexServiceProvider {
 			log.warn("mapGene2Concepts is null");
 			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
 		} else
-			System.out.println("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
+			log.info("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
 
 		if (mapConcept2Genes == null) {
 			log.warn("mapConcept2Genes is null");
 			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
 		} else
-			System.out.println("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
+			log.info("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
 		if (mapGene2PathLength == null) {
 			log.warn("Gene2PathLength is null");
@@ -2866,7 +2835,7 @@ public class OndexServiceProvider {
 		log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());
 	}
 
-	public ArrayList<ONDEXConcept> filterQTLs(ArrayList<ONDEXConcept> genes, List<QTL> qtls) {
+	public ArrayList<ONDEXConcept> filterQTLs(ArrayList<ONDEXConcept> genes, List<String> qtls) {
 		Set<ONDEXConcept> genesQTL = searchQTLs(qtls);
 		genes.retainAll(genesQTL);
 		return genes;
@@ -2943,7 +2912,7 @@ public class OndexServiceProvider {
 			}
 			out3.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Faile to generate stats", ex);
 		}
 	}
 

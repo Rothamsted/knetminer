@@ -21,6 +21,10 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
 		<!-- Put all the data sources as dependencies here -->
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.arabidopsis</groupId>

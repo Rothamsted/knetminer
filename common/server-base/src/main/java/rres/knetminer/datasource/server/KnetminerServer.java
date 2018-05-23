@@ -1,7 +1,6 @@
 package rres.knetminer.datasource.server;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
-import rres.knetminer.datasource.api.QTL;
 
 @RestController
 @RequestMapping("/")
@@ -46,6 +45,7 @@ public class KnetminerServer {
 		}
 	}
 
+	@CrossOrigin
 	@GetMapping("/{ds}/{mode}")
 	public ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestParam(required = false) List<String> qtl,
@@ -62,18 +62,11 @@ public class KnetminerServer {
 		request.setKeyword(keyword);
 		request.setListMode(listMode);
 		request.setList(list);
-		List<QTL> qtls = new ArrayList<QTL>();
-		try {
-			for (String qtlStr : qtl) {
-				qtls.add(QTL.fromString(qtlStr));
-			}
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.BAD_REQUEST);
-		}
-		request.setQtls(qtls);
+		request.setQtl(qtl);
 		return this._handle(ds, mode, request);
 	}
 
+	@CrossOrigin
 	@PostMapping("/{ds}/{mode}")
 	public ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request) {
@@ -94,7 +87,7 @@ public class KnetminerServer {
 				String paramsStr = 	"Keyword:"+request.getKeyword()+
 									" , List:"+Arrays.toString(request.getList().toArray())+
 									" , ListMode:"+request.getListMode()+
-									" , QTLs:"+Arrays.toString(request.getQtls().toArray());
+									" , QTL:"+Arrays.toString(request.getQtl().toArray());
 				log.debug("Calling "+mode+" with "+paramsStr);
 			}
 			KnetminerResponse response;
@@ -108,10 +101,10 @@ public class KnetminerServer {
 			log.info("Invalid parameters passed to "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.BAD_REQUEST);
 		} catch (Error e) {
-			log.info("Error while running "+mode, e);
+			log.error("Error while running "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
-			log.info("Exception while running "+mode, e);
+			log.error("Exception while running "+mode, e);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
