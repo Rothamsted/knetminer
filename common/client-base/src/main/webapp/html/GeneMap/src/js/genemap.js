@@ -832,7 +832,7 @@ GENEMAP.GeneMap = function (userConfig) {
   
   my.drawFromRawXML = function(outerTargetId, basemapXMLString, annotationXMLString) {
     var reader = GENEMAP.XmlDataReader();
-
+    
     reader.readXMLDataFromRawXML(basemapXMLString, annotationXMLString).then(function (data) {
     	my._draw(outerTargetId, data);
     });

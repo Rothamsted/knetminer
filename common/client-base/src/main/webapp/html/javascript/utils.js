@@ -588,7 +588,7 @@ $(document).ready(
 		    		}
 		    	});
 
-					$('body').on('mouseenter', 'span.hint', function(event){
+				$('body').on('mouseenter', 'span.hint', function(event){
 		 			target = $(this)[0].id;
 	 				var message = "";
 	 				addClass = "";
@@ -807,7 +807,7 @@ function searchKeyword(){
 				//	$("#pGViewer").replaceWith(genomicView);
 
 					// Setup the mapview component
-					var baseMap = data.GViewer;
+					var baseMap = data.gviewer;
                    //    console.log("annotations file: "+ annotations);
 
                   // create new basemap with bands for genes and pass it as well to the Map Viewer.

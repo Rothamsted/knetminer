@@ -916,7 +916,7 @@ public class OndexServiceProvider {
 					// System.out.println("findQTL(): ccTrait=null; concept Type: "+ type +",
 					// chrName: "+ chrName +", tax_id= "+ tax_id);
 				}
-				results.add(new QTL(type, chrName, start, end, label, "", 1.0f, trait, tax_id));
+				results.add(new QTL(chrName, type, start, end, label, "", 1.0f, trait, tax_id));
 			}
 		} else {
 			// be careful with the choice of analyzer: ConceptClasses are not
