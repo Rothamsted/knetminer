@@ -683,7 +683,7 @@ function searchKeyword(){
 	var list = $("#list_of_genes").val().split('\n');
 	for (var i = 0; i < list.length; i++) { // remove empty lines
 	    if (!list[i].trim()) {         
-	        this.splice(i, 1);
+	        list.splice(i, 1);
 	        i--;
 	    }
 	}
