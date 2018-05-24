@@ -1,19 +1,24 @@
 package rres.knetminer.datasource.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KnetminerRequest {
-	private List<QTL> qtls;
+	private List<String> qtl = new ArrayList<String>();
 	private String keyword;
-	private List<String> list;
+	private List<String> list = new ArrayList<String>();
 	private String listMode;
 
-	public List<QTL> getQtls() {
-		return qtls;
+	public KnetminerRequest() {
+
 	}
 
-	public void setQtls(List<QTL> qtls) {
-		this.qtls = qtls;
+	public List<String> getQtl() {
+		return qtl;
+	}
+
+	public void setQtl(List<String> qtl) {
+		this.qtl = qtl;
 	}
 
 	public String getKeyword() {

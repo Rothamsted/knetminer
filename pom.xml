@@ -1,12 +1,27 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
+
+	<groupId>uk.ac.rothamsted.knetminer</groupId>
 	<artifactId>parent</artifactId>
-	<packaging>pom</packaging>
 	<name>parent</name>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
+	<description>KnetMiner is a platform for fast candidate gene discovery using data mining techniques.</description>
+	<url>http://knetminer.rothamsted.ac.uk/</url>
+	<packaging>pom</packaging>
+
+	<organization>
+		<name>Rothamsted Research</name>
+		<url>http://www.rothamsted.ac.uk/</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>GNU GPL</name>
+			<url>http://www.gnu.org/licenses/gpl.html</url>
+		</license>
+	</licenses>
 
 	<modules>
 		<module>common</module>
@@ -34,33 +49,33 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
-				<version>2.4</version>
+				<version>${mojo.taglist.maven.plugin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.4</version>
+				<version>${maven.surefire.report.plugin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>${maven.project.info.reports.plugin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>2.4</version>
+				<version>${maven.pmd.plugin.version}</version>
 				<configuration>
 					<linkXref>true</linkXref>
 					<sourceEncoding>ISO-8859-1</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.8</targetJdk>
+					<targetJdk>${java.version}</targetJdk>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
+				<version>${maven.javadoc.plugin.version}</version>
 				<configuration>
 					<stylesheet>maven</stylesheet>
 					<additionalparam>
@@ -79,318 +94,303 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
-	<licenses>
-        <license>
-            <name>GNU GPL</name>
-            <url>http://www.gnu.org/licenses/gpl.html</url>
-        </license>
-    </licenses>
-    <description>KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
-    </description>
-    <url>http://knetminer.rothamsted.ac.uk/</url>
 
-    <ciManagement>
-        <system>hudson</system>
-        <url>http://ondex.rothamsted.ac.uk/hudson</url>
-    </ciManagement>
+	<scm>
+		<connection>scm:git:https://github.com/Rothamsted/knetminer</connection>
+		<developerConnection>scm:git:https://github.com/Rothamsted/knetminer</developerConnection>
+		<url>https://github.com/Rothamsted/knetminer</url>
+	</scm>
 
-    <organization>
-        <name>Rothamsted Research</name>
-        <url>http://www.rothamsted.ac.uk/</url>
-    </organization>
+	<ciManagement>
+		<system>hudson</system>
+		<url>http://ondex.rothamsted.ac.uk/hudson</url>
+	</ciManagement>
 
-    <scm>
-        <connection>scm:git:https://github.com/Rothamsted/knetminer</connection>
-        <developerConnection>scm:git:https://github.com/Rothamsted/knetminer</developerConnection>
-        <url>https://github.com/Rothamsted/knetminer</url>
-    </scm>
- 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>Internal Releases</name>
-            <url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Internal Snapshots</name>
-            <url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <site>
-            <id>Ondex_site</id>
-            <url>file:///var/www/html/ondex</url>
-        </site>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Internal Releases</name>
+			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Internal Snapshots</name>
+			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<site>
+			<id>Ondex_site</id>
+			<url>file:///var/www/html/ondex</url>
+		</site>
+	</distributionManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin.version}</version>
-                <configuration>
-                    <forkMode>always</forkMode>
-                    <forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
-                    <argLine>-Xms4G -Xmx4G -Dondex.dir=${basedir}/data</argLine>
-                    <excludes>
-                        <exclude>net/sourceforge/ondex/apps/*</exclude>
-                    </excludes>
-                    <failIfNoTests>false</failIfNoTests>
-                    <enableAssertions>true</enableAssertions>
-                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                    <useFile>false</useFile>                    
-                    <!--testFailureIgnore>true</testFailureIgnore -->
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                </configuration>
-            </plugin>
-        </plugins>
-
-        <!-- To define the producer version in your parent POM -->
-        <pluginManagement>
-            <plugins>
+	<build>
+		<pluginManagement>
+			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.plugin.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<showWarnings>true</showWarnings>
+						<showDeprecation>true</showDeprecation>
+						<maxmem>1024m</maxmem>
+						<encoding>UTF-8</encoding>
+						<fork>true</fork>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>2.2</version>
+					<version>${maven.war.plugin.version}</version>
 				</plugin>
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-archiver</artifactId>
-					<version>2.5</version>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${mojo.exec.plugin.version}</version>
 				</plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <showWarnings>true</showWarnings>
-                        <showDeprecation>true</showDeprecation>
-                        <maxmem>1024m</maxmem>
-                        <encoding>UTF-8</encoding>
-                        <fork>true</fork>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxb2-maven-plugin</artifactId>
-                    <version>${mojo.jaxb2.maven.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>jaxb2-xjc</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>xjc</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- Need for newer Eclipse versions with m2e integrated -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-dependency-plugin</artifactId>
-                                        <versionRange>[2.0,)</versionRange>
-                                        <goals>
-                                            <goal>copy-dependencies</goal>
-                                            <goal>unpack</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-javadoc-plugin</artifactId>
-                                        <versionRange>[2.6,)</versionRange>
-                                        <goals>
-                                            <goal>javadoc</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.plugin.version}</version>
+				<configuration>
+					<forkMode>always</forkMode>
+					<forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
+					<argLine>-Xms4G -Xmx4G</argLine>
+					<failIfNoTests>false</failIfNoTests>
+					<enableAssertions>true</enableAssertions>
+					<redirectTestOutputToFile>false</redirectTestOutputToFile>
+					<useFile>false</useFile>
+					<!--testFailureIgnore>true</testFailureIgnore -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven.source.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<preparationGoals>clean verify install</preparationGoals>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-    </build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.6</java.version>
+		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
 
-    <properties>
-        <java.version>1.8</java.version>
-        <target.dir>target</target.dir>
-        <nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
-        <!--Plugin Properties -->
-        <!-- was 2.2.6 First that works is 2.2.11 -->
-        <cxf.version>2.2.11</cxf.version>
-        <maven.assembly.plugin.version>2.2-beta-5</maven.assembly.plugin.version>
-        <maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
-        <maven.dependency.plugin.version>2.1</maven.dependency.plugin.version>
-        <maven.failsafe.plugin.version>2.6</maven.failsafe.plugin.version>
-        <maven.jar.plugin.version>2.3</maven.jar.plugin.version>
-        <maven.javadoc.plugin.version>2.6.1</maven.javadoc.plugin.version>
-        <maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
-        <maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
-        <maven.scm.plugin.version>1.2</maven.scm.plugin.version>
-        <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-        <maven.surefire.plugin.version>2.4.3</maven.surefire.plugin.version>
-        <maven.surefire.report.plugin.version>2.4</maven.surefire.report.plugin.version>
-        <mojo.axistools.maven.plugin.version>1.3</mojo.axistools.maven.plugin.version>
-        <mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
-        <mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
-        <mojo.jaxb2.maven.plugin.version>1.3</mojo.jaxb2.maven.plugin.version>
-        <mojo.nsis.maven.plugin.version>1.0-ONDEX</mojo.nsis.maven.plugin.version>
-        <!-- Dependecies not yet used but ready -->
-        <apache.log4j.version>1.2.15</apache.log4j.version>
-        <collections.generic.version>4.01</collections.generic.version>
-        <org.biopax.paxtools.version>20101113</org.biopax.paxtools.version>
-        <org.biojava.version>1.7.1</org.biojava.version>
-        <com.hp.hpl.jena.version>2.5.7</com.hp.hpl.jena.version>
-        <com.sleepycat.je.version>4.0.71</com.sleepycat.je.version>
-        <com.thoughtworks.xstream.version>1.3.1</com.thoughtworks.xstream.version>
-        <javax.management.jmxri>1.2.1</javax.management.jmxri>
-        <jexcelapi.jxl.version>2.6.10</jexcelapi.jxl.version>
-        <junit.version>4.7</junit.version>
-        <mysql.connector.java.version>5.1.6</mysql.connector.java.version>
-        <org.apache.lucene.core.version>3.6.1</org.apache.lucene.core.version>
-    </properties>
+		<log4j.version>2.3</log4j.version>
+		<lucene.version>6.6.0</lucene.version>
+		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
+		<maven.war.plugin.version>2.4</maven.war.plugin.version>
+		<maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
+		<maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
+		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
+		<maven.surefire.plugin.version>2.4.3</maven.surefire.plugin.version>
+		<maven.surefire.report.plugin.version>2.4</maven.surefire.report.plugin.version>
+		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
+		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
+		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
+		<ondex.version>1.2.1-SNAPSHOT</ondex.version>
+		<springframework.version>4.3.0.RELEASE</springframework.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<jackson.library.version>2.7.5</jackson.library.version>
+		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
+		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+		<junit.version>4.7</junit.version>
+	</properties>
 
-    <profiles>
-        <profile>
-            <id>eclipse-folders</id>
-            <properties>
-                <target.dir>target-eclipse</target.dir>
-            </properties>
-        </profile>
-        <profile>
-            <id>with-report</id>
-            <build>
-                <plugins><!-- test code coverage -->
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.4</version>
-                        <configuration>
-                            <formats>
-                                <format>xml</format>
-                                <format>html</format>
-                            </formats>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>cobertura-copertura</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>cobertura-clean</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>with-report</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>${mojo.cobertura.maven.plugin.version}</version>
+						<configuration>
+							<formats>
+								<format>xml</format>
+								<format>html</format>
+							</formats>
+						</configuration>
+						<executions>
+							<execution>
+								<id>cobertura-copertura</id>
+								<phase>package</phase>
+								<goals>
+									<goal>cobertura</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>cobertura-clean</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
-    <repositories>
-       <repository><id>public</id><name>Public repository</name><url>http://central.maven.org/maven2/</url></repository>
-        <repository>
-            <id>ondex_repro</id>
-            <name>ondex_repro</name>
-            <url>${nexus.repro}/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>snapshot_releases</id>
-            <name>nexus.repro</name>
-            <url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
-<!--            <url>${nexus.repro}/content/groups/public-snapshots</url> -->
-        </repository> 
-    </repositories>
+	<repositories>
+		<repository>
+			<id>public</id>
+			<name>Public repository</name>
+			<url>http://central.maven.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>ondex_repro</id>
+			<name>ondex_repro</name>
+			<url>${nexus.repro}/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>snapshot_releases</id>
+			<name>nexus.repro</name>
+			<url>${nexus.repro}/content/repositories/snapshots</url>
+			<!-- <url>${nexus.repro}/content/groups/public-snapshots</url> -->
+		</repository>
+	</repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>ondex_repo</id>
-            <name>ondex_repo</name>
-            <url>${nexus.repro}/content/groups/public</url>
-        </pluginRepository>
-    </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>ondex_repo</id>
+			<name>ondex_repo</name>
+			<url>${nexus.repro}/content/groups/public</url>
+		</pluginRepository>
+	</pluginRepositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${javax.servlet.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>javax.servlet.jsp-api</artifactId>
+				<version>${javax.servlet.jsp.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>${javax.servlet.jstl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>taglibs</groupId>
+				<artifactId>standard</artifactId>
+				<version>${taglibs.version}</version>
+			</dependency>
 
-    <dependencyManagement>
-        <dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.library.version}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-            </dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.core</groupId>
+				<artifactId>tools</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.core</groupId>
+				<artifactId>workflow-api</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.core</groupId>
+				<artifactId>memory</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.core</groupId>
+				<artifactId>lucene</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.modules</groupId>
+				<artifactId>generic</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.modules</groupId>
+				<artifactId>oxl</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.ondex.modules</groupId>
+				<artifactId>cyjs_json</artifactId>
+				<version>${ondex.version}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>net.sourceforge.collections</groupId>
-                <artifactId>collections-generic</artifactId>
-                <version>4.01</version>
-            </dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-analyzers-common</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>net.sourceforge.jexcelapi</groupId>
-                <artifactId>jxl</artifactId>
-                <version>2.6.10</version>
-            </dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-jcl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
 
-        </dependencies>
-    </dependencyManagement>
-	
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 </project>

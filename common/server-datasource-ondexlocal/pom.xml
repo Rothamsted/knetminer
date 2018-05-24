@@ -3,86 +3,58 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
+	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 	<artifactId>server-datasource-ondexlocal</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
 	<name>KnetMiner base Ondex in-memory datasource</name>
-	<url>http://maven.apache.org</url>
+	<packaging>jar</packaging>
 
 	<parent>
 		<artifactId>common</artifactId>
-		<groupId>uk.ac.rothamsted.qtlnetminer</groupId>
-		<version>0.5.0-SNAPSHOT</version>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<springframework.version>4.3.0.RELEASE</springframework.version>
-		<jackson.library>2.7.5</jackson.library>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>uk.ac.rothamsted.qtlnetminer.common</groupId>
+			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-datasource-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>tools</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>workflow-api</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>memory</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>lucene</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!--0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
-			<version>6.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>generic</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>oxl</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 0.6.0-SNAPSHOT -->
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
-			<version>1.2.1-SNAPSHOT</version><!-- 1.1.1-SNAPSHOT -->
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

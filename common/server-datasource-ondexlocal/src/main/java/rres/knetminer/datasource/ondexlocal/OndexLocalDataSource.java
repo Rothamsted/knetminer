@@ -28,8 +28,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	private OndexServiceProvider ondexServiceProvider;
 
-	public OndexLocalDataSource(String[] dsNames, String configXmlPath, String semanticMotifsPath) {
-		this.setDataSourceNames(dsNames);
+	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
+		this.setDataSourceNames(new String[] {dsName});
 
 		Properties props = new Properties();
 		// Config.xml is provided by the implementing abstract class in its
@@ -42,17 +42,21 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 		this.ondexServiceProvider = new OndexServiceProvider();
 		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(props.getProperty("reference_genome")));
+		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
 		this.ondexServiceProvider.setTaxId(Arrays.asList(props.getProperty("SpeciesTaxId").split(",")));
+		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(props.getProperty("export_visible_network")));
+		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
 		try {
 			this.ondexServiceProvider.createGraph(props.getProperty("DataPath"), props.getProperty("DataFile"),
 					semanticMotifsPath);
 		} catch (Exception e) {
+			log.error("Failed to create Ondex graph", e);
 			throw new Error(e);
 		}
 	}
 
-	public CountHitsResponse countHits(KnetminerRequest request) throws IllegalArgumentException {
+	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
@@ -61,17 +65,18 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public SynonymsResponse synonyms(KnetminerRequest request) throws IllegalArgumentException {
+	public SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		try {
 			SynonymsResponse response = new SynonymsResponse();
 			response.setSynonyms(this.ondexServiceProvider.writeSynonymTable(request.getKeyword()));
 			return response;
 		} catch (ParseException e) {
+			log.error("Failed to count synonyms", e);
 			throw new Error(e);
 		}
 	}
 
-	public CountLociResponse countLoci(KnetminerRequest request) throws IllegalArgumentException {
+	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		String[] loci = request.getKeyword().split("-");
 		String chr = loci[0];
 		int start = 0, end = 0;
@@ -81,75 +86,66 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		if (loci.length > 2) {
 			end = Integer.parseInt(loci[2]);
 		}
+		log.info("Counting loci "+chr+":"+start+":"+end);
 		CountLociResponse response = new CountLociResponse();
 		response.setGeneCount(this.ondexServiceProvider.getGeneCount(chr, start, end));
 		return response;
 	}
 
-	public GenomeResponse genome(KnetminerRequest request) throws IllegalArgumentException {
+	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		GenomeResponse response = new GenomeResponse();
 		this._keyword(response, request);
 		return response;
 	}
 
-	public QtlResponse qtl(KnetminerRequest request) throws IllegalArgumentException {
+	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		QtlResponse response = new QtlResponse();
 		this._keyword(response, request);
 		return response;
 	}
 
-	public <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
+	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
 			throws IllegalArgumentException {
 		// Find genes from the user's list
 		Set<ONDEXConcept> userGenes = null;
 		if (request.getList() != null && request.getList().size() > 0) {
 			userGenes = this.ondexServiceProvider.searchGenes(request.getList());
-			System.out.println("Number of user provided genes: " + userGenes.size());
+			log.info("Number of user provided genes: " + userGenes.size());
 		}
 
 		// Genome search
-		System.out.println("Search mode: " + response.getClass().getName());
+		log.info("Search mode: " + response.getClass().getName());
 		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		if (response.getClass().equals(GenomeResponse.class)) {
 			genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-			System.out.println("Number of genes " + genes.size());
+			log.info("Number of genes " + genes.size());
 		} else if (response.getClass().equals(QtlResponse.class)) {
 			genes = qtlnetminerResults.getSortedCandidates();
-			System.out.println("Number of genes " + genes.size());
-			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtls());
-			System.out.println("Genes after QTL filter: " + genes.size());
-		}
-		if (request.getList().size() > 0) {
-			Set<ONDEXConcept> userList = this.ondexServiceProvider.searchGenes(request.getList());
-			if (response.getClass().equals(QtlResponse.class) && request.getListMode().equals("GLrestrict")) {
-				ArrayList<ONDEXConcept> userListArray = new ArrayList<ONDEXConcept>(userList);
-				userListArray = this.ondexServiceProvider.filterQTLs(userListArray, request.getQtls());
-				userList = new HashSet<ONDEXConcept>(userListArray);
-				System.out.println("Number of user provided genes within QTL: " + userList.size());
-			}
-			qtlnetminerResults.setUsersGenes(userList);
+			log.info("Number of genes " + genes.size());
+			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
+			log.info("Genes after QTL filter: " + genes.size());
 		}
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
-				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtls(),
+				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
-				System.out.println("1.) Gviewer annotation ");
+				log.debug("1.) Gviewer annotation ");
 			} else {
-				System.out.println("1.) No reference genome for Gviewer annotation ");
+				log.debug("1.) No reference genome for Gviewer annotation ");
 			}
 
 			// Gene table file
-			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtls(),
+			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtl(),
 					request.getListMode());
-			System.out.println("2.) Gene table ");
+			log.debug("2.) Gene table ");
 
 			// Evidence table file
 			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
-					userGenes, request.getQtls());
-			System.out.println("3.) Evidence table ");
+					userGenes, request.getQtl());
+			log.debug("3.) Evidence table ");
 
 			// Document count (only related with genes)
 			int docSize = this.ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
@@ -169,10 +165,10 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public NetworkResponse network(KnetminerRequest request) throws IllegalArgumentException {
+	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
 
-		System.out.println("Call applet! Search genes " + request.getList().size());
+		log.info("Call applet! Search genes " + request.getList().size());
 
 		// Search Genes
 		if (!request.getList().isEmpty()) {
@@ -180,8 +176,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 
 		// Search Regions
-		if (!request.getQtls().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtls()));
+		if (!request.getQtl().isEmpty()) {
+			genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
 		}
 
 		// Find Semantic Motifs
@@ -192,12 +188,13 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		try {
 			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
 		} catch (InvalidPluginArgumentException e) {
+			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
 		return response;
 	}
 
-	public EvidencePathResponse evidencePath(KnetminerRequest request) throws IllegalArgumentException {
+	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
 		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID);
 
@@ -206,6 +203,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		try {
 			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
 		} catch (InvalidPluginArgumentException e) {
+			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
 		return response;

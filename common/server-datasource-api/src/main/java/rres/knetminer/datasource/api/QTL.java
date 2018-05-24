@@ -1,19 +1,5 @@
 package rres.knetminer.datasource.api;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-@JsonDeserialize(using = QTL.QTLDeserializer.class)
-@JsonSerialize(using = QTL.QTLSerializer.class)
 public class QTL {
 	public String type;
 	public String chromosome;
@@ -25,10 +11,14 @@ public class QTL {
 	public String trait;
 	public String taxID;
 
-	public QTL(String type, String chromosome, int start, int end, String label, String significance, float pValue,
+	public QTL() {
+		
+	}
+	
+	public QTL(String chromosome, String type, int start, int end, String label, String significance, float pValue,
 			String trait, String taxID) {
-		this.setType(type);
 		this.setChromosome(chromosome);
+		this.setType(type);
 		this.setStart(start);
 		this.setEnd(end);
 		this.setLabel(label);
@@ -133,23 +123,5 @@ public class QTL {
 			}
 		}
 		throw new IllegalArgumentException(qtlStr + " not valid qtl region");
-	}
-
-	class QTLDeserializer extends JsonDeserializer<QTL> {
-		@Override
-		public QTL deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-				throws IOException, JsonProcessingException {
-
-			String qtlStr = jsonParser.getText();
-			return QTL.fromString(qtlStr);
-		}
-	}
-
-	class QTLSerializer extends JsonSerializer<QTL> {
-		@Override
-		public void serialize(QTL qtl, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-				throws IOException, JsonProcessingException {
-			jsonGenerator.writeObject(qtl.toString());
-		}
 	}
 }

@@ -55,5 +55,15 @@ GENEMAP.AnnotationXMLReader = function () {
       log.info('reading annotation file: ', path);
       return d3.promise.xml(path).then(_readAnnotations);
     },
+
+    readAnnotationXMLFromRawXML: function (xmlStr) {
+      log.info('reading annotation xml');
+      return new Promise(function(resolve, reject){
+    	  var parser = new DOMParser();
+    	  var xml = parser.parseFromString(xmlStr, "application/xml");
+    	  var genome = _readAnnotations(xml);
+    	  resolve(genome);
+    	});
+    },
   };
 };

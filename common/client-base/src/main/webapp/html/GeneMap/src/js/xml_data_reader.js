@@ -113,7 +113,7 @@ GENEMAP.XmlDataReader = function () {
   };
 
   return {
-
+	  
     readXMLData: function (basemapPath, annotationPath) {
 
       var basemapReader = GENEMAP.BasemapXmlReader();
@@ -136,5 +136,28 @@ GENEMAP.XmlDataReader = function () {
 
       return basemapPromise.then(_processBasemapData);
     },
+    
+    readXMLDataFromRawXML: function (basemapXMLString, annotationXMLString) {
+
+        var basemapReader = GENEMAP.BasemapXmlReader();
+        var basemapPromise = basemapReader.readBasemapXMLFromRawXML(basemapXMLString);
+
+        if (annotationXMLString) {
+          var annotationReader = GENEMAP.AnnotationXMLReader();
+          var annotationPromise = annotationReader.readAnnotationXMLFromRawXML(annotationXMLString);
+
+          var promise = Promise.all([basemapPromise, annotationPromise]).then(_processJoinedData, function (error) {
+
+            log.error('error while reading XML strings: ' + error);
+
+            // try and process the basemap file
+            return basemapPromise.then(_processBasemapData);
+          });
+
+          return promise;
+        }
+
+        return basemapPromise.then(_processBasemapData);
+      },
   };
 };

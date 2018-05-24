@@ -1,7 +1,14 @@
 package rres.knetminer.datasource.api;
 
+import java.util.Arrays;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 @KnetminerDataSourceProvider
 public abstract class KnetminerDataSource {
+    protected final Logger log = LogManager.getLogger(getClass());
+
 	/*
 	 * Request to refresh the “MatchCounter” (as user types search keywords, e.g,
 	 * stating “826 documents and 7248 genes will be found with this query”):
@@ -57,6 +64,7 @@ public abstract class KnetminerDataSource {
 	
 	public void setDataSourceNames(String[] dataSourceNames) {
 		this.dataSourceNames = dataSourceNames;
+		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
 
 	/*
@@ -66,17 +74,17 @@ public abstract class KnetminerDataSource {
 	 * throwing an exception sub-classed from Error.
 	 */
 
-	public abstract CountHitsResponse countHits(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract SynonymsResponse synonyms(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract CountLociResponse countLoci(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract GenomeResponse genome(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract QtlResponse qtl(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract NetworkResponse network(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract EvidencePathResponse evidencePath(KnetminerRequest request) throws IllegalArgumentException;
+	public abstract EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }
