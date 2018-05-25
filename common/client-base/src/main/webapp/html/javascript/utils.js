@@ -1262,7 +1262,7 @@ var table = "";
 
     	$("#numGenes").change(function(e){
           //  $("#loadingDiv_GeneView").css("display","block"); // notify
-            printGenesTable(text);	//if number of genes to show changes, redraw table.
+    		createGenesTable(text);	//if number of genes to show changes, redraw table.
           //  $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
         
@@ -1272,7 +1272,7 @@ var table = "";
         $("#revertGeneView").click(function(e) {
          //   $("#loadingDiv_GeneView").css("display","block"); // notify
         //    console.log("Revert Gene View... text:"+ text);
-            printGenesTable(text); // redraw table
+        	createGenesTable(text); // redraw table
          //   $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
 
