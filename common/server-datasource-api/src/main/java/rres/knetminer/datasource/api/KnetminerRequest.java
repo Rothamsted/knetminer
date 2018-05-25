@@ -5,9 +5,9 @@ import java.util.List;
 
 public class KnetminerRequest {
 	private List<String> qtl = new ArrayList<String>();
-	private String keyword;
+	private String keyword = "";
 	private List<String> list = new ArrayList<String>();
-	private String listMode;
+	private String listMode = "";
 
 	public KnetminerRequest() {
 
