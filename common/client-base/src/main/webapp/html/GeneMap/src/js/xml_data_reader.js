@@ -137,10 +137,10 @@ GENEMAP.XmlDataReader = function () {
       return basemapPromise.then(_processBasemapData);
     },
     
-    readXMLDataFromRawXML: function (basemapXMLString, annotationXMLString) {
+    readXMLDataFromRawAnnotationXML: function (basemapPath, annotationXMLString) {
 
         var basemapReader = GENEMAP.BasemapXmlReader();
-        var basemapPromise = basemapReader.readBasemapXMLFromRawXML(basemapXMLString);
+        var basemapPromise = basemapReader.readBasemapXML(basemapPath);
 
         if (annotationXMLString) {
           var annotationReader = GENEMAP.AnnotationXMLReader();

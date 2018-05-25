@@ -830,10 +830,10 @@ GENEMAP.GeneMap = function (userConfig) {
     });
   };
   
-  my.drawFromRawXML = function(outerTargetId, basemapXMLString, annotationXMLString) {
+  my.drawFromRawAnnotationXML = function(outerTargetId, basemapPath, annotationXMLString) {
     var reader = GENEMAP.XmlDataReader();
     
-    reader.readXMLDataFromRawXML(basemapXMLString, annotationXMLString).then(function (data) {
+    reader.readXMLDataFromRawAnnotationXML(basemapPath, annotationXMLString).then(function (data) {
     	my._draw(outerTargetId, data);
     });
   };

@@ -807,11 +807,11 @@ function searchKeyword(){
 				//	$("#pGViewer").replaceWith(genomicView);
 
 					// Setup the mapview component
-					var baseMap = data.gviewer;
+					var annotationsMap = data.gviewer;
                    //    console.log("annotations file: "+ annotations);
 
                   // create new basemap with bands for genes and pass it as well to the Map Viewer.
-					genemap.drawFromRawXML('#genemap', baseMap);
+					genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
 
 					//Collapse Suggestor view
 					$('#suggestor_search').attr('src', 'html/image/expand.gif');

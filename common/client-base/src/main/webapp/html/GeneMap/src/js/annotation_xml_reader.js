@@ -59,11 +59,8 @@ GENEMAP.AnnotationXMLReader = function () {
     readAnnotationXMLFromRawXML: function (xmlStr) {
       log.info('reading annotation xml');
       return new Promise(function(resolve, reject){
-    	  var parser = new DOMParser();
-    	  var xml = parser.parseFromString(xmlStr, "application/xml");
-    	  var genome = _readAnnotations(xml);
-    	  resolve(genome);
-    	});
+    	  resolve(new DOMParser().parseFromString(xmlStr, "application/xml"));
+    	}).then(_readAnnotations);
     },
   };
 };

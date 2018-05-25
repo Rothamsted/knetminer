@@ -56,11 +56,8 @@ GENEMAP.BasemapXmlReader = function () {
     readBasemapXMLFromRawXML: function (xmlStr) {
       log.info('reading basemap xml');
       return new Promise(function(resolve, reject){
-    	  var parser = new DOMParser();
-    	  var xml = parser.parseFromString(xmlStr, "application/xml");
-    	  var genome = _readBasemapXML(xml);
-    	  resolve(genome);
-    	});
+    	  resolve(new DOMParser().parseFromString(xmlStr, "application/xml"));
+    	}).then(_readBasemapXML);
     },
   };
 };
