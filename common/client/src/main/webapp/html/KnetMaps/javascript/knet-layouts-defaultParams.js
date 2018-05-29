@@ -1,5 +1,5 @@
 
- var animate_layout= true; // global variable for layout animation setting (default: true).
+var animate_layout= true; // global variable for layout animation setting (default: true).
 
  // CoSE layout.
  var coseNetworkLayout= {
@@ -69,7 +69,7 @@
     idealEdgeLength: 100, nodeOverlap: 20
    };
 
-   // NEW: Force layout.
+   // Force layout.
    var ngraph_forceNetworkLayout= {
     name: 'cytoscape-ngraph.forcelayout',
     animate: animate_layout, fit: true,

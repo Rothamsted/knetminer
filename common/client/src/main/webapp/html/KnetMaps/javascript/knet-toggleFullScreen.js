@@ -11,9 +11,6 @@
 	// reload the network
 	load_reload_Network(currentEles_jsons, currentStylesheet_json/*, false*/);
 
-	// toggle label visibility
-    //    showHideLabels($('#changeLabelVisibility').val());
-        
         // Show Item Info table
         openItemInfoPane();
        }
@@ -24,9 +21,6 @@
 
         // reload the network
 	load_reload_Network(currentEles_jsons, currentStylesheet_json/*, false*/);
-
-	// toggle label visibility
-    //    showHideLabels($('#changeLabelVisibility').val());
 
         // Hide Item Info table
         closeItemInfoPane();

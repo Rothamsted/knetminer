@@ -1,12 +1,9 @@
   /** Item Info.: display information about the selected concept(s)/ relation(s) including attributes, 
    * co-accessions and evidences.
-   * @type type
    */
    function showItemInfo(selectedElement) {
     var itemInfo= "";
     var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
-/*    console.log("Display Item Info. for id: "+ selectedElement.id() +", isNode ?= "+ 
-            selectedElement.isNode() +", isEdge ?= "+ selectedElement.isEdge());*/
     var createExpressionEntries= false;
     try {
          var cy= $('#cy').cytoscape('get');
@@ -31,18 +28,6 @@
             // Store the necessary data in the cells.
             cell1.innerHTML= "Concept Type:";
             cell2.innerHTML= selectedElement.data('conceptType'); // concept Type
-            // Concept 'value'.
-        /*    row= table.insertRow(1);
-            cell1= row.insertCell(0);
-            cell2= row.insertCell(1);
-            cell1.innerHTML= "Value:";
-            cell2.innerHTML= conValue;
-            // Concept 'PID'.
-            row= table.insertRow(2);
-            cell1= row.insertCell(0);
-            cell2= row.insertCell(1);
-            cell1.innerHTML= "PID:";
-            cell2.innerHTML= selectedElement.data('pid');*/
             // Concept 'Annotation'.
             row= table.insertRow(1/*3*/);
             cell1= row.insertCell(0);
@@ -86,7 +71,6 @@
                               synonymID= '<html>'+ synonymID +'</html>';
                               synonymID= jQuery(synonymID).text(); // filter out html content from id field.
                              }
-                        //   console.log("*synonym: "+ coname_Synonym +"\n \t id: "+ synonymID);
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            var dispSynonym= coname_Synonym +
                                    ' <a><img src="html/KnetMaps/image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
@@ -137,7 +121,6 @@
                                     aaSeq= attrValue.match(/.{1,10}/g); // split into string array of 10 characters each.
                                     counter= 0;
                                     // Have monospaced font for AA sequence.
-//                                    attrValue= "<font size=\"1\">";
                                     attrValue= "<span style= \"font-family: 'Courier New', Courier, monospace\">";
                                     for(var p=0; p < aaSeq.length; p++) {
                                         attrValue= attrValue + aaSeq[p] +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -146,7 +129,6 @@
                                            attrValue= attrValue +"<br/>";
                                           }
                                        }
-//                                    attrValue= attrValue +"</font>";
                                     attrValue= attrValue +"</span>";
                                    }
                             cell1.innerHTML= attrName;
@@ -173,7 +155,6 @@
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
                                coAccUrl= coAccUrl.replace(/\s/g,''); // remove spaces, if any
                                // open attribute url in new blank tab.
-//                               attrValue= "<a href=\""+ coAccUrl +"\" target=\"_blank\">"+ co_acc +"</a>";
                                co_acc= "<a href=\""+ coAccUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ co_acc +"</a>";
                               }
                             }
@@ -217,17 +198,15 @@
                 cell1= row.insertCell(0);
                 cell2= row.insertCell(1);
                 cell1.innerHTML= "From:";
-            //    cell2.innerHTML= selectedElement.data('source'); // relation source ('fromConcept').
                 var fromID= selectedElement.data('source'); // relation source ('fromConcept').
-                cell2.innerHTML= cy.$('#'+fromID).data('value') +" ("+ cy.$('#'+fromID).data('conceptType').toLowerCase() +")"; // relation source ('fromConcept').
+                cell2.innerHTML= cy.$('#'+fromID).data('value') +" ("+ cy.$('#'+fromID).data('conceptType').toLowerCase() +")"; // relation source.
                 // Relation 'target'.
                 row= table.insertRow(2);
                 cell1= row.insertCell(0);
                 cell2= row.insertCell(1);
                 cell1.innerHTML= "To:";
-//                cell2.innerHTML= selectedElement.data('target'); // relation target ('toConcept').
-                var toID= selectedElement.data('target'); // relation source ('toConcept').
-                cell2.innerHTML= cy.$('#'+toID).data('value') +" ("+ cy.$('#'+toID).data('conceptType').toLowerCase() +")"; // relation source ('toConcept').
+                var toID= selectedElement.data('target'); // relation destination ('toConcept').
+                cell2.innerHTML= cy.$('#'+toID).data('value') +" ("+ cy.$('#'+toID).data('conceptType').toLowerCase() +")"; // relation destination.
                 // Get all metadata for this relation from the metadataJSON variable.
                 for(var j=0; j < metadataJSON.ondexmetadata.relations.length; j++) {
                     if(selectedElement.id() === metadataJSON.ondexmetadata.relations[j].id) {
@@ -273,15 +252,10 @@
           itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack; // error details
           console.log(itemInfo);
          }
-//    $("#infoDialog").html(itemInfo); // display in the dialog box.
    }
 
  // Open the Item Info pane when the "Item Info" option is selected for a concept or relation.
  function openItemInfoPane() {
-//  myLayout.show('east', true); // to unhide (show) and open the pane.
-//  myLayout.slideOpen('east'); // open the (already unhidden) Item Info pane.
-
-  // $("#itemInfo").css("display","block"); // show the Item Info div
   var effect = 'slide';
   // Set the options for the effect type chosen
   var options = { direction: 'right' };
@@ -293,11 +267,6 @@
     }
  }
 
- /*$("#btnCloseItemInfoPane").click(function() {
-     console.log("Close ItemInfo pane...");
-     $("#itemInfo").hide();
- });*/
- 
  function closeItemInfoPane() {
   $("#itemInfo").hide();
  }
@@ -306,8 +275,6 @@
   function removeNodeBlur(ele) {
     var thisElement= ele;
     try {
-/*      thisElement.neighborhood().nodes().style({'opacity': '1'});
-      thisElement.neighborhood().edges().style({'opacity': '1'});*/
       if(thisElement.hasClass('BlurNode')) { // Remove any shadow created around the node.
          thisElement.removeClass('BlurNode');
         }
@@ -320,16 +287,10 @@
   // Show hidden, connected nodes connected to this node & also remove shadow effect from nodes, wheere needed.
   function showLinks(ele) {
     var selectedNode= ele;
-    // Remove css style changes occurring from a 'tapdragover' ('mouseover') event.
-//    resetRelationCSS(selectedNode);
-
-//    selectedNode.neighborhood().nodes().show();
-//    selectedNode.neighborhood().edges().show();
     // Show concept neighborhood.
-//    selectedNode.connectedEdges().connectedNodes().show(); // DISABLED 27/02/17
     selectedNode.connectedEdges().connectedNodes().removeClass('HideEle');
     selectedNode.connectedEdges().connectedNodes().addClass('ShowEle');
-//    selectedNode.connectedEdges().show(); // DISABLED 27/02/17
+
     selectedNode.connectedEdges().removeClass('HideEle');
     selectedNode.connectedEdges().addClass('ShowEle');
 
@@ -342,14 +303,11 @@
         var its_connected_hiddenNodesCount= its_connected_hidden_nodes.length;
         console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
         if(its_connected_hiddenNodesCount </*<=*/ 1) {
-//        if(its_connected_hiddenNodesCount /*<*/=== 0/*1*/) {
            removeNodeBlur(elem);
-//           elem.connectedEdges().show();
           }
     });
 
     try { // Relayout the graph.
-//         rerunGraphLayout(/*selectedNode.neighborhood()*/selectedNode.connectedEdges().connectedNodes());
          // Set a circle layout on the neighborhood.
          var eleBBox= selectedNode.boundingBox(); // get the bounding box of thie selected concept (node) for the layout to run around it.
          // Define the neighborhood's layout.
@@ -359,10 +317,7 @@
                 stop: undefined/*function() { cy.center(); cy.fit(); }*/ };
 
          // Set the layout only using the hidden concepts (nodes).
-//         console.log("Node neighborhood.filter(visible) size: "+ selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').length);
-//         if(selectedNode.neighborhood().length > 5/*2*/) {
               selectedNode.neighborhood().filter('node[conceptDisplay = "none"]').layout(mini_circleLayout);
-//             }
         }
     catch(err) { console.log("Error occurred while setting layout on selected element's neighborhood: "+ err.stack); }
   }
@@ -374,8 +329,6 @@
      cy.nodes().forEach(function(ele) {
       if(ele.selected()) {
          if(new_conceptName.length> 30) { new_conceptName= new_conceptName.substr(0,29)+'...'; }
-   //      console.log("Selected concept: "+ ele.data('displayValue')/*ele.data('value')*/ +"; \t Use new preferred Name (for Label): "+ new_conceptName);
-         /*ele.data('Value', new_conceptName);*/
          ele.data('displayValue', new_conceptName);
          if(ele.style('text-opacity') === '0') {
             ele.style({'text-opacity': '1'}); // show the concept Label.

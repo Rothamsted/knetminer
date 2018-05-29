@@ -1,18 +1,13 @@
-function load_reload_Network(network_json, network_style/*, runNetLayout*/) {
-
-//console.log("style: "+ JSON.stringify(network_style, null, 4));
-//console.log("load_reload_Network: elements: "+ JSON.stringify(network_json, null, 4));
+function load_reload_Network(network_json, network_style) {
 
 // Initialise a cytoscape container instance on the HTML DOM using JQuery.
 $('#cy').cytoscape({
   container: document.getElementById('cy')/*$('#cy')*/,
-
   style: network_style,
-
   // Using the JSON data to create the nodes.
   elements: network_json,
-  
 //  layout: /*defaultNetworkLayout*/ coseNetworkLayout, // layout of the Network
+
   // these options hide parts of the graph during interaction such as panning, dragging, etc. to enable faster rendering for larger graphs.
 //  hideLabelsOnViewport: true,
 //  hideEdgesOnViewport: true,
@@ -49,10 +44,7 @@ $('#cy').cytoscape({
   motionBlur: true,
 
   ready: function() {
-   //if(runNetLayout===true) {
-    //  setDefaultLayout(); // set default Layout
       rerunLayout(); // reset current layout.
-     //}
    window.cy= this;
   }
 });
@@ -262,28 +254,6 @@ cy.elements().qtip({
            }
         },
 
-        /*{
-         content: 'Show Selections',
-         select: function() {
-             $("#infoDialog").dialog(); // initialize a dialog box.
-             // Display details of all the selected elements: nodes & edges.
-             var selections= "";
-             cy.nodes().forEach(function( ele ) {
-                if(ele.selected()) {
-                   selections += ele.data('conceptType') +" : "+ ele.data('value') +" , PID: "+ ele.data('pid') + "<br/><br/>";
-                  }
-             });
-
-             cy.edges().forEach(function( ele ) {
-                if(ele.selected()) {
-                   selections += "Relation: "+ ele.data('label') +" , From: "+ ele.data('source') +" , To: "+ ele.data('target') +"<br/>";
-                  }
-             });
-             console.log("ShowSelections (Shift+click): selections= "+ selections);
-             $("#infoDialog").html(selections);
-            }
-        },*/
-
         {
          content: 'Label on/ off by Type',
          select: function() {
@@ -298,24 +268,7 @@ cy.elements().qtip({
                 eleType= 'label';
                 elements= cy.edges(); // fetch all the edges.
                }
-        //     console.log("Toggle Label on/ off by type: "+ thisElementType);
 
-           /*  if(this.isNode() || this.isEdge()) {
-                if(this.style('text-opacity') === '0') {
-                   elements.forEach(function( ele ) {
-                    if(ele.data(eleType) === thisElementType) {
-                       ele.style({'text-opacity': '1'}); // show the concept/ relation Label.
-                      }
-                   });
-                  }
-                  else {
-                   elements.forEach(function( ele ) {
-                    if(ele.data(eleType) === thisElementType) {
-                       ele.style({'text-opacity': '0'}); // hide the concept/ relation Label.
-                      }
-                   });
-                  }
-               }*/
                 if(this.hasClass("LabelOff")) {  // show the concept/ relation Label.
                    elements.forEach(function( ele ) {
                     if(ele.data(eleType) === thisElementType) { // for same concept or relation types
@@ -342,12 +295,6 @@ cy.elements().qtip({
         {
          content: 'Label on/ off',
          select: function() {
-           /*  if(this.style('text-opacity') === '0') {
-                this.style({'text-opacity': '1'}); // show the concept/ relation Label.
-               }
-               else {
-                this.style({'text-opacity': '0'}); // hide the concept/ relation Label.
-               }*/
              if(this.hasClass("LabelOff")) {  // show the concept/ relation Label.
                 this.removeClass("LabelOff");
                 this.addClass("LabelOn");
