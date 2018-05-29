@@ -27,7 +27,7 @@
 1-6	has_observ_pheno
 1-7	enc
 1-10	enc
-1-11	cooc_wi
+1-16	cooc_wi
 1-8	genetic
 1-8	physical
 1-9	genetic
@@ -40,7 +40,7 @@
 9-4	participates_in
 9-5	located_in
 9-6	has_observ_pheno
-9-11	cooc_wi
+9-16	cooc_wi
 
 10-7	h_s_s	4
 10-10	h_s_s	4

@@ -35,9 +35,10 @@
 1-20	has_variation
 1-2	occ_in
 1-22	differentially_expressed
-1-16	cooc_wi
+1-21	cooc_wi
 1-23	part_of
 1-9	regulates	2
+1-8	regulates	2
 1-8	homeolog	2
 1-9	homeolog	2
 1-20	has_mutant
@@ -58,7 +59,7 @@
 10-12	cat_c
 10-14	has_domain
 10-15	cat_c
-10-16	cooc_wi
+10-21	cooc_wi
 
 9-2	pub_in
 9-3	has_function
@@ -80,13 +81,13 @@
 11-5	located_in
 12-3	equ
 
-9-16	cooc_wi
+9-21	cooc_wi
 10-17	is_a
 10-177	is_a
 17-18	ca_by
 17-188	ca_by
 18-19	part_of
 
-23-24	enriched_for
+23-21	enriched_for
 23-25	part_of
 23-4	enriched_for
