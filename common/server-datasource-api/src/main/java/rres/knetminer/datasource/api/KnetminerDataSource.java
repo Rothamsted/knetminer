@@ -66,6 +66,16 @@ public abstract class KnetminerDataSource {
 		this.dataSourceNames = dataSourceNames;
 		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
+	
+	private String api_url = "";
+	
+	public void setApiUrl(String api_url) {
+		this.api_url = api_url;
+	}
+	
+	public String getApiUrl() {
+		return this.api_url;
+	}
 
 	/*
 	 * In all the below, IllegalArgumentException should be thrown if the incoming
@@ -87,4 +97,6 @@ public abstract class KnetminerDataSource {
 	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
 	public abstract EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	
+	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }

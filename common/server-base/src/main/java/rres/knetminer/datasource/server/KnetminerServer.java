@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,8 @@ public class KnetminerServer {
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
-			@RequestParam(required = false, defaultValue = "") String listMode) {
+			@RequestParam(required = false, defaultValue = "") String listMode, 
+			HttpServletRequest rawRequest) {
 		if (qtl == null) {
 			qtl = Collections.emptyList();
 		}
@@ -63,17 +66,17 @@ public class KnetminerServer {
 		request.setListMode(listMode);
 		request.setList(list);
 		request.setQtl(qtl);
-		return this._handle(ds, mode, request);
+		return this._handle(ds, mode, request, rawRequest);
 	}
 
 	@CrossOrigin
 	@PostMapping("/{ds}/{mode}")
 	public ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
-			@RequestBody KnetminerRequest request) {
-		return this._handle(ds, mode, request);
+			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
+		return this._handle(ds, mode, request, rawRequest);
 	}
 
-	private ResponseEntity<KnetminerResponse> _handle(String ds, String mode, KnetminerRequest request) {
+	private ResponseEntity<KnetminerResponse> _handle(String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) {
 		if (this.dataSourceCache == null) {
 			this.buildDataSourceCache();
 		}
@@ -82,6 +85,8 @@ public class KnetminerServer {
 			log.info("Invalid data source requested: /"+ds);
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
 		}
+		String incomingUrlPath = rawRequest.getRequestURL().toString().split("\\?")[0];
+		dataSource.setApiUrl(incomingUrlPath.substring(0, incomingUrlPath.lastIndexOf('/')));
 		try {
 			if (log.isDebugEnabled()) {
 				String paramsStr = 	"Keyword:"+request.getKeyword()+

@@ -9,19 +9,10 @@ window.onload= function () {
  * them in the release.html webpage.
  */
 function fetchStats() {
-    var fileUrl= data_url +"latestNetwork_Stats.tab";
+    var fileUrl= api_url +"/latestNetworkStats";
 //console.log("Fetching Network stats from: "+ fileUrl);
-    try {
-     $.ajax({
-        url:fileUrl,
-        type: 'GET',
-        dataType: 'text',
-        async: true,
-        timeout: 1000000,
-        error: function(){						  
-        },
-        success: function(text){
-    		var resp= text.split("\n");
+     $.get(fileUrl).done(function(data){
+    		var resp= data.stats.split("\n");
                 var totalGenes= fetchValue(resp[1]);
                 var totalConcepts= fetchValue(resp[2]);
                 var totalRelations= fetchValue(resp[3]);
@@ -48,7 +39,7 @@ function fetchStats() {
                 var cc_table="Detailed breakdown:<br><table style='border-collapse: collapse;'><tr>"+
                         "<th style='border: 1px solid #dddddd; text-align: left;'>Concept Type</th>"+
                         "<th style='border: 1px solid #dddddd; text-align: left;'>count</th></tr>";
-                for(var i=11; i < resp.length-2; i++) {
+                for(var i=11; i < resp.length-3; i++) {
                     var cc= fetchValue(resp[i]).split("=");
                     cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>"+cc[0]+
                             "</td><td style='border: 1px solid #dddddd; text-align: left;'>"+cc[1]+"</td></tr>";
@@ -56,10 +47,10 @@ function fetchStats() {
                 cc_table +="</table>";
 
                 $("#network_stats").append(statsText + cc_table);
-	}
-      });
-    }
-  catch(err) { console.log("Error occurred while retrieving Network details: \n"+ err.message +"\n"+ err.stack); }
+		 }
+	 ).fail(function() {
+		console.log("Error occurred while retrieving Network details");
+	});
 }
 
  function fetchValue(valText) {

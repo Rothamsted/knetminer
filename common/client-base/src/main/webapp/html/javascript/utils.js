@@ -983,9 +983,6 @@ function getRadioValue(radio) {
 function createGenesTable(text, keyword, rows){
 var table = "";
    //     $("#loadingDiv_GeneView").css("display","block"); // notify
-    	if($("#numGenes").length){
-		rows = $("#numGenes").val();
-	}
 	var candidate_genes = text.split("\n");
 	var results = candidate_genes.length-2;
         //console.log("GeneView table entries= "+ results);
@@ -995,18 +992,18 @@ var table = "";
                 // Gene View: interactive summary legend for evidence types.
 	var interactive_summary_Legend= getInteractiveSummaryLegend(text);
                 
-		//table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-		table = table + '<p class="margin_left">Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+		table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,'+btoa(text)+'" target="_blank">Download as TAB delimited file</a><br />';
+		table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 		table = table + '<form name="checkbox_form">';
 		table = table + 'Max number of genes to show: ';
 		table = table + '<select value="'+rows+'" id="numGenes">';
 		//table = table + '<select value="'+results+'" id="numGenes">';
-                        table = table + '<option value="1000">1000</option>';
-		table = table + '<option value="500">500</option>';
-		table = table + '<option value="200">200</option>';
-		table = table + '<option value="100">100</option>';
-		table = table + '<option value="50">50</option>';
-                        table = table + '<option value="'+results+'">All ('+results+')</option>';
+                        table = table + '<option value="1000"'+(rows==1000?'selected':'')+'>1000</option>';
+		table = table + '<option value="500"'+(rows==500?'selected':'')+'>500</option>';
+		table = table + '<option value="200"'+(rows==200?'selected':'')+'>200</option>';
+		table = table + '<option value="100"'+(rows==100?'selected':'')+'>100</option>';
+		table = table + '<option value="50"'+(rows==50?'selected':'')+'>50</option>';
+                        table = table + '<option value="'+results+'"'+(rows==results?'selected':'')+'>All ('+results+')</option>';
 		table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
 		table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
@@ -1262,7 +1259,7 @@ var table = "";
 
     	$("#numGenes").change(function(e){
           //  $("#loadingDiv_GeneView").css("display","block"); // notify
-    		createGenesTable(text);	//if number of genes to show changes, redraw table.
+    		createGenesTable(text, keyword, $("#numGenes").val());	//if number of genes to show changes, redraw table.
           //  $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
         
@@ -1272,7 +1269,7 @@ var table = "";
         $("#revertGeneView").click(function(e) {
          //   $("#loadingDiv_GeneView").css("display","block"); // notify
         //    console.log("Revert Gene View... text:"+ text);
-        	createGenesTable(text); // redraw table
+        	createGenesTable(text, keyword, $("#numGenes").val()); // redraw table
          //   $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
 
