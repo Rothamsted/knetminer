@@ -713,7 +713,7 @@ public class OndexServiceProvider {
 		// 2nd step: calculate a score for each candidate gene
 		for (int geneId : mapGene2HitConcept.keySet()) {
 
-			// weighted sum of all evidence concepts
+// weighted sum of all evidence concepts
 			double weighted_evidence_sum = 0;
 
 			// iterate over each evidence concept and compute a weight that is composed of
@@ -741,7 +741,7 @@ public class OndexServiceProvider {
 
 			// normalise weighted sum with by the size of the gene knowledge graph
 			double knetScore = normFactor * weighted_evidence_sum;
-
+                        
 			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 

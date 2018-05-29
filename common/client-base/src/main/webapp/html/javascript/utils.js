@@ -1156,22 +1156,22 @@ var table = "";
 					//Shows the icons
 					var evidence_elements = evidences[count_i].split("//");
 					//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';
-                                                if(evidence_elements[0] !== "Trait") {
+                                                //if(evidence_elements[0] !== "Trait") {
 					   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                  }
+                                               /*   }
                                                 else { // For Trait, display tooltip text as GWAS instead.
 					   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="GWAS" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                  }
+                                                  }*/
 					//Builds the evidence box
 					//evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
 					evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_'+values[1].replace(".","_")+evidence_elements[0]+'></span>';
 
-                                                if(evidence_elements[0] !== "Trait") {
+                                                //if(evidence_elements[0] !== "Trait") {
 					   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
-                                                  }
+                                                /*  }
                                                 else { // For Trait, display evidence box heading as GWAS instead.
 					   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>GWAS</span></p>';
-                                                  }
+                                                  } */
 					for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
 						//link publications with pubmed
 						pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
@@ -1384,12 +1384,12 @@ function createEvidenceTable(text){
 			else
 				evidenceValue = values[1];
                                 
-			if(values[0] !== "Trait") {
+			//if(values[0] !== "Trait") {
                                   table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
-                                  }
+                                /*  }
                                 else { // For Trait, display tooltip text as GWAS instead & also sort as GWAS.
 			  table = table + '<td type-sort-value=GWAS"' + '"><div class="evidence_item evidence_item_'+values[0]+'" title="GWAS"></div></td>';
-                                 }
+                                 } */
 			table = table + '<td>'+evidenceValue+'</td>';
 			table = table + '<td>'+values[2]+'</td>';
 			//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
@@ -1450,12 +1450,12 @@ function createEvidenceTable(text){
 		//Shows the evidence summary box
 		for(key in summaryArr){
                             var contype= key.trim();
-			if (key !== "Trait") {
+			//if (key !== "Trait") {
                                     summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
-                                   }
+                                 /*  }
                                  else { // For Trait, display tooltip text as GWAS instead.
                                     summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
-                                   }
+                                   } */
 
 		}
 
