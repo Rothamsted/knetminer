@@ -28,6 +28,19 @@ import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 
+/**
+ * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
+ * instances of this abstract class simply call the constructor with appropriate values for dsName 
+ * (the name of the source, i.e. the 'X' in the /X/Y URl pattern), and the path to the config XML and
+ * semantic motifs files in the resources package (which this abstract class lacks).
+ * 
+ * TODO: Although these responses are all JSON, some of the fields include embedded XML, Javascript,
+ * tab-delimited or other formats within them as strings. In future these should be converted to
+ * pure JSON.
+ * 
+ * @author holland
+ *
+ */
 public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	private OndexServiceProvider ondexServiceProvider;

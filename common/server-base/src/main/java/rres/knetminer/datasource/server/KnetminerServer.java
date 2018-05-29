@@ -27,6 +27,14 @@ import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 
+/**
+ * KnetminerServer is a fully working server, except that it lacks any data sources. To make a server with 
+ * data sources, just add one or more JARs to the classpath which include classes that implement 
+ * KnetminerDataSourceProvider (and are in package rres.knetminer.datasource). They are detected and loaded 
+ * via autowiring. See the sister server-example project for how this is done.
+ * 
+ * @author holland
+ */
 @RestController
 @RequestMapping("/")
 public class KnetminerServer {
@@ -37,6 +45,12 @@ public class KnetminerServer {
 
 	private Map<String, KnetminerDataSource> dataSourceCache;
 
+	/**
+	 * Autowiring will populate the basic dataSources list with all instances of KnetminerDataSourceProvider.
+	 * This method is used, upon first access, to take that list and turn it into a map of URL paths
+	 * to data sources, using the getName() function of each data source to build an equivalent URL. For 
+	 * instance a data source with getName()='hello' will receive all requests matching '/hello/**'.
+	 */
 	private void buildDataSourceCache() {
 		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
 		for (KnetminerDataSource dataSource : this.dataSources) {
@@ -47,6 +61,20 @@ public class KnetminerServer {
 		}
 	}
 
+	/**
+	 * Pick up all GET requests sent to any URL matching /X/Y. X is taken to be the name of the data
+	 * source to look up by its getName() function (see above for the mapping function buildDataSourceCache().
+	 * Y is the 'mode' of the request. Spring magic automatically converts the response into JSON. We
+	 * convert the GET parameters into a KnetminerRequest object for handling by the _handle() method.
+	 * @param ds
+	 * @param mode
+	 * @param qtl
+	 * @param keyword
+	 * @param list
+	 * @param listMode
+	 * @param rawRequest
+	 * @return
+	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/{mode}")
 	public ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
@@ -69,6 +97,18 @@ public class KnetminerServer {
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
+	/**
+	 * Pick up all POST requests sent to any URL matching /X/Y. X is taken to be the name of the data
+	 * source to look up by its getName() function (see above for the mapping function buildDataSourceCache().
+	 * Y is the 'mode' of the request. Spring magic automatically converts the response into JSON. Spring magic
+	 * also automatically converts the inbound POST JSON body into a KnetminerRequest object for handling by
+	 * the _handle() method.
+	 * @param ds
+	 * @param mode
+	 * @param request
+	 * @param rawRequest
+	 * @return
+	 */
 	@CrossOrigin
 	@PostMapping("/{ds}/{mode}")
 	public ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
@@ -76,6 +116,15 @@ public class KnetminerServer {
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
+	/**
+	 * We use reflection to take the 'mode' (the Y part of the /X/Y request path) and look up an equivalent
+	 * method on the requested data source, then we call it with the request parameters passed in.
+	 * @param ds
+	 * @param mode
+	 * @param request
+	 * @param rawRequest
+	 * @return
+	 */
 	private ResponseEntity<KnetminerResponse> _handle(String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) {
 		if (this.dataSourceCache == null) {
 			this.buildDataSourceCache();
