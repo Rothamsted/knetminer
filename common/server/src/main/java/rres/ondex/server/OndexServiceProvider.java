@@ -467,6 +467,7 @@ public class OndexServiceProvider {
 
 		//boolean fileIsCreated = false;
 		boolean jsonFileIsCreated = false;
+                System.out.println("exportGraph: exportPath: "+ exportPath);
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
