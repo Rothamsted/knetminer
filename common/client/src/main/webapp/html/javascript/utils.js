@@ -160,61 +160,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target){
 }
 
 /*
- * String containing the legend for all the tables and the network view.
- *
- */
-/*var legendHtmlContainer = 	"<div id=legend_picture>" +
-								"<div id=legend_container>" +
-									"<table id=legend_frame cellspacing=1>" +
-										"<tr>" +
-											"<td align=center><img src=html/image/Gene.png></td>" +
-											"<td align=center><img src=html/image/Protein.png></td>" +
-											"<td align=center><img src=html/image/Pathway.png></td>" +
-											"<td align=center><img src=html/image/Compound.png></td>" +
-											"<td align=center><img src=html/image/Enzyme.png></td>" +
-											"<td align=center><img src=html/image/Reaction.png></td>" +
-											"<td align=center><img src=html/image/Publication.png></td>" +
-											"<td align=center><img src=html/image/Molecular_function.png></td>" +
-											//"<td align=center><img src=html/image/Disease.png></td>" +
-										"</tr><tr>" +
-											"<td align=center><font size=1.8px>Gene</font></td>" +
-											"<td align=center><font size=1.8px>Protein</font></td>" +
-											"<td align=center><font size=1.8px>Pathway</font></td>" +
-											"<td align=center><font size=1.8px>SNP</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme</font></td>" +
-											"<td align=center><font size=1.8px>Reaction</font></td>" +
-											"<td align=center><font size=1.8px>Publication</font></td>" +
-											"<td align=center><font size=1.8px>Mol. Function</font></td>" +
-											//"<td align=center><font size=1.8px>Disease</font></td>" +
-										"</tr><tr>" +
-											"<td align=center></td>" +
-										"</tr><tr>" +
-											"<td align=center><img src=html/image/Phenotype.png></td>" +
-											"<td align=center><img src=html/image/DGES.png></td>" +
-											"<td align=center><img src=html/image/Bioogical_proccess.png></td>" +
-											"<td align=center><img src=html/image/Cellular_component.png></td>" +
-											"<td align=center><img src=html/image/Protein_domain.png></td>" +
-											"<td align=center><img src=html/image/Trait_ontology.png></td>" +
-											"<td align=center><img src=html/image/Enzyme_clasification.png></td>" +
-											"<td align=center><img src=html/image/Trait.png></td>" +
-											//"<td align=center><img src=html/image/Drug.png></td>" +
-										"</tr><tr>" +
-											"<td align=center><font size=1.8px>Phenotype</font></td>" +
-											"<td align=center><font size=1.8px>DGES</font></td>" +
-											"<td align=center><font size=1.8px>Biol. Proccess</font></td>" +
-											"<td align=center><font size=1.8px>Cell. Component</font></td>" +
-											"<td align=center><font size=1.8px>Protein Domain</font></td>" +
-											"<td align=center><font size=1.8px>Trait Ontology</font></td>" +
-											"<td align=center><font size=1.8px>Enzyme Classification</font></td>" +
-											"<td align=center><font size=1.8px>GWAS</font></td>" +
-											//"<td align=center><font size=1.8px>Drug</font></td>" +
-										"</tr>" +
-									"</table>" +
-								"</div>" +
-							"</div>";*/ // DISABLED
-/*
  * Function to check the brackets in a string are balanced
- *
  */
 function bracketsAreBalanced(str) {
 	var count = 0;
@@ -1284,22 +1230,22 @@ function createGenesTable(tableUrl, keyword, rows){
 							//Shows the icons
 							var evidence_elements = evidences[count_i].split("//");
 							//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';
-                                                        if(evidence_elements[0] !== "Trait") {
+                                                        //if(evidence_elements[0] !== "Trait") {
 							   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                          }
+                                                        /*  }
                                                         else { // For Trait, display tooltip text as GWAS instead.
 							   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="GWAS" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                          }
+                                                          }*/
 							//Builds the evidence box
 							//evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
 							evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_'+values[1].replace(".","_")+evidence_elements[0]+'></span>';
 
-                                                        if(evidence_elements[0] !== "Trait") {
+                                                        //if(evidence_elements[0] !== "Trait") {
 							   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
-                                                          }
+                                                        /*  }
                                                         else { // For Trait, display evidence box heading as GWAS instead.
 							   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>GWAS</span></p>';
-                                                          }
+                                                          }*/
 							for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
 								//link publications with pubmed
 								pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
@@ -1527,12 +1473,12 @@ function createEvidenceTable(tableUrl){
 					else
 						evidenceValue = values[1];
                                         
-					if(values[0] !== "Trait") {
+					//if(values[0] !== "Trait") {
                                           table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
-                                          }
+                                        /*  }
                                         else { // For Trait, display tooltip text as GWAS instead & also sort as GWAS.
 					  table = table + '<td type-sort-value=GWAS"' + '"><div class="evidence_item evidence_item_'+values[0]+'" title="GWAS"></div></td>';
-                                         }
+                                         }*/
 					table = table + '<td>'+evidenceValue+'</td>';
 					table = table + '<td>'+values[2]+'</td>';
 					//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
@@ -1593,12 +1539,12 @@ function createEvidenceTable(tableUrl){
 				//Shows the evidence summary box
 				for(key in summaryArr){
                                     var contype= key.trim();
-					if (key !== "Trait") {
+					//if (key !== "Trait") {
                                             summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
-                                           }
+                                        /*   }
                                          else { // For Trait, display tooltip text as GWAS instead.
                                             summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
-                                           }
+                                           }*/
 
 				}
 
