@@ -467,6 +467,7 @@ public class OndexServiceProvider {
 
 		//boolean fileIsCreated = false;
 		boolean jsonFileIsCreated = false;
+                System.out.println("exportGraph: exportPath: "+ exportPath);
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
@@ -788,7 +789,7 @@ public class OndexServiceProvider {
 		// 2nd step: calculate a score for each candidate gene
 		for (int geneId : mapGene2HitConcept.keySet()) {
 
-			// weighted sum of all evidence concepts
+// weighted sum of all evidence concepts
 			double weighted_evidence_sum = 0;
 			
 			//iterate over each evidence concept and compute a weight that is composed of three components
@@ -807,15 +808,14 @@ public class OndexServiceProvider {
 				double evidence_weight = igf * luceneScore * distance;
 						
 				//sum of all evidence weights		
-				weighted_evidence_sum += evidence_weight;
+                                weighted_evidence_sum += evidence_weight;
 			}
-			
 			// the inverse size of the gene knoweldge graph 
 			double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
 			
 			//normalise weighted sum with by the size of the gene knowledge graph
-			double knetScore = normFactor * weighted_evidence_sum;
-			
+                        double knetScore = normFactor * weighted_evidence_sum;
+                        
 			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 
@@ -2925,7 +2925,7 @@ public class OndexServiceProvider {
 					Set<ONDEXConcept> concepts = path.getAllConcepts();
                                         
                                         // Extract pathLength and endNode ID.
-                                        int pathLength= (path.getLength()-1) / 2; // get Path Length
+                                        int pathLength= path.getLength(); // get Path Length
                                         ONDEXConcept con= (ONDEXConcept) path.getConceptsInPositionOrder().get(path.getConceptsInPositionOrder().size() - 1);
                                         int lastConID = con.getId(); // endNode ID.
                                         String gpl_key= String.valueOf(gene.getId()) +"//"+ String.valueOf(lastConID);
