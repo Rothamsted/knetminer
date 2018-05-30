@@ -62,10 +62,10 @@
         <script src="html/KnetMaps/javascript/knet-menu.js"></script> <!-- KnetMaps menubar -->
         <script src="html/KnetMaps/javascript/knet-stats.js"></script> <!-- Network stats -->
         <script src="html/KnetMaps/javascript/knet-container.js"></script>
-        <script src="html/KnetMaps/javascript/knet-toggleFullScreen.js"></script>
         <script src="html/KnetMaps/javascript/knet-conceptsLegend.js"></script> <!-- dynamic, interactive ConceptsLegend -->
         <script src="html/KnetMaps/javascript/knet-itemInfo.js"></script>
         <script src="html/KnetMaps/javascript/knet-generator.js"></script>
+        <script src="html/KnetMaps/javascript/knetmaps.js"></script>
         
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script> <!-- interactive summary Legend for Gene View -->

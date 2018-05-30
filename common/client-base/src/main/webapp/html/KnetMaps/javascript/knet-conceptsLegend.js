@@ -1,5 +1,13 @@
+var KNETMAPS = KNETMAPS || {};
+
+KNETMAPS.ConceptsLegend = function() {
+
+	var stats = KNETMAPS.Stats();
+	
+	var my = function() {};
+	
   // Dynamically populate interactive concept legend.
-  function populateConceptLegend() {
+  my.populateConceptLegend = function() {
       var cy= $('#cy').cytoscape('get');
       var conNodes= cy.nodes();
       var conceptTypes= []; // get a unique Array with all concept Types in current network.
@@ -58,7 +66,7 @@
 	$('#knetLegend').html(knetLegend); // update knetLegend
    }
 
- function showConnectedByType(conType) {
+  my.showConnectedByType = function(conType) {
   var cy= $('#cy').cytoscape('get');
 
   var hiddenNodes_ofSameType= cy.collection();
@@ -80,5 +88,8 @@
   // Display edges between such connected Nodes too.
   hiddenNodes_ofSameType.edgesWith(currently_visibleNodes).addClass('ShowEle').removeClass('HideEle');
 
-  updateKnetStats(); // Refresh network Stats.
+  stats.updateKnetStats(); // Refresh network Stats.
  }
+  
+  return my;
+};
