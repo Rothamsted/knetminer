@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/humanDisease_data/"; // now, using HTTP instead of HTTPS
+var api_url = "http://knetminer.rothamsted.ac.uk/humanDisease_data/"; // now, using HTTP instead of HTTPS
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/humanDisease_data/";
 //var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = "Human Disease";

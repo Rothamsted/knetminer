@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/maize_data/";
+var api_url = "http://knetminer.rothamsted.ac.uk/maize_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/maize_data/";
 //var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Maize genome';

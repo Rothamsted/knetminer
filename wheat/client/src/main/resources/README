@@ -1,3 +1,0 @@
-To deploy to new server modify at least:
-src/main/resources/config.xml
-Replace old URLs with new one.

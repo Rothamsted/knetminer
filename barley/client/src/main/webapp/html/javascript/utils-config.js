@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/barley_data/";
+var api_url = "http://knetminer.rothamsted.ac.uk/barley_data/";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/barley_data/"; // now, using HTTP instead of HTTPS
 //var data_url = "http://maize-dev.rothamsted.ac.uk/barley_data/";
 var species = 'Barley Genome';
