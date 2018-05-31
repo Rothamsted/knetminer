@@ -9,13 +9,11 @@ KNETMAPS.Menu = function() {
 	var my=function() {};
 	
  my.onHover = function(thisBtn) {
-	 var img= $(thisBtn).attr('src');
-    $(thisBtn).attr('src', img.replace('.png','_hover.png'));
+    $(thisBtn).removeClass('unhover').addClass('hover');
  }
 
  my.offHover = function(thisBtn) {
-	 var img= $(thisBtn).attr('src');
-    $(thisBtn).attr('src', img.replace('_hover.png','.png'));
+	    $(thisBtn).removeClass('hover').addClass('unhover');
  }
 
  my.popupItemInfo = function() {
@@ -183,7 +181,7 @@ KNETMAPS.Menu = function() {
    var currentEles_jsons= cy_target.elements().jsons();
    var currentStylesheet_json= cy_target.style().json(); //cy_target.style().json();
    if(!$('#knet-maps').hasClass('full_screen')) {
-      $('#maximizeOverlay').attr('src', 'html/KnetMaps/image/minimizeOverlay.png'); // toggle image
+      $('#maximizeOverlay').removeClass('max').addClass('min'); // toggle image
 	// Maximize
       $('#knet-maps').addClass('full_screen');
 
@@ -194,7 +192,7 @@ KNETMAPS.Menu = function() {
 	iteminfo.openItemInfoPane();
      }
      else {
-      $('#maximizeOverlay').attr('src', 'html/KnetMaps/image/maximizeOverlay.png'); // toggle image
+      $('#maximizeOverlay').removeClass('min').addClass('max'); // toggle image
 	// Minimize
       $('#knet-maps').removeClass('full_screen');
 

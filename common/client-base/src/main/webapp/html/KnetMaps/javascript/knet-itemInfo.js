@@ -79,7 +79,7 @@ KNETMAPS.ItemInfo = function() {
                              }
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            var dispSynonym= coname_Synonym +
-                                   ' <a><img src="html/KnetMaps/image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);" onmouseover="KNETMAPS.KnetMenu().onHover($(this));" onmouseout="KNETMAPS.KnetMenu().offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
+                                   ' <input type="submit" value="" class="knetSynonym" id="'+ synonymID +'" onclick="KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);" onmouseover="KNETMAPS.Menu().onHover($(this));" onmouseout="KNETMAPS.Menu().offHover($(this));" title="Use as concept Label"/>' +'<br/>';
                            all_concept_names= all_concept_names + dispSynonym;
                           }
                        }
@@ -165,7 +165,7 @@ KNETMAPS.ItemInfo = function() {
                               }
                             }
                         // Display concept accessions along with an eye icon to use them as preferred concept name.
-                        co_acc= co_acc +" <a><img src='html/KnetMaps/image/labelEye.png' alt='Use' id='"+ accession +"' onclick='KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);' onmouseover='KNETMAPS.KnetMenu().onHover($(this));' onmouseout='KNETMAPS.KnetMenu().offHover($(this));' title='Use as concept Label'/></a>";
+                        co_acc= co_acc +" <input type='submit' value='' class='knetSynonym' id='"+ accession +"' onclick='KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));' title='Use as concept Label'/>";
                         cell1.innerHTML= accessionID;
                         cell2.innerHTML= co_acc;
                        }

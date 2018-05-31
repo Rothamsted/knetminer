@@ -1,4 +1,7 @@
 bin/
+dist/
+node_modules/
+bower_components/
 target/
 .classpath
 .project

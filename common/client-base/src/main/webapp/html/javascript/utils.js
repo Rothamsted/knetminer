@@ -852,7 +852,7 @@ function generateCyJSNetwork(url,requestParams){
          $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
         }
     catch(err) {
-          var errorMsg= err.stack;
+        	var errorMsg= err.stack+":::"+err.name+":::"+err.message;
           console.log(errorMsg);
      	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
          }

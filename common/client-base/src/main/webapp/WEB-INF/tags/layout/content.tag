@@ -123,7 +123,7 @@
             <!-- new KnetMaps.js -->
             <div id="NetworkCanvas" class="resultViewer" style="display:none;">
                     <!-- KnetMaps -->
-                    <div id="knet-maps" class="bootstrap" style="display:none;"></div>
+                    <div id="knet-maps" style="display:none;"></div>
             </div>
         </div>
         </div>  <!-- tabviewer -->
