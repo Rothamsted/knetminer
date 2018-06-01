@@ -21,7 +21,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>exec-npm-install</id>
+						<id>exec-npm-install-genemap</id>
 						<phase>compile</phase>
 						<configuration>
 							<executable>npm</executable>
@@ -35,7 +35,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>exec-bower-install</id>
+						<id>exec-bower-install-genemap</id>
 						<phase>compile</phase>
 						<configuration>
 							<executable>bower</executable>
@@ -49,7 +49,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>exec-gulp-clean</id>
+						<id>exec-gulp-clean-genemap</id>
 						<phase>compile</phase>
 						<configuration>
 							<executable>gulp</executable>
@@ -63,7 +63,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>exec-gulp-optimise</id>
+						<id>exec-gulp-optimise-genemap</id>
 						<phase>compile</phase>
 						<configuration>
 							<executable>gulp</executable>
@@ -71,6 +71,48 @@
 								<argument>optimise</argument>
 							</arguments>
 							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>exec-npm-install-knetmaps</id>
+						<phase>compile</phase>
+						<configuration>
+							<executable>npm</executable>
+							<arguments>
+								<argument>install</argument>
+							</arguments>
+							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>exec-gulp-clean-knetmaps</id>
+						<phase>compile</phase>
+						<configuration>
+							<executable>gulp</executable>
+							<arguments>
+								<argument>clean-dist</argument>
+							</arguments>
+							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>exec-gulp-optimise-knetmaps</id>
+						<phase>compile</phase>
+						<configuration>
+							<executable>gulp</executable>
+							<arguments>
+								<argument>optimise</argument>
+							</arguments>
+							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
 						</configuration>
 						<goals>
 							<goal>exec</goal>
@@ -88,7 +130,7 @@
 						html/GeneView/**,
 						html/image/**,
 						html/javascript/**,
-						html/KnetMaps/**,
+						html/KnetMaps/dist/**,
 						WEB-INF/**
 					</packagingIncludes>
 				</configuration>

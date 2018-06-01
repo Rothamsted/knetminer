@@ -1,7 +1,17 @@
-function load_reload_Network(network_json, network_style) {
+var KNETMAPS = KNETMAPS || {};
+
+KNETMAPS.Container = function() {
+	
+
+	var stats = KNETMAPS.Stats();
+	var iteminfo = KNETMAPS.ItemInfo();
+
+	var my = function() {};
+	
+my.load_reload_Network = function(network_json, network_style) {
 
 // Initialise a cytoscape container instance on the HTML DOM using JQuery.
-$('#cy').cytoscape({
+var cy = cytoscape({
   container: document.getElementById('cy')/*$('#cy')*/,
   style: network_style,
   // Using the JSON data to create the nodes.
@@ -44,13 +54,13 @@ $('#cy').cytoscape({
   motionBlur: true,
 
   ready: function() {
-      rerunLayout(); // reset current layout.
+	  KNETMAPS.Menu().rerunLayout(); // reset current layout.
    window.cy= this;
   }
 });
 
 // Get the cytoscape instance as a Javascript object from JQuery.
-var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+//var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
 // cy.boxSelectionEnabled(true); // enable box selection (highlight & select multiple elements for moving via mouse click and drag).
 cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning, i.e., dragging the entire graph.
@@ -173,7 +183,7 @@ cy.elements().qtip({
       }
       catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
     console.log(info);
-    showItemInfo(thisElement);
+    iteminfo.showItemInfo(thisElement);
    });
 // cxttap - normalised right click or 2-finger tap event.
 
@@ -191,10 +201,10 @@ cy.elements().qtip({
          content: 'Show Info',
          select: function() {
              // Show Item Info Pane.
-             openItemInfoPane();
+        	 iteminfo.openItemInfoPane();
 
              // Display Item Info.
-             showItemInfo(this);
+        	 iteminfo.showItemInfo(this);
             }
         },
             
@@ -202,9 +212,9 @@ cy.elements().qtip({
          content: 'Show Links',
          select: function() {
              if(this.isNode()) {
-                showLinks(this);
+            	 iteminfo.showLinks(this);
                 // Refresh network legend.
-                updateKnetStats();
+                stats.updateKnetStats();
                }
            }
         },
@@ -216,7 +226,7 @@ cy.elements().qtip({
              this.removeClass('ShowEle');
              this.addClass('HideEle');
              // Refresh network legend.
-             updateKnetStats();
+             stats.updateKnetStats();
             }
         },
 
@@ -250,7 +260,7 @@ cy.elements().qtip({
                // rerunLayout();
                }
             // Refresh network Stats.
-            updateKnetStats();
+            stats.updateKnetStats();
            }
         },
 
@@ -327,3 +337,6 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
   });
 
 }
+
+return my;
+};

@@ -1,5 +1,11 @@
-  // Refresh network stats, whenever nodes are hidden individually or in group or in case of "Show All" or "Show Links".
-  function updateKnetStats() {
+var KNETMAPS = KNETMAPS || {};
+
+KNETMAPS.Stats = function() {
+
+	var my = function() {};
+	
+	// Refresh network stats, whenever nodes are hidden individually or in group or in case of "Show All" or "Show Links".
+  my.updateKnetStats = function() {
 	var cy= $('#cy').cytoscape('get');
 	var totalNodes= cy.nodes().size();
 	var nodes_shown= cy.$(':visible').nodes().size();
@@ -11,3 +17,6 @@
 
 	$('#statsLegend span').text(cyLegend); // update
    }
+  
+  return my;
+};
