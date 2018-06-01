@@ -467,6 +467,7 @@ public class OndexServiceProvider {
 
 		//boolean fileIsCreated = false;
 		boolean jsonFileIsCreated = false;
+                System.out.println("exportGraph: exportPath: "+ exportPath);
 
 		// Unconnected filter
 		Filter uFilter = new Filter();
@@ -768,7 +769,6 @@ public class OndexServiceProvider {
 		System.out.println("total hits from lucene: " + hit2score.keySet().size());
 
 		// 1st step: create map of genes to concepts that contain query terms
-		// (keywords)
 		mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
 		for (ONDEXConcept c : hit2score.keySet()) {
 
@@ -789,26 +789,33 @@ public class OndexServiceProvider {
 		// 2nd step: calculate a score for each candidate gene
 		for (int geneId : mapGene2HitConcept.keySet()) {
 
-			// implementing an analogous score to tf-idf used in information
-			// retrieval
-			// reflects how important a term is to a gene in a collection
-			// (genome)
-
-                    // KnetScore, calculated using IGF & EDF.
-			// term document frequency
-			double normFactor = (double) /*mapGene2HitConcept.get(geneId).size() */ 1 / (double) mapGene2Concepts.get(geneId).size();
-
-			// inverse document frequency
+// weighted sum of all evidence concepts
 			double weighted_evidence_sum = 0;
+			
+			//iterate over each evidence concept and compute a weight that is composed of three components
 			for (int cId : mapGene2HitConcept.get(geneId)) {
-				// use a weight that is the initial lucene tf-idf score of hit
-				// concept
+				
+				//relevance of search term to concept
 				float luceneScore = hit2score.get(graph.getConcept(cId));
-				weighted_evidence_sum += Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size()) * luceneScore;
+				
+				//specificity of evidence to gene
+				double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
+				
+				//inverse distance from gene to evidence
+				int distance = 1 / mapGene2PathLength.get(geneId+"//"+cId); 
+				
+				//multiply all three components to obtain a single evidence weight 
+				double evidence_weight = igf * luceneScore * distance;
+						
+				//sum of all evidence weights		
+                                weighted_evidence_sum += evidence_weight;
 			}
-			// take the mean of all idf scores
-			// idf = idf / mapGene2HitConcept.get(geneId).size();
-			double knetScore = normFactor * weighted_evidence_sum;
+			// the inverse size of the gene knoweldge graph 
+			double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+			
+			//normalise weighted sum with by the size of the gene knowledge graph
+                        double knetScore = normFactor * weighted_evidence_sum;
+                        
 			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 
