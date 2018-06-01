@@ -1,4 +1,4 @@
-var data_url = "http://knetminer.rothamsted.ac.uk/sol_data/";
+var api_url = "http://knetminer.rothamsted.ac.uk/sol_data/";
 //var data_url = "http://maize-dev.rothamsted.ac.uk/sol_data/"; // test on maize-dev
 //var applet_url = "https://ondex.rothamsted.ac.uk/OndexWebBeta/";
 var species = 'Tomato Genome';
