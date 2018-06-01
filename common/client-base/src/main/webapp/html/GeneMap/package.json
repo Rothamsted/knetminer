@@ -7,7 +7,10 @@
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bower": "^1.8.4",
+    "jquery": "^3.3.1"
+  },
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.1",
@@ -33,7 +36,7 @@
     "jshint-stylish": "^2.1.0",
     "run-sequence": "^1.1.5",
     "wiredep": "^3.0.0",
-    "yargs": "^4.1.0"
+    "yargs": "^4.8.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
