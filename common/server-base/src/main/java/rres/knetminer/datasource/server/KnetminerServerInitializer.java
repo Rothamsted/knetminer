@@ -2,6 +2,10 @@ package rres.knetminer.datasource.server;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+/**
+ * Placeholder class that helps Spring set things up properly. Do not change.
+ * @author holland
+ */
 public class KnetminerServerInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	@Override
 	protected Class<?>[] getRootConfigClasses() {

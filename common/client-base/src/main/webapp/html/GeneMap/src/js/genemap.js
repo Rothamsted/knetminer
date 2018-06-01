@@ -435,15 +435,15 @@ GENEMAP.GeneMap = function (userConfig) {
         // Use list='' from url (link) instead of gene label.
         var geneURI= gene.link;
         var geneLink= geneURI.substring(geneURI.indexOf("list="), geneURI.length).split("=")[1];
-        return /*gene.label*/geneLink; }) ; }
+        return /*gene.label*/decodeURIComponent(geneLink.replace(/\+/g, ' ')); }) ; }
     ) );
 
-    var url = config.apiUrl+'/network?keyword='+$('#keywords').val();
+    var url = config.apiUrl+'/network';
     //console.log("GeneMap: Launch Network for url: "+ url);
     //console.log("selectedLabels: "+ selectedLabels);
 
     log.info('selected labels: ' + selectedLabels);
-    generateCyJSNetwork(url, { list: selectedLabels.join('\n') });
+    generateCyJSNetwork(url, { list: selectedLabels, keyword: $('#keywords').val() });
   };
 
   // toggle the global label visibility, from 'auto', to 'show' and to 'hide'

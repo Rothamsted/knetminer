@@ -2,6 +2,9 @@ package rres.knetminer.datasource.ondexlocal;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,35 +23,54 @@ import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
+import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 
+/**
+ * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
+ * instances of this abstract class simply call the constructor with appropriate values for dsName 
+ * (the name of the source, i.e. the 'X' in the /X/Y URl pattern), and the path to the config XML and
+ * semantic motifs files in the resources package (which this abstract class lacks).
+ * 
+ * TODO: Although these responses are all JSON, some of the fields include embedded XML, Javascript,
+ * tab-delimited or other formats within them as strings. In future these should be converted to
+ * pure JSON.
+ * 
+ * @author holland
+ *
+ */
 public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	private OndexServiceProvider ondexServiceProvider;
+	
+	private Properties props = new Properties();
+	
+	public String getProperty(String key) {
+		return this.props.getProperty(key);
+	}
 
 	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
 		this.setDataSourceNames(new String[] {dsName});
-
-		Properties props = new Properties();
+		
 		// Config.xml is provided by the implementing abstract class in its
 		// src/main/resources folder
 		URL configUrl = Thread.currentThread().getContextClassLoader().getResource(configXmlPath);
 		try {
-			props.loadFromXML(configUrl.openStream());
+			this.props.loadFromXML(configUrl.openStream());
 		} catch (IOException e) {
 			throw new Error(e);
 		}
 		this.ondexServiceProvider = new OndexServiceProvider();
-		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(props.getProperty("reference_genome")));
+		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(this.getProperty("reference_genome")));
 		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
-		this.ondexServiceProvider.setTaxId(Arrays.asList(props.getProperty("SpeciesTaxId").split(",")));
+		this.ondexServiceProvider.setTaxId(Arrays.asList(this.getProperty("SpeciesTaxId").split(",")));
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
-		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(props.getProperty("export_visible_network")));
+		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
 		try {
-			this.ondexServiceProvider.createGraph(props.getProperty("DataPath"), props.getProperty("DataFile"),
+			this.ondexServiceProvider.createGraph(this.getProperty("DataPath"), this.getProperty("DataFile"),
 					semanticMotifsPath);
 		} catch (Exception e) {
 			log.error("Failed to create Ondex graph", e);
@@ -130,7 +152,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
-				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(genes, userGenes, request.getQtl(),
+				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
 				log.debug("1.) Gviewer annotation ");
 			} else {
@@ -206,6 +228,18 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
+		return response;
+	}
+	
+	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+		LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
+		try {
+			byte[] encoded = Files.readAllBytes(Paths.get(this.getProperty("DataPath"), "latestNetwork_Stats.tab"));
+			response.stats = new String(encoded, Charset.defaultCharset());
+		} catch (IOException ex) {
+	    	log.error(ex);
+	    	throw new Error(ex); 
+	    }
 		return response;
 	}
 }

@@ -14,10 +14,11 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -501,6 +502,9 @@ public class OndexServiceProvider {
 	 */
 	private String createsNotList(String keyword) {
 		String result = "";
+		if (keyword==null) {
+			keyword="";
+		}
 
 		keyword = keyword.replace("(", "");
 		keyword = keyword.replace(")", "");
@@ -709,7 +713,7 @@ public class OndexServiceProvider {
 		// 2nd step: calculate a score for each candidate gene
 		for (int geneId : mapGene2HitConcept.keySet()) {
 
-			// weighted sum of all evidence concepts
+// weighted sum of all evidence concepts
 			double weighted_evidence_sum = 0;
 
 			// iterate over each evidence concept and compute a weight that is composed of
@@ -737,7 +741,7 @@ public class OndexServiceProvider {
 
 			// normalise weighted sum with by the size of the gene knowledge graph
 			double knetScore = normFactor * weighted_evidence_sum;
-
+                        
 			scoredCandidates.put(graph.getConcept(geneId), knetScore);
 		}
 
@@ -1446,7 +1450,7 @@ public class OndexServiceProvider {
 	 * @param keyword
 	 *            user-specified keyword
 	 */
-	public String writeAnnotationXML(ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
+	public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
 			String keyword, int maxGenes, Hits hits, String listMode) {
 		List<QTL> userQtl = new ArrayList<QTL>();
 		for (String qtlStr : userQtlStr) {
@@ -1548,8 +1552,14 @@ public class OndexServiceProvider {
 			// String query = "mode=network&keyword=" + keyword+"&list="+name;
 			// Replace '&' with '&amp;' to make it comptaible with the new
 			// d3.js-based Map View.
-			String query = "mode=network&amp;keyword=" + keyword + "&amp;list=" + name;
-			String uri = "OndexServlet?" + query;
+			String query;
+			try {
+				query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;list=" + URLEncoder.encode(name, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				log.error(e);
+				throw new Error(e);
+			}
+			String uri = api_url + "/network?" + query;
 
 			// Genes
 			sb.append("<feature id=\"" + id + "\">\n");
@@ -1680,8 +1690,14 @@ public class OndexServiceProvider {
 			// keyword+"&qtl1="+chrLatin+":"+start+":"+end;
 			// Replace '&' with '&amp;' to make it comptaible with the new
 			// d3.js-based Map View.
-			String query = "mode=network&amp;keyword=" + keyword + "&amp;qtl1=" + chr + ":" + start + ":" + end;
-			String uri = "OndexServlet?" + query;
+			String query;
+			try {
+				query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
+			} catch (UnsupportedEncodingException e) {
+				log.error(e);
+				throw new Error(e);
+			}
+			String uri = api_url +"/network?" + query;
 
 			sb.append("<feature>\n");
 			sb.append("<chromosome>" + chr + "</chromosome>\n");

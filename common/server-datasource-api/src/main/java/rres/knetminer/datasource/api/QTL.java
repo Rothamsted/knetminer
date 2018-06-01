@@ -1,5 +1,14 @@
 package rres.knetminer.datasource.api;
 
+/**
+ * Represents a QTL in a structured form.
+ * 
+ * TODO: Future versions should incorporate additional elements of the QTL concept into the toString and
+ * fromString methods.
+ * 
+ * @author holland
+ *
+ */
 public class QTL {
 	public String type;
 	public String chromosome;

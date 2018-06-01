@@ -983,9 +983,6 @@ function getRadioValue(radio) {
 function createGenesTable(text, keyword, rows){
 var table = "";
    //     $("#loadingDiv_GeneView").css("display","block"); // notify
-    	if($("#numGenes").length){
-		rows = $("#numGenes").val();
-	}
 	var candidate_genes = text.split("\n");
 	var results = candidate_genes.length-2;
         //console.log("GeneView table entries= "+ results);
@@ -995,18 +992,18 @@ var table = "";
                 // Gene View: interactive summary legend for evidence types.
 	var interactive_summary_Legend= getInteractiveSummaryLegend(text);
                 
-		//table = table + '<p class="margin_left"><a href="'+tableUrl+'" target="_blank">Download as TAB delimited file</a><br />';
-		table = table + '<p class="margin_left">Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+		table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,'+btoa(text)+'" target="_blank">Download as TAB delimited file</a><br />';
+		table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 		table = table + '<form name="checkbox_form">';
 		table = table + 'Max number of genes to show: ';
 		table = table + '<select value="'+rows+'" id="numGenes">';
 		//table = table + '<select value="'+results+'" id="numGenes">';
-                        table = table + '<option value="1000">1000</option>';
-		table = table + '<option value="500">500</option>';
-		table = table + '<option value="200">200</option>';
-		table = table + '<option value="100">100</option>';
-		table = table + '<option value="50">50</option>';
-                        table = table + '<option value="'+results+'">All ('+results+')</option>';
+                        table = table + '<option value="1000"'+(rows==1000?'selected':'')+'>1000</option>';
+		table = table + '<option value="500"'+(rows==500?'selected':'')+'>500</option>';
+		table = table + '<option value="200"'+(rows==200?'selected':'')+'>200</option>';
+		table = table + '<option value="100"'+(rows==100?'selected':'')+'>100</option>';
+		table = table + '<option value="50"'+(rows==50?'selected':'')+'>50</option>';
+                        table = table + '<option value="'+results+'"'+(rows==results?'selected':'')+'>All ('+results+')</option>';
 		table = table + '<select>';
 //				table = table + '<div id="selectUser"><input type="checkbox" name="chkusr" />Select All Targets</div>';
 		table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />'+
@@ -1159,22 +1156,22 @@ var table = "";
 					//Shows the icons
 					var evidence_elements = evidences[count_i].split("//");
 					//evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideDown(300);" style="cursor:pointer;">'+((evidence_elements.length)-1)+'</span>';
-                                                if(evidence_elements[0] !== "Trait") {
+                                                //if(evidence_elements[0] !== "Trait") {
 					   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="'+evidence_elements[0]+'" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                  }
+                                               /*   }
                                                 else { // For Trait, display tooltip text as GWAS instead.
 					   evidence = evidence+'<div class="evidence_item evidence_item_'+evidence_elements[0]+'" title="GWAS" ><span class="dropdown_box_open" id="evidence_box_open_'+values[1].replace(".","_")+evidence_elements[0]+'">'+((evidence_elements.length)-1)+'</span>';
-                                                  }
+                                                  }*/
 					//Builds the evidence box
 					//evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box" style="display:none"><a class="evidence_box_close" href="javascript:;" onclick="$(\'#evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'\').slideUp(100);"></a>';
 					evidence = evidence+'<div id="evidence_box_'+values[1].replace(".","_")+evidence_elements[0]+'" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_'+values[1].replace(".","_")+evidence_elements[0]+'></span>';
 
-                                                if(evidence_elements[0] !== "Trait") {
+                                                //if(evidence_elements[0] !== "Trait") {
 					   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>'+evidence_elements[0]+'</span></p>';
-                                                  }
+                                                /*  }
                                                 else { // For Trait, display evidence box heading as GWAS instead.
 					   evidence = evidence+'<p><div class="evidence_item evidence_item_'+evidence_elements[0]+'"></div> <span>GWAS</span></p>';
-                                                  }
+                                                  } */
 					for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
 						//link publications with pubmed
 						pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
@@ -1262,7 +1259,7 @@ var table = "";
 
     	$("#numGenes").change(function(e){
           //  $("#loadingDiv_GeneView").css("display","block"); // notify
-    		createGenesTable(text);	//if number of genes to show changes, redraw table.
+    		createGenesTable(text, keyword, $("#numGenes").val());	//if number of genes to show changes, redraw table.
           //  $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
         
@@ -1272,7 +1269,7 @@ var table = "";
         $("#revertGeneView").click(function(e) {
          //   $("#loadingDiv_GeneView").css("display","block"); // notify
         //    console.log("Revert Gene View... text:"+ text);
-        	createGenesTable(text); // redraw table
+        	createGenesTable(text, keyword, $("#numGenes").val()); // redraw table
          //   $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
 
@@ -1387,12 +1384,12 @@ function createEvidenceTable(text){
 			else
 				evidenceValue = values[1];
                                 
-			if(values[0] !== "Trait") {
+			//if(values[0] !== "Trait") {
                                   table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_'+values[0]+'" title="'+values[0]+'"></div></td>';
-                                  }
+                                /*  }
                                 else { // For Trait, display tooltip text as GWAS instead & also sort as GWAS.
 			  table = table + '<td type-sort-value=GWAS"' + '"><div class="evidence_item evidence_item_'+values[0]+'" title="GWAS"></div></td>';
-                                 }
+                                 } */
 			table = table + '<td>'+evidenceValue+'</td>';
 			table = table + '<td>'+values[2]+'</td>';
 			//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
@@ -1453,12 +1450,12 @@ function createEvidenceTable(text){
 		//Shows the evidence summary box
 		for(key in summaryArr){
                             var contype= key.trim();
-			if (key !== "Trait") {
+			//if (key !== "Trait") {
                                     summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
-                                   }
+                                 /*  }
                                  else { // For Trait, display tooltip text as GWAS instead.
                                     summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
-                                   }
+                                   } */
 
 		}
 

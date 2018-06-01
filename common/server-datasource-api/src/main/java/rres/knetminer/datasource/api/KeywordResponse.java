@@ -1,5 +1,11 @@
 package rres.knetminer.datasource.api;
 
+/**
+ * Contains elements that are common to both NetworkResponse and GenomeResponse, hence it is abstract.
+ * 
+ * @author holland
+ *
+ */
 public abstract class KeywordResponse extends KnetminerResponse {
 	private String GViewer;
 	private String geneTable;

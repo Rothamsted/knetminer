@@ -35,6 +35,8 @@ function initializeNetworkView() {
 
 // initialize the network
 function initializeNetworkView(networkJSON, metadataJSON) {
+	graphJSON = networkJSON;
+	allGraphData = metadataJSON;
    // modify for networkJSON to read JSON object from file and retain contents from "elements" section for nodes and edges info.
 //   var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
 

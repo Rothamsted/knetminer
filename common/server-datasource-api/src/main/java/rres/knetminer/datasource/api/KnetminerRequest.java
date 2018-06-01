@@ -3,6 +3,13 @@ package rres.knetminer.datasource.api;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * All possible inputs to a Knetminer server request, with appropriate defaults set for all. This is the 
+ * set of all possible inputs for all possible 'mode's.
+ * 
+ * @author holland
+ *
+ */
 public class KnetminerRequest {
 	private List<String> qtl = new ArrayList<String>();
 	private String keyword = "";

@@ -1,9 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;

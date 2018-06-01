@@ -9,3 +9,4 @@ stdout.log
 .vagrant/
 common/client/nb-configuration.xml
 *.oxl
+package-lock.json
