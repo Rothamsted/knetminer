@@ -6,6 +6,8 @@ target/
 .classpath
 .project
 .settings
+node_modules
+dist/
 stderr.log
 stdout.log
 *swp
