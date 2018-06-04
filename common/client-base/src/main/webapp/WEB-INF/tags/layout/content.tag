@@ -7,7 +7,7 @@
 
 <div id="content">
 	<div id="search">
-		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()">
+		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()" accept-charset="UTF-8">
 			<ul id="main_list">
 				<li>
                                     <!-- Sample Queries -->
@@ -129,4 +129,3 @@
         </div>  <!-- tabviewer -->
     </div>  <!-- content -->
 </div>
-

@@ -2,38 +2,62 @@
 
 **KnetMaps** is a web application that uses cytoscapeJS, jQuery and other javascript libraries to visualize network graphs and allow users to interact with them. It accepts a JSON dataset from the user as input and visualizes it within a container on your web page.
 
-### KnetMaps components
+### **KnetMaps** components
 
 * Menubar: A menubar that combines a host of useful features to filter, toggle, re-layout, export and interact with the network
 * cytoscapeJS container: A core cytoscapeJS container to visualize animated, inter-connected nodes and edges as a network graph.
 * ItemInfo: A sliding overlay panel to display additional (optional) metadata associated with nodes and edges.
 * Counts legend: A nifty legend to list the number of total and visible nodes (and edges) within the currently visualized network.
 
-### Using KnetMaps in your web application
+## Using **KnetMaps** in your web application
 
-A simple way to have **KnetMaps** on your web application (hosted via Apache, Tomcat, etc) is shown in `index.html`, i.e., using the code snippet below. This code in the `<body>` of the `index.html` page will create the KnetMaps menubar, the cytoscapeJS core container, ItemInfo panel and a counts legend:
+**KnetMaps** is a self-contained JavaScript application. It must be configured and then compiled before deployment (see `QuickStart_Guide.md`). It must be loaded in the page headers, along with its dependencies and stylesheets, before it can be used in your application:
 ```
-<!-- KnetMaps -->
-    <div id="knet-maps">
-	    <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
-		<div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info pane -->
-		    <table id="itemInfo_Table" class="infoTable" cellspacing=1><thead><th>Info box:</th>
-			    <th><input type="image" id="btnCloseItemInfoPane" src="image/close-icon.png" onClick="closeItemInfoPane();"></th>
-	    </thead><tbody></tbody></table></div>
-		<div id="cy"></div> <!-- cytoscapeJS container -->
-		<!-- interactive Legend to show all concepts in current network -->
-		<div id="knetLegend" title="Hover over icons to see corresponding Concept type & click an icon to show all such Concepts connected to visible Concepts in this network"><span>Concepts:</span></div>
-		<!-- dynamically updated Stats to show number of shown/ hidden concepts -->
-		<div id="statsLegend" style="width: 350px; margin: auto;"><span>KnetMaps</span></div>
-		<div id="infoDialog"></div> <!-- popup dialog -->
-    </div>
+    <link href="css/knetmaps.css" rel="stylesheet" /> <!-- KnetMaps stylesheet -->
+    <script src="js/knetmaps-lib.min.js"></script> <!-- KnetMaps dependencies -->
+    <script src="js/knetmaps.min.js"></script> <!-- KnetMaps source code -->    
 ```
 
-In the example page: `index.html`, KnetMaps is launched by default when the page loads using a dataset selected from the dropdown menu and is later invoked whenever users select a new dataset to visualize from the dropdown menu (invoked via the `onchange` event of the dropdown menu). The `launchNetwork(datasetName)` method in `launchNetwork.js` populates the menubar, loads the JSON dataset object and initializes the cytoscapeJS container.
+**Note:** If you have already loaded JQuery elsewhere on your page, please include the `knetmaps-lib-nojquery.min.js` file instead.
+
+Once loaded, it can be drawn anywhere on the page, even multiple times, by calling:
+```
+    <div id="knet-maps"/>
+    <script type="text/javascript">
+        graphJSON = ''; // Put your graph JSON in here (see below)
+        KNETMAPS.KnetMaps().draw('#knet-maps');
+    </script>
+```
+
+The `<div>` tag can have any ID that you want, as long as it matches the one passed to `draw()`. 
+
+The example above uses a static `graphJSON` graph defined in the page itself (see below for what it should look like). Or, you can load it dynamically, e.g. from KnetMiner, and use `drawRaw()` instead (using the `post()` function from the JQuery library loaded as part of **KnetMaps**):
+```
+    <div id="knet-maps"/>
+    <script type="text/javascript">
+		$.post({
+	            <!—network query -->
+			    url: 'http://my.server:8080/server-example/arabidopsis/network',
+			    headers: {
+			        "Accept": "application/json; charset=utf-8",
+			        "Content-Type": "application/json; charset=utf-8"
+			        },
+			    datatype: "json",
+			    data: JSON.stringify({
+			        // These are the search params to the /network call
+			        keyword: 'keyword OR otherword',   
+			        list: ['candidate1','candidate2','etc...']
+			        })
+		   }).success(function(data) {
+		       <!—rendered in KnetMaps -->
+			   KNETMAPS.KnetMaps().draw(‘#knet-maps’, data.graph); 
+		   });      
+    </script>
+```
 
 ### Input JSON Dataset
 
-To use **KnetMaps** out-of-the-box in your web application, all you need to provide is a JSON dataset (with a nested JSON syntax as shown below) containing information about the nodes and edges in the network and (optional) visual attributes for them:
+To use **KnetMaps** out-of-the-box in your web application, all you need to provide is a JSON dataset (with a nested JSON syntax as shown below) containing information about the nodes and edges in the network and (optional) visual attributes for them. This is exactly the same format (including the `var` declaration and the variable name) that must be passed to `drawRaw()` if using a third party source to download the graph:
 ```
 var graphJSON= { "nodes": [
         { "data": { "id": "1", "conceptType": "Gene", "flagged": "true", "conceptColor": "lightBlue", "annotation": "", "conceptSize": "26px", "value": "c1", "pid": "c1", "conceptDisplay": "element", "conceptShape": "triangle"} , "group": "nodes"} , 
@@ -65,9 +89,11 @@ For **KnetMaps** used in QTLNetMiner, we use a few additional visual attributes 
 
 In QTLNetMiner, the dataset generated also provides an additional JSON object: ```var allGraphData``` that provides additional metadata about nodes (synonyms, accessions, evidences) and edges (scores for weighted edges, e.g, p-value, BLAST scores, etc). This information is displayed in a sliding overlay panel called **ItemInfo** when a node or edge is clicked within the network.
 
+## Internal workings
+
 ### Initializing the network
 
-The network initialization and rendering code is done in `knet-container.js` and `knet-generator.js`. The network is first invoked via the `generateNetworkGraph(jsonFile)` method within `knet-generator.js`. This method is provided with the server-side path/ url to the file and it reads the file's contents via a JQuery `.getScript()` and callback function before invoking the `initializeNetworkView()` method which defines the dataset and stylesheet for the network as shown below:
+The network initialization and rendering code is done in `knet-container.js` and `knet-generator.js`. The network is first invoked via the `generateNetworkGraph()` method within `knet-generator.js`. This method is provided with the server-side path/ url to the file and it reads the file's contents via a JQuery `.getScript()` and callback function before invoking the `initializeNetworkView()` method which defines the dataset and stylesheet for the network as shown below:
 ```
 function initializeNetworkView() {
    var networkJSON= graphJSON; // JSON dataset
