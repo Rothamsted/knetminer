@@ -847,7 +847,7 @@ function generateCyJSNetwork(url,requestParams){
     //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     try {
         activateButton('NetworkCanvas');
-    	knetmaps.draw('#knet-maps', data.graph);
+    	knetmaps.drawRaw('#knet-maps', data.graph);
          // Remove the preloader message in Gene View, for the Network Viewer
          $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
         }

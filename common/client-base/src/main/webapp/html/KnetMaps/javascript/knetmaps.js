@@ -71,11 +71,19 @@ KNETMAPS.KnetMaps = function() {
 
 	// Exposed API
 
-	my.draw = function(target, graph) {
+	my.drawRaw = function(target, graph) {
 		drawDiv(target);
 		showDiv(target);
 		maskloader.showNetworkLoader(target);
 		generator.generateNetworkGraphRaw(graph);
+		maskloader.removeNetworkLoader(target);
+	};
+
+	my.draw = function(target) {
+		drawDiv(target);
+		showDiv(target);
+		maskloader.showNetworkLoader(target);
+		generator.generateNetworkGraph();
 		maskloader.removeNetworkLoader(target);
 	};
 

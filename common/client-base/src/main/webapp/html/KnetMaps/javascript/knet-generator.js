@@ -1,4 +1,6 @@
 var KNETMAPS = KNETMAPS || {};
+var graphJSON = graphJSON  || '';
+var allGraphData = allGraphData || '';
 
 KNETMAPS.Generator = function() {
 
@@ -9,16 +11,13 @@ KNETMAPS.Generator = function() {
 
 	var my = function() {};
 	
-	// initialize and generate the network
- my.generateNetworkGraph=function(json_File) {
+	// initialize and generate the network from default global vars
+ my.generateNetworkGraph=function() {
    //console.log("Dataset file path: "+ json_File);
 
-    // Include this file's contents on the page at runtime using jQuery and a callback function.
-/*   $.getScript(json_File, function() {*/
-   jQuery.getScript(json_File, function() {
-//     console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
-	   my.initializeNetworkView();
+	 // NB graphJSON and allGraphData should be declared outside this script
+	   my.initializeNetworkView(graphJSON, allGraphData);
 
      // Highlight nodes with hidden, connected nodes using Shadowing.
 	   my.blurNodesWithHiddenNeighborhood();
@@ -30,19 +29,13 @@ KNETMAPS.Generator = function() {
 
      // dynamically populate interactive concept legend.
      legend.populateConceptLegend();
-   });
   }
 
-//initialize and generate the network
+//initialize and generate the network from provided JSON blob
  my.generateNetworkGraphRaw=function(json_blob) {
    //console.log("Dataset file path: "+ json_File);
 	eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
   }
-
-//initialize the network
- my.initializeNetworkView=function() {
-	return my.initializeNetworkViewFromJson(graphJSON, allGraphData); // using the dynamically included graphJSON and allGraphData objects directly.
-}
 
 // initialize the network
  my.initializeNetworkView=function(networkJSON, metadataJSON) {
