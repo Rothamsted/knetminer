@@ -59,7 +59,7 @@ KNETMAPS.ConceptsLegend = function() {
 	  else if(conText === "Protein Domain") {
 		  conText= "Domain";
 		 }
-          knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="submit" value="" id="'+ con +'" title="Show All '+ con +'(s)" class="knetCon_'+con.replace(/ /g,'_')+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ 
+          knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="submit" value="" id="'+ con +'" title="Show All '+ con +'(s)" class="knetCon_'+con.replace(/ /g,'_')+'" style="vertical-align:middle" onclick="KNETMAPS.ConceptsLegend().showConnectedByType(this.id);">'+ 
 		                conceptsHashmap[con] +'<span class="icon_caption">'+ conText +'</span></div>';
          }
         knetLegend= knetLegend +'</div></div>';
