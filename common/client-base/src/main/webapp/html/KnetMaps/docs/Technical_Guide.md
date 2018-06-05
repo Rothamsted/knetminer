@@ -33,25 +33,26 @@ The `<div>` tag can have any ID that you want, as long as it matches the one pas
 
 The example above uses a static `graphJSON` graph defined in the page itself (see below for what it should look like). Or, you can load it dynamically, e.g. from KnetMiner, and use `drawRaw()` instead (using the `post()` function from the JQuery library loaded as part of **KnetMaps**):
 ```
-    <div id="knet-maps"/>
+    <div id="knetmap"/>
     <script type="text/javascript">
-		$.post({
-	            <!—network query -->
-			    url: 'http://my.server:8080/server-example/arabidopsis/network',
-			    headers: {
-			        "Accept": "application/json; charset=utf-8",
-			        "Content-Type": "application/json; charset=utf-8"
-			        },
-			    datatype: "json",
-			    data: JSON.stringify({
-			        // These are the search params to the /network call
-			        keyword: 'keyword OR otherword',   
-			        list: ['candidate1','candidate2','etc...']
-			        })
+		$.ajax({
+           <!—network query -->
+		   url: "http://my.server:8080/server-example/arabidopsis/network",
+		   type: "post",
+		   headers: {
+		       "Accept": "application/json; charset=utf-8",
+		       "Content-Type": "application/json; charset=utf-8"
+		       },
+		   dataType: "json",
+		   data: JSON.stringify({
+		       // These are the search params to the /network call
+		       keyword: "keyword OR otherword",
+		       list: ["candidate1","candidate2","etc..."]
+		       })
 		   }).success(function(data) {
-		       <!—rendered in KnetMaps -->
-			   KNETMAPS.KnetMaps().draw(‘#knet-maps’, data.graph); 
-		   });      
+		      <!—rendered in KnetMaps -->
+		      KNETMAPS.KnetMaps().drawRaw("#knetmap", data.graph);
+		   });    
     </script>
 ```
 

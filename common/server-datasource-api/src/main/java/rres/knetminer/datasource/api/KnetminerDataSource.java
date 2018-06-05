@@ -49,7 +49,7 @@ public abstract class KnetminerDataSource {
 	public String getApiUrl() {
 		return this.api_url;
 	}
-
+	
 	/*
 	 * In all the below, IllegalArgumentException should be thrown if the incoming
 	 * request object is missing any information required to run the query. If

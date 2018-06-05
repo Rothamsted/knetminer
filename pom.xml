@@ -217,6 +217,7 @@
 		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
 		<junit.version>4.7</junit.version>
+		<json.version>20180130</json.version>
 	</properties>
 
 	<profiles>
@@ -389,6 +390,12 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
+			</dependency>
+
+			<dependency>
+    				<groupId>org.json</groupId>
+    				<artifactId>json</artifactId>
+    				<version>${json.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
