@@ -123,23 +123,7 @@
             <!-- new KnetMaps.js -->
             <div id="NetworkCanvas" class="resultViewer" style="display:none;">
                     <!-- KnetMaps -->
-                    <div id="knet-maps" style="display:none;">
-                        <div id="knetmaps-menu"></div> <!-- KnetMaps Menubar -->
-                        <div id="itemInfo" class="infoDiv" style="display:none;"> <!-- Item Info pane -->
-                            <table id="itemInfo_Table" class="infoTable" cellspacing=1>
-                                <thead><th>Info box:</th>
-                                   <!-- <th><button id="btnCloseItemInfoPane" onclick="closeItemInfoPane();">Close</button></th> -->
-                                    <th><input type="image" id="btnCloseItemInfoPane" src="html/KnetMaps/image/close-icon.png" onclick="closeItemInfoPane();"></th>
-                                </thead><tbody></tbody></table>
-                        </div>
-                        <!-- The core cytoscapeJS container -->
-                        <div id="cy"></div>
-                        <!-- interactive, dynamic Legend to show all concept of a particular type -->
-                        <div id="knetLegend" title="Hover over icons to see corresponding Concept type & click an icon to show all such Concepts connected to visible Concepts in this network"><span>Concepts:</span></div>
-                        <!-- dynamically updated Legend to show number of shown/ hidden concepts -->
-                        <div id="statsLegend" style="width: 350px; margin: auto;"><span>KnetMaps</span></div>
-                        <div id="infoDialog"></div> <!-- popup dialog -->
-                    </div>
+                    <div id="knet-maps" style="display:none;"></div>
             </div>
         </div>
         </div>  <!-- tabviewer -->
