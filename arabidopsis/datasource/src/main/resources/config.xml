@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>Contains MultiThreadServer configuration values</comment>	
-	<entry key="DataPath">D:/Users/singha/KnetMinerArabidopsis</entry>
-	<entry key="DataFile">D:/Users/singha/KnetMinerArabidopsis/test_Arabidopsis.oxl</entry>
+	<entry key="DataPath">/var/www/html/arabidopsis_data_test</entry>
+	<entry key="DataFile">/var/www/html/arabidopsis_data_test/test_Arabidopsis.oxl</entry>
 	<entry key="SpeciesTaxId">3702</entry>
 	<entry key="reference_genome">true</entry>
 	<entry key="export_visible_network">true</entry>
