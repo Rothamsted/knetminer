@@ -1,5 +1,13 @@
+var KNETMAPS = KNETMAPS || {};
+
+KNETMAPS.ConceptsLegend = function() {
+
+	var stats = KNETMAPS.Stats();
+	
+	var my = function() {};
+	
   // Dynamically populate interactive concept legend.
-  function populateConceptLegend() {
+  my.populateConceptLegend = function() {
       var cy= $('#cy').cytoscape('get');
       var conNodes= cy.nodes();
       var conceptTypes= []; // get a unique Array with all concept Types in current network.
@@ -51,14 +59,14 @@
 	  else if(conText === "Protein Domain") {
 		  conText= "Domain";
 		 }
-          knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="image" id="'+ con +'" title="Show All '+ con +'(s)" src="html/KnetMaps/image_legend/'+ con +'.png'+'" style="vertical-align:middle" onclick="showConnectedByType(this.id);">'+ 
+          knetLegend= knetLegend +'<div class="knetLegend_cell"><input type="submit" value="" id="'+ con +'" title="Show All '+ con +'(s)" class="knetCon_'+con.replace(/ /g,'_')+'" style="vertical-align:middle" onclick="KNETMAPS.ConceptsLegend().showConnectedByType(this.id);">'+ 
 		                conceptsHashmap[con] +'<span class="icon_caption">'+ conText +'</span></div>';
          }
         knetLegend= knetLegend +'</div></div>';
 	$('#knetLegend').html(knetLegend); // update knetLegend
    }
 
- function showConnectedByType(conType) {
+  my.showConnectedByType = function(conType) {
   var cy= $('#cy').cytoscape('get');
 
   var hiddenNodes_ofSameType= cy.collection();
@@ -80,5 +88,8 @@
   // Display edges between such connected Nodes too.
   hiddenNodes_ofSameType.edgesWith(currently_visibleNodes).addClass('ShowEle').removeClass('HideEle');
 
-  updateKnetStats(); // Refresh network Stats.
+  stats.updateKnetStats(); // Refresh network Stats.
  }
+  
+  return my;
+};

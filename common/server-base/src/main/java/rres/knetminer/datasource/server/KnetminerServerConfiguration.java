@@ -1,8 +1,12 @@
 package rres.knetminer.datasource.server;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import rres.knetminer.datasource.api.KnetminerDataSourceProvider;
 
@@ -18,5 +22,14 @@ import rres.knetminer.datasource.api.KnetminerDataSourceProvider;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "rres.knetminer.datasource" }, includeFilters = @ComponentScan.Filter(KnetminerDataSourceProvider.class))
-public class KnetminerServerConfiguration {
+public class KnetminerServerConfiguration extends WebMvcConfigurerAdapter {
+
+	@Bean
+	public InternalResourceViewResolver resolver() {
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setViewClass(JstlView.class);
+		resolver.setPrefix("/WEB-INF/views/");
+		resolver.setSuffix(".jsp");
+		return resolver;
+	}
 }

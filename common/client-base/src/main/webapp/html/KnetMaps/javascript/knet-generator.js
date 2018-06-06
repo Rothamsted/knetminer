@@ -1,40 +1,44 @@
-// initialize and generate the network
-function generateNetworkGraph(json_File) {
+var KNETMAPS = KNETMAPS || {};
+var graphJSON = graphJSON  || '';
+var allGraphData = allGraphData || '';
+
+KNETMAPS.Generator = function() {
+
+	var stats = KNETMAPS.Stats();
+	var iteminfo = KNETMAPS.ItemInfo();
+	var container = KNETMAPS.Container();
+	var legend = KNETMAPS.ConceptsLegend();
+
+	var my = function() {};
+	
+	// initialize and generate the network from default global vars
+ my.generateNetworkGraph=function() {
    //console.log("Dataset file path: "+ json_File);
 
-    // Include this file's contents on the page at runtime using jQuery and a callback function.
-/*   $.getScript(json_File, function() {*/
-   jQuery.getScript(json_File, function() {
-//     console.log(json_File +" file included...");
      // Initialize the cytoscapeJS container for Network View.
-     initializeNetworkView();
+	 // NB graphJSON and allGraphData should be declared outside this script
+	   my.initializeNetworkView(graphJSON, allGraphData);
 
      // Highlight nodes with hidden, connected nodes using Shadowing.
-     blurNodesWithHiddenNeighborhood();
+	   my.blurNodesWithHiddenNeighborhood();
 
      // Set the default layout.
 //     setDefaultLayout();
      // update network stats <div>.
-     updateKnetStats();
+     stats.updateKnetStats();
 
      // dynamically populate interactive concept legend.
-     populateConceptLegend();
-   });
+     legend.populateConceptLegend();
   }
 
-//initialize and generate the network
-function generateNetworkGraphRaw(json_blob) {
+//initialize and generate the network from provided JSON blob
+ my.generateNetworkGraphRaw=function(json_blob) {
    //console.log("Dataset file path: "+ json_File);
-	eval(json_blob+'; initializeNetworkView(graphJSON, allGraphData); blurNodesWithHiddenNeighborhood(); updateKnetStats(); populateConceptLegend();');
+	eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
   }
-
-//initialize the network
-function initializeNetworkView() {
-	return initializeNetworkViewFromJson(graphJSON, allGraphData); // using the dynamically included graphJSON and allGraphData objects directly.
-}
 
 // initialize the network
-function initializeNetworkView(networkJSON, metadataJSON) {
+ my.initializeNetworkView=function(networkJSON, metadataJSON) {
 	graphJSON = networkJSON;
 	allGraphData = metadataJSON;
    // modify for networkJSON to read JSON object from file and retain contents from "elements" section for nodes and edges info.
@@ -167,13 +171,13 @@ function initializeNetworkView(networkJSON, metadataJSON) {
 // On startup
 $(function() { // on dom ready
   // load the cytoscapeJS network
-  load_reload_Network(networkJSON, networkStylesheet/*, true*/);
+  container.load_reload_Network(networkJSON, networkStylesheet/*, true*/);
   
-  append_visibility_and_label_classes(); // to all network nodes/ edges.
+  my.append_visibility_and_label_classes(); // to all network nodes/ edges.
 }); // on dom ready
 }
 
- function append_visibility_and_label_classes() {
+ my.append_visibility_and_label_classes=function() {
   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
     cy.nodes().forEach(function( conc ) { // for concepts
@@ -217,7 +221,7 @@ $(function() { // on dom ready
   }*/
   
   // Show shadow effect on nodes with connected, hidden elements in their neighborhood.
-  function blurNodesWithHiddenNeighborhood() {
+ my.blurNodesWithHiddenNeighborhood=function() {
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
     cy.nodes().forEach(function( ele ) {
@@ -246,3 +250,6 @@ $(function() { // on dom ready
          }
    });
   }
+ 
+ return my;
+};

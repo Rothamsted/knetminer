@@ -5,6 +5,7 @@ var genes;
 
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(750).height(400);
+var knetmaps = KNETMAPS.KnetMaps();
 
 /*
 Functions for show and hide structures when a button is pressed
@@ -264,9 +265,6 @@ function matchCounter(){
  * 
  */		
 function evidencePath(id){	
-	// Preloader for KnetMaps
-	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-
 	var url = api_url+'/evidencePath';
 //	generateNetwork(url,'');
         // Generate the Network Graph using the new Network Viewer.
@@ -830,7 +828,9 @@ function searchKeyword(){
  * Generates the new lightweight Network graph, using cytoscapeJS.
  * @author: Ajit Singh.
  */
-function generateCyJSNetwork(url,requestParams){
+function generateCyJSNetwork(url,requestParams){	
+	// Preloader for KnetMaps
+	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post({
         url:url,
@@ -846,72 +846,18 @@ function generateCyJSNetwork(url,requestParams){
     // Network Graph: JSON file.
     //var network_json= oxl.replace(".oxl", ".json"); // JSON file path
     try {
-    	 populateKnetMenu(); // initialize the KnetMaps menubar, if needed.
-    
-         $("#knet-maps").css("display","block"); // show the KnetMaps menubar.
-         activateButton('NetworkCanvas');
-
-         // Show KnetMaps maskloader.
-         showNetworkLoader();
-
-         // Generate the Network after the page load event.
-         generateNetworkGraphRaw(data.graph);
-        
-         // Remove KnetMaps maskloader.
-         removeNetworkLoader();
+        activateButton('NetworkCanvas');
+    	knetmaps.drawRaw('#knet-maps', data.graph);
          // Remove the preloader message in Gene View, for the Network Viewer
          $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
         }
     catch(err) {
-          var errorMsg= err.stack;
-          console.log("Error: <br/>"+"Details: "+ errorMsg);
+        	var errorMsg= err.stack+":::"+err.name+":::"+err.message;
+          console.log(errorMsg);
+     	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
          }
    });
   }
-
-// Add KnetMaps menu bar
-function populateKnetMenu() {
- var knet_menu= "<input type='image' id='maximizeOverlay' src='html/KnetMaps/image/maximizeOverlay.png' title='Toggle full screen' onclick='OnMaximizeClick();' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='showAll' src='html/KnetMaps/image/showAll.png' onclick='showAll();' title='Show all the concept & relations in the Network' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='relayoutNetwork' src='html/KnetMaps/image/relayoutNetwork.png' onclick='rerunLayout();' title='Re-run the Layout' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='openItemInfoBtn' src='html/KnetMaps/image/openItemInfoBtn.png' onclick='popupItemInfo();' title='Show Info box' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<span class='knet-dropdowns'>"+
-                        "<select id='layouts_dropdown' class='knet-dropdowns' onChange='rerunLayout();' title='Select network layout'>"+
-                            "<option value='cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"+
-                            "<option value='ngraph_force_layout' title='using ngraph_force layout (works well on planar graphs)'>Force layout</option>"+
-                            "<option value='circle_layout'>Circular layout</option>"+
-                            "<option value='concentric_layout'>Concentric layout</option>"+
-                            "<option value='coseBilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"+
-                        /*    "<option value='euler_layout'>Euler layout</option>"+
-                            "<option value='random_layout'>Random layout</option>"+*/
-                        "</select>"+
-                        "<select id='changeLabelVisibility' class='knet-dropdowns' onChange='showHideLabels(this.value);' title='Select label visibility'>"+
-                            "<option value='None' selected='selected'>Labels: None</option>"+
-                            "<option value='Concepts'>Labels: Concepts</option>"+
-                            "<option value='Relations'>Labels: Relations</option>"+
-                            "<option value='Both'>Labels: Both</option>"+
-                        "</select>"+
-                        "<select id='changeLabelFont' class='knet-dropdowns' onChange='changeLabelFontSize(this.value);' title='Select label font size'>"+
-                            "<option value='8'>Label size: 8px</option>"+
-                            "<option value='12'>Label size: 12px</option>"+
-                            "<option value='16' selected='selected'>Label size: 16px</option>"+
-                            "<option value='20'>Label size: 20px</option>"+
-                            "<option value='24'>Label size: 24px</option>"+
-                            "<option value='28'>Label size: 28px</option>"+
-                            "<option value='32'>Label size: 32px</option>"+
-                            "<option value='36'>Label size: 36px</option>"+
-                            "<option value='40'>Label size: 40px</option>"+
-                        "</select>"+
-			        "</span>"+
-                    "<input type='image' id='resetNetwork' src='html/KnetMaps/image/resetNetwork.png' onclick='resetGraph();' title='Reposition (reset and re-fit) the graph' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='savePNG' src='html/KnetMaps/image/savePNG.png' onclick='exportAsImage();' title='Export the network as a .png image' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='saveJSON' src='html/KnetMaps/image/saveJSON.png' onclick='exportAsJson();' title='Export the network in JSON format' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>"+
-                    "<input type='image' id='helpURL' src='html/KnetMaps/image/help.png' onclick='openKnetHelpPage();' title='Go to help documentation' onmouseover='onHover($(this));' onmouseout='offHover($(this));'>";
-
- $('#knetmaps-menu').html(knet_menu);
-}
-
 
 /*
  * Function
@@ -930,9 +876,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
 	}
         else {
- 	  // Preloader for KnetMaps
-	  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
-
          // console.log("GeneView: Launch Network for url: OndexServlet?mode=network&keyword="+ keyword);
           generateCyJSNetwork(api_url+'/network', {keyword:keyword, list:candidatelist});
 	 }
@@ -1219,9 +1162,6 @@ var table = "";
 	 */
 	$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
 		e.preventDefault();
-            // Preloader for the new Network Viewer (KnetMaps).
-            $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
-
 		var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_","");
 		var values = e.data.x[geneNum].split("\t");
 //    			generateNetwork('\OndexServlet?mode=network&list='+values[1]+'&keyword='+keyword, null);
