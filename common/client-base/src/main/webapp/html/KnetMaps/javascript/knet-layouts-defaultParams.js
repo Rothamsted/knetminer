@@ -1,8 +1,14 @@
 
-var animate_layout= true; // global variable for layout animation setting (default: true).
+var KNETMAPS = KNETMAPS || {};
 
+KNETMAPS.LayoutDefaults = function() {
+	
+	var animate_layout= true; // global variable for layout animation setting (default: true).
+
+	var my = function() {};
+	
  // CoSE layout.
- var coseNetworkLayout= {
+ my.coseNetworkLayout= {
   name: 'cose', // cytoscapeJS CoSE layout
   // Called on `layoutready`
   ready: function(){ },
@@ -62,7 +68,7 @@ var animate_layout= true; // global variable for layout animation setting (defau
   useMultitasking: true
  };
 
-   var coseNetworkLayout_old= {
+  my.coseNetworkLayout_old= {
     name: 'cose', // CytoscapeJS CoSE layout
     animate: animate_layout /*true*/,
     handleDisconnected: true, avoidOverlap: true,
@@ -70,7 +76,7 @@ var animate_layout= true; // global variable for layout animation setting (defau
    };
 
    // Force layout.
-   var ngraph_forceNetworkLayout= {
+   my.ngraph_forceNetworkLayout= {
     name: 'cytoscape-ngraph.forcelayout',
     animate: animate_layout, fit: true,
     async: {
@@ -116,7 +122,7 @@ var animate_layout= true; // global variable for layout animation setting (defau
    };
 
    // Circular layout.
-   var circleNetworkLayout= {
+   my.circleNetworkLayout= {
       name: 'circle', // Circle layout (Ondex Web: Circular)
       padding: 10/*30*/, avoidOverlap: true, boundingBox: undefined, handleDisconnected: true,
       animate: animate_layout, fit: true, counterclockwise: false,
@@ -126,7 +132,7 @@ var animate_layout= true; // global variable for layout animation setting (defau
    };
 
    // Concentric layout.
-   var concentricNetworkLayout= {
+   my.concentricNetworkLayout= {
     name: 'concentric', fit: true, padding: 10, 
     startAngle: 3/2 * Math.PI, // the position of the 1st node
     counterclockwise: false, // whether the layout should go anticlockwise (true) or clockwise (false)
@@ -140,7 +146,7 @@ var animate_layout= true; // global variable for layout animation setting (defau
    };
 
    // CoSE-Bilkent layout.
-   var coseBilkentNetworkLayout= {
+   my.coseBilkentNetworkLayout= {
     name: 'cose-bilkent', 
 	ready: function () {
 	},
@@ -181,6 +187,9 @@ var animate_layout= true; // global variable for layout animation setting (defau
     gravityRange: 3.8
    };
 
-   var coseBilkentNetworkLayout_old= {
+   my.coseBilkentNetworkLayout_old= {
     name: 'cose-bilkent', handleDisconnected: true, avoidOverlap: true
    };
+
+	return my;
+};

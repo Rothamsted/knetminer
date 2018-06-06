@@ -1,7 +1,13 @@
   /** Item Info.: display information about the selected concept(s)/ relation(s) including attributes, 
    * co-accessions and evidences.
    */
-   function showItemInfo(selectedElement) {
+var KNETMAPS = KNETMAPS || {};
+
+KNETMAPS.ItemInfo = function() {
+	
+	var my = function() {};
+
+   my.showItemInfo = function(selectedElement) {
     var itemInfo= "";
     var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
     var createExpressionEntries= false;
@@ -73,7 +79,7 @@
                              }
                            // Display concept synonyms along with an eye icon to use them as preferred concept name.
                            var dispSynonym= coname_Synonym +
-                                   ' <a><img src="html/KnetMaps/image/labelEye.png" alt="Use" id="'+ synonymID +'" onclick="useAsPreferredConceptName(this.id);" onmouseover="onHover($(this));" onmouseout="offHover($(this));" title="Use as concept Label"/></a>' +'<br/>';
+                                   ' <input type="submit" value="" class="knetSynonym" id="'+ synonymID +'" onclick="KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);" onmouseover="KNETMAPS.Menu().onHover($(this));" onmouseout="KNETMAPS.Menu().offHover($(this));" title="Use as concept Label"/>' +'<br/>';
                            all_concept_names= all_concept_names + dispSynonym;
                           }
                        }
@@ -159,7 +165,7 @@
                               }
                             }
                         // Display concept accessions along with an eye icon to use them as preferred concept name.
-                        co_acc= co_acc +" <a><img src='html/KnetMaps/image/labelEye.png' alt='Use' id='"+ accession +"' onclick='useAsPreferredConceptName(this.id);' onmouseover='onHover($(this));' onmouseout='offHover($(this));' title='Use as concept Label'/></a>";
+                        co_acc= co_acc +" <input type='submit' value='' class='knetSynonym' id='"+ accession +"' onclick='KNETMAPS.ItemInfo().useAsPreferredConceptName(this.id);' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));' title='Use as concept Label'/>";
                         cell1.innerHTML= accessionID;
                         cell2.innerHTML= co_acc;
                        }
@@ -255,7 +261,7 @@
    }
 
  // Open the Item Info pane when the "Item Info" option is selected for a concept or relation.
- function openItemInfoPane() {
+   my.openItemInfoPane = function() {
   var effect = 'slide';
   // Set the options for the effect type chosen
   var options = { direction: 'right' };
@@ -267,12 +273,12 @@
     }
  }
 
- function closeItemInfoPane() {
+   my.closeItemInfoPane = function() {
   $("#itemInfo").hide();
  }
 
   // Remove shadow effect from nodes, if it exists.
-  function removeNodeBlur(ele) {
+   my.removeNodeBlur = function(ele) {
     var thisElement= ele;
     try {
       if(thisElement.hasClass('BlurNode')) { // Remove any shadow created around the node.
@@ -285,7 +291,7 @@
   }
 
   // Show hidden, connected nodes connected to this node & also remove shadow effect from nodes, wheere needed.
-  function showLinks(ele) {
+   my.showLinks = function(ele) {
     var selectedNode= ele;
     // Show concept neighborhood.
     selectedNode.connectedEdges().connectedNodes().removeClass('HideEle');
@@ -295,7 +301,7 @@
     selectedNode.connectedEdges().addClass('ShowEle');
 
     // Remove shadow effect from the nodes that had hidden nodes in their neighborhood.
-    removeNodeBlur(selectedNode);
+    my.removeNodeBlur(selectedNode);
 
     // Remove shadow effect from connected nodes too, if they do not have more hidden nodes in their neighborhood.
     selectedNode.connectedEdges().connectedNodes().forEach(function( elem ) {
@@ -303,7 +309,7 @@
         var its_connected_hiddenNodesCount= its_connected_hidden_nodes.length;
         console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
         if(its_connected_hiddenNodesCount </*<=*/ 1) {
-           removeNodeBlur(elem);
+           my.removeNodeBlur(elem);
           }
     });
 
@@ -323,7 +329,7 @@
   }
 
   // Set the given name (label) for the selected concept.
-  function useAsPreferredConceptName(new_conceptName) {
+   my.useAsPreferredConceptName = function(new_conceptName) {
    try {
      var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
      cy.nodes().forEach(function(ele) {
@@ -340,3 +346,6 @@
           console.log("Error occurred while altering preferred concept name. \n"+"Error Details: "+ err.stack);
          }
   }
+   
+   return my;
+};
