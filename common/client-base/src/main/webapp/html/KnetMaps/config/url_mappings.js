@@ -18,7 +18,7 @@ var url_mappings= {
      {"cv": "EBI-GXA", "weblink": "https://www.ebi.ac.uk/gxa/experiments/", "cc_restriction": ""},
      {"cv": "GENB", "weblink": "http://www.ncbi.nlm.nih.gov/sites/entrez?db=nuccore&cmd=search&term=", "cc_restriction": ""},
      {"cv": "GENOSCOPE", "weblink": "http://www.genoscope.cns.fr/brassicanapus/cgi-bin/gbrowse/colza/?name=", "cc_restriction": ""},
-     {"cv": "GO", "weblink": "http://www.ebi.ac.uk/QuickGO-Beta/term/", "cc_restriction": ""},
+     {"cv": "GO", "weblink": "http://www.ebi.ac.uk/QuickGO/term/", "cc_restriction": ""},
      {"cv": "INTACT", "weblink": "http://www.ebi.ac.uk/intact/pages/interactions/interactions.xhtml?query=", "cc_restriction": ""},
      {"cv": "IPRO", "weblink": "http://www.ebi.ac.uk/interpro/IEntry?ac=", "cc_restriction": ""},
      {"cv": "KEGG", "weblink": "http://www.genome.jp/dbget-bin/www_bget?cpd:", "cc_restriction": "Comp"},
