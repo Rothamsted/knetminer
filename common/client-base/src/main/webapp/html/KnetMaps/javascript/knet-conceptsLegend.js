@@ -47,9 +47,9 @@ KNETMAPS.ConceptsLegend = function() {
 		  else if(conText === "PlantOntologyTerm") {
 			      conText= "PO";
 		      }
-	  else if(conText === "Trait") {
+	  /*else if(conText === "Trait") {
 		  conText= "GWAS";
-		 }
+		 }*/
 	  else if(conText === "Enzyme Classification") {
 		  conText= "EC";
 		 }
