@@ -35,11 +35,13 @@ KNETMAPS.ItemInfo = function() {
             cell1.innerHTML= "Concept Type:";
             cell2.innerHTML= selectedElement.data('conceptType'); // concept Type
             // Concept 'Annotation'.
-            row= table.insertRow(1/*3*/);
-            cell1= row.insertCell(0);
-            cell2= row.insertCell(1);
-            cell1.innerHTML= "Annotation:";
-            cell2.innerHTML= selectedElement.data('annotation');
+            if(selectedElement.data('annotation') !== "") {
+               row= table.insertRow(1/*3*/);
+               cell1= row.insertCell(0);
+               cell2= row.insertCell(1);
+               cell1.innerHTML= "Annotation:";
+               cell2.innerHTML= selectedElement.data('annotation');
+              }
             // Get all metadata for this concept from the metadataJSON variable.
             for(var j=0; j < metadataJSON.ondexmetadata.concepts.length; j++) {
                 if(selectedElement.id() === metadataJSON.ondexmetadata.concepts[j].id) {
@@ -62,6 +64,15 @@ KNETMAPS.ItemInfo = function() {
                           }
                        }
                     cell2.innerHTML= evidences.substring(0, evidences.length-2);
+                    
+                    // Concept 'Description'.
+                    if(metadataJSON.ondexmetadata.concepts[j].description !== "") {
+                       row= table.insertRow(table.rows.length);
+                       cell1= row.insertCell(0);
+                       cell2= row.insertCell(1);
+                       cell1.innerHTML= "Description:";
+                       cell2.innerHTML= metadataJSON.ondexmetadata.concepts[j].description;
+                      }
 
                     // Get all Synonyms (concept names).
                     var all_concept_names= "";
@@ -159,6 +170,7 @@ KNETMAPS.ItemInfo = function() {
                         for(var u=0; u < url_mappings.html_acc.length; u++) {
                             if(url_mappings.html_acc[u].cv === accessionID) {
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
+                               if(accessionID === "CO") { coAccUrl= coAccUrl +"/"; }
                                coAccUrl= coAccUrl.replace(/\s/g,''); // remove spaces, if any
                                // open attribute url in new blank tab.
                                co_acc= "<a href=\""+ coAccUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ co_acc +"</a>";
