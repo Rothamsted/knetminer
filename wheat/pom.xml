@@ -14,5 +14,6 @@
 	<modules>
 		<module>client</module>
 		<module>datasource</module>
+		<module>ws</module>
 	</modules>
 </project>

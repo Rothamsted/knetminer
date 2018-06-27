@@ -19,6 +19,6 @@
 		<module>server-base</module>
 		<module>server-datasource-api</module>
 		<module>server-datasource-ondexlocal</module>
-		<module>server-example</module>
+	 <module>ws-example</module>
 	</modules>
 </project>

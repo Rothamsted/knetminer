@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
-	<artifactId>server-example</artifactId> <!-- Change me -->
-	<name>KnetMiner example server</name> <!-- Change me -->
+	<artifactId>ws-example</artifactId> <!-- Change me -->
+	<name>KnetMiner-example-WS</name> <!-- Change me -->
 	<packaging>war</packaging>
 
 	<parent>
@@ -31,6 +31,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>server-example</finalName> <!-- Change me -->
+		<finalName>ws-example</finalName> <!-- Change me -->
 	</build>
 </project>
