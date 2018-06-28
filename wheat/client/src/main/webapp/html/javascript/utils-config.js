@@ -1,6 +1,6 @@
-var api_url = "http://knetminer.rothamsted.ac.uk/ws/wheat/"; 
+//var api_url = "http://knetminer.rothamsted.ac.uk/ws/wheat"; 
+var api_url = "http://babvs57.rothamsted.ac.uk:8443/ws/wheat"; 
 //var data_url = "http://knetminer.rothamsted.ac.uk/wheat_data/";
-//var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/wheat_data/"; // now, using HTTP instead of HTTPS
 //var data_url = "http://maize-dev.rothamsted.ac.uk/wheat_data/";
 var species = 'Wheat Genome (IWGSP1, MIPSv2.1)';
 var reference_genome = true/*false*/; //true if you are providing a reference genome, false to disable MapView
