@@ -1,5 +1,6 @@
 //var api_url = "http://knetminer.rothamsted.ac.uk/ws/wheat"; 
 var api_url = "http://babvs57.rothamsted.ac.uk:8443/ws/wheat"; 
+//var api_url = "http://localhost:8080/ws/wheat";
 //var data_url = "http://knetminer.rothamsted.ac.uk/wheat_data/";
 //var data_url = "http://maize-dev.rothamsted.ac.uk/wheat_data/";
 var species = 'Wheat Genome (IWGSP1, MIPSv2.1)';
