@@ -31,6 +31,7 @@ var url_mappings= {
      {"cv": "PDB", "weblink": "http://www.rcsb.org/pdb/explore/explore.do?structureId=", "cc_restriction": ""},
      {"cv": "PFAM", "weblink": "http://pfam.sanger.ac.uk/family/", "cc_restriction": ""},
      {"cv": "PlnTFDB", "weblink": "http://plntfdb.bio.uni-potsdam.de/v3.0/get_id.php?seq_id=", "cc_restriction": ""},
+     {"cv": "PMID", "weblink": "http://www.ncbi.nlm.nih.gov/pubmed/", "cc_restriction": ""},
      {"cv": "PO", "weblink": "http://purl.obolibrary.org/obo/PO_", "cc_restriction": ""},
      {"cv": "Poplar-JGI", "weblink": "http://genome.jgi-psf.org/cgi-bin/dispGeneModel?db=Poptr1_1&id=", "cc_restriction": ""},
      {"cv": "PoplarCyc", "weblink": "http://pmn.plantcyc.org/POPLAR/NEW-IMAGE?object=", "cc_restriction": ""},
