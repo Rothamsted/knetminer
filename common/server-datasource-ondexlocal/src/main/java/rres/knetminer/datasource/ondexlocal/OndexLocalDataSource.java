@@ -140,12 +140,28 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		if (response.getClass().equals(GenomeResponse.class)) {
-			genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-			log.info("Number of genes " + genes.size());
+			log.info("Genome response...");
+                        if(userGenes != null) {
+                           // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
+                           genes= new ArrayList<ONDEXConcept> (userGenes);
+                           log.info("Using user-provided gene list... genes: "+ genes.size());
+                          }
+                        else {
+                            genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+                           }
+			log.info("Number of genes: " + genes.size());
 		} else if (response.getClass().equals(QtlResponse.class)) {
-			genes = qtlnetminerResults.getSortedCandidates();
-			log.info("Number of genes " + genes.size());
-			genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
+			log.info("QTL response...");
+                        if(userGenes != null) {
+                           // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
+                           genes= new ArrayList<ONDEXConcept> (userGenes);
+                           log.info("Using user-provided gene list... genes: "+ genes.size());
+                          }
+                        else {
+                            genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+                            log.info("Number of genes: " + genes.size());
+                            genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
+                           }
 			log.info("Genes after QTL filter: " + genes.size());
 		}
 
