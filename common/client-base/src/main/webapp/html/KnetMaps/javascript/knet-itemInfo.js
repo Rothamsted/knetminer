@@ -128,9 +128,10 @@ KNETMAPS.ItemInfo = function() {
                                     urlAttrValue= urlAttrValue.replace(/\s/g,''); // remove spaces, if any
                                     var urls= urlAttrValue.split(",");
                                     urls.forEach(function(entry,index) {
-                                         attrValue= attrValue +"<a href=\""+ entry +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ entry +"</a><br/>";
+                                         attrValue= attrValue +"<a href=\""+ entry +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ entry +"</a>,<br/>";
                                         });
-                                    attrValue= attrValue.substring(0,attrValue.length-1);
+                                   // attrValue= attrValue.substring(0,attrValue.length-1); // omit last comma
+                                    attrValue= attrValue.substring(0,attrValue.lastIndexOf("<")-1); // omit last break & comma
                                    }
                             // For Aminoacid sequence (AA).
                             else if(attrName.includes("AA")) {
@@ -257,8 +258,30 @@ KNETMAPS.ItemInfo = function() {
                                 row= table.insertRow(table.rows.length/* - 1*/); // new row.
                                 cell1= row.insertCell(0);
                                 cell2= row.insertCell(1);
-                                cell1.innerHTML= metadataJSON.ondexmetadata.relations[j].attributes[k].attrname;
-                                cell2.innerHTML= metadataJSON.ondexmetadata.relations[j].attributes[k].value;
+                                attrName= metadataJSON.ondexmetadata.relations[j].attributes[k].attrname;
+                                attrValue= metadataJSON.ondexmetadata.relations[j].attributes[k].value;
+                                // For PubMed ID's (PMID), add urls (can be multiple for same attribute name)
+                                if(attrName === "PMID") {
+                                   // get PMID url from KnetMaps/config
+                                   var pmidUrl= "";
+                                   for(var u=0; u < url_mappings.html_acc.length; u++) {
+                                       if(url_mappings.html_acc[u].cv === attrName) {
+                                          pmidUrl= url_mappings.html_acc[u].weblink; // PMID url
+                                         }
+                                     }
+                                   // for multiple PMID's for relation attribute
+                                   var pmidAttrValue= "";
+                                   var pmids= attrValue.split(",");
+                                   pmids.forEach(function(entry,index) {
+                                         entry= entry.replace(/\s/g,''); // remove spaces, if any
+                                         attrUrl= pmidUrl + entry;
+                                         pmidAttrValue= pmidAttrValue +"<a href=\""+ attrUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ entry +"</a>,<br/>";
+                                        });
+                                    pmidAttrValue= pmidAttrValue.substring(0,pmidAttrValue.lastIndexOf("<")-1); // omit last break & comma
+                                    attrValue= pmidAttrValue; // return urls
+                                   }
+                                cell1.innerHTML= attrName;
+                                cell2.innerHTML= attrValue;
                                }
                            }
                        }

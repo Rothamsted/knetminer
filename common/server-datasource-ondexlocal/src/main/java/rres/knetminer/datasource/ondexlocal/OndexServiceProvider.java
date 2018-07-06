@@ -260,12 +260,12 @@ public class OndexServiceProvider {
 			avgValues = all_keys > 0 ? all_values_count / all_keys : 0;
 
 			/*
-			 * System.out.println("Graph Stats:");
-			 * System.out.println("1) Total number of genes: "+ totalGenes);
-			 * System.out.println("2) Total concepts: "+ totalConcepts);
-			 * System.out.println("3) Total Relations: "+ totalRelations);
-			 * System.out.println("4) Concept2Gene #mappings: "+ geneEvidenceConcepts);
-			 * System.out.println("5) Min., Max., Average size of gene-evidence networks: "
+			 * log.info("Graph Stats:");
+			 * log.info("1) Total number of genes: "+ totalGenes);
+			 * log.info("2) Total concepts: "+ totalConcepts);
+			 * log.info("3) Total Relations: "+ totalRelations);
+			 * log.info("4) Concept2Gene #mappings: "+ geneEvidenceConcepts);
+			 * log.info("5) Min., Max., Average size of gene-evidence networks: "
 			 * + minValues +", "+ maxValues +", "+ avgValues);
 			 */
 
@@ -321,7 +321,7 @@ public class OndexServiceProvider {
 			 * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
 			 * HashMap
 			 */
-			generateGeneEvidenceStats(fileUrl);
+                      //   generateGeneEvidenceStats(fileUrl); // DISABLED
 
 		} catch (IOException e) {
 			log.error("Failed to count stats for graph", e);
@@ -803,8 +803,10 @@ public class OndexServiceProvider {
 	 * @return Set<ONDEXConcept> concepts
 	 */
 	public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr) {
+            log.info("qtlsStr: "+ qtlsStr); // qtl string
 		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();
 
+                // convert List<String> qtlStr to List<QTL> qtls
 		List<QTL> qtls = new ArrayList<QTL>();
 		for (String qtlStr : qtlsStr) {
 			qtls.add(QTL.fromString(qtlStr));
@@ -817,6 +819,7 @@ public class OndexServiceProvider {
 				chrQTL = qtl.getChromosome();
 				startQTL = qtl.getStart();
 				endQTL = qtl.getEnd();
+                                log.info("user QTL (chrQTL, startQTL, endQTL): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
 				// swap start with stop if start larger than stop
 				if (startQTL > endQTL) {
 					int tmp = startQTL;
@@ -830,10 +833,11 @@ public class OndexServiceProvider {
 				// AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
 				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
 				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
+                                log.info("genes matched from entire network: "+ genes.size());
 
 				for (ONDEXConcept c : genes) {
 					String chrGene = null;
-					double startGene = 0;
+					int startGene = 0;
 					if (c.getAttribute(attTAXID) == null
 							|| !taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
 						continue;
@@ -842,7 +846,7 @@ public class OndexServiceProvider {
 						chrGene = c.getAttribute(attChromosome).getValue().toString();
 					}
 					// TEMPORARY FIX, to be disabled for new .oxl species networks that have string
-					// 'Chrosmosome' (instead of the older integer Chromosome) & don't have a string
+					// 'Chromosome' (instead of the older integer Chromosome) & don't have a string
 					// 'Location' attribute.
 					/*
 					 * if(c.getAttribute(attLoc) != null) { // if String Location exists, use that
@@ -850,18 +854,19 @@ public class OndexServiceProvider {
 					 * basemap. chrGene= c.getAttribute(attLoc).getValue().toString(); }
 					 */
 
-					if (attCM != null) {
+					/*if (attCM != null) {
 						if (c.getAttribute(attCM) != null) {
 							startGene = (Double) c.getAttribute(attCM).getValue();
 						}
-					} else if (c.getAttribute(attBegin) != null) {
-						startGene = (double) ((Integer) c.getAttribute(attBegin).getValue());
+					} else*/ if (c.getAttribute(attBegin) != null) {
+						startGene = /*(double)*/ ((Integer) c.getAttribute(attBegin).getValue());
 					}
 					if (chrGene != null && startGene != 0) {
-
-						if (chrQTL.equals(chrGene) && startGene >= startQTL && startGene <= endQTL) {
+                                            //log.info("Gene (chr, start) found: "+ chrGene +","+ startGene);
+						if (chrQTL.equals(chrGene)) {
+                                                    if ((startGene >= startQTL) && (startGene <= endQTL)) {
 							concepts.add(c);
-						}
+						}}
 
 					}
 				}
@@ -917,7 +922,7 @@ public class OndexServiceProvider {
 				String tax_id = "";
 				if (attTaxID != null && q.getAttribute(attTaxID) != null) {
 					tax_id = q.getAttribute(attTaxID).getValue().toString();
-					// System.out.println("findQTL(): ccTrait=null; concept Type: "+ type +",
+					// log.info("findQTL(): ccTrait=null; concept Type: "+ type +",
 					// chrName: "+ chrName +", tax_id= "+ tax_id);
 				}
 				results.add(new QTL(chrName, type, start, end, label, "", 1.0f, trait, tax_id));
@@ -963,7 +968,7 @@ public class OndexServiceProvider {
 							|| r.getFromConcept().getOfType().equals(ccSNP)
 							|| r.getToConcept().getOfType().equals(ccSNP)) {
 						// QTL-->Trait or SNP-->Trait
-						// System.out.println("QTL-->Trait or SNP-->Trait");
+						// log.info("QTL-->Trait or SNP-->Trait");
 						ONDEXConcept conQTL = r.getFromConcept();
 						// results.add(conQTL);
 						if (conQTL.getAttribute(attChromosome) != null && conQTL.getAttribute(attBegin) != null
@@ -979,12 +984,12 @@ public class OndexServiceProvider {
 							}
 							String trait = c.getConceptName().getName();
 							String tax_id = "";
-							// System.out.println("findQTL(): conQTL.getAttribute(attTaxID): "+
+							// log.info("findQTL(): conQTL.getAttribute(attTaxID): "+
 							// conQTL.getAttribute(attTaxID) +", value= "+
 							// conQTL.getAttribute(attTaxID).getValue().toString());
 							if (attTaxID != null && conQTL.getAttribute(attTaxID) != null) {
 								tax_id = conQTL.getAttribute(attTaxID).getValue().toString();
-								// System.out.println("findQTL(): conQTL Type: "+ type +", chrName: "+ chrName
+								// log.info("findQTL(): conQTL Type: "+ type +", chrName: "+ chrName
 								// +", tax_id= "+ tax_id);
 							}
 							results.add(new QTL(chrName, type, start, end, label, "", pValue, trait, tax_id));
@@ -1443,12 +1448,22 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Write GViewer confirm annotation XML file
-	 * 
-	 * @param genes
-	 *            list of genes to be displayed
+	 * Write Genomaps XML file
+         * @param api_url
+	 *      ws url for API
+         * @param genes
+         *      list of genes to be displayed (all genes for search result)
+         * @param userGenes
+         *      gene list from user
+         * @param userQtlStr
+         *      user QTLs
 	 * @param keyword
-	 *            user-specified keyword
+	 *      user-specified keyword
+         * @param maxGenes
+         * @param hits
+	 *      search Hits
+         * @param listMode
+         * @return 
 	 */
 	public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
 			String keyword, int maxGenes, Hits hits, String listMode) {
@@ -1456,6 +1471,16 @@ public class OndexServiceProvider {
 		for (String qtlStr : userQtlStr) {
 			userQtl.add(QTL.fromString(qtlStr));
 		}
+                
+                log.info("Genomaps: generate XML...");
+                // If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
+                /*if(userGenes != null) {
+                   // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
+                   genes= new ArrayList<ONDEXConcept> (userGenes);
+                   log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
+                  }*/
+                // added user gene list restriction above (04/07/2018, singha)
+                log.info("Genomaps: Visualize genes: "+ genes.size());
 		
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
@@ -1548,7 +1573,7 @@ public class OndexServiceProvider {
 			}
 
 			String label = getDefaultNameForGroupOfConcepts(c);
-
+                        
 			// String query = "mode=network&keyword=" + keyword+"&list="+name;
 			// Replace '&' with '&amp;' to make it comptaible with the new
 			// d3.js-based Map View.
@@ -1559,32 +1584,33 @@ public class OndexServiceProvider {
 				log.error(e);
 				throw new Error(e);
 			}
-			String uri = api_url + "/network?" + query;
-
-			// Genes
-			sb.append("<feature id=\"" + id + "\">\n");
-			sb.append("<chromosome>" + chr + "</chromosome>\n");
-			sb.append("<start>" + beg + "</start>\n");
-			sb.append("<end>" + end + "</end>\n");
-			sb.append("<type>gene</type>\n");
-			if (id <= size / 3) {
-				sb.append("<color>0x00FF00</color>\n"); // Green
-			} else if (id > size / 3 && id <= 2 * size / 3) {
-				sb.append("<color>0xFFA500</color>\n"); // Orange
-			} else {
-				sb.append("<color>0xFF0000</color>\n"); // Red
-			}
-			sb.append("<label>" + label + "</label>\n");
-			sb.append("<link>" + uri + "</link>\n");
-			// Add 'score' tag as well.
-			Double score = 0.0;
-			if (scoredCandidates != null) {
-				if (scoredCandidates.get(c) != null) {
-					score = scoredCandidates.get(c); // fetch score
-				}
-			}
-			sb.append("<score>" + score + "</score>\n"); // score
-			sb.append("</feature>\n");
+			String uri = api_url + "/network?" + query; // KnetMaps (network) query
+                    //    log.info("KnetMaps (network) query: "+ uri);
+                        
+                        // Genes
+                        sb.append("<feature id=\"" + id + "\">\n");
+                        sb.append("<chromosome>" + chr + "</chromosome>\n");
+                        sb.append("<start>" + beg + "</start>\n");
+                        sb.append("<end>" + end + "</end>\n");
+                        sb.append("<type>gene</type>\n");
+                        if (id <= size / 3) {
+                            sb.append("<color>0x00FF00</color>\n"); // Green
+                           } else if (id > size / 3 && id <= 2 * size / 3) {
+                               sb.append("<color>0xFFA500</color>\n"); // Orange
+                              } else {
+                               sb.append("<color>0xFF0000</color>\n"); // Red
+                              }
+                        sb.append("<label>" + label + "</label>\n");
+                        sb.append("<link>" + uri + "</link>\n");
+                        // Add 'score' tag as well.
+                        Double score= 0.0;
+                        if(scoredCandidates != null) {
+                           if(scoredCandidates.get(c) != null) {
+                              score= scoredCandidates.get(c); // fetch score
+                             }
+                          }
+                        sb.append("<score>" + score + "</score>\n"); // score
+                        sb.append("</feature>\n");
 
 			if (id++ > maxGenes)
 				break;
@@ -1671,6 +1697,7 @@ public class OndexServiceProvider {
 		// }
 
 		// display user QTLs
+                log.info("Display user QTLs... QTLs provided: "+ userQtl.size());
 		for (QTL region : userQtl) {
 			String chr = region.getChromosome();
 			int start = region.getStart();
@@ -1742,6 +1769,7 @@ public class OndexServiceProvider {
 		HashMap<String, String> trait2color = new HashMap<String, String>();
 		int index = 0;
 
+                log.info("Display QTLs and SNPs... QTLs found: "+ qtlDB.size());
 		for (QTL loci : qtlDB) {
 
 			String type = loci.getType();
@@ -1750,7 +1778,7 @@ public class OndexServiceProvider {
 			Integer endQTL = loci.getEnd();
 			String label = loci.getLabel().replaceAll("\"", "");
 			String trait = loci.getTrait();
-			// System.out.println("writeAnnotationXML() for MapView: type: "+ type +",
+			// log.info("writeAnnotationXML() for MapView: type: "+ type +",
 			// chrQTL= "+ chrQTL +", label: "+ label +" & loci.TaxID= "+ loci.getTaxID());
 
 			if (!trait2color.containsKey(trait)) {
@@ -1784,7 +1812,7 @@ public class OndexServiceProvider {
 				// add check if species TaxID (list from client/utils-config.js) contains this
 				// SNP's TaxID.
 				if (taxID.contains(loci.getTaxID())) {
-					// System.out.println("SNP: loci.getTaxID()= "+ loci.getTaxID());
+					// log.info("SNP: loci.getTaxID()= "+ loci.getTaxID());
 					sb.append("<type>snp</type>\n");
 					sb.append("<color>" + color + "</color>\n");
 					sb.append("<trait>" + trait + "</trait>\n");
@@ -2049,7 +2077,7 @@ public class OndexServiceProvider {
 			}
 			if (!all_evidences.equals("")) {
 				all_evidences = all_evidences.substring(0, all_evidences.length() - 1);
-				// System.out.println("GeneTable.tab: evidenceIDs: "+ all_evidences);
+				// log.info("GeneTable.tab: evidenceIDs: "+ all_evidences);
 			}
 			/*
 			 * out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg +
@@ -2313,7 +2341,7 @@ public class OndexServiceProvider {
 			Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
 			FloatValueComparator<Integer> comparator = new FloatValueComparator<Integer>(synonymsList);
 			TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
-			// System.out.println("\n writeSynonymTable: Keyword: "+ key);
+			// log.info("writeSynonymTable: Keyword: "+ key);
 			// a HashMap to store the count for the number of values written
 			// to the Synonym Table (for each Concept Type).
 			Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
@@ -2705,7 +2733,7 @@ public class OndexServiceProvider {
 					int lastConID = con.getId(); // endNode ID.
 					String gpl_key = String.valueOf(gene.getId()) + "//" + String.valueOf(lastConID);
 					if (!mapGene2PathLength.containsKey(gpl_key)) {
-						// System.out.println(gpl_key +": "+ pathLength);
+						// log.info(gpl_key +": "+ pathLength);
 						mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
 					}
 
@@ -2860,7 +2888,7 @@ public class OndexServiceProvider {
 	/*
 	 * generate gene2evidence .tab file with contents of the mapGenes2Concepts
 	 * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
-	 * HashMap author singha
+	 * author singha
 	 */
 	private void generateGeneEvidenceStats(String fileUrl) {
 		try {
@@ -2923,7 +2951,7 @@ public class OndexServiceProvider {
 				String key = plEntry.getKey();
 				int pl = plEntry.getValue();
 				String pl_txt = key + "\t" + pl + "\n";
-				// System.out.println("mapGene2PathLength: "+ pl_txt);
+				// log.info("mapGene2PathLength: "+ pl_txt);
 				out3.write(pl_txt); // write contents.
 			}
 			out3.close();

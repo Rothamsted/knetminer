@@ -121,7 +121,7 @@ public class QTL {
 	public static QTL fromString(String qtlStr) throws IllegalArgumentException {
 		String[] r = qtlStr.split(":");
 		if (r.length == 3 || r.length == 4) {
-			String chrName = r[0], label = "";
+			String chrName = r[0].split("=")[1], label = "";
 			Integer start = Integer.parseInt(r[1]), end = Integer.parseInt(r[2]);
 			if (r.length == 4) {
 				label = r[3];
