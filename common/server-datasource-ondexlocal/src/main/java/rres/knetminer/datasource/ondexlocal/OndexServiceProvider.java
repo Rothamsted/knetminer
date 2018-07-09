@@ -819,7 +819,7 @@ public class OndexServiceProvider {
 				chrQTL = qtl.getChromosome();
 				startQTL = qtl.getStart();
 				endQTL = qtl.getEnd();
-                                log.info("user QTL (chrQTL, startQTL, endQTL): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
+                                log.info("user QTL (chr, start, end): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
 				// swap start with stop if start larger than stop
 				if (startQTL > endQTL) {
 					int tmp = startQTL;
@@ -1849,7 +1849,7 @@ public class OndexServiceProvider {
 		}
 		
 		Set<Integer> userGeneIds = new HashSet<Integer>();
-		if (userGenes != null) {
+		/*if (userGenes != null) {
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
 
 			// is conversion into integer sets needed because comparing the
@@ -1861,12 +1861,13 @@ public class OndexServiceProvider {
 			for (ONDEXConcept c : userGenes) {
 				userGeneIds.add(c.getId());
 				if (!candidateGeneIds.contains(c.getId())) {
+                                    log.info("add user gene: "+ c.getId() +" to candidates...");
 					candidates.add(c);
 				}
 			}
 		} else {
 			log.info("No user gene list defined.");
-		}
+		}*/
 
 		if (qtls.isEmpty()) {
 			log.info("No QTL regions defined.");
