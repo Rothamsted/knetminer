@@ -1847,7 +1847,8 @@ public class OndexServiceProvider {
 		for (String qtlStr : qtlsStr) {
 			qtls.add(QTL.fromString(qtlStr));
 		}
-		
+                
+		log.info("generate Gene table...");
 		Set<Integer> userGeneIds = new HashSet<Integer>();
 		/*if (userGenes != null) {
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
@@ -1868,6 +1869,13 @@ public class OndexServiceProvider {
 		} else {
 			log.info("No user gene list defined.");
 		}*/
+		if (userGenes != null) {
+                    for(ONDEXConcept c : userGenes) {
+                        userGeneIds.add(c.getId());
+                       }
+		} else {
+			log.info("No user gene list defined.");
+		}
 
 		if (qtls.isEmpty()) {
 			log.info("No QTL regions defined.");

@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
@@ -128,7 +129,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
 			throws IllegalArgumentException {
-		// Find genes from the user's list
+		// Find genes from the user's gene list
 		Set<ONDEXConcept> userGenes = null;
 		if (request.getList() != null && request.getList().size() > 0) {
 			userGenes = this.ondexServiceProvider.searchGenes(request.getList());
@@ -141,22 +142,64 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider);
 		if (response.getClass().equals(GenomeResponse.class)) {
 			log.info("Genome response...");
+                        
                         genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-                        log.info("Number of genes found: " + genes.size());
+                        log.info("Number of genes: " + genes.size());
+                        
                         if(userGenes != null) {
-                           // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
-                           genes= new ArrayList<ONDEXConcept> (userGenes);
+                           /* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
+                        //   genes= new ArrayList<ONDEXConcept> (userGenes);
+                            
+                           /* filter scored results (ArrayList<ONDEXConcept> genes) to only retain sorted genes (by KnetScore) 
+                             from user gene list (Set<ONDEXConcept> userGenes) */
+                           Iterator<ONDEXConcept> itr = genes.iterator();
+                           while(itr.hasNext()) {
+                                 ONDEXConcept gene= itr.next();
+                                 if(!userGenes.contains(gene)) {
+                                    itr.remove();
+                                   }
+                                }
+                          
+                           /* also, add any missing genes from user list (Set<ONDEXConcept> userGenes) that weren't already in the scored results 
+                           (ArrayList<ONDEXConcept> genes) due to no evidences */
+                           for(ONDEXConcept userGene : userGenes) {
+                               if(!genes.contains(userGene)) {
+                                  genes.add(userGene);
+				 }
+                              }
                            log.info("Using user gene list... genes: "+ genes.size());
                           }
 		} else if (response.getClass().equals(QtlResponse.class)) {
 			log.info("QTL response...");
+                        
                         genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-                        log.info("Number of genes found: " + genes.size());
+                        log.info("Number of genes: " + genes.size());
+                        
                         if(userGenes != null) {
-                           // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
-                           genes= new ArrayList<ONDEXConcept> (userGenes);
+                           /* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
+                        //   genes= new ArrayList<ONDEXConcept> (userGenes);
+                            
+                           /* filter scored results (ArrayList<ONDEXConcept> genes) to only retain sorted genes (by KnetScore) 
+                             from user gene list (Set<ONDEXConcept> userGenes) */
+                           Iterator<ONDEXConcept> itr = genes.iterator();
+                           while(itr.hasNext()) {
+                                 ONDEXConcept gene= itr.next();
+                                 if(!userGenes.contains(gene)) {
+                                    itr.remove();
+                                   }
+                                }
+                          
+                           /* also, add any missing genes from user list (Set<ONDEXConcept> userGenes) that weren't already in the scored results 
+                           (ArrayList<ONDEXConcept> genes) due to no evidences */
+                           for(ONDEXConcept userGene : userGenes) {
+                               if(!genes.contains(userGene)) {
+                                  genes.add(userGene);
+				 }
+                              }
                            log.info("Using user gene list... genes: "+ genes.size());
                           }
+                        
+                        // filter QTL's as well
                         genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
 			log.info("Genes after QTL filter: " + genes.size());
 		}
