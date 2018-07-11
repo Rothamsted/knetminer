@@ -209,6 +209,12 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
 				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
+
+                                // temporary...
+                        /*        String genomaps_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_genomaps.xml").toString();
+                                this.ondexServiceProvider.writeGenomapsFile(genomaps_filename, xmlGViewer);
+                                */
+                                
 				log.debug("1.) Genomaps annotation ");
 			} else {
 				log.debug("1.) No reference genome for Genomaps annotation ");
