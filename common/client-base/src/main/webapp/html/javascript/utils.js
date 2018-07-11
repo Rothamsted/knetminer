@@ -806,7 +806,7 @@ function searchKeyword(){
 
 					// Setup the mapview component
 					var annotationsMap = data.gviewer;
-                   //    console.log("annotations file: "+ annotations);
+                                        //console.log("Genomaps... xml: "+ annotationsMap);
 
                   // create new basemap with bands for genes and pass it as well to the Map Viewer.
 					genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
