@@ -819,7 +819,7 @@ public class OndexServiceProvider {
 				chrQTL = qtl.getChromosome();
 				startQTL = qtl.getStart();
 				endQTL = qtl.getEnd();
-                                log.info("user QTL (chrQTL, startQTL, endQTL): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
+                                log.info("user QTL (chr, start, end): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
 				// swap start with stop if start larger than stop
 				if (startQTL > endQTL) {
 					int tmp = startQTL;
@@ -1480,7 +1480,6 @@ public class OndexServiceProvider {
                    log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
                   }*/
                 // added user gene list restriction above (04/07/2018, singha)
-                log.info("Genomaps: Visualize genes: "+ genes.size());
 		
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
@@ -1510,6 +1509,7 @@ public class OndexServiceProvider {
 		if (genes.size() > maxGenes)
 			size = maxGenes;
 
+                log.info("visualize genes: "+ genes.size());
 		for (ONDEXConcept c : genes) {
 
 			// only genes that are on chromosomes (not scaffolds)
@@ -1573,6 +1573,7 @@ public class OndexServiceProvider {
 			}
 
 			String label = getDefaultNameForGroupOfConcepts(c);
+                        //log.info("id, chr, start, end, label, type: "+ id +", "+ chr +", "+ beg +", "+ end +", "+ label + ", gene");
                         
 			// String query = "mode=network&keyword=" + keyword+"&list="+name;
 			// Replace '&' with '&amp;' to make it comptaible with the new
@@ -1585,7 +1586,7 @@ public class OndexServiceProvider {
 				throw new Error(e);
 			}
 			String uri = api_url + "/network?" + query; // KnetMaps (network) query
-                    //    log.info("KnetMaps (network) query: "+ uri);
+                        //log.info("Genomaps: add KnetMaps (network) query: "+ uri);
                         
                         // Genes
                         sb.append("<feature id=\"" + id + "\">\n");
@@ -1610,6 +1611,7 @@ public class OndexServiceProvider {
                              }
                           }
                         sb.append("<score>" + score + "</score>\n"); // score
+                        //log.info("score: "+ score);
                         sb.append("</feature>\n");
 
 			if (id++ > maxGenes)
@@ -1735,6 +1737,7 @@ public class OndexServiceProvider {
 			sb.append("<label>" + label + "</label>\n");
 			sb.append("<link>" + uri + "</link>\n");
 			sb.append("</feature>\n");
+                        //log.info("add QTL: chr, start, end, label, type, uri: "+ chr +", "+ start +", "+ end +", "+ label + ", QTL, "+ uri);
 		}
 		// //find qtl in knowledgebase that match keywords
 		// List<QTL> qtlDB = findQTL(keyword);
@@ -1770,16 +1773,16 @@ public class OndexServiceProvider {
 		int index = 0;
 
                 log.info("Display QTLs and SNPs... QTLs found: "+ qtlDB.size());
+                log.info("TaxID(s): "+ taxID);
 		for (QTL loci : qtlDB) {
 
-			String type = loci.getType();
+			String type = loci.getType().trim();
 			String chrQTL = loci.getChromosome();
 			Integer startQTL = loci.getStart();
 			Integer endQTL = loci.getEnd();
 			String label = loci.getLabel().replaceAll("\"", "");
 			String trait = loci.getTrait();
-			// log.info("writeAnnotationXML() for MapView: type: "+ type +",
-			// chrQTL= "+ chrQTL +", label: "+ label +" & loci.TaxID= "+ loci.getTaxID());
+                    //    log.info("type= "+ type +", chrQTL: "+ chrQTL +", label: "+ label +" & loci.TaxID= "+ loci.getTaxID());
 
 			if (!trait2color.containsKey(trait)) {
 				trait2color.put(trait, colorHex[index]);
@@ -1798,39 +1801,55 @@ public class OndexServiceProvider {
 			}
 
 			// TODO get p-value of SNP-Trait relations
-			sb.append("<feature>\n");
-			sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
-			sb.append("<start>" + startQTL + "</start>\n");
-			sb.append("<end>" + endQTL + "</end>\n");
 			if (type.equals("QTL")) {
-				sb.append("<type>qtl</type>\n");
-				sb.append("<color>" + color + "</color>\n");
-				sb.append("<trait>" + trait + "</trait>\n");
-				sb.append(
-						"<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=" + label + "</link>\n");
+                            sb.append("<feature>\n");
+                            sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
+                            sb.append("<start>" + startQTL + "</start>\n");
+                            sb.append("<end>" + endQTL + "</end>\n");
+                            sb.append("<type>qtl</type>\n");
+                            sb.append("<color>" + color + "</color>\n");
+                            sb.append("<trait>" + trait + "</trait>\n");
+                            sb.append("<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=" + label + "</link>\n");
+                            sb.append("<label>" + label + "</label>\n");
+                            sb.append("</feature>\n");
+                        //    log.info("add QTL: trait, label: "+ trait +", "+ label);
 			} else if (type.equals("SNP")) {
-				// add check if species TaxID (list from client/utils-config.js) contains this
-				// SNP's TaxID.
+				/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
 				if (taxID.contains(loci.getTaxID())) {
-					// log.info("SNP: loci.getTaxID()= "+ loci.getTaxID());
-					sb.append("<type>snp</type>\n");
-					sb.append("<color>" + color + "</color>\n");
-					sb.append("<trait>" + trait + "</trait>\n");
-					sb.append("<pvalue>" + pvalue + "</pvalue>");
-					sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label
+                                    sb.append("<feature>\n");
+                                    sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
+                                    sb.append("<start>" + startQTL + "</start>\n");
+                                    sb.append("<end>" + endQTL + "</end>\n");
+                                    sb.append("<type>snp</type>\n");
+                                    sb.append("<color>" + color + "</color>\n");
+                                    sb.append("<trait>" + trait + "</trait>\n");
+                                    sb.append("<pvalue>" + pvalue + "</pvalue>\n");
+                                    sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label
 							+ "</link>\n");
+                                    sb.append("<label>" + label + "</label>\n");
+                                    sb.append("</feature>\n");
+                                //    log.info("TaxID= "+ loci.getTaxID() +", add SNP: chr, trait, label, p-value: "+ chr +", "+ trait +", "+ label +", "+ pvalue);
 				}
 			}
-
-			sb.append("<label>" + label + "</label>\n");
-
-			sb.append("</feature>\n");
 
 		}
 
 		sb.append("</genome>\n");
-		return sb.toString();
+                //log.info("Genomaps generated...");
+                return sb.toString();
 	}
+        
+        // temporary...
+        public void writeGenomapsFile(String filename, String sb_string) {
+            try {
+                BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+                out.write(sb_string);
+                out.close();
+               }
+            catch(Exception ex) {
+                log.debug(ex.getMessage());
+               }                                
+           }
 
 	/**
 	 * This table contains all possible candidate genes for given query
@@ -1847,9 +1866,10 @@ public class OndexServiceProvider {
 		for (String qtlStr : qtlsStr) {
 			qtls.add(QTL.fromString(qtlStr));
 		}
-		
+                
+		log.info("generate Gene table...");
 		Set<Integer> userGeneIds = new HashSet<Integer>();
-		if (userGenes != null) {
+		/*if (userGenes != null) {
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
 
 			// is conversion into integer sets needed because comparing the
@@ -1861,9 +1881,17 @@ public class OndexServiceProvider {
 			for (ONDEXConcept c : userGenes) {
 				userGeneIds.add(c.getId());
 				if (!candidateGeneIds.contains(c.getId())) {
+                                    log.info("add user gene: "+ c.getId() +" to candidates...");
 					candidates.add(c);
 				}
 			}
+		} else {
+			log.info("No user gene list defined.");
+		}*/
+		if (userGenes != null) {
+                    for(ONDEXConcept c : userGenes) {
+                        userGeneIds.add(c.getId());
+                       }
 		} else {
 			log.info("No user gene list defined.");
 		}
@@ -2098,6 +2126,7 @@ public class OndexServiceProvider {
 			}
 
 		}
+		//log.info("Gene table generated...");
 		return out.toString();
 	}
 
@@ -2119,6 +2148,7 @@ public class OndexServiceProvider {
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
 		
+		log.info("generate Evidence table...");
 		List<QTL> qtls = new ArrayList<QTL>();
 		for (String qtlStr : qtlsStr) {
 			qtls.add(QTL.fromString(qtlStr));
@@ -2281,6 +2311,7 @@ public class OndexServiceProvider {
 			out.append(type + "\t" + name + "\t" + fmt.format(score) + "\t" + numberOfGenes + "\t" + numberOfUserGenes
 					+ "\t" + numberOfQTL + "\t" + ondexId + "\n");
 		}
+		//log.info("Evidence table generated...");
 		return out.toString();
 	}
 
