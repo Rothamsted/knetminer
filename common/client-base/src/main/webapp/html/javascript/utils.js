@@ -817,7 +817,7 @@ function searchKeyword(){
 
 					activateButton('resultsTable');
 					createGenesTable(data.geneTable, keyword, candidateGenes);
-					createEvidenceTable(data.evidenceTable);
+					createEvidenceTable(data.evidenceTable, keyword);
 				}
 	        });
 	}
@@ -825,7 +825,7 @@ function searchKeyword(){
 
 /*
  * Function
- * Generates the new lightweight Network graph, using cytoscapeJS.
+ * Generates the network using KnetMaps
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,requestParams){	
@@ -938,7 +938,7 @@ var table = "";
 		table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,'+btoa(text)+'" target="_blank">Download as TAB delimited file</a><br />';
 		table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 		table = table + '<form name="checkbox_form">';
-		table = table + 'Max number of genes to show: ';
+		table = table + '<u>Max</u> number of genes to show: ';
 		table = table + '<select value="'+rows+'" id="numGenes">';
 		//table = table + '<select value="'+results+'" id="numGenes">';
                         table = table + '<option value="1000"'+(rows==1000?'selected':'')+'>1000</option>';
@@ -955,7 +955,8 @@ var table = "";
 		// dynamic Evidence Summary to be displayed above Gene View table
 	//	table = table + interactive_summary_Legend;
 		table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + 
-                                '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes">'+'</div>';
+                                '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
+
 		table = table + '<div id= "geneViewTable" class = "scrollTable">';
 		table = table + '<table id = "tablesorter" class="tablesorter">';
 		table = table + '<thead>';
@@ -970,11 +971,11 @@ var table = "";
 			table = table + '<th width="60">'+values[3]+'</th>';
 			table = table + '<th width="70">'+values[4]+'</th>';
 		}
-		//table = table + '<th width="70">'+values[5]+'</th>';
-		table = table + '<th width="70">'+values[6]+'</th>';
+		//table = table + '<th width="70">'+values[5]+'</th>'; // hide TAXID (if single organism)
+	//	table = table + '<th width="70">'+values[6]+'</th>'; // hide score for now (18/07/18)
 	//	table = table + '<th width="85">'+values[7]+'</th>'; // user yes/no; DISABLED (13/09/17)
 		if(reference_genome == true){ //QTL
-		table = table + '<th width="70">'+values[8]+'</th>';
+		//table = table + '<th width="70">'+values[8]+'</th>'; // hide QTL for now (18/07/18)
                         }
 		table = table + '<th width="220">'+values[9]+'</th>';
 		table = table + '<th width="70">Select</th>';
@@ -1134,7 +1135,7 @@ var table = "";
 
 		    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 		    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
-			table = table + gene + geneName + taxid + chr + start + score + /*usersList +*/ withinQTL + evidence + select;
+			table = table + gene + geneName + taxid + chr + start + /*score + /*usersList +*/ /*withinQTL +*/ evidence + select; // hide score & QTL for now (18/07/18)
 		    table = table + '</tr>';
 		}
                 table = table+'</tbody>';
@@ -1213,6 +1214,14 @@ var table = "";
          //   $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
 
+        $("#revertGeneView").mouseenter(function(e) {
+            $("#revertGeneView").removeClass('unhover').addClass('hover');
+	});
+
+        $("#revertGeneView").mouseout(function(e) {
+            $("#revertGeneView").removeClass('hover').addClass('unhover');
+	});
+        
 	/*
 	 * if select all targets is checked find all targets and check them.
 	 */
@@ -1285,7 +1294,7 @@ function containsKey(keyToTest, array){
  * Function
  *
  */
-function createEvidenceTable(text){
+function createEvidenceTable(text, keyword){
 	var table = "";
 	var summaryArr = new Array();
 	var summaryText = '';
@@ -1307,7 +1316,7 @@ function createEvidenceTable(text){
 		table = table + '<th width="78">'+header[2]+'</th>';
 		table = table + '<th width="60">'+header[3]+'</th>';
 		table = table + '<th width="103">'+header[4]+'</th>';
-		table = table + '<th width="50">'+header[5]+'</th>';
+	//	table = table + '<th width="50">'+header[5]+'</th>'; // hide QTL for now (18/07/18)
 		table = table + '</tr>';
 		table = table + '</thead>';
 		table = table + '<tbody class="scrollTable">';
@@ -1332,10 +1341,28 @@ function createEvidenceTable(text){
                                  } */
 			table = table + '<td>'+evidenceValue+'</td>';
 			table = table + '<td>'+values[2]+'</td>';
+                        
 			//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-			table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
-			table = table + '<td>'+values[4]+'</td>'; // user genes
-			table = table + '<td>'+values[5]+'</td>';
+			table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>'; // all genes
+                        
+		//	table = table + '<td>'+values[4]+'</td>'; // user genes
+                        // user genes
+                        var userGenes= 0;
+                        if(values[4].length >0) {
+                           userGenes= 1; // min. 1 user gene found
+                           values[4]= values[4].trim();
+                           //keyword= keyword.replace(/"/g, ''').trim();
+                           if(values[4].includes(",")) { // multiple user genes found
+                              userGenes= values[4].split(",").length;
+                             }
+                           table = table +'<td><a href="javascript:;" title="Display in KnetMaps" onclick="generate_UserGenes_EvidenceNetwork('+values[4]+','+keyword+');">'+userGenes+'</a></td>'; // user genes
+                          }
+                          else {
+                           userGenes= 0;
+                           table = table + '<td>'+userGenes+'</td>'; // zero user genes
+                          }
+
+		//	table = table + '<td>'+values[5]+'</td>'; // hide QTL for now (18/07/18)
 			table = table + '</tr>';
 			//Calculates the summary box
 			if (containsKey(values[0],summaryArr)){
@@ -1402,6 +1429,28 @@ function createEvidenceTable(text){
                         // display dynamic Evidence Summary legend above Evidence View.
 		$("#evidenceSummary1").html(summaryText);
 	}
+}
+
+/*
+ * Function
+ * Generates evidence's network for user genes.
+ * @author: Ajit Singh.
+ */
+function generate_UserGenes_EvidenceNetwork(evi_userGenes, keyword) {
+	var ug_list= [];
+        if(evi_userGenes.includes(",")) {
+           var vals= evi_userGenes.split(",");
+           for(var i=0; i < vals.length; i++) {
+               ug_list.push(vals[i]);
+              }
+        }
+        else {
+          ug_list.push(evi_userGenes);
+        }
+        
+        console.log("generate_UserGenes_EvidenceNetwork: api_url: "+ api_url +"/network ; keyword: "+ keyword +", ug_list: "+ ug_list);
+        // Generate Network
+        generateCyJSNetwork(api_url+'/network', {keyword:keyword, list:ug_list});
 }
 
 /*

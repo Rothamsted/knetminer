@@ -1840,7 +1840,7 @@ public class OndexServiceProvider {
 	}
         
         // temporary...
-        public void writeGenomapsFile(String filename, String sb_string) {
+        public void writeResultsFile(String filename, String sb_string) {
             try {
                 BufferedWriter out = new BufferedWriter(new FileWriter(filename));
                 out.write(sb_string);
@@ -2174,15 +2174,35 @@ public class OndexServiceProvider {
 			Set<Integer> listOfGenes = mapConcept2Genes.get(lc.getId());
 			Integer numberOfGenes = listOfGenes.size();
 			// Creates numberOfUserGenes and numberOfQTL
-			Integer numberOfUserGenes = 0;
+			//Integer numberOfUserGenes = 0;
+                        String user_genes="";
 			Integer numberOfQTL = 0;
 
 			for (int log : listOfGenes) {
 
 				ONDEXConcept gene = graph.getConcept(log);
 				if ((userGenes != null) && (gene != null) && (userGenes.contains(gene))) {
-					numberOfUserGenes++;
-				}
+                                   // numberOfUserGenes++;
+                                    // retain gene Accession/Name (18/07/18)
+                                    String geneAcc="";
+                                    for(ConceptAccession acc : gene.getConceptAccessions()) {
+                                        String accValue= acc.getAccession();
+                                        geneAcc = accValue;
+                                        if(acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
+						&& (accValue.indexOf(".") == -1)) {
+                                           geneAcc = accValue;
+                                           break;
+                                          }
+                                        else if(acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
+                                            geneAcc = accValue;
+                                            break;
+                                           }
+                                        }
+                                    // use shortest preferred concept name
+                                  /*  String geneName = getShortestPreferedName(gene.getConceptNames());
+                                    geneAcc= geneName; */
+                                    user_genes= user_genes + geneAcc +",";
+				  }
 
 				if (mapGene2QTL.containsKey(log)) {
 					numberOfQTL++;
@@ -2307,8 +2327,13 @@ public class OndexServiceProvider {
 				// }
 				// }
 			}
+                        
+                        // omit last comma from user_genes String
+                        if(user_genes.contains(",")) {
+                           user_genes= user_genes.substring(0, user_genes.length()-1);
+                          }
 			// writes the row
-			out.append(type + "\t" + name + "\t" + fmt.format(score) + "\t" + numberOfGenes + "\t" + numberOfUserGenes
+			out.append(type + "\t" + name + "\t" + fmt.format(score) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
 					+ "\t" + numberOfQTL + "\t" + ondexId + "\n");
 		}
 		//log.info("Evidence table generated...");

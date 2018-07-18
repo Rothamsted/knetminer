@@ -684,6 +684,8 @@ a.contact-button :hover {
 /* Gene View: interactive evidence summary filter */
 #evidenceSummary2 {cursor:pointer; padding-top:5px; padding-bottom:5px;}
 #loadingDiv_GeneView {float:right; color:darkOrange; font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
+#revertGeneView.unhover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter.png") no-repeat; }
+#revertGeneView.hover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter_hover.png") no-repeat; }
 
 /* Suggestor box */
 /* #suggestor_search_area {} */
