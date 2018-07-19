@@ -1346,16 +1346,16 @@ function createEvidenceTable(text, keyword){
 			table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>'; // all genes
                         
 		//	table = table + '<td>'+values[4]+'</td>'; // user genes
-                        // user genes
+                        // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
                         var userGenes= 0;
-                        if(values[4].length >0) {
-                           userGenes= 1; // min. 1 user gene found
+                        if(values[4].length > 0) {
+                           userGenes= 1; // i.e., min. 1 user gene found
                            values[4]= values[4].trim();
-                           //keyword= keyword.replace(/"/g, ''').trim();
-                           if(values[4].includes(",")) { // multiple user genes found
-                              userGenes= values[4].split(",").length;
+                           if(values[4].includes(",")) { // for multiple user genes
+                              userGenes= values[4].split(",").length; // total user genes found
                              }
-                           table = table +'<td><a href="javascript:;" title="Display in KnetMaps" onclick="generate_UserGenes_EvidenceNetwork('+values[4]+','+keyword+');">'+userGenes+'</a></td>'; // user genes
+                           // launch evidence network using 'userGenes'.
+                           table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_'+ev_i+'">'+userGenes+'</a></td>';
                           }
                           else {
                            userGenes= 0;
@@ -1404,53 +1404,62 @@ function createEvidenceTable(text, keyword){
 			evidencePath(values[6]);
 		});
 
+		/*
+		 * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
+                 * @author: Ajit Singh (19/07/2018)
+		 */
+		$(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function(e) {
+                    e.preventDefault();
+                    var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_","");
+                    var values = e.data.x[evidenceNum].split("\t");
+                    
+                    var evi_userGenes= values[4].trim(); // user gene(s) provided
+                    // Add comma-separated user genes to a new (candidates) list
+                    var ug_list= [];
+                    if(evi_userGenes.includes(",")) {
+                       var vals= evi_userGenes.split(",");
+                       for(var i=0; i < vals.length; i++) {
+                           ug_list.push(vals[i]);
+                          }
+                      }
+                    else {
+                        ug_list.push(evi_userGenes);
+                       }
+                    
+                    var search_keywords= keyword.trim(); // user search keyword(s) used
+                //    search_keywords= search_keywords.replace(/"/g, '\"').trim(); // replace all keyword double quotes with separator/quote
+                    
+                //    console.log("generate userGenes_evidenceNetwork: keywords: "+ search_keywords +", userGenes_list: "+ ug_list);
+                    // Generate Network
+                    generateCyJSNetwork(api_url+'/network', {keyword:search_keywords, list:ug_list});
+		});
+                
 		$("#tablesorterEvidence").tablesorter({
-            sortList: [[3,1]],  //sort by score in decending order
-            textExtraction: function(node) { // Sort TYPE column
-                var attr = $(node).attr('type-sort-value');
-                if (typeof attr !== 'undefined' && attr !== false) {
-                    return attr;
-                }
-                return $(node).text();
-            }
-        });
+                    sortList: [[3,1]],  //sort by score in decending order
+                    textExtraction: function(node) { // Sort TYPE column
+                        var attr = $(node).attr('type-sort-value');
+                        if (typeof attr !== 'undefined' && attr !== false) {
+                            return attr;
+                           }
+                        return $(node).text();
+                       }
+                    });
+
 		//Shows the evidence summary box
 		for(key in summaryArr){
-                            var contype= key.trim();
-			//if (key !== "Trait") {
-                                    summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
-                                 /*  }
-                                 else { // For Trait, display tooltip text as GWAS instead.
-                                    summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
-                                   } */
+                    var contype= key.trim();
+                //    if (key !== "Trait") {
+                        summaryText= summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
+                    /*   }
+                    else { // For Trait, display tooltip text as GWAS instead.
+                        summaryText= summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
+                       }*/
 
 		}
 
                         // display dynamic Evidence Summary legend above Evidence View.
 		$("#evidenceSummary1").html(summaryText);
 	}
-}
-
-/*
- * Function
- * Generates evidence's network for user genes.
- * @author: Ajit Singh.
- */
-function generate_UserGenes_EvidenceNetwork(evi_userGenes, keyword) {
-	var ug_list= [];
-        if(evi_userGenes.includes(",")) {
-           var vals= evi_userGenes.split(",");
-           for(var i=0; i < vals.length; i++) {
-               ug_list.push(vals[i]);
-              }
-        }
-        else {
-          ug_list.push(evi_userGenes);
-        }
-        
-        console.log("generate_UserGenes_EvidenceNetwork: api_url: "+ api_url +"/network ; keyword: "+ keyword +", ug_list: "+ ug_list);
-        // Generate Network
-        generateCyJSNetwork(api_url+'/network', {keyword:keyword, list:ug_list});
 }
 
 /*
