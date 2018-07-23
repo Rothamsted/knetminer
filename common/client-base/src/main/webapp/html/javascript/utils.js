@@ -954,8 +954,7 @@ var table = "";
                         table = table +'<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
 	//	table = table + interactive_summary_Legend;
-		table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + 
-                                '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
+		table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend +'</div>';
 
 		table = table + '<div id= "geneViewTable" class = "scrollTable">';
 		table = table + '<table id = "tablesorter" class="tablesorter">';
