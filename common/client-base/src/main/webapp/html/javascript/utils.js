@@ -817,7 +817,7 @@ function searchKeyword(){
 
 					activateButton('resultsTable');
 					createGenesTable(data.geneTable, keyword, candidateGenes);
-					createEvidenceTable(data.evidenceTable);
+					createEvidenceTable(data.evidenceTable, keyword);
 				}
 	        });
 	}
@@ -825,7 +825,7 @@ function searchKeyword(){
 
 /*
  * Function
- * Generates the new lightweight Network graph, using cytoscapeJS.
+ * Generates the network using KnetMaps
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,requestParams){	
@@ -938,7 +938,7 @@ var table = "";
 		table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,'+btoa(text)+'" target="_blank">Download as TAB delimited file</a><br />';
 		table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
 		table = table + '<form name="checkbox_form">';
-		table = table + 'Max number of genes to show: ';
+		table = table + '<u>Max</u> number of genes to show: ';
 		table = table + '<select value="'+rows+'" id="numGenes">';
 		//table = table + '<select value="'+results+'" id="numGenes">';
                         table = table + '<option value="1000"'+(rows==1000?'selected':'')+'>1000</option>';
@@ -955,7 +955,8 @@ var table = "";
 		// dynamic Evidence Summary to be displayed above Gene View table
 	//	table = table + interactive_summary_Legend;
 		table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ interactive_summary_Legend + 
-                                '<input id="revertGeneView" type="button" value="Undo All" title= "Revert all filtering changes">'+'</div>';
+                                '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
+
 		table = table + '<div id= "geneViewTable" class = "scrollTable">';
 		table = table + '<table id = "tablesorter" class="tablesorter">';
 		table = table + '<thead>';
@@ -970,11 +971,11 @@ var table = "";
 			table = table + '<th width="60">'+values[3]+'</th>';
 			table = table + '<th width="70">'+values[4]+'</th>';
 		}
-		//table = table + '<th width="70">'+values[5]+'</th>';
-		table = table + '<th width="70">'+values[6]+'</th>';
+		//table = table + '<th width="70">'+values[5]+'</th>'; // hide TAXID (if single organism)
+	//	table = table + '<th width="70">'+values[6]+'</th>'; // hide score for now (18/07/18)
 	//	table = table + '<th width="85">'+values[7]+'</th>'; // user yes/no; DISABLED (13/09/17)
 		if(reference_genome == true){ //QTL
-		table = table + '<th width="70">'+values[8]+'</th>';
+		//table = table + '<th width="70">'+values[8]+'</th>'; // hide QTL for now (18/07/18)
                         }
 		table = table + '<th width="220">'+values[9]+'</th>';
 		table = table + '<th width="70">Select</th>';
@@ -1134,7 +1135,7 @@ var table = "";
 
 		    var select = '<td><input id="checkboxGene_'+i+'" type="checkbox" name= "candidates" value="'+values[1]+'"></td>';
 		    //table = table + gene + chr + start + end + score + withinQTL + usersList + evidence + select;
-			table = table + gene + geneName + taxid + chr + start + score + /*usersList +*/ withinQTL + evidence + select;
+			table = table + gene + geneName + taxid + chr + start + /*score + /*usersList +*/ /*withinQTL +*/ evidence + select; // hide score & QTL for now (18/07/18)
 		    table = table + '</tr>';
 		}
                 table = table+'</tbody>';
@@ -1213,6 +1214,14 @@ var table = "";
          //   $("#loadingDiv_GeneView").css("display","none"); // clear
 	});
 
+        $("#revertGeneView").mouseenter(function(e) {
+            $("#revertGeneView").removeClass('unhover').addClass('hover');
+	});
+
+        $("#revertGeneView").mouseout(function(e) {
+            $("#revertGeneView").removeClass('hover').addClass('unhover');
+	});
+        
 	/*
 	 * if select all targets is checked find all targets and check them.
 	 */
@@ -1285,7 +1294,7 @@ function containsKey(keyToTest, array){
  * Function
  *
  */
-function createEvidenceTable(text){
+function createEvidenceTable(text, keyword){
 	var table = "";
 	var summaryArr = new Array();
 	var summaryText = '';
@@ -1307,7 +1316,7 @@ function createEvidenceTable(text){
 		table = table + '<th width="78">'+header[2]+'</th>';
 		table = table + '<th width="60">'+header[3]+'</th>';
 		table = table + '<th width="103">'+header[4]+'</th>';
-		table = table + '<th width="50">'+header[5]+'</th>';
+	//	table = table + '<th width="50">'+header[5]+'</th>'; // hide QTL for now (18/07/18)
 		table = table + '</tr>';
 		table = table + '</thead>';
 		table = table + '<tbody class="scrollTable">';
@@ -1332,10 +1341,28 @@ function createEvidenceTable(text){
                                  } */
 			table = table + '<td>'+evidenceValue+'</td>';
 			table = table + '<td>'+values[2]+'</td>';
+                        
 			//table = table + '<td><a href="javascript:;" onclick="evidencePath('+values[6]+');">'+values[3]+'</a></td>';
-			table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in the new KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>';
-			table = table + '<td>'+values[4]+'</td>'; // user genes
-			table = table + '<td>'+values[5]+'</td>';
+			table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_'+ev_i+'">'+values[3]+'</a></td>'; // all genes
+                        
+		//	table = table + '<td>'+values[4]+'</td>'; // user genes
+                        // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
+                        var userGenes= 0;
+                        if(values[4].length > 0) {
+                           userGenes= 1; // i.e., min. 1 user gene found
+                           values[4]= values[4].trim();
+                           if(values[4].includes(",")) { // for multiple user genes
+                              userGenes= values[4].split(",").length; // total user genes found
+                             }
+                           // launch evidence network using 'userGenes'.
+                           table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_'+ev_i+'">'+userGenes+'</a></td>';
+                          }
+                          else {
+                           userGenes= 0;
+                           table = table + '<td>'+userGenes+'</td>'; // zero user genes
+                          }
+
+		//	table = table + '<td>'+values[5]+'</td>'; // hide QTL for now (18/07/18)
 			table = table + '</tr>';
 			//Calculates the summary box
 			if (containsKey(values[0],summaryArr)){
@@ -1377,25 +1404,56 @@ function createEvidenceTable(text){
 			evidencePath(values[6]);
 		});
 
+		/*
+		 * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
+                 * @author: Ajit Singh (19/07/2018)
+		 */
+		$(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function(e) {
+                    e.preventDefault();
+                    var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_","");
+                    var values = e.data.x[evidenceNum].split("\t");
+                    
+                    var evi_userGenes= values[4].trim(); // user gene(s) provided
+                    // Add comma-separated user genes to a new (candidates) list
+                    var ug_list= [];
+                    if(evi_userGenes.includes(",")) {
+                       var vals= evi_userGenes.split(",");
+                       for(var i=0; i < vals.length; i++) {
+                           ug_list.push(vals[i]);
+                          }
+                      }
+                    else {
+                        ug_list.push(evi_userGenes);
+                       }
+                    
+                    var search_keywords= keyword.trim(); // user search keyword(s) used
+                //    search_keywords= search_keywords.replace(/"/g, '\"').trim(); // replace all keyword double quotes with separator/quote
+                    
+                //    console.log("generate userGenes_evidenceNetwork: keywords: "+ search_keywords +", userGenes_list: "+ ug_list);
+                    // Generate Network
+                    generateCyJSNetwork(api_url+'/network', {keyword:search_keywords, list:ug_list});
+		});
+                
 		$("#tablesorterEvidence").tablesorter({
-            sortList: [[3,1]],  //sort by score in decending order
-            textExtraction: function(node) { // Sort TYPE column
-                var attr = $(node).attr('type-sort-value');
-                if (typeof attr !== 'undefined' && attr !== false) {
-                    return attr;
-                }
-                return $(node).text();
-            }
-        });
+                    sortList: [[3,1]],  //sort by score in decending order
+                    textExtraction: function(node) { // Sort TYPE column
+                        var attr = $(node).attr('type-sort-value');
+                        if (typeof attr !== 'undefined' && attr !== false) {
+                            return attr;
+                           }
+                        return $(node).text();
+                       }
+                    });
+
 		//Shows the evidence summary box
 		for(key in summaryArr){
-                            var contype= key.trim();
-			//if (key !== "Trait") {
-                                    summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
-                                 /*  }
-                                 else { // For Trait, display tooltip text as GWAS instead.
-                                    summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
-                                   } */
+                    var contype= key.trim();
+                //    if (key !== "Trait") {
+                        summaryText= summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+' title="'+key+'"></div>'+summaryArr[key]+'</div>';
+                    /*   }
+                    else { // For Trait, display tooltip text as GWAS instead.
+                        summaryText= summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" title="GWAS"></div>'+summaryArr[key]+'</div>';
+                       }*/
 
 		}
 
