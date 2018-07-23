@@ -224,8 +224,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtl(),
 					request.getListMode());
                         // temporary...
-                        String gv_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_GeneTable.tab").toString();
-                        this.ondexServiceProvider.writeResultsFile(gv_filename, geneTable);
+                    /*    String gv_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_GeneTable.tab").toString();
+                        this.ondexServiceProvider.writeResultsFile(gv_filename, geneTable); */
                                 
 			log.debug("2.) Gene table ");
 
@@ -233,8 +233,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
                         // temporary...
-                        String ev_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_EvidenceTable.tab").toString();
-                        this.ondexServiceProvider.writeResultsFile(ev_filename, evidenceTable);
+                    /*    String ev_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_EvidenceTable.tab").toString();
+                        this.ondexServiceProvider.writeResultsFile(ev_filename, evidenceTable); */
 
 			log.debug("3.) Evidence table ");
 
