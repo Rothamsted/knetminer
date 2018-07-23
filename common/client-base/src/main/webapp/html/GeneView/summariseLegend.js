@@ -71,8 +71,7 @@
 	   }
 	 }
 
- // legend= legend + summaryText +'</div>' +'<input id="revertGeneView" type="button" value="Undo All" onclick="revertGeneViewTable(\''+GeneView_fullText.trim()+'\');" title= "Revert all filtering changes"></div>';
-  legend= legend + summaryText +'</div>';
+  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
   return legend;
  }
 
