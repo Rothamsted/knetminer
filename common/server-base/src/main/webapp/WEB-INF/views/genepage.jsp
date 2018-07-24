@@ -9,7 +9,8 @@
 	<div id="knetmap"></div>
 	<script type="text/javascript">
 		$.ajax({
-		   url: "${apiUrl}/network",
+		//   url: "${apiUrl}/network",
+		   url: "http://knetminer.rothamsted.ac.uk/wheat_api/network",
 		   type: "post",
 		   headers: {
 		       "Accept": "application/json; charset=utf-8",
