@@ -261,7 +261,7 @@ KNETMAPS.ItemInfo = function() {
                                 attrName= metadataJSON.ondexmetadata.relations[j].attributes[k].attrname;
                                 attrValue= metadataJSON.ondexmetadata.relations[j].attributes[k].value;
                                 // For PubMed ID's (PMID), add urls (can be multiple for same attribute name)
-                                if(attrName === "PMID") {
+                                if((attrName === "PMID") || (attrName === "PubMed")) {
                                    // get PMID url from KnetMaps/config
                                    var pmidUrl= "";
                                    for(var u=0; u < url_mappings.html_acc.length; u++) {
