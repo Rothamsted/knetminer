@@ -1538,12 +1538,19 @@ function parseKeywords() {
 function highlightKeywords(text) {
 	parseKeywords();
 	// iterate parsedKeywords map and find whole word matches in text, wrap in highlighted span with mapped colour
+	// first pass marks the bits that need replacing (so that we don't end up recursively replacing our own replaced HTML spans)
 	for (var kw in parsedKeywords) {
         if (parsedKeywords.hasOwnProperty(kw)) {
-			var colour = parsedKeywords[kw];
-			text = text.replace(new RegExp("\\b("+kw+")\\b", "i"), "<span style='background-color:"+parsedKeywords[kw]+"'>$1</span>");
+        	text = text.replace(new RegExp("\\b("+kw+")\\b", "ig"),'__REPLACEME__$1__REPLACEME__');
         }
 	}
+    // second pass does the actual substitution
+    for (var kw in parsedKeywords) {
+        if (parsedKeywords.hasOwnProperty(kw)) {
+            var colour = parsedKeywords[kw];
+            text = text.replace(new RegExp("\\b__REPLACEME__("+kw+")__REPLACEME__\\b", "ig"), "<span style='background-color:"+parsedKeywords[kw]+"'>$1</span>");
+        }
+    }
     return text;
 }
 
