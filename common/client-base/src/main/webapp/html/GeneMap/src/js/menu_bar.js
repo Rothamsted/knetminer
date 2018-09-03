@@ -74,7 +74,7 @@ GENEMAP.MenuBar = function (userConfig) {
       .attr( {
         'id': name,
         'name':  name,
-        'class' : 'myselectpicker'
+        'class' : 'menu-dropdown'
       });
 
     var options = selectElement.selectAll('option').data(data);

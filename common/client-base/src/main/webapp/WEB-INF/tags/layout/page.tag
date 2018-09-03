@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <%@ tag description="Page layout" %>
 
 <%@ attribute name="title"       required="true" description="Page title" %>
@@ -15,9 +17,7 @@
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         <meta name="keywords" content="${keywords}" />
@@ -48,10 +48,10 @@
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script> <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
-		
-	<script src="https://use.fontawesome.com/a90751c39e.js"></script>
-	
-        <jsp:invoke fragment="extraHeader"/>
+
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+
+    <jsp:invoke fragment="extraHeader"/>
         
         <!-- Google Analytics -->
         <script>
