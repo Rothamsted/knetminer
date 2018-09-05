@@ -1726,7 +1726,16 @@ function createSynonymTable(text){
 //					var originalTermName = e.data.x[0].replace("<","").replace(">","");
                                         var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
 //                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
-					
+
+					if (keyword.indexOf(' ')>=0) {
+						if (!keyword.startsWith('"')) {
+                            keyword = '"' + keyword;
+                        }
+                        if (!keyword.endsWith('"')) {
+                            keyword = keyword + '"';
+                        }
+					}
+
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
 					}
