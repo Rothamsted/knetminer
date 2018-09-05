@@ -2355,7 +2355,7 @@ public class OndexServiceProvider {
 		key = key.replace(" AND ", "___");
 		key = key.replace(" OR ", "___");
 		// replace quotes with blank
-		key = key.replace("\"", "");
+		// key = key.replace("\"", "");
 
 		// System.out.println(key);
 
