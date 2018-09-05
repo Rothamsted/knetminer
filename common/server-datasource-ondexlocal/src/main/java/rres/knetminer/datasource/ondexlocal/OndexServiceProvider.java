@@ -2402,8 +2402,6 @@ public class OndexServiceProvider {
 			// to the Synonym Table (for each Concept Type).
 			Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
 
-			out.append("<" + key + ">\n");
-
 			// search concept names
 			String fieldNameCN = getFieldName("ConceptName", null);
 			// QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
@@ -2433,6 +2431,10 @@ public class OndexServiceProvider {
 			}
 
 			if (synonymsList != null) {
+
+				// Only start a KEY tag if it will have contents. Otherwise skip it.
+				out.append("<" + key + ">\n");
+
 				// Creates a sorted list of synonyms
 				sortedSynonymsList.putAll(synonymsList);
 
@@ -2489,9 +2491,9 @@ public class OndexServiceProvider {
 
 					}
 				}
-			}
 
-			out.append("</" + key + ">\n");
+				out.append("</" + key + ">\n");
+			}
 		}
 		return out.toString();
 	}

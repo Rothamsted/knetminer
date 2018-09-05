@@ -1582,7 +1582,7 @@ function createSynonymTable(text){
 								}
 							}
 
-						  table =  table + aTable[i]+'</table>';
+						  table =  table + aTable[i].replace(/"/g, '') + '</table>';
 						}
 					//New Term
 					}else if(evidenceTable[ev_i][0] == '<'){
