@@ -70,8 +70,6 @@ Functions for Add, Remove or Replace terms from the query search box
 */
 function addKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' OR '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -86,8 +84,6 @@ function addKeyword(keyword, from, target){
 
 function addKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' OR '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -102,8 +98,6 @@ function addKeywordUndo(keyword, from, target){
 
 function excludeKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' NOT '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -118,8 +112,6 @@ function excludeKeyword(keyword, from, target){
 
 function excludeKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' NOT '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
