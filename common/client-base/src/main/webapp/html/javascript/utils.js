@@ -1454,97 +1454,6 @@ function createEvidenceTable(text, keyword){
 	}
 }
 
-
-var parsedKeywords = {};
-
-function parseKeywords() {
-	var initialSplit = $('#keywords').val().split(" ");
-	var kwds = [];
-	var ongoingKwd = '';
-	var inQuotes = false;
-	for (var i = 0; i < initialSplit.length; i++) {
-		var kw = initialSplit[i];
-		// skip blank entries
-		if (kw == '') {
-			continue;
-		}
-		// open quote
-		if (kw.startsWith('"')) {
-			// special case open-close single word
-			if (kw.endsWith('"')) {
-				kwds.push(kw.substr(1, kw.length-2));
-			} else {
-				ongoingKwd = kw.substr(1);
-				inQuotes = true;
-			}
-		}
-		// close quote
-		else if (kw.endsWith('"')) {
-			ongoingKwd += " "+kw.substr(0, kw.length-1);
-			kwds.push(ongoingKwd);
-			ongoingKwd = '';
-			inQuotes = false;
-		}
-		// open bracket
-		else if (kw.startsWith('(')) {
-			// special case open-close single word
-	        if (kw.endsWith(')')) {
-                kwds.push(kw.substr(1, kw.length-2));
-            } else {
-                kwds.push(kw.substr(1));
-            }
-		}
-		// close bracket
-		else if (kw.endsWith(')')) {
-            kwds.push(kw.substr(0, kw.length - 1));
-        }
-        // standard word
-		else {
-			if (inQuotes) {
-				if (ongoingKwd == '') {
-					ongoingKwd = kw;
-				} else {
-					ongoingKwd += " " + kw;
-				}
- 			} else {
-				kwds.push(kw);
-			}
-		}
-	}
-	// push final word found, if missing a trailing quote to close it
-	if (ongoingKwd != '') {
-        kwds.push(ongoingKwd);
-	}
-	// remove all AND, OR, NOT
-	parsedKeywords = {};
-	for (var i = 0; i < kwds.length; i++) {
-		var kw = kwds[i].replace(/[\(\)]/g, '').trim().toUpperCase();
-		// in case any blanks slipped through
-		if (kw!='' && kw!='AND' && kw!='OR' && kw!='NOT' && !(kw in parsedKeywords)) {
-            // assign random colour (light colours above 5 in each place)
-            parsedKeywords[kw] = "#000000".replace(/0/g,function(){return ((~~(Math.random()*11))+5).toString(16);});
-		}
-    }
-}
-
-function highlightKeywords(text) {
-	// iterate parsedKeywords map and find whole word matches in text, wrap in highlighted span with mapped colour
-	// first pass marks the bits that need replacing (so that we don't end up recursively replacing our own replaced HTML spans)
-	for (var kw in parsedKeywords) {
-        if (parsedKeywords.hasOwnProperty(kw)) {
-        	text = text.replace(new RegExp("\\b("+kw+")\\b", "ig"),'__REPLACEME__$1__REPLACEME__');
-        }
-	}
-    // second pass does the actual substitution
-    for (var kw in parsedKeywords) {
-        if (parsedKeywords.hasOwnProperty(kw)) {
-            var colour = parsedKeywords[kw];
-            text = text.replace(new RegExp("\\b__REPLACEME__("+kw+")__REPLACEME__\\b", "ig"), "<span style='background-color:"+parsedKeywords[kw]+"'>$1</span>");
-        }
-    }
-    return text;
-}
-
 /*
  * Function
  *
@@ -1561,7 +1470,6 @@ function createSynonymTable(text){
 			var minRowsInTable = 20/*14*/;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
-                parseKeywords();
 				terms = '';
 				table = '';
 				for(var ev_i=0; ev_i < (evidenceTable.length-1); ev_i++) {
@@ -1656,7 +1564,7 @@ function createSynonymTable(text){
 							//If is not a new document type a new row is added to the existing table
 							conceptIndex = aNewConcepts.indexOf(values[1]);
 							row = '<tr>';
-							row = row + '<td width="390">'+highlightKeywords(values[0])+'</td>'
+							row = row + '<td width="390">'+values[0]+'</td>'
 							//row = row + '<td width="80"><a  href="javascript:;" onclick="addKeyword(\''+values[0]+'\', \'synonymstable_add_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword" title="Add term"></div></a> <a href="javascript:;" onclick="excludeKeyword(\''+values[0]+'\', \'synonymstable_exclude_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_exclude_'+ev_i+'_'+countConcepts+'" class="excludeKeyword" title="Exclude term"></div></a> <a href="javascript:;" onclick="replaceKeyword(\''+originalTermName+'\',\''+values[0]+'\', \'synonymstable_replace_'+ev_i+'_'+countConcepts+'\', \'keywords\')"><div id="synonymstable_replace_'+ev_i+'_'+countConcepts+'" class="replaceKeyword" title="Replace term"></div></a></td>';
 							row = row + '<td width="80">';
 							row = row + '<div id="synonymstable_add_'+ev_i+'_'+countConcepts+'" class="addKeyword synonymTableEvent" title="Add term"></div>';
@@ -1710,11 +1618,11 @@ function createSynonymTable(text){
 					showSynonymTab('tabBox_'+termName,buttonID, 'tablesorterSynonym'+termName+'_'+conceptNum);
 				});
 
-				$(".synonymTableEvent").bind("click", {x: evidenceTable}, function(e) {
+				$(".addKeyword,.excludeKeyword,.replaceKeyword").click(function(e) {
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
-					var keyword = e.data.x[synonymNum].split("\t")[0];
+					var keyword = evidenceTable[synonymNum].split("\t")[0];
 //					var originalTermName = e.data.x[0].replace("<","").replace(">","");
                                         var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
 //                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);

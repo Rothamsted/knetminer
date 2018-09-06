@@ -35,8 +35,11 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
+import net.sourceforge.ondex.core.Attribute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -1111,6 +1114,159 @@ public class OndexServiceProvider {
 	}
 
 	/**
+	 * Tests if there is a match of this query within the search string
+	 *
+	 * @param p
+	 *            the pattern (if null then literal match .contains is used)
+	 * @param query
+	 *            the query to match
+	 * @param target
+	 *            the target to match to
+	 * @return is there a match
+	 */
+	private boolean isMatching(Pattern p, String target) {
+		return p.matcher(target).find(0);
+	}
+
+	/**
+	 * Converts a keyword into a list of words
+	 *
+	 * @param keyword
+	 * @return null or the list of words
+	 */
+	private Set<String> parseKeywordIntoSetOfWords(String keyword) {
+		Set<String> result = new HashSet<String>();
+		String key = keyword.replace("(", " ");
+		key = key.replace(")", " ");
+		key = key.replace("AND", " ");
+		key = key.replace("OR", " ");
+		key = key.replace("NOT", " ");
+		key = key.replaceAll("\\s+", " ").trim();
+		String builtK = "";
+		for (String k : key.split(" ")) {
+			if (k.startsWith("\"")) {
+				if (k.endsWith("\"")) {
+					result.add(k.substring(1, k.length()-2));
+				} else {
+					builtK = k.substring(1);
+				}
+			} else if (k.endsWith("\"")) {
+				builtK += " "+k.substring(0, k.length()-1);
+				result.add(builtK);
+				builtK = "";
+			} else {
+				if (builtK != "") {
+					builtK += " "+k;
+				} else {
+					result.add(k);
+				}
+			}
+//				System.out.println("subkeyworkd: "+k);
+		}
+		if (builtK != "") {
+			result.add(builtK);
+		}
+		log.info("keys: " + result);
+		return result;
+	}
+
+	/**
+	 * Searches different fields of a concept for a query or pattern
+	 * and highlights them
+	 *
+	 * @param concept
+	 * @param p
+	 * @param search
+	 * @return true if one of the concept fields contains the query
+	 */
+	private boolean highlight(ONDEXConcept concept, String regex) {
+//			System.out.println("Original keyword: "+regex);
+		boolean found = false;
+		Set<String> keywords = this.parseKeywordIntoSetOfWords(regex);
+
+		String pid = concept.getPID();
+		String anno = concept.getAnnotation();
+		String desc = concept.getDescription();
+
+
+		//Searches and highlights for every key word of regex
+		for (String key : keywords) {
+
+			Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
+			String highlighter = "<span style=\"background-color:yellow\"><b>$0</b></span>";
+
+			//Searchs in pid
+			if(pid.contains(key)){
+				found = true;
+			}
+
+			//Searchs in annotations
+			if(this.isMatching(p, anno)){
+				found = true;
+				// search and replace all matching expressions
+				String newAnno = p.matcher(anno).replaceAll(highlighter);
+				concept.setAnnotation(newAnno);
+			}
+
+			//Searchs in descriptions
+			if(this.isMatching(p, desc)){
+				found = true;
+				// search and replace all matching expressions
+				String newDesc = p.matcher(desc).replaceAll(highlighter);
+				concept.setDescription(newDesc);
+			}
+
+			// search in concept names
+			HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
+			for (ConceptName cno : concept.getConceptNames()) {
+				String cn = cno.getName();
+				if(this.isMatching(p, cn)){
+					found = true;
+					//Saves the conceptNames we want to update
+					namesToCreate.put(cn, cno.isPreferred());
+				}
+			}
+			//For each conceptName of the update list deletes and creates a new conceptName
+			for (String ntc : namesToCreate.keySet()) {
+				if(!ntc.contains("</span>")) {
+					String newName = p.matcher(ntc).replaceAll(highlighter);
+					boolean isPref = namesToCreate.get(ntc);
+					concept.deleteConceptName(ntc);
+					concept.createConceptName(newName, isPref);
+				}
+			}
+
+
+			// search in concept accessions
+			for (ConceptAccession ca : concept.getConceptAccessions()) {
+				String accession = ca.getAccession();
+				if(this.isMatching(p, accession)){
+					found = true;
+				}
+			}
+
+			// search in concept attributes
+			for (Attribute attribute : concept.getAttributes()) {
+				if(!(attribute.getOfType().getId().equals("AA")) ||
+						!(attribute.getOfType().getId().equals("NA")) ||
+						!(attribute.getOfType().getId().startsWith("AA_")) ||
+						!(attribute.getOfType().getId().startsWith("NA_"))){
+					String value = attribute.getValue().toString();
+					if(this.isMatching(p, value)){
+						found = true;
+						// search and replace all matching expressions
+						Matcher m = p.matcher(value);
+						String newAttStr = m.replaceAll(highlighter);
+						attribute.setValue(newAttStr);
+					}
+
+				}
+			}
+		}
+		return found;
+	}
+
+	/**
 	 * Searches with Lucene for documents, finds semantic motifs and by crossing
 	 * this data makes concepts visible, changes the size and highlight the hits
 	 * 
@@ -1171,6 +1327,7 @@ public class OndexServiceProvider {
 
 					// highlight the keyword in any concept attribute values
 					if (!keywordConcepts.contains(cloneCon)) {
+						this.highlight(cloneCon, keyword);
 						keywordConcepts.add(cloneCon);
 
 						if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -2341,35 +2498,6 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Converts a keyword into a list of terms (more than one word)
-	 * 
-	 * @param keyword
-	 * @return null or the list of terms
-	 */
-	public LinkedHashSet<String> parseKeywordIntoSetOfTerms(String keyword) {
-		LinkedHashSet<String> result = new LinkedHashSet<String>();
-		String key = keyword.replace("(", "");
-		key = key.replace(")", "");
-
-		key = key.replace("NOT", "___");
-		key = key.replace(" AND ", "___");
-		key = key.replace(" OR ", "___");
-		// replace quotes with blank
-		// key = key.replace("\"", "");
-
-		// System.out.println(key);
-
-		// key = key.replaceAll("\\s+", " ");
-
-		for (String k : key.split("___")) {
-			result.add(k.trim());
-			// System.out.println("subkeyword for synonym table: "+k.trim());
-		}
-		log.debug("keys: " + result);
-		return result;
-	}
-
-	/**
 	 * Write Synonym Table for Query suggestor
 	 * 
 	 * @param luceneConcepts
@@ -2386,12 +2514,15 @@ public class OndexServiceProvider {
 		// to store top 25 values for each concept type instead of just 25
 		// values per keyword.
 		int existingCount = 0;
-		/* Set<String> */LinkedHashSet<String> keys = parseKeywordIntoSetOfTerms(keyword);
+		/* Set<String> */Set<String> keys = this.parseKeywordIntoSetOfWords(keyword);
 		// Convert the LinkedHashSet to a String[] array.
 		String[] synonymKeys = keys.toArray(new String[keys.size()]);
 		// for (String key : keys) {
 		for (int k = synonymKeys.length - 1; k >= 0; k--) {
 			String key = synonymKeys[k];
+			if (key.indexOf('"')>-1) {
+				key = "\""+key+"\"";
+			}
 			// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 			Analyzer analyzer = new StandardAnalyzer();
 			Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
