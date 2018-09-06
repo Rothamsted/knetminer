@@ -194,7 +194,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.8</java.version>
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
 
 		<log4j.version>2.3</log4j.version>
@@ -218,6 +218,7 @@
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
 		<junit.version>4.7</junit.version>
 		<json.version>20180130</json.version>
+		<ga.version>2.0.0</ga.version>
 	</properties>
 
 	<profiles>
@@ -396,6 +397,12 @@
     				<groupId>org.json</groupId>
     				<artifactId>json</artifactId>
     				<version>${json.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.brsanthu</groupId>
+				<artifactId>google-analytics-java</artifactId>
+				<version>${ga.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
