@@ -1528,7 +1528,6 @@ function parseKeywords() {
 }
 
 function highlightKeywords(text) {
-	parseKeywords();
 	// iterate parsedKeywords map and find whole word matches in text, wrap in highlighted span with mapped colour
 	// first pass marks the bits that need replacing (so that we don't end up recursively replacing our own replaced HTML spans)
 	for (var kw in parsedKeywords) {
@@ -1562,6 +1561,7 @@ function createSynonymTable(text){
 			var minRowsInTable = 20/*14*/;
 			var nullTerm = false;
 			if(evidenceTable.length > 3) {
+                parseKeywords();
 				terms = '';
 				table = '';
 				for(var ev_i=0; ev_i < (evidenceTable.length-1); ev_i++) {
