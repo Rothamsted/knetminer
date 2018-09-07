@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
 	<Properties>
-		<Property name="log-path">${sys:catalina.home}/logs/</Property>
+		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
 	<Appenders>
 		<RollingFile name="RollingFile"
-			fileName="${log-path}/knetminer-server.log"
-			filePattern="${log-path}/knetminer-server-%d{yyyy-MM-dd}.log">
+			fileName="${log-name}.log"
+			filePattern="${log-name}-%d{yyyy-MM-dd}.log">
 			<PatternLayout>
 				<pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern>
 			</PatternLayout>

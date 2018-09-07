@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -1188,12 +1189,17 @@ public class OndexServiceProvider {
 		String anno = concept.getAnnotation();
 		String desc = concept.getDescription();
 
+		Random random = new Random();
 
 		//Searches and highlights for every key word of regex
 		for (String key : keywords) {
 
 			Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
-			String highlighter = "<span style=\"background-color:yellow\"><b>$0</b></span>";
+
+			int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+
+			// format it as hexadecimal string (with hashtag and leading zeros)
+			String highlighter = "<span style=\"background-color:"+String.format("#%06x", colourCode)+"\"><b>$0</b></span>";
 
 			//Searchs in pid
 			if(pid.contains(key)){
@@ -2520,9 +2526,10 @@ public class OndexServiceProvider {
 		// for (String key : keys) {
 		for (int k = synonymKeys.length - 1; k >= 0; k--) {
 			String key = synonymKeys[k];
-			if (key.indexOf('"')>-1) {
+			if (key.contains(" ")) {
 				key = "\""+key+"\"";
 			}
+			log.info("Checking synonyms for "+key);
 			// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 			Analyzer analyzer = new StandardAnalyzer();
 			Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();

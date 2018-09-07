@@ -133,7 +133,6 @@ public class KnetminerServer {
 		}
 		this._googlePageView(ds, "genepage", rawRequest);
 		model.addAttribute("list", new JSONArray(list).toString());
-		model.addAttribute("apiUrl", dataSource.getApiUrl());
 		model.addAttribute("keyword", keyword);
 		return "genepage";
 	}
