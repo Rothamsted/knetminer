@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1180,26 +1181,19 @@ public class OndexServiceProvider {
 	 * @param search
 	 * @return true if one of the concept fields contains the query
 	 */
-	private boolean highlight(ONDEXConcept concept, String regex) {
+	private boolean highlight(ONDEXConcept concept, Map<String,String> keywordColourMap) {
 //			System.out.println("Original keyword: "+regex);
 		boolean found = false;
-		Set<String> keywords = this.parseKeywordIntoSetOfWords(regex);
 
 		String pid = concept.getPID();
 		String anno = concept.getAnnotation();
 		String desc = concept.getDescription();
 
-		Random random = new Random();
-
 		//Searches and highlights for every key word of regex
-		for (String key : keywords) {
+		for (String key : keywordColourMap.keySet()) {
 
 			Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
-
-			int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
-
-			// format it as hexadecimal string (with hashtag and leading zeros)
-			String highlighter = "<span style=\"background-color:"+String.format("#%06x", colourCode)+"\"><b>$0</b></span>";
+			String highlighter = "<span style=\"background-color:"+keywordColourMap.get(key)+"\"><b>$0</b></span>";
 
 			//Searchs in pid
 			if(pid.contains(key)){
@@ -1299,9 +1293,16 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
 		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
 
-		if (keyword != null) {
-			log.info("Keyword is: " + keyword);
+		log.info("Keyword is: " + keyword);
+		Set<String> keywords = keyword==null ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
+		Map<String,String> keywordColourMap = new HashMap<String,String>();
+		Random random = new Random();
+		for (String key : keywords) {
+			int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+			// format it as hexadecimal string (with hashtag and leading zeros)
+			keywordColourMap.put(key, String.format("#%06x", colourCode));
 		}
+
 		// create new graph to return
 		ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
 		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
@@ -1334,8 +1335,7 @@ public class OndexServiceProvider {
 
 					// highlight the keyword in any concept attribute values
 					if (!keywordConcepts.contains(cloneCon)) {
-						this.highlight(cloneCon, keyword);
-                                                //log.info("keyword highlighted in concept: " + cloneCon.getConceptName().getName());
+						this.highlight(cloneCon, keywordColourMap);
 						keywordConcepts.add(cloneCon);
 
 						if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -2540,7 +2540,7 @@ public class OndexServiceProvider {
 		// for (String key : keys) {
 		for (int k = synonymKeys.length - 1; k >= 0; k--) {
 			String key = synonymKeys[k];
-			if (key.contains(" ")) {
+			if (key.contains(" ") && !key.startsWith("\"")) {
 				key = "\""+key+"\"";
 			}
 			log.info("Checking synonyms for "+key);
