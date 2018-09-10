@@ -823,7 +823,9 @@ function searchKeyword(){
  */
 function generateCyJSNetwork(url,requestParams){	
 	// Preloader for KnetMaps
-	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+  //	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+	$("#loadingNetwork_Div").html('<b>Loading Network, please wait...</b>');
+        console.log("Generate network... url: "+ url +", requestParams: "+ requestParams);
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post({
         url:url,
@@ -842,12 +844,14 @@ function generateCyJSNetwork(url,requestParams){
         activateButton('NetworkCanvas');
     	knetmaps.drawRaw('#knet-maps', data.graph);
          // Remove the preloader message in Gene View, for the Network Viewer
-         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+       //  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+         $("#loadingNetwork_Div").html('');
         }
     catch(err) {
         	var errorMsg= err.stack+":::"+err.name+":::"+err.message;
           console.log(errorMsg);
-     	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
+     	 //$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
+         $("#loadingNetwork_Div").html("Error: <br/>"+"Details: "+ errorMsg);
          }
    });
   }
