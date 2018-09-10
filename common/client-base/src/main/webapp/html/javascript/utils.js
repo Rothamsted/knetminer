@@ -1624,8 +1624,17 @@ function createSynonymTable(text){
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
 					var keyword = evidenceTable[synonymNum].split("\t")[0];
 //					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-                                        var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
+					var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
 //                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
+
+                    if (originalTermName.indexOf(' ')>=0) {
+                        if (!originalTermName.startsWith('"')) {
+                            originalTermName = '"' + originalTermName;
+                        }
+                        if (!originalTermName.endsWith('"')) {
+                            originalTermName = originalTermName + '"';
+                        }
+                    }
 
 					if (keyword.indexOf(' ')>=0) {
 						if (!keyword.startsWith('"')) {
