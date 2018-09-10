@@ -681,7 +681,7 @@ public class OndexServiceProvider {
 		mergeHits(hit2score, sHitsAnno, NOTList);
 
 		log.info("Query: " + qAnno.toString(fieldNameCA));
-		log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
+		//log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
 
 		return hit2score;
 	}
@@ -1281,6 +1281,7 @@ public class OndexServiceProvider {
 		HashMap<ONDEXConcept, Float> luceneResults = null;
 		try {
 			luceneResults = searchLucene(keyword);
+                        log.info("Number of Lucene documents found: " + luceneResults.keySet().size());
 		} catch (Exception e) {
 			log.error("Lucene search failed", e);
 		}
@@ -1351,6 +1352,7 @@ public class OndexServiceProvider {
 						continue;
 					}
 
+                                        log.info("highlight path; concept: " + cloneCon.getConceptName().getName());
 					// annotate the semantic motif in the new Ondex graph
 					highlightPath(path, graphCloner);
 				}
@@ -1362,6 +1364,7 @@ public class OndexServiceProvider {
 		}
 
 		if (keywordConcepts.isEmpty()) {
+                    //log.info("keywordConcepts isEmpty()?: " + keywordConcepts.isEmpty());
 			Set<ONDEXConcept> cons = subGraph.getConcepts();
 			Set<ONDEXRelation> rels = subGraph.getRelations();
 
@@ -1414,6 +1417,7 @@ public class OndexServiceProvider {
 		// + " concepts.");
 		log.debug("Number of candidate genes " + candidateGenes.size());
 
+		log.info("export visible network: " + export_visible_network);
 		if (export_visible_network) {
 
 			ONDEXGraphMetaData md = subGraph.getMetaData();
@@ -1435,6 +1439,7 @@ public class OndexServiceProvider {
 
 			ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
 
+                        log.info("graph filtered...");
 			subGraph = filteredGraph;
 
 		}
@@ -1453,6 +1458,7 @@ public class OndexServiceProvider {
 	 *            cloner for the new graph
 	 */
 	public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
+            //log.info("highlightPath...");
 
 		Font fontHighlight = new Font("sansserif", Font.BOLD, 20);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -1475,10 +1481,11 @@ public class OndexServiceProvider {
 			attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
 
 		RelationType rt = md.getFactory().createRelationType("is_p");
-		EvidenceType et = md.getFactory().createEvidenceType("QTLNetMiner");
+		EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
 
 		// search last concept of semantic motif for keyword
 		int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
+                //log.info("search last concept of semantic motif for keyword... indexLastCon: "+ indexLastCon);
 
 		ONDEXConcept gene = null;
 		ONDEXConcept con = null;
@@ -1487,6 +1494,7 @@ public class OndexServiceProvider {
 			// first element is gene and last element the keyword concept
 			gene = (ONDEXConcept) path.getStartingEntity();
 			con = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+                        //log.info("starting gene: "+ gene.getConceptName().getName() +", indexLastCon: "+ indexLastCon +", concept: "+ con.getConceptName().getName());
 		}
 
 		// else {
@@ -1499,6 +1507,7 @@ public class OndexServiceProvider {
 		// annotate concept that contains keyword
 		ONDEXConcept c = graphCloner.cloneConcept(con);
 		if (c.getAttribute(attSize) == null) {
+                    //log.info("annotate concept: " + c.getConceptName().getName());
 			// initial size
 			c.createAttribute(attSize, new Integer(70), false);
 			c.createAttribute(attVisible, true, false);
@@ -1509,7 +1518,8 @@ public class OndexServiceProvider {
 
 		// annotate gene concept
 		ONDEXConcept g = graphCloner.cloneConcept(gene);
-		if (g.getAttribute(attSize) == null) {
+		if (g.getAttribute(attFlagged) == null) {
+                    //log.info("annotate gene: " + g.getConceptName().getName());
 
 			// initial size
 			g.createAttribute(attSize, new Integer(70), false);
@@ -1523,6 +1533,7 @@ public class OndexServiceProvider {
 
 		// add gene-QTL-Trait relations to the network
 		if (mapGene2QTL.containsKey(gene.getId())) {
+                    //log.info("add gene-QTL-Trait relations to the network...");
 			Set<Integer> qtlSet = mapGene2QTL.get(gene.getId());
 			for (Integer qtlId : qtlSet) {
 				ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
@@ -1560,6 +1571,7 @@ public class OndexServiceProvider {
 		for (ONDEXRelation rel : rels) {
 			ONDEXRelation r = graphCloner.cloneRelation(rel);
 			if (r.getAttribute(attSize) == null) {
+                            //log.info("annotate path connecting gene to keyword concept, relationID: " + r.getId());
 				// initial size
 				r.createAttribute(attSize, new Integer(5), false);
 				r.createAttribute(attVisible, true, false);
@@ -1576,6 +1588,7 @@ public class OndexServiceProvider {
 		for (ONDEXConcept pconcept : cons) {
 			ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
 			if (concept.getAttribute(attSize) == null) {
+                            //log.info("set intermediate concepts in path to visible, concept: " + concept.getConceptName().getName());
 				concept.createAttribute(attSize, new Integer(30), false);
 				concept.createAttribute(attVisible, true, false);
 			} else {
