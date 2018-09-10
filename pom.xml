@@ -209,7 +209,7 @@
 		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
-		<ondex.version>1.2.1-SNAPSHOT</ondex.version>
+		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
 		<springframework.version>4.3.0.RELEASE</springframework.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<jackson.library.version>2.7.5</jackson.library.version>
