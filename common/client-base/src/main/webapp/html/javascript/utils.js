@@ -253,7 +253,7 @@ function matchCounter(){
 }
 
 /*
- * Function to get the network of all genes related to a given evidence
+ * Function to get the network of all "genes" related to a given evidence
  * 
  */		
 function evidencePath(id){	
@@ -822,8 +822,11 @@ function searchKeyword(){
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,requestParams){	
-	// Preloader for KnetMaps
-	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+    // Preloader for KnetMaps in Gene View and Evidence View
+    $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
+    $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+  //  console.log("Generate network... url: "+ url +", requestParams: "+ requestParams);
+
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post({
         url:url,
@@ -841,20 +844,21 @@ function generateCyJSNetwork(url,requestParams){
     try {
         activateButton('NetworkCanvas');
     	knetmaps.drawRaw('#knet-maps', data.graph);
-         // Remove the preloader message in Gene View, for the Network Viewer
-         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-        }
+        
+        // Remove the preloader message in Gene View and Evidence View, for KnetMaps
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+        $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+       }
     catch(err) {
         	var errorMsg= err.stack+":::"+err.name+":::"+err.message;
-          console.log(errorMsg);
-     	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
+                console.log(errorMsg);
          }
    });
   }
 
 /*
  * Function
- * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
+ * Generates multi gene network in KnetMaps
  * @author: Ajit Singh.
  */
 function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
@@ -1151,7 +1155,7 @@ var table = "";
     //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
 
 	/*
-	 * click Handler for viewing a network.
+	 * click Handler for viewing a network of a gene.
 	 */
 	$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
 		e.preventDefault();
@@ -1387,17 +1391,17 @@ function createEvidenceTable(text, keyword){
 		});
 
 		/*
-		 * click handler for generating the evidence path network
+		 * click handler for generating the evidence path network, from "Genes" column
 		 */
 		$(".generateEvidencePath").bind("click", {x: evidenceTable}, function(e) {
 			e.preventDefault();
 			var evidenceNum = $(e.target).attr("id").replace("generateEvidencePath_","");
 			var values = e.data.x[evidenceNum].split("\t");
-			evidencePath(values[6]);
+			evidencePath(values[6]); // generate network for selected Evidence
 		});
 
 		/*
-		 * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
+		 * click handler for generating the evidence path network for "user genes" (using user_genes and search keywords, passed to api_url
                  * @author: Ajit Singh (19/07/2018)
 		 */
 		$(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function(e) {

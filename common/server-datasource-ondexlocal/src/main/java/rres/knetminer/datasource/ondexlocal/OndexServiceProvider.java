@@ -1352,7 +1352,7 @@ public class OndexServiceProvider {
 						continue;
 					}
 
-                                        log.info("highlight path; concept: " + cloneCon.getConceptName().getName());
+                                        //log.info("highlight path; concept (id, type): " + cloneCon.getId() +", "+ cloneCon.getOfType().getFullname());
 					// annotate the semantic motif in the new Ondex graph
 					highlightPath(path, graphCloner);
 				}
