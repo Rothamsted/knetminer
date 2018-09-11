@@ -70,8 +70,6 @@ Functions for Add, Remove or Replace terms from the query search box
 */
 function addKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' OR '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -86,8 +84,6 @@ function addKeyword(keyword, from, target){
 
 function addKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' OR '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -102,8 +98,6 @@ function addKeywordUndo(keyword, from, target){
 
 function excludeKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' NOT '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -118,8 +112,6 @@ function excludeKeyword(keyword, from, target){
 
 function excludeKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' NOT '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -261,7 +253,7 @@ function matchCounter(){
 }
 
 /*
- * Function to get the network of all genes related to a given evidence
+ * Function to get the network of all "genes" related to a given evidence
  * 
  */		
 function evidencePath(id){	
@@ -307,8 +299,8 @@ $(document).ready(
 			$('#keywords').keyup(function(e) {
                             // this stops matchCounter being called when the enter or arrow keys are used.
                             if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                               matchCounter();
-      			      }
+                                matchCounter();
+                            }
                             // update matchCounter and QuerySuggestor only when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
 /*                            if(e.which === 13) {
                                matchCounter();
@@ -578,6 +570,7 @@ $(document).ready(
 		    	 			}
 							
 		    	 			matchCounter(); // updates number of matched documents and genes counter
+
                                                 // Refresh the Query Suggester, if it's already open.
 	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                                                    refreshQuerySuggester();
@@ -829,8 +822,11 @@ function searchKeyword(){
  * @author: Ajit Singh.
  */
 function generateCyJSNetwork(url,requestParams){	
-	// Preloader for KnetMaps
-	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+    // Preloader for KnetMaps in Gene View and Evidence View
+    $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
+    $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+  //  console.log("Generate network... url: "+ url +", requestParams: "+ requestParams);
+
     //OndexServlet?mode=network&list=POPTR_0003s06140&keyword=acyltransferase
 	$.post({
         url:url,
@@ -848,20 +844,21 @@ function generateCyJSNetwork(url,requestParams){
     try {
         activateButton('NetworkCanvas');
     	knetmaps.drawRaw('#knet-maps', data.graph);
-         // Remove the preloader message in Gene View, for the Network Viewer
-         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-        }
+        
+        // Remove the preloader message in Gene View and Evidence View, for KnetMaps
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+        $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+       }
     catch(err) {
         	var errorMsg= err.stack+":::"+err.name+":::"+err.message;
-          console.log(errorMsg);
-     	 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">'+"Error: <br/>"+"Details: "+ errorMsg+'</div>');
+                console.log(errorMsg);
          }
    });
   }
 
 /*
  * Function
- * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
+ * Generates multi gene network in KnetMaps
  * @author: Ajit Singh.
  */
 function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
@@ -1158,7 +1155,7 @@ var table = "";
     //    $("#numGenes").val(rows); // DISABLED on 03/03/2017 as was breaking GeneView table.
 
 	/*
-	 * click Handler for viewing a network.
+	 * click Handler for viewing a network of a gene.
 	 */
 	$(".viewGeneNetwork").bind("click", {x: candidate_genes}, function(e) {
 		e.preventDefault();
@@ -1394,17 +1391,17 @@ function createEvidenceTable(text, keyword){
 		});
 
 		/*
-		 * click handler for generating the evidence path network
+		 * click handler for generating the evidence path network, from "Genes" column
 		 */
 		$(".generateEvidencePath").bind("click", {x: evidenceTable}, function(e) {
 			e.preventDefault();
 			var evidenceNum = $(e.target).attr("id").replace("generateEvidencePath_","");
 			var values = e.data.x[evidenceNum].split("\t");
-			evidencePath(values[6]);
+			evidencePath(values[6]); // generate network for selected Evidence
 		});
 
 		/*
-		 * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
+		 * click handler for generating the evidence path network for "user genes" (using user_genes and search keywords, passed to api_url
                  * @author: Ajit Singh (19/07/2018)
 		 */
 		$(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function(e) {
@@ -1497,7 +1494,7 @@ function createSynonymTable(text){
 								}
 							}
 
-						  table =  table + aTable[i]+'</table>';
+						  table =  table + aTable[i].replace(/"/g, '') + '</table>';
 						}
 					//New Term
 					}else if(evidenceTable[ev_i][0] == '<'){
@@ -1625,15 +1622,33 @@ function createSynonymTable(text){
 					showSynonymTab('tabBox_'+termName,buttonID, 'tablesorterSynonym'+termName+'_'+conceptNum);
 				});
 
-				$(".synonymTableEvent").bind("click", {x: evidenceTable}, function(e) {
+				$(".addKeyword,.excludeKeyword,.replaceKeyword").click(function(e) {
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
-					var keyword = e.data.x[synonymNum].split("\t")[0];
+					var keyword = evidenceTable[synonymNum].split("\t")[0];
 //					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-                                        var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
+					var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
 //                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
-					
+
+                    if (originalTermName.indexOf(' ')>=0) {
+                        if (!originalTermName.startsWith('"')) {
+                            originalTermName = '"' + originalTermName;
+                        }
+                        if (!originalTermName.endsWith('"')) {
+                            originalTermName = originalTermName + '"';
+                        }
+                    }
+
+					if (keyword.indexOf(' ')>=0) {
+						if (!keyword.startsWith('"')) {
+                            keyword = '"' + keyword;
+                        }
+                        if (!keyword.endsWith('"')) {
+                            keyword = keyword + '"';
+                        }
+					}
+
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
 					}

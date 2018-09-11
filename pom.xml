@@ -194,7 +194,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.8</java.version>
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
 
 		<log4j.version>2.3</log4j.version>
@@ -209,7 +209,7 @@
 		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
-		<ondex.version>1.2.1-SNAPSHOT</ondex.version>
+		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
 		<springframework.version>4.3.0.RELEASE</springframework.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<jackson.library.version>2.7.5</jackson.library.version>
@@ -218,6 +218,7 @@
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
 		<junit.version>4.7</junit.version>
 		<json.version>20180130</json.version>
+		<ga.version>2.0.0</ga.version>
 	</properties>
 
 	<profiles>
@@ -385,6 +386,11 @@
 				<artifactId>log4j-jcl</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-web</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>junit</groupId>
@@ -396,6 +402,12 @@
     				<groupId>org.json</groupId>
     				<artifactId>json</artifactId>
     				<version>${json.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.brsanthu</groupId>
+				<artifactId>google-analytics-java</artifactId>
+				<version>${ga.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
