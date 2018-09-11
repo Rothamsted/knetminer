@@ -1,14 +1,20 @@
 package rres.knetminer.datasource.server;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import com.brsanthu.googleanalytics.GoogleAnalytics;
+import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -50,6 +56,8 @@ public class KnetminerServer {
 
 	private Map<String, KnetminerDataSource> dataSourceCache;
 
+	private String gaTrackingId;
+
 	/**
 	 * Autowiring will populate the basic dataSources list with all instances of
 	 * KnetminerDataSourceProvider. This method is used, upon first access, to take
@@ -58,13 +66,49 @@ public class KnetminerServer {
 	 * instance a data source with getName()='hello' will receive all requests
 	 * matching '/hello/**'.
 	 */
-	private void buildDataSourceCache() {
+	@PostConstruct
+	public void _buildDataSourceCache() {
 		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
 		for (KnetminerDataSource dataSource : this.dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
 				this.dataSourceCache.put(ds, dataSource);
 				log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
 			}
+		}
+	}
+
+	/**
+	 * Loads Google Analytics properties from src/main/resources/ga.properties . It expects
+	 * to find GOOGLE_ANALYTICS_ENABLED = True or False. If True, it also expects to find
+	 * GOOGLE_ANALYTICS_TRACKING_ID with a valid Google Analytics tracking ID.
+	 */
+	@PostConstruct
+	public void _loadGATrackingId() {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		InputStream input = classLoader.getResourceAsStream("ga.properties");
+		Properties props = new Properties();
+		try {
+			props.load(input);
+		} catch (IOException ex) {
+			log.warn("Failed to load Google Analytics properties file", ex);
+			return;
+		}
+		if (Boolean.parseBoolean(props.getProperty("GOOGLE_ANALYTICS_ENABLED", "False"))) {
+			this.gaTrackingId = props.getProperty("GOOGLE_ANALYTICS_TRACKING_ID", null);
+			if (this.gaTrackingId == null)
+				log.warn("Google Analytics properties file enabled analytics but did not provide tracking ID");
+			else
+				log.info("Google Analytics enabled");
+		} else
+			log.info("Google Analytics disabled");
+	}
+
+	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest) {
+		if (this.gaTrackingId!=null) {
+			String pageName = ds+"/"+mode;
+			GoogleAnalytics ga = new GoogleAnalyticsBuilder().withTrackingId(this.gaTrackingId).build();
+			ga.pageView().documentTitle(pageName).documentPath("/" + pageName)
+					.userIp(rawRequest.getRemoteAddr()).send();
 		}
 	}
 
@@ -87,8 +131,8 @@ public class KnetminerServer {
 		if (dataSource == null) {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+		this._googlePageView(ds, "genepage", rawRequest);
 		model.addAttribute("list", new JSONArray(list).toString());
-		model.addAttribute("apiUrl", dataSource.getApiUrl());
 		model.addAttribute("keyword", keyword);
 		return "genepage";
 	}
@@ -153,9 +197,6 @@ public class KnetminerServer {
 	}
 
 	private KnetminerDataSource getConfiguredDatasource(String ds, HttpServletRequest rawRequest) {
-		if (this.dataSourceCache == null) {
-			this.buildDataSourceCache();
-		}
 		KnetminerDataSource dataSource = this.dataSourceCache.get(ds);
 		if (dataSource == null) {
 			log.info("Invalid data source requested: /" + ds);
@@ -192,6 +233,7 @@ public class KnetminerServer {
 			}
 			KnetminerResponse response;
 			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
+			this._googlePageView(ds, mode, rawRequest);
 			response = (KnetminerResponse) method.invoke(dataSource, ds, request);
 			return new ResponseEntity<KnetminerResponse>(response, HttpStatus.OK);
 		} catch (NoSuchMethodException e) {

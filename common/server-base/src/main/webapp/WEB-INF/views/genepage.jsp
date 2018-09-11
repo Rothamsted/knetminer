@@ -9,21 +9,20 @@
 	<div id="knetmap"></div>
 	<script type="text/javascript">
 		$.ajax({
-		//   url: "${apiUrl}/network",
-		   url: "http://knetminer.rothamsted.ac.uk/wheat_api/network",
-		   type: "post",
-		   headers: {
-		       "Accept": "application/json; charset=utf-8",
-		       "Content-Type": "application/json; charset=utf-8"
-		       },
-		   dataType: "json",
-		   data: JSON.stringify({
-		       keyword: "${keyword}",
-		       list: ${list}
-		       })
-		   }).success(function(data) {
-		      KNETMAPS.KnetMaps().drawRaw("#knetmap", data.graph);
-		   });
+            url: "network",
+            type: "post",
+            headers: {
+                "Accept": "application/json; charset=utf-8",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            dataType: "json",
+            data: JSON.stringify({
+                keyword: "${keyword}",
+                list: ${list}
+            })
+        }).success(function (data) {
+            KNETMAPS.KnetMaps().drawRaw("#knetmap", data.graph);
+        });
 		</script>
 </body>
 </html>
