@@ -1,15 +1,57 @@
 {
-  "name": "gene-map",
-  "version": "1.0.0",
-  "description": "",
-  "main": "genemap.js",
+ "name": "genomaps",
+  "version": "1.0.1",
+  "license": "MIT",
+  "description": "Interactive visualization of high-density SNP, QTL, GWAS and gene data",
+  "main": "genomaps.js",
+  "homepage": "http://knetminer.rothamsted.ac.uk/GenoMaps/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rothamsted/genomaps.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Rothamsted/genomaps.js/issues"
+  },
+  "author": {
+    "name": "Keywan Hassani-Pak",
+    "email": "keywan.hassani-pak@rothamsted.ac.uk",
+    "url": "https://www.rothamsted.ac.uk/our-people/keywan-hassani-pak"
+  },
+  "contributors": [
+    {
+      "name": "Francis Newson",
+      "email": "francis.newson@tessella.com"
+    },
+	{
+      "name": "Ajit Singh",
+      "email": "ajit.singh@rothamsted.ac.uk"
+    },
+   {
+      "name": "Peter Norton",
+      "email": "peter.norton@tessella.com"
+    }
+  ],
+  "keywords": [
+  	"genome",
+  	"chromosome",
+  	"SNP",
+	"QTL",
+	"GWAS",
+	"gene",	
+  	"visualisation",
+  	"visualization",
+  	"node",
+  	"npm",
+  	"nodejs",
+  	"bower",
+  	"D3",
+  	"biojs"
+  ],
   "directories": {
     "doc": "docs",
     "test": "test"
   },
   "dependencies": {
-    "bower": "^1.8.4",
-    "jquery": "^3.3.1"
   },
   "devDependencies": {
     "del": "^2.2.0",
@@ -36,11 +78,10 @@
     "jshint-stylish": "^2.1.0",
     "run-sequence": "^1.1.5",
     "wiredep": "^3.0.0",
-    "yargs": "^4.8.1"
+    "yargs": "^4.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  }
+
 }

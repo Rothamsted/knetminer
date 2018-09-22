@@ -1,8 +1,39 @@
 {
-  "name": "knet-maps",
-  "version": "1.0.0",
-  "description": "",
+  "name": "knetmaps",
+  "version": "1.0.2",
+  "license": "ISC",
+  "description": "Interactive network visualization tool for intuitive exploratory analysis of heterogeneous knowledge graphs",
   "main": "knetmaps.js",
+  "homepage": "http://knetminer.rothamsted.ac.uk/KnetMaps/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rothamsted/knetmaps.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Rothamsted/knetmaps.js/issues"
+  },
+  "author": {
+    "name": "Ajit Singh",
+    "email": "ajit.singh@rothamsted.ac.uk",
+    "url": "https://www.rothamsted.ac.uk/our-people/ajit-singh"
+  },
+  "contributors": [
+    {
+      "name": "Keywan Hassani-Pak",
+      "email": "keywan.hassani-pak@rothamsted.ac.uk"
+    }
+  ],
+  "keywords": [
+  	"network",
+  	"visualisation",
+  	"visualization",
+  	"node",
+  	"npm",
+  	"nodejs",
+  	"bower",
+  	"cytoscapejs",
+  	"biojs"
+  ],
   "directories": {
     "doc": "docs",
     "test": "test"
@@ -39,7 +70,5 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
