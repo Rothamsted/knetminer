@@ -1,34 +1,34 @@
 {
  "name": "genomaps",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "Interactive visualization of high-density SNP, QTL, GWAS and gene data",
-  "main": "genemap.js",
-  "homepage": "https://ondex.rothamsted.ac.uk/QTLNetMiner/",
+  "main": "genomaps.js",
+  "homepage": "http://knetminer.rothamsted.ac.uk/GenoMaps/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rothamsted/GenoMap.js"
+    "url": "https://github.com/Rothamsted/genomaps.js"
   },
   "bugs": {
-    "url": "https://github.com/Rothamsted/GenoMap.js/issues"
+    "url": "https://github.com/Rothamsted/genomaps.js/issues"
   },
   "author": {
     "name": "Keywan Hassani-Pak",
-    "email": "pakk@rothamsted.ac.uk",
-    "url": "http://www.rothamsted.ac.uk/people/pakk"
+    "email": "keywan.hassani-pak@rothamsted.ac.uk",
+    "url": "https://www.rothamsted.ac.uk/our-people/keywan-hassani-pak"
   },
   "contributors": [
     {
       "name": "Francis Newson",
       "email": "francis.newson@tessella.com"
     },
-    {
-      "name": "Peter Norton",
-      "email": "peter.norton@tessella.com"
-    },
-    {
+	{
       "name": "Ajit Singh",
       "email": "ajit.singh@rothamsted.ac.uk"
+    },
+   {
+      "name": "Peter Norton",
+      "email": "peter.norton@tessella.com"
     }
   ],
   "keywords": [
