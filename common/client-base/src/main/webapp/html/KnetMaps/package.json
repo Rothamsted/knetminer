@@ -1,6 +1,6 @@
 {
-  "name": "knet-maps",
-  "version": "1.0.0",
+  "name": "knetmaps",
+  "version": "1.0.1",
   "description": "",
   "main": "knetmaps.js",
   "directories": {
