@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="cicer-client:war">
+    <output-path>$PROJECT_DIR$/cicer/client/target</output-path>
+    <root id="archive" name="knetminer-cicer.war">
+      <element id="artifact" artifact-name="cicer-client:war exploded" />
+    </root>
+  </artifact>
+</component>

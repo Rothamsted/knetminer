@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="potato-client:war">
+    <output-path>$PROJECT_DIR$/potato/client/target</output-path>
+    <root id="archive" name="knetminer-potato.war">
+      <element id="artifact" artifact-name="potato-client:war exploded" />
+    </root>
+  </artifact>
+</component>

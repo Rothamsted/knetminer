@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/arabidopsis/arabidopsis.iml" filepath="$PROJECT_DIR$/arabidopsis/arabidopsis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arabidopsis/client/arabidopsis-client.iml" filepath="$PROJECT_DIR$/arabidopsis/client/arabidopsis-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arabidopsis/datasource/arabidopsis-datasource.iml" filepath="$PROJECT_DIR$/arabidopsis/datasource/arabidopsis-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arabidopsis/ws/arabidopsis-ws.iml" filepath="$PROJECT_DIR$/arabidopsis/ws/arabidopsis-ws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/barley/barley.iml" filepath="$PROJECT_DIR$/barley/barley.iml" />
+      <module fileurl="file://$PROJECT_DIR$/barley/client/barley-client.iml" filepath="$PROJECT_DIR$/barley/client/barley-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/barley/datasource/barley-datasource.iml" filepath="$PROJECT_DIR$/barley/datasource/barley-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boleracea/boleracea.iml" filepath="$PROJECT_DIR$/boleracea/boleracea.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boleracea/client/boleracea-client.iml" filepath="$PROJECT_DIR$/boleracea/client/boleracea-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boleracea/datasource/boleracea-datasource.iml" filepath="$PROJECT_DIR$/boleracea/datasource/boleracea-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chicken/chicken.iml" filepath="$PROJECT_DIR$/chicken/chicken.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chicken/client/chicken-client.iml" filepath="$PROJECT_DIR$/chicken/client/chicken-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chicken/datasource/chicken-datasource.iml" filepath="$PROJECT_DIR$/chicken/datasource/chicken-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cicer/cicer.iml" filepath="$PROJECT_DIR$/cicer/cicer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cicer/client/cicer-client.iml" filepath="$PROJECT_DIR$/cicer/client/cicer-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cicer/datasource/cicer-datasource.iml" filepath="$PROJECT_DIR$/cicer/datasource/cicer-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/client-base/client-base.iml" filepath="$PROJECT_DIR$/common/client-base/client-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cow/cow.iml" filepath="$PROJECT_DIR$/cow/cow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cow/client/cow-client.iml" filepath="$PROJECT_DIR$/cow/client/cow-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cow/datasource/cow-datasource.iml" filepath="$PROJECT_DIR$/cow/datasource/cow-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drosophilla/drosophilla.iml" filepath="$PROJECT_DIR$/drosophilla/drosophilla.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drosophilla/client/drosophilla-client.iml" filepath="$PROJECT_DIR$/drosophilla/client/drosophilla-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drosophilla/datasource/drosophilla-datasource.iml" filepath="$PROJECT_DIR$/drosophilla/datasource/drosophilla-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/fgraminearum/fgraminearum.iml" filepath="$PROJECT_DIR$/fungi/fgraminearum/fgraminearum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/fgraminearum/client/fgraminearum-client.iml" filepath="$PROJECT_DIR$/fungi/fgraminearum/client/fgraminearum-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/fgraminearum/datasource/fgraminearum-datasource.iml" filepath="$PROJECT_DIR$/fungi/fgraminearum/datasource/fgraminearum-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/fungi.iml" filepath="$PROJECT_DIR$/fungi/fungi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/humanDisease/humandisease.iml" filepath="$PROJECT_DIR$/humanDisease/humandisease.iml" />
+      <module fileurl="file://$PROJECT_DIR$/humanDisease/client/humandisease-client.iml" filepath="$PROJECT_DIR$/humanDisease/client/humandisease-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/humanDisease/datasource/humandisease-datasource.iml" filepath="$PROJECT_DIR$/humanDisease/datasource/humandisease-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/knetminer.iml" filepath="$PROJECT_DIR$/.idea/knetminer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maize/maize.iml" filepath="$PROJECT_DIR$/maize/maize.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maize/client/maize-client.iml" filepath="$PROJECT_DIR$/maize/client/maize-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maize/datasource/maize-datasource.iml" filepath="$PROJECT_DIR$/maize/datasource/maize-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pig/pig.iml" filepath="$PROJECT_DIR$/pig/pig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pig/client/pig-client.iml" filepath="$PROJECT_DIR$/pig/client/pig-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pig/datasource/pig-datasource.iml" filepath="$PROJECT_DIR$/pig/datasource/pig-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/poplar/poplar.iml" filepath="$PROJECT_DIR$/poplar/poplar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/poplar/client/poplar-client.iml" filepath="$PROJECT_DIR$/poplar/client/poplar-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/poplar/datasource/poplar-datasource.iml" filepath="$PROJECT_DIR$/poplar/datasource/poplar-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/potato/potato.iml" filepath="$PROJECT_DIR$/potato/potato.iml" />
+      <module fileurl="file://$PROJECT_DIR$/potato/client/potato-client.iml" filepath="$PROJECT_DIR$/potato/client/potato-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/potato/datasource/potato-datasource.iml" filepath="$PROJECT_DIR$/potato/datasource/potato-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rice/rice.iml" filepath="$PROJECT_DIR$/rice/rice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rice/client/rice-client.iml" filepath="$PROJECT_DIR$/rice/client/rice-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rice/datasource/rice-datasource.iml" filepath="$PROJECT_DIR$/rice/datasource/rice-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/server-base/server-base.iml" filepath="$PROJECT_DIR$/common/server-base/server-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/server-datasource-api/server-datasource-api.iml" filepath="$PROJECT_DIR$/common/server-datasource-api/server-datasource-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/server-datasource-ondexlocal/server-datasource-ondexlocal.iml" filepath="$PROJECT_DIR$/common/server-datasource-ondexlocal/server-datasource-ondexlocal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sviminalis/sviminalis.iml" filepath="$PROJECT_DIR$/sviminalis/sviminalis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sviminalis/client/sviminalis-client.iml" filepath="$PROJECT_DIR$/sviminalis/client/sviminalis-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sviminalis/datasource/sviminalis-datasource.iml" filepath="$PROJECT_DIR$/sviminalis/datasource/sviminalis-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tomato/tomato.iml" filepath="$PROJECT_DIR$/tomato/tomato.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tomato/client/tomato-client.iml" filepath="$PROJECT_DIR$/tomato/client/tomato-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tomato/datasource/tomato-datasource.iml" filepath="$PROJECT_DIR$/tomato/datasource/tomato-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheat/wheat.iml" filepath="$PROJECT_DIR$/wheat/wheat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheat/client/wheat-client.iml" filepath="$PROJECT_DIR$/wheat/client/wheat-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheat/datasource/wheat-datasource.iml" filepath="$PROJECT_DIR$/wheat/datasource/wheat-datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheat/ws/wheat-ws.iml" filepath="$PROJECT_DIR$/wheat/ws/wheat-ws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/ws-example/ws-example.iml" filepath="$PROJECT_DIR$/common/ws-example/ws-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/ztritici/ztritici.iml" filepath="$PROJECT_DIR$/fungi/ztritici/ztritici.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/ztritici/client/ztritici-client.iml" filepath="$PROJECT_DIR$/fungi/ztritici/client/ztritici-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fungi/ztritici/datasource/ztritici-datasource.iml" filepath="$PROJECT_DIR$/fungi/ztritici/datasource/ztritici-datasource.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.sourceforge.ondex.core:workflow-api:1.2.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/workflow-api/1.2.1-SNAPSHOT/workflow-api-1.2.1-20180413.173906-72.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/workflow-api/1.2.1-SNAPSHOT/workflow-api-1.2.1-20180413.173906-72-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/workflow-api/1.2.1-SNAPSHOT/workflow-api-1.2.1-20180413.173906-72-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

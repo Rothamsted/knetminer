@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="drosophilla-client:war">
+    <output-path>$PROJECT_DIR$/drosophilla/client/target</output-path>
+    <root id="archive" name="knetminer-drosophilla.war">
+      <element id="artifact" artifact-name="drosophilla-client:war exploded" />
+    </root>
+  </artifact>
+</component>

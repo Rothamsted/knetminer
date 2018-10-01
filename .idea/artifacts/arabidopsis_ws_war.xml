@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="arabidopsis-ws:war">
+    <output-path>$PROJECT_DIR$/arabidopsis/ws/target</output-path>
+    <root id="archive" name="ws.war">
+      <element id="artifact" artifact-name="arabidopsis-ws:war exploded" />
+    </root>
+  </artifact>
+</component>

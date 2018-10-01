@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="fgraminearum-client:war exploded">
+    <output-path>$PROJECT_DIR$/fungi/fgraminearum/client/target/knetminer-fgraminearum</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="fgraminearum-client" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/fungi/fgraminearum/client/target/knetminer-fgraminearum/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="fgraminearum-client/web/Web" />
+      <element id="artifact" artifact-name="client-base:war exploded" />
+    </root>
+  </artifact>
+</component>

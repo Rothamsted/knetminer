@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="USE_RELEASE_OPTION" value="false" />
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="arabidopsis-client" />
+        <module name="arabidopsis-datasource" />
+        <module name="arabidopsis-ws" />
+        <module name="barley-client" />
+        <module name="barley-datasource" />
+        <module name="boleracea-client" />
+        <module name="boleracea-datasource" />
+        <module name="chicken-client" />
+        <module name="chicken-datasource" />
+        <module name="cicer-client" />
+        <module name="cicer-datasource" />
+        <module name="client-base" />
+        <module name="cow-client" />
+        <module name="cow-datasource" />
+        <module name="drosophilla-client" />
+        <module name="drosophilla-datasource" />
+        <module name="fgraminearum-client" />
+        <module name="fgraminearum-datasource" />
+        <module name="humandisease-client" />
+        <module name="humandisease-datasource" />
+        <module name="maize-client" />
+        <module name="maize-datasource" />
+        <module name="pig-client" />
+        <module name="pig-datasource" />
+        <module name="poplar-client" />
+        <module name="poplar-datasource" />
+        <module name="potato-client" />
+        <module name="potato-datasource" />
+        <module name="rice-client" />
+        <module name="rice-datasource" />
+        <module name="server-base" />
+        <module name="server-datasource-api" />
+        <module name="server-datasource-ondexlocal" />
+        <module name="sviminalis-client" />
+        <module name="sviminalis-datasource" />
+        <module name="tomato-client" />
+        <module name="tomato-datasource" />
+        <module name="wheat-client" />
+        <module name="wheat-datasource" />
+        <module name="wheat-ws" />
+        <module name="ws-example" />
+        <module name="ztritici-client" />
+        <module name="ztritici-datasource" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="arabidopsis" target="1.5" />
+      <module name="arabidopsis-client" target="1.8" />
+      <module name="arabidopsis-datasource" target="1.8" />
+      <module name="arabidopsis-ws" target="1.8" />
+      <module name="barley" target="1.5" />
+      <module name="barley-client" target="1.8" />
+      <module name="barley-datasource" target="1.8" />
+      <module name="boleracea" target="1.5" />
+      <module name="boleracea-client" target="1.8" />
+      <module name="boleracea-datasource" target="1.8" />
+      <module name="chicken" target="1.5" />
+      <module name="chicken-client" target="1.8" />
+      <module name="chicken-datasource" target="1.8" />
+      <module name="cicer" target="1.5" />
+      <module name="cicer-client" target="1.8" />
+      <module name="cicer-datasource" target="1.8" />
+      <module name="client-base" target="1.8" />
+      <module name="common" target="1.5" />
+      <module name="cow" target="1.5" />
+      <module name="cow-client" target="1.8" />
+      <module name="cow-datasource" target="1.8" />
+      <module name="drosophilla" target="1.5" />
+      <module name="drosophilla-client" target="1.8" />
+      <module name="drosophilla-datasource" target="1.8" />
+      <module name="fgraminearum" target="1.5" />
+      <module name="fgraminearum-client" target="1.8" />
+      <module name="fgraminearum-datasource" target="1.8" />
+      <module name="fungi" target="1.5" />
+      <module name="humandisease" target="1.5" />
+      <module name="humandisease-client" target="1.8" />
+      <module name="humandisease-datasource" target="1.8" />
+      <module name="knetminer" target="1.5" />
+      <module name="maize" target="1.5" />
+      <module name="maize-client" target="1.8" />
+      <module name="maize-datasource" target="1.8" />
+      <module name="pig" target="1.5" />
+      <module name="pig-client" target="1.8" />
+      <module name="pig-datasource" target="1.8" />
+      <module name="poplar" target="1.5" />
+      <module name="poplar-client" target="1.8" />
+      <module name="poplar-datasource" target="1.8" />
+      <module name="potato" target="1.5" />
+      <module name="potato-client" target="1.8" />
+      <module name="potato-datasource" target="1.8" />
+      <module name="rice" target="1.5" />
+      <module name="rice-client" target="1.8" />
+      <module name="rice-datasource" target="1.8" />
+      <module name="server-base" target="1.8" />
+      <module name="server-datasource-api" target="1.8" />
+      <module name="server-datasource-ondexlocal" target="1.8" />
+      <module name="sviminalis" target="1.5" />
+      <module name="sviminalis-client" target="1.8" />
+      <module name="sviminalis-datasource" target="1.8" />
+      <module name="tomato" target="1.5" />
+      <module name="tomato-client" target="1.8" />
+      <module name="tomato-datasource" target="1.8" />
+      <module name="wheat" target="1.5" />
+      <module name="wheat-client" target="1.8" />
+      <module name="wheat-datasource" target="1.8" />
+      <module name="wheat-ws" target="1.8" />
+      <module name="ws-example" target="1.8" />
+      <module name="ztritici" target="1.5" />
+      <module name="ztritici-client" target="1.8" />
+      <module name="ztritici-datasource" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

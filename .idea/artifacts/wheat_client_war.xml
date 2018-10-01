@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="wheat-client:war">
+    <output-path>$PROJECT_DIR$/wheat/client/target</output-path>
+    <root id="archive" name="knetminer-wheat.war">
+      <element id="artifact" artifact-name="wheat-client:war exploded" />
+    </root>
+  </artifact>
+</component>

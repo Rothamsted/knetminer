@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.sourceforge.ondex.modules:generic:1.2.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/modules/generic/1.2.1-SNAPSHOT/generic-1.2.1-20180413.174701-121.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/modules/generic/1.2.1-SNAPSHOT/generic-1.2.1-20180413.174701-121-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/modules/generic/1.2.1-SNAPSHOT/generic-1.2.1-20180413.174701-121-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

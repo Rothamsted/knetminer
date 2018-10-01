@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.sourceforge.ondex.core:marshal:1.2.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/marshal/1.2.1-SNAPSHOT/marshal-1.2.1-20180413.173812-74.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/marshal/1.2.1-SNAPSHOT/marshal-1.2.1-20180413.173812-74-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/ondex/core/marshal/1.2.1-SNAPSHOT/marshal-1.2.1-20180413.173812-74-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,1350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="15ff318e-7a1b-4dc4-9b05-1407c56d637c" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/arabidopsis/client/src/main/webapp/html/javascript/utils-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/arabidopsis/client/src/main/webapp/html/javascript/utils-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arabidopsis/datasource/src/main/resources/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/arabidopsis/datasource/src/main/resources/config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexServiceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexServiceProvider.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/fungi/fgraminearum/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/ztritici/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/target/" />
+    <ignored path="$PROJECT_DIR$/potato/client/target/" />
+    <ignored path="$PROJECT_DIR$/common/server-datasource-api/target/" />
+    <ignored path="$PROJECT_DIR$/maize/client/target/" />
+    <ignored path="$PROJECT_DIR$/drosophilla/client/target/" />
+    <ignored path="$PROJECT_DIR$/common/server-base/target/" />
+    <ignored path="$PROJECT_DIR$/pig/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/rice/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/poplar/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/ztritici/client/target/" />
+    <ignored path="$PROJECT_DIR$/maize/target/" />
+    <ignored path="$PROJECT_DIR$/cow/client/target/" />
+    <ignored path="$PROJECT_DIR$/boleracea/target/" />
+    <ignored path="$PROJECT_DIR$/humanDisease/target/" />
+    <ignored path="$PROJECT_DIR$/maize/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/drosophilla/target/" />
+    <ignored path="$PROJECT_DIR$/cicer/client/target/" />
+    <ignored path="$PROJECT_DIR$/cow/target/" />
+    <ignored path="$PROJECT_DIR$/rice/client/target/" />
+    <ignored path="$PROJECT_DIR$/common/client-base/target/" />
+    <ignored path="$PROJECT_DIR$/wheat/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/common/target/" />
+    <ignored path="$PROJECT_DIR$/tomato/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/boleracea/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/chicken/client/target/" />
+    <ignored path="$PROJECT_DIR$/cicer/target/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/chicken/target/" />
+    <ignored path="$PROJECT_DIR$/sviminalis/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/wheat/ws/target/" />
+    <ignored path="$PROJECT_DIR$/arabidopsis/target/" />
+    <ignored path="$PROJECT_DIR$/potato/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/poplar/client/target/" />
+    <ignored path="$PROJECT_DIR$/wheat/target/" />
+    <ignored path="$PROJECT_DIR$/cicer/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/chicken/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/humanDisease/client/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/fgraminearum/client/target/" />
+    <ignored path="$PROJECT_DIR$/barley/target/" />
+    <ignored path="$PROJECT_DIR$/cow/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/arabidopsis/client/target/" />
+    <ignored path="$PROJECT_DIR$/common/server-datasource-ondexlocal/target/" />
+    <ignored path="$PROJECT_DIR$/potato/target/" />
+    <ignored path="$PROJECT_DIR$/rice/target/" />
+    <ignored path="$PROJECT_DIR$/sviminalis/target/" />
+    <ignored path="$PROJECT_DIR$/drosophilla/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/ztritici/target/" />
+    <ignored path="$PROJECT_DIR$/arabidopsis/ws/target/" />
+    <ignored path="$PROJECT_DIR$/barley/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/pig/client/target/" />
+    <ignored path="$PROJECT_DIR$/arabidopsis/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/poplar/target/" />
+    <ignored path="$PROJECT_DIR$/humanDisease/datasource/target/" />
+    <ignored path="$PROJECT_DIR$/common/ws-example/target/" />
+    <ignored path="$PROJECT_DIR$/barley/client/target/" />
+    <ignored path="$PROJECT_DIR$/wheat/client/target/" />
+    <ignored path="$PROJECT_DIR$/boleracea/client/target/" />
+    <ignored path="$PROJECT_DIR$/pig/target/" />
+    <ignored path="$PROJECT_DIR$/sviminalis/client/target/" />
+    <ignored path="$PROJECT_DIR$/tomato/target/" />
+    <ignored path="$PROJECT_DIR$/tomato/client/target/" />
+    <ignored path="$PROJECT_DIR$/fungi/fgraminearum/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1640842247">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="10" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.17" value="2" />
+          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.22" value="1" />
+          <entry key="project.open.time.23" value="1" />
+          <entry key="project.open.time.26" value="1" />
+          <entry key="project.open.time.29" value="1" />
+          <entry key="project.open.time.35" value="1" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.opened" value="11" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="class" value="3" />
+          <entry key="css" value="6" />
+          <entry key="html" value="2" />
+          <entry key="iml" value="2" />
+          <entry key="java" value="18" />
+          <entry key="js" value="13" />
+          <entry key="jsp" value="4" />
+          <entry key="less" value="7" />
+          <entry key="properties" value="1" />
+          <entry key="tag" value="1" />
+          <entry key="xml" value="60" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CLASS" value="3" />
+          <entry key="CSS" value="6" />
+          <entry key="HTML" value="2" />
+          <entry key="IDEA_MODULE" value="2" />
+          <entry key="JAVA" value="18" />
+          <entry key="JSP" value="5" />
+          <entry key="JavaScript" value="13" />
+          <entry key="Less" value="7" />
+          <entry key="Properties" value="1" />
+          <entry key="XML" value="60" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.spring.boot.run.usages" />
+      <usages-collector id="statistics.spring.boot.mvc.usages" />
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CSS" value="24" />
+          <entry key="JAVA" value="4201" />
+          <entry key="JSP" value="43" />
+          <entry key="JavaScript" value="4319" />
+          <entry key="Less" value="142" />
+          <entry key="Properties" value="64" />
+          <entry key="XML" value="146" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="css" value="24" />
+          <entry key="java" value="4201" />
+          <entry key="js" value="4319" />
+          <entry key="jsp" value="35" />
+          <entry key="less" value="142" />
+          <entry key="properties" value="64" />
+          <entry key="tag" value="8" />
+          <entry key="xml" value="146" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages" />
+    </session>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="knetminer" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexServiceProvider.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="113">
+              <caret line="1193" column="24" lean-forward="true" selection-start-line="1193" selection-start-column="24" selection-end-line="1193" selection-end-column="24" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/javascript/utils.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="1640" column="23" selection-start-line="1640" selection-start-column="23" selection-end-line="1640" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>addKeyword</find>
+      <find>synonymTableEvent</find>
+      <find>createSynon</find>
+      <find>addKey</find>
+      <find>getApiUrl</find>
+      <find>Words</find>
+      <find>setA</find>
+      <find>span§</find>
+      <find>gold</find>
+      <find>yellow</find>
+      <find>AddConceptNodeInfo</find>
+      <find>cyjsJson</find>
+      <find>Export</find>
+      <find>knetminer-server</find>
+      <find>Initi</find>
+      <find>servlet</find>
+      <find>web.xml</find>
+      <find>highlightPath</find>
+      <find>evidencePath</find>
+      <find>evidenceP</find>
+      <find>highlightP</find>
+      <find>candidateGEnes</find>
+      <find>colour</find>
+      <find>highlight(</find>
+      <find>Colour</find>
+      <find>Random</find>
+      <find>contains</find>
+      <find>parseKey</find>
+      <find>replaceKey</find>
+      <find>highli</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/js</dir>
+      <dir>$PROJECT_DIR$/common/client-base/src/main</dir>
+      <dir>$PROJECT_DIR$/common/client-base</dir>
+      <dir>$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/javascript</dir>
+      <dir>$PROJECT_DIR$/common/client-base/src</dir>
+      <dir>$PROJECT_DIR$/common/server-datasource-ondexlocal/src</dir>
+      <dir>$PROJECT_DIR$/common</dir>
+      <dir>$PROJECT_DIR$/common/server-base</dir>
+      <dir>$PROJECT_DIR$</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/common/ws-example/src/ga.properties" />
+        <option value="$PROJECT_DIR$/common/ws-example/src/main/resources/ga.properties" />
+        <option value="$PROJECT_DIR$/arabidopsis/client/src/main/webapp/html/javascript/utils-config.js" />
+        <option value="$PROJECT_DIR$/common/server-datasource-ondexlocal/pom.xml" />
+        <option value="$PROJECT_DIR$/arabidopsis/datasource/src/main/resources/config.xml" />
+        <option value="$PROJECT_DIR$/arabidopsis/client/src/main/webapp/html/index.jsp" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/WEB-INF/tags/layout/page.tag" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/less/mapview.less" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/css/style.css" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/js/menu_bar.js" />
+        <option value="$PROJECT_DIR$/common/server-base/src/main/webapp/WEB-INF/views/genepage.jsp" />
+        <option value="$PROJECT_DIR$/common/server-base/src/main/java/rres/knetminer/datasource/server/KnetminerServer.java" />
+        <option value="$PROJECT_DIR$/common/server-base/src/main/resources/log4j2.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/common/server-base/pom.xml" />
+        <option value="$PROJECT_DIR$/common/ws-example/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/common/server-base/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/arabidopsis/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/arabidopsis/ws/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/wheat/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/wheat/ws/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/tomato/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/sviminalis/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/rice/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/potato/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/poplar/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/pig/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/maize/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/humanDisease/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/fungi/fgraminearum/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/fungi/ztritici/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/drosophilla/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/cow/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/cicer/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/chicken/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/boleracea/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/barley/client/src/main/webapp/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/javascript/utils.js" />
+        <option value="$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexServiceProvider.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand />
+      <select />
+    </treeState>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/node_modules" />
+    <handled-path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/node_modules" />
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/abbrev/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ajv/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/align-text/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/amdefine/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ansi-escapes/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ansi-regex/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ansicolors/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/archy/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/array-filter/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/array-find-index/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/array-map/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/array-reduce/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/asn1/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/assert-plus/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/async/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/asynckit/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/aws-sign2/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/aws4/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/balanced-match/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bcrypt-pbkdf/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/binary/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bl/node_modules/readable-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bl/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/boom/node_modules/hoek/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/boom/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-config/node_modules/mout/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-config/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-endpoint-parser/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-json/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-logger/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/async/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/caseless/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/har-validator/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/mkdirp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/qs/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/request/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/tough-cookie/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/node_modules/tunnel-agent/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/bower-registry-client/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/boxen/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/brace-expansion/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/buffers/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/builtin-modules/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/camelcase-keys/node_modules/camelcase/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/camelcase-keys/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/camelcase/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/capture-stack-trace/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cardinal/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/caseless/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/center-align/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chainsaw/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chalk/node_modules/ansi-styles/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chalk/node_modules/supports-color/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chalk/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chmodr/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/chownr/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cli-cursor/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cli-width/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cliui/node_modules/wordwrap/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cliui/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/co/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/code-point-at/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/combined-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/commander/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/concat-map/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/configstore/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/configstore/node_modules/mkdirp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/configstore/node_modules/uuid/benchmark/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/configstore/node_modules/uuid/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/configstore/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/core-util-is/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/create-error-class/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/cryptiles/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/currently-unhandled/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/dashdash/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/decamelize/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/decompress-zip/node_modules/isarray/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/decompress-zip/node_modules/readable-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/decompress-zip/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/deep-extend/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/delayed-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/destroy/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/dot-prop/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/duplexer2/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ecc-jsbn/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/end-of-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ends-with/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/error-ex/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/escape-string-regexp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/exit-hook/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ext-list/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ext-name/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/extend/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/extsprintf/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/figures/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/filled-array/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/find-up/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/findup-sync/node_modules/glob/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/findup-sync/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/forever-agent/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/form-data/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fs-write-stream-atomic/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fs.realpath/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fstream-ignore/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fstream/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fstream/node_modules/mkdirp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/fstream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/generate-function/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/generate-object-property/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/get-stdin/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/getpass/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/github/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/glob/node_modules/minimatch/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/glob/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/got/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/graceful-fs/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/handlebars/node_modules/source-map/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/handlebars/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/har-schema/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/har-validator/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/has-ansi/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/hawk/node_modules/hoek/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/hawk/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/hosted-git-info/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/http-signature/node_modules/assert-plus/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/http-signature/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/iferr/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/imurmurhash/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/indent-string/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/inflight/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/inherits/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/ini/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/inquirer/node_modules/lodash/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/inquirer/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/intersect/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-arrayish/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-buffer/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-builtin-module/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-finite/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-fullwidth-code-point/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-my-json-valid/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-npm/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-obj/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-plain-obj/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-property/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-redirect/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-retry-allowed/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-root/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-typedarray/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/is-utf8/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/isarray/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/isexe/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/isstream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/jsbn/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/json-schema/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/json-stable-stringify/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/json-stringify-safe/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/jsonify/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/jsonpointer/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/jsprim/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/junk/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/kind-of/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/latest-version/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/lazy-cache/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/load-json-file/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/lockfile/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/lodash/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/longest/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/loud-rejection/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/lowercase-keys/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/lru-cache/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/map-obj/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/md5-hex/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/md5-o-matic/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/meow/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mime-db/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mime-types/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mime/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/minimatch/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mkdirp/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mkdirp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mkpath/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mout/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/mute-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/nested-error-stacks/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/node-status-codes/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/node-uuid/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/nopt/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/normalize-package-data/node_modules/semver/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/normalize-package-data/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/number-is-nan/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/oauth-sign/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/object-assign/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/once/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/onetime/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/opn/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/optimist/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/optimist/node_modules/wordwrap/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/optimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/os-homedir/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/os-tmpdir/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/osenv/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/p-throttler/node_modules/q/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/p-throttler/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/package-json/node_modules/semver/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/package-json/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/parse-json/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/path-exists/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/path-is-absolute/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/path-parse/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/path-type/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/performance-now/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/pify/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/pinkie-promise/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/pinkie/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/prepend-http/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/process-nextick-args/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/promptly/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/pump/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/punycode/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/q/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/rc/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/read-all-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/read-pkg-up/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/read-pkg/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/read/node_modules/mute-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/read/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/readable-stream/node_modules/string_decoder/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/readable-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/readline2/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/redent/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/redeyed/node_modules/esprima/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/redeyed/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/registry-auth-token/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/registry-url/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/repeat-string/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/repeating/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request-progress/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request-replay/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request/node_modules/async/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request/node_modules/form-data/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request/node_modules/qs/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request/node_modules/tough-cookie/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/request/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/deep-extend/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/rc/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/resolve/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/resolve/test/resolver/baz/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/resolve/test/resolver/biz/node_modules/garply/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/resolve/test/resolver/incorrect_main/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/node_modules/strip-json-comments/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/requireg/test/fixtures/lib/node_modules/beaker/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/test/module_dir/zmodules/bbb/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/test/resolver/baz/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/test/resolver/dot_main/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/test/resolver/dot_slash_main/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/resolve/test/resolver/incorrect_main/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/restore-cursor/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/retry/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/right-align/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/rimraf/node_modules/glob/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/rimraf/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/run-async/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/rx-lite/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/safe-buffer/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/semver-diff/node_modules/semver/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/semver-diff/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/semver-utils/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/semver/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/shell-quote/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/signal-exit/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/slide/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/sntp/node_modules/hoek/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/sntp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/sort-keys-length/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/sort-keys/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/spdx-correct/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/spdx-expression-parse/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/spdx-license-ids/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/sshpk/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/string-width/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/string_decoder/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/stringify-object/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/stringstream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/strip-ansi/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/strip-bom/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/strip-indent/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/strip-json-comments/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tar-fs/node_modules/minimist/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tar-fs/node_modules/mkdirp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tar-fs/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tar-stream/node_modules/bl/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tar-stream/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/throttleit/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/through/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/timed-out/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tmp/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/touch/node_modules/nopt/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/touch/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/traverse/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/trim-newlines/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tunnel-agent/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/tweetnacl/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/uglify-js/node_modules/source-map/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/uglify-js/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/uglify-to-browserify/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/untildify/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/unzip-response/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/update-notifier/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/url-parse-lax/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/user-home/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/util-deprecate/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/uuid/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/validate-npm-package-license/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/verror/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/which/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/widest-line/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/window-size/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/wrappy/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/write-file-atomic/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/xdg-basedir/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/xtend/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/lib/node_modules/yargs/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/node_modules/bower/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/bootstrap-touchspin/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/bootstrap/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/d3.promise/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/es5-shim/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/es6-shim/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/jasmine-collection-matchers/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/jasmine-core/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/jquery-ui/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/lodash/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/loglevel/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/saveSvgAsPng/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/bower_components/simple-statistics/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/package.json" />
+      <path value="$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="803" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Code maturityJava</id>
+          </State>
+          <State>
+            <id>CorrectnessLintAndroid</id>
+          </State>
+          <State>
+            <id>GeneralJavaScript</id>
+          </State>
+          <State>
+            <id>JUnitJava</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>JavaScript</id>
+          </State>
+          <State>
+            <id>JavaScript validity issuesJavaScript</id>
+          </State>
+          <State>
+            <id>LintAndroid</id>
+          </State>
+          <State>
+            <id>PerformanceJava</id>
+          </State>
+          <State>
+            <id>PerformanceLintAndroid</id>
+          </State>
+          <State>
+            <id>Probable bugsJava</id>
+          </State>
+          <State>
+            <id>Probable bugsJavaScript</id>
+          </State>
+          <State>
+            <id>Serialization issuesJava</id>
+          </State>
+          <State>
+            <id>Threading issuesJava</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="parent" type="58d84e3e:PackageViewProjectNode" />
+              <item name="server-base" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="parent" type="58d84e3e:PackageViewProjectNode" />
+              <item name="server-base" type="616d4139:PackageViewModuleNode" />
+              <item name="rres.knetminer.datasource.server" type="1f31426a:PackageElementNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="AndroidView" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="rres" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="rres" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="knetminer" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="rres" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="knetminer" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="datasource" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="parent" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="server-base" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="rres" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="knetminer" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="datasource" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="server" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knetminer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="knetminer" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="client-base" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="javascript" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536571302750" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/common/ws-example/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="15ff318e-7a1b-4dc4-9b05-1407c56d637c" name="Default" comment="" />
+      <created>1535639285056</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1535639285056</updated>
+      <workItem from="1535639290197" duration="468000" />
+      <workItem from="1535640365468" duration="82000" />
+      <workItem from="1535640643673" duration="513000" />
+      <workItem from="1535642748415" duration="527000" />
+      <workItem from="1535643290908" duration="34000" />
+      <workItem from="1535643333595" duration="681000" />
+      <workItem from="1535967574823" duration="21417000" />
+      <workItem from="1536158652099" duration="2711000" />
+      <workItem from="1536164340849" duration="54000" />
+      <workItem from="1536233123924" duration="13253000" />
+      <workItem from="1536306961078" duration="4587000" />
+      <workItem from="1536315272175" duration="1320000" />
+      <workItem from="1536570246790" duration="1146000" />
+      <workItem from="1538387267160" duration="1241000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="48034000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1440" height="803" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49648383" visible="true" weight="0.28183118" />
+      <window_info id="Structure" order="1" weight="0.2496318" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" sideWeight="0.5035162" side_tool="true" weight="0.26752505" />
+      <window_info id="Nl-Palette" order="7" />
+      <window_info id="Web" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32770744" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Spring" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Java Enterprise" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Properties" order="4" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
+      <window_info anchor="right" id="Maven Projects" order="6" weight="0.3298969" />
+      <window_info anchor="right" id="Database" order="7" />
+      <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="right" id="Theme Preview" order="9" />
+      <window_info anchor="right" id="Preview" order="10" weight="0.3297568" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/.tmp/js/menu_bar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="149" column="4" selection-start-line="149" selection-start-column="4" selection-end-line="149" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/dist/styles/genemap.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/dist/styles/genemap-lib.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/less/mapview.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="253" column="9" selection-start-line="253" selection-start-column="9" selection-end-line="253" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="873" column="1" selection-start-line="873" selection-start-column="1" selection-end-line="873" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/css/releaseNotes_style.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/WEB-INF/tags/layout/page.tag">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="28" column="71" selection-start-line="28" selection-start-column="53" selection-end-line="28" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/js/genemap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="49" column="24" selection-start-line="49" selection-start-column="21" selection-end-line="49" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/GeneMap/src/js/menu_bar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="72" column="13" selection-start-line="72" selection-start-column="7" selection-end-line="72" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/dist/js/knetmaps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="473" column="1" selection-start-line="473" selection-start-column="1" selection-end-line="473" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/javascript/knetmaps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="77" column="37" selection-start-line="77" selection-start-column="37" selection-end-line="77" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-datasource-api/src/main/java/rres/knetminer/datasource/api/KnetminerDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-193">
+          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/datasource/src/main/java/rres/knetminer/datasource/provider/Arabidopsis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/datasource/src/main/resources/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/src/main/java/rres/knetminer/datasource/server/KnetminerServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="135" selection-start-line="135" selection-end-line="135" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/src/main/webapp/WEB-INF/views/genepage.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/KnetMaps/javascript/knet-generator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="64" column="79" selection-start-line="64" selection-start-column="79" selection-end-line="64" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/ws-example/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/pom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/ws/pom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/src/main/java/rres/knetminer/datasource/server/KnetminerServerInitializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="100" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="100" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="59" column="20" selection-start-line="59" selection-start-column="20" selection-end-line="59" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/src/main/resources/log4j2.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="16" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/ws-example/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="387" column="25" selection-start-line="387" selection-start-column="25" selection-end-line="387" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/client/src/main/webapp/html/index.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-base/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="57" selection-start-line="3" selection-start-column="57" selection-end-line="3" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wheat/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wheat/ws/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tomato/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sviminalis/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rice/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/potato/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/poplar/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pig/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maize/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/humanDisease/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fungi/fgraminearum/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fungi/ztritici/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drosophilla/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cow/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cicer/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chicken/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boleracea/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/barley/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/client/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="6" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arabidopsis/ws/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexLocalDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="287" column="41" selection-start-line="287" selection-start-column="32" selection-end-line="287" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-base/src/main/webapp/html/javascript/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="1640" column="23" selection-start-line="1640" selection-start-column="23" selection-end-line="1640" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-datasource-ondexlocal/src/main/java/rres/knetminer/datasource/ondexlocal/OndexServiceProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="1193" column="24" lean-forward="true" selection-start-line="1193" selection-start-column="24" selection-end-line="1193" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

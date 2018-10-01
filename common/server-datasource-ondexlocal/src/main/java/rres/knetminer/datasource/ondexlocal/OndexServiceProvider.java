@@ -1111,6 +1111,212 @@ public class OndexServiceProvider {
 	}
 
 	/**
+	 * Tests if there is a match of this query within the search string
+	 *
+	 * @param p
+	 *            the pattern (if null then literal match .contains is used)
+	 * @param query
+	 *            the query to match
+	 * @param target
+	 *            the target to match to
+	 * @return is there a match
+	 */
+	private boolean isMatching(Pattern p, String target) {
+		return p.matcher(target).find(0);
+	}
+
+	/**
+	 * Converts a keyword into a list of words
+	 *
+	 * @param keyword
+	 * @return null or the list of words
+	 */
+	private Set<String> parseKeywordIntoSetOfWords(String keyword) {
+		Set<String> result = new HashSet<String>();
+		String key = keyword.replace("(", " ");
+		key = key.replace(")", " ");
+		key = key.replace("AND", " ");
+		key = key.replace("OR", " ");
+		key = key.replace("NOT", " ");
+		key = key.replaceAll("\\s+", " ").trim();
+		String builtK = "";
+		for (String k : key.split(" ")) {
+			if (k.startsWith("\"")) {
+				if (k.endsWith("\"")) {
+					result.add(k.substring(1, k.length()-2));
+				} else {
+					builtK = k.substring(1);
+				}
+			} else if (k.endsWith("\"")) {
+				builtK += " "+k.substring(0, k.length()-1);
+				result.add(builtK);
+				builtK = "";
+			} else {
+				if (builtK != "") {
+					builtK += " "+k;
+				} else {
+					result.add(k);
+				}
+			}
+//				System.out.println("subkeyworkd: "+k);
+		}
+		if (builtK != "") {
+			result.add(builtK);
+		}
+		log.info("keys: " + result);
+		return result;
+	}
+
+	/**
+	 * Searches different fields of a concept for a query or pattern
+	 * and highlights them
+	 *
+	 * @param concept
+	 * @param p
+	 * @param search
+	 * @return true if one of the concept fields contains the query
+	 */
+	private boolean highlight(ONDEXConcept concept, Map<String,String> keywordColourMap) {
+//			System.out.println("Original keyword: "+regex);
+		boolean found = false;
+
+		// Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
+		String[] orderedKeywords = keywordColourMap.keySet().toArray(new String[0]);
+		Arrays.sort(orderedKeywords, new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				if (o1.length()==o2.length()) {
+					return o1.compareTo(o2); // Same length? Compare alphabetically
+				} else {
+					return o1.length()-o2.length(); // Otherwise put the shorter one first
+				}
+			}
+		});
+
+		// First pass: wrap matches in ____. Prevents substring interference
+		String marker = "____";
+		for (String key : orderedKeywords) {
+			Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
+			String highlighter = marker+key+marker;
+
+			//Searchs in annotations
+			String anno = concept.getAnnotation();
+			if(this.isMatching(p, anno)){
+				found = true;
+				// search and replace all matching expressions
+				String newAnno = p.matcher(anno).replaceAll(highlighter);
+				concept.setAnnotation(newAnno);
+			}
+
+			//Searchs in descriptions
+			String desc = concept.getDescription();
+			if(this.isMatching(p, desc)){
+				found = true;
+				// search and replace all matching expressions
+				String newDesc = p.matcher(desc).replaceAll(highlighter);
+				concept.setDescription(newDesc);
+			}
+
+			// search in concept names
+			HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
+			for (ConceptName cno : concept.getConceptNames()) {
+				String cn = cno.getName();
+				if(this.isMatching(p, cn)){
+					found = true;
+					//Saves the conceptNames we want to update
+					namesToCreate.put(cn, cno.isPreferred());
+				}
+			}
+			//For each conceptName of the update list deletes and creates a new conceptName
+			for (String ntc : namesToCreate.keySet()) {
+				if(!ntc.contains("</span>")) {
+					String newName = p.matcher(ntc).replaceAll(highlighter);
+					boolean isPref = namesToCreate.get(ntc);
+					concept.deleteConceptName(ntc);
+					concept.createConceptName(newName, isPref);
+				}
+			}
+
+			// search in concept attributes
+			for (Attribute attribute : concept.getAttributes()) {
+				if(!(attribute.getOfType().getId().equals("AA")) ||
+						!(attribute.getOfType().getId().equals("NA")) ||
+						!(attribute.getOfType().getId().startsWith("AA_")) ||
+						!(attribute.getOfType().getId().startsWith("NA_"))){
+					String value = attribute.getValue().toString();
+					if(this.isMatching(p, value)){
+						found = true;
+						// search and replace all matching expressions
+						Matcher m = p.matcher(value);
+						String newAttStr = m.replaceAll(highlighter);
+						attribute.setValue(newAttStr);
+					}
+
+				}
+			}
+		}
+
+		// Second pass: perform substitution
+		for (String key : orderedKeywords) {
+			Pattern p = Pattern.compile(marker+key+marker, Pattern.CASE_INSENSITIVE);
+			String highlighter = "<span style=\"background-color:"+keywordColourMap.get(key)+"\"><b>"+key+"</b></span>";
+
+			//Searchs in annotations
+			String anno = concept.getAnnotation();
+			if(this.isMatching(p, anno)){
+				// search and replace all matching expressions
+				String newAnno = p.matcher(anno).replaceAll(highlighter);
+				concept.setAnnotation(newAnno);
+			}
+
+			//Searchs in descriptions
+			String desc = concept.getDescription();
+			if(this.isMatching(p, desc)){
+				// search and replace all matching expressions
+				String newDesc = p.matcher(desc).replaceAll(highlighter);
+				concept.setDescription(newDesc);
+			}
+
+			// search in concept names
+			HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
+			for (ConceptName cno : concept.getConceptNames()) {
+				String cn = cno.getName();
+				if(this.isMatching(p, cn)){
+					//Saves the conceptNames we want to update
+					namesToCreate.put(cn, cno.isPreferred());
+				}
+			}
+			//For each conceptName of the update list deletes and creates a new conceptName
+			for (String ntc : namesToCreate.keySet()) {
+				if(!ntc.contains("</span>")) {
+					String newName = p.matcher(ntc).replaceAll(highlighter);
+					boolean isPref = namesToCreate.get(ntc);
+					concept.deleteConceptName(ntc);
+					concept.createConceptName(newName, isPref);
+				}
+			}
+
+			// search in concept attributes
+			for (Attribute attribute : concept.getAttributes()) {
+				if(!(attribute.getOfType().getId().equals("AA")) ||
+						!(attribute.getOfType().getId().equals("NA")) ||
+						!(attribute.getOfType().getId().startsWith("AA_")) ||
+						!(attribute.getOfType().getId().startsWith("NA_"))){
+					String value = attribute.getValue().toString();
+					if(this.isMatching(p, value)){
+						// search and replace all matching expressions
+						Matcher m = p.matcher(value);
+						String newAttStr = m.replaceAll(highlighter);
+						attribute.setValue(newAttStr);
+					}
+
+				}
+			}
+		}
+
+		return found;
+	}
+
+	/**
 	 * Searches with Lucene for documents, finds semantic motifs and by crossing
 	 * this data makes concepts visible, changes the size and highlight the hits
 	 * 
