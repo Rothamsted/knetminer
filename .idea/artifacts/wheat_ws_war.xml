@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="wheat-ws:war">
-    <output-path>$PROJECT_DIR$/wheat/ws/target</output-path>
-    <root id="archive" name="ws.war">
-      <element id="artifact" artifact-name="wheat-ws:war exploded" />
-    </root>
-  </artifact>
-</component>

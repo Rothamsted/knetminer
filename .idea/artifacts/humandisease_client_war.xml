@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="humandisease-client:war">
-    <output-path>$PROJECT_DIR$/humanDisease/client/target</output-path>
-    <root id="archive" name="knetminer-humandisease.war">
-      <element id="artifact" artifact-name="humandisease-client:war exploded" />
-    </root>
-  </artifact>
-</component>

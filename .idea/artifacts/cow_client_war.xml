@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="cow-client:war">
-    <output-path>$PROJECT_DIR$/cow/client/target</output-path>
-    <root id="archive" name="knetminer-cow.war">
-      <element id="artifact" artifact-name="cow-client:war exploded" />
-    </root>
-  </artifact>
-</component>

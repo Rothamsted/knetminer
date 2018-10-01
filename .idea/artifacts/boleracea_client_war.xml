@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="boleracea-client:war">
-    <output-path>$PROJECT_DIR$/boleracea/client/target</output-path>
-    <root id="archive" name="knetminer-boleracea.war">
-      <element id="artifact" artifact-name="boleracea-client:war exploded" />
-    </root>
-  </artifact>
-</component>

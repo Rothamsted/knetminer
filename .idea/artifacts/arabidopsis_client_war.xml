@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="arabidopsis-client:war">
-    <output-path>$PROJECT_DIR$/arabidopsis/client/target</output-path>
-    <root id="archive" name="knetminer-arabidopsis.war">
-      <element id="artifact" artifact-name="arabidopsis-client:war exploded" />
-    </root>
-  </artifact>
-</component>

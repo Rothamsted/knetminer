@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="maize-client:war">
-    <output-path>$PROJECT_DIR$/maize/client/target</output-path>
-    <root id="archive" name="knetminer-maize.war">
-      <element id="artifact" artifact-name="maize-client:war exploded" />
-    </root>
-  </artifact>
-</component>

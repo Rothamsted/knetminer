@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="barley-client:war">
-    <output-path>$PROJECT_DIR$/barley/client/target</output-path>
-    <root id="archive" name="knetminer-barley.war">
-      <element id="artifact" artifact-name="barley-client:war exploded" />
-    </root>
-  </artifact>
-</component>

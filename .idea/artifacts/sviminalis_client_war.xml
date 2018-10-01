@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="sviminalis-client:war">
-    <output-path>$PROJECT_DIR$/sviminalis/client/target</output-path>
-    <root id="archive" name="knetminer-sviminalis.war">
-      <element id="artifact" artifact-name="sviminalis-client:war exploded" />
-    </root>
-  </artifact>
-</component>

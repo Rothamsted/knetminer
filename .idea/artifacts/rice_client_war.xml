@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="rice-client:war">
-    <output-path>$PROJECT_DIR$/rice/client/target</output-path>
-    <root id="archive" name="knetminer-rice.war">
-      <element id="artifact" artifact-name="rice-client:war exploded" />
-    </root>
-  </artifact>
-</component>

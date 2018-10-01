@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="ztritici-client:war">
-    <output-path>$PROJECT_DIR$/fungi/ztritici/client/target</output-path>
-    <root id="archive" name="knetminer-ztritici.war">
-      <element id="artifact" artifact-name="ztritici-client:war exploded" />
-    </root>
-  </artifact>
-</component>

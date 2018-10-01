@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="pig-client:war">
-    <output-path>$PROJECT_DIR$/pig/client/target</output-path>
-    <root id="archive" name="knetminer-pig.war">
-      <element id="artifact" artifact-name="pig-client:war exploded" />
-    </root>
-  </artifact>
-</component>

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="tomato-client:war">
-    <output-path>$PROJECT_DIR$/tomato/client/target</output-path>
-    <root id="archive" name="knetminer-tomato.war">
-      <element id="artifact" artifact-name="tomato-client:war exploded" />
-    </root>
-  </artifact>
-</component>
