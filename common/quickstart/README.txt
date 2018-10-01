@@ -2,25 +2,30 @@ The steps below are common to both Docker and AWS. For Docker, checkout the sour
 AWS, fire up the KnetMiner Quickstart AMI (with ports 23 and 8080 exposed) and ssh in to it as the 'ubuntu' user, where
 you will find the code already checked out in the 'knetminer' folder in your home directory.
 
-The first thing you need to do is configure the species you want to serve with KnetMiner Quickstart:
+COMMON STEPS...
 
   1. Set up your environment:
     a. On DOCKER only:
-      i. Change directory to knetminer/common
-      ii. Run 'mvn clean install'
+      i. In the knetminer directory run 'mvn clean install'
     b. On AWS only:
       i. Start an EC2 server using the KnetMiner QuickStart AMI and ssh into it as the 'ubuntu' user
+      ii. If you wish to switch to a different branch or update the knetminer code before deploying it:
+        1. Change into the knetminer directory
+        2. To switch to a different Git branch: 'git checkout <name of branch>'
+        3. To get the latest version of the code: 'git pull'
+        4. Run 'mvn clean install'
   2. Copy your OXL file to the correct location:  (the filename is also important, not just the location!)
     a. On DOCKER only:
       knetminer/common/quickstart.oxl
-    b. On AWS only:
-      /home/ubuntu/quickstart.oxl
-  3. Change directory to knetminer/common/quickstart
-  4. Edit the following files and make sure they are correct:
-    a. datasource/src/main/resources/SemanticMotifs.txt
-    b. client/src/main/webapp/html/data/basemap.xml
-    c. client/src/main/webapp/html/index.jsp  (the chromosomes list should match those in basemap.xml)
-  5. Run 'mvn clean package' _after_ editing the files in step 4
+    b. On AWS only (using sudo cp):
+      /root/quickstart.oxl
+  3. Edit the following files and make sure they are correct:
+    a. knetminer/common/quickstart/datasource/src/main/resources/SemanticMotifs.txt
+    b. knetminer/common/quickstart/datasource/src/main/resources/config.xml  (in particular SpeciesTaxId)
+    c. knetminer/common/quickstart/client/src/main/webapp/html/data/basemap.xml
+    d. knetminer/common/quickstart/client/src/main/webapp/html/index.jsp
+         (the chromosomes list should match those in basemap.xml)
+  4. In the knetminer/common/quickstart directory run 'mvn clean package' _after_ editing the files in step 4
 
 TO START THE KNETMINER SERVER WITH DOCKER...
     docker image build .

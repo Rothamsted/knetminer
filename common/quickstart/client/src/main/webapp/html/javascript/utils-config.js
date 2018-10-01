@@ -4,6 +4,6 @@ var api_url = "/ws/quickstart";
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/arabidopsis_data/"; // test
 //var data_url = "http://maize-dev.rothamsted.ac.uk/arabidopsis_data/"; // test
 var species = "Quickstart";
-var reference_genome = false; //true if you are providing a reference genome
+var reference_genome = true; //true if you are providing a reference genome
 var multiorganisms = false; //true if you specified more than one taxid in the server file config.xml (ie: <entry key="SpeciesTaxId">4113,4081</entry>)
 var species_name = 'Quickstart';
