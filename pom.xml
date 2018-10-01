@@ -219,6 +219,7 @@
 		<junit.version>4.7</junit.version>
 		<json.version>20180130</json.version>
 		<ga.version>2.0.0</ga.version>
+		<commons.version>2.6</commons.version>
 	</properties>
 
 	<profiles>
@@ -390,6 +391,11 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-web</artifactId>
 				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.version}</version>
 			</dependency>
 
 			<dependency>

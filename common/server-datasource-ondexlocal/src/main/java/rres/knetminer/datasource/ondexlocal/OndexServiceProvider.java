@@ -28,7 +28,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -42,6 +41,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 import net.sourceforge.ondex.core.Attribute;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -185,7 +185,7 @@ public class OndexServiceProvider {
 		graph = new MemoryONDEXGraph("OndexKB");
 
 		loadOndexKBGraph(graphFileName);
-		indexOndexGraph(dataPath);
+		indexOndexGraph(graphFileName, dataPath);
 
 		log.info("Loading semantic motifs from "+smFileName);
 		StateMachine sm = loadSemanticMotifs(smFileName);
@@ -193,7 +193,7 @@ public class OndexServiceProvider {
 		// create a crawler using our semantic motifs
 		gt = new GraphTraverser(sm);
 
-		populateHashMaps(dataPath);
+		populateHashMaps(graphFileName, dataPath);
 
 		// determine number of genes in given species (taxid)
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
@@ -355,16 +355,20 @@ public class OndexServiceProvider {
 	/**
 	 * Indexes Ondex Graph
 	 */
-	private void indexOndexGraph(String dataPath) {
+	private void indexOndexGraph(String graphFileName, String dataPath) {
 		try {
 			// index the Ondex graph
-			File file = null;
-			file = Paths.get(dataPath, "index").toFile();
-			log.debug("Building Lucene Index: " + file.getAbsolutePath());
-			if (!file.exists())
-				lenv = new LuceneEnv(file.getAbsolutePath(), true);
+			File graphFile = new File(graphFileName);
+			File indexFile = Paths.get(dataPath, "index").toFile();
+			if (indexFile.exists() && (indexFile.lastModified() < graphFile.lastModified())) {
+				log.info("Graph file updated since index last built, deleting old index");
+				FileUtils.deleteDirectory(indexFile);
+			}
+			log.debug("Building Lucene Index: " + indexFile.getAbsolutePath());
+			if (!indexFile.exists())
+				lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
 			else
-				lenv = new LuceneEnv(file.getAbsolutePath(), false);
+				lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
 			lenv.setONDEXGraph(graph);
 			log.debug("Lucene Index created");
 		} catch (Exception e) {
@@ -802,8 +806,7 @@ public class OndexServiceProvider {
 	/**
 	 * Searches for genes within genomic regions (QTLs)
 	 * 
-	 * @param List<QTL>
-	 *            qtls
+	 * @param List<String> qtlsStr
 	 * 
 	 * @return Set<ONDEXConcept> concepts
 	 */
@@ -2930,8 +2933,9 @@ public class OndexServiceProvider {
 	 * genes presented in their motifs
 	 * 
 	 */
-	public void populateHashMaps(String dataPath) {
+	public void populateHashMaps(String graphFileName, String dataPath) {
 		log.info("Populate HashMaps");
+		File graphFile = new File(graphFileName);
 		File file1 = Paths.get(dataPath, "mapConcept2Genes").toFile();
 		File file2 = Paths.get(dataPath, "mapGene2Concepts").toFile();
 		File file3 = Paths.get(dataPath, "mapGene2PathLength").toFile();
@@ -2959,7 +2963,14 @@ public class OndexServiceProvider {
 			}
 		}
 
-		if (!file1.exists() || !file2.exists() || !file3.exists()) {
+		if (file1.exists() && (file1.lastModified() < graphFile.lastModified())) {
+			log.info("Graph file updated since hashmaps last built, deleting old hashmaps");
+			file1.delete();
+			file2.delete();
+			file3.delete();
+		}
+
+		if (!file1.exists()) {
 
 			// the results give us a map of every starting concept to every
 			// valid path
