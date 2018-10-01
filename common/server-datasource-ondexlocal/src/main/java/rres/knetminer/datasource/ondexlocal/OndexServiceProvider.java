@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,13 +31,17 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
+import net.sourceforge.ondex.core.Attribute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -1342,9 +1347,16 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
 		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
 
-		if (keyword != null) {
-			log.info("Keyword is: " + keyword);
+		log.info("Keyword is: " + keyword);
+		Set<String> keywords = keyword==null ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
+		Map<String,String> keywordColourMap = new HashMap<String,String>();
+		Random random = new Random();
+		for (String key : keywords) {
+			int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+			// format it as hexadecimal string (with hashtag and leading zeros)
+			keywordColourMap.put(key, String.format("#%06x", colourCode));
 		}
+
 		// create new graph to return
 		ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
 		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
@@ -1377,6 +1389,7 @@ public class OndexServiceProvider {
 
 					// highlight the keyword in any concept attribute values
 					if (!keywordConcepts.contains(cloneCon)) {
+						this.highlight(cloneCon, keywordColourMap);
 						keywordConcepts.add(cloneCon);
 
 						if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -2547,35 +2560,6 @@ public class OndexServiceProvider {
 	}
 
 	/**
-	 * Converts a keyword into a list of terms (more than one word)
-	 * 
-	 * @param keyword
-	 * @return null or the list of terms
-	 */
-	public LinkedHashSet<String> parseKeywordIntoSetOfTerms(String keyword) {
-		LinkedHashSet<String> result = new LinkedHashSet<String>();
-		String key = keyword.replace("(", "");
-		key = key.replace(")", "");
-
-		key = key.replace("NOT", "___");
-		key = key.replace(" AND ", "___");
-		key = key.replace(" OR ", "___");
-		// replace quotes with blank
-		key = key.replace("\"", "");
-
-		// System.out.println(key);
-
-		// key = key.replaceAll("\\s+", " ");
-
-		for (String k : key.split("___")) {
-			result.add(k.trim());
-			// System.out.println("subkeyword for synonym table: "+k.trim());
-		}
-		log.debug("keys: " + result);
-		return result;
-	}
-
-	/**
 	 * Write Synonym Table for Query suggestor
 	 * 
 	 * @param luceneConcepts
@@ -2592,12 +2576,16 @@ public class OndexServiceProvider {
 		// to store top 25 values for each concept type instead of just 25
 		// values per keyword.
 		int existingCount = 0;
-		/* Set<String> */LinkedHashSet<String> keys = parseKeywordIntoSetOfTerms(keyword);
+		/* Set<String> */Set<String> keys = this.parseKeywordIntoSetOfWords(keyword);
 		// Convert the LinkedHashSet to a String[] array.
 		String[] synonymKeys = keys.toArray(new String[keys.size()]);
 		// for (String key : keys) {
 		for (int k = synonymKeys.length - 1; k >= 0; k--) {
 			String key = synonymKeys[k];
+			if (key.contains(" ") && !key.startsWith("\"")) {
+				key = "\""+key+"\"";
+			}
+			log.info("Checking synonyms for "+key);
 			// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 			Analyzer analyzer = new StandardAnalyzer();
 			Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
@@ -2607,8 +2595,6 @@ public class OndexServiceProvider {
 			// a HashMap to store the count for the number of values written
 			// to the Synonym Table (for each Concept Type).
 			Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
-
-			out.append("<" + key + ">\n");
 
 			// search concept names
 			String fieldNameCN = getFieldName("ConceptName", null);
@@ -2639,6 +2625,10 @@ public class OndexServiceProvider {
 			}
 
 			if (synonymsList != null) {
+
+				// Only start a KEY tag if it will have contents. Otherwise skip it.
+				out.append("<" + key + ">\n");
+
 				// Creates a sorted list of synonyms
 				sortedSynonymsList.putAll(synonymsList);
 
@@ -2695,9 +2685,9 @@ public class OndexServiceProvider {
 
 					}
 				}
-			}
 
-			out.append("</" + key + ">\n");
+				out.append("</" + key + ">\n");
+			}
 		}
 		return out.toString();
 	}

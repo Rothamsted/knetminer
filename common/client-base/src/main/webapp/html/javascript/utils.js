@@ -70,8 +70,6 @@ Functions for Add, Remove or Replace terms from the query search box
 */
 function addKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' OR '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -86,8 +84,6 @@ function addKeyword(keyword, from, target){
 
 function addKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' OR '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','addKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -102,8 +98,6 @@ function addKeywordUndo(keyword, from, target){
 
 function excludeKeyword(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query+' NOT '+keyword;
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeywordUndo(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -118,8 +112,6 @@ function excludeKeyword(keyword, from, target){
 
 function excludeKeywordUndo(keyword, from, target){
 	query = $('#'+target).val();
-	if(keyword.indexOf(' ') != -1 && keyword.indexOf('"') == -1)
-		keyword = '"'+keyword+'"';
 	newquery = query.replace(' NOT '+keyword, "");
 	$('#'+target).val(newquery);
 	//$('#'+from).parent().attr('onClick','excludeKeyword(\''+keyword+'\',\''+from+'\',\''+target+'\')');
@@ -307,8 +299,8 @@ $(document).ready(
 			$('#keywords').keyup(function(e) {
                             // this stops matchCounter being called when the enter or arrow keys are used.
                             if(e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40){
-                               matchCounter();
-      			      }
+                                matchCounter();
+                            }
                             // update matchCounter and QuerySuggestor only when a Enter key is pressed, i.e., do a Search, and not for other keyup events.
 /*                            if(e.which === 13) {
                                matchCounter();
@@ -578,6 +570,7 @@ $(document).ready(
 		    	 			}
 							
 		    	 			matchCounter(); // updates number of matched documents and genes counter
+
                                                 // Refresh the Query Suggester, if it's already open.
 	 		                        if($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                                                    refreshQuerySuggester();
@@ -1497,7 +1490,7 @@ function createSynonymTable(text){
 								}
 							}
 
-						  table =  table + aTable[i]+'</table>';
+						  table =  table + aTable[i].replace(/"/g, '') + '</table>';
 						}
 					//New Term
 					}else if(evidenceTable[ev_i][0] == '<'){
@@ -1625,15 +1618,33 @@ function createSynonymTable(text){
 					showSynonymTab('tabBox_'+termName,buttonID, 'tablesorterSynonym'+termName+'_'+conceptNum);
 				});
 
-				$(".synonymTableEvent").bind("click", {x: evidenceTable}, function(e) {
+				$(".addKeyword,.excludeKeyword,.replaceKeyword").click(function(e) {
 					e.preventDefault();
 					var currentTarget = $(e.currentTarget);
 					var synonymNum = currentTarget.attr("id").replace("synonymstable_","").split("_")[1];
-					var keyword = e.data.x[synonymNum].split("\t")[0];
+					var keyword = evidenceTable[synonymNum].split("\t")[0];
 //					var originalTermName = e.data.x[0].replace("<","").replace(">","");
-                                        var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
+					var originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym","").replace("_1_buttonSynonym","").replace(/_/g," ");
 //                                        console.log("original term: "+ originalTermName +", replace with keyword: "+ keyword);
-					
+
+                    if (originalTermName.indexOf(' ')>=0) {
+                        if (!originalTermName.startsWith('"')) {
+                            originalTermName = '"' + originalTermName;
+                        }
+                        if (!originalTermName.endsWith('"')) {
+                            originalTermName = originalTermName + '"';
+                        }
+                    }
+
+					if (keyword.indexOf(' ')>=0) {
+						if (!keyword.startsWith('"')) {
+                            keyword = '"' + keyword;
+                        }
+                        if (!keyword.endsWith('"')) {
+                            keyword = keyword + '"';
+                        }
+					}
+
 					if(currentTarget.hasClass("addKeyword")){
 						addKeyword(keyword, currentTarget.attr("id"), 'keywords');
 					}
