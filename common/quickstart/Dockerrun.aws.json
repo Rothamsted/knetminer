@@ -1,0 +1,7 @@
+{
+  "Ports": [
+    {
+      "ContainerPort": "8080"
+    }
+  ]
+}
