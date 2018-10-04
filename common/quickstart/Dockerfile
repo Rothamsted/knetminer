@@ -38,6 +38,3 @@ RUN git checkout ${git_branch} \
  && mvn clean install \
  && mv /root/knetminer/common/quickstart/client/target/client.war $CATALINA_HOME/webapps \
  && mv /root/knetminer/common/quickstart/ws/target/ws.war $CATALINA_HOME/webapps 
-
-WORKDIR /root
-RUN rm -rf /root/knetminer /root/.m2
