@@ -4,7 +4,7 @@ FROM andreptb/tomcat:7-jdk8
  
 # INSTRUCTIONS
 # 1. Configure the OXL file and other settings in the ENV statement below
-# 2a. For AWS deployment, send the modified Dockerfile to ElasticBeanStalk and run it there
+# 2a. For AWS deployment, send the modified Dockerfile in a zip to ElasticBeanStalk and run it there
 # 2b. Or, for local deployment in Docker, continue from step 3
 # 3. Build with "docker image build -t knetminer ." 
 # 4. Run the resulting image with "docker run -it --rm knetminer"
