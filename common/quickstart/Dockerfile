@@ -7,7 +7,7 @@ FROM andreptb/tomcat:7-jdk8
 # 2a. For AWS deployment, send the modified Dockerfile to ElasticBeanStalk ("eb init", "eb create" from within an empty folder containing a copy of the Dockerfile)) and run it there. After deploying you'll need to modify the auto-generated EC2 security group such that it allows access to port 8080 for Tomcat. It will take around 10 minutes to build the image and start it before you can access it at http://<ec2hostname>:8080/client/
 # 2b. Or, for local deployment in Docker, continue from step 3
 # 3. Build with "docker image build -t knetminer ." 
-# 4. Run the resulting image with "docker run -it --rm knetminer". You can access it at http://localhost:8080/client/
+# 4. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer". You can access it at http://localhost:8080/client/
 
 ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl  \
     semantic_motifs_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/SemanticMotifs.txt  \
