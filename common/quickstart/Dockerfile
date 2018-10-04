@@ -4,7 +4,7 @@ FROM andreptb/tomcat:7-jdk8
  
 # INSTRUCTIONS
 # 1. Configure the OXL file and other settings in the ENV statement below
-# 2a. For AWS deployment, send the modified Dockerfile and accompanying Dockerrun.aws.json to ElasticBeanStalk ("eb init", "eb create" from within an empty folder containing a copy of the two files)) and run it there. It will take around 10 minutes to build the image and start it before you can access it at http://<ec2hostname>/client/ (NB. Do not include :8080 in the URL)
+# 2a. For AWS deployment, send the modified Dockerfile and accompanying Dockerrun.aws.json to ElasticBeanStalk ("eb init", "eb create" from within an empty folder containing a copy of the two files)) and run it there. It will take around 10 minutes to build the image and start it before you can access it at http://<beanstalk-load-balancer-name>/client/ (NB. Do not include :8080 in the URL)
 # 2b. Or, for local deployment in Docker, continue from step 3
 # 3. Build with "docker image build --squash -t knetminer ." 
 # 4. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer". You can access it at http://localhost:8080/client/
