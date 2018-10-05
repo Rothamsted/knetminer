@@ -20,8 +20,8 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     species_short_name=Arabidopsis \
     species_link_name=arabidopsis \
     eg_keywords="[e.g. 'disease resistance', 'xylan|cell wall']" \
-    keywords="keyword1, keyword2, keyword3" \
-    chromosomes="1,2,3,4,5"  \
+    keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
+    description="Arabidopsis Knetminer" \
     reference_genome=true \
     git_branch=20181001_autodeploy
 
@@ -34,7 +34,7 @@ ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
 WORKDIR /root
 
 RUN set -x \
- && apk add --no-cache maven nodejs-npm git \
+ && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
  && git clone https://github.com/Rothamsted/knetminer.git \
@@ -52,6 +52,7 @@ RUN set -x \
  && mv ${cl}/release.html.template ${cl}/release.html \
  && mv ${cl}/index.jsp.template ${cl}/index.jsp \
  && mv ${cl}/javascript/utils-config.js.template ${cl}/javascript/utils-config.js \
+ && chromosomes=$(echo "cat //genome/chromosome/@number" | xmllint --shell ${cl}/data/basemap.xml | sed -n 's/[^\"]*\"\([^\"]*\)\"[^\"]*/\1/gp' | sed -e :a -e '$!N; s/\n/,/; ta';) \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/javascript/utils-config.js \
@@ -59,7 +60,8 @@ RUN set -x \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/release.html \
  && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
- && sed -e "s/!!KEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!METADESC!!/${description}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!EGKEYWORDS!!/${eg_keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!TAXID!!/${tax_id}/g" -i'' ${ds}/resources/config.xml \
