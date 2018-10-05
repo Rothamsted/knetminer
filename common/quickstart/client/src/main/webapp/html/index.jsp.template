@@ -1,0 +1,9 @@
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
+
+<layout:page title="!!SHORTNAME!!" description="" keywords="!!KEYWORDS!!" species="!!SHORTNAME!!"
+             image="html/image/organism.png" eg_keywords="!!EGKEYWORDS!!" chromosomes="!!CHROMOSOMES!!">
+    <jsp:attribute name="extraHeader">
+    </jsp:attribute>
+    <jsp:attribute name="extraBottom">
+    </jsp:attribute>
+</layout:page>

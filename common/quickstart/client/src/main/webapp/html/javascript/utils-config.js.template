@@ -1,5 +1,5 @@
-var api_url = "/ws/quickstart";
-var species = "Quickstart";
+var api_url = "/ws/!!LINKNAME!!";
+var species = "!!SHORTNAME!! Genome";
 var reference_genome = !!REFGENOME!!; 
 var multiorganisms = false; 
-var species_name = 'Quickstart';
+var species_name = "!!SPECIES!!";;
