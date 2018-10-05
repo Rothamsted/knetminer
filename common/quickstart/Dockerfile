@@ -33,12 +33,14 @@ ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
     common=/root/knetminer/common
 WORKDIR /root
 
-RUN apk add --no-cache maven nodejs-npm git \
+RUN set -x \
+ && apk add --no-cache maven nodejs-npm git \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
  && git clone https://github.com/Rothamsted/knetminer.git \
  && cd knetminer \
  && git checkout ${git_branch} \
+ && mkdir -p ${cl}/data ${cl}/image \
  && wget -O /root/data.oxl ${oxl_file} \
  && wget -O ${ds}/resources/SemanticMotifs.txt ${semantic_motifs_file} \
  && wget -O ${cl}/data/basemap.xml ${basemap_file} \
@@ -46,7 +48,7 @@ RUN apk add --no-cache maven nodejs-npm git \
  && wget -O ${cl}/image/background.jpg ${background_image_file} \
  && wget -O ${cl}/image/organism.png ${organism_image_file} \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
- && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java  \
+ && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
  && mv ${cl}/index.jsp.template ${cl}/index.jsp \
  && mv ${cl}/javascript/utils-config.js.template ${cl}/javascript/utils-config.js \
@@ -56,11 +58,11 @@ RUN apk add --no-cache maven nodejs-npm git \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/release.html \
  && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/index.jsp \
- && sed -e "s/!!CHROMOSOMES!!/$chromosomes}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!KEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!EGKEYWORDS!!/${eg_keywords}/g" -i'' ${cl}/index.jsp \
- && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/src/main/resources/config.xml \
- && sed -e "s/!!TAXID!!/${tax_id}/g" -i'' ${ds}/src/main/resources/config.xml \
+ && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \
+ && sed -e "s/!!TAXID!!/${tax_id}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mvn install \
  && cd ${common} \
