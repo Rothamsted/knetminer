@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
-	<artifactId>ws-example</artifactId> <!-- Change me -->
-	<name>KnetMiner Example WS</name> <!-- Change me -->
+	<groupId>uk.ac.rothamsted.knetminer.quickstart</groupId>
+	<artifactId>quickstart-ws</artifactId> <!-- Change me -->
+	<name>KnetMiner Quickstart WS</name> <!-- Change me -->
 	<packaging>war</packaging>
 
 	<parent>
-		<artifactId>common</artifactId>
+		<artifactId>quickstart</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
@@ -23,14 +23,14 @@
 		</dependency>
 		<!-- Put all the data sources as dependencies here -->
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.arabidopsis</groupId>
-			<artifactId>arabidopsis-datasource</artifactId>
+			<groupId>uk.ac.rothamsted.knetminer.quickstart</groupId>
+			<artifactId>quickstart-datasource</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<!-- End list of data sources -->
 	</dependencies>
 
 	<build>
-		<finalName>ws-example</finalName> <!-- Change me -->
+		<finalName>ws</finalName> <!-- Change me -->
 	</build>
 </project>

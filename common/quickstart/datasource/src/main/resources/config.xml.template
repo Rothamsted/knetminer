@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Contains MultiThreadServer configuration values</comment>	
+        <entry key="DataPath">/root</entry>
+        <entry key="DataFile">/root/data.oxl</entry>
+	<entry key="SpeciesTaxId">!!TAXID!!</entry>
+	<entry key="reference_genome">!!REFGENOME!!</entry>
+	<entry key="export_visible_network">true</entry>
+</properties>
