@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -576,7 +577,7 @@ public class OndexServiceProvider {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public HashMap<ONDEXConcept, Float> searchLucene(String keywords) throws IOException, ParseException {
+	public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList) throws IOException, ParseException {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
 		String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
@@ -593,8 +594,18 @@ public class OndexServiceProvider {
 
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 
-		if ("".equals(keywords)) {
-			log.info("No keyword, skipping Lucene stage");
+		if ("".equals(keywords) || keywords==null) {
+			log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
+			if (geneList!=null) {
+				for (ONDEXConcept gene : geneList) {
+					for (int conceptId : mapGene2Concepts.get(gene.getId())) {
+						ONDEXConcept concept = graph.getConcept(conceptId);
+						if (!concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+							hit2score.put(concept, 1.0f);
+						}
+					}
+				}
+			}
 			return hit2score;
 		}
 
@@ -1343,7 +1354,7 @@ public class OndexServiceProvider {
 		// Searches with Lucene: luceneResults
 		HashMap<ONDEXConcept, Float> luceneResults = null;
 		try {
-			luceneResults = searchLucene(keyword);
+			luceneResults = searchLucene(keyword, seed);
 		} catch (Exception e) {
 			log.error("Lucene search failed", e);
 		}
