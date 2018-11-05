@@ -593,6 +593,11 @@ public class OndexServiceProvider {
 
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 
+		if ("".equals(keywords)) {
+			log.info("No keyword, skipping Lucene stage");
+			return hit2score;
+		}
+
 		// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Analyzer analyzer = new StandardAnalyzer();
 
@@ -1351,7 +1356,7 @@ public class OndexServiceProvider {
 		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
 
 		log.info("Keyword is: " + keyword);
-		Set<String> keywords = keyword==null ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
+		Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
 		Map<String,String> keywordColourMap = new HashMap<String,String>();
 		Random random = new Random();
 		for (String key : keywords) {

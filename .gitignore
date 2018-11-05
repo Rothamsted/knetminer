@@ -13,7 +13,7 @@ target/
 dist/
 stderr.log
 stdout.log
-*swp
+*.swp
 .vagrant/
 common/client/nb-configuration.xml
 *.oxl

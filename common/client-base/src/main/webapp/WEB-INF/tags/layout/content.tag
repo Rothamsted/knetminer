@@ -19,23 +19,33 @@
                                             <div id="eg_queries"></div>
                                         </div>
                                     </div>
-                                    
-                                    <div id="keyword_search">
+
+                                <div id="keyword_search">
 						<ul>
+        <li>
+        <div id="toggle_keyword_search">
+        <span style="vertical-align:middle;">
+        <input type="radio" name="kwdsearch" id="with" value="with" checked="checked"/><label for="with">With keyword search</label>
+        <input type="radio" name="kwdsearch" id="without" value="without"/><label for="with">Without keyword search</label>
+        </span>
+        </div>
+        </li>
+                            <div class="with_keyword_search">
 							<li><input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
 							<span style="vertical-align:middle;">
-							<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
+							<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" class="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
 						<!--	<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" onclick="searchKeyword();"/> -->
 							</span></li>
-							<li><div id="loadingDiv"></div></li>
+							<li><div class="loadingDiv"></div></li>
+                            </div>
 						</ul>
-						<div id="matchesResultDiv"></div>
+						<div id="matchesResultDiv" class="with_keyword_search"></div>
 					    <!-- <div id="eg_keywords_hidden" style="display:none;">
 							${eg_keywords}
 						</div> -->
-						
+
 					</div>
-				<li>
+				<li class="with_keyword_search">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
 						<span id="suggestor_invite"></span>
 						<hr width="45%" align="left">
@@ -79,7 +89,7 @@
 								</td>
 							</tr>
 						</table>
-						<div class="rightnav">				
+						<div class="rightnav">
 							<input type="radio" name="search_mode" value="genome" checked="checked">whole-genome
 							<input type="radio" name="search_mode" value="qtl">within region<br>
 						</div>
@@ -92,16 +102,19 @@
 						<div id="advanced_search_area" style="display:none;">
 							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
 							<div class="rightnav_genelist" style="display:none">
-								<input type="radio" name="list_mode" value="GLrestrict">Intersection								
+								<input type="radio" name="list_mode" value="GLrestrict">Intersection
 								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
 							</div>
 						</div>
 					</div>
 				</li>
+				<li class="without_keyword_search" style="display:none;">
+				<div class="loadingDiv"></div><br/>
+				<input class="keywordsSubmit" style="width:30px;height:30px;" type="image" alt="Submit" label="Search" src="html/image/search_button.jpg" class="button" disabled/></li>
 			</ul>
 		</form>
 	</div>
-	
+
 	<div id="pGViewer_title"></div>
 	<div id="tabviewer">
 
@@ -111,7 +124,7 @@
 		<div class="menu_button button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="menu_button button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
-        
+
         </div>
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
@@ -123,9 +136,8 @@
             <!-- new KnetMaps.js -->
             <div id="NetworkCanvas" class="resultViewer" style="display:none;">
                     <!-- KnetMaps -->
-                    <div id="knet-maps" style="display:none;"></div>
+	tagName                    <div id="knet-maps" style="display:none;"></div>
             </div>
         </div>
         </div>  <!-- tabviewer -->
     </div>  <!-- content -->
-</div>
