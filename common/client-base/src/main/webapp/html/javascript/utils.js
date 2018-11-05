@@ -1258,7 +1258,7 @@ function createEvidenceTable(text, keyword) {
         });
 
         $("#tablesorterEvidence").tablesorter({
-            sortList: [[3, 1]],  //sort by score in decending order
+            sortList: [[3, header[2]=='P-VALUE'?0:1]],  //sort by score in decending order
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {

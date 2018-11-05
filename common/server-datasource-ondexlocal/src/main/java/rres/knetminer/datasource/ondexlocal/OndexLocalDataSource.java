@@ -203,7 +203,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			log.debug("2.) Gene table ");
 
 			// Evidence table file
-			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
+			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
                         // temporary...
                     /*    String ev_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_EvidenceTable.tab").toString();
