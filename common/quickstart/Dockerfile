@@ -24,7 +24,7 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
     description="Arabidopsis Knetminer" \
     reference_genome=true \
-    git_branch=20181001_autodeploy
+    git_branch=20181001_rhlastweek
 
 # DO NOT TOUCH BELOW THIS LINE
 
