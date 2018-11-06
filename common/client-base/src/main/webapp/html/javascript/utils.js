@@ -1150,10 +1150,11 @@ function createEvidenceTable(text, keyword) {
         var header = evidenceTable[0].split("\t");
         table = table + '<th width="60">Exclude</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
-        table = table + '<th width="212">' + header[1] + '</th>'
+        table = table + '<th width="212">' + header[1] + '</th>';
         table = table + '<th width="78">' + header[2] + '</th>';
-        table = table + '<th width="60">' + header[3] + '</th>';
-        table = table + '<th width="103">' + header[4] + '</th>';
+        table = table + '<th width="78">' + header[3] + '</th>';
+        table = table + '<th width="60">' + header[4] + '</th>';
+        table = table + '<th width="103">' + header[5] + '</th>';
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
@@ -1172,16 +1173,17 @@ function createEvidenceTable(text, keyword) {
             table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
             table = table + '<td>' + values[2] + '</td>';
+            table = table + '<td>' + values[3] + '</td>';
 
-            table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[3] + '</a></td>'; // all genes
+            table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
 
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
             var userGenes = 0;
-            if (values[4].length > 0) {
+            if (values[5].length > 0) {
                 userGenes = 1; // i.e., min. 1 user gene found
-                values[4] = values[4].trim();
-                if (values[4].includes(",")) { // for multiple user genes
-                    userGenes = values[4].split(",").length; // total user genes found
+                values[5] = values[5].trim();
+                if (values[5].includes(",")) { // for multiple user genes
+                    userGenes = values[5].split(",").length; // total user genes found
                 }
                 // launch evidence network using 'userGenes'.
                 table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes + '</a></td>';
@@ -1214,9 +1216,9 @@ function createEvidenceTable(text, keyword) {
             var values = e.data.x[evidenceNum].split("\t");
 
             if ($(e.target).hasClass("excludeKeyword")) {
-                excludeKeyword('ConceptID:' + values[6], targetID, 'keywords');
+                excludeKeyword('ConceptID:' + values[7], targetID, 'keywords');
             } else {
-                excludeKeywordUndo('ConceptID:' + values[6], targetID, 'keywords');
+                excludeKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
             }
         });
 
@@ -1227,7 +1229,7 @@ function createEvidenceTable(text, keyword) {
             e.preventDefault();
             var evidenceNum = $(e.target).attr("id").replace("generateEvidencePath_", "");
             var values = e.data.x[evidenceNum].split("\t");
-            evidencePath(values[6]);
+            evidencePath(values[7]);
         });
 
         /*
@@ -1239,7 +1241,7 @@ function createEvidenceTable(text, keyword) {
             var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_", "");
             var values = e.data.x[evidenceNum].split("\t");
 
-            var evi_userGenes = values[4].trim(); // user gene(s) provided
+            var evi_userGenes = values[5].trim(); // user gene(s) provided
             // Add comma-separated user genes to a new (candidates) list
             var ug_list = [];
             if (evi_userGenes.includes(",")) {
@@ -1258,7 +1260,8 @@ function createEvidenceTable(text, keyword) {
         });
 
         $("#tablesorterEvidence").tablesorter({
-            sortList: [[3, header[2]=='P-VALUE'?0:1]],  //sort by score in decending order
+            // sort by score in descending order if with keywords, or p-value ascending if without keywords
+            sortList: [[$('#without').prop('checked')?4:3, $('#without').prop('checked')?0:1]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {
