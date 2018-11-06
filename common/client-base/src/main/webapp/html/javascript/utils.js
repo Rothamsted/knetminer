@@ -187,7 +187,7 @@ function matchCounter() {
 }
 
 /*
- * Function to get the network of all genes related to a given evidence
+ * Function to get the network of all "genes" related to a given evidence
  * 
  */
 function evidencePath(id) {
@@ -774,7 +774,7 @@ function generateCyJSNetwork(url, requestParams) {
 
 /*
  * Function
- * Generates multi gene network used in the new lightweight, cytoscapeJS Network Viewer.
+ * Generates multi gene network in KnetMaps
  * @author: Ajit Singh.
  */
 function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
@@ -1234,7 +1234,7 @@ function createEvidenceTable(text, keyword) {
 
         /*
          * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
-                 * @author: Ajit Singh (19/07/2018)
+                * @author: Ajit Singh (19/07/2018)
          */
         $(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function (e) {
             e.preventDefault();

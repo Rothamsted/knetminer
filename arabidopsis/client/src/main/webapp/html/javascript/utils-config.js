@@ -1,5 +1,5 @@
-var api_url = "http://localhost:8080/ws/arabidopsis";
-//var api_url = "http://knetminer.rothamsted.ac.uk/ws/arabidopsis";
+//var api_url = "http://localhost:8080/ws/arabidopsis";
+var api_url = "http://knetminer.rothamsted.ac.uk/ws/arabidopsis";
 //var data_url = "http://knetminer.rothamsted.ac.uk/arabidopsis_data/"; 
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/arabidopsis_data/"; // test
 //var data_url = "http://maize-dev.rothamsted.ac.uk/arabidopsis_data/"; // test
