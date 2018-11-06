@@ -80,7 +80,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	}
 
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider);
+		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
 		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
@@ -139,69 +139,42 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		// Genome search
 		log.info("Search mode: " + response.getClass().getName());
 		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
-		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider);
-		if (response.getClass().equals(GenomeResponse.class)) {
-			log.info("Genome response...");
-                        
-                        genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-                        log.info("Number of genes: " + genes.size());
-                        
-                        if(userGenes != null) {
-                           /* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
-                        //   genes= new ArrayList<ONDEXConcept> (userGenes);
+		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider, userGenes);
+		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class)) {
+			log.info("Genome or QTL response...");
+
+			genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+			log.info("Number of genes: " + genes.size());
+
+			if (userGenes != null) {
+				/* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
+				//   genes= new ArrayList<ONDEXConcept> (userGenes);
                             
                            /* filter scored results (ArrayList<ONDEXConcept> genes) to only retain sorted genes (by KnetScore) 
                              from user gene list (Set<ONDEXConcept> userGenes) */
-                           Iterator<ONDEXConcept> itr = genes.iterator();
-                           while(itr.hasNext()) {
-                                 ONDEXConcept gene= itr.next();
-                                 if(!userGenes.contains(gene)) {
-                                    itr.remove();
-                                   }
-                                }
+				Iterator<ONDEXConcept> itr = genes.iterator();
+				while (itr.hasNext()) {
+					ONDEXConcept gene = itr.next();
+					if (!userGenes.contains(gene)) {
+						itr.remove();
+					}
+				}
                           
                            /* also, add any missing genes from user list (Set<ONDEXConcept> userGenes) that weren't already in the scored results 
                            (ArrayList<ONDEXConcept> genes) due to no evidences */
-                           for(ONDEXConcept userGene : userGenes) {
-                               if(!genes.contains(userGene)) {
-                                  genes.add(userGene);
-				 }
-                              }
-                           log.info("Using user gene list... genes: "+ genes.size());
-                          }
-		} else if (response.getClass().equals(QtlResponse.class)) {
-			log.info("QTL response...");
-                        
-                        genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
-                        log.info("Number of genes: " + genes.size());
-                        
-                        if(userGenes != null) {
-                           /* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
-                        //   genes= new ArrayList<ONDEXConcept> (userGenes);
-                            
-                           /* filter scored results (ArrayList<ONDEXConcept> genes) to only retain sorted genes (by KnetScore) 
-                             from user gene list (Set<ONDEXConcept> userGenes) */
-                           Iterator<ONDEXConcept> itr = genes.iterator();
-                           while(itr.hasNext()) {
-                                 ONDEXConcept gene= itr.next();
-                                 if(!userGenes.contains(gene)) {
-                                    itr.remove();
-                                   }
-                                }
-                          
-                           /* also, add any missing genes from user list (Set<ONDEXConcept> userGenes) that weren't already in the scored results 
-                           (ArrayList<ONDEXConcept> genes) due to no evidences */
-                           for(ONDEXConcept userGene : userGenes) {
-                               if(!genes.contains(userGene)) {
-                                  genes.add(userGene);
-				 }
-                              }
-                           log.info("Using user gene list... genes: "+ genes.size());
-                          }
-                        
-                        // filter QTL's as well
-                        genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
-			log.info("Genes after QTL filter: " + genes.size());
+				for (ONDEXConcept userGene : userGenes) {
+					if (!genes.contains(userGene)) {
+						genes.add(userGene);
+					}
+				}
+				log.info("Using user gene list... genes: " + genes.size());
+			}
+			if (response.getClass().equals(QtlResponse.class)) {
+				log.info("QTL response...");
+				// filter QTL's as well
+				genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
+				log.info("Genes after QTL filter: " + genes.size());
+			}
 		}
 
 		if (genes.size() > 0) {
@@ -230,7 +203,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			log.debug("2.) Gene table ");
 
 			// Evidence table file
-			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(qtlnetminerResults.getLuceneConcepts(),
+			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
                         // temporary...
                     /*    String ev_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_EvidenceTable.tab").toString();

@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,6 +87,7 @@ import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
+import rres.knetminer.datasource.ondexlocal.FisherExact;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -161,6 +163,7 @@ public class OndexServiceProvider {
 	boolean referenceGenome;
 
 	boolean export_visible_network;
+
 
 	/**
 	 * Loads configuration for chromosomes and initialises map
@@ -576,7 +579,7 @@ public class OndexServiceProvider {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public HashMap<ONDEXConcept, Float> searchLucene(String keywords) throws IOException, ParseException {
+	public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList) throws IOException, ParseException {
 
 		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
 		String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
@@ -592,6 +595,21 @@ public class OndexServiceProvider {
 		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 
 		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
+
+		if ("".equals(keywords) || keywords==null) {
+			log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
+			if (geneList!=null) {
+				for (ONDEXConcept gene : geneList) {
+					for (int conceptId : mapGene2Concepts.get(gene.getId())) {
+						ONDEXConcept concept = graph.getConcept(conceptId);
+						if (!concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+							hit2score.put(concept, 1.0f);
+						}
+					}
+				}
+			}
+			return hit2score;
+		}
 
 		// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Analyzer analyzer = new StandardAnalyzer();
@@ -1338,21 +1356,19 @@ public class OndexServiceProvider {
 		// Searches with Lucene: luceneResults
 		HashMap<ONDEXConcept, Float> luceneResults = null;
 		try {
-			luceneResults = searchLucene(keyword);
-                        log.info("Number of Lucene documents found: " + luceneResults.keySet().size());
+			luceneResults = searchLucene(keyword, seed);
 		} catch (Exception e) {
 			log.error("Lucene search failed", e);
 		}
 
-		// the results give us a map of every starting concept to every valid
-		// path
+		// the results give us a map of every starting concept to every valid path
 		Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
 
 		Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
 		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
 
 		log.info("Keyword is: " + keyword);
-		Set<String> keywords = keyword==null ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
+		Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
 		Map<String,String> keywordColourMap = new HashMap<String,String>();
 		Random random = new Random();
 		for (String key : keywords) {
@@ -2375,14 +2391,17 @@ public class OndexServiceProvider {
 	 * @return boolean
 	 */
 
-	public String writeEvidenceTable(HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
+	public String writeEvidenceTable(String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
 			List<String> qtlsStr) {
 
 		ONDEXGraphMetaData md = graph.getMetaData();
 		AttributeName attChr = md.getAttributeName("Chromosome");
 		AttributeName attBeg = md.getAttributeName("BEGIN");
 		AttributeName attCM = md.getAttributeName("cM");
-		
+		int allGenesSize = mapGene2Concepts.keySet().size();
+		int userGenesSize = userGenes==null ? 0 : userGenes.size();
+		FisherExact fisherExact = ("".equals(keywords) || keywords==null) ? new FisherExact(allGenesSize) : null;
+
 		log.info("generate Evidence table...");
 		List<QTL> qtls = new ArrayList<QTL>();
 		for (String qtlStr : qtlsStr) {
@@ -2391,7 +2410,10 @@ public class OndexServiceProvider {
 
 		StringBuffer out = new StringBuffer();
 		// writes the header of the table
-		out.append("TYPE\tNAME\tSCORE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+		String score_label = ("".equals(keywords) || keywords==null) ? "P-VALUE" : "SCORE";
+		out.append("TYPE\tNAME\t"+score_label+"\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+
+		DecimalFormat fmt = new DecimalFormat("".equals("keywords") ? "0.00" : "0.00000");
 
 		for (ONDEXConcept lc : luceneConcepts.keySet()) {
 			// Creates type,name,score and numberOfGenes
@@ -2401,7 +2423,6 @@ public class OndexServiceProvider {
 			if (type == "Publication" && !name.contains("PMID:"))
 				name = "PMID:" + name;
 			Float score = luceneConcepts.get(lc);
-			DecimalFormat fmt = new DecimalFormat("0.00");
 			Integer ondexId = lc.getId();
 			if (!mapConcept2Genes.containsKey(lc.getId())) {
 				continue;
@@ -2567,6 +2588,18 @@ public class OndexServiceProvider {
                         if(user_genes.contains(",")) {
                            user_genes= user_genes.substring(0, user_genes.length()-1);
                           }
+			if ("".equals(keywords) || keywords==null) {
+				// quick adjustment to the score to make it a P-value from F-test instead
+				int matched_inGeneList =  "".equals(user_genes) ? 0 : user_genes.split(",").length;
+				int notMatched_inGeneList = userGenesSize - matched_inGeneList;
+				int matched_notInGeneList = numberOfGenes - matched_inGeneList;
+				int notMatched_notInGeneList = allGenesSize - matched_notInGeneList - matched_inGeneList - notMatched_inGeneList;
+				score = (float) fisherExact.getP(
+							matched_inGeneList,
+							matched_notInGeneList,
+							notMatched_inGeneList,
+							notMatched_notInGeneList);
+			}
 			// writes the row
 			out.append(type + "\t" + name + "\t" + fmt.format(score) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
 					+ "\t" + numberOfQTL + "\t" + ondexId + "\n");

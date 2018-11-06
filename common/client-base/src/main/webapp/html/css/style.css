@@ -191,7 +191,7 @@ div#keyword_search input[type="text"] {
 div#keyword_search input[type="text"]:focus {
 outline-width: 0;
 }
-#keywordsSubmit:focus{
+.keywordsSubmit:focus{
 outline-width: 0;
 }
 @media(max-width:1512px){
@@ -235,7 +235,7 @@ div#list_search {
 	}
 
 
-div#loadingDiv {
+div.loadingDiv {
 	width:30px;
 	height:35px;
 	margin-left:-35px;
@@ -267,7 +267,7 @@ div#loadingNetwork_Div {
 div#loadingNetwork_Div img {
 	float:right;
 }
-div#loadingDiv ul li{
+div.loadingDiv ul li{
 	padding-left:20px;
 }
 div#region_search_area li {
