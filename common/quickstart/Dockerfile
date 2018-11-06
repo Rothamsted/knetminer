@@ -15,6 +15,7 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     sample_query_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/sampleQuery.xml  \
     background_image_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/background.jpg  \
     organism_image_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/organism.png  \
+    release_notes_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/release_notes.html  \
     tax_id=3702  \
     species_name="Arabidopsis thaliana" \
     species_short_name=Arabidopsis \
@@ -47,6 +48,7 @@ RUN set -x \
  && wget -O ${cl}/data/sampleQuery.xml ${sample_query_file} \
  && wget -O ${cl}/image/background.jpg ${background_image_file} \
  && wget -O ${cl}/image/organism.png ${organism_image_file} \
+ && wget -O ${cl}/release_notes.html ${release_notes_file} \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
@@ -58,6 +60,7 @@ RUN set -x \
  && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/release.html \
+ && sed -e "/!!RELEASE!!/{r ${cl}/release_notes.html" -e "d}" -i'' ${cl}/release.html \
  && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \

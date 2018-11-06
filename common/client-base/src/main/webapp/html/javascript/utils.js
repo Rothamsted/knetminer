@@ -652,8 +652,8 @@ function searchKeyword() {
     if (keyword.length < 2 && !withoutKeywordMode) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a keyword.</b></div>');
     }
-    else if (list.length > 500000 || (withoutKeywordMode && list.length == 0)) {
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
+    else if (list.length > 500000 || (withoutKeywordMode && (list.length == 0 && requestParams['qtl'].length==0))) {
+        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a valid list of genes or QTL regions.</b></div>');
     }
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer

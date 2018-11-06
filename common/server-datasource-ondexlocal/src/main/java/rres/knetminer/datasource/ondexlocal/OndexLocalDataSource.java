@@ -130,10 +130,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
 			throws IllegalArgumentException {
 		// Find genes from the user's gene list
-		Set<ONDEXConcept> userGenes = null;
+		Set<ONDEXConcept> userGenes = new HashSet<ONDEXConcept>();
 		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes = this.ondexServiceProvider.searchGenes(request.getList());
+			userGenes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
 			log.info("Number of user provided genes: " + userGenes.size());
+		}
+		// Also search Regions
+		if (!request.getQtl().isEmpty()) {
+			userGenes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
 		}
 
 		// Genome search
