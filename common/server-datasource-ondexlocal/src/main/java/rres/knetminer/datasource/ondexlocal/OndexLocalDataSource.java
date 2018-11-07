@@ -139,6 +139,9 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		if (!request.getQtl().isEmpty()) {
 			userGenes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
 		}
+		if (userGenes.isEmpty()) {
+			userGenes = null;
+		}
 
 		// Genome search
 		log.info("Search mode: " + response.getClass().getName());

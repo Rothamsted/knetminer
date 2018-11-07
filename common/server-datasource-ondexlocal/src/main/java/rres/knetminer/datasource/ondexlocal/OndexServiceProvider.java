@@ -1090,11 +1090,10 @@ public class OndexServiceProvider {
      * @return subGraph
      */
     public ONDEXGraph evidencePath(Integer evidenceOndexId) {
-        log.debug("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
+        log.info("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
         // Searches genes related to the evidenceID
-        Set<Integer> relatedGenes = mapConcept2Genes.get(evidenceOndexId);
         Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
-        for (Integer rg : relatedGenes) {
+        for (Integer rg : mapConcept2Genes.get(evidenceOndexId)) {
             relatedONDEXConcepts.add(graph.getConcept(rg));
         }
 
@@ -1111,8 +1110,12 @@ public class OndexServiceProvider {
         for (List<EvidencePathNode> paths : results.values()) {
             for (EvidencePathNode path : paths) {
                 Set<ONDEXConcept> concepts = path.getAllConcepts();
+                Set<ONDEXRelation> relations = path.getAllRelations();
                 for (ONDEXConcept c : concepts) {
                     graphCloner.cloneConcept(c);
+                }
+                for (ONDEXRelation r : relations) {
+                    graphCloner.cloneRelation(r);
                 }
                 // search last concept of semantic motif for keyword
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
@@ -1120,7 +1123,7 @@ public class OndexServiceProvider {
                 if (lastCon.getId() == evidenceOndexId) {
                     highlightPath(path, graphCloner);
                 } else {
-                    // hidePath(path,graphCloner);
+                    //hidePath(path,graphCloner);
                 }
             }
         }
@@ -1349,7 +1352,7 @@ public class OndexServiceProvider {
         } catch (Exception e) {
             log.error("Lucene search failed", e);
         }
-
+        
         // the results give us a map of every starting concept to every valid path
         Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
 
@@ -1390,6 +1393,7 @@ public class OndexServiceProvider {
                 // search last concept of semantic motif for keyword
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
                 ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
+
                 ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
                 if (luceneResults.containsKey(keywordCon)) {
