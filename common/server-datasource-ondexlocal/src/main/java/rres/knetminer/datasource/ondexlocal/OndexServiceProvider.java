@@ -1089,12 +1089,15 @@ public class OndexServiceProvider {
      * @param evidenceOndexId
      * @return subGraph
      */
-    public ONDEXGraph evidencePath(Integer evidenceOndexId) {
+    public ONDEXGraph evidencePath(Integer evidenceOndexId, Set<ONDEXConcept> genes) {
         log.info("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
-        // Searches genes related to the evidenceID
+        // Searches genes related to the evidenceID. If user genes provided, only include those.
         Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
         for (Integer rg : mapConcept2Genes.get(evidenceOndexId)) {
-            relatedONDEXConcepts.add(graph.getConcept(rg));
+            ONDEXConcept gene = graph.getConcept(rg);
+            if (genes==null || genes.isEmpty() || genes.contains(gene)) {
+                relatedONDEXConcepts.add(gene);
+            }
         }
 
         // the results give us a map of every starting concept to every valid
@@ -1109,14 +1112,6 @@ public class OndexServiceProvider {
         // the evidence
         for (List<EvidencePathNode> paths : results.values()) {
             for (EvidencePathNode path : paths) {
-                Set<ONDEXConcept> concepts = path.getAllConcepts();
-                Set<ONDEXRelation> relations = path.getAllRelations();
-                for (ONDEXConcept c : concepts) {
-                    graphCloner.cloneConcept(c);
-                }
-                for (ONDEXRelation r : relations) {
-                    graphCloner.cloneRelation(r);
-                }
                 // search last concept of semantic motif for keyword
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
                 ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);

@@ -190,10 +190,13 @@ function matchCounter() {
  * Function to get the network of all "genes" related to a given evidence
  * 
  */
-function evidencePath(id) {
-    var url = api_url + '/evidencePath';
+function evidencePath(id, genes) {
     // Generate the Network Graph using the new Network Viewer.
-    generateCyJSNetwork(url, {keyword: id});
+    var params = {keyword: id};
+    if (genes.length > 0) {
+        params.list = genes;
+    }
+    generateCyJSNetwork(api_url + '/evidencePath', params);
 }
 
 /*
@@ -1229,7 +1232,7 @@ function createEvidenceTable(text, keyword) {
             e.preventDefault();
             var evidenceNum = $(e.target).attr("id").replace("generateEvidencePath_", "");
             var values = e.data.x[evidenceNum].split("\t");
-            evidencePath(values[7]);
+            evidencePath(values[7], []);
         });
 
         /*
@@ -1240,23 +1243,8 @@ function createEvidenceTable(text, keyword) {
             e.preventDefault();
             var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_", "");
             var values = e.data.x[evidenceNum].split("\t");
-
             var evi_userGenes = values[5].trim(); // user gene(s) provided
-            // Add comma-separated user genes to a new (candidates) list
-            var ug_list = [];
-            if (evi_userGenes.includes(",")) {
-                var vals = evi_userGenes.split(",");
-                for (var i = 0; i < vals.length; i++) {
-                    ug_list.push(vals[i]);
-                }
-            }
-            else {
-                ug_list.push(evi_userGenes);
-            }
-
-            var search_keywords = keyword.trim(); // user search keyword(s) used
-            // Generate Network
-            generateCyJSNetwork(api_url + '/network', {keyword: search_keywords, list: ug_list});
+            evidencePath(values[7], evi_userGenes.split(","));
         });
 
         $("#tablesorterEvidence").tablesorter({

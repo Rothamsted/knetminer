@@ -267,7 +267,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
-		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID);
+		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+
+		// Search Genes
+		if (!request.getList().isEmpty()) {
+			genes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
+		}
+
+		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID, genes);
 
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
