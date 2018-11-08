@@ -17,5 +17,5 @@ docker image build \
   -f Dockerfile-local .
 rm Dockerfile-local
 
-echo "You can run this Docker using: $docker run -p8080:8080 -it --rm $IMAGE_NAME"
+echo "You can run this Docker using: docker run -p8080:8080 -it --rm $IMAGE_NAME"
 echo "Then access it at http://localhost:8080/client/"
