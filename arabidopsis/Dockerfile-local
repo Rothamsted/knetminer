@@ -33,8 +33,15 @@ ARG reference_genome
 ARG git_branch=master
 
 EXPOSE 8080
-ADD * /root/
 WORKDIR /root
+COPY ${oxl_file} \
+     ${semantic_motifs_file} \
+     ${basemap_file} \
+     ${sample_query_file} \
+     ${background_image_file} \
+     ${organism_image_file} \
+     ${release_notes_file} \
+     /root/
 ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
     cl=/root/knetminer/common/quickstart/client/src/main/webapp/html \
     common=/root/knetminer/common
