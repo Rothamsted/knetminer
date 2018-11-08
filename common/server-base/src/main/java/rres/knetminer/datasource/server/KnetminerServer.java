@@ -133,7 +133,7 @@ public class KnetminerServer {
 		}
 		this._googlePageView(ds, "genepage", rawRequest);
 		model.addAttribute("list", new JSONArray(list).toString());
-		if (keyword!=null) {
+		if (keyword != null && !"".equals(keyword)) {
 			model.addAttribute("keyword", keyword);
 		}
 		return "genepage";
@@ -153,13 +153,15 @@ public class KnetminerServer {
 	@CrossOrigin
 	@GetMapping("/{ds}/evidencepage")
 	public String evidencepage(@PathVariable String ds, @RequestParam(required = true) String keyword,
-						       @RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model) {
+						       @RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model) {
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 		this._googlePageView(ds, "evidencepage", rawRequest);
-		model.addAttribute("list", new JSONArray(list).toString());
+		if (!list.isEmpty()) {
+			model.addAttribute("list", new JSONArray(list).toString());
+		}
 		model.addAttribute("keyword", keyword);
 		return "evidencepage";
 	}
