@@ -573,7 +573,7 @@ public class OndexServiceProvider {
      * @throws IOException
      * @throws ParseException
      */
-    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList) throws IOException, ParseException {
+    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications) throws IOException, ParseException {
 
         Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
         String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
@@ -596,7 +596,7 @@ public class OndexServiceProvider {
                 for (ONDEXConcept gene : geneList) {
                     for (int conceptId : mapGene2Concepts.get(gene.getId())) {
                         ONDEXConcept concept = graph.getConcept(conceptId);
-                        if (!concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+                        if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
                             hit2score.put(concept, 1.0f);
                         }
                     }
@@ -1343,7 +1343,7 @@ public class OndexServiceProvider {
         // Searches with Lucene: luceneResults
         HashMap<ONDEXConcept, Float> luceneResults = null;
         try {
-            luceneResults = searchLucene(keyword, seed);
+            luceneResults = searchLucene(keyword, seed, false);
         } catch (Exception e) {
             log.error("Lucene search failed", e);
         }
@@ -2329,19 +2329,20 @@ public class OndexServiceProvider {
              * "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" + isInList + "\t" +
              * infoQTL + "\t" + evidence + "\n");
              */
-            if (userGenes != null) {
-                // if GeneList was provided by the user, display only those genes.
-                if (isInList.equals("yes")) {
+            if (!"".equals(evidence) || qtls.isEmpty()) {
+                if (userGenes != null) {
+                    // if GeneList was provided by the user, display only those genes.
+                    if (isInList.equals("yes")) {
+                        out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+                                + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
+                                + evidences_linked + "\t" + all_evidences + "\n");
+                    }
+                } else { // default
                     out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                             + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
                             + evidences_linked + "\t" + all_evidences + "\n");
                 }
-            } else { // default
-                out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-                        + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
-                        + evidences_linked + "\t" + all_evidences + "\n");
             }
-
         }
         //log.info("Gene table generated...");
         return out.toString();
@@ -2386,8 +2387,12 @@ public class OndexServiceProvider {
             String type = lc.getOfType().getId();
             String name = getDefaultNameForGroupOfConcepts(lc);
             // All publications will have the format PMID:15487445
-            if (type == "Publication" && !name.contains("PMID:"))
-                name = "PMID:" + name;
+            //if (type == "Publication" && !name.contains("PMID:"))
+            //    name = "PMID:" + name;
+            // Do not print publications or proteins in evidence view
+            if (type == "Publication" || type == "Protein") {
+                continue;
+            }
             Float score = luceneConcepts.get(lc);
             Integer ondexId = lc.getId();
             if (!mapConcept2Genes.containsKey(lc.getId())) {
@@ -2568,7 +2573,10 @@ public class OndexServiceProvider {
                         notMatched_inGeneList,
                         notMatched_notInGeneList);
             }
-            // writes the row
+            // writes the row - unless user genes provided and none match this row
+            if (userGenes!=null && !userGenes.isEmpty() && "".equals(user_genes)) {
+                continue;
+            }
             out.append(type + "\t" + name + "\t" + sfmt.format(score) + "\t" + pfmt.format(pvalue) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
                     + "\t" + numberOfQTL + "\t" + ondexId + "\n");
         }

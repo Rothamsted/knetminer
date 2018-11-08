@@ -155,7 +155,7 @@ div#leftnav {
 
 div#content {
 	padding-top: 100px;
-    height: auto;
+    height: 100% !important;
     padding-bottom: 10px;
 }
 
