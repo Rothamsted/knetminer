@@ -12,7 +12,7 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    height: 100%;
+    min-height: 100%;
 }
 
 h2 {
@@ -155,7 +155,7 @@ div#leftnav {
 
 div#content {
 	padding-top: 100px;
-    height: 100% !important;
+    height: auto;
     padding-bottom: 10px;
 }
 
