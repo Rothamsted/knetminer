@@ -23,6 +23,7 @@ ARG release_notes_file=release_notes.html
 # Other arguments
 
 ARG tax_id  
+ARG multiorganisms=false
 ARG species_name 
 ARG species_short_name 
 ARG species_link_name 
@@ -34,14 +35,6 @@ ARG git_branch=master
 
 EXPOSE 8080
 WORKDIR /root
-COPY ${oxl_file} \
-     ${semantic_motifs_file} \
-     ${basemap_file} \
-     ${sample_query_file} \
-     ${background_image_file} \
-     ${organism_image_file} \
-     ${release_notes_file} \
-     /root/
 ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
     cl=/root/knetminer/common/quickstart/client/src/main/webapp/html \
     common=/root/knetminer/common
@@ -53,15 +46,17 @@ RUN set -x \
  && git clone https://github.com/Rothamsted/knetminer.git \
  && cd knetminer \
  && git checkout ${git_branch} \
- && mkdir -p ${cl}/data ${cl}/image \
- && mv /root/${oxl_file} /root/data.oxl \
- && mv /root/${semantic_motifs_file} ${ds}/resources/SemanticMotifs.txt \
- && mv /root/${basemap_file} ${cl}/data/basemap.xml \
- && mv /root/${sample_query_file} ${cl}/data/sampleQuery.xml \
- && mv /root/${background_image_file} ${cl}/image/background.jpg \
- && mv /root/${organism_image_file} ${cl}/image/organism.png \
- && mv /root/${release_notes_file} ${cl}/release_notes.html \
- && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
+ && mkdir -p ${cl}/data ${cl}/image 
+
+COPY ${oxl_file} /root/data.oxl
+COPY ${semantic_motifs_file} ${ds}/resources/SemanticMotifs.txt 
+COPY ${basemap_file} ${cl}/data/basemap.xml 
+COPY ${sample_query_file} ${cl}/data/sampleQuery.xml 
+COPY ${background_image_file} ${cl}/image/background.jpg 
+COPY ${organism_image_file} ${cl}/image/organism.png 
+COPY ${release_notes_file} ${cl}/release_notes.html 
+
+RUN mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
  && mv ${cl}/index.jsp.template ${cl}/index.jsp \
