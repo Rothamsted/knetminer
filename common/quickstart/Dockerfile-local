@@ -56,7 +56,8 @@ COPY ${background_image_file} ${cl}/image/background.jpg
 COPY ${organism_image_file} ${cl}/image/organism.png 
 COPY ${release_notes_file} ${cl}/release_notes.html 
 
-RUN mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
+RUN cd knetminer \
+ && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
  && mv ${cl}/index.jsp.template ${cl}/index.jsp \
