@@ -2,49 +2,61 @@ FROM andreptb/tomcat:7-jdk8
 
 # DO NOT TOUCH ABOVE THIS LINE
  
-# INSTRUCTIONS
-# 1. Configure the OXL file and other settings in the ENV statement below
-# 2a. For AWS deployment, send the modified Dockerfile and accompanying Dockerrun.aws.json to ElasticBeanStalk ("eb init", "eb create" from within an empty folder containing a copy of the two files)) and run it there. It will take around 10 minutes to build the image and start it before you can access it at http://<beanstalk-load-balancer-name>/client/ (NB. Do not include :8080 in the URL)
-# 2b. Or, for local deployment in Docker, continue from step 3
-# 3. Build with "docker image build --squash -t knetminer ." 
-# 4. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer". You can access it at http://localhost:8080/client/
-
-ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl  \
-    semantic_motifs_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/SemanticMotifs.txt  \
-    basemap_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/basemap.xml  \
-    sample_query_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/sampleQuery.xml  \
-    background_image_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/background.jpg  \
-    release_notes_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/release_notes.html  \
-    tax_id=3702  \
-    species_name="Arabidopsis thaliana" \
-    species_link_name=arabidopsis \
-    keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
-    description="Arabidopsis Knetminer" \
-    reference_genome=true \
-    git_branch=20181001_rhlastweek
+# INSTRUCTIONS do not use directly. 
+# 1. Check out the KnetMiner source. 
+# 2. Within it, reate a folder with the OXL file and other files referenced in the ARG statement below
+# 3. Change into the folder containing the KnetMiner source and your newly created species folder
+# 4. Build with "docker image build --squash -t knetminer-myspecies -f common/quickstart/Dockerfile-dev --build-arg species_dir=myspeciesfolder [--build-arg varname=value -build-arg ...] .", specifying one build-arg parameter for each argument not provided with a default below or that you wish to override
+# 5. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer-myspecies". You can access it at http://localhost:8080/client/
 
 # DO NOT TOUCH BELOW THIS LINE
 
+# Files that need to be in the local folder
+
+ARG oxl_file=data.oxl  
+ARG semantic_motifs_file=SemanticMotifs.txt  
+ARG basemap_file=basemap.xml  
+ARG sample_query_file=sampleQuery.xml  
+ARG background_image_file=background.jpg  
+ARG release_notes_file=release_notes.html  
+
+# Other arguments
+
+ARG tax_id  
+ARG multiorganisms=false
+ARG species_name 
+ARG species_link_name 
+ARG keywords 
+ARG description 
+ARG reference_genome 
+ARG species_dir
+
 EXPOSE 8080
+WORKDIR /root
 ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
     cl=/root/knetminer/common/quickstart/client/src/main/webapp/html \
     common=/root/knetminer/common
-WORKDIR /root
+
+RUN mkdir -p /root/knetminer
+
+COPY pom.xml /root/knetminer/pom.xml
+COPY common ${common}
 
 RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
- && git clone https://github.com/Rothamsted/knetminer.git \
- && cd knetminer \
- && git checkout ${git_branch} \
- && mkdir -p ${cl}/data ${cl}/image \
- && wget -O /root/data.oxl ${oxl_file} \
- && wget -O ${ds}/resources/SemanticMotifs.txt ${semantic_motifs_file} \
- && wget -O ${cl}/data/basemap.xml ${basemap_file} \
- && wget -O ${cl}/data/sampleQuery.xml ${sample_query_file} \
- && wget -O ${cl}/image/background.jpg ${background_image_file} \
- && wget -O ${cl}/release_notes.html ${release_notes_file} \
+ && cd /root/knetminer \
+ && mkdir -p ${cl}/data ${cl}/image 
+
+COPY ${species_dir}/${oxl_file} /root/data.oxl
+COPY ${species_dir}/${semantic_motifs_file} ${ds}/resources/SemanticMotifs.txt 
+COPY ${species_dir}/${basemap_file} ${cl}/data/basemap.xml 
+COPY ${species_dir}/${sample_query_file} ${cl}/data/sampleQuery.xml 
+COPY ${species_dir}/${background_image_file} ${cl}/image/background.jpg 
+COPY ${species_dir}/${release_notes_file} ${cl}/release_notes.html 
+
+RUN cd /root/knetminer \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
@@ -77,7 +89,6 @@ RUN set -x \
  && cd ${common}/quickstart \
  && mvn install \
  && mv ${common}/quickstart/client/target/client.war ${CATALINA_HOME}/webapps \
- && mv ${common}/quickstart/ws/target/ws.war ${CATALINA_HOME}/webapps \
- && rm -rf /root/.m2 /root/knetminer
+ && mv ${common}/quickstart/ws/target/ws.war ${CATALINA_HOME}/webapps 
 
 CMD ["catalina.sh", "run"]

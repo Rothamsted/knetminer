@@ -10,7 +10,6 @@ target/
 .classpath
 .project
 .settings
-dist/
 stderr.log
 stdout.log
 *.swp
