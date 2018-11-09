@@ -56,6 +56,19 @@
 						</div>
 					</div>
 				</li>
+				<li style="padding-top:20px; width:70%;">
+					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
+					<hr width="45%" align="left">
+					<div id="list_search">
+						<div id="advanced_search_area" style="display:none;">
+							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
+							<div class="rightnav_genelist" style="display:none">
+								<input type="radio" name="list_mode" value="GLrestrict">Intersection
+								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
+							</div>
+						</div>
+					</div>
+				</li>
 				<li id="genomeorqtlsearchbox" style="display:none; width:70%;">
 				<br />
 				<b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
@@ -92,19 +105,6 @@
 						<div class="rightnav">
 							<input type="radio" name="search_mode" value="genome" checked="checked">whole-genome
 							<input type="radio" name="search_mode" value="qtl">within region<br>
-						</div>
-					</div>
-				</li>
-				<li style="padding-top:20px; width:70%;">
-					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
-						<hr width="45%" align="left">
-					<div id="list_search">
-						<div id="advanced_search_area" style="display:none;">
-							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
-							<div class="rightnav_genelist" style="display:none">
-								<input type="radio" name="list_mode" value="GLrestrict">Intersection
-								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
-							</div>
 						</div>
 					</div>
 				</li>

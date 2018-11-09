@@ -130,10 +130,17 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
 			throws IllegalArgumentException {
 		// Find genes from the user's gene list
-		Set<ONDEXConcept> userGenes = null;
+		Set<ONDEXConcept> userGenes = new HashSet<ONDEXConcept>();
 		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes = this.ondexServiceProvider.searchGenes(request.getList());
+			userGenes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
 			log.info("Number of user provided genes: " + userGenes.size());
+		}
+		// Also search Regions - only if no genes provided
+		if (userGenes.isEmpty() && !request.getQtl().isEmpty()) {
+			userGenes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+		}
+		if (userGenes.isEmpty()) {
+			userGenes = null;
 		}
 
 		// Genome search
@@ -260,7 +267,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
-		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID);
+		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+
+		// Search Genes
+		if (!request.getList().isEmpty()) {
+			genes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
+		}
+
+		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID, genes);
 
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();

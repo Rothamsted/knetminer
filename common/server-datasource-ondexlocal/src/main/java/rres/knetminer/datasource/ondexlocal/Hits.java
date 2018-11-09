@@ -34,7 +34,7 @@ public class Hits {
 		this.ondexProvider = ondexProvider;
 		this.keyword = keyword;
 		try {
-			this.luceneConcepts = ondexProvider.searchLucene(keyword, geneList);
+			this.luceneConcepts = ondexProvider.searchLucene(keyword, geneList, true);
 			//remove from constructor if it slows down search noticeably
 			this.countLinkedGenes();
 		} 
