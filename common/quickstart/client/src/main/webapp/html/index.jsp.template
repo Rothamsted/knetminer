@@ -1,7 +1,6 @@
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
-<layout:page title="!!SHORTNAME!!" description="!!METADESC!!" keywords="!!METAKEYWORDS!!" species="!!SHORTNAME!!"
-             image="html/image/organism.png" eg_keywords="!!EGKEYWORDS!!" chromosomes="!!CHROMOSOMES!!">
+<layout:page title="!!SHORTNAME!!" description="!!METADESC!!" keywords="!!METAKEYWORDS!!" species="!!SHORTNAME!!" chromosomes="!!CHROMOSOMES!!">
     <jsp:attribute name="extraHeader">
     </jsp:attribute>
     <jsp:attribute name="extraBottom">

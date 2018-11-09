@@ -1,6 +1,5 @@
 <%@ tag description="Header" %>
 
-<%@ attribute name="species" required="false" description="Species" %>
 <%@ attribute name="image" required="false" description="Image" %>
 
 <div id="header">

@@ -7,7 +7,6 @@
 <%@ attribute name="description" required="true" description="Page description" %>
 <%@ attribute name="extraHeader" fragment="true" description="Extra code to put before head" %>
 <%@ attribute name="extraBottom" fragment="true" description="Extra code to put before body" %>
-<%@ attribute name="species" fragment="false" description="Species" %>
 <%@ attribute name="image" fragment="false" description="Image" %>
 <%@ attribute name="eg_keywords" fragment="false" description="e.g. keywords" %>
 <%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
@@ -68,7 +67,7 @@
     <body>
         <!-- Main -->
         <div id="wrapper">
-        	<layout:header species="${species}" />
+        	<layout:header />
  			<layout:content eg_keywords="${eg_keywords}" chromosomes="${chromosomes}"  assembly="${assembly}"/>
             <layout:footer/>
         </div>
