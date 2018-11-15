@@ -56,7 +56,7 @@ RUN set -x \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/release.html \
  && sed -e "/!!RELEASE!!/{r ${cl}/release_notes.html" -e "d}" -i'' ${cl}/release.html \
- && sed -e "s/!!SPECIES!!/${species}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METADESC!!/${description}/g" -i'' ${cl}/index.jsp \
