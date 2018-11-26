@@ -1,0 +1,11 @@
+node_modules/*
+bower_components/
+.tmp/
+assets/
+dev/
+images/
+src/
+stylesheets/
+javascripts/
+test/
+

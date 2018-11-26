@@ -1,6 +1,6 @@
 {
- "name": "genomaps",
-  "version": "1.0.1",
+  "name": "genomaps",
+  "version": "1.0.3",
   "license": "MIT",
   "description": "Interactive visualization of high-density SNP, QTL, GWAS and gene data",
   "main": "genomaps.js",
@@ -22,37 +22,36 @@
       "name": "Francis Newson",
       "email": "francis.newson@tessella.com"
     },
-	{
+    {
       "name": "Ajit Singh",
       "email": "ajit.singh@rothamsted.ac.uk"
     },
-   {
+    {
       "name": "Peter Norton",
       "email": "peter.norton@tessella.com"
     }
   ],
   "keywords": [
-  	"genome",
-  	"chromosome",
-  	"SNP",
-	"QTL",
-	"GWAS",
-	"gene",	
-  	"visualisation",
-  	"visualization",
-  	"node",
-  	"npm",
-  	"nodejs",
-  	"bower",
-  	"D3",
-  	"biojs"
+    "genome",
+    "chromosome",
+    "SNP",
+    "QTL",
+    "GWAS",
+    "gene",
+    "visualisation",
+    "visualization",
+    "node",
+    "npm",
+    "nodejs",
+    "bower",
+    "D3",
+    "biojs"
   ],
   "directories": {
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.1",
@@ -83,5 +82,4 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
-
 }
