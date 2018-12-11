@@ -1,8 +1,12 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-arabidopsis"
+IMAGE_NAME="knetminer-arabidopsis-dev"
 
-cp ../common/quickstart/Dockerfile-local .
+SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
+cd ..
+cp .dockerignore-template .dockerignore
+cat .gitignore >> .dockerignore
+ls -1 | grep -v $SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 
 docker image build \
     	--build-arg tax_id=3702  \
@@ -11,12 +15,13 @@ docker image build \
     	--build-arg keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
-  --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
+  --build-arg species_dir="$SPECIES_DIR" \
   --squash -t $IMAGE_NAME \
-  -f Dockerfile-local .
+  -f common/quickstart/Dockerfile-dev .
 
 if [ $? -eq 0 ]; then
-	rm Dockerfile-local
+	rm .dockerignore
+	cd $SPECIES_DIR
 	echo "You can run this Docker using: docker run -p8080:8080 -it --rm $IMAGE_NAME"
 	echo "Then access it at http://localhost:8080/client/"
 fi

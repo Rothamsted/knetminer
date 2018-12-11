@@ -7,13 +7,9 @@
 <%@ attribute name="description" required="true" description="Page description" %>
 <%@ attribute name="extraHeader" fragment="true" description="Extra code to put before head" %>
 <%@ attribute name="extraBottom" fragment="true" description="Extra code to put before body" %>
-<%@ attribute name="species" fragment="false" description="Species" %>
-<%@ attribute name="image" fragment="false" description="Image" %>
-<%@ attribute name="eg_keywords" fragment="false" description="e.g. keywords" %>
 <%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
-<%@ attribute name="species_name" fragment="false" description="species_name" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
@@ -51,7 +47,7 @@
 
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
-    <jsp:invoke fragment="extraHeader"/>
+        <jsp:invoke fragment="extraHeader"/>
         
         <!-- Google Analytics -->
         <script>
@@ -68,8 +64,8 @@
     <body>
         <!-- Main -->
         <div id="wrapper">
-        	<layout:header species="${species}" />
- 			<layout:content eg_keywords="${eg_keywords}" chromosomes="${chromosomes}"  assembly="${assembly}"/>
+        	<layout:header />
+ 			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}"/>
             <layout:footer/>
         </div>
         <jsp:invoke fragment="extraBottom"/>

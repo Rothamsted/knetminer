@@ -14,13 +14,10 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     basemap_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/basemap.xml  \
     sample_query_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/sampleQuery.xml  \
     background_image_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/background.jpg  \
-    organism_image_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/organism.png  \
     release_notes_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/release_notes.html  \
     tax_id=3702  \
     species_name="Arabidopsis thaliana" \
-    species_short_name=Arabidopsis \
     species_link_name=arabidopsis \
-    eg_keywords="[e.g. 'disease resistance', 'xylan|cell wall']" \
     keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
     description="Arabidopsis Knetminer" \
     reference_genome=true \
@@ -47,7 +44,6 @@ RUN set -x \
  && wget -O ${cl}/data/basemap.xml ${basemap_file} \
  && wget -O ${cl}/data/sampleQuery.xml ${sample_query_file} \
  && wget -O ${cl}/image/background.jpg ${background_image_file} \
- && wget -O ${cl}/image/organism.png ${organism_image_file} \
  && wget -O ${cl}/release_notes.html ${release_notes_file} \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
@@ -57,15 +53,13 @@ RUN set -x \
  && chromosomes=$(echo "cat //genome/chromosome/@number" | xmllint --shell ${cl}/data/basemap.xml | sed -n 's/[^\"]*\"\([^\"]*\)\"[^\"]*/\1/gp' | sed -e :a -e '$!N; s/\n/,/; ta';) \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/javascript/utils-config.js \
- && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${cl}/javascript/utils-config.js \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/release.html \
  && sed -e "/!!RELEASE!!/{r ${cl}/release_notes.html" -e "d}" -i'' ${cl}/release.html \
- && sed -e "s/!!SHORTNAME!!/${species_short_name}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METADESC!!/${description}/g" -i'' ${cl}/index.jsp \
- && sed -e "s/!!EGKEYWORDS!!/${eg_keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!TAXID!!/${tax_id}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \

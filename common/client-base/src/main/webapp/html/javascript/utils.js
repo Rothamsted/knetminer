@@ -253,20 +253,14 @@ $(document).ready(
                 $('#advanced_search').trigger('click');
             }
             $('.keywordsSubmit').removeAttr("disabled");
-            $('#keywords').val('');
+            $("#keywords").val('');
             $('.loadingDiv').html('');
         });
         $('#with').click(function () {
             $('.with_keyword_search').show();
             $('.without_keyword_search').hide();
-            if ($('#region_search').attr('src') === 'html/image/collapse.gif') {
-                $('#region_search').trigger('click');
-            }
-            if ($('#advanced_search').attr('src') === 'html/image/collapse.gif') {
-                $('#advanced_search').trigger('click');
-            }
             $('.keywordsSubmit').attr("disabled");
-            $('#keywords').val('');
+            $("#keywords").val('');
             $('.loadingDiv').html('');
         });
         // Add QTL region
@@ -333,7 +327,10 @@ $(document).ready(
                     $('#region_search_area tr:last').prev().remove();
                 }
                 if ($('#region_search_area tr').length <= 3) {
-                    $('#removeRow').attr('disabled', true);
+                    $("#chr1").attr('selectedIndex', 0);
+                    $("#start1").val('');
+                    $("#end1").val('');
+                    $("#label1" ).val('');
                 }
                 else if ($('#rows tr').length < 7) {
                     $('#addRow').removeAttr('disabled');
