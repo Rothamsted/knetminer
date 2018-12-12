@@ -16,6 +16,7 @@ docker image build \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="$SPECIES_DIR" \
+  --build-arg knetminer_port=8081 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
 
@@ -24,4 +25,5 @@ if [ $? -eq 0 ]; then
 	cd $SPECIES_DIR
 	echo "You can run this Docker using: docker run -p8080:8080 -it --rm $IMAGE_NAME"
 	echo "Then access it at http://localhost:8080/client/"
+	echo "Note: port 8080 is the Tomcat default; replace with the knetminer_port defined in this file"
 fi

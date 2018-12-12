@@ -30,11 +30,15 @@ ARG keywords
 ARG description 
 ARG reference_genome 
 ARG species_dir
+ARG knetminer_port
 
-EXPOSE 8080
+#EXPOSE 8080
+EXPOSE ${knetminer_port}
+
 WORKDIR /root
 ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
     cl=/root/knetminer/common/quickstart/client/src/main/webapp/html \
+	tc=/usr/local/tomcat/conf/ \
     common=/root/knetminer/common
 
 RUN mkdir -p /root/knetminer
@@ -75,6 +79,7 @@ RUN cd /root/knetminer \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!TAXID!!/${tax_id}/g" -i'' ${ds}/resources/config.xml \
  && sed -e "s/!!LINKNAME!!/${species_link_name}/g" -i'' ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
+ && sed -i.bk "s/8080/${knetminer_port}/g" ${tc}/server.xml \
  && mvn install \
  && cd ${common} \
  && mvn install \
