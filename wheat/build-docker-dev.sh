@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-arabidopsis-dev"
+IMAGE_NAME="knetminer-wheat-dev"
 
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
 cd ..
@@ -9,14 +9,14 @@ cat .gitignore >> .dockerignore
 ls -1 | grep -v $SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 
 docker image build \
-    	--build-arg tax_id=3702  \
-    	--build-arg species_name="Arabidopsis thaliana" \
-    	--build-arg species_link_name=arabidopsis \
-    	--build-arg keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
-    	--build-arg description="Arabidopsis Knetminer" \
+    	--build-arg tax_id=4565  \
+    	--build-arg species_name="Triticum aestivum" \
+    	--build-arg species_link_name=wheat \
+    	--build-arg keywords="wheat, t.aestivum, knetminer, quickstart, demo" \
+    	--build-arg description="Knetminer Wheat" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="$SPECIES_DIR" \
-  --build-arg knetminer_port=8081 \
+  --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
 
