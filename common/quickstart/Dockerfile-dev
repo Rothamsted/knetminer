@@ -4,16 +4,17 @@ FROM andreptb/tomcat:7-jdk8
  
 # INSTRUCTIONS do not use directly. 
 # 1. Check out the KnetMiner source. 
-# 2. Within it, reate a folder with the OXL file and other files referenced in the ARG statement below
+# 2. Within it, create a folder with the OXL file and other files referenced in the ARG statement below
 # 3. Change into the folder containing the KnetMiner source and your newly created species folder
 # 4. Build with "docker image build --squash -t knetminer-myspecies -f common/quickstart/Dockerfile-dev --build-arg species_dir=myspeciesfolder [--build-arg varname=value -build-arg ...] .", specifying one build-arg parameter for each argument not provided with a default below or that you wish to override
 # 5. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer-myspecies". You can access it at http://localhost:8080/client/
 
 # DO NOT TOUCH BELOW THIS LINE
 
-# Files that need to be in the local folder
+# Files that need to be in the local folder (including the .oxl file)
 
-ARG oxl_file=data.oxl  
+#ARG oxl_file=data.oxl  
+ARG oxl_file={oxl_file_name}  
 ARG semantic_motifs_file=SemanticMotifs.txt  
 ARG basemap_file=basemap.xml  
 ARG sample_query_file=sampleQuery.xml  
