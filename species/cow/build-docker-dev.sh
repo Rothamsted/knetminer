@@ -9,14 +9,14 @@ cat .gitignore >> .dockerignore
 ls -1 | grep -v species/$SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 
 docker image build \
-    	--build-arg tax_id=9031  \
-    	--build-arg species_name="Gallus gallus" \
-    	--build-arg species_link_name=chicken \
-    	--build-arg keywords="chicken, gallus, knetminer, quickstart, demo" \
-    	--build-arg description="Chicken Knetminer" \
+    	--build-arg tax_id=9913  \
+    	--build-arg species_name="Bos taurus" \
+    	--build-arg species_link_name=cow \
+    	--build-arg keywords="cow, b.taurus, knetminer, quickstart, demo" \
+    	--build-arg description="Cow Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file_name="ChickenKNET.oxl" \
+  --build-arg oxl_file_name="CowKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .

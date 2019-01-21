@@ -5,14 +5,14 @@ IMAGE_NAME="knetminer-barley"
 cp ../common/quickstart/Dockerfile-local .
 
 docker image build \
-    	--build-arg tax_id=9031  \
-    	--build-arg species_name="Gallus gallus" \
-    	--build-arg species_link_name=chicken \
-    	--build-arg keywords="chicken, gallus, knetminer, quickstart, demo" \
-    	--build-arg description="Chicken Knetminer" \
+    	--build-arg tax_id=3827  \
+    	--build-arg species_name="Cicer arietinum" \
+    	--build-arg species_link_name=cicer \
+    	--build-arg keywords="cicer, c.arietinum, knetminer, quickstart, demo" \
+    	--build-arg description="Cicer Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file_name="ChickenKNET.oxl" \
+  --build-arg oxl_file_name="CicerKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
