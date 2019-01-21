@@ -9,10 +9,10 @@ docker image build \
     	--build-arg species_name="Salix viminalis" \
     	--build-arg species_link_name=sviminalis \
     	--build-arg keywords="sviminalis, s.viminalis, knetminer, quickstart, demo" \
-    	--build-arg description="SViminalis Knetminer" \
+    	--build-arg description="Sviminalis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file_name="SViminalisKNET.oxl" \
+  --build-arg oxl_file_name="WillowKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
