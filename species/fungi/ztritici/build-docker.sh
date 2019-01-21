@@ -5,15 +5,15 @@ IMAGE_NAME="knetminer-barley"
 cp ../common/quickstart/Dockerfile-local .
 
 docker image build \
-    	--build-arg tax_id=7227  \
-    	--build-arg species_name="Drosophila melanogaster" \
-    	--build-arg species_link_name=drosophila \
-    	--build-arg keywords="drosophila, d.melanogaster, knetminer, quickstart, demo" \
-    	--build-arg description="Drosophila Knetminer" \
+    	--build-arg tax_id=336722  \
+    	--build-arg species_name="Zymoseptoria tritici" \
+    	--build-arg species_link_name=zymoseptoria \
+    	--build-arg keywords="zymoseptoria, z.tritici, knetminer, quickstart, demo" \
+    	--build-arg description="Zymoseptoria Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file_name="DrosophillaKNET.oxl" \
-  --build-arg knetminer_port=8080 \
+  --build-arg oxl_file_name="FungiKNET.oxl" \
+  --build-arg knetminer_port=8081 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
 
