@@ -13,7 +13,7 @@ docker image build \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
   --build-arg oxl_file_name="FungiKNET.oxl" \
-  --build-arg knetminer_port=8080 \
+  --build-arg knetminer_port=8081 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
 
