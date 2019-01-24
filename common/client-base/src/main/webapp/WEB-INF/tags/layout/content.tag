@@ -106,7 +106,7 @@
 				</li>
 				<li class="without_keyword_search" style="display:none;">
 				    <input class="keywordsSubmit" style="width:30px;height:30px;" type="image" alt="Submit" label="Search" src="html/image/search_button.jpg" class="button" disabled/>
-				    <div class="loadingDiv"></div>
+				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>
 			</ul>
 		</form>
