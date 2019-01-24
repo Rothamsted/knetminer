@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-humanDisease-dev"
+IMAGE_NAME="knetminer-humandisease-dev"
 
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
 cd ..
@@ -11,7 +11,7 @@ ls -1 | grep -v species/$SPECIES_DIR | grep -v pom.xml | grep -v common >> .dock
 docker image build \
     	--build-arg tax_id=9606  \
     	--build-arg species_name="Neurodegenerative Diseases" \
-    	--build-arg species_link_name=humanDisease \
+    	--build-arg species_link_name=human_disease \
     	--build-arg keywords="human, humanDisease, knetminer, quickstart, demo" \
     	--build-arg description="HumanDisease Knetminer" \
     	--build-arg reference_genome=true \

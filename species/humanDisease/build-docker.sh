@@ -1,13 +1,13 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-humanDisease"
+IMAGE_NAME="knetminer-humandisease"
 
 cp ../common/quickstart/Dockerfile-local .
 
 docker image build \
     	--build-arg tax_id=9606  \
     	--build-arg species_name="Neurodegenerative Diseases" \
-    	--build-arg species_link_name=humanDisease \
+    	--build-arg species_link_name=human_disease \
     	--build-arg keywords="human, humanDisease, knetminer, quickstart, demo" \
     	--build-arg description="HumanDisease Knetminer" \
     	--build-arg reference_genome=true \
