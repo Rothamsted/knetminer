@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-arabidopsis-dev"
+IMAGE_NAME="knetminer-drosophila-dev"
 
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
 cd ..

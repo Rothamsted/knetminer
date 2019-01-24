@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-barley"
+IMAGE_NAME="knetminer-chicken"
 
 cp ../common/quickstart/Dockerfile-local .
 
