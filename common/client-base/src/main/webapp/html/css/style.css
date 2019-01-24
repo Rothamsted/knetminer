@@ -550,9 +550,10 @@ body:after{
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	position: relative;
+	position: fixed; /* relative; */
     width: 100%;
     height: 150px;
+	bottom: 0px;
 	}
 @media (max-width:1490px){
 	.contact-footer {
