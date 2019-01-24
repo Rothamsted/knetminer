@@ -178,6 +178,7 @@ div#keyword_search ul{
 }
 div#keyword_search li {
 	float:left;
+	height:35px;
 }
 div#keyword_search input[type="text"] {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
@@ -242,6 +243,7 @@ div.loadingDiv {
 	color:#D56048;
 	position:relative;
 	top:10px;
+	display:inline-block;
 }
 div#loadingNetworkDiv {
 	float:right;
