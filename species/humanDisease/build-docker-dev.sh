@@ -15,7 +15,7 @@ docker image build \
     	--build-arg keywords="human, humanDisease, knetminer, quickstart, demo" \
     	--build-arg description="HumanDisease Knetminer" \
     	--build-arg reference_genome=true \
-  --build-arg species_dir="$SPECIES_DIR" \
+  --build-arg species_dir="species/$SPECIES_DIR" \
   --build-arg oxl_file="NeuroDiseaseKnet.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
