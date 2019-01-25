@@ -2,7 +2,7 @@
 
 IMAGE_NAME="knetminer-fusarium"
 
-cp ../common/quickstart/Dockerfile-local .
+cp ../../../common/quickstart/Dockerfile-local .
 
 docker image build \
     	--build-arg tax_id=5518  \

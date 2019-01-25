@@ -3,7 +3,7 @@
 IMAGE_NAME="knetminer-maize-dev"
 
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
-cd ..
+cd ../..
 cp .dockerignore-template .dockerignore
 cat .gitignore >> .dockerignore
 ls -1 | grep -v species/$SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
