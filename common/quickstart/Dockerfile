@@ -35,9 +35,8 @@ RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
- && git clone https://github.com/Rothamsted/knetminer.git \
+ && git clone --single-branch -b ${git_branch} https://github.com/Rothamsted/knetminer.git \
  && cd knetminer \
- && git checkout ${git_branch} \
  && mkdir -p ${cl}/data ${cl}/image \
  && wget -O /root/data.oxl ${oxl_file} \
  && wget -O ${ds}/resources/SemanticMotifs.txt ${semantic_motifs_file} \

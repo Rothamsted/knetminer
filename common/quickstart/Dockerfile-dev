@@ -14,7 +14,7 @@ FROM andreptb/tomcat:7-jdk8
 # Files that need to be in the local folder (including the .oxl file)
 
 #ARG oxl_file=data.oxl  
-ARG oxl_file={oxl_file_name}  
+ARG oxl_file=${oxl_file_name}  
 ARG semantic_motifs_file=SemanticMotifs.txt  
 ARG basemap_file=basemap.xml  
 ARG sample_query_file=sampleQuery.xml  

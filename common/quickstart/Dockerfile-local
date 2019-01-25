@@ -13,7 +13,7 @@ FROM andreptb/tomcat:7-jdk8
 # Files that need to be in the local folder (including the .oxl file)
 
 #ARG oxl_file=data.oxl  
-ARG oxl_file={oxl_file_name}  
+ARG oxl_file=${oxl_file_name}  
 ARG semantic_motifs_file=SemanticMotifs.txt  
 ARG basemap_file=basemap.xml  
 ARG sample_query_file=sampleQuery.xml  
@@ -29,7 +29,7 @@ ARG species_link_name
 ARG keywords 
 ARG description 
 ARG reference_genome 
-ARG git_branch=master
+ARG git_branch=20181001_rhlastweek
 ARG knetminer_port
 
 #EXPOSE 8080
@@ -45,9 +45,8 @@ RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
- && git clone https://github.com/Rothamsted/knetminer.git \
+ && git clone --single-branch -b ${git_branch} https://github.com/Rothamsted/knetminer.git \
  && cd knetminer \
- && git checkout ${git_branch} \
  && mkdir -p ${cl}/data ${cl}/image 
 
 COPY ${oxl_file} /root/data.oxl
