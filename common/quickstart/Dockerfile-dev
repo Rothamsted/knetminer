@@ -34,21 +34,8 @@ ARG species_dir
 ARG knetminer_port
 
 # test
-echo "species_name: " $species_name
-echo "species_link_name: " $species_link_name
-echo "tax_id: " $tax_id
-echo "multiorganisms: " $multiorganisms
-echo "keywords: " $keywords
-echo "description: " $description
-echo "reference_genome: " $reference_genome
-echo "species_dir: " $species_dir
-echo "knetminer_port: " $knetminer_port
-echo "oxl_file: " $oxl_file
-echo "semantic_motifs_file: " $semantic_motifs_file
-echo "basemap_file: " $basemap_file
-echo "sample_query_file: " $sample_query_file
-echo "background_image_file: " $background_image_file
-echo "release_notes_file: " $release_notes_file
+RUN echo 'species_name: ' $species_name , 'tax_id: ' $tax_id , 'reference_genome: ' $reference_genome , 'species_dir: ' $species_dir
+RUN echo 'knetminer_port: ' $knetminer_port , 'oxl_file: ' $oxl_file , 'semantic_motifs_file: ' $semantic_motifs_file
 
 #EXPOSE 8080
 EXPOSE ${knetminer_port}
