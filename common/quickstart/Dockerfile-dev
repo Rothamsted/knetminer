@@ -14,7 +14,7 @@ FROM andreptb/tomcat:7-jdk8
 # Files that need to be in the local folder (including the .oxl file)
 
 #ARG oxl_file=data.oxl  
-ARG oxl_file=${oxl_file_name}  
+ARG oxl_file  
 ARG semantic_motifs_file=SemanticMotifs.txt  
 ARG basemap_file=basemap.xml  
 ARG sample_query_file=sampleQuery.xml  
@@ -32,10 +32,6 @@ ARG description
 ARG reference_genome 
 ARG species_dir
 ARG knetminer_port
-
-# test
-RUN echo 'species_name: ' $species_name , 'tax_id: ' $tax_id , 'reference_genome: ' $reference_genome , 'species_dir: ' $species_dir
-RUN echo 'knetminer_port: ' $knetminer_port , 'oxl_file: ' $oxl_file , 'semantic_motifs_file: ' $semantic_motifs_file
 
 #EXPOSE 8080
 EXPOSE ${knetminer_port}
