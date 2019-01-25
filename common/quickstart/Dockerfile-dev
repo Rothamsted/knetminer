@@ -54,12 +54,12 @@ RUN set -x \
  && cd /root/knetminer \
  && mkdir -p ${cl}/data ${cl}/image 
 
+COPY ${species_dir}/${oxl_file} /root/data.oxl
 COPY ${species_dir}/${semantic_motifs_file} ${ds}/resources/SemanticMotifs.txt 
 COPY ${species_dir}/${basemap_file} ${cl}/data/basemap.xml 
 COPY ${species_dir}/${sample_query_file} ${cl}/data/sampleQuery.xml 
 COPY ${species_dir}/${background_image_file} ${cl}/image/background.jpg 
 COPY ${species_dir}/${release_notes_file} ${cl}/release_notes.html 
-COPY ${species_dir}/${oxl_file} /root/data.oxl
 
 RUN cd /root/knetminer \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
