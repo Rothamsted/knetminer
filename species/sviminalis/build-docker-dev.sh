@@ -16,7 +16,7 @@ docker image build \
     	--build-arg description="Sviminalis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file_name="WillowKNET.oxl" \
+  --build-arg oxl_file="WillowKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .

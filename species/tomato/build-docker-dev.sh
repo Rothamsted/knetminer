@@ -18,7 +18,7 @@ docker image build \
     	--build-arg reference_genome=true \
 #    	--build-arg multiorganisms=true \ #
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file_name="SolKNET.oxl" \
+  --build-arg oxl_file="SolKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-arabidopsis-dev"
+IMAGE_NAME="knetminer-arabidopsis-mini-dev"
 
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
 cd ../..
@@ -16,7 +16,7 @@ docker image build \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file_name="ArabidopsisKNET.oxl" \
+  --build-arg oxl_file="data_ara.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .

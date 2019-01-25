@@ -12,7 +12,7 @@ docker image build \
     	--build-arg description="Cicer Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file_name="CicerKNET.oxl" \
+  --build-arg oxl_file="CicerKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .

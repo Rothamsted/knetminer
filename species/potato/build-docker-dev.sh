@@ -16,7 +16,7 @@ docker image build \
     	--build-arg description="Potato Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file_name="PotatoKNET.oxl" \
+  --build-arg oxl_file="PotatoKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .

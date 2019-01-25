@@ -16,7 +16,7 @@ docker image build \
     	--build-arg description="Zymoseptoria Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/fungi/$SPECIES_DIR" \
-  --build-arg oxl_file_name="FungiKNET.oxl" \
+  --build-arg oxl_file="FungiKNET.oxl" \
   --build-arg knetminer_port=8082 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
