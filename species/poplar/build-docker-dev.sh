@@ -1,13 +1,22 @@
 #!/bin/bash
 
+#image name
 IMAGE_NAME="knetminer-poplar-dev"
 
+# current $SPECIES_DIR.
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
+
+#copy .dockerignore-template and .gitignore settings.
 cd ../..
 cp .dockerignore-template .dockerignore
 cat .gitignore >> .dockerignore
-ls -1 | grep -v species/$SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 
+# add all species/ sub-folders to .dockerignore except KnetMiner/pom.xml, common/ and species/$SPECIES_DIR.
+cd species/
+ls -1 | grep -v $SPECIES_DIR | sed 's/^/species\//' | grep -v pom.xml | grep -v common >> .dockerignore
+cd ..
+
+#pass docker image build parameters
 docker image build \
     	--build-arg tax_id=3694  \
     	--build-arg species_name="Populus trichocarpa" \
@@ -21,6 +30,7 @@ docker image build \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
 
+#when done, remove .dockerignore and notify with instructions.
 if [ $? -eq 0 ]; then
 	rm .dockerignore
 	cd species/$SPECIES_DIR

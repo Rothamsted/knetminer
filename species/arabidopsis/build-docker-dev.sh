@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #image name
-IMAGE_NAME="knetminer-arabidopsis-mini-dev"
+IMAGE_NAME="knetminer-arabidopsis-dev"
 
 # current $SPECIES_DIR.
 SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
