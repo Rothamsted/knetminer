@@ -6,6 +6,7 @@ SPECIES_DIR=`pwd | rev | cut -d '/' -f1 | rev`
 cd ../..
 cp .dockerignore-template .dockerignore
 cat .gitignore >> .dockerignore
+#ls -1 | grep -v $SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 ls -1 | grep -v species/$SPECIES_DIR | grep -v pom.xml | grep -v common >> .dockerignore
 
 docker image build \
