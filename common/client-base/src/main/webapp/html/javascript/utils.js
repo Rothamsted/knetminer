@@ -246,9 +246,9 @@ $(document).ready(
         $('#without').click(function () {
             $('.with_keyword_search').hide();
             $('.without_keyword_search').show();
-            if ($('#region_search').attr('src') === 'html/image/expand.gif') {
+        /*    if ($('#region_search').attr('src') === 'html/image/expand.gif') {
                 $('#region_search').trigger('click');
-            }
+            }*/
             if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
                 $('#advanced_search').trigger('click');
             }
