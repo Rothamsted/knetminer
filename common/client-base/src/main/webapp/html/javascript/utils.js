@@ -191,12 +191,19 @@ function matchCounter() {
  * 
  */
 function evidencePath(id, genes) {
-    // Generate the Network Graph using the new Network Viewer.
+	// Show loading spinner on 'content' div
+	activateSpinner("#content");
+	
     var params = {keyword: id};
     if (genes.length > 0) {
         params.list = genes;
     }
+	
+    // Generate the Network in KnetMaps.
     generateCyJSNetwork(api_url + '/evidencePath', params);
+	
+	 // Remove loading spinner from 'content' div
+	 deactivateSpinner("#content");
 }
 
 /*
@@ -658,6 +665,9 @@ function searchKeyword() {
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
+		// Show loading spinner on 'content' div
+		activateSpinner("#content");
+		
         $.post({
             url: api_url + request,
             timeout: 1000000,
@@ -735,6 +745,8 @@ function searchKeyword() {
                     createEvidenceTable(data.evidenceTable, keyword);
                 }
             });
+	 // Remove loading spinner from 'content' div
+	 deactivateSpinner("#content");
     }
 }
 
@@ -789,7 +801,13 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
     else {
+		// Show loading spinner on 'content' div
+		activateSpinner("#content");
+
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
+		
+		// Remove loading spinner from 'content' div
+		deactivateSpinner("#content");
     }
 }
 
@@ -1026,8 +1044,15 @@ function createGenesTable(text, keyword, rows) {
         e.preventDefault();
         var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
         var values = e.data.x[geneNum].split("\t");
-        // Generate Network using the new Network Viewer.
+		
+		// Show loading spinner on 'content' div
+		activateSpinner("#content");
+	    
+        // Generate Network in KnetMaps.
         generateCyJSNetwork(api_url + '/network', {list: [values[1]], keyword: keyword});
+		
+		// Remove loading spinner from 'content' div
+		deactivateSpinner("#content");
     });
 
     /*

@@ -23,6 +23,7 @@
         <link rel="shortcut icon" href="html/image/favicon.ico" >
 
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/> <!-- common style.css -->
+        <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
         <!-- GeneMap -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
@@ -44,6 +45,7 @@
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script> <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
+        <script type="text/javascript" src="html/javascript/maskloader-spinner.js"></script>
 
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
