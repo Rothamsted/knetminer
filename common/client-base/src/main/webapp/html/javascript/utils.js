@@ -659,11 +659,12 @@ function searchKeyword() {
     }
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer
+		
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
+		//console.log("search>> start loading div...");
 		// Show loading spinner on 'search' div
 		activateSpinner("#search");
-		console.log("search>> start loading div...");
-		console.log("search>> start spinner...");
+		//console.log("search>> start spinner...");
 		
         $.post({
             url: api_url + request,
@@ -679,11 +680,11 @@ function searchKeyword() {
                 alert("An error has ocurred " + errorlog);
 				// Remove loading spinner from 'search' div
 				deactivateSpinner("#search");
-		console.log("search>> error >> remove spinner...");
+				//console.log("search>> error >> remove spinner...");
             })
             .success(function (data) {
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-		console.log("search>> success >> remove loading div...");
+				//console.log("search>> success >> remove loading div...");
                 if (data.geneCount == 0) {
                     var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 
@@ -747,10 +748,8 @@ function searchKeyword() {
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
-		console.log("search>> success>> remove spinner...");
+			 //console.log("search>> success>> remove spinner...");
             });
-	 // Remove loading spinner from 'search' div
-	 //deactivateSpinner("#search");
     }
 }
 
@@ -762,10 +761,11 @@ function searchKeyword() {
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+	//console.log("network>> start loading div...");
+	
 	// Show loading spinner on 'tabviewer' div
 	activateSpinner("#tabviewer");
- console.log("network>> start loading div...");
- console.log("network>> start spinner...");
+	//console.log("network>> start spinner...");
  
     $.post({
         url: url,
@@ -777,6 +777,12 @@ function generateCyJSNetwork(url, requestParams) {
         datatype: "json",
         data: JSON.stringify(requestParams)
     })
+	    .fail(function (errorlog) {
+			alert("An error has ocurred..." + errorlog);
+			// Remove loading spinner from 'tabviewer' div
+			deactivateSpinner("#tabviewer");
+			//console.log("network>> error >> remove spinner...");
+        })
         .success(function (data) {
             // Network graph: JSON file.
             try {
@@ -784,16 +790,16 @@ function generateCyJSNetwork(url, requestParams) {
                 knetmaps.drawRaw('#knet-maps', data.graph);
                 // Remove the preloader message in Gene View, for the Network Viewer
                 $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-			console.log("network>> remove loading div...");
+				//console.log("network>> remove loading div...");
             }
             catch (err) {
                 var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
                 console.log(errorMsg);
                 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
             }
-	  console.log("network>> remove spinner...");
 		 // Remove loading spinner from 'tabviewer' div
 		 deactivateSpinner("#tabviewer");
+		 //console.log("network>> remove spinner...");
         });
 }
 
