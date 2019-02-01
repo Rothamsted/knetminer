@@ -158,7 +158,7 @@ Both svg and png files are committed in the repository.
 
 To avoid having to use bootstrap's css on the entire site I've generated a customised version of the bootstrap css based on the answer to a question on [Stack Overflow](http://stackoverflow.com/questions/13966259/how-to-namespace-twitter-bootstrap-so-styles-dont-conflict).
 
-This was compiles using [WinLess](http://winless.org/) although any Less compiler should work.
+This was compiled using [WinLess](http://winless.org/) although any Less compiler should work.
 
 # npm and bower
 
