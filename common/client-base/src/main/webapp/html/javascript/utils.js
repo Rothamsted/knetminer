@@ -191,8 +191,6 @@ function matchCounter() {
  * 
  */
 function evidencePath(id, genes) {
-	// Show loading spinner on 'tabviewer' div
-	activateSpinner("#tabviewer");
 	
     var params = {keyword: id};
     if (genes.length > 0) {
@@ -201,9 +199,6 @@ function evidencePath(id, genes) {
 	
     // Generate the Network in KnetMaps.
     generateCyJSNetwork(api_url + '/evidencePath', params);
-	
-	 // Remove loading spinner from 'tabviewer' div
-	 deactivateSpinner("#tabviewer");
 }
 
 /*
@@ -667,6 +662,8 @@ function searchKeyword() {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
 		// Show loading spinner on 'search' div
 		activateSpinner("#search");
+		console.log("search>> start loading div...");
+		console.log("search>> start spinner...");
 		
         $.post({
             url: api_url + request,
@@ -680,9 +677,13 @@ function searchKeyword() {
         })
             .fail(function (errorlog) {
                 alert("An error has ocurred " + errorlog);
+				// Remove loading spinner from 'search' div
+				deactivateSpinner("#search");
+		console.log("search>> error >> remove spinner...");
             })
             .success(function (data) {
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+		console.log("search>> success >> remove loading div...");
                 if (data.geneCount == 0) {
                     var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 
@@ -744,9 +745,12 @@ function searchKeyword() {
                     createGenesTable(data.geneTable, keyword, candidateGenes);
                     createEvidenceTable(data.evidenceTable, keyword);
                 }
+			 // Remove loading spinner from 'search' div
+			 deactivateSpinner("#search");
+		console.log("search>> success>> remove spinner...");
             });
 	 // Remove loading spinner from 'search' div
-	 deactivateSpinner("#search");
+	 //deactivateSpinner("#search");
     }
 }
 
@@ -758,6 +762,11 @@ function searchKeyword() {
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
+	// Show loading spinner on 'tabviewer' div
+	activateSpinner("#tabviewer");
+ console.log("network>> start loading div...");
+ console.log("network>> start spinner...");
+ 
     $.post({
         url: url,
         timeout: 1000000,
@@ -769,18 +778,22 @@ function generateCyJSNetwork(url, requestParams) {
         data: JSON.stringify(requestParams)
     })
         .success(function (data) {
-            // Network Graph: JSON file.
+            // Network graph: JSON file.
             try {
                 activateButton('NetworkCanvas');
                 knetmaps.drawRaw('#knet-maps', data.graph);
                 // Remove the preloader message in Gene View, for the Network Viewer
                 $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+			console.log("network>> remove loading div...");
             }
             catch (err) {
                 var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
                 console.log(errorMsg);
                 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
             }
+	  console.log("network>> remove spinner...");
+		 // Remove loading spinner from 'tabviewer' div
+		 deactivateSpinner("#tabviewer");
         });
 }
 
@@ -801,13 +814,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
     else {
-		// Show loading spinner on 'tabviewer' div
-		activateSpinner("#tabviewer");
-
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
-		
-		// Remove loading spinner from 'tabviewer' div
-		deactivateSpinner("#tabviewer");
     }
 }
 
@@ -1045,14 +1052,8 @@ function createGenesTable(text, keyword, rows) {
         var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
         var values = e.data.x[geneNum].split("\t");
 		
-		// Show loading spinner on 'tabviewer' div
-		activateSpinner("#tabviewer");
-	    
         // Generate Network in KnetMaps.
         generateCyJSNetwork(api_url + '/network', {list: [values[1]], keyword: keyword});
-		
-		// Remove loading spinner from 'tabviewer' div
-		deactivateSpinner("#tabviewer");
     });
 
     /*
