@@ -1,6 +1,6 @@
 {
   "name": "knetmaps",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "license": "ISC",
   "description": "Interactive network visualization tool for intuitive exploratory analysis of heterogeneous knowledge graphs",
   "main": "knetmaps.js",
