@@ -784,6 +784,9 @@ function generateCyJSNetwork(url, requestParams) {
 			//console.log("network>> error >> remove spinner...");
         })
         .success(function (data) {
+			// Remove loading spinner from 'tabviewer' div
+			deactivateSpinner("#tabviewer");
+			//console.log("network>> remove spinner...");
             // Network graph: JSON file.
             try {
                 activateButton('NetworkCanvas');
@@ -797,9 +800,6 @@ function generateCyJSNetwork(url, requestParams) {
                 console.log(errorMsg);
                 $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
             }
-		 // Remove loading spinner from 'tabviewer' div
-		 deactivateSpinner("#tabviewer");
-		 //console.log("network>> remove spinner...");
         });
 }
 
