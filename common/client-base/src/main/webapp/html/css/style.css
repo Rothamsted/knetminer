@@ -244,7 +244,7 @@ div.loadingDiv {
 	color:#D56048;
 	position:relative;
 	top:10px;
-	left:5px;
+	/*left:5px;*/
 	display:inline-block;
 }
 div#loadingNetworkDiv {

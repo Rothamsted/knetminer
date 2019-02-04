@@ -660,8 +660,7 @@ function searchKeyword() {
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer
 		
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
-		//console.log("search>> start loading div...");
+        //$(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
 		// Show loading spinner on 'search' div
 		activateSpinner("#search");
 		//console.log("search>> start spinner...");
@@ -683,8 +682,7 @@ function searchKeyword() {
 				//console.log("search>> error >> remove spinner...");
             })
             .success(function (data) {
-                $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-				//console.log("search>> success >> remove loading div...");
+                //$(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                 if (data.geneCount == 0) {
                     var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 
@@ -745,8 +743,6 @@ function searchKeyword() {
                     activateButton('resultsTable');
                     createGenesTable(data.geneTable, keyword, candidateGenes);
                     createEvidenceTable(data.evidenceTable, keyword);
-					// scroll down to geneTable
-					document.getElementById('resultsTable').scrollIntoView();
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
@@ -789,20 +785,21 @@ function generateCyJSNetwork(url, requestParams) {
 			// Remove loading spinner from 'tabviewer' div
 			//console.log("network>> remove spinner...");
 			$.when(deactivateSpinner("#tabviewer"))
-			.then(function() { activateButton('NetworkCanvas'); });
-			// Network graph: JSON file.
-			try {
-			  //activateButton('NetworkCanvas');
-			  knetmaps.drawRaw('#knet-maps', data.graph);
-			  // Remove the preloader message in Gene View, for the Network Viewer
-			  $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-			  //console.log("network>> remove loading div...");
-			 }
-			catch (err) {
-				var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-				console.log(errorMsg);
-				$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
-			   }
+			.done(function() {
+				// Network graph: JSON file.
+				try {
+					activateButton('NetworkCanvas');
+					knetmaps.drawRaw('#knet-maps', data.graph);
+					// Remove the preloader message in Gene View, for the Network Viewer
+					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+					//console.log("network>> remove loading div...");
+				   }
+				catch (err) {
+					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
+					console.log(errorMsg);
+					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
+				   }
+		    });
         });
 }
 
@@ -916,7 +913,7 @@ function createGenesTable(text, keyword, rows) {
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
-        console.log("GeneView: display " + rows + " (from " + results + ") results.");
+        //console.log("GeneView: display " + rows + " (from " + results + ") results.");
 
         //this loop iterates over the full table and prints the
         //first n rows + the user provided genes
@@ -1052,6 +1049,8 @@ function createGenesTable(text, keyword, rows) {
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
+	// scroll down to geneTable
+	document.getElementById('resultsTable').scrollIntoView();
 
     /*
      * click Handler for viewing a network.
