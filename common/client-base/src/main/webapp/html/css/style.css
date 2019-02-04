@@ -672,7 +672,7 @@ a.contact-button :hover {
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
 /* Search bar */
-#search{position:relative; width: 70%; margin: auto;background-color:#F4F5F7;border:2px solid #2d2c2c;padding-bottom: 20px; border-radius:18px;
+#search{position:relative; width:70%; margin:auto; background-color:#F4F5F7; border:2px solid #2d2c2c;/*padding-bottom:20px;*/ border-radius:18px;
 	  -moz-border-radius:18px; 
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
