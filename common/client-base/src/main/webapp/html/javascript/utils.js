@@ -1045,7 +1045,7 @@ function createGenesTable(text, keyword, rows) {
         table = table + '</form>';
     }
 
-    table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="button" type="button" value="View Network" title="Display the network in KnetMaps">';
+    table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="button_on" type="button" value="View Network" title="Display the network in KnetMaps" style="width:110px;height:35px;color:white;padding-bottom:7px;">';
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
