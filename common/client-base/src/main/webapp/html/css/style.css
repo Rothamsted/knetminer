@@ -155,7 +155,7 @@ div#leftnav {
 /*end navbar*/
 
 div#content {
-	padding-top: 100px;
+	padding-top: /*100*/80px;
     height: auto;
     padding-bottom: 150px;
 }
@@ -662,8 +662,8 @@ a.contact-button :hover {
 .button_on a {color:#FFF;text-decoration:none;}
 .button_on:hover {background-color:grey;}
 #pGViewer {float:left;}
-#resultsTable {position:relative;padding-bottom:80px;margin:auto;width:90%;}
-#evidenceTable {position:relative;padding-bottom:80px; margin: auto; width: 90%;}
+#resultsTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
+#evidenceTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
 #tablesorterEvidence div{margin-left:19px;}
 #tablesorterEvidence div.evidence_item {margin-left:13px;}
 .margin_left {position:relative;}
