@@ -23,8 +23,8 @@
                         <li>
                             <div id="toggle_keyword_search">
                                 <span style="vertical-align:middle;">
-                                    <input type="radio" name="kwdsearch" id="with" value="with" checked="checked"/><label for="with">With keyword search</label>
-                                    <input type="radio" name="kwdsearch" id="without" value="without"/><label for="with">Without keyword search</label>
+                                    <input type="radio" name="kwdsearch" id="with" value="with" checked="checked"/><label for="with">Advanced search</label>
+                                    <input type="radio" name="kwdsearch" id="without" value="without"/><label for="with">Gene List only</label>
                                 </span>
                             </div>
                         </li>
@@ -65,7 +65,7 @@
 						</div>
 					</div>
 				</li>
-				<li id="genomeorqtlsearchbox" style="display:none; width:70%;">
+				<li id="genomeorqtlsearchbox" class="with_keyword_search" style="display:none; width:70%;">
     				<br />
 				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
                     <hr width="45%" align="left">
