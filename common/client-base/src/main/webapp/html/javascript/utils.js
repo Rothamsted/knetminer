@@ -787,21 +787,22 @@ function generateCyJSNetwork(url, requestParams) {
         })
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
-			deactivateSpinner("#tabviewer").then(activateButton('NetworkCanvas'));
 			//console.log("network>> remove spinner...");
-            // Network graph: JSON file.
-            try {
-                //activateButton('NetworkCanvas');
-                knetmaps.drawRaw('#knet-maps', data.graph);
-                // Remove the preloader message in Gene View, for the Network Viewer
-                $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-				//console.log("network>> remove loading div...");
-            }
-            catch (err) {
-                var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-                console.log(errorMsg);
-                $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
-            }
+			deactivateSpinner("#tabviewer").then(function (data) {
+				// Network graph: JSON file.
+				try {
+					activateButton('NetworkCanvas');
+					knetmaps.drawRaw('#knet-maps', data.graph);
+					// Remove the preloader message in Gene View, for the Network Viewer
+					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+					//console.log("network>> remove loading div...");
+				   }
+				catch (err) {
+					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
+					console.log(errorMsg);
+					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
+				   }
+			});
         });
 }
 
