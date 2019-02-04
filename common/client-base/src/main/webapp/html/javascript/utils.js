@@ -803,7 +803,6 @@ function generateCyJSNetwork(url, requestParams) {
 				console.log(errorMsg);
 				$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 			   }
-			});
         });
 }
 
