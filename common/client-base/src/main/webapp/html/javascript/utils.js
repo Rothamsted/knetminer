@@ -745,6 +745,8 @@ function searchKeyword() {
                     activateButton('resultsTable');
                     createGenesTable(data.geneTable, keyword, candidateGenes);
                     createEvidenceTable(data.evidenceTable, keyword);
+					// scroll down to geneTable
+					document.getElementById('resultsTable').scrollIntoView();
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
@@ -785,11 +787,11 @@ function generateCyJSNetwork(url, requestParams) {
         })
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
-			deactivateSpinner("#tabviewer");
+			deactivateSpinner("#tabviewer").then(activateButton('NetworkCanvas'));
 			//console.log("network>> remove spinner...");
             // Network graph: JSON file.
             try {
-                activateButton('NetworkCanvas');
+                //activateButton('NetworkCanvas');
                 knetmaps.drawRaw('#knet-maps', data.graph);
                 // Remove the preloader message in Gene View, for the Network Viewer
                 $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
