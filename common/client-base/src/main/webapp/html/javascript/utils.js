@@ -788,7 +788,8 @@ function generateCyJSNetwork(url, requestParams) {
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 			//console.log("network>> remove spinner...");
-			deactivateSpinner("#tabviewer").then(function (data) {
+			deactivateSpinner("#tabviewer")
+			.done(function (data) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
