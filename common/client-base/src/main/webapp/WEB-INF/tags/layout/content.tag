@@ -31,11 +31,10 @@
                         <div class="with_keyword_search">
                             <li>
                                 <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
-                                <span style="vertical-align:middle;">
+                                <!-- <span style="vertical-align:middle;">
                                     <input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" class="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
                                     <div class="loadingDiv"></div>
-                            <!--	<input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" id="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" onclick="searchKeyword();"/> -->
-                                </span>
+                                </span> -->
                             </li>
                         </div>
                     </ul>

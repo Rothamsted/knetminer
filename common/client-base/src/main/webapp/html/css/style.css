@@ -238,12 +238,12 @@ div#list_search {
 
 
 div.loadingDiv {
-	width:30px;
+	width:380px;
 	height:35px;
-	margin-left:-35px;
+	/*margin-left:-35px;*/
 	color:#D56048;
 	position:relative;
-	top:10px;
+	top:-10px;
 	display:inline-block;
 }
 div#loadingNetworkDiv {
