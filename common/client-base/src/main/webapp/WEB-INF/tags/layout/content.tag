@@ -104,8 +104,9 @@
                     </div>
 				</li>
 				<br>
-				<li class="without_keyword_search" style="display:none;">
-				    <input class="keywordsSubmit" style="width:130px;height:30px;" type="image" alt="Submit" label="Search" src="html/image/search_button_adv.jpg" class="button" disabled/>
+				<!--<li class="without_keyword_search" style="display:none;">-->
+				<li>
+				    <input class="keywordsSubmit button_on" type="button" value="Advanced Search" onclick="searchKeyword();" style="width:130px;height:35px;color:white;padding-bottom:7px;background-color:gray;margin-left:0px;" alt="Submit" label="Search" disabled/>
 				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>
 			</ul>

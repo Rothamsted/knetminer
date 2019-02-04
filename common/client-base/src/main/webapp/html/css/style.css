@@ -243,7 +243,8 @@ div.loadingDiv {
 	/*margin-left:-35px;*/
 	color:#D56048;
 	position:relative;
-	top:-10px;
+	top:10px;
+	left:5px;
 	display:inline-block;
 }
 div#loadingNetworkDiv {
