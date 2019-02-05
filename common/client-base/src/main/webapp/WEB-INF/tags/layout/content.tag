@@ -106,7 +106,7 @@
 				<br>
 				<!--<li class="without_keyword_search" style="display:none;">-->
 				<li>
-				    <input class="keywordsSubmit button_on" type="button" value="Search" onclick="searchKeyword();" style="width:80px;height:35px;color:white;padding-bottom:7px;margin-left:0px;" alt="Submit" label="Search"/>
+				    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/>
 					<br><br>
 				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>

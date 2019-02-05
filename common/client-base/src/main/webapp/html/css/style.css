@@ -676,6 +676,7 @@ a.contact-button :hover {
 	  -moz-border-radius:18px; 
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
+.knet_button {width:130px; height:35px; color:darkorange; margin-left:0px; background-color:dimgrey; font-family:'Play', sans-serif; font-size:16px;}
 #pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;color:white;}
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:15px; padding-top:15px;}
