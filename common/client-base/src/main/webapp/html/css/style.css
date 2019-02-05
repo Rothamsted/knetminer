@@ -155,9 +155,9 @@ div#leftnav {
 /*end navbar*/
 
 div#content {
-	padding-top: /*100*/80px;
+	padding-top: /*100*/70px;
     height: auto;
-    padding-bottom: 150px;
+    padding-bottom: 140px;
 }
 
 ul#main_list {
