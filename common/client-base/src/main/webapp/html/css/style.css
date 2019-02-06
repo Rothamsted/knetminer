@@ -237,7 +237,7 @@ div#list_search {
 	}
 
 
-.loadingDiv {
+div.loadingDiv {
 	width:450px;
 	height:35px;
 	color:#D56048;
@@ -272,6 +272,15 @@ div#loadingNetwork_Div img {
 }
 div.loadingDiv ul li{
 	padding-left:20px;
+}
+#explainer {
+	width:570px;
+	height:35px;
+	color:#D56048;
+	position:relative;
+	top:-10px;
+	font-style:normal;
+	display:inline-block;
 }
 div#region_search_area li {
     list-style:none;

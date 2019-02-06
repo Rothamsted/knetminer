@@ -685,7 +685,7 @@ function searchKeyword() {
 				//console.log("search>> error >> remove spinner...");
             })
             .success(function (data) {
-                //$(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+                $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                 if (data.geneCount == 0) {
                     var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
 
@@ -791,7 +791,8 @@ function generateCyJSNetwork(url, requestParams) {
 			.done(function() {*/
 				// Network graph: JSON file.
 				try {
-					deactivateSpinner("#tabviewer").activateButton('NetworkCanvas', function() {
+					activateButton('NetworkCanvas');
+					deactivateSpinner("#tabviewer", function() {
 					knetmaps.drawRaw('#knet-maps', data.graph);
 					});
 					// Remove the preloader message in Gene View, for the Network Viewer
