@@ -15,7 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -58,9 +56,7 @@ import org.apache.lucene.search.Query;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
-import net.sourceforge.ondex.algorithm.graphquery.GraphTraverser;
-import net.sourceforge.ondex.algorithm.graphquery.StateMachine;
-import net.sourceforge.ondex.algorithm.graphquery.flatfile.StateMachineFlatFileParser2;
+import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
 import net.sourceforge.ondex.config.ONDEXGraphRegistry;
@@ -104,9 +100,9 @@ public class OndexServiceProvider {
 	// String>();
 
 	/**
-	 * GraphTraverser will be initiated with a state machine
+	 * A specific traverser implementation can be selected via the option 'GraphTraverserClass' in the main config.xml
 	 */
-	GraphTraverser gt;
+	AbstractGraphTraverser gt;
 
 	/**
 	 * Ondex knowledge base as memory graph
@@ -161,6 +157,10 @@ public class OndexServiceProvider {
 	boolean referenceGenome;
 
 	boolean export_visible_network;
+	
+	private Map<String, Object> options = new HashMap<> (); 
+
+	
 
 	/**
 	 * Loads configuration for chromosomes and initialises map
@@ -186,12 +186,14 @@ public class OndexServiceProvider {
 
 		loadOndexKBGraph(graphFileName);
 		indexOndexGraph(dataPath);
+		
+		gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
 
-		log.info("Loading semantic motifs from "+smFileName);
-		StateMachine sm = loadSemanticMotifs(smFileName);
-
-		// create a crawler using our semantic motifs
-		gt = new GraphTraverser(sm);
+		// These might be needed by one implementation or the other. Those that don't need a property like these
+		// can just ignore them
+		gt.setOption ( "StateMachineFilePath", smFileName );
+		gt.setOption ( "ONDEXGraph", graph );
+		gt.setOption ( "LuceneEnv", lenv );
 
 		populateHashMaps(dataPath);
 
@@ -372,26 +374,6 @@ public class OndexServiceProvider {
 		}
 	}
 
-	/**
-	 * Creates a state machine for semantic motif search
-	 */
-	private StateMachine loadSemanticMotifs(String smFile) {
-
-		StateMachineFlatFileParser2 smp = null;
-		try {
-			// load semantic motifs from file
-			URL motifsUrl = Thread.currentThread().getContextClassLoader().getResource(smFile);
-
-			smp = new StateMachineFlatFileParser2();
-			smp.parseReader(new BufferedReader(new InputStreamReader(motifsUrl.openStream())), graph);
-
-			log.debug("Completed State Machine");
-		} catch (Exception e) {
-			log.error("Failed to compile state machine",  e);
-		}
-
-		return smp.getStateMachine();
-	}
 
 	/**
 	 * Export the Ondex graph to file system as a .oxl file and also in JSON format
@@ -3169,7 +3151,20 @@ public class OndexServiceProvider {
 			log.error("Faile to generate stats", ex);
 		}
 	}
+	
+	
+	/**
+	 * We receive options set from the main config.xml file. These are further passed to the specific 
+	 * {@link AbstractGraphTraverser} that is selected via the 'GraphTraverserClass' option in the main 
+	 * config file (together with a couple of other parameters, see
+	 */	
+	public Map<String, Object> getOptions () {
+		return options;
+	}
 
+	public void setOptions ( Map<String, Object> options ) {
+		this.options = options;
+	}
 }
 
 class ValueComparator<T> implements Comparator<T> {
@@ -3209,4 +3204,5 @@ class FloatValueComparator<T> implements Comparator<T> {
 			return -1;
 		}
 	}
+
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -63,7 +64,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		} catch (IOException e) {
 			throw new Error(e);
 		}
+		
 		this.ondexServiceProvider = new OndexServiceProvider();
+
+		// All the properties from config.xml are forwarded to the 
+		// service provider, so that further configuration can be bootstrapped from
+		// base properties.
+		this.ondexServiceProvider.setOptions ( (Map) this.props );
+
 		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(this.getProperty("reference_genome")));
 		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
 		this.ondexServiceProvider.setTaxId(Arrays.asList(this.getProperty("SpeciesTaxId").split(",")));

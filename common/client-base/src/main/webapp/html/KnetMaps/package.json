@@ -24,15 +24,15 @@
     }
   ],
   "keywords": [
-  	"network",
-  	"visualisation",
-  	"visualization",
-  	"node",
-  	"npm",
-  	"nodejs",
-  	"bower",
-  	"cytoscapejs",
-  	"biojs"
+    "network",
+    "visualisation",
+    "visualization",
+    "node",
+    "npm",
+    "nodejs",
+    "bower",
+    "cytoscapejs",
+    "biojs"
   ],
   "directories": {
     "doc": "docs",
