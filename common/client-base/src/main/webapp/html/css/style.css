@@ -237,10 +237,9 @@ div#list_search {
 	}
 
 
-div.loadingDiv {
+.loadingDiv {
 	width:450px;
 	height:35px;
-	/*margin-left:-35px;*/
 	color:#D56048;
 	position:relative;
 	top:10px;

@@ -18,29 +18,21 @@
                             <div id="eg_queries"></div>
                         </div>
                     </div>
+                    <!-- Keyword search -->
                     <div id="keyword_search">
                     <ul>
                         <li>
-                            <div id="toggle_keyword_search">
-                                <span style="vertical-align:middle;">
-                                    <input type="radio" name="kwdsearch" id="with" value="with" checked="checked"/><label for="with">Advanced search</label>
-                                    <input type="radio" name="kwdsearch" id="without" value="without"/><label for="with">Gene List only</label>
-                                </span>
-                            </div>
+                            <p id="explainer" class="loadingDiv" title="You can just search with keyword or gene list, or combine both." style="top:-10px;font-style:normal;width:570px;">
+							<b>Search the knowledge network with keywords, gene list and genomic regions.</b></p>
                         </li>
-                        <div class="with_keyword_search">
                             <li>
                                 <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
-                                <!-- <span style="vertical-align:middle;">
-                                    <input style="position:relative; right:41px; top:7px; width:30px;height:30px;" type="image" class="keywordsSubmit" src="html/image/search_button.jpg" alt="Submit" class="button" disabled/>
-                                    <div class="loadingDiv"></div>
-                                </span> -->
                             </li>
-                        </div>
                     </ul>
-					<div id="matchesResultDiv" class="with_keyword_search"></div>
+					</div>
+					<div id="matchesResultDiv"></div>
                 </li>
-				<li class="with_keyword_search">
+				<li>
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Query Suggestor</b>
                     <span id="suggestor_invite"></span>
                     <hr width="45%" align="left">
@@ -52,19 +44,19 @@
 					</div>
 				</li>
 				<li style="padding-top:20px; width:70%;">
-					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
+					<b><img src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
-						<div id="advanced_search_area" style="display:none;">
-							<textarea id="list_of_genes" cols="50" rows="7"></textarea>
-							<div class="rightnav_genelist" style="display:none">
+						<div id="advanced_search_area" style="display:block;">
+							<textarea id="list_of_genes" cols="50" rows="7" placeholder="gene_id&#10;gene_name"></textarea>
+							<!-- <div class="rightnav_genelist" style="display:none">
 								<input type="radio" name="list_mode" value="GLrestrict">Intersection
 								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</li>
-				<li id="genomeorqtlsearchbox" class="with_keyword_search" style="display:none; width:70%;">
+				<li id="genomeorqtlsearchbox" style="display:none; width:70%;">
     				<br />
 				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Genome or QTL Search</b>
                     <hr width="45%" align="left">
@@ -104,7 +96,6 @@
                     </div>
 				</li>
 				<br>
-				<!--<li class="without_keyword_search" style="display:none;">-->
 				<li>
 				    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/>
 					<br><br>
@@ -140,4 +131,3 @@
 		</div>
 	</div>  <!-- tabviewer -->
 </div>  <!-- content -->
-</div>

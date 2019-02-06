@@ -245,12 +245,12 @@ $(document).ready(
             }
         });
         // Show/hide keyword search
-        $('#without').click(function () {
+      /*  $('#without').click(function () {
             $('.with_keyword_search').hide();
             $('.without_keyword_search').show();
-        /*    if ($('#region_search').attr('src') === 'html/image/expand.gif') {
-                $('#region_search').trigger('click');
-            }*/
+        //    if ($('#region_search').attr('src') === 'html/image/expand.gif') {
+        //        $('#region_search').trigger('click');
+        //    }
             if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
                 $('#advanced_search').trigger('click');
             }
@@ -264,7 +264,7 @@ $(document).ready(
             $('.keywordsSubmit').attr("disabled");
             $("#keywords").val('');
             $('.loadingDiv').html('');
-        });
+        }); */
         // Add QTL region
         $('#addRow').click(
             function () {
@@ -611,15 +611,15 @@ function refreshQuerySuggester() {
 }
 
 /*
- * Function to refresh GViewer
- *
+ * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
 function searchKeyword() {
     var searchMode = getRadioValue(document.gviewerForm.search_mode);
-    var withoutKeywordMode = $('#without').prop('checked');
+	console.log("searchKeyword: searchMode= "+ searchMode);
+    /*var withoutKeywordMode = $('#without').prop('checked');
     if (withoutKeywordMode) {
         $('#keywords').val('');  // to make sure we don't accidentally include any
-    }
+    }*/
     var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
     var keyword = trim($("#keywords").val());
     var list = $("#list_of_genes").val().split('\n');
@@ -651,11 +651,14 @@ function searchKeyword() {
             counter++;
         }
     }
-    if (keyword.length < 2 && !withoutKeywordMode) {
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a keyword or switch to "Gene List only" mode.</b></div>');
+    if (keyword.length < 2 && list.length == 0) {
+        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
     }
-    else if (list.length > 500000 || (withoutKeywordMode && (list.length == 0 && requestParams['qtl'].length==0))) {
+    /*else if (list.length > 500000 || (withoutKeywordMode && (list.length == 0 && requestParams['qtl'].length==0))) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
+    }*/
+    else if (list.length > 100) {
+        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Gene list limit (100) exceeded.</b></div>');
     }
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer
@@ -784,12 +787,13 @@ function generateCyJSNetwork(url, requestParams) {
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 			//console.log("network>> remove spinner...");
-			$.when(deactivateSpinner("#tabviewer"))
-			.done(function() {
+			/*$.when(deactivateSpinner("#tabviewer"))
+			.done(function() {*/
 				// Network graph: JSON file.
 				try {
-					activateButton('NetworkCanvas');
+					deactivateSpinner("#tabviewer").activateButton('NetworkCanvas', function() {
 					knetmaps.drawRaw('#knet-maps', data.graph);
+					});
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					//console.log("network>> remove loading div...");
@@ -799,7 +803,7 @@ function generateCyJSNetwork(url, requestParams) {
 					console.log(errorMsg);
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 				   }
-		    });
+		    //});
         });
 }
 
