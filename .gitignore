@@ -17,3 +17,4 @@ stdout.log
 common/client/nb-configuration.xml
 *.oxl
 package-lock.json
+.DS_Store
