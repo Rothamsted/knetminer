@@ -98,7 +98,7 @@
 				<br>
 				<li>
 				    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/>
-					<br><br>
+					<br>
 				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>
 			</ul>

@@ -786,15 +786,13 @@ function generateCyJSNetwork(url, requestParams) {
         })
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
+			deactivateSpinner("#tabviewer");
 			//console.log("network>> remove spinner...");
-			/*$.when(deactivateSpinner("#tabviewer"))
-			.done(function() {*/
+			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-					deactivateSpinner("#tabviewer", function() {
 					knetmaps.drawRaw('#knet-maps', data.graph);
-					});
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					//console.log("network>> remove loading div...");
@@ -804,7 +802,6 @@ function generateCyJSNetwork(url, requestParams) {
 					console.log(errorMsg);
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 				   }
-		    //});
         });
 }
 
