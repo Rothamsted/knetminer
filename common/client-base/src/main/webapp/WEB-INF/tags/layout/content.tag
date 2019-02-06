@@ -29,7 +29,7 @@
                                 <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
                             </li>
                     </ul>
-					</div>
+				<!--	</div>-->
 					<div id="matchesResultDiv"></div>
                 </li>
 				<li>
@@ -131,3 +131,4 @@
 		</div>
 	</div>  <!-- tabviewer -->
 </div>  <!-- content -->
+</div>
