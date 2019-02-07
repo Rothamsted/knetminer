@@ -33,7 +33,7 @@
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
 					</div>
 				</li>
-				<li>
+				<li style="width: 70%;">
 				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Query Suggestor</b>
                     <span id="suggestor_invite"></span>
