@@ -74,66 +74,18 @@ gene_name"></textarea>
                                 <td><label>Genes</label></td>
                             </tr>
                             <tr>
-                                <td>
-                                    <select id="chr1" onchange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" selectedindex="0">
-                                        
-                                        <option value="1">1</option>
-                                        
-                                        <option value="2">2</option>
-                                        
-                                        <option value="3">3</option>
-                                        
-                                        <option value="4">4</option>
-                                        
-                                        <option value="5">5</option>
-                                        
-                                        <option value="6">6</option>
-                                        
-                                        <option value="7">7</option>
-                                        
-                                        <option value="8">8</option>
-                                        
-                                        <option value="9">9</option>
-                                        
-                                        <option value="10">10</option>
-                                        
-                                        <option value="11">11</option>
-                                        
-                                        <option value="12">12</option>
-                                        
-                                        <option value="13">13</option>
-                                        
-                                        <option value="14">14</option>
-                                        
-                                        <option value="15">15</option>
-                                        
-                                        <option value="16">16</option>
-                                        
-                                        <option value="17">17</option>
-                                        
-                                        <option value="18">18</option>
-                                        
-                                        <option value="19">19</option>
-                                        
-                                        <option value="20">20</option>
-                                        
-                                        <option value="21">21</option>
-                                        
-                                        <option value="22">22</option>
-                                        
-                                        <option value="X">X</option>
-                                        
-                                        <option value="Y">Y</option>
-                                        
-                                        <option value="MT">MT</option>
-                                        
-                                    </select>
-                                </td>
-                                <td><input id="start1" name="start" type="text" onkeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())"></td>
-                                <td><input id="end1" name="end" type="text" onkeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())"></td>
-                                <td><input id="label1" name="label" type="text"></td>
-                                <td><input id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())"></td>
-                            </tr>
+								<td>
+									<select id="chr1" onChange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" >
+										<c:forTokens items="${chromosomes}" delims="," var="item" varStatus="status">
+       									<option value="${item}">${item}</option>
+    									</c:forTokens>
+									</select>
+								</td>
+								<td><input id="start1" name="start" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><input id="end1" name="end" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><input id="label1" name="label" type="text" /></td>
+								<td><input id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+							</tr>
                             <tr>
                                 <td colspan="5">
                                     <input id="addRow" value="Add" type="button" class="button_link"> or
