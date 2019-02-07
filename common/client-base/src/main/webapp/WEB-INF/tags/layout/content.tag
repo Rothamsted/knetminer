@@ -26,7 +26,9 @@
 							<b>Search the knowledge network with keywords, gene list and genomic regions.</b></p>
                         </li>
                             <li>
-                                <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." />
+							    <b><img id="kwd_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
+								<hr width="45%" align="left">
+                                <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display:none;"/>
                             </li>
                     </ul>
 				<!--	</div>-->
@@ -44,10 +46,10 @@
 					</div>
 				</li>
 				<li style="padding-top:20px; width:70%;">
-					<b><img src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
+					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;"/>Gene List</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
-						<div id="advanced_search_area" style="display:block;">
+						<div id="advanced_search_area" style="display:none;">
 							<textarea id="list_of_genes" cols="50" rows="7" placeholder="gene_id&#10;gene_name"></textarea>
 							<!-- <div class="rightnav_genelist" style="display:none">
 								<input type="radio" name="list_mode" value="GLrestrict">Intersection
@@ -97,7 +99,8 @@
 				</li>
 				<br>
 				<li>
-				    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/>
+				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
+					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network">Search <i class="fa fa-search"></i></button>
 					<br>
 				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>

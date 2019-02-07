@@ -212,6 +212,15 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); // set/ update species name from utils_config.js
+		
+		// display keyword search box
+		if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
+			$('#kwd_search').trigger('click');
+           }
+		// display gene list search
+		if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
+			$('#advanced_search').trigger('click');
+           }
 
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -339,26 +348,14 @@ $(document).ready(
                 }
                 return false;
             });
-        // Region search
-        $('#region_search').click(
+        // Keyword search
+        $('#kwd_search').click(
             function () {
                 var src = ($(this).attr('src') === 'html/image/expand.gif')
                     ? 'html/image/collapse.gif'
                     : 'html/image/expand.gif';
                 $(this).attr('src', src);
-                $('#region_search_area').animate({
-                        height: 'toggle'
-                    }, 500
-                );
-            });
-        // Advanced search
-        $('#advanced_search').click(
-            function () {
-                var src = ($(this).attr('src') === 'html/image/expand.gif')
-                    ? 'html/image/collapse.gif'
-                    : 'html/image/expand.gif';
-                $(this).attr('src', src);
-                $('#advanced_search_area').animate({
+                $('#keywords').animate({
                         height: 'toggle'
                     }, 500
                 );
@@ -377,6 +374,30 @@ $(document).ready(
                 if ($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                     refreshQuerySuggester();
                 }
+            });
+        // Advanced search (gene list)
+        $('#advanced_search').click(
+            function () {
+                var src = ($(this).attr('src') === 'html/image/expand.gif')
+                    ? 'html/image/collapse.gif'
+                    : 'html/image/expand.gif';
+                $(this).attr('src', src);
+                $('#advanced_search_area').animate({
+                        height: 'toggle'
+                    }, 500
+                );
+            });
+        // Region search
+        $('#region_search').click(
+            function () {
+                var src = ($(this).attr('src') === 'html/image/expand.gif')
+                    ? 'html/image/collapse.gif'
+                    : 'html/image/expand.gif';
+                $(this).attr('src', src);
+                $('#region_search_area').animate({
+                        height: 'toggle'
+                    }, 500
+                );
             });
         //Match counter
         //$("#keywords").keyup(matchCounter());
@@ -1047,7 +1068,8 @@ function createGenesTable(text, keyword, rows) {
         table = table + '</form>';
     }
 
-    table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="knet_button button" type="button" value="View Network" title="Display the network in KnetMaps">';
+    //table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="knet_button button" type="button" value="View Network" title="Display the network in KnetMaps">';
+    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps">View <i class="fas fa-dna"></i></button>';
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
