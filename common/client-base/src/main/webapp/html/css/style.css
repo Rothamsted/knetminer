@@ -333,11 +333,12 @@ a[id="generateMultiGeneNetworkButton"] {
 	margin-top:40px;
 }
 
-/* New button to show CytoscapeJS Network Viewer. */
-/*#new_generateMultiGeneNetworkButton {
+/* New button to show the network in KnetMaps */
+#new_generateMultiGeneNetworkButton {
 	float:right;
-	margin:10px;
-}*/
+	margin-top:10px;
+	width:80px;
+}
 
 /*
 div#footer {
@@ -684,7 +685,8 @@ a.contact-button :hover {
 	  -moz-border-radius:18px; 
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
-.knet_button {width:130px; height:35px; color:darkorange; margin-left:0px; background-color:dimgrey; font-family:'Play', sans-serif; font-size:16px;}
+.knet_button {width:100px; height:35px; color:darkorange; margin-left:0px; background-color:dimgrey; font-family:'Play', sans-serif; font-size:16px; cursor:pointer;}
+.knet_button:hover {color:black; background-color:lightgray;}
 #pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;color:white;}
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:15px; padding-top:15px;}
