@@ -34,7 +34,7 @@
 					</div>
 				</li>
 				<li>
-				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
+				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move; color:darkorange;">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Query Suggestor</b>
                     <span id="suggestor_invite"></span>
                     <hr width="45%" align="left">

@@ -419,7 +419,7 @@ $(document).ready(
 			},
 			inertia: true,
 			restrict: {
-				restriction: element.parentNode,
+				restriction: /*element.parentNode*/document.getElementById('content'),
 				elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
 				endOnly: true
 			}
