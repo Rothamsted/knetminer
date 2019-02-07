@@ -213,15 +213,6 @@ $(document).ready(
         // add species name to header
         $('#species_header').text(species_name); // set/ update species name from utils_config.js
 		
-		// display keyword search box
-		if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
-			$('#kwd_search').trigger('click');
-           }
-		// display gene list search
-		if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
-			$('#advanced_search').trigger('click');
-           }
-
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
             $('#genomeorqtlsearchbox').show();
@@ -253,7 +244,7 @@ $(document).ready(
                 }
             }
         });
-        // Show/hide keyword search
+        // with and without keyword search modes (old)
       /*  $('#without').click(function () {
             $('.with_keyword_search').hide();
             $('.without_keyword_search').show();
@@ -274,6 +265,7 @@ $(document).ready(
             $("#keywords").val('');
             $('.loadingDiv').html('');
         }); */
+		
         // Add QTL region
         $('#addRow').click(
             function () {
@@ -401,6 +393,16 @@ $(document).ready(
             });
         //Match counter
         //$("#keywords").keyup(matchCounter());
+		
+		// display keyword search box, by default
+		if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
+			$('#kwd_search').trigger('click');
+           }
+		// display gene list search, by default
+		if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
+			$('#advanced_search').trigger('click');
+           }
+		   
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
 
