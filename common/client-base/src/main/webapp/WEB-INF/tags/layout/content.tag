@@ -45,7 +45,7 @@
 					</div>
 				</li>
 				<li style="padding-top:20px; width:70%;">
-					<b><img id="advanced_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Gene List</b>
+					<b><img id="advanced_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
@@ -60,7 +60,7 @@ gene_name"></textarea>
 				</li>
 				<li id="genomeorqtlsearchbox" style="width: 70%;">
     				<br>
-				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome or QTL Search</b>
+				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
                     <hr width="45%" align="left">
                     <div id="region_search_area" style="display: none;">
                         <table id="regions_table">
