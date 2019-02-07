@@ -351,6 +351,10 @@ $(document).ready(
                         height: 'toggle'
                     }, 500
                 );
+                $('#matchesResultDiv').animate({
+                        height: 'toggle'
+                    }, 500
+                );
             });
         // Suggestor search
         $('#suggestor_search').click(
@@ -395,13 +399,13 @@ $(document).ready(
         //$("#keywords").keyup(matchCounter());
 		
 		// display keyword search box, by default
-		if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
+		//if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
 			$('#kwd_search').trigger('click');
-           }
+         //  }
 		// display gene list search, by default
-		if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
+		//if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
 			$('#advanced_search').trigger('click');
-           }
+         //  }
 		   
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
