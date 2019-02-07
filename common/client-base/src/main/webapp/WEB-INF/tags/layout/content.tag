@@ -101,7 +101,7 @@
 				<br>
 				<li>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
-					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network">Search <i class="fa fa-search"></i></button>
+					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search"></i> Search</button>
 					<br>
 				    <div class="loadingDiv" style="margin-left: 0px;top:7px;"></div>
 				</li>
