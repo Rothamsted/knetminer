@@ -407,7 +407,7 @@ $(document).ready(
 			$('#advanced_search').trigger('click');
          //  }
 		
-		// Make Query suggestor draggable via Interact.js
+		// to make the Query suggestor draggable via interactJS
 		var element= document.getElementById('draggable-suggestor'), 
 		x = 0, y = 0;
 		interact(element)
@@ -432,7 +432,7 @@ $(document).ready(
 			event.target.style.transform =
 			'translate(' + x + 'px, ' + y + 'px)';
 		});
-		
+
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
 
