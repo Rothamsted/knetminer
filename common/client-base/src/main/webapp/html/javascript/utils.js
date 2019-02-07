@@ -406,7 +406,33 @@ $(document).ready(
 		//if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
 			$('#advanced_search').trigger('click');
          //  }
-		   
+		
+		// Make Query suggestor draggable via Interact.js
+		var element= document.getElementById('draggable-suggestor'), 
+		x = 0, y = 0;
+		interact(element)
+		.draggable({
+			snap: {
+				targets: [ interact.createSnapGrid({ x: 30, y: 30 }) ],
+				range: Infinity,
+				relativePoints: [ { x: 0, y: 0 } ]
+			},
+			inertia: true,
+			restrict: {
+				restriction: element.parentNode,
+				elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+				endOnly: true
+			}
+		})
+		.on('dragmove', function (event) {
+			x += event.dx;
+			y += event.dy;
+			
+			event.target.style.webkitTransform =
+			event.target.style.transform =
+			'translate(' + x + 'px, ' + y + 'px)';
+		});
+		
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
 

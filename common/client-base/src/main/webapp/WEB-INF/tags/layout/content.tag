@@ -34,6 +34,7 @@
 					</div>
 				</li>
 				<li>
+				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Query Suggestor</b>
                     <span id="suggestor_invite"></span>
                     <hr width="45%" align="left">
@@ -43,12 +44,13 @@
 							<div id="suggestor_tables">No suggestions found</div>
 						</div>
 					</div>
+				  </div>
 				</li>
 				<li style="padding-top:20px; width:70%;">
 					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
-						<div id="advanced_search_area" style="display: block;">
+						<div id="advanced_search_area" style="display: none;">
 							<textarea id="list_of_genes" cols="50" rows="7" placeholder="gene_id
 gene_name"></textarea>
 							<!-- <div class="rightnav_genelist" style="display:none">
@@ -148,7 +150,7 @@ gene_name"></textarea>
 				<br>
 				<li>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
-					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network">Search <svg class="svg-inline--fa fa-search fa-w-16" aria-hidden="true" data-prefix="fa" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg><!-- <i class="fa fa-search"></i> --></button>
+					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network">Search <i class="fa fa-search"></i></button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>
@@ -156,7 +158,7 @@ gene_name"></textarea>
 		</form>
 	</div>
 
-	<div id="pGViewer_title">In total <b>3 genes</b> were found.<br>Query was found in <b>1096 documents</b> related with genes (1096 documents in total)<br></div>
+	<div id="pGViewer_title"></div>
 	<div id="tabviewer" style="display: block;">
 
     	<div id="tabviewer_buttons">
