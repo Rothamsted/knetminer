@@ -32,8 +32,18 @@
 <!--	</div>-->
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
 					</div>
+						 <br>
+						 <button id="qs_opener">Query Suggestor</button>
+						 <div id="suggestor_search">
+						     <div id="suggestor_search_area" style="width: 70%; display: none;">
+							     <div id="suggestor_terms"> </div>
+								 <div id="suggestor_tables">No suggestions found</div>
+							 </div>
+						 </div>
 				</li>
-				<li style="width: 70%;">
+					
+				</li>
+			<!--	<li style="width: 70%;">
 				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Query Suggestor</b>
                     <span id="suggestor_invite"></span>
@@ -45,7 +55,7 @@
 						</div>
 					</div>
 				  </div>
-				</li>
+				</li> -->
 				<li style="padding-top:20px; width:70%;">
 					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
 					<hr width="45%" align="left">

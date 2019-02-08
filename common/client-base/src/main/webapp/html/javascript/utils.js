@@ -59,8 +59,9 @@ function activateButton(option) {
         $('#' + option + '_button').attr('class', 'button_off');
 
         //Collapse Suggestor view
-        $('#suggestor_search').attr('src', 'html/image/expand.gif');
-        $('#suggestor_search_area').slideUp(500);
+        //$('#suggestor_search').attr('src', 'html/image/expand.gif');
+        //$('#suggestor_search_area').slideUp(500);
+		$('#suggestor_search').dialog('close');
     });
 }
 
@@ -237,9 +238,9 @@ $(document).ready(
             }
             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
             if (e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40) {
-                //    if(e.which === 13) { // only refresh QuerySuggester when Enter key is pressed
                 // Refresh the query suggester table as well, if it's already open.
-                if ($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
+              //  if ($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
+				if($('#suggestor_search').dialog('isOpen')) {
                     refreshQuerySuggester();
                 }
             }
@@ -357,7 +358,7 @@ $(document).ready(
                 );
             });
         // Suggestor search
-        $('#suggestor_search').click(
+      /*  $('#suggestor_search').click(
             function () {
                 var src = ($(this).attr('src') === 'html/image/expand.gif')
                     ? 'html/image/collapse.gif'
@@ -370,7 +371,23 @@ $(document).ready(
                 if ($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                     refreshQuerySuggester();
                 }
-            });
+            });*/
+		  $("#suggestor_search").dialog({
+			  autoOpen: false,
+			  show: {
+				  effect: "blind",
+				  duration: 1000
+				 },
+			  hide: {
+				  effect: "explode",
+				  duration: 1000
+				 }
+			});
+
+		  $("#qs_opener").click(function() {
+			  $("#suggestor_search").dialog( "open" );
+			});
+			
         // Advanced search (gene list)
         $('#advanced_search').click(
             function () {
@@ -408,7 +425,7 @@ $(document).ready(
          //  }
 		
 		// to make the Query suggestor draggable via interactJS
-		var element= document.getElementById('draggable-suggestor'), 
+/*		var element= document.getElementById('draggable-suggestor'), 
 		x = 0, y = 0;
 		interact(element)
 		.draggable({
@@ -419,7 +436,7 @@ $(document).ready(
 			},
 			inertia: true,
 			restrict: {
-				restriction: /*element.parentNode*/document.getElementById('content'),
+				restriction: document.getElementById('content'), //element.parentNode
 				elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
 				endOnly: true
 			}
@@ -431,7 +448,7 @@ $(document).ready(
 			event.target.style.webkitTransform =
 			event.target.style.transform =
 			'translate(' + x + 'px, ' + y + 'px)';
-		});
+		});*/
 
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
@@ -752,8 +769,9 @@ function searchKeyword() {
                         }
 
                         //Collapse Suggestor view
-                        $('#suggestor_search').attr('src', 'html/image/expand.gif');
-                        $('#suggestor_search_area').slideUp(500);
+                        //$('#suggestor_search').attr('src', 'html/image/expand.gif');
+                        //$('#suggestor_search_area').slideUp(500);
+						$('#suggestor_search').dialog('close');
                     }
 
                     $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -793,8 +811,10 @@ function searchKeyword() {
                     genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
 
                     //Collapse Suggestor view
-                    $('#suggestor_search').attr('src', 'html/image/expand.gif');
-                    $('#suggestor_search_area').slideUp(500);
+                    //$('#suggestor_search').attr('src', 'html/image/expand.gif');
+                    //$('#suggestor_search_area').slideUp(500);
+					$('#suggestor_search').dialog('close');
+
 
                     activateButton('resultsTable');
                     createGenesTable(data.geneTable, keyword, candidateGenes);
