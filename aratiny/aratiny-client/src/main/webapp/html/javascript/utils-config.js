@@ -1,5 +1,7 @@
 //var api_url = "http://localhost:8080/aratiny-ws/arabidopsis";
-var api_url = "http://localhost:9090/ws/aratiny";
+//var api_url = "http://localhost:9090/ws/aratiny";
+//var api_url = "http://localhost:9090/aratiny";
+var api_url = "${knetminer.api.base_url}/aratiny"
 //var data_url = "http://knetminer.rothamsted.ac.uk/arabidopsis_data/"; 
 //var data_url = "http://qtlnetminer-test.rothamsted.ac.uk/arabidopsis_data/"; // test
 //var data_url = "http://maize-dev.rothamsted.ac.uk/arabidopsis_data/"; // test

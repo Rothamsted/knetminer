@@ -11,6 +11,11 @@
 	<packaging>pom</packaging>
 	<name>aratiny - Arabidobsis-based Tiny Test Site</name>
 	
+	<properties>
+		<knetminer.api.htppPort>9090</knetminer.api.htppPort>
+	</properties>
+	
+	
 	<modules>
 		<module>aratiny-client</module>
 		<module>aratiny-datasource</module>
