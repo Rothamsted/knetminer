@@ -42,6 +42,7 @@
 		<module>sviminalis</module>
 		<module>tomato</module>
 		<module>wheat</module>
+		<module>aratiny</module>
 	</modules>
 
 	<reporting>

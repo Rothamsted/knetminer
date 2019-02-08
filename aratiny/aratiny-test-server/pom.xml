@@ -1,0 +1,74 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<artifactId>aratiny</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>aratiny-test-server</artifactId>
+	<name>aratiny-test-server - Test Server for Knetminer client+ws</name>
+	<packaging>jar</packaging>
+
+
+	<build>
+		<finalName>aratiny-test-server</finalName>
+		
+		<plugins>
+  		<plugin>
+  			<artifactId>maven-dependency-plugin</artifactId>	  			
+  			<executions>
+  				<execution>
+  					<phase>prepare-package</phase>
+  					<goals>
+  						<goal>copy</goal>
+  					</goals>
+  					<configuration>
+	          	<artifactItems>
+	            	<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>aratiny-ws</artifactId>
+									<version>${project.version}</version>
+									<type>war</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>aratiny-client</artifactId>
+									<version>${project.version}</version>
+									<type>war</type>
+								</artifactItem>
+	          	</artifactItems>  						
+  					</configuration>
+  				</execution>
+  			</executions>
+  		</plugin>
+  		
+			<plugin>
+			  <groupId>org.eclipse.jetty</groupId>
+			  <artifactId>jetty-maven-plugin</artifactId>
+			  <version>9.4.15-SNAPSHOT</version>
+			  <configuration>
+			    <scanIntervalSeconds>10</scanIntervalSeconds>
+			    <webApp>
+			      <contextPath>/test</contextPath>
+			    </webApp>
+			    <contextHandlers>
+			      <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+			        <war>${project.build.directory}/dependency/aratiny-ws-${project.version}</war>
+			        <contextPath>/aratiny-ws</contextPath>
+			      </contextHandler>
+			      <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+			        <war>${project.build.directory}/dependency/aratiny-client-${project.version}</war>
+			        <contextPath>/aratiny-client</contextPath>
+			      </contextHandler>
+			    </contextHandlers>
+			  </configuration>
+			</plugin>  
+							
+		</plugins>
+	</build>
+	
+</project>
