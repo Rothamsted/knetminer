@@ -25,16 +25,15 @@
 				</li>
 				<li style="width: 70%;"> <!-- Keyword search -->
 				    <b><img id="kwd_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
-					<hr width="70%" align="left">
+					<hr width="85%" align="left">
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: none;">
-						 &nbsp; &nbsp;
-						 <img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">
+						 <img id="suggestor_search" src="html/image/qs_expand.png" style="padding-right:5px;cursor:pointer; display:none;">
 						 <br>
 						<!-- </div> -->
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
 						 <!-- query suggestor -->
-						 <div id="suggestor_search" style="border-radius:4px; touch-action:none; cursor:move;">
+						 <div id="suggestor_search_div" style="border-radius:4px; touch-action:none; cursor:move;">
 						    <div id="suggestor_search_area" style="width: 70%; display: none;">
 							    <div id="suggestor_terms"> </div>
 								<div id="suggestor_tables">No suggestions found</div>
@@ -72,7 +71,7 @@ gene_name"></textarea>
 				<li id="genomeorqtlsearchbox" style="width: 70%;">
     				<br>
 				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
-                    <hr width="45%" align="left">
+                    <hr width="60%" align="left">
                     <div id="region_search_area" style="display: none;">
                         <table id="regions_table">
                             <tbody><tr>
@@ -111,7 +110,7 @@ gene_name"></textarea>
 				<br>
 				<li>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
-					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search"> Search</i></button>
+					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>

@@ -351,28 +351,28 @@ $(document).ready(
                 $('#keywords').animate({
                         height: 'toggle'
                     }, 500
-                );
+                ).css('display', 'inline-block');
                 $('#matchesResultDiv').animate({
                         height: 'toggle'
                     }, 500
                 );
-                $('#qs_opener').animate({
+                $('#suggestor_search').animate({
                         height: 'toggle'
                     }, 500
-                );
+                ).css('display', 'inline-block');
             });
         // Suggestor search
         $('#suggestor_search').click(
             function () {
-                var src = ($(this).attr('src') === 'html/image/expand.gif')
-                    ? 'html/image/collapse.gif'
-                    : 'html/image/expand.gif';
+                var src = ($(this).attr('src') === 'html/image/qs_expand.png')
+                    ? 'html/image/qs_collapse.png'
+                    : 'html/image/qs_expand.png';
                 $(this).attr('src', src);
                 $('#suggestor_search_area').animate({
                         height: 'toggle'
                     }, 500
                 );
-                if ($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
                     refreshQuerySuggester();
                 }
             });
@@ -429,9 +429,9 @@ $(document).ready(
          //  }
 		
 		// to make the Query suggestor draggable via interactJS
-		var drag_element= document.getElementById('suggestor_search_div'), 
+		var element= document.getElementById('suggestor_search_div'), 
 		x = 0, y = 0;
-		interact(drag_element)
+		interact(element)
 		.draggable({
 			snap: {
 				targets: [ interact.createSnapGrid({ x: 30, y: 30 }) ],
