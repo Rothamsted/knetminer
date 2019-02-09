@@ -23,7 +23,7 @@
 				    <p id="explainer" title="You can just search with keyword or gene list, or combine both.">
 					Search the knowledge network with keywords, gene list and genomic regions:</p>
 				</li>
-				<li style="width: 70%;"> <!-- Keyword search -->
+				<li style="width: 80%;"> <!-- Keyword search -->
 				    <b><img id="kwd_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
