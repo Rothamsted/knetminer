@@ -59,9 +59,9 @@ function activateButton(option) {
         $('#' + option + '_button').attr('class', 'button_off');
 
         //Collapse Suggestor view
-        //$('#suggestor_search').attr('src', 'html/image/expand.gif');
-        //$('#suggestor_search_area').slideUp(500);
-		$('#suggestor_search').dialog('close');
+        $('#suggestor_search').attr('src', 'html/image/expand.gif');
+        $('#suggestor_search_area').slideUp(500);
+		//$('#suggestor_search').dialog('close');
     });
 }
 
@@ -239,8 +239,8 @@ $(document).ready(
             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
             if (e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40) {
                 // Refresh the query suggester table as well, if it's already open.
-              //  if ($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
-				if($('#suggestor_search').dialog('isOpen')) {
+                if ($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
+				//if($('#suggestor_search').dialog('isOpen')) {
                     refreshQuerySuggester();
                 }
             }
@@ -356,9 +356,13 @@ $(document).ready(
                         height: 'toggle'
                     }, 500
                 );
+                $('#qs_opener').animate({
+                        height: 'toggle'
+                    }, 500
+                );
             });
         // Suggestor search
-      /*  $('#suggestor_search').click(
+        $('#suggestor_search').click(
             function () {
                 var src = ($(this).attr('src') === 'html/image/expand.gif')
                     ? 'html/image/collapse.gif'
@@ -371,8 +375,8 @@ $(document).ready(
                 if ($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
                     refreshQuerySuggester();
                 }
-            });*/
-		  $("#suggestor_search").dialog({
+            });
+		/*  $("#suggestor_search").dialog({
 			  autoOpen: false,
 			  show: {
 				  effect: "blind",
@@ -386,7 +390,7 @@ $(document).ready(
 
 		  $("#qs_opener").click(function() {
 			  $("#suggestor_search").dialog( "open" );
-			});
+			});*/
 			
         // Advanced search (gene list)
         $('#advanced_search').click(
@@ -425,9 +429,9 @@ $(document).ready(
          //  }
 		
 		// to make the Query suggestor draggable via interactJS
-/*		var element= document.getElementById('draggable-suggestor'), 
+		var drag_element= document.getElementById('suggestor_search_div'), 
 		x = 0, y = 0;
-		interact(element)
+		interact(drag_element)
 		.draggable({
 			snap: {
 				targets: [ interact.createSnapGrid({ x: 30, y: 30 }) ],
@@ -448,7 +452,7 @@ $(document).ready(
 			event.target.style.webkitTransform =
 			event.target.style.transform =
 			'translate(' + x + 'px, ' + y + 'px)';
-		});*/
+		});
 
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
@@ -769,9 +773,9 @@ function searchKeyword() {
                         }
 
                         //Collapse Suggestor view
-                        //$('#suggestor_search').attr('src', 'html/image/expand.gif');
-                        //$('#suggestor_search_area').slideUp(500);
-						$('#suggestor_search').dialog('close');
+                        $('#suggestor_search').attr('src', 'html/image/expand.gif');
+                        $('#suggestor_search_area').slideUp(500);
+						//$('#suggestor_search').dialog('close');
                     }
 
                     $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -811,9 +815,9 @@ function searchKeyword() {
                     genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
 
                     //Collapse Suggestor view
-                    //$('#suggestor_search').attr('src', 'html/image/expand.gif');
-                    //$('#suggestor_search_area').slideUp(500);
-					$('#suggestor_search').dialog('close');
+                    $('#suggestor_search').attr('src', 'html/image/expand.gif');
+                    $('#suggestor_search_area').slideUp(500);
+					//$('#suggestor_search').dialog('close');
 
 
                     activateButton('resultsTable');

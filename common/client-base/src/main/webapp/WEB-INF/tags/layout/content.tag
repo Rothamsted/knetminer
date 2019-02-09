@@ -28,20 +28,19 @@
 					<hr width="70%" align="left">
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: none;">
+						 &nbsp; &nbsp;
+						 <img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">
 						 <br>
-<!--	</div>-->
+						<!-- </div> -->
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
-					</div>
-						 <br>
-						 <button id="qs_opener">Query Suggestor</button>
-						 <div id="suggestor_search">
-						     <div id="suggestor_search_area" style="width: 70%; display: none;">
-							     <div id="suggestor_terms"> </div>
-								 <div id="suggestor_tables">No suggestions found</div>
-							 </div>
+						 <!-- query suggestor -->
+						 <div id="suggestor_search" style="border-radius:4px; touch-action:none; cursor:move;">
+						    <div id="suggestor_search_area" style="width: 70%; display: none;">
+							    <div id="suggestor_terms"> </div>
+								<div id="suggestor_tables">No suggestions found</div>
+							</div>
 						 </div>
-				</li>
-					
+					</div>
 				</li>
 			<!--	<li style="width: 70%;">
 				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
@@ -112,7 +111,7 @@ gene_name"></textarea>
 				<br>
 				<li>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
-					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network">Search <i class="fa fa-search"></i></button>
+					<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search"> Search</i></button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>
