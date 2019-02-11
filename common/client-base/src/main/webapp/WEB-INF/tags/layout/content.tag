@@ -31,7 +31,6 @@
 						 <span style="vertical-align:middle">
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:7px; width:30px; height:30px; display:none;">
 						 </span>
-						 <br>
 						<!-- </div> -->
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
 						 <!-- query suggestor -->
