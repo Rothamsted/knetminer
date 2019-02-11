@@ -4,7 +4,7 @@ var genes;
 */
 
 // Map View
-var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(600); // changed from 750x400 to 800x600
+var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
 
 /*
