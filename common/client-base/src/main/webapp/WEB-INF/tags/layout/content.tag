@@ -19,7 +19,7 @@
                         </div>
                     </div>
 				</li>
-				<li style="height: 35px;">
+				<li style="height: 35px;padding-bottom: 10px;">
 				    <p id="explainer" title="You can just search with keyword or gene list, or combine both.">
 					Search the knowledge network with keywords, gene list and genomic regions:</p>
 				</li>
@@ -69,7 +69,7 @@ gene_name"></textarea>
 						</div>
 					</div>
 				</li>
-				<li id="genomeorqtlsearchbox" style="width: 70%;">
+				<li id="genomeorqtlsearchbox" style="width: 70%;padding-bottom: 20px;">
     				<br>
 				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
                     <hr width="60%" align="left">
