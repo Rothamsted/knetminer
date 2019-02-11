@@ -360,6 +360,10 @@ $(document).ready(
                         height: 'toggle'
                     }, 500
                 ).css('display', 'inline-block');
+                $('#suggestor_search_area').animate({
+                        height: 'toggle'
+                    }, 500
+                );
             });
         // Suggestor search
         $('#suggestor_search').click(
@@ -428,8 +432,8 @@ $(document).ready(
 			$('#advanced_search').trigger('click');
          //  }
 		
-		// to make the Query suggestor draggable via interactJS
-		var element= document.getElementById('suggestor_search_div'), 
+		// to make the Query suggestor draggable via interactJS; DISABLED
+	/*	var element= document.getElementById('suggestor_search_div'), 
 		x = 0, y = 0;
 		interact(element)
 		.draggable({
@@ -452,7 +456,7 @@ $(document).ready(
 			event.target.style.webkitTransform =
 			event.target.style.transform =
 			'translate(' + x + 'px, ' + y + 'px)';
-		});
+		}); */
 
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
@@ -1125,7 +1129,7 @@ function createGenesTable(text, keyword, rows) {
     }
 
     //table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="knet_button button" type="button" value="View Network" title="Display the network in KnetMaps">';
-    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"><i class="fas fa-dna"></i> View</button>';
+    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"><i class="fas fa-project-diagram"></i> View</button>';
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;

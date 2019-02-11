@@ -29,12 +29,13 @@
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: none;">
 						 <span style="vertical-align:middle">
+						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:7px; width:30px; height:30px; display:none;">
 						 </span>
 						 <br>
 						<!-- </div> -->
 						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
 						 <!-- query suggestor -->
-						 <div id="suggestor_search_div" style="border-radius:4px; touch-action:none; cursor:move;">
+						 <div id="suggestor_search_div" style="border-radius:4px; /*touch-action:none; cursor:move;*/">
 						    <div id="suggestor_search_area" style="width: 70%; display: none;">
 							    <div id="suggestor_terms"> </div>
 								<div id="suggestor_tables">No suggestions found</div>
