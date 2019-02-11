@@ -59,7 +59,7 @@ function activateButton(option) {
         $('#' + option + '_button').attr('class', 'button_off');
 
         //Collapse Suggestor view
-        $('#suggestor_search').attr('src', 'html/image/expand.gif');
+        $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
         $('#suggestor_search_area').slideUp(500);
 		//$('#suggestor_search').dialog('close');
     });
@@ -239,7 +239,7 @@ $(document).ready(
             // this stops refreshQuerySuggester being called when the enter or arrow keys are used.
             if (e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40) {
                 // Refresh the query suggester table as well, if it's already open.
-                if ($('#suggestor_search').attr('src') === "html/image/collapse.gif") {
+                if ($('#suggestor_search').attr('src') === "html/image/qs_collapse.png") {
 				//if($('#suggestor_search').dialog('isOpen')) {
                     refreshQuerySuggester();
                 }
@@ -599,7 +599,7 @@ $(document).ready(
                     matchCounter(); // updates number of matched documents and genes counter
 
                     // Refresh the Query Suggester, if it's already open.
-                    if ($('#suggestor_search').attr('src') == "html/image/collapse.gif") {
+                    if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
                         refreshQuerySuggester();
                     }
                 });
@@ -773,7 +773,7 @@ function searchKeyword() {
                         }
 
                         //Collapse Suggestor view
-                        $('#suggestor_search').attr('src', 'html/image/qs_expand.gif');
+                        $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
                         $('#suggestor_search_area').slideUp(500);
 						//$('#suggestor_search').dialog('close');
                     }
@@ -815,7 +815,7 @@ function searchKeyword() {
                     genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
 
                     //Collapse Suggestor view
-                    $('#suggestor_search').attr('src', 'html/image/expand.gif');
+                    $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
                     $('#suggestor_search_area').slideUp(500);
 					//$('#suggestor_search').dialog('close');
 
