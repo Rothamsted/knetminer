@@ -1370,6 +1370,7 @@ function createEvidenceTable(text, keyword) {
 
         $("#tablesorterEvidence").tablesorter({
             // sort by score in descending order if with keywords, or p-value ascending if without keywords
+			/* ToDo: replace $('#without').prop('checked') logic for p-value sorter with $("#keywords").val()='' check */
             sortList: [[$('#without').prop('checked')?4:3, $('#without').prop('checked')?0:1]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
