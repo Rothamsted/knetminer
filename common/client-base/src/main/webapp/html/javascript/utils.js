@@ -773,7 +773,7 @@ function searchKeyword() {
                         }
 
                         //Collapse Suggestor view
-                        $('#suggestor_search').attr('src', 'html/image/expand.gif');
+                        $('#suggestor_search').attr('src', 'html/image/qs_expand.gif');
                         $('#suggestor_search_area').slideUp(500);
 						//$('#suggestor_search').dialog('close');
                     }
