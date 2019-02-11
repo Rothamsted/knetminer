@@ -24,15 +24,15 @@
 					Search the knowledge network with keywords, gene list and genomic regions:</p>
 				</li>
 				<li style="width: 80%;"> <!-- Keyword search -->
-				    <b><img id="kwd_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
+				    <b><img id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
-					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: none;">
+					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: inline-block;">
 						 <span style="vertical-align:middle">
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:7px; width:30px; height:30px; display:none;">
 						 </span>
 						<!-- </div> -->
-						 <div id="matchesResultDiv" style="display: none;">Please, start typing your query</div>
+						 <div id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
 						 <!-- query suggestor -->
 						 <div id="suggestor_search_div" style="border-radius:4px; /*touch-action:none; cursor:move;*/">
 						    <div id="suggestor_search_area" style="width: 70%; display: none;">
@@ -56,10 +56,10 @@
 				  </div>
 				</li> -->
 				<li style="padding-top:20px; width:70%;">
-					<b><img id="advanced_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
+					<b><img id="advanced_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
-						<div id="advanced_search_area" style="display: none;">
+						<div id="advanced_search_area" style="display: block;">
 							<textarea id="list_of_genes" cols="50" rows="7" placeholder="gene_id
 gene_name"></textarea>
 							<!-- <div class="rightnav_genelist" style="display:none">

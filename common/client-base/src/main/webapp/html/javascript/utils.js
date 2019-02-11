@@ -166,6 +166,8 @@ function matchCounter() {
     var keyword = $('#keywords').val();
     if (keyword.length == 0) {
         $('#matchesResultDiv').html('Please, start typing your query');
+		// hide query suggestor icon
+		$('#suggestor_search').css('display', 'none');
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
@@ -175,9 +177,14 @@ function matchCounter() {
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
+					// show query suggestor icon
+					$('#suggestor_search').css('display', 'inline-block');
                 }
-                else
-                    $('#matchesResultDiv').html('No documents or genes will be found with this query');
+                else {
+				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
+				  // hide query suggestor icon
+				  $('#suggestor_search').css('display', 'none');
+				}
             }).fail(function () {
                 $('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
             });
@@ -356,10 +363,10 @@ $(document).ready(
                         height: 'toggle'
                     }, 500
                 );
-                $('#suggestor_search').animate({
+                $('#suggestor_search')/*.animate({
                         height: 'toggle'
                     }, 500
-                ).css('display', 'inline-block');
+                )*/.css('display', 'inline-block');
                 $('#suggestor_search_area').animate({
                         height: 'toggle'
                     }, 500
@@ -425,11 +432,13 @@ $(document).ready(
 		
 		// display keyword search box, by default
 		//if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
-			$('#kwd_search').trigger('click');
+	//		$('#kwd_search').trigger('click');
          //  }
+		 // hide query suggestor icon
+		// $('#suggestor_search').css('display', 'none');
 		// display gene list search, by default
 		//if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
-			$('#advanced_search').trigger('click');
+		//	$('#advanced_search').trigger('click');
          //  }
 		
 		// to make the Query suggestor draggable via interactJS; DISABLED
