@@ -120,7 +120,7 @@ gene_name"></textarea>
 	</div>
 
 	<div id="pGViewer_title"></div>
-	<div id="tabviewer" style="display: block;">
+	<div id="tabviewer" style="display: none;">
 
     	<div id="tabviewer_buttons">
         	<div class="button_off" id="resultsTable_button"><a href="javascript:;" onclick="activateButton('resultsTable');">Gene View</a> </div>

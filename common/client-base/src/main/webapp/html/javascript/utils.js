@@ -701,7 +701,7 @@ function refreshQuerySuggester() {
  */
 function searchKeyword() {
     var searchMode = getRadioValue(document.gviewerForm.search_mode);
-	console.log("searchKeyword: searchMode= "+ searchMode);
+	//console.log("searchKeyword: searchMode= "+ searchMode);
     /*var withoutKeywordMode = $('#without').prop('checked');
     if (withoutKeywordMode) {
         $('#keywords').val('');  // to make sure we don't accidentally include any
@@ -866,7 +866,7 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams),
-		beforeSend: deactivateSpinner("#tabviewer");
+		beforeSend: deactivateSpinner("#tabviewer")
     })
 	    .fail(function (errorlog) {
 			alert("An error has ocurred..." + errorlog);
