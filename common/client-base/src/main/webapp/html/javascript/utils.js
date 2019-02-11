@@ -865,18 +865,16 @@ function generateCyJSNetwork(url, requestParams) {
             "Content-Type": "application/json; charset=utf-8"
         },
         datatype: "json",
-        data: JSON.stringify(requestParams)
+        data: JSON.stringify(requestParams),
+		beforeSend: deactivateSpinner("#tabviewer");
     })
 	    .fail(function (errorlog) {
 			alert("An error has ocurred..." + errorlog);
-			// Remove loading spinner from 'tabviewer' div
-			deactivateSpinner("#tabviewer");
-			//console.log("network>> error >> remove spinner...");
+		//	deactivateSpinner("#tabviewer");
         })
         .success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
-			deactivateSpinner("#tabviewer");
-			//console.log("network>> remove spinner...");
+		//	deactivateSpinner("#tabviewer");
 			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
