@@ -25,7 +25,7 @@ docker image build \
     	--build-arg description="Knetminer Wheat" \
     	--build-arg reference_genome=true \
   --build-arg species_dir="species/$SPECIES_DIR" \
-  --build-arg oxl_file="WheatKNET.oxl" \
+  --build-arg oxl_file="WheatKNET_v42.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
