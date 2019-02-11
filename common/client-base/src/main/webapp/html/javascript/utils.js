@@ -351,7 +351,8 @@ $(document).ready(
         // Keyword search
         $('#kwd_search').click(
             function () {
-                var src = ($(this).attr('src') === 'html/image/expand.gif')
+				var old_src= $(this).attr('src');
+                var src = (old_src === 'html/image/expand.gif')
                     ? 'html/image/collapse.gif'
                     : 'html/image/expand.gif';
                 $(this).attr('src', src);
@@ -363,14 +364,12 @@ $(document).ready(
                         height: 'toggle'
                     }, 500
                 );
-                $('#suggestor_search')/*.animate({
-                        height: 'toggle'
-                    }, 500
-                )*/.css('display', 'inline-block');
-                $('#suggestor_search_area').animate({
-                        height: 'toggle'
-                    }, 500
-                );
+
+				if(old_src === 'html/image/collapse.gif') {
+				   // hide suggestor_search img icon and suggestor_search_area div
+				   $('#suggestor_search').css('display', 'none');
+				   $('#suggestor_search_area').css('display', 'none');
+				  }
             });
         // Suggestor search
         $('#suggestor_search').click(
