@@ -47,7 +47,7 @@ RUN set -x \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
  && git clone --single-branch -b ${git_branch} https://github.com/AjitPS/KnetMiner.git \
- && cd knetminer \
+ && cd Knetminer \
  && mkdir -p ${cl}/data ${cl}/image 
 
 COPY ${oxl_file} /root/data.oxl
