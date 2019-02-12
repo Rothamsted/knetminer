@@ -12,7 +12,7 @@ docker image build \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file="AraKNET_v42.oxl.oxl" \
+  --build-arg oxl_file="AraKNET_v42.oxl" \
   --build-arg knetminer_port=8082 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
