@@ -112,7 +112,7 @@ gene_name"></textarea>
 				<li>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
 				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
-					<button class="btn keywordsSubmit knet_button" type="button" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>
