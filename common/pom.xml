@@ -14,12 +14,12 @@
 	<name>KnetMiner Common</name>
 	<description>Provides functionality shared between all organism specific KnetMiner implementations.</description>
 	
-	<modules>
+<!--	<modules>
 		<module>client-base</module>
 		<module>server-base</module>
 		<module>server-datasource-api</module>
 		<module>server-datasource-ondexlocal</module>
                 <module>ws-example</module>
 		<module>quickstart</module>
-	</modules>
+	</modules> -->
 </project>
