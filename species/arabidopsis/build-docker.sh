@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-arabidopsis"
+IMAGE_NAME="knetminer-ara"
 
 cp ../../common/quickstart/Dockerfile-local .
 
@@ -12,8 +12,8 @@ docker image build \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
   --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
-  --build-arg oxl_file="ArabidopsisKNET.oxl" \
-  --build-arg knetminer_port=8080 \
+  --build-arg oxl_file="AraKNET_v42.oxl.oxl" \
+  --build-arg knetminer_port=8082 \
   --squash -t $IMAGE_NAME \
   -f Dockerfile-local .
 
