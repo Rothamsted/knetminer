@@ -701,7 +701,7 @@ function refreshQuerySuggester() {
  */
 function searchKeyword() {
     var searchMode = getRadioValue(document.gviewerForm.search_mode);
-	//console.log("searchKeyword: searchMode= "+ searchMode);
+	//console.log("searchKeyword() ... searchMode= "+ searchMode);
     /*var withoutKeywordMode = $('#without').prop('checked');
     if (withoutKeywordMode) {
         $('#keywords').val('');  // to make sure we don't accidentally include any
@@ -737,6 +737,7 @@ function searchKeyword() {
             counter++;
         }
     }
+	console.log("api_url/request= "+ api_url + request);
     if (keyword.length < 2 && list.length == 0) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
     }
@@ -753,6 +754,8 @@ function searchKeyword() {
 		// Show loading spinner on 'search' div
 		activateSpinner("#search");
 		//console.log("search>> start spinner...");
+		console.log("requestParams to send...");
+		console.dir(requestParams);
 		
         $.post({
             url: api_url + request,
