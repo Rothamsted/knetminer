@@ -29,7 +29,8 @@ ARG species_link_name
 ARG keywords 
 ARG description 
 ARG reference_genome 
-ARG git_branch=201902_dev_ui_deploy
+#ARG git_branch=master
+ARG git_branch
 ARG knetminer_port
 
 #EXPOSE 8080
