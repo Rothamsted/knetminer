@@ -30,7 +30,6 @@ ARG keywords
 ARG description 
 ARG reference_genome 
 #ARG git_branch=master
-ARG git_branch
 ARG knetminer_port
 
 #EXPOSE 8080
@@ -46,7 +45,7 @@ RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
- && git clone --single-branch -b ${git_branch} https://github.com/AjitPS/KnetMiner.git \
+ && git clone --single-branch -b 20181001_rh_stable https://github.com/AjitPS/KnetMiner.git \
  && cd KnetMiner \
  && mkdir -p ${cl}/data ${cl}/image 
 
