@@ -11,7 +11,6 @@ docker image build \
     	--build-arg keywords="arabidopsis, a.thaliana, knetminer, quickstart, demo" \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
- # --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \ #
   --build-arg git_branch="201902_dev_ui_deploy" \
   --build-arg oxl_file="AraKNET_v42.oxl" \
   --build-arg knetminer_port=8082 \
