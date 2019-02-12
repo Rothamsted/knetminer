@@ -23,7 +23,7 @@
 		</license>
 	</licenses>
 
-	<modules>
+<!--	<modules>
 		<module>common</module>
 		<module>arabidopsis</module>
 		<module>barley</module>
@@ -42,7 +42,7 @@
 		<module>sviminalis</module>
 		<module>tomato</module>
 		<module>wheat</module>
-	</modules>
+	</modules> -->
 	
 	<reporting>
 		<plugins>
