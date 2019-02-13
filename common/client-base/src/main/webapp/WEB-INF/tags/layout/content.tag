@@ -21,13 +21,13 @@
 				</li>
 				<li style="height: 35px;padding-bottom: 10px;">
 				    <p id="explainer" title="You can just search with keyword or gene list, or combine both.">
-					Search the knowledge network with keywords, gene list and genomic regions:</p>
+					Search KnetMiner with keywords, gene lists or genomic regions:</p>
 				</li>
 				<li style="width: 80%;"> <!-- Keyword search -->
 				    <b><img id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
-					     <input id="keywords" name="keywords" type="text" placeholder="Search Knetminer for traits, genes, pathways, ..." style="display: inline-block;">
+					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 						 <span style="vertical-align:middle">
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:7px; width:30px; height:30px; display:none;">
 						 </span>
