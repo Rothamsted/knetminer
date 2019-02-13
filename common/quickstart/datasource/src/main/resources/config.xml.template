@@ -6,5 +6,5 @@
         <entry key="DataFile">/root/data.oxl</entry>
 	<entry key="SpeciesTaxId">!!TAXID!!</entry>
 	<entry key="reference_genome">!!REFGENOME!!</entry>
-	<entry key="export_visible_network">true</entry>
+	<entry key="export_visible_network">false</entry>
 </properties>

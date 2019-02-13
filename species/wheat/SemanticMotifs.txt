@@ -34,7 +34,7 @@
 1-20	has_variation
 1-2	occ_in
 1-22	differentially_expressed
-1-16	cooc_wi
+1-21	cooc_wi
 1-23	part_of
 1-9	regulates	2
 1-8	regulates	2
@@ -58,7 +58,7 @@
 10-12	cat_c
 10-14	has_domain
 10-15	cat_c
-10-16	cooc_wi
+10-21	cooc_wi
 
 9-2	pub_in
 9-3	has_function
@@ -71,6 +71,7 @@
 9-13	has_observ_pheno
 9-20	has_variation
 9-22	differentially_expressed
+9-21	cooc_wi
 
 20-21	associated_with
 20-26	leads_to
@@ -80,7 +81,7 @@
 11-5	located_in
 12-3	equ
 
-9-21	cooc_wi
+
 10-17	is_a
 10-177	is_a
 17-18	ca_by
