@@ -14,7 +14,6 @@
 14^	ProtDomain
 15^	EC
 
-16^	TO
 17	Enzyme
 177^	Enzyme
 18	Reaction
@@ -35,12 +34,12 @@
 1-20	has_variation
 1-2	occ_in
 1-22	differentially_expressed
-1-21	cooc_wi
+1-16	cooc_wi
 1-23	part_of
 1-9	regulates	2
 1-8	regulates	2
-1-8	homeolog	2
-1-9	homeolog	2
+1-8	homoeolog	2
+1-9	homoeolog	2
 1-20	has_mutant
 
 10-10	h_s_s	4
@@ -59,7 +58,7 @@
 10-12	cat_c
 10-14	has_domain
 10-15	cat_c
-10-21	cooc_wi
+10-16	cooc_wi
 
 9-2	pub_in
 9-3	has_function
