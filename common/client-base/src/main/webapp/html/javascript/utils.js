@@ -1142,8 +1142,8 @@ function createGenesTable(text, keyword, rows) {
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
-	// scroll down to geneTable
-	document.getElementById('resultsTable').scrollIntoView();
+	// scroll down to geneTable, but show tabviewer_buttons above
+	document.getElementById('pGViewer_title').scrollIntoView();
 
     /*
      * click Handler for viewing a network.
