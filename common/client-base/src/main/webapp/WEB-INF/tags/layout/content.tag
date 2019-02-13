@@ -60,8 +60,7 @@
 					<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
-							<textarea id="list_of_genes" cols="50" rows="7" placeholder="gene_id
-gene_name"></textarea>
+							<textarea id="list_of_genes" cols="50" rows="7" placeholder="Search for gene id/name (one per line)"></textarea>
 							<!-- <div class="rightnav_genelist" style="display:none">
 								<input type="radio" name="list_mode" value="GLrestrict">Intersection
 								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
