@@ -1138,7 +1138,7 @@ function createGenesTable(text, keyword, rows) {
     }
 
     //table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="knet_button button" type="button" value="View Network" title="Display the network in KnetMaps">';
-    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"><i class="fas fa-bezier-curve"></i> View</button>';
+    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps">View Network</button>';
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
