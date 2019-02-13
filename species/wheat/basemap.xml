@@ -28,7 +28,7 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5" length="709760750" number="chr5A">
+	<chromosome index="5" length="709760750" number="5A">
 		<band index="1">
 			<start>0</start>
 			<end>709760750</end>
@@ -133,7 +133,7 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="20" length="473517451" number="chr6D">
+	<chromosome index="20" length="473517451" number="6D">
 		<band index="1">
 			<start>0</start>
 			<end>473517451</end>
