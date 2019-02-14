@@ -709,6 +709,8 @@ function searchKeyword() {
     var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
     var keyword = trim($("#keywords").val());
     var list = $("#list_of_genes").val().split('\n');
+    var geneList_size= list.length;
+    //console.log("geneList_size= "+ geneList_size);
     for (var i = 0; i < list.length; i++) { // remove empty lines
         if (!list[i].trim()) {
             list.splice(i, 1);
@@ -838,6 +840,12 @@ function searchKeyword() {
                     activateButton('resultsTable');
                     createGenesTable(data.geneTable, keyword, candidateGenes);
                     createEvidenceTable(data.evidenceTable, keyword);
+					// show linked/unlinked genes checkboxes only if a gene list was provided by the user
+                    if(geneList_size > 0) {
+                    	//console.log("show checkboxes...");
+                       $('#selectUser').show();
+                      }
+                      else { $('#selectUser').hide(); }
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
@@ -980,7 +988,7 @@ function createGenesTable(text, keyword, rows) {
         table = table + '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
         table = table + '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
         table = table + '<select>';
-        table = table + '<div id="selectUser">Known targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select Targets with existing evidence." /> Novel targets:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select Targets without existing evidence." />' +
+        table = table + '<div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
             '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
         table = table + '<br>';
         // dynamic Evidence Summary to be displayed above Gene View table
