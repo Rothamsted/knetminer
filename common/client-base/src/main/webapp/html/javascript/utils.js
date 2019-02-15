@@ -931,8 +931,12 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
             candidatelist.push(cb_list[i].value);
         }
     }
+    console.log(candidatelist.length +" gene(s) selected.");
     if (candidatelist == "") {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+    }
+    else if (candidatelist.length > 20) {
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>The free version of KnetMiner is limited to 20 genes.</b></div>');
     }
     else {
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
