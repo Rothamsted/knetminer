@@ -739,7 +739,7 @@ function searchKeyword() {
             counter++;
         }
     }
-	console.log("api_url/request= "+ api_url + request);
+	//console.log("api_url/request= "+ api_url + request);
     if (keyword.length < 2 && list.length == 0) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
     }
@@ -756,9 +756,9 @@ function searchKeyword() {
 		// Show loading spinner on 'search' div
 		activateSpinner("#search");
 		//console.log("search>> start spinner...");
-		console.log("requestParams to send...");
-		console.dir(requestParams);
 		
+		//console.log("requestParams to send...");
+		//console.dir(requestParams);
         $.post({
             url: api_url + request,
             timeout: 1000000,
