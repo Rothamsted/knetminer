@@ -2,30 +2,18 @@
 
 	<p><strong>Datasets used for integration</strong></p>
 	<ul>
-		<li>Gene- Protein [Ensembl]</li>
-		<ul>
-		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/gff3/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.36.gff3.gz">Arabidopsis_thaliana.TAIR10.36.gff3</a></li>
-                    <li><a href="ftp://ftp.ensemblgenomes.org/pub/current/plants/fasta/arabidopsis_thaliana/pep/Arabidopsis_thaliana.TAIR10.pep.all.fa.gz">Arabidopsis_thaliana.TAIR10.pep.all.fa</a></li>
-		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/tsv/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.36.uniprot.tsv.gz">Ensembl - UniprotKB Mapping</a></li>
-		</ul>
-    	<li>Gene-SNP-Phenotype [Ensembl]</li>
+		<li>Gene-Protein [ENSEMBL Plants v42]</li>
+		<li>Gene-SNP-Trait [ENSEMBL Plants]</li>
     	<ul>
             <li>Arabidopsis GWAS data for 92 phenotypes.</li>
             <li>Phenotypes are grouped into the four categories: flowering, developmental, defense and ionomics.</li>
             <li>For more information see <a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a></li>
-            <li>Data was downloaded from <a href="Protein@Rice-Protein@Plants::UniProtKB-SP [Smith-Waterman]">Ensembl Biomart</a></li>
             <li>SNP-Phenotype relations (27,466 relations) of significant SNPs (p-value<0.0001) linked to 92 phenotypes; on average 300 SNPs per phenotype.</li>
             <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (13,331 relations)</li>
-            <li>#SNP=11,996 | #Gene=8,241 | #Phenotype=92</li>
-            <li>To see it live, go to <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/">KnetMiner Arabidopsis</a> and search for <i>dormancy</i>, then switch to Map View.</li>
+            <li>#SNP=11,996 | #Gene=8,241 | #Phenotype=92</li>  
         </ul>
 		
     	<li>Gene-GO [GOA]</li>
-    	<ul>
-            <li>Include all evidence types</li>
-            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a></li>
-            <li>Ondex GAF parser requires additional mapping file of feature type -> <i>Ondex Concept Class</i></li>
-        </ul>
     	<li>Gene-Gene Interactions [BioGRID]</li>
     	<ul>
             <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.151.tab2.zip">TAB</a></li>
@@ -34,51 +22,38 @@
             <li>Relations: 303 [genetic] | 37083 [physical] | 19295 [pub_in]</li>
 	    <li>filter out High Throughput interactions for gene AT5G03240</li>
         </ul>
-    	<li>Gene-Phenotype [TAIR]</li>
-    	<ul>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Germplasm_Phenotype_20130122">TAB</a></li>
-        </ul>
+	<li>Gene-Phenotype [TAIR]</li>
     	<li>Publications [PubMed]</li>
     	<ul>
-            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana">XML</a></li>
+            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana">Arabidopsis Query</a></li>
             <li>57,600 PubMed abstracts</li>
             <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
         </ul>
     	<li>Gene-Publication [GOA, TAIR]</li>
-    	<ul>
-            <li><a href="http://www.geneontology.org/gene-associations/gene_association.tair.gz">GAF 2.0</a></li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
-        </ul>
     	<li>Protein-Publication [UniProtKB, TAIR]</li>
-    	<ul>
+	<li>Arabidopsis proteome</li>
+	<ul>
             <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml">At proteome XML</a></li>
-            <li><a href="ftp://ftp.arabidopsis.org/home/tair/User_Requests/Locus_Published_20140331.txt.gz">TAB</a></li>
         </ul>
+		
     	<li>Protein-Pathway [AraCyc]</li>
     	<ul>
-            <li>AraCyc Release 15</li>
-            <li>biopax-level2.owl</li>
-            <li>Translation.tab</li>
+            <li>AraCyc Release 15 (biopax-level2.owl)</li>
         </ul>
-	<li>Protein Domain [Ensembl]</li>
+		
+	<li>Protein Domain [ENSEMBL PLants]</li>
 	<ul>
-	    <li>InterPro Protein Domains from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+	    <li>InterPro and PFAM </li>
 	</ul>
-    	<li>Gene-TO [Text Mining]</li>
+		
+    	<li>Gene-TO [KnetMiner]</li>
     	<ul>
-            <li>Created 27k Gene-TO sentence based co-occurrences in PubMed abstracts</li>
+            <li>Sentence-level co-occurrences in PubMed abstracts</li>
         </ul>
-    	<li>Sequence alignments to other Plants</li>
+    	<li>Protein-Protein Alignments</li>
     	<ul>
-            <li>Protein@Arabidopsis-Protein@Plants::UniProtKB-SP [Smith-Waterman]:
-                <ul>
-		    <li>Concepts: 27112 [Protein]</li>
-                    <li>Relations: 102202 [h_s_s]</li>
-                </ul>
-            </li>
-            <li>Protein-GO [UniProtKB]</li>
-            <li>Protein-Publication [UniProtKB]</li>
-	    <li><a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&compress=yes&format=xml">UniprotKB-SP Plants XML</a></li>
+            <li>Arabidopsis vs. other Plant species from UniProtKB-SP [Smith-Waterman]</li>
+	    <li>Protein set: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&compress=yes&format=xml">UniprotKB-SP Plants XML</a></li>
         </ul>
     	<li>Orthologs in Yeast</li>
     	<ul>
