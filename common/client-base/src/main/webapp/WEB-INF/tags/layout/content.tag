@@ -101,10 +101,10 @@
                                 </td>
                             </tr>
                         </tbody></table>
-                        <div class="rightnav">
+                    <!--    <div class="rightnav">
                             <input type="radio" name="search_mode" value="genome" checked="checked">whole-genome
                             <input type="radio" name="search_mode" value="qtl">within region<br>
-                        </div>
+                        </div> -->
                     </div>
 				</li>
 				<br>

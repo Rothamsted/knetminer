@@ -704,53 +704,61 @@ function refreshQuerySuggester() {
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
 function searchKeyword() {
-    var searchMode = getRadioValue(document.gviewerForm.search_mode);
-	//console.log("searchKeyword() ... searchMode= "+ searchMode);
+    //var searchMode = getRadioValue(document.gviewerForm.search_mode);
+    var searchMode="genome"; // default
+
     /*var withoutKeywordMode = $('#without').prop('checked');
     if (withoutKeywordMode) {
         $('#keywords').val('');  // to make sure we don't accidentally include any
     }*/
+
     var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
+    // search keyword provided
     var keyword = trim($("#keywords").val());
+    // gene list provided
     var list = $("#list_of_genes").val().split('\n');
-    var geneList_size= list.length;
-    //console.log("geneList_size= "+ geneList_size);
     for (var i = 0; i < list.length; i++) { // remove empty lines
         if (!list[i].trim()) {
             list.splice(i, 1);
             i--;
         }
     }
-    var regions = document.getElementById('regions_table').rows.length - 2;
-    var request = "/" + searchMode;
+
+    // requestParams
     var requestParams = {};
     requestParams['keyword'] = keyword;
     if (list.length > 0) {
         requestParams['list'] = list;
         requestParams['listMode'] = listMode;
     }
-    var counter = 1;
 
+    // qtl regions provided
+    var regions = document.getElementById('regions_table').rows.length - 2;
+    var counter = 1;
     requestParams['qtl'] = [];
     for (i = 1; i <= regions; i++) {
         var chr = $("#chr" + i + " option:selected").val();
         var start = trim($("#start" + i).val());
         var end = trim($("#end" + i).val());
         var label = trim($("#label" + i).val());
+        console.log(chr +","+ start+","+ end);
 
         if (chr.length > 0 && start.length > 0 && end.length > 0 && parseInt(start) < parseInt(end)) {
             requestParams['qtl'].push("&qtl" + counter + "=" + chr + ":" + start + ":" + end + ":" + label);
             counter++;
         }
     }
-	//console.log("api_url/request= "+ api_url + request);
-    if (keyword.length < 2 && list.length == 0) {
+    // if a region is provided, set searchMode to "qtl" instead of "genome" to focus only on that region
+    if(counter > 1) { searchMode="qtl"; }
+    
+	// api request
+    var request = "/" + searchMode;
+	console.log("api_url/request= "+ api_url + request);
+	
+  /*  if (keyword.length < 2 && list.length == 0) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
-    }
-    /*else if (list.length > 500000 || (withoutKeywordMode && (list.length == 0 && requestParams['qtl'].length==0))) {
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a valid list of genes.</b></div>');
     }*/
-    else if (list.length > 100) {
+   /* else*/ if (list.length > 100) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Gene list limit (100) exceeded.</b></div>');
     }
     else {
@@ -761,7 +769,7 @@ function searchKeyword() {
 		activateSpinner("#search");
 		//console.log("search>> start spinner...");
 		
-		//console.log("requestParams to send...");
+		//console.log("requestParams:");
 		//console.dir(requestParams);
         $.post({
             url: api_url + request,
