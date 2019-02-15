@@ -1,75 +1,60 @@
+<p><strong>ENSEMBL PLANTS</strong></p>
 <ul>
+	<li>Gene-[enc]-Protein</li>
+	<li>Protein-[has]-Domain</li>
+	<li>Protein-[xref]-Protein (ENSEMBL-UNIPROT mapping)</li>
+	<li>Gene-[has_variant]-SNP-[associate_with]-Trait  (<a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a>)</li>
+</ul>	
 
-	<p><strong>Datasets used for integration</strong></p>
-	<ul>
-		<li>Gene-Protein [ENSEMBL Plants v42]</li>
-		<li>Gene-SNP-Trait [ENSEMBL Plants]</li>
-    	<ul>
-            <li>Arabidopsis GWAS data for 92 phenotypes.</li>
-            <li>Phenotypes are grouped into the four categories: flowering, developmental, defense and ionomics.</li>
-            <li>For more information see <a href="http://www.nature.com/nature/journal/v465/n7298/abs/nature08800.html">Atwell et al, 2010, Nature</a> and <a href="http://www.nature.com/nature/journal/v465/n7298/extref/nature08800-s1.pdf">supplementary information</a></li>
-            <li>SNP-Phenotype relations (27,466 relations) of significant SNPs (p-value<0.0001) linked to 92 phenotypes; on average 300 SNPs per phenotype.</li>
-            <li>SNP-Gene relations are based on genes in close proximity to SNPs <1000bp (13,331 relations)</li>
-            <li>#SNP=11,996 | #Gene=8,241 | #Phenotype=92</li>  
-        </ul>
-		
-    	<li>Gene-GO [GOA]</li>
-    	<li>Gene-Gene Interactions [BioGRID]</li>
-    	<ul>
-            <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.151.tab2.zip">TAB</a></li>
-            <li>Version 3.4.151</li>
-            <li>Concepts: 9212 [Gene] | 2359 [Publication]</li>
-            <li>Relations: 303 [genetic] | 37083 [physical] | 19295 [pub_in]</li>
-	    <li>filter out High Throughput interactions for gene AT5G03240</li>
-        </ul>
-	<li>Gene-Phenotype [TAIR]</li>
-    	<li>Publications [PubMed]</li>
-    	<ul>
-            <li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=arabidopsis+thaliana">Arabidopsis Query</a></li>
-            <li>57,600 PubMed abstracts</li>
-            <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
-        </ul>
-    	<li>Gene-Publication [GOA, TAIR]</li>
-    	<li>Protein-Publication [UniProtKB, TAIR]</li>
-	<li>Arabidopsis proteome</li>
-	<ul>
-            <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000006548&compress=yes&format=xml">At proteome XML</a></li>
-        </ul>
-		
-    	<li>Protein-Pathway [AraCyc]</li>
-    	<ul>
-            <li>AraCyc Release 15 (biopax-level2.owl)</li>
-        </ul>
-		
-	<li>Protein Domain [ENSEMBL PLants]</li>
-	<ul>
-	    <li>InterPro and PFAM </li>
-	</ul>
-		
-    	<li>Gene-TO [KnetMiner]</li>
-    	<ul>
-            <li>Sentence-level co-occurrences in PubMed abstracts</li>
-        </ul>
-    	<li>Protein-Protein Alignments</li>
-    	<ul>
-            <li>Arabidopsis vs. other Plant species from UniProtKB-SP [Smith-Waterman]</li>
-	    <li>Protein set: <a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A33090+NOT+taxonomy%3A3702+AND+reviewed%3Ayes&compress=yes&format=xml">UniprotKB-SP Plants XML</a></li>
-        </ul>
-    	<li>Orthologs in Yeast</li>
-    	<ul>
-            <li>Protein@Arabidopsis-Protein@Yeast [OMA]</li>
-            <li>Protein-GO [UniProtKB]</li>
-            <li>Protein-Publication [UniProtKB]</li>
-	    <li>SGD-UniprotKB [Ensembl] <a href="ftp://ftp.ensemblgenomes.org/pub/fungi/current/tsv/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.36.uniprot.tsv.gz">TAB</a></li>
-            <li>Protein-Protein Interaction [BioGRID]:
-                <ul>
-		    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.148/BIOGRID-ORGANISM-3.4.151.tab2.zip">TAB</a></li>
-		    <li>Concepts: 5344 [Protein] | 13954 [Publication]</li>
-                    <li>Relations: 31041 [genetic] | 27773 [physical] | 72752 [pub_in]</li>
-		    <li>filter out High Throughput interactions</li>
-                </ul>
-            </li>
-        </ul>
+<p><strong>GO and GOA</strong></p>
+<ul>
+	<li>Gene-[has_function]-MolecularFunction</li>
+	<li>Gene-[participates_in]-BiologicalProcess</li>
+	<li>Gene-[located_in]-CellularComponent</li>
+	<li>Gene-[pub_in]-Publication</li>
+	<li>GOterm-[is_a|part_of]-GOterm</li>
+</ul>
+	
+<p><strong>BIOGRID</strong></p>	
+<ul>
+	<li>Gene-[genetic]-Gene</li>
+	<li>Gene-[physical]-Gene</li>
+</ul>
 
+<p><strong>TAIR</strong></p>	
+<ul>
+	<li>Gene-[has]-Phenotype</li>
+	<li>Gene-[pub_in]-Publication</li>
+	<li>Protein-[pub_in]-Publication</li>
 </ul>
+
+<p><strong>PUBMED</strong></p>	
+<ul>
+	<li>Publication cotaining Arabidopsis (title, abstract, authors, joural, mesh)</li>
 </ul>
+
+<p><strong>UNIPROTKB (Arabidopsis, Plants and Yeast)</strong></p>	
+<ul>
+	<li>Protein-[has_function]-MolecularFunction</li>
+	<li>Protein-[participates_in]-BiologicalProcess</li>
+	<li>Protein-[located_in]-CellularComponent</li>
+	<li>Protein-[pub_in]-Publication</li>
+	<li>Protein-[has]-EC</li>
+</ul>
+
+<p><strong>ARACYC (Plant Metabolic Network)</strong></p>	
+<ul>
+	<li>Protein-[is_a]-Enzyme</li>
+	<li>Enzyme-[catalyzed_by]-Reaction</li>
+	<li>Reaction-[part_of]-Pathway</li>
+</ul>
+
+<p><strong>Made by KnetMiner</strong></p>	
+<ul>
+	<li>Gene-[occurs_in]-Publication</li>
+	<li>Gene-[cooc_with]-TraitOntology (sentence-level co-occurence)</li>
+	<li>Protein-[topn_alignment]-Protein (SmithWaterman: Arabidopsis-Plants)</li>
+	<li>Protein-[ortholog]-Protein (OMA: Arabidopsis-Yeast)</li>
+</ul>
+
+
