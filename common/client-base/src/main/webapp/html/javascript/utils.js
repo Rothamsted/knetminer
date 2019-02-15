@@ -741,7 +741,6 @@ function searchKeyword() {
         var start = trim($("#start" + i).val());
         var end = trim($("#end" + i).val());
         var label = trim($("#label" + i).val());
-        console.log(chr +","+ start+","+ end);
 
         if (chr.length > 0 && start.length > 0 && end.length > 0 && parseInt(start) < parseInt(end)) {
             requestParams['qtl'].push("&qtl" + counter + "=" + chr + ":" + start + ":" + end + ":" + label);
