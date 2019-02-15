@@ -536,8 +536,12 @@ $(document).ready(
 
                 // set an event handler to populate the search fields when one of the example queries is clicked
                 $('body').on('click', '.exampleQuery', function () {
-                    $('#with').trigger('click');
+                    //$('#with').trigger('click');
                     sampleNum = $(this)[0].id.replace('exampleQuery', '');
+                    // display keyword search box
+		            if($('#kwd_search').attr('src') === 'html/image/expand.gif') {
+		               $('#kwd_search').trigger('click');
+		              }
                     $("#keywords").val(sampleQueries[sampleNum].term);
                     var numRegions = sampleQueries[sampleNum].regions.length;
 
