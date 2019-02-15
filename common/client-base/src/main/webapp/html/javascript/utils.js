@@ -753,7 +753,7 @@ function searchKeyword() {
     
 	// api request
     var request = "/" + searchMode;
-	console.log("api_url/request= "+ api_url + request);
+	//console.log("api_url/request= "+ api_url + request);
 	
   /*  if (keyword.length < 2 && list.length == 0) {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
@@ -992,7 +992,7 @@ function createGenesTable(text, keyword, rows) {
         table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
         table = table + '<form name="checkbox_form">';
         table = table + '<u>Max</u> number of genes to show: ';
-        table = table + '<select value="' + rows + '" id="numGenes">';
+        table = table + '<select value="' + /*rows*/results + '" id="numGenes">';
         table = table + '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000</option>';
         table = table + '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
         table = table + '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
