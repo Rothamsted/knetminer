@@ -749,8 +749,10 @@ function searchKeyword() {
             counter++;
         }
     }
-    // if a region is provided, set searchMode to "qtl" instead of "genome" to focus only on that region
+    // if a region is provided, set searchMode to "qtl" (to focus only on that region)
     if(counter > 1) { searchMode="qtl"; }
+    // if a gene list is provided, use "genome" searchMode
+    if(geneList_size > 0) { searchMode="genome"; }
     
 	// api request
     var request = "/" + searchMode;
