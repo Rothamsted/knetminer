@@ -717,13 +717,14 @@ function searchKeyword() {
     var keyword = trim($("#keywords").val());
     // gene list provided
     var list = $("#list_of_genes").val().split('\n');
-	var geneList_size= list.length;
     for (var i = 0; i < list.length; i++) { // remove empty lines
         if (!list[i].trim()) {
             list.splice(i, 1);
             i--;
         }
     }
+	var geneList_size= list.length;
+	//console.log("geneList_size= "+ geneList_size);
 
     // requestParams
     var requestParams = {};
