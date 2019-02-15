@@ -931,7 +931,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
             candidatelist.push(cb_list[i].value);
         }
     }
-    console.log(candidatelist.length +" gene(s) selected.");
+    //console.log(candidatelist.length +" gene(s) selected.");
     if (candidatelist == "") {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
