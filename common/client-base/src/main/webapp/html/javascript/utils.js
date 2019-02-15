@@ -762,7 +762,7 @@ function searchKeyword() {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Please provide a search keyword or gene list.</b></div>');
     }*/
    /* else*/ if (list.length > 100) {
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Gene list limit (100) exceeded.</b></div>');
+        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free version of KnetMiner is limited to 100 genes.</b></div>');
     }
     else {
         $('#tabviewer').show(); // show Tab buttons and viewer
