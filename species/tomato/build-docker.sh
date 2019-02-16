@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-solanaceae"
+IMAGE_NAME="knetminer-solanaceae-v3.0"
 
 cp ../../common/quickstart/Dockerfile-local .
 
@@ -20,7 +20,7 @@ docker image build \
   -f Dockerfile-local .
 
 if [ $? -eq 0 ]; then
-	rm Dockerfile-local
+	#rm Dockerfile-local
 	echo "You can run this Docker using: docker run -p8080:8080 -it --rm $IMAGE_NAME"
 	echo "Then access it at http://localhost:8080/client/"
 	echo "Note: port 8080 is the Tomcat default; replace with the knetminer_port defined in this file"
