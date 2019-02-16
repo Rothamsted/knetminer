@@ -48,4 +48,3 @@ The sliding overlay panel on the right is to display relevant information relate
 ![KnetMaps_ItemInfo](KnetMaps_item.png)
 
 
-

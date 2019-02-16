@@ -125,7 +125,7 @@ public class KnetminerServer {
 	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/genepage")
-	public String genepage(@PathVariable String ds, @RequestParam(required = true) String keyword,
+	public String genepage(@PathVariable String ds, @RequestParam(required = false) String keyword,
 			@RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model) {
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
@@ -133,8 +133,37 @@ public class KnetminerServer {
 		}
 		this._googlePageView(ds, "genepage", rawRequest);
 		model.addAttribute("list", new JSONArray(list).toString());
-		model.addAttribute("keyword", keyword);
+		if (keyword != null && !"".equals(keyword)) {
+			model.addAttribute("keyword", keyword);
+		}
 		return "genepage";
+	}
+
+	/**
+	 * A /evidencepage shortcut which generates a redirect to a prepopulated KnetMaps
+	 * template with the /evidencePath query built for the user already. See WEB-INF/views
+	 * to find the HTML template that this query will return.
+	 * @param ds
+	 * @param keyword
+	 * @param list
+	 * @param rawRequest
+	 * @param model
+	 * @return
+	 */
+	@CrossOrigin
+	@GetMapping("/{ds}/evidencepage")
+	public String evidencepage(@PathVariable String ds, @RequestParam(required = true) String keyword,
+						       @RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model) {
+		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
+		if (dataSource == null) {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
+		this._googlePageView(ds, "evidencepage", rawRequest);
+		if (!list.isEmpty()) {
+			model.addAttribute("list", new JSONArray(list).toString());
+		}
+		model.addAttribute("keyword", keyword);
+		return "evidencepage";
 	}
 
 	/**

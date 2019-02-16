@@ -6,13 +6,14 @@ body {
 	margin:0px;padding:0px;
 	font-size:16px;
 	font-family: 'Play', sans-serif;
+	position: relative;
 	min-width: 960px;
 	background: url("../image/background.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    height: 100%;
+    min-height: 100%;
 }
 
 h2 {
@@ -138,7 +139,7 @@ div#leftnav {
 
 .navbar {
 	display:block;
-	height:51px;
+	height:55px;
 	box-shadow: 0 1px 1px white;
 	background-color:#2A2A2A;
 	position: fixed;
@@ -154,9 +155,9 @@ div#leftnav {
 /*end navbar*/
 
 div#content {
-	padding-top: 100px;
+	padding-top: /*100*/70px;
     height: auto;
-    padding-bottom: 10px;
+    padding-bottom: 140px;
 }
 
 ul#main_list {
@@ -164,8 +165,8 @@ ul#main_list {
 }
 
 div#keyword_search  {
-	padding-top:20px;
-        width:70%;
+	/*padding-top:20px;*/
+        width:100%;
 }
 div#keyword_search ul{
 	list-style:none;
@@ -178,11 +179,12 @@ div#keyword_search ul{
 }
 div#keyword_search li {
 	float:left;
+	height:35px;
 }
 div#keyword_search input[type="text"] {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	font-size:16px;
-	width:740px;
+	width:/*740px*/80%;
 	height:30px;
 	margin-right:5px;
 	border: solid 2px;
@@ -191,12 +193,12 @@ div#keyword_search input[type="text"] {
 div#keyword_search input[type="text"]:focus {
 outline-width: 0;
 }
-#keywordsSubmit:focus{
+.keywordsSubmit:focus{
 outline-width: 0;
 }
 @media(max-width:1512px){
 div#keyword_search input[type="text"] {
-	width:480px;
+	width:/*480px*/80%;
 }}
 div#list_search {
 	position:relative;
@@ -235,13 +237,14 @@ div#list_search {
 	}
 
 
-div#loadingDiv {
-	width:30px;
+div.loadingDiv {
+	width:450px;
 	height:35px;
-	margin-left:-35px;
 	color:#D56048;
 	position:relative;
 	top:10px;
+	/*left:5px;*/
+	display:inline-block;
 }
 div#loadingNetworkDiv {
 	float:right;
@@ -267,8 +270,17 @@ div#loadingNetwork_Div {
 div#loadingNetwork_Div img {
 	float:right;
 }
-div#loadingDiv ul li{
+div.loadingDiv ul li{
 	padding-left:20px;
+}
+#explainer {
+	width:570px;
+	height:35px;
+	color:black;
+	position:relative;
+	top:-10px;
+	font-style:normal;
+	display:inline-block;
 }
 div#region_search_area li {
     list-style:none;
@@ -321,11 +333,12 @@ a[id="generateMultiGeneNetworkButton"] {
 	margin-top:40px;
 }
 
-/* New button to show CytoscapeJS Network Viewer. */
-/*#new_generateMultiGeneNetworkButton {
+/* New button to show the network in KnetMaps */
+#new_generateMultiGeneNetworkButton {
 	float:right;
-	margin:10px;
-}*/
+	margin-top:10px;
+	width:120px;
+}
 
 /*
 div#footer {
@@ -530,7 +543,7 @@ body:after{
 #legend_frame {border: solid 1px gray; padding: 10px; border-radius: 6px; margin-top: 30px;}*/
 
 /* General Styles */
-#wrapper {position:relative;margin:auto; min-height:100%;}
+#wrapper {/*position:relative;*/margin:auto; min-height:100%;}
 
 /* Header  */
 #header {position:relative;clear:left;}
@@ -550,13 +563,16 @@ body:after{
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	position: relative;
+	position: absolute; /* relative; */
     width: 100%;
-    height: 150px;
+    height: 130px;
+	bottom: 0;
+	right: 0;
+	left: 0;
 	}
 @media (max-width:1490px){
 	.contact-footer {
-		height:200px;
+		height:130px;
 	}
 }
 .contact-footer p {
@@ -570,7 +586,7 @@ body:after{
 .contact-footer ul li{
 	display:inline;
 	float:left;
-	padding-top:20px;
+	/*padding-top:20px;*/
 }
 .foot {
 		text-align:center;
@@ -655,8 +671,8 @@ a.contact-button :hover {
 .button_on a {color:#FFF;text-decoration:none;}
 .button_on:hover {background-color:grey;}
 #pGViewer {float:left;}
-#resultsTable {position:relative;padding-bottom:80px;margin:auto;width:90%;}
-#evidenceTable {position:relative;padding-bottom:80px; margin: auto; width: 90%;}
+#resultsTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
+#evidenceTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
 #tablesorterEvidence div{margin-left:19px;}
 #tablesorterEvidence div.evidence_item {margin-left:13px;}
 .margin_left {position:relative;}
@@ -665,14 +681,16 @@ a.contact-button :hover {
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
 /* Search bar */
-#search{position:relative; width: 70%; margin: auto;background-color:#F4F5F7;border:2px solid #2d2c2c;padding-bottom: 20px; border-radius:18px;
+#search{position:relative; width:70%; margin:auto; background-color:#F4F5F7; border:2px solid #2d2c2c;/*padding-bottom:20px;*/ border-radius:18px;
 	  -moz-border-radius:18px; 
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
+.knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ font-size:15px; cursor:pointer;}
+.knet_button:hover {color:white; background-color:darkgray;}
 #pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;color:white;}
 .preloader_bar {left:250px;position:relative;}
-#matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:15px; padding-top:15px;}
-#genemap-tab {position: relative;width: 90%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
+#matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:10px; padding-top:10px;}
+#genemap-tab {position: relative;width: 95%;height: 95%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
 
 #NetworkCanvas{position:relative;float:left;width: 95%/*850px*/; height: /*600*/640px; padding-bottom: /*70*/10px;}
 #Network_frame{border:none;}
@@ -870,5 +888,5 @@ a.contact-button :hover {
       
 
 #genemap {
-	height: 500px;/*450px;*/
+	height: 620px;/*450px;*/
 }

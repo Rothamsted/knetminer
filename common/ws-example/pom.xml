@@ -5,7 +5,7 @@
 
 	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 	<artifactId>ws-example</artifactId> <!-- Change me -->
-	<name>KnetMiner-example-WS</name> <!-- Change me -->
+	<name>KnetMiner Example WS</name> <!-- Change me -->
 	<packaging>war</packaging>
 
 	<parent>
