@@ -11,7 +11,6 @@ docker image build \
     	--build-arg keywords="boleracea, b.oleracea, knetminer, quickstart, demo" \
     	--build-arg description="Boleracea Knetminer" \
     	--build-arg reference_genome=true \
-  --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
   --build-arg oxl_file="BoleraceaKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
