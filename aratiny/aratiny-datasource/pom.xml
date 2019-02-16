@@ -12,22 +12,51 @@
 	<artifactId>aratiny-datasource</artifactId>
 	<packaging>jar</packaging>
 
+	<properties><knetminer.graphTraverserClass></knetminer.graphTraverserClass></properties>
+
 	<dependencies>
-		<!-- Choose the type of data source here -->
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-datasource-ondexlocal</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		<!-- End choice -->
 	</dependencies>
 	
 	<build>
+		
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		
+		<testResources>
+			<!-- These files contains Maven variables that need to be interpolated -->
+			<testResource>
+			  <directory>src/test/resources</directory>
+			  <filtering>true</filtering>
+			  <includes>
+			  	<include>data/neo4j-config/config.xml</include>
+			  </includes>
+			</testResource>
+			<!-- And the rest doesn't -->
+			<testResource>
+			  <directory>src/test/resources</directory>
+			  <filtering>false</filtering>
+			  <excludes>
+			  	<exclude>data/neo4j-config/config.xml</exclude>
+			  </excludes>
+			</testResource>		
+   	</testResources>		
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>neo4j</id>
+			<properties>
+				<knetminer.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.graphTraverserClass>
+			</properties>
+		</profile>
+	</profiles>
 </project>

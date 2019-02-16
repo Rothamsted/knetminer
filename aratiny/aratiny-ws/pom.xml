@@ -11,6 +11,7 @@
 	<artifactId>aratiny-ws</artifactId>
 	<packaging>war</packaging>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
@@ -23,9 +24,174 @@
 			<artifactId>aratiny-datasource</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jcl</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<finalName>aratiny-ws</finalName>
+		
+		<plugins>
+		
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+				
+			<plugin>
+			  <groupId>org.eclipse.jetty</groupId>
+			  <artifactId>jetty-maven-plugin</artifactId>
+			  <executions>
+			  	<execution>
+			  		<id>start</id>
+			  		<phase>pre-integration-test</phase>
+			  		<goals><goal>start</goal></goals>
+			  	</execution>
+			  	<execution>
+			  		<id>stop</id>
+			  		<phase>post-integration-test</phase>
+			  		<goals><goal>stop</goal></goals>
+			  	</execution>
+			  </executions>
+			  <configuration>
+	        <httpConnector>
+	          <port>${knetminer.api.httpPort}</port>
+	        </httpConnector>			    
+			    <webApp>
+			      <contextPath>/${knetminer.api.webContext}</contextPath>
+			    </webApp>
+			    <stopPort>9091</stopPort>
+			  </configuration>
+			</plugin>		
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>			
+		
+		</plugins>
 	</build>
+	
+	<profiles>
+		
+		<profile>
+			<id>neo4j</id>
+			<build>
+				<plugins>
+		  		<plugin>
+		  			<artifactId>maven-dependency-plugin</artifactId>	  			
+		  			<executions>
+		  				<execution>
+		  					<phase>generate-test-resources</phase>
+		  					<goals><goal>unpack</goal></goals>
+		  				</execution>
+		  			</executions>
+						<configuration>
+		        	<artifactItems>
+		        		<artifactItem>
+									<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+									<artifactId>test-data-server</artifactId>
+									<version>1.0-SNAPSHOT</version>
+									<includes>ara-tiny-neo4j.tar.bz2</includes>
+		        		</artifactItem>
+		        	</artifactItems>  						
+						</configuration>
+		  		</plugin>
+		  		
+					<!-- 
+						Unzip neo4j test DB downloaded by the dependency plugin. 
+						This happens after neo4j-server-maven-plugin below has downladed the 
+						Neo4j distribution. 
+					-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>process-test-resources</phase>
+								<goals><goal>run</goal></goals>
+								<configuration>
+									<tasks>
+										<untar 
+											src = "${project.build.directory}/dependency/ara-tiny-neo4j.tar.bz2" 
+											dest = "target/neo4j-server/neo4j-community-${neo4j.server.version}/data/databases"
+											compression = "bzip2"
+										/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>	
+				
+				  <!-- 
+						A small plug-in that starts Neo4j. 
+						
+						1.1 is the official version that integrated our improvements at
+						at https://github.com/Rothamsted/neo4j-server-maven-plugin 
+				  -->		  
+			    <plugin>
+				    <groupId>com.github.harti2006</groupId>
+					  <artifactId>neo4j-server-maven-plugin</artifactId>
+						<version>1.1</version>
+						<configuration>
+							<version>${neo4j.server.version}</version>
+							<port>${neo4j.server.httpPort}</port>
+							<boltPort>${neo4j.server.boltPort}</boltPort>
+							<serverReadyAttempts>120</serverReadyAttempts>
+							<!-- We have our own DB, see above -->
+							<deleteDb>false</deleteDb>					
+						</configuration>
+						<executions>
+							<!-- Start/stop just to download it before the ant/untar task above -->
+							<execution>
+								<id>neo4j-server-download</id>
+								<phase>generate-test-resources</phase>
+								<goals>
+									<goal>start</goal>
+									<goal>stop</goal>
+								</goals>
+								<configuration><deleteDb>true</deleteDb></configuration>
+							</execution>
+							<!-- 
+							  Regular start/stop, using the test DB downloaded by dependency plugin.
+							  
+							  Notes on hooked phases: the only way to control plugin exec order, when they're
+							  linked to the same phase, is to define them in the desired order in the POM. Unfortunately,
+							  this is not possible when the plug-in that should go first (Neo4) is in a profile, while the
+							  other (jetty) is in the main section. So, we use the (ugly) workaround of hooking neo4j to
+							  weird phases.
+							-->
+							<execution>
+								<id>start-neo4j-server</id>
+								<phase>prepare-package</phase>
+								<goals><goal>start</goal></goals>
+							</execution>
+							<execution>
+								<id>stop-neo4j-server</id>
+								<phase>verify</phase>
+								<goals><goal>stop</goal></goals>
+							</execution>					
+						</executions>		        
+			    </plugin>	
+				</plugins>
+			</build>		
+		</profile>
+	</profiles>
 </project>

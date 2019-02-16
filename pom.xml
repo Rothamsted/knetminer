@@ -194,6 +194,8 @@
 	</build>
 
 	<properties>
+		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
@@ -211,13 +213,13 @@
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
 		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
-		<springframework.version>4.3.0.RELEASE</springframework.version>
+		<springframework.version>4.3.6.RELEASE</springframework.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<jackson.library.version>2.7.5</jackson.library.version>
 		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
 		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
-		<junit.version>4.7</junit.version>
+		<junit.version>4.10</junit.version>
 		<json.version>20180130</json.version>
 		<ga.version>2.0.0</ga.version>
 	</properties>
@@ -286,8 +288,20 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<dependencyManagement>
+	<dependencyManagement>	
 		<dependencies>
+			<!-- The new backend, based on Neo4j -->
+			<dependency>
+				<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+				<artifactId>cypher-client</artifactId>
+				<version>${knetminer.backend.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>log4j-over-slf4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
@@ -313,16 +327,34 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>				
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -330,11 +362,12 @@
 				<version>${jackson.library.version}</version>
 			</dependency>
 
-			<dependency>
-				<groupId>net.sourceforge.ondex.core</groupId>
-				<artifactId>tools</artifactId>
-				<version>${ondex.version}</version>
-			</dependency>
+	    <dependency>
+	      <groupId>net.sourceforge.ondex.core</groupId>
+	      <artifactId>tools</artifactId>
+	      <version>${ondex.version}</version>
+	    </dependency>
+
 			<dependency>
 				<groupId>net.sourceforge.ondex.core</groupId>
 				<artifactId>workflow-api</artifactId>
@@ -406,10 +439,35 @@
 			</dependency>
 
 			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.6</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.brsanthu</groupId>
 				<artifactId>google-analytics-java</artifactId>
 				<version>${ga.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>uk.ac.ebi</groupId>
+				<artifactId>jutils</artifactId>
+				<version>7.0.1-SNAPSHOT</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.7</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+					  <artifactId>commons-logging</artifactId>
+					</exclusion>			
+				</exclusions>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
