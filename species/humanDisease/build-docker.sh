@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-humandisease"
+IMAGE_NAME="knetminer-humandisease-v3.0"
 
 cp ../../common/quickstart/Dockerfile-local .
 
