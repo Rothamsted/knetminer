@@ -1,89 +1,48 @@
-<hr>
-<!--<p id="knetminer-archived"><i>Old</i> KnetMiner Wheat (using <b>TGACv1.0</b> reference) archived and available: <strong><a href="http://knetminer.rothamsted.ac.uk/archive/Triticum_aestivum/" title="KnetMiner Wheat (archive)">HERE</a></strong>.</p> -->
-
-<p id="knetminer-version">KnetMiner <strong>version</strong> used: <a href="https://github.com/Rothamsted/knetminer/releases/tag/v2.0" title="KnetMiner release v2.0">v2.0</a>.</p>
-<hr>
+<p><strong>Ensembl Plants (Triticum aestivum)</strong></p>
 <ul>
-	<p><strong>Datasets used for integration</strong></p>
-	<ul>
-    	<li>Gene-Protein [Ensembl]</li>
-			<ul>
-				<li>RefSeq v1.0 High Confidence Genes</li>
-				<li>iwgsc_refseqv1.0_HighConf_2017Mar13.gff3</li>
-				<li>iwgsc_refseqv1.0_HighConf_PROTEIN_2017Mar13.fa</li>
-				<li>Concepts: 110,790 [Gene] | 137,052 [Protein]</li>
-				<li>Relations: 137,052 [encodes]</li>
-			</ul>
-		<li>Gene-SNP-Phenotype [T3]</li>
-			<ul>
-				<li>Wheat GWAS/QTL data for about 50 phenotypes</li>
-				<li>SNP markers were mapped to IWGSC RefSeq</li>
-				<li>Data was provided by Jean-Luc Janning and Clay Birkett and is available at <a href="https://triticeaetoolbox.org/wheat/" title="Triticeae Toolbox">Triticeae Toolbox</a></li>
-			</ul>
-		<li>Co-Expression [JIC]</li><!--Gene-[part_of]-CoExpCluster-[part_of]-CoExpStudy, CoExpCluster-[enriched_for]-GO/PO-->
-			<ul>
-				<li>Data provided by Cristobal Uauy and Philippa Borrill from John Innes Centre</li>
-				<li>WGCNA global network using 850 RNA-seq samples from diverse tissues, developmental stages, stresses and varieties</li>
-				<li>Enriched GO and Plant Ontology terms for each Co-Expression Cluster</li>
-				<li>Concepts: 54,402 [Gene] | 38 [CoExpCluster] | 1 [CoExpStudy] | 43 [BioProc] | 270 [PlantOntologyTerm]
-				<li>Relations: 2,582 [enriched_for] | 54,440 [part_of] 
-			</ul>
-		<li>Gene Regulation [JIC]</li><!-- Gene-[regulates]-Gene-->
-			<ul>
-				<li>Data provided by John Innes Centre</li>
-				<li>Top 1 million Genie3 transcription factor target predictions</li>
-				<li>3,384 Transcription Factors</li>
-				<li>Concepts: 75,725 [Gene]</li>
-				<li>Relations: 1,000,000 [regulates]</li>
-			</ul>
-		<li>TILLING SNP-Effects [Rothamsted]</li><!-- Gene-[has_mutant]-SNP-[leads_to]-SNPEffect-->
-			<ul>
-				<li>Data provided by Robert King from Rothamsted Research</li>
-				<li>Filter SNP effects for stop_gained, stop_lost and start_lost</li>
-				<li>Filter for High Confidence Genes</li>
-				<li>Concepts: 52,601 [Gene] | 145,973 [SNP] | 29 [SNPEffect]</li>
-				<li>Relations: 145,973 [has_mutant] | 145,973 [leads_to]
-			</ul>
-		<li>Gene Homeologs [IWGSC]</li><!--Gene-[homeolog]-Gene-->
-			<ul>
-				<li>Concepts: 114,495 [Gene]</li>
-				<li>Relations: 114,862 [homeolog]</li>
-			</ul>
-		<li>Gene-TraitOntology [Text-Mining]</li>
-			<ul>
-				<li>Gene-TO sentence based co-occurrences in PubMed abstracts</li>
-			</ul>
-		<li>Publications [PubMed]</li>
-			<ul>
-				<li>PubMed articles containing wheat OR triticum aestivum</li>
-				<li><a href="https://www.ncbi.nlm.nih.gov/pubmed?term=(((wheat)+NOT+wheat%5BAuthor%5D))+OR+triticum+aestivum">XML</a></li>
-				<li>54,783 PubMed abstracts</li>
-				<li>Filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
-			</ul>
-		<li>Ontologies</li>
-			<ul>
-				<li><a href="http://purl.obolibrary.org/obo/po.owl">Plant Ontology</a></li>
-			</ul>
-		<li>Homology [Decypher, Ensembl]</li>
-			<ul>
-				<li>Wheat-Arabidopsis homologs from <a href="http://plants.ensembl.org/">Ensembl</a></li>
-					<ul>
-						<li>Concepts: 79,314 [Protein]</li>
-						<li>Relations: 147,659 [orthologue]</li>
-					</ul>
-				<li>Sequence alignments to other Plants</li>
-					<ul>
-						<li>Wheat proteins aligned against plant proteins from UniProtKB-SP [Smith-Waterman]
-							<ul>
-								<li>Concepts: 65,370 [Protein]</li>
-								<li>Relations: 344,344 [h_s_S]</li>
-							</ul>
-					</ul>
-			</ul>
-		<li>References</li>
-			<ul>
-				<li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
-			</ul>
-  	</ul>
-	
+	<li>Gene-[enc]-Protein</li>
+	<li>Gene-[homoeolog]-Gene</li>
+	<li>Protein-[has]-Domain</li>
+	<li>Protein-[ortholog]-Protein (Wheat-Arabidopsis)</li>
+	<li>Protein-[xref]-Protein (ENSEMBL-UNIPROT mapping)</li>
 </ul>
+
+<p><strong>Designing Future Wheat</strong></p>
+<ul>
+	<li>Gene-[has_mutant]-SNP-(leads_to)-SNPEffect (TILLING data)</li>
+	<li>Gene-[regulates]-Gene (Genie3 on wheat-expression.com data)</li>
+	<li>Gene-[part_of]-CoExpCluster (WGCNA on wheat-expression.com data)</li>
+	<li>CoExpCluster-[enriched_for]-[GeneOntologyTerm]</li>
+	<li>CoExpCluster-[enriched_for]-[PlantOntologyTerm]</li>
+	<li>CoExpCluster-[part_of]-CoExpStudy</li>
+</ul>
+
+<p><strong>Triticeae Toolbox Database</strong></p>	
+<ul>
+	<li>Gene-[has_variation]-SNP-[associate_with]-Trait</li>
+</ul>
+
+<p><strong>PUBMED</strong></p>	
+<ul>
+	<li>Publication cotaining "wheat AND gene" in title/abstract</li>
+</ul>
+
+<p><strong>UNIPROTKB (Wheat, Plants)</strong></p>	
+<ul>
+	<li>Protein-[has_function]-MolecularFunction</li>
+	<li>Protein-[participates_in]-BiologicalProcess</li>
+	<li>Protein-[located_in]-CellularComponent</li>
+	<li>Protein-[pub_in]-Publication</li>
+	<li>Protein-[has]-EC</li>
+</ul>
+
+<p><strong>Made by KnetMiner</strong></p>	
+<ul>
+	<li>Gene-[occurs_in]-Publication</li>
+	<li>Gene-[cooc_with]-TraitOntology (sentence-level co-occurence)</li>
+	<li>Gene-[cooc_with]-CropOntology (sentence-level co-occurence)</li>
+	<li>Protein-[topn_alignment]-Protein (SmithWaterman: Wheat-Plants)</li>
+	<li>Putative wheat gene names from Arabidopsis ortholog or top UniProt hit</li>
+	<li>Arabidpsis Knowledge Network (see release notes for AraKnet)</li>
+</ul>
+
