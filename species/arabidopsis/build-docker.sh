@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="knetminer-ara"
+IMAGE_NAME="knetminer-arabidopsis"
 
 cp ../../common/quickstart/Dockerfile-local .
 
