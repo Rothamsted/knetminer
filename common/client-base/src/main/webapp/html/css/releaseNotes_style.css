@@ -36,7 +36,7 @@
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	padding-bottom:10px;
+	/*padding-bottom:10px;*/
 	position: absolute;
     width: 100%;
 	}
@@ -50,7 +50,7 @@
 .contact-footer ul li{
 	display:inline;
 	float:left;
-	padding-top:30px;
+	/*padding-top:30px;*/
 }
 .foot {
 		text-align:center;

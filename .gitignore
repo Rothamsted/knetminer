@@ -1,5 +1,6 @@
-.idea
+.elasticbeanstalk
 *.iml
+.idea
 bin/
 .tmp
 dist/
@@ -9,10 +10,9 @@ target/
 .classpath
 .project
 .settings
-dist/
 stderr.log
 stdout.log
-*swp
+*.swp
 .vagrant/
 common/client/nb-configuration.xml
 *.oxl

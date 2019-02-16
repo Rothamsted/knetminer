@@ -23,27 +23,11 @@
 		</license>
 	</licenses>
 
-	<modules>
+<!--	<modules>
 		<module>common</module>
-		<module>arabidopsis</module>
-		<module>barley</module>
-		<module>boleracea</module>
-		<module>chicken</module>
-		<module>cicer</module>
-		<module>cow</module>
-		<module>drosophilla</module>
-		<module>fungi</module>
-		<module>humanDisease</module>
-		<module>maize</module>
-		<module>pig</module>
-		<module>poplar</module>
-		<module>potato</module>
-		<module>rice</module>
-		<module>sviminalis</module>
-		<module>tomato</module>
-		<module>wheat</module>
-	</modules>
-
+		<module>species</module>
+	</modules> -->
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -219,6 +203,7 @@
 		<junit.version>4.7</junit.version>
 		<json.version>20180130</json.version>
 		<ga.version>2.0.0</ga.version>
+		<commons.version>2.6</commons.version>
 	</properties>
 
 	<profiles>
@@ -390,6 +375,11 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-web</artifactId>
 				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.version}</version>
 			</dependency>
 
 			<dependency>
