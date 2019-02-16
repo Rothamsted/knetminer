@@ -11,7 +11,6 @@ docker image build \
     	--build-arg keywords="zymoseptoria, z.tritici, knetminer, quickstart, demo" \
     	--build-arg description="Zymoseptoria Knetminer" \
     	--build-arg reference_genome=true \
-  --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
   --build-arg oxl_file="FungiKNET.oxl" \
   --build-arg knetminer_port=8082 \
   --squash -t $IMAGE_NAME \
