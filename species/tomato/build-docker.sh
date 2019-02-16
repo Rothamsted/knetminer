@@ -13,7 +13,7 @@ docker image build \
     	--build-arg description="Solanaceae Knetminer" \
     	--build-arg reference_genome=true \
 #    	--build-arg multiorganisms=true \ #
-  --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \
+#  --build-arg git_branch=`git branch | grep \* | cut -d ' ' -f2` \ #
   --build-arg oxl_file="SolKNET.oxl" \
   --build-arg knetminer_port=8080 \
   --squash -t $IMAGE_NAME \
