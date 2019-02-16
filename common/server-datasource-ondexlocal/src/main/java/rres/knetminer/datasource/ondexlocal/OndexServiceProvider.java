@@ -752,10 +752,10 @@ public class OndexServiceProvider {
 
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-                double distance = path_length==null ? 1 : (1 / path_length);
+                double distance = path_length==null ? 0 : (1 / path_length);
 
-                // multiply all three components to obtain a single evidence weight
-                double evidence_weight = igf * luceneScore * distance;
+                // take the mean of all three components 
+                double evidence_weight =  (igf + luceneScore + distance) / 3;
 
                 // sum of all evidence weights
                 weighted_evidence_sum += evidence_weight;
