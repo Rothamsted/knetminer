@@ -3035,7 +3035,7 @@ public class OndexServiceProvider {
 			if (!mapConcept2Genes.containsKey(lastConID)) {
 			    Set<Integer> setGenes = new HashSet<Integer>();
 			    setGenes.add(gene.getId());
-			    mapConcept2Genes.put(c.getId(), setGenes);
+			    mapConcept2Genes.put(lastConID, setGenes);
 			} else {
 			    mapConcept2Genes.get(lastConID).add(gene.getId());
 			}
