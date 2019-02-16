@@ -307,7 +307,10 @@ public class OndexServiceProvider {
                     } else if (conID.equalsIgnoreCase("Gene")) {
                         con_count = numGenesInGenome;
                     }
-                    sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+					// exclude "Thing" CC
+                    if(!conID.equalsIgnoreCase("Thing")) {
+					   sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+					  }
                 }
             }
             sb.append("</conceptClasses>\n");
