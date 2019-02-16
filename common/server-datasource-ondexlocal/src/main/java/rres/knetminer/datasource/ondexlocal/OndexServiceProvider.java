@@ -3012,7 +3012,13 @@ public class OndexServiceProvider {
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
-                    }
+                    }else{
+			    if(pathLength < mapGene2PathLength.get(gpl_key)){
+				    // update HashMap with shorter pathLength
+				    mapGene2PathLength.put(gpl_key, pathLength); 
+			    }
+			    
+		    }    
 
                     // GENE 2 CONCEPT
                     if (!mapGene2Concepts.containsKey(gene.getId())) {
