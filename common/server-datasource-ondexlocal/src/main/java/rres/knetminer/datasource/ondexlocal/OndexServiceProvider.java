@@ -3023,29 +3023,23 @@ public class OndexServiceProvider {
                     // GENE 2 CONCEPT
                     if (!mapGene2Concepts.containsKey(gene.getId())) {
                         Set<Integer> setConcepts = new HashSet<Integer>();
-                        for (ONDEXConcept c : concepts) {
-                            setConcepts.add(c.getId());
-                        }
+			setConcepts.add(lastConID);
                         mapGene2Concepts.put(gene.getId(), setConcepts);
                     } else {
-                        Set<Integer> setConcepts = new HashSet<Integer>();
-                        for (ONDEXConcept c : concepts) {
-                            setConcepts.add(c.getId());
-                        }
-                        mapGene2Concepts.get(gene.getId()).addAll(setConcepts);
+                        mapGene2Concepts.get(gene.getId()).add(lastConID);
                     }
 
                     // CONCEPT 2 GENE
                     concepts.remove(gene);
-                    for (ONDEXConcept c : concepts) {
-                        if (!mapConcept2Genes.containsKey(c.getId())) {
-                            Set<Integer> setGenes = new HashSet<Integer>();
-                            setGenes.add(gene.getId());
-                            mapConcept2Genes.put(c.getId(), setGenes);
-                        } else {
-                            mapConcept2Genes.get(c.getId()).add(gene.getId());
-                        }
-                    }
+                    
+			if (!mapConcept2Genes.containsKey(lastConID)) {
+			    Set<Integer> setGenes = new HashSet<Integer>();
+			    setGenes.add(gene.getId());
+			    mapConcept2Genes.put(c.getId(), setGenes);
+			} else {
+			    mapConcept2Genes.get(lastConID).add(gene.getId());
+			}
+                    
                 }
             }
             try {
