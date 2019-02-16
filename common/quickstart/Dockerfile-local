@@ -4,7 +4,7 @@ FROM andreptb/tomcat:7-jdk8
  
 # INSTRUCTIONS do not use directly. 
 # 1. Create a folder with the OXL file and other files referenced in the ARG statement below
-# 2. Copy this Dockerfile into that folder
+# 2. Copy this Dockerfile into that folder. Set git_repo and branch_name in line 48 below (as passing git parameters from build-docker.sh fails)
 # 2. Build with "docker image build --squash -t knetminer-myspecies -f Dockerfile-local [--build-arg varname=value -build-arg ...] .", specifying one build-arg parameter for each argument not provided with a default below or that you wish to override
 # 3. Run the resulting image with "docker run -p8080:8080 -it --rm knetminer-myspecies". You can access it at http://localhost:8080/client/
 
