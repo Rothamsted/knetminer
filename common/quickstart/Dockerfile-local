@@ -36,17 +36,17 @@ ARG knetminer_port
 EXPOSE ${knetminer_port}
 
 WORKDIR /root
-ENV ds=/root/KnetMiner/common/quickstart/datasource/src/main \
-    cl=/root/KnetMiner/common/quickstart/client/src/main/webapp/html \
+ENV ds=/root/knetminer/common/quickstart/datasource/src/main \
+    cl=/root/knetminer/common/quickstart/client/src/main/webapp/html \
 	tc=/usr/local/tomcat/conf/ \
-    common=/root/KnetMiner/common
+    common=/root/knetminer/common
 
 RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
- && git clone --single-branch -b 201902_dev_ui_deploy https://github.com/AjitPS/KnetMiner.git \
- && cd KnetMiner \
+ && git clone --single-branch -b knetminer-3.0 https://github.com/Rothamsted/knetminer.git \
+ && cd knetminer \
  && mkdir -p ${cl}/data ${cl}/image 
 
 COPY ${oxl_file} /root/data.oxl
@@ -56,7 +56,7 @@ COPY ${sample_query_file} ${cl}/data/sampleQuery.xml
 COPY ${background_image_file} ${cl}/image/background.jpg 
 COPY ${release_notes_file} ${cl}/release_notes.html 
 
-RUN cd KnetMiner \
+RUN cd knetminer \
  && mv ${ds}/resources/config.xml.template ${ds}/resources/config.xml \
  && mv ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java.template ${ds}/java/rres/knetminer/datasource/provider/Quickstart.java \
  && mv ${cl}/release.html.template ${cl}/release.html \
@@ -91,6 +91,6 @@ RUN cd KnetMiner \
  && mvn install \
  && mv ${common}/quickstart/client/target/client.war ${CATALINA_HOME}/webapps \
  && mv ${common}/quickstart/ws/target/ws.war ${CATALINA_HOME}/webapps \
- && rm -rf /root/.m2 /root/KnetMiner
+ && rm -rf /root/.m2 /root/knetminer
 
 CMD ["catalina.sh", "run"]
