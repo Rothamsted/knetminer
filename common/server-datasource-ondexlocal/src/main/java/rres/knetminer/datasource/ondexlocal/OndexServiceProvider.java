@@ -762,7 +762,10 @@ public class OndexServiceProvider {
             }
 
             // the inverse size of the gene knoweldge graph
-            double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+            // double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+		
+		//size of all hit concepts
+		double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
 
             // normalise weighted sum with by the size of the gene knowledge graph
             double knetScore = normFactor * weighted_evidence_sum;
@@ -3003,15 +3006,17 @@ public class OndexServiceProvider {
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
 
+			
                     // add all semantic motifs to the new graph
-                    Set<ONDEXConcept> concepts = path.getAllConcepts();
+                    // Set<ONDEXConcept> concepts = path.getAllConcepts();
 
                     // Extract pathLength and endNode ID.
                     int pathLength = (path.getLength() - 1) / 2; // get Path Length
                     ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder()
                             .get(path.getConceptsInPositionOrder().size() - 1);
                     int lastConID = con.getId(); // endNode ID.
-                    String gpl_key = String.valueOf(gene.getId()) + "//" + String.valueOf(lastConID);
+                    String gpl_key = gene.getId() + "//" + lastConID;
+			
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
@@ -3033,7 +3038,7 @@ public class OndexServiceProvider {
                     }
 
                     // CONCEPT 2 GENE
-                    concepts.remove(gene);
+                    // concepts.remove(gene);
                     
 			if (!mapConcept2Genes.containsKey(lastConID)) {
 			    Set<Integer> setGenes = new HashSet<Integer>();
