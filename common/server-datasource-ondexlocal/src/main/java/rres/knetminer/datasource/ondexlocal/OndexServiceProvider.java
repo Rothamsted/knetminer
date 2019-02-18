@@ -753,7 +753,7 @@ public class OndexServiceProvider {
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
 		    if(path_length==null){
-		    	System.out.println("WARNING: Path length is null for"+geneId + "//" + cId);
+		    	System.out.println("WARNING: Path length is null for: "+geneId + "//" + cId);
 		    }
                 double distance = path_length==null ? 0 : (1 / path_length);
 
@@ -771,7 +771,7 @@ public class OndexServiceProvider {
 		//double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
 
             // normalise weighted sum with by the size of the gene knowledge graph
-            double knetScore = /*normFactor*/ * weighted_evidence_sum;
+            double knetScore = /*normFactor * */ weighted_evidence_sum;
 
             scoredCandidates.put(graph.getConcept(geneId), knetScore);
         }
