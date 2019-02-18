@@ -753,7 +753,7 @@ public class OndexServiceProvider {
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
 		    if(path_length==null){
-		    	System.out.println("WARNING: Path length is null for: "+geneId + "//" + cId);
+		    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
 		    }
                 double distance = path_length==null ? 0 : (1 / path_length);
 
@@ -764,13 +764,16 @@ public class OndexServiceProvider {
                 weighted_evidence_sum += evidence_weight;
             }
 
-            // the inverse size of the gene knoweldge graph
-            // double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+
+            	// normalisation method 1: size of the gene knoweldge graph
+            	// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
 		
-		//size of all hit concepts
+		// normalistion method 2: size of matching evidence concepts only (mean score)
 		//double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
 
-            // normalise weighted sum with by the size of the gene knowledge graph
+           	
+		// No normalisation for now as it's too experimental. 
+		// This meeans better studied genes will appear top of the list
             double knetScore = /*normFactor * */ weighted_evidence_sum;
 
             scoredCandidates.put(graph.getConcept(geneId), knetScore);
