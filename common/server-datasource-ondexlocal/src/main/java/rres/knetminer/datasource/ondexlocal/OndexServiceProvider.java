@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -23,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +42,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 import net.sourceforge.ondex.core.Attribute;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -82,6 +85,7 @@ import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
+import rres.knetminer.datasource.ondexlocal.FisherExact;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -185,7 +189,7 @@ public class OndexServiceProvider {
 		graph = new MemoryONDEXGraph("OndexKB");
 
 		loadOndexKBGraph(graphFileName);
-		indexOndexGraph(dataPath);
+    indexOndexGraph(graphFileName, dataPath);
 		
 		gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
 
@@ -195,7 +199,7 @@ public class OndexServiceProvider {
 		gt.setOption ( "ONDEXGraph", graph );
 		gt.setOption ( "LuceneEnv", lenv );
 
-		populateHashMaps(dataPath);
+		populateHashMaps(graphFileName, dataPath);
 
 		// determine number of genes in given species (taxid)
 		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
@@ -307,7 +311,10 @@ public class OndexServiceProvider {
 					} else if (conID.equalsIgnoreCase("Gene")) {
 						con_count = numGenesInGenome;
 					}
-					sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+					// exclude "Thing" CC
+          if(!conID.equalsIgnoreCase("Thing")) {
+   sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+  }					
 				}
 			}
 			sb.append("</conceptClasses>\n");
@@ -357,30 +364,33 @@ public class OndexServiceProvider {
 	/**
 	 * Indexes Ondex Graph
 	 */
-	private void indexOndexGraph(String dataPath) {
-		try {
-			// index the Ondex graph
-			File file = null;
-			file = Paths.get(dataPath, "index").toFile();
-			log.debug("Building Lucene Index: " + file.getAbsolutePath());
-			if (!file.exists())
-				lenv = new LuceneEnv(file.getAbsolutePath(), true);
-			else
-				lenv = new LuceneEnv(file.getAbsolutePath(), false);
-			lenv.setONDEXGraph(graph);
-			log.debug("Lucene Index created");
-		} catch (Exception e) {
-			log.error("Faild to load graph index", e);
-		}
-	}
+  private void indexOndexGraph(String graphFileName, String dataPath) {
+    try {
+        // index the Ondex graph
+        File graphFile = new File(graphFileName);
+        File indexFile = Paths.get(dataPath, "index").toFile();
+        if (indexFile.exists() && (indexFile.lastModified() < graphFile.lastModified())) {
+            log.info("Graph file updated since index last built, deleting old index");
+            FileUtils.deleteDirectory(indexFile);
+        }
+        log.debug("Building Lucene Index: " + indexFile.getAbsolutePath());
+        if (!indexFile.exists())
+            lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
+        else
+            lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
+        lenv.setONDEXGraph(graph);
+        log.debug("Lucene Index created");
+    } catch (Exception e) {
+        log.error("Faild to load graph index", e);
+    }
+}
 
 
 	/**
 	 * Export the Ondex graph to file system as a .oxl file and also in JSON format
 	 * using the new JSON Exporter plugin in Ondex.
 	 * 
-	 * @param ONDEXGraph
-	 *            graph
+	 * @param ONDEXGraph graph
 	 * @throws InvalidPluginArgumentException
 	 */
 	public String exportGraph(ONDEXGraph og) throws InvalidPluginArgumentException {
@@ -483,8 +493,7 @@ public class OndexServiceProvider {
 	/**
 	 * Creates a new keyword for finding the NOT list
 	 * 
-	 * @param keyword
-	 *            original keyword
+   * @param keyword original keyword
 	 * @return new keyword for searching the NOT list
 	 */
 	private String createsNotList(String keyword) {
@@ -519,10 +528,8 @@ public class OndexServiceProvider {
 	/**
 	 * Merge two maps using the greater scores
 	 * 
-	 * @param hit2score
-	 *            map that holds all hits and scores
-	 * @param sHits
-	 *            map that holds search results
+   * @param hit2score map that holds all hits and scores
+   * @param sHits     map that holds search results
 	 */
 	private void mergeHits(HashMap<ONDEXConcept, Float> hit2score, ScoredHits<ONDEXConcept> sHits,
 			ScoredHits<ONDEXConcept> NOTHits) {
@@ -544,129 +551,143 @@ public class OndexServiceProvider {
 		}
 	}
 
-	/**
-	 * Search for concepts in OndexKB which contain the keyword and find genes
-	 * connected to them.
-	 * 
-	 * @param keyword
-	 *            user-specified keyword
-	 * @return set of genes related to the keyword
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public HashMap<ONDEXConcept, Float> searchLucene(String keywords) throws IOException, ParseException {
+  /**
+   * Search for concepts in OndexKB which contain the keyword and find genes
+   * connected to them.
+   *
+   * @param keyword user-specified keyword
+   * @return set of genes related to the keyword
+   * @throws IOException
+   * @throws ParseException
+   */
+  public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications) throws IOException, ParseException {
 
-		Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
-		String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
-				"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" };
-		// sources identified in KNETviewer
-		/*
-		 * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY",
-		 * "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT",
-		 * "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB",
-		 * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
-		 * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
-		 */
-		Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
+      Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
+      String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
+              "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
+      // sources identified in KNETviewer
+      /*
+       * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY",
+       * "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT",
+       * "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB",
+       * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
+       * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
+       */
+      Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 
-		HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
+      HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 
-		// Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Analyzer analyzer = new StandardAnalyzer();
+      if ("".equals(keywords) || keywords == null) {
+          log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
+          if (geneList != null) {
+              for (ONDEXConcept gene : geneList) {
+                  for (int conceptId : mapGene2Concepts.get(gene.getId())) {
+                      ONDEXConcept concept = graph.getConcept(conceptId);
+                      if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+                          hit2score.put(concept, 1.0f);
+                      }
+                  }
+              }
+          }
+          return hit2score;
+      }
 
-		String keyword = keywords;
+      // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+      Analyzer analyzer = new StandardAnalyzer();
 
-		// creates the NOT list (list of all the forbidden documents)
-		String NOTQuery = createsNotList(keyword);
-		String crossTypesNotQuery = "";
-		ScoredHits<ONDEXConcept> NOTList = null;
-		if (NOTQuery != "") {
-			crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
-					+ NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
-					+ NOTQuery + ")";
-			String fieldNameNQ = getFieldName("ConceptName", null);
-			// QueryParser parserNQ = new QueryParser(Version.LUCENE_36, fieldNameNQ,
-			// analyzer);
-			QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
-			Query qNQ = parserNQ.parse(crossTypesNotQuery);
-			NOTList = lenv.searchTopConcepts(qNQ, 2000);
-		}
+      String keyword = keywords;
 
-		// number of top concepts retrieved for each Lucene field
-		/*
-		 * increased for now from 500 to 1500, until Lucene code is ported from Ondex to
-		 * QTLNetMiner, when we'll make changes to the QueryParser code instead.
-		 */
-		int max_concepts = 2000/* 500 */;
+      // creates the NOT list (list of all the forbidden documents)
+      String NOTQuery = createsNotList(keyword);
+      String crossTypesNotQuery = "";
+      ScoredHits<ONDEXConcept> NOTList = null;
+      if (NOTQuery != "") {
+          crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
+                  + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
+                  + NOTQuery + ")";
+          String fieldNameNQ = getFieldName("ConceptName", null);
+          // QueryParser parserNQ = new QueryParser(Version.LUCENE_36, fieldNameNQ,
+          // analyzer);
+          QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
+          Query qNQ = parserNQ.parse(crossTypesNotQuery);
+          NOTList = lenv.searchTopConcepts(qNQ, 2000);
+      }
 
-		// search concept attributes
-		for (AttributeName att : atts) {
-			// Query qAtt =
-			// LuceneQueryBuilder.searchConceptByConceptAttributeExact(att,
-			// keyword);
-			// ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt,
-			// 100);
-			// mergeHits(hit2score, sHits);
+      // number of top concepts retrieved for each Lucene field
+      /*
+       * increased for now from 500 to 1500, until Lucene code is ported from Ondex to
+       * QTLNetMiner, when we'll make changes to the QueryParser code instead.
+       */
+      int max_concepts = 2000/* 500 */;
 
-			String fieldName = getFieldName("ConceptAttribute", att.getId());
-			// QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
-			QueryParser parser = new QueryParser(fieldName, analyzer);
-			Query qAtt = parser.parse(keyword);
-			ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
-			mergeHits(hit2score, sHits, NOTList);
+      // search concept attributes
+      for (AttributeName att : atts) {
+          // Query qAtt =
+          // LuceneQueryBuilder.searchConceptByConceptAttributeExact(att,
+          // keyword);
+          // ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt,
+          // 100);
+          // mergeHits(hit2score, sHits);
 
-		}
-		for (String dsAc : dsAcc) {
-			// search concept accessions
-			// Query qAccessions =
-			// LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
-			// false, dsAcc);
-			String fieldName = getFieldName("ConceptAccessions", dsAc);
-			// QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
-			QueryParser parser = new QueryParser(fieldName, analyzer);
-			Query qAccessions = parser.parse(keyword);
-			ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
-			mergeHits(hit2score, sHitsAcc, NOTList);
-		}
+          String fieldName = getFieldName("ConceptAttribute", att.getId());
+          // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
+          QueryParser parser = new QueryParser(fieldName, analyzer);
+          Query qAtt = parser.parse(keyword);
+          ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
+          mergeHits(hit2score, sHits, NOTList);
 
-		// search concept names
-		// Query qNames =
-		// LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
-		String fieldNameCN = getFieldName("ConceptName", null);
-		// QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
-		// analyzer);
-		QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
-		Query qNames = parserCN.parse(keyword);
-		ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
-		mergeHits(hit2score, sHitsNames, NOTList);
+      }
+      for (String dsAc : dsAcc) {
+          // search concept accessions
+          // Query qAccessions =
+          // LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
+          // false, dsAcc);
+          String fieldName = getFieldName("ConceptAccessions", dsAc);
+          // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
+          QueryParser parser = new QueryParser(fieldName, analyzer);
+          Query qAccessions = parser.parse(keyword);
+          ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
+          mergeHits(hit2score, sHitsAcc, NOTList);
+      }
 
-		// search concept description
-		// Query qDesc =
-		// LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
-		String fieldNameD = getFieldName("Description", null);
-		// QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD,
-		// analyzer);
-		QueryParser parserD = new QueryParser(fieldNameD, analyzer);
-		Query qDesc = parserD.parse(keyword);
-		ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
-		mergeHits(hit2score, sHitsDesc, NOTList);
+      // search concept names
+      // Query qNames =
+      // LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
+      String fieldNameCN = getFieldName("ConceptName", null);
+      // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
+      // analyzer);
+      QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
+      Query qNames = parserCN.parse(keyword);
+      ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
+      mergeHits(hit2score, sHitsNames, NOTList);
 
-		// search concept annotation
-		// Query qAnno =
-		// LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
-		String fieldNameCA = getFieldName("Annotation", null);
-		// QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA,
-		// analyzer);
-		QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
-		Query qAnno = parserCA.parse(keyword);
-		ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
-		mergeHits(hit2score, sHitsAnno, NOTList);
+      // search concept description
+      // Query qDesc =
+      // LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
+      String fieldNameD = getFieldName("Description", null);
+      // QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD,
+      // analyzer);
+      QueryParser parserD = new QueryParser(fieldNameD, analyzer);
+      Query qDesc = parserD.parse(keyword);
+      ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
+      mergeHits(hit2score, sHitsDesc, NOTList);
 
-		log.info("Query: " + qAnno.toString(fieldNameCA));
-		//log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
+      // search concept annotation
+      // Query qAnno =
+      // LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
+      String fieldNameCA = getFieldName("Annotation", null);
+      // QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA,
+      // analyzer);
+      QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
+      Query qAnno = parserCA.parse(keyword);
+      ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
+      mergeHits(hit2score, sHitsAnno, NOTList);
 
-		return hit2score;
-	}
+      log.info("Query: " + qAnno.toString(fieldNameCA));
+      log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
+
+      return hit2score;
+  }
 
 	public ArrayList<ONDEXConcept> getScoredGenes(Map<ONDEXConcept, Float> hit2score) throws IOException {
 		return new ArrayList<ONDEXConcept>(this.getScoredGenesMap(hit2score).keySet());
@@ -714,7 +735,8 @@ public class OndexServiceProvider {
 				double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
 
 				// inverse distance from gene to evidence
-				int distance = 1 / mapGene2PathLength.get(geneId + "//" + cId);
+        Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
+        double distance = path_length==null ? 1 : (1 / path_length);
 
 				// multiply all three components to obtain a single evidence weight
 				double evidence_weight = igf * luceneScore * distance;
@@ -771,9 +793,8 @@ public class OndexServiceProvider {
 	/**
 	 * Did you mean function for spelling correction
 	 * 
-	 * @param String
-	 *            keyword
-	 * @return list of spell corrected words
+   * @param String keyword
+   * @return list of spell corrected words
 	 */
 	public List<String> didyoumean(String keyword) throws ParseException {
 		List<String> alternatives = new ArrayList<String>();
@@ -781,88 +802,88 @@ public class OndexServiceProvider {
 		return alternatives;
 	}
 
-	/**
-	 * Searches for genes within genomic regions (QTLs)
-	 * 
-	 * @param List<QTL>
-	 *            qtls
-	 * 
-	 * @return Set<ONDEXConcept> concepts
-	 */
-	public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr) {
-            log.info("qtlsStr: "+ qtlsStr); // qtl string
-		Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();
+  /**
+   * Searches for genes within genomic regions (QTLs)
+   *
+   * @param List<String> qtlsStr
+   * @return Set<ONDEXConcept> concepts
+   */
+  public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr) {
+      log.info("qtlsStr: " + qtlsStr); // qtl string
+      Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();
 
-                // convert List<String> qtlStr to List<QTL> qtls
-		List<QTL> qtls = new ArrayList<QTL>();
-		for (String qtlStr : qtlsStr) {
-			qtls.add(QTL.fromString(qtlStr));
-		}
-		
-		String chrQTL;
-		int startQTL, endQTL;
-		for (QTL qtl : qtls) {
-			try {
-				chrQTL = qtl.getChromosome();
-				startQTL = qtl.getStart();
-				endQTL = qtl.getEnd();
-                                log.info("user QTL (chr, start, end): "+ chrQTL +" , "+ startQTL +" , "+ endQTL);
-				// swap start with stop if start larger than stop
-				if (startQTL > endQTL) {
-					int tmp = startQTL;
-					startQTL = endQTL;
-					endQTL = tmp;
-				}
-				ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
-				AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
-				AttributeName attCM = graph.getMetaData().getAttributeName("cM");
-				AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-				// AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
-				AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
-				Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
-                                log.info("genes matched from entire network: "+ genes.size());
+      // convert List<String> qtlStr to List<QTL> qtls
+      List<QTL> qtls = new ArrayList<QTL>();
+      for (String qtlStr : qtlsStr) {
+          qtls.add(QTL.fromString(qtlStr));
+      }
 
-				for (ONDEXConcept c : genes) {
-					String chrGene = null;
-					int startGene = 0;
-					if (c.getAttribute(attTAXID) == null
-							|| !taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
-						continue;
-					}
-					if (c.getAttribute(attChromosome) != null) {
-						chrGene = c.getAttribute(attChromosome).getValue().toString();
-					}
-					// TEMPORARY FIX, to be disabled for new .oxl species networks that have string
-					// 'Chromosome' (instead of the older integer Chromosome) & don't have a string
-					// 'Location' attribute.
-					/*
-					 * if(c.getAttribute(attLoc) != null) { // if String Location exists, use that
-					 * instead of integer Chromosome as client-side may use String Location in
-					 * basemap. chrGene= c.getAttribute(attLoc).getValue().toString(); }
-					 */
+      String chrQTL;
+      int startQTL, endQTL;
+      for (QTL qtl : qtls) {
+          try {
+              chrQTL = qtl.getChromosome();
+              startQTL = qtl.getStart();
+              endQTL = qtl.getEnd();
+              log.info("user QTL (chr, start, end): " + chrQTL + " , " + startQTL + " , " + endQTL);
+              // swap start with stop if start larger than stop
+              if (startQTL > endQTL) {
+                  int tmp = startQTL;
+                  startQTL = endQTL;
+                  endQTL = tmp;
+              }
+              ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
+              AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
+              AttributeName attCM = graph.getMetaData().getAttributeName("cM");
+              AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+              // AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
+              AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
+              Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
+              log.info("genes matched from entire network: " + genes.size());
 
-					/*if (attCM != null) {
-						if (c.getAttribute(attCM) != null) {
-							startGene = (Double) c.getAttribute(attCM).getValue();
-						}
-					} else*/ if (c.getAttribute(attBegin) != null) {
-						startGene = /*(double)*/ ((Integer) c.getAttribute(attBegin).getValue());
-					}
-					if (chrGene != null && startGene != 0) {
-                                            //log.info("Gene (chr, start) found: "+ chrGene +","+ startGene);
-						if (chrQTL.equals(chrGene)) {
-                                                    if ((startGene >= startQTL) && (startGene <= endQTL)) {
-							concepts.add(c);
-						}}
+              for (ONDEXConcept c : genes) {
+                  String chrGene = null;
+                  int startGene = 0;
+                  if (c.getAttribute(attTAXID) == null
+                          || !taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
+                      continue;
+                  }
+                  if (c.getAttribute(attChromosome) != null) {
+                      chrGene = c.getAttribute(attChromosome).getValue().toString();
+                  }
+                  // TEMPORARY FIX, to be disabled for new .oxl species networks that have string
+                  // 'Chromosome' (instead of the older integer Chromosome) & don't have a string
+                  // 'Location' attribute.
+                  /*
+                   * if(c.getAttribute(attLoc) != null) { // if String Location exists, use that
+                   * instead of integer Chromosome as client-side may use String Location in
+                   * basemap. chrGene= c.getAttribute(attLoc).getValue().toString(); }
+                   */
 
+				/*if (attCM != null) {
+					if (c.getAttribute(attCM) != null) {
+						startGene = (Double) c.getAttribute(attCM).getValue();
 					}
-				}
-			} catch (Exception e) {
-				log.error("Not valid qtl", e);
-			}
-		}
-		return concepts;
-	}
+				} else*/
+                  if (c.getAttribute(attBegin) != null) {
+                      startGene = /*(double)*/ ((Integer) c.getAttribute(attBegin).getValue());
+                  }
+                  if (chrGene != null && startGene != 0) {
+                      //log.info("Gene (chr, start) found: "+ chrGene +","+ startGene);
+                      if (chrQTL.equals(chrGene)) {
+                          if ((startGene >= startQTL) && (startGene <= endQTL)) {
+                              concepts.add(c);
+                          }
+                      }
+
+                  }
+              }
+          } catch (Exception e) {
+              log.error("Not valid qtl", e);
+          }
+      }
+      return concepts;
+  }
 
 	/**
 	 * Searches the knowledge base for QTL concepts that match any of the user input
@@ -992,8 +1013,7 @@ public class OndexServiceProvider {
 	 * Semantic Motif Search for list of genes
 	 * 
 	 * @param accessions
-	 * @param regex
-	 *            trait-related
+   * @param regex      trait-related
 	 * @return OndexGraph containing the gene network
 	 */
 	public ONDEXGraph getGenes(Integer[] ids, String regex) {
@@ -1016,8 +1036,7 @@ public class OndexServiceProvider {
 	/**
 	 * Searches for ONDEXConcepts with the given accessions in the OndexGraph.
 	 * 
-	 * @param List<String>
-	 *            accessions
+   * @param List<String> accessions
 	 * @return Set<ONDEXConcept>
 	 */
 	public Set<ONDEXConcept> searchGenes(List<String> accessions) {
@@ -1057,57 +1076,52 @@ public class OndexServiceProvider {
 	 * @param evidenceOndexId
 	 * @return subGraph
 	 */
-	public ONDEXGraph evidencePath(Integer evidenceOndexId) {
-		log.debug("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
-		// Searches genes related to the evidenceID
-		Set<Integer> relatedGenes = mapConcept2Genes.get(evidenceOndexId);
-		Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
-		for (Integer rg : relatedGenes) {
-			relatedONDEXConcepts.add(graph.getConcept(rg));
-		}
+  public ONDEXGraph evidencePath(Integer evidenceOndexId, Set<ONDEXConcept> genes) {
+    log.info("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
+    // Searches genes related to the evidenceID. If user genes provided, only include those.
+    Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
+    for (Integer rg : mapConcept2Genes.get(evidenceOndexId)) {
+        ONDEXConcept gene = graph.getConcept(rg);
+        if (genes==null || genes.isEmpty() || genes.contains(gene)) {
+            relatedONDEXConcepts.add(gene);
+        }
+    }
 
-		// the results give us a map of every starting concept to every valid
-		// path
-		Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);
+    // the results give us a map of every starting concept to every valid
+    // path
+    Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);
 
-		// create new graph to return
-		ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
-		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
-		ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
-		// Highlights the right path and hides the path that doesn't leads to
-		// the evidence
-		for (List<EvidencePathNode> paths : results.values()) {
-			for (EvidencePathNode path : paths) {
-				Set<ONDEXConcept> concepts = path.getAllConcepts();
-				for (ONDEXConcept c : concepts) {
-					graphCloner.cloneConcept(c);
-				}
-				// search last concept of semantic motif for keyword
-				int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-				ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-				if (lastCon.getId() == evidenceOndexId) {
-					highlightPath(path, graphCloner);
-				} else {
-					// hidePath(path,graphCloner);
-				}
-			}
-		}
-		ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
+    // create new graph to return
+    ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
+    ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
+    ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
+    // Highlights the right path and hides the path that doesn't leads to
+    // the evidence
+    for (List<EvidencePathNode> paths : results.values()) {
+        for (EvidencePathNode path : paths) {
+            // search last concept of semantic motif for keyword
+            int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
+            ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+            if (lastCon.getId() == evidenceOndexId) {
+                highlightPath(path, graphCloner);
+            } else {
+                //hidePath(path,graphCloner);
+            }
+        }
+    }
+    ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
 
-		return subGraph;
-	}
+    return subGraph;
+  }
 
-	/**
-	 * Tests if there is a match of this query within the search string
-	 *
-	 * @param p
-	 *            the pattern (if null then literal match .contains is used)
-	 * @param query
-	 *            the query to match
-	 * @param target
-	 *            the target to match to
-	 * @return is there a match
-	 */
+  /**
+   * Tests if there is a match of this query within the search string
+   *
+   * @param p      the pattern (if null then literal match .contains is used)
+   * @param query  the query to match
+   * @param target the target to match to
+   * @return is there a match
+   */
 	private boolean isMatching(Pattern p, String target) {
 		return p.matcher(target).find(0);
 	}
@@ -1163,431 +1177,468 @@ public class OndexServiceProvider {
 	 * @param search
 	 * @return true if one of the concept fields contains the query
 	 */
-	private boolean highlight(ONDEXConcept concept, Map<String,String> keywordColourMap) {
-//			System.out.println("Original keyword: "+regex);
-		boolean found = false;
-
-		String pid = concept.getPID();
-		String anno = concept.getAnnotation();
-		String desc = concept.getDescription();
-
-		//Searches and highlights for every key word of regex
-		for (String key : keywordColourMap.keySet()) {
-
-			Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
-			String highlighter = "<span style=\"background-color:"+keywordColourMap.get(key)+"\"><b>$0</b></span>";
-
-			//Searchs in pid
-			if(pid.contains(key)){
-				found = true;
-			}
-
-			//Searchs in annotations
-			if(this.isMatching(p, anno)){
-				found = true;
-				// search and replace all matching expressions
-				String newAnno = p.matcher(anno).replaceAll(highlighter);
-				concept.setAnnotation(newAnno);
-			}
-
-			//Searchs in descriptions
-			if(this.isMatching(p, desc)){
-				found = true;
-				// search and replace all matching expressions
-				String newDesc = p.matcher(desc).replaceAll(highlighter);
-				concept.setDescription(newDesc);
-			}
-
-			// search in concept names
-			HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
-			for (ConceptName cno : concept.getConceptNames()) {
-				String cn = cno.getName();
-				if(this.isMatching(p, cn)){
-					found = true;
-					//Saves the conceptNames we want to update
-					namesToCreate.put(cn, cno.isPreferred());
-				}
-			}
-			//For each conceptName of the update list deletes and creates a new conceptName
-			for (String ntc : namesToCreate.keySet()) {
-				if(!ntc.contains("</span>")) {
-					String newName = p.matcher(ntc).replaceAll(highlighter);
-					boolean isPref = namesToCreate.get(ntc);
-					concept.deleteConceptName(ntc);
-					concept.createConceptName(newName, isPref);
-				}
-			}
-
-
-			// search in concept accessions
-			for (ConceptAccession ca : concept.getConceptAccessions()) {
-				String accession = ca.getAccession();
-				if(this.isMatching(p, accession)){
-					found = true;
-				}
-			}
-
-			// search in concept attributes
-			for (Attribute attribute : concept.getAttributes()) {
-				if(!(attribute.getOfType().getId().equals("AA")) ||
-						!(attribute.getOfType().getId().equals("NA")) ||
-						!(attribute.getOfType().getId().startsWith("AA_")) ||
-						!(attribute.getOfType().getId().startsWith("NA_"))){
-					String value = attribute.getValue().toString();
-					if(this.isMatching(p, value)){
-						found = true;
-						// search and replace all matching expressions
-						Matcher m = p.matcher(value);
-						String newAttStr = m.replaceAll(highlighter);
-						attribute.setValue(newAttStr);
-					}
-
-				}
-			}
-		}
-		return found;
-	}
-
-	/**
-	 * Searches with Lucene for documents, finds semantic motifs and by crossing
-	 * this data makes concepts visible, changes the size and highlight the hits
-	 * 
-	 * @param seed
-	 *            List of selected genes
-	 * @param keyword
-	 * @return subGraph
-	 */
-	public ONDEXGraph findSemanticMotifs(Set<ONDEXConcept> seed, String keyword) {
-		log.debug("Method findSemanticMotifs - keyword: " + keyword);
-		// Searches with Lucene: luceneResults
-		HashMap<ONDEXConcept, Float> luceneResults = null;
-		try {
-			luceneResults = searchLucene(keyword);
-                        log.info("Number of Lucene documents found: " + luceneResults.keySet().size());
-		} catch (Exception e) {
-			log.error("Lucene search failed", e);
-		}
-
-		// the results give us a map of every starting concept to every valid
-		// path
-		Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
-
-		Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
-		Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
-
-		log.info("Keyword is: " + keyword);
-		Set<String> keywords = keyword==null ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
-		Map<String,String> keywordColourMap = new HashMap<String,String>();
-		Random random = new Random();
-		for (String key : keywords) {
-			int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
-			// format it as hexadecimal string (with hashtag and leading zeros)
-			keywordColourMap.put(key, String.format("#%06x", colourCode));
-		}
-
-		// create new graph to return
-		ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
-		ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
-
-		ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
-
-		int numVisiblePublication = 0;
-
-		for (List<EvidencePathNode> paths : results.values()) {
-			for (EvidencePathNode path : paths) {
-
-				// add all semantic motifs to the new graph
-				Set<ONDEXConcept> concepts = path.getAllConcepts();
-				Set<ONDEXRelation> relations = path.getAllRelations();
-				for (ONDEXConcept c : concepts) {
-					graphCloner.cloneConcept(c);
-				}
-				for (ONDEXRelation r : relations) {
-					graphCloner.cloneRelation(r);
-				}
-
-				// search last concept of semantic motif for keyword
-				int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-				ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
-				ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-
-				if (luceneResults.containsKey(keywordCon)) {
-
-					ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
-
-					// highlight the keyword in any concept attribute values
-					if (!keywordConcepts.contains(cloneCon)) {
-						this.highlight(cloneCon, keywordColourMap);
-						keywordConcepts.add(cloneCon);
-
-						if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
-							numVisiblePublication++;
-						}
-					}
-
-					// Hides the whole path from gene to publication if more than X publications
-					// exist in the subgraph
-					// the visible network is otherwise too large
-					// TODO: Instead of choosing X arbitrary publications, show the most specific or
-					// latest publications
-					if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && numVisiblePublication > 20) {
-						continue;
-					}
-
-                                        //log.info("highlight path; concept (id, type): " + cloneCon.getId() +", "+ cloneCon.getOfType().getFullname());
-					// annotate the semantic motif in the new Ondex graph
-					highlightPath(path, graphCloner);
-				}
-
-				ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);
-				candidateGenes.add(cloneCon);
-
-			}
-		}
-
-		if (keywordConcepts.isEmpty()) {
-                    //log.info("keywordConcepts isEmpty()?: " + keywordConcepts.isEmpty());
-			Set<ONDEXConcept> cons = subGraph.getConcepts();
-			Set<ONDEXRelation> rels = subGraph.getRelations();
-
-			ONDEXGraphMetaData md = subGraph.getMetaData();
-			AttributeName attFlagged = md.getAttributeName("flagged");
-			AttributeName attVisible = md.getAttributeName("visible");
-			AttributeName attSize = md.getAttributeName("size");
-
-			if (attSize == null)
-				attSize = md.getFactory().createAttributeName("size", Integer.class);
-			if (attVisible == null)
-				attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-			if (attFlagged == null)
-				attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
-
-			for (ONDEXConcept gene : candidateGenes) {
-				gene.createAttribute(attFlagged, true, false);
-				gene.createAttribute(attVisible, true, false);
-				gene.createAttribute(attSize, new Integer(70), false);
-			}
-
-			for (ONDEXConcept c : cons) {
-
-				if (c.getOfType().getId().equalsIgnoreCase("Publication")
-						|| c.getOfType().getId().equalsIgnoreCase("CelComp")) {
-					c.createAttribute(attVisible, false, false);
-				} else if (c.getOfType().getId().equalsIgnoreCase("BioProc")) {
-					c.createAttribute(attSize, new Integer(60), false);
-					c.createAttribute(attVisible, true, false);
-				} else {
-					if (c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null) {
-						c.createAttribute(attSize, new Integer(30), false);
-						c.createAttribute(attVisible, true, false);
-					}
-				}
-			}
-
-			for (ONDEXRelation r : rels) {
-				r.createAttribute(attVisible, true, false);
-				r.createAttribute(attSize, new Integer(3), false);
-			}
-
-		}
-
-		ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
-
-		log.debug("Number of seed genes: " + seed.size());
-		// System.out.println("Keyword(s) were found in " +
-		// keywordConcepts.size()
-		// + " concepts.");
-		log.debug("Number of candidate genes " + candidateGenes.size());
-
-		log.info("export visible network: " + export_visible_network);
-		if (export_visible_network) {
-
-			ONDEXGraphMetaData md = subGraph.getMetaData();
-			AttributeName attSize = md.getAttributeName("size");
-			Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
-			Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
-
-			ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
-			ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
-
-			ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
-
-			for (ONDEXConcept c : itc) {
-				graphCloner2.cloneConcept(c);
-			}
-			for (ONDEXRelation r : itr) {
-				graphCloner2.cloneRelation(r);
-			}
-
-			ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
-
-                        log.info("graph filtered...");
-			subGraph = filteredGraph;
-
-		}
-
-		return subGraph;
-
-	}
-
-	/**
-	 * Annotate first and last concept and relations of a given path Do annotations
-	 * on a new graph and not on the original graph
-	 * 
-	 * @param path
-	 *            Contains concepts and relations of a semantic motif
-	 * @param graphCloner
-	 *            cloner for the new graph
-	 */
-	public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
-            //log.info("highlightPath...");
-
-		Font fontHighlight = new Font("sansserif", Font.BOLD, 20);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		XMLEncoder encoder = new XMLEncoder(bos);
-		encoder.writeObject(fontHighlight);
-		encoder.close();
-
-		ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
-
-		AttributeName attSize = md.getAttributeName("size");
-		if (attSize == null)
-			attSize = md.getFactory().createAttributeName("size", Integer.class);
-
-		AttributeName attVisible = md.getAttributeName("visible");
-		if (attVisible == null)
-			attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-
-		AttributeName attFlagged = md.getAttributeName("flagged");
-		if (attFlagged == null)
-			attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
-
-		RelationType rt = md.getFactory().createRelationType("is_p");
-		EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
-
-		// search last concept of semantic motif for keyword
-		int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-                //log.info("search last concept of semantic motif for keyword... indexLastCon: "+ indexLastCon);
-
-		ONDEXConcept gene = null;
-		ONDEXConcept con = null;
-
-		if (((ONDEXConcept) path.getStartingEntity()).getOfType().getId().equals("Gene")) {
-			// first element is gene and last element the keyword concept
-			gene = (ONDEXConcept) path.getStartingEntity();
-			con = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-                        //log.info("starting gene: "+ gene.getConceptName().getName() +", indexLastCon: "+ indexLastCon +", concept: "+ con.getConceptName().getName());
-		}
-
-		// else {
-		// // last element must be the gene
-		// con = (ONDEXConcept) path.getStartingEntity();
-		// gene = (ONDEXConcept)
-		// path.getConceptsInPositionOrder().get(indexLastCon);
-		// }
-
-		// annotate concept that contains keyword
-		ONDEXConcept c = graphCloner.cloneConcept(con);
-		if (c.getAttribute(attSize) == null) {
-                    //log.info("annotate concept: " + c.getConceptName().getName());
-			// initial size
-			c.createAttribute(attSize, new Integer(70), false);
-			c.createAttribute(attVisible, true, false);
-		} else {
-			// keyword part of another path to same gene or different gene
-
-		}
-
-		// annotate gene concept
-		ONDEXConcept g = graphCloner.cloneConcept(gene);
-		if (g.getAttribute(attFlagged) == null) {
-                    //log.info("annotate gene: " + g.getConceptName().getName());
-
-			// initial size
-			g.createAttribute(attSize, new Integer(70), false);
-			g.createAttribute(attVisible, true, false);
-			g.createAttribute(attFlagged, true, false);
-		} else {
-			// Integer size = (Integer) g.getAttribute(attSize).getValue();
-			// size++;
-			// g.getAttribute(attSize).setValue(size);
-		}
-
-		// add gene-QTL-Trait relations to the network
-		if (mapGene2QTL.containsKey(gene.getId())) {
-                    //log.info("add gene-QTL-Trait relations to the network...");
-			Set<Integer> qtlSet = mapGene2QTL.get(gene.getId());
-			for (Integer qtlId : qtlSet) {
-				ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
-				if (graphCloner.getNewGraph().getRelation(g, qtl, rt) == null) {
-					ONDEXRelation r = graphCloner.getNewGraph().getFactory().createRelation(g, qtl, rt, et);
-					r.createAttribute(attSize, new Integer(2), false);
-					r.createAttribute(attVisible, true, false);
-				}
-				if (qtl.getAttribute(attSize) == null) {
-					qtl.createAttribute(attSize, new Integer(70), false);
-					qtl.createAttribute(attVisible, true, false);
-				}
-				Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
-				for (ONDEXRelation r : relSet) {
-					if (r.getOfType().getId().equals("control")) {
-						ONDEXRelation rel = graphCloner.cloneRelation(r);
-						if (rel.getAttribute(attSize) == null) {
-							rel.createAttribute(attSize, new Integer(2), false);
-							rel.createAttribute(attVisible, true, false);
-						}
-						ONDEXConcept tC = r.getToConcept();
-						ONDEXConcept traitCon = graphCloner.cloneConcept(tC);
-						if (traitCon.getAttribute(attSize) == null) {
-							traitCon.createAttribute(attSize, new Integer(70), false);
-							traitCon.createAttribute(attVisible, true, false);
-						}
-					}
-
-				}
-			}
-		}
-
-		// annotate path connecting gene to keyword concept
-		Set<ONDEXRelation> rels = path.getAllRelations();
-		for (ONDEXRelation rel : rels) {
-			ONDEXRelation r = graphCloner.cloneRelation(rel);
-			if (r.getAttribute(attSize) == null) {
-                            //log.info("annotate path connecting gene to keyword concept, relationID: " + r.getId());
-				// initial size
-				r.createAttribute(attSize, new Integer(5), false);
-				r.createAttribute(attVisible, true, false);
-			} else {
-				// increase size for more supporting evidence
-				// Integer size = (Integer) r.getAttribute(attSize).getValue();
-				// size++;
-				// r.getAttribute(attSize).setValue(size);
-			}
-		}
-
-		// set concepts in path to visible
-		Set<ONDEXConcept> cons = path.getAllConcepts();
-		for (ONDEXConcept pconcept : cons) {
-			ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
-			if (concept.getAttribute(attSize) == null) {
-                            //log.info("set intermediate concepts in path to visible, concept: " + concept.getConceptName().getName());
-				concept.createAttribute(attSize, new Integer(30), false);
-				concept.createAttribute(attVisible, true, false);
-			} else {
-				// contains already visual information
-				// (e.g. gene, keyword or part of other paths)
-			}
-		}
-	}
-
-	/**
-	 * hides the path between a gene and a concept
-	 * 
-	 * @param path
-	 *            Contains concepts and relations of a semantic motif
-	 * @param graphCloner
-	 *            cloner for the new graph
-	 */
+  private boolean highlight(ONDEXConcept concept, Map<String, String> keywordColourMap) {
+//	System.out.println("Original keyword: "+regex);
+    boolean found = false;
+
+    // Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
+    String[] orderedKeywords = keywordColourMap.keySet().toArray(new String[0]);
+    Arrays.sort(orderedKeywords, new Comparator<String>() {
+        public int compare(String o1, String o2) {
+            if (o1.length() == o2.length()) {
+                return o1.compareTo(o2); // Same length? Compare alphabetically
+            } else {
+                return o1.length() - o2.length(); // Otherwise put the shorter one first
+            }
+        }
+    });
+
+    // First pass: wrap matches in ____. Prevents substring interference
+    String marker = "____";
+    for (String key : orderedKeywords) {
+        Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
+        String highlighter = marker + key + marker;
+
+        //Searchs in annotations
+        String anno = concept.getAnnotation();
+        if (this.isMatching(p, anno)) {
+            found = true;
+            // search and replace all matching expressions
+            String newAnno = p.matcher(anno).replaceAll(highlighter);
+            concept.setAnnotation(newAnno);
+        }
+
+        //Searchs in descriptions
+        String desc = concept.getDescription();
+        if (this.isMatching(p, desc)) {
+            found = true;
+            // search and replace all matching expressions
+            String newDesc = p.matcher(desc).replaceAll(highlighter);
+            concept.setDescription(newDesc);
+        }
+
+        // search in concept names
+        HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
+        for (ConceptName cno : concept.getConceptNames()) {
+            String cn = cno.getName();
+            if (this.isMatching(p, cn)) {
+                found = true;
+                //Saves the conceptNames we want to update
+                namesToCreate.put(cn, cno.isPreferred());
+            }
+        }
+        //For each conceptName of the update list deletes and creates a new conceptName
+        for (String ntc : namesToCreate.keySet()) {
+            if (!ntc.contains("</span>")) {
+                String newName = p.matcher(ntc).replaceAll(highlighter);
+                boolean isPref = namesToCreate.get(ntc);
+                concept.deleteConceptName(ntc);
+                concept.createConceptName(newName, isPref);
+            }
+        }
+
+        // search in concept attributes
+        for (Attribute attribute : concept.getAttributes()) {
+            if (!(attribute.getOfType().getId().equals("AA")) ||
+                    !(attribute.getOfType().getId().equals("NA")) ||
+                    !(attribute.getOfType().getId().startsWith("AA_")) ||
+                    !(attribute.getOfType().getId().startsWith("NA_"))) {
+                String value = attribute.getValue().toString();
+                if (this.isMatching(p, value)) {
+                    found = true;
+                    // search and replace all matching expressions
+                    Matcher m = p.matcher(value);
+                    String newAttStr = m.replaceAll(highlighter);
+                    attribute.setValue(newAttStr);
+                }
+
+            }
+        }
+    }
+
+    // Second pass: perform substitution
+    for (String key : orderedKeywords) {
+        Pattern p = Pattern.compile(marker + key + marker, Pattern.CASE_INSENSITIVE);
+        String highlighter = "<span style=\"background-color:" + keywordColourMap.get(key) + "\"><b>" + key + "</b></span>";
+
+        //Searchs in annotations
+        String anno = concept.getAnnotation();
+        if (this.isMatching(p, anno)) {
+            // search and replace all matching expressions
+            String newAnno = p.matcher(anno).replaceAll(highlighter);
+            concept.setAnnotation(newAnno);
+        }
+
+        //Searchs in descriptions
+        String desc = concept.getDescription();
+        if (this.isMatching(p, desc)) {
+            // search and replace all matching expressions
+            String newDesc = p.matcher(desc).replaceAll(highlighter);
+            concept.setDescription(newDesc);
+        }
+
+        // search in concept names
+        HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
+        for (ConceptName cno : concept.getConceptNames()) {
+            String cn = cno.getName();
+            if (this.isMatching(p, cn)) {
+                //Saves the conceptNames we want to update
+                namesToCreate.put(cn, cno.isPreferred());
+            }
+        }
+        //For each conceptName of the update list deletes and creates a new conceptName
+        for (String ntc : namesToCreate.keySet()) {
+            if (!ntc.contains("</span>")) {
+                String newName = p.matcher(ntc).replaceAll(highlighter);
+                boolean isPref = namesToCreate.get(ntc);
+                concept.deleteConceptName(ntc);
+                concept.createConceptName(newName, isPref);
+            }
+        }
+
+        // search in concept attributes
+        for (Attribute attribute : concept.getAttributes()) {
+            if (!(attribute.getOfType().getId().equals("AA")) ||
+                    !(attribute.getOfType().getId().equals("NA")) ||
+                    !(attribute.getOfType().getId().startsWith("AA_")) ||
+                    !(attribute.getOfType().getId().startsWith("NA_"))) {
+                String value = attribute.getValue().toString();
+                if (this.isMatching(p, value)) {
+                    // search and replace all matching expressions
+                    Matcher m = p.matcher(value);
+                    String newAttStr = m.replaceAll(highlighter);
+                    attribute.setValue(newAttStr);
+                }
+
+            }
+        }
+    }
+
+    return found;
+  }
+
+  /**
+   * Searches with Lucene for documents, finds semantic motifs and by crossing
+   * this data makes concepts visible, changes the size and highlight the hits
+   *
+   * @param seed    List of selected genes
+   * @param keyword
+   * @return subGraph
+   */
+  public ONDEXGraph findSemanticMotifs(Set<ONDEXConcept> seed, String keyword) {
+      log.debug("Method findSemanticMotifs - keyword: " + keyword);
+      // Searches with Lucene: luceneResults
+      HashMap<ONDEXConcept, Float> luceneResults = null;
+      try {
+          luceneResults = searchLucene(keyword, seed, false);
+      } catch (Exception e) {
+          log.error("Lucene search failed", e);
+      }
+      
+      // the results give us a map of every starting concept to every valid path
+      Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
+
+      Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
+      Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
+
+      log.info("Keyword is: " + keyword);
+      Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
+      Map<String, String> keywordColourMap = new HashMap<String, String>();
+      Random random = new Random();
+      for (String key : keywords) {
+          int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+          // format it as hexadecimal string (with hashtag and leading zeros)
+          keywordColourMap.put(key, String.format("#%06x", colourCode));
+      }
+
+      // create new graph to return
+      ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
+      ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
+
+      ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
+
+      int numVisiblePublication = 0;
+
+      for (List<EvidencePathNode> paths : results.values()) {
+          for (EvidencePathNode path : paths) {
+
+              // add all semantic motifs to the new graph
+              Set<ONDEXConcept> concepts = path.getAllConcepts();
+              Set<ONDEXRelation> relations = path.getAllRelations();
+              for (ONDEXConcept c : concepts) {
+                  graphCloner.cloneConcept(c);
+              }
+              for (ONDEXRelation r : relations) {
+                  graphCloner.cloneRelation(r);
+              }
+
+              // search last concept of semantic motif for keyword
+              int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
+              ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
+
+              ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+
+              if (luceneResults.containsKey(keywordCon)) {
+
+                  ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
+
+                  // highlight the keyword in any concept attribute values
+                  if (!keywordConcepts.contains(cloneCon)) {
+                      this.highlight(cloneCon, keywordColourMap);
+                      keywordConcepts.add(cloneCon);
+
+                      if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
+                          numVisiblePublication++;
+                      }
+                  }
+
+                  // Hides the whole path from gene to publication if more than X publications
+                  // exist in the subgraph
+                  // the visible network is otherwise too large
+                  // TODO: Instead of choosing X arbitrary publications, show the most specific or
+                  // latest publications
+                  if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && numVisiblePublication > 20) {
+                      continue;
+                  }
+
+                  // annotate the semantic motif in the new Ondex graph
+                  highlightPath(path, graphCloner);
+              }
+
+              ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);
+              candidateGenes.add(cloneCon);
+
+          }
+      }
+
+      if (keywordConcepts.isEmpty()) {
+          Set<ONDEXConcept> cons = subGraph.getConcepts();
+          Set<ONDEXRelation> rels = subGraph.getRelations();
+
+          ONDEXGraphMetaData md = subGraph.getMetaData();
+          AttributeName attFlagged = md.getAttributeName("flagged");
+          AttributeName attVisible = md.getAttributeName("visible");
+          AttributeName attSize = md.getAttributeName("size");
+
+          if (attSize == null)
+              attSize = md.getFactory().createAttributeName("size", Integer.class);
+          if (attVisible == null)
+              attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+          if (attFlagged == null)
+              attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
+
+          for (ONDEXConcept gene : candidateGenes) {
+              gene.createAttribute(attFlagged, true, false);
+              gene.createAttribute(attVisible, true, false);
+              gene.createAttribute(attSize, new Integer(70), false);
+          }
+
+          for (ONDEXConcept c : cons) {
+
+              if (c.getOfType().getId().equalsIgnoreCase("Publication")
+                      || c.getOfType().getId().equalsIgnoreCase("CelComp")) {
+                  c.createAttribute(attVisible, false, false);
+              } else if (c.getOfType().getId().equalsIgnoreCase("BioProc")) {
+                  c.createAttribute(attSize, new Integer(60), false);
+                  c.createAttribute(attVisible, true, false);
+              } else {
+                  if (c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null) {
+                      c.createAttribute(attSize, new Integer(30), false);
+                      c.createAttribute(attVisible, true, false);
+                  }
+              }
+          }
+
+          for (ONDEXRelation r : rels) {
+              r.createAttribute(attVisible, true, false);
+              r.createAttribute(attSize, new Integer(3), false);
+          }
+
+      }
+
+      ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
+
+      log.debug("Number of seed genes: " + seed.size());
+      // System.out.println("Keyword(s) were found in " +
+      // keywordConcepts.size()
+      // + " concepts.");
+      log.debug("Number of candidate genes " + candidateGenes.size());
+
+      if (export_visible_network) {
+
+          ONDEXGraphMetaData md = subGraph.getMetaData();
+          AttributeName attSize = md.getAttributeName("size");
+          Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
+          Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
+
+          ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
+          ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
+
+          ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
+
+          for (ONDEXConcept c : itc) {
+              graphCloner2.cloneConcept(c);
+          }
+          for (ONDEXRelation r : itr) {
+              graphCloner2.cloneRelation(r);
+          }
+
+          ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
+
+          subGraph = filteredGraph;
+
+      }
+
+      return subGraph;
+
+  }
+
+  /**
+   * Annotate first and last concept and relations of a given path Do annotations
+   * on a new graph and not on the original graph
+   *
+   * @param path        Contains concepts and relations of a semantic motif
+   * @param graphCloner cloner for the new graph
+   */
+  public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
+
+      Font fontHighlight = new Font("sansserif", Font.BOLD, 20);
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      XMLEncoder encoder = new XMLEncoder(bos);
+      encoder.writeObject(fontHighlight);
+      encoder.close();
+
+      ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
+
+      AttributeName attSize = md.getAttributeName("size");
+      if (attSize == null)
+          attSize = md.getFactory().createAttributeName("size", Integer.class);
+
+      AttributeName attVisible = md.getAttributeName("visible");
+      if (attVisible == null)
+          attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+
+      AttributeName attFlagged = md.getAttributeName("flagged");
+      if (attFlagged == null)
+          attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
+
+      RelationType rt = md.getFactory().createRelationType("is_p");
+      EvidenceType et = md.getFactory().createEvidenceType("QTLNetMiner");
+
+      // search last concept of semantic motif for keyword
+      int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
+
+      ONDEXConcept gene = null;
+      ONDEXConcept con = null;
+
+      if (((ONDEXConcept) path.getStartingEntity()).getOfType().getId().equals("Gene")) {
+          // first element is gene and last element the keyword concept
+          gene = (ONDEXConcept) path.getStartingEntity();
+          con = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+      }
+
+      // else {
+      // // last element must be the gene
+      // con = (ONDEXConcept) path.getStartingEntity();
+      // gene = (ONDEXConcept)
+      // path.getConceptsInPositionOrder().get(indexLastCon);
+      // }
+
+      // annotate concept that contains keyword
+      ONDEXConcept c = graphCloner.cloneConcept(con);
+      if (c.getAttribute(attSize) == null) {
+          // initial size
+          c.createAttribute(attSize, new Integer(70), false);
+          c.createAttribute(attVisible, true, false);
+      } else {
+          // keyword part of another path to same gene or different gene
+
+      }
+
+      // annotate gene concept
+      ONDEXConcept g = graphCloner.cloneConcept(gene);
+      if (g.getAttribute(attSize) == null) {
+
+          // initial size
+          g.createAttribute(attSize, new Integer(70), false);
+          g.createAttribute(attVisible, true, false);
+          g.createAttribute(attFlagged, true, false);
+      } else {
+          // Integer size = (Integer) g.getAttribute(attSize).getValue();
+          // size++;
+          // g.getAttribute(attSize).setValue(size);
+      }
+
+      // add gene-QTL-Trait relations to the network
+      if (mapGene2QTL.containsKey(gene.getId())) {
+          Set<Integer> qtlSet = mapGene2QTL.get(gene.getId());
+          for (Integer qtlId : qtlSet) {
+              ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
+              if (graphCloner.getNewGraph().getRelation(g, qtl, rt) == null) {
+                  ONDEXRelation r = graphCloner.getNewGraph().getFactory().createRelation(g, qtl, rt, et);
+                  r.createAttribute(attSize, new Integer(2), false);
+                  r.createAttribute(attVisible, true, false);
+              }
+              if (qtl.getAttribute(attSize) == null) {
+                  qtl.createAttribute(attSize, new Integer(70), false);
+                  qtl.createAttribute(attVisible, true, false);
+              }
+              Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
+              for (ONDEXRelation r : relSet) {
+                  if (r.getOfType().getId().equals("control")) {
+                      ONDEXRelation rel = graphCloner.cloneRelation(r);
+                      if (rel.getAttribute(attSize) == null) {
+                          rel.createAttribute(attSize, new Integer(2), false);
+                          rel.createAttribute(attVisible, true, false);
+                      }
+                      ONDEXConcept tC = r.getToConcept();
+                      ONDEXConcept traitCon = graphCloner.cloneConcept(tC);
+                      if (traitCon.getAttribute(attSize) == null) {
+                          traitCon.createAttribute(attSize, new Integer(70), false);
+                          traitCon.createAttribute(attVisible, true, false);
+                      }
+                  }
+
+              }
+          }
+      }
+
+      // annotate path connecting gene to keyword concept
+      Set<ONDEXRelation> rels = path.getAllRelations();
+      for (ONDEXRelation rel : rels) {
+          ONDEXRelation r = graphCloner.cloneRelation(rel);
+          if (r.getAttribute(attSize) == null) {
+              // initial size
+              r.createAttribute(attSize, new Integer(5), false);
+              r.createAttribute(attVisible, true, false);
+          } else {
+              // increase size for more supporting evidence
+              // Integer size = (Integer) r.getAttribute(attSize).getValue();
+              // size++;
+              // r.getAttribute(attSize).setValue(size);
+          }
+      }
+
+      // set concepts in path to visible
+      Set<ONDEXConcept> cons = path.getAllConcepts();
+      for (ONDEXConcept pconcept : cons) {
+          ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
+          if (concept.getAttribute(attSize) == null) {
+              concept.createAttribute(attSize, new Integer(30), false);
+              concept.createAttribute(attVisible, true, false);
+          } else {
+              // contains already visual information
+              // (e.g. gene, keyword or part of other paths)
+          }
+      }
+  }
+  
+  /**
+   * hides the path between a gene and a concept
+   *
+   * @param path        Contains concepts and relations of a semantic motif
+   * @param graphCloner cloner for the new graph
+   */
 	public void hidePath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
 		ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
 		AttributeName attVisible = md.getAttributeName("visible");
@@ -1606,24 +1657,19 @@ public class OndexServiceProvider {
 		}
 	}
 
-	/**
-	 * Write Genomaps XML file
-         * @param api_url
-	 *      ws url for API
-         * @param genes
-         *      list of genes to be displayed (all genes for search result)
-         * @param userGenes
-         *      gene list from user
-         * @param userQtlStr
-         *      user QTLs
-	 * @param keyword
-	 *      user-specified keyword
-         * @param maxGenes
-         * @param hits
-	 *      search Hits
-         * @param listMode
-         * @return 
-	 */
+  /**
+   * Write Genomaps XML file
+   *
+   * @param api_url    ws url for API
+   * @param genes      list of genes to be displayed (all genes for search result)
+   * @param userGenes  gene list from user
+   * @param userQtlStr user QTLs
+   * @param keyword    user-specified keyword
+   * @param maxGenes
+   * @param hits       search Hits
+   * @param listMode
+   * @return
+   */
 	public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
 			String keyword, int maxGenes, Hits hits, String listMode) {
 		List<QTL> userQtl = new ArrayList<QTL>();
@@ -1998,17 +2044,16 @@ public class OndexServiceProvider {
                 return sb.toString();
 	}
         
-        // temporary...
-        public void writeResultsFile(String filename, String sb_string) {
-            try {
-                BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-                out.write(sb_string);
-                out.close();
-               }
-            catch(Exception ex) {
-                log.debug(ex.getMessage());
-               }                                
-           }
+  // temporary...
+  public void writeResultsFile(String filename, String sb_string) {
+    try {
+        BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+        out.write(sb_string);
+        out.close();
+    } catch (Exception ex) {
+        log.debug(ex.getMessage());
+    }
+  }
 
 	/**
 	 * This table contains all possible candidate genes for given query
@@ -2271,19 +2316,21 @@ public class OndexServiceProvider {
 			 * "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" + isInList + "\t" +
 			 * infoQTL + "\t" + evidence + "\n");
 			 */
-			if (userGenes != null) {
-				// if GeneList was provided by the user, display only those genes.
-				if (isInList.equals("yes")) {
+      if (!"".equals(evidence) || qtls.isEmpty()) {
+				if (userGenes != null) {
+					// if GeneList was provided by the user, display only those genes.
+					if (isInList.equals("yes")) {
+						out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+								+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
+								+ evidences_linked + "\t" + all_evidences + "\n");
+					}
+				} else { // default
 					out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
 							+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
 							+ evidences_linked + "\t" + all_evidences + "\n");
 				}
-			} else { // default
-				out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-						+ fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
-						+ evidences_linked + "\t" + all_evidences + "\n");
+	
 			}
-
 		}
 		//log.info("Gene table generated...");
 		return out.toString();
@@ -2299,205 +2346,231 @@ public class OndexServiceProvider {
 	 * @return boolean
 	 */
 
-	public String writeEvidenceTable(HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
-			List<String> qtlsStr) {
+  public String writeEvidenceTable(String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
+                                   List<String> qtlsStr) {
 
-		ONDEXGraphMetaData md = graph.getMetaData();
-		AttributeName attChr = md.getAttributeName("Chromosome");
-		AttributeName attBeg = md.getAttributeName("BEGIN");
-		AttributeName attCM = md.getAttributeName("cM");
-		
-		log.info("generate Evidence table...");
-		List<QTL> qtls = new ArrayList<QTL>();
-		for (String qtlStr : qtlsStr) {
-			qtls.add(QTL.fromString(qtlStr));
-		}
+      ONDEXGraphMetaData md = graph.getMetaData();
+      AttributeName attChr = md.getAttributeName("Chromosome");
+      AttributeName attBeg = md.getAttributeName("BEGIN");
+      AttributeName attCM = md.getAttributeName("cM");
+      int allGenesSize = mapGene2Concepts.keySet().size();
+      int userGenesSize = userGenes == null ? 0 : userGenes.size();
+      FisherExact fisherExact = userGenesSize > 0 ? new FisherExact(allGenesSize) : null;
 
-		StringBuffer out = new StringBuffer();
-		// writes the header of the table
-		out.append("TYPE\tNAME\tSCORE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+      log.info("generate Evidence table...");
+      List<QTL> qtls = new ArrayList<QTL>();
+      for (String qtlStr : qtlsStr) {
+          qtls.add(QTL.fromString(qtlStr));
+      }
 
-		for (ONDEXConcept lc : luceneConcepts.keySet()) {
-			// Creates type,name,score and numberOfGenes
-			String type = lc.getOfType().getId();
-			String name = getDefaultNameForGroupOfConcepts(lc);
-			// All publications will have the format PMID:15487445
-			if (type == "Publication" && !name.contains("PMID:"))
-				name = "PMID:" + name;
-			Float score = luceneConcepts.get(lc);
-			DecimalFormat fmt = new DecimalFormat("0.00");
-			Integer ondexId = lc.getId();
-			if (!mapConcept2Genes.containsKey(lc.getId())) {
-				continue;
-			}
-			Set<Integer> listOfGenes = mapConcept2Genes.get(lc.getId());
-			Integer numberOfGenes = listOfGenes.size();
-			// Creates numberOfUserGenes and numberOfQTL
-			//Integer numberOfUserGenes = 0;
-                        String user_genes="";
-			Integer numberOfQTL = 0;
+      StringBuffer out = new StringBuffer();
+      // writes the header of the table
+      out.append("TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
 
-			for (int log : listOfGenes) {
+      DecimalFormat sfmt = new DecimalFormat("0.00");
+      DecimalFormat pfmt = new DecimalFormat("0.00000");
 
-				ONDEXConcept gene = graph.getConcept(log);
-				if ((userGenes != null) && (gene != null) && (userGenes.contains(gene))) {
-                                   // numberOfUserGenes++;
-                                    // retain gene Accession/Name (18/07/18)
-                                    String geneAcc="";
-                                    for(ConceptAccession acc : gene.getConceptAccessions()) {
-                                        String accValue= acc.getAccession();
-                                        geneAcc = accValue;
-                                        if(acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
-						&& (accValue.indexOf(".") == -1)) {
-                                           geneAcc = accValue;
-                                           break;
-                                          }
-                                        else if(acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
-                                            geneAcc = accValue;
-                                            break;
-                                           }
-                                        }
-                                    // use shortest preferred concept name
-                                  /*  String geneName = getShortestPreferedName(gene.getConceptNames());
-                                    geneAcc= geneName; */
-                                    user_genes= user_genes + geneAcc +",";
-				  }
+      for (ONDEXConcept lc : luceneConcepts.keySet()) {
+          // Creates type,name,score and numberOfGenes
+          String type = lc.getOfType().getId();
+          String name = getDefaultNameForGroupOfConcepts(lc);
+          // All publications will have the format PMID:15487445
+          //if (type == "Publication" && !name.contains("PMID:"))
+          //    name = "PMID:" + name;
+          // Do not print publications or proteins in evidence view
+          if (type == "Publication" || type == "Protein") {
+              continue;
+          }
+          Float score = luceneConcepts.get(lc);
+          Integer ondexId = lc.getId();
+          if (!mapConcept2Genes.containsKey(lc.getId())) {
+              continue;
+          }
+          Set<Integer> listOfGenes = mapConcept2Genes.get(lc.getId());
+          Integer numberOfGenes = listOfGenes.size();
+          // Creates numberOfUserGenes and numberOfQTL
+          //Integer numberOfUserGenes = 0;
+          String user_genes = "";
+          Integer numberOfQTL = 0;
 
-				if (mapGene2QTL.containsKey(log)) {
-					numberOfQTL++;
+          for (int log : listOfGenes) {
 
-					// for(Integer cid : mapGene2QTL.get(log)){
-					// ONDEXConcept qtl = graph.getConcept(cid);
-					// String traitDesc =
-					// qtl.getAttribute(attTrait).getValue().toString();
-					//
-					// if (infoQTL == "")
-					// infoQTL += traitDesc + "//" + traitDesc;
-					// else
-					// infoQTL += "||" + traitDesc + "//" + traitDesc;
-					// }
-				}
+              ONDEXConcept gene = graph.getConcept(log);
+              if ((userGenes != null) && (gene != null) && (userGenes.contains(gene))) {
+                  // numberOfUserGenes++;
+                  // retain gene Accession/Name (18/07/18)
+                  String geneAcc = "";
+                  for (ConceptAccession acc : gene.getConceptAccessions()) {
+                      String accValue = acc.getAccession();
+                      geneAcc = accValue;
+                      if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
+                              && (accValue.indexOf(".") == -1)) {
+                          geneAcc = accValue;
+                          break;
+                      } else if (acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
+                          geneAcc = accValue;
+                          break;
+                      }
+                  }
+                  // use shortest preferred concept name
+                                /*  String geneName = getShortestPreferedName(gene.getConceptNames());
+                                  geneAcc= geneName; */
+                  user_genes = user_genes + geneAcc + ",";
+              }
 
-				String chr = null;
-				double beg = 0.0;
+              if (mapGene2QTL.containsKey(log)) {
+                  numberOfQTL++;
 
-				if (gene.getAttribute(attChr) != null) {
-					chr = gene.getAttribute(attChr).getValue().toString();
-				}
+                  // for(Integer cid : mapGene2QTL.get(log)){
+                  // ONDEXConcept qtl = graph.getConcept(cid);
+                  // String traitDesc =
+                  // qtl.getAttribute(attTrait).getValue().toString();
+                  //
+                  // if (infoQTL == "")
+                  // infoQTL += traitDesc + "//" + traitDesc;
+                  // else
+                  // infoQTL += "||" + traitDesc + "//" + traitDesc;
+                  // }
+              }
 
-				if (gene.getAttribute(attBeg) != null) {
-					beg = (Integer) gene.getAttribute(attBeg).getValue();
-				}
+              String chr = null;
+              double beg = 0.0;
 
-				if (attCM != null) {
-					if (gene.getAttribute(attCM) != null) {
-						beg = (Double) gene.getAttribute(attCM).getValue();
-					}
-				} else if (gene.getAttribute(attBeg) != null) {
-					beg = (Integer) gene.getAttribute(attBeg).getValue();
-				}
+              if (gene.getAttribute(attChr) != null) {
+                  chr = gene.getAttribute(attChr).getValue().toString();
+              }
 
-				if (!qtls.isEmpty()) {
-					for (QTL loci : qtls) {
-						String qtlChrom = loci.getChromosome();
-						Integer qtlStart = loci.getStart();
-						Integer qtlEnd = loci.getEnd();
+              if (gene.getAttribute(attBeg) != null) {
+                  beg = (Integer) gene.getAttribute(attBeg).getValue();
+              }
 
-						if (qtlChrom.equals(chr) && beg >= qtlStart && beg <= qtlEnd) {
+              if (attCM != null) {
+                  if (gene.getAttribute(attCM) != null) {
+                      beg = (Double) gene.getAttribute(attCM).getValue();
+                  }
+              } else if (gene.getAttribute(attBeg) != null) {
+                  beg = (Integer) gene.getAttribute(attBeg).getValue();
+              }
 
-							numberOfQTL++;
-							// if (infoQTL == "")
-							// infoQTL += loci.getLabel() + "//" +
-							// loci.getTrait();
-							// else
-							// infoQTL += "||" + loci.getLabel() + "//" +
-							// loci.getTrait();
-						}
-					}
-				}
+              if (!qtls.isEmpty()) {
+                  for (QTL loci : qtls) {
+                      String qtlChrom = loci.getChromosome();
+                      Integer qtlStart = loci.getStart();
+                      Integer qtlEnd = loci.getEnd();
 
-				// int chr = 0, beg = 0, end = 0;
-				// Double cm = 0.00;
-				// if (graph.getConcept(log).getAttribute(attChr) != null) {
-				// chr = (Integer)
-				// graph.getConcept(log).getAttribute(attChr).getValue();
-				// }
-				// else if (graph.getConcept(log).getAttribute(attScaf) !=
-				// null) {
-				// chr = (Integer)
-				// graph.getConcept(log).getAttribute(attScaf).getValue();
-				// }
-				// if (graph.getConcept(log).getAttribute(attBeg) != null) {
-				// beg = (Integer)
-				// graph.getConcept(log).getAttribute(attBeg).getValue();
-				// }
-				// if (graph.getConcept(log).getAttribute(attEnd) != null) {
-				// end = (Integer)
-				// graph.getConcept(log).getAttribute(attEnd).getValue();
-				// }
-				// if (attCM != null) {
-				// if (graph.getConcept(log).getAttribute(attCM) != null) {
-				// cm = (Double)
-				// graph.getConcept(log).getAttribute(attCM).getValue();
-				// }
-				// }
-				// if(!qtls.isEmpty()){
-				// for(QTL loci : qtls) {
-				// try{
-				// Integer qtlChrom =
-				// chromBidiMap.inverseBidiMap().get(loci.getChrName());
-				// Long qtlStart = Long.parseLong(loci.getStart());
-				// Long qtlEnd = Long.parseLong(loci.getEnd());
-				//
-				// if (cm != null) {
-				// if((qtlChrom == chr) && (cm >= qtlStart) && (cm <=
-				// qtlEnd)){
-				// if (!evidenceQTL.contains(loci)) {
-				// numberOfQTL++;
-				// evidenceQTL.add(loci);
-				// if (infoQTL == "")
-				// infoQTL += loci.getLabel() + "//" + loci.getTrait();
-				// else
-				// infoQTL += "||" + loci.getLabel() + "//" +
-				// loci.getTrait();
-				// }
-				// }
-				// }
-				// else {
-				// if((qtlChrom == chr) && (beg >= qtlStart) && (end <=
-				// qtlEnd)){
-				// if (!evidenceQTL.contains(loci)) {
-				// numberOfQTL++;
-				// evidenceQTL.add(loci);
-				// if (infoQTL == "")
-				// infoQTL += loci.getLabel() + "//" + loci.getTrait();
-				// else
-				// infoQTL += "||" + loci.getLabel() + "//" +
-				// loci.getTrait();
-				// }
-				// }
-				// }
-				// }
-				// catch(Exception e){
-				// System.out.println("An error occurred in method:
-				// writeEvidenceOut.");
-				// System.out.println(e.getMessage());
-				// }
-				// }
-				// }
-			}
-                        
-                        // omit last comma from user_genes String
-                        if(user_genes.contains(",")) {
-                           user_genes= user_genes.substring(0, user_genes.length()-1);
-                          }
-			// writes the row
-			out.append(type + "\t" + name + "\t" + fmt.format(score) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
-					+ "\t" + numberOfQTL + "\t" + ondexId + "\n");
-		}
-		//log.info("Evidence table generated...");
-		return out.toString();
-	}
+                      if (qtlChrom.equals(chr) && beg >= qtlStart && beg <= qtlEnd) {
+
+                          numberOfQTL++;
+                          // if (infoQTL == "")
+                          // infoQTL += loci.getLabel() + "//" +
+                          // loci.getTrait();
+                          // else
+                          // infoQTL += "||" + loci.getLabel() + "//" +
+                          // loci.getTrait();
+                      }
+                  }
+              }
+
+              // int chr = 0, beg = 0, end = 0;
+              // Double cm = 0.00;
+              // if (graph.getConcept(log).getAttribute(attChr) != null) {
+              // chr = (Integer)
+              // graph.getConcept(log).getAttribute(attChr).getValue();
+              // }
+              // else if (graph.getConcept(log).getAttribute(attScaf) !=
+              // null) {
+              // chr = (Integer)
+              // graph.getConcept(log).getAttribute(attScaf).getValue();
+              // }
+              // if (graph.getConcept(log).getAttribute(attBeg) != null) {
+              // beg = (Integer)
+              // graph.getConcept(log).getAttribute(attBeg).getValue();
+              // }
+              // if (graph.getConcept(log).getAttribute(attEnd) != null) {
+              // end = (Integer)
+              // graph.getConcept(log).getAttribute(attEnd).getValue();
+              // }
+              // if (attCM != null) {
+              // if (graph.getConcept(log).getAttribute(attCM) != null) {
+              // cm = (Double)
+              // graph.getConcept(log).getAttribute(attCM).getValue();
+              // }
+              // }
+              // if(!qtls.isEmpty()){
+              // for(QTL loci : qtls) {
+              // try{
+              // Integer qtlChrom =
+              // chromBidiMap.inverseBidiMap().get(loci.getChrName());
+              // Long qtlStart = Long.parseLong(loci.getStart());
+              // Long qtlEnd = Long.parseLong(loci.getEnd());
+              //
+              // if (cm != null) {
+              // if((qtlChrom == chr) && (cm >= qtlStart) && (cm <=
+              // qtlEnd)){
+              // if (!evidenceQTL.contains(loci)) {
+              // numberOfQTL++;
+              // evidenceQTL.add(loci);
+              // if (infoQTL == "")
+              // infoQTL += loci.getLabel() + "//" + loci.getTrait();
+              // else
+              // infoQTL += "||" + loci.getLabel() + "//" +
+              // loci.getTrait();
+              // }
+              // }
+              // }
+              // else {
+              // if((qtlChrom == chr) && (beg >= qtlStart) && (end <=
+              // qtlEnd)){
+              // if (!evidenceQTL.contains(loci)) {
+              // numberOfQTL++;
+              // evidenceQTL.add(loci);
+              // if (infoQTL == "")
+              // infoQTL += loci.getLabel() + "//" + loci.getTrait();
+              // else
+              // infoQTL += "||" + loci.getLabel() + "//" +
+              // loci.getTrait();
+              // }
+              // }
+              // }
+              // }
+              // catch(Exception e){
+              // System.out.println("An error occurred in method:
+              // writeEvidenceOut.");
+              // System.out.println(e.getMessage());
+              // }
+              // }
+              // }
+          }
+
+          // omit last comma from user_genes String
+          if (user_genes.contains(",")) {
+              user_genes = user_genes.substring(0, user_genes.length() - 1);
+          }
+
+          double pvalue = 0.0;
+
+          if (userGenesSize > 0) {
+              // quick adjustment to the score to make it a P-value from F-test instead
+              int matched_inGeneList = "".equals(user_genes) ? 0 : user_genes.split(",").length;
+              int notMatched_inGeneList = userGenesSize - matched_inGeneList;
+              int matched_notInGeneList = numberOfGenes - matched_inGeneList;
+              int notMatched_notInGeneList = allGenesSize - matched_notInGeneList - matched_inGeneList - notMatched_inGeneList;
+              pvalue = fisherExact.getP(
+                      matched_inGeneList,
+                      matched_notInGeneList,
+                      notMatched_inGeneList,
+                      notMatched_notInGeneList);
+          }
+          // writes the row - unless user genes provided and none match this row
+          if (userGenes!=null && !userGenes.isEmpty() && "".equals(user_genes)) {
+              continue;
+          }
+          out.append(type + "\t" + name + "\t" + sfmt.format(score) + "\t" + pfmt.format(pvalue) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
+                  + "\t" + numberOfQTL + "\t" + ondexId + "\n");
+      }
+      //log.info("Evidence table generated...");
+      return out.toString();
+  }
 
 	/**
 	 * Write Synonym Table for Query suggestor
@@ -2516,7 +2589,8 @@ public class OndexServiceProvider {
 		// to store top 25 values for each concept type instead of just 25
 		// values per keyword.
 		int existingCount = 0;
-		/* Set<String> */Set<String> keys = this.parseKeywordIntoSetOfWords(keyword);
+    /* Set<String> */
+    Set<String> keys = this.parseKeywordIntoSetOfWords(keyword);
 		// Convert the LinkedHashSet to a String[] array.
 		String[] synonymKeys = keys.toArray(new String[keys.size()]);
 		// for (String key : keys) {
@@ -2651,8 +2725,7 @@ public class OndexServiceProvider {
 	 * Returns the shortest preferred Name from a set of concept Names or ""
 	 * [Gene|Protein][Phenotype][The rest]
 	 * 
-	 * @param cns
-	 *            Set<ConceptName>
+   * @param cns Set<ConceptName>
 	 * @return String name
 	 */
 	private String getShortestPreferedName(Set<ConceptName> cns) {
@@ -2670,8 +2743,7 @@ public class OndexServiceProvider {
 	/**
 	 * Returns the shortest not ambiguous accession or ""
 	 * 
-	 * @param accs
-	 *            Set<ConceptAccession>
+   * @param accs Set<ConceptAccession>
 	 * @return String name
 	 */
 	private String getShortestNotAmbiguousAccession(Set<ConceptAccession> accs) {
@@ -2690,9 +2762,8 @@ public class OndexServiceProvider {
 	 * Returns the best name for each group of concept classes
 	 * [Gene|Protein][Phenotype][The rest]
 	 * 
-	 * @param c
-	 *            ONDEXConcept
-	 * @return normalised name
+   * @param c ONDEXConcept
+   * @return normalised name
 	 */
 	private String getDefaultNameForGroupOfConcepts(ONDEXConcept c) {
 
@@ -2794,13 +2865,9 @@ public class OndexServiceProvider {
 	/**
 	 * Returns number of organism (taxID) genes at a given loci
 	 * 
-	 * @param chr
-	 *            chromosome name as used in GViewer
-	 * @param start
-	 *            start position
-	 * @param end
-	 *            end position
-	 * 
+   * @param chr   chromosome name as used in GViewer
+   * @param start start position
+   * @param end   end position
 	 * @return 0 if no genes found, otherwise number of genes at specified loci
 	 */
 	public int getGeneCount(String chr, int start, int end) {
@@ -2864,212 +2931,218 @@ public class OndexServiceProvider {
 		}
 	}
 
-	/**
-	 * 
-	 * This method populates a HashMap with concepts from KB as keys and list of
-	 * genes presented in their motifs
-	 * 
-	 */
-	public void populateHashMaps(String dataPath) {
-		log.info("Populate HashMaps");
-		File file1 = Paths.get(dataPath, "mapConcept2Genes").toFile();
-		File file2 = Paths.get(dataPath, "mapGene2Concepts").toFile();
-		File file3 = Paths.get(dataPath, "mapGene2PathLength").toFile();
-		log.info("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
+  /**
+   * This method populates a HashMap with concepts from KB as keys and list of
+   * genes presented in their motifs
+   */
+  public void populateHashMaps(String graphFileName, String dataPath) {
+      log.info("Populate HashMaps");
+      File graphFile = new File(graphFileName);
+      File file1 = Paths.get(dataPath, "mapConcept2Genes").toFile();
+      File file2 = Paths.get(dataPath, "mapGene2Concepts").toFile();
+      File file3 = Paths.get(dataPath, "mapGene2PathLength").toFile();
+      log.info("Generate HashMap files: mapConcept2Genes & mapGene2Concepts...");
 
-		AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
-		AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
-		AttributeName attEnd = graph.getMetaData().getAttributeName("END");
-		AttributeName attCM = graph.getMetaData().getAttributeName("cM");
-		AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
+      AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
+      AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
+      AttributeName attEnd = graph.getMetaData().getAttributeName("END");
+      AttributeName attCM = graph.getMetaData().getAttributeName("cM");
+      AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
 
-		ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
-		ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
+      ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
+      ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
 
-		Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
-		if (ccQTL != null)
-			qtls = graph.getConceptsOfConceptClass(ccQTL);
+      Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
+      if (ccQTL != null)
+          qtls = graph.getConceptsOfConceptClass(ccQTL);
 
-		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
-		for (ONDEXConcept gene : seed) {
-			if (gene.getAttribute(attTAXID) != null
-					&& taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-				genes.add(gene);
-			}
-		}
+      Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
+      Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+      for (ONDEXConcept gene : seed) {
+          if (gene.getAttribute(attTAXID) != null
+                  && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
+              genes.add(gene);
+          }
+      }
 
-		if (!file1.exists() || !file2.exists() || !file3.exists()) {
+      if (file1.exists() && (file1.lastModified() < graphFile.lastModified())) {
+          log.info("Graph file updated since hashmaps last built, deleting old hashmaps");
+          file1.delete();
+          file2.delete();
+          file3.delete();
+      }
 
-			// the results give us a map of every starting concept to every
-			// valid path
-			Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
+      if (!file1.exists()) {
 
-			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-			mapGene2PathLength = new HashMap<String, Integer>();
-			log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
-			for (List<EvidencePathNode> paths : results.values()) {
-				for (EvidencePathNode path : paths) {
+          // the results give us a map of every starting concept to every
+          // valid path
+          Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
 
-					// search last concept of semantic motif for keyword
-					ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
+          mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
+          mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+          mapGene2PathLength = new HashMap<String, Integer>();
+          log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
+          for (List<EvidencePathNode> paths : results.values()) {
+              for (EvidencePathNode path : paths) {
 
-					// add all semantic motifs to the new graph
-					Set<ONDEXConcept> concepts = path.getAllConcepts();
+                  // search last concept of semantic motif for keyword
+                  ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
 
-					// Extract pathLength and endNode ID.
-					int pathLength = (path.getLength() - 1) / 2; // get Path Length
-					ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder()
-							.get(path.getConceptsInPositionOrder().size() - 1);
-					int lastConID = con.getId(); // endNode ID.
-					String gpl_key = String.valueOf(gene.getId()) + "//" + String.valueOf(lastConID);
-					if (!mapGene2PathLength.containsKey(gpl_key)) {
-						// log.info(gpl_key +": "+ pathLength);
-						mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
-					}
+                  // add all semantic motifs to the new graph
+                  Set<ONDEXConcept> concepts = path.getAllConcepts();
 
-					// GENE 2 CONCEPT
-					if (!mapGene2Concepts.containsKey(gene.getId())) {
-						Set<Integer> setConcepts = new HashSet<Integer>();
-						for (ONDEXConcept c : concepts) {
-							setConcepts.add(c.getId());
-						}
-						mapGene2Concepts.put(gene.getId(), setConcepts);
-					} else {
-						Set<Integer> setConcepts = new HashSet<Integer>();
-						for (ONDEXConcept c : concepts) {
-							setConcepts.add(c.getId());
-						}
-						mapGene2Concepts.get(gene.getId()).addAll(setConcepts);
-					}
+                  // Extract pathLength and endNode ID.
+                  int pathLength = (path.getLength() - 1) / 2; // get Path Length
+                  ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder()
+                          .get(path.getConceptsInPositionOrder().size() - 1);
+                  int lastConID = con.getId(); // endNode ID.
+                  String gpl_key = String.valueOf(gene.getId()) + "//" + String.valueOf(lastConID);
+                  if (!mapGene2PathLength.containsKey(gpl_key)) {
+                      // log.info(gpl_key +": "+ pathLength);
+                      mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
+                  }else{
+		    if(pathLength < mapGene2PathLength.get(gpl_key)){
+			    // update HashMap with shorter pathLength
+			    mapGene2PathLength.put(gpl_key, pathLength); 
+		    }
+		    
+	    }    
 
-					// CONCEPT 2 GENE
-					concepts.remove(gene);
-					for (ONDEXConcept c : concepts) {
-						if (!mapConcept2Genes.containsKey(c.getId())) {
-							Set<Integer> setGenes = new HashSet<Integer>();
-							setGenes.add(gene.getId());
-							mapConcept2Genes.put(c.getId(), setGenes);
-						} else {
-							mapConcept2Genes.get(c.getId()).add(gene.getId());
-						}
-					}
-				}
-			}
-			try {
-				FileOutputStream f;
-				ObjectOutputStream s;
+                  // GENE 2 CONCEPT
+                  if (!mapGene2Concepts.containsKey(gene.getId())) {
+                      Set<Integer> setConcepts = new HashSet<Integer>();
+		setConcepts.add(lastConID);
+                      mapGene2Concepts.put(gene.getId(), setConcepts);
+                  } else {
+                      mapGene2Concepts.get(gene.getId()).add(lastConID);
+                  }
 
-				f = new FileOutputStream(file1);
-				s = new ObjectOutputStream(f);
-				s.writeObject(mapConcept2Genes);
-				s.close();
-
-				f = new FileOutputStream(file2);
-				s = new ObjectOutputStream(f);
-				s.writeObject(mapGene2Concepts);
-				s.close();
-
-				f = new FileOutputStream(file3);
-				s = new ObjectOutputStream(f);
-				s.writeObject(mapGene2PathLength);
-				s.close();
-
-			} catch (Exception e) {
-				log.error("Failed to write files", e);
-			}
+                  // CONCEPT 2 GENE
+                  concepts.remove(gene);
+                  
+		if (!mapConcept2Genes.containsKey(lastConID)) {
+		    Set<Integer> setGenes = new HashSet<Integer>();
+		    setGenes.add(gene.getId());
+		    mapConcept2Genes.put(lastConID, setGenes);
 		} else {
-			try {
-				FileInputStream f;
-				ObjectInputStream s;
-
-				f = new FileInputStream(file1);
-				s = new ObjectInputStream(f);
-				mapConcept2Genes = (HashMap<Integer, Set<Integer>>) s.readObject();
-				s.close();
-
-				f = new FileInputStream(file2);
-				s = new ObjectInputStream(f);
-				mapGene2Concepts = (HashMap<Integer, Set<Integer>>) s.readObject();
-				s.close();
-
-				f = new FileInputStream(file3);
-				s = new ObjectInputStream(f);
-				mapGene2PathLength = (HashMap<String, Integer>) s.readObject();
-				s.close();
-
-			} catch (Exception e) {
-				log.error("Failed to read files", e);
-			}
+		    mapConcept2Genes.get(lastConID).add(gene.getId());
 		}
+                  
+              }
+          }
+          try {
+              FileOutputStream f;
+              ObjectOutputStream s;
 
-		if (mapGene2Concepts == null) {
-			log.warn("mapGene2Concepts is null");
-			mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-		} else
-			log.info("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
+              f = new FileOutputStream(file1);
+              s = new ObjectOutputStream(f);
+              s.writeObject(mapConcept2Genes);
+              s.close();
 
-		if (mapConcept2Genes == null) {
-			log.warn("mapConcept2Genes is null");
-			mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-		} else
-			log.info("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
+              f = new FileOutputStream(file2);
+              s = new ObjectOutputStream(f);
+              s.writeObject(mapGene2Concepts);
+              s.close();
 
-		if (mapGene2PathLength == null) {
-			log.warn("Gene2PathLength is null");
-			mapGene2PathLength = new HashMap<String, Integer>();
-		} else
-			log.info("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
+              f = new FileOutputStream(file3);
+              s = new ObjectOutputStream(f);
+              s.writeObject(mapGene2PathLength);
+              s.close();
 
-		log.info("Create Gene2QTL map now...");
+          } catch (Exception e) {
+              log.error("Failed to write files", e);
+          }
+      } else {
+          try {
+              FileInputStream f;
+              ObjectInputStream s;
 
-		mapGene2QTL = new HashMap<Integer, Set<Integer>>();
+              f = new FileInputStream(file1);
+              s = new ObjectInputStream(f);
+              mapConcept2Genes = (HashMap<Integer, Set<Integer>>) s.readObject();
+              s.close();
 
-		for (ONDEXConcept gene : genes) {
+              f = new FileInputStream(file2);
+              s = new ObjectInputStream(f);
+              mapGene2Concepts = (HashMap<Integer, Set<Integer>>) s.readObject();
+              s.close();
 
-			String chr = null;
-			double beg = 0.0;
-			double begCM = 0.0;
-			int begBP = 0;
+              f = new FileInputStream(file3);
+              s = new ObjectInputStream(f);
+              mapGene2PathLength = (HashMap<String, Integer>) s.readObject();
+              s.close();
 
-			if (gene.getAttribute(attChromosome) != null) {
-				chr = gene.getAttribute(attChromosome).getValue().toString();
-			}
+          } catch (Exception e) {
+              log.error("Failed to read files", e);
+          }
+      }
 
-			if (attCM != null && gene.getAttribute(attCM) != null) {
-				begCM = (Double) gene.getAttribute(attCM).getValue();
-			}
+      if (mapGene2Concepts == null) {
+          log.warn("mapGene2Concepts is null");
+          mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+      } else
+          log.info("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
 
-			if (attBegin != null && gene.getAttribute(attBegin) != null) {
-				begBP = (Integer) gene.getAttribute(attBegin).getValue();
-			}
+      if (mapConcept2Genes == null) {
+          log.warn("mapConcept2Genes is null");
+          mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
+      } else
+          log.info("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
 
-			if (attCM != null)
-				beg = begCM;
-			else
-				beg = begBP;
+      if (mapGene2PathLength == null) {
+          log.warn("Gene2PathLength is null");
+          mapGene2PathLength = new HashMap<String, Integer>();
+      } else
+          log.info("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
 
-			for (ONDEXConcept q : qtls) {
-				String chrQTL = q.getAttribute(attChromosome).getValue().toString();
-				int startQTL = (Integer) q.getAttribute(attBegin).getValue();
-				int endQTL = (Integer) q.getAttribute(attEnd).getValue();
+      log.info("Create Gene2QTL map now...");
 
-				if (chrQTL.equals(chr) && (beg >= startQTL) && (beg <= endQTL)) {
+      mapGene2QTL = new HashMap<Integer, Set<Integer>>();
 
-					if (!mapGene2QTL.containsKey(gene.getId())) {
-						Set<Integer> setQTL = new HashSet<Integer>();
-						mapGene2QTL.put(gene.getId(), setQTL);
-					}
+      for (ONDEXConcept gene : genes) {
 
-					mapGene2QTL.get(gene.getId()).add(q.getId());
-				}
+          String chr = null;
+          double beg = 0.0;
+          double begCM = 0.0;
+          int begBP = 0;
 
-			}
-		}
+          if (gene.getAttribute(attChromosome) != null) {
+              chr = gene.getAttribute(attChromosome).getValue().toString();
+          }
 
-		log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());
-	}
+          if (attCM != null && gene.getAttribute(attCM) != null) {
+              begCM = (Double) gene.getAttribute(attCM).getValue();
+          }
+
+          if (attBegin != null && gene.getAttribute(attBegin) != null) {
+              begBP = (Integer) gene.getAttribute(attBegin).getValue();
+          }
+
+          if (attCM != null)
+              beg = begCM;
+          else
+              beg = begBP;
+
+          for (ONDEXConcept q : qtls) {
+              String chrQTL = q.getAttribute(attChromosome).getValue().toString();
+              int startQTL = (Integer) q.getAttribute(attBegin).getValue();
+              int endQTL = (Integer) q.getAttribute(attEnd).getValue();
+
+              if (chrQTL.equals(chr) && (beg >= startQTL) && (beg <= endQTL)) {
+
+                  if (!mapGene2QTL.containsKey(gene.getId())) {
+                      Set<Integer> setQTL = new HashSet<Integer>();
+                      mapGene2QTL.put(gene.getId(), setQTL);
+                  }
+
+                  mapGene2QTL.get(gene.getId()).add(q.getId());
+              }
+
+          }
+      }
+
+      log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());
+  }
 
 	public ArrayList<ONDEXConcept> filterQTLs(ArrayList<ONDEXConcept> genes, List<String> qtls) {
 		Set<ONDEXConcept> genesQTL = searchQTLs(qtls);

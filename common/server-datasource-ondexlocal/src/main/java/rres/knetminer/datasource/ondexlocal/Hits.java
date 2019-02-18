@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,11 +30,11 @@ public class Hits {
 	String keyword = "";
 	
 	
-	public Hits(String keyword, OndexServiceProvider ondexProvider) {
+	public Hits(String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList) {
 		this.ondexProvider = ondexProvider;
 		this.keyword = keyword;
 		try {
-			this.luceneConcepts = ondexProvider.searchLucene(keyword);
+			this.luceneConcepts = ondexProvider.searchLucene(keyword, geneList, true);
 			//remove from constructor if it slows down search noticeably
 			this.countLinkedGenes();
 		} 
