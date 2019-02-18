@@ -222,6 +222,7 @@
 		<junit.version>4.10</junit.version>
 		<json.version>20180130</json.version>
 		<ga.version>2.0.0</ga.version>
+		<commons.version>2.6</commons.version>
 	</properties>
 
 	<profiles>
@@ -288,8 +289,20 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<dependencyManagement>	
+	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+				<artifactId>server-datasource-ondexlocal</artifactId>
+				<version>${project.version}</version>
+				<exclusions>
+					<!-- Remove the old log4j and requires a replacment with log4j-1.2-api (listed below) -->
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 			<!-- The new backend, based on Neo4j -->
 			<dependency>
 				<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
@@ -421,11 +434,29 @@
 				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
+			 	<groupId>org.apache.logging.log4j</groupId>
+			 	<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<!-- 
+				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.
+				(https://logging.apache.org/log4j/2.x/manual/api.html)
+			 -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-1.2-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-web</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -436,12 +467,6 @@
     				<groupId>org.json</groupId>
     				<artifactId>json</artifactId>
     				<version>${json.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.6</version>
 			</dependency>
 
 			<dependency>
