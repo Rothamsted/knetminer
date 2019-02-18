@@ -3,7 +3,6 @@ package rres.knetminer.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
-import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +10,7 @@ import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -20,16 +19,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonParser;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
 import uk.ac.ebi.utils.xml.XPathReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * TODO: comment me!
@@ -40,7 +38,7 @@ import uk.ac.ebi.utils.xml.XPathReader;
  */
 public class ApiIT
 {
-	private static Logger clog = LoggerFactory.getLogger ( ApiIT.class );
+	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	
 	public static JSONObject invokeApi ( String callName, Object... jsonFields )
 	{
@@ -58,12 +56,16 @@ public class ApiIT
 			HttpClient client = HttpClientBuilder.create ().build ();
 
 			HttpResponse response = client.execute ( post );
+			int httpCode = response.getStatusLine ().getStatusCode ();
+			if ( httpCode != 200 ) ExceptionUtils.throwEx ( 
+				HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
+			);
 			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
-			clog.debug ( "JSON got from <{}>:\n{}", url, jsStr );
+			clog.info ( "JSON got from <{}>:\n{}", url, jsStr );
 			
 			return new JSONObject ( jsStr );
 		}
-		catch ( JSONException | IOException ex )
+		catch ( JSONException | IOException | HttpException ex )
 		{
 			throw buildEx (
 				UnexpectedEventException.class,
