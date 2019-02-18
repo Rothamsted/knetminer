@@ -752,20 +752,29 @@ public class OndexServiceProvider {
 
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-                double distance = path_length==null ? 1 : (1 / path_length);
+		    if(path_length==null){
+		    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
+		    }
+                double distance = path_length==null ? 0 : (1 / path_length);
 
-                // multiply all three components to obtain a single evidence weight
-                double evidence_weight = igf * luceneScore * distance;
+                // take the mean of all three components 
+                double evidence_weight =  (igf + luceneScore + distance) / 3;
 
                 // sum of all evidence weights
                 weighted_evidence_sum += evidence_weight;
             }
 
-            // the inverse size of the gene knoweldge graph
-            double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
 
-            // normalise weighted sum with by the size of the gene knowledge graph
-            double knetScore = normFactor * weighted_evidence_sum;
+            	// normalisation method 1: size of the gene knoweldge graph
+            	// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+		
+		// normalistion method 2: size of matching evidence concepts only (mean score)
+		//double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
+
+           	
+		// No normalisation for now as it's too experimental. 
+		// This meeans better studied genes will appear top of the list
+            double knetScore = /*normFactor * */ weighted_evidence_sum;
 
             scoredCandidates.put(graph.getConcept(geneId), knetScore);
         }
@@ -3003,15 +3012,17 @@ public class OndexServiceProvider {
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
 
+			
                     // add all semantic motifs to the new graph
-                    Set<ONDEXConcept> concepts = path.getAllConcepts();
+                    // Set<ONDEXConcept> concepts = path.getAllConcepts();
 
                     // Extract pathLength and endNode ID.
                     int pathLength = (path.getLength() - 1) / 2; // get Path Length
                     ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder()
                             .get(path.getConceptsInPositionOrder().size() - 1);
                     int lastConID = con.getId(); // endNode ID.
-                    String gpl_key = String.valueOf(gene.getId()) + "//" + String.valueOf(lastConID);
+                    String gpl_key = gene.getId() + "//" + lastConID;
+			
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
@@ -3033,7 +3044,7 @@ public class OndexServiceProvider {
                     }
 
                     // CONCEPT 2 GENE
-                    concepts.remove(gene);
+                    // concepts.remove(gene);
                     
 			if (!mapConcept2Genes.containsKey(lastConID)) {
 			    Set<Integer> setGenes = new HashSet<Integer>();
