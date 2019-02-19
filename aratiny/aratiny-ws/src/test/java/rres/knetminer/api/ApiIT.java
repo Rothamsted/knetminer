@@ -1,5 +1,6 @@
 package rres.knetminer.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
@@ -39,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 public class ApiIT
 {
 	private static Logger clog = LogManager.getLogger ( ApiIT.class );
+	private Logger log = LogManager.getLogger ( this.getClass () );
 	
 	public static JSONObject invokeApi ( String callName, Object... jsonFields )
 	{
@@ -92,20 +94,50 @@ public class ApiIT
 	}
 	
 	@Test
-	public void testGenome ()
+	public void testGenomeGrowth () {
+		testGenome ( "growth", "ABI3" );
+	}
+	
+	@Test
+	public void testGenomeASK7 () {
+		testGenome ( "'AT5G14750'", "ASK7" );
+	}
+
+	/**
+	 * This is actually run only if we're running the neo4j profile (we receive a flag by Maven, reporting that).
+	 */
+	@Test
+	public void testGenomeNeo4j () 
 	{
-		JSONObject js = invokeApi ( "genome", "keyword", "growth", "qtl", new String[0] );
+		// TODO: possibly factorise this safeguard
+		String neoPropType = "maven.profileId";
+		String neoProp = System.getProperty ( neoPropType, null );
+		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", neoProp );
+
+		if ( !"neo4j".equals ( neoProp ) ) {
+			log.warn ( "Skipping test for neo4j profile-only" );
+			return;
+		}
 		
-		assertTrue ( "geneCount from /genome is wrong!", js.getInt ( "geneCount" ) > 0 );
+		testGenome ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
+	}
+		
+	
+	
+	private void testGenome ( String keyword, String expectedGeneLabel )
+	{
+		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0] );
+		
+		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
 		
 		String xmlView = js.getString ( "gviewer" );
-		assertNotNull ( "gviewer from /genome is null!", xmlView );
+		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
 		
 		XPathReader xpath = new XPathReader ( xmlView );
 		
 		assertNotNull (
-			"Gene ABI3 not returned by /genome", 
-			xpath.readString ( "/genome/feature[./label = 'ABI3']" )
+			"Gene " + expectedGeneLabel + " not returned by /genome", 
+			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
-	}
+	}	
 }

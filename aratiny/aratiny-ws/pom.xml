@@ -11,6 +11,7 @@
 	<artifactId>aratiny-ws</artifactId>
 	<packaging>war</packaging>
 
+	<properties><maven.profileId>default</maven.profileId></properties>
 
 	<dependencies>
 		<dependency>
@@ -89,6 +90,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 	      <artifactId>maven-failsafe-plugin</artifactId>
+	      <configuration combine.self = "merge">
+	      	<systemProperties>
+	      		<maven.profileId>${maven.profileId}</maven.profileId>
+	      	</systemProperties>
+	      </configuration>
 			</plugin>			
 		
 		</plugins>
@@ -98,6 +104,9 @@
 		
 		<profile>
 			<id>neo4j</id>
+			<properties>
+				<maven.profileId>neo4j</maven.profileId>
+			</properties>
 			<build>
 				<plugins>
 		  		<plugin>
