@@ -1435,69 +1435,26 @@ public class OndexServiceProvider {
         
         ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
         
-        // check if subgraph has publications
+        // if subgraph has publications
 		if (ccPub != null) {
 			
-	        
-	        AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
-	        
-	        
-			// Create a sorted list of setPub based on YEAR attribute
-			// First, we need a year converter to int
-			// -1 is a fallback case, which will push all invalid years down
-			Function<ONDEXConcept, Integer> conceptYear = c -> Optional.ofNullable(c.getAttribute(attYear))
-					.map(Attribute::getValue).map(year -> { // We come up here
-															// only
-															// when
-															// attribute+value
-															// != null
-						if (year instanceof Number)
-							return ((Number) year).intValue();
-						// must be a string
-						String syear = (String) year;
-						if ("".equals(syear))
-							return -1;
-						try {
-							return Integer.valueOf((String) year);
-						} catch (NumberFormatException ex) {
-							return -1;
-						}
-					}).orElse(-1);
+			// get all publications in subgraph that have and don't have keyword
+	        Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass(ccPub);
+	        Set<Integer> allPubIds = new HashSet<Integer>();
+			for (ONDEXConcept c : allPubs) {
+				allPubIds.add(c.getId());
+			}
 
-			// Now, let's sort using streams
-			// Returns the 20 most recent publications,
-			List<ONDEXConcept> sortedAndLimitedPubs = pubKeywordSet.parallelStream()
-					// - is to sort from the most recent (highest) year
-					.sorted((pub1, pub2) -> -Integer.compare(conceptYear.apply(pub1), conceptYear.apply(pub2)))
-					.limit(20).collect(Collectors.toList());
-
-			// Filter articles published before this year.
-			// int currentYear = Calendar.getInstance().get ( Calendar.YEAR );
-			// int yearThreeShold = currentYear - 5;
-			//
-			// List<ONDEXConcept> sortedAndLimitedPubs1 = pubSet.parallelStream
-			// ()
-			// .filter ( pub -> conceptYear.apply ( pub ) >= yearThreeShold )
-			// .sorted ( (pub1, pub2) -> - Integer.compare ( conceptYear.apply (
-			// pub1 ), conceptYear.apply ( pub2 ) ) )
-			// .limit ( 20 )
-			// .collect ( Collectors.toList ());
-
-			Set<ONDEXConcept> pubAllSet = subGraph.getConceptsOfConceptClass(ccPub);
-			List<Integer> toRemove = new ArrayList<Integer>();
+	        // publications that we want to keep (newest + have keyword)
+			AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
+	     	List<Integer> newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
+	     			
+			// publications that want to remove 
+			allPubIds.removeAll(newPubIds);
 			
 			// Keep most recent publications that contain keyword and remove rest from subGraph
-			for (ONDEXConcept c : pubAllSet) {
-				if (!sortedAndLimitedPubs.contains(c)) {
-					toRemove.add(c.getId());
-				}
-			}
-			
-			for (Integer cId : toRemove) {
-				subGraph.deleteConcept(cId);
-			}
-			
-		
+			final ONDEXGraph subGraphRo = subGraph;
+			allPubIds.forEach ( pubId -> subGraphRo.deleteConcept ( pubId ) );
         }
 		
 
