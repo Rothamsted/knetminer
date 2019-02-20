@@ -1438,7 +1438,7 @@ public class OndexServiceProvider {
         // check if subgraph has publications
 		if (ccPub != null) {
 			
-	        Set<ONDEXConcept> pubAllSet = subGraph.getConceptsOfConceptClass(ccPub);
+	        
 	        AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
 	        
 	        
@@ -1483,12 +1483,20 @@ public class OndexServiceProvider {
 			// .limit ( 20 )
 			// .collect ( Collectors.toList ());
 
+			Set<ONDEXConcept> pubAllSet = subGraph.getConceptsOfConceptClass(ccPub);
+			List<Integer> toRemove = new ArrayList<Integer>();
+			
 			// Keep most recent publications that contain keyword and remove rest from subGraph
 			for (ONDEXConcept c : pubAllSet) {
 				if (!sortedAndLimitedPubs.contains(c)) {
-					subGraph.deleteConcept(c.getId());
+					toRemove.add(c.getId());
 				}
 			}
+			
+			for (Integer cId : toRemove) {
+				subGraph.deleteConcept(cId);
+			}
+			
 		
         }
 		
