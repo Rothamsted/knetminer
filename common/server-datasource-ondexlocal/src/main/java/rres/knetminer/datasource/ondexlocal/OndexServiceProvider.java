@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Collection;
 import java.util.Comparator;
@@ -31,14 +32,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
 import net.sourceforge.ondex.core.Attribute;
@@ -1366,9 +1370,6 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
         
-        ConceptClass ccPub = graph.getMetaData().getConceptClass("Publication");
-        AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
-
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
@@ -1385,9 +1386,7 @@ public class OndexServiceProvider {
 
         ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
 
-        int numVisiblePublication = 0;
-        
-        Set<ONDEXConcept> pubSet = new HashSet<ONDEXConcept>();
+        Set<ONDEXConcept> pubKeywordSet = new HashSet<ONDEXConcept>();
 
         for (List<EvidencePathNode> paths : results.values()) {
             for (EvidencePathNode path : paths) {
@@ -1408,6 +1407,7 @@ public class OndexServiceProvider {
 
                 ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
+                // end concept contains keyword
                 if (luceneResults.containsKey(keywordCon)) {
 
                     ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
@@ -1417,19 +1417,9 @@ public class OndexServiceProvider {
                         this.highlight(cloneCon, keywordColourMap);
                         keywordConcepts.add(cloneCon);
 
-                        if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && 
-                        		keywordCon.getAttribute(attYear) != null) {
-                        	pubSet.add(cloneCon);
+                        if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
+                        	pubKeywordSet.add(cloneCon);
                         }
-                    }
-
-                    // Hides the whole path from gene to publication if more than X publications
-                    // exist in the subgraph
-                    // the visible network is otherwise too large
-                    // TODO: Instead of choosing X arbitrary publications, show the most specific or
-                    // latest publications
-                    if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && numVisiblePublication > 20) {
-                        continue;
                     }
 
                     // annotate the semantic motif in the new Ondex graph
@@ -1443,9 +1433,65 @@ public class OndexServiceProvider {
         }
         
         
-        //TODO 1: Create a sorted list of setPub based on YEAR attribute
-        //TODO 2: Keep 20 most recent publications that contain keyword and remove rest from subGraph
+        ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
         
+        // check if subgraph has publications
+		if (ccPub != null) {
+			
+	        Set<ONDEXConcept> pubAllSet = subGraph.getConceptsOfConceptClass(ccPub);
+	        AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
+	        
+	        
+			// Create a sorted list of setPub based on YEAR attribute
+			// First, we need a year converter to int
+			// -1 is a fallback case, which will push all invalid years down
+			Function<ONDEXConcept, Integer> conceptYear = c -> Optional.ofNullable(c.getAttribute(attYear))
+					.map(Attribute::getValue).map(year -> { // We come up here
+															// only
+															// when
+															// attribute+value
+															// != null
+						if (year instanceof Number)
+							return ((Number) year).intValue();
+						// must be a string
+						String syear = (String) year;
+						if ("".equals(syear))
+							return -1;
+						try {
+							return Integer.valueOf((String) year);
+						} catch (NumberFormatException ex) {
+							return -1;
+						}
+					}).orElse(-1);
+
+			// Now, let's sort using streams
+			// Returns the 20 most recent publications,
+			List<ONDEXConcept> sortedAndLimitedPubs = pubKeywordSet.parallelStream()
+					// - is to sort from the most recent (highest) year
+					.sorted((pub1, pub2) -> -Integer.compare(conceptYear.apply(pub1), conceptYear.apply(pub2)))
+					.limit(20).collect(Collectors.toList());
+
+			// Filter articles published before this year.
+			// int currentYear = Calendar.getInstance().get ( Calendar.YEAR );
+			// int yearThreeShold = currentYear - 5;
+			//
+			// List<ONDEXConcept> sortedAndLimitedPubs1 = pubSet.parallelStream
+			// ()
+			// .filter ( pub -> conceptYear.apply ( pub ) >= yearThreeShold )
+			// .sorted ( (pub1, pub2) -> - Integer.compare ( conceptYear.apply (
+			// pub1 ), conceptYear.apply ( pub2 ) ) )
+			// .limit ( 20 )
+			// .collect ( Collectors.toList ());
+
+			// Keep most recent publications that contain keyword and remove rest from subGraph
+			for (ONDEXConcept c : pubAllSet) {
+				if (!sortedAndLimitedPubs.contains(c)) {
+					subGraph.deleteConcept(c.getId());
+				}
+			}
+		
+        }
+		
 
         if (keywordConcepts.isEmpty()) {
             Set<ONDEXConcept> cons = subGraph.getConcepts();
@@ -3303,3 +3349,5 @@ class FloatValueComparator<T> implements Comparator<T> {
         }
     }
 }
+
+
