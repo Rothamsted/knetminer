@@ -11,7 +11,10 @@
 	<artifactId>aratiny-ws</artifactId>
 	<packaging>war</packaging>
 
-	<properties><maven.profileId>default</maven.profileId></properties>
+	<properties>
+		<maven.profileId>default</maven.profileId>
+		<properties><knetminer.graphTraverserClass></knetminer.graphTraverserClass></properties>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -83,6 +86,9 @@
 			    <webApp>
 			      <contextPath>/${knetminer.api.webContext}</contextPath>
 			    </webApp>
+          <webAppConfig>
+            <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
+          </webAppConfig>
 			    <stopPort>9091</stopPort>
 			  </configuration>
 			</plugin>		
@@ -98,6 +104,30 @@
 			</plugin>			
 		
 		</plugins>
+		
+		<testResources>
+			<!-- These files contains Maven variables that need to be interpolated -->
+			<testResource>
+			  <directory>src/test/resources</directory>
+			  <filtering>true</filtering>
+			  <includes>
+			  	<include>knetminer-config/config.xml</include>
+			  	<include>knetminer-config/neo4j/config.xml</include>
+			  	<include>jetty-web.xml</include>
+			  </includes>
+			</testResource>
+			<!-- And the rest doesn't -->
+			<testResource>
+			  <directory>src/test/resources</directory>
+			  <filtering>false</filtering>
+			  <excludes>
+			  	<exclude>knetminer-config/config.xml</exclude>
+			  	<exclude>knetminer-config/neo4j/config.xml</exclude>
+			  	<exclude>jetty-web.xml</exclude>
+			  </excludes>
+			</testResource>		
+   	</testResources>				
+		
 	</build>
 	
 	<profiles>
@@ -106,6 +136,7 @@
 			<id>neo4j</id>
 			<properties>
 				<maven.profileId>neo4j</maven.profileId>
+				<knetminer.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.graphTraverserClass>
 			</properties>
 			<build>
 				<plugins>

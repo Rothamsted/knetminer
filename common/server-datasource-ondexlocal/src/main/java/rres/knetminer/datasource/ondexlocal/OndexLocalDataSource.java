@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
@@ -45,6 +48,32 @@ import rres.knetminer.datasource.api.SynonymsResponse;
  */
 public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
+	public static class ConfigFileHarvester implements ServletContextListener
+	{
+		public static String  CONFIG_FILE_PATH_PROP = "knetminer.dataSource.configFilePath"; 
+		private static String configFilePath = null;
+		
+		@Override
+		public synchronized void contextInitialized ( ServletContextEvent sce )
+		{
+			if ( configFilePath != null ) throw new UnsupportedOperationException (
+			  CONFIG_FILE_PATH_PROP + " can be set only once, for a Knetminer server managing just one data source"
+			);
+			configFilePath = System.getProperty ( 
+				CONFIG_FILE_PATH_PROP,
+				sce.getServletContext ().getInitParameter ( CONFIG_FILE_PATH_PROP )
+			);
+		}
+
+		@Override
+		public void contextDestroyed ( ServletContextEvent sce ) {}
+
+		public static synchronized String getConfigFilePath ()
+		{
+			return configFilePath;
+		}
+	}
+	
 	private OndexServiceProvider ondexServiceProvider;
 	
 	private Properties props = new Properties();
@@ -53,17 +82,53 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return this.props.getProperty(key);
 	}
 
+	public OndexLocalDataSource () {
+		init ();
+	}
+	
 	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
-		this.setDataSourceNames(new String[] {dsName});
+		init ( dsName, configXmlPath, semanticMotifsPath );
+	}
+
+	
+	private void init () {
+		init ( null, null, null );
+	}
+
+	private void init ( String dsName, String configXmlPath, String semanticMotifsPath )
+	{
+		// Config.xml location can be specified in different ways, see the constructors
+		if ( configXmlPath == null )
+		{
+			configXmlPath = ConfigFileHarvester.getConfigFilePath ();
+			if ( configXmlPath == null ) throw new IllegalStateException ( 
+				"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
+				+ ", either as a Java property, a <context-param> in web.xml, or" 
+				+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
+			);
+		}
 		
-		// Config.xml is provided by the implementing abstract class in its
-		// src/main/resources folder
-		URL configUrl = Thread.currentThread().getContextClassLoader().getResource(configXmlPath);
-		try {
+		try 
+		{
+			URL configUrl = configXmlPath.startsWith ( "file://" )
+				? new URL ( configXmlPath )
+				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
+			
 			this.props.loadFromXML(configUrl.openStream());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new Error(e);
 		}
+
+		if ( dsName == null ) dsName = this.props.getProperty ( "DataSourceName", null );
+		if ( dsName == null ) throw new IllegalArgumentException ( 
+			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
+		);
+		this.setDataSourceNames(new String[] {dsName});
+		
+		if ( semanticMotifsPath == null )
+			// We need it here, to support legacy method interfaces. It is later put back into properties
+			semanticMotifsPath = this.props.getProperty ( "StateMachineFilePath", null );
 		
 		this.ondexServiceProvider = new OndexServiceProvider();
 
@@ -86,6 +151,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			throw new Error(e);
 		}
 	}
+	
 
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);

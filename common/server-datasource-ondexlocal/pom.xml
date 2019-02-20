@@ -72,5 +72,10 @@
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
 		</dependency>
+		<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <scope>provided</scope>
+		</dependency>		
 	</dependencies>
 </project>

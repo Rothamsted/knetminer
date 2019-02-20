@@ -15,6 +15,7 @@
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
 		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
+    
     <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
 		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
 
