@@ -1365,6 +1365,9 @@ public class OndexServiceProvider {
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
+        
+        ConceptClass ccPub = graph.getMetaData().getConceptClass("Publication");
+        AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
 
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
@@ -1383,6 +1386,8 @@ public class OndexServiceProvider {
         ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
 
         int numVisiblePublication = 0;
+        
+        Set<ONDEXConcept> pubSet = new HashSet<ONDEXConcept>();
 
         for (List<EvidencePathNode> paths : results.values()) {
             for (EvidencePathNode path : paths) {
@@ -1412,8 +1417,9 @@ public class OndexServiceProvider {
                         this.highlight(cloneCon, keywordColourMap);
                         keywordConcepts.add(cloneCon);
 
-                        if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
-                            numVisiblePublication++;
+                        if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication") && 
+                        		keywordCon.getAttribute(attYear) != null) {
+                        	pubSet.add(cloneCon);
                         }
                     }
 
@@ -1435,6 +1441,11 @@ public class OndexServiceProvider {
 
             }
         }
+        
+        
+        //TODO 1: Create a sorted list of setPub based on YEAR attribute
+        //TODO 2: Keep 20 most recent publications that contain keyword and remove rest from subGraph
+        
 
         if (keywordConcepts.isEmpty()) {
             Set<ONDEXConcept> cons = subGraph.getConcepts();
@@ -1457,7 +1468,8 @@ public class OndexServiceProvider {
                 gene.createAttribute(attVisible, true, false);
                 gene.createAttribute(attSize, new Integer(70), false);
             }
-
+            
+            // TODO: only show paths between genes and GO-BP or Trait (TO) terms
             for (ONDEXConcept c : cons) {
 
                 if (c.getOfType().getId().equalsIgnoreCase("Publication")
