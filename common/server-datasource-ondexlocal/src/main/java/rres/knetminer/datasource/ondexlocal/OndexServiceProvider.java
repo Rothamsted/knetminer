@@ -1381,7 +1381,7 @@ public class OndexServiceProvider {
         }
 
         // create new graph to return
-        ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
+        final ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
         ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
 
         ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
@@ -1453,8 +1453,7 @@ public class OndexServiceProvider {
 			allPubIds.removeAll(newPubIds);
 			
 			// Keep most recent publications that contain keyword and remove rest from subGraph
-			final ONDEXGraph subGraphRo = subGraph;
-			allPubIds.forEach ( pubId -> subGraphRo.deleteConcept ( pubId ) );
+			allPubIds.forEach ( pubId -> subGraph.deleteConcept ( pubId ) );
         }
 		
 
@@ -1514,26 +1513,26 @@ public class OndexServiceProvider {
 
         if (export_visible_network) {
 
-            ONDEXGraphMetaData md = subGraph.getMetaData();
-            AttributeName attSize = md.getAttributeName("size");
-            Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
-            Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
-
-            ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
-            ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
-
-            ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
-
-            for (ONDEXConcept c : itc) {
-                graphCloner2.cloneConcept(c);
-            }
-            for (ONDEXRelation r : itr) {
-                graphCloner2.cloneRelation(r);
-            }
-
-            ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
-
-            subGraph = filteredGraph;
+//            ONDEXGraphMetaData md = subGraph.getMetaData();
+//            AttributeName attSize = md.getAttributeName("size");
+//            Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
+//            Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
+//
+//            ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
+//            ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
+//
+//            ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
+//
+//            for (ONDEXConcept c : itc) {
+//                graphCloner2.cloneConcept(c);
+//            }
+//            for (ONDEXRelation r : itr) {
+//                graphCloner2.cloneRelation(r);
+//            }
+//
+//            ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
+//
+//            subGraph = filteredGraph;
 
         }
 
