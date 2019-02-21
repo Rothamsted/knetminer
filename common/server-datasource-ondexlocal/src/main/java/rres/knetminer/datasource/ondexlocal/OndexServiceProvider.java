@@ -1592,6 +1592,10 @@ public class OndexServiceProvider {
         RelationType rt = md.getFactory().createRelationType("is_p");
         EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
         
+        ConceptClass ccGene = md.getConceptClass("Gene");
+        if (ccGene == null)
+        	ccGene = md.getFactory().createConceptClass("Gene");
+        
         ConceptClass ccTrait = md.getConceptClass("Trait");
         if (ccTrait == null)
         	ccTrait = md.getFactory().createConceptClass("Trait");
@@ -1616,28 +1620,56 @@ public class OndexServiceProvider {
             con = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
         }
 
-
-        // annotate concept that contains keyword
-        ONDEXConcept c = graphCloner.cloneConcept(con);
-        if (c.getAttribute(attSize) == null) {
-            // initial size
-            c.createAttribute(attSize, new Integer(70), false);
-            c.createAttribute(attVisible, true, false);
+        // set all concepts in path to visible
+        Set<ONDEXConcept> cons = path.getAllConcepts();
+        for (ONDEXConcept pconcept : cons) {
+            ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
+            if (concept.getAttribute(attSize) == null) {
+                concept.createAttribute(attSize, new Integer(30), false);
+                concept.createAttribute(attVisible, true, false);
+            } 
         }
         
+        // evidence Node in the new subGraph
+        ONDEXConcept clonedEndNode = graphCloner.cloneConcept(con);
+       
+        // give evidence nodes a bigger size
+        clonedEndNode.getAttribute(attSize).setValue(new Integer(70));
+        
+        
         // set node visibility back to false, if filter=yes and cc not part of filter-list 
-        if(doFilter && !ccFilter.contains(c.getOfType())){
-            c.getAttribute(attVisible).setValue(false);
+        if(doFilter && !ccFilter.contains(clonedEndNode.getOfType())){
+            for (ONDEXConcept pconcept : cons) {
+                ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
+                concept.getAttribute(attVisible).setValue(false);
+            }
         }
-
-        // annotate gene concept
+        
+        // seed gene should be visible, bigger and flagged
         ONDEXConcept g = graphCloner.cloneConcept(gene);
-        if (g.getAttribute(attSize) == null) {
-            // initial size
-            g.createAttribute(attSize, new Integer(70), false);
-            g.createAttribute(attVisible, true, false);
-            g.createAttribute(attFlagged, true, false);
-        } 
+        g.getAttribute(attSize).setValue(new Integer(70));
+        g.getAttribute(attVisible).setValue(true);
+        g.getAttribute(attFlagged).setValue(true);
+        
+        
+        // annotate path connecting gene to keyword concept
+        Set<ONDEXRelation> rels = path.getAllRelations();
+        for (ONDEXRelation rel : rels) {
+            ONDEXRelation r = graphCloner.cloneRelation(rel);
+            if (r.getAttribute(attSize) == null) {
+                // initial size
+                r.createAttribute(attSize, new Integer(5), false);
+                r.createAttribute(attVisible, true, false);
+            }  
+        }
+        
+        // set relation visibility back to false, if filter=yes and cc not part of filter-list 
+        if(doFilter && !ccFilter.contains(clonedEndNode.getOfType())){
+            for (ONDEXRelation rel : rels) {
+                ONDEXRelation r = graphCloner.cloneRelation(rel);
+                r.getAttribute(attVisible).setValue(false);
+            }
+        }
 
         // add gene-QTL-Trait relations to the network
         if (mapGene2QTL.containsKey(gene.getId())) {
@@ -1669,44 +1701,6 @@ public class OndexServiceProvider {
                         }
                     }
                 }
-            }
-        }
-
-        // annotate path connecting gene to keyword concept
-        Set<ONDEXRelation> rels = path.getAllRelations();
-        for (ONDEXRelation rel : rels) {
-            ONDEXRelation r = graphCloner.cloneRelation(rel);
-            if (r.getAttribute(attSize) == null) {
-                // initial size
-                r.createAttribute(attSize, new Integer(5), false);
-                r.createAttribute(attVisible, true, false);
-            }  
-        }
-        
-        // set relation visibility back to false, if filter=yes and cc not part of filter-list 
-        if(doFilter && !ccFilter.contains(c.getOfType())){
-            for (ONDEXRelation rel : rels) {
-                ONDEXRelation r = graphCloner.cloneRelation(rel);
-                r.getAttribute(attVisible).setValue(false);
-            }
-        }
-
-
-        // set concepts in path to visible
-        Set<ONDEXConcept> cons = path.getAllConcepts();
-        for (ONDEXConcept pconcept : cons) {
-            ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
-            if (concept.getAttribute(attSize) == null) {
-                concept.createAttribute(attSize, new Integer(30), false);
-                concept.createAttribute(attVisible, true, false);
-            } 
-        }
-        
-        // set node visibility back to false, if filter=yes and cc not part of filter-list 
-        if(doFilter && !ccFilter.contains(c.getOfType())){
-            for (ONDEXConcept pconcept : cons) {
-                ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
-                concept.getAttribute(attVisible).setValue(false);
             }
         }
         
