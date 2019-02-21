@@ -2299,47 +2299,61 @@ public class OndexServiceProvider {
             if (luceneHits == null) {
                 luceneHits = new HashSet<Integer>();
             }
-
+            
             Set<Integer> evidencesIDs = new HashSet<Integer>();
             for (int hitID : luceneHits) {
                 ONDEXConcept c = graph.getConcept(hitID);
                 evidencesIDs.add(c.getId()); // retain all evidences' ID's
                 String ccId = c.getOfType().getId();
+                
+                // skip publications as handled differently (see below)
+                if (ccId.equals("Publication")) 
+                	continue;
+                
                 String name = getDefaultNameForGroupOfConcepts(c);
-                // All publications will have the format PMID:15487445
-                if (ccId == "Publication" && !name.contains("PMID:"))
-                    name = "PMID:" + name;
 
                 if (!cc2name.containsKey(ccId)) {
-                    cc2name.put(ccId, ccId + "//" + name);
+                    cc2name.put(ccId, name);
                 } else {
                     String act_name = cc2name.get(ccId);
                     act_name = act_name + "//" + name;
                     cc2name.put(ccId, act_name);
                 }
             }
+            
+            // special case for publications to sort and filter most recent publications
+            Set<ONDEXConcept> allPubs = new HashSet<ONDEXConcept>();
+            for (int lid : luceneHits) {
+                ONDEXConcept c = graph.getConcept(lid);
+                if(c.getOfType().getId().equals("Publication"))
+                	allPubs.add(c);
+            }
+            
+            AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
+            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+            
+            String pubString = "Publication__"+allPubs.size()+"__";
+            for (Integer pid : newPubs) {
+                String name = getDefaultNameForGroupOfConcepts(graph.getConcept(pid));
+                // All publications will have the format PMID:15487445
+                if (!name.contains("PMID:")) {
+                    name = "PMID:" + name;
+                }
+                pubString = pubString + "//" + name;
+				
+			}
+            
+            // add most recent publications here
+            if(!newPubs.isEmpty())
+            	cc2name.put("Publication", pubString);
+            
+            
             int evidences_linked = luceneHits.size(); // no. of evidences linked per gene
-
-            // Removed ccSNP from Geneview table (12/09/2017)
-            /*
-             * if (ccSNP != null) { Set<ONDEXRelation> rels =
-             * graph.getRelationsOfConcept(gene); for (ONDEXRelation rel : rels) { if
-             * (rel.getOfType().getId().equals("has_variation")) { ONDEXConcept snpConcept =
-             * rel.getToConcept(); String ccId = "SNP"; String name =
-             * getDefaultNameForGroupOfConcepts(snpConcept); if (attSnpCons != null &&
-             * snpConcept.getAttribute(attSnpCons) != null) name =
-             * snpConcept.getAttribute(attSnpCons).getValue().toString(); if
-             * (!cc2name.containsKey(ccId)) { cc2name.put(ccId, ccId + "//" + name); } else
-             * { String act_name = cc2name.get(ccId); act_name = act_name + "//" + name;
-             * cc2name.put(ccId, act_name); } } }
-             *
-             * }
-             */
 
             // create output string for evidences column in GeneView table
             String evidence = "";
             for (String ccId : cc2name.keySet()) {
-                evidence += cc2name.get(ccId) + "||";
+                evidence += ccId+"__"+cc2name.get(ccId).split("//")+"__"+cc2name.get(ccId) + "||";
             }
 
             String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
@@ -2370,13 +2384,13 @@ public class OndexServiceProvider {
                     // if GeneList was provided by the user, display only those genes.
                     if (isInList.equals("yes")) {
                         out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-                                + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
-                                + evidences_linked + "\t" + all_evidences + "\n");
+                                + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
+                                + evidences_linked + "\t" + all_evidences + "\n"*/);
                     }
                 } else { // default
                     out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-                            + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence + "\t"
-                            + evidences_linked + "\t" + all_evidences + "\n");
+                            + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
+                            + evidences_linked + "\t" + all_evidences + "\n" */);
                 }
             }
         }
