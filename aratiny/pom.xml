@@ -27,7 +27,6 @@
 	
 	<modules>
 		<module>aratiny-client</module>
-		<module>aratiny-datasource</module>
 		<module>aratiny-ws</module>
 	</modules>
 	

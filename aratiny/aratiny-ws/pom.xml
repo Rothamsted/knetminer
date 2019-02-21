@@ -24,8 +24,8 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>aratiny-datasource</artifactId>
+			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+			<artifactId>configurable-datasource</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -158,7 +158,7 @@
 			</properties>
 			<build>
 				<plugins>
-		  		
+
 					<!-- 
 						Unzip neo4j test DB downloaded by the dependency plugin. 
 						This happens after neo4j-server-maven-plugin below has downladed the 
@@ -224,18 +224,45 @@
 							-->
 							<execution>
 								<id>start-neo4j-server</id>
-								<phase>prepare-package</phase>
+								<phase>pre-integration-test</phase>
 								<goals><goal>start</goal></goals>
 							</execution>
 							<execution>
 								<id>stop-neo4j-server</id>
-								<phase>verify</phase>
+								<phase>post-integration-test</phase>
 								<goals><goal>stop</goal></goals>
 							</execution>					
 						</executions>		        
-			    </plugin>	
+			    </plugin>
+			    
+			    <!-- 
+			    	It inherits stuff from the main section. We have to repeat it here, since it's the only way to
+			    	force same-phase execution order when using profiles (both jetty and neo4j belong in pre/post integration 
+			    	test phases, the former must be started (stopped) before (after) the latter).
+			     -->
+					<plugin>
+					  <groupId>org.eclipse.jetty</groupId>
+					  <artifactId>jetty-maven-plugin</artifactId>
+					</plugin>			    
+
 				</plugins>
 			</build>		
 		</profile>
+		
+		<!-- 
+			This is used to run the build in 'console' mode, ie, start Neo4j (if the corresponding profile is enabled)
+			and jetty and keep them on until the maven user presses Enter.
+			
+			There is a (pseudo) test in ApiIT to deal with that, which wait for a key if this profile is enabled (and the
+			the maven.profileId is set to 'console'). The build finishes after that step with the usual server shutdowns.
+		-->
+		<profile>
+			<id>console</id>
+			<properties>
+				<maven.profileId>console</maven.profileId>
+			</properties>
+		</profile>
+				
 	</profiles>
+
 </project>

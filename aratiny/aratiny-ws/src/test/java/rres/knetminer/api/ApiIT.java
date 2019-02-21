@@ -77,6 +77,15 @@ public class ApiIT
 		}
 	}
 	
+	public static String getMavenProfileId ()
+	{
+		String neoPropType = "maven.profileId";
+		String result = System.getProperty ( neoPropType, null );
+		
+		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", result );
+		return result;
+	}
+	
 	
 	@Test
 	public void testCountHits () throws JSONException, IOException, URISyntaxException
@@ -108,12 +117,7 @@ public class ApiIT
 	@Test
 	public void testGenomeNeo4j () 
 	{
-		// TODO: possibly factorise this safeguard
-		String neoPropType = "maven.profileId";
-		String neoProp = System.getProperty ( neoPropType, null );
-		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", neoProp );
-
-		if ( !"neo4j".equals ( neoProp ) ) {
+		if ( !"neo4j".equals ( getMavenProfileId () ) ) {
 			log.warn ( "Skipping test for neo4j profile-only" );
 			return;
 		}
@@ -138,5 +142,18 @@ public class ApiIT
 			"Gene " + expectedGeneLabel + " not returned by /genome", 
 			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
-	}	
+	}
+	
+	/**
+	 * It's a pseudo-test that works with the 'run' profile, to stop the maven build at the integration-test phase.
+	 * See the POM.
+	 */
+	@Test
+	public void blockingPseudoTest () throws IOException
+	{
+		if ( !"console".equals ( getMavenProfileId () ) ) return;
+		
+		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
+		System.in.read ();
+	}
 }

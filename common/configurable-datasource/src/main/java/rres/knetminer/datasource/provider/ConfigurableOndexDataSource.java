@@ -2,8 +2,8 @@ package rres.knetminer.datasource.provider;
 
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 
-public class Arabidopsis extends OndexLocalDataSource {
+public class ConfigurableOndexDataSource extends OndexLocalDataSource {
 
-	public Arabidopsis() {
+	public ConfigurableOndexDataSource() {
 	}
 }
