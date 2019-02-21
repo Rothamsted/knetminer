@@ -1649,10 +1649,10 @@ public class OndexServiceProvider {
         ONDEXConcept g = graphCloner.cloneConcept(gene);
         g.getAttribute(attSize).setValue(new Integer(70));
         g.getAttribute(attVisible).setValue(true);
-        g.getAttribute(attFlagged).setValue(true);
+        g.createAttribute(attFlagged, true, false);
         
         
-        // annotate path connecting gene to keyword concept
+        // set all relations in path to visible
         Set<ONDEXRelation> rels = path.getAllRelations();
         for (ONDEXRelation rel : rels) {
             ONDEXRelation r = graphCloner.cloneRelation(rel);
