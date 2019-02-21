@@ -1132,7 +1132,7 @@ public class OndexServiceProvider {
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
                 ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
                 if (lastCon.getId() == evidenceOndexId) {
-                    highlightPath(path, graphCloner);
+                    highlightPath(path, graphCloner, false);
                 } else {
                     //hidePath(path,graphCloner);
                 }
@@ -1407,9 +1407,16 @@ public class OndexServiceProvider {
 
                 ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
-                // end concept contains keyword
+                // go here only in keyword-mode and end concept contains keyword
                 if (luceneResults.containsKey(keywordCon)) {
+                	
+                	// no-keyword or no-keyword-match mode, so only highlight if a gene-trait paths
+                	if(keyword == null || keyword.equals("")){
+                        highlightPath(path, graphCloner, true);
+                        continue;
+                	}
 
+                	// keyword-mode -> do text and path highlighting
                     ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
 
                     // highlight the keyword in any concept attribute values
@@ -1422,8 +1429,9 @@ public class OndexServiceProvider {
                         }
                     }
 
-                    // annotate the semantic motif in the new Ondex graph
-                    highlightPath(path, graphCloner);
+                    // highlight all paths to evidence nodes
+                    highlightPath(path, graphCloner, false);
+                    
                 }
 
                 ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);
@@ -1435,7 +1443,7 @@ public class OndexServiceProvider {
         
         ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
         
-        // if subgraph has publications
+        // if subgraph has publications do smart filtering of most interesting papers
 		if (ccPub != null) {
 			
 			// get all publications in subgraph that have and don't have keyword
@@ -1445,63 +1453,75 @@ public class OndexServiceProvider {
 				allPubIds.add(c.getId());
 			}
 
-	        // publications that we want to keep (newest + have keyword)
 			AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
-	     	List<Integer> newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
-	     			
-			// publications that want to remove 
+			
+			List<Integer> newPubIds = new ArrayList<Integer>();
+			
+			if(!pubKeywordSet.isEmpty()){
+				
+				// if  publications with keyword exist, keep most recent papers from pub-keyword set
+		     	newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
+		     			
+			}else{
+				
+				// if non of publication contains the keyword, just keep most recent papers from total set
+				newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+			}
+			
+			// publications that we want to remove 
 			allPubIds.removeAll(newPubIds);
 			
 			// Keep most recent publications that contain keyword and remove rest from subGraph
 			allPubIds.forEach ( pubId -> subGraph.deleteConcept ( pubId ) );
         }
 		
-
-        if (keywordConcepts.isEmpty()) {
-            Set<ONDEXConcept> cons = subGraph.getConcepts();
-            Set<ONDEXRelation> rels = subGraph.getRelations();
-
-            ONDEXGraphMetaData md = subGraph.getMetaData();
-            AttributeName attFlagged = md.getAttributeName("flagged");
-            AttributeName attVisible = md.getAttributeName("visible");
-            AttributeName attSize = md.getAttributeName("size");
-
-            if (attSize == null)
-                attSize = md.getFactory().createAttributeName("size", Integer.class);
-            if (attVisible == null)
-                attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-            if (attFlagged == null)
-                attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
-
-            for (ONDEXConcept gene : candidateGenes) {
-                gene.createAttribute(attFlagged, true, false);
-                gene.createAttribute(attVisible, true, false);
-                gene.createAttribute(attSize, new Integer(70), false);
-            }
-            
-            // TODO: only show paths between genes and GO-BP or Trait (TO) terms
-            for (ONDEXConcept c : cons) {
-
-                if (c.getOfType().getId().equalsIgnoreCase("Publication")
-                        || c.getOfType().getId().equalsIgnoreCase("CelComp")) {
-                    c.createAttribute(attVisible, false, false);
-                } else if (c.getOfType().getId().equalsIgnoreCase("BioProc")) {
-                    c.createAttribute(attSize, new Integer(60), false);
-                    c.createAttribute(attVisible, true, false);
-                } else {
-                    if (c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null) {
-                        c.createAttribute(attSize, new Integer(30), false);
-                        c.createAttribute(attVisible, true, false);
-                    }
-                }
-            }
-
-            for (ONDEXRelation r : rels) {
-                r.createAttribute(attVisible, true, false);
-                r.createAttribute(attSize, new Integer(3), false);
-            }
-
-        }
+		// what do we want to show in no-keyword mode or when none of evidence nodes matches keyword
+//        if (keywordConcepts.isEmpty()) {
+//        	log.debug("INFO: no-keyword mode or no-keyword-match mode");
+//            Set<ONDEXConcept> cons = subGraph.getConcepts();
+//            Set<ONDEXRelation> rels = subGraph.getRelations();
+//
+//            ONDEXGraphMetaData md = subGraph.getMetaData();
+//            AttributeName attFlagged = md.getAttributeName("flagged");
+//            AttributeName attVisible = md.getAttributeName("visible");
+//            AttributeName attSize = md.getAttributeName("size");
+//
+//            if (attSize == null)
+//                attSize = md.getFactory().createAttributeName("size", Integer.class);
+//            if (attVisible == null)
+//                attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+//            if (attFlagged == null)
+//                attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
+//
+//            for (ONDEXConcept gene : candidateGenes) {
+//                gene.createAttribute(attFlagged, true, false);
+//                gene.createAttribute(attVisible, true, false);
+//                gene.createAttribute(attSize, new Integer(70), false);
+//            }
+//            
+//            // TODO: only show paths between genes and GO-BP or Trait (TO) terms
+//            for (ONDEXConcept c : cons) {
+//
+//                if (c.getOfType().getId().equalsIgnoreCase("Publication")
+//                        || c.getOfType().getId().equalsIgnoreCase("CelComp")) {
+//                    c.createAttribute(attVisible, false, false);
+//                } else if (c.getOfType().getId().equalsIgnoreCase("BioProc")) {
+//                    c.createAttribute(attSize, new Integer(60), false);
+//                    c.createAttribute(attVisible, true, false);
+//                } else {
+//                    if (c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null) {
+//                        c.createAttribute(attSize, new Integer(30), false);
+//                        c.createAttribute(attVisible, true, false);
+//                    }
+//                }
+//            }
+//
+//            for (ONDEXRelation r : rels) {
+//                r.createAttribute(attVisible, true, false);
+//                r.createAttribute(attSize, new Integer(3), false);
+//            }
+//
+//        }
 
         ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
 
@@ -1547,7 +1567,7 @@ public class OndexServiceProvider {
      * @param path        Contains concepts and relations of a semantic motif
      * @param graphCloner cloner for the new graph
      */
-    public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
+    public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter) {
 
         Font fontHighlight = new Font("sansserif", Font.BOLD, 20);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -1570,8 +1590,20 @@ public class OndexServiceProvider {
             attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
 
         RelationType rt = md.getFactory().createRelationType("is_p");
-        EvidenceType et = md.getFactory().createEvidenceType("QTLNetMiner");
+        EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
+        
+        ConceptClass ccTrait = md.getConceptClass("Trait");
+        if (ccTrait == null)
+        	ccTrait = md.getFactory().createConceptClass("Trait");
+        
+        ConceptClass ccPhenotype = md.getConceptClass("Phenotype");
+        if (ccPhenotype == null)
+        	ccPhenotype = md.getFactory().createConceptClass("Phenotype");
 
+        Set<ConceptClass> ccFilter = new HashSet<ConceptClass>();
+        ccFilter.add(ccTrait);
+        ccFilter.add(ccPhenotype);
+        
         // search last concept of semantic motif for keyword
         int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
 
@@ -1584,12 +1616,6 @@ public class OndexServiceProvider {
             con = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
         }
 
-        // else {
-        // // last element must be the gene
-        // con = (ONDEXConcept) path.getStartingEntity();
-        // gene = (ONDEXConcept)
-        // path.getConceptsInPositionOrder().get(indexLastCon);
-        // }
 
         // annotate concept that contains keyword
         ONDEXConcept c = graphCloner.cloneConcept(con);
@@ -1597,24 +1623,21 @@ public class OndexServiceProvider {
             // initial size
             c.createAttribute(attSize, new Integer(70), false);
             c.createAttribute(attVisible, true, false);
-        } else {
-            // keyword part of another path to same gene or different gene
-
+        }
+        
+        // set node visibility back to false, if filter=yes and cc not part of filter-list 
+        if(doFilter && !ccFilter.contains(c.getOfType())){
+            c.getAttribute(attVisible).setValue(false);
         }
 
         // annotate gene concept
         ONDEXConcept g = graphCloner.cloneConcept(gene);
         if (g.getAttribute(attSize) == null) {
-
             // initial size
             g.createAttribute(attSize, new Integer(70), false);
             g.createAttribute(attVisible, true, false);
             g.createAttribute(attFlagged, true, false);
-        } else {
-            // Integer size = (Integer) g.getAttribute(attSize).getValue();
-            // size++;
-            // g.getAttribute(attSize).setValue(size);
-        }
+        } 
 
         // add gene-QTL-Trait relations to the network
         if (mapGene2QTL.containsKey(gene.getId())) {
@@ -1645,7 +1668,6 @@ public class OndexServiceProvider {
                             traitCon.createAttribute(attVisible, true, false);
                         }
                     }
-
                 }
             }
         }
@@ -1658,13 +1680,17 @@ public class OndexServiceProvider {
                 // initial size
                 r.createAttribute(attSize, new Integer(5), false);
                 r.createAttribute(attVisible, true, false);
-            } else {
-                // increase size for more supporting evidence
-                // Integer size = (Integer) r.getAttribute(attSize).getValue();
-                // size++;
-                // r.getAttribute(attSize).setValue(size);
+            }  
+        }
+        
+        // set relation visibility back to false, if filter=yes and cc not part of filter-list 
+        if(doFilter && !ccFilter.contains(c.getOfType())){
+            for (ONDEXRelation rel : rels) {
+                ONDEXRelation r = graphCloner.cloneRelation(rel);
+                r.getAttribute(attVisible).setValue(false);
             }
         }
+
 
         // set concepts in path to visible
         Set<ONDEXConcept> cons = path.getAllConcepts();
@@ -1673,11 +1699,18 @@ public class OndexServiceProvider {
             if (concept.getAttribute(attSize) == null) {
                 concept.createAttribute(attSize, new Integer(30), false);
                 concept.createAttribute(attVisible, true, false);
-            } else {
-                // contains already visual information
-                // (e.g. gene, keyword or part of other paths)
+            } 
+        }
+        
+        // set node visibility back to false, if filter=yes and cc not part of filter-list 
+        if(doFilter && !ccFilter.contains(c.getOfType())){
+            for (ONDEXConcept pconcept : cons) {
+                ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
+                concept.getAttribute(attVisible).setValue(false);
             }
         }
+        
+        
     }
 
     /**
