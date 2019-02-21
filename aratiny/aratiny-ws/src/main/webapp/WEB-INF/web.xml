@@ -5,4 +5,8 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
   <display-name>KnetMiner Ara-Tiny WS</display-name>
+	<listener>
+<!-- 		<listener-class>rres.knetminer.api.TestListener</listener-class> -->
+		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
+	</listener>  
 </web-app>

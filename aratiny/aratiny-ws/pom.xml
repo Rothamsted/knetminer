@@ -13,7 +13,7 @@
 
 	<properties>
 		<maven.profileId>default</maven.profileId>
-		<properties><knetminer.graphTraverserClass></knetminer.graphTraverserClass></properties>
+		<knetminer.graphTraverserClass></knetminer.graphTraverserClass>
 	</properties>
 
 	<dependencies>
@@ -59,6 +59,26 @@
 		
 		<plugins>
 		
+  		<plugin>
+  			<artifactId>maven-dependency-plugin</artifactId>	  			
+  			<executions>
+  				<execution>
+  					<phase>generate-test-resources</phase>
+  					<goals><goal>unpack</goal></goals>
+  				</execution>
+  			</executions>
+				<configuration>
+        	<artifactItems>
+        		<artifactItem>
+							<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+							<artifactId>test-data-server</artifactId>
+							<version>1.0-SNAPSHOT</version>
+							<includes>ara-tiny-neo4j.tar.bz2,ara-tiny.oxl</includes>
+        		</artifactItem>
+        	</artifactItems>  						
+				</configuration>
+  		</plugin>
+		
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -85,10 +105,8 @@
 	        </httpConnector>			    
 			    <webApp>
 			      <contextPath>/${knetminer.api.webContext}</contextPath>
-			    </webApp>
-          <webAppConfig>
             <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
-          </webAppConfig>
+			    </webApp>
 			    <stopPort>9091</stopPort>
 			  </configuration>
 			</plugin>		
@@ -111,7 +129,7 @@
 			  <directory>src/test/resources</directory>
 			  <filtering>true</filtering>
 			  <includes>
-			  	<include>knetminer-config/config.xml</include>
+			  	<include>knetminer-config/data-source.xml</include>
 			  	<include>knetminer-config/neo4j/config.xml</include>
 			  	<include>jetty-web.xml</include>
 			  </includes>
@@ -121,7 +139,7 @@
 			  <directory>src/test/resources</directory>
 			  <filtering>false</filtering>
 			  <excludes>
-			  	<exclude>knetminer-config/config.xml</exclude>
+			  	<exclude>knetminer-config/data-source.xml</exclude>
 			  	<exclude>knetminer-config/neo4j/config.xml</exclude>
 			  	<exclude>jetty-web.xml</exclude>
 			  </excludes>
@@ -140,25 +158,6 @@
 			</properties>
 			<build>
 				<plugins>
-		  		<plugin>
-		  			<artifactId>maven-dependency-plugin</artifactId>	  			
-		  			<executions>
-		  				<execution>
-		  					<phase>generate-test-resources</phase>
-		  					<goals><goal>unpack</goal></goals>
-		  				</execution>
-		  			</executions>
-						<configuration>
-		        	<artifactItems>
-		        		<artifactItem>
-									<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
-									<artifactId>test-data-server</artifactId>
-									<version>1.0-SNAPSHOT</version>
-									<includes>ara-tiny-neo4j.tar.bz2</includes>
-		        		</artifactItem>
-		        	</artifactItems>  						
-						</configuration>
-		  		</plugin>
 		  		
 					<!-- 
 						Unzip neo4j test DB downloaded by the dependency plugin. 
@@ -217,7 +216,7 @@
 							<!-- 
 							  Regular start/stop, using the test DB downloaded by dependency plugin.
 							  
-							  Notes on hooked phases: the only way to control plugin exec order, when they're
+							  Notes on the hooked phases: the only way to control plugin exec order, when they're
 							  linked to the same phase, is to define them in the desired order in the POM. Unfortunately,
 							  this is not possible when the plug-in that should go first (Neo4) is in a profile, while the
 							  other (jetty) is in the main section. So, we use the (ugly) workaround of hooking neo4j to

@@ -3,6 +3,7 @@ package rres.knetminer.api;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 
 /**
  * TODO: comment me!

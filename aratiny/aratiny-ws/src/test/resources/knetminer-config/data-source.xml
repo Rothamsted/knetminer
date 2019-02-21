@@ -5,7 +5,7 @@
   
   <entry key="DataSourceName">aratiny</entry>
 
-  <entry key="StateMachineFilePath">${project.build.testOutputDirectory}/knetminer-config/SemanticMotifs.txt</entry>
+  <entry key="StateMachineFilePath">file://${project.build.testOutputDirectory}/knetminer-config/SemanticMotifs.txt</entry>
   
   <entry key="DataPath">${project.build.directory}/data</entry>
   <entry key="DataFile">${project.build.directory}/dependency/ara-tiny.oxl</entry>
