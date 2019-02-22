@@ -1133,18 +1133,21 @@ function createGenesTable(text, keyword, rows) {
             if (evidences.length > 0) {
                 for (var count_i = 0; count_i < (evidences.length); count_i++) {
                     //Shows the icons
-                    var evidence_elements = evidences[count_i].split("//");
-                    evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_elements[0] + '" title="' + evidence_elements[0] + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_elements[0] + '">' + ((evidence_elements.length) - 1) + '</span>';
+                    //var evidence_elements = evidences[count_i].split("//");
+                    var evidence_elements = evidences[count_i].split("__");
+					var evidence_elements_len= evidence_elements[1];
+					var evidences_nodes= evidence_elements[2];
+                    evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_elements[0] + '" title="' + evidence_elements[0] + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_elements[0] + '">' + evidence_elements_len + '</span>';
                     //Builds the evidence box
                     evidence = evidence + '<div id="evidence_box_' + values[1].replace(".", "_") + evidence_elements[0] + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + values[1].replace(".", "_") + evidence_elements[0] + '></span>';
                     evidence = evidence + '<p><div class="evidence_item evidence_item_' + evidence_elements[0] + '"></div> <span>' + evidence_elements[0] + '</span></p>';
-                    for (var count_eb = 1; count_eb < (evidence_elements.length); count_eb++) {
+                    for (var count_eb = 0; count_eb < evidences_nodes.length; count_eb++) {
                         //link publications with pubmed
                         pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
                         if (evidence_elements[0] == 'Publication')
-                            evidenceValue = '<a href="' + pubmedurl + evidence_elements[count_eb].substring(5) + '" target="_blank">' + evidence_elements[count_eb] + '</a>';
+                            evidenceValue = '<a href="' + pubmedurl + evidences_nodes[count_eb].substring(5) + '" target="_blank">' + evidences_nodes[count_eb] + '</a>';
                         else
-                            evidenceValue = evidence_elements[count_eb];
+                            evidenceValue = evidences_nodes[count_eb];
 
                         evidence = evidence + '<p>' + evidenceValue + '</p>';
                     }
