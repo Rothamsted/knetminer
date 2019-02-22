@@ -2161,8 +2161,8 @@ public class OndexServiceProvider {
         // ConceptClass ccSNP = md.getConceptClass("SNP");
 
         StringBuffer out = new StringBuffer();
-        out.append(
-                "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
+        //out.append("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
+        out.append("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n");
         for (ONDEXConcept gene : candidates) {
             int id = gene.getId();
             String geneAcc = "";
