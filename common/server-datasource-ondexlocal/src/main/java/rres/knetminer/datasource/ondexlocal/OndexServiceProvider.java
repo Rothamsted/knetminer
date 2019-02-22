@@ -922,7 +922,7 @@ public class OndexServiceProvider {
      * @return list of QTL objects
      */
     public Set<QTL> findQTL(String keyword) throws ParseException {
-
+    	
         ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
         ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
@@ -1754,7 +1754,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null) {
+        if (ccQTL != null && !keyword.equals("") && keyword!=null) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
