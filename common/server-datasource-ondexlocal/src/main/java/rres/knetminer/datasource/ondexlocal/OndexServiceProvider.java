@@ -1368,7 +1368,6 @@ public class OndexServiceProvider {
         Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
-        Set<ONDEXConcept> candidateGenes = new HashSet<ONDEXConcept>();
         
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
@@ -1403,52 +1402,49 @@ public class OndexServiceProvider {
 
                 // search last concept of semantic motif for keyword
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-                ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
+                ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
-                ONDEXConcept keywordCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-
-                // go here only in keyword-mode and end concept contains keyword
-                if (luceneResults.containsKey(keywordCon)) {
                 	
-                	// no-keyword or no-keyword-match mode, so only highlight if a gene-trait paths
-                	if(keyword == null || keyword.equals("")){
-                        highlightPath(path, graphCloner, true);
-                        continue;
-                	}
+                // no-keyword or no-keyword-match mode, set path to visible if end-node is Trait or Phenotype
+            	if(keyword == null || keyword.equals("") || !luceneResults.containsKey(endNode)){
+            		
+                    highlightPath(path, graphCloner, true);
+                    
+            	}
+                
+            	// keyword-mode and end concept contains keyword, set path to visible
+            	else if (luceneResults.containsKey(endNode)) {
 
                 	// keyword-mode -> do text and path highlighting
-                    ONDEXConcept cloneCon = graphCloner.cloneConcept(keywordCon);
+                    ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
 
-                    // highlight the keyword in any concept attribute values
+                    // highlight keyword in any concept attribute 
                     if (!keywordConcepts.contains(cloneCon)) {
                         this.highlight(cloneCon, keywordColourMap);
                         keywordConcepts.add(cloneCon);
 
-                        if (keywordCon.getOfType().getId().equalsIgnoreCase("Publication")) {
+                        if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
                         	pubKeywordSet.add(cloneCon);
                         }
                     }
 
-                    // highlight all paths to evidence nodes
+                    // set only paths from gene to evidence nodes to visible
                     highlightPath(path, graphCloner, false);
                     
                 }
-
-                ONDEXConcept cloneCon = graphCloner.cloneConcept(gene);
-                candidateGenes.add(cloneCon);
-
             }
         }
         
         
         ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
+        Set<Integer> allPubIds = new HashSet<Integer>();
         
         // if subgraph has publications do smart filtering of most interesting papers
 		if (ccPub != null) {
 			
 			// get all publications in subgraph that have and don't have keyword
 	        Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass(ccPub);
-	        Set<Integer> allPubIds = new HashSet<Integer>();
+	        
 			for (ONDEXConcept c : allPubs) {
 				allPubIds.add(c.getId());
 			}
@@ -1474,6 +1470,12 @@ public class OndexServiceProvider {
 			// Keep most recent publications that contain keyword and remove rest from subGraph
 			allPubIds.forEach ( pubId -> subGraph.deleteConcept ( pubId ) );
         }
+		
+        ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
+
+        log.debug("Number of seed genes: " + seed.size());
+        log.debug("Number of removed publications " + allPubIds.size());
+        
 		
 		// what do we want to show in no-keyword mode or when none of evidence nodes matches keyword
 //        if (keywordConcepts.isEmpty()) {
@@ -1523,16 +1525,10 @@ public class OndexServiceProvider {
 //
 //        }
 
-        ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
 
-        log.debug("Number of seed genes: " + seed.size());
-        // System.out.println("Keyword(s) were found in " +
-        // keywordConcepts.size()
-        // + " concepts.");
-        log.debug("Number of candidate genes " + candidateGenes.size());
 
-        if (export_visible_network) {
-
+//        if (export_visible_network) {
+//
 //            ONDEXGraphMetaData md = subGraph.getMetaData();
 //            AttributeName attSize = md.getAttributeName("size");
 //            Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
@@ -1553,8 +1549,8 @@ public class OndexServiceProvider {
 //            ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
 //
 //            subGraph = filteredGraph;
-
-        }
+//
+//        }
 
         return subGraph;
 
@@ -1566,6 +1562,7 @@ public class OndexServiceProvider {
      *
      * @param path        Contains concepts and relations of a semantic motif
      * @param graphCloner cloner for the new graph
+     * @param doFilter If true only a path to Trait and Phenotype nodes will be made visible
      */
     public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter) {
 
