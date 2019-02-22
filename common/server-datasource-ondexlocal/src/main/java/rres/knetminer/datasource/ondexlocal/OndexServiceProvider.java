@@ -928,7 +928,12 @@ public class OndexServiceProvider {
         ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
 
         // no Trait-QTL relations found
-        if (ccTrait == null && (ccQTL == null || ccSNP == null)) {
+        if (ccTrait == null && (ccQTL == null || ccSNP == null) ) {
+            return new HashSet<QTL>();
+        }
+        
+        // no keyword provided
+        if (keyword==null || keyword.equals("")) {
             return new HashSet<QTL>();
         }
 
@@ -2457,8 +2462,8 @@ public class OndexServiceProvider {
             // All publications will have the format PMID:15487445
             //if (type == "Publication" && !name.contains("PMID:"))
             //    name = "PMID:" + name;
-            // Do not print publications or proteins in evidence view
-            if (type == "Publication" || type == "Protein") {
+            // Do not print publications or proteins  or enzymes in evidence view
+            if (type == "Publication" || type == "Protein" || type == "Enzyme") {
                 continue;
             }
             Float score = luceneConcepts.get(lc);
@@ -2501,16 +2506,6 @@ public class OndexServiceProvider {
                 if (mapGene2QTL.containsKey(log)) {
                     numberOfQTL++;
 
-                    // for(Integer cid : mapGene2QTL.get(log)){
-                    // ONDEXConcept qtl = graph.getConcept(cid);
-                    // String traitDesc =
-                    // qtl.getAttribute(attTrait).getValue().toString();
-                    //
-                    // if (infoQTL == "")
-                    // infoQTL += traitDesc + "//" + traitDesc;
-                    // else
-                    // infoQTL += "||" + traitDesc + "//" + traitDesc;
-                    // }
                 }
 
                 String chr = null;
@@ -2541,85 +2536,11 @@ public class OndexServiceProvider {
                         if (qtlChrom.equals(chr) && beg >= qtlStart && beg <= qtlEnd) {
 
                             numberOfQTL++;
-                            // if (infoQTL == "")
-                            // infoQTL += loci.getLabel() + "//" +
-                            // loci.getTrait();
-                            // else
-                            // infoQTL += "||" + loci.getLabel() + "//" +
-                            // loci.getTrait();
+
                         }
                     }
                 }
 
-                // int chr = 0, beg = 0, end = 0;
-                // Double cm = 0.00;
-                // if (graph.getConcept(log).getAttribute(attChr) != null) {
-                // chr = (Integer)
-                // graph.getConcept(log).getAttribute(attChr).getValue();
-                // }
-                // else if (graph.getConcept(log).getAttribute(attScaf) !=
-                // null) {
-                // chr = (Integer)
-                // graph.getConcept(log).getAttribute(attScaf).getValue();
-                // }
-                // if (graph.getConcept(log).getAttribute(attBeg) != null) {
-                // beg = (Integer)
-                // graph.getConcept(log).getAttribute(attBeg).getValue();
-                // }
-                // if (graph.getConcept(log).getAttribute(attEnd) != null) {
-                // end = (Integer)
-                // graph.getConcept(log).getAttribute(attEnd).getValue();
-                // }
-                // if (attCM != null) {
-                // if (graph.getConcept(log).getAttribute(attCM) != null) {
-                // cm = (Double)
-                // graph.getConcept(log).getAttribute(attCM).getValue();
-                // }
-                // }
-                // if(!qtls.isEmpty()){
-                // for(QTL loci : qtls) {
-                // try{
-                // Integer qtlChrom =
-                // chromBidiMap.inverseBidiMap().get(loci.getChrName());
-                // Long qtlStart = Long.parseLong(loci.getStart());
-                // Long qtlEnd = Long.parseLong(loci.getEnd());
-                //
-                // if (cm != null) {
-                // if((qtlChrom == chr) && (cm >= qtlStart) && (cm <=
-                // qtlEnd)){
-                // if (!evidenceQTL.contains(loci)) {
-                // numberOfQTL++;
-                // evidenceQTL.add(loci);
-                // if (infoQTL == "")
-                // infoQTL += loci.getLabel() + "//" + loci.getTrait();
-                // else
-                // infoQTL += "||" + loci.getLabel() + "//" +
-                // loci.getTrait();
-                // }
-                // }
-                // }
-                // else {
-                // if((qtlChrom == chr) && (beg >= qtlStart) && (end <=
-                // qtlEnd)){
-                // if (!evidenceQTL.contains(loci)) {
-                // numberOfQTL++;
-                // evidenceQTL.add(loci);
-                // if (infoQTL == "")
-                // infoQTL += loci.getLabel() + "//" + loci.getTrait();
-                // else
-                // infoQTL += "||" + loci.getLabel() + "//" +
-                // loci.getTrait();
-                // }
-                // }
-                // }
-                // }
-                // catch(Exception e){
-                // System.out.println("An error occurred in method:
-                // writeEvidenceOut.");
-                // System.out.println(e.getMessage());
-                // }
-                // }
-                // }
             }
 
             // omit last comma from user_genes String
