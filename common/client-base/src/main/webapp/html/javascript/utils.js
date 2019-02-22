@@ -1131,20 +1131,25 @@ function createGenesTable(text, keyword, rows) {
             var values_evidence = values[9];
             var evidences = values_evidence.split("||");
             if (evidences.length > 0) {
-                for (var count_i = 0; count_i < (evidences.length); count_i++) {
+                for (var count_i = 0; count_i < evidences.length; count_i++) {
                     //Shows the icons
                     //var evidence_elements = evidences[count_i].split("//");
                     var evidence_elements = evidences[count_i].split("__");
-					var evidence_elements_len= evidence_elements[1];
-					var evidences_nodes= evidence_elements[2];
-                    evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_elements[0] + '" title="' + evidence_elements[0] + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_elements[0] + '">' + evidence_elements_len + '</span>';
+				//console.log("evidence_elements: "+ evidence_elements);
+					var evidence_cc= evidence_elements[0];
+					var evidence_size= evidence_elements[1];
+					var evidences_nodes= evidence_elements[2].split("//");
+					/console.log("evidence_cc: "+ evidence_cc);
+				//console.log("evidence_size: "+ evidence_size);
+				//console.log("evidences_nodes: "+ evidences_nodes);
+                    evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_cc + '" title="' + evidence_cc + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_cc + '">' + evidence_size + '</span>';
                     //Builds the evidence box
-                    evidence = evidence + '<div id="evidence_box_' + values[1].replace(".", "_") + evidence_elements[0] + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + values[1].replace(".", "_") + evidence_elements[0] + '></span>';
-                    evidence = evidence + '<p><div class="evidence_item evidence_item_' + evidence_elements[0] + '"></div> <span>' + evidence_elements[0] + '</span></p>';
+                    evidence = evidence + '<div id="evidence_box_' + values[1].replace(".", "_") + evidence_cc + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + values[1].replace(".", "_") + evidence_cc + '></span>';
+                    evidence = evidence + '<p><div class="evidence_item evidence_item_' + evidence_cc + '"></div> <span>' + evidence_cc + '</span></p>';
                     for (var count_eb = 0; count_eb < evidences_nodes.length; count_eb++) {
                         //link publications with pubmed
                         pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-                        if (evidence_elements[0] == 'Publication')
+                        if (evidence_cc == 'Publication')
                             evidenceValue = '<a href="' + pubmedurl + evidences_nodes[count_eb].substring(5) + '" target="_blank">' + evidences_nodes[count_eb] + '</a>';
                         else
                             evidenceValue = evidences_nodes[count_eb];
