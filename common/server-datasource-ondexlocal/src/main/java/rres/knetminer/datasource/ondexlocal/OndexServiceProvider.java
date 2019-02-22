@@ -2462,7 +2462,7 @@ public class OndexServiceProvider {
             // All publications will have the format PMID:15487445
             //if (type == "Publication" && !name.contains("PMID:"))
             //    name = "PMID:" + name;
-            // Do not print publications or proteins in evidence view
+            // Do not print publications or proteins  or enzymes in evidence view
             if (type == "Publication" || type == "Protein" || type == "Enzyme") {
                 continue;
             }
