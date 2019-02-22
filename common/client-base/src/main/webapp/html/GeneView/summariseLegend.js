@@ -31,7 +31,7 @@
           var conCount= rv.trim().split("__")[1].trim();
           var knet_nodes= rv.trim().split("__")[2].trim();
           for(var k=0; k < knet_nodes.length; k++) {
-              var type_evi= conType +"|"+ evidence_elements[k].trim();
+              var type_evi= conType +"|"+ knet_nodes[k].trim();
               //console.log("\t \t type_evi: "+ type_evi);
               
               if(!evidences_Summary.includes(type_evi)) {
