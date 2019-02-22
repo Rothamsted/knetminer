@@ -2390,16 +2390,16 @@ public class OndexServiceProvider {
                     if (isInList.equals("yes")) {
                         out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                                 + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                                + evidences_linked + "\t" + all_evidences + "\n"*/);
+                                + evidences_linked + "\t" + all_evidences*/ + "\n");
                     }
                 } else { // default
                     out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                             + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                            + evidences_linked + "\t" + all_evidences + "\n" */);
+                            + evidences_linked + "\t" + all_evidences*/ + "\n");
                 }
             }
         }
-        //log.info("Gene table generated...");
+        log.info("Gene table generated...");
         return out.toString();
     }
 
