@@ -152,7 +152,7 @@
 		<term>"grain fill duration" OR "seed growth"</term>
 		<withinRegion>false</withinRegion>
 		<region>
-			<chromosome>chr5A</chromosome>
+			<chromosome>5A</chromosome>
 			<start>580000000</start>
 			<end>590000000</end>
 			<label>QTL</label>
