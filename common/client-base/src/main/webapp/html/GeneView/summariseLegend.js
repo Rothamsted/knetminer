@@ -21,13 +21,16 @@
       var row_values= evi.trim().split("||");
       row_values.forEach(function(rv) {
 //console.log("\t \t row_value: "+ rv);
-          var evidence_elements= rv.trim().split("//");
+          //var evidence_elements= rv.trim().split("//");
 //console.log("\t \t \t evidence_elements: "+ evidence_elements);
           // add to Array evidence_elements[0] & length-1
-          var conType= evidence_elements[0].trim();
-          var conCount= evidence_elements.length-1;
+          //var conType= evidence_elements[0].trim();
+          //var conCount= evidence_elements.length-1;
         //  console.log("\t type: "+ conType +", count: "+ conCount);
-          for(var k=1; k <= conCount; k++) {
+          var conType= rv.trim().split("__")[0].trim();
+          var conCount= rv.trim().split("__")[1].trim();
+          var knet_nodes= rv.trim().split("__")[2].trim();
+          for(var k=0; k < knet_nodes.length; k++) {
               var type_evi= conType +"|"+ evidence_elements[k].trim();
               //console.log("\t \t type_evi: "+ type_evi);
               
