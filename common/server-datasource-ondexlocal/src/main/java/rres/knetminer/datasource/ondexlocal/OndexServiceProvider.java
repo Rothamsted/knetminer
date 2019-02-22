@@ -2336,13 +2336,18 @@ public class OndexServiceProvider {
                 if (!name.contains("PMID:")) {
                     name = "PMID:" + name;
                 }
-                pubString = pubString + "//" + name;
+                pubString = pubString + name + "//";
 				
 			}
             
+            String tidyPubString = "";
+            if(pubString.endsWith("//")){
+            	tidyPubString = pubString.substring(0, pubString.length() - 2);
+            }
+            
             // add most recent publications here
             if(!newPubs.isEmpty())
-            	cc2name.put("Publication", pubString);
+            	cc2name.put("Publication", tidyPubString);
             
             
             int evidences_linked = luceneHits.size(); // no. of evidences linked per gene
@@ -2350,7 +2355,10 @@ public class OndexServiceProvider {
             // create output string for evidences column in GeneView table
             String evidence = "";
             for (String ccId : cc2name.keySet()) {
-                evidence += ccId+"__"+cc2name.get(ccId).split("//")+"__"+cc2name.get(ccId) + "||";
+            	if(ccId.equals("Publication"))
+            		evidence += cc2name.get(ccId) + "||";
+            	else
+            		evidence += ccId+"__"+cc2name.get(ccId).split("//")+"__"+cc2name.get(ccId) + "||";
             }
 
             String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
