@@ -1139,7 +1139,7 @@ function createGenesTable(text, keyword, rows) {
 					var evidence_cc= evidence_elements[0];
 					var evidence_size= evidence_elements[1];
 					var evidences_nodes= evidence_elements[2].split("//");
-					/console.log("evidence_cc: "+ evidence_cc);
+					//console.log("evidence_cc: "+ evidence_cc);
 				//console.log("evidence_size: "+ evidence_size);
 				//console.log("evidences_nodes: "+ evidences_nodes);
                     evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_cc + '" title="' + evidence_cc + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_cc + '">' + evidence_size + '</span>';
