@@ -279,6 +279,13 @@
 			<url>${nexus.repro}/content/repositories/snapshots</url>
 			<!-- <url>${nexus.repro}/content/groups/public-snapshots</url> -->
 		</repository>
+
+  	<!-- jutils -->
+		<repository>
+		  <id>EBIBioSamples-GH-repo</id>
+		  <url>https://raw.githubusercontent.com/EBIBioSamples/EBIBioSamples.github.io/maven-repo</url>
+		  <snapshots><enabled>true</enabled></snapshots>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
