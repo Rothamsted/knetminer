@@ -1368,6 +1368,7 @@ public class OndexServiceProvider {
         Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
+        Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
         
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
@@ -1405,36 +1406,48 @@ public class OndexServiceProvider {
                 ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
                 	
-                // no-keyword or no-keyword-match mode, set path to visible if end-node is Trait or Phenotype
-            	if(keyword == null || keyword.equals("") || !luceneResults.containsKey(endNode)){
-            		
+                // no-keyword, set path to visible if end-node is Trait or Phenotype
+            	if(keyword == null || keyword.equals("")){
                     highlightPath(path, graphCloner, true);
+                    continue;
                     
             	}
                 
-            	// keyword-mode and end concept contains keyword, set path to visible
-            	else if (luceneResults.containsKey(endNode)) {
+				// keyword-mode and end concept contains keyword, set path to visible
+				if (luceneResults.containsKey(endNode)) {
 
-                	// keyword-mode -> do text and path highlighting
-                    ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
+					// keyword-mode -> do text and path highlighting
+					ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
 
-                    // highlight keyword in any concept attribute 
-                    if (!keywordConcepts.contains(cloneCon)) {
-                        this.highlight(cloneCon, keywordColourMap);
-                        keywordConcepts.add(cloneCon);
+					// highlight keyword in any concept attribute
+					if (!keywordConcepts.contains(cloneCon)) {
+						this.highlight(cloneCon, keywordColourMap);
+						keywordConcepts.add(cloneCon);
 
-                        if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
-                        	pubKeywordSet.add(cloneCon);
-                        }
-                    }
+						if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
+							pubKeywordSet.add(cloneCon);
+						}
+					}
 
-                    // set only paths from gene to evidence nodes to visible
-                    highlightPath(path, graphCloner, false);
-                    
-                }
+					// set only paths from gene to evidence nodes to visible
+					highlightPath(path, graphCloner, false);
+
+				} else {
+
+					// collect all paths that did not qualify
+					pathSet.add(path);
+
+				}
             }
         }
         
+        // special case when none of nodes contains keyword (no-keyword-match)
+        // set path to visible if end-node is Trait or Phenotype
+        if(keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))){
+        	for (EvidencePathNode path : pathSet) {
+        		highlightPath(path, graphCloner, true);
+			}
+        }
         
         ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
         Set<Integer> allPubIds = new HashSet<Integer>();
