@@ -928,7 +928,12 @@ public class OndexServiceProvider {
         ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
 
         // no Trait-QTL relations found
-        if (ccTrait == null && (ccQTL == null || ccSNP == null)) {
+        if (ccTrait == null && (ccQTL == null || ccSNP == null) ) {
+            return new HashSet<QTL>();
+        }
+        
+        // no keyword provided
+        if (keyword==null || keyword.equals("")) {
             return new HashSet<QTL>();
         }
 
