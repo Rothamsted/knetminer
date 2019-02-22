@@ -108,16 +108,16 @@
 	</ciManagement>
 
 	<distributionManagement>
-		<repository>
-			<id>releases</id>
+	  <repository>
+			<id>ondex-releases</id>
 			<name>Internal Releases</name>
 			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
+	  </repository>
+	  <snapshotRepository>
+			<id>ondex-snapshots</id>
 			<name>Internal Snapshots</name>
 			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
+	  </snapshotRepository>
 		<site>
 			<id>Ondex_site</id>
 			<url>file:///var/www/html/ondex</url>
