@@ -1636,10 +1636,9 @@ public class OndexServiceProvider {
             }
         }
         
-        // seed gene should always be visible, bigger and flagged
-        if (geneNodeClone.getAttribute(attVisible) == null) {
-        	   geneNodeClone.createAttribute(attSize, new Integer(80), false);
-               geneNodeClone.createAttribute(attVisible, true, false);
+        // seed gene should always be bigger and flagged
+        if (geneNodeClone.getAttribute(attFlagged) == null) {
+        	   geneNodeClone.getAttribute(attSize).setValue(new Integer(80));
                geneNodeClone.createAttribute(attFlagged, true, false);
         }
         
