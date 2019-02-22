@@ -1128,9 +1128,9 @@ function createGenesTable(text, keyword, rows) {
 
             // For each evidence show the images - start
             var evidence = '<td>';
-            var values_evidence = values[9].trim();
-            var evidences = values_evidence.split("||");
-            if (evidences.length > 0) {
+            var values_evidence = values[9];
+            if (values_evidence.length > 0) {
+				var evidences = values_evidence.split("||");
                 for (var count_i = 0; count_i < evidences.length; count_i++) {
                     //Shows the icons
 				//console.log("evidences["+count_i+"]: "+ evidences[count_i]);
