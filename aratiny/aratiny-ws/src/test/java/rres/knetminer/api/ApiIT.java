@@ -146,7 +146,7 @@ public class ApiIT
 	
 	/**
 	 * It's a pseudo-test that works with the 'run' profile, to stop the maven build at the integration-test phase.
-	 * See the POM.
+	 * See the POM for details.
 	 */
 	@Test
 	public void blockingPseudoTest () throws IOException
@@ -154,6 +154,8 @@ public class ApiIT
 		if ( !"console".equals ( getMavenProfileId () ) ) return;
 		
 		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
+		log.info ( "The API should be available at " + System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" );
+		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
 }

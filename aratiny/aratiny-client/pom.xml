@@ -21,6 +21,8 @@
 			This is used to setup CORS in the response. See:
 			- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 			- http://tuckey.org/urlrewrite/
+			
+			We use this web filter in src/main/webapp/WEB-INF 
 		 -->
 		<dependency>
 			<groupId>org.tuckey</groupId>
@@ -68,6 +70,17 @@
 			<plugin>
 			  <groupId>org.eclipse.jetty</groupId>
 			  <artifactId>jetty-maven-plugin</artifactId>
+			  <!-- No need to start/stop in the build cycle, just make it visible for manual run. -->
+			  <executions>
+			  	<execution>
+			  		<id>start</id>
+			  		<phase />
+			  	</execution>
+			  	<execution>
+			  		<id>stop</id>
+			  		<phase />
+			  	</execution>
+			  </executions>
 			</plugin>
 
 		</plugins>

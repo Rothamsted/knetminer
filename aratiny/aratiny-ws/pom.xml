@@ -255,6 +255,8 @@
 			
 			There is a (pseudo) test in ApiIT to deal with that, which wait for a key if this profile is enabled (and the
 			the maven.profileId is set to 'console'). The build finishes after that step with the usual server shutdowns.
+			
+			It's all a dirty trick, but we didn't find another way to do it: jetty:run is not enough, we need a whole build
 		-->
 		<profile>
 			<id>console</id>
