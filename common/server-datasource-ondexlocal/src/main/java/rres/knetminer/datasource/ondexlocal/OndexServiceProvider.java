@@ -2358,7 +2358,7 @@ public class OndexServiceProvider {
             	if(ccId.equals("Publication"))
             		evidence += cc2name.get(ccId) + "||";
             	else
-            		evidence += ccId+"__"+cc2name.get(ccId).split("//")+"__"+cc2name.get(ccId) + "||";
+            		evidence += ccId+"__"+cc2name.get(ccId).split("//").length+"__"+cc2name.get(ccId) + "||";
             }
 
             String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
