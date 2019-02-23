@@ -1,4 +1,4 @@
-# AraTiny, Test Knetminer Instance
+# AraTiny, Test Knetminer Instance
 
 This project and its submodules contains an instance of Knetminer, working on a tiny version of the Arabidopsis 
 dataset (the same as the one used for the [Docker example](/Rothamsted/knetminer/tree/master/common/quickstart)).
