@@ -136,12 +136,12 @@ ORDER BY hss.E_VALUE, hss.PERCENTALIGNMENT DESC
   
 ## Troubleshooting
   
-  * The two commands above rebuild the aratiny project taking dependencies from Maven artefactories. If something doesn't
+  * The two commands above rebuild the aratiny project taking dependencies from Maven artifactories. If something doesn't
 work, you can try to first build the whole `knetminer/` project (`mvn install` from the git-cloned directory), but you
 will need [NPM](https://www.npmjs.com/) installed for that.
 
-  * In cases like API stopped with Ctrl-C (and not with the Enter key), retrying to run the API again might complain that
-Neo4 or Jetty are still running. You can try to fix this issue by looking at the running processes: 
+  * In cases like the API stopped with Ctrl-C (and not with the Enter key), retrying to run the API again might complain 
+that Neo4 or Jetty are still running. You can try to fix this issue by looking at the running processes: 
 `ps -efa |grep neo4j`, or `ps -efa |grep jetty`. If you see that there is still a neo4j process, kill its PID (reported
-by the `ps` command. Same for jetty, but pay attention to not killing the UI Jetty (`ps` output mentions either `aratiny-ws`
-or `aratiny-client`).
+by the `ps` command. Same for jetty, but pay attention to not killing the Jetty server that is running the UI 
+(`ps` output mentions either `aratiny-ws` or `aratiny-client`).
