@@ -1624,6 +1624,13 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> cons = path.getAllConcepts();
         Set<ONDEXRelation> rels = path.getAllRelations();
         
+        // seed gene should always be visible, flagged and bigger
+        if (geneNodeClone.getAttribute(attVisible) == null) {
+        	geneNodeClone.createAttribute(attFlagged, true, false);
+        	geneNodeClone.createAttribute(attVisible, true, false);
+        	geneNodeClone.createAttribute(attSize, new Integer(80), false);
+        }
+        
         // set all concepts to visible if filtering is turned off
         // OR filter is turned on and end node is of specific type
         if(!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))){
@@ -1634,12 +1641,6 @@ public class OndexServiceProvider {
                     concept.createAttribute(attVisible, true, false);
                 } 
             }
-        }
-        
-        // seed gene should always be bigger and flagged
-        if (geneNodeClone.getAttribute(attFlagged) == null) {
-        	   geneNodeClone.getAttribute(attSize).setValue(new Integer(80));
-               geneNodeClone.createAttribute(attFlagged, true, false);
         }
         
         // set all relations to visible if filtering is turned off
