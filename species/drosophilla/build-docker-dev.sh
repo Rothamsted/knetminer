@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=7227  \
     	--build-arg species_name="Drosophila melanogaster" \
-    	--build-arg species_link_name=drosophila \
+    	--build-arg species_link_name=drosophilaknet \
     	--build-arg keywords="drosophila, d.melanogaster, knetminer, quickstart, demo" \
     	--build-arg description="Drosophila Knetminer" \
     	--build-arg reference_genome=true \

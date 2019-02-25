@@ -925,8 +925,11 @@ function generateCyJSNetwork(url, requestParams) {
  */
 function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     var candidatelist = [];
-    var cb_list = document.checkbox_form.candidates;
-    for (var i = 0; i < cb_list.length; i++) {
+    //var cb_list = document.checkbox_form.candidates;
+    var cb_list = $("input[name=candidates");
+    var cb_list_len = cb_list.length;
+    //console.log("cb_list length= "+ cb_list_len);
+    for (var i = 0; i < cb_list_len; i++) {
         if (cb_list[i].checked) {
             candidatelist.push(cb_list[i].value);
         }

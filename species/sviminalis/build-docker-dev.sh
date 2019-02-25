@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=40686  \
     	--build-arg species_name="Salix viminalis" \
-    	--build-arg species_link_name=sviminalis \
+    	--build-arg species_link_name=willowknet \
     	--build-arg keywords="sviminalis, s.viminalis, knetminer, quickstart, demo" \
     	--build-arg description="Sviminalis Knetminer" \
     	--build-arg reference_genome=true \
