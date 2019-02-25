@@ -6,7 +6,7 @@
 	<groupId>uk.ac.rothamsted.knetminer</groupId>
 	<artifactId>parent</artifactId>
 	<name>parent</name>
-	<version>1.0.0N-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<description>KnetMiner is a platform for fast candidate gene discovery using data mining techniques.</description>
 	<url>http://knetminer.rothamsted.ac.uk/</url>
 	<packaging>pom</packaging>
