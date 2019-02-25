@@ -739,9 +739,9 @@ public class OndexServiceProvider {
 
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-		    if(path_length==null){
-		    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
-		    }
+						    if(path_length==null){
+						    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
+						    }
                 double distance = path_length==null ? 0 : (1 / path_length);
 
                 // take the mean of all three components 
@@ -2308,7 +2308,7 @@ public class OndexServiceProvider {
                 	continue;
                 
                 String name = getDefaultNameForGroupOfConcepts(c);
-
+                
                 if (!cc2name.containsKey(ccId)) {
                     cc2name.put(ccId, name);
                 } else {
@@ -2981,7 +2981,7 @@ public class OndexServiceProvider {
                             .get(path.getConceptsInPositionOrder().size() - 1);
                     int lastConID = con.getId(); // endNode ID.
                     String gpl_key = gene.getId() + "//" + lastConID;
-			
+			              
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
@@ -3004,15 +3004,9 @@ public class OndexServiceProvider {
 
                     // CONCEPT 2 GENE
                     // concepts.remove(gene);
-                    
-			if (!mapConcept2Genes.containsKey(lastConID)) {
-			    Set<Integer> setGenes = new HashSet<Integer>();
-			    setGenes.add(gene.getId());
-			    mapConcept2Genes.put(lastConID, setGenes);
-			} else {
-			    mapConcept2Genes.get(lastConID).add(gene.getId());
-			}
-                    
+           
+                    mapConcept2Genes.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
+                    	.add ( gene.getId () );
                 }
             }
             try {
