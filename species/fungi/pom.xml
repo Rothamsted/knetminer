@@ -11,9 +11,9 @@
         <packaging>pom</packaging>
         <name>KnetMiner Fungi</name>
 
-<!--        <modules>
+        <modules>
 		<module>fgraminearum</module>
 		<module>ztritici</module>
-	</modules> -->
+	</modules>
 	
 </project>

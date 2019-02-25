@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>FLC gene expression</description>
+		<term>flowering FLC FT</term>
+	</query>
+	<query>
+		<name>Example 2</name>
+		<description>Petal size QTL</description>
+		<term>"cell size" OR "cell division" OR "cell cycle"</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>4</chromosome>
+			<start>9920000</start>
+			<end>10180000</end>
+			<label>Petal size</label>
+		</region>
+                <gene>At4g18330</gene>
+	</query>	
+	<query>
+		<name>Example 3</name>
+		<description>Dormancy</description>
+		<term>dormancy OR anthocyanin</term>
+	</query>
+</sampleQueries>

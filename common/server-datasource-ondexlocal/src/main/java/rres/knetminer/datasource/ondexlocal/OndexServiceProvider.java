@@ -63,9 +63,7 @@ import org.apache.lucene.search.Query;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
-import net.sourceforge.ondex.algorithm.graphquery.GraphTraverser;
-import net.sourceforge.ondex.algorithm.graphquery.StateMachine;
-import net.sourceforge.ondex.algorithm.graphquery.flatfile.StateMachineFlatFileParser2;
+import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
 import net.sourceforge.ondex.config.ONDEXGraphRegistry;
@@ -111,7 +109,7 @@ public class OndexServiceProvider {
     /**
      * GraphTraverser will be initiated with a state machine
      */
-    GraphTraverser gt;
+  	AbstractGraphTraverser gt;
 
     /**
      * Ondex knowledge base as memory graph
@@ -167,7 +165,10 @@ public class OndexServiceProvider {
 
     boolean export_visible_network;
 
+  	private Map<String, Object> options = new HashMap<> (); 
 
+  	
+  	
     /**
      * Loads configuration for chromosomes and initialises map
      */
@@ -193,11 +194,13 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-        log.info("Loading semantic motifs from " + smFileName);
-        StateMachine sm = loadSemanticMotifs(smFileName);
+    		gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
 
-        // create a crawler using our semantic motifs
-        gt = new GraphTraverser(sm);
+    		// These might be needed by one implementation or the other. Those that don't need a property like these
+    		// can just ignore them
+    		gt.setOption ( "StateMachineFilePath", smFileName );
+    		gt.setOption ( "ONDEXGraph", graph );
+    		gt.setOption ( "LuceneEnv", lenv );
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -385,26 +388,6 @@ public class OndexServiceProvider {
         }
     }
 
-    /**
-     * Creates a state machine for semantic motif search
-     */
-    private StateMachine loadSemanticMotifs(String smFile) {
-
-        StateMachineFlatFileParser2 smp = null;
-        try {
-            // load semantic motifs from file
-            URL motifsUrl = Thread.currentThread().getContextClassLoader().getResource(smFile);
-
-            smp = new StateMachineFlatFileParser2();
-            smp.parseReader(new BufferedReader(new InputStreamReader(motifsUrl.openStream())), graph);
-
-            log.debug("Completed State Machine");
-        } catch (Exception e) {
-            log.error("Failed to compile state machine", e);
-        }
-
-        return smp.getStateMachine();
-    }
 
     /**
      * Export the Ondex graph to file system as a .oxl file and also in JSON format
@@ -756,9 +739,9 @@ public class OndexServiceProvider {
 
                 // inverse distance from gene to evidence
                 Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-		    if(path_length==null){
-		    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
-		    }
+						    if(path_length==null){
+						    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
+						    }
                 double distance = path_length==null ? 0 : (1 / path_length);
 
                 // take the mean of all three components 
@@ -2325,7 +2308,7 @@ public class OndexServiceProvider {
                 	continue;
                 
                 String name = getDefaultNameForGroupOfConcepts(c);
-
+                
                 if (!cc2name.containsKey(ccId)) {
                     cc2name.put(ccId, name);
                 } else {
@@ -2998,7 +2981,7 @@ public class OndexServiceProvider {
                             .get(path.getConceptsInPositionOrder().size() - 1);
                     int lastConID = con.getId(); // endNode ID.
                     String gpl_key = gene.getId() + "//" + lastConID;
-			
+			              
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
@@ -3021,15 +3004,9 @@ public class OndexServiceProvider {
 
                     // CONCEPT 2 GENE
                     // concepts.remove(gene);
-                    
-			if (!mapConcept2Genes.containsKey(lastConID)) {
-			    Set<Integer> setGenes = new HashSet<Integer>();
-			    setGenes.add(gene.getId());
-			    mapConcept2Genes.put(lastConID, setGenes);
-			} else {
-			    mapConcept2Genes.get(lastConID).add(gene.getId());
-			}
-                    
+           
+                    mapConcept2Genes.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
+                    	.add ( gene.getId () );
                 }
             }
             try {
@@ -3227,45 +3204,57 @@ public class OndexServiceProvider {
         }
     }
 
+    
+  	/**
+  	 * We receive options set from the main config.xml file. These are further passed to the specific 
+  	 * {@link AbstractGraphTraverser} that is selected via the 'GraphTraverserClass' option in the main 
+  	 * config file (together with a couple of other parameters, see
+  	 */	
+  	public Map<String, Object> getOptions () {
+  		return options;
+  	}
+
+  	public void setOptions ( Map<String, Object> options ) {
+  		this.options = options;
+  	}
 }
 
 class ValueComparator<T> implements Comparator<T> {
 
-    Map<T, Double> base;
+	Map<T, Double> base;
 
-    public ValueComparator(Map<T, Double> base) {
-        this.base = base;
-    }
+	public ValueComparator(Map<T, Double> base) {
+		this.base = base;
+	}
 
-    public int compare(Object a, Object b) {
+	public int compare(Object a, Object b) {
 
-        if (base.get(a) < base.get(b)) {
-            return 1;
-        } else if (base.get(a) == base.get(b)) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
+		if (base.get(a) < base.get(b)) {
+			return 1;
+		} else if (base.get(a) == base.get(b)) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}
 }
 
 class FloatValueComparator<T> implements Comparator<T> {
 
-    Map<T, Float> base;
+	Map<T, Float> base;
 
-    public FloatValueComparator(Map<T, Float> base) {
-        this.base = base;
-    }
+	public FloatValueComparator(Map<T, Float> base) {
+		this.base = base;
+	}
 
-    public int compare(Object a, Object b) {
-        if (base.get(a) < base.get(b)) {
-            return 1;
-        } else if (base.get(a) == base.get(b)) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
+	public int compare(Object a, Object b) {
+		if (base.get(a) < base.get(b)) {
+			return 1;
+		} else if (base.get(a) == base.get(b)) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}
+
 }
-
-

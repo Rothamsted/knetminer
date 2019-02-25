@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Configuration for Knetminer</comment>	
+  
+  <entry key="DataSourceName">aratiny</entry>
+
+  <entry key="StateMachineFilePath">file://${project.build.testOutputDirectory}/knetminer-config/SemanticMotifs.txt</entry>
+  
+  <entry key="DataPath">${project.build.directory}/data</entry>
+  <entry key="DataFile">${project.build.directory}/dependency/ara-tiny.oxl</entry>
+	<entry key="SpeciesTaxId">3702</entry>
+	<entry key="reference_genome">true</entry>
+	<entry key="export_visible_network">true</entry>
+	
+
+	<!-- 
+		This is the configuration for the new Neo4j-based backend 
+	-->
+	
+	<!-- The value for this comes from Maven and depends on the selected profile. -->
+	<entry key = "GraphTraverserClass">${knetminer.graphTraverserClass}</entry>
+	<!-- This is for the new Neo4j-based graph traverser -->
+	<entry key = "knetminer.backend.configPath">${project.build.testOutputDirectory}/knetminer-config/neo4j/config.xml</entry>
+</properties>

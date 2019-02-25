@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<artifactId>common</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+	<artifactId>configurable-datasource</artifactId>
+	<packaging>jar</packaging>
+
+	<description>
+		A trivial extension of the abstract Ondex data source, which has zero parameters in the constructor and
+		can be configured completely via file. the aratiny project uses this contains example of how to set it up.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+			<artifactId>server-datasource-ondexlocal</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
