@@ -21,7 +21,7 @@ docker image build \
     	--build-arg tax_id=4081  \
 #    	--build-arg tax_id=4113,4081  \ #
     	--build-arg species_name="Solanaceae" \
-    	--build-arg species_link_name=solanaceae \
+    	--build-arg species_link_name=solknet \
     	--build-arg keywords="solanaceae, tomato, knetminer, quickstart, demo" \
     	--build-arg description="Solanaceae Knetminer" \
     	--build-arg reference_genome=true \

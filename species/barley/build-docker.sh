@@ -7,7 +7,7 @@ cp ../../common/quickstart/Dockerfile-local .
 docker image build \
     	--build-arg tax_id=112509  \
     	--build-arg species_name="Hordeum vulgare" \
-    	--build-arg species_link_name=barley \
+    	--build-arg species_link_name=barleyknet \
     	--build-arg keywords="barley, h.vulgare, knetminer, quickstart, demo" \
     	--build-arg description="Barley Knetminer" \
     	--build-arg reference_genome=true \
