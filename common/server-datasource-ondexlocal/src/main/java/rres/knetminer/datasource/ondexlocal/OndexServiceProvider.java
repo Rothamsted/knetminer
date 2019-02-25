@@ -1636,11 +1636,18 @@ public class OndexServiceProvider {
             }
         }
         
-        // seed gene should always be bigger and flagged
+        // seed gene should always be flagged
         if (geneNodeClone.getAttribute(attFlagged) == null) {
-        	   geneNodeClone.getAttribute(attSize).setValue(new Integer(80));
-               geneNodeClone.createAttribute(attFlagged, true, false);
+        	geneNodeClone.createAttribute(attFlagged, true, false);
         }
+        
+        // seed gene should always be bigger 
+        if(geneNodeClone.getAttribute(attSize) == null){
+        	geneNodeClone.createAttribute(attSize, new Integer(80), false);
+        }else{
+        	geneNodeClone.getAttribute(attSize).setValue(new Integer(80));
+        }
+        
         
         // set all relations to visible if filtering is turned off
         // OR filter is turned on and end node is of specific type
