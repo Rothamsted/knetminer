@@ -7,7 +7,7 @@ cp ../../../common/quickstart/Dockerfile-local .
 docker image build \
     	--build-arg tax_id=336722  \
     	--build-arg species_name="Zymoseptoria tritici" \
-    	--build-arg species_link_name=zymoseptoria \
+    	--build-arg species_link_name=zymoknet \
     	--build-arg keywords="zymoseptoria, z.tritici, knetminer, quickstart, demo" \
     	--build-arg description="Zymoseptoria Knetminer" \
     	--build-arg reference_genome=true \

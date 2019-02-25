@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=39947  \
     	--build-arg species_name="Oryza sativa Japonica" \
-    	--build-arg species_link_name=rice \
+    	--build-arg species_link_name=riceknet \
     	--build-arg keywords="rice, o.sativa, knetminer, quickstart, demo" \
     	--build-arg description="Rice Knetminer" \
     	--build-arg reference_genome=true \

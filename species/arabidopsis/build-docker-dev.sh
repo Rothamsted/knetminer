@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=3702  \
     	--build-arg species_name="Arabidopsis thaliana" \
-    	--build-arg species_link_name=arabidopsis \
+    	--build-arg species_link_name=araknet \
     	--build-arg keywords="arabidopsis, a.thaliana, knetminer, quickstart, demo" \
     	--build-arg description="Arabidopsis Knetminer" \
     	--build-arg reference_genome=true \
