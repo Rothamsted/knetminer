@@ -7,7 +7,7 @@ cp ../../common/quickstart/Dockerfile-local .
 docker image build \
     	--build-arg tax_id=9913  \
     	--build-arg species_name="Bos taurus" \
-    	--build-arg species_link_name=cow \
+    	--build-arg species_link_name=cowknet \
     	--build-arg keywords="cow, b.taurus, knetminer, quickstart, demo" \
     	--build-arg description="Cow Knetminer" \
     	--build-arg reference_genome=true \

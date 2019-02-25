@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=3694  \
     	--build-arg species_name="Populus trichocarpa" \
-    	--build-arg species_link_name=poplar \
+    	--build-arg species_link_name=poplarknet \
     	--build-arg keywords="poplar, p.trichocarpa, knetminer, quickstart, demo" \
     	--build-arg description="Poplar Knetminer" \
     	--build-arg reference_genome=true \
