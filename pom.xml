@@ -25,24 +25,7 @@
 
 	<modules>
 		<module>common</module>
-		<module>arabidopsis</module>
-		<module>barley</module>
-		<module>boleracea</module>
-		<module>chicken</module>
-		<module>cicer</module>
-		<module>cow</module>
-		<module>drosophilla</module>
-		<module>fungi</module>
-		<module>humanDisease</module>
-		<module>maize</module>
-		<module>pig</module>
-		<module>poplar</module>
-		<module>potato</module>
-		<module>rice</module>
-		<module>sviminalis</module>
-		<module>tomato</module>
-		<module>wheat</module>
-		<module>aratiny</module>
+		<module>species</module>
 	</modules>
 
 	<reporting>
