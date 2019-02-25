@@ -18,14 +18,14 @@
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-base</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.0-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 		<!-- Put all the data sources as dependencies here -->
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.quickstart</groupId>
 			<artifactId>quickstart-datasource</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<!-- End list of data sources -->
 	</dependencies>

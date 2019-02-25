@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>client-base</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.0-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 	</dependencies>
