@@ -7,7 +7,7 @@ cp ../../../common/quickstart/Dockerfile-local .
 docker image build \
     	--build-arg tax_id=5518  \
     	--build-arg species_name="Fusarium graminearum" \
-    	--build-arg species_link_name=fusarium \
+    	--build-arg species_link_name=gramiknet \
     	--build-arg keywords="fusarium, f.graminearum, knetminer, quickstart, demo" \
     	--build-arg description="Fusarium Knetminer" \
     	--build-arg reference_genome=true \
