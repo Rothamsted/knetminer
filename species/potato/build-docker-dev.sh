@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=4113  \
     	--build-arg species_name="Solanum tuberosum" \
-    	--build-arg species_link_name=potato \
+    	--build-arg species_link_name=potatoknet \
     	--build-arg keywords="potato, s.tuberosum, knetminer, quickstart, demo" \
     	--build-arg description="Potato Knetminer" \
     	--build-arg reference_genome=true \

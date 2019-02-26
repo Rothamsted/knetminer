@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=9823  \
     	--build-arg species_name="Sus scrofa" \
-    	--build-arg species_link_name=pig \
+    	--build-arg species_link_name=pigknet \
     	--build-arg keywords="pig, s.scrofa, knetminer, quickstart, demo" \
     	--build-arg description="Pig Knetminer" \
     	--build-arg reference_genome=true \

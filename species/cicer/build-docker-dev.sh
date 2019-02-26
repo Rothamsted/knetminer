@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=3827  \
     	--build-arg species_name="Cicer arietinum" \
-    	--build-arg species_link_name=cicer \
+    	--build-arg species_link_name=cicerknet \
     	--build-arg keywords="cicer, c.arietinum, knetminer, quickstart, demo" \
     	--build-arg description="Cicer Knetminer" \
     	--build-arg reference_genome=true \

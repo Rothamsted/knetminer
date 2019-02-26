@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=4565  \
     	--build-arg species_name="Triticum aestivum" \
-    	--build-arg species_link_name=wheat \
+    	--build-arg species_link_name=wheatknet \
     	--build-arg keywords="wheat, t.aestivum, knetminer, quickstart, demo" \
     	--build-arg description="Knetminer Wheat" \
     	--build-arg reference_genome=true \

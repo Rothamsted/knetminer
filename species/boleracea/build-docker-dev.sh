@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=109376  \
     	--build-arg species_name="B. oleracea cv. TO1000" \
-    	--build-arg species_link_name=boleracea \
+    	--build-arg species_link_name=boleraceaknet \
     	--build-arg keywords="boleracea, b.oleracea, knetminer, quickstart, demo" \
     	--build-arg description="Boleracea Knetminer" \
     	--build-arg reference_genome=true \

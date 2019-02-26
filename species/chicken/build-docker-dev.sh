@@ -18,7 +18,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=9031  \
     	--build-arg species_name="Gallus gallus" \
-    	--build-arg species_link_name=chicken \
+    	--build-arg species_link_name=chickenknet \
     	--build-arg keywords="chicken, gallus, knetminer, quickstart, demo" \
     	--build-arg description="Chicken Knetminer" \
     	--build-arg reference_genome=true \

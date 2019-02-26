@@ -20,7 +20,7 @@ cd ..
 docker image build \
     	--build-arg tax_id=9606  \
     	--build-arg species_name="Neurodegenerative Diseases" \
-    	--build-arg species_link_name=human_disease \
+    	--build-arg species_link_name=neuroknet \
     	--build-arg keywords="human, humanDisease, knetminer, quickstart, demo" \
     	--build-arg description="HumanDisease Knetminer" \
     	--build-arg reference_genome=true \
