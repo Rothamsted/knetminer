@@ -45,23 +45,19 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <webResources>
-						<!-- These files contains Maven variables that need to be interpolated -->
             <resource>
               <directory>src/main/webapp</directory>
               <filtering>true</filtering>
-              <includes>
-              	<include>html/javascript/utils-config.js</include>
-              	<include>WEB-INF/urlrewrite.xml</include>
-              </includes>
+              <excludes>
+								<!-- All files except these contain Maven variables that need to be interpolated -->
+              	<exclude>**/*.jpg</exclude>
+              	<exclude>**/*.png</exclude>
+              </excludes>
             </resource>
-            <!-- And the rest doesn't -->
+            <!-- So, the others go in unfiltered -->
             <resource>
               <directory>src/main/webapp</directory>
               <filtering>false</filtering>
-              <excludes>
-              	<exclude>html/javascript/utils-config.js</exclude>
-              	<exclude>WEB-INF/urlrewrite.xml</exclude>
-              </excludes>
             </resource>
           </webResources>        
         </configuration>

@@ -13,7 +13,6 @@
 
 	<properties>
 		<maven.profileId>default</maven.profileId>
-		<knetminer.graphTraverserClass></knetminer.graphTraverserClass>
 	</properties>
 
 	<dependencies>
@@ -124,25 +123,18 @@
 		</plugins>
 		
 		<testResources>
-			<!-- These files contains Maven variables that need to be interpolated -->
 			<testResource>
 			  <directory>src/test/resources</directory>
 			  <filtering>true</filtering>
-			  <includes>
-			  	<include>knetminer-config/data-source.xml</include>
-			  	<include>knetminer-config/neo4j/config.xml</include>
-			  	<include>jetty-web.xml</include>
-			  </includes>
+				<!-- All files except these contain Maven variables that need to be interpolated -->
+			  <excludes>
+			  	<exclude>**/*.cypher</exclude>
+			  </excludes>
 			</testResource>
-			<!-- And the rest doesn't -->
+			<!-- So, the others go in unfiltered -->
 			<testResource>
 			  <directory>src/test/resources</directory>
 			  <filtering>false</filtering>
-			  <excludes>
-			  	<exclude>knetminer-config/data-source.xml</exclude>
-			  	<exclude>knetminer-config/neo4j/config.xml</exclude>
-			  	<exclude>jetty-web.xml</exclude>
-			  </excludes>
 			</testResource>		
    	</testResources>				
 		
@@ -154,7 +146,7 @@
 			<id>neo4j</id>
 			<properties>
 				<maven.profileId>neo4j</maven.profileId>
-				<knetminer.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.graphTraverserClass>
+				<knetminer.api.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.api.graphTraverserClass>
 			</properties>
 			<build>
 				<plugins>

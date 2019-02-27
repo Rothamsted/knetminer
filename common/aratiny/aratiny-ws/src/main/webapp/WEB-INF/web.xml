@@ -6,6 +6,7 @@
         version="3.0">
   <display-name>KnetMiner Ara-Tiny WS</display-name>
 	<listener>
+		<!-- Picks the config file parameter, see the source -->
 		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
 	</listener>  
 </web-app>
