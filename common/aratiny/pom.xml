@@ -11,15 +11,25 @@
 	<packaging>pom</packaging>
 	<name>aratiny - Arabidobsis-based Tiny Test Site</name>
 		
+	<description>A small Knetminer instance, based on a reduced version of the Arabidopsis dataset, which is used for
+	automated tests of the Knetminer code base, as well as to run a testbed for manual testing and inspection of the
+	Knetminer functionality and interface.</description>	
+		
 	<properties>
 	
+		<!-- 
+		  Several of these varibales can be overriden by instance-specific Maven profiles.
+		  See TODO.
+		 -->
 		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
 		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+
 		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+		
 		<!--  true if you are providing a reference genome -->
 		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
 
@@ -33,11 +43,17 @@
 		
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
-		<!-- Here it is http://localhost:9090/ws -->
+		<!-- Here, it is http://localhost:9090/ws -->
 		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
-		<!-- Here it is http://localhost:9090/ws/aratiny -->
+		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
 		
+		<neo4j.server.version>3.4.6</neo4j.server.version>
+		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
+		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
+		
+		<neo4j.server.boltUrl>bolt://127.0.0.1:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+
 		<!-- 
 			This is injected into config.xml for the ws/ war. 
 		  With empty value, the traditional Ondex traverser is picked. The alternative is
@@ -45,15 +61,14 @@
 		  which uses the new Neo4j-backed traverser.  
 		 -->
 		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
-    
+
+
+ 		<!-- 
+ 			This is more for building, and shouldn't need instance-specific configuration
+ 		--> 
+ 		  
     <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
 		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
-
-		<neo4j.server.version>3.4.6</neo4j.server.version>
-		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
-		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
-		
-		<neo4j.server.boltUrl>bolt://127.0.0.1:${neo4j.server.boltPort}</neo4j.server.boltUrl>
 
 	</properties>
 	
