@@ -66,7 +66,6 @@
  		<!-- 
  			This is more for building, and shouldn't need instance-specific configuration
  		--> 
- 		  
     <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
 		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
 
@@ -109,7 +108,7 @@
 		        </httpConnector>			    
 				    <webApp>
 				      <contextPath>/</contextPath>
-				      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>			      
+				      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 				    </webApp>
 				    <stopPort>8081</stopPort>
 				    <stopKey>araTinyJetty</stopKey>

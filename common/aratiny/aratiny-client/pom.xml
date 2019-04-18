@@ -59,13 +59,20 @@
               <directory>src/main/webapp</directory>
               <filtering>false</filtering>
             </resource>
-          </webResources>        
+          </webResources>
         </configuration>
       </plugin>
       
 			<plugin>
 			  <groupId>org.eclipse.jetty</groupId>
 			  <artifactId>jetty-maven-plugin</artifactId>
+			  <configuration>
+			    <webApp>
+			      <contextPath>/</contextPath>
+			      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+			      <overrideDescriptor>target/test-classes/WEB-INF/web.xml</overrideDescriptor>    
+			    </webApp>
+			  </configuration>
 			  <!-- No need to start/stop in the build cycle, just make it visible for manual run. -->
 			  <executions>
 			  	<execution>

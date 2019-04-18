@@ -41,12 +41,10 @@ Knetminer and see the effect of new changes on your local (development) copy.
 Use a shell, cd to a directory you like and clone knetminer:
 
 ```bash
-git clone --branch 201902_cypher https://github.com/Rothamsted/knetminer
+git clone https://github.com/Rothamsted/knetminer
 ```
 
 You should have the `knetminer/` folder available.
-
-TODO: for the moment this is on the `201902_cypher` branch only. We will merge into master soon.
 
 
 ### Running aratiny-ws (i.e., the Knetminer API)
