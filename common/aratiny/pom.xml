@@ -49,10 +49,12 @@
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
 		
 		<neo4j.server.version>3.4.6</neo4j.server.version>
+		
+		<neo4j.server.host>localhost</neo4j.server.host>
 		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
 		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
 		
-		<neo4j.server.boltUrl>bolt://127.0.0.1:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
 
 		<!-- 
 			This is injected into config.xml for the ws/ war. 
