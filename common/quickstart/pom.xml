@@ -9,11 +9,81 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>quickstart</artifactId>
 	<packaging>pom</packaging>
-	<name>KnetMiner Quickstart</name>
+	<name>KnetMiner Docker Quickstart</name>
+	
+	<description>This is a template project, which is used to populate a Docker image with dataset-specific files and 
+	settings.</description>
 	
 	<modules>
 		<module>client</module>
-		<module>datasource</module>
 		<module>ws</module>
 	</modules>
+	
+	<properties>
+	
+		<!-- 
+		  These need to be be overriden by dataset-specific Maven profiles.
+		  See aratiny/pom.xml
+		 -->
+		<knetminer.dataSourceId>arabidopsis</knetminer.dataSourceId>
+		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
+		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
+		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
+		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+
+		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+		
+		<!--  true if you are providing a reference genome -->
+		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+
+		<!-- TODO: to be injected from the mvn command line, reading release_notes.html into this variable -->
+		<knetminer.releaseNotesHtml><![CDATA[
+			<h2>CHANGE ME!</h2>
+			<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
+			<p>Lorem ipsum dolor sit amet, etc etc</p>.
+		]]></knetminer.releaseNotesHtml>
+
+		
+		<!-- 
+		  These are usually dataset-independent for Tomcat on Docker, some Jetty-based tests (in aratiny)
+		 	override them 
+		-->
+		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		<knetminer.api.httpPort>8080</knetminer.api.httpPort>
+		<!-- 
+			In a Docker container, this ends up being http://localhost:8080/ws and again, you shouldn't need 
+		  changes for Docker dataset-specific builds, it is changed in Jetty-based tests.
+		-->
+		<knetminer.api.baseUrl>/${knetminer.api.webContext}</knetminer.api.baseUrl>
+		<!-- 
+			Here this ends up being something like http://localhost:8080/ws/arabidopsis
+			This is the format required by the API and the URL is passed to the client 
+		-->
+		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
+		
+		<!-- 
+			Neo4j setup.
+			
+			This applies only if you use the Neo4j version (via TODO)
+		-->
+		<neo4j.server.version>3.4.6</neo4j.server.version>
+		
+		<!-- TODO: inject ENV var here, with default fallback, 
+				 host and port params are only needed in aratiny, to use the Neo4j plugin 
+		-->		
+		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+
+		<!-- 
+		  TODO: needs to depend on env var, see my notes
+		  
+			This is injected into config.xml for the ws/ war. 
+		  With empty value, the traditional Ondex traverser is picked. The alternative is
+		  uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser (see neo4j profile in aratiny-ws/pom.xml),
+		  which uses the new Neo4j-backed traverser.  
+		 -->
+		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
+
+	</properties>	
+	
 </project>

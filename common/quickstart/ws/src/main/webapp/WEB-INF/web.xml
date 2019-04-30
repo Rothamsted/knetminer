@@ -5,4 +5,15 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
   <display-name>KnetMiner Quickstart WS</display-name>
+  
+  <!-- 
+  	This is the configuration directory under the Docker container. This is made independent on the specific 
+  	dataset that the container runs with by means of voulumes, ie, the folder mentioned below is mapped from 
+  	a dataset-specific directory on the Docker host.
+  -->
+	<context-param>
+		<param-name>knetminer.dataSource.configFilePath</param-name>
+		<param-value>/root/knetminer-config/data-source.xml</param-value>		
+	</context-param>
+  
 </web-app>

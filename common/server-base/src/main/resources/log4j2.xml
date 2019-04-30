@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
 	<Properties>
+	  <!-- TODO: Docker should map ${sys:catalina.home}/logs/ to some volume -->
 		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
 	<Appenders>

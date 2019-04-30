@@ -23,6 +23,15 @@
 		</license>
 	</licenses>
 
+	<properties>
+    <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
+		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
+	</properties>
+
+	<!-- 
+		TODO: parent needs a merge with common and pom files in species/ need to be removed.
+		At the same time, the folders in common need to be raised one level.
+	-->
 	<modules>
 		<module>common</module>
 		<module>species</module>
@@ -375,6 +384,12 @@
 				<groupId>net.sourceforge.ondex.core</groupId>
 				<artifactId>workflow-api</artifactId>
 				<version>${ondex.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>net.sourceforge.ondex.core</groupId>

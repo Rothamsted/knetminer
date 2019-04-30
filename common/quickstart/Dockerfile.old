@@ -1,35 +1,4 @@
-FROM andreptb/tomcat:7-jdk8 AS base
-
-EXPOSE 8080
-
-ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
-
-# working dirs are: 
-# - configuration and .war files go to /root/knetminer-config
-# - data go to /root/knetminer-data
-#   - These are mounted as a dataset-specific volume, if you don't map any volume to these dir, the container
-#   we'll use the VM directories, which contains the defaults we copy there from this Dockerfile
-# 
-# - runtime builds (ie, the client) are made into /root/knetminer-build. Base files are copied into this
-#   and then files from /knetminer-config/build/ are used to override such defaults. Again, these files
-#   are either a sample client (taken from the VM's directory), or dataset-specific client files (taken from
-#   the mounted volume).   
-
-ENV knet_cfg_dir=/root/knetminer-config \
-		knet_build_dir=/root/knetminer-build \
-		knet_data_dir=/root/knetminer-data
-
-ENV knet_web_dir="$knet_cfg_dir/web"
-
-# ---- Here we go
-#
-RUN apk add --no-cache maven
-
-FROM base AS full
-WORKDIR $knet_build_dir
-ADD $sample_oxl_url $knet_data_dir
-COPY ./deploy-docker-env.sh 
-RUN ./deploy-docker-env.sh 
+FROM andreptb/tomcat:7-jdk8
 
 # DO NOT TOUCH ABOVE THIS LINE
  

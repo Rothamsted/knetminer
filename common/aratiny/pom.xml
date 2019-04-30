@@ -64,13 +64,6 @@
 		 -->
 		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
 
-
- 		<!-- 
- 			This is more for building, and shouldn't need instance-specific configuration
- 		--> 
-    <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
-		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
-
 	</properties>
 	
 	<modules>
@@ -78,11 +71,7 @@
 		<module>aratiny-ws</module>
 	</modules>
 	
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>			
-	</dependencyManagement>
-	
+		
 	<build>	
 		<pluginManagement>
 			<plugins>
@@ -176,7 +165,6 @@
 		<plugins>
 
 			<!-- Disabling stuff from the parent level -->
-					
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
         <executions>
