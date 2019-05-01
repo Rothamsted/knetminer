@@ -3,9 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.rothamsted.knetminer.quickstart</groupId>
-	<artifactId>quickstart-ws</artifactId> <!-- Change me -->
-	<name>KnetMiner Quickstart WS</name> <!-- Change me -->
+	<artifactId>quickstart-ws</artifactId>
+	<name>KnetMiner Docker API Web Service</name>
 	<packaging>war</packaging>
 
 	<parent>
@@ -21,13 +20,11 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-		<!-- Put all the data sources as dependencies here -->
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.quickstart</groupId>
-			<artifactId>quickstart-datasource</artifactId>
+			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+			<artifactId>configurable-datasource</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- End list of data sources -->
 	</dependencies>
 
 	<build>

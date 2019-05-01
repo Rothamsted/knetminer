@@ -6,20 +6,4 @@
         version="3.0">
   <display-name>KnetMiner Base API Web Service</display-name>
   
-	<listener>
-		<!-- Picks the config file parameter, see below (and the source of this class) -->
-		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
-	</listener>
-  
-	<!-- 
-		The default should work fine within the web container's home. 
-		However, this is also intended to be overridden in different ways, either via script replacement (in Docker),
-		or via mechanisms to provide an additional web.xml to the container (possible in Tomcat, already being done here
-		for Jetty, see test/resources). 
-	-->
-	<context-param>
-		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>knetminer-config/data-source.xml</param-value>		
-	</context-param>
-  
 </web-app>

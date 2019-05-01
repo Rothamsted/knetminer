@@ -8,7 +8,7 @@
   
 	<context-param>
 		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>file://${project.build.testOutputDirectory}/knetminer-config/data-source.xml</param-value>
+		<param-value>file://${knetminer.configDir}/data-source.xml</param-value>
 	</context-param>
 	
 </web-app>
