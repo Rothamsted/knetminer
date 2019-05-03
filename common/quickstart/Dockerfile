@@ -1,4 +1,4 @@
-FROM andreptb/tomcat:7-jdk8 AS base
+FROM knetminer/knetminer-base
 
 EXPOSE 8080
 
@@ -27,23 +27,21 @@ ENV knet_web_dir="$knet_cfg_dir/web"
 
 # ---- Here we go
 # 
-RUN set -x \
- && apk add --no-cache maven nodejs-npm git libxml2-utils \
- && npm install bower gulp -g \
- && echo '{"allow_root":true}' > /root/.bowerrc
- && mkdir -p $knet_data_dir
 
-FROM base AS build
 WORKDIR $knet_data_dir
 ADD $sample_oxl_url $knet_data_dir/knowledge-network.oxl
 
 WORKDIR $knet_build_dir
+
 # If this is run in dev mode, we need 'docker build -f .' from the knetminer root directory, since
 # climbing up the host paths is forbidden 
 COPY . knetminer
+COPY common/aratiny/aratiny-docker/maven-settings.xml $knet_cfg_dir/
+
+
 WORKDIR knetminer/common/quickstart
+
 RUN set -x \
-	&& ./docker-build-helper.sh \
- 	&& rm -rf /root/.m2 $knet_build_dir
+	&& ./docker-build-helper.sh
 
 CMD [ "./docker-runtime-helper.sh" ]

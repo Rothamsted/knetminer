@@ -1,3 +1,4 @@
+#!/bin/sh
 cd "$(dirname $0)"
 mydir="$(pwd)"
 
@@ -5,6 +6,7 @@ knet_cfg_dir=${1:-/root/knetminer-config}
 knet_tomcat_home=${2:-$CATALINA_HOME}
 
 knet_web_dir="$knet_cfg_dir/web"
+
 mkdir --parents "$knet_web_dir"
 
 # Build the client for this dataset
