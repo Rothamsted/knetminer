@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This is used for the server's log (ie, Jetty) during tests, it doesn't go into the final war
+  (which has its production version)
+-->
 <Configuration status="DEBUG">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">

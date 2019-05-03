@@ -19,11 +19,11 @@ ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetmin
 #
 # - common config goes to    
 
-ENV knet_cfg_dir=/root/knetminer-config \
-		knet_build_dir=/root/knetminer-build \
+ENV knet_build_dir=/root/knetminer-build \
 		knet_data_dir=/root/knetminer-data
 
-ENV knet_web_dir="$knet_cfg_dir/web"
+# TODO: remove ENV knet_cfg_dir=/root/knetminer-config
+# TODO: remove ENV knet_web_dir="$knet_cfg_dir/web"
 
 # ---- Here we go
 # 
@@ -36,8 +36,6 @@ WORKDIR $knet_build_dir
 # If this is run in dev mode, we need 'docker build -f .' from the knetminer root directory, since
 # climbing up the host paths is forbidden 
 COPY . knetminer
-COPY common/aratiny/aratiny-docker/maven-settings.xml $knet_cfg_dir/
-
 
 WORKDIR knetminer/common/quickstart
 

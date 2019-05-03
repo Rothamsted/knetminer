@@ -36,6 +36,9 @@
 		<knetminer.configDir>${project.build.testOutputDirectory}/knetminer-config</knetminer.configDir>
 		<knetminer.dataDir>${project.build.directory}/data</knetminer.dataDir>
 
+		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is upon builds -->
+		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
+
 		<!--
 			In most cases, probably you'll be fine with the overriding provided below, in the 'docker' profile.
 			For aratiny, we need this non-common value since it's difficult to rename a downloaded test file. 

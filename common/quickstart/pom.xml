@@ -84,6 +84,8 @@
 		 -->
 		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
 
+		<!-- Many of the properties above populate this file -->
+		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>	
 	</properties>	
 	
 </project>

@@ -13,12 +13,9 @@
 		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
 	</listener>   
   
-  <!--
-  	This is suitable for TOMCAT_HOME, it's overridden by jetty-web.xml 
-  -->
 	<context-param>
 		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>file://knetminer-config/data-source.xml</param-value>
+		<param-value>file://${knetminer.configFile}</param-value>
 	</context-param>
   
 </web-app>

@@ -5,10 +5,17 @@ mydir="$(pwd)"
 knet_cfg_dir=${1:-/root/knetminer-config}
 knet_tomcat_home=${2:-$CATALINA_HOME}
 
+knet_web_dir="$knet_cfg_dir/web"
+
+# Build the ws (API) and put it under Tomcat
 cd ws
-mvn clean package
+mvn clean install -DskipTests -DskipITs
 cp -f target/ws.war "$knet_tomcat_home/webapps"
 
+# The client's war stays in the volume, linked under Tomcat. This way the docker runtime script can decide
+# if it has to be rebuilt
+#
+ln -s "$knet_web_dir/client.war" "$knet_tomcat_home/webapps/client.war"
 
 # Useful during dev
 # TODO: disable in production!

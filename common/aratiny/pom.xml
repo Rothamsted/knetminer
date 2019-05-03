@@ -55,7 +55,7 @@
 		        </httpConnector>			    
 				    <webApp>
 				      <contextPath>/</contextPath>
-				      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+							<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 				    </webApp>
 				    <stopPort>8081</stopPort>
 				    <stopKey>araTinyJetty</stopKey>

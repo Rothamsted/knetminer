@@ -103,7 +103,13 @@
 	        </httpConnector>			    
 			    <webApp>
 			      <contextPath>/${knetminer.api.webContext}</contextPath>
+						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
             <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
+			      <resourceBases>
+			      	<!-- Thes test dir contains things like logger config for test server -->
+			      	<resourceBase>src/test/webapp</resourceBase>
+			      	<resourceBase>src/main/webapp</resourceBase>
+			      </resourceBases>
 			    </webApp>
 			    <stopPort>9091</stopPort>
 			  </configuration>
@@ -117,7 +123,20 @@
 	      		<maven.profileId>${maven.profileId}</maven.profileId>
 	      	</systemProperties>
 	      </configuration>
-			</plugin>			
+			</plugin>
+			
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>src/main/webapp</directory>
+              <filtering>true</filtering>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>					
 		
 		</plugins>
 		
