@@ -39,7 +39,6 @@ COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
 
-RUN set -x \
-	&& ./docker-build-helper.sh
+RUN ./docker-build-helper.sh
 
 CMD [ "./docker-runtime-helper.sh" ]

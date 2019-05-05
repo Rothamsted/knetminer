@@ -36,7 +36,7 @@
 		<knetminer.configDir>${project.build.testOutputDirectory}/knetminer-config</knetminer.configDir>
 		<knetminer.dataDir>${project.build.directory}/data</knetminer.dataDir>
 
-		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is upon builds -->
+		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
 		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
 
 		<!--
@@ -300,17 +300,11 @@
 					while clients will have their own Maven settings to override these values.
 					 
 				-->
-				
-				<!-- 
-					These dirs always refer to the container, which possibly points indirectly to the files of a mounted volume 
-				-->
-				<knetminer.docker.rootDir>/root</knetminer.docker.rootDir>
-				
-				<knetminer.configDir>${knetminer.docker.rootDir}/knetminer-config</knetminer.configDir>
-				<knetminer.dataDir>${knetminer.docker.rootDir}/knetminer-data</knetminer.dataDir>
-		
+								
+				<knetminer.configDir>/root/knetminer-config</knetminer.configDir>
+				<knetminer.dataDir>/root/knetminer-data</knetminer.dataDir>
+						
 				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
-				
 								
 				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
 				<!-- It's just /ws, so that our Tomcat can append the right prefix automatically -->
@@ -326,7 +320,29 @@
 				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
 
 			</properties>
-									
+				
+			<build>
+				<!-- We don't test during docker deployment, so all related plugins are turned off -->
+				<plugins>
+					<plugin>
+					  <groupId>org.eclipse.jetty</groupId>
+					  <artifactId>jetty-maven-plugin</artifactId>
+					  <executions>
+					  	<execution><id>start</id><phase>_none_</phase></execution>
+					  	<execution><id>stop</id><phase>_none_</phase></execution>
+					  </executions>
+					</plugin>
+					<plugin>
+				    <groupId>com.github.harti2006</groupId>
+					  <artifactId>neo4j-server-maven-plugin</artifactId>
+					  <executions>
+					  	<execution><id>neo4j-server-download</id><phase>_none_</phase></execution>
+					  	<execution><id>start-neo4j-server</id><phase>_none_</phase></execution>
+					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
+					  </executions>
+					</plugin>
+				</plugins>
+			</build>					
 		</profile>
 	
 	

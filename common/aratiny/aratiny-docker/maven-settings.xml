@@ -3,4 +3,22 @@
       xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                           https://maven.apache.org/xsd/settings-1.0.0.xsd">
                             
+	<profiles>
+		<!-- 
+			See quickstart/local-env-ex
+			
+			This shows how to use the Docker scripts (plus additional Maven profiles) to deploy on a regular
+			system, without Docker.
+		 -->
+		<profile>
+			<id>local-env-ex</id>
+			<activation><activeByDefault>false</activeByDefault></activation>
+			<properties>
+				<knetminer.configDir>/tmp/knetminer-config</knetminer.configDir>
+				<knetminer.dataDir>/tmp/knetminer-data</knetminer.dataDir>
+				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
+				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
+			</properties>
+		</profile>
+	</profiles>
 </settings>
