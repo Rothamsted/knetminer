@@ -4,28 +4,33 @@
 # as a volume. 
 #
 
+# Set these as you need
 knet_deploy_dir=/tmp
 knet_cfg_dir=$knet_deploy_dir/knetminer-config
 knet_data_dir=$knet_deploy_dir/knetminer-data
+export CATALINA_HOME=/tmp/tomcat
 
 mkdir --parents "$knet_cfg_dir"
 mkdir --parents "$knet_data_dir"
 
-cp ./maven-settings.xml "$knet_cfg_dir"
+#cp ./maven-settings.xml "$knet_cfg_dir"
+wget 'https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl' \
+		 -O "$knet_data_dir/knowledge-network.oxl"
 
-# Now you just need to run our Docker container, with: TODO
+export MAVEN_OPTS="-Dknetminer.configDir=/tmp/$knet_cfg_dir -Dknetminer.dataDir=/tmp/$knet_data_dir"
 
-# The same dir can be picked locally, but you'll need some tweaking, see below
-#  
-# This will deploy our ws.war into tomcat home
-# 
-#   - needs a proper build environment, see the Dockerfile
-#   - needs web.xml redefinition with TODO
-#
-# tomcat_home=/Applications/local/dev/apache-tomcat-9.0.16
-# cd ..
-# ./docker-build-helper.sh "$knet_cfg_dir" "$tomcat_home"
-# 
-# And this will run the server locally, same way it's done under Docker
-# 
-# ./docker-runtime-helper.sh "$knet_cfg_dir" "$tomcat_home"
+cat <<EOT
+
+	
+	Now you can do things like:
+
+cd ..
+./docker-build-helper.sh "$knet_cfg_dir" "$tomcat_home"
+
+
+	And, after the above:
+
+./docker-runtime-helper.sh "$knet_cfg_dir" ''
+
+EOT
+

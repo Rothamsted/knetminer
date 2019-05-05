@@ -21,6 +21,7 @@
 	
 	<!-- The value for this comes from Maven and depends on the selected profile. -->
 	<entry key = "GraphTraverserClass">${knetminer.api.graphTraverserClass}</entry>
+	
 	<!-- This is for the new Neo4j-based graph traverser -->
-	<entry key = "knetminer.backend.configPath">${knetminer.configDir}/neo4j/config.xml</entry>
+	<entry key = "knetminer.backend.configPath">${knetminer.neo4j.configFile}</entry>
 </properties>

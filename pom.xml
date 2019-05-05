@@ -80,6 +80,9 @@
 		  which uses the new Neo4j-backed traverser.  
 		 -->
 		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
+
+		<!-- There is a production version, which searches into state machine-generated files -->
+		<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config-test.xml</knetminer.neo4j.configFile>
 				
 		<neo4j.server.host>localhost</neo4j.server.host>
 		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
@@ -319,6 +322,8 @@
 				<neo4j.server.boltPort>7687</neo4j.server.boltPort>
 				<!-- Not actually used, but just in case -->
 				<neo4j.server.httpPort>7474</neo4j.server.httpPort>
+
+				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
 
 			</properties>
 									
