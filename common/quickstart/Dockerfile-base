@@ -17,6 +17,6 @@ COPY . knetminer
 WORKDIR knetminer
 
 RUN echo -e "\n\n\tBuilding knetminer codebase and pulling all dependencies\n" \
-	&& mvn clean install -DskipTests -DskipITs
+	&& mvn clean dependency:resolve
 	
 #CMD [ "echo", "DO NOT RUN ME, This is a base image, used to build the Knetminer runtime" ]

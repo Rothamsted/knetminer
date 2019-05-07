@@ -35,11 +35,10 @@ ADD $sample_oxl_url $knet_data_dir/knowledge-network.oxl
 WORKDIR $knet_build_dir
 
 # If this is run in dev mode, we need 'docker build -f .' from the knetminer root directory, since
-# climbing up the host paths is forbidden 
+# climbing up the host paths is forbidden
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
+RUN ./docker-build-helper.sh '' '' "$tomcat_password"
 
-RUN ./docker-build-helper.sh '' '' "$knet_tomcat_home"
-
-CMD [ "./docker-runtime-helper.sh" ]
+ENTRYPOINT [ "./docker-runtime-helper.sh", '' ]
