@@ -1,0 +1,32 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                            
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<properties>
+				<knetminer.dataSourceId>araknet</knetminer.dataSourceId>
+				<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about the Arabidopsis</knetminer.appDescription>
+				<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer</knetminer.appKeywords>
+				<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+		
+				<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+				<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+				
+				<!--  true if you are providing a reference genome -->
+				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+		
+				<!-- TODO: to be injected from the mvn command line, reading release_notes.html into this variable -->
+				<knetminer.releaseNotesHtml><![CDATA[
+					<h2>CHANGE ME!</h2>
+					<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
+					<p>Lorem ipsum dolor sit amet, etc etc</p>.
+				]]></knetminer.releaseNotesHtml>
+						
+			</properties>
+		</profile>
+	</profiles>
+</settings>
