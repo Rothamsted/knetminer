@@ -48,7 +48,7 @@
 		<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
 			<constructor-arg>
 				<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
-					<constructor-arg value = "#{configDirPath}/semantic-motif-queries" />
+					<constructor-arg value = "#{configDirPath}/state-machine-queries" />
 					<constructor-arg>
 						<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
 							<constructor-arg value = "*.cypher" />

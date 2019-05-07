@@ -46,7 +46,10 @@ client_html_dir="$client_src_dir/src/main/webapp/html"
 cd "$mydir/../.."
 cp -Rf common/aratiny/aratiny-client/* "$client_src_dir"
 cp "$knet_instance_dir/client/"*.xml "$client_html_dir/data"
-cp "$knet_instance_dir/client/"*.{jpg,png} "$client_html_dir/image"
+for ext in jpg png gif svg tif
+do
+	cp "$knet_instance_dir/client/"*.$ext "$client_html_dir/image" || :
+done
 cd "$client_src_dir"
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" -DskipTests -DskipITs clean package
 cp target/knetminer-aratiny.war "$knet_web_dir/client.war" # Tomcat has already a link to this
@@ -59,7 +62,7 @@ if [ "$knet_tomcat_home" == '' ]; then
 	echo -e "\n\n\tEmpty tomcat home parameter, exiting after build\n"
 	exit
 fi
-echo -e "\n\n\tRunnin che server\n"
+echo -e "\n\n\tRunning che server\n"
 cd "$knet_tomcat_home/bin" 
 ./catalina.sh run
 echo -e "\n\n\tServer Stopped\n"

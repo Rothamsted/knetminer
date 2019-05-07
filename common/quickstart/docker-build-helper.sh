@@ -6,7 +6,7 @@ mydir="$(pwd)"
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
 knet_cfg_dir=${1:-/root/knetminer-config}
-knet_tomcat_home=${2:-$CATALINA_HOME}
+knet_tomcat_home=${2:-$CATALINA_HOME} 
 knet_tomcat_pwd="$3"
 
 knet_web_dir="$knet_cfg_dir/web"
@@ -29,7 +29,7 @@ cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 # The client's war stays in the volume, linked under Tomcat. This way the docker runtime script can decide
 # if it has to be rebuilt
 #
-ln --symbolic --force "$knet_web_dir/client.war" "$knet_tomcat_home/webapps/client.war"
+ln -s -f "$knet_web_dir/client.war" "$knet_tomcat_home/webapps/client.war"
 
 # Useful during dev
 if [ "$knet_tomcat_pwd" != '' ] && [ ! -e ./tomcat-users.xml.knetminer-bkp ]; then

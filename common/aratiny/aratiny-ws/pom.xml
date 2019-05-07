@@ -107,8 +107,8 @@
             <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
 			      	<!-- Thes test dir contains things like logger config for test server -->
-			      	<resourceBase>src/test/webapp</resourceBase>
-			      	<resourceBase>src/main/webapp</resourceBase>
+			      	<resourceBase>${project.basedir}/src/test/webapp</resourceBase>
+			      	<resourceBase>${project.basedir}/src/main/webapp</resourceBase>
 			      </resourceBases>
 			    </webApp>
 			    <stopPort>9091</stopPort>
@@ -275,6 +275,35 @@
 				<maven.profileId>console</maven.profileId>
 			</properties>
 		</profile>
+				
+		<profile>
+			<id>docker</id>
+			
+			<build>
+				<!-- We don't test during docker deployment, so all related plugins are turned off -->
+				<plugins>
+					<plugin>
+					  <groupId>org.eclipse.jetty</groupId>
+					  <artifactId>jetty-maven-plugin</artifactId>
+					  <executions>
+					  	<execution><id>start</id><phase>_none_</phase></execution>
+					  	<execution><id>stop</id><phase>_none_</phase></execution>
+					  </executions>
+					</plugin>
+					<plugin>
+				    <groupId>com.github.harti2006</groupId>
+					  <artifactId>neo4j-server-maven-plugin</artifactId>
+					  <executions>
+					  	<execution><id>neo4j-server-download</id><phase>_none_</phase></execution>
+					  	<execution><id>start-neo4j-server</id><phase>_none_</phase></execution>
+					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
+					  </executions>
+					</plugin>
+				</plugins>
+			</build>					
+		
+		</profile>		
+				
 				
 	</profiles>
 

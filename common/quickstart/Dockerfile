@@ -1,5 +1,10 @@
 FROM knetminer/knetminer-base
 
+# If set, tomcat-users.xml is populated with the user 'tomcat' and this password
+# Can be useful for basic debugging.
+#
+ARG tomcat_password=''
+
 EXPOSE 8080
 
 ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
@@ -17,13 +22,9 @@ ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetmin
 #   are either a sample client (taken from the VM's directory), or dataset-specific client files (taken from
 #   the mounted volume).
 #
-# - common config goes to    
 
 ENV knet_build_dir=/root/knetminer-build \
 		knet_data_dir=/root/knetminer-data
-
-# TODO: remove ENV knet_cfg_dir=/root/knetminer-config
-# TODO: remove ENV knet_web_dir="$knet_cfg_dir/web"
 
 # ---- Here we go
 # 
@@ -39,6 +40,6 @@ COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
 
-RUN ./docker-build-helper.sh
+RUN ./docker-build-helper.sh '' '' "$knet_tomcat_home"
 
 CMD [ "./docker-runtime-helper.sh" ]
