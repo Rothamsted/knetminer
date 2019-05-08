@@ -41,4 +41,5 @@ COPY . knetminer
 WORKDIR knetminer/common/quickstart
 RUN ./docker-build-helper.sh '' '' "$tomcat_password"
 
-ENTRYPOINT [ "./docker-runtime-helper.sh", '' ]
+ENTRYPOINT ["./docker-runtime-helper.sh", ""] 
+

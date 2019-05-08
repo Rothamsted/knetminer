@@ -19,12 +19,11 @@
 				<!--  true if you are providing a reference genome -->
 				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
 		
-				<!-- TODO: to be injected from the mvn command line, reading release_notes.html into this variable -->
-				<knetminer.releaseNotesHtml><![CDATA[
-					<h2>CHANGE ME!</h2>
-					<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
-					<p>Lorem ipsum dolor sit amet, etc etc</p>.
-				]]></knetminer.releaseNotesHtml>
+				<!-- 
+					The contents of client/release_notes.html take priority over this, so it doesn't really matter
+					if you define this property to override the default. We do it here just to recall this behaviour.
+				-->				
+				<knetminer.releaseNotesHtml></knetminer.releaseNotesHtml>
 						
 			</properties>
 		</profile>

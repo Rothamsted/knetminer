@@ -28,8 +28,8 @@ cp -Rf aratiny-ws /tmp
 rm -Rf test/resources/knetminer-config/*.cypher
 cd "$mydir/../.."
 cp -Rf "$knet_instance_dir/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-config
-# Have a copy on the config dir too, as a reference and to ease following operations
-cp "$knet_instance_dir/maven-settings.xml" "$knet_cfg_dir" 
+# Have a copy of maven settings on the config dir too, as a reference and to ease following operations
+cp "$knet_instance_dir/maven-settings.xml" "$knet_cfg_dir"
 cd /tmp/aratiny-ws
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" clean test-compile
 # End eventually, deploy the instantiated config files
@@ -48,8 +48,17 @@ cp -Rf common/aratiny/aratiny-client/* "$client_src_dir"
 cp "$knet_instance_dir/client/"*.xml "$client_html_dir/data"
 for ext in jpg png gif svg tif
 do
+	# Ignore 'source file doesn't exist'
 	cp "$knet_instance_dir/client/"*.$ext "$client_html_dir/image" || :
 done
+
+# The Maven placeholder can either be set by settings, or replaced directly by a file, le latter taking
+# priority
+#
+[ -e "$knet_instance_dir/release_notes.html" ] && \
+	sed -e /'\$\{knetminer.releaseNotesHtml\}'/{r "$knet_instance_dir/release_notes.html" -e 'd}' \
+    	-i'' "$client_html_dir/release.html"
+
 cd "$client_src_dir"
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" -DskipTests -DskipITs clean package
 cp target/knetminer-aratiny.war "$knet_web_dir/client.war" # Tomcat has already a link to this

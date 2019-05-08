@@ -58,7 +58,10 @@
 		<!--  true if you are providing a reference genome -->
 		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
 
-		<!-- TODO: to be injected from the mvn command line, reading release_notes.html into this variable -->
+		<!-- 
+			If your dataset config directory contains client/release_notes.html, its contents will be used as a value for
+			the corresponding placeholder, taking priority over this variable. Hence, it will be ignored in such a case. 
+		-->
 		<knetminer.releaseNotesHtml><![CDATA[
 			<h2>CHANGE ME!</h2>
 			<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
@@ -135,7 +138,6 @@
 	-->
 	<modules>
 		<module>common</module>
-		<module>species</module>
 	</modules>
 
 	<reporting>
