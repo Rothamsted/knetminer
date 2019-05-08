@@ -53,11 +53,12 @@ do
 done
 
 # The Maven placeholder can either be set by settings, or replaced directly by a file, le latter taking
-# priority
+# priority.
+# TODO: this approach replaces the placeholder in one file only. Should we replace it in maven settings?
 #
-[ -e "$knet_instance_dir/release_notes.html" ] && \
-	sed -e /'\$\{knetminer.releaseNotesHtml\}'/{r "$knet_instance_dir/release_notes.html" -e 'd}' \
-    	-i'' "$client_html_dir/release.html"
+[ -e "$knet_instance_dir/client/release_notes.html" ] && \
+  sed -e "/\${knetminer.releaseNotesHtml}/{r $knet_instance_dir/client/release_notes.html" -e 'd}' \
+      "$client_html_dir/release.html" -i'' "$client_html_dir/release.html"
 
 cd "$client_src_dir"
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" -DskipTests -DskipITs clean package
