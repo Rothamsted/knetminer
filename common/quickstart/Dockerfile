@@ -7,8 +7,6 @@ ARG tomcat_password=''
 
 EXPOSE 8080
 
-ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
-
 # working dirs are: 
 # - configuration and .war files go to /root/knetminer-config
 # 
@@ -22,9 +20,10 @@ ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetmin
 #   are either a sample client (taken from the VM's directory), or dataset-specific client files (taken from
 #   the mounted volume).
 #
-
 ENV knet_build_dir=/root/knetminer-build \
 		knet_data_dir=/root/knetminer-data
+
+ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
 
 # ---- Here we go
 # 

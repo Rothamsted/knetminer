@@ -168,6 +168,18 @@
 			</properties>
 			<build>
 				<plugins>
+					
+					<plugin>
+					  <groupId>org.apache.maven.plugins</groupId>
+					  <artifactId>maven-resources-plugin</artifactId>
+					  <configuration>
+					  	<!-- 
+					  		We want this, cause there are some empty dirs that must exist in the final config in order to
+					  	  avoid file-not-found errors 
+					  	-->
+					    <includeEmptyDirs>true</includeEmptyDirs>
+					  </configuration>
+					</plugin>
 
 					<!-- 
 						Unzip neo4j test DB downloaded by the dependency plugin. 
