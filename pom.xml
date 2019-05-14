@@ -92,7 +92,9 @@
 		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
 		
 		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
-		
+		<neo4j.server.user>neo4j</neo4j.server.user>
+		<neo4j.server.password>test</neo4j.server.password>
+
 			
 		<!--
 		 

@@ -1,14 +1,40 @@
-docker run \
-  --env "MAVEN_ARGS=-Pdocker,neo4j -Dneo4j.server.boltUrl=bolt://192.168.1.114:17690" 
-  --volume '/tmp/data:/root/knetminer-data' \
-  --volume "/Users/brandizi/Documents/Work/RRes/ondex_git:/root/knetminer-build" \
-  -p 8080:8080 -it knetminer/knetminer
-  
---neo4j 1/0
---data-dir
---build-dir
---neo4j-url
---neo4j-user
---neo4j-pwd
---client-prefix
-[ client-id ]
+# Variables influencing this scripts:
+#
+# $1 = directory name under $KNET_DATASET_DIR (eg, arabidopsis, wheat).
+#
+# KNET_HOST_DATA_DIR # host directory where to put knowledge-network.oxl and to be used as data directory
+# KNET_IS_NEO4J # any non-null will run the container in Neo4j mode, against a Neo4j server
+# KNET_NEO4J_URL # Neo4j bolt:// URL pointing to the DB server you want to use (ignored if KNET_IS_NEO4J not set) 
+# KNET_NEO4J_USER # Neo4j login user (defult is neo4j)
+# KNET_NEO4J_PWD #  default is test
+#
+# KNET_DATASET_DIR # directory where to get datasets (default is 'species' and is relative to the knetminer codebase's root) 
+# KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
+# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (-p 8080:8080 -it ARE NOT set if this is non-null)
+#  
+
+dataset_id="$1"
+if [ "$dataset_id" == "" ] && [ "$KNET_DATASET_DIR" == "" ]; then
+	instance_dir=''	
+else
+	instance_dir="${KNET_DATASET_DIR:-species}/$dataset_id"
+fi
+
+[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-p 8080:8080 -it"
+[ "$KNET_HOST_DATA_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATA_DIR:/root/knetminer-data"
+[ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build"
+
+[ "$MAVEN_ARGS" == "" ] && MAVEN_ARGS="-Pdocker" 
+
+if [ "$KNET_IS_NEO4J" != "" ]; then 
+	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
+	[ "$KNET_NEO4J_URL" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.boltUrl=$KNET_NEO4J_URL"
+	[ "$KNET_NEO4J_USER" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.user=$KNET_NEO4J_USER"
+	[ "$KNET_NEO4J_PWD" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$KNET_NEO4J_PWD"
+fi
+
+[ "$MAVEN_ARGS" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --env MAVEN_ARGS"
+export MAVEN_ARGS
+
+set -ex
+docker run $KNET_DOCKER_OPTS knetminer/knetminer $instance_dir
