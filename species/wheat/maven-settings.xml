@@ -9,7 +9,7 @@
 			<properties>
 				<knetminer.dataSourceId>wheatknet</knetminer.dataSourceId>
 				<knetminer.specieName>Triticum aestivum</knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about wheat</knetminer.appDescription>
+				<knetminer.appDescription>Knetminer instance about: Triticum aestivum</knetminer.appDescription>
 				<knetminer.appKeywords>wheat, t.aestivum, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>4565</knetminer.specieTaxId>
 		

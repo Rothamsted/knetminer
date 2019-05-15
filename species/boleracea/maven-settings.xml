@@ -9,7 +9,7 @@
 			<properties>
 				<knetminer.dataSourceId>boleraceaknet</knetminer.dataSourceId>
 				<knetminer.specieName>B. oleracea cv. TO1000</knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about the Boleracea</knetminer.appDescription>
+				<knetminer.appDescription>Knetminer instance about: B. oleracea cv. TO1000</knetminer.appDescription>
 				<knetminer.appKeywords>boleracea, b.oleracea, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>109376</knetminer.specieTaxId>
 		

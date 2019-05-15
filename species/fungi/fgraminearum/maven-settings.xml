@@ -7,11 +7,11 @@
 		<profile>
 			<id>docker</id>
 			<properties>
-				<knetminer.dataSourceId>barleyknet</knetminer.dataSourceId>
-				<knetminer.specieName>Hordeum vulgare</knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about: Hordeum vulgare</knetminer.appDescription>
-				<knetminer.appKeywords>barley, h.vulgare, knetminer</knetminer.appKeywords>
-				<knetminer.specieTaxId>112509</knetminer.specieTaxId>
+				<knetminer.dataSourceId>gramiknet</knetminer.dataSourceId>
+				<knetminer.specieName>Fusarium graminearum</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about: Fusarium graminearum</knetminer.appDescription>
+				<knetminer.appKeywords>fusarium, f.graminearum, knetminer</knetminer.appKeywords>
+				<knetminer.specieTaxId>5518</knetminer.specieTaxId>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
 				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>

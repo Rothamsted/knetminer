@@ -8,8 +8,8 @@
 			<id>docker</id>
 			<properties>
 				<knetminer.dataSourceId>araknet</knetminer.dataSourceId>
-				<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about the Arabidopsis</knetminer.appDescription>
+				<knetminer.specieName>Arabidopsis thaliana</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about: Arabidopsis thaliana</knetminer.appDescription>
 				<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>3702</knetminer.specieTaxId>
 		
