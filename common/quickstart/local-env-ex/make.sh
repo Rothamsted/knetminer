@@ -31,12 +31,12 @@ cat <<EOT
 	Now you can do things like:
 
 cd ..
-./docker-build-helper.sh "$knet_cfg_dir" '' 'tomcat'
+./build-helper.sh "$knet_cfg_dir" '' 'tomcat'
 
 
 	And, after the above:
 
-./docker-runtime-helper.sh "$knet_cfg_dir" '' ''
+./runtime-helper.sh "$knet_cfg_dir" '' ''
 
 EOT
 

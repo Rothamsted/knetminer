@@ -14,15 +14,21 @@ EXPOSE 8080
 #   - These are mounted as a dataset-specific volume, if you don't map any volume to these dir, the container
 #   we'll use the VM directories, which contains the defaults we copy there from this Dockerfile
 # 
-# - builds, either made at image build stage, or at docker runtime (ie, the clients), are made into /root/knetminer-build.
-#   Base files are copied/cloned into this
-#   and then files from /knetminer-config/build/ are used to override such defaults. Again, these files
-#   are either a sample client (taken from the VM's directory), or dataset-specific client files (taken from
-#   the mounted volume).
+# - code is got from /root/knetminer-build. This is populated with the knetminer codebase when this image is built,
+# copying files from $(dirname <this-file>/../..) and then, at image runtime, it can be replaced by means of local volume
+# mapping (see docker-run.sh), so that the client and the configuration can be rebuilt dynamically at runtime. This is
+# useful for development. 
+# 
+# This kind of building is managed by runtime-helper.sh, which, is the entry point for this Docker image. This script
+# rebuilds a dataset/specie specific configuration, plus a dataset-specific client .WAR, using settings and sources in
+# /root/knetminer-build (eg, /root/knetminer-build/species/arabidopsis). Then it runs the server/client .war files within
+# the Tomcat server in the container. So, the image is dataset-independent, while the container depends on the dataset
+# directory (usually under <codebase>/species) that is passed to the container.
 #
 ENV knet_build_dir=/root/knetminer-build \
 		knet_data_dir=/root/knetminer-data
 
+# This is the default dataset used to populate the aratiny example.
 ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
 
 # ---- Here we go
@@ -38,7 +44,7 @@ WORKDIR $knet_build_dir
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
-RUN ./docker-build-helper.sh '' '' "$tomcat_password"
+RUN ./build-helper.sh '' '' "$tomcat_password"
 
-ENTRYPOINT ["./docker-runtime-helper.sh", ""] 
+ENTRYPOINT ["./runtime-helper.sh", ""] 
 
