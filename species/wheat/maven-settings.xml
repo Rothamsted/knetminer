@@ -13,8 +13,8 @@
 				<knetminer.appKeywords>wheat, t.aestivum, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>4565</knetminer.specieTaxId>
 		
-				<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
-				<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
+				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
 				
 				<!--  true if you are providing a reference genome -->
 				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
