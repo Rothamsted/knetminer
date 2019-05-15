@@ -18,18 +18,25 @@ do
 	mvn $MAVEN_ARGS -N install
 done
 
+# Have a copy of maven settings on the config dir, where it needs some instantiation
+cd "$mydir/../.."
+cp "$knet_instance_dir/maven-settings.xml" "$knet_cfg_dir"
+# This is a parameter passed to index.jsp, it comes from attributes in basemap.xml
+chromosomes_list=$(xmllint --xpath '//genome/chromosome/@number' "$knet_instance_dir/client/basemap.xml" | sed -E s/'number="([^"]*)"'/'\1'/g)
+chromosomes_list=$(echo $chromosomes_list | sed s/'^ '// | sed s/' '/','/g)
+# So, instantiate the right Maven property, if the corresponding placeholder is defined
+sed s/'%%knetminer\.chromosomeList%%'/"$chromosomes_list"/ -i "$knet_cfg_dir/maven-settings.xml"
+
 # Now let's create the right config files and copy them on the config dir/volume
 #
 echo -e "\n\n\tBuilding the server-side config\n"
-# We need a copy where we can replace the knetminer test config with the one we need#
+# We need a copy where we can replace the knetminer test config with the one we need
+# We're in the knetminer codebase root now
 rm -Rf /tmp/aratiny-ws
-cp -Rf aratiny-ws /tmp
-# We don't need at the test queries
-rm -Rf test/resources/knetminer-config/*.cypher
-cd "$mydir/../.."
+cp -Rf common/aratiny/aratiny-ws /tmp
+# We don't need the test queries used for aratiny
+rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-config/*.cypher
 cp -Rf "$knet_instance_dir/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-config
-# Have a copy of maven settings on the config dir too, as a reference and to ease following operations
-cp "$knet_instance_dir/maven-settings.xml" "$knet_cfg_dir"
 cd /tmp/aratiny-ws
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" clean test-compile
 # End eventually, deploy the instantiated config files
@@ -43,7 +50,7 @@ echo -e "\n\n\tBuilding the client app\n"
 mkdir --parents "$knet_web_dir/client-src"
 client_src_dir="$knet_web_dir/client-src"
 client_html_dir="$client_src_dir/src/main/webapp/html"
-cd "$mydir/../.."
+cd "$mydir/../.." # Again in knetminer codebase's root
 cp -Rf common/aratiny/aratiny-client/* "$client_src_dir"
 cp "$knet_instance_dir/client/"*.xml "$client_html_dir/data"
 for ext in jpg png gif svg tif

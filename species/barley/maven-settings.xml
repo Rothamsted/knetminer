@@ -1,0 +1,31 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                            
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<properties>
+				<knetminer.dataSourceId>barleyknet</knetminer.dataSourceId>
+				<knetminer.specieName>Hordeum Vulgare</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about the Barley</knetminer.appDescription>
+				<knetminer.appKeywords>barley, h.vulgare, knetminer</knetminer.appKeywords>
+				<knetminer.specieTaxId>112509</knetminer.specieTaxId>
+		
+				<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+				<knetminer.chromosomeList>1,2,3,4,5,6,7,8,9</knetminer.chromosomeList>
+				
+				<!--  true if you are providing a reference genome -->
+				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+		
+				<!-- 
+					The contents of client/release_notes.html take priority over this, so it doesn't really matter
+					if you define this property to override the default. We do it here just to recall this behaviour.
+				-->				
+				<knetminer.releaseNotesHtml></knetminer.releaseNotesHtml>
+						
+			</properties>
+		</profile>
+	</profiles>
+</settings>
