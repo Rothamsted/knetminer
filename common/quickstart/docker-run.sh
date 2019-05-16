@@ -8,6 +8,7 @@
 # KNET_NEO4J_USER # Neo4j login user (defult is neo4j)
 # KNET_NEO4J_PWD #  default is test
 #
+# KNET_HOST_CONFIG_DIR # directory where to place instantiated configuration files (default is /root/knetminer-config in the container) 
 # KNET_DATASET_DIR # directory where to get datasets (default is 'species' and is relative to the knetminer codebase's root) 
 # KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
 # KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (-p 8080:8080 -it ARE NOT set if this is non-null)
@@ -22,12 +23,17 @@ fi
 
 [ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-p 8080:8080 -it"
 [ "$KNET_HOST_DATA_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATA_DIR:/root/knetminer-data"
+[ "$KNET_HOST_CONFIG_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CONFIG_DIR:/root/knetminer-config"
 [ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build"
 
 [ "$MAVEN_ARGS" == "" ] && MAVEN_ARGS="-Pdocker" 
 
 if [ "$KNET_IS_NEO4J" != "" ]; then 
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
+	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
+	# the maven command line. So, this is a way to customise things like local installations, and doing so while
+	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
+	# 
 	[ "$KNET_NEO4J_URL" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.boltUrl=$KNET_NEO4J_URL"
 	[ "$KNET_NEO4J_USER" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.user=$KNET_NEO4J_USER"
 	[ "$KNET_NEO4J_PWD" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$KNET_NEO4J_PWD"
