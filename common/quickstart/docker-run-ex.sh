@@ -1,5 +1,3 @@
-# Variables influencing this scripts:
-#
 set arabidopsis # This is $1 now. Leave this blank to have a settings base to be invoked with the dataset you want
 export KNET_HOST_DATA_DIR=/tmp/data
 export KNET_IS_NEO4J='true'
