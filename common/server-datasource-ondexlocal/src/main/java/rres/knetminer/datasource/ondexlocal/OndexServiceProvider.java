@@ -376,15 +376,15 @@ public class OndexServiceProvider {
                 log.info("Graph file updated since index last built, deleting old index");
                 FileUtils.deleteDirectory(indexFile);
             }
-            log.debug("Building Lucene Index: " + indexFile.getAbsolutePath());
+            log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
             if (!indexFile.exists())
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
             else
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
             lenv.setONDEXGraph(graph);
-            log.debug("Lucene Index created");
+            log.info("Lucene Index created");
         } catch (Exception e) {
-            log.error("Faild to load graph index", e);
+            log.info("Faild to load graph index", e);
         }
     }
 
