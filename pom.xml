@@ -406,7 +406,7 @@
 				<artifactId>server-datasource-ondexlocal</artifactId>
 				<version>${project.version}</version>
 				<exclusions>
-					<!-- Remove the old log4j and requires a replacment with log4j-1.2-api (listed below) -->
+					<!-- Remove the old log4j and requires a replacement with log4j-1.2-api (listed below) -->
 					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>log4j</artifactId>
