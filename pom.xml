@@ -556,7 +556,7 @@
 			</dependency>
 			<!-- 
 				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.
-				(https://logging.apache.org/log4j/2.x/manual/api.html)
+				(https://logging.apache.org/log4j/2.x/manual/migration.html)
 			 -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>

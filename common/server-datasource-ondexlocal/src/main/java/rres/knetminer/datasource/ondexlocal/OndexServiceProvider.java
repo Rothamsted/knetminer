@@ -351,13 +351,7 @@ public class OndexServiceProvider {
     private void loadOndexKBGraph(String filename) {
         try {
             log.debug("Start Loading OndexKB Graph..." + filename);
-            Parser oxl = new Parser();
-            ONDEXPluginArguments pa = new ONDEXPluginArguments(oxl.getArgumentDefinitions());
-            pa.setOption(FileArgumentDefinition.INPUT_FILE, filename);
-            oxl.setArguments(pa);
-            oxl.setONDEXGraph(graph);
-
-            oxl.start();
+            Parser.loadOXL ( filename, graph );
             log.debug("OndexKB Graph Loaded Into Memory");
         } catch (Exception e) {
             log.error("Failed to load graph", e);
