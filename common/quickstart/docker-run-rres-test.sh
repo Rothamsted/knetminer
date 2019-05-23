@@ -1,3 +1,9 @@
+# Script used to run RRes instances.
+# Invocation examples:
+# ./docker-run-rres-test.sh arabidopsis # arabidopsis
+# ./docker-run-rres-test.sh arabidopsis 7687 # arabidopsis Neo4j traverser, bolt port on 7687 (server is babvs65)
+# ./docker-run-rres-test.sh wheat 8091 7688 16 # wheat, Tomcat on 9091, Neo4j on 7688, 16GB of RAM handed to the container
+#
 specie=$1 # Call me with the specie id/directory in species/, eg, 'arabidopsis'
 http_port=$2 # The host port to map to the 8080/Tomcat in the container
 bolt_port=$3 # The Neo4j bolt port, if not defined, runs the traditional version, not Neo4j
