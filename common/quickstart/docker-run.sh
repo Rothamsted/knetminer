@@ -21,7 +21,7 @@ else
 	instance_dir="${KNET_DATASET_DIR:-species}/$dataset_id"
 fi
 
-[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-p 8080:8080 -it"
+[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-p 8080:8080 -it --name $dataset_id"
 [ "$KNET_HOST_DATA_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATA_DIR:/root/knetminer-data"
 [ "$KNET_HOST_CONFIG_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CONFIG_DIR:/root/knetminer-config"
 [ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build"
