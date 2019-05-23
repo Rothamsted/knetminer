@@ -90,6 +90,7 @@ import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
 import rres.knetminer.datasource.ondexlocal.FisherExact;
+import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -2960,6 +2961,9 @@ public class OndexServiceProvider {
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
             mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
+            PercentProgressLogger progressLogger = new PercentProgressLogger (
+            	"{}% of paths stored", results.values ().size ()
+            );
             for (List<EvidencePathNode> paths : results.values()) {
                 for (EvidencePathNode path : paths) {
 
@@ -2980,18 +2984,18 @@ public class OndexServiceProvider {
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
-                    }else{
-			    if(pathLength < mapGene2PathLength.get(gpl_key)){
-				    // update HashMap with shorter pathLength
-				    mapGene2PathLength.put(gpl_key, pathLength); 
-			    }
-			    
-		    }    
+                    }
+                    else {
+									    if(pathLength < mapGene2PathLength.get(gpl_key)){
+										    // update HashMap with shorter pathLength
+										    mapGene2PathLength.put(gpl_key, pathLength); 
+									    }
+                    }    
 
                     // GENE 2 CONCEPT
                     if (!mapGene2Concepts.containsKey(gene.getId())) {
                         Set<Integer> setConcepts = new HashSet<Integer>();
-			setConcepts.add(lastConID);
+                        setConcepts.add(lastConID);
                         mapGene2Concepts.put(gene.getId(), setConcepts);
                     } else {
                         mapGene2Concepts.get(gene.getId()).add(lastConID);
@@ -3003,6 +3007,7 @@ public class OndexServiceProvider {
                     mapConcept2Genes.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
                     	.add ( gene.getId () );
                 }
+                progressLogger.updateWithIncrement ();
             }
             try {
                 FileOutputStream f;
@@ -3073,6 +3078,10 @@ public class OndexServiceProvider {
 
         mapGene2QTL = new HashMap<Integer, Set<Integer>>();
 
+        PercentProgressLogger progressLogger = new PercentProgressLogger (
+        	"{}% of genes processed", genes.size ()
+        );
+        
         for (ONDEXConcept gene : genes) {
 
             String chr = null;
@@ -3113,6 +3122,7 @@ public class OndexServiceProvider {
                 }
 
             }
+            progressLogger.updateWithIncrement ();
         }
 
         log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());
