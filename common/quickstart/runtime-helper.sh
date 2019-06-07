@@ -35,7 +35,7 @@ echo -e "\n\n\tBuilding the server-side config\n"
 rm -Rf /tmp/aratiny-ws
 cp -Rf common/aratiny/aratiny-ws /tmp
 # We don't need the test queries used for aratiny
-rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-config/*.cypher
+rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-config/neo4j/*.cypher
 cp -Rf "$knet_instance_dir/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-config
 cd /tmp/aratiny-ws
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" clean test-compile
@@ -79,7 +79,7 @@ if [ "$knet_tomcat_home" == '' ]; then
 	echo -e "\n\n\tEmpty tomcat home parameter, exiting after build\n"
 	exit
 fi
-echo -e "\n\n\tRunning che server\n"
+echo -e "\n\n\tRunning the server\n"
 cd "$knet_tomcat_home/bin" 
 ./catalina.sh run
 echo -e "\n\n\tServer Stopped\n"

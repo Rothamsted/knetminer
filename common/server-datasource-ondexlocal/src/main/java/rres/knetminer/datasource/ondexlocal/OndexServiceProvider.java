@@ -195,7 +195,7 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-    		gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
+        if ( gt == null ) gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
 
     		// These might be needed by one implementation or the other. Those that don't need a property like these
     		// can just ignore them
@@ -3004,7 +3004,8 @@ public class OndexServiceProvider {
                     // CONCEPT 2 GENE
                     // concepts.remove(gene);
            
-                    mapConcept2Genes.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
+                    mapConcept2Genes
+                    	.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
                     	.add ( gene.getId () );
                 }
                 progressLogger.updateWithIncrement ();
