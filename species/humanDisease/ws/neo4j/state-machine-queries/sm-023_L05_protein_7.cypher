@@ -1,5 +1,5 @@
 MATCH path = (gene_1:Gene{ iri: $startIri })
-  - [enc_1_10:enc] -> (protein_10:Protein)
-  - [xref_10_10:xref*0..] -> (protein_10b:Protein)
-  - [xref_10_7:xref] -> (protein_7:Protein)
+  - [enc_1_10:enc] - (protein_10:Protein)
+  - [it_wi_10_10_d:it_wi*0..1] -> (protein_10b:Protein)
+  - [it_wi_10_7_d:it_wi] -> (protein_7:Protein)
 RETURN path
