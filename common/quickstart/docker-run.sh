@@ -1,3 +1,6 @@
+# 
+# Runs a specie/dataset instance of the Knetminer Docker container. 
+# 
 # Variables influencing this scripts:
 #
 # $1 = directory name under $KNET_DATASET_DIR (eg, arabidopsis, wheat).
