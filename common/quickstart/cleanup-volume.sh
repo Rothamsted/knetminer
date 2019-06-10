@@ -1,7 +1,7 @@
 dataset_dir="$1"
 myname=$(basename $0)
 
-if [ "$dataset_dir" == '' ]; then
+if [ "$dataset_dir" == '' ]; then
 	cat <<EOT
 
 
@@ -22,20 +22,20 @@ fi
 # Some safety tests
 for dir in "$dataset_dir" "$dataset_dir/config" "$dataset_dir/data"
 do
-	[ -d "$dir" ] && [ -r "$dir" ] && [ -w "$dir" ] && continue
+	[ -d "$dir" ] && [ -r "$dir" ] && [ -w "$dir" ] && continue
 	
 	echo -e "\n\n\t'$dir' isn't accessible, I refuse to continue\n"
 	exit 2
 done
 
-echo -e "\n\n\tCleaning config\n"
+echo ''
+echo -e "\tCleaning config"
 cd "$dataset_dir"
 cd config
 rm -Rf *
 
-echo -e "\n\n\tCleaning config\n"
-cd "$dataset_dir"
-cd config
+echo -e "\tCleaning config"
+cd ../data
 rm -Rf *.tab index map*
 
-echo -e "\n\n\tThe end\n"
+echo -e "\n\tThe end\n"
