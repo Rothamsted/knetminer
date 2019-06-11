@@ -204,7 +204,7 @@ public class OndexServiceProvider {
     		gt.setOption ( "LuceneEnv", lenv );
 
         populateHashMaps(graphFileName, dataPath);
-
+                
         // determine number of genes in given species (taxid)
         AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
         ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -2955,7 +2955,12 @@ public class OndexServiceProvider {
 
             // the results give us a map of every starting concept to every
             // valid path
+
+	        	// Causes the Cypher-based traverser to report some performance stats
+	      		gt.setOption ( "isPerformanceTrackingEnabled", true );        	
             Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
+	          // Let's disable it after the initial population
+	      		gt.setOption ( "isPerformanceTrackingEnabled", false );
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
