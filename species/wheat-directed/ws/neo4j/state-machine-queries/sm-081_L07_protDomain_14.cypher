@@ -2,6 +2,6 @@ MATCH path = (gene_1:Gene{ iri: $startIri })
   - [homoeolog_1_9:homoeolog] - (gene_9:Gene)
   - [rel_9_9_3:genetic|physical*0..3] - (gene_9b:Gene)
   - [enc_9_10_d:enc] -> (protein_10:Protein)
-  - [xref_10_10_2:xref*0..2] - (protein_10b:Protein)
-  - [pub_in_10_2_d:pub_in] -> (publication_2:Publication)
+  - [h_s_s_10_10:h_s_s*0..] - (protein_10b:Protein)
+  - [has_domain_10_14_d:has_domain] -> (protDomain_14:ProtDomain)
 RETURN path

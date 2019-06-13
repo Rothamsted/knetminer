@@ -52,8 +52,8 @@
 10-3	has_function		d
 10-4	participates_in		d
 10-5	located_in		d
-10-9	enc		d
-10-8	enc		d
+9-10	enc		d
+8-10	enc		d
 10-11	has_domain		d
 10-12	cat_c		d
 10-14	has_domain		d
