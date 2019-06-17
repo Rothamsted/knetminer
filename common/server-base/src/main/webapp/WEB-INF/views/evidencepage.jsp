@@ -1,8 +1,8 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="http://knetminer.rothamsted.ac.uk/KnetMaps/dist/css/knetmaps.css"/>
-<script type="text/javascript" src="http://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps-lib.min.js"></script>
-<script type="text/javascript" src="http://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/css/knetmaps.css"/>
+<script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps-lib.min.js"></script>
+<script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps.min.js"></script>
 <title>KnetMiner network</title>
 </head>
 <body>
