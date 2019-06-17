@@ -33,6 +33,7 @@ WORKDIR /root
 
 RUN set -x \
  && apk add --no-cache maven nodejs-npm git libxml2-utils \
+ && npm config set unsafe-perm true \
  && npm install bower gulp -g \
  && echo '{"allow_root":true}' > /root/.bowerrc \
  && git clone --single-branch -b ${git_branch} https://github.com/Rothamsted/knetminer.git \
