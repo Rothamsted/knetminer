@@ -1608,7 +1608,7 @@ public class OndexServiceProvider {
         Set<ONDEXRelation> rels = path.getAllRelations();
         
         // seed gene should always be visible, flagged and bigger
-        if (geneNodeClone.getAttribute(attVisible) == null) {
+        if (geneNodeClone.getAttribute(attFlagged) == null) {
         	geneNodeClone.createAttribute(attFlagged, true, false);
         	geneNodeClone.createAttribute(attVisible, true, false);
         	geneNodeClone.createAttribute(attSize, new Integer(80), false);
