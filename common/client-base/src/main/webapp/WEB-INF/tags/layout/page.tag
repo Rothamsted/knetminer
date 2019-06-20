@@ -79,16 +79,23 @@
 
         <jsp:invoke fragment="extraHeader"/>
     </head>
-    <body>
+    <body class="${embeddable ? "embeddable" : ""}">
         <!-- Main -->
         <div id="wrapper">
-        <c:if test="${!embeddable}">
-            <layout:header />
-        </c:if>
+            <c:choose>
+                <c:when test="${!embeddable}">
+                    <layout:header />
+                </c:when>
+                <c:otherwise>
+                    <c:if test="${embeddable}">
+                        <div class="logo_embedded"><img src="html/image/logo-regular.png" alt="Logo" height="35" /></div>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
  			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
-        <c:if test="${!embeddable}">
-            <layout:footer />
-        </c:if>
+            <c:if test="${!embeddable}">
+                <layout:footer />
+            </c:if>
         </div>
         <jsp:invoke fragment="extraBottom"/>
     </body>
