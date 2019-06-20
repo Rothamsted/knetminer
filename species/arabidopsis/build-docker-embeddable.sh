@@ -27,6 +27,7 @@ docker image build \
   --build-arg species_dir="species/$SPECIES_DIR" \
   --build-arg oxl_file="AraKNET_v42.oxl" \
   --build-arg knetminer_port=8080 \
+  --build-arg embeddable=true \
   --squash -t $IMAGE_NAME \
   -f common/quickstart/Dockerfile-dev .
 
