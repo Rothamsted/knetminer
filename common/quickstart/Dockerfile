@@ -20,7 +20,7 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     species_link_name=arabidopsis \
     keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
     description="Arabidopsis Knetminer" \
-    embeddable=false \
+    embeddable=false \ # This flag enables embeddable mode (w/o header, footer and background image)
     reference_genome=true \
     git_branch=20181001_rhlastweek
 
