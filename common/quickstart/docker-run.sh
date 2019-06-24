@@ -1,5 +1,5 @@
 # 
-# Runs a specie/dataset instance of the Knetminer Docker container. 
+# Helper for the host, to run a specie/dataset instance of the Knetminer Docker container. 
 # 
 # Variables influencing this scripts:
 #
