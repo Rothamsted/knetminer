@@ -32,6 +32,7 @@ ARG description
 ARG reference_genome 
 ARG species_dir
 ARG knetminer_port
+ARG embeddable=false
 
 #EXPOSE 8080
 EXPOSE ${knetminer_port}
@@ -76,6 +77,7 @@ RUN cd /root/knetminer \
  && sed -e "/!!RELEASE!!/{r ${cl}/release_notes.html" -e "d}" -i'' ${cl}/release.html \
  && sed -e "s/!!SPECIES!!/${species}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!EMBEDDABLE!!/${embeddable}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METADESC!!/${description}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \

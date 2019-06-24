@@ -20,6 +20,7 @@ ENV oxl_file=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/def
     species_link_name=arabidopsis \
     keywords="arabidopsis, thaliana, knetminer, quickstart, demonstration" \
     description="Arabidopsis Knetminer" \
+    embeddable=false \ # This flag enables embeddable mode (w/o header, footer and background image)
     reference_genome=true \
     git_branch=20181001_rhlastweek
 
@@ -58,6 +59,7 @@ RUN set -x \
  && sed -e "/!!RELEASE!!/{r ${cl}/release_notes.html" -e "d}" -i'' ${cl}/release.html \
  && sed -e "s/!!SPECIES!!/${species_name}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!CHROMOSOMES!!/${chromosomes}/g" -i'' ${cl}/index.jsp \
+ && sed -e "s/!!EMBEDDABLE!!/${embeddable}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METAKEYWORDS!!/${keywords}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!METADESC!!/${description}/g" -i'' ${cl}/index.jsp \
  && sed -e "s/!!REFGENOME!!/${reference_genome}/g" -i'' ${ds}/resources/config.xml \
