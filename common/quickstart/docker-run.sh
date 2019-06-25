@@ -5,16 +5,16 @@
 #
 # $1 = directory name under $KNET_DATASET_DIR (eg, arabidopsis, wheat).
 #
+# KNET_HOST_CONFIG_DIR # host directory where to place instantiated configuration files (default is /root/knetminer-config in the container) 
+# KNET_DATASET_DIR # container directory where to get datasets (default is 'species' and is relative to the knetminer codebase's root) 
+# KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
+# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (-p 8080:8080 -it ARE NOT set if this is non-null)
+#
 # KNET_HOST_DATA_DIR # host directory where to put knowledge-network.oxl and to be used as data directory
 # KNET_IS_NEO4J # any non-null will run the container in Neo4j mode, against a Neo4j server
 # KNET_NEO4J_URL # Neo4j bolt:// URL pointing to the DB server you want to use (ignored if KNET_IS_NEO4J not set) 
 # KNET_NEO4J_USER # Neo4j login user (defult is neo4j)
 # KNET_NEO4J_PWD #  default is test
-#
-# KNET_HOST_CONFIG_DIR # directory where to place instantiated configuration files (default is /root/knetminer-config in the container) 
-# KNET_DATASET_DIR # directory where to get datasets (default is 'species' and is relative to the knetminer codebase's root) 
-# KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
-# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (-p 8080:8080 -it ARE NOT set if this is non-null)
 #  
 
 dataset_id="$1"
