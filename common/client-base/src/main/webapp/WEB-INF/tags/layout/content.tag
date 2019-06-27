@@ -3,6 +3,7 @@
 
 <%@ attribute name="chromosomes" required="false" description="list of chromosomes" %>
 <%@ attribute name="assembly" required="false" description="genome assembly" %>
+<%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
 
 <div id="content">
 	<div id="search">
@@ -11,6 +12,7 @@
 				<li>
                     <!-- Sample Queries -->
                     <div id="info" class="details">
+                        <c:if test="${embeddable}"><div class="species_header"></div></c:if>
                         <div id="info-text">
                             <div style="height: 10px;"><h3>Example queries</h3>
                                 <a class="close" href="#info" title="close"><img src="html/image/close_button.png"></a>

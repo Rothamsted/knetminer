@@ -69,6 +69,16 @@
 		]]></knetminer.releaseNotesHtml>
 
 		
+		<!-- 
+			This is used by Genestack to customise the client/frontend layout with stuff like their own logo.
+			When using the Docker runtime, this can be overridden by adding -Dknetminer.ui.embeddableLayout=true 
+			to MAVEN_ARGS. The latter can be set via the --env option of 'docker run', or see scripts like
+			docker-run.sh. REMEMBER that, if you use this MAVEN_ARGS, it always requires -Pdocker when 
+			running Docker (and -Pdocker,neo4j or even additional profiles (possibly in future), if you want
+			the corresponding features enabled.  			 
+		-->
+		<knetminer.ui.embeddableLayout>false</knetminer.ui.embeddableLayout>
+		
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
 		<!-- Here, it is http://localhost:9090/ws -->

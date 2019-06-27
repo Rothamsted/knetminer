@@ -1,8 +1,12 @@
+# This is joined with .gitignore to produce .dockerignore
 .git
 **/bower_components
 **/node_modules
 **/target
 common/ws-example
+# Remember to issue cat .dockerignore-template .gitignore >.dockerignore
+# when you change .gitignore
+#
 .elasticbeanstalk
 *.iml
 .idea
