@@ -11,8 +11,4 @@
 	<packaging>pom</packaging>
 	<name>KnetMiner Chicken</name>
 	
-	<modules>
-		<module>client</module>
-		<module>datasource</module>
-	</modules>
 </project>

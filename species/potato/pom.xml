@@ -11,8 +11,4 @@
 	<packaging>pom</packaging>
 	<name>KnetMiner Potato</name>
 	
-	<modules>
-		<module>client</module>
-		<module>datasource</module>
-	</modules>
 </project>

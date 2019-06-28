@@ -76,7 +76,7 @@
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-datasource-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

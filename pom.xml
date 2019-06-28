@@ -23,11 +23,11 @@
 		</license>
 	</licenses>
 
-<!--	<modules>
+	<modules>
 		<module>common</module>
 		<module>species</module>
-	</modules> -->
-	
+	</modules>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -91,16 +91,16 @@
 	</ciManagement>
 
 	<distributionManagement>
-		<repository>
-			<id>releases</id>
+	  <repository>
+			<id>ondex-releases</id>
 			<name>Internal Releases</name>
 			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
+	  </repository>
+	  <snapshotRepository>
+			<id>ondex-snapshots</id>
 			<name>Internal Snapshots</name>
 			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
+	  </snapshotRepository>
 		<site>
 			<id>Ondex_site</id>
 			<url>file:///var/www/html/ondex</url>
@@ -177,6 +177,8 @@
 	</build>
 
 	<properties>
+		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
@@ -194,13 +196,13 @@
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
 		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
-		<springframework.version>4.3.0.RELEASE</springframework.version>
+		<springframework.version>4.3.6.RELEASE</springframework.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<jackson.library.version>2.7.5</jackson.library.version>
 		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
 		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
-		<junit.version>4.7</junit.version>
+		<junit.version>4.10</junit.version>
 		<json.version>20180130</json.version>
 		<ga.version>2.0.0</ga.version>
 		<commons.version>2.6</commons.version>
@@ -260,6 +262,13 @@
 			<url>${nexus.repro}/content/repositories/snapshots</url>
 			<!-- <url>${nexus.repro}/content/groups/public-snapshots</url> -->
 		</repository>
+
+  	<!-- jutils -->
+		<repository>
+		  <id>EBIBioSamples-GH-repo</id>
+		  <url>https://raw.githubusercontent.com/EBIBioSamples/EBIBioSamples.github.io/maven-repo</url>
+		  <snapshots><enabled>true</enabled></snapshots>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -272,6 +281,30 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+				<artifactId>server-datasource-ondexlocal</artifactId>
+				<version>${project.version}</version>
+				<exclusions>
+					<!-- Remove the old log4j and requires a replacment with log4j-1.2-api (listed below) -->
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<!-- The new backend, based on Neo4j -->
+			<dependency>
+				<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+				<artifactId>cypher-client</artifactId>
+				<version>${knetminer.backend.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>log4j-over-slf4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
@@ -297,16 +330,34 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>				
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+			      <groupId>commons-logging</groupId>
+			      <artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -314,11 +365,12 @@
 				<version>${jackson.library.version}</version>
 			</dependency>
 
-			<dependency>
-				<groupId>net.sourceforge.ondex.core</groupId>
-				<artifactId>tools</artifactId>
-				<version>${ondex.version}</version>
-			</dependency>
+	    <dependency>
+	      <groupId>net.sourceforge.ondex.core</groupId>
+	      <artifactId>tools</artifactId>
+	      <version>${ondex.version}</version>
+	    </dependency>
+
 			<dependency>
 				<groupId>net.sourceforge.ondex.core</groupId>
 				<artifactId>workflow-api</artifactId>
@@ -372,6 +424,20 @@
 				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
+			 	<groupId>org.apache.logging.log4j</groupId>
+			 	<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<!-- 
+				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.
+				(https://logging.apache.org/log4j/2.x/manual/api.html)
+			 -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-1.2-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-web</artifactId>
 				<version>${log4j.version}</version>
@@ -381,7 +447,6 @@
 				<artifactId>commons-io</artifactId>
 				<version>${commons.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -399,6 +464,25 @@
 				<artifactId>google-analytics-java</artifactId>
 				<version>${ga.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>uk.ac.ebi</groupId>
+				<artifactId>jutils</artifactId>
+				<version>7.0.1-SNAPSHOT</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.7</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+					  <artifactId>commons-logging</artifactId>
+					</exclusion>			
+				</exclusions>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 

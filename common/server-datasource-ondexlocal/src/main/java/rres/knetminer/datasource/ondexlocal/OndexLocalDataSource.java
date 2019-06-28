@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -52,18 +53,61 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return this.props.getProperty(key);
 	}
 
+	public OndexLocalDataSource () {
+		init ();
+	}
+	
 	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
-		this.setDataSourceNames(new String[] {dsName});
+		init ( dsName, configXmlPath, semanticMotifsPath );
+	}
+
+	
+	private void init () {
+		init ( null, null, null );
+	}
+
+	private void init ( String dsName, String configXmlPath, String semanticMotifsPath )
+	{
+		// Config.xml location can be specified in different ways, see the constructors
+		if ( configXmlPath == null )
+		{
+			configXmlPath = ConfigFileHarvester.getConfigFilePath ();
+			if ( configXmlPath == null ) throw new IllegalStateException ( 
+				"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
+				+ ", either as a Java property, a <context-param> in web.xml, or" 
+				+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
+			);
+		}
 		
-		// Config.xml is provided by the implementing abstract class in its
-		// src/main/resources folder
-		URL configUrl = Thread.currentThread().getContextClassLoader().getResource(configXmlPath);
-		try {
+		try 
+		{
+			URL configUrl = configXmlPath.startsWith ( "file://" )
+				? new URL ( configXmlPath )
+				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
+			
 			this.props.loadFromXML(configUrl.openStream());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new Error(e);
 		}
+
+		if ( dsName == null ) dsName = this.props.getProperty ( "DataSourceName", null );
+		if ( dsName == null ) throw new IllegalArgumentException ( 
+			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
+		);
+		this.setDataSourceNames(new String[] {dsName});
+		
+		if ( semanticMotifsPath == null )
+			// We need it here, to support legacy method interfaces. It is later put back into properties
+			semanticMotifsPath = this.props.getProperty ( "StateMachineFilePath", null );
+		
 		this.ondexServiceProvider = new OndexServiceProvider();
+
+		// All the properties from config.xml are forwarded to the 
+		// service provider, so that further configuration can be bootstrapped from
+		// base properties.
+		this.ondexServiceProvider.setOptions ( (Map) this.props );
+
 		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(this.getProperty("reference_genome")));
 		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
 		this.ondexServiceProvider.setTaxId(Arrays.asList(this.getProperty("SpeciesTaxId").split(",")));
@@ -78,6 +122,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			throw new Error(e);
 		}
 	}
+	
 
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);

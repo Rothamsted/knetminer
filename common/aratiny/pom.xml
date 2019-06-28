@@ -1,0 +1,197 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+		<artifactId>common</artifactId>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>aratiny</artifactId>
+	<packaging>pom</packaging>
+	<name>aratiny - Arabidobsis-based Tiny Test Site</name>
+		
+	<description>A small Knetminer instance, based on a reduced version of the Arabidopsis dataset, which is used for
+	automated tests of the Knetminer code base, as well as to run a testbed for manual testing and inspection of the
+	Knetminer functionality and interface.</description>	
+		
+	<properties>
+	
+		<!-- 
+		  Several of these varibales can be overriden by instance-specific Maven profiles.
+		  See TODO.
+		 -->
+		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
+		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
+		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
+		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
+		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+
+		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+		
+		<!--  true if you are providing a reference genome -->
+		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+
+		<!-- TODO: to be injected from the mvn command line, reading release_notes.html into this variable -->
+		<knetminer.releaseNotesHtml><![CDATA[
+			<h2>CHANGE ME!</h2>
+			<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
+			<p>Lorem ipsum dolor sit amet, etc etc</p>.
+		]]></knetminer.releaseNotesHtml>
+
+		
+		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
+		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		<!-- Here, it is http://localhost:9090/ws -->
+		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
+		<!-- Here, it is http://localhost:9090/ws/aratiny -->
+		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
+		
+		<neo4j.server.version>3.4.6</neo4j.server.version>
+		
+		<neo4j.server.host>localhost</neo4j.server.host>
+		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
+		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
+		
+		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+
+		<!-- 
+			This is injected into config.xml for the ws/ war. 
+		  With empty value, the traditional Ondex traverser is picked. The alternative is
+		  uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser (see neo4j profile in aratiny-ws/pom.xml),
+		  which uses the new Neo4j-backed traverser.  
+		 -->
+		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
+
+
+ 		<!-- 
+ 			This is more for building, and shouldn't need instance-specific configuration
+ 		--> 
+    <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
+		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
+
+	</properties>
+	
+	<modules>
+		<module>aratiny-client</module>
+		<module>aratiny-ws</module>
+	</modules>
+	
+	<dependencyManagement>
+		<dependencies>
+		</dependencies>			
+	</dependencyManagement>
+	
+	<build>	
+		<pluginManagement>
+			<plugins>
+				<plugin>
+				  <groupId>org.eclipse.jetty</groupId>
+				  <artifactId>jetty-maven-plugin</artifactId>
+			    <version>9.4.14.v20181114</version>
+				  <executions>
+				  	<execution>
+				  		<id>start</id>
+				  		<phase>pre-integration-test</phase>
+				  		<goals><goal>start</goal></goals>
+				  	</execution>
+				  	<execution>
+				  		<id>stop</id>
+				  		<phase>post-integration-test</phase>
+				  		<goals><goal>stop</goal></goals>
+				  	</execution>
+				  </executions>
+				  <configuration>
+				    <scanIntervalSeconds>10</scanIntervalSeconds>
+		        <httpConnector>
+		        	<!-- We might want a less common port, since this might be already used in our CI servers  -->
+		          <port>8080</port>
+		        </httpConnector>			    
+				    <webApp>
+				      <contextPath>/</contextPath>
+				      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+				    </webApp>
+				    <stopPort>8081</stopPort>
+				    <stopKey>araTinyJetty</stopKey>
+				    <stopWait>10</stopWait>			    
+				  </configuration>
+				</plugin>	
+				
+								
+			  <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-surefire-plugin</artifactId>
+			    <version>3.0.0-M1</version>
+			    <configuration combine.self = "override">
+						<forkCount>0</forkCount>
+			      <properties>
+			        <property>
+			        	<!-- Prints out spaces and test name before/after every test method and automatically -->
+			          <name>listener</name>
+			          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
+			        </property>
+			       </properties>
+			    </configuration>
+			  </plugin>
+				
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-failsafe-plugin</artifactId>
+		      <version>3.0.0-M1</version>
+		      <configuration combine.self = "override">
+		      	<forkCount>0</forkCount>
+		        <trimStackTrace>false</trimStackTrace>
+		        <systemPropertyVariables>
+		        	<!-- Forwarded to Java -->
+		          <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
+							<knetminer.api.baseUrl>${knetminer.api.baseUrl}</knetminer.api.baseUrl>
+		        </systemPropertyVariables>
+			      <properties>
+			        <property>
+			        	<!-- Prints out spaces and test name before/after every test method and automatically -->
+			          <name>listener</name>
+			          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
+			        </property>
+			       </properties>
+		      </configuration>
+				  <dependencies>
+				  </dependencies>
+					<executions combine.self = "override">
+	          <execution>
+	          	<id>failsafe-test</id>
+	            <goals><goal>integration-test</goal></goals>
+	          </execution>
+	          <execution>
+		      		<id>failsafe-verify</id>
+		      		<goals><goal>verify</goal></goals>
+	          </execution>
+	        </executions>      
+				</plugin>		
+									
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+
+			<!-- Disabling stuff from the parent level -->
+					
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-site</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+		
+		</plugins>
+	</build>
+  <reporting />		
+</project>

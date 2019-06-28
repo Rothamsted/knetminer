@@ -11,7 +11,7 @@
 	<packaging>pom</packaging>
 	<name>KnetMiner Species</name>
 
-<!--	<modules>
+	<modules>
 		<module>arabidopsis</module>
 		<module>barley</module>
 		<module>boleracea</module>
@@ -29,5 +29,5 @@
 		<module>sviminalis</module>
 		<module>tomato</module>
 		<module>wheat</module>
-	</modules> -->
+	</modules>
 </project>

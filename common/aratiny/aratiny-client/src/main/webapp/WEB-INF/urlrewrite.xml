@@ -1,0 +1,12 @@
+<urlrewrite>
+	<!-- 
+		Configures UrlRewriteFilter, see the POM.
+		This file is only picked during tests, but it can safely stay here if the production web.xml doesn't
+		use it (and managing things this way is simpler). 
+	-->
+	<rule>
+	  <from>.*</from>
+	  <!-- CORS rule, instructs the web browser to accept Javascript-originated requests to the data server -->
+	  <set type="response-header" name="Access-Control-Allow-Origin">${knetminer.api.baseUrl}</set>
+  </rule>
+</urlrewrite>

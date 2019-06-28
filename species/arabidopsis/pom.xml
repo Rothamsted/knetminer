@@ -10,4 +10,5 @@
 	<artifactId>arabidopsis</artifactId>
 	<packaging>pom</packaging>
 	<name>KnetMiner Arabidopsis</name>
+	
 </project>

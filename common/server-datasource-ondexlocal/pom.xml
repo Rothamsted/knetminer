@@ -18,20 +18,32 @@
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>server-datasource-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-api</artifactId>
-                </dependency>
+		 	<groupId>org.apache.logging.log4j</groupId>
+		 	<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
+		<!-- 
+			The new backend, based on Neo4j. We choose to include this dependency anyway. It can be used or not, using
+			the configuration, it doesn't hurt anything if not used. 
+		-->
+		<dependency>
+	    <groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+	    <artifactId>cypher-client</artifactId>
+		</dependency>			
+		<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-api</artifactId>
+    </dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.ondex.core</groupId>
-			<artifactId>tools</artifactId>
-		</dependency>
+		</dependency>    
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>workflow-api</artifactId>
@@ -60,5 +72,10 @@
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
 		</dependency>
+		<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <scope>provided</scope>
+		</dependency>		
 	</dependencies>
 </project>
