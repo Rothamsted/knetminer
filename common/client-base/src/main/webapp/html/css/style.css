@@ -704,7 +704,8 @@ a.contact-button :hover {
 	  -o-border-radius:18px;}
 .knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ font-size:15px; cursor:pointer;}
 .knet_button:hover {color:white; background-color:darkgray;}
-#pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;color:white;}
+#pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;}
+.pGViewer_title_line {background-color: #2A2A2A; color: white; padding: 1px 3px;}
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:10px; padding-top:10px;}
 #genemap-tab {position: relative;width: 95%;height: 95%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
