@@ -13,10 +13,11 @@
 # host directory where your specie/ instance definitions are (maven-settings.xml, client/, ws/ files). This is where $1
 # is looked up (so, arabidopsis/, or wheat/, rice/, etc). By default, this script uses the species/ directory on the 
 # container, which, in turn, comes from our GitHub codebase repository. WARNING: we DO NOT recommend to use both this
-# and KNET_HOST_CODEBASE_DIR.  
+# and KNET_HOST_CODEBASE_DIR.
+# KNET_HOST_PORT # the HTTP port to be used to reach knetminer from the host, eg, 9090 => knetminer will be on 
+# http://localhost:8090/client. Default is 8080
 # 
 # KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
-# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (-p 8080:8080 -it ARE NOT set if this is non-null)
 #
 # MAVEN_ARGS # custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
 # configuration from Maven settings). WARNING: if you set this to non-null, YOU MUST also set proper profiles. 
@@ -30,15 +31,20 @@
 # KNET_NEO4J_URL # Neo4j bolt:// URL pointing to the DB server you want to use (ignored if KNET_IS_NEO4J not set) 
 # KNET_NEO4J_USER # Neo4j login user (defult is neo4j)
 # KNET_NEO4J_PWD #  default is test
+#
+# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (in addition to the ones implied by other variables above
 #  
 
 dataset_id="$1"
 
-[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-p 8080:8080 -it --name $dataset_id"
+[ "$KNET_HOST_PORT" == "" ] && KNET_HOST_PORT="8080"
+
+[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-it"
+KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS -p $KNET_HOST_PORT:8080 --name $dataset_id"
 [ "$KNET_HOST_DATA_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATA_DIR:/root/knetminer-data"
 [ "$KNET_HOST_CONFIG_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CONFIG_DIR:/root/knetminer-config"
-[ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build"
-[ "$KNET_HOST_DATASET_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATASET_DIR:/root/knetminer-build/species"
+[ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build/knetminer"
+[ "$KNET_HOST_DATASET_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATASET_DIR:/root/knetminer-build/knetminer/species"
 
 [ "$MAVEN_ARGS" == "" ] && MAVEN_ARGS="-Pdocker" 
 

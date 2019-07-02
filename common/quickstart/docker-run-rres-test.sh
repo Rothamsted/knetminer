@@ -32,8 +32,8 @@ export JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryL
 #                    -Djava.rmi.server.hostname=localhost
 #                    -Dcom.sun.management.jmxremote.local.only=false"
 
-export KNET_DOCKER_OPTS="--memory ${memory}G --env JAVA_TOOL_OPTIONS -p $http_port:8080 --name $specie"
-#export KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS -it"
+export KNET_HOST_PORT="$http_port"
+export KNET_DOCKER_OPTS="--memory ${memory}G --env JAVA_TOOL_OPTIONS"
 export KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --detach"
 
 # Profiling (See above)
