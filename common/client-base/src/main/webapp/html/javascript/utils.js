@@ -793,7 +793,7 @@ function searchKeyword() {
             .success(function (data) {
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                 if (data.geneCount == 0) {
-                    var genomicViewTitle = '<div id="pGViewer_title">Sorry, no results were found.<br />Make sure that all words are spelled correctly. Otherwise try a different or more general query.<br /></div>'
+                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry, no results were found.</span><br /><span class="pGViewer_title_line">Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span></div>'
 
                     if (typeof gviewer != "undefined" && gviewer != false) {
 
@@ -833,10 +833,10 @@ function searchKeyword() {
                         }
                     }
 
-                    var genomicViewTitle = '<div id="pGViewer_title">In total <b>' + results + ' genes</b> were found.<br />Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)<br /></div>'
+                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
                     if (candidateGenes > 1000) {
                         candidateGenes = 1000;
-                        genomicViewTitle = '<div id="pGViewer_title">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Map view.<br />Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)<br /></div>';
+                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Map view.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
                     }
 
                     $("#pGViewer_title").replaceWith(genomicViewTitle);
