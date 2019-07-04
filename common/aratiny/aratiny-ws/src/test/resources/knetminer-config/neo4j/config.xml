@@ -6,20 +6,30 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 		<!-- 
+			see config-test.xml for details on the format of this file 
+		-->
+
+		<!-- 
 		  Just leave this here. It means some components are got from the Java source files, by means of
 		  Spring annotations. You do need this base (which the declaration below extend/override). 
 		-->
     <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
     
+    
     <bean name = "configDirPath" class = "java.lang.String">
-    	<constructor-arg value = "${project.build.testOutputDirectory}/knetminer-config/neo4j" />
+    	<constructor-arg value = "${knetminer.configDir}/neo4j" />
     </bean> 
+    
     
 		<!-- 
 			This is one of the many ways to read query definitions from files. 
 			All *.cypher files are read using our IOUtils. 
 		-->
-		<bean name = "semanticMotifsQueries" class = "java.util.Arrays" factory-method = "asList" >
+		
+		<!-- 
+			Custom-made queries are read from the root of the config dir
+		 -->
+		<bean name = "semanticMotifsQueriesCustom" class = "java.util.Arrays" factory-method = "asList" >
 			<constructor-arg>
 				<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
 					<constructor-arg ref = "configDirPath" />
@@ -31,32 +41,37 @@
 				</bean>
 			</constructor-arg>
 		</bean>
+
+		<!-- 
+			There might be other queries, produced from the SM converter
+		-->
+		<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
+			<constructor-arg>
+				<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
+					<constructor-arg value = "#{configDirPath}/state-machine-queries" />
+					<constructor-arg>
+						<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
+							<constructor-arg value = "*.cypher" />
+						</bean>
+					</constructor-arg>
+				</bean>
+			</constructor-arg>
+		</bean>
 		
-			<!--
-				This is another possible initialisation pattern.
-				Apache IOUtils are used to read file contents into strings. 
-			-->		
-			<!-- util:list id = "semanticMotifsQueries" value-type = "java.lang.String">
-			<bean class = "org.apache.commons.io.IOUtils" factory-method = "toString">
-				<constructor-arg 
-					value = "classpath:test-config/simple-protein-publication.cypher"
-					type = "java.io.Reader" 
-				/>
-			</bean>
-			<bean class = "org.apache.commons.io.IOUtils" factory-method = "toString">
-				<constructor-arg 
-					value = "classpath:test-config/simple-gene-occurrence.cypher"
-					type = "java.io.Reader" 
-				/>
-			</bean>
-		</util:list -->
-        
+		<!-- The all are combined into the beanName that is searched by our graph traverser -->
+		<bean name = "semanticMotifsQueries" 
+					class = "org.apache.commons.collections15.ListUtils" factory-method = "union" >
+			<constructor-arg ref = "semanticMotifsQueriesCustom" />
+			<constructor-arg ref = "semanticMotifsQueriesStateMachine" />
+		</bean>
+
+		<!-- Neo4j server set up here -->
 		<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" factory-method="driver">
 			<constructor-arg value = "${neo4j.server.boltUrl}" />
 			<constructor-arg>
 				<bean class = "org.neo4j.driver.v1.AuthTokens" factory-method = "basic">
-					<constructor-arg value = "neo4j" />
-					<constructor-arg value = "test" />
+					<constructor-arg value = "${neo4j.server.user}" />
+					<constructor-arg value = "${neo4j.server.password}" />
 				</bean>
 			</constructor-arg>
 		</bean>    

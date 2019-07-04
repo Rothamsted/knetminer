@@ -1,8 +1,0 @@
-<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
-
-<layout:page title="!!SPECIES!!" description="!!METADESC!!" keywords="!!METAKEYWORDS!!" chromosomes="!!CHROMOSOMES!!">
-    <jsp:attribute name="extraHeader">
-    </jsp:attribute>
-    <jsp:attribute name="extraBottom">
-    </jsp:attribute>
-</layout:page>

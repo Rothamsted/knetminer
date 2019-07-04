@@ -18,8 +18,6 @@
 		<module>server-datasource-api</module>
 		<module>server-datasource-ondexlocal</module>
 		<module>configurable-datasource</module>
-	 <module>ws-example</module>
-	 <module>aratiny</module>
-	 <module>quickstart</module>
+		<module>aratiny</module>
 	</modules>
 </project>

@@ -1,4 +1,0 @@
-var api_url = "../ws/!!LINKNAME!!";
-var reference_genome = !!REFGENOME!!; 
-var multiorganisms = false; 
-var species_name = "!!SPECIES!!";

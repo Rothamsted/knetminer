@@ -90,6 +90,7 @@ import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
 import rres.knetminer.datasource.ondexlocal.FisherExact;
+import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -194,7 +195,7 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-    		gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
+        if ( gt == null ) gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
 
     		// These might be needed by one implementation or the other. Those that don't need a property like these
     		// can just ignore them
@@ -203,7 +204,7 @@ public class OndexServiceProvider {
     		gt.setOption ( "LuceneEnv", lenv );
 
         populateHashMaps(graphFileName, dataPath);
-
+                
         // determine number of genes in given species (taxid)
         AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
         ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -351,13 +352,7 @@ public class OndexServiceProvider {
     private void loadOndexKBGraph(String filename) {
         try {
             log.debug("Start Loading OndexKB Graph..." + filename);
-            Parser oxl = new Parser();
-            ONDEXPluginArguments pa = new ONDEXPluginArguments(oxl.getArgumentDefinitions());
-            pa.setOption(FileArgumentDefinition.INPUT_FILE, filename);
-            oxl.setArguments(pa);
-            oxl.setONDEXGraph(graph);
-
-            oxl.start();
+            Parser.loadOXL ( filename, graph );
             log.debug("OndexKB Graph Loaded Into Memory");
         } catch (Exception e) {
             log.error("Failed to load graph", e);
@@ -376,15 +371,15 @@ public class OndexServiceProvider {
                 log.info("Graph file updated since index last built, deleting old index");
                 FileUtils.deleteDirectory(indexFile);
             }
-            log.debug("Building Lucene Index: " + indexFile.getAbsolutePath());
+            log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
             if (!indexFile.exists())
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
             else
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
             lenv.setONDEXGraph(graph);
-            log.debug("Lucene Index created");
+            log.info("Lucene Index created");
         } catch (Exception e) {
-            log.error("Faild to load graph index", e);
+            log.info("Faild to load graph index", e);
         }
     }
 
@@ -2960,12 +2955,20 @@ public class OndexServiceProvider {
 
             // the results give us a map of every starting concept to every
             // valid path
+
+	        	// Causes the Cypher-based traverser to report some performance stats
+	      		gt.setOption ( "isPerformanceTrackingEnabled", true );        	
             Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
+	          // Let's disable it after the initial population
+	      		gt.setOption ( "isPerformanceTrackingEnabled", false );
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
             mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
+            PercentProgressLogger progressLogger = new PercentProgressLogger (
+            	"{}% of paths stored", results.values ().size ()
+            );
             for (List<EvidencePathNode> paths : results.values()) {
                 for (EvidencePathNode path : paths) {
 
@@ -2986,18 +2989,18 @@ public class OndexServiceProvider {
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
-                    }else{
-			    if(pathLength < mapGene2PathLength.get(gpl_key)){
-				    // update HashMap with shorter pathLength
-				    mapGene2PathLength.put(gpl_key, pathLength); 
-			    }
-			    
-		    }    
+                    }
+                    else {
+									    if(pathLength < mapGene2PathLength.get(gpl_key)){
+										    // update HashMap with shorter pathLength
+										    mapGene2PathLength.put(gpl_key, pathLength); 
+									    }
+                    }    
 
                     // GENE 2 CONCEPT
                     if (!mapGene2Concepts.containsKey(gene.getId())) {
                         Set<Integer> setConcepts = new HashSet<Integer>();
-			setConcepts.add(lastConID);
+                        setConcepts.add(lastConID);
                         mapGene2Concepts.put(gene.getId(), setConcepts);
                     } else {
                         mapGene2Concepts.get(gene.getId()).add(lastConID);
@@ -3006,9 +3009,11 @@ public class OndexServiceProvider {
                     // CONCEPT 2 GENE
                     // concepts.remove(gene);
            
-                    mapConcept2Genes.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
+                    mapConcept2Genes
+                    	.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
                     	.add ( gene.getId () );
                 }
+                progressLogger.updateWithIncrement ();
             }
             try {
                 FileOutputStream f;
@@ -3079,6 +3084,10 @@ public class OndexServiceProvider {
 
         mapGene2QTL = new HashMap<Integer, Set<Integer>>();
 
+        PercentProgressLogger progressLogger = new PercentProgressLogger (
+        	"{}% of genes processed", genes.size ()
+        );
+        
         for (ONDEXConcept gene : genes) {
 
             String chr = null;
@@ -3119,6 +3128,7 @@ public class OndexServiceProvider {
                 }
 
             }
+            progressLogger.updateWithIncrement ();
         }
 
         log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());

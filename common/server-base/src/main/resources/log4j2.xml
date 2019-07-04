@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
 	<Properties>
+	  <!-- TODO: Docker should map ${sys:catalina.home}/logs/ to some volume -->
 		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
 	<Appenders>
@@ -17,10 +18,7 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="root" level="info" additivity="false">
-			<appender-ref ref="RollingFile" level="debug" />
-		</Logger>
-		<Root level="info" additivity="false">
+		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />
 		</Root>
 	</Loggers>

@@ -5,21 +5,23 @@
   
   <entry key="DataSourceName">${knetminer.dataSourceId}</entry>
 
-  <entry key="StateMachineFilePath">file://${project.build.testOutputDirectory}/knetminer-config/SemanticMotifs.txt</entry>
+  <entry key="StateMachineFilePath">file://${knetminer.configDir}/SemanticMotifs.txt</entry>
   
-  <entry key="DataPath">${project.build.directory}/data</entry>
-  <entry key="DataFile">${project.build.directory}/dependency/ara-tiny.oxl</entry>
+  <entry key="DataPath">${knetminer.dataDir}</entry>
+  <entry key="DataFile">${knetminer.oxlFile}</entry>
+  
 	<entry key="SpeciesTaxId">${knetminer.specieTaxId}</entry>
 	<entry key="reference_genome">true</entry>
 	<entry key="export_visible_network">true</entry>
 	
 
 	<!-- 
-		This is the configuration for the new Neo4j-based backend 
+		This is the configuration for the new Neo4j-based backend
 	-->
 	
 	<!-- The value for this comes from Maven and depends on the selected profile. -->
 	<entry key = "GraphTraverserClass">${knetminer.api.graphTraverserClass}</entry>
+	
 	<!-- This is for the new Neo4j-based graph traverser -->
-	<entry key = "knetminer.backend.configPath">${project.build.testOutputDirectory}/knetminer-config/neo4j/config.xml</entry>
+	<entry key = "knetminer.backend.configPath">${knetminer.neo4j.configFile}</entry>
 </properties>

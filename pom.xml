@@ -23,9 +23,133 @@
 		</license>
 	</licenses>
 
+
+	<properties>
+		
+		<!-- 
+		  Several of these varibles can be overriden by instance-specific Maven profiles.
+		  Here, we give values suitable for maven tests (eg, in aratiny).
+		  
+		  See TODO.
+		 -->
+		 
+		<knetminer.configDir>${project.build.testOutputDirectory}/knetminer-config</knetminer.configDir>
+		<knetminer.dataDir>${project.build.directory}/data</knetminer.dataDir>
+
+		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
+		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
+
+		<!--
+			In most cases, probably you'll be fine with the overriding provided below, in the 'docker' profile.
+			For aratiny, we need this non-common value since it's difficult to rename a downloaded test file. 
+		-->
+		<knetminer.oxlFile>${project.build.directory}/dependency/ara-tiny.oxl</knetminer.oxlFile>
+		 
+
+		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
+		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
+		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
+		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
+		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+
+		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
+		
+		<!--  true if you are providing a reference genome -->
+		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+
+		<!-- 
+			If your dataset config directory contains client/release_notes.html, its contents will be used as a value for
+			the corresponding placeholder, taking priority over this variable. Hence, it will be ignored in such a case. 
+		-->
+		<knetminer.releaseNotesHtml><![CDATA[
+			<h2>CHANGE ME!</h2>
+			<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
+			<p>Lorem ipsum dolor sit amet, etc etc</p>.
+		]]></knetminer.releaseNotesHtml>
+
+		
+		<!-- 
+			This is used by Genestack to customise the client/frontend layout with stuff like their own logo.
+			When using the Docker runtime, this can be overridden by adding -Dknetminer.ui.embeddableLayout=true 
+			to MAVEN_ARGS. The latter can be set via the \-\-env option of 'docker run', or see scripts like
+			docker-run.sh. REMEMBER that, if you use this MAVEN_ARGS, it always requires -Pdocker when 
+			running Docker (and -Pdocker,neo4j or even additional profiles (possibly in future), if you want
+			the corresponding features enabled.  			 
+		-->
+		<knetminer.ui.embeddableLayout>false</knetminer.ui.embeddableLayout>
+		
+		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
+		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		<!-- Here, it is http://localhost:9090/ws -->
+		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
+		<!-- Here, it is http://localhost:9090/ws/aratiny -->
+		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
+		
+		<!-- 
+			This is injected into config.xml for the ws/ war. 
+		  With empty value, the traditional Ondex traverser is picked. The alternative is
+		  uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser (see neo4j profile in aratiny-ws/pom.xml),
+		  which uses the new Neo4j-backed traverser.  
+		 -->
+		<knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass>
+
+		<!-- There is a production version, which searches into state machine-generated files -->
+		<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config-test.xml</knetminer.neo4j.configFile>
+				
+		<neo4j.server.host>localhost</neo4j.server.host>
+		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
+		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
+		
+		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+		<neo4j.server.user>neo4j</neo4j.server.user>
+		<neo4j.server.password>test</neo4j.server.password>
+
+			
+		<!--
+		 
+			Instead, these shouldn't need to be changed 
+		
+		-->
+		
+		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
+	
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
+
+		<log4j.version>2.3</log4j.version>
+		<lucene.version>6.6.0</lucene.version>
+		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
+		<maven.war.plugin.version>2.4</maven.war.plugin.version>
+		<maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
+		<maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
+		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
+	  <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
+		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
+		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
+		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
+		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
+		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
+		<springframework.version>4.3.6.RELEASE</springframework.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<jackson.library.version>2.7.5</jackson.library.version>
+		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
+		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+		<junit.version>4.10</junit.version>
+		<json.version>20180130</json.version>
+		<ga.version>2.0.0</ga.version>
+		<commons.version>2.6</commons.version>
+	</properties>
+
+
+	<!-- 
+		TODO: parent needs a merge with common and pom files in species/ need to be removed.
+		At the same time, the folders in common need to be raised one level.
+	-->
 	<modules>
 		<module>common</module>
-		<module>species</module>
 	</modules>
 
 	<reporting>
@@ -176,40 +300,46 @@
 		</plugins>
 	</build>
 
-	<properties>
-		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
-	
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
-		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
-
-		<log4j.version>2.3</log4j.version>
-		<lucene.version>6.6.0</lucene.version>
-		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
-		<maven.war.plugin.version>2.4</maven.war.plugin.version>
-		<maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
-		<maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
-		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-		<maven.surefire.plugin.version>2.4.3</maven.surefire.plugin.version>
-		<maven.surefire.report.plugin.version>2.4</maven.surefire.report.plugin.version>
-		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
-		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
-		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
-		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
-		<springframework.version>4.3.6.RELEASE</springframework.version>
-		<taglibs.version>1.1.2</taglibs.version>
-		<jackson.library.version>2.7.5</jackson.library.version>
-		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
-		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
-		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
-		<junit.version>4.10</junit.version>
-		<json.version>20180130</json.version>
-		<ga.version>2.0.0</ga.version>
-		<commons.version>2.6</commons.version>
-	</properties>
 
 	<profiles>
+		
 		<profile>
+			<id>docker</id>
+			<activation><activeByDefault>false</activeByDefault></activation>
+			<properties>
+				
+				<!--
+				
+					These are common values for a Docker-dedicated build. WS building should be fine with these,
+					while clients will have their own Maven settings to override these values.
+					 
+				-->
+								
+				<knetminer.configDir>/root/knetminer-config</knetminer.configDir>
+				<knetminer.dataDir>/root/knetminer-data</knetminer.dataDir>
+						
+				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
+								
+				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
+				<!-- It's just /ws, so that our Tomcat can append the right prefix automatically -->
+  			<knetminer.api.baseUrl>/${knetminer.api.webContext}</knetminer.api.baseUrl>
+										
+				<!-- This needs to be mapped to the right Neo4j server, via \-\-link or 'docker network' commands -->									
+				<neo4j.server.host>neo4j</neo4j.server.host>
+				<!-- Moreover, default Neo4j ports require proper mappings -->
+				<neo4j.server.boltPort>7687</neo4j.server.boltPort>
+				<!-- Not actually used, but just in case -->
+				<neo4j.server.httpPort>7474</neo4j.server.httpPort>
+
+				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
+
+			</properties>
+				
+		</profile>
+	
+	
+		<profile>
+			<!-- TODO: still needed?! -->
 			<id>with-report</id>
 			<build>
 				<plugins>
@@ -286,7 +416,7 @@
 				<artifactId>server-datasource-ondexlocal</artifactId>
 				<version>${project.version}</version>
 				<exclusions>
-					<!-- Remove the old log4j and requires a replacment with log4j-1.2-api (listed below) -->
+					<!-- Remove the old log4j and requires a replacement with log4j-1.2-api (listed below) -->
 					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>log4j</artifactId>
@@ -375,6 +505,12 @@
 				<groupId>net.sourceforge.ondex.core</groupId>
 				<artifactId>workflow-api</artifactId>
 				<version>${ondex.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>net.sourceforge.ondex.core</groupId>
@@ -430,7 +566,7 @@
 			</dependency>
 			<!-- 
 				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.
-				(https://logging.apache.org/log4j/2.x/manual/api.html)
+				(https://logging.apache.org/log4j/2.x/manual/migration.html)
 			 -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>

@@ -10,21 +10,36 @@
 <%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
+<%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <c:if test="${!embeddable}">
         <meta name="keywords" content="${keywords}" />
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <!-- favicon added -->
-        <link rel="shortcut icon" href="html/image/favicon.ico" >
+        <link rel="shortcut icon" href="html/image/favicon.ico" />
 
-		<!-- KnetMiner common style.css -->
+        <!-- Google Analytics -->
+        <!-- end Google Analytics -->
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-88753233-1', 'auto');
+        ga('send', 'pageview');
+        </script>
+    </c:if>
+        <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-		<!-- loader/spinner css -->
+        <!-- loader/spinner css -->
         <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
         <!-- Genomaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
@@ -33,7 +48,6 @@
         <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
 
         <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
-		
 		<!-- bootstrap css -->
 	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 		<!-- font-awesome css -->
@@ -64,25 +78,24 @@
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
         <jsp:invoke fragment="extraHeader"/>
-        
-        <!-- Google Analytics -->
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-                
-            ga('create', 'UA-88753233-1', 'auto');
-            ga('send', 'pageview');
-        </script>
-        <!-- end Google Analytics -->
     </head>
-    <body>
+    <body class="${embeddable ? "embeddable" : ""}">
         <!-- Main -->
         <div id="wrapper">
-        	<layout:header />
- 			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}"/>
-            <layout:footer/>
+            <c:choose>
+                <c:when test="${!embeddable}">
+                    <layout:header />
+                </c:when>
+                <c:otherwise>
+                    <c:if test="${embeddable}">
+                        <div class="logo_embedded"><img src="html/image/logo-regular.png" alt="Logo" height="35" /></div>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+ 			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
+            <c:if test="${!embeddable}">
+                <layout:footer />
+            </c:if>
         </div>
         <jsp:invoke fragment="extraBottom"/>
     </body>
