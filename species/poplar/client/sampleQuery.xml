@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Lignin content</description>
+		<term>"lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>Chr01</chromosome>
+			<start>29000000</start>
+			<end>30000000</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+			<chromosome>Chr09</chromosome>
+			<start>8000000</start>
+			<end>9000000</end>
+			<label>QTL2</label>
+		</region>
+	</query>	
+	
+	<query>
+		<name>Example 2</name>
+		<description>Shoot branching</description>
+		<term>"shoot branching" OR strigolactone</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>Chr05</chromosome>
+			<start>10000000</start>
+			<end>13000000</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+			<chromosome>Chr06</chromosome>
+			<start>14000000</start>
+			<end>15000000</end>
+			<label>QTL2</label>
+		</region>
+		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
+		<gene>POTRI.006G155500</gene>
+		<gene>POTRI.002G118900</gene>
+		<gene>POTRI.016G062700</gene>
+		<gene>POTRI.014G016500</gene>
+		<gene>POTRI.007G052000</gene>
+		<gene>POTRI.005G145000</gene>
+		<gene>POTRI.002G046500</gene>
+		<gene>POTRI.001G249400</gene>
+		<gene>POTRI.T069400</gene>
+		<gene>POTRI.T068500</gene>
+		<gene>POTRI.002G131500</gene>
+		<gene>POTRI.T013200</gene>
+		<gene>POTRI.005G100600</gene>
+		<gene>POTRI.003G174300</gene>
+		<gene>POTRI.005G216400</gene>
+		<gene>POTRI.006G238500</gene>
+		<gene>POTRI.009G043400</gene>
+		<gene>POTRI.001G054000</gene>
+		<gene>POTRI.010G212000</gene>
+		<gene>POTRI.004G171400</gene>
+		
+	</query>
+</sampleQueries>

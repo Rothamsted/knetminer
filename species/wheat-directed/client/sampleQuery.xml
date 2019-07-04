@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Grain colour</description>
+		<term>color OR flavon* OR proanthocyanidin</term>
+                <gene>TraesCS1D02G351600</gene>
+                <gene>TraesCS1D02G276300</gene>
+                <gene>TraesCS2A02G527700</gene>
+                <gene>TraesCS2A02G025700</gene>
+                <gene>TraesCS2B02G558400</gene>
+                <gene>TraesCS2B02G038700</gene>
+                <gene>TraesCS2D02G530600</gene>
+                <gene>TraesCS2D02G493400</gene>
+                <gene>TraesCS3A02G464900</gene>
+                <gene>TraesCS3A02G226600</gene>
+                <gene>TraesCS3B02G006100</gene>
+                <gene>TraesCSU02G046300</gene>
+                <gene>TraesCSU02G043000</gene>
+                <gene>TraesCS3B02G280700</gene>
+                <gene>TraesCS1B02G420400</gene>
+                <gene>TraesCS3B02G510700</gene>
+                <gene>TraesCSU02G159400</gene>
+                <gene>TraesCS3B02G006600</gene>
+                <gene>TraesCS3B02G257900</gene>
+                <gene>TraesCS3B02G277600</gene>
+                <gene>TraesCS3B02G007400</gene>
+                <gene>TraesCS3B02G006500</gene>
+                <gene>TraesCS3A02G007300</gene>
+                <gene>TraesCS3B02G006300</gene>
+                <gene>TraesCS3B02G010500</gene>
+                <gene>TraesCS3D02G224600</gene>
+                <gene>TraesCSU02G140100</gene>
+                <gene>TraesCS3D02G463200</gene>
+                <gene>TraesCS3D02G468500</gene>
+                <gene>TraesCS3D02G468400</gene>
+                <gene>TraesCSU02G040800</gene>
+                <gene>TraesCS4A02G206800</gene>
+                <gene>TraesCS4A02G085900</gene>
+                <gene>TraesCS6A02G369700</gene>
+                <gene>TraesCS6B02G406400</gene>
+                <gene>TraesCS6B02G405900</gene>
+                <gene>TraesCSU02G069200</gene>
+	</query>
+	<query>
+		<name>Example 2</name>
+		<description>Pre-harvest sprouting</description>
+		<term>"seed germination" OR "seed dormancy"</term>
+                <gene>TraesCS1D02G351600</gene>
+                <gene>TraesCS1D02G276300</gene>
+                <gene>TraesCS2A02G527700</gene>
+                <gene>TraesCS2A02G025700</gene>
+                <gene>TraesCS2B02G558400</gene>
+                <gene>TraesCS2B02G038700</gene>
+                <gene>TraesCS2D02G530600</gene>
+                <gene>TraesCS2D02G493400</gene>
+                <gene>TraesCS3A02G464900</gene>
+                <gene>TraesCS3A02G226600</gene>
+                <gene>TraesCS3B02G006100</gene>
+                <gene>TraesCSU02G046300</gene>
+                <gene>TraesCSU02G043000</gene>
+                <gene>TraesCS3B02G280700</gene>
+                <gene>TraesCS1B02G420400</gene>
+                <gene>TraesCS3B02G510700</gene>
+                <gene>TraesCSU02G159400</gene>
+                <gene>TraesCS3B02G006600</gene>
+                <gene>TraesCS3B02G257900</gene>
+                <gene>TraesCS3B02G277600</gene>
+                <gene>TraesCS3B02G007400</gene>
+                <gene>TraesCS3B02G006500</gene>
+                <gene>TraesCS3A02G007300</gene>
+                <gene>TraesCS3B02G006300</gene>
+                <gene>TraesCS3B02G010500</gene>
+                <gene>TraesCS3D02G224600</gene>
+                <gene>TraesCSU02G140100</gene>
+                <gene>TraesCS3D02G463200</gene>
+                <gene>TraesCS3D02G468500</gene>
+                <gene>TraesCS3D02G468400</gene>
+                <gene>TraesCSU02G040800</gene>
+                <gene>TraesCS4A02G206800</gene>
+                <gene>TraesCS4A02G085900</gene>
+                <gene>TraesCS6A02G369700</gene>
+                <gene>TraesCS6B02G406400</gene>
+                <gene>TraesCS6B02G405900</gene>
+                <gene>TraesCSU02G069200</gene>
+	</query>
+	<query>
+		<name>Example 3</name>
+		<description>Grain colour + PHS</description>
+		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
+                <gene>TraesCS3B02G007400</gene>
+                <gene>TraesCS2A02G025700</gene>
+                <gene>TraesCS2D02G530600</gene>
+                <gene>TraesCS2A02G527700</gene>
+                <gene>TraesCS2B02G558400</gene>
+                <gene>TraesCS2B02G038700</gene>
+                <gene>TraesCS3B02G257900</gene>
+                <gene>TraesCS3A02G226600</gene>
+                <gene>TraesCS3D02G224600</gene>
+                <gene>TraesCS3D02G468400</gene>
+                <gene>TraesCS3B02G280700</gene>
+                <gene>TraesCS2D02G493400</gene>
+	</query>
+	<query>
+		<name>Example 4</name>
+		<description>Rust response</description>
+		<term>rust OR response OR disease</term>
+		<gene>TraesCS1B02G343700</gene>
+		<gene>TraesCS1B02G343800</gene>
+		<gene>TraesCS1B02G343900</gene>
+		<gene>TraesCS1D02G156800</gene>
+		<gene>TraesCS2A02G157900</gene>
+		<gene>TraesCS2A02G395200</gene>
+		<gene>TraesCS2B02G183200</gene>
+		<gene>TraesCS2B02G184100</gene>
+		<gene>TraesCS2B02G184100</gene>
+		<gene>TraesCS2B02G184100</gene>
+		<gene>TraesCS2B02G184100</gene>
+		<gene>TraesCS2D02G009700</gene>
+		<gene>TraesCS2D02G010700</gene>
+		<gene>TraesCS2D02G165200</gene>
+		<gene>TraesCS3B02G381600</gene>
+		<gene>TraesCS4A02G456300</gene>
+		<gene>TraesCS5B02G241800</gene>
+		<gene>TraesCS5B02G337300</gene>
+		<gene>TraesCS5B02G347900</gene>
+		<gene>TraesCS5D02G559100</gene>
+		<gene>TraesCS5D02G560600</gene>
+		<gene>TraesCS5D02G560900</gene>
+		<gene>TraesCS5D02G560900</gene>
+		<gene>TraesCS5D02G560900</gene>
+		<gene>TraesCS6A02G416300</gene>
+		<gene>TraesCS6A02G417500</gene>
+		<gene>TraesCS6A02G417600</gene>
+		<gene>TraesCS6A02G419100</gene>
+		<gene>TraesCS6B02G462300</gene>
+		<gene>TraesCS6B02G468200</gene>
+		<gene>TraesCS6B02G470800</gene>
+		<gene>TraesCS6B02G471500</gene>
+		<gene>TraesCS6B02G471700</gene>
+		<gene>TraesCS6B02G473000</gene>
+		<gene>TraesCS6B02G473300</gene>
+		<gene>TraesCS6D02G398300</gene>
+		<gene>TraesCS6D02G401700</gene>
+		<gene>TraesCS6D02G405600</gene>
+		<gene>TraesCS6D02G405600</gene>
+		<gene>TraesCS7A02G033100</gene>
+	</query>
+	<query>
+		<name>Example 5</name>
+		<description>Grain growth</description>
+		<term>"grain fill duration" OR "seed growth"</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>5A</chromosome>
+			<start>580000000</start>
+			<end>590000000</end>
+			<label>QTL</label>
+		</region>
+		<gene>ADA2A</gene>
+		<gene>BPM5</gene>
+	</query>
+</sampleQueries>

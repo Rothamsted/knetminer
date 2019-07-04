@@ -1,0 +1,29 @@
+# This is joined with .gitignore to produce .dockerignore
+.git
+**/bower_components
+**/node_modules
+**/target
+common/ws-example
+# Remember to issue cat .dockerignore-template .gitignore >.dockerignore
+# when you change .gitignore
+#
+.elasticbeanstalk
+*.iml
+.idea
+bin/
+.tmp
+dist/
+node_modules/
+bower_components/
+target/
+.classpath
+.project
+.settings
+stderr.log
+stdout.log
+*.swp
+.vagrant/
+common/client/nb-configuration.xml
+*.oxl
+package-lock.json
+.DS_Store

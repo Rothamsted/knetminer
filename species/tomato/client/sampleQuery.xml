@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>ABA and plant maturity</description>
+		<term>ABA OR "Abscisic acid" OR "developmental process" OR "developmental maturation"</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>6</chromosome>
+			<start>34312220</start>
+			<end>52065731</end>
+			<label>1_Maturity_06</label>
+		</region>
+		<region>
+			<chromosome>6</chromosome>
+			<start>52304476</start>
+			<end>58264191</end>
+			<label>2_Maturity_06</label>
+		</region>
+		<region>
+			<chromosome>11</chromosome>
+			<start>814609</start>
+			<end>44218466</end>
+			<label>1_Maturity_11</label>
+		</region>
+		<mapGLWithoutRestriction>false</mapGLWithoutRestriction>
+		<gene>PGSC0003DMG400019437</gene>
+		<gene>PGSC0003DMG402020132</gene>
+		<gene>PGSC0003DMG400020225</gene>
+		<gene>PGSC0003DMG400022131</gene>
+		<gene>PGSC0003DMG400024152</gene>
+		<gene>PGSC0003DMG400025487</gene>
+		<gene>PGSC0003DMG400025932</gene>
+		<gene>PGSC0003DMG400026148</gene>
+		<gene>PGSC0003DMG400027720</gene>
+		<gene>PGSC0003DMG400030332</gene>
+		<gene>PGSC0003DMG400031236</gene>
+		<gene>PGSC0003DMG402031237</gene>
+		<gene>PGSC0003DMG400031535</gene>
+		<gene>PGSC0003DMG400032249</gene>
+		<gene>PGSC0003DMG400033589</gene>
+		<gene>PGSC0003DMG400033590</gene>
+		<gene>PGSC0003DMG400033591</gene>
+		<gene>PGSC0003DMG400033876</gene>
+		<gene>PGSC0003DMG400039214</gene>
+	</query>	
+</sampleQueries>

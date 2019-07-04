@@ -1,0 +1,22 @@
+FROM knetminer/knetminer-bare
+
+# The base image + a full maven build of the entire knetminer codebase.
+# Having this as a separated image allows for smaller builds when updating just a couple of maven 
+# modules
+#
+
+ENV knet_build_dir=/root/knetminer-build
+
+WORKDIR $knet_build_dir
+
+# You need 'docker build -f .' from the knetminer root directory, since
+# climbing up the host paths is forbidden 
+#
+COPY . knetminer
+
+WORKDIR knetminer
+
+RUN echo -e "\n\n\tBuilding knetminer codebase and pulling all dependencies\n" \
+	&& mvn clean dependency:resolve
+	
+#CMD [ "echo", "DO NOT RUN ME, This is a base image, used to build the Knetminer runtime" ]

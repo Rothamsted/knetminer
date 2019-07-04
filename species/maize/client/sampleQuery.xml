@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Sugar content</description>
+		<term>"sugar content" OR glucose</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>1</chromosome>
+			<start>227000000</start>
+			<end>267000000</end>
+			<label>AQFS466</label>
+		</region>
+		<region>
+			<chromosome>10</chromosome>
+			<start>127000000</start>
+			<end>146000000</end>
+			<label>AQFS472</label>
+		</region>
+	</query>	
+	
+	<query>
+		<name>Example 2</name>
+		<description>Drought</description>
+		<term>drought OR trehalose</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>1</chromosome>
+			<start>10000000</start>
+			<end>13000000</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+			<chromosome>4</chromosome>
+			<start>14000000</start>
+			<end>15000000</end>
+			<label>QTL2</label>
+		</region>
+		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
+		<gene>Zm00001d049252</gene>
+		<gene>Zm00001d005687</gene>
+		<gene>Zm00001d037211</gene>
+		<gene>Zm00001d008338</gene>
+		<gene>Zm00001d047110</gene>
+		<gene>Zm00001d022193</gene>
+		<gene>Zm00001d010662</gene>
+		<gene>Zm00001d032311</gene>
+		<gene>Zm00001d028267</gene>
+		<gene>Zm00001d020396</gene>
+		<gene>Zm00001d023673</gene>
+		<gene>Zm00001d017502</gene>
+		<gene>Zm00001d050293</gene>
+		<gene>Zm00001d052060</gene>		
+	</query>
+</sampleQueries>
