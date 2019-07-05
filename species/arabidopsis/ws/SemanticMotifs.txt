@@ -3,7 +3,7 @@
 2^	Publication
 3^	MolFunc
 4^	BioProc
-5^ 	CelComp
+5^	CelComp
 6^	Phenotype
 7^	Protein
 8^	Gene
@@ -17,7 +17,7 @@
 14^	Path
 15	SNP
 16^	Trait
-166 Trait
+166	Trait
 17^	ProtDomain
 
 #Transitions
@@ -35,8 +35,8 @@
 1-9	physical
 1-15	has_variation
 15-16	associated_with
-166-2 pub_in
-166-16  is_part_of
+166-2	pub_in
+166-16	is_part_of
 
 9-2	pub_in
 9-3	has_function
