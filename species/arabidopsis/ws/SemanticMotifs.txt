@@ -35,6 +35,7 @@
 1-9	physical
 1-15	has_variation
 15-16	associated_with
+15-166	associated_with
 166-2	pub_in
 166-16	is_part_of
 
