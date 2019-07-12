@@ -1,21 +1,15 @@
 package rres.knetminer.datasource.ondexlocal;
 
-import java.awt.Font;
-import java.beans.XMLEncoder;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -23,29 +17,24 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
-import net.sourceforge.ondex.core.Attribute;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +56,7 @@ import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
 import net.sourceforge.ondex.config.ONDEXGraphRegistry;
+import net.sourceforge.ondex.core.Attribute;
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
@@ -89,7 +79,6 @@ import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
-import rres.knetminer.datasource.ondexlocal.FisherExact;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
@@ -3012,6 +3001,7 @@ public class OndexServiceProvider {
                     mapConcept2Genes
                     	.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
                     	.add ( gene.getId () );
+                   
                 }
                 progressLogger.updateWithIncrement ();
             }

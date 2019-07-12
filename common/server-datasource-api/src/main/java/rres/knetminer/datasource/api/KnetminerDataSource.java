@@ -2,8 +2,8 @@ package rres.knetminer.datasource.api;
 
 import java.util.Arrays;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A data source provides data for KnetminerServer to serve. The annotation makes it get picked up
