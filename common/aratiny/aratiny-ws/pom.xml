@@ -67,6 +67,7 @@
   			</executions>
 				<configuration>
         	<artifactItems>
+        		<!--  Download some reference test data, see https://github.com/Rothamsted/knetminer-backend/tree/master/test-data-server -->
         		<artifactItem>
 							<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
 							<artifactId>test-data-server</artifactId>
