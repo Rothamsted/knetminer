@@ -15,7 +15,10 @@
 
 	<description>
 		A trivial extension of the abstract Ondex data source, which has zero parameters in the constructor and
-		can be configured completely via file. the aratiny project uses this contains example of how to set it up.
+		can be configured completely via file. The aratiny project uses this and contains example of how to set it up.
+		
+		This project contains one class only, but we need it as a separated Maven project, since there is a Spring-based
+		bootstrap in Knetminer-ws and it expects one instance only of ConfigurableOndexDataSource.
 	</description>
 
 	<dependencies>

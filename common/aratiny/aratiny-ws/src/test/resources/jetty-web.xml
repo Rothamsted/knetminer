@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This is identical to the main web.xml, it's duplicated here cause jetty doesn't filter
+	web resources.
+-->
 <web-app
         xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,7 +12,7 @@
   
 	<context-param>
 		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>file://${project.build.testOutputDirectory}/knetminer-config/data-source.xml</param-value>
+		<param-value>file://${knetminer.configFile}</param-value>
 	</context-param>
 	
 </web-app>

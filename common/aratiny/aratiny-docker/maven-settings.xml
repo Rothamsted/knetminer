@@ -1,0 +1,26 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                            
+	<profiles>
+		<!-- 
+			See quickstart/local-env-ex
+			
+			This shows how to use the Docker scripts (plus additional Maven profiles) to deploy on a regular
+			system, without Docker.
+		 -->
+		<profile>
+			<id>local-env-ex</id>
+			<activation><activeByDefault>false</activeByDefault></activation>
+			<properties>
+				<knetminer.configDir>/tmp/knetminer-config</knetminer.configDir>
+				<knetminer.dataDir>/tmp/knetminer-data</knetminer.dataDir>
+				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
+				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
+				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
+				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
+			</properties>
+		</profile>
+	</profiles>
+</settings>

@@ -1,0 +1,358 @@
+<svg width="1355px" height="1076px"
+ viewBox="0.00 0.00 1015.90 807.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform=" rotate(0) translate(4 803)">
+<title>%3</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-803 1011.9,-803 1011.9,4 -4,4"/>
+<!-- Trait(21) -->
+<g id="node1" class="node">
+<title>Trait(21)</title>
+<polygon fill="none" stroke="darkgreen" points="1004.05,-339.54 1004.05,-354.46 977.51,-365 939.98,-365 913.44,-354.46 913.44,-339.54 939.98,-329 977.51,-329 1004.05,-339.54"/>
+<polygon fill="none" stroke="darkgreen" points="1008.06,-336.83 1008.06,-357.17 978.28,-369 939.21,-369 909.43,-357.17 909.43,-336.83 939.21,-325 978.28,-325 1008.06,-336.83"/>
+<text text-anchor="middle" x="958.74" y="-342.8" font-family="Times,serif" font-size="14.00">Trait(21)</text>
+</g>
+<!-- Phenotype(13) -->
+<g id="node2" class="node">
+<title>Phenotype(13)</title>
+<polygon fill="none" stroke="darkgreen" points="779.98,-281.54 779.98,-296.46 740.67,-307 685.07,-307 645.76,-296.46 645.76,-281.54 685.07,-271 740.67,-271 779.98,-281.54"/>
+<polygon fill="none" stroke="darkgreen" points="783.96,-278.47 783.96,-299.53 741.19,-311 684.55,-311 641.77,-299.53 641.77,-278.47 684.55,-267 741.19,-267 783.96,-278.47"/>
+<text text-anchor="middle" x="712.87" y="-284.8" font-family="Times,serif" font-size="14.00">Phenotype(13)</text>
+</g>
+<!-- MolFunc(3) -->
+<g id="node3" class="node">
+<title>MolFunc(3)</title>
+<polygon fill="none" stroke="darkgreen" points="770.26,-605.54 770.26,-620.46 736.64,-631 689.1,-631 655.48,-620.46 655.48,-605.54 689.1,-595 736.64,-595 770.26,-605.54"/>
+<polygon fill="none" stroke="darkgreen" points="774.27,-602.61 774.27,-623.39 737.26,-635 688.48,-635 651.47,-623.39 651.47,-602.61 688.48,-591 737.26,-591 774.27,-602.61"/>
+<text text-anchor="middle" x="712.87" y="-608.8" font-family="Times,serif" font-size="14.00">MolFunc(3)</text>
+</g>
+<!-- CelComp(5) -->
+<g id="node4" class="node">
+<title>CelComp(5)</title>
+<polygon fill="none" stroke="darkgreen" points="771.47,-459.54 771.47,-474.46 737.14,-485 688.59,-485 654.27,-474.46 654.27,-459.54 688.59,-449 737.14,-449 771.47,-459.54"/>
+<polygon fill="none" stroke="darkgreen" points="775.46,-456.59 775.46,-477.41 737.74,-489 688,-489 650.28,-477.41 650.28,-456.59 688,-445 737.74,-445 775.46,-456.59"/>
+<text text-anchor="middle" x="712.87" y="-462.8" font-family="Times,serif" font-size="14.00">CelComp(5)</text>
+</g>
+<!-- BioProc(4) -->
+<g id="node5" class="node">
+<title>BioProc(4)</title>
+<polygon fill="none" stroke="darkgreen" points="766.32,-397.54 766.32,-412.46 735.01,-423 690.73,-423 659.42,-412.46 659.42,-397.54 690.73,-387 735.01,-387 766.32,-397.54"/>
+<polygon fill="none" stroke="darkgreen" points="770.32,-394.67 770.32,-415.33 735.67,-427 690.07,-427 655.42,-415.33 655.42,-394.67 690.07,-383 735.67,-383 770.32,-394.67"/>
+<text text-anchor="middle" x="712.87" y="-400.8" font-family="Times,serif" font-size="14.00">BioProc(4)</text>
+</g>
+<!-- Enzyme(177) -->
+<g id="node6" class="node">
+<title>Enzyme(177)</title>
+<polygon fill="none" stroke="darkgreen" points="486.76,-238.54 486.76,-253.46 449.81,-264 397.57,-264 360.62,-253.46 360.62,-238.54 397.57,-228 449.81,-228 486.76,-238.54"/>
+<polygon fill="none" stroke="darkgreen" points="490.76,-235.53 490.76,-256.47 450.37,-268 397.01,-268 356.62,-256.47 356.62,-235.53 397.01,-224 450.37,-224 490.76,-235.53"/>
+<text text-anchor="middle" x="423.69" y="-241.8" font-family="Times,serif" font-size="14.00">Enzyme(177)</text>
+</g>
+<!-- TO(16) -->
+<g id="node7" class="node">
+<title>TO(16)</title>
+<polygon fill="none" stroke="darkgreen" points="752.33,-219.54 752.33,-234.46 729.21,-245 696.53,-245 673.41,-234.46 673.41,-219.54 696.53,-209 729.21,-209 752.33,-219.54"/>
+<polygon fill="none" stroke="darkgreen" points="756.33,-216.97 756.33,-237.03 730.08,-249 695.66,-249 669.41,-237.03 669.41,-216.97 695.66,-205 730.08,-205 756.33,-216.97"/>
+<text text-anchor="middle" x="712.87" y="-222.8" font-family="Times,serif" font-size="14.00">TO(16)</text>
+</g>
+<!-- ProtDomain(14) -->
+<g id="node8" class="node">
+<title>ProtDomain(14)</title>
+<polygon fill="none" stroke="darkgreen" points="497.55,-176.54 497.55,-191.46 454.28,-202 393.1,-202 349.84,-191.46 349.84,-176.54 393.1,-166 454.28,-166 497.55,-176.54"/>
+<polygon fill="none" stroke="darkgreen" points="501.55,-173.4 501.55,-194.6 454.76,-206 392.62,-206 345.83,-194.6 345.83,-173.4 392.62,-162 454.76,-162 501.55,-173.4"/>
+<text text-anchor="middle" x="423.69" y="-179.8" font-family="Times,serif" font-size="14.00">ProtDomain(14)</text>
+</g>
+<!-- Publication(2) -->
+<g id="node9" class="node">
+<title>Publication(2)</title>
+<polygon fill="none" stroke="darkgreen" points="778.77,-151.54 778.77,-166.46 740.16,-177 685.57,-177 646.97,-166.46 646.97,-151.54 685.57,-141 740.16,-141 778.77,-151.54"/>
+<polygon fill="none" stroke="darkgreen" points="782.78,-148.49 782.78,-169.51 740.7,-181 685.04,-181 642.96,-169.51 642.96,-148.49 685.04,-137 740.7,-137 782.78,-148.49"/>
+<text text-anchor="middle" x="712.87" y="-154.8" font-family="Times,serif" font-size="14.00">Publication(2)</text>
+</g>
+<!-- Gene(8) -->
+<g id="node10" class="node">
+<title>Gene(8)</title>
+<polygon fill="none" stroke="darkgreen" points="754.98,-78.54 754.98,-93.46 730.31,-104 695.43,-104 670.76,-93.46 670.76,-78.54 695.43,-68 730.31,-68 754.98,-78.54"/>
+<polygon fill="none" stroke="darkgreen" points="758.96,-75.9 758.96,-96.1 731.12,-108 694.61,-108 666.78,-96.1 666.78,-75.9 694.61,-64 731.12,-64 758.96,-75.9"/>
+<text text-anchor="middle" x="712.87" y="-81.8" font-family="Times,serif" font-size="14.00">Gene(8)</text>
+</g>
+<!-- EC(15) -->
+<g id="node11" class="node">
+<title>EC(15)</title>
+<polygon fill="none" stroke="darkgreen" points="462.92,-14.54 462.92,-29.46 439.94,-40 407.44,-40 384.46,-29.46 384.46,-14.54 407.44,-4 439.94,-4 462.92,-14.54"/>
+<polygon fill="none" stroke="darkgreen" points="466.93,-11.98 466.93,-32.02 440.82,-44 406.56,-44 380.45,-32.02 380.45,-11.98 406.56,0 440.82,0 466.93,-11.98"/>
+<text text-anchor="middle" x="423.69" y="-17.8" font-family="Times,serif" font-size="14.00">EC(15)</text>
+</g>
+<!-- Reaction(188) -->
+<g id="node12" class="node">
+<title>Reaction(188)</title>
+<polygon fill="none" stroke="darkgreen" points="778.75,-736.54 778.75,-751.46 740.16,-762 685.58,-762 646.99,-751.46 646.99,-736.54 685.58,-726 740.16,-726 778.75,-736.54"/>
+<polygon fill="none" stroke="darkgreen" points="782.76,-733.49 782.76,-754.51 740.7,-766 685.04,-766 642.98,-754.51 642.98,-733.49 685.04,-722 740.7,-722 782.76,-733.49"/>
+<text text-anchor="middle" x="712.87" y="-739.8" font-family="Times,serif" font-size="14.00">Reaction(188)</text>
+</g>
+<!-- Protein(7) -->
+<g id="node13" class="node">
+<title>Protein(7)</title>
+<polygon fill="none" stroke="darkgreen" points="473.21,-769.54 473.21,-784.46 444.2,-795 403.18,-795 374.17,-784.46 374.17,-769.54 403.18,-759 444.2,-759 473.21,-769.54"/>
+<polygon fill="none" stroke="darkgreen" points="477.19,-766.74 477.19,-787.26 444.9,-799 402.48,-799 370.19,-787.26 370.19,-766.74 402.48,-755 444.9,-755 477.19,-766.74"/>
+<text text-anchor="middle" x="423.69" y="-772.8" font-family="Times,serif" font-size="14.00">Protein(7)</text>
+</g>
+<!-- Path(19) -->
+<g id="node14" class="node">
+<title>Path(19)</title>
+<polygon fill="none" stroke="darkgreen" points="1002.56,-678.54 1002.56,-693.46 976.89,-704 940.6,-704 914.93,-693.46 914.93,-678.54 940.6,-668 976.89,-668 1002.56,-678.54"/>
+<polygon fill="none" stroke="darkgreen" points="1006.55,-675.86 1006.55,-696.14 977.68,-708 939.81,-708 910.94,-696.14 910.94,-675.86 939.81,-664 977.68,-664 1006.55,-675.86"/>
+<text text-anchor="middle" x="958.74" y="-681.8" font-family="Times,serif" font-size="14.00">Path(19)</text>
+</g>
+<!-- Gene(1) -->
+<g id="node15" class="node">
+<title>Gene(1)</title>
+<ellipse fill="none" stroke="red" cx="43.08" cy="-607" rx="39.15" ry="39.15"/>
+<ellipse fill="none" stroke="red" cx="43.08" cy="-607" rx="43.15" ry="43.15"/>
+<text text-anchor="middle" x="43.08" y="-602.8" font-family="Times,serif" font-size="14.00">Gene(1)</text>
+</g>
+<!-- Gene(1)&#45;&gt;Protein(7) -->
+<g id="edge32" class="edge">
+<title>Gene(1)&#45;&gt;Protein(7)</title>
+<path fill="none" stroke="black" d="M72.6,-638.48C110.83,-678.16 182.92,-744.5 260.35,-772 295.43,-784.46 337.49,-785.4 370.01,-783.38"/>
+<text text-anchor="middle" x="191.97" y="-766.8" font-family="Times,serif" font-size="14.00">enc</text>
+</g>
+<!-- Protein(10) -->
+<g id="node20" class="node">
+<title>Protein(10)</title>
+<ellipse fill="none" stroke="black" cx="191.97" cy="-429" rx="50.27" ry="18"/>
+<text text-anchor="middle" x="191.97" y="-424.8" font-family="Times,serif" font-size="14.00">Protein(10)</text>
+</g>
+<!-- Gene(1)&#45;&gt;Protein(10) -->
+<g id="edge33" class="edge">
+<title>Gene(1)&#45;&gt;Protein(10)</title>
+<path fill="none" stroke="blue" d="M71.36,-573.94C102.56,-536.13 152.44,-475.69 176.74,-446.24"/>
+<text text-anchor="middle" x="113.87" y="-535.8" font-family="Times,serif" font-size="14.00">enc</text>
+</g>
+<!-- ProtDomain(11) -->
+<g id="node16" class="node">
+<title>ProtDomain(11)</title>
+<ellipse fill="none" stroke="black" cx="423.69" cy="-519" rx="68" ry="18"/>
+<text text-anchor="middle" x="423.69" y="-514.8" font-family="Times,serif" font-size="14.00">ProtDomain(11)</text>
+</g>
+<!-- ProtDomain(11)&#45;&gt;MolFunc(3) -->
+<g id="edge1" class="edge">
+<title>ProtDomain(11)&#45;&gt;MolFunc(3)</title>
+<path fill="none" stroke="blue" d="M453.38,-535.33C471.79,-545.27 496.45,-557.63 519.37,-566 544.25,-575.09 608.86,-590.25 656.39,-600.89"/>
+<text text-anchor="middle" x="571.47" y="-594.8" font-family="Times,serif" font-size="14.00">has_function</text>
+</g>
+<!-- ProtDomain(11)&#45;&gt;CelComp(5) -->
+<g id="edge2" class="edge">
+<title>ProtDomain(11)&#45;&gt;CelComp(5)</title>
+<path fill="none" stroke="black" d="M465.55,-533.18C506.65,-545.15 571.27,-557.62 623.57,-539 651.34,-529.11 676.69,-506.35 693.04,-489.04"/>
+<text text-anchor="middle" x="571.47" y="-550.8" font-family="Times,serif" font-size="14.00">located_in</text>
+</g>
+<!-- ProtDomain(11)&#45;&gt;BioProc(4) -->
+<g id="edge3" class="edge">
+<title>ProtDomain(11)&#45;&gt;BioProc(4)</title>
+<path fill="none" stroke="blue" d="M464.12,-504.48C504.39,-489.53 568.61,-465.32 623.57,-443 640.12,-436.28 658.26,-428.54 673.77,-421.81"/>
+<text text-anchor="middle" x="571.47" y="-485.8" font-family="Times,serif" font-size="14.00">participates_in</text>
+</g>
+<!-- EC(12) -->
+<g id="node17" class="node">
+<title>EC(12)</title>
+<ellipse fill="none" stroke="black" cx="423.69" cy="-595" rx="36.28" ry="18"/>
+<text text-anchor="middle" x="423.69" y="-590.8" font-family="Times,serif" font-size="14.00">EC(12)</text>
+</g>
+<!-- EC(12)&#45;&gt;MolFunc(3) -->
+<g id="edge4" class="edge">
+<title>EC(12)&#45;&gt;MolFunc(3)</title>
+<path fill="none" stroke="black" d="M456.47,-602.59C474.75,-606.56 498.22,-611.01 519.37,-613 563.46,-617.15 613.48,-617.01 651.47,-615.9"/>
+<text text-anchor="middle" x="571.47" y="-618.8" font-family="Times,serif" font-size="14.00">equ</text>
+</g>
+<!-- Gene(9) -->
+<g id="node18" class="node">
+<title>Gene(9)</title>
+<ellipse fill="none" stroke="black" cx="423.69" cy="-304" rx="39.15" ry="18"/>
+<text text-anchor="middle" x="423.69" y="-299.8" font-family="Times,serif" font-size="14.00">Gene(9)</text>
+</g>
+<!-- Gene(9)&#45;&gt;Phenotype(13) -->
+<g id="edge9" class="edge">
+<title>Gene(9)&#45;&gt;Phenotype(13)</title>
+<path fill="none" stroke="blue" d="M460.52,-297.48C478.18,-294.58 499.82,-291.49 519.37,-290 559.69,-286.93 604.9,-286.54 641.37,-286.98"/>
+<text text-anchor="middle" x="571.47" y="-292.8" font-family="Times,serif" font-size="14.00">has_observ_pheno</text>
+</g>
+<!-- Gene(9)&#45;&gt;MolFunc(3) -->
+<g id="edge8" class="edge">
+<title>Gene(9)&#45;&gt;MolFunc(3)</title>
+<path fill="none" stroke="black" d="M445.63,-319.1C463.53,-333.23 488.38,-356.01 501.37,-382 525.29,-429.85 482.3,-462.44 519.37,-501 552.05,-535 582.14,-498.48 623.57,-521 654.5,-537.81 681.07,-569.23 696.77,-590.62"/>
+<text text-anchor="middle" x="571.47" y="-523.8" font-family="Times,serif" font-size="14.00">has_function</text>
+</g>
+<!-- Gene(9)&#45;&gt;CelComp(5) -->
+<g id="edge11" class="edge">
+<title>Gene(9)&#45;&gt;CelComp(5)</title>
+<path fill="none" stroke="blue" d="M441.34,-320.29C459.41,-337.32 489.67,-364.02 519.37,-382 562.38,-408.03 578.38,-403.98 623.57,-426 631.8,-430.01 633.38,-431.93 641.57,-436 651.13,-440.75 661.58,-445.56 671.43,-449.92"/>
+<text text-anchor="middle" x="571.47" y="-428.8" font-family="Times,serif" font-size="14.00">located_in</text>
+</g>
+<!-- Gene(9)&#45;&gt;BioProc(4) -->
+<g id="edge12" class="edge">
+<title>Gene(9)&#45;&gt;BioProc(4)</title>
+<path fill="none" stroke="black" d="M452.87,-316.34C471.49,-324.16 496.58,-334.08 519.37,-341 564.75,-354.78 579.22,-347.2 623.57,-364 632.13,-367.24 633.38,-369.93 641.57,-374 651.61,-378.99 662.62,-384.04 672.9,-388.58"/>
+<text text-anchor="middle" x="571.47" y="-366.8" font-family="Times,serif" font-size="14.00">participates_in</text>
+</g>
+<!-- Gene(9)&#45;&gt;TO(16) -->
+<g id="edge5" class="edge">
+<title>Gene(9)&#45;&gt;TO(16)</title>
+<path fill="none" stroke="blue" d="M455.87,-293.65C469.87,-288.84 486.55,-282.89 501.37,-277 509.51,-273.77 511.05,-271.72 519.37,-269 569.76,-252.5 629.7,-240.58 669.15,-233.75"/>
+<text text-anchor="middle" x="571.47" y="-271.8" font-family="Times,serif" font-size="14.00">cooc_wi</text>
+</g>
+<!-- Gene(9)&#45;&gt;Publication(2) -->
+<g id="edge13" class="edge">
+<title>Gene(9)&#45;&gt;Publication(2)</title>
+<path fill="none" stroke="blue" d="M460.77,-298.31C475.01,-294.42 490.52,-287.91 501.37,-277 518.62,-259.66 501.85,-242.06 519.37,-225 554.18,-191.11 577.65,-207.84 623.57,-192 637.81,-187.09 653.21,-181.45 667.11,-176.23"/>
+<text text-anchor="middle" x="571.47" y="-227.8" font-family="Times,serif" font-size="14.00">pub_in</text>
+</g>
+<!-- Gene(9)&#45;&gt;Gene(8) -->
+<g id="edge6" class="edge">
+<title>Gene(9)&#45;&gt;Gene(8)</title>
+<path fill="none" stroke="black" d="M461.79,-299.23C476.19,-295.49 491.55,-288.84 501.37,-277 534.96,-236.51 486.36,-200.97 519.37,-160 555.43,-115.25 621.94,-97.53 666.54,-90.53"/>
+<text text-anchor="middle" x="571.47" y="-176.8" font-family="Times,serif" font-size="14.00">genetic(&lt;=8)</text>
+<text text-anchor="middle" x="571.47" y="-162.8" font-family="Times,serif" font-size="14.00">physical(&lt;=8)</text>
+</g>
+<!-- Gene(9)&#45;&gt;Gene(9) -->
+<g id="edge7" class="edge">
+<title>Gene(9)&#45;&gt;Gene(9)</title>
+<path fill="none" stroke="blue" d="M402.03,-319.17C395.47,-329.66 402.69,-340 423.69,-340 444.69,-340 451.91,-329.66 445.35,-319.17"/>
+<text text-anchor="middle" x="423.69" y="-356.8" font-family="Times,serif" font-size="14.00">genetic(&lt;=8)</text>
+<text text-anchor="middle" x="423.69" y="-342.8" font-family="Times,serif" font-size="14.00">physical(&lt;=8)</text>
+</g>
+<!-- SNP(20) -->
+<g id="node19" class="node">
+<title>SNP(20)</title>
+<ellipse fill="none" stroke="black" cx="712.87" cy="-347" rx="41.13" ry="18"/>
+<text text-anchor="middle" x="712.87" y="-342.8" font-family="Times,serif" font-size="14.00">SNP(20)</text>
+</g>
+<!-- Gene(9)&#45;&gt;SNP(20) -->
+<g id="edge10" class="edge">
+<title>Gene(9)&#45;&gt;SNP(20)</title>
+<path fill="none" stroke="black" d="M462.25,-307.13C502.37,-310.75 567.72,-317.47 623.57,-327 641.24,-330.01 660.68,-334.31 676.81,-338.15"/>
+<text text-anchor="middle" x="571.47" y="-329.8" font-family="Times,serif" font-size="14.00">has_variation</text>
+</g>
+<!-- SNP(20)&#45;&gt;Trait(21) -->
+<g id="edge14" class="edge">
+<title>SNP(20)&#45;&gt;Trait(21)</title>
+<path fill="none" stroke="black" d="M754.14,-347C796.76,-347 864,-347 909.44,-347"/>
+<text text-anchor="middle" x="846.88" y="-349.8" font-family="Times,serif" font-size="14.00">associated_with</text>
+</g>
+<!-- Protein(10)&#45;&gt;MolFunc(3) -->
+<g id="edge23" class="edge">
+<title>Protein(10)&#45;&gt;MolFunc(3)</title>
+<path fill="none" stroke="blue" d="M197.8,-447.09C206.31,-476.13 226.37,-533.67 260.35,-571 290.18,-603.77 303.72,-608.78 346.01,-622 463.86,-658.85 500.94,-648.38 623.57,-634 636.25,-632.51 649.74,-629.87 662.27,-626.94"/>
+<text text-anchor="middle" x="423.69" y="-649.8" font-family="Times,serif" font-size="14.00">has_function</text>
+</g>
+<!-- Protein(10)&#45;&gt;CelComp(5) -->
+<g id="edge26" class="edge">
+<title>Protein(10)&#45;&gt;CelComp(5)</title>
+<path fill="none" stroke="black" d="M241.18,-433.4C247.62,-433.96 254.15,-434.5 260.35,-435 399.59,-446.13 563.15,-457.23 650.13,-462.98"/>
+<text text-anchor="middle" x="423.69" y="-454.8" font-family="Times,serif" font-size="14.00">located_in</text>
+</g>
+<!-- Protein(10)&#45;&gt;BioProc(4) -->
+<g id="edge27" class="edge">
+<title>Protein(10)&#45;&gt;BioProc(4)</title>
+<path fill="none" stroke="blue" d="M241.56,-425.47C271.64,-423.3 311.07,-420.47 346.01,-418 423.05,-412.56 442.19,-408.87 519.37,-406 565.13,-404.3 617.04,-404.13 655.41,-404.34"/>
+<text text-anchor="middle" x="423.69" y="-420.8" font-family="Times,serif" font-size="14.00">participates_in</text>
+</g>
+<!-- Protein(10)&#45;&gt;Enzyme(177) -->
+<g id="edge24" class="edge">
+<title>Protein(10)&#45;&gt;Enzyme(177)</title>
+<path fill="none" stroke="black" d="M201.25,-410.93C212.22,-388.56 233.36,-350.31 260.35,-325 292.48,-294.88 338.24,-274.02 372.99,-261.34"/>
+<text text-anchor="middle" x="294.18" y="-327.8" font-family="Times,serif" font-size="14.00">is_a</text>
+</g>
+<!-- Protein(10)&#45;&gt;ProtDomain(14) -->
+<g id="edge22" class="edge">
+<title>Protein(10)&#45;&gt;ProtDomain(14)</title>
+<path fill="none" stroke="black" d="M196.32,-410.83C203.16,-378.06 221.51,-308.34 260.35,-264 288.1,-232.33 331.28,-211.9 366.13,-199.61"/>
+<text text-anchor="middle" x="294.18" y="-266.8" font-family="Times,serif" font-size="14.00">has_domain</text>
+</g>
+<!-- Protein(10)&#45;&gt;Publication(2) -->
+<g id="edge28" class="edge">
+<title>Protein(10)&#45;&gt;Publication(2)</title>
+<path fill="none" stroke="black" d="M194.84,-410.75C201.84,-353.84 232.22,-180.91 346.01,-139 452.26,-99.87 587.64,-124.82 660.26,-143.66"/>
+<text text-anchor="middle" x="423.69" y="-141.8" font-family="Times,serif" font-size="14.00">pub_in</text>
+</g>
+<!-- Protein(10)&#45;&gt;Gene(8) -->
+<g id="edge18" class="edge">
+<title>Protein(10)&#45;&gt;Gene(8)</title>
+<path fill="none" stroke="black" d="M192.38,-410.94C191.74,-362.64 196.22,-228.56 260.35,-146 356.77,-21.88 575.63,-54.32 668.69,-75.04"/>
+<text text-anchor="middle" x="423.69" y="-83.8" font-family="Times,serif" font-size="14.00">enc</text>
+</g>
+<!-- Protein(10)&#45;&gt;EC(15) -->
+<g id="edge16" class="edge">
+<title>Protein(10)&#45;&gt;EC(15)</title>
+<path fill="none" stroke="black" d="M193.57,-410.89C196.2,-342.82 209.02,-103.63 260.35,-52 291.37,-20.8 343.56,-16.23 380.37,-17.57"/>
+<text text-anchor="middle" x="294.18" y="-54.8" font-family="Times,serif" font-size="14.00">cat_c</text>
+</g>
+<!-- Protein(10)&#45;&gt;Protein(7) -->
+<g id="edge20" class="edge">
+<title>Protein(10)&#45;&gt;Protein(7)</title>
+<path fill="none" stroke="black" d="M195.06,-446.98C201.83,-502.21 224.76,-668.05 260.35,-707 281.78,-730.44 298.69,-717.8 328.01,-730 349.02,-738.74 371.89,-750.04 389.89,-759.37"/>
+<text text-anchor="middle" x="294.18" y="-760.8" font-family="Times,serif" font-size="14.00">h_s_s(&lt;=5)</text>
+<text text-anchor="middle" x="294.18" y="-746.8" font-family="Times,serif" font-size="14.00">ortho(&lt;=5)</text>
+<text text-anchor="middle" x="294.18" y="-732.8" font-family="Times,serif" font-size="14.00">xref(&lt;=8)</text>
+</g>
+<!-- Protein(10)&#45;&gt;ProtDomain(11) -->
+<g id="edge21" class="edge">
+<title>Protein(10)&#45;&gt;ProtDomain(11)</title>
+<path fill="none" stroke="blue" d="M217.24,-444.79C229.77,-452.49 245.51,-461.47 260.35,-468 297.26,-484.24 340.97,-497.66 373.72,-506.65"/>
+<text text-anchor="middle" x="294.18" y="-494.8" font-family="Times,serif" font-size="14.00">has_domain</text>
+</g>
+<!-- Protein(10)&#45;&gt;EC(12) -->
+<g id="edge15" class="edge">
+<title>Protein(10)&#45;&gt;EC(12)</title>
+<path fill="none" stroke="blue" d="M204.46,-446.54C216.7,-464.22 237.45,-491.49 260.35,-510 302.54,-544.09 360.54,-570.48 394.58,-584.3"/>
+<text text-anchor="middle" x="294.18" y="-555.8" font-family="Times,serif" font-size="14.00">cat_c</text>
+</g>
+<!-- Protein(10)&#45;&gt;Gene(9) -->
+<g id="edge17" class="edge">
+<title>Protein(10)&#45;&gt;Gene(9)</title>
+<path fill="none" stroke="blue" d="M211.5,-412.35C224.55,-401.17 242.76,-386.59 260.35,-376 303.94,-349.76 358.78,-327.43 392.26,-314.88"/>
+<text text-anchor="middle" x="294.18" y="-378.8" font-family="Times,serif" font-size="14.00">enc</text>
+</g>
+<!-- Protein(10)&#45;&gt;Protein(10) -->
+<g id="edge19" class="edge">
+<title>Protein(10)&#45;&gt;Protein(10)</title>
+<path fill="none" stroke="blue" d="M178.04,-446.41C175.44,-456.09 180.08,-465 191.97,-465 203.85,-465 208.49,-456.09 205.89,-446.41"/>
+<text text-anchor="middle" x="191.97" y="-495.8" font-family="Times,serif" font-size="14.00">h_s_s(&lt;=5)</text>
+<text text-anchor="middle" x="191.97" y="-481.8" font-family="Times,serif" font-size="14.00">ortho(&lt;=5)</text>
+<text text-anchor="middle" x="191.97" y="-467.8" font-family="Times,serif" font-size="14.00">xref(&lt;=8)</text>
+</g>
+<!-- Enzyme(17) -->
+<g id="node21" class="node">
+<title>Enzyme(17)</title>
+<ellipse fill="none" stroke="black" cx="423.69" cy="-709" rx="53.63" ry="18"/>
+<text text-anchor="middle" x="423.69" y="-704.8" font-family="Times,serif" font-size="14.00">Enzyme(17)</text>
+</g>
+<!-- Protein(10)&#45;&gt;Enzyme(17) -->
+<g id="edge25" class="edge">
+<title>Protein(10)&#45;&gt;Enzyme(17)</title>
+<path fill="none" stroke="blue" d="M192.28,-447.18C191.64,-491.98 196.54,-608.5 260.35,-670 268.78,-678.12 331.18,-691.52 376.1,-700.3"/>
+<text text-anchor="middle" x="294.18" y="-692.8" font-family="Times,serif" font-size="14.00">is_a</text>
+</g>
+<!-- Enzyme(17)&#45;&gt;Reaction(188) -->
+<g id="edge30" class="edge">
+<title>Enzyme(17)&#45;&gt;Reaction(188)</title>
+<path fill="none" stroke="black" d="M474.39,-715.06C521.02,-720.74 591.19,-729.29 643.17,-735.63"/>
+<text text-anchor="middle" x="571.47" y="-734.8" font-family="Times,serif" font-size="14.00">ca_by</text>
+</g>
+<!-- Reaction(18) -->
+<g id="node22" class="node">
+<title>Reaction(18)</title>
+<ellipse fill="none" stroke="black" cx="712.87" cy="-686" rx="56.04" ry="18"/>
+<text text-anchor="middle" x="712.87" y="-681.8" font-family="Times,serif" font-size="14.00">Reaction(18)</text>
+</g>
+<!-- Enzyme(17)&#45;&gt;Reaction(18) -->
+<g id="edge29" class="edge">
+<title>Enzyme(17)&#45;&gt;Reaction(18)</title>
+<path fill="none" stroke="blue" d="M476.36,-704.86C527.72,-700.75 606.13,-694.47 658.18,-690.3"/>
+<text text-anchor="middle" x="571.47" y="-702.8" font-family="Times,serif" font-size="14.00">ca_by</text>
+</g>
+<!-- Reaction(18)&#45;&gt;Path(19) -->
+<g id="edge31" class="edge">
+<title>Reaction(18)&#45;&gt;Path(19)</title>
+<path fill="none" stroke="black" d="M769.21,-686C811.93,-686 870.39,-686 910.83,-686"/>
+<text text-anchor="middle" x="846.88" y="-688.8" font-family="Times,serif" font-size="14.00">part_of</text>
+</g>
+</g>
+</svg>

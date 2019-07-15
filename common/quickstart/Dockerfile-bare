@@ -1,0 +1,11 @@
+FROM andreptb/tomcat:7-jdk8
+
+# A base image, that prepares all the environment (OS, 3rd-party tools) to build/run Knetminer
+#
+RUN set -x \
+	&& apk add --no-cache maven nodejs-npm git libxml2-utils \
+	&& npm config set unsafe-perm true \
+	&& npm install bower gulp -g \
+	&& echo '{"allow_root":true}' > /root/.bowerrc
+
+#CMD [ "echo", "DO NOT RUN ME, This is a base image, used to build the Knetminer runtime" ]

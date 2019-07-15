@@ -1,3 +1,6 @@
+# Remember to issue cat .dockerignore-template .gitignore >.dockerignore
+# when you change .gitignore
+#
 .elasticbeanstalk
 *.iml
 .idea

@@ -4,22 +4,18 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
-  <display-name>KnetMiner API Web Service</display-name>
-
+  
+  <display-name>KnetMiner aratiny WS</display-name>
+	
+	<!-- This comes from the configurable data source and picks up the parameter below -->
 	<listener>
 		<!-- Picks the config file parameter, see the source -->
 		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
-	</listener>
-	
-	<!-- 
-		The default should work fine within the web container's home. 
-		However, this is also intended to be overridden in different ways, either via script replacement (in Docker),
-		or via mechanisms to provide an additional web.xml to the container (possible in Tomcat, already being done here
-		for Jetty, see test/resources). 
-	-->
+	</listener>   
+  
 	<context-param>
 		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>knetminer-config/data-source.xml</param-value>		
+		<param-value>file://${knetminer.configFile}</param-value>
 	</context-param>
-
+  
 </web-app>

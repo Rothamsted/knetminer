@@ -1,0 +1,31 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                            
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<properties>
+				<knetminer.dataSourceId>maizeknet</knetminer.dataSourceId>
+				<knetminer.specieName>Zea mays</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about: Zea mays</knetminer.appDescription>
+				<knetminer.appKeywords>maize, z.mays, knetminer</knetminer.appKeywords>
+				<knetminer.specieTaxId>4577</knetminer.specieTaxId>
+		
+				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
+				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
+				
+				<!--  true if you are providing a reference genome -->
+				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+		
+				<!-- 
+					The contents of client/release_notes.html take priority over this, so it doesn't really matter
+					if you define this property to override the default. We do it here just to recall this behaviour.
+				-->				
+				<knetminer.releaseNotesHtml></knetminer.releaseNotesHtml>
+						
+			</properties>
+		</profile>
+	</profiles>
+</settings>

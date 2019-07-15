@@ -13,8 +13,6 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-import com.brsanthu.googleanalytics.GoogleAnalytics;
-import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -32,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
+
+import com.brsanthu.googleanalytics.GoogleAnalytics;
+import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;

@@ -11,6 +11,6 @@ cd ../aratiny-ws
 #
 [ "$profiles" == "" ] || profiles="$profiles,"
 profiles="${profiles}console"
-mvn -P"$profiles" clean verify
+mvn -P"$profiles" $MAVEN_ARGS clean verify
 
 echo -e "\n\nService should have gone down now, but don't forget the client.\n"
