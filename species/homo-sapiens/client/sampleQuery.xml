@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Search Terms</description>
+		<term>"cell death" OR apoptosis</term>              
+	</query>
+	<query>
+		<name>Example 2</name>
+		<description>Gene View</description>
+		<term>Alzheimer OR Parkinson OR Heparin OR "cell death"</term>
+		<gene>APP</gene>
+		<gene>MAPT</gene>
+		<gene>PRNP</gene>
+	</query>
+	<query>
+		<name>Example 3</name>
+		<description>Evidence View</description>
+		<term>Alzheimer "cell death"</term>              
+	</query>
+	<query>
+		<name>Example 4</name>
+		<description>Map View</description>
+		<term>Parkinson "cell death"</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>12</chromosome>
+			<start>35000000</start>
+			<end>44000000</end>
+			<label>My QTL</label>
+		</region>              
+	</query>
+</sampleQueries>
