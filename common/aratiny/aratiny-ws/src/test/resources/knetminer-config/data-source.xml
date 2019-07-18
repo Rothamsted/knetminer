@@ -5,7 +5,7 @@
   
   <entry key="DataSourceName">${knetminer.dataSourceId}</entry>
 
-  <entry key="StateMachineFilePath">file://${knetminer.configDir}/SemanticMotifs.txt</entry>
+  <entry key="StateMachineFilePath">file:///${knetminer.configDir}/SemanticMotifs.txt</entry>
   
   <entry key="DataPath">${knetminer.dataDir}</entry>
   <entry key="DataFile">${knetminer.oxlFile}</entry>
