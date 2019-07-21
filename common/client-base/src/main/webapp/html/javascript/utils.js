@@ -723,6 +723,9 @@ function searchKeyword() {
             i--;
         }
     }
+    // remove spaces in each geneList entry
+    list= list.map(s => s.trim());
+    
 	var geneList_size= list.length;
 	//console.log("geneList_size= "+ geneList_size);
 
