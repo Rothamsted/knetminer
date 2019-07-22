@@ -381,3 +381,11 @@ While `Cose` layout uses a wider range of complex parameters which can be set as
   useMultitasking: true
  };
 ```
+
+
+### To build/package and test locally:
+- Install Node.js (https://nodejs.org/en/download/) & NPM
+- Install Git (https://git-scm.com/)
+- Install bower: `npm install -g bower`
+- Install gulp: `npm install -g gulp`
+- Note: Our test environment uses `npm 6.1.0 , bower 1.8.4, gulp 1.8.4`, but newer versions of bower/gulp should work too. 
