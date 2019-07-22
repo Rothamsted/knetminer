@@ -2,11 +2,11 @@
 # Installation Guide
 
 ### First time install
-- Install Node.js (https://nodejs.org/en/download/)
+- Install Node.js (https://nodejs.org/en/download/) & NPM
 - Install Git (https://git-scm.com/)
 - Install bower: `npm install -g bower`
 - Install gulp: `npm install -g gulp`
-
+- Note: Our test environment uses `npm 6.1.0 , bower 1.8.4, gulp 1.8.4`, but newer versions of bower/gulp should work too. 
 
 ### Building the compressed and minified files
 
@@ -59,8 +59,10 @@ By default the chart will size to fit the containing element.
 
 The chart will then need to be drawn by creating a GeneMap object and calling the .draw() method:
 
-	var chart = GENEMAP.GeneMap();
+	var chart = GENEMAP.GeneMap({api_url: 'http://my.server:8080/server-example/arabidopsis/'});
 	chart.draw("#map", basemapPath, annotationsPath);
+
+**Note:** the `api_url` parameter is used to tell GeneMap how to construct URLs to send new queries to KnetMiner. It should include the full server method, name and port (`http://my.server:8080`), webapp (`server-example`), and datasource name (`arabidopsis` in this example). Omitting it will not break GeneMap but some KnetMiner-specific tasks may fail.
 
 The `basemapPath` and `annotationsPath` variable need to include a path to the basemap and annotations XML files that you want to draw on the chart. The annotationPath is optional and doesn't have to be supplied.
 
@@ -87,4 +89,9 @@ There are a limited number of rendering options available on the chart object, t
  - Check the head contains the `<meta charset="UTF-8">` tag as d3 uses UTF8.
 
 ## To test Genomap.js:
-After running, ```npm install```, ```bower install``` and ```gulp optimise``` in /GeneMap directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
+After running, ```npm install```, ```bower install``` and ```gulp optimise``` in genomap.js directory, run ```gulp serve-dev``` and navigate to <http://localhost:8080/index.html> to run the demo page.
+
+
+
+**IMP:** If `bower` install throws npm error, add: `npm config set unsafe-perm true` before doing: `npm install bower gulp -g`.
+
