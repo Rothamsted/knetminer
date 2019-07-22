@@ -15,64 +15,39 @@
      }
 //console.log("evidencesArr: "+ evidencesArr);
 
-  var evidences_Summary= new Array();
+  var con_legend= new Map();
   // Iterate through evidences and get counts for each evidence Concept Type.
   evidencesArr.forEach(function(evi) {
       var row_values= evi.trim().split("||");
       row_values.forEach(function(rv) {
-//console.log("\t \t row_value: "+ rv);
-          //var evidence_elements= rv.trim().split("//");
-//console.log("\t \t \t evidence_elements: "+ evidence_elements);
-          // add to Array evidence_elements[0] & length-1
-          //var conType= evidence_elements[0].trim();
-          //var conCount= evidence_elements.length-1;
-        //  console.log("\t type: "+ conType +", count: "+ conCount);
           var conType= rv.trim().split("__")[0].trim();
-          var conCount= rv.trim().split("__")[1].trim();
-          var knet_nodes= rv.trim().split("__")[2].trim();
-          for(var k=0; k < knet_nodes.length; k++) {
-              var type_evi= conType +"|"+ knet_nodes[k].trim();
-              //console.log("\t \t type_evi: "+ type_evi);
-              
-              if(!evidences_Summary.includes(type_evi)) {
-                 evidences_Summary.push(type_evi);
-            //	 console.log("\t \t \t New/unique type_evi: "+ type_evi +" Saved!");
-                }
-             }
+          var conCount= Number(rv.trim().split("__")[1].trim());
+          // check/add unique concept types to Map
+          if(con_legend.has(conType)) {
+             // update if this count is greater than old, stored count
+             var old_count= con_legend.get(conType);
+             if(Number(conCount) > Number(old_count)) { con_legend.set(conType, conCount); }
+            }
+          else { // add new conType to Map
+              con_legend.set(conType, conCount);
+          }
         });
      });
-//console.log("evidences_Summary: "+ evidences_Summary);
-
-   var evidence_Types= {}; // new Object();
-  // For each line in evidences_Summary array, split by |, take cell 0 (type) and store with count.
-  evidences_Summary.forEach(function(evidence) {
-	var evidenceType= evidence.split("|")[0].trim();
-//	console.log("evidence_Types["+evidenceType+"]: "+ evidence_Types[evidenceType]);
-	if(evidenceType in evidence_Types) { // increment count
-	   var eviCount= evidence_Types[evidenceType] + 1;
-	   evidence_Types[evidenceType]= eviCount;
-	   //console.log("\t"+ evidenceType +", count= "+ evidence_Types[evidenceType]);
-	  }
-	  else { // add
-	   evidence_Types[evidenceType]= 1; // new entry
-	   //console.log("\t"+ evidenceType +" Added...; count="+ evidence_Types[evidenceType]);
-	  }
-  });
-//console.log("Legend>> evidence_Types: "+ JSON.stringify(evidence_Types));
 
   // Display evidence icons with count and name in legend.
   //var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
   var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
   var summaryText = '';
-  for(var key in evidence_Types){
+  con_legend.forEach(function(value, key, map) {
       var contype= key.trim();
-	  if (key !== "Trait") {
-	      summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="'+key+'"></div>'+evidence_Types[key]+'</div>';
-		 }
-	  else { // For Trait, display tooltip text as GWAS instead.
-	    summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="GWAS"></div>'+evidence_Types[key]+'</div>';
-	   }
+      console.log("key, value: "+ key +", "+ value);
+      if (key !== "Trait") {
+          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="'+key+'"></div>'+value+'</div>';
 	 }
+      else { // For Trait, display tooltip text as GWAS instead.
+          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="GWAS"></div>'+value+'</div>';
+	 }
+  });
 
   legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
   return legend;
