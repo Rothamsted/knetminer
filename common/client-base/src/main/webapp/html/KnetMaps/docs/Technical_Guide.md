@@ -1,5 +1,12 @@
 # Technical Guide
 
+### To build/package and test locally:
+- Install Node.js (https://nodejs.org/en/download/) & NPM
+- Install Git (https://git-scm.com/)
+- Install bower: `npm install -g bower`
+- Install gulp: `npm install -g gulp`
+- Note: Our test environment uses `npm 6.1.0 , bower 1.8.4, gulp 1.8.4`, but newer versions of bower/gulp should work too. 
+
 **KnetMaps** is a web application that uses cytoscapeJS, jQuery and other javascript libraries to visualize network graphs and allow users to interact with them. It accepts a JSON dataset from the user as input and visualizes it within a container on your web page.
 
 ### **KnetMaps** components
@@ -381,3 +388,10 @@ While `Cose` layout uses a wider range of complex parameters which can be set as
   useMultitasking: true
  };
 ```
+
+### To build/package and test locally:
+- Install Node.js (https://nodejs.org/en/download/) & NPM
+- Install Git (https://git-scm.com/)
+- Install bower: `npm install -g bower`
+- Install gulp: `npm install -g gulp`
+- Note: Our test environment uses `npm 6.1.0 , bower 1.8.4, gulp 1.8.4`, but newer versions of bower/gulp should work too. 
