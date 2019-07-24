@@ -1,6 +1,6 @@
  /*
   * Function to create interactive legend as summary for Gene View evidences.
-  * @returns interactive Gene View summary legend <div>
+  * @returns interactive Gene View summary legend <div> for filtering
   */
  function getInteractiveSummaryLegend(GeneView_fullText) {
   var evidences_rows= GeneView_fullText.split("\n");
@@ -49,7 +49,7 @@
 	 }
   });
 
-  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
+  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
   return legend;
  }
 
