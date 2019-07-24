@@ -1232,7 +1232,7 @@ function createGenesTable(text, keyword, rows) {
     });
 
     /*
-     * Revert Evidence Filtering changes
+     * Revert Evidence Filtering changes on Gene View table
      */
     $("#revertGeneView").click(function (e) {
         createGenesTable(text, keyword, $("#numGenes").val()); // redraw table
@@ -1309,9 +1309,14 @@ function createEvidenceTable(text, keyword) {
     $('#evidenceTable').html("<p>No evidence found.</p>");
     var evidenceTable = text.split("\n");
     if (evidenceTable.length > 2) {
+        // Evidence View: interactive legend for evidences.
+        var evi_legend= getEvidencesLegend(text);
+        
         table = '';
         table = table + '<p></p>';
-        table = table + '<div id="evidenceSummary1" class="evidenceSummary"></div>';
+        //table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
+        // display dynamic Evidence Summary legend above Evidence View.
+        table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
         table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
         table = table + '<table id="tablesorterEvidence" class="tablesorter">';
         table = table + '<thead>';
@@ -1363,12 +1368,12 @@ function createEvidenceTable(text, keyword) {
             }
 
             table = table + '</tr>';
-            //Calculates the summary box
-            if (containsKey(values[0], summaryArr)) {
+            //Calculates the summary box; OLD
+          /*  if (containsKey(values[0], summaryArr)) {
                 summaryArr[values[0]] = summaryArr[values[0]] + 1;
             } else {
                 summaryArr[values[0]] = 1;
-            }
+            }*/
         }
         table = table + '</tbody>';
         table = table + '</table>';
@@ -1412,7 +1417,7 @@ function createEvidenceTable(text, keyword) {
             var evi_userGenes = values[5].trim(); // user gene(s) provided
             evidencePath(values[7], evi_userGenes.split(","));
         });
-
+        
         $("#tablesorterEvidence").tablesorter({
             // sort by score in descending order if with keywords, or p-value ascending if without keywords
 			/* ToDo: replace $('#without').prop('checked') logic for p-value sorter with $("#keywords").val()='' check */
@@ -1426,14 +1431,30 @@ function createEvidenceTable(text, keyword) {
             }
         });
 
-        //Shows the evidence summary box
+        /*
+         * Revert filtering changes on Evidence View table
+         */
+        $("#revertEvidenceView").click(function (e) {
+            createEvidenceTable(text, keyword); // redraw table
+        });
+        
+        $("#revertEvidenceView").mouseenter(function (e) {
+            $("#revertEvidenceView").removeClass('unhover').addClass('hover');
+        });
+        
+        $("#revertEvidenceView").mouseout(function (e) {
+            $("#revertEvidenceView").removeClass('hover').addClass('unhover');
+        });
+
+    /*    //Shows the evidence summary box
         for (key in summaryArr) {
             var contype = key.trim();
-            summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + ' title="' + key + '"></div>' + summaryArr[key] + '</div>';
+            summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterEvidenceTableByType("'+contype+'"); title="' + key + '"></div>' + summaryArr[key] + '</div>';
         }
+        summaryText = summaryText + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
 
         // display dynamic Evidence Summary legend above Evidence View.
-        $("#evidenceSummary1").html(summaryText);
+        $("#evidenceSummary1").html(summaryText); */
     }
 }
 
