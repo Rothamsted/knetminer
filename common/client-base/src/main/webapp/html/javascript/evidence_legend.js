@@ -43,7 +43,7 @@
   * Filter visible Evidence View table by selected Concept Type (from legend)
   */
  function filterEvidenceTableByType(key) {
-  console.log("Evidence View legend: filterEvidenceTableByType= "+ key);
+  //console.log("Evidence View legend: filterEvidenceTableByType= "+ key);
   // Check which Tab user is on: Gene View or Evidence View
   try {
       // disable clicked button
@@ -62,12 +62,12 @@
 		  var evType= ev_cells.item(1).innerHTML; // Evidences
 		  if(!evType.includes(key)) {
                       // if evidences of this type are shown, hide those table rows.
-                      console.log("\t HIDE: evType: "+ evType);
+                      //console.log("\t HIDE: evType: "+ evType);
                       currentRow.style.display= 'none';
 		    }
                   else { // Else, show them to allow users to visualize multiple evidence types together
                       if (currentRow.style.display === 'none') {
-                          console.log("\t SHOW: evType: "+ evType);
+                          //console.log("\t SHOW: evType: "+ evType);
 			  currentRow.style.display= 'table-row';
                          }
                     }

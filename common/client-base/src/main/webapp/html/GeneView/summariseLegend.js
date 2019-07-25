@@ -55,7 +55,7 @@
   * Filter visible table by selected Concept Type
   */
  function filterTableByType(key) {
-  console.log("filterGeneTableByType: "+ key);
+  //console.log("filterGeneTableByType: "+ key);
   // Check which Tab user is on: Gene View or Evidence View
   if ($('#resultsTable').css('display') === 'block') {
 //      $("#loadingDiv_GeneView").css("display","block"); // notify
