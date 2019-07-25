@@ -65,6 +65,8 @@
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
 		<!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
+        <!-- interactive Legend for Evidence View -->
+        <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->

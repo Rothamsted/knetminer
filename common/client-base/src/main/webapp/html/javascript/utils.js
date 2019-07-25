@@ -860,14 +860,13 @@ function searchKeyword() {
                     createEvidenceTable(data.evidenceTable, keyword);
 					// show linked/unlinked genes checkboxes only if a gene list was provided by the user
                     if(geneList_size > 0) {
-                    	//console.log("show checkboxes...");
                        $('#selectUser').show();
                       }
                       else { $('#selectUser').hide(); }
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
-			 //console.log("search>> success>> remove spinner...");
+			 //console.log("search: success; remove spinner...");
             });
     }
 }
@@ -880,11 +879,10 @@ function searchKeyword() {
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-	//console.log("network>> start loading div...");
 	
 	// Show loading spinner on 'tabviewer' div
 	activateSpinner("#tabviewer");
-	//console.log("network>> start spinner...");
+	//console.log("network: start spinner...");
  
     $.post({
         url: url,
@@ -911,7 +909,6 @@ function generateCyJSNetwork(url, requestParams) {
 					knetmaps.drawRaw('#knet-maps', data.graph);
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-					//console.log("network>> remove loading div...");
 				   }
 				catch (err) {
 					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
@@ -931,7 +928,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     //var cb_list = document.checkbox_form.candidates;
     var cb_list = $("input[name=candidates");
     var cb_list_len = cb_list.length;
-    //console.log("cb_list length= "+ cb_list_len);
     for (var i = 0; i < cb_list_len; i++) {
         if (cb_list[i].checked) {
             candidatelist.push(cb_list[i].value);
@@ -1139,16 +1135,12 @@ function createGenesTable(text, keyword, rows) {
 				var evidences = values_evidence.split("||");
                 for (var count_i = 0; count_i < evidences.length; count_i++) {
                     //Shows the icons
-				//console.log("evidences["+count_i+"]: "+ evidences[count_i]);
                     //var evidence_elements = evidences[count_i].split("//");
                     var evidence_elements = evidences[count_i].split("__");
-				//console.log("evidence_elements: "+ evidence_elements);
 					var evidence_cc= evidence_elements[0];
 					var evidence_size= evidence_elements[1];
 					var evidences_nodes= evidence_elements[2].split("//");
 					//console.log("evidence_cc: "+ evidence_cc);
-				//console.log("evidence_size: "+ evidence_size);
-				//console.log("evidences_nodes: "+ evidences_nodes);
                     evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_cc + '" title="' + evidence_cc + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_cc + '">' + evidence_size + '</span>';
                     //Builds the evidence box
                     evidence = evidence + '<div id="evidence_box_' + values[1].replace(".", "_") + evidence_cc + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + values[1].replace(".", "_") + evidence_cc + '></span>';
@@ -1232,7 +1224,7 @@ function createGenesTable(text, keyword, rows) {
     });
 
     /*
-     * Revert Evidence Filtering changes
+     * Revert Evidence Filtering changes on Gene View table
      */
     $("#revertGeneView").click(function (e) {
         createGenesTable(text, keyword, $("#numGenes").val()); // redraw table
@@ -1309,9 +1301,14 @@ function createEvidenceTable(text, keyword) {
     $('#evidenceTable').html("<p>No evidence found.</p>");
     var evidenceTable = text.split("\n");
     if (evidenceTable.length > 2) {
+        // Evidence View: interactive legend for evidences.
+        var evi_legend= getEvidencesLegend(text);
+        
         table = '';
         table = table + '<p></p>';
-        table = table + '<div id="evidenceSummary1" class="evidenceSummary"></div>';
+        //table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
+        // display dynamic Evidence Summary legend above Evidence View.
+        table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
         table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
         table = table + '<table id="tablesorterEvidence" class="tablesorter">';
         table = table + '<thead>';
@@ -1363,12 +1360,12 @@ function createEvidenceTable(text, keyword) {
             }
 
             table = table + '</tr>';
-            //Calculates the summary box
-            if (containsKey(values[0], summaryArr)) {
+            //Calculates the summary box; OLD
+          /*  if (containsKey(values[0], summaryArr)) {
                 summaryArr[values[0]] = summaryArr[values[0]] + 1;
             } else {
                 summaryArr[values[0]] = 1;
-            }
+            }*/
         }
         table = table + '</tbody>';
         table = table + '</table>';
@@ -1412,7 +1409,7 @@ function createEvidenceTable(text, keyword) {
             var evi_userGenes = values[5].trim(); // user gene(s) provided
             evidencePath(values[7], evi_userGenes.split(","));
         });
-
+        
         $("#tablesorterEvidence").tablesorter({
             // sort by score in descending order if with keywords, or p-value ascending if without keywords
 			/* ToDo: replace $('#without').prop('checked') logic for p-value sorter with $("#keywords").val()='' check */
@@ -1426,14 +1423,30 @@ function createEvidenceTable(text, keyword) {
             }
         });
 
-        //Shows the evidence summary box
+        /*
+         * Revert filtering changes on Evidence View table
+         */
+        $("#revertEvidenceView").click(function (e) {
+            createEvidenceTable(text, keyword); // redraw table
+        });
+        
+        $("#revertEvidenceView").mouseenter(function (e) {
+            $("#revertEvidenceView").removeClass('unhover').addClass('hover');
+        });
+        
+        $("#revertEvidenceView").mouseout(function (e) {
+            $("#revertEvidenceView").removeClass('hover').addClass('unhover');
+        });
+
+    /*    //Shows the evidence summary box
         for (key in summaryArr) {
             var contype = key.trim();
-            summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + ' title="' + key + '"></div>' + summaryArr[key] + '</div>';
+            summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterEvidenceTableByType("'+contype+'"); title="' + key + '"></div>' + summaryArr[key] + '</div>';
         }
+        summaryText = summaryText + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
 
         // display dynamic Evidence Summary legend above Evidence View.
-        $("#evidenceSummary1").html(summaryText);
+        $("#evidenceSummary1").html(summaryText); */
     }
 }
 

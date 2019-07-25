@@ -1,10 +1,9 @@
  /*
   * Function to create interactive legend as summary for Gene View evidences.
-  * @returns interactive Gene View summary legend <div>
+  * @returns interactive Gene View summary legend <div> for filtering
   */
  function getInteractiveSummaryLegend(GeneView_fullText) {
   var evidences_rows= GeneView_fullText.split("\n");
-//console.log("getInteractiveSummaryLegend()>> evidences_rows: "+ evidences_rows);
 
   var evidencesArr= new Array();
   for(var i=1; i < evidences_rows.length-1; i++) {
@@ -13,7 +12,6 @@
          evidencesArr.push(evi_value);
         }
      }
-//console.log("evidencesArr: "+ evidencesArr);
 
   var con_legend= new Map();
   // Iterate through evidences and get counts for each evidence Concept Type.
@@ -40,7 +38,6 @@
   var summaryText = '';
   con_legend.forEach(function(value, key, map) {
       var contype= key.trim();
-      console.log("key, value: "+ key +", "+ value);
       if (key !== "Trait") {
           summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="'+key+'"></div>'+value+'</div>';
 	 }
@@ -49,7 +46,7 @@
 	 }
   });
 
-  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering/sorting changes">'+'</div>';
+  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
   return legend;
  }
 
@@ -58,7 +55,7 @@
   * Filter visible table by selected Concept Type
   */
  function filterTableByType(key) {
-  console.log("filterTableByType: "+ key);
+  console.log("filterGeneTableByType: "+ key);
   // Check which Tab user is on: Gene View or Evidence View
   if ($('#resultsTable').css('display') === 'block') {
 //      $("#loadingDiv_GeneView").css("display","block"); // notify
@@ -66,7 +63,6 @@
     //  $('#tablesorter').children('tbody');
 	  var gvTable= /*$('#tablesorter');*/ document.getElementById("tablesorter");
 	  var rowLength= gvTable.rows.length;
-//	  console.log("rows= "+ rowLength +", columns= "+ gvTable.rows[0].cells.length);
 	  for(var i=1; i < rowLength; i++) { // i=1 to skip title row
 	      var currentRow= gvTable.rows.item(i);
 	      // get cells of current row
@@ -75,7 +71,6 @@
 		  var gene_evidences= gv_cells.item(gv_cells.length-2).innerHTML; // Evidences
   	      // if this Accession doesn't have key in evidences, hide the row.
 		  if(!gene_evidences.includes(key)) {
-//		  console.log("gene_acc: "+ gene_acc +"; evidences: "+ gene_evidences);
 		     // hide row
 			 currentRow.style.display= 'none';
 		    }
