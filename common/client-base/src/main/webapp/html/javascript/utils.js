@@ -860,14 +860,13 @@ function searchKeyword() {
                     createEvidenceTable(data.evidenceTable, keyword);
 					// show linked/unlinked genes checkboxes only if a gene list was provided by the user
                     if(geneList_size > 0) {
-                    	//console.log("show checkboxes...");
                        $('#selectUser').show();
                       }
                       else { $('#selectUser').hide(); }
                 }
 			 // Remove loading spinner from 'search' div
 			 deactivateSpinner("#search");
-			 //console.log("search>> success>> remove spinner...");
+			 //console.log("search: success; remove spinner...");
             });
     }
 }
@@ -880,11 +879,10 @@ function searchKeyword() {
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-	//console.log("network>> start loading div...");
 	
 	// Show loading spinner on 'tabviewer' div
 	activateSpinner("#tabviewer");
-	//console.log("network>> start spinner...");
+	//console.log("network: start spinner...");
  
     $.post({
         url: url,
@@ -911,7 +909,6 @@ function generateCyJSNetwork(url, requestParams) {
 					knetmaps.drawRaw('#knet-maps', data.graph);
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-					//console.log("network>> remove loading div...");
 				   }
 				catch (err) {
 					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
@@ -931,7 +928,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     //var cb_list = document.checkbox_form.candidates;
     var cb_list = $("input[name=candidates");
     var cb_list_len = cb_list.length;
-    //console.log("cb_list length= "+ cb_list_len);
     for (var i = 0; i < cb_list_len; i++) {
         if (cb_list[i].checked) {
             candidatelist.push(cb_list[i].value);
@@ -1139,16 +1135,12 @@ function createGenesTable(text, keyword, rows) {
 				var evidences = values_evidence.split("||");
                 for (var count_i = 0; count_i < evidences.length; count_i++) {
                     //Shows the icons
-				//console.log("evidences["+count_i+"]: "+ evidences[count_i]);
                     //var evidence_elements = evidences[count_i].split("//");
                     var evidence_elements = evidences[count_i].split("__");
-				//console.log("evidence_elements: "+ evidence_elements);
 					var evidence_cc= evidence_elements[0];
 					var evidence_size= evidence_elements[1];
 					var evidences_nodes= evidence_elements[2].split("//");
 					//console.log("evidence_cc: "+ evidence_cc);
-				//console.log("evidence_size: "+ evidence_size);
-				//console.log("evidences_nodes: "+ evidences_nodes);
                     evidence = evidence + '<div class="evidence_item evidence_item_' + evidence_cc + '" title="' + evidence_cc + '" ><span class="dropdown_box_open" id="evidence_box_open_' + values[1].replace(".", "_") + evidence_cc + '">' + evidence_size + '</span>';
                     //Builds the evidence box
                     evidence = evidence + '<div id="evidence_box_' + values[1].replace(".", "_") + evidence_cc + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + values[1].replace(".", "_") + evidence_cc + '></span>';
