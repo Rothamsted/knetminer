@@ -182,9 +182,6 @@ public class OndexServiceProvider {
         graph = new MemoryONDEXGraph("OndexKB");
 
         loadOndexKBGraph(graphFileName);
-        // remove any pre-existing, visible, size and flagged attributes from concepts and relations
-        //removeOldAttributesFromKBGraph();
-        
         indexOndexGraph(graphFileName, dataPath);
 
         if ( gt == null ) gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
