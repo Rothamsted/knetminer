@@ -182,6 +182,9 @@ public class OndexServiceProvider {
         graph = new MemoryONDEXGraph("OndexKB");
 
         loadOndexKBGraph(graphFileName);
+        // remove any pre-existing, visible, size and flagged attributes from concepts and relations
+        //removeOldAttributesFromKBGraph();
+        
         indexOndexGraph(graphFileName, dataPath);
 
         if ( gt == null ) gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
@@ -205,7 +208,7 @@ public class OndexServiceProvider {
                 numGenesInGenome++;
             }
         }
-
+        
         // Write Stats about the created Ondex graph & its mappings to a file.
         log.info("Saving graph stats to " + dataPath);
         displayGraphStats(dataPath);
@@ -343,11 +346,68 @@ public class OndexServiceProvider {
             log.debug("Start Loading OndexKB Graph..." + filename);
             Parser.loadOXL ( filename, graph );
             log.debug("OndexKB Graph Loaded Into Memory");
+            
+            // remove any pre-existing, visible, size and flagged attributes from concepts and relations
+            removeOldAttributesFromKBGraph();
         } catch (Exception e) {
             log.error("Failed to load graph", e);
         }
     }
 
+    /**
+     * remove any pre-existing, visible, size and flagged attributes from concepts and relations
+     * 29-07-2019
+     */
+    private void removeOldAttributesFromKBGraph() {
+        try {
+             log.debug("Remove old 'visible' attributes from all concepts and relations...");
+             
+             AttributeName attVisible = graph.getMetaData().getAttributeName("visible");
+             AttributeName attSize = graph.getMetaData().getAttributeName("size");
+             AttributeName attFlagged = graph.getMetaData().getAttributeName("flagged");
+             
+           //  Set<ONDEXConcept> visibleConcepts = new LinkedList<> (graph.getConceptsOfAttributeName(attVisible));
+             Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
+             Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
+             Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
+             
+             Set<Integer> removeMe = new HashSet<>();
+             visibleConcepts.forEach(con -> removeMe.add(con.getId()));
+             sizedConcepts.forEach(con -> removeMe.add(con.getId()));
+             flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
+             for(Integer con : removeMe) {
+                 if(graph.getConcept(con).getAttribute(attVisible) != null) {
+                     graph.getConcept(con).deleteAttribute(attVisible);
+                 }
+                 if(graph.getConcept(con).getAttribute(attSize) != null) {
+                     graph.getConcept(con).deleteAttribute(attSize);
+                 }
+                 if(graph.getConcept(con).getAttribute(attFlagged) != null) {
+                     graph.getConcept(con).deleteAttribute(attFlagged);
+                 }
+             }
+             
+             // doing the same for relations
+             Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
+             Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
+             
+             Set<Integer> removeMe2 = new HashSet<>();
+             visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
+             sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
+             for(Integer rel : removeMe2) {
+                 if(graph.getRelation(rel).getAttribute(attVisible) != null) {
+                     graph.getRelation(rel).deleteAttribute(attVisible);
+                 }
+                 if(graph.getRelation(rel).getAttribute(attSize) != null) {
+                     graph.getRelation(rel).deleteAttribute(attSize);
+                 }
+             }
+             
+        } catch (Exception ex) {
+            log.error("Failed to remove pre-existing attributes from graph", ex);
+        }
+    }
+    
     /**
      * Indexes Ondex Graph
      */
