@@ -1352,12 +1352,12 @@ public class OndexServiceProvider {
             }
             //For each conceptName of the update list deletes and creates a new conceptName
             for (String ntc : namesToCreate.keySet()) {
-                if (!ntc.contains("</span>")) {
+//                if (!ntc.contains("</span>")) {
                     String newName = p.matcher(ntc).replaceAll(highlighter);
                     boolean isPref = namesToCreate.get(ntc);
                     concept.deleteConceptName(ntc);
                     concept.createConceptName(newName, isPref);
-                }
+//                }
             }
 
             // search in concept attributes
