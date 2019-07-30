@@ -400,8 +400,11 @@ public class OndexServiceProvider {
                  }
              }
              
-        } catch (Exception ex) {
-            log.error("Failed to remove pre-existing attributes from graph", ex);
+        } 
+        catch (Exception ex) 
+        {
+          log.warn ( "Failed to remove pre-existing attributes from graph: {}", ex.getMessage () );
+          log.trace ( "Failed to remove pre-existing attributes from graph, detailed exception follows", ex );
         }
     }
     
