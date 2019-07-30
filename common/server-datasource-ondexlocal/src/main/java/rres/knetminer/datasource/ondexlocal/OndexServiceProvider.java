@@ -2577,7 +2577,7 @@ public class OndexServiceProvider {
             // a HashMap to store the count for the number of values written
             // to the Synonym Table (for each Concept Type).
             Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
-
+            
             // search concept names
             String fieldNameCN = getFieldName("ConceptName", null);
             // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
