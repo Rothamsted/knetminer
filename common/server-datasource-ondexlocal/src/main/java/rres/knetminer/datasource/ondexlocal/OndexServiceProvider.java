@@ -641,6 +641,12 @@ public class OndexServiceProvider {
 
         String keyword = keywords;
 
+        //added to overcome double quotes issue
+        //if changing this, need to change genepage.jsp and evidencepage.jsp
+        keyword = keyword.replaceAll("^###|###$", "\"");
+        log.debug("Keyword is:"+ keyword);
+
+
         // creates the NOT list (list of all the forbidden documents)
         String NOTQuery = createsNotList(keyword);
         String crossTypesNotQuery = "";
@@ -1399,6 +1405,11 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
         
+
+        //added to overcome double quotes issue
+        //if changing this, need to change genepage.jsp and evidencepage.jsp
+        keyword = keyword.replaceAll("^###|###$", "\"");
+
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
