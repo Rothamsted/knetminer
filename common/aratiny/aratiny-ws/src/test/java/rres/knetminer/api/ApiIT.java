@@ -76,6 +76,11 @@ public class ApiIT
 		}
 	}
 	
+	/**
+	 * Using a property set by it, returns the current profile in use.
+	 * This is used by tests like {@link #blockingPseudoTest()} to establish
+	 * what to do.
+	 */
 	public static String getMavenProfileId ()
 	{
 		String neoPropType = "maven.profileId";

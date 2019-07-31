@@ -24,4 +24,10 @@
 	
 	<!-- This is for the new Neo4j-based graph traverser -->
 	<entry key = "knetminer.backend.configPath">${knetminer.neo4j.configFile}</entry>
+	
+	<!-- 
+		When enabled, the Cypher graph traverser reports some statistics about its interaction with Neo4j.
+		Probably you're not interested in this if you aren't a Knetminer developer.
+	-->
+	<entry key = "knetminer.backend.traverserPerformanceTrackingEnabled">true</entry>
 </properties>

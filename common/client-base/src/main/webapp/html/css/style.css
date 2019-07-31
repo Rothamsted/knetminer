@@ -410,6 +410,9 @@ table.tablesorter thead tr .header {
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
+        position: sticky;
+        top: 0;
+        z-index: 999;
 }
 table.tablesorter tbody td {
 	color:#3D3D3D;

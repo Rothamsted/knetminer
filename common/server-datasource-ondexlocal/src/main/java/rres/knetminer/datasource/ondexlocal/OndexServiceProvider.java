@@ -400,8 +400,11 @@ public class OndexServiceProvider {
                  }
              }
              
-        } catch (Exception ex) {
-            log.error("Failed to remove pre-existing attributes from graph", ex);
+        } 
+        catch (Exception ex) 
+        {
+          log.warn ( "Failed to remove pre-existing attributes from graph: {}", ex.getMessage () );
+          log.trace ( "Failed to remove pre-existing attributes from graph, detailed exception follows", ex );
         }
     }
     
@@ -640,6 +643,12 @@ public class OndexServiceProvider {
         Analyzer analyzer = new StandardAnalyzer();
 
         String keyword = keywords;
+
+        //added to overcome double quotes issue
+        //if changing this, need to change genepage.jsp and evidencepage.jsp
+        keyword = keyword.replaceAll("^###|###$", "\"");
+        log.debug("Keyword is:"+ keyword);
+
 
         // creates the NOT list (list of all the forbidden documents)
         String NOTQuery = createsNotList(keyword);
@@ -1346,12 +1355,12 @@ public class OndexServiceProvider {
             }
             //For each conceptName of the update list deletes and creates a new conceptName
             for (String ntc : namesToCreate.keySet()) {
-                if (!ntc.contains("</span>")) {
+//                if (!ntc.contains("</span>")) {
                     String newName = p.matcher(ntc).replaceAll(highlighter);
                     boolean isPref = namesToCreate.get(ntc);
                     concept.deleteConceptName(ntc);
                     concept.createConceptName(newName, isPref);
-                }
+//                }
             }
 
             // search in concept attributes
@@ -1399,6 +1408,11 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
         
+
+        //added to overcome double quotes issue
+        //if changing this, need to change genepage.jsp and evidencepage.jsp
+        keyword = keyword.replaceAll("^###|###$", "\"");
+
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
@@ -2634,7 +2648,7 @@ public class OndexServiceProvider {
             // a HashMap to store the count for the number of values written
             // to the Synonym Table (for each Concept Type).
             Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
-
+            
             // search concept names
             String fieldNameCN = getFieldName("ConceptName", null);
             // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
