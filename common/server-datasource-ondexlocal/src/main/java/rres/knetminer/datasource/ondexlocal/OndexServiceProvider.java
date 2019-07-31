@@ -128,12 +128,6 @@ public class OndexServiceProvider {
     HashMap<Integer, Set<Integer>> mapGene2QTL;
 
     /**
-     * Temp: map query genes to a score
-     */
-
-    HashMap<ONDEXConcept, Double> scoredCandidates;
-
-    /**
      * number of genes in genome
      */
     int numGenesInGenome;
@@ -739,81 +733,79 @@ public class OndexServiceProvider {
         return hit2score;
     }
 
-    public ArrayList<ONDEXConcept> getScoredGenes(Map<ONDEXConcept, Float> hit2score) throws IOException {
-        return new ArrayList<ONDEXConcept>(this.getScoredGenesMap(hit2score).keySet());
-    }
-
     public SortedMap<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
-        scoredCandidates = new HashMap<ONDEXConcept, Double>();
+        Map<ONDEXConcept, Double> scoredCandidates = new HashMap<ONDEXConcept, Double>();
         ValueComparator<ONDEXConcept> comparator = new ValueComparator<ONDEXConcept>(scoredCandidates);
         TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
 
         log.info("total hits from lucene: " + hit2score.keySet().size());
 
-        // 1st step: create map of genes to concepts that contain query terms
-        mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
-        for (ONDEXConcept c : hit2score.keySet()) {
+        synchronized (this) {
+            // 1st step: create map of genes to concepts that contain query terms
+            mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
+            for (ONDEXConcept c : hit2score.keySet()) {
 
-            // hit concept not connected via valid path to any gene
-            if (!mapConcept2Genes.containsKey(c.getId())) {
-                continue;
-            }
-            Set<Integer> genes = mapConcept2Genes.get(c.getId());
-            for (int geneId : genes) {
-                if (!mapGene2HitConcept.containsKey(geneId)) {
-                    mapGene2HitConcept.put(geneId, new HashSet<Integer>());
+                // hit concept not connected via valid path to any gene
+                if (!mapConcept2Genes.containsKey(c.getId())) {
+                    continue;
                 }
+                Set<Integer> genes = mapConcept2Genes.get(c.getId());
+                for (int geneId : genes) {
+                    if (!mapGene2HitConcept.containsKey(geneId)) {
+                        mapGene2HitConcept.put(geneId, new HashSet<Integer>());
+                    }
 
-                mapGene2HitConcept.get(geneId).add(c.getId());
+                    mapGene2HitConcept.get(geneId).add(c.getId());
+                }
             }
-        }
 
-        // 2nd step: calculate a score for each candidate gene
-        for (int geneId : mapGene2HitConcept.keySet()) {
+            // 2nd step: calculate a score for each candidate gene
+            for (int geneId : mapGene2HitConcept.keySet()) {
 
 // weighted sum of all evidence concepts
-            double weighted_evidence_sum = 0;
+                double weighted_evidence_sum = 0;
 
-            // iterate over each evidence concept and compute a weight that is composed of
-            // three components
-            for (int cId : mapGene2HitConcept.get(geneId)) {
+                // iterate over each evidence concept and compute a weight that is composed of
+                // three components
+                for (int cId : mapGene2HitConcept.get(geneId)) {
 
-                // relevance of search term to concept
-                float luceneScore = hit2score.get(graph.getConcept(cId));
+                    // relevance of search term to concept
+                    float luceneScore = hit2score.get(graph.getConcept(cId));
 
-                // specificity of evidence to gene
-                double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
+                    // specificity of evidence to gene
+                    double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
 
-                // inverse distance from gene to evidence
-                Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-						    if(path_length==null){
-						    	log.info("WARNING: Path length is null for: "+geneId + "//" + cId);
-						    }
-                double distance = path_length==null ? 0 : (1 / path_length);
+                    // inverse distance from gene to evidence
+                    Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
+                    if (path_length == null) {
+                        log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
+                    }
+                    double distance = path_length == null ? 0 : (1 / path_length);
 
-                // take the mean of all three components 
-                double evidence_weight =  (igf + luceneScore + distance) / 3;
+                    // take the mean of all three components
+                    double evidence_weight = (igf + luceneScore + distance) / 3;
 
-                // sum of all evidence weights
-                weighted_evidence_sum += evidence_weight;
+                    // sum of all evidence weights
+                    weighted_evidence_sum += evidence_weight;
+                }
+
+
+                // normalisation method 1: size of the gene knoweldge graph
+                // double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+
+                // normalistion method 2: size of matching evidence concepts only (mean score)
+                //double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
+
+
+                // No normalisation for now as it's too experimental.
+                // This meeans better studied genes will appear top of the list
+                double knetScore = /*normFactor * */ weighted_evidence_sum;
+
+                scoredCandidates.put(graph.getConcept(geneId), knetScore);
             }
 
-
-            	// normalisation method 1: size of the gene knoweldge graph
-            	// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
-		
-		// normalistion method 2: size of matching evidence concepts only (mean score)
-		//double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
-
-           	
-		// No normalisation for now as it's too experimental. 
-		// This meeans better studied genes will appear top of the list
-            double knetScore = /*normFactor * */ weighted_evidence_sum;
-
-            scoredCandidates.put(graph.getConcept(geneId), knetScore);
-        }
-
-        sortedCandidates.putAll(scoredCandidates);
+        }//end of synchronised block
+            sortedCandidates.putAll(scoredCandidates);
 
         return sortedCandidates;
     }
@@ -1770,7 +1762,7 @@ public class OndexServiceProvider {
      * @return
      */
     public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-                                     String keyword, int maxGenes, Hits hits, String listMode) {
+                                     String keyword, int maxGenes, Hits hits, String listMode,Map<ONDEXConcept, Double> scoredCandidates) {
         List<QTL> userQtl = new ArrayList<QTL>();
         for (String qtlStr : userQtlStr) {
             userQtl.add(QTL.fromString(qtlStr));
@@ -2164,7 +2156,7 @@ public class OndexServiceProvider {
      * @return
      */
     public String writeGeneTable(ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
-                                 String listMode) {
+                                 String listMode,Map<ONDEXConcept, Double> scoredCandidates) {
         List<QTL> qtls = new ArrayList<QTL>();
         for (String qtlStr : qtlsStr) {
             qtls.add(QTL.fromString(qtlStr));
@@ -2340,9 +2332,11 @@ public class OndexServiceProvider {
                 }
             }
 
-            // get lucene hits per gene
-            Set<Integer> luceneHits = mapGene2HitConcept.get(id);
-
+            Set<Integer> luceneHits = Collections.<Integer>emptySet();
+            synchronized (this) {
+                // get lucene hits per gene
+                luceneHits = mapGene2HitConcept.get(id);
+            }
             // organise by concept class
             HashMap<String, String> cc2name = new HashMap<String, String>();
 

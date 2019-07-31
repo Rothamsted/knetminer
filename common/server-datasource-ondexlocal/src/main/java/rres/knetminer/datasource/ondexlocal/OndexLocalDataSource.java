@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.HashMap;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -192,10 +193,12 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Search mode: " + response.getClass().getName());
 		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider, userGenes);
+		Map<ONDEXConcept, Double> geneMap = new HashMap<ONDEXConcept, Double>();
 		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class)) {
 			log.info("Genome or QTL response...");
 
-			genes = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+			geneMap = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+			genes.addAll(geneMap.keySet());
 			log.info("Number of genes: " + genes.size());
 
 			if (userGenes != null) {
@@ -233,8 +236,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			String xmlGViewer = "";
 			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
 				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
-						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode());
-
+						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap);
                                 // temporary...
                         /*        String genomaps_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_genomaps.xml").toString();
                                 this.ondexServiceProvider.writeResultsFile(genomaps_filename, xmlGViewer);
@@ -247,8 +249,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 			// Gene table file
 			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtl(),
-					request.getListMode());
-                        // temporary...
+					request.getListMode(),geneMap);                        // temporary...
                     /*    String gv_filename= Paths.get(this.getProperty("DataPath"), System.currentTimeMillis()+"_GeneTable.tab").toString();
                         this.ondexServiceProvider.writeResultsFile(gv_filename, geneTable); */
                                 
