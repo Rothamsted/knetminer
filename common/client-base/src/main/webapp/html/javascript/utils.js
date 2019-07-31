@@ -1316,7 +1316,7 @@ function createEvidenceTable(text, keyword) {
         var header = evidenceTable[0].split("\t");
         table = table + '<th width="60">Exclude</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
-        table = table + '<th width="212">' + header[1] + '</th>';
+        table = table + '<th width="212">DESCRIPTION</th>';
         table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78">' + header[3] + '</th>';
         table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
