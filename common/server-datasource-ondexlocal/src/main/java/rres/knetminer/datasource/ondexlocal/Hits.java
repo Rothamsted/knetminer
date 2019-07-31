@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +27,7 @@ public class Hits {
 	HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
 	int luceneDocumentsLinked;
 	int numConnectedGenes;
-	ArrayList<ONDEXConcept> sortedCandidates;
+	Map<ONDEXConcept, Double> sortedCandidates;
 	String keyword = "";
 	
 	
@@ -76,9 +77,9 @@ public class Hits {
 		return this.luceneConcepts;
 	}
 
-	public ArrayList<ONDEXConcept> getSortedCandidates(){
+	public Map<ONDEXConcept, Double> getSortedCandidates(){
 		try {
-			this.sortedCandidates = ondexProvider.getScoredGenes(luceneConcepts);
+			this.sortedCandidates = ondexProvider.getScoredGenesMap(luceneConcepts);
 		} 
 		catch (IOException e) {			
 			log.error("Candidate sorting failed", e);
