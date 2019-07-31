@@ -357,15 +357,20 @@ public class OndexServiceProvider {
              AttributeName attSize = graph.getMetaData().getAttributeName("size");
              AttributeName attFlagged = graph.getMetaData().getAttributeName("flagged");
              
-           //  Set<ONDEXConcept> visibleConcepts = new LinkedList<> (graph.getConceptsOfAttributeName(attVisible));
-             Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
-             Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
-             Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
-             
              Set<Integer> removeMe = new HashSet<>();
-             visibleConcepts.forEach(con -> removeMe.add(con.getId()));
-             sizedConcepts.forEach(con -> removeMe.add(con.getId()));
-             flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
+             if(graph.getConceptsOfAttributeName(attVisible) != null) {
+                 Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
+                 visibleConcepts.forEach(con -> removeMe.add(con.getId()));
+                }
+             if(graph.getConceptsOfAttributeName(attSize) != null) {
+                 Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
+                 sizedConcepts.forEach(con -> removeMe.add(con.getId()));
+                }
+             if(graph.getConceptsOfAttributeName(attFlagged) != null) {
+                 Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
+                 flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
+                }
+             
              for(Integer con : removeMe) {
                  if(graph.getConcept(con).getAttribute(attVisible) != null) {
                      graph.getConcept(con).deleteAttribute(attVisible);
@@ -379,12 +384,16 @@ public class OndexServiceProvider {
              }
              
              // doing the same for relations
-             Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
-             Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
-             
              Set<Integer> removeMe2 = new HashSet<>();
-             visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
-             sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
+             if(graph.getRelationsOfAttributeName(attVisible) != null) {
+                 Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
+                 visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
+                }
+             if(graph.getRelationsOfAttributeName(attSize) != null) {
+                 Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
+                 sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
+                }
+             
              for(Integer rel : removeMe2) {
                  if(graph.getRelation(rel).getAttribute(attVisible) != null) {
                      graph.getRelation(rel).deleteAttribute(attVisible);
