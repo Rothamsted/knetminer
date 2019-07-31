@@ -1,3 +1,8 @@
+<%
+// added to overcome double quotes issue
+String keywords = request.getParameter("keyword");
+keywords = keywords.replaceAll("^\"|\"$", "###");
+%>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/css/knetmaps.css"/>
@@ -17,7 +22,7 @@
             },
             dataType: "json",
             data: JSON.stringify({
-                keyword: "${keyword}",
+                keyword: "<%=keywords%>",
                 list: ${list}
             })
         }).success(function (data) {
