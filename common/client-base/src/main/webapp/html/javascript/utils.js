@@ -1317,9 +1317,9 @@ function createEvidenceTable(text, keyword) {
         table = table + '<th width="60">Exclude</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
         table = table + '<th width="212">' + header[1] + '</th>';
-        table = table + '<th width="78">' + header[2] + '</th>';
+        table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78">' + header[3] + '</th>';
-        table = table + '<th width="60">' + header[4] + '</th>';
+        table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
         table = table + '<th width="103">' + header[5] + '</th>';
         table = table + '</tr>';
         table = table + '</thead>';
@@ -1412,8 +1412,7 @@ function createEvidenceTable(text, keyword) {
         
         $("#tablesorterEvidence").tablesorter({
             // sort by score in descending order if with keywords, or p-value ascending if without keywords
-			/* ToDo: replace $('#without').prop('checked') logic for p-value sorter with $("#keywords").val()='' check */
-            sortList: [[$('#without').prop('checked')?4:3, $('#without').prop('checked')?0:1]],
+            sortList: [[$('#keywords').val()!=='' ? 3:4, $('#keywords').val()!=='' ? 1:0]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {
