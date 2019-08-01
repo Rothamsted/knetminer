@@ -191,6 +191,11 @@ $(function() { // on dom ready
        // Add relevant label visibility class
        if(conc.style('text-opacity') === '0') { conc.addClass('LabelOff'); }
        else { conc.addClass('LabelOn'); }
+       // show flagged gene's labels
+       if(conc.data('flagged') === 'true') {
+       	  conc.removeClass('LabelOff').addClass('LabelOn');
+       	  conc.style({'text-background-color': '#FFFF00'}).style({'text-background-opacity': '1'});
+       	 }
     });
     cy.edges().forEach(function( rel ) { // for relations
        // Add relevant Relation visibility class
