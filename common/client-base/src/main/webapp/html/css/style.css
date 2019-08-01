@@ -357,7 +357,7 @@ div#footer {
 */
 div.scrollTable {
 	width:100%;       /* table width will be 99% of this*/
-	max-height:/*400*/600px;    /* must be greater than tbody*/
+	max-height:/*400*/550px;    /* must be greater than tbody*/
 	overflow:auto;
 	margin:0 auto;
 }
