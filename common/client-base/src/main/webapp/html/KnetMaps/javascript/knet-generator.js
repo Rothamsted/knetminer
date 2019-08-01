@@ -166,6 +166,10 @@ KNETMAPS.Generator = function() {
         })
       .selector('.LabelOff').css({ // settings to show Label on node/ edge
               'text-opacity': '0'
+        })
+      .selector('.FlaggedGene').css({ // to show highlighed label on flagged gene
+              'text-background-color': '#FFFF00',
+              'text-background-opacity': '1'
         });
 
 // On startup
@@ -194,7 +198,7 @@ $(function() { // on dom ready
        // show flagged gene's labels
        if(conc.data('flagged') === 'true') {
        	  conc.removeClass('LabelOff').addClass('LabelOn');
-       	  conc.style({'text-background-color': '#FFFF00'}).style({'text-background-opacity': '1'});
+          conc.addClass('FlaggedGene');
        	 }
     });
     cy.edges().forEach(function( rel ) { // for relations
