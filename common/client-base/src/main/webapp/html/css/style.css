@@ -503,35 +503,35 @@ span.hint-big:hover {
 /* Evidence pictures */
 .evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font:12px Arial, Helvetica, sans-serif}
 .evidence_item_Gene {background:url(../image/Gene.png) no-repeat;padding-top:6px;height:16px;}
-.evidence_item_BioProc {background:url(../image/Bioogical_proccess.png) no-repeat;}
-.evidence_item_CelComp {background:url(../image/Cellular_component.png) no-repeat;}
-.evidence_item_Comp {background:url(../image/Compound.png) no-repeat;}
-.evidence_item_SNP {background:url(../image/Compound.png) no-repeat;}
-.evidence_item_Enzyme {background:url(../image/Enzyme.png) no-repeat;}
-.evidence_item_EC {background:url(../image/Enzyme_clasification.png) no-repeat;}
-.evidence_item_MolFunc {background:url(../image/Molecular_function.png) no-repeat;}
-.evidence_item_Path {background:url(../image/Pathway.png) no-repeat;}
-.evidence_item_Protein {background:url(../image/Protein.png) no-repeat;}
-.evidence_item_ProtDomain {background:url(../image/Protein_domain.png) no-repeat;}
-.evidence_item_Publication {background:url(../image/Publication.png) no-repeat;}
-.evidence_item_Reaction {background:url(../image/Reaction.png) no-repeat;}
-.evidence_item_Transport {background:url(../image/Transport.png) no-repeat;}
-.evidence_item_TO {background:url(../image/Trait_ontology.png) no-repeat;}
-.evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
-.evidence_item_Trait {background:url(../image/Trait.png) no-repeat;}
-.evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
-.evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
-.evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
-.evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
-.evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
+.evidence_item_BioProc {background:url(../image/Biological_Process.png) no-repeat;}
+.evidence_item_CelComp {background:url(../image/Cellular_Component.png) no-repeat;}
 .evidence_item_CoExpCluster {background:url(../image/CoExpCluster.png) no-repeat;}
 .evidence_item_CoExpStudy {background:url(../image/CoExpStudy.png) no-repeat;}
+.evidence_item_Comp {background:url(../image/Compound.png) no-repeat;}
+.evidence_item_DGES {background:url(../image/DGES.png) no-repeat;}
+.evidence_item_Disease {background:url(../image/Disease.png) no-repeat;}
+.evidence_item_Drug {background:url(../image/Drug.png) no-repeat;}
+.evidence_item_Enzyme {background:url(../image/Enzyme.png) no-repeat;}
+.evidence_item_EC {background:url(../image/Enzyme_Classification.png) no-repeat;}
+.evidence_item_MolFunc {background:url(../image/Molecular_Function.png) no-repeat;}
+.evidence_item_Path {background:url(../image/Pathway.png) no-repeat;}
+.evidence_item_Phenotype {background:url(../image/Phenotype.png) no-repeat;}
 .evidence_item_PlantOntologyTerm {background:url(../image/PlantOntologyTerm.png) no-repeat;}
+.evidence_item_Protein {background:url(../image/Protein.png) no-repeat;}
+.evidence_item_ProtDomain {background:url(../image/Protein_Domain.png) no-repeat;}
+.evidence_item_Publication {background:url(../image/Publication.png) no-repeat;}
+.evidence_item_QTL {background:url(../image/QTL.png) no-repeat;}
+.evidence_item_Reaction {background:url(../image/Reaction.png) no-repeat;}
+.evidence_item_Scaffold {background:url(../image/Scaffold.png) no-repeat;}
+.evidence_item_SNP {background:url(../image/Compound.png) no-repeat;}
 .evidence_item_SNPEffect {background:url(../image/SNPEffect.png) no-repeat;}
+.evidence_item_Trait {background:url(../image/Trait.png) no-repeat;}
+.evidence_item_TO {background:url(../image/Trait_Ontology.png) no-repeat;}
+.evidence_item_Transport {background:url(../image/Transport.png) no-repeat;}
 
 /* Preload the evidence pictures */
 body:after{
-	content:url(../image/Gene.png) url(../image/Bioogical_proccess.png) url(../image/Cellular_component.png) url(../image/Compound.png) url(../image/Enzyme.png) url(../image/Enzyme_clasification.png) url(../image/Molecular_function.png) url(../image/Pathway.png) url(../image/Protein.png) url(../image/Protein_domain.png) url(../image/Publication.png) url(../image/Reaction.png) url(../image/Transport.png) url(../image/Trait_ontology.png) url(../image/Phenotype.png)  url(../image/Trait.png) url(../image/Drug.png) url(../image/Disease.png) url(../image/DGES.png) url(../image/QTL.png) url(../image/Scaffold.png);
+	content:url(../image/Gene.png) url(../image/Biological_Process.png) url(../image/Cellular_Component.png) url(../image/CoExpCluster.png) url(../image/CoExpStudy.png) url(../image/Compound.png) url(../image/DGES.png) url(../image/Disease.png) url(../image/Drug.png) url(../image/Enzyme.png) url(../image/Enzyme_Classification.png) url(../image/Molecular_Function.png) url(../image/Pathway.png) url(../image/Phenotype.png) url(../image/PlantOntologyTerm.png) url(../image/Protein.png) url(../image/Protein_Domain.png) url(../image/Publication.png) url(../image/QTL.png) url(../image/Reaction.png) url(../image/Scaffold.png) url(../image/SNPEffect.png) url(../image/Trait.png) url(../image/Trait_Ontology.png) url(../image/Transport.png);
 	display:none;
 }
 
