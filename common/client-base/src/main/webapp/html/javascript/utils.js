@@ -878,6 +878,7 @@ function searchKeyword() {
  */
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
+    $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 	
 	// Show loading spinner on 'tabviewer' div
@@ -909,11 +910,12 @@ function generateCyJSNetwork(url, requestParams) {
 					knetmaps.drawRaw('#knet-maps', data.graph);
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
 				   }
 				catch (err) {
 					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
 					console.log(errorMsg);
-					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
+					//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 				   }
         });
 }
