@@ -13,9 +13,6 @@
 	<artifactId>aratiny-client</artifactId>
 	<packaging>war</packaging>
 
-	<properties>
-	</properties>
-
 	<dependencies>
 		<!-- 
 			This is used to setup CORS in the response. See:

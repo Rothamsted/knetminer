@@ -17,12 +17,10 @@ mydir="$(pwd)"
 
 # --- Command line parameters
 #
-# Where Knetminer applications takes dataset/specie specific configuration.
-knet_cfg_dir=${1:-/root/knetminer-config} 
 # Where the Tomcat server is installed.
-knet_tomcat_home=${2:-$CATALINA_HOME} 
+knet_tomcat_home=${1:-$CATALINA_HOME} 
 # If set, the 'tomcat' user in the Tomcat Manager application will be enabled with this password.  
-knet_tomcat_pwd="$3" 
+knet_tomcat_pwd="$2" 
 
 # --- Environment
 #
@@ -34,10 +32,7 @@ export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 # ---- Parameters/environment setup ends here
 #
 
-knet_web_dir="$knet_cfg_dir/web" # web-specific config
-
 echo -e "\n\n\tBuilding Knetminer\n"
-mkdir --parents "$knet_web_dir"
 
 # Move from the location of this script to the root of the Knetminer codebase 
 cd ../.. 
@@ -54,14 +49,10 @@ cd common/aratiny/aratiny-ws
 # Put it under Tomcat
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
-# The client's war stays in the configuration directory, linked under Tomcat. This will typically be a dataset/specie 
-# specific host volume. This way, the docker runtime script (runtime-helper.sh) can decide if the client has to be 
-# rebuilt (eg, based on dates, or user parameters).
-#
-ln -s -f "$knet_web_dir/client.war" "$knet_tomcat_home/webapps/client.war"
+# The client is rebuilt by the container, cause its files need to be instantiated with the dataset-specific settings. 
 
 
-# If the user has given $3 ($knet_tomcat_pwd), changes the default tomcat-users.xml by enabling the 
+# If the user has given ($knet_tomcat_pwd), changes the default tomcat-users.xml by enabling the 
 # 'tomcat' user with the given password. This Might be Useful during dev, to inspect the web server status
 # 
 if [ "$knet_tomcat_pwd" != '' ] && [ ! -e ./tomcat-users.xml.knetminer-bkp ]; then
