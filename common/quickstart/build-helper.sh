@@ -4,7 +4,7 @@
 # 
 # This is used in Dockerfile to build the main Knetminer image.
 # It builds a reference server application (aratiny-ws), which works with data and configuration read from
-# fixed directoried on the container file system. Later, the corresponding container can be run by mapping 
+# fixed directories on the container file system. Later, the corresponding container can be run by mapping 
 # those directories to host locations, via Docker volumes (see docker-run.sh).
 # 
 # This script is designed to build a fully-functional Knetminer distribution either on a Docker container or
