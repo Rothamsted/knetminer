@@ -80,7 +80,7 @@ cp -Rf "$knet_instance_dir/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-co
 # Eventually, go to the build place and do mvn test-compile. This creates interpolated config files (ie, 
 # all the placeholders are instantiated with the values in maven settings or in ancestor POMS).  
 cd /tmp/aratiny-ws
-# Also, note that this command DOESN'T rebuild the server app, it just preparse some files into target/
+# Also, note that this command DOESN'T rebuild the server app, it just prepares some files into target/
 mvn $MAVEN_ARGS --settings "$knet_cfg_dir/maven-settings.xml" clean test-compile
 # End eventually, deploy the instantiated config files
 cp -Rf target/test-classes/knetminer-config/* "$knet_cfg_dir"
