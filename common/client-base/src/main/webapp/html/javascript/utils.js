@@ -878,6 +878,7 @@ function searchKeyword() {
  */
 function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
+    $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 	
 	// Show loading spinner on 'tabviewer' div
@@ -909,11 +910,12 @@ function generateCyJSNetwork(url, requestParams) {
 					knetmaps.drawRaw('#knet-maps', data.graph);
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
 				   }
 				catch (err) {
 					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
 					console.log(errorMsg);
-					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
+					//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 				   }
         });
 }
@@ -1316,10 +1318,10 @@ function createEvidenceTable(text, keyword) {
         var header = evidenceTable[0].split("\t");
         table = table + '<th width="60">Exclude</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
-        table = table + '<th width="212">' + header[1] + '</th>';
-        table = table + '<th width="78">' + header[2] + '</th>';
+        table = table + '<th width="212">DESCRIPTION</th>';
+        table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78">' + header[3] + '</th>';
-        table = table + '<th width="60">' + header[4] + '</th>';
+        table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
         table = table + '<th width="103">' + header[5] + '</th>';
         table = table + '</tr>';
         table = table + '</thead>';
@@ -1341,7 +1343,14 @@ function createEvidenceTable(text, keyword) {
             table = table + '<td>' + values[2] + '</td>';
             table = table + '<td>' + values[3] + '</td>';
 
-            table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
+            // all genes
+            if(values[4] < 500) {
+                table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
+               }
+            else {
+                table = table + '<td>' + values[4] + '</td>';
+            }
+
 
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
             var userGenes = 0;
@@ -1352,7 +1361,12 @@ function createEvidenceTable(text, keyword) {
                     userGenes = values[5].split(",").length; // total user genes found
                 }
                 // launch evidence network using 'userGenes'.
-                table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes + '</a></td>';
+                if(userGenes < 500) {
+                    table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes + '</a></td>';
+                  }
+                else {
+                    table = table + '<td>' + userGenes + '</td>'; // user genes
+                }
             }
             else {
                 userGenes = 0;
@@ -1412,8 +1426,7 @@ function createEvidenceTable(text, keyword) {
         
         $("#tablesorterEvidence").tablesorter({
             // sort by score in descending order if with keywords, or p-value ascending if without keywords
-			/* ToDo: replace $('#without').prop('checked') logic for p-value sorter with $("#keywords").val()='' check */
-            sortList: [[$('#without').prop('checked')?4:3, $('#without').prop('checked')?0:1]],
+            sortList: [[$('#keywords').val()!=='' ? 3:4, $('#keywords').val()!=='' ? 1:0]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {

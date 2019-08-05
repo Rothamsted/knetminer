@@ -70,30 +70,30 @@ input.knetCon_Compound { border: none; width:22px; height:22px; background:url("
 input.knetCon_DGES { border: none; width:22px; height:22px; background:url("../img/DGES.png") }
 input.knetCon_Disease { border: none; width:22px; height:22px; background:url("../img/Disease.png") }
 input.knetCon_Drug { border: none; width:22px; height:22px; background:url("../img/Drug.png") }
-input.knetCon_Enzyme_Classification { border: none; width:22px; height:22px; background:url("../img/Enzyme Classification.png") }
 input.knetCon_Enzyme { border: none; width:22px; height:22px; background:url("../img/Enzyme.png") }
+input.knetCon_Enzyme_Classification { border: none; width:22px; height:22px; background:url("../img/Enzyme_Classification.png") }
 input.knetCon_Gene { border: none; width:22px; height:22px; background:url("../img/Gene.png") }
 input.knetCon_Molecular_Function { border: none; width:22px; height:22px; background:url("../img/Molecular_Function.png") }
 input.knetCon_Pathway { border: none; width:22px; height:22px; background:url("../img/Pathway.png") }
 input.knetCon_Phenotype { border: none; width:22px; height:22px; background:url("../img/Phenotype.png") }
 input.knetCon_PlantOntologyTerm { border: none; width:22px; height:22px; background:url("../img/PlantOntologyTerm.png") }
-input.knetCon_Protein_Domain { border: none; width:22px; height:22px; background:url("../img/Protein Domain.png") }
 input.knetCon_Protein { border: none; width:22px; height:22px; background:url("../img/Protein.png") }
+input.knetCon_Protein_Domain { border: none; width:22px; height:22px; background:url("../img/Protein_Domain.png") }
 input.knetCon_Publication { border: none; width:22px; height:22px; background:url("../img/Publication.png") }
 input.knetCon_QTL { border: none; width:22px; height:22px; background:url("../img/QTL.png") }
-input.knetCon_Quantitative_Trait_Locus { border: none; width:22px; height:22px; background:url("../img/Quantitative Trait Locus.png") }
+input.knetCon_Quantitative_Trait_Locus { border: none; width:22px; height:22px; background:url("../img/Quantitative_Trait_Locus.png") }
 input.knetCon_Reaction { border: none; width:22px; height:22px; background:url("../img/Reaction.png") }
 input.knetCon_Scaffold { border: none; width:22px; height:22px; background:url("../img/Scaffold.png") }
 input.knetCon_SNP { border: none; width:22px; height:22px; background:url("../img/SNP.png") }
 input.knetCon_SNPEffect { border: none; width:22px; height:22px; background:url("../img/SNPEffect.png") }
-input.knetCon_Trait_Ontology { border: none; width:22px; height:22px; background:url("../img/Trait Ontology.png") }
 input.knetCon_Trait { border: none; width:22px; height:22px; background:url("../img/Trait.png") }
+input.knetCon_Trait_Ontology { border: none; width:22px; height:22px; background:url("../img/Trait_Ontology.png") }
 
 /*.full_screen #knetmaps-menu {
   margin-top: 0px;
 }*/
 
- /* KNETviewer dropdowns */
+ /* KnetMaps dropdowns */
  .knet-dropdowns {
   /*display: inline;*/
   margin-top:5px;
