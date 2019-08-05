@@ -2,10 +2,10 @@
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.
 #
-ARG tomcat_password=''
-ARG docker_tag='latest'
+ARG TOMCAT_PASSWORD=''
+ARG DOCKER_TAG='latest'
 
-FROM knetminer/knetminer-base:${docker_tag}
+FROM knetminer/knetminer-base:${DOCKER_TAG}
 
 
 EXPOSE 8080
@@ -47,7 +47,7 @@ ADD $sample_oxl_url $knet_dataset_dir/data/knowledge-network.oxl
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
-RUN ./build-helper.sh '' "$tomcat_password"
+RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
 ENTRYPOINT ["./runtime-helper.sh"] 
 CMD ["aratiny"] # The id of the default dataset
