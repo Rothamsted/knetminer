@@ -20,7 +20,7 @@ mydir="$(pwd)"
 # --- Command line parameters
 
 # TODO: comment me!
-knet_dataset_id="$1" # In Docker (ie, ENTRYPOINT), this is aratiny by default
+knet_dataset_id="$1" # In Docker (ie, CMD+ENTRYPOINT), this is aratiny by default
 
 # TODO: comment me!
 knet_dataset_dir=${2:-/root/knetminer-dataset}
