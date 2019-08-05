@@ -105,11 +105,47 @@ public class KnetminerServer {
 	}
 
 	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest) {
+		log.debug("<=======================>");
+
+		String ipAddress = rawRequest.getHeader("X-FORWARDED-FOR");
+		log.debug("DEBUG STEP 1:"+ipAddress);
+		if (ipAddress == null) {
+			ipAddress = rawRequest.getRemoteAddr();
+			log.debug("DEBUG STEP 2:"+ipAddress);
+		}else{
+			log.debug("DEBUG STEP 3:"+ipAddress);
+			if(ipAddress.indexOf(',')!= -1){
+				ipAddress = ipAddress.split(",")[0];
+			}
+			log.debug("DEBUG STEP 4:"+ipAddress);
+		}
+		log.debug("DEBUG STEP 5:"+ipAddress);
+
+		String[] IP_HEADER_CANDIDATES = {
+				"X-Forwarded-For",
+				"Proxy-Client-IP",
+				"WL-Proxy-Client-IP",
+				"HTTP_X_FORWARDED_FOR",
+				"HTTP_X_FORWARDED",
+				"HTTP_X_CLUSTER_CLIENT_IP",
+				"HTTP_CLIENT_IP",
+				"HTTP_FORWARDED_FOR",
+				"HTTP_FORWARDED",
+				"HTTP_VIA",
+				"REMOTE_ADDR" };
+
+		for (String header : IP_HEADER_CANDIDATES) {
+			String ip = rawRequest.getHeader(header);
+			if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+				log.debug("DEBUG LOOP :"+":"+header+":"+ip);
+			}
+		}
+
 		if (this.gaTrackingId!=null) {
 			String pageName = ds+"/"+mode;
 			GoogleAnalytics ga = new GoogleAnalyticsBuilder().withTrackingId(this.gaTrackingId).build();
 			ga.pageView().documentTitle(pageName).documentPath("/" + pageName)
-					.userIp(rawRequest.getRemoteAddr()).send();
+					.userIp(ipAddress).send();
 		}
 	}
 
