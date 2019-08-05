@@ -43,13 +43,13 @@ do
   	#--: Passed to Docker as --memory (eg, container_memory 12G)
   	--container-memory)
   	  container_memory="$2"; shift 2;;
-  	#--: Identifies the Docker image version you want to use (eg, --image-version test will pick knetminer/knetminer:dev)
+  	#--: Identifies the Docker image version you want to use (eg, --image-version test, will pick knetminer/knetminer:test)
   	#--: Default is 'latest' (corresponding to '') 
   	--image-version)
   		image_version="$2"; shift 2;;
   	--help)
   		echo -e "\n"
-  		egrep '(#\-\-:|\-\-.+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'\-\-(.+)\)'/'--\1'/g
+  		egrep '(#\-\-:|\-\-.+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'\s+\-\-(.+)\)'/'--\1'/g
   		echo -e "\n\tFor details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker\n"
   		exit 1;;
   	*)
