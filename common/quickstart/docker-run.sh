@@ -12,38 +12,45 @@ image_version='latest'
 while [[ $# -gt 0 ]]
 do
 	opt_name="$1"
-  case $opt_name in 
-  	# If non-null, the dataset settings are taken from the Knetminer codebase in the container, under species/$dataset_id
-  	--dataset-id)
-  		dataset_id="$2"; shift 2;;
-  	# The dataset directory in the host (see the documentation for details)
+  case $opt_name in
+  	# WARNING: these '--:' special markers are used by --help to generate explanations about the available
+  	# options
+  	#--: The dataset directory in the host (see the documentation for details)
   	--dataset-dir)
   		dataset_dir="$2"; shift 2;;
-  	# The host port to which the container HTTP port is mapped
+  	#--: If non-null, the dataset settings are taken from the Knetminer codebase in the container, 
+  	#--: under species/$dataset-id (see the documentation for details).
+  	--dataset-id)
+  		dataset_id="$2"; shift 2;;
+  	#--: The host port to which the container HTTP port is mapped
   	--host-port)
   		host_port="$2"; shift 2;;
-  	# Enable Neo4j mode (see the documentation for details)
+  	#--: Enable Neo4j mode (see the documentation for details)
   	--with-neo4j)
   		is_neo4j=true; shift;;
+  	#--: Neo4j URL, eg, bolt://someserver:7687
   	--neo4j-url)
   		neo4j_url="$2"; shift 2;;
+  	#--: Neo4j user
   	--neo4j-user)
   		neo4j_user="$2"; shift 2;;
+  	#--: Neo4j password
   	--neo4j-pwd)
   		neo4j_pwd="$2"; shift 2;;
-  	# Passed to Docker, as --name, useful to manage running containers 
+  	#--: Passed to Docker, as --name, useful to manage running containers 
   	--container-name)
   	  container_name="$2"; shift 2;;
-  	# Passed to Docker as --memory (eg, container_memory 12G)
+  	#--: Passed to Docker as --memory (eg, container_memory 12G)
   	--container-memory)
   	  container_memory="$2"; shift 2;;
-  	# Identifies the Docker image version you want to use (eg, --image-version test will pick knetminer/knetminer:dev)
-  	# Default is 'latest' (corresponding to '') 
+  	#--: Identifies the Docker image version you want to use (eg, --image-version test will pick knetminer/knetminer:dev)
+  	#--: Default is 'latest' (corresponding to '') 
   	--image-version)
   		image_version="$2"; shift 2;;
   	--help)
-  		echo -e "\n\n\tFor command line options, see the source of this file."
-  		echo -e "\tFor details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker\n"
+  		echo -e "\n"
+  		egrep '(#\-\-:|\-\-.+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'\-\-(.+)\)'/'--\1'/g
+  		echo -e "\n\tFor details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker\n"
   		exit 1;;
   	*)
   		shift;;
