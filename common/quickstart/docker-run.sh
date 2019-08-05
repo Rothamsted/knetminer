@@ -1,6 +1,61 @@
+
+
+## Parse the CLI options
+# 
+
+# after some defaults
+dataset_id=''
+dataset_dir=''
+host_port=8080
+image_version='latest'
+
+while [[ $# -gt 0 ]]
+do
+	opt_name="$1"
+  case $opt_name in 
+  	# If non-null, the dataset settings are taken from the Knetminer codebase in the container, under species/$dataset_id
+  	--dataset-id)
+  		dataset_id="$2"; shift 2;;
+  	# The dataset directory in the host (see the documentation for details)
+  	--dataset-dir)
+  		dataset_dir="$2"; shift 2;;
+  	# The host port to which the container HTTP port is mapped
+  	--host-port)
+  		host_port="$2"; shift 2;;
+  	# Enable Neo4j mode (see the documentation for details)
+  	--with-neo4j)
+  		is_neo4j=true; shift;;
+  	--neo4j-url)
+  		neo4j_url="$2"; shift 2;;
+  	--neo4j-user)
+  		neo4j_user="$2"; shift 2;;
+  	--neo4j-pwd)
+  		neo4j_pwd="$2"; shift 2;;
+  	# Passed to Docker, as --name, useful to manage running containers 
+  	--container-name)
+  	  container_name="$2"; shift 2;;
+  	# Passed to Docker as --memory (eg, container_memory 12G)
+  	--container-memory)
+  	  container_memory="$2"; shift 2;;
+  	# Identifies the Docker image version you want to use (eg, --image-version test will pick knetminer/knetminer:dev)
+  	# Default is 'latest' (corresponding to '') 
+  	--image-version)
+  		image_version="$2"; shift 2;;
+  	--help)
+  		echo -e "\n\n\tFor command line options, see the source of this file."
+  		echo -e "\tFor details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker\n"
+  		exit 1;;
+  	*)
+  		shift;;
+	esac
+done
+  		
+
 # 
 # Helper for the host, to run a specie/dataset instance of the Knetminer Docker container. 
 # 
+# TODO: Rewrite all the comments!
+
 # Environment variables influencing this scripts:
 #
 # $1 = directory name under $KNET_DATASET_DIR (eg, arabidopsis, wheat).
@@ -35,32 +90,41 @@
 # KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (in addition to the ones implied by other variables above
 #  
 
-dataset_id="$1"
+## Build up the docker command
+#
+[ "$DOCKER_OPTS" == "" ] && DOCKER_OPTS="-it"
+DOCKER_OPTS="$DOCKER_OPTS -p $host_port:8080"
+[ "$container_name" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --name $container_name"
+[ "$container_memory" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory $container_memory"
 
-[ "$KNET_HOST_PORT" == "" ] && KNET_HOST_PORT="8080"
-
-[ "$KNET_DOCKER_OPTS" == "" ] && KNET_DOCKER_OPTS="-it"
-KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS -p $KNET_HOST_PORT:8080 --name $dataset_id"
-[ "$KNET_HOST_DATA_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATA_DIR:/root/knetminer-data"
-[ "$KNET_HOST_CONFIG_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CONFIG_DIR:/root/knetminer-config"
-[ "$KNET_HOST_CODEBASE_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_CODEBASE_DIR:/root/knetminer-build/knetminer"
-[ "$KNET_HOST_DATASET_DIR" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --volume $KNET_HOST_DATASET_DIR:/root/knetminer-build/knetminer/species"
-
+if [ "$dataset_dir" == '' ]; then
+	[ "$dataset_id" == '' ] && dataset_id='aratiny'
+else
+	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
+fi
+	
 [ "$MAVEN_ARGS" == "" ] && MAVEN_ARGS="-Pdocker" 
 
-if [ "$KNET_IS_NEO4J" != "" ]; then 
+if [ "$is_neo4j" != "" ]; then 
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
 	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
 	# 
-	[ "$KNET_NEO4J_URL" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.boltUrl=$KNET_NEO4J_URL"
-	[ "$KNET_NEO4J_USER" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.user=$KNET_NEO4J_USER"
-	[ "$KNET_NEO4J_PWD" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$KNET_NEO4J_PWD"
+	[ "$neo4j_url" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.boltUrl=$neo4j_url"
+	[ "$neo4j_user" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.user=$neo4j_user"
+	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
 fi
 
-[ "$MAVEN_ARGS" == "" ] || KNET_DOCKER_OPTS="$KNET_DOCKER_OPTS --env MAVEN_ARGS"
+[ "$MAVEN_ARGS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env MAVEN_ARGS"
 export MAVEN_ARGS
 
+[ "$JAVA_TOOL_OPTIONS" == "" ] && JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1"
+
+DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
+
+echo -e "\n"
+echo "MAVEN_ARGS:" $MAVEN_ARGS
+echo "JAVA_TOOL_OPTIONS:" $JAVA_TOOL_OPTIONS
 set -ex
-docker run $KNET_DOCKER_OPTS knetminer/knetminer "species/$dataset_id"
+docker run $DOCKER_OPTS knetminer/knetminer:$image_version "$dataset_id"

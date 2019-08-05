@@ -21,7 +21,7 @@ export KNET_NEO4J_USER='rouser'
 export KNET_NEO4J_PWD='rouser'
 #DEBUG, to get code from your sandbox: export KNET_HOST_CODEBASE_DIR=/Users/brandizi/Documents/Work/RRes/ondex_git
 
-# Use tall the memory you find
+# Use all the memory you find
 export JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1"
 
 # Profiling (requires -p 9098:9098 -p 9099:9099 passed to Docker) 
