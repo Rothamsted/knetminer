@@ -1,13 +1,18 @@
-FROM knetminer/knetminer-base
 
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.
 #
 ARG tomcat_password=''
+ARG docker_tag='latest'
+
+FROM knetminer/knetminer-base:${docker_tag}
+
 
 EXPOSE 8080
 
-# working dirs are: 
+# working dirs are:
+# TODO: REVIEW ALL THESE COMMENTS
+# 
 # - configuration and .war files go to /root/knetminer-config
 # 
 # - data go to /root/knetminer-data
@@ -26,7 +31,7 @@ EXPOSE 8080
 # directory (usually under <codebase>/species) that is passed to the container.
 #
 ENV knet_build_dir=/root/knetminer-build \
-		knet_data_dir=/root/knetminer-data
+		knet_dataset_dir=/root/knetminer-dataset
 
 # This is the default dataset used to populate the aratiny example.
 ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl
@@ -34,17 +39,16 @@ ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetmin
 # ---- Here we go
 # 
 
-WORKDIR $knet_data_dir
-ADD $sample_oxl_url $knet_data_dir/knowledge-network.oxl
-
 WORKDIR $knet_build_dir
+ADD $sample_oxl_url $knet_dataset_dir/data/knowledge-network.oxl
 
-# If this is run in dev mode, we need 'docker build -f .' from the knetminer root directory, since
+# If this is run in dev mode, we need 'docker build -f .' from the codebase root directory, since
 # climbing up the host paths is forbidden
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
-RUN ./build-helper.sh '' '' "$tomcat_password"
+RUN ./build-helper.sh '' "$tomcat_password"
 
-ENTRYPOINT ["./runtime-helper.sh", ""] 
+ENTRYPOINT ["./runtime-helper.sh"] 
+CMD ["aratiny"] # The id of the default dataset
 
