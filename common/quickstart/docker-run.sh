@@ -28,6 +28,16 @@ do
   	#--: The host port to which the container HTTP port is mapped.
   	--host-port)
   		host_port="$2"; shift 2;;
+  	#--: Passed to Docker, as --name, useful to manage running containers. 
+  	--container-name)
+  	  container_name="$2"; shift 2;;
+  	#--: Passed to Docker as --memory (eg, container_memory 12G).
+  	--container-memory)
+  	  container_memory="$2"; shift 2;;
+  	#--: Docker is invoked with --detach, ie, container is run in background and this script ends immediately 
+  	#--: (it's useful to use it with --container-name)
+  	--detach)
+  		is_container_detach=true; shift;;
   	#--: Enable Neo4j mode (see the documentation for details).
   	--with-neo4j)
   		is_neo4j=true; shift;;
@@ -40,12 +50,6 @@ do
   	#--: Neo4j password.
   	--neo4j-pwd)
   		neo4j_pwd="$2"; shift 2;;
-  	#--: Passed to Docker, as --name, useful to manage running containers. 
-  	--container-name)
-  	  container_name="$2"; shift 2;;
-  	#--: Passed to Docker as --memory (eg, container_memory 12G).
-  	--container-memory)
-  	  container_memory="$2"; shift 2;;
   	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
   	#--: will pick knetminer/knetminer:test). Default is 'latest' (which corresponds to '').
   	--image-version)
@@ -71,6 +75,9 @@ do
 	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
 	If you don't set this, the default is '-it'.
 	
+	JAVA_TOOL_OPTIONS: custom JVM options. The default for this tells the JVM in the container to use all the available
+	RAM (see my source for details).
+	
 EOT
   		exit 1;;
   	*)
@@ -82,6 +89,7 @@ done
 ## Build up the docker command
 #
 [ "$DOCKER_OPTS" == "" ] && DOCKER_OPTS="-it"
+[ "$is_container_detach" == '' ] || DOCKER_OPTS="$DOCKER_OPTS --detach"
 DOCKER_OPTS="$DOCKER_OPTS -p $host_port:8080"
 [ "$container_name" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --name $container_name"
 [ "$container_memory" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory $container_memory"
@@ -92,9 +100,8 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 	
-[ "$MAVEN_ARGS" == "" ] && MAVEN_ARGS="-Pdocker" 
 
-if [ "$is_neo4j" != "" ]; then 
+if [ "$is_neo4j" != '' ]; then 
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
@@ -105,12 +112,11 @@ if [ "$is_neo4j" != "" ]; then
 	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
 fi
 
+# Default is -Pdocker, typically you DO WANT this
 [ "$MAVEN_ARGS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env MAVEN_ARGS"
-export MAVEN_ARGS
-
-[ "$JAVA_TOOL_OPTIONS" == "" ] && JAVA_TOOL_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1"
-
-DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
+# Default is -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+# which tells the JVM to use all the RAM passed to the container
+[ "$JAVA_TOOL_OPTIONS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
 
 echo -e "\n"
 echo "MAVEN_ARGS:" $MAVEN_ARGS

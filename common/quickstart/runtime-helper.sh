@@ -58,6 +58,9 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
+# Default Java options to tell the JVM to use all the available memory
+export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1'}
+
 
 # ---- Parameters/environment setup ends here
 #
