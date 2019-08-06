@@ -52,7 +52,7 @@
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
 
-		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
 		
 		<!--  true if you are providing a reference genome -->

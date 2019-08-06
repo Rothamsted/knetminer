@@ -1,4 +1,7 @@
-
+# Helper for the host, to run a specie/dataset instance of the Knetminer Docker container.
+#
+# See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+#
 
 ## Parse the CLI options
 # 
@@ -49,53 +52,32 @@ do
   		image_version="$2"; shift 2;;
   	--help)
   		echo -e "\n"
+  		# Report the options
   		egrep '(#\-\-:|\-\-.+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
-  		echo -e "\n\tFor details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker\n"
+  		cat <<EOT
+
+
+	For details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker
+	
+	=== Variables that affects this script ===
+
+	MAVEN_ARGS: custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
+	configuration from Maven settings). WARNING: if you set this to non-null, YOU MUST also set proper profiles. 
+	Docker needs MAVEN_ARGS="... -Pdocker" as a minimum. It might need -Pdocker,neo4j or other profiles.
+
+	Example of how to set custom embeddable layout (GeneStack option)
+	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true -Pdocker"
+
+	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
+	If you don't set this, the default is '-it'.
+	
+EOT
   		exit 1;;
   	*)
   		shift;;
 	esac
 done
   		
-
-# 
-# Helper for the host, to run a specie/dataset instance of the Knetminer Docker container. 
-# 
-# TODO: Rewrite all the comments!
-
-# Environment variables influencing this scripts:
-#
-# $1 = directory name under $KNET_DATASET_DIR (eg, arabidopsis, wheat).
-#
-# All the env vars can be setup via export XXX=<value> before invoking this script. None is (formally) mandatory, 
-# defaults are used if you leave them empty.
-#
-# KNET_HOST_CONFIG_DIR # host directory where to place instantiated configuration files (default is /root/knetminer-config in the container) 
-# KNET_HOST_DATASET_DIR # host directory where to place instantiated configuration files (default is /root/knetminer-config in the container) 
-# host directory where your specie/ instance definitions are (maven-settings.xml, client/, ws/ files). This is where $1
-# is looked up (so, arabidopsis/, or wheat/, rice/, etc). By default, this script uses the species/ directory on the 
-# container, which, in turn, comes from our GitHub codebase repository. WARNING: we DO NOT recommend to use both this
-# and KNET_HOST_CODEBASE_DIR.
-# KNET_HOST_PORT # the HTTP port to be used to reach knetminer from the host, eg, 9090 => knetminer will be on 
-# http://localhost:8090/client. Default is 8080
-# 
-# KNET_HOST_CODEBASE_DIR # dev option, client/configuration will be updated with code from this dir on the host
-#
-# MAVEN_ARGS # custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
-# configuration from Maven settings). WARNING: if you set this to non-null, YOU MUST also set proper profiles. 
-# Docker needs MAVEN_ARGS="... -Pdocker" as a minimum. It might need -Pdocker,neo4j or other profiles.
-#
-# Example of how to set custom embeddable layout (GeneStack option)
-# export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true -Pdocker"
-#
-# KNET_HOST_DATA_DIR # host directory where to put knowledge-network.oxl and to be used as data directory
-# KNET_IS_NEO4J # any non-null will run the container in Neo4j mode, against a Neo4j server
-# KNET_NEO4J_URL # Neo4j bolt:// URL pointing to the DB server you want to use (ignored if KNET_IS_NEO4J not set) 
-# KNET_NEO4J_USER # Neo4j login user (defult is neo4j)
-# KNET_NEO4J_PWD #  default is test
-#
-# KNET_DOCKER_OPTS # custom options to be passed to 'docker run' (in addition to the ones implied by other variables above
-#  
 
 ## Build up the docker command
 #

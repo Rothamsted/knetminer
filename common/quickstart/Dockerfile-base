@@ -1,6 +1,6 @@
 FROM knetminer/knetminer-bare
 
-# The base image + a full maven build of the entire knetminer codebase.
+# The bare image + a full maven build of the entire knetminer codebase.
 # Having this as a separated image allows for smaller builds when updating just a couple of maven 
 # modules
 #

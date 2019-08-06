@@ -17,7 +17,7 @@ cd "$mydir"
 # Set these as you need.
 
 # the dataset dir. This has standard subfolders like settings/ config/ data/  
-# See TODO for details
+# See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details
 #
 knet_dataset_dir=/tmp/knetminer-sample-dataset 
 

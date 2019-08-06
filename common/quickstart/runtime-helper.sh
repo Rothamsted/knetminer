@@ -5,24 +5,45 @@
 # This is used by the Knetminer container as ENTRYPOINT. It takes Knetminer client files from a fixed container
 # directory and uses them to run a dataset/specie specific container instance (all datasets leverage the same built
 # image). The configuration directory can dynamically be linked to an host location by mapping it as a Docker volume
-# (see docker-run.sh).   
+# (see https://github.com/Rothamsted/knetminer/wiki/8.-Docker).   
 # 
-# This script is designed to run a fully-functional Knetminer container or any to start Knetminer from any other host, 
+# This script is also designed to run a fully-functional Knetminer container or any to start Knetminer from any other host, 
 # independently on Docker. In the latter case, you need to pre-install requirements manually
-# and to pass the correct parameters to this script (see local-env-ex for details about this case). The best way to 
+# and to pass the correct parameters (see local-env-ex/ for details about this case). The best way to 
 # prepare an environment to run this script is builder-helper.sh (which can be used either to build a Docker container 
 # or any other environment).
 #
-set -ex
+set -e
 cd "$(dirname $0)"
 mydir="$(pwd)"
 
 # --- Command line parameters
 
-# TODO: comment me!
+if [ "$1" == '--help' ]; then
+	cat <<EOT
+	
+	
+	Syntax: $(basename $0) [--deploy-only|--help] [dataset-id] [dataset-dir] [tomcat-home-dir]
+
+	Runs a Knetminer instance against a dataset, either from the Knetminer Docker container or from your own location.
+	See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+
+EOT
+	exit 1
+elif [ "$1" == '--deploy-only' ]; then
+	is_deploy_only=true
+	shift
+fi
+
+set -x
+	
+# The dataset ID, ie, the settings directory to be found in the codebase, under species/
+# If this is omitted, the settings are looked up on the dataset dir.
 knet_dataset_id="$1" # In Docker (ie, CMD+ENTRYPOINT), this is aratiny by default
 
-# TODO: comment me!
+# The dataset directory, where config, data and possibly settings are taken for the dataset that the current
+# Knetminer instance is based on. The default is the dataset path in the Docker container, which can be mapped
+# to the user's location on the host via Docker volume mappings. 
 knet_dataset_dir=${2:-/root/knetminer-dataset}
 
 # Where the Tomcat server is installed.
@@ -148,7 +169,10 @@ cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 # --- And eventually run the server, which will have the ws.war (from the Docker build), the new client .war and the server config.
 # 
 
-# TODO: --build-only, to avoid Tomcat run.
+if $is_deploy_only; then
+	echo -e "\n\n\tFiles deployed at '$knet_tomcat_home/webapps/', not running Tomcat because of --deploy-only\n"
+	exit
+fi
 
 echo -e "\n\n\tRunning the Tomcat server\n"
 cd "$knet_tomcat_home/bin" 

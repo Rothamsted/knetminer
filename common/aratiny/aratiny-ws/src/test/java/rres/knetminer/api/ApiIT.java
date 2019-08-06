@@ -29,7 +29,10 @@ import uk.ac.ebi.utils.xml.XPathReader;
 
 
 /**
- * TODO: comment me!
+ * Integration test for the ws WAR app. (ie, the Knetminer API).
+ * 
+ * The tests here invokes the API and check the returned JSON. They are integration tests cause they
+ * need that the Maven build launches the ws into the embedded Jetty server.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>11 Feb 2019</dd></dl>

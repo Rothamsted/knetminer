@@ -9,8 +9,21 @@
 # 
 # This script is designed to build a fully-functional Knetminer distribution either on a Docker container or
 # any other host, independently on Docker. In the latter case, you need to pre-install requirements manually
-# and to pass the correct parameters to this script (see local-env-ex for details about this case).
+# and to pass the correct parameters to this script (see local-env-ex/ for details about this case).
 #
+if [ "$1" == '--help' ]; then
+	cat <<EOT
+	
+	
+	Syntax: $(basename $0) [--help] [tomcat-home-dir] [new-tomcat-manager-password]
+
+	Builds the Knetminer .war applications.
+	See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+
+EOT
+	exit 1
+fi
+
 set -ex
 cd "$(dirname $0)"
 mydir="$(pwd)"
