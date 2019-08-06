@@ -172,7 +172,7 @@ cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 # --- And eventually run the server, which will have the ws.war (from the Docker build), the new client .war and the server config.
 # 
 
-if $is_deploy_only; then
+if [ "$is_deploy_only" != '' ]; then
 	echo -e "\n\n\tFiles deployed at '$knet_tomcat_home/webapps/', not running Tomcat because of --deploy-only\n"
 	exit
 fi
