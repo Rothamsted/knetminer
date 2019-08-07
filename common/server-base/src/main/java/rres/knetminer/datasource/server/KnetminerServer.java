@@ -104,12 +104,47 @@ public class KnetminerServer {
 			log.info("Google Analytics disabled");
 	}
 
-	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest) {
+	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest)
+	{
+		String ipAddress = rawRequest.getHeader("X-FORWARDED-FOR");
+		log.debug("IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress);
+		if (ipAddress == null) {
+			ipAddress = rawRequest.getRemoteAddr();
+			log.debug("IP TRACING 2, getRemoteAddr(): {}", ipAddress);
+		}else{
+			log.debug("IP TRACING 3, IP to be split: {}", ipAddress);
+			if(ipAddress.indexOf(',')!= -1){
+				ipAddress = ipAddress.split(",")[0];
+			}
+			log.debug("IP TRACING 4, splitted IP: {}", ipAddress);
+		}
+		log.debug("IP TRACING 5 post-processed IP: {}", ipAddress);
+
+		String[] IP_HEADER_CANDIDATES = {
+				"X-Forwarded-For",
+				"Proxy-Client-IP",
+				"WL-Proxy-Client-IP",
+				"HTTP_X_FORWARDED_FOR",
+				"HTTP_X_FORWARDED",
+				"HTTP_X_CLUSTER_CLIENT_IP",
+				"HTTP_CLIENT_IP",
+				"HTTP_FORWARDED_FOR",
+				"HTTP_FORWARDED",
+				"HTTP_VIA",
+				"REMOTE_ADDR" };
+
+		for (String header : IP_HEADER_CANDIDATES) {
+			String ip = rawRequest.getHeader(header);
+			if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+				log.debug("IP TRACING, req headers, {}:{}", header, ip);
+			}
+		}
+
 		if (this.gaTrackingId!=null) {
 			String pageName = ds+"/"+mode;
 			GoogleAnalytics ga = new GoogleAnalyticsBuilder().withTrackingId(this.gaTrackingId).build();
 			ga.pageView().documentTitle(pageName).documentPath("/" + pageName)
-					.userIp(rawRequest.getRemoteAddr()).send();
+					.userIp(ipAddress).send();
 		}
 	}
 

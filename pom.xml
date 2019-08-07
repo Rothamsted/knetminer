@@ -27,7 +27,7 @@
 	<properties>
 		
 		<!-- 
-		  Several of these varibles can be overriden by instance-specific Maven profiles.
+		  Several of these properties can be overriden by instance-specific Maven profiles.
 		  Here, we give values suitable for maven tests (eg, in aratiny).
 		  
 		  See TODO.
