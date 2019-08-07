@@ -9,28 +9,16 @@ KNETMAPS.ConceptsLegend = function () {
 
 
     my.conName = function (conText) {
-
-        if (conText === "Biological_Process") {
-            conText = "BioProc";
-        } else if (conText === "Molecular_Function") {
-            conText = "MolFunc";
-        } else if (conText === "Cellular_Component") {
-            conText = "CellComp";
-        } else if (conText === "Trait Ontology") {
-            conText = "TO";
-        } else if (conText === "PlantOntologyTerm") {
-            conText = "PO";
-        }
-        /*else if(conText === "Trait") {
-         conText= "GWAS";
-         }*/
-        else if (conText === "Enzyme Classification") {
-            conText = "EC";
-        } else if (conText === "Quantitative Trait Locus") {
-            conText = "QTL";
-        } else if (conText === "Protein Domain") {
-            conText = "Domain";
-        }
+        
+        // Map the concept names to corresponding legend context names
+        map = {"Biological_Process" : "BioProc", "Molecular_Function" : "MolFunc",
+                "Cellular_Component" : "CellComp", "Trait Ontology" : "TO",
+                "PlantOntologyTerm" : "PO", "Enzyme Classification" : "EC",
+                "Quantitative Trait Locus" : "QTL", "Protein Domain" : "Domain"};
+        result = map[conText];
+        // If result is not null, return result, else return conText
+        return result != null ? result : conText;
+        
         return conText;
     }
 
