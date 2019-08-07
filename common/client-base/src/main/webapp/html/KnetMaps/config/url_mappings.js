@@ -3,6 +3,8 @@ var url_mappings= {
  "html_acc": [
      {"cv": "AC", "weblink": "http://pmn.plantcyc.org/ARA/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""},
      {"cv": "AspGD", "weblink": "http://www.aspergillusgenome.org/cgi-bin/locus.pl?dbid=", "cc_restriction": ""},
+     {"cv": "AraPheno", "weblink" : "https://arapheno.1001genomes.org/study/", "cc_restriction": ""},
+     {"cv": "AraGWAS", "weblink" : "https://aragwas.1001genomes.org/#/study/", "cc_restriction": ""},
      {"cv": "CHEBI", "weblink": "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=", "cc_restriction": ""},
      {"cv": "CHEMBL", "weblink": "https://www.ebi.ac.uk/chembldb/compound/inspect/", "cc_restriction": ""},
      {"cv": "CHEMBLASSAY", "weblink": "https://www.ebi.ac.uk/chembldb/assay/inspect/", "cc_restriction": ""},
@@ -14,6 +16,8 @@ var url_mappings= {
      {"cv": "EMBL", "weblink": "http://www.ebi.ac.uk/ena/data/view/", "cc_restriction": ""},
      {"cv": "ENSEMBL", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
      {"cv": "ENSV", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
+     {"cv": "ENSEMBL-HUMAN", "weblink": "https://www.ensembl.org/Human/Search/Results?q=", "cc_restriction": ""},
+     {"cv": "ENSV-HUMAN", "weblink": "http://www.ensembl.org/Homo_sapiens/Variation/Explore?db=core;v=", "cc_restriction": ""},
      {"cv": "ENSEMBL-MOUSE", "weblink": "http://www.ensembl.org/Mus_musculus/Gene/Summary?db=core;g=", "cc_restriction": ""},
      {"cv": "EBI-GXA", "weblink": "https://www.ebi.ac.uk/gxa/experiments/", "cc_restriction": ""},
      {"cv": "GENB", "weblink": "http://www.ncbi.nlm.nih.gov/sites/entrez?db=nuccore&cmd=search&term=", "cc_restriction": ""},
@@ -50,6 +54,7 @@ var url_mappings= {
      {"cv": "TO", "weblink": "http://purl.obolibrary.org/obo/TO_", "cc_restriction": ""},
      {"cv": "TX", "weblink": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=", "cc_restriction": ""},
      {"cv": "UNIPROTKB", "weblink": "http://www.uniprot.org/uniprot/", "cc_restriction": ""},
-     {"cv": "YeastCyc", "weblink": "https://yeast.biocyc.org/YEAST/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""}
+     {"cv": "YeastCyc", "weblink": "https://yeast.biocyc.org/YEAST/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""},
+     {"cv": "HumanCyc", "weblink": "https://humancyc.org/HUMAN/substring-search?type=NIL&object=", "cc_restriction": ""}
  ]
 };
