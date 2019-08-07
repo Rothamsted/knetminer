@@ -18,8 +18,6 @@ KNETMAPS.ConceptsLegend = function () {
         result = map[conText];
         // If result is not null, return result, else return conText
         return result != null ? result : conText;
-        
-        return conText;
     }
 
     // Dynamically populate interactive concept legend.
