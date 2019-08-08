@@ -54,10 +54,11 @@ do
   	#--: will pick knetminer/knetminer:test). Default is 'latest' (which corresponds to '').
   	--image-version)
   		image_version="$2"; shift 2;;
+  	#--: yields this help output and then exits with 1
   	--help)
   		echo -e "\n"
   		# Report the options
-  		egrep '(#\-\-:|\-\-.+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
+  		egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
   		cat <<EOT
 
 
@@ -79,6 +80,9 @@ do
 	RAM (see my source for details).
 	
 EOT
+  		exit 1;;
+  	--*)
+			echo -e "\n\n\tERROR: Invalid option '$1', try --help\n"
   		exit 1;;
   	*)
   		shift;;
