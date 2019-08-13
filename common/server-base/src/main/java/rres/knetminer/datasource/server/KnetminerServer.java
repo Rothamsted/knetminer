@@ -104,22 +104,21 @@ public class KnetminerServer {
 			log.info("Google Analytics disabled");
 	}
 
-	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest) {
-		log.debug("<=======================>");
-
+	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest)
+	{
 		String ipAddress = rawRequest.getHeader("X-FORWARDED-FOR");
-		log.debug("DEBUG STEP 1:"+ipAddress);
+		log.debug("IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress);
 		if (ipAddress == null) {
 			ipAddress = rawRequest.getRemoteAddr();
-			log.debug("DEBUG STEP 2:"+ipAddress);
+			log.debug("IP TRACING 2, getRemoteAddr(): {}", ipAddress);
 		}else{
-			log.debug("DEBUG STEP 3:"+ipAddress);
+			log.debug("IP TRACING 3, IP to be split: {}", ipAddress);
 			if(ipAddress.indexOf(',')!= -1){
 				ipAddress = ipAddress.split(",")[0];
 			}
-			log.debug("DEBUG STEP 4:"+ipAddress);
+			log.debug("IP TRACING 4, splitted IP: {}", ipAddress);
 		}
-		log.debug("DEBUG STEP 5:"+ipAddress);
+		log.debug("IP TRACING 5 post-processed IP: {}", ipAddress);
 
 		String[] IP_HEADER_CANDIDATES = {
 				"X-Forwarded-For",
@@ -137,7 +136,7 @@ public class KnetminerServer {
 		for (String header : IP_HEADER_CANDIDATES) {
 			String ip = rawRequest.getHeader(header);
 			if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-				log.debug("DEBUG LOOP :"+":"+header+":"+ip);
+				log.debug("IP TRACING, req headers, {}:{}", header, ip);
 			}
 		}
 

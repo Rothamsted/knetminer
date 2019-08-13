@@ -27,14 +27,14 @@
 	<properties>
 		
 		<!-- 
-		  Several of these varibles can be overriden by instance-specific Maven profiles.
+		  Several of these properties can be overriden by instance-specific Maven profiles.
 		  Here, we give values suitable for maven tests (eg, in aratiny).
 		  
 		  See TODO.
 		 -->
-		 
-		<knetminer.configDir>${project.build.testOutputDirectory}/knetminer-config</knetminer.configDir>
-		<knetminer.dataDir>${project.build.directory}/data</knetminer.dataDir>
+		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
+		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
+		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
 		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
@@ -52,7 +52,7 @@
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
 
-		<!-- TODO: this should be XPath-computed from basemap.xml and injected via mvn command line -->
+		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
 		
 		<!--  true if you are providing a reference genome -->
@@ -314,10 +314,9 @@
 					while clients will have their own Maven settings to override these values.
 					 
 				-->
-								
-				<knetminer.configDir>/root/knetminer-config</knetminer.configDir>
-				<knetminer.dataDir>/root/knetminer-data</knetminer.dataDir>
-						
+				<knetminer.datasetDir>/root/knetminer-dataset</knetminer.datasetDir>
+				<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
+				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
 								
 				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
