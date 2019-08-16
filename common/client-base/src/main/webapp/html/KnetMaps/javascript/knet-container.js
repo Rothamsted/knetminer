@@ -237,10 +237,14 @@ cy.elements().qtip({
                 var thisConceptType= this.data('conceptType');
         //        console.log("Hide Concept by Type: "+ thisConceptType);
                 cy.nodes().forEach(function( ele ) {
-                 if(ele.data('conceptType') === thisConceptType) {
+                 if(ele.data('conceptType') === thisConceptType && thisConceptType.includes("Gene") == false) {
                     //ele.hide();
                     ele.removeClass('ShowEle');
                     ele.addClass('HideEle');
+                    $('#infoDialog').html("");
+                   }
+                   if(thisConceptType.includes("Gene")){
+                      $('#infoDialog').html('<font color="red">' + "Can't remove  " + thisConceptType + " concept nodes.</font>").show();
                    }
                 });
                 // Relayout the graph.
