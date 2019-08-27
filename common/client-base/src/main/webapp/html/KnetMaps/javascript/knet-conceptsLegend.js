@@ -153,7 +153,15 @@ KNETMAPS.ConceptsLegend = function () {
             stats.updateKnetStats(); // Refresh network Stats.
         } else if (conText.includes("Gene")) {
             // Show appropriate error regarding user attempt to remove the Gene concept.
-            $('#infoDialog').html('<font color="red">' + "Can't remove  " + conText + " concept nodes.</font>").show();
+            cy.nodes().forEach(function (ele) {
+                if (ele.hasClass('FlaggedGene')) {
+                    $('#infoDialog').html('<font color="red">' + "Can't remove  the main Gene Concept node.</font>").show();
+                } else if (ele.data('conceptType') == conType) {
+                    ele.removeClass('ShowEle').addClass('HideEle');
+                    $('#infoDialog').html("");
+                    stats.updateKnetStats(); 
+                }
+            });
         } else if (edge_count > 0 && conText.includes("Gene") == false) {
             $('#infoDialog').html("");
         }
