@@ -268,6 +268,6 @@ input.knetCon_Trait_Ontology { border: none; width:22px; height:22px; background
      }
 
      .icon_caption {
-      display: block;/*float:left;*/
-	  font-size: 12px;
+      display: block;/*float:below;*/
+	  font-size: 11.5px;
      }      
