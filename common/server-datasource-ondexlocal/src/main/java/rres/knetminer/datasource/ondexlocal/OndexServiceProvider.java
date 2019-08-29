@@ -698,7 +698,7 @@ public class OndexServiceProvider {
             // Query qAccessions =
             // LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
             // false, dsAcc);
-            String fieldName = getFieldName("ConceptAccessions", dsAc);
+            String fieldName = getFieldName("ConceptAccession", dsAc);
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAccessions = parser.parse(keyword);
