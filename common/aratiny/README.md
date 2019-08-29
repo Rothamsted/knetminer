@@ -91,7 +91,7 @@ is at <http://localhost:17490/>
 ## Using the `aratinty` project for Cypher-based semantic motif queries.
 
 The neo4j mode uses Cypher-based queries for finding paths between genes to other entities. The queries are
-in the [test folder](aratiny-ws/src/test/resources/knetminer-dataset/knetminer-config/neo4j). Any
+in the [test folder](aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j). Any
 addition of .cypher files to this folder will be used by the `./run-ws-neo4j.sh` above to initially scan the 
 test data and find the paths specified by the queries.
 
@@ -103,7 +103,7 @@ UI).
 
 ### Rules for valid semantic motif queries 
 
-Let's look at [an example](aratiny-ws/src/test/resources/knetminer-dataset/knetminer-config/neo4j/simple-protein-publication.cypher):
+Let's look at [an example](aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/simple-protein-publication.cypher):
 
 ```sql
 MATCH path =  
