@@ -23,8 +23,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
@@ -33,6 +35,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -89,6 +93,7 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  * @author taubertj, pakk, singha
  */
 public class OndexServiceProvider {
+
     protected final Logger log = LogManager.getLogger(getClass());
 
     /**
@@ -96,11 +101,10 @@ public class OndexServiceProvider {
      */
     // BidiMap<Integer, String> chromBidiMap = new DualHashBidiMap<Integer,
     // String>();
-
     /**
      * GraphTraverser will be initiated with a state machine
      */
-  	AbstractGraphTraverser gt;
+    AbstractGraphTraverser gt;
 
     /**
      * Ondex knowledge base as memory graph
@@ -119,7 +123,8 @@ public class OndexServiceProvider {
     static HashMap<String, Integer> mapGene2PathLength;
 
     /**
-     * Query-dependent mapping between genes and concepts that contain query terms
+     * Query-dependent mapping between genes and concepts that contain query
+     * terms
      */
     HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
@@ -150,10 +155,8 @@ public class OndexServiceProvider {
 
     boolean export_visible_network;
 
-  	private Map<String, Object> options = new HashMap<> (); 
+    private Map<String, Object> options = new HashMap<>();
 
-  	
-  	
     /**
      * Loads configuration for chromosomes and initialises map
      */
@@ -162,8 +165,8 @@ public class OndexServiceProvider {
     }
 
     /**
-     * Load OXL data file into memory Build Lucene index for the Ondex graph Create
-     * a state machine for semantic motif search
+     * Load OXL data file into memory Build Lucene index for the Ondex graph
+     * Create a state machine for semantic motif search
      *
      * @throws ArrayIndexOutOfBoundsException
      * @throws PluginConfigurationException
@@ -179,16 +182,18 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-        if ( gt == null ) gt = AbstractGraphTraverser.getInstance ( this.getOptions () );
+        if (gt == null) {
+            gt = AbstractGraphTraverser.getInstance(this.getOptions());
+        }
 
-    		// These might be needed by one implementation or the other. Those that don't need a property like these
-    		// can just ignore them
-    		gt.setOption ( "StateMachineFilePath", smFileName );
-    		gt.setOption ( "ONDEXGraph", graph );
-    		gt.setOption ( "LuceneEnv", lenv );
+        // These might be needed by one implementation or the other. Those that don't need a property like these
+        // can just ignore them
+        gt.setOption("StateMachineFilePath", smFileName);
+        gt.setOption("ONDEXGraph", graph);
+        gt.setOption("LuceneEnv", lenv);
 
         populateHashMaps(graphFileName, dataPath);
-                
+
         // determine number of genes in given species (taxid)
         AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
         ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
@@ -200,7 +205,7 @@ public class OndexServiceProvider {
                 numGenesInGenome++;
             }
         }
-        
+
         // Write Stats about the created Ondex graph & its mappings to a file.
         log.info("Saving graph stats to " + dataPath);
         displayGraphStats(dataPath);
@@ -267,7 +272,6 @@ public class OndexServiceProvider {
              * log.info("5) Min., Max., Average size of gene-evidence networks: "
              * + minValues +", "+ maxValues +", "+ avgValues);
              */
-
             // Write the Stats to a .tab file.
             StringBuffer sb = new StringBuffer();
             // sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
@@ -299,10 +303,10 @@ public class OndexServiceProvider {
                     } else if (conID.equalsIgnoreCase("Gene")) {
                         con_count = numGenesInGenome;
                     }
-					// exclude "Thing" CC
-                    if(!conID.equalsIgnoreCase("Thing")) {
-					   sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
-					  }
+                    // exclude "Thing" CC
+                    if (!conID.equalsIgnoreCase("Thing")) {
+                        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+                    }
                 }
             }
             sb.append("</conceptClasses>\n");
@@ -324,7 +328,6 @@ public class OndexServiceProvider {
              * HashMap
              */
             //   generateGeneEvidenceStats(fileUrl); // DISABLED
-
         } catch (IOException e) {
             log.error("Failed to count stats for graph", e);
         }
@@ -336,9 +339,9 @@ public class OndexServiceProvider {
     private void loadOndexKBGraph(String filename) {
         try {
             log.debug("Start Loading OndexKB Graph..." + filename);
-            Parser.loadOXL ( filename, graph );
+            Parser.loadOXL(filename, graph);
             log.debug("OndexKB Graph Loaded Into Memory");
-            
+
             // remove any pre-existing, visible, size and flagged attributes from concepts and relations
             removeOldAttributesFromKBGraph();
         } catch (Exception e) {
@@ -347,71 +350,69 @@ public class OndexServiceProvider {
     }
 
     /**
-     * remove any pre-existing, visible, size and flagged attributes from concepts and relations
-     * 29-07-2019
+     * remove any pre-existing, visible, size and flagged attributes from
+     * concepts and relations 29-07-2019
      */
     private void removeOldAttributesFromKBGraph() {
         try {
-             log.debug("Remove old 'visible' attributes from all concepts and relations...");
-             
-             AttributeName attVisible = graph.getMetaData().getAttributeName("visible");
-             AttributeName attSize = graph.getMetaData().getAttributeName("size");
-             AttributeName attFlagged = graph.getMetaData().getAttributeName("flagged");
-             
-             Set<Integer> removeMe = new HashSet<>();
-             if(graph.getConceptsOfAttributeName(attVisible) != null) {
-                 Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
-                 visibleConcepts.forEach(con -> removeMe.add(con.getId()));
+            log.debug("Remove old 'visible' attributes from all concepts and relations...");
+
+            AttributeName attVisible = graph.getMetaData().getAttributeName("visible");
+            AttributeName attSize = graph.getMetaData().getAttributeName("size");
+            AttributeName attFlagged = graph.getMetaData().getAttributeName("flagged");
+
+            Set<Integer> removeMe = new HashSet<>();
+            if (graph.getConceptsOfAttributeName(attVisible) != null) {
+                Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
+                visibleConcepts.forEach(con -> removeMe.add(con.getId()));
+            }
+            if (graph.getConceptsOfAttributeName(attSize) != null) {
+                Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
+                sizedConcepts.forEach(con -> removeMe.add(con.getId()));
+            }
+            if (graph.getConceptsOfAttributeName(attFlagged) != null) {
+                Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
+                flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
+            }
+
+            for (Integer con : removeMe) {
+                if (graph.getConcept(con).getAttribute(attVisible) != null) {
+                    graph.getConcept(con).deleteAttribute(attVisible);
                 }
-             if(graph.getConceptsOfAttributeName(attSize) != null) {
-                 Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
-                 sizedConcepts.forEach(con -> removeMe.add(con.getId()));
+                if (graph.getConcept(con).getAttribute(attSize) != null) {
+                    graph.getConcept(con).deleteAttribute(attSize);
                 }
-             if(graph.getConceptsOfAttributeName(attFlagged) != null) {
-                 Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
-                 flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
+                if (graph.getConcept(con).getAttribute(attFlagged) != null) {
+                    graph.getConcept(con).deleteAttribute(attFlagged);
                 }
-             
-             for(Integer con : removeMe) {
-                 if(graph.getConcept(con).getAttribute(attVisible) != null) {
-                     graph.getConcept(con).deleteAttribute(attVisible);
-                 }
-                 if(graph.getConcept(con).getAttribute(attSize) != null) {
-                     graph.getConcept(con).deleteAttribute(attSize);
-                 }
-                 if(graph.getConcept(con).getAttribute(attFlagged) != null) {
-                     graph.getConcept(con).deleteAttribute(attFlagged);
-                 }
-             }
-             
-             // doing the same for relations
-             Set<Integer> removeMe2 = new HashSet<>();
-             if(graph.getRelationsOfAttributeName(attVisible) != null) {
-                 Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
-                 visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
+            }
+
+            // doing the same for relations
+            Set<Integer> removeMe2 = new HashSet<>();
+            if (graph.getRelationsOfAttributeName(attVisible) != null) {
+                Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
+                visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
+            }
+            if (graph.getRelationsOfAttributeName(attSize) != null) {
+                Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
+                sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
+            }
+
+            for (Integer rel : removeMe2) {
+                if (graph.getRelation(rel).getAttribute(attVisible) != null) {
+                    graph.getRelation(rel).deleteAttribute(attVisible);
                 }
-             if(graph.getRelationsOfAttributeName(attSize) != null) {
-                 Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
-                 sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
+                if (graph.getRelation(rel).getAttribute(attSize) != null) {
+                    graph.getRelation(rel).deleteAttribute(attSize);
                 }
-             
-             for(Integer rel : removeMe2) {
-                 if(graph.getRelation(rel).getAttribute(attVisible) != null) {
-                     graph.getRelation(rel).deleteAttribute(attVisible);
-                 }
-                 if(graph.getRelation(rel).getAttribute(attSize) != null) {
-                     graph.getRelation(rel).deleteAttribute(attSize);
-                 }
-             }
-             
-        } 
-        catch (Exception ex) 
-        {
-          log.warn ( "Failed to remove pre-existing attributes from graph: {}", ex.getMessage () );
-          log.trace ( "Failed to remove pre-existing attributes from graph, detailed exception follows", ex );
+            }
+
+        } catch (Exception ex) {
+            log.warn("Failed to remove pre-existing attributes from graph: {}", ex.getMessage());
+            log.trace("Failed to remove pre-existing attributes from graph, detailed exception follows", ex);
         }
     }
-    
+
     /**
      * Indexes Ondex Graph
      */
@@ -425,10 +426,11 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            if (!indexFile.exists())
+            if (!indexFile.exists()) {
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
-            else
+            } else {
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
+            }
             lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
@@ -437,10 +439,9 @@ public class OndexServiceProvider {
         }
     }
 
-
     /**
-     * Export the Ondex graph to file system as a .oxl file and also in JSON format
-     * using the new JSON Exporter plugin in Ondex.
+     * Export the Ondex graph to file system as a .oxl file and also in JSON
+     * format using the new JSON Exporter plugin in Ondex.
      *
      * @param ONDEXGraph graph
      * @throws InvalidPluginArgumentException
@@ -490,7 +491,6 @@ public class OndexServiceProvider {
         //
         // ONDEXGraph graph3 = new MemoryONDEXGraph("FilteredGraph");
         // visFilter.copyResultsToNewGraph(graph3);
-
         // oxl export
         // disabled (25/10/17)
         /*
@@ -509,7 +509,6 @@ public class OndexServiceProvider {
          * checkFileExist(exportPath); } System.out.println("OXL file created:" +
          * exportPath);
          */
-
         // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
         Export jsonExport = new Export();
         // JSON output file.
@@ -531,7 +530,7 @@ public class OndexServiceProvider {
             // Export the contents of the 'graph' object as multiple JSON
             // objects to an output file.
             jsonExport.start();
-            log.debug("Network JSON file created:" + /* jsonExportPath */exportPath.getAbsolutePath());
+            log.debug("Network JSON file created:" + /* jsonExportPath */ exportPath.getAbsolutePath());
             encoded = Files.readAllBytes(exportPath.toPath());
             exportPath.delete();
         } catch (IOException ex) {
@@ -541,7 +540,6 @@ public class OndexServiceProvider {
     }
 
     // JavaScript Document
-
     /**
      * Creates a new keyword for finding the NOT list
      *
@@ -581,10 +579,10 @@ public class OndexServiceProvider {
      * Merge two maps using the greater scores
      *
      * @param hit2score map that holds all hits and scores
-     * @param sHits     map that holds search results
+     * @param sHits map that holds search results
      */
     private void mergeHits(HashMap<ONDEXConcept, Float> hit2score, ScoredHits<ONDEXConcept> sHits,
-                           ScoredHits<ONDEXConcept> NOTHits) {
+            ScoredHits<ONDEXConcept> NOTHits) {
         for (ONDEXConcept c : sHits.getOndexHits()) {
             if (NOTHits == null || !NOTHits.getOndexHits().contains(c)) {
                 if (c instanceof LuceneConcept) {
@@ -616,7 +614,7 @@ public class OndexServiceProvider {
 
         Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
         String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
-                "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
+            "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
         // sources identified in KNETviewer
         /*
          * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY",
@@ -652,8 +650,7 @@ public class OndexServiceProvider {
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
         keyword = keyword.replaceAll("^###|###$", "\"");
-        log.debug("Keyword is:"+ keyword);
-
+        log.debug("Keyword is:" + keyword);
 
         // creates the NOT list (list of all the forbidden documents)
         String NOTQuery = createsNotList(keyword);
@@ -741,17 +738,17 @@ public class OndexServiceProvider {
         ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
         mergeHits(hit2score, sHitsAnno, NOTList);
 
-        log.info("Query: " + qAnno.toString(fieldNameCA));
+        log.info("Query: ............" + qAnno.toString(fieldNameCA));
         log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
 
         return hit2score;
     }
 
-    public SortedMap<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
+    public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
         Map<ONDEXConcept, Double> scoredCandidates = new HashMap<ONDEXConcept, Double>();
-        ValueComparator<ONDEXConcept> comparator = new ValueComparator<ONDEXConcept>(scoredCandidates);
-        TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
-
+        Map<ONDEXConcept, Double> sortedCandidates = new HashMap<ONDEXConcept, Double>(); // Sort via stream instead
+//        ValueComparator<ONDEXConcept> comparator = new ValueComparator<ONDEXConcept>(scoredCandidates);
+//        TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
         log.info("total hits from lucene: " + hit2score.keySet().size());
 
         synchronized (this) {
@@ -776,7 +773,7 @@ public class OndexServiceProvider {
             // 2nd step: calculate a score for each candidate gene
             for (int geneId : mapGene2HitConcept.keySet()) {
 
-// weighted sum of all evidence concepts
+                // weighted sum of all evidence concepts
                 double weighted_evidence_sum = 0;
 
                 // iterate over each evidence concept and compute a weight that is composed of
@@ -803,24 +800,30 @@ public class OndexServiceProvider {
                     weighted_evidence_sum += evidence_weight;
                 }
 
-
                 // normalisation method 1: size of the gene knoweldge graph
                 // double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
-
                 // normalistion method 2: size of matching evidence concepts only (mean score)
                 //double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
-
-
                 // No normalisation for now as it's too experimental.
                 // This meeans better studied genes will appear top of the list
                 double knetScore = /*normFactor * */ weighted_evidence_sum;
 
                 scoredCandidates.put(graph.getConcept(geneId), knetScore);
             }
+            //sortedCandidates.putAll(scoredCandidates); 
+            /**
+             * sorting via stream instead. Resolves issues otherwise caused by
+             * use of ValueComparator *
+             */
+            sortedCandidates = scoredCandidates
+                    .entrySet()
+                    .stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                    .collect(
+                            toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                    LinkedHashMap::new)); // Sort the candidate values
 
         }//end of synchronised block
-            sortedCandidates.putAll(scoredCandidates);
-
         return sortedCandidates;
     }
 
@@ -854,7 +857,6 @@ public class OndexServiceProvider {
     // System.out.println("related genes size: "+relatedGenes.size());
     // return relatedGenes;
     // }
-
     /**
      * Did you mean function for spelling correction
      *
@@ -925,7 +927,7 @@ public class OndexServiceProvider {
                      * basemap. chrGene= c.getAttribute(attLoc).getValue().toString(); }
                      */
 
-					/*if (attCM != null) {
+ /*if (attCM != null) {
 						if (c.getAttribute(attCM) != null) {
 							startGene = (Double) c.getAttribute(attCM).getValue();
 						}
@@ -951,25 +953,25 @@ public class OndexServiceProvider {
     }
 
     /**
-     * Searches the knowledge base for QTL concepts that match any of the user input
-     * terms
+     * Searches the knowledge base for QTL concepts that match any of the user
+     * input terms
      *
      * @param keyword
      * @return list of QTL objects
      */
     public Set<QTL> findQTL(String keyword) throws ParseException {
-    	
+
         ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
         ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
 
         // no Trait-QTL relations found
-        if (ccTrait == null && (ccQTL == null || ccSNP == null) ) {
+        if (ccTrait == null && (ccQTL == null || ccSNP == null)) {
             return new HashSet<QTL>();
         }
-        
+
         // no keyword provided
-        if (keyword==null || keyword.equals("")) {
+        if (keyword == null || keyword.equals("")) {
             return new HashSet<QTL>();
         }
 
@@ -1083,7 +1085,7 @@ public class OndexServiceProvider {
      * Semantic Motif Search for list of genes
      *
      * @param accessions
-     * @param regex      trait-related
+     * @param regex trait-related
      * @return OndexGraph containing the gene network
      */
     public ONDEXGraph getGenes(Integer[] ids, String regex) {
@@ -1140,8 +1142,8 @@ public class OndexServiceProvider {
     }
 
     /**
-     * Searches genes related to an evidence, finds semantic motifs and shows the
-     * path between them
+     * Searches genes related to an evidence, finds semantic motifs and shows
+     * the path between them
      *
      * @param evidenceOndexId
      * @return subGraph
@@ -1152,7 +1154,7 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
         for (Integer rg : mapConcept2Genes.get(evidenceOndexId)) {
             ONDEXConcept gene = graph.getConcept(rg);
-            if (genes==null || genes.isEmpty() || genes.contains(gene)) {
+            if (genes == null || genes.isEmpty() || genes.contains(gene)) {
                 relatedONDEXConcepts.add(gene);
             }
         }
@@ -1187,8 +1189,8 @@ public class OndexServiceProvider {
     /**
      * Tests if there is a match of this query within the search string
      *
-     * @param p      the pattern (if null then literal match .contains is used)
-     * @param query  the query to match
+     * @param p the pattern (if null then literal match .contains is used)
+     * @param query the query to match
      * @param target the target to match to
      * @return is there a match
      */
@@ -1239,8 +1241,8 @@ public class OndexServiceProvider {
     }
 
     /**
-     * Searches different fields of a concept for a query or pattern
-     * and highlights them
+     * Searches different fields of a concept for a query or pattern and
+     * highlights them
      *
      * @param concept
      * @param p
@@ -1309,10 +1311,10 @@ public class OndexServiceProvider {
 
             // search in concept attributes
             for (Attribute attribute : concept.getAttributes()) {
-                if (!(attribute.getOfType().getId().equals("AA")) ||
-                        !(attribute.getOfType().getId().equals("NA")) ||
-                        !(attribute.getOfType().getId().startsWith("AA_")) ||
-                        !(attribute.getOfType().getId().startsWith("NA_"))) {
+                if (!(attribute.getOfType().getId().equals("AA"))
+                        || !(attribute.getOfType().getId().equals("NA"))
+                        || !(attribute.getOfType().getId().startsWith("AA_"))
+                        || !(attribute.getOfType().getId().startsWith("NA_"))) {
                     String value = attribute.getValue().toString();
                     if (this.isMatching(p, value)) {
                         found = true;
@@ -1359,19 +1361,19 @@ public class OndexServiceProvider {
             //For each conceptName of the update list deletes and creates a new conceptName
             for (String ntc : namesToCreate.keySet()) {
 //                if (!ntc.contains("</span>")) {
-                    String newName = p.matcher(ntc).replaceAll(highlighter);
-                    boolean isPref = namesToCreate.get(ntc);
-                    concept.deleteConceptName(ntc);
-                    concept.createConceptName(newName, isPref);
+                String newName = p.matcher(ntc).replaceAll(highlighter);
+                boolean isPref = namesToCreate.get(ntc);
+                concept.deleteConceptName(ntc);
+                concept.createConceptName(newName, isPref);
 //                }
             }
 
             // search in concept attributes
             for (Attribute attribute : concept.getAttributes()) {
-                if (!(attribute.getOfType().getId().equals("AA")) ||
-                        !(attribute.getOfType().getId().equals("NA")) ||
-                        !(attribute.getOfType().getId().startsWith("AA_")) ||
-                        !(attribute.getOfType().getId().startsWith("NA_"))) {
+                if (!(attribute.getOfType().getId().equals("AA"))
+                        || !(attribute.getOfType().getId().equals("NA"))
+                        || !(attribute.getOfType().getId().startsWith("AA_"))
+                        || !(attribute.getOfType().getId().startsWith("NA_"))) {
                     String value = attribute.getValue().toString();
                     if (this.isMatching(p, value)) {
                         // search and replace all matching expressions
@@ -1391,7 +1393,7 @@ public class OndexServiceProvider {
      * Searches with Lucene for documents, finds semantic motifs and by crossing
      * this data makes concepts visible, changes the size and highlight the hits
      *
-     * @param seed    List of selected genes
+     * @param seed List of selected genes
      * @param keyword
      * @return subGraph
      */
@@ -1404,13 +1406,12 @@ public class OndexServiceProvider {
         } catch (Exception e) {
             log.error("Lucene search failed", e);
         }
-        
+
         // the results give us a map of every starting concept to every valid path
         Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
-        
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
@@ -1451,92 +1452,90 @@ public class OndexServiceProvider {
                 int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
                 ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
 
-                	
                 // no-keyword, set path to visible if end-node is Trait or Phenotype
-            	if(keyword == null || keyword.equals("")){
+                if (keyword == null || keyword.equals("")) {
                     highlightPath(path, graphCloner, true);
                     continue;
-                    
-            	}
-                
-				// keyword-mode and end concept contains keyword, set path to visible
-				if (luceneResults.containsKey(endNode)) {
 
-					// keyword-mode -> do text and path highlighting
-					ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
+                }
 
-					// highlight keyword in any concept attribute
-					if (!keywordConcepts.contains(cloneCon)) {
-						this.highlight(cloneCon, keywordColourMap);
-						keywordConcepts.add(cloneCon);
+                // keyword-mode and end concept contains keyword, set path to visible
+                if (luceneResults.containsKey(endNode)) {
 
-						if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
-							pubKeywordSet.add(cloneCon);
-						}
-					}
+                    // keyword-mode -> do text and path highlighting
+                    ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
 
-					// set only paths from gene to evidence nodes to visible
-					highlightPath(path, graphCloner, false);
+                    // highlight keyword in any concept attribute
+                    if (!keywordConcepts.contains(cloneCon)) {
+                        this.highlight(cloneCon, keywordColourMap);
+                        keywordConcepts.add(cloneCon);
 
-				} else {
+                        if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
+                            pubKeywordSet.add(cloneCon);
+                        }
+                    }
 
-					// collect all paths that did not qualify
-					pathSet.add(path);
+                    // set only paths from gene to evidence nodes to visible
+                    highlightPath(path, graphCloner, false);
 
-				}
+                } else {
+
+                    // collect all paths that did not qualify
+                    pathSet.add(path);
+
+                }
             }
         }
-        
+
         // special case when none of nodes contains keyword (no-keyword-match)
         // set path to visible if end-node is Trait or Phenotype
-        if(keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))){
-        	for (EvidencePathNode path : pathSet) {
-        		highlightPath(path, graphCloner, true);
-			}
+        if (keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))) {
+            for (EvidencePathNode path : pathSet) {
+                highlightPath(path, graphCloner, true);
+            }
         }
-        
+
         ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
         Set<Integer> allPubIds = new HashSet<Integer>();
-        
-        // if subgraph has publications do smart filtering of most interesting papers
-		if (ccPub != null) {
-			
-			// get all publications in subgraph that have and don't have keyword
-	        Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass(ccPub);
-	        
-			for (ONDEXConcept c : allPubs) {
-				allPubIds.add(c.getId());
-			}
 
-			AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
-			
-			List<Integer> newPubIds = new ArrayList<Integer>();
-			
-			if(!pubKeywordSet.isEmpty()){
-				
-				// if  publications with keyword exist, keep most recent papers from pub-keyword set
-		     	newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
-		     			
-			}else{
-				
-				// if non of publication contains the keyword, just keep most recent papers from total set
-				newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
-			}
-			
-			// publications that we want to remove 
-			allPubIds.removeAll(newPubIds);
-			
-			// Keep most recent publications that contain keyword and remove rest from subGraph
-			allPubIds.forEach ( pubId -> subGraph.deleteConcept ( pubId ) );
+        // if subgraph has publications do smart filtering of most interesting papers
+        if (ccPub != null) {
+
+            // get all publications in subgraph that have and don't have keyword
+            Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass(ccPub);
+
+            for (ONDEXConcept c : allPubs) {
+                allPubIds.add(c.getId());
+            }
+
+            AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
+
+            List<Integer> newPubIds = new ArrayList<Integer>();
+
+            if (!pubKeywordSet.isEmpty()) {
+
+                // if  publications with keyword exist, keep most recent papers from pub-keyword set
+                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
+
+            } else {
+
+                // if non of publication contains the keyword, just keep most recent papers from total set
+                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+            }
+
+            // publications that we want to remove 
+            allPubIds.removeAll(newPubIds);
+
+            // Keep most recent publications that contain keyword and remove rest from subGraph
+            allPubIds.forEach(pubId -> subGraph.deleteConcept(pubId));
         }
-		
+
         ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
 
         log.debug("Number of seed genes: " + seed.size());
         log.debug("Number of removed publications " + allPubIds.size());
-        
-		
-		// what do we want to show in no-keyword mode or when none of evidence nodes matches keyword
+
+        // what do we want to show in no-keyword mode or when none of evidence nodes matches keyword
 //        if (keywordConcepts.isEmpty()) {
 //        	log.debug("INFO: no-keyword mode or no-keyword-match mode");
 //            Set<ONDEXConcept> cons = subGraph.getConcepts();
@@ -1583,9 +1582,6 @@ public class OndexServiceProvider {
 //            }
 //
 //        }
-
-
-
 //        if (export_visible_network) {
 //
 //            ONDEXGraphMetaData md = subGraph.getMetaData();
@@ -1610,48 +1606,52 @@ public class OndexServiceProvider {
 //            subGraph = filteredGraph;
 //
 //        }
-
         return subGraph;
 
     }
 
     /**
-     * Annotate first and last concept and relations of a given path Do annotations
-     * on a new graph and not on the original graph
+     * Annotate first and last concept and relations of a given path Do
+     * annotations on a new graph and not on the original graph
      *
-     * @param path        Contains concepts and relations of a semantic motif
+     * @param path Contains concepts and relations of a semantic motif
      * @param graphCloner cloner for the new graph
-     * @param doFilter If true only a path to Trait and Phenotype nodes will be made visible
+     * @param doFilter If true only a path to Trait and Phenotype nodes will be
+     * made visible
      */
     public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter) {
 
         ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
 
         AttributeName attSize = md.getAttributeName("size");
-        if (attSize == null)
+        if (attSize == null) {
             attSize = md.getFactory().createAttributeName("size", Integer.class);
+        }
 
         AttributeName attVisible = md.getAttributeName("visible");
-        if (attVisible == null)
+        if (attVisible == null) {
             attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+        }
 
         AttributeName attFlagged = md.getAttributeName("flagged");
-        if (attFlagged == null)
+        if (attFlagged == null) {
             attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
+        }
 
         ConceptClass ccTrait = md.getConceptClass("Trait");
-        if (ccTrait == null)
-        	ccTrait = md.getFactory().createConceptClass("Trait");
-        
+        if (ccTrait == null) {
+            ccTrait = md.getFactory().createConceptClass("Trait");
+        }
+
         ConceptClass ccPhenotype = md.getConceptClass("Phenotype");
-        if (ccPhenotype == null)
-        	ccPhenotype = md.getFactory().createConceptClass("Phenotype");
+        if (ccPhenotype == null) {
+            ccPhenotype = md.getFactory().createConceptClass("Phenotype");
+        }
 
         Set<ConceptClass> ccFilter = new HashSet<ConceptClass>();
         ccFilter.add(ccTrait);
         ccFilter.add(ccPhenotype);
-        
-        
+
         // gene and evidence nodes of path in knowledge graph
         int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
         ONDEXConcept geneNode = (ONDEXConcept) path.getStartingEntity();
@@ -1660,50 +1660,48 @@ public class OndexServiceProvider {
         // get equivalent gene and evidence nodes in new sub-graph
         ONDEXConcept endNodeClone = graphCloner.cloneConcept(endNode);
         ONDEXConcept geneNodeClone = graphCloner.cloneConcept(geneNode);
-        
+
         // all nodes and relations of given path 
         Set<ONDEXConcept> cons = path.getAllConcepts();
         Set<ONDEXRelation> rels = path.getAllRelations();
-        
+
         // seed gene should always be visible, flagged and bigger
         if (geneNodeClone.getAttribute(attFlagged) == null) {
-        	geneNodeClone.createAttribute(attFlagged, true, false);
-        	geneNodeClone.createAttribute(attVisible, true, false);
-        	geneNodeClone.createAttribute(attSize, new Integer(80), false);
+            geneNodeClone.createAttribute(attFlagged, true, false);
+            geneNodeClone.createAttribute(attVisible, true, false);
+            geneNodeClone.createAttribute(attSize, new Integer(80), false);
         }
-        
+
         // set all concepts to visible if filtering is turned off
         // OR filter is turned on and end node is of specific type
-        if(!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))){
+        if (!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))) {
             for (ONDEXConcept c : cons) {
                 ONDEXConcept concept = graphCloner.cloneConcept(c);
                 if (concept.getAttribute(attVisible) == null) {
                     concept.createAttribute(attSize, new Integer(50), false);
                     concept.createAttribute(attVisible, true, false);
-                } 
+                }
             }
         }
-        
+
         // set all relations to visible if filtering is turned off
         // OR filter is turned on and end node is of specific type
-        if(!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))) {
-	        for (ONDEXRelation rel : rels) {
-	            ONDEXRelation r = graphCloner.cloneRelation(rel);
-	            if (r.getAttribute(attVisible) == null) {
-	                // initial size
-	                r.createAttribute(attSize, new Integer(5), false);
-	                r.createAttribute(attVisible, true, false);
-	            }  
-	        }
+        if (!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))) {
+            for (ONDEXRelation rel : rels) {
+                ONDEXRelation r = graphCloner.cloneRelation(rel);
+                if (r.getAttribute(attVisible) == null) {
+                    // initial size
+                    r.createAttribute(attSize, new Integer(5), false);
+                    r.createAttribute(attVisible, true, false);
+                }
+            }
         }
-        
 
-        
         // add gene-QTL-Trait relations to the network
         if (mapGene2QTL.containsKey(geneNode.getId())) {
             RelationType rt = md.getFactory().createRelationType("is_p");
             EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
-            
+
             Set<Integer> qtlSet = mapGene2QTL.get(geneNode.getId());
             for (Integer qtlId : qtlSet) {
                 ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
@@ -1734,21 +1732,21 @@ public class OndexServiceProvider {
                 }
             }
         }
-        
-        
+
     }
 
     /**
      * hides the path between a gene and a concept
      *
-     * @param path        Contains concepts and relations of a semantic motif
+     * @param path Contains concepts and relations of a semantic motif
      * @param graphCloner cloner for the new graph
      */
     public void hidePath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
         ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
         AttributeName attVisible = md.getAttributeName("visible");
-        if (attVisible == null)
+        if (attVisible == null) {
             attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
+        }
 
         // hide every concept except by the last one
         int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
@@ -1765,18 +1763,18 @@ public class OndexServiceProvider {
     /**
      * Write Genomaps XML file
      *
-     * @param api_url    ws url for API
-     * @param genes      list of genes to be displayed (all genes for search result)
-     * @param userGenes  gene list from user
+     * @param api_url ws url for API
+     * @param genes list of genes to be displayed (all genes for search result)
+     * @param userGenes gene list from user
      * @param userQtlStr user QTLs
-     * @param keyword    user-specified keyword
+     * @param keyword user-specified keyword
      * @param maxGenes
-     * @param hits       search Hits
+     * @param hits search Hits
      * @param listMode
      * @return
      */
     public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-                                     String keyword, int maxGenes, Hits hits, String listMode,Map<ONDEXConcept, Double> scoredCandidates) {
+            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates) {
         List<QTL> userQtl = new ArrayList<QTL>();
         for (String qtlStr : userQtlStr) {
             userQtl.add(QTL.fromString(qtlStr));
@@ -1784,7 +1782,7 @@ public class OndexServiceProvider {
 
         log.info("Genomaps: generate XML...");
         // If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
-                /*if(userGenes != null) {
+        /*if(userGenes != null) {
                    // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
                    genes= new ArrayList<ONDEXConcept> (userGenes);
                    log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
@@ -1800,7 +1798,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && !keyword.equals("") && keyword!=null) {
+        if (ccQTL != null && !keyword.equals("") && keyword != null) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
@@ -1816,16 +1814,18 @@ public class OndexServiceProvider {
 
         // genes are grouped in three portions based on size
         int size = genes.size();
-        if (genes.size() > maxGenes)
+        if (genes.size() > maxGenes) {
             size = maxGenes;
+        }
 
         log.info("visualize genes: " + genes.size());
         for (ONDEXConcept c : genes) {
 
             // only genes that are on chromosomes (not scaffolds)
             // can be displayed in Map View
-            if (c.getAttribute(attChr) == null || c.getAttribute(attChr).getValue().toString().equals("U"))
+            if (c.getAttribute(attChr) == null || c.getAttribute(attChr).getValue().toString().equals("U")) {
                 continue;
+            }
 
             String chr = c.getAttribute(attChr).getValue().toString();
             // TEMPORARY FIX, to be disabled for new .oxl species networks that have string
@@ -1835,7 +1835,7 @@ public class OndexServiceProvider {
              * To handle String chromosome names (e.eg, in Wheat where client-side Gene View
              * uses location '1A', etc. instead of chrosome '1', etc.
              */
-            /*
+ /*
              * if(c.getAttribute(attLoc).getValue().toString() != null) { chr=
              * c.getAttribute(attLoc).getValue().toString(); }
              */
@@ -1924,8 +1924,9 @@ public class OndexServiceProvider {
             //log.info("score: "+ score);
             sb.append("</feature>\n");
 
-            if (id++ > maxGenes)
+            if (id++ > maxGenes) {
                 break;
+            }
 
         }
 
@@ -2007,7 +2008,6 @@ public class OndexServiceProvider {
         // sb.append("</feature>\n");
         // }
         // }
-
         // display user QTLs
         log.info("Display user QTLs... QTLs provided: " + userQtl.size());
         for (QTL region : userQtl) {
@@ -2068,10 +2068,10 @@ public class OndexServiceProvider {
         // }
 
         String[] colorHex = {"0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
-                "0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854",
-                "0xC20061", "0xFF7E3D", "0x008F8F", "0xFF00AA", "0xFFFFAA", "0xD4A8FF", "0xA8D4FF", "0xFFAAAA",
-                "0xAA0000", "0xAA00FF", "0xAA00AA", "0xAAFF00", "0xAAFFFF", "0xAAFFAA", "0xAAAA00", "0xAAAAFF",
-                "0xAAAAAA", "0x000055", "0x00FF55", "0x00AA55", "0x005500", "0x0055FF"};
+            "0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854",
+            "0xC20061", "0xFF7E3D", "0x008F8F", "0xFF00AA", "0xFFFFAA", "0xD4A8FF", "0xA8D4FF", "0xFFAAAA",
+            "0xAA0000", "0xAA00FF", "0xAA00AA", "0xAAFF00", "0xAAFFFF", "0xAAFFAA", "0xAAAA00", "0xAAAAFF",
+            "0xAAAAAA", "0x000055", "0x00FF55", "0x00AA55", "0x005500", "0x0055FF"};
         // 0xFFB300, # Vivid Yellow
         // 0x803E75, # Strong Purple
         // 0xFF6800, # Vivid Orange
@@ -2170,7 +2170,7 @@ public class OndexServiceProvider {
      * @return
      */
     public String writeGeneTable(ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
-                                 String listMode,Map<ONDEXConcept, Double> scoredCandidates) {
+            String listMode, Map<ONDEXConcept, Double> scoredCandidates) {
         List<QTL> qtls = new ArrayList<QTL>();
         for (String qtlStr : qtlsStr) {
             qtls.add(QTL.fromString(qtlStr));
@@ -2178,15 +2178,13 @@ public class OndexServiceProvider {
 
         log.info("generate Gene table...");
         Set<Integer> userGeneIds = new HashSet<Integer>();
-		/*if (userGenes != null) {
+        /*if (userGenes != null) {
 			Set<Integer> candidateGeneIds = new HashSet<Integer>();
-
 			// is conversion into integer sets needed because comparing the
 			// ONDEXConcept objects is not working???
 			for (ONDEXConcept c : candidates) {
 				candidateGeneIds.add(c.getId());
 			}
-
 			for (ONDEXConcept c : userGenes) {
 				userGeneIds.add(c.getId());
 				if (!candidateGeneIds.contains(c.getId())) {
@@ -2257,10 +2255,11 @@ public class OndexServiceProvider {
 
             DecimalFormat fmt = new DecimalFormat("0.00");
 
-            if (attCM != null)
+            if (attCM != null) {
                 beg = fmt.format(begCM);
-            else
+            } else {
                 beg = Integer.toString(begBP);
+            }
 
             Double score = 0.0;
             if (scoredCandidates != null) {
@@ -2285,15 +2284,17 @@ public class OndexServiceProvider {
                     String acc = qtl.getConceptName().getName().replaceAll("\"", "");
 
                     String traitDesc = null;
-                    if (attTrait != null && qtl.getAttribute(attTrait) != null)
+                    if (attTrait != null && qtl.getAttribute(attTrait) != null) {
                         traitDesc = qtl.getAttribute(attTrait).getValue().toString();
-                    else
+                    } else {
                         traitDesc = acc;
+                    }
 
-                    if (infoQTL == "")
+                    if (infoQTL == "") {
                         infoQTL += traitDesc + "//" + traitDesc;
-                    else
+                    } else {
                         infoQTL += "||" + traitDesc + "//" + traitDesc;
+                    }
 
                 }
 
@@ -2338,10 +2339,11 @@ public class OndexServiceProvider {
 
                     // FIXME re-factor chromosome string
                     if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if (infoQTL == "")
+                        if (infoQTL == "") {
                             infoQTL += loci.getLabel() + "//" + loci.getTrait();
-                        else
+                        } else {
                             infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
+                        }
                     }
                 }
             }
@@ -2357,19 +2359,20 @@ public class OndexServiceProvider {
             if (luceneHits == null) {
                 luceneHits = new HashSet<Integer>();
             }
-            
+
             Set<Integer> evidencesIDs = new HashSet<Integer>();
             for (int hitID : luceneHits) {
                 ONDEXConcept c = graph.getConcept(hitID);
                 evidencesIDs.add(c.getId()); // retain all evidences' ID's
                 String ccId = c.getOfType().getId();
-                
+
                 // skip publications as handled differently (see below)
-                if (ccId.equals("Publication")) 
-                	continue;
-                
+                if (ccId.equals("Publication")) {
+                    continue;
+                }
+
                 String name = getDefaultNameForGroupOfConcepts(c);
-                
+
                 if (!cc2name.containsKey(ccId)) {
                     cc2name.put(ccId, name);
                 } else {
@@ -2378,19 +2381,20 @@ public class OndexServiceProvider {
                     cc2name.put(ccId, act_name);
                 }
             }
-            
+
             // special case for publications to sort and filter most recent publications
             Set<ONDEXConcept> allPubs = new HashSet<ONDEXConcept>();
             for (int lid : luceneHits) {
                 ONDEXConcept c = graph.getConcept(lid);
-                if(c.getOfType().getId().equals("Publication"))
-                	allPubs.add(c);
+                if (c.getOfType().getId().equals("Publication")) {
+                    allPubs.add(c);
+                }
             }
-            
+
             AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
             List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
-            
-            String pubString = "Publication__"+allPubs.size()+"__";
+
+            String pubString = "Publication__" + allPubs.size() + "__";
             for (Integer pid : newPubs) {
                 String name = getDefaultNameForGroupOfConcepts(graph.getConcept(pid));
                 // All publications will have the format PMID:15487445
@@ -2398,34 +2402,36 @@ public class OndexServiceProvider {
                     name = "PMID:" + name;
                 }
                 pubString = pubString + name + "//";
-				
-			}
-            
-            String tidyPubString = "";
-            if(pubString.endsWith("//")){
-            	tidyPubString = pubString.substring(0, pubString.length() - 2);
+
             }
-            
+
+            String tidyPubString = "";
+            if (pubString.endsWith("//")) {
+                tidyPubString = pubString.substring(0, pubString.length() - 2);
+            }
+
             // add most recent publications here
-            if(!newPubs.isEmpty())
-            	cc2name.put("Publication", tidyPubString);
-            
-            
+            if (!newPubs.isEmpty()) {
+                cc2name.put("Publication", tidyPubString);
+            }
+
             int evidences_linked = luceneHits.size(); // no. of evidences linked per gene
 
             // create output string for evidences column in GeneView table
             String evidence = "";
             for (String ccId : cc2name.keySet()) {
-            	if(ccId.equals("Publication"))
-            		evidence += cc2name.get(ccId) + "||";
-            	else
-            		evidence += ccId+"__"+cc2name.get(ccId).split("//").length+"__"+cc2name.get(ccId) + "||";
+                if (ccId.equals("Publication")) {
+                    evidence += cc2name.get(ccId) + "||";
+                } else {
+                    evidence += ccId + "__" + cc2name.get(ccId).split("//").length + "__" + cc2name.get(ccId) + "||";
+                }
             }
 
             String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
 
-            if (!evidence.equals(""))
+            if (!evidence.equals("")) {
                 evidence = evidence.substring(0, evidence.length() - 2);
+            }
 
             if (luceneHits.isEmpty() && listMode.equals("GLrestrict")) {
                 continue;
@@ -2473,9 +2479,8 @@ public class OndexServiceProvider {
      * @param filename
      * @return boolean
      */
-
     public String writeEvidenceTable(String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
-                                     List<String> qtlsStr) {
+            List<String> qtlsStr) {
 
         ONDEXGraphMetaData md = graph.getMetaData();
         AttributeName attChr = md.getAttributeName("Chromosome");
@@ -2541,7 +2546,7 @@ public class OndexServiceProvider {
                         }
                     }
                     // use shortest preferred concept name
-                                  /*  String geneName = getShortestPreferedName(gene.getConceptNames());
+                    /*  String geneName = getShortestPreferedName(gene.getConceptNames());
                                     geneAcc= geneName; */
                     user_genes = user_genes + geneAcc + ",";
                 }
@@ -2606,7 +2611,7 @@ public class OndexServiceProvider {
                         notMatched_notInGeneList);
             }
             // writes the row - unless user genes provided and none match this row
-            if (userGenes!=null && !userGenes.isEmpty() && "".equals(user_genes)) {
+            if (userGenes != null && !userGenes.isEmpty() && "".equals(user_genes)) {
                 continue;
             }
             out.append(type + "\t" + name + "\t" + sfmt.format(score) + "\t" + pfmt.format(pvalue) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
@@ -2626,7 +2631,6 @@ public class OndexServiceProvider {
      * @return boolean
      * @throws ParseException
      */
-
     public String writeSynonymTable(String keyword) throws ParseException {
         StringBuffer out = new StringBuffer();
         int topX = 25;
@@ -2653,7 +2657,7 @@ public class OndexServiceProvider {
             // a HashMap to store the count for the number of values written
             // to the Synonym Table (for each Concept Type).
             Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
-            
+
             // search concept names
             String fieldNameCN = getFieldName("ConceptName", null);
             // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
@@ -2720,12 +2724,14 @@ public class OndexServiceProvider {
 
                                     // error going around for publication
                                     // suggestions
-                                    if (name.contains("\n"))
+                                    if (name.contains("\n")) {
                                         name = name.replace("\n", "");
+                                    }
                                     // error going around for qtl
                                     // suggestions
-                                    if (name.contains("\""))
+                                    if (name.contains("\"")) {
                                         name = name.replaceAll("\"", "");
+                                    }
                                     out.append(name + "\t" + type + "\t" + score.toString() + "\t" + id + "\n");
                                     existingCount++;
                                     // store the count per concept Type for
@@ -2840,8 +2846,7 @@ public class OndexServiceProvider {
             } else {
                 cn = shortest_coname; // use shortest, preferred concept name.
             }
-        }
-        // } else if (ct == "Phenotype") {
+        } // } else if (ct == "Phenotype") {
         // AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
         // cn = c.getAttribute(att).getValue().toString().trim();
         //
@@ -2857,8 +2862,9 @@ public class OndexServiceProvider {
                 cn = getShortestNotAmbiguousAccession(accs);
             }
         }
-        if (cn.length() > 30)
+        if (cn.length() > 30) {
             cn = cn.substring(0, 29) + "...";
+        }
         return cn;
     }
 
@@ -2909,9 +2915,9 @@ public class OndexServiceProvider {
     /**
      * Returns number of organism (taxID) genes at a given loci
      *
-     * @param chr   chromosome name as used in GViewer
+     * @param chr chromosome name as used in GViewer
      * @param start start position
-     * @param end   end position
+     * @param end end position
      * @return 0 if no genes found, otherwise number of genes at specified loci
      */
     public int getGeneCount(String chr, int start, int end) {
@@ -2997,8 +3003,9 @@ public class OndexServiceProvider {
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
 
         Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
-        if (ccQTL != null)
+        if (ccQTL != null) {
             qtls = graph.getConceptsOfConceptClass(ccQTL);
+        }
 
         Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
         Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
@@ -3020,19 +3027,18 @@ public class OndexServiceProvider {
 
             // the results give us a map of every starting concept to every
             // valid path
-
-	        	// Causes the Cypher-based traverser to report some performance stats
-	      		gt.setOption ( "isPerformanceTrackingEnabled", true );        	
+            // Causes the Cypher-based traverser to report some performance stats
+            gt.setOption("isPerformanceTrackingEnabled", true);
             Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
-	          // Let's disable it after the initial population
-	      		gt.setOption ( "isPerformanceTrackingEnabled", false );
+            // Let's disable it after the initial population
+            gt.setOption("isPerformanceTrackingEnabled", false);
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
             mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
-            PercentProgressLogger progressLogger = new PercentProgressLogger (
-            	"{}% of paths stored", results.values ().size ()
+            PercentProgressLogger progressLogger = new PercentProgressLogger(
+                    "{}% of paths stored", results.values().size()
             );
             for (List<EvidencePathNode> paths : results.values()) {
                 for (EvidencePathNode path : paths) {
@@ -3040,27 +3046,24 @@ public class OndexServiceProvider {
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
 
-			
                     // add all semantic motifs to the new graph
                     // Set<ONDEXConcept> concepts = path.getAllConcepts();
-
                     // Extract pathLength and endNode ID.
                     int pathLength = (path.getLength() - 1) / 2; // get Path Length
                     ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder()
                             .get(path.getConceptsInPositionOrder().size() - 1);
                     int lastConID = con.getId(); // endNode ID.
                     String gpl_key = gene.getId() + "//" + lastConID;
-			              
+
                     if (!mapGene2PathLength.containsKey(gpl_key)) {
                         // log.info(gpl_key +": "+ pathLength);
                         mapGene2PathLength.put(gpl_key, pathLength); // store in HashMap
+                    } else {
+                        if (pathLength < mapGene2PathLength.get(gpl_key)) {
+                            // update HashMap with shorter pathLength
+                            mapGene2PathLength.put(gpl_key, pathLength);
+                        }
                     }
-                    else {
-									    if(pathLength < mapGene2PathLength.get(gpl_key)){
-										    // update HashMap with shorter pathLength
-										    mapGene2PathLength.put(gpl_key, pathLength); 
-									    }
-                    }    
 
                     // GENE 2 CONCEPT
                     if (!mapGene2Concepts.containsKey(gene.getId())) {
@@ -3073,13 +3076,12 @@ public class OndexServiceProvider {
 
                     // CONCEPT 2 GENE
                     // concepts.remove(gene);
-           
                     mapConcept2Genes
-                    	.computeIfAbsent ( lastConID, _id -> new HashSet<> () )
-                    	.add ( gene.getId () );
-                   
+                            .computeIfAbsent(lastConID, _id -> new HashSet<>())
+                            .add(gene.getId());
+
                 }
-                progressLogger.updateWithIncrement ();
+                progressLogger.updateWithIncrement();
             }
             try {
                 FileOutputStream f;
@@ -3131,29 +3133,32 @@ public class OndexServiceProvider {
         if (mapGene2Concepts == null) {
             log.warn("mapGene2Concepts is null");
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-        } else
+        } else {
             log.info("Populated Gene2Concept with #mappings: " + mapGene2Concepts.size());
+        }
 
         if (mapConcept2Genes == null) {
             log.warn("mapConcept2Genes is null");
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-        } else
+        } else {
             log.info("Populated Concept2Gene with #mappings: " + mapConcept2Genes.size());
+        }
 
         if (mapGene2PathLength == null) {
             log.warn("Gene2PathLength is null");
             mapGene2PathLength = new HashMap<String, Integer>();
-        } else
+        } else {
             log.info("Populated Gene2PathLength with #mappings: " + mapGene2PathLength.size());
+        }
 
         log.info("Create Gene2QTL map now...");
 
         mapGene2QTL = new HashMap<Integer, Set<Integer>>();
 
-        PercentProgressLogger progressLogger = new PercentProgressLogger (
-        	"{}% of genes processed", genes.size ()
+        PercentProgressLogger progressLogger = new PercentProgressLogger(
+                "{}% of genes processed", genes.size()
         );
-        
+
         for (ONDEXConcept gene : genes) {
 
             String chr = null;
@@ -3173,10 +3178,11 @@ public class OndexServiceProvider {
                 begBP = (Integer) gene.getAttribute(attBegin).getValue();
             }
 
-            if (attCM != null)
+            if (attCM != null) {
                 beg = begCM;
-            else
+            } else {
                 beg = begBP;
+            }
 
             for (ONDEXConcept q : qtls) {
                 String chrQTL = q.getAttribute(attChromosome).getValue().toString();
@@ -3194,7 +3200,7 @@ public class OndexServiceProvider {
                 }
 
             }
-            progressLogger.updateWithIncrement ();
+            progressLogger.updateWithIncrement();
         }
 
         log.info("Populated Gene2QTL with #mappings: " + mapGene2QTL.size());
@@ -3281,57 +3287,57 @@ public class OndexServiceProvider {
         }
     }
 
-    
-  	/**
-  	 * We receive options set from the main config.xml file. These are further passed to the specific 
-  	 * {@link AbstractGraphTraverser} that is selected via the 'GraphTraverserClass' option in the main 
-  	 * config file (together with a couple of other parameters, see
-  	 */	
-  	public Map<String, Object> getOptions () {
-  		return options;
-  	}
+    /**
+     * We receive options set from the main config.xml file. These are further
+     * passed to the specific {@link AbstractGraphTraverser} that is selected
+     * via the 'GraphTraverserClass' option in the main config file (together
+     * with a couple of other parameters, see
+     */
+    public Map<String, Object> getOptions() {
+        return options;
+    }
 
-  	public void setOptions ( Map<String, Object> options ) {
-  		this.options = options;
-  	}
+    public void setOptions(Map<String, Object> options) {
+        this.options = options;
+    }
 }
 
 class ValueComparator<T> implements Comparator<T> {
 
-	Map<T, Double> base;
+    Map<T, Double> base;
 
-	public ValueComparator(Map<T, Double> base) {
-		this.base = base;
-	}
+    public ValueComparator(Map<T, Double> base) {
+        this.base = base;
+    }
 
-	public int compare(Object a, Object b) {
+    public int compare(Object a, Object b) {
 
-		if (base.get(a) < base.get(b)) {
-			return 1;
-		} else if (base.get(a) == base.get(b)) {
-			return 0;
-		} else {
-			return -1;
-		}
-	}
+        if (base.get(a) < base.get(b)) {
+            return 1;
+        } else if (base.get(a) == base.get(b)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 }
 
 class FloatValueComparator<T> implements Comparator<T> {
 
-	Map<T, Float> base;
+    Map<T, Float> base;
 
-	public FloatValueComparator(Map<T, Float> base) {
-		this.base = base;
-	}
+    public FloatValueComparator(Map<T, Float> base) {
+        this.base = base;
+    }
 
-	public int compare(Object a, Object b) {
-		if (base.get(a) < base.get(b)) {
-			return 1;
-		} else if (base.get(a) == base.get(b)) {
-			return 0;
-		} else {
-			return -1;
-		}
-	}
+    public int compare(Object a, Object b) {
+        if (base.get(a) < base.get(b)) {
+            return 1;
+        } else if (base.get(a) == base.get(b)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 
 }
