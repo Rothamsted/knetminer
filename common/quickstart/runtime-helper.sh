@@ -112,10 +112,10 @@ rm -Rf /tmp/aratiny-ws common/aratiny/aratiny-ws/target
 cp -Rf common/aratiny/aratiny-ws /tmp
 
 # We don't need the test queries used for aratiny, let's remove them from the build location
-rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-config/neo4j/*.cypher
+rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/*.cypher
 
 # And then copy the dataset-specific config to the build place (in /tmp) 
-cp -Rf "$knet_dataset_dir/settings/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-config
+cp -Rf "$knet_dataset_dir/settings/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config
 
 # Eventually, go to the build place and do mvn test-compile. This creates interpolated config files (ie, 
 # all the placeholders are instantiated with the values in maven settings or in ancestor POMS).  
@@ -125,7 +125,7 @@ cd /tmp/aratiny-ws
 mvn $MAVEN_ARGS --settings "$knet_dataset_dir/config/actual-maven-settings.xml" clean test-compile
 
 # End eventually, deploy the instantiated config files
-cp -Rf target/test-classes/knetminer-config/* "$knet_dataset_dir/config"
+cp -Rf target/test-classes/knetminer-dataset/config/* "$knet_dataset_dir/config"
 
 
 
@@ -172,7 +172,7 @@ cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 # --- And eventually run the server, which will have the ws.war (from the Docker build), the new client .war and the server config.
 # 
 
-if [ "$is_deploy_only" != '' ]; then
+if [ "$is_deploy_only" != '' ]; then
 	echo -e "\n\n\tFiles deployed at '$knet_tomcat_home/webapps/', not running Tomcat because of --deploy-only\n"
 	exit
 fi

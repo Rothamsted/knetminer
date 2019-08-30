@@ -34,8 +34,13 @@ cd "$dataset_dir"
 cd config
 rm -Rf *
 
-echo -e "\tCleaning config"
+echo -e "\tCleaning data"
 cd ../data
 rm -Rf *.tab index map*
 
+echo -e "\tCleaning client-src"
+cd ..
+rm -Rf client-src
+
+echo -e "\t"
 echo -e "\n\tThe end\n"
