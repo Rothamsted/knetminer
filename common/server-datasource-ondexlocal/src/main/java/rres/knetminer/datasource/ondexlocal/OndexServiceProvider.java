@@ -426,11 +426,7 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            if (!indexFile.exists()) {
-                lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
-            } else {
-                lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
-            }
+            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), !indexFile.exists() );
             lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
@@ -738,8 +734,8 @@ public class OndexServiceProvider {
         ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
         mergeHits(hit2score, sHitsAnno, NOTList);
 
-        log.info("Query: ............" + qAnno.toString(fieldNameCA));
-        log.info("Annotation hits: " + sHitsAnno.getOndexHits().size());
+        log.info("searchLucene(), query for annotation: " + qAnno.toString(fieldNameCA));
+        log.info("Resulting Annotation hits: " + sHitsAnno.getOndexHits().size());
 
         return hit2score;
     }
