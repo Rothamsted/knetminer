@@ -5,6 +5,7 @@ KNETMAPS.Container = function () {
 
     var stats = KNETMAPS.Stats();
     var iteminfo = KNETMAPS.ItemInfo();
+    var conceptLegend = KNETMAPS.ConceptsLegend();
 
     var my = function () {};
 
@@ -230,6 +231,7 @@ KNETMAPS.Container = function () {
                             this.addClass('HideEle');
                             // Refresh network legend.
                             stats.updateKnetStats();
+                            conceptLegend.populateConceptLegend();
                         }
                     }
                 },
@@ -245,6 +247,7 @@ KNETMAPS.Container = function () {
                                     //ele.hide();
                                     ele.removeClass('ShowEle').addClass('HideEle');
                                     $('#infoDialog').html("");
+                                    
                                 }
                                 if (ele.hasClass('FlaggedGene')) {
                                     $('#infoDialog').html('<font color="red">' + "Can't remove  the main Gene Concept node.</font>").show();
@@ -267,6 +270,7 @@ KNETMAPS.Container = function () {
                         }
                         // Refresh network Stats.
                         stats.updateKnetStats();
+                        conceptLegend.populateConceptLegend();
                     }
                 },
 
