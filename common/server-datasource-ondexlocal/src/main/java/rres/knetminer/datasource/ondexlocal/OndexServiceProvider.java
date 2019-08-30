@@ -76,6 +76,7 @@ import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
+import net.sourceforge.ondex.logging.ONDEXLogger;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
@@ -428,6 +429,7 @@ public class OndexServiceProvider {
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), true);
             else
                 lenv = new LuceneEnv(indexFile.getAbsolutePath(), false);
+            lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
         } catch (Exception e) {
