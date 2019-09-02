@@ -8,9 +8,10 @@ addons:
     packages:
       - libxml2-utils
       
-before_script:
+install:
   - npm config set unsafe-perm true
   - npm install bower gulp -g
+  - export PATH="/usr/local/bin:$PATH"
       
 script: 
   - mvn deploy --settings settings.xml
