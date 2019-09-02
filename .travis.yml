@@ -1,0 +1,17 @@
+language: java
+
+jdk:
+  - openjdk8
+
+addons:
+  apt:
+    packages:
+      - libxml2-utils
+      
+install:
+  - npm config set unsafe-perm true
+  - npm install bower gulp -g
+  - export PATH="/usr/local/bin:$PATH"
+      
+script: 
+  - mvn deploy --settings settings.xml

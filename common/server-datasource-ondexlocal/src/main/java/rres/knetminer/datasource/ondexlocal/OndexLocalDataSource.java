@@ -220,6 +220,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 				for (ONDEXConcept userGene : userGenes) {
 					if (!genes.contains(userGene)) {
 						genes.add(userGene);
+                                                geneMap.put(userGene, 0.0); // Ensure the gene is placed into the HashMap
 					}
 				}
 				log.info("Using user gene list... genes: " + genes.size());

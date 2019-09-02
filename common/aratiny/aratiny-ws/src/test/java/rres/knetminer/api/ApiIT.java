@@ -7,6 +7,7 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
@@ -92,21 +93,37 @@ public class ApiIT
 		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", result );
 		return result;
 	}
-	
-	
-	@Test
-	public void testCountHits () throws JSONException, IOException, URISyntaxException
+
+	private void testCountHits ( String keyword ) throws JSONException, IOException, URISyntaxException
 	{
+		String encKeyword = URLEncoder.encode ( keyword, "UTF-8" );
 		JSONObject js = new JSONObject ( IOUtils.toString ( 
-			new URI ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits?keyword=seed" ),
+			new URI ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits?keyword=" + encKeyword ),
 			"UTF-8"
 		));
 		
 		Stream.of ( "luceneCount", "luceneLinkedCount", "geneCount" )
 		.forEach ( key -> 
-		  assertTrue ( "countHits returned a wrong result (" + key + ")!", js.getInt ( key ) > 0 )
+		  assertTrue ( 
+		  	"countHits for '" + keyword + "' returned a wrong result (" + key + ")!", 
+		  	js.getInt ( key ) > 0 )
 		);
 	}
+
+	
+	@Test
+	public void testCountHits () throws JSONException, IOException, URISyntaxException {
+		testCountHits ( "seed" );
+	}
+
+	/**
+	 * Testing indexing of accessions.
+	 */
+	@Test
+	public void testCountHitsPhraseQuery () throws JSONException, IOException, URISyntaxException {
+		testCountHits ( "cell cycle" );
+	}
+
 	
 	@Test
 	public void testGenomeGrowth () {
