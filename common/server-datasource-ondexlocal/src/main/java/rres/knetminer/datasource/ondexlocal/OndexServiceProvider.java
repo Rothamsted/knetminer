@@ -43,12 +43,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
-//import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-//import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryparser.classic.ParseException;
-//import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -76,7 +73,6 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
-//import net.sourceforge.ondex.export.oxl.Export;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
@@ -263,15 +259,6 @@ public class OndexServiceProvider {
             // Calculate average size of gene-evidence networks in the HashMap.
             avgValues = all_keys > 0 ? all_values_count / all_keys : 0;
 
-            /*
-             * log.info("Graph Stats:");
-             * log.info("1) Total number of genes: "+ totalGenes);
-             * log.info("2) Total concepts: "+ totalConcepts);
-             * log.info("3) Total Relations: "+ totalRelations);
-             * log.info("4) Concept2Gene #mappings: "+ geneEvidenceConcepts);
-             * log.info("5) Min., Max., Average size of gene-evidence networks: "
-             * + minValues +", "+ maxValues +", "+ avgValues);
-             */
             // Write the Stats to a .tab file.
             StringBuffer sb = new StringBuffer();
             // sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
@@ -459,52 +446,6 @@ public class OndexServiceProvider {
         ONDEXGraph graph2 = new MemoryONDEXGraph("FilteredGraphUnconnected");
         uFilter.copyResultsToNewGraph(graph2);
 
-        // // Attribute Value Filter
-        // net.sourceforge.ondex.filter.attributevalue.Filter visFilter = new
-        // net.sourceforge.ondex.filter.attributevalue.Filter();
-        // ONDEXPluginArguments visFA = new
-        // ONDEXPluginArguments(visFilter.getArgumentDefinitions());
-        // visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.ATTRNAME_ARG,
-        // "size");
-        // //Not sure if "true" needs to be string or boolean
-        // visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.VALUE_ARG,
-        // "0");
-        // visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.OPERATOR_ARG,
-        // ">");
-        // visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.INCLUDING_ARG,
-        // true);
-        // visFA.addOption(net.sourceforge.ondex.filter.attributevalue.ArgumentNames.IGNORE_ARG,
-        // true);
-        //
-        // visFilter.setArguments(visFA);
-        // visFilter.setONDEXGraph(graph2);
-        // try {
-        // visFilter.start();
-        // } catch (WrongArgumentException e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // }
-        //
-        // ONDEXGraph graph3 = new MemoryONDEXGraph("FilteredGraph");
-        // visFilter.copyResultsToNewGraph(graph3);
-        // oxl export
-        // disabled (25/10/17)
-        /*
-         * Export export = new Export(); export.setLegacyMode(true);
-         * ONDEXPluginArguments ea = new
-         * ONDEXPluginArguments(export.getArgumentDefinitions());
-         * ea.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
-         * ea.addOption("GZip", true); export.setArguments(ea);
-         * export.setONDEXGraph(graph2); try { export.start(); } catch (IOException e) {
-         * e.printStackTrace(); System.out.println(e.getMessage()); } catch
-         * (XMLStreamException e) { e.printStackTrace();
-         * System.out.println(e.getMessage()); } catch (JAXBException e) {
-         * e.printStackTrace(); System.out.println(e.getMessage()); }
-         *
-         * // Check if .oxl file exists while (!fileIsCreated) { fileIsCreated =
-         * checkFileExist(exportPath); } System.out.println("OXL file created:" +
-         * exportPath);
-         */
         // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
         Export jsonExport = new Export();
         // JSON output file.
@@ -743,8 +684,6 @@ public class OndexServiceProvider {
     public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
         Map<ONDEXConcept, Double> scoredCandidates = new HashMap<ONDEXConcept, Double>();
         Map<ONDEXConcept, Double> sortedCandidates = new HashMap<ONDEXConcept, Double>(); // Sort via stream instead
-//        ValueComparator<ONDEXConcept> comparator = new ValueComparator<ONDEXConcept>(scoredCandidates);
-//        TreeMap<ONDEXConcept, Double> sortedCandidates = new TreeMap<ONDEXConcept, Double>(comparator);
         log.info("total hits from lucene: " + hit2score.keySet().size());
 
         synchronized (this) {
@@ -823,36 +762,7 @@ public class OndexServiceProvider {
         return sortedCandidates;
     }
 
-    // /**
-    // * From the given set concepts (genes) here we return those associated
-    // with the keyword.
-    // *
-    // * @param List<String> list
-    // * @param String keyword
-    // *
-    // * @return ArrayList<ONDEXConcept> genes
-    // */
-    // public Set<ONDEXConcept> searchList(Set<ONDEXConcept> list, String
-    // keyword){
-    // Set<ONDEXConcept> relatedGenes = new HashSet<ONDEXConcept>();
-    //
-    // for(ONDEXConcept concept : list){
-    // if(mapGene2Concepts.containsKey(concept.getId())){
-    // Set<Integer> accessions = mapGene2Concepts.get(concept.getId());
-    // for(Integer acc : accessions){
-    // ONDEXConcept linkedConcept = graph.getConcept(acc);
-    // if (OndexSearch.find(linkedConcept, keyword, false)) {
-    // relatedGenes.add(concept);
-    // break;
-    // }
-    // }
-    // }
-    // }
-    //
-    //
-    // System.out.println("related genes size: "+relatedGenes.size());
-    // return relatedGenes;
-    // }
+
     /**
      * Did you mean function for spelling correction
      *
@@ -914,20 +824,7 @@ public class OndexServiceProvider {
                     if (c.getAttribute(attChromosome) != null) {
                         chrGene = c.getAttribute(attChromosome).getValue().toString();
                     }
-                    // TEMPORARY FIX, to be disabled for new .oxl species networks that have string
-                    // 'Chromosome' (instead of the older integer Chromosome) & don't have a string
-                    // 'Location' attribute.
-                    /*
-                     * if(c.getAttribute(attLoc) != null) { // if String Location exists, use that
-                     * instead of integer Chromosome as client-side may use String Location in
-                     * basemap. chrGene= c.getAttribute(attLoc).getValue().toString(); }
-                     */
 
- /*if (attCM != null) {
-						if (c.getAttribute(attCM) != null) {
-							startGene = (Double) c.getAttribute(attCM).getValue();
-						}
-					} else*/
                     if (c.getAttribute(attBegin) != null) {
                         startGene = /*(double)*/ ((Integer) c.getAttribute(attBegin).getValue());
                     }
@@ -1531,77 +1428,6 @@ public class OndexServiceProvider {
         log.debug("Number of seed genes: " + seed.size());
         log.debug("Number of removed publications " + allPubIds.size());
 
-        // what do we want to show in no-keyword mode or when none of evidence nodes matches keyword
-//        if (keywordConcepts.isEmpty()) {
-//        	log.debug("INFO: no-keyword mode or no-keyword-match mode");
-//            Set<ONDEXConcept> cons = subGraph.getConcepts();
-//            Set<ONDEXRelation> rels = subGraph.getRelations();
-//
-//            ONDEXGraphMetaData md = subGraph.getMetaData();
-//            AttributeName attFlagged = md.getAttributeName("flagged");
-//            AttributeName attVisible = md.getAttributeName("visible");
-//            AttributeName attSize = md.getAttributeName("size");
-//
-//            if (attSize == null)
-//                attSize = md.getFactory().createAttributeName("size", Integer.class);
-//            if (attVisible == null)
-//                attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-//            if (attFlagged == null)
-//                attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
-//
-//            for (ONDEXConcept gene : candidateGenes) {
-//                gene.createAttribute(attFlagged, true, false);
-//                gene.createAttribute(attVisible, true, false);
-//                gene.createAttribute(attSize, new Integer(70), false);
-//            }
-//            
-//            // TODO: only show paths between genes and GO-BP or Trait (TO) terms
-//            for (ONDEXConcept c : cons) {
-//
-//                if (c.getOfType().getId().equalsIgnoreCase("Publication")
-//                        || c.getOfType().getId().equalsIgnoreCase("CelComp")) {
-//                    c.createAttribute(attVisible, false, false);
-//                } else if (c.getOfType().getId().equalsIgnoreCase("BioProc")) {
-//                    c.createAttribute(attSize, new Integer(60), false);
-//                    c.createAttribute(attVisible, true, false);
-//                } else {
-//                    if (c.getAttribute(attSize) == null && c.getAttribute(attVisible) == null) {
-//                        c.createAttribute(attSize, new Integer(30), false);
-//                        c.createAttribute(attVisible, true, false);
-//                    }
-//                }
-//            }
-//
-//            for (ONDEXRelation r : rels) {
-//                r.createAttribute(attVisible, true, false);
-//                r.createAttribute(attSize, new Integer(3), false);
-//            }
-//
-//        }
-//        if (export_visible_network) {
-//
-//            ONDEXGraphMetaData md = subGraph.getMetaData();
-//            AttributeName attSize = md.getAttributeName("size");
-//            Set<ONDEXConcept> itc = subGraph.getConceptsOfAttributeName(attSize);
-//            Set<ONDEXRelation> itr = subGraph.getRelationsOfAttributeName(attSize);
-//
-//            ONDEXGraph filteredGraph = new MemoryONDEXGraph("FilteredSubGraph");
-//            ONDEXGraphCloner graphCloner2 = new ONDEXGraphCloner(subGraph, filteredGraph);
-//
-//            ONDEXGraphRegistry.graphs.put(filteredGraph.getSID(), filteredGraph);
-//
-//            for (ONDEXConcept c : itc) {
-//                graphCloner2.cloneConcept(c);
-//            }
-//            for (ONDEXRelation r : itr) {
-//                graphCloner2.cloneRelation(r);
-//            }
-//
-//            ONDEXGraphRegistry.graphs.remove(filteredGraph.getSID());
-//
-//            subGraph = filteredGraph;
-//
-//        }
         return subGraph;
 
     }
@@ -1824,18 +1650,6 @@ public class OndexServiceProvider {
             }
 
             String chr = c.getAttribute(attChr).getValue().toString();
-            // TEMPORARY FIX, to be disabled for new .oxl species networks that have string
-            // 'Chromosome' (instead of the older integer Chromosome) & don't have a string
-            // 'Location' attribute.
-            /*
-             * To handle String chromosome names (e.eg, in Wheat where client-side Gene View
-             * uses location '1A', etc. instead of chrosome '1', etc.
-             */
- /*
-             * if(c.getAttribute(attLoc).getValue().toString() != null) { chr=
-             * c.getAttribute(attLoc).getValue().toString(); }
-             */
-
             int end = 0;
             c.getAttribute(attEnd).getValue();
 
@@ -1870,13 +1684,8 @@ public class OndexServiceProvider {
 
             String name = c.getPID();
 
-            for (ConceptAccession acc : c.getConceptAccessions()) {
-                // if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
-                // && accValue.startsWith("AT")
-                // && (accValue.indexOf(".") == -1)) {
+            for (ConceptAccession acc : c.getConceptAccessions())
                 name = acc.getAccession();
-                // }
-            }
 
             String label = getDefaultNameForGroupOfConcepts(c);
             //log.info("id, chr, start, end, label, type: "+ id +", "+ chr +", "+ beg +", "+ end +", "+ label + ", gene");
@@ -1926,85 +1735,6 @@ public class OndexServiceProvider {
 
         }
 
-        // if (usersRelatedGenes != null && usersRelatedGenes.size() > 0) {
-        // for (ONDEXConcept u : usersRelatedGenes) {
-        // // only genes that are on chromosomes (not scaffolds)
-        // // can be displayed in GViewer
-        // if (u.getAttribute(attChr) == null)
-        // continue;
-        //
-        // String name = u.getPID();
-        //
-        // for (ConceptAccession acc : u.getConceptAccessions()) {
-        // String accValue = acc.getAccession();
-        // //if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
-        // // && accValue.startsWith("AT")
-        // // && (accValue.indexOf(".") == -1)) {
-        // name = acc.getAccession();
-        // //}
-        // }
-        //
-        // String chr = u.getAttribute(attChr).getValue().toString();
-        // String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-        // String beg = u.getAttribute(attBeg).getValue().toString();
-        // String end = u.getAttribute(attEnd).getValue().toString();
-        //
-        // String query = "mode=network&keyword=" + keyword+"&list="+name;
-        // String uri = "OndexServlet?" + query;
-        //
-        // // Genes
-        // sb.append("<feature id=\"" + id + "\">\n");
-        // sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
-        // sb.append("<start>" + beg + "</start>\n");
-        // sb.append("<end>" + end + "</end>\n");
-        // sb.append("<type>gene</type>\n");
-        // sb.append("<color>0x0000ff</color>\n"); // COLOR
-        // sb.append("<label>" + name + "</label>\n");
-        // sb.append("<link>" + uri + "</link>\n");
-        // sb.append("</feature>\n");
-        // }
-        // }
-        //
-        // if (!listMode.equals("GLrestrict") && usersUnrelatedGenes != null &&
-        // usersUnrelatedGenes.size() > 0) {
-        // for (ONDEXConcept u : usersUnrelatedGenes) {
-        // // only genes that are on chromosomes (not scaffolds)
-        // // can be displayed in GViewer
-        // if (u.getAttribute(attChr) == null)
-        // continue;
-        //
-        // String name = u.getPID();
-        //
-        // for (ConceptAccession acc : u.getConceptAccessions()) {
-        // String accValue = acc.getAccession();
-        // if (acc.getElementOf().getId().equalsIgnoreCase("TAIR")
-        // && accValue.startsWith("AT")
-        // && (accValue.indexOf(".") == -1)) {
-        // name = acc.getAccession();
-        // }
-        // }
-        //
-        // String chr = u.getAttribute(attChr).getValue().toString();
-        // String chrLatin = chromBidiMap.get(Integer.valueOf(chr));
-        // String beg = u.getAttribute(attBeg).getValue().toString();
-        // String end = u.getAttribute(attEnd).getValue().toString();
-        //
-        // String query = "mode=network&keyword=" + keyword+"&list="+name;
-        // String uri = "OndexServlet?" + query;
-        //
-        // // Genes
-        // sb.append("<feature id=\"" + id + "\">\n");
-        // sb.append("<chromosome>" + chrLatin + "</chromosome>\n");
-        // sb.append("<start>" + beg + "</start>\n");
-        // sb.append("<end>" + end + "</end>\n");
-        // sb.append("<type>gene</type>\n");
-        // sb.append("<color>0xFFFFFF</color>\n"); // white
-        // sb.append("<label>" + name + "</label>\n");
-        // sb.append("<link>" + uri + "</link>\n");
-        // sb.append("</feature>\n");
-        // }
-        // }
-        // display user QTLs
         log.info("Display user QTLs... QTLs provided: " + userQtl.size());
         for (QTL region : userQtl) {
             String chr = region.getChromosome();
@@ -2045,23 +1775,6 @@ public class OndexServiceProvider {
             sb.append("</feature>\n");
             //log.info("add QTL: chr, start, end, label, type, uri: "+ chr +", "+ start +", "+ end +", "+ label + ", QTL, "+ uri);
         }
-        // //find qtl in knowledgebase that match keywords
-        // List<QTL> qtlDB = findQTL(keyword);
-        //
-        // some logic to limit QTL size if too many are found
-        // System.out.println(qtlDB.size() + " QTLs are found.");
-        // if(qtlDB.size() > 150){
-        // System.out.println("Too many QTL found, remove not significant
-        // ones...");
-        // List<QTL> toRemove= new ArrayList<QTL>();
-        // for(QTL q : qtlDB){
-        // if(!q.getSignificance().equalsIgnoreCase("significant")){
-        // toRemove.add(q);
-        // }
-        // }
-        // qtlDB.removeAll(toRemove);
-        // System.out.println(qtlDB.size() + " QTLs are significant.");
-        // }
 
         String[] colorHex = {"0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
             "0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854",
@@ -2174,23 +1887,7 @@ public class OndexServiceProvider {
 
         log.info("generate Gene table...");
         Set<Integer> userGeneIds = new HashSet<Integer>();
-        /*if (userGenes != null) {
-			Set<Integer> candidateGeneIds = new HashSet<Integer>();
-			// is conversion into integer sets needed because comparing the
-			// ONDEXConcept objects is not working???
-			for (ONDEXConcept c : candidates) {
-				candidateGeneIds.add(c.getId());
-			}
-			for (ONDEXConcept c : userGenes) {
-				userGeneIds.add(c.getId());
-				if (!candidateGeneIds.contains(c.getId())) {
-                                    log.info("add user gene: "+ c.getId() +" to candidates...");
-					candidates.add(c);
-				}
-			}
-		} else {
-			log.info("No user gene list defined.");
-		}*/
+
         if (userGenes != null) {
             for (ONDEXConcept c : userGenes) {
                 userGeneIds.add(c.getId());
@@ -2296,37 +1993,7 @@ public class OndexServiceProvider {
 
             }
 
-            // if(!qtls.isEmpty()){
-            // for(QTL loci : qtls) {
-            // try{
-            // Integer qtlChrom =
-            // chromBidiMap.inverseBidiMap().get(loci.getChrName());
-            // Long qtlStart = Long.parseLong(loci.getStart());
-            // Long qtlEnd = Long.parseLong(loci.getEnd());
-            //
-            // if (cm != null) {
-            // if(qtlChrom == chr && cm >= qtlStart && cm <= qtlEnd){
-            // numQTL++;
-            // }
-            // }
-            // else {
-            // if(qtlChrom == chr && beg >= qtlStart && beg <= qtlEnd){
-            // numQTL++;
-            // }
-            // }
-            //
-            // }
-            // catch(Exception e){
-            // System.out.println("An error occurred in method:
-            // writeTableOut.");
-            // System.out.println(e.getMessage());
-            //
-            // }
-            // }
-            // }
-            //
-            // String infoQTL = "";
-            //
+
             if (!qtls.isEmpty()) {
                 for (QTL loci : qtls) {
                     String qtlChrom = loci.getChromosome();
