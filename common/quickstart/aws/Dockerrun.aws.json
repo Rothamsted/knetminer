@@ -11,6 +11,5 @@
       "ContainerDirectory": "/root/knetminer-dataset"
     }
   ],
-  "Entrypoint": "./runtime-helper.sh",
-  "Command": "arabidopsis /root/knetminer-dataset"
+  "Entrypoint": "./runtime-helper.sh"
 }
