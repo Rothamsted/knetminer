@@ -7,7 +7,7 @@ addons:
   apt:
     packages:
       - libxml2-utils
-      
+        
 install:
   - npm config set unsafe-perm true
   - npm install bower gulp -g
