@@ -8,6 +8,10 @@ addons:
     packages:
       - libxml2-utils
         
+cache:
+  directories:
+    - $HOME/.m2
+          
 install:
   - npm config set unsafe-perm true
   - npm install bower gulp -g
