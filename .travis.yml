@@ -11,6 +11,7 @@ addons:
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.npm
           
 install:
   - npm config set unsafe-perm true
