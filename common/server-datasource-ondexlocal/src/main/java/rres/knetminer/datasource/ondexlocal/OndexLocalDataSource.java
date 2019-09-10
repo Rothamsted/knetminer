@@ -67,6 +67,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		init ( null, null, null );
 	}
 
+	@SuppressWarnings ( { "rawtypes", "unchecked" } )
 	private void init ( String dsName, String configXmlPath, String semanticMotifsPath )
 	{
 		// Config.xml location can be specified in different ways, see the constructors
@@ -116,9 +117,11 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
 		try {
-			this.ondexServiceProvider.createGraph(this.getProperty("DataPath"), this.getProperty("DataFile"),
-					semanticMotifsPath);
-		} catch (Exception e) {
+			this.ondexServiceProvider.createGraph (
+				this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
+			);
+		} 
+		catch (Exception e) {
 			log.error("Failed to create Ondex graph", e);
 			throw new Error(e);
 		}
