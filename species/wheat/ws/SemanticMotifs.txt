@@ -3,7 +3,7 @@
 2^	Publication
 3^	MolFunc
 4^	BioProc
-5^ 	CelComp
+5^  CelComp
 7^	Protein
 8^	Gene
 9	Gene
