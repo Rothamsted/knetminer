@@ -1,7 +1,10 @@
 <%
 // added to overcome double quotes issue
-String keywords = request.getParameter("keyword");
+String keywords="";
+if(request.getParameter("keyword")!=null) {
+keywords = request.getParameter("keyword");
 keywords = keywords.replaceAll("^\"|\"$", "###");
+}
 %>
 <html>
 <head>
