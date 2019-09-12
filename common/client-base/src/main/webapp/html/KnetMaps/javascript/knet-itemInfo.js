@@ -104,6 +104,7 @@ KNETMAPS.ItemInfo = function() {
                         if((metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "size")
                             && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "visible")
                             && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "flagged")
+                            && (metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname !== "iri")
                             && (!(metadataJSON.ondexmetadata.concepts[j].attributes[k].attrname.includes("exp_")))) {
                             row= table.insertRow(table.rows.length/* - 1*/); // new row.
                             cell1= row.insertCell(0);
