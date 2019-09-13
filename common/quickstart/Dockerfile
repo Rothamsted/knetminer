@@ -30,6 +30,9 @@ ADD $sample_oxl_url $knet_dataset_dir/data/knowledge-network.oxl
 # climbing up the host paths is forbidden
 COPY . knetminer
 
+# Uncomment the below line to copy swagger docs to container
+#COPY swagger-ui /usr/local/tomcat/webapps/swagger-ui
+
 WORKDIR knetminer/common/quickstart
 RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 

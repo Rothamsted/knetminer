@@ -1,0 +1,418 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "3.1",
+    "title": "Knetminer",
+    "termsOfService": "https://knetminer.rothamsted.ac.uk/KnetMiner/",
+    "contact": {
+      "email": "keywan.hassani-pak@rothamsted.ac.uk"
+    },
+    "license": {
+      "name": "GNU LESSER GENERAL PUBLIC LICENSE",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "knetminer.rothamsted.ac.uk",
+  "basePath": "/araknet",
+  "tags": [
+    {
+      "name": "genepage",
+      "description": "Genepage API"
+    },
+    {
+      "name": "genome",
+      "description": "Genome API"
+    },
+    {
+      "name": "network",
+      "description": "Network API"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/genepage": {
+      "get": {
+        "tags": [
+          "genepage"
+        ],
+        "summary": "Show knowledge network for the given gene list and keyword",
+        "description": "Show knowledge network for the given gene list and keyword (optional). Adding a keyword argument will do some smart filtering on the gene list and display the most interesting paths connecting genes and keywords. ",
+        "operationId": "genepage",
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "list",
+            "in": "query",
+            "description": "Single or multiple gene ids/names separated by comma. Gene id or names must match the concept accession or name of the gene in the knowledge graph.",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": ""
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "single or multiple search terms. Supports Lucene query syntax including wildcards and boolean AND, OR, NOT operators. Also supports doublequotes(“”).",
+            "required": true,
+            "default":, "",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML page with KnetMaps network embedded",
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/genome": {
+      "get": {
+        "tags": [
+          "genome"
+        ],
+        "summary": "KnetMiner search results for input gene list or trait keywords",
+        "description": "Show KnetMiner search results for input gene list or trait keywords. Keywords can be used on their own or to filter the gene list. Genomic regions (optional) can be added to focus on specific QTLs.",
+        "operationId": "genome",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "list",
+            "in": "query",
+            "description": "Single or multiple gene ids/names separated by comma. Gene id or names must match the concept accession or name of the gene in the knowledge graph.",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": ""
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "single or multiple search terms. Supports Lucene query syntax including wildcards and boolean AND, OR, NOT operators. Also supports doublequotes(“”).",
+            "required": true,
+            "type": "string",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "Region",
+            "in": "query",
+            "description": "QTL/regions with chromosome, start and end positions.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Response",
+            "schema": {
+                "$ref": "#/definitions/GenomeResponse"
+            }
+          }
+        }
+      },
+    "post": {
+        "tags": [
+          "genome"
+        ],
+        "summary": "KnetMiner search results for input gene list or trait keywords",
+        "description": "Show KnetMiner search results for input gene list or trait keywords. Keywords can be used on their own or to filter the gene list. Genomic regions (optional) can be added to focus on specific QTLs.",
+        "operationId": "genome",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "JSON query payload",
+            "required": true,
+            "schema": {
+                "$ref": "#/definitions/GenomeRequest"
+            }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Response",
+            "schema": {
+                "$ref": "#/definitions/GenomeResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+  "/network": {
+    "post": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Request Knetminer knowledge network via JSON payload",
+        "description":Request knowledge network for the input gene list and keyword (optional). Adding a keyword argument will do some smart filtering on the gene list and display the most interesting paths connecting genes and keywords, 
+        "operationId": "network",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "JSON query payload",
+            "required": true,
+            "schema": {
+                "$ref": "#/definitions/NetworkRequest"
+            }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Response",
+            "schema": {
+                "$ref": "#/definitions/NetworkResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Show knowledge network",
+        "description": "Show knowledge network for input gene and keyword (optional). Adding a keyword argument will do some smart filtering on the gene list and display the most interesting paths connecting genes and keywords",
+        "operationId": "network",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "list",
+            "in": "query",
+            "description": "Single or multiple gene ids/names separated by comma. Gene id or names must match the concept accession or name of the gene in the knowledge graph.",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "single or multiple search terms. Supports Lucene query syntax including wildcards and boolean AND, OR, NOT operators. Also supports doublequotes(“”).",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Region",
+            "in": "query",
+            "description": "QTL/regions with chromosome, start and end positions.",
+            "required": false,
+            "type": "string",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+                "$ref": "#/definitions/NetworkResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+  "/countHits": {
+    "get": {
+        "tags": [
+          "Hit Count"
+        ],
+        "summary": "Request number of evidence terms in the knowledge graph",
+        "description": "Show the number of evidence terms in the knowledge graph that are linked to the trait keywords. Gene list (optional) are to be provided to restrict the matching evidences",
+        "operationId": "countHits",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          { 
+            "name": "list",
+            "in": "query", 
+            "description": "Single or multiple gene ids/names separated by comma. Gene id or names must match the concept accession or name of the gene in the knowledge graph.",        
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          { 
+            "name": "keyword",
+            "in": "query", 
+            "description": "Single or multiple search terms. Supports Lucene query syntax including wildcards and boolean AND, OR, NOT operators. Also supports doublequotes(“”).",      
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Response",
+            "schema": { 
+                "$ref": "#/definitions/CountHitsResponse"
+            }
+          }
+        }
+      }
+     }
+  },
+  "definitions": {
+    "GenepageResponse": {
+      "type": "object",
+      "description": "HTML page using KnetMaps.js to render the generated .cyjs network.",
+      "properties": {
+        "graph": {
+          "type": "string",
+          "description": "HTML content to render the network"
+        }
+      }
+    },
+   "GenomeRequest": {
+      "type": "object",
+      "description": "JSON payload for Genome API", 
+      "properties": {
+        "keyword": {
+          "type": "string",
+	  "example": "leaf",
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "type":"string"
+          },
+          "example": "[\"AT2G32950\"]"
+        },
+        "qtl": {
+          "type": "array",
+          "items": {
+            "type":"string"
+          },
+          "example":"[\"&qtl1=4:9920000:10180000:Petal size\"]"
+        },
+        "listMode": {
+          "type": "string",
+	   "example": "GL",
+        }
+      }
+    },
+    "GenomeResponse": {
+      "type": "object",
+      "description": "JSON with complete Gene View and Evidence View tables and Genomaps (chromosome-centric XML view) information from KnetMiner",
+      "properties": {
+        "geneTable": {
+          "type": "string"
+        },
+        "evidenceTable": {
+          "type": "string"
+        },
+        "geneCount": {
+          "type": "integer",
+	  "example": 2
+        },
+        "docSize": {
+          "type": "integer",
+	  "example": 5061
+        },
+        "totalDocSize": {
+          "type": "integer",
+	  "example": 5712
+        },
+        "gviewer": {
+          "type": "string"
+        }
+      }
+    },
+   "NetworkRequest": {
+      "type": "object",
+      "description": "JSON payload for Network API",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "example": "leaf",
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "type":"string"
+          },
+          "example": "[\"AT2G32950\"]"
+        }
+      }
+    },
+    "NetworkResponse": {
+      "type": "object",
+      "description": "JSON network of input genes optionally filtered by keywords or QTL regions.",
+      "properties": {
+        "graph": {
+          "type": "string"
+        }
+      }
+    },
+    "CountHitsResponse": {
+      "type": "object",
+      "description": "JSON with evidence counts",
+      "properties": {
+        "luceneCount": {
+          "type": "integer",
+          "example": 1106
+        },
+        "luceneLinedCount": {
+          "type": "integer",
+          "example": 1020
+        },
+        "geneCount": {
+          "type": "integer",
+          "example": 8671
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Knetminer",
+    "url": "https://knetminer.rothamsted.ac.uk/"
+  }
+}
