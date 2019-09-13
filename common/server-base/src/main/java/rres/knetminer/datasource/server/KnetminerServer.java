@@ -284,6 +284,28 @@ public class KnetminerServer {
 	@PostMapping("/{ds}/{mode}")
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
+		Map<String, String> map = new TreeMap<>();
+
+		map.put("host",rawRequest.getServerName());
+		map.put("port",Integer.toString(rawRequest.getServerPort()));
+
+		map.put("mode", mode);
+		String keyword = request.getKeyword();
+		List<String> list = request.getList();
+		List<String> qtl = request.getQtl();
+		if(keyword != null) {
+			map.put("keywords", keyword);
+		}
+		if(!list.isEmpty()) {
+			map.put("list", new JSONArray(list).toString());
+		}
+
+		map.put("qtl", new JSONArray(qtl).toString());
+
+		map.put("datasource", ds);
+
+		ObjectMessage msg = new ObjectMessage(map);
+		logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
