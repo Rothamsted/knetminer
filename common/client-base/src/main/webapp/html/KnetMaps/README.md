@@ -1,5 +1,7 @@
 # KnetMaps.js
-Interactive visualisation and exploration of heterogeneous knowledge networks
+Interactive network visualisation tool for exploration of heterogeneous biological knowledge graphs.
+
+KnetMaps **paper** at https://f1000research.com/articles/7-1651/v1.
 
 ![KnetMaps_screenshot](https://raw.githubusercontent.com/Rothamsted/knetmaps.js/master/docs/KnetMaps_demo.png)
 
