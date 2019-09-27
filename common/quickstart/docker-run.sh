@@ -118,10 +118,10 @@ if [ "$is_neo4j" != '' ]; then
 fi
 
 # Default is -Pdocker, typically you DO WANT this
-[ "$MAVEN_ARGS" == "" ] || docker_envs="MAVEN_ARGS"
+[ "$MAVEN_ARGS" == "" ] || ( export MAVEN_ARGS; docker_envs="MAVEN_ARGS" )
 # Default is -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
 # which tells the JVM to use all the RAM passed to the container
-[ "$JAVA_TOOL_OPTIONS" == "" ] || docker_envs="$docker_envs JAVA_TOOL_OPTIONS"
+[ "$JAVA_TOOL_OPTIONS" == "" ] || ( export JAVA_TOOL_OPTIONS; docker_envs="$docker_envs JAVA_TOOL_OPTIONS" )
 
 [[ "$docker_envs" == '' ]] || DOCKER_OPTS="$DOCKER_OPTS --env $docker_envs"
 

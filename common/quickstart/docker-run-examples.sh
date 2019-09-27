@@ -45,4 +45,5 @@ exit 1
   --host-port 9090 \
   --container-name 'wheat-directed' \
   --container-memory 20G \
-  --with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7687 --neo4j-user rouser --neo4j-pwd rouser
+  --with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 --neo4j-user rouser --neo4j-pwd rouser \
+  --detach
