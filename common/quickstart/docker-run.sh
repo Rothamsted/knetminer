@@ -67,11 +67,11 @@ do
 	=== Variables that affects this script ===
 
 	MAVEN_ARGS: custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
-	configuration from Maven settings). WARNING: if you set this to non-null, YOU MUST also set proper profiles. 
-	Docker needs MAVEN_ARGS="... -Pdocker" as a minimum. It might need -Pdocker,neo4j or other profiles.
-
+	configuration from Maven settings). WARNING: if you set your own -P profile option with this, very likely
+	you'll need -Pdocker. You might need -Pneo4j too.  
+	
 	Example of how to set custom embeddable layout (GeneStack option)
-	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true -Pdocker"
+	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true"
 
 	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
 	If you don't set this, the default is '-it'.
@@ -118,10 +118,12 @@ if [ "$is_neo4j" != '' ]; then
 fi
 
 # Default is -Pdocker, typically you DO WANT this
-[ "$MAVEN_ARGS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env MAVEN_ARGS"
+[ "$MAVEN_ARGS" == "" ] || docker_envs="MAVEN_ARGS"
 # Default is -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
 # which tells the JVM to use all the RAM passed to the container
-[ "$JAVA_TOOL_OPTIONS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
+[ "$JAVA_TOOL_OPTIONS" == "" ] || docker_envs="$docker_envs JAVA_TOOL_OPTIONS"
+
+[[ "$docker_envs" == '' ]] || DOCKER_OPTS="$DOCKER_OPTS --env $docker_envs"
 
 echo -e "\n"
 echo "MAVEN_ARGS:" $MAVEN_ARGS
