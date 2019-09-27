@@ -104,8 +104,9 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 	
-
-if [ "$is_neo4j" != '' ]; then 
+ 
+if [ "$is_neo4j" != '' ]; then
+	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS='-Pdocker'
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
