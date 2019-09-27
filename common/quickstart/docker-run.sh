@@ -117,16 +117,21 @@ if [ "$is_neo4j" != '' ]; then
 	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
 fi
 
-# Default is -Pdocker, typically you DO WANT this
-[ "$MAVEN_ARGS" == "" ] || ( export MAVEN_ARGS; docker_envs="MAVEN_ARGS" )
-# Default is -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+# Default MAVEN_ARGS is -Pdocker. If no '-P' is used, this profile is added automatically.
+# Typically you DO WANT this.
+# 
+# Default JAVA_TOOL_OPTIONS is:
+#   -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
 # which tells the JVM to use all the RAM passed to the container
-[ "$JAVA_TOOL_OPTIONS" == "" ] || ( export JAVA_TOOL_OPTIONS; docker_envs="$docker_envs JAVA_TOOL_OPTIONS" )
-
-[[ "$docker_envs" == '' ]] || DOCKER_OPTS="$DOCKER_OPTS --env $docker_envs"
-
+#
 echo -e "\n"
-echo "MAVEN_ARGS:" $MAVEN_ARGS
-echo "JAVA_TOOL_OPTIONS:" $JAVA_TOOL_OPTIONS
+for env_var in MAVEN_ARGS JAVA_TOOL_OPTIONS
+do
+	[[ "${!env_var}" == '' ]] && continue;
+	export $env_var
+	DOCKER_OPTS="$DOCKER_OPTS --env $env_var"
+	echo "$env_var: \"${!env_var}\"" 
+fi
+
 set -ex
 docker run $DOCKER_OPTS knetminer/knetminer:$image_version "$dataset_id"
