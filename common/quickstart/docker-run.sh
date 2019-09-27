@@ -130,8 +130,8 @@ do
 	[[ "${!env_var}" == '' ]] && continue;
 	export $env_var
 	DOCKER_OPTS="$DOCKER_OPTS --env $env_var"
-	echo "$env_var: \"${!env_var}\"" 
-fi
+	echo "export $env_var=\"${!env_var}\"" 
+done
 
 set -ex
 docker run $DOCKER_OPTS knetminer/knetminer:$image_version "$dataset_id"
