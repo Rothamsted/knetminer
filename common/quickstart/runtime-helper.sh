@@ -36,7 +36,10 @@ elif [ "$1" == '--deploy-only' ]; then
 fi
 
 set -x
-	
+
+echo -e "\n\n\tInitial environment:"
+env
+
 # The dataset ID, ie, the settings directory to be found in the codebase, under species/
 # If this is omitted, the settings are looked up on the dataset dir.
 knet_dataset_id="$1" # In Docker (ie, CMD+ENTRYPOINT), this is aratiny by default
