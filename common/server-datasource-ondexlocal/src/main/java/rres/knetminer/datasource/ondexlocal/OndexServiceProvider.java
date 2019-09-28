@@ -418,7 +418,7 @@ public class OndexServiceProvider {
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
         } catch (Exception e) {
-            log.info("Faild to load graph index", e);
+            log.info("Failed to load graph index", e);
         }
     }
 

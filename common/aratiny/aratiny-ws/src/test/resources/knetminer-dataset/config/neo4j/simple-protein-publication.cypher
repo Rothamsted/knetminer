@@ -3,4 +3,3 @@ MATCH path =
   - [hss:h_s_s] -> (p1:Protein)
 	- [pubref:pub_in] -> (pub:Publication)
 RETURN path
-ORDER BY hss.E_VALUE, hss.PERCENTALIGNMENT DESC
