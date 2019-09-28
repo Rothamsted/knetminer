@@ -21,7 +21,8 @@ install:
   - export PATH="/usr/local/bin:$PATH"
       
 script: 
-  - mvn deploy --settings settings.xml
+  # You need --quiet, Travis doesn't like too big logs.
+  - mvn --quiet deploy --settings settings.xml
   - echo -e "\n\n\tDocker-base"
   - docker build --no-cache -t knetminer/knetminer-base -f common/quickstart/Dockerfile-base .
   - echo -e "\n\n\tDocker"
