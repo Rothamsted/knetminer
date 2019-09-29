@@ -28,7 +28,7 @@ script:
   - echo -e "\n\n\tDocker"
   - docker build --no-cache -t knetminer/knetminer -f common/quickstart/Dockerfile .
   - echo -e "\n\n\tPushing Docker-base"
-  - docker logind -u "$DOCKER_USER" -p "$DOCKER_PWD"
+  - docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
   - docker push knetminer/knetminer-base 
   - echo -e "\n\n\tPushing Docker"
   - docker push knetminer/knetminer
