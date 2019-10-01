@@ -1,6 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -90,7 +93,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			this.props.loadFromXML(configUrl.openStream());
 		}
 		catch (IOException e) {
-			throw new Error(e);
+			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
 		}
 
 		if ( dsName == null ) dsName = this.props.getProperty ( "DataSourceName", null );
@@ -116,15 +119,10 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
-		try {
-			this.ondexServiceProvider.createGraph (
-				this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
-			);
-		} 
-		catch (Exception e) {
-			log.error("Failed to create Ondex graph", e);
-			throw new Error(e);
-		}
+
+		this.ondexServiceProvider.createGraph (
+			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
+		);
 	}
 	
 
@@ -142,9 +140,18 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			SynonymsResponse response = new SynonymsResponse();
 			response.setSynonyms(this.ondexServiceProvider.writeSynonymTable(request.getKeyword()));
 			return response;
-		} catch (ParseException e) {
-			log.error("Failed to count synonyms", e);
-			throw new Error(e);
+		} 
+		catch (ParseException e) 
+		{
+			IllegalArgumentException wex = ExceptionUtils.buildEx ( 
+				IllegalArgumentException.class, 
+				e,
+				"Error while counting synonyms for \"%s\": %s", 
+				Optional.ofNullable ( request ).map ( KnetminerRequest::getKeyword ).orElse ( "<null response>" ),
+				e.getMessage ()
+			);
+			log.error ( wex );
+			throw wex;
 		}
 	}
 
@@ -287,7 +294,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	}
 
 	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+		Set<ONDEXConcept> genes = new HashSet<>();
 
 		log.info("Call applet! Search genes " + request.getList().size());
 

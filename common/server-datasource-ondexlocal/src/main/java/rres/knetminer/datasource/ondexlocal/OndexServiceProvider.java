@@ -168,9 +168,8 @@ public class OndexServiceProvider {
      * @throws ArrayIndexOutOfBoundsException
      * @throws PluginConfigurationException
      */
-    public void createGraph(String dataPath, String graphFileName, String smFileName)
-            throws ArrayIndexOutOfBoundsException, PluginConfigurationException {
-
+    public void createGraph(String dataPath, String graphFileName, String smFileName) 
+    {
         log.info("Loading graph from " + graphFileName);
 
         // new in-memory graph
