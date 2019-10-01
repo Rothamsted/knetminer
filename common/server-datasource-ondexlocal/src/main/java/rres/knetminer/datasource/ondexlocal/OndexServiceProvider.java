@@ -80,6 +80,7 @@ import net.sourceforge.ondex.logging.ONDEXLogger;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
@@ -315,8 +316,8 @@ public class OndexServiceProvider {
              * HashMap
              */
             //   generateGeneEvidenceStats(fileUrl); // DISABLED
-        } catch (IOException e) {
-            log.error("Failed to count stats for graph", e);
+        } catch (IOException ex) {
+          log.error("Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex);
         }
     }
 
@@ -333,6 +334,9 @@ public class OndexServiceProvider {
             removeOldAttributesFromKBGraph();
         } catch (Exception e) {
             log.error("Failed to load graph", e);
+            ExceptionUtils.throwEx (
+            	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
+            ); 
         }
     }
 
@@ -417,8 +421,19 @@ public class OndexServiceProvider {
             lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
-        } catch (Exception e) {
-            log.fatal ( "Failed to load graph index", e );
+            
+            // Reset it, should avoid some errors we have seen. It's reopened automatically by
+            // methods needed it.
+            lenv.closeIndex ();
+            lenv.cleanup ();
+            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), false );
+        } 
+        catch (Exception e)
+        {
+            log.fatal ( "Error while loading/creating graph index: " + e.getMessage (), e );
+            ExceptionUtils.throwEx (
+            	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
+            ); 
         }
     }
 
@@ -1296,7 +1311,8 @@ public class OndexServiceProvider {
         HashMap<ONDEXConcept, Float> luceneResults = null;
         try {
             luceneResults = searchLucene(keyword, seed, false);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Lucene search failed", e);
         }
 
@@ -1696,9 +1712,14 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;list=" + URLEncoder.encode(name, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error(e);
-                throw new Error(e);
+            } 
+            catch (UnsupportedEncodingException e)
+            {
+                log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+                throw ExceptionUtils.buildEx (
+                	RuntimeException.class, e,
+                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
+                );
             }
             String uri = api_url + "/network?" + query; // KnetMaps (network) query
             //log.info("Genomaps: add KnetMaps (network) query: "+ uri);
@@ -1758,9 +1779,14 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
-            } catch (UnsupportedEncodingException e) {
-                log.error(e);
-                throw new Error(e);
+            }
+            catch (UnsupportedEncodingException e) 
+            {
+              	log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+                throw ExceptionUtils.buildEx (
+                	RuntimeException.class, e,
+                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
+                );
             }
             String uri = api_url + "/network?" + query;
 
@@ -1864,8 +1890,9 @@ public class OndexServiceProvider {
             BufferedWriter out = new BufferedWriter(new FileWriter(filename));
             out.write(sb_string);
             out.close();
-        } catch (Exception ex) {
-            log.debug(ex.getMessage());
+        } 
+        catch (Exception ex) {
+        	log.error ( "Error while exporting '" + filename + "': " + ex.getMessage (), ex );
         }
     }
 
@@ -2766,7 +2793,10 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-                log.error("Failed to write files", e);
+                log.error("Failed while creating internal map files: " + e.getMessage (), e);
+                ExceptionUtils.throwEx (
+                	RuntimeException.class, e, "Failed while creating internal map files: %s", e.getMessage ()
+                ); 
             }
         } else {
             try {
@@ -2789,7 +2819,10 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-                log.error("Failed to read files", e);
+              log.error("Failed while reading internal map files: " + e.getMessage (), e);
+              ExceptionUtils.throwEx (
+              	RuntimeException.class, e, "Failed while reading internal map files: %s", e.getMessage ()
+              ); 
             }
         }
 
@@ -2946,7 +2979,7 @@ public class OndexServiceProvider {
             }
             out3.close();
         } catch (Exception ex) {
-            log.error("Faile to generate stats", ex);
+            log.error("Error while writing stats: " + ex.getMessage (), ex);
         }
     }
 
