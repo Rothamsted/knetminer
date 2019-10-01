@@ -427,6 +427,8 @@ public class OndexServiceProvider {
             lenv.closeIndex ();
             lenv.cleanup ();
             lenv = new LuceneEnv ( indexFile.getAbsolutePath(), false );
+            lenv.addONDEXListener ( new ONDEXLogger () );
+            lenv.setONDEXGraph(graph);
         } 
         catch (Exception e)
         {
@@ -575,9 +577,9 @@ public class OndexServiceProvider {
          * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
          * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
          */
-        Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
+        Set<String> dsAcc = new HashSet<>(Arrays.asList(datasources));
 
-        HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
+        HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
 
         if ("".equals(keywords) || keywords == null) {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
