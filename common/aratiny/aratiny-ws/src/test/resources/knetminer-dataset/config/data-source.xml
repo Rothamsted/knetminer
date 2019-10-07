@@ -31,8 +31,9 @@
 		limit. If one query takes longer, it is aborted with empty results, but without breaking the application.
 		-1 means no timeout, but it's not recommended.
 	-->
-	<entry key = "knetminer.backend.cypher.queryTimeoutMs">3000</entry>
-	
+	<entry key = "_knetminer.backend.cypher.queryTimeoutMs">3000</entry>
+	<entry key = "knetminer.backend.cypher.queryTimeoutMs">-1</entry>
+
 	<!-- 
 		When enabled, the Cypher graph traverser reports some statistics about its interaction with Neo4j.
 		Probably you're not interested in this if you aren't a Knetminer developer.

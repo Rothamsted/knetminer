@@ -423,8 +423,7 @@ public class OndexServiceProvider {
             
             // Reset it, should avoid some errors we have seen. It's reopened automatically by
             // methods needed it.
-            lenv.closeIndex ();
-            lenv.cleanup ();
+            lenv.closeAll ();
             lenv = new LuceneEnv ( indexFile.getAbsolutePath(), false );
             lenv.addONDEXListener ( new ONDEXLogger () );
             lenv.setONDEXGraph(graph);
@@ -563,8 +562,11 @@ public class OndexServiceProvider {
      * @throws IOException
      * @throws ParseException
      */
-    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications) throws IOException, ParseException {
-
+    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications)
+    	throws IOException, ParseException
+    {
+    	try
+    	{
         Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
         String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
             "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
@@ -630,13 +632,6 @@ public class OndexServiceProvider {
 
         // search concept attributes
         for (AttributeName att : atts) {
-            // Query qAtt =
-            // LuceneQueryBuilder.searchConceptByConceptAttributeExact(att,
-            // keyword);
-            // ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt,
-            // 100);
-            // mergeHits(hit2score, sHits);
-
             String fieldName = getFieldName("ConceptAttribute", att.getId());
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
@@ -695,6 +690,11 @@ public class OndexServiceProvider {
         log.info("Resulting Annotation hits: " + sHitsAnno.getOndexHits().size());
 
         return hit2score;
+    	}
+    	finally {
+    		if ( lenv != null ) this.lenv.closeAll ();
+    	}
+    	
     }
 
     public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
@@ -863,12 +863,13 @@ public class OndexServiceProvider {
 
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
-     * input terms
+     * input terms.
      *
-     * @param keyword
-     * @return list of QTL objects
+     * TODO: made private, cause it seems being used by {@link #writeAnnotationXML(String, ArrayList, Set, List, String, int, Hits, String, Map)}
+     * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
+     * 
      */
-    public Set<QTL> findQTL(String keyword) throws ParseException {
+    private Set<QTL> findQTL(String keyword) throws ParseException {
 
         ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
@@ -1613,7 +1614,10 @@ public class OndexServiceProvider {
      * @return
      */
     public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates) {
+            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates)
+    {
+    	try
+    	{
         List<QTL> userQtl = new ArrayList<QTL>();
         for (String qtlStr : userQtlStr) {
             userQtl.add(QTL.fromString(qtlStr));
@@ -1883,6 +1887,10 @@ public class OndexServiceProvider {
         sb.append("</genome>\n");
         //log.info("Genomaps generated...");
         return sb.toString();
+    	}
+    	finally {
+    		if ( lenv != null ) lenv.closeAll ();
+    	}
     }
 
     // temporary...
@@ -2322,7 +2330,10 @@ public class OndexServiceProvider {
      * @return boolean
      * @throws ParseException
      */
-    public String writeSynonymTable(String keyword) throws ParseException {
+    public String writeSynonymTable(String keyword) throws ParseException 
+    {
+    	try
+    	{
         StringBuffer out = new StringBuffer();
         int topX = 25;
         // to store top 25 values for each concept type instead of just 25
@@ -2445,6 +2456,10 @@ public class OndexServiceProvider {
             }
         }
         return out.toString();
+    	}
+    	finally {
+    		if ( lenv != null ) lenv.closeAll ();
+    	}
     }
 
     public HashMap<Integer, Set<Integer>> getMapEvidences2Genes(HashMap<ONDEXConcept, Float> luceneConcepts) {
