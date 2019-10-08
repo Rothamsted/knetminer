@@ -286,10 +286,7 @@ public class OndexServiceProvider {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } else if (conID.equalsIgnoreCase("Gene")) {
-                        con_count = numGenesInGenome;
-                    }
-                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
                         sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
                     }
                 }
