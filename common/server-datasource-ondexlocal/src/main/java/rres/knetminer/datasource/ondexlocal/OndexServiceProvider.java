@@ -286,7 +286,8 @@ public class OndexServiceProvider {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                    }
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
                         sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
                     }
                 }
@@ -298,14 +299,13 @@ public class OndexServiceProvider {
             // Obtain counts of concepts
             Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
                     .stream()
-                        .collect(Collectors
-                                    .groupingBy(v -> graph.getConcept(v.getKey())
-                                                                       .getOfType()
-                                                                       .getId(),
-                                                                        Collectors.counting()));
-            
+                    .collect(Collectors
+                            .groupingBy(v -> graph.getConcept(v.getKey())
+                                    .getOfType()
+                                    .getId(), Collectors.counting()));
+
             // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-            sorted_conceptClasses.parallelStream().forEach(conceptClass -> {
+            sorted_conceptClasses.stream().forEach(conceptClass -> {
                 if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
                     String conceptID = conceptClass.getId(); // Get concept ID 
                     if (!C2GcountMap.keySet().contains(conceptID)) {
@@ -315,18 +315,19 @@ public class OndexServiceProvider {
                     }
                 }
             });
-            
+
             TreeMap<String, Long> sorted_C2GcountMap = new TreeMap<String, Long>(C2GcountMap); // Sort the values
 
             sorted_C2GcountMap.entrySet().stream().forEach(pair -> {
                 for (ConceptClass concept_class : sorted_conceptClasses) {
                     if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
                         String conID = concept_class.getId(); // Get concept ID 
-                        if (conID.equalsIgnoreCase("Path")) {
-                            conID = "Pathway";
-                        } else if (conID.equalsIgnoreCase("Comp")) {
-                            conID = "Compound";
-                        } if (conID.contains(pair.getKey())) {
+                        if (pair.getKey().equals(conID)) {
+                            if (conID.equalsIgnoreCase("Path")) {
+                                conID = "Pathway";
+                            } else if (conID.equalsIgnoreCase("Comp")) {
+                                conID = "Compound";
+                            }
                             sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
                         }
                     }
@@ -334,7 +335,7 @@ public class OndexServiceProvider {
             });
 
             sb.append("</ccgeneEviCount>\n");
-            
+
             // Relationships per concept
             sb.append("<connectivity>\n");
             for (ConceptClass concept_class : sorted_conceptClasses) {
@@ -346,8 +347,9 @@ public class OndexServiceProvider {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
-                        float connectivity = ( (float) con_count/ (float) relation_count) * 100;
+                    }
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                        float connectivity = ((float) relation_count / (float) con_count);
                         sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
                     }
                 }
