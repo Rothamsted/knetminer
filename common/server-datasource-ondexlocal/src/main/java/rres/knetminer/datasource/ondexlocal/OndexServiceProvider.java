@@ -211,11 +211,11 @@ public class OndexServiceProvider {
 
     /*
      * Generate Stats about the created Ondex graph and its mappings:
-     * mapConcept2Genes & mapGene2Concepts. Author Singha
-     * Updating to also give Concept2Gene per concept
+     * mapConcept2Genes & mapGene2Concepts. author singha
      */
     private void displayGraphStats(String fileUrl) {
-        // Update the Network Stats file that holds the latest Stats information.
+        // Update the Network Stats file that holds the latest Stats
+        // information.
         String fileName = Paths.get(fileUrl, "latestNetwork_Stats.tab").toString();
 
         int minValues, maxValues = 0, avgValues, all_values_count = 0;
@@ -273,86 +273,30 @@ public class OndexServiceProvider {
             sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
             sb.append("</evidenceNetworkSizes>\n");
 
-            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
-            Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
-
             // Display table breakdown of all conceptClasses in network
             sb.append("<conceptClasses>\n");
+            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
+            Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
             for (ConceptClass con_class : sorted_conceptClasses) {
                 if (graph.getConceptsOfConceptClass(con_class).size() > 0) {
-                    String conID = con_class.getId(); // Get concept ID
-                    int con_count = graph.getConceptsOfConceptClass(con_class).size(); // Get count of concept
+                    String conID = con_class.getId();
+                    int con_count = graph.getConceptsOfConceptClass(con_class).size();
                     if (conID.equalsIgnoreCase("Path")) {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                    } else if (conID.equalsIgnoreCase("Trait")) {
+                        conID = "Trait (GWAS)";
+                    } else if (conID.equalsIgnoreCase("Gene")) {
+                        con_count = numGenesInGenome;
+                    }
+                    // exclude "Thing" CC
+                    if (!conID.equalsIgnoreCase("Thing")) {
                         sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
                     }
                 }
             }
             sb.append("</conceptClasses>\n");
-
-            // Obtain concept count from concept2gene
-            sb.append("<ccgeneEviCount>\n");
-            // Obtain counts of concepts
-            Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
-                    .stream()
-                        .collect(Collectors
-                                    .groupingBy(v -> graph.getConcept(v.getKey())
-                                                                       .getOfType()
-                                                                       .getId(),
-                                                                        Collectors.counting()));
-            
-            // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-            sorted_conceptClasses.parallelStream().forEach(conceptClass -> {
-                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
-                    String conceptID = conceptClass.getId(); // Get concept ID 
-                    if (!C2GcountMap.keySet().contains(conceptID)) {
-                        if (!conceptID.equalsIgnoreCase("Thing") && !conceptID.equalsIgnoreCase("TestCC")) {
-                            C2GcountMap.put(conceptID, Long.valueOf(0));
-                        }
-                    }
-                }
-            });
-            
-            TreeMap<String, Long> sorted_C2GcountMap = new TreeMap<String, Long>(C2GcountMap); // Sort the values
-
-            sorted_C2GcountMap.entrySet().stream().forEach(pair -> {
-                for (ConceptClass concept_class : sorted_conceptClasses) {
-                    if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
-                        String conID = concept_class.getId(); // Get concept ID 
-                        if (conID.equalsIgnoreCase("Path")) {
-                            conID = "Pathway";
-                        } else if (conID.equalsIgnoreCase("Comp")) {
-                            conID = "Compound";
-                        } if (conID.contains(pair.getKey())) {
-                            sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
-                        }
-                    }
-                }
-            });
-
-            sb.append("</ccgeneEviCount>\n");
-            
-            // Relationships per concept
-            sb.append("<connectivity>\n");
-            for (ConceptClass concept_class : sorted_conceptClasses) {
-                if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
-                    String conID = concept_class.getId(); // Get concept ID                    
-                    int relation_count = graph.getRelationsOfConceptClass(concept_class).size(); // relationship count
-                    int con_count = graph.getConceptsOfConceptClass(concept_class).size(); // Get count of concept
-                    if (conID.equalsIgnoreCase("Path")) {
-                        conID = "Pathway";
-                    } else if (conID.equalsIgnoreCase("Comp")) {
-                        conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
-                        float connectivity = ( (float) con_count/ (float) relation_count) * 100;
-                        sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
-                    }
-                }
-            }
-            sb.append("</connectivity>\n");
             sb.append("</stats>");
 
             // Update the file storing the latest Stats data.
@@ -472,8 +416,8 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-            lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
+            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), !indexFile.exists() );
+            lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
             
@@ -833,6 +777,7 @@ public class OndexServiceProvider {
         }//end of synchronised block
         return sortedCandidates;
     }
+
 
     /**
      * Did you mean function for spelling correction
@@ -1677,10 +1622,10 @@ public class OndexServiceProvider {
         log.info("Genomaps: generate XML...");
         // If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
         /*if(userGenes != null) {
-         // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
-         genes= new ArrayList<ONDEXConcept> (userGenes);
-         log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
-         }*/
+                   // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
+                   genes= new ArrayList<ONDEXConcept> (userGenes);
+                   log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
+                  }*/
         // added user gene list restriction above (04/07/2018, singha)
 
         ONDEXGraphMetaData md = graph.getMetaData();
@@ -1756,9 +1701,8 @@ public class OndexServiceProvider {
 
             String name = c.getPID();
 
-            for (ConceptAccession acc : c.getConceptAccessions()) {
+            for (ConceptAccession acc : c.getConceptAccessions())
                 name = acc.getAccession();
-            }
 
             String label = getDefaultNameForGroupOfConcepts(c);
             //log.info("id, chr, start, end, label, type: "+ id +", "+ chr +", "+ beg +", "+ end +", "+ label + ", gene");
@@ -2077,6 +2021,7 @@ public class OndexServiceProvider {
 
             }
 
+
             if (!qtls.isEmpty()) {
                 for (QTL loci : qtls) {
                     String qtlChrom = loci.getChromosome();
@@ -2203,12 +2148,12 @@ public class OndexServiceProvider {
                     if (isInList.equals("yes")) {
                         out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                                 + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                                 + evidences_linked + "\t" + all_evidences*/ + "\n");
+                                + evidences_linked + "\t" + all_evidences*/ + "\n");
                     }
                 } else { // default
                     out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                             + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                             + evidences_linked + "\t" + all_evidences*/ + "\n");
+                            + evidences_linked + "\t" + all_evidences*/ + "\n");
                 }
             }
         }
@@ -2293,7 +2238,7 @@ public class OndexServiceProvider {
                     }
                     // use shortest preferred concept name
                     /*  String geneName = getShortestPreferedName(gene.getConceptNames());
-                     geneAcc= geneName; */
+                                    geneAcc= geneName; */
                     user_genes = user_genes + geneAcc + ",";
                 }
 
