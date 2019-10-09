@@ -415,7 +415,7 @@
 				<artifactId>server-datasource-ondexlocal</artifactId>
 				<version>${project.version}</version>
 				<exclusions>
-					<!-- Remove the old log4j and requires a replacement with log4j-1.2-api (listed below) -->
+					<!-- Removes the old log4j and requires a replacement with log4j-1.2-api (listed below) -->
 					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>log4j</artifactId>
@@ -562,6 +562,13 @@
 			 	<groupId>org.apache.logging.log4j</groupId>
 			 	<artifactId>log4j-slf4j-impl</artifactId>
 				<version>${log4j.version}</version>
+				<exclusions>
+					<exclusion>
+						<!-- We use our own -->
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<!-- 
 				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.

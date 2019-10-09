@@ -37,3 +37,13 @@ exit 1
   --container-name 'wheat' \
   --container-memory 20G
 
+
+# RRes-specific test
+./docker-run.sh \
+  --dataset-id wheat-directed \
+  --dataset-dir /root/knetminer-test/knetminer-datasets/wheat-directed \
+  --host-port 9090 \
+  --container-name 'wheat-directed' \
+  --container-memory 20G \
+  --with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 --neo4j-user rouser --neo4j-pwd rouser \
+  --detach
