@@ -37,20 +37,17 @@ function fetchStats() {
 
         // Tabular breakdown of all conceptTypes and their count.
         var cc_table = "Detailed breakdown:<br><table style'><tr><td>" +
-                "<table style='border-collapse: collapse; float: left'>";
+                "<table style='border-collapse: collapse; float: left'>"+
+                "<th style='border: 1px solid #dddddd; text-align: left;'>Type</th>" +
+                "<th style='border: 1px solid #dddddd; text-align: left;'>#Total</th></tr>";
 
         var ccArray = [];
-        var cc_bool = false, rel_bool = false, ccEvi_bool = false; // Define first Bools
+        var rel_bool = false, ccEvi_bool = false; // Define first Bools
         var loop_count = 0;
 
         for (var i = 11; i < resp.length - 2; i++) {
 
             if (resp[i].toString().includes("<cc_count>")) {
-                if (cc_bool === false) {
-                    cc_table += "<th style='border: 1px solid #dddddd; text-align: left;'>Type</th>" +
-                            "<th style='border: 1px solid #dddddd; text-align: left;'>#Total</th></tr>"
-                    cc_bool = true;
-                }
                 var cc = fetchValue(resp[i]).split("=");
                 ccArray.push(cc[1]);
                 cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>" + cc[0] + "</td>" +
@@ -60,7 +57,7 @@ function fetchStats() {
             if (resp[i].toString().includes("<ccEvi>")) {
                 if (ccEvi_bool === false) {
                     cc_table += "</table><table style='border-collapse: collapse; float: left'><th style='border: 1px solid #dddddd; text-align: left;'>#Linked</th>" +
-                            "<th style='border: 1px solid #dddddd; text-align: left;'>Linked (%)</th></tr>"
+                            "<th style='border: 1px solid #dddddd; text-align: left;'>%Linked</th></tr>"
                     ccEvi_bool = true;
                 }
                 var conEvi = fetchValue(resp[i]).split("=>");
@@ -73,7 +70,7 @@ function fetchStats() {
 
             if (resp[i].toString().includes("<hubiness>")) {
                 if (rel_bool === false) {
-                    cc_table += "</table><table style='border-collapse: collapse; float: left'><th style='border: 1px solid #dddddd; text-align: left;'>#Total/#Relations (%)</th></tr>";
+                    cc_table += "</table><table style='border-collapse: collapse; float: left'><th style='border: 1px solid #dddddd; text-align: left;'>Avg.degree</th></tr>";
                     rel_bool = true;
                 }
                 var rel = fetchValue(resp[i]).split("->");
@@ -81,9 +78,10 @@ function fetchStats() {
             }
         }
 
-        cc_table += "</table></table>";
+        cc_table += "</table></table></table>";
 
         $("#network_stats").append(statsText + cc_table);
+        $("#network_stats th:contains('Avg.degree')").attr('title', "The Avg.degree calculates the average degree of inwards and outwards connections to a node, given as (for each concept) the total number of unique relationships divided by the total number of concepts present in the graph");
     }
     ).fail(function () {
         console.log("Error occurred while retrieving Network details");
