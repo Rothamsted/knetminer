@@ -1,6 +1,9 @@
 # This is invoked by Travis, as per .travis.yml
 #
+#
+
 [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && goal='install' || goal='deploy'
+
 # You need --quiet, Travis doesn't like too big logs.
 mvn --quiet $goal --settings settings.xml
 
@@ -11,7 +14,7 @@ echo -e "\n\n\tDocker"
 docker build --no-cache -t knetminer/knetminer -f common/quickstart/Dockerfile .
 
 if [[  "${TRAVIS_PULL_REQUEST}" == "true" ]]; then
-	echo -e "\n\n\tWe're building a PR, Not pushing to DockerHub\n"
+	echo -e "\n\n\tWe're building a pull request, Not pushing to DockerHub\n"
 	exit
 fi
 
