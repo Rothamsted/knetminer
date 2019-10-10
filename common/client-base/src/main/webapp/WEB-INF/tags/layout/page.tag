@@ -39,6 +39,8 @@
     </c:if>
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+        <!-- KnetMiner button.css -->
+        <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
         <!-- loader/spinner css -->
         <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
         <!-- Genomaps.js css -->
