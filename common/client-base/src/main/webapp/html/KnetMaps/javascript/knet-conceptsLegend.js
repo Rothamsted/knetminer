@@ -214,7 +214,8 @@ KNETMAPS.ConceptsLegend = function () {
             $('#infoDialog').html("");
         }
 
-        KNETMAPS.ConceptsLegend().conceptCount(cy, conID, conText, totConcepts); // Update the text count
+        //KNETMAPS.ConceptsLegend().conceptCount(cy, conID, conText, totConcepts); // Update the text count
+        KNETMAPS.ConceptsLegend().populateConceptLegend();
     }
 
     return my;

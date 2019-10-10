@@ -26,10 +26,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -80,7 +78,6 @@ import net.sourceforge.ondex.logging.ONDEXLogger;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
@@ -168,8 +165,9 @@ public class OndexServiceProvider {
      * @throws ArrayIndexOutOfBoundsException
      * @throws PluginConfigurationException
      */
-    public void createGraph(String dataPath, String graphFileName, String smFileName) 
-    {
+    public void createGraph(String dataPath, String graphFileName, String smFileName)
+            throws ArrayIndexOutOfBoundsException, PluginConfigurationException {
+
         log.info("Loading graph from " + graphFileName);
 
         // new in-memory graph
@@ -286,7 +284,8 @@ public class OndexServiceProvider {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                    }
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
                         sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
                     }
                 }
@@ -298,14 +297,13 @@ public class OndexServiceProvider {
             // Obtain counts of concepts
             Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
                     .stream()
-                        .collect(Collectors
-                                    .groupingBy(v -> graph.getConcept(v.getKey())
-                                                                       .getOfType()
-                                                                       .getId(),
-                                                                        Collectors.counting()));
-            
+                    .collect(Collectors
+                            .groupingBy(v -> graph.getConcept(v.getKey())
+                                    .getOfType()
+                                    .getId(), Collectors.counting()));
+
             // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-            sorted_conceptClasses.parallelStream().forEach(conceptClass -> {
+            sorted_conceptClasses.stream().forEach(conceptClass -> {
                 if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
                     String conceptID = conceptClass.getId(); // Get concept ID 
                     if (!C2GcountMap.keySet().contains(conceptID)) {
@@ -315,18 +313,19 @@ public class OndexServiceProvider {
                     }
                 }
             });
-            
+
             TreeMap<String, Long> sorted_C2GcountMap = new TreeMap<String, Long>(C2GcountMap); // Sort the values
 
             sorted_C2GcountMap.entrySet().stream().forEach(pair -> {
                 for (ConceptClass concept_class : sorted_conceptClasses) {
                     if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
                         String conID = concept_class.getId(); // Get concept ID 
-                        if (conID.equalsIgnoreCase("Path")) {
-                            conID = "Pathway";
-                        } else if (conID.equalsIgnoreCase("Comp")) {
-                            conID = "Compound";
-                        } if (conID.contains(pair.getKey())) {
+                        if (pair.getKey().equals(conID)) {
+                            if (conID.equalsIgnoreCase("Path")) {
+                                conID = "Pathway";
+                            } else if (conID.equalsIgnoreCase("Comp")) {
+                                conID = "Compound";
+                            }
                             sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
                         }
                     }
@@ -334,7 +333,7 @@ public class OndexServiceProvider {
             });
 
             sb.append("</ccgeneEviCount>\n");
-            
+
             // Relationships per concept
             sb.append("<connectivity>\n");
             for (ConceptClass concept_class : sorted_conceptClasses) {
@@ -346,8 +345,9 @@ public class OndexServiceProvider {
                         conID = "Pathway";
                     } else if (conID.equalsIgnoreCase("Comp")) {
                         conID = "Compound";
-                    } if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
-                        float connectivity = ( (float) con_count/ (float) relation_count) * 100;
+                    }
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                        float connectivity = ((float) relation_count / (float) con_count);
                         sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
                     }
                 }
@@ -371,8 +371,8 @@ public class OndexServiceProvider {
              * HashMap
              */
             //   generateGeneEvidenceStats(fileUrl); // DISABLED
-        } catch (IOException ex) {
-          log.error("Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex);
+        } catch (IOException e) {
+            log.error("Failed to count stats for graph", e);
         }
     }
 
@@ -389,9 +389,6 @@ public class OndexServiceProvider {
             removeOldAttributesFromKBGraph();
         } catch (Exception e) {
             log.error("Failed to load graph", e);
-            ExceptionUtils.throwEx (
-            	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
-            ); 
         }
     }
 
@@ -476,21 +473,8 @@ public class OndexServiceProvider {
             lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
-            
-            // Reset it, should avoid some errors we have seen. It's reopened automatically by
-            // methods needed it.
-            lenv.closeIndex ();
-            lenv.cleanup ();
-            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), false );
-            lenv.addONDEXListener ( new ONDEXLogger () );
-            lenv.setONDEXGraph(graph);
-        } 
-        catch (Exception e)
-        {
-            log.fatal ( "Error while loading/creating graph index: " + e.getMessage (), e );
-            ExceptionUtils.throwEx (
-            	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
-            ); 
+        } catch (Exception e) {
+            log.info("Faild to load graph index", e);
         }
     }
 
@@ -632,9 +616,9 @@ public class OndexServiceProvider {
          * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
          * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
          */
-        Set<String> dsAcc = new HashSet<>(Arrays.asList(datasources));
+        Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
 
-        HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
+        HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
 
         if ("".equals(keywords) || keywords == null) {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
@@ -1367,8 +1351,7 @@ public class OndexServiceProvider {
         HashMap<ONDEXConcept, Float> luceneResults = null;
         try {
             luceneResults = searchLucene(keyword, seed, false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Lucene search failed", e);
         }
 
@@ -1769,14 +1752,9 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;list=" + URLEncoder.encode(name, "UTF-8");
-            } 
-            catch (UnsupportedEncodingException e)
-            {
-                log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
-                throw ExceptionUtils.buildEx (
-                	RuntimeException.class, e,
-                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
-                );
+            } catch (UnsupportedEncodingException e) {
+                log.error(e);
+                throw new Error(e);
             }
             String uri = api_url + "/network?" + query; // KnetMaps (network) query
             //log.info("Genomaps: add KnetMaps (network) query: "+ uri);
@@ -1836,14 +1814,9 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
-            }
-            catch (UnsupportedEncodingException e) 
-            {
-              	log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
-                throw ExceptionUtils.buildEx (
-                	RuntimeException.class, e,
-                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
-                );
+            } catch (UnsupportedEncodingException e) {
+                log.error(e);
+                throw new Error(e);
             }
             String uri = api_url + "/network?" + query;
 
@@ -1947,9 +1920,8 @@ public class OndexServiceProvider {
             BufferedWriter out = new BufferedWriter(new FileWriter(filename));
             out.write(sb_string);
             out.close();
-        } 
-        catch (Exception ex) {
-        	log.error ( "Error while exporting '" + filename + "': " + ex.getMessage (), ex );
+        } catch (Exception ex) {
+            log.debug(ex.getMessage());
         }
     }
 
@@ -2849,10 +2821,7 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-                log.error("Failed while creating internal map files: " + e.getMessage (), e);
-                ExceptionUtils.throwEx (
-                	RuntimeException.class, e, "Failed while creating internal map files: %s", e.getMessage ()
-                ); 
+                log.error("Failed to write files", e);
             }
         } else {
             try {
@@ -2875,10 +2844,7 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-              log.error("Failed while reading internal map files: " + e.getMessage (), e);
-              ExceptionUtils.throwEx (
-              	RuntimeException.class, e, "Failed while reading internal map files: %s", e.getMessage ()
-              ); 
+                log.error("Failed to read files", e);
             }
         }
 
@@ -3035,7 +3001,7 @@ public class OndexServiceProvider {
             }
             out3.close();
         } catch (Exception ex) {
-            log.error("Error while writing stats: " + ex.getMessage (), ex);
+            log.error("Faile to generate stats", ex);
         }
     }
 
