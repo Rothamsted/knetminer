@@ -67,11 +67,11 @@ do
 	=== Variables that affects this script ===
 
 	MAVEN_ARGS: custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
-	configuration from Maven settings). WARNING: if you set this to non-null, YOU MUST also set proper profiles. 
-	Docker needs MAVEN_ARGS="... -Pdocker" as a minimum. It might need -Pdocker,neo4j or other profiles.
-
+	configuration from Maven settings). WARNING: if you set your own -P profile option with this, very likely
+	you'll need -Pdocker. You might need -Pneo4j too.  
+	
 	Example of how to set custom embeddable layout (GeneStack option)
-	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true -Pdocker"
+	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true"
 
 	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
 	If you don't set this, the default is '-it'.
@@ -104,8 +104,9 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 	
-
-if [ "$is_neo4j" != '' ]; then 
+ 
+if [ "$is_neo4j" != '' ]; then
+	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS='-Pdocker'
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
@@ -116,14 +117,21 @@ if [ "$is_neo4j" != '' ]; then
 	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
 fi
 
-# Default is -Pdocker, typically you DO WANT this
-[ "$MAVEN_ARGS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env MAVEN_ARGS"
-# Default is -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+# Default MAVEN_ARGS is -Pdocker. If no '-P' is used, this profile is added automatically.
+# Typically you DO WANT this.
+# 
+# Default JAVA_TOOL_OPTIONS is:
+#   -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
 # which tells the JVM to use all the RAM passed to the container
-[ "$JAVA_TOOL_OPTIONS" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
-
+#
 echo -e "\n"
-echo "MAVEN_ARGS:" $MAVEN_ARGS
-echo "JAVA_TOOL_OPTIONS:" $JAVA_TOOL_OPTIONS
+for env_var in MAVEN_ARGS JAVA_TOOL_OPTIONS
+do
+	[[ "${!env_var}" == '' ]] && continue;
+	export $env_var
+	DOCKER_OPTS="$DOCKER_OPTS --env $env_var"
+	echo "export $env_var=\"${!env_var}\"" 
+done
+
 set -ex
 docker run $DOCKER_OPTS knetminer/knetminer:$image_version "$dataset_id"

@@ -8,7 +8,7 @@
         </li>
         <li style="float: left; width: 50%; margin: 0px 2%;">
             <img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" width="201.5" height="66.3">
-            <p id="text-logo">Supported by BBSRC grants BB/F006039/1, BB/I023860/1, BB/N022874/1</p>
+            <p id="text-logo">Supported by BBSRC grants <a class="links-text" title="DiseaseNetMiner" target="_blank" href="https://gtr.ukri.org/projects?ref=BB%2FN022874%2F1">BB/N022874/1</a> and <a class="links-text" title="DFW" target="_blank" href="https://gtr.ukri.org/projects?ref=BBS%2FE%2FC%2F000I0210">BBS/E/C/000I0210</a></p>
         </li>
         <li style="float: left; width: 20%;">
             <h4><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;&nbsp;Contact us:</h4>

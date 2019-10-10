@@ -3,4 +3,3 @@ MATCH path =
   - [occ1:cooc_wi] -> (g1:Gene)
   - [part:participates_in] -> (proc:BioProc)
 RETURN path
-ORDER BY occ.MAX_TFIDF DESC

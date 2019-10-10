@@ -7,7 +7,9 @@ addons:
   apt:
     packages:
       - libxml2-utils
-        
+services:
+  - docker      
+  
 cache:
   directories:
     - $HOME/.m2
@@ -19,5 +21,4 @@ install:
   - export PATH="/usr/local/bin:$PATH"
       
 script: 
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && docker push || mvn install'
-  - mvn deploy --settings settings.xml
+  - ./travis-build.sh
