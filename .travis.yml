@@ -19,4 +19,5 @@ install:
   - export PATH="/usr/local/bin:$PATH"
       
 script: 
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && docker push || mvn install'
   - mvn deploy --settings settings.xml
