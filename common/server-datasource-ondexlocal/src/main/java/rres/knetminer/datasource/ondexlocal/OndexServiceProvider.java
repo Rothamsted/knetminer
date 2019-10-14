@@ -274,60 +274,53 @@ public class OndexServiceProvider {
             sb.append("</evidenceNetworkSizes>\n");
 
             Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
-            Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+            Set<ConceptClass> sortedConceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
 
             // Display table breakdown of all conceptClasses in network
             sb.append("<conceptClasses>\n");
-            for (ConceptClass con_class : sorted_conceptClasses) {
-                if (graph.getConceptsOfConceptClass(con_class).size() > 0) {
-                    String conID = con_class.getId();
-                    int con_count = graph.getConceptsOfConceptClass(con_class).size();
-                    if (conID.equalsIgnoreCase("Path")) {
-                        conID = "Pathway";
-                    } else if (conID.equalsIgnoreCase("Comp")) {
-                        conID = "Compound";
-                    }
+            for (ConceptClass conClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conClass).size() > 0) {
+                    String conID = conClass.getId(); // Get concept ID
+                    int conCount = graph.getConceptsOfConceptClass(conClass).size(); // Get count of concept
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
                     if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
-                        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+                        sb.append("<cc_count>").append(conID).append("=").append(conCount).append("</cc_count>\n");
                     }
                 }
             }
             sb.append("</conceptClasses>\n");
+            sb.append("<ccgeneEviCount>\n"); // Obtain concept count from concept2gene
 
-            // Obtain concept count from concept2gene
-            sb.append("<ccgeneEviCount>\n");
-            // Obtain counts of concepts
             Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
                     .stream()
-                    .collect(Collectors
-                            .groupingBy(v -> graph.getConcept(v.getKey())
-                                    .getOfType()
-                                    .getId(), Collectors.counting()));
+                    .collect(Collectors.groupingBy(
+                             v -> graph.getConcept(v.getKey())
+                                                   .getOfType()
+                                                   .getId(),
+                                                   Collectors.counting()));
 
             // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-            sorted_conceptClasses.stream().forEach(conceptClass -> {
+            sortedConceptClasses.stream().forEach(conceptClass -> {
                 if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
-                    String conceptID = conceptClass.getId(); // Get concept ID 
-                    if (!C2GcountMap.keySet().contains(conceptID)) {
-                        if (!conceptID.equalsIgnoreCase("Thing") && !conceptID.equalsIgnoreCase("TestCC")) {
-                            C2GcountMap.put(conceptID, Long.valueOf(0));
-                        }
+                    String conceptID = conceptClass.getId(); 
+                    if (!C2GcountMap.keySet().contains(conceptID)
+                            && !conceptID.equalsIgnoreCase("Thing")
+                            && !conceptID.equalsIgnoreCase("TestCC")) {
+                        C2GcountMap.put(conceptID, Long.valueOf(0));
                     }
                 }
             });
 
-            TreeMap<String, Long> sorted_C2GcountMap = new TreeMap<String, Long>(C2GcountMap); // Sort the values
+            TreeMap<String, Long> sortedC2GcountMap = new TreeMap<String, Long>(C2GcountMap); 
 
-            sorted_C2GcountMap.entrySet().stream().forEach(pair -> {
-                for (ConceptClass concept_class : sorted_conceptClasses) {
+            sortedC2GcountMap.entrySet().stream().forEach(pair -> {
+                for (ConceptClass concept_class : sortedConceptClasses) {
                     if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
-                        String conID = concept_class.getId(); // Get concept ID 
+                        String conID = concept_class.getId();  
                         if (pair.getKey().equals(conID)) {
-                            if (conID.equalsIgnoreCase("Path")) {
-                                conID = "Pathway";
-                            } else if (conID.equalsIgnoreCase("Comp")) {
-                                conID = "Compound";
-                            }
+                            conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                            conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
                             sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
                         }
                     }
@@ -335,21 +328,16 @@ public class OndexServiceProvider {
             });
 
             sb.append("</ccgeneEviCount>\n");
-
-            // Relationships per concept
-            sb.append("<connectivity>\n");
-            for (ConceptClass concept_class : sorted_conceptClasses) {
-                if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
-                    String conID = concept_class.getId(); // Get concept ID                    
-                    int relation_count = graph.getRelationsOfConceptClass(concept_class).size(); // relationship count
-                    int con_count = graph.getConceptsOfConceptClass(concept_class).size(); // Get count of concept
-                    if (conID.equalsIgnoreCase("Path")) {
-                        conID = "Pathway";
-                    } else if (conID.equalsIgnoreCase("Comp")) {
-                        conID = "Compound";
-                    }
-                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
-                        float connectivity = ((float) relation_count / (float) con_count);
+            sb.append("<connectivity>\n");  // Relationships per concept
+            for (ConceptClass conceptClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
+                    String conID = conceptClass.getId();                    
+                    int relationCount = graph.getRelationsOfConceptClass(conceptClass).size(); 
+                    int conCount = graph.getConceptsOfConceptClass(conceptClass).size(); 
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) {
+                        float connectivity = ((float) relationCount / (float) conCount);
                         sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
                     }
                 }
