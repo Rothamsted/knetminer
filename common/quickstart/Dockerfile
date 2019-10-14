@@ -9,6 +9,7 @@ ARG DOCKER_TAG='latest'
 #
 ARG TOMCAT_PASSWORD=''
 
+
 FROM knetminer/knetminer-base:${DOCKER_TAG}
 
 EXPOSE 8080
