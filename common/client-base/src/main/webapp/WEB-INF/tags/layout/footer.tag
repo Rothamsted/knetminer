@@ -3,12 +3,12 @@
 <div class="contact-footer">
     <ul>
         <li style="float: left; width: 23%;">
-            <a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="html/image/rothamsted_logo.png" width="80" height="80"/></a>  <!--width="63.6" height="85.5"/> -->
-            <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk" class="logos"><img class="bbsrc-logo" src="html/image/bbsrc_logo.png" width="194" height="78"/></a>
+            <a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="html/image/rothamsted_logo.png" width="80" height="80"/></a>
+            <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk" class="logos"><img class="bbsrc-logo" src="html/image/bbsrc_logo.png" width="194" height="80"/></a>
         </li>
         <li style="float: left; width: 50%; margin: 0px 2%;">
             <img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" width="201.5" height="66.3">
-            <p id="text-logo">Supported by BBSRC grants <a class="links-text" title="DiseaseNetMiner" target="_blank" href="https://gtr.ukri.org/projects?ref=BB%2FN022874%2F1">BB/N022874/1</a> and <a class="links-text" title="DFW" target="_blank" href="https://gtr.ukri.org/projects?ref=BBS%2FE%2FC%2F000I0210">BBS/E/C/000I0210</a></p>
+            <p id="text-logo">Supported by the UK Biotechnology and Biological Sciences Research Council</p>
         </li>
         <li style="float: left; width: 20%;">
             <h4><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;&nbsp;Contact us:</h4>
