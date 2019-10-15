@@ -465,7 +465,7 @@ public class OndexServiceProvider {
             lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
             lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
-            log.info("Lucene Index created");
+            log.info("Lucene Index created");            
         }
         catch (Exception e)
         {
