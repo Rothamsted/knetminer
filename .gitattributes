@@ -34,7 +34,11 @@
 * text=auto
 
 # Force the following filetypes to have unix eols, so Windows does not break them
+# WARNING *.* causes problems with image files in GeneMap (see #448).
 #*.* text eol=lf
+
+*.sh
+
 
 # Windows forced line-endings
 /.idea/* text eol=crlf
