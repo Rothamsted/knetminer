@@ -254,10 +254,10 @@ public class KnetminerServer {
 		map.put("qtl", new JSONArray(qtl).toString());
 
 		map.put("datasource", ds);
-
-		ObjectMessage msg = new ObjectMessage(map);
-		logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
-
+		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
+			ObjectMessage msg = new ObjectMessage(map);
+			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
+		}
 		KnetminerRequest request = new KnetminerRequest();
 		request.setKeyword(keyword);
 		request.setListMode(listMode);
@@ -303,9 +303,11 @@ public class KnetminerServer {
 		map.put("qtl", new JSONArray(qtl).toString());
 
 		map.put("datasource", ds);
-
-		ObjectMessage msg = new ObjectMessage(map);
-		logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
+		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
+			ObjectMessage msg = new ObjectMessage(map);
+			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
+		}
+		
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
