@@ -80,6 +80,7 @@ import net.sourceforge.ondex.logging.ONDEXLogger;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
@@ -168,8 +169,7 @@ public class OndexServiceProvider {
      * @throws PluginConfigurationException
      */
     public void createGraph(String dataPath, String graphFileName, String smFileName)
-            throws ArrayIndexOutOfBoundsException, PluginConfigurationException {
-
+    {
         log.info("Loading graph from " + graphFileName);
 
         // new in-memory graph
@@ -211,11 +211,11 @@ public class OndexServiceProvider {
 
     /*
      * Generate Stats about the created Ondex graph and its mappings:
-     * mapConcept2Genes & mapGene2Concepts. author singha
+     * mapConcept2Genes & mapGene2Concepts. Author Singha
+     * Updating to also give Concept2Gene per concept
      */
     private void displayGraphStats(String fileUrl) {
-        // Update the Network Stats file that holds the latest Stats
-        // information.
+        // Update the Network Stats file that holds the latest Stats information.
         String fileName = Paths.get(fileUrl, "latestNetwork_Stats.tab").toString();
 
         int minValues, maxValues = 0, avgValues, all_values_count = 0;
@@ -273,30 +273,76 @@ public class OndexServiceProvider {
             sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
             sb.append("</evidenceNetworkSizes>\n");
 
+            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
+            Set<ConceptClass> sortedConceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+
             // Display table breakdown of all conceptClasses in network
             sb.append("<conceptClasses>\n");
-            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
-            Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
-            for (ConceptClass con_class : sorted_conceptClasses) {
-                if (graph.getConceptsOfConceptClass(con_class).size() > 0) {
-                    String conID = con_class.getId();
-                    int con_count = graph.getConceptsOfConceptClass(con_class).size();
-                    if (conID.equalsIgnoreCase("Path")) {
-                        conID = "Pathway";
-                    } else if (conID.equalsIgnoreCase("Comp")) {
-                        conID = "Compound";
-                    } else if (conID.equalsIgnoreCase("Trait")) {
-                        conID = "Trait (GWAS)";
-                    } else if (conID.equalsIgnoreCase("Gene")) {
-                        con_count = numGenesInGenome;
-                    }
-                    // exclude "Thing" CC
-                    if (!conID.equalsIgnoreCase("Thing")) {
-                        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+            for (ConceptClass conClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conClass).size() > 0) {
+                    String conID = conClass.getId(); // Get concept ID
+                    int conCount = graph.getConceptsOfConceptClass(conClass).size(); // Get count of concept
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                        sb.append("<cc_count>").append(conID).append("=").append(conCount).append("</cc_count>\n");
                     }
                 }
             }
             sb.append("</conceptClasses>\n");
+            sb.append("<ccgeneEviCount>\n"); // Obtain concept count from concept2gene
+
+            Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
+                    .stream()
+                    .collect(Collectors.groupingBy(
+                             v -> graph.getConcept(v.getKey())
+                                                   .getOfType()
+                                                   .getId(),
+                                                   Collectors.counting()));
+
+            // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
+            sortedConceptClasses.stream().forEach(conceptClass -> {
+                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
+                    String conceptID = conceptClass.getId(); 
+                    if (!C2GcountMap.keySet().contains(conceptID)
+                            && !conceptID.equalsIgnoreCase("Thing")
+                            && !conceptID.equalsIgnoreCase("TestCC")) {
+                        C2GcountMap.put(conceptID, Long.valueOf(0));
+                    }
+                }
+            });
+
+            TreeMap<String, Long> sortedC2GcountMap = new TreeMap<String, Long>(C2GcountMap); 
+
+            sortedC2GcountMap.entrySet().stream().forEach(pair -> {
+                for (ConceptClass concept_class : sortedConceptClasses) {
+                    if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
+                        String conID = concept_class.getId();  
+                        if (pair.getKey().equals(conID)) {
+                            conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                            conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                            sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
+                        }
+                    }
+                }
+            });
+
+            sb.append("</ccgeneEviCount>\n");
+            sb.append("<connectivity>\n");  // Relationships per concept
+            for (ConceptClass conceptClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
+                    String conID = conceptClass.getId();                    
+                    int relationCount = graph.getRelationsOfConceptClass(conceptClass).size(); 
+                    int conCount = graph.getConceptsOfConceptClass(conceptClass).size(); 
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) {
+                        float connectivity = ((float) relationCount / (float) conCount);
+                        sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
+                    }
+                }
+            }
+            sb.append("</connectivity>\n");
             sb.append("</stats>");
 
             // Update the file storing the latest Stats data.
@@ -315,8 +361,8 @@ public class OndexServiceProvider {
              * HashMap
              */
             //   generateGeneEvidenceStats(fileUrl); // DISABLED
-        } catch (IOException e) {
-            log.error("Failed to count stats for graph", e);
+        } catch (IOException ex) {
+          log.error("Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex);
         }
     }
 
@@ -333,6 +379,9 @@ public class OndexServiceProvider {
             removeOldAttributesFromKBGraph();
         } catch (Exception e) {
             log.error("Failed to load graph", e);
+            ExceptionUtils.throwEx (
+            	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
+            ); 
         }
     }
 
@@ -413,12 +462,17 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), !indexFile.exists() );
-            lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
+            lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
+            lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
-            log.info("Lucene Index created");
-        } catch (Exception e) {
-            log.info("Faild to load graph index", e);
+            log.info("Lucene Index created");            
+        }
+        catch (Exception e)
+        {
+            log.fatal ( "Error while loading/creating graph index: " + e.getMessage (), e );
+            ExceptionUtils.throwEx (
+            	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
+            ); 
         }
     }
 
@@ -547,8 +601,9 @@ public class OndexServiceProvider {
      * @throws IOException
      * @throws ParseException
      */
-    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications) throws IOException, ParseException {
-
+    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications)
+    	throws IOException, ParseException
+    {
         Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
         String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
             "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
@@ -560,9 +615,9 @@ public class OndexServiceProvider {
          * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
          * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
          */
-        Set<String> dsAcc = new HashSet<String>(Arrays.asList(datasources));
+        Set<String> dsAcc = new HashSet<>(Arrays.asList(datasources));
 
-        HashMap<ONDEXConcept, Float> hit2score = new HashMap<ONDEXConcept, Float>();
+        HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
 
         if ("".equals(keywords) || keywords == null) {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
@@ -614,13 +669,6 @@ public class OndexServiceProvider {
 
         // search concept attributes
         for (AttributeName att : atts) {
-            // Query qAtt =
-            // LuceneQueryBuilder.searchConceptByConceptAttributeExact(att,
-            // keyword);
-            // ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt,
-            // 100);
-            // mergeHits(hit2score, sHits);
-
             String fieldName = getFieldName("ConceptAttribute", att.getId());
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
@@ -762,7 +810,6 @@ public class OndexServiceProvider {
         return sortedCandidates;
     }
 
-
     /**
      * Did you mean function for spelling correction
      *
@@ -847,12 +894,13 @@ public class OndexServiceProvider {
 
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
-     * input terms
+     * input terms.
      *
-     * @param keyword
-     * @return list of QTL objects
+     * TODO: made private, cause it seems being used by {@link #writeAnnotationXML(String, ArrayList, Set, List, String, int, Hits, String, Map)}
+     * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
+     *
      */
-    public Set<QTL> findQTL(String keyword) throws ParseException {
+    private Set<QTL> findQTL(String keyword) throws ParseException {
 
         ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
@@ -1296,7 +1344,8 @@ public class OndexServiceProvider {
         HashMap<ONDEXConcept, Float> luceneResults = null;
         try {
             luceneResults = searchLucene(keyword, seed, false);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Lucene search failed", e);
         }
 
@@ -1596,7 +1645,8 @@ public class OndexServiceProvider {
      * @return
      */
     public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates) {
+            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates)
+    {
         List<QTL> userQtl = new ArrayList<QTL>();
         for (String qtlStr : userQtlStr) {
             userQtl.add(QTL.fromString(qtlStr));
@@ -1605,10 +1655,10 @@ public class OndexServiceProvider {
         log.info("Genomaps: generate XML...");
         // If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
         /*if(userGenes != null) {
-                   // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
-                   genes= new ArrayList<ONDEXConcept> (userGenes);
-                   log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
-                  }*/
+         // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
+         genes= new ArrayList<ONDEXConcept> (userGenes);
+         log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
+         }*/
         // added user gene list restriction above (04/07/2018, singha)
 
         ONDEXGraphMetaData md = graph.getMetaData();
@@ -1696,9 +1746,14 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;list=" + URLEncoder.encode(name, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error(e);
-                throw new Error(e);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+                throw ExceptionUtils.buildEx (
+                	RuntimeException.class, e,
+                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
+                );
             }
             String uri = api_url + "/network?" + query; // KnetMaps (network) query
             //log.info("Genomaps: add KnetMaps (network) query: "+ uri);
@@ -1758,9 +1813,14 @@ public class OndexServiceProvider {
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
-            } catch (UnsupportedEncodingException e) {
-                log.error(e);
-                throw new Error(e);
+            }
+            catch (UnsupportedEncodingException e) 
+            {
+              	log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+                throw ExceptionUtils.buildEx (
+                	RuntimeException.class, e,
+                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
+                );
             }
             String uri = api_url + "/network?" + query;
 
@@ -1864,8 +1924,9 @@ public class OndexServiceProvider {
             BufferedWriter out = new BufferedWriter(new FileWriter(filename));
             out.write(sb_string);
             out.close();
-        } catch (Exception ex) {
-            log.debug(ex.getMessage());
+        }
+        catch (Exception ex) {
+        	log.error ( "Error while exporting '" + filename + "': " + ex.getMessage (), ex );
         }
     }
 
@@ -1993,7 +2054,6 @@ public class OndexServiceProvider {
 
             }
 
-
             if (!qtls.isEmpty()) {
                 for (QTL loci : qtls) {
                     String qtlChrom = loci.getChromosome();
@@ -2120,12 +2180,12 @@ public class OndexServiceProvider {
                     if (isInList.equals("yes")) {
                         out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                                 + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                                + evidences_linked + "\t" + all_evidences*/ + "\n");
+                                 + evidences_linked + "\t" + all_evidences*/ + "\n");
                     }
                 } else { // default
                     out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
                             + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                            + evidences_linked + "\t" + all_evidences*/ + "\n");
+                             + evidences_linked + "\t" + all_evidences*/ + "\n");
                 }
             }
         }
@@ -2210,7 +2270,7 @@ public class OndexServiceProvider {
                     }
                     // use shortest preferred concept name
                     /*  String geneName = getShortestPreferedName(gene.getConceptNames());
-                                    geneAcc= geneName; */
+                     geneAcc= geneName; */
                     user_genes = user_genes + geneAcc + ",";
                 }
 
@@ -2766,7 +2826,10 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-                log.error("Failed to write files", e);
+                log.error("Failed while creating internal map files: " + e.getMessage (), e);
+                ExceptionUtils.throwEx (
+                	RuntimeException.class, e, "Failed while creating internal map files: %s", e.getMessage ()
+                ); 
             }
         } else {
             try {
@@ -2789,7 +2852,10 @@ public class OndexServiceProvider {
                 s.close();
 
             } catch (Exception e) {
-                log.error("Failed to read files", e);
+              log.error("Failed while reading internal map files: " + e.getMessage (), e);
+              ExceptionUtils.throwEx (
+              	RuntimeException.class, e, "Failed while reading internal map files: %s", e.getMessage ()
+              ); 
             }
         }
 
@@ -2946,7 +3012,7 @@ public class OndexServiceProvider {
             }
             out3.close();
         } catch (Exception ex) {
-            log.error("Faile to generate stats", ex);
+            log.error("Error while writing stats: " + ex.getMessage (), ex);
         }
     }
 

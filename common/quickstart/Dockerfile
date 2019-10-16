@@ -9,6 +9,7 @@ ARG DOCKER_TAG='latest'
 #
 ARG TOMCAT_PASSWORD=''
 
+
 FROM knetminer/knetminer-base:${DOCKER_TAG}
 
 RUN apk add --update \
@@ -41,6 +42,7 @@ COPY . knetminer
 WORKDIR knetminer/common/quickstart
 RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
+RUN touch /etc/crontab /etc/cron*/*
 RUN cp -r .aws ~/ && crontab analytics-cron && crond
 
 ENTRYPOINT ["./runtime-helper.sh"] 

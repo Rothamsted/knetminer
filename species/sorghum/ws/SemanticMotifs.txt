@@ -3,7 +3,7 @@
 2^	Publication
 3^	MolFunc
 4^	BioProc
-5^ 	CelComp
+5^	CelComp
 7^	Protein
 8^	Gene
 9	Gene
@@ -14,7 +14,6 @@
 14^	ProtDomain
 15^	EC
 
-16^	TO
 17	Enzyme
 177^	Enzyme
 18	Reaction
@@ -22,6 +21,7 @@
 19^	Path
 20	SNP
 21^	Trait
+211	Trait
 
 #Transitions
 1-10	enc
@@ -29,6 +29,11 @@
 1-2	occ_in
 1-13	has_observ_pheno
 1-20	has_variation
+1-188	inv_in
+1-19	part_of
+20-211	associated_with
+211-2	pub_in
+211-21	is_part_of
 
 10-10	equivalent	4
 10-7	equivalent	4
@@ -48,7 +53,7 @@
 10-12	cat_c
 10-14	has_domain
 10-15	cat_c
-10-16	cooc_wi
+10-21	cooc_wi
 
 9-2	pub_in
 9-3	has_function
@@ -66,8 +71,8 @@
 11-5	located_in
 12-3	equ
 
-9-16	cooc_wi
-1-16	cooc_wi
+9-21	cooc_wi
+1-21	cooc_wi
 10-17	is_a
 10-177	is_a
 17-18	ca_by

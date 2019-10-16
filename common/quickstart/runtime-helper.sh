@@ -36,7 +36,10 @@ elif [ "$1" == '--deploy-only' ]; then
 fi
 
 set -x
-	
+
+echo -e "\n\n\tInitial environment:"
+env
+
 # The dataset ID, ie, the settings directory to be found in the codebase, under species/
 # If this is omitted, the settings are looked up on the dataset dir.
 knet_dataset_id="$1" # In Docker (ie, CMD+ENTRYPOINT), this is aratiny by default
@@ -179,6 +182,14 @@ fi
 
 echo -e "\n\n\tRunning the Tomcat server\n"
 cd "$knet_tomcat_home/bin" 
+
+#Start crond
+if grep -q "docker" /proc/self/cgroup; then
+	echo -e "\nRunning crond in docker container\n\n"
+	/usr/sbin/crond
+else
+	echo -e "\nI'm not in a docker container, so not going to run crond here.\n\n"
+fi
 ./catalina.sh run
 
 echo -e "\n\n\tTomcat Server Stopped, container script has finished\n"

@@ -172,6 +172,7 @@ KNETMAPS.ItemInfo = function() {
                             if(url_mappings.html_acc[u].cv === accessionID) {
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
                                if(accessionID === "CO") { coAccUrl= coAccUrl +"/"; }
+							   coAccUrl= coAccUrl.replace('TO:','').replace('PO:',''); // remove TO: or PO:, if exists
                                coAccUrl= coAccUrl.replace(/\s/g,''); // remove spaces, if any
                                // open attribute url in new blank tab.
                                co_acc= "<a href=\""+ coAccUrl +"\" onclick=\"window.open(this.href,'_blank');return false;\">"+ co_acc +"</a>";

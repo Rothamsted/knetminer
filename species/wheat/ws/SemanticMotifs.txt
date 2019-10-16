@@ -33,6 +33,8 @@
 1-10	enc
 1-7	enc
 1-20	has_variation
+1-188	inv_in
+1-19	part_of
 1-2	occ_in
 1-22	differentially_expressed
 1-21	cooc_wi
