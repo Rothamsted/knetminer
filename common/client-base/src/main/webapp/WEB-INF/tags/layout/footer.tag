@@ -2,14 +2,14 @@
 
 <div class="contact-footer">
     <ul>
-        <li style="float: left; width: 35%;">
+        <li style="float:left;width:35%;">
             <a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="html/image/rothamsted_logo.png" width="80" height="80"/></a>  
             <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk/" class="logos"><img class="bbsrc-logo" src="html/image/bbsrc_logo.png"/></a>
         </li>
-        <li style="float: left; width: 40%; margin: 0px 2%;">
+        <li style="float:left;width:40%;">
 			<a target="_blank" title="KnetMiner" href="https://knetminer.org/"><img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" height="71"></a>
         </li>
-        <li style="float: right; width: 20%;">
+        <li style="float:right;/*width:23%;*/">
             <a class="contact-button" target="_blank" title="Contact_Page" href="https://knetminer.org/KnetMiner/contact.html"><h4><i class="fas fa-user" aria-hidden="true"></i>&nbsp;&nbsp;Contact us</h4></a>
 			<!--<p>keywan.hassani-pak@rothamsted.ac.uk </p> -->
             <div class="twitter-buttons">
