@@ -7,7 +7,7 @@
             <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk/" class="logos"><img class="bbsrc-logo" src="html/image/bbsrc_logo.png"/></a>
         </li>
         <li style="float: left; width: 50%; margin: 0px 2%;">
-			<a target="_blank" title="KnetMiner" href="https://knetminer.org/"><img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" width="233.5" height="71"></a>
+			<a target="_blank" title="KnetMiner" href="https://knetminer.org/"><img class="knetminer-logo" src="html/image/logo-regular.png" alt="Logo" height="71"></a>
         </li>
         <li style="float: left; width: 20%;">
             <a class="contact-button" target="_blank" title="Contact_Page" href="https://knetminer.org/KnetMiner/contact.html"><h4><i class="fas fa-user" aria-hidden="true"></i>&nbsp;&nbsp;Contact us</h4></a>
