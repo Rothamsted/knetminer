@@ -1,5 +1,5 @@
 <%
-// added to overcome double quotes issue
+// added to overcome double quotes issue in API search
 String keywords="";
 if(request.getParameter("keyword")!=null) {
 keywords = request.getParameter("keyword");
@@ -10,15 +10,15 @@ String genelist="";
 if(request.getParameter("list")!=null) {
 genelist = request.getParameter("list");
 }
-String datasetDescription= "Discover the <a target='_blank' href='https://knetminer.org' style='color:darkOrange'>KnetMiner</a> knowledge network for <b>gene(s)</b>: ["+ genelist + "] (blue triangle with yellow label) and potential links ";
+String datasetDescription= "Discover the <a target='_blank' href='https://knetminer.org' style='color:darkOrange'>KnetMiner</a> knowledge network for gene(s): [<b>"+ genelist + "</b>] (<i>blue triangles with yellow label</i>) and potential links ";
 if(request.getParameter("keyword")!=null) {
-datasetDescription= datasetDescription + "to [<b>" + keywords + "</b>]. If the genes do not have a link to [<b>"+ keywords +"</b>], you will see links to any phenotype/trait (green rectangles and pentagons). ";
+datasetDescription= datasetDescription + "to [<b>" + keywords + "</b>]. If the genes do not have a link to [<b>"+ keywords +"</b>], you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
 }
 else {
 // when no keyword is provided
-datasetDescription= datasetDescription + "to <b>any</b> phenotype/trait (green rectangles and pentagons). ";
+datasetDescription= datasetDescription + "to <b>any</b> phenotype/trait (<i>green rectangles and pentagons</i>). ";
 }
-datasetDescription= datasetDescription + "<u>Tip:</u> Right-click-hold on nodes to add labels or to show their properties. Use the Interactive Legend to add (single-click) or hide (double-click) other types of information to/from the network.";
+datasetDescription= datasetDescription + "<u>Tip:</u> <i>Right-click-hold</i> on nodes to add labels or to show their properties. Use the Interactive Legend to add (<i>single-click</i>) or hide (<i>double-click</i>) other types of information to/from the network.";
 %>
 <html>
 <head>
@@ -41,7 +41,7 @@ datasetDescription= datasetDescription + "<u>Tip:</u> Right-click-hold on nodes 
  	</nav>  <!-- end navbar -->
 
 <div id="content">
-    <div id="dataset-description"><%=datasetDescription%></div><br/>
+    <div id="dataset-description"><p id="dataset-desc"><%=datasetDescription%></p></div><br/>
 	<!-- KnetMaps -->
 	<div id="knetmap"></div>
 </div>  <!-- content -->

@@ -6,7 +6,7 @@ keywords = request.getParameter("keyword");
 keywords = keywords.replaceAll("^\"|\"$", "###");
 }
 // added to display evidencepage API - query summary above rendered network
-String datasetDescription= "Discover the <a target='_blank' href='https://knetminer.org' style='color:darkOrange'>KnetMiner</a> knowledge network for the top <b>genes</b> linked to your <b>evidence term</b>. <u>Tip:</u> Right-click-hold on nodes to add labels or to show their properties. Use the Interactive Legend to add (single-click) or hide (double-click) other types of information to/from the network.";
+String datasetDescription= "Discover the <a target='_blank' href='https://knetminer.org' style='color:darkOrange'>KnetMiner</a> knowledge network for the top <b>genes</b> linked to your <b>evidence term</b>. <u>Tip:</u> <i>Right-click-hold</i> on nodes to add labels or to show their properties. Use the Interactive Legend to add (<i>single-click</i>) or hide (<i>double-click</i>) other types of information to/from the network.";
 %>
 <html>
 <head>
@@ -29,7 +29,7 @@ String datasetDescription= "Discover the <a target='_blank' href='https://knetmi
  	</nav>  <!-- end navbar -->
  
 <div id="content">
-    <div id="dataset-description"><%=datasetDescription%></div><br/>
+    <div id="dataset-description"><p id="dataset-desc"><%=datasetDescription%></p></div><br/>
 	<!-- KnetMaps -->
 	<div id="knetmap"></div>
 </div>  <!-- content -->
