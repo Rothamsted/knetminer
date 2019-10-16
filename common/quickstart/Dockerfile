@@ -42,6 +42,7 @@ COPY . knetminer
 WORKDIR knetminer/common/quickstart
 RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
+RUN touch /etc/crontab /etc/cron*/*
 RUN cp -r .aws ~/ && crontab analytics-cron && crond
 
 ENTRYPOINT ["./runtime-helper.sh"] 
