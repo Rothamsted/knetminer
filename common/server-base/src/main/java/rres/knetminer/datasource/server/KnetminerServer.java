@@ -3,20 +3,19 @@ package rres.knetminer.datasource.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.message.ObjectMessage;
+
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -58,6 +57,9 @@ public class KnetminerServer {
 	private Map<String, KnetminerDataSource> dataSourceCache;
 
 	private String gaTrackingId;
+
+	private static final Logger logAnalytics = LogManager.getLogger("analytics-log");
+
 
 	/**
 	 * Autowiring will populate the basic dataSources list with all instances of
@@ -163,6 +165,7 @@ public class KnetminerServer {
 	@GetMapping("/{ds}/genepage")
 	public String genepage(@PathVariable String ds, @RequestParam(required = false) String keyword,
 			@RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model) {
+
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
@@ -172,6 +175,7 @@ public class KnetminerServer {
 		if (keyword != null && !"".equals(keyword)) {
 			model.addAttribute("keyword", keyword);
 		}
+
 		return "genepage";
 	}
 
@@ -195,6 +199,7 @@ public class KnetminerServer {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 		this._googlePageView(ds, "evidencepage", rawRequest);
+
 		if (!list.isEmpty()) {
 			model.addAttribute("list", new JSONArray(list).toString());
 		}
@@ -232,6 +237,27 @@ public class KnetminerServer {
 		if (list == null) {
 			list = Collections.emptyList();
 		}
+
+		Map<String, String> map = new TreeMap<>();
+
+		map.put("host",rawRequest.getServerName());
+		map.put("port",Integer.toString(rawRequest.getServerPort()));
+
+		map.put("mode", mode);
+		if(keyword != null) {
+			map.put("keywords", keyword);
+		}
+		if(!list.isEmpty()) {
+			map.put("list", new JSONArray(list).toString());
+		}
+
+		map.put("qtl", new JSONArray(qtl).toString());
+
+		map.put("datasource", ds);
+
+		ObjectMessage msg = new ObjectMessage(map);
+		logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
+
 		KnetminerRequest request = new KnetminerRequest();
 		request.setKeyword(keyword);
 		request.setListMode(listMode);
@@ -258,6 +284,28 @@ public class KnetminerServer {
 	@PostMapping("/{ds}/{mode}")
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
+		Map<String, String> map = new TreeMap<>();
+
+		map.put("host",rawRequest.getServerName());
+		map.put("port",Integer.toString(rawRequest.getServerPort()));
+
+		map.put("mode", mode);
+		String keyword = request.getKeyword();
+		List<String> list = request.getList();
+		List<String> qtl = request.getQtl();
+		if(keyword != null) {
+			map.put("keywords", keyword);
+		}
+		if(!list.isEmpty()) {
+			map.put("list", new JSONArray(list).toString());
+		}
+
+		map.put("qtl", new JSONArray(qtl).toString());
+
+		map.put("datasource", ds);
+
+		ObjectMessage msg = new ObjectMessage(map);
+		logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
@@ -289,6 +337,7 @@ public class KnetminerServer {
 		if (dataSource == null) {
 			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
 		}
+
 		try {
 			if (log.isDebugEnabled()) {
 				String paramsStr = "Keyword:" + request.getKeyword() + " , List:"

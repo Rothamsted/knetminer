@@ -3,6 +3,9 @@
 	<Properties>
 		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
+	<CustomLevels>
+		<CustomLevel name="ANALYTICS" intLevel="50" />
+	</CustomLevels>
 	<Appenders>
 		<RollingFile name="RollingFile"
 			fileName="${log-name}.log"
@@ -16,8 +19,20 @@
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
+		<RollingFile name="AnalyticsRollingFile"
+					 fileName="${log-name}-analytics.json"
+					 filePattern="${log-name}-analytics-%d{yyyy-MM-dd}.json">
+			<JSONLayout compact="false" eventEol="true" objectMessageAsJsonObject="true"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
 	</Appenders>
 	<Loggers>
+		<Logger name="analytics-log" level="ANALYTICS">
+			<AppenderRef ref="AnalyticsRollingFile" />
+		</Logger>
 		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />
 		</Root>
