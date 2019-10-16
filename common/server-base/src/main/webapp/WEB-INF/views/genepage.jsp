@@ -42,7 +42,6 @@ datasetDescription= datasetDescription + "<u>Tip:</u> Right-click-hold on nodes 
 
 <div id="content">
     <div id="dataset-description"><%=datasetDescription%></div><br/>
-    <div id="dataset-description">the top <b>genes</b> linked to your <b>evidence term</b>. </div><br/>
 	<!-- KnetMaps -->
 	<div id="knetmap"></div>
 </div>  <!-- content -->
