@@ -10,15 +10,15 @@ String genelist="";
 if(request.getParameter("list")!=null) {
 genelist = request.getParameter("list");
 }
-String datasetDescription= "Discover the <a target='_blank' href='https://knetminer.org' style='color:darkOrange'>KnetMiner</a> knowledge network for gene(s): [<b>"+ genelist + "</b>] (<i>blue triangles with yellow label</i>) and potential links ";
+String datasetDescription= "Discover the KnetMiner knowledge network for gene(s): <span style='color:darkOrange'>"+ genelist + "</span> (blue triangles with yellow label) and potential links ";
 if(request.getParameter("keyword")!=null) {
-datasetDescription= datasetDescription + "to [<b>" + keywords + "</b>]. If the genes do not have a link to [<b>"+ keywords +"</b>], you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
+datasetDescription= datasetDescription + "to <span style='color:darkOrange'>" + keywords + "</span> related nodes. If the genes do not have a link to <span style='color:darkOrange'>"+ keywords +"</span>, you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
 }
 else {
 // when no keyword is provided
-datasetDescription= datasetDescription + "to <b>any</b> phenotype/trait (<i>green rectangles and pentagons</i>). ";
+datasetDescription= datasetDescription + "to <b>any</b> phenotype/trait (green rectangles and pentagons). ";
 }
-datasetDescription= datasetDescription + "<u>Tip:</u> <i>Right-click-hold</i> on nodes to add labels or to show their properties. Use the Interactive Legend to add (<i>single-click</i>) or hide (<i>double-click</i>) other types of information to/from the network.";
+datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nodes to add labels or to show their properties. Use the Interactive Legend to add (single-click) or hide (double-click) other types of information to/from the network.</i>";
 %>
 <html>
 <head>
@@ -53,13 +53,12 @@ datasetDescription= datasetDescription + "<u>Tip:</u> <i>Right-click-hold</i> on
 			   <a target="_blank" title="BBSRC" href="http://www.bbsrc.ac.uk/" class="logos"><img class="bbsrc-logo" src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/bbsrc_logo.png"/></a>
 			 </li>
 		     <li class="center-footer">
-			   <a target="_blank" title="KnetMaps" href="https://f1000research.com/articles/7-1651/v1" class="logos"><img src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/knetmaps.jpg" width="380" height="82"/></a>
-			   <!--<p id="footer-text">Powered by <a target="_blank" href="https://f1000research.com/articles/7-1651/v1" style="color:darkOrange">KnetMaps.js</a></p>
-			   <p id="footer-text-sub">Supported by the UK Biotechnology and Biological Sciences Research Council</p>-->
+			   <a target="_blank" title="KnetMiner" href="https://knetminer.org" class="logos"><img src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/logo-regular.png" height="90"/></a>
 			 </li>
 			 <li class="right-footer">
 			   <ul class="nav navbar-nav" id="bottom">
 			     <li>
+				   <p id="footer-text">Powered by <a target="_blank" href="https://f1000research.com/articles/7-1651/v1" style="color:darkOrange">KnetMaps.js</a></p>
 				   <a target="_blank" href="https://www.npmjs.com/package/knetmaps">NPM</a>
 				   <a target="_blank" href="https://github.com/Rothamsted/knetmaps.js/blob/master/LICENSE">License</a>
 				   <a target="_blank" href="https://twitter.com/knetminer">Twitter</a>
