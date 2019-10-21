@@ -98,17 +98,18 @@ DOCKER_OPTS="$DOCKER_OPTS -p $host_port:8080"
 [ "$container_name" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --name $container_name"
 [ "$container_memory" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory $container_memory"
 
+# If neither --dataset-dir nor --dataset-id are specified, then you want the continer default aratiny 
 if [ "$dataset_dir" == '' ]; then
 	[ "$dataset_id" == '' ] && dataset_id='aratiny'
 else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 	
- 
+# Neo4j mode
 if [ "$is_neo4j" != '' ]; then
 	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS='-Pdocker'
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
-	# As you see all the Maven properties used in the POMs (and, from there in other files) can be overridden from
+	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
 	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
 	# 
