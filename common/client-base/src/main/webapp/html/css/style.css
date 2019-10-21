@@ -295,7 +295,7 @@ div#region_search_area li {
     list-style:none;
 }
 div#region_search_area {
-    #text-align:center;
+    //text-align:center;
     padding:20px 0px 20px 0px;
     width:100%;
 	position:relative;
@@ -705,8 +705,8 @@ a.contact-button :hover {
 	  -moz-border-radius:18px; 
 	  -webkit-border-radius:18px; 
 	  -o-border-radius:18px;}
-.knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ font-size:15px; cursor:pointer;}
-.knet_button:hover {color:white; background-color:darkgray;}
+//.knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ font-size:15px; cursor:pointer;}
+//.knet_button:hover {color:white; background-color:darkgray;}
 #pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;}
 .pGViewer_title_line {background-color: #2A2A2A; color: white; padding: 1px 3px;}
 .preloader_bar {left:250px;position:relative;}

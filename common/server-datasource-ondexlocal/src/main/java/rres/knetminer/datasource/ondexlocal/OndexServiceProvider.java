@@ -273,30 +273,76 @@ public class OndexServiceProvider {
             sb.append("<avgSize>").append(avgValues).append("</avgSize>\n");
             sb.append("</evidenceNetworkSizes>\n");
 
+            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
+            Set<ConceptClass> sortedConceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+
             // Display table breakdown of all conceptClasses in network
             sb.append("<conceptClasses>\n");
-            Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
-            Set<ConceptClass> sorted_conceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
-            for (ConceptClass con_class : sorted_conceptClasses) {
-                if (graph.getConceptsOfConceptClass(con_class).size() > 0) {
-                    String conID = con_class.getId();
-                    int con_count = graph.getConceptsOfConceptClass(con_class).size();
-                    if (conID.equalsIgnoreCase("Path")) {
-                        conID = "Pathway";
-                    } else if (conID.equalsIgnoreCase("Comp")) {
-                        conID = "Compound";
-                    } else if (conID.equalsIgnoreCase("Trait")) {
-                        conID = "Trait (GWAS)";
-                    } else if (conID.equalsIgnoreCase("Gene")) {
-                        con_count = numGenesInGenome;
-                    }
-                    // exclude "Thing" CC
-                    if (!conID.equalsIgnoreCase("Thing")) {
-                        sb.append("<cc_count>").append(conID).append("=").append(con_count).append("</cc_count>\n");
+            for (ConceptClass conClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conClass).size() > 0) {
+                    String conID = conClass.getId(); // Get concept ID
+                    int conCount = graph.getConceptsOfConceptClass(conClass).size(); // Get count of concept
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) { // exclude "Thing" CC
+                        sb.append("<cc_count>").append(conID).append("=").append(conCount).append("</cc_count>\n");
                     }
                 }
             }
             sb.append("</conceptClasses>\n");
+            sb.append("<ccgeneEviCount>\n"); // Obtain concept count from concept2gene
+
+            Map<String, Long> C2GcountMap = mapConcept2Genes.entrySet()
+                    .stream()
+                    .collect(Collectors.groupingBy(
+                             v -> graph.getConcept(v.getKey())
+                                                   .getOfType()
+                                                   .getId(),
+                                                   Collectors.counting()));
+
+            // Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
+            sortedConceptClasses.stream().forEach(conceptClass -> {
+                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
+                    String conceptID = conceptClass.getId(); 
+                    if (!C2GcountMap.keySet().contains(conceptID)
+                            && !conceptID.equalsIgnoreCase("Thing")
+                            && !conceptID.equalsIgnoreCase("TestCC")) {
+                        C2GcountMap.put(conceptID, Long.valueOf(0));
+                    }
+                }
+            });
+
+            TreeMap<String, Long> sortedC2GcountMap = new TreeMap<String, Long>(C2GcountMap); 
+
+            sortedC2GcountMap.entrySet().stream().forEach(pair -> {
+                for (ConceptClass concept_class : sortedConceptClasses) {
+                    if (graph.getConceptsOfConceptClass(concept_class).size() > 0) {
+                        String conID = concept_class.getId();  
+                        if (pair.getKey().equals(conID)) {
+                            conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                            conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                            sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
+                        }
+                    }
+                    }
+            });
+
+            sb.append("</ccgeneEviCount>\n");
+            sb.append("<connectivity>\n");  // Relationships per concept
+            for (ConceptClass conceptClass : sortedConceptClasses) {
+                if (graph.getConceptsOfConceptClass(conceptClass).size() > 0) {
+                    String conID = conceptClass.getId();                    
+                    int relationCount = graph.getRelationsOfConceptClass(conceptClass).size(); 
+                    int conCount = graph.getConceptsOfConceptClass(conceptClass).size(); 
+                    conID = conID.equalsIgnoreCase("Path") ? "Pathway" : conID;
+                    conID = conID.equalsIgnoreCase("Comp") ? "Compound" : conID;
+                    if (!conID.equalsIgnoreCase("Thing") && !conID.equalsIgnoreCase("TestCC")) {
+                        float connectivity = ((float) relationCount / (float) conCount);
+                        sb.append("<hubiness>").append(conID).append("->").append(String.format("%2.02f", connectivity)).append("</hubiness>\n");
+                    }
+                }
+            }
+            sb.append("</connectivity>\n");
             sb.append("</stats>");
 
             // Update the file storing the latest Stats data.
@@ -420,13 +466,6 @@ public class OndexServiceProvider {
             lenv.addONDEXListener ( new ONDEXLogger () ); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
             log.info("Lucene Index created");
-            
-            // Reset it, should avoid some errors we have seen. It's reopened automatically by
-            // methods needed it.
-            lenv.closeAll ();
-            lenv = new LuceneEnv ( indexFile.getAbsolutePath(), false );
-            lenv.addONDEXListener ( new ONDEXLogger () );
-            lenv.setONDEXGraph(graph);
         } 
         catch (Exception e)
         {
@@ -565,8 +604,6 @@ public class OndexServiceProvider {
     public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications)
     	throws IOException, ParseException
     {
-    	try
-    	{
         Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
         String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
             "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
@@ -690,11 +727,6 @@ public class OndexServiceProvider {
         log.info("Resulting Annotation hits: " + sHitsAnno.getOndexHits().size());
 
         return hit2score;
-    	}
-    	finally {
-    		if ( lenv != null ) this.lenv.closeAll ();
-    	}
-    	
     }
 
     public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
@@ -1616,8 +1648,6 @@ public class OndexServiceProvider {
     public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
             String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates)
     {
-    	try
-    	{
         List<QTL> userQtl = new ArrayList<QTL>();
         for (String qtlStr : userQtlStr) {
             userQtl.add(QTL.fromString(qtlStr));
@@ -1887,10 +1917,6 @@ public class OndexServiceProvider {
         sb.append("</genome>\n");
         //log.info("Genomaps generated...");
         return sb.toString();
-    	}
-    	finally {
-    		if ( lenv != null ) lenv.closeAll ();
-    	}
     }
 
     // temporary...
@@ -2332,8 +2358,6 @@ public class OndexServiceProvider {
      */
     public String writeSynonymTable(String keyword) throws ParseException 
     {
-    	try
-    	{
         StringBuffer out = new StringBuffer();
         int topX = 25;
         // to store top 25 values for each concept type instead of just 25
@@ -2456,10 +2480,6 @@ public class OndexServiceProvider {
             }
         }
         return out.toString();
-    	}
-    	finally {
-    		if ( lenv != null ) lenv.closeAll ();
-    	}
     }
 
     public HashMap<Integer, Set<Integer>> getMapEvidences2Genes(HashMap<ONDEXConcept, Float> luceneConcepts) {
