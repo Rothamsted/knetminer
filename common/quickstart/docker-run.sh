@@ -73,7 +73,7 @@ do
 	Example of how to set custom embeddable layout (GeneStack option)
 	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true"
 
-	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
+	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above).
 	If you don't set this, the default is '-it'.
 	
 	JAVA_TOOL_OPTIONS: custom JVM options. The default for this tells the JVM in the container to use all the available
