@@ -59,6 +59,10 @@ public class KnetminerServer {
 
 	private String gaTrackingId;
 
+	// Special logging to achieve web analytics info.
+	private static final Logger logAnalytics = LogManager.getLogger("analytics-log");
+
+
 	/**
 	 * Autowiring will populate the basic dataSources list with all instances of
 	 * KnetminerDataSourceProvider. This method is used, upon first access, to take
@@ -214,7 +218,7 @@ public class KnetminerServer {
 	 * @param mode
 	 * @param qtl
 	 * @param keyword
-	 * @param list
+	 * @param list TODO: what is this?!
 	 * @param listMode
 	 * @param rawRequest
 	 * @return
@@ -231,6 +235,32 @@ public class KnetminerServer {
 		}
 		if (list == null) {
 			list = Collections.emptyList();
+		}
+
+		// TODO: We need VERY MUCH to pollute code this way! 
+		// This MUST go to some utilty and there there MUST BE only some invocation that clearly recalls the semantics 
+		// of these operations, eg, KnetminerServerUtils.logAnalytics ( logger, rawRequest, mode, list )
+		// This is filed under #TODO
+		//
+		Map<String, String> map = new TreeMap<>();
+
+		map.put("host",rawRequest.getServerName());
+		map.put("port",Integer.toString(rawRequest.getServerPort()));
+
+		map.put("mode", mode);
+		if(keyword != null) {
+			map.put("keywords", keyword);
+		}
+		if(!list.isEmpty()) {
+			map.put("list", new JSONArray(list).toString());
+		}
+
+		map.put("qtl", new JSONArray(qtl).toString());
+
+		map.put("datasource", ds);
+		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
+			ObjectMessage msg = new ObjectMessage(map);
+			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
 		}
 		KnetminerRequest request = new KnetminerRequest();
 		request.setKeyword(keyword);
@@ -258,6 +288,33 @@ public class KnetminerServer {
 	@PostMapping("/{ds}/{mode}")
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
+		// TODO WRONG! Duplicating code like this is way too poor and 
+		// it needs to be factorised in a separated utility anyway!
+		//
+		Map<String, String> map = new TreeMap<>();
+
+		map.put("host",rawRequest.getServerName());
+		map.put("port",Integer.toString(rawRequest.getServerPort()));
+
+		map.put("mode", mode);
+		String keyword = request.getKeyword();
+		List<String> list = request.getList();
+		List<String> qtl = request.getQtl();
+		if(keyword != null) {
+			map.put("keywords", keyword);
+		}
+		if(!list.isEmpty()) {
+			map.put("list", new JSONArray(list).toString());
+		}
+
+		map.put("qtl", new JSONArray(qtl).toString());
+
+		map.put("datasource", ds);
+		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
+			ObjectMessage msg = new ObjectMessage(map);
+			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
+		}
+		
 		return this._handle(ds, mode, request, rawRequest);
 	}
 
