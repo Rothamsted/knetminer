@@ -14,7 +14,7 @@ if [ "$aws_flag" != "--aws" ]; then echo -e "\nIncorrect flag given, you must gi
 if [ -d "$aws_dir" ]; then
 	if [ -f "$aws_dir/.aws/credentials" ] && [ -f "$aws_dir/analytics-s3-sync.sh" ]; then
 		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/.aws/credentials:ro" 
-		# Added as a check so we know whether to run crond or not
+		# Added as a check so we know whether to run crond or not - it'll check to see this volume exists
 		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/common/quickstart/.aws/credentials:ro" 
 		DOCKER_OPTS="$DOCKER_OPTS -t -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/quickstart/analytics-s3-sync.sh" 
 	else
