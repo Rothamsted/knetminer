@@ -12,6 +12,13 @@ ARG TOMCAT_PASSWORD=''
 
 FROM knetminer/knetminer-base:${DOCKER_TAG}
 
+RUN apk add --update \
+           python \
+           python-dev \
+           py-pip \
+           build-base \
+           && pip install awscli
+
 EXPOSE 8080
 
 # See the documentation for detains on what the dataset dir is
@@ -27,12 +34,16 @@ ENV sample_oxl_url=https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetmin
 WORKDIR $knet_build_dir
 ADD $sample_oxl_url $knet_dataset_dir/data/knowledge-network.oxl
 
+
 # If this is run in dev mode, we need 'docker build -f .' from the codebase root directory, since
 # climbing up the host paths is forbidden
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
 RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
+
+RUN touch /etc/crontab /etc/cron*/*
+RUN cp -r .aws ~/ && crontab analytics-cron && crond
 
 ENTRYPOINT ["./runtime-helper.sh"] 
 CMD ["aratiny"] # The id of the default dataset

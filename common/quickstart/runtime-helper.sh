@@ -182,6 +182,17 @@ fi
 
 echo -e "\n\n\tRunning the Tomcat server\n"
 cd "$knet_tomcat_home/bin" 
+
+#Start crond
+if grep -q "docker" /proc/self/cgroup; then
+	[ -f /root/knetminer-build/knetminer/common/quickstart/.aws/credentials ] && /usr/sbin/crond
+	[ -f /root/knetminer-build/knetminer/common/quickstart/.aws/credentials ] && echo -e "\nRunning crond in docker container\n\n"
+	
+	# Otherwise, don't run crond.
+	[ ! -f /root/knetminer-build/knetminer/common/quickstart/.aws/credentials ] && echo -e "\nNo credentials given, not running crond\n\n" 
+else
+	echo -e "\nI'm not in a docker container, so not going to run crond here.\n\n"
+fi
 ./catalina.sh run
 
 echo -e "\n\n\tTomcat Server Stopped, container script has finished\n"
