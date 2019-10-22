@@ -1,122 +1,31 @@
 # Helper for the AWS specific host, to run a species/dataset instance of the Knetminer Docker container with AWS logging.
 #
-# See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
-#
+# See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details. See https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#deploying-with-aws-analytics-enabled for additional help.
+
 # Set the default directory
-
 cd "$(dirname "$0")"
+# Get the initial arguments & make sure it's the aws flag - More flags can be added here
+aws_flag="$1"; 
+aws_dir="$2"; shift;
 
-## Parse the CLI options
+if [ "$aws_flag" != "--aws" ]; then echo -e "\nIncorrect flag given, you must give the --aws flag first!\n\nExiting script\n"; exit 1; fi
 
-# after some defaults
-dataset_id=''
-dataset_dir=''
-host_port=8080
-image_version='latest'
-
-
-while [[ $# -gt 0 ]]
-do
-	opt_name="$1"
-  case $opt_name in
-  	# WARNING: these '--:' special markers are used by --help to generate explanations about the available
-  	# options.
-  	#--: The dataset directory in the host (see the documentation for details).
-  	--dataset-dir)
-  		dataset_dir="$2"; shift 2;;
-  	#--: If non-null, the dataset settings are taken from the Knetminer codebase in the container, 
-  	#--: under species/$dataset-id (see the documentation for details).
-  	--dataset-id)
-  		dataset_id="$2"; shift 2;;
-  	#--: The host port to which the container HTTP port is mapped.
-  	--host-port)
-  		host_port="$2"; shift 2;;
-  	#--: Passed to Docker, as --name, useful to manage running containers. 
-  	--container-name)
-  	  container_name="$2"; shift 2;;
-  	#--: Passed to Docker as --memory (eg, container_memory 12G).
-  	--container-memory)
-  	  container_memory="$2"; shift 2;;
-	#--: Passed to Docker as volume mounts (Environmental variable for AWS logging)
-	--AWS)
-		aws_dir="$2"; shift 2;;
-  	#--: Docker is invoked with --detach, ie, container is run in background and this script ends immediately 
-  	#--: (it's useful to use it with --container-name)
-  	--detach)
-  		is_container_detach=true; shift;;
-  	#--: Enable Neo4j mode (see the documentation for details).
-  	--with-neo4j)
-  		is_neo4j=true; shift;;
-  	#--: Neo4j URL (eg, bolt://someserver:7687).
-  	--neo4j-url)
-  		neo4j_url="$2"; shift 2;;
-  	#--: Neo4j user.
-  	--neo4j-user)
-  		neo4j_user="$2"; shift 2;;
-  	#--: Neo4j password.
-  	--neo4j-pwd)
-  		neo4j_pwd="$2"; shift 2;;
-  	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
-  	#--: will pick knetminer/knetminer:test). Default is 'latest' (which corresponds to '').
-  	--image-version)
-  		image_version="$2"; shift 2;;
-  	#--: yields this help output and then exits with 1
-  	--help)
-  		echo -e "\n"
-  		# Report the options
-  		egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
-  		cat <<EOT
-
-
-	For details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker
-	
-	=== Variables that affects this script ===
-
-	MAVEN_ARGS: custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
-	configuration from Maven settings). WARNING: if you set your own -P profile option with this, very likely
-	you'll need -Pdocker. You might need -Pneo4j too.  
-	
-	Example of how to set custom embeddable layout (GeneStack option)
-	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true"
-
-	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above.
-	If you don't set this, the default is '-it'.
-	
-	JAVA_TOOL_OPTIONS: custom JVM options. The default for this tells the JVM in the container to use all the available
-	RAM (see my source for details).
-	
-EOT
-  		exit 1;;
-  	--*)
-			echo -e "\n\n\tERROR: Invalid option '$1', try --help\n"
-  		exit 1;;
-  	*)
-  		shift;;
-	esac
-done
-  		
-
-## Build up the docker command
-#
-[ "$DOCKER_OPTS" == "" ] && DOCKER_OPTS="-it"
-[ "$is_container_detach" == '' ] || DOCKER_OPTS="$DOCKER_OPTS --detach"
-DOCKER_OPTS="$DOCKER_OPTS -p $host_port:8080"
-[ "$container_name" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --name $container_name"
-[ "$container_memory" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory $container_memory"
-
-if [ "$dataset_dir" == '' ]; then
-	[ "$dataset_id" == '' ] && dataset_id='aratiny'
-else
-	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
-fi
-
+# Make sure the directory and files exist!
 if [ -d "$aws_dir" ]; then
-	DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/.aws/credentials:ro" 
-	# Added as a check so we know whether to run crond or not
-	DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/common/quickstart/.aws/credentials:ro" 
-	DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/quickstart/analytics-s3-sync.sh" 
+	if [ -f "$aws_dir/.aws/credentials" ] && [ -f "$aws_dir/analytics-s3-sync.sh" ]; then
+		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/.aws/credentials:ro" 
+		# Added as a check so we know whether to run crond or not
+		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/common/quickstart/.aws/credentials:ro" 
+		DOCKER_OPTS="$DOCKER_OPTS -t -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/quickstart/analytics-s3-sync.sh" 
+	else
+		echo -e "\n\nCan't find the correct file(s) in the directory ("$aws_dir") given.\n" 
+		echo -e "Please check that you have the "$aws_dir"/.aws/credentials and "$aws_dir"/analytics-s3-sync.sh files present in this directory\n\nExiting script\n"; 
+		exit 1;
+	fi
 else
-	echo "Incorrect file directory ("$aws_dir")given, please check your AWS file directory"
+	echo -e "\n\nIncorrect file directory ("$aws_dir") given, please check your AWS file directory\n\nExiting script\n"; 
+	exit 1;
 fi
 export DOCKER_OPTS
-./docker-run.sh
+# Change the array index when adding additional arguments in future
+./docker-run.sh  "${@:2}"
