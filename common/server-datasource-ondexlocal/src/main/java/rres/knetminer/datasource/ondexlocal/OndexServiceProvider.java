@@ -324,7 +324,7 @@ public class OndexServiceProvider {
                             sb.append("<ccEvi>").append(conID).append("=>").append(Math.toIntExact(pair.getValue())).append("</ccEvi>\n");
                         }
                     }
-                }
+                    }
             });
 
             sb.append("</ccgeneEviCount>\n");
@@ -465,8 +465,8 @@ public class OndexServiceProvider {
             lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
             lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
             lenv.setONDEXGraph(graph);
-            log.info("Lucene Index created");            
-        }
+            log.info("Lucene Index created");
+        } 
         catch (Exception e)
         {
             log.fatal ( "Error while loading/creating graph index: " + e.getMessage (), e );
@@ -898,7 +898,7 @@ public class OndexServiceProvider {
      *
      * TODO: made private, cause it seems being used by {@link #writeAnnotationXML(String, ArrayList, Set, List, String, int, Hits, String, Map)}
      * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
-     *
+     * 
      */
     private Set<QTL> findQTL(String keyword) throws ParseException {
 
@@ -2354,7 +2354,8 @@ public class OndexServiceProvider {
      * @return boolean
      * @throws ParseException
      */
-    public String writeSynonymTable(String keyword) throws ParseException {
+    public String writeSynonymTable(String keyword) throws ParseException 
+    {
         StringBuffer out = new StringBuffer();
         int topX = 25;
         // to store top 25 values for each concept type instead of just 25
