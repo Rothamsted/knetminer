@@ -7,11 +7,11 @@
 # image). The configuration directory can dynamically be linked to an host location by mapping it as a Docker volume
 # (see https://github.com/Rothamsted/knetminer/wiki/8.-Docker).   
 # 
-# This script is also designed to run a fully-functional Knetminer container or any to start Knetminer from any other host, 
-# independently on Docker. In the latter case, you need to pre-install requirements manually
+# This script is also designed to prepare a fully-functional Knetminer environment in a Tomcat container and start 
+# Knetminer from any host, independently on Docker. In the latter case, you need to pre-install requirements manually
 # and to pass the correct parameters (see local-env-ex/ for details about this case). The best way to 
-# prepare an environment to run this script is builder-helper.sh (which can be used either to build a Docker container 
-# or any other environment).
+# prepare an environment to run this script is builder-helper.sh (which, similarly, can be used either to build a Docker
+# container or any other environment).
 #
 set -e
 cd "$(dirname $0)"
@@ -171,6 +171,21 @@ mvn $MAVEN_ARGS --settings "$knet_dataset_dir/config/actual-maven-settings.xml" 
 # Let's copy to Tomcat
 cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 
+# Periodic task used for analytics under AWS
+# 
+if grep -q "docker" /proc/self/cgroup; then
+	if [[ -f "$mydir/.aws/credentials" ]]; then 
+		echo -e "\n\n\tRunning crond in Docker container\n"
+		crontab $mydir/analytics-cron 
+		crond
+		echo -e "\ncrond started\n"
+	else
+		echo -e "\nNo credentials given, skipping\n"
+	fi 
+else
+	echo -e "\nSkipping crond (running outside Docker)"
+fi
+
 
 # --- And eventually run the server, which will have the ws.war (from the Docker build), the new client .war and the server config.
 # 
@@ -182,6 +197,6 @@ fi
 
 echo -e "\n\n\tRunning the Tomcat server\n"
 cd "$knet_tomcat_home/bin" 
-./catalina.sh run
 
+./catalina.sh run
 echo -e "\n\n\tTomcat Server Stopped, container script has finished\n"
