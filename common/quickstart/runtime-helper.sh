@@ -7,11 +7,11 @@
 # image). The configuration directory can dynamically be linked to an host location by mapping it as a Docker volume
 # (see https://github.com/Rothamsted/knetminer/wiki/8.-Docker).   
 # 
-# This script is also designed to run a fully-functional Knetminer container or any to start Knetminer from any other host, 
-# independently on Docker. In the latter case, you need to pre-install requirements manually
+# This script is also designed to prepare a fully-functional Knetminer environment in a Tomcat container and start 
+# Knetminer from any host, independently on Docker. In the latter case, you need to pre-install requirements manually
 # and to pass the correct parameters (see local-env-ex/ for details about this case). The best way to 
-# prepare an environment to run this script is builder-helper.sh (which can be used either to build a Docker container 
-# or any other environment).
+# prepare an environment to run this script is builder-helper.sh (which, similarly, can be used either to build a Docker
+# container or any other environment).
 #
 set -e
 cd "$(dirname $0)"
