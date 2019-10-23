@@ -35,7 +35,7 @@
 	</Appenders>
 	<!-- 
 		This is where the analytics is sent, in JSON format.
-	--->
+	-->
 	<Loggers>
 		<Logger name="analytics-log" level="ANALYTICS">
 			<AppenderRef ref="AnalyticsRollingFile" />
