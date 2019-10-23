@@ -58,6 +58,7 @@ public class KnetminerServer {
 
 	private String gaTrackingId;
 
+	// Special logging to achieve web analytics info.
 	private static final Logger logAnalytics = LogManager.getLogger("analytics-log");
 
 
@@ -219,7 +220,7 @@ public class KnetminerServer {
 	 * @param mode
 	 * @param qtl
 	 * @param keyword
-	 * @param list
+	 * @param list TODO: what is this?!
 	 * @param listMode
 	 * @param rawRequest
 	 * @return
@@ -238,6 +239,11 @@ public class KnetminerServer {
 			list = Collections.emptyList();
 		}
 
+		// TODO: We need VERY MUCH to pollute code this way! 
+		// This MUST go to some utilty and there there MUST BE only some invocation that clearly recalls the semantics 
+		// of these operations, eg, KnetminerServerUtils.logAnalytics ( logger, rawRequest, mode, list )
+		// This is filed under #462
+		//
 		Map<String, String> map = new TreeMap<>();
 
 		map.put("host",rawRequest.getServerName());
@@ -284,6 +290,9 @@ public class KnetminerServer {
 	@PostMapping("/{ds}/{mode}")
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
+		// TODO WRONG! Duplicating code like this is way too poor and 
+		// it needs to be factorised in a separated utility anyway!
+		//
 		Map<String, String> map = new TreeMap<>();
 
 		map.put("host",rawRequest.getServerName());

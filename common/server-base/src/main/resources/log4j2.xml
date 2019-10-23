@@ -3,6 +3,10 @@
 	<Properties>
 		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
+	<!-- 
+		This is a special, top-priority level, used to report 
+	  web analytics info
+	-->
 	<CustomLevels>
 		<CustomLevel name="ANALYTICS" intLevel="50" />
 	</CustomLevels>
@@ -29,6 +33,9 @@
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
 	</Appenders>
+	<!-- 
+		This is where the analytics is sent, in JSON format.
+	-->
 	<Loggers>
 		<Logger name="analytics-log" level="ANALYTICS">
 			<AppenderRef ref="AnalyticsRollingFile" />

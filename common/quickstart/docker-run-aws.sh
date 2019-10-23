@@ -8,7 +8,12 @@ cd "$(dirname "$0")"
 aws_flag="$1"; 
 aws_dir="$2"; shift;
 
-if [ "$aws_flag" != "--aws" ]; then echo -e "\nIncorrect flag given, you must give the --aws flag first!\n\nExiting script\n"; exit 1; fi
+if [ "$aws_flag" != "--aws" ]; then 
+	echo -e "\nIncorrect flag given, you must give the --aws flag first!\n\nExiting script\n"
+	exit 1
+fi
+
+[ "$DOCKER_OPTS" == "" ] && DOCKER_OPTS="-it" # These are useful defaults
 
 # Make sure the directory and files exist!
 if [ -d "$aws_dir" ]; then
@@ -16,7 +21,7 @@ if [ -d "$aws_dir" ]; then
 		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/.aws/credentials:ro" 
 		# Added as a check so we know whether to run crond or not - it'll check to see this volume exists
 		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/common/quickstart/.aws/credentials:ro" 
-		DOCKER_OPTS="$DOCKER_OPTS -t -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/quickstart/analytics-s3-sync.sh" 
+		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/quickstart/analytics-s3-sync.sh" 
 	else
 		echo -e "\n\nCan't find the correct file(s) in the directory ("$aws_dir") given.\n" 
 		echo -e "Please check that you have the "$aws_dir"/.aws/credentials and "$aws_dir"/analytics-s3-sync.sh files present in this directory\n\nExiting script\n"; 
@@ -26,6 +31,8 @@ else
 	echo -e "\n\nIncorrect file directory ("$aws_dir") given, please check your AWS file directory\n\nExiting script\n"; 
 	exit 1;
 fi
+
 export DOCKER_OPTS
+
 # Change the array index when adding additional arguments in future
 ./docker-run.sh  "${@:2}"
