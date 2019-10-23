@@ -176,7 +176,7 @@ cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 if grep -q "docker" /proc/self/cgroup; then
 	if [[ -f "$mydir/.aws/credentials" ]]; then 
 		echo -e "\n\n\tRunning crond in Docker container\n"
-		crontab analytics-cron # TODO: it's already in the Dockerfile, needed here too?
+		crontab $mydir/analytics-cron # TODO: it's already in the Dockerfile, needed here too?
 		crond
 		echo -e "\ncrond started\n"
 	else

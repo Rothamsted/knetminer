@@ -45,7 +45,6 @@ RUN apk add --update \
            && pip install awscli \
   && touch /etc/crontab /etc/cron*/* \
   && cp -r .aws ~/ \
-  && crontab analytics-cron \
   && ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
 
