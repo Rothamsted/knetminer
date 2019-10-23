@@ -12,12 +12,6 @@ ARG TOMCAT_PASSWORD=''
 
 FROM knetminer/knetminer-base:${DOCKER_TAG}
 
-RUN apk add --update \
-           python \
-           python-dev \
-           py-pip \
-           build-base \
-           && pip install awscli
 
 EXPOSE 8080
 
@@ -40,11 +34,20 @@ ADD $sample_oxl_url $knet_dataset_dir/data/knowledge-network.oxl
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
-RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
-RUN touch /etc/crontab /etc/cron*/*
-RUN cp -r .aws ~/ && crontab analytics-cron && crond
+# TODO: AWS requires a specific image
+#
+RUN apk add --update \
+           python \
+           python-dev \
+           py-pip \
+           build-base \
+           && pip install awscli \
+  && touch /etc/crontab /etc/cron*/* \
+  && cp -r .aws ~/ \
+  && crontab analytics-cron \
+  && ./build-helper.sh '' "$TOMCAT_PASSWORD"
+
 
 ENTRYPOINT ["./runtime-helper.sh"] 
 CMD ["aratiny"] # The id of the default dataset
-
