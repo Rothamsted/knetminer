@@ -5,6 +5,7 @@ KNETMAPS.Menu = function() {
 	var iteminfo = KNETMAPS.ItemInfo();
 	var container = KNETMAPS.Container();
 	var stats = KNETMAPS.Stats();
+        var conceptLegend = KNETMAPS.ConceptsLegend();
 
 	var my=function() {};
 	
@@ -81,6 +82,9 @@ KNETMAPS.Menu = function() {
 
    // Refresh network legend.
    stats.updateKnetStats();
+   // Update the stats legend
+   conceptLegend.populateConceptLegend();
+   
   }
   
   // Re-run the entire graph's layout.
