@@ -91,7 +91,7 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  */
 public class OndexServiceProvider {
 
-    protected final Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * ChromosomeID mapping for different datasets
@@ -101,56 +101,56 @@ public class OndexServiceProvider {
     /**
      * GraphTraverser will be initiated with a state machine
      */
-    AbstractGraphTraverser gt;
+    private AbstractGraphTraverser gt;
 
     /**
      * Ondex knowledge base as memory graph
      */
-    ONDEXGraph graph;
+    private ONDEXGraph graph;
 
     /**
      * Query-independent Ondex motifs as a hash map
      */
-    static HashMap<Integer, Set<Integer>> mapGene2Concepts;
-    static HashMap<Integer, Set<Integer>> mapConcept2Genes;
+    private static HashMap<Integer, Set<Integer>> mapGene2Concepts;
+    private static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 
     /**
      * HashMap of geneID -> endNodeID_pathLength
      */
-    static HashMap<String, Integer> mapGene2PathLength;
+    private static HashMap<String, Integer> mapGene2PathLength;
 
     /**
      * Query-dependent mapping between genes and concepts that contain query
      * terms
      */
-    HashMap<Integer, Set<Integer>> mapGene2HitConcept;
+    private HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
     /**
      * Gene to QTL mapping
      */
-    HashMap<Integer, Set<Integer>> mapGene2QTL;
+    private HashMap<Integer, Set<Integer>> mapGene2QTL;
 
     /**
      * number of genes in genome
      */
-    int numGenesInGenome;
+    private int numGenesInGenome;
 
     /**
      * index the graph
      */
-    LuceneEnv lenv;
+    private LuceneEnv lenv;
 
     /**
      * TaxID of organism for which the knowledgebase was created
      */
-    List<String> taxID;
+    private List<String> taxID;
 
     /**
      * true if a reference genome is provided
      */
-    boolean referenceGenome;
+    private boolean referenceGenome;
 
-    boolean export_visible_network;
+    private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
 
