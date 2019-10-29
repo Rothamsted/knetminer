@@ -2,6 +2,8 @@
 #
 #
 
+set -e # Fail fast upon the first error
+
 [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && goal='install' || goal='deploy'
 
 # You need --quiet, Travis doesn't like too big logs.
