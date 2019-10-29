@@ -101,7 +101,7 @@ public class OndexServiceProvider {
     /**
      * GraphTraverser will be initiated with a state machine
      */
-    private AbstractGraphTraverser gt;
+    private AbstractGraphTraverser graphTraverser;
 
     /**
      * Ondex knowledge base as memory graph
@@ -178,15 +178,15 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-        if (gt == null) {
-            gt = AbstractGraphTraverser.getInstance(this.getOptions());
+        if (graphTraverser == null) {
+            graphTraverser = AbstractGraphTraverser.getInstance(this.getOptions());
         }
 
         // These might be needed by one implementation or the other. Those that don't need a property like these
         // can just ignore them
-        gt.setOption("StateMachineFilePath", smFileName);
-        gt.setOption("ONDEXGraph", graph);
-        gt.setOption("LuceneEnv", lenv);
+        graphTraverser.setOption("StateMachineFilePath", smFileName);
+        graphTraverser.setOption("ONDEXGraph", graph);
+        graphTraverser.setOption("LuceneEnv", lenv);
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -1102,7 +1102,7 @@ public class OndexServiceProvider {
 
         // the results give us a map of every starting concept to every valid
         // path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, relatedONDEXConcepts, null);
 
         // create new graph to return
         ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
@@ -1350,7 +1350,7 @@ public class OndexServiceProvider {
         }
 
         // the results give us a map of every starting concept to every valid path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
@@ -2752,10 +2752,10 @@ public class OndexServiceProvider {
             // the results give us a map of every starting concept to every
             // valid path
             // Causes the Cypher-based traverser to report some performance stats
-            gt.setOption("isPerformanceTrackingEnabled", true);
-            Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
+            graphTraverser.setOption("isPerformanceTrackingEnabled", true);
+            Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, genes, null);
             // Let's disable it after the initial population
-            gt.setOption("isPerformanceTrackingEnabled", false);
+            graphTraverser.setOption("isPerformanceTrackingEnabled", false);
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
@@ -3030,6 +3030,13 @@ public class OndexServiceProvider {
     public void setOptions(Map<String, Object> options) {
         this.options = options;
     }
+
+		public static HashMap<Integer, Set<Integer>> getMapConcept2Genes ()
+		{
+			return mapConcept2Genes;
+		}
+    
+    
 }
 
 class ValueComparator<T> implements Comparator<T> {
