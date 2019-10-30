@@ -138,7 +138,7 @@ public class OndexServiceProvider {
     /**
      * index the graph
      */
-    private LuceneEnv lenv;
+    private LuceneEnv luceneMgr;
 
     /**
      * TaxID of organism for which the knowledgebase was created
@@ -186,7 +186,7 @@ public class OndexServiceProvider {
         // can just ignore them
         graphTraverser.setOption("StateMachineFilePath", smFileName);
         graphTraverser.setOption("ONDEXGraph", graph);
-        graphTraverser.setOption("LuceneEnv", lenv);
+        graphTraverser.setOption("LuceneEnv", luceneMgr);
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -462,9 +462,9 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-            lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
-            lenv.setONDEXGraph(graph);
+            luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
+            luceneMgr.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
+            luceneMgr.setONDEXGraph(graph);
             log.info("Lucene Index created");
         } 
         catch (Exception e)
@@ -657,7 +657,7 @@ public class OndexServiceProvider {
             // analyzer);
             QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
             Query qNQ = parserNQ.parse(crossTypesNotQuery);
-            NOTList = lenv.searchTopConcepts(qNQ, 2000);
+            NOTList = luceneMgr.searchTopConcepts(qNQ, 2000);
         }
 
         // number of top concepts retrieved for each Lucene field
@@ -673,7 +673,7 @@ public class OndexServiceProvider {
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAtt = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
+            ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
             mergeHits(hit2score, sHits, NOTList);
 
         }
@@ -686,7 +686,7 @@ public class OndexServiceProvider {
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAccessions = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
+            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts(qAccessions, max_concepts);
             mergeHits(hit2score, sHitsAcc, NOTList);
         }
 
@@ -698,7 +698,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
         Query qNames = parserCN.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
         mergeHits(hit2score, sHitsNames, NOTList);
 
         // search concept description
@@ -709,7 +709,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserD = new QueryParser(fieldNameD, analyzer);
         Query qDesc = parserD.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsDesc = luceneMgr.searchTopConcepts(qDesc, max_concepts);
         mergeHits(hit2score, sHitsDesc, NOTList);
 
         // search concept annotation
@@ -720,7 +720,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
         Query qAnno = parserCA.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsAnno = luceneMgr.searchTopConcepts(qAnno, max_concepts);
         mergeHits(hit2score, sHitsAnno, NOTList);
 
         log.info("searchLucene(), query for annotation: " + qAnno.toString(fieldNameCA));
@@ -976,7 +976,7 @@ public class OndexServiceProvider {
                     .add(cN, BooleanClause.Occur.MUST).build();
             log.info("QTL search query: " + finalQuery.toString());
 
-            ScoredHits<ONDEXConcept> hits = lenv.searchTopConcepts(finalQuery, 100);
+            ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts(finalQuery, 100);
 
             for (ONDEXConcept c : hits.getOndexHits()) {
                 if (c instanceof LuceneConcept) {
@@ -2388,7 +2388,7 @@ public class OndexServiceProvider {
             // analyzer);
             QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
             Query qNames = parserCN.parse(key);
-            ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/* 100 */);
+            ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts(qNames, 500/* 100 */);
             /*
              * number of top concepts searched for each Lucene field, increased for now from
              * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
