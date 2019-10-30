@@ -49,6 +49,8 @@
 10-7	h_s_s	4
 10-10	ortho	4
 10-7	ortho	4
+10-10	equivalent	4
+10-7	equivalent	4
 10-10	xref	8
 10-7	xref	8
 10-2	pub_in
