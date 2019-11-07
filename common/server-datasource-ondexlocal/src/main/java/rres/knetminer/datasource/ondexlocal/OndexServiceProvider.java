@@ -1364,22 +1364,23 @@ public class OndexServiceProvider {
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
         Random random = new Random();
+        ArrayList<Color> colArray = new ArrayList<Color>(); // Compare each colour to ensure we never have duplicates
         keywords.forEach((key) -> {
             int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
-            while (colourBrightness < 40) {
-                // Ensure colour lumence is above 40 so it's bright enough (see git issue #466)
+            Color colorVal = null;
+            // Ensure colour lumence is >40 (git issue #466) and no colorus are repeated and are never yellow
+            while (colourBrightness < 40 && !colArray.contains(colorVal) && !Color.YELLOW.equals(colorVal)) {
                 colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
                 // Obtain the colourCode & brightness/lumence value
                 String colorHex = "#" + Integer.toHexString(colourCode);
-                Color colorVal = Color.decode(colorHex);
+                colorVal = Color.decode(colorHex);
                 colourBrightness = (int) Math.sqrt(colorVal.getRed() * colorVal.getRed() * .241 +
-                        colorVal.getGreen() * colorVal.getGreen() * .691 +
-                        colorVal.getBlue() * colorVal.getBlue() * .068);
+                                                    colorVal.getGreen() * colorVal.getGreen() * .691 +
+                                                    colorVal.getBlue() * colorVal.getBlue() * .068);
+                colArray.add(colorVal); // Add to color ArrayList to track colours
             }
-            // If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
-            if (colourBrightness > 40) {
-                keywordColourMap.put(key, String.format("#%06x", colourCode));
-            }
+            //If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
+            if (colourBrightness > 40) keywordColourMap.put(key, String.format("#%06x", colourCode));
         });
 
         // create new graph to return
