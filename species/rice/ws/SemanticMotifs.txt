@@ -42,6 +42,10 @@
 1-8	regulates	2
 1-8	homoeolog	2
 1-9	homoeolog	2
+1-8	genetic	2
+1-8	physical	2
+1-9	genetic	2
+1-9	physical	2
 1-20	has_mutant
 1-20	has_variation
 1-13	has_observ_pheno
