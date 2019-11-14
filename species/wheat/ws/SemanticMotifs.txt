@@ -32,7 +32,6 @@
 #Transitions
 1-10	enc
 1-7	enc
-1-20	has_variation
 1-188	inv_in
 1-19	part_of
 1-2	occ_in
@@ -44,6 +43,8 @@
 1-8	homoeolog	2
 1-9	homoeolog	2
 1-20	has_mutant
+1-20	has_variation
+1-13	has_observ_pheno
 
 10-10	h_s_s	4
 10-7	h_s_s	4
