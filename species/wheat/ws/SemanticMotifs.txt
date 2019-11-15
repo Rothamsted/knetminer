@@ -32,7 +32,6 @@
 #Transitions
 1-10	enc
 1-7	enc
-1-20	has_variation
 1-188	inv_in
 1-19	part_of
 1-2	occ_in
@@ -43,12 +42,20 @@
 1-8	regulates	2
 1-8	homoeolog	2
 1-9	homoeolog	2
+1-8	genetic	2
+1-8	physical	2
+1-9	genetic	2
+1-9	physical	2
 1-20	has_mutant
+1-20	has_variation
+1-13	has_observ_pheno
 
 10-10	h_s_s	4
 10-7	h_s_s	4
 10-10	ortho	4
 10-7	ortho	4
+10-10	equivalent	4
+10-7	equivalent	4
 10-10	xref	8
 10-7	xref	8
 10-2	pub_in

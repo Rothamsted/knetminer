@@ -5,6 +5,7 @@ KNETMAPS.Menu = function() {
 	var iteminfo = KNETMAPS.ItemInfo();
 	var container = KNETMAPS.Container();
 	var stats = KNETMAPS.Stats();
+        var conceptLegend = KNETMAPS.ConceptsLegend();
 
 	var my=function() {};
 	
@@ -46,17 +47,15 @@ KNETMAPS.Menu = function() {
   
   // Export the graph as a .png image and allow users to save it.
  my.exportAsImage = function() {
-   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+   var cy = $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    // Export as .png image
-   var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
-   //console.log("Export network PNG as: kNetwork.png");
-
-   // Use IFrame to open png image in a new browser tab
-   var cy_width= $('#cy').width();
-   var cy_height= $('#cy').height();
+   var png64 = cy.png({
+                       "scale" : 2,
+                       }); // .setAttribute('crossOrigin', 'anonymous');
+   var cyWidth = ($('#cy').width() * 2), cyHeight = ($('#cy').width() * 2);   
    //var knet_iframe_style= "border:1px solid black; top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
-   var knet_iframe_style= "top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
+   var knet_iframe_style= "top:0px; left:0px; bottom:0px; right:0px; width:" + cyWidth + "; height:" + cyHeight + ";";
    var knet_iframe = '<iframe src="'+ png64 +'" frameborder="0" style="'+ knet_iframe_style +'" allowfullscreen></iframe>';
    var pngTab= window.open();
    pngTab.document.open();
@@ -81,6 +80,9 @@ KNETMAPS.Menu = function() {
 
    // Refresh network legend.
    stats.updateKnetStats();
+   // Update the stats legend
+   conceptLegend.populateConceptLegend();
+   
   }
   
   // Re-run the entire graph's layout.

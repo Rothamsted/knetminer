@@ -52,10 +52,10 @@ exit 1
 # host and connect these ports (or you can use tricks like SSH tunnelling). Clearly, every new container needs its own ports.
 #
 export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
- -Dcom.sun.management.jmxremote.authenticate=false
- -Dcom.sun.management.jmxremote.port=9010
- -Dcom.sun.management.jmxremote.rmi.port=9011
- -Djava.rmi.server.hostname=localhost
- -Dcom.sun.management.jmxremote.local.only=false"
+	-Dcom.sun.management.jmxremote.authenticate=false
+ 	-Dcom.sun.management.jmxremote.port=9010
+ 	-Dcom.sun.management.jmxremote.rmi.port=9011
+ 	-Djava.rmi.server.hostname=localhost
+ 	-Dcom.sun.management.jmxremote.local.only=false"
 # 
 export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011"

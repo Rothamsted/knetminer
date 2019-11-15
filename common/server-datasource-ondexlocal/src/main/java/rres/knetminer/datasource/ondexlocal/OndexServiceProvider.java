@@ -1,5 +1,6 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -91,7 +92,7 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  */
 public class OndexServiceProvider {
 
-    protected final Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * ChromosomeID mapping for different datasets
@@ -101,56 +102,56 @@ public class OndexServiceProvider {
     /**
      * GraphTraverser will be initiated with a state machine
      */
-    AbstractGraphTraverser gt;
+    private AbstractGraphTraverser graphTraverser;
 
     /**
      * Ondex knowledge base as memory graph
      */
-    ONDEXGraph graph;
+    private ONDEXGraph graph;
 
     /**
      * Query-independent Ondex motifs as a hash map
      */
-    static HashMap<Integer, Set<Integer>> mapGene2Concepts;
-    static HashMap<Integer, Set<Integer>> mapConcept2Genes;
+    private static HashMap<Integer, Set<Integer>> mapGene2Concepts;
+    private static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 
     /**
      * HashMap of geneID -> endNodeID_pathLength
      */
-    static HashMap<String, Integer> mapGene2PathLength;
+    private static HashMap<String, Integer> mapGene2PathLength;
 
     /**
      * Query-dependent mapping between genes and concepts that contain query
      * terms
      */
-    HashMap<Integer, Set<Integer>> mapGene2HitConcept;
+    private HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
     /**
      * Gene to QTL mapping
      */
-    HashMap<Integer, Set<Integer>> mapGene2QTL;
+    private HashMap<Integer, Set<Integer>> mapGene2QTL;
 
     /**
      * number of genes in genome
      */
-    int numGenesInGenome;
+    private int numGenesInGenome;
 
     /**
      * index the graph
      */
-    LuceneEnv lenv;
+    private LuceneEnv luceneMgr;
 
     /**
      * TaxID of organism for which the knowledgebase was created
      */
-    List<String> taxID;
+    private List<String> taxID;
 
     /**
      * true if a reference genome is provided
      */
-    boolean referenceGenome;
+    private boolean referenceGenome;
 
-    boolean export_visible_network;
+    private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
 
@@ -178,15 +179,15 @@ public class OndexServiceProvider {
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-        if (gt == null) {
-            gt = AbstractGraphTraverser.getInstance(this.getOptions());
+        if (graphTraverser == null) {
+            graphTraverser = AbstractGraphTraverser.getInstance(this.getOptions());
         }
 
         // These might be needed by one implementation or the other. Those that don't need a property like these
         // can just ignore them
-        gt.setOption("StateMachineFilePath", smFileName);
-        gt.setOption("ONDEXGraph", graph);
-        gt.setOption("LuceneEnv", lenv);
+        graphTraverser.setOption("StateMachineFilePath", smFileName);
+        graphTraverser.setOption("ONDEXGraph", graph);
+        graphTraverser.setOption("LuceneEnv", luceneMgr);
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -462,9 +463,9 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-            lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
-            lenv.setONDEXGraph(graph);
+            luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
+            luceneMgr.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
+            luceneMgr.setONDEXGraph(graph);
             log.info("Lucene Index created");
         } 
         catch (Exception e)
@@ -657,7 +658,7 @@ public class OndexServiceProvider {
             // analyzer);
             QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
             Query qNQ = parserNQ.parse(crossTypesNotQuery);
-            NOTList = lenv.searchTopConcepts(qNQ, 2000);
+            NOTList = luceneMgr.searchTopConcepts(qNQ, 2000);
         }
 
         // number of top concepts retrieved for each Lucene field
@@ -673,7 +674,7 @@ public class OndexServiceProvider {
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAtt = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
+            ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
             mergeHits(hit2score, sHits, NOTList);
 
         }
@@ -686,7 +687,7 @@ public class OndexServiceProvider {
             // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAccessions = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
+            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts(qAccessions, max_concepts);
             mergeHits(hit2score, sHitsAcc, NOTList);
         }
 
@@ -698,7 +699,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
         Query qNames = parserCN.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
         mergeHits(hit2score, sHitsNames, NOTList);
 
         // search concept description
@@ -709,7 +710,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserD = new QueryParser(fieldNameD, analyzer);
         Query qDesc = parserD.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsDesc = luceneMgr.searchTopConcepts(qDesc, max_concepts);
         mergeHits(hit2score, sHitsDesc, NOTList);
 
         // search concept annotation
@@ -720,7 +721,7 @@ public class OndexServiceProvider {
         // analyzer);
         QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
         Query qAnno = parserCA.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsAnno = luceneMgr.searchTopConcepts(qAnno, max_concepts);
         mergeHits(hit2score, sHitsAnno, NOTList);
 
         log.info("searchLucene(), query for annotation: " + qAnno.toString(fieldNameCA));
@@ -976,7 +977,7 @@ public class OndexServiceProvider {
                     .add(cN, BooleanClause.Occur.MUST).build();
             log.info("QTL search query: " + finalQuery.toString());
 
-            ScoredHits<ONDEXConcept> hits = lenv.searchTopConcepts(finalQuery, 100);
+            ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts(finalQuery, 100);
 
             for (ONDEXConcept c : hits.getOndexHits()) {
                 if (c instanceof LuceneConcept) {
@@ -1102,7 +1103,7 @@ public class OndexServiceProvider {
 
         // the results give us a map of every starting concept to every valid
         // path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, relatedONDEXConcepts, null);
 
         // create new graph to return
         ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
@@ -1350,7 +1351,7 @@ public class OndexServiceProvider {
         }
 
         // the results give us a map of every starting concept to every valid path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
@@ -1363,11 +1364,24 @@ public class OndexServiceProvider {
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
         Random random = new Random();
-        for (String key : keywords) {
-            int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
-            // format it as hexadecimal string (with hashtag and leading zeros)
-            keywordColourMap.put(key, String.format("#%06x", colourCode));
-        }
+        ArrayList<Color> colArray = new ArrayList<Color>(); // Compare each colour to ensure we never have duplicates
+        keywords.forEach((key) -> {
+            int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
+            Color colorVal = null;
+            // Ensure colour lumence is >40 (git issue #466) and no colorus are repeated and are never yellow
+            while (colourBrightness < 40 && !colArray.contains(colorVal) && !Color.YELLOW.equals(colorVal)) {
+                colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+                // Obtain the colourCode & brightness/lumence value
+                String colorHex = "#" + Integer.toHexString(colourCode);
+                colorVal = Color.decode(colorHex);
+                colourBrightness = (int) Math.sqrt(colorVal.getRed() * colorVal.getRed() * .241 +
+                                                    colorVal.getGreen() * colorVal.getGreen() * .691 +
+                                                    colorVal.getBlue() * colorVal.getBlue() * .068);
+                colArray.add(colorVal); // Add to color ArrayList to track colours
+            }
+            //If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
+            if (colourBrightness > 40) keywordColourMap.put(key, String.format("#%06x", colourCode));
+        });
 
         // create new graph to return
         final ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
@@ -2388,7 +2402,7 @@ public class OndexServiceProvider {
             // analyzer);
             QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
             Query qNames = parserCN.parse(key);
-            ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/* 100 */);
+            ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts(qNames, 500/* 100 */);
             /*
              * number of top concepts searched for each Lucene field, increased for now from
              * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
@@ -2752,10 +2766,10 @@ public class OndexServiceProvider {
             // the results give us a map of every starting concept to every
             // valid path
             // Causes the Cypher-based traverser to report some performance stats
-            gt.setOption("isPerformanceTrackingEnabled", true);
-            Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
+            graphTraverser.setOption("isPerformanceTrackingEnabled", true);
+            Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, genes, null);
             // Let's disable it after the initial population
-            gt.setOption("isPerformanceTrackingEnabled", false);
+            graphTraverser.setOption("isPerformanceTrackingEnabled", false);
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
@@ -3030,6 +3044,13 @@ public class OndexServiceProvider {
     public void setOptions(Map<String, Object> options) {
         this.options = options;
     }
+
+		public static HashMap<Integer, Set<Integer>> getMapConcept2Genes ()
+		{
+			return mapConcept2Genes;
+		}
+    
+    
 }
 
 class ValueComparator<T> implements Comparator<T> {
