@@ -1601,7 +1601,7 @@ public class OndexServiceProvider {
                 }
                 Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
                 for (ONDEXRelation r : relSet) {
-                    if (r.getOfType().getId().equals("control")) {
+                    if (r.getOfType().getId().equals("has_mapped")) {
                         ONDEXRelation rel = graphCloner.cloneRelation(r);
                         if (rel.getAttribute(attSize) == null) {
                             rel.createAttribute(attSize, new Integer(2), false);
