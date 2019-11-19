@@ -642,7 +642,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
         log.debug("Keyword is:" + keyword);
 
         // creates the NOT list (list of all the forbidden documents)
@@ -1358,7 +1358,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
 
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
