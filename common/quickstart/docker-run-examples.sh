@@ -41,7 +41,7 @@ exit 1
 # RRes-specific test
 ./docker-run.sh \
   --dataset-id wheat-directed \
-  --dataset-dir /root/knetminer-test/knetminer-datasets/wheat-directed \
+  --dataset-dir /opt/data/knetminer-datasets/wheat-directed \
   --host-port 9090 \
   --container-name 'wheat-directed' \
   --container-memory 20G \
