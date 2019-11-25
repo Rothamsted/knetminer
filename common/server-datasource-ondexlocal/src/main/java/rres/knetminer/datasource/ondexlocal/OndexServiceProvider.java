@@ -2062,7 +2062,7 @@ public class OndexServiceProvider {
                     String acc = Optional.ofNullable ( qtl.getConceptName () )
                     	.map ( ConceptName::getName )
                     	.map ( StringEscapeUtils::escapeCsv )
-                    	.orElse ( () -> {
+                    	.orElseGet ( () -> {
                     		log.error ( "writeTable(): gene name not found for id: {}", cid );
                     		return "";
                   	});
