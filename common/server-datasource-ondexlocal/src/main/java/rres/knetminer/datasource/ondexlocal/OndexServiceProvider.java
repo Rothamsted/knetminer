@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
@@ -41,6 +43,7 @@ import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -2049,7 +2052,20 @@ public class OndexServiceProvider {
                 for (Integer cid : mapGene2QTL.get(gene.getId())) {
                     ONDEXConcept qtl = graph.getConcept(cid);
 
-                    String acc = qtl.getConceptName().getName().replaceAll("\"", "");
+                    /* TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage
+                     * to ALL cases like this, and hence we MUST move this code to some utility. 
+                     */ 
+                    if ( qtl == null ) {
+                    	log.error ( "writeTable(): no gene found for id: ", cid );
+                    	continue;
+                    }
+                    String acc = Optional.ofNullable ( qtl.getConceptName () )
+                    	.map ( ConceptName::getName )
+                    	.map ( StringEscapeUtils::escapeCsv )
+                    	.orElse ( () -> {
+                    		log.error ( "writeTable(): gene name not found for id: {}", cid );
+                    		return "";
+                  	});
 
                     String traitDesc = null;
                     if (attTrait != null && qtl.getAttribute(attTrait) != null) {
