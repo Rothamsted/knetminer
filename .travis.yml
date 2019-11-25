@@ -22,7 +22,7 @@ install:
   - npm config set unsafe-perm true
   - npm install bower gulp -g
   - export PATH="/usr/local/bin:$PATH"
-  #- n 11.15.0 # TODO: Remove after fix of https://github.com/Rothamsted/knetminer/issues/432
+  - n 11.15.0 # TODO: Remove after fix of https://github.com/Rothamsted/knetminer/issues/432
       
 script: 
   - ./travis-build.sh
