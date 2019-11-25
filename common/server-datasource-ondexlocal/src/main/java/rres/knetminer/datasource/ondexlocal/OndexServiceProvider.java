@@ -642,7 +642,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
         log.debug("Keyword is:" + keyword);
 
         // creates the NOT list (list of all the forbidden documents)
@@ -1358,7 +1358,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
 
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
@@ -1601,7 +1601,7 @@ public class OndexServiceProvider {
                 }
                 Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
                 for (ONDEXRelation r : relSet) {
-                    if (r.getOfType().getId().equals("control")) {
+                    if (r.getOfType().getId().equals("has_mapped")) {
                         ONDEXRelation rel = graphCloner.cloneRelation(r);
                         if (rel.getAttribute(attSize) == null) {
                             rel.createAttribute(attSize, new Integer(2), false);

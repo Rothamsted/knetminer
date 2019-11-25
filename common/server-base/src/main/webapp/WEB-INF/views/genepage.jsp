@@ -3,7 +3,7 @@
 String keywords="";
 if(request.getParameter("keyword")!=null) {
 keywords = request.getParameter("keyword");
-keywords = keywords.replaceAll("^\"|\"$", "###");
+keywords = keywords.replace("\"", "###");
 }
 // added to display genepage API - query summary above rendered network
 String genelist="";
