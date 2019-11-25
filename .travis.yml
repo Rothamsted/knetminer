@@ -20,6 +20,7 @@ install:
   - npm config set unsafe-perm true
   - npm install bower gulp -g
   - npm install -g n
+  - which n
   - sudo /usr/local/bin/n 11.15.0 # TODO: Remove after fix of https://github.com/Rothamsted/knetminer/issues/432
       
 script: 
