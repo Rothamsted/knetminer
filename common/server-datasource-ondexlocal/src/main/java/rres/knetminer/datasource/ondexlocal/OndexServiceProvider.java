@@ -2780,12 +2780,14 @@ public class OndexServiceProvider {
         if (!file1.exists()) {
 
             // the results give us a map of every starting concept to every
-            // valid path
-            // Causes the Cypher-based traverser to report some performance stats
-            graphTraverser.setOption("isPerformanceTrackingEnabled", true);
+            // valid path.
+        		//
+        	          
             Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, genes, null);
-            // Let's disable it after the initial population
-            graphTraverser.setOption("isPerformanceTrackingEnabled", false);
+
+            // Performance stats reporting about the Cypher-based traverser is disabled after the initial
+        		// traversal. This option has no effect when the SM-based traverser is used.
+            graphTraverser.setOption("performanceReportFrequency", -1);
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
