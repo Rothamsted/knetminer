@@ -43,5 +43,7 @@
 		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />
 		</Root>
+		<!-- Too much stuff from this, let's disable it -->
+		<Logger name = "uk.ac.ebi.utils.threading.batchproc" level = "WARN" />
 	</Loggers>
 </Configuration>
