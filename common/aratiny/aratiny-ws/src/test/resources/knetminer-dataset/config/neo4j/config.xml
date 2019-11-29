@@ -6,13 +6,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 		<!-- 
-			see config-test.xml for details on the format of this file 
+			Have a look at this test file for details on how to define Neo4j-related params:
+			https://github.com/Rothamsted/knetminer-backend/blob/master/cypher-client/src/test/resources/test-config/config.xml
 		-->
 
-		<!-- 
-		  Just leave this here. It means some components are got from the Java source files, by means of
-		  Spring annotations. You do need this base (which the declaration below extend/override). 
-		-->
     <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
     
     
@@ -20,12 +17,7 @@
     	<constructor-arg value = "${knetminer.configDir}/neo4j" />
     </bean> 
     
-    
-		<!-- 
-			This is one of the many ways to read query definitions from files. 
-			All *.cypher files are read using our IOUtils. 
-		-->
-		
+    		
 		<!-- 
 			Custom-made queries are read from the root of the config dir
 		 -->
@@ -58,14 +50,14 @@
 			</constructor-arg>
 		</bean>
 		
-		<!-- The all are combined into the beanName that is searched by our graph traverser -->
+		<!-- They are all combined into the beanName that is searched by our graph traverser -->
 		<bean name = "semanticMotifsQueries" 
 					class = "org.apache.commons.collections15.ListUtils" factory-method = "union" >
 			<constructor-arg ref = "semanticMotifsQueriesCustom" />
 			<constructor-arg ref = "semanticMotifsQueriesStateMachine" />
 		</bean>
 
-		<!-- Neo4j server set up here -->
+		<!-- Neo4j server set up -->
 		<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" factory-method="driver">
 			<constructor-arg value = "${neo4j.server.boltUrl}" />
 			<constructor-arg>

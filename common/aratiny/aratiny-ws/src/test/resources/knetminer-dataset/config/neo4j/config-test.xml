@@ -5,22 +5,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
-		<!-- This is used for tests, config.xml is used in production -->
+		<!-- This is used for tests, config.xml is used in production (look at it for details) -->
 
-		<!-- 
-		  Just leave this here. It means some components are got from the Java source files, by means of
-		  Spring annotations. You do need this base (which the declaration below extend/override). 
-		-->
     <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
     
     <bean name = "configDirPath" class = "java.lang.String">
     	<constructor-arg value = "${knetminer.configDir}/neo4j" />
     </bean> 
     
-		<!-- 
-			This is one of the many ways to read query definitions from files. 
-			All *.cypher files are read using our IOUtils. 
-		-->
+    <!-- The path queries for the Cypher-based traverser -->
 		<bean name = "semanticMotifsQueries" class = "java.util.Arrays" factory-method = "asList" >
 			<constructor-arg>
 				<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
