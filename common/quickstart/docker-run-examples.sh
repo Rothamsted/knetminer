@@ -57,5 +57,8 @@ export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
  	-Dcom.sun.management.jmxremote.rmi.port=9011
  	-Djava.rmi.server.hostname=localhost
  	-Dcom.sun.management.jmxremote.local.only=false"
-# 
-export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011"
+# and these can be used for debugging
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
+  		 -Djava.compiler=NONE
+  		 -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011 -p 5005:5005"
