@@ -127,7 +127,7 @@ cd /tmp/aratiny-ws
 # Also, note that this command DOESN'T rebuild the server app, it just prepares some files into target/
 mvn $MAVEN_ARGS --settings "$knet_dataset_dir/config/actual-maven-settings.xml" clean test-compile
 
-# End eventually, deploy the instantiated config files
+# And eventually, deploy the instantiated config files
 cp -Rf target/test-classes/knetminer-dataset/config/* "$knet_dataset_dir/config"
 
 

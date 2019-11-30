@@ -43,8 +43,5 @@
 		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />
 		</Root>
-		<!-- Too much stuff from these, let's lower their verbosity -->
-		<Logger name = "uk.ac.ebi.utils.threading.batchproc" level = "WARN" />
-		<Logger name = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.SinglePathQueryProcessor" level = "WARN" />
 	</Loggers>
 </Configuration>
