@@ -60,7 +60,7 @@
  	<!-- The Neo4j driver -->
 	<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" 
 			factory-method="driver">
-		<constructor-arg value = "bolt://127.0.0.1:${neo4j.server.boltPort}" />
+		<constructor-arg value = "${neo4j.server.boltUrl}" />
 		<constructor-arg>
 			<bean class = "org.neo4j.driver.v1.AuthTokens" factory-method = "basic">
 				<constructor-arg value = "${neo4j.server.user}" />
