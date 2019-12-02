@@ -61,12 +61,9 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
-# Default Java options to tell the JVM to use all the available memory+
-# TODO: -XX:MaxRAMFraction=1 doesn't work very well (the JVM takes all the container's RAM), we 
-# need to either go back to old -Xmx or try recent JDK RAM options. MaxRAMFraction only accepts powers
-# of 2 (MaxRAMFraction=n means <all RAM> * 1/2^n) and that's quite poor for fine tuning like 80% of the total. 
+# Default Java options to tell the JVM to use (almost) all the available memory+
 #
-export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1'}
+export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0'}
 
 
 # ---- Parameters/environment setup ends here
