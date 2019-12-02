@@ -1,6 +1,6 @@
 # A bare image, that prepares all the environment (OS, 3rd-party tools) to build/run Knetminer
 #
-FROM andreptb/tomcat:7-jdk8
+FROM knetminer/docker-tomcat:9-jdk8-alpine
 
 RUN set -x \
 	&& apk add --no-cache maven nodejs-npm git libxml2-utils \
