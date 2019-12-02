@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
@@ -41,6 +43,7 @@ import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -642,7 +645,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
         log.debug("Keyword is:" + keyword);
 
         // creates the NOT list (list of all the forbidden documents)
@@ -1358,7 +1361,7 @@ public class OndexServiceProvider {
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
 
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
@@ -1601,7 +1604,7 @@ public class OndexServiceProvider {
                 }
                 Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
                 for (ONDEXRelation r : relSet) {
-                    if (r.getOfType().getId().equals("control")) {
+                    if (r.getOfType().getId().equals("has_mapped")) {
                         ONDEXRelation rel = graphCloner.cloneRelation(r);
                         if (rel.getAttribute(attSize) == null) {
                             rel.createAttribute(attSize, new Integer(2), false);
@@ -2049,7 +2052,20 @@ public class OndexServiceProvider {
                 for (Integer cid : mapGene2QTL.get(gene.getId())) {
                     ONDEXConcept qtl = graph.getConcept(cid);
 
-                    String acc = qtl.getConceptName().getName().replaceAll("\"", "");
+                    /* TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage
+                     * to ALL cases like this, and hence we MUST move this code to some utility. 
+                     */ 
+                    if ( qtl == null ) {
+                    	log.error ( "writeTable(): no gene found for id: ", cid );
+                    	continue;
+                    }
+                    String acc = Optional.ofNullable ( qtl.getConceptName () )
+                    	.map ( ConceptName::getName )
+                    	.map ( StringEscapeUtils::escapeCsv )
+                    	.orElseGet ( () -> {
+                    		log.error ( "writeTable(): gene name not found for id: {}", cid );
+                    		return "";
+                  	});
 
                     String traitDesc = null;
                     if (attTrait != null && qtl.getAttribute(attTrait) != null) {
@@ -2764,12 +2780,14 @@ public class OndexServiceProvider {
         if (!file1.exists()) {
 
             // the results give us a map of every starting concept to every
-            // valid path
-            // Causes the Cypher-based traverser to report some performance stats
-            graphTraverser.setOption("isPerformanceTrackingEnabled", true);
+            // valid path.
+        		//
+        	          
             Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, genes, null);
-            // Let's disable it after the initial population
-            graphTraverser.setOption("isPerformanceTrackingEnabled", false);
+
+            // Performance stats reporting about the Cypher-based traverser is disabled after the initial
+        		// traversal. This option has no effect when the SM-based traverser is used.
+            graphTraverser.setOption("performanceReportFrequency", -1);
 
             mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
             mapGene2Concepts = new HashMap<Integer, Set<Integer>>();

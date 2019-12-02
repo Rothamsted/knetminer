@@ -7,7 +7,7 @@ set -e # Fail fast upon the first error
 [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && goal='install' || goal='deploy'
 
 # You need --quiet, Travis doesn't like too big logs.
-mvn --quiet $goal --settings settings.xml
+mvn --quiet --settings settings.xml $goal
 
 echo -e "\n\n\tDocker-base"
 docker build --no-cache -t knetminer/knetminer-base -f common/quickstart/Dockerfile-base .
@@ -23,5 +23,6 @@ fi
 echo -e "\n\n\tPushing Docker-base"
 docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 docker push knetminer/knetminer-base 
+
 echo -e "\n\n\tPushing Docker"
 docker push knetminer/knetminer

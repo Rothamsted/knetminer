@@ -16,9 +16,14 @@ cache:
     - $HOME/.npm
           
 install:
+  - export PATH="/usr/local/bin:$PATH"
   - npm config set unsafe-perm true
   - npm install bower gulp -g
-  - export PATH="/usr/local/bin:$PATH"
+  # Downgrades Node.js, due to lib clash (https://github.com/Rothamsted/knetminer/issues/432)
+  # TODO: remove after the mentioned issue is fixed.
+  - npm install -g n
+  - npath=$(which n) # we need this, cause the installation is somewhere in $HOME and 'n' needs sudo
+  - sudo $npath 11.15.0 
       
 script: 
   - ./travis-build.sh
