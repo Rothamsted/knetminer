@@ -59,6 +59,9 @@ export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
  	-Dcom.sun.management.jmxremote.local.only=false"
 # and these can be used for debugging
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
-  		 -Djava.compiler=NONE
-  		 -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+	-Djava.compiler=NONE
+  -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+# If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
+# limited defaults
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xmx28G"
 export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011 -p 5005:5005"
