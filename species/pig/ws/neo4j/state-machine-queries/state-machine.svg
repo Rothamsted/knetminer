@@ -38,8 +38,15 @@
 <polygon fill="none" stroke="darkgreen" points="692.92,-261.49 692.92,-282.51 650.85,-294 595.18,-294 553.11,-282.51 553.11,-261.49 595.18,-250 650.85,-250 692.92,-261.49"/>
 <text text-anchor="middle" x="623.02" y="-267.8" font-family="Times,serif" font-size="14.00">Publication(6)</text>
 </g>
-<!-- Gene(1) -->
+<!-- Protein(11) -->
 <g id="node6" class="node">
+<title>Protein(11)</title>
+<polygon fill="none" stroke="darkgreen" points="264.25,-215.54 264.25,-230.46 232.41,-241 187.38,-241 155.53,-230.46 155.53,-215.54 187.38,-205 232.41,-205 264.25,-215.54"/>
+<polygon fill="none" stroke="darkgreen" points="268.27,-212.66 268.27,-233.34 233.06,-245 186.73,-245 151.52,-233.34 151.52,-212.66 186.73,-201 233.06,-201 268.27,-212.66"/>
+<text text-anchor="middle" x="209.89" y="-218.8" font-family="Times,serif" font-size="14.00">Protein(11)</text>
+</g>
+<!-- Gene(1) -->
+<g id="node7" class="node">
 <title>Gene(1)</title>
 <ellipse fill="none" stroke="red" cx="43.08" cy="-204" rx="39.15" ry="39.15"/>
 <ellipse fill="none" stroke="red" cx="43.08" cy="-204" rx="43.15" ry="43.15"/>
@@ -48,18 +55,11 @@
 <!-- Gene(1)&#45;&gt;Publication(6) -->
 <g id="edge11" class="edge">
 <title>Gene(1)&#45;&gt;Publication(6)</title>
-<path fill="none" stroke="black" d="M80.6,-225.41C100.84,-236.11 126.86,-248.03 151.71,-254 291.14,-287.5 460.43,-283.53 553.11,-277.72"/>
+<path fill="none" stroke="blue" d="M80.6,-225.41C100.84,-236.11 126.86,-248.03 151.71,-254 291.14,-287.5 460.43,-283.53 553.11,-277.72"/>
 <text text-anchor="middle" x="305.52" y="-280.8" font-family="Times,serif" font-size="14.00">pub_in</text>
 </g>
-<!-- Protein(11) -->
-<g id="node7" class="node">
-<title>Protein(11)</title>
-<polygon fill="none" stroke="darkgreen" points="264.25,-215.54 264.25,-230.46 232.41,-241 187.38,-241 155.53,-230.46 155.53,-215.54 187.38,-205 232.41,-205 264.25,-215.54"/>
-<polygon fill="none" stroke="darkgreen" points="268.27,-212.66 268.27,-233.34 233.06,-245 186.73,-245 151.52,-233.34 151.52,-212.66 186.73,-201 233.06,-201 268.27,-212.66"/>
-<text text-anchor="middle" x="209.89" y="-218.8" font-family="Times,serif" font-size="14.00">Protein(11)</text>
-</g>
 <!-- Gene(1)&#45;&gt;Protein(11) -->
-<g id="edge9" class="edge">
+<g id="edge8" class="edge">
 <title>Gene(1)&#45;&gt;Protein(11)</title>
 <path fill="none" stroke="black" d="M86.09,-208.84C105.93,-211.13 129.92,-213.9 151.41,-216.37"/>
 <text text-anchor="middle" x="118.93" y="-216.8" font-family="Times,serif" font-size="14.00">enc</text>
@@ -73,7 +73,7 @@
 <!-- Gene(1)&#45;&gt;Gene(2) -->
 <g id="edge10" class="edge">
 <title>Gene(1)&#45;&gt;Gene(2)</title>
-<path fill="none" stroke="blue" d="M85.24,-194.26C112.89,-187.72 148.89,-179.2 174.91,-173.04"/>
+<path fill="none" stroke="black" d="M85.24,-194.26C112.89,-187.72 148.89,-179.2 174.91,-173.04"/>
 <text text-anchor="middle" x="118.93" y="-191.8" font-family="Times,serif" font-size="14.00">ortho</text>
 </g>
 <!-- Protein(3) -->
@@ -83,7 +83,7 @@
 <text text-anchor="middle" x="388.93" y="-141.8" font-family="Times,serif" font-size="14.00">Protein(3)</text>
 </g>
 <!-- Gene(1)&#45;&gt;Protein(3) -->
-<g id="edge8" class="edge">
+<g id="edge9" class="edge">
 <title>Gene(1)&#45;&gt;Protein(3)</title>
 <path fill="none" stroke="blue" d="M73.93,-173.49C93.99,-155.26 122.09,-133.8 151.71,-124 220.72,-101.16 306.86,-120.27 353.71,-134.34"/>
 <text text-anchor="middle" x="209.89" y="-126.8" font-family="Times,serif" font-size="14.00">enc</text>
