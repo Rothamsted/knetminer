@@ -26,6 +26,11 @@ docker rm wheat-ci || true
 yes | docker system prune --all
 docker pull knetminer/knetminer
 
+if [[ "$(hostname)" != 'babvs73.rothamsted.ac.uk' ]]; then
+	echo -e "\n\n\tSkipping deployment of test instance, this is only done on babvs73"
+	exit
+fi
+
 echo -e "--- Cleaning Knetminer dataset directory\n"
 ./cleanup-volume.sh --all "$dataset_dir"
 
