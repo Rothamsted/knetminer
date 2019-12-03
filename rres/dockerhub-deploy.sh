@@ -2,6 +2,8 @@
 # from DockerHub, after they've beeen updated.
 #
 
+set -e # Stop upon the first problem
+
 dataset_dir=/opt/data/knetminer-datasets/wheat-ci
 host_port=9100
 
