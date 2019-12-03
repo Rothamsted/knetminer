@@ -25,8 +25,8 @@ echo -e "--- Cleaning Knetminer dataset directory\n"
 
 echo -e "\n\n\t(Re)launching Docker\n"
 ./docker-run.sh \
-  --dataset-id wheat --dataset-dir "$dataset_dir" --host-port $host_port \
-  --container-name wheat-ci \
+  --dataset-id wheat --container-name wheat-ci \
+  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 24G \
   --detach
 
 # TODO: as a minimum, check it's up via wget, later run scripts that check sensible results are returned
