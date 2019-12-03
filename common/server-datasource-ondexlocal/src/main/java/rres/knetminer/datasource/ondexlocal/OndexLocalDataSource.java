@@ -21,10 +21,13 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
+import org.json.JSONException;
+import org.json.JSONObject;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.EvidencePathResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
+import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
@@ -119,6 +122,10 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
+                this.ondexServiceProvider.setVersion(this.getProperty("version"));
+                log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
+                this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
+                log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
 
 		this.ondexServiceProvider.createGraph (
 			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
@@ -355,4 +362,26 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	    }
 		return response;
 	}
+        
+        public GraphSummaryResponse graphSummary (String dsName, KnetminerRequest request) throws IllegalArgumentException {
+            GraphSummaryResponse response = new GraphSummaryResponse();
+            
+            try {
+                // Parse the data into a JSON format & set the graphSummary as is - this data is obtained from the maven-settings.xml
+                JSONObject summaryJSON = new JSONObject();
+                summaryJSON.put("dateCreated", this.ondexServiceProvider.getCreationDate());
+                summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
+                summaryJSON.put("version", this.ondexServiceProvider.getVersion());
+                this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
+                    summaryJSON.put("taxid", taxID);
+                });
+                response.graphSummary = summaryJSON.toString();
+            } catch (JSONException ex) {
+                log.error(ex);
+                throw new Error(ex);
+            }
+            
+            return response;
+            
+        }
 }

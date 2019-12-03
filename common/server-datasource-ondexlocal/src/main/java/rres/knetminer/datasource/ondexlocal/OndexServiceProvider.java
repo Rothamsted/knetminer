@@ -16,11 +16,13 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -148,7 +150,22 @@ public class OndexServiceProvider {
      * TaxID of organism for which the knowledgebase was created
      */
     private List<String> taxID;
-
+    
+    /**
+     * Version of KnetMiner being used
+     **/
+    private String version;
+    
+    /**
+     * The organisation source name
+     */
+    private String sourceOrganization;
+    
+    /** 
+     * The Date of graph creation
+     */
+    private final Date creationDate = new Date();
+    
     /**
      * true if a reference genome is provided
      */
@@ -215,7 +232,7 @@ public class OndexServiceProvider {
 
     /*
      * Generate Stats about the created Ondex graph and its mappings:
-     * mapConcept2Genes & mapGene2Concepts. Author Singha
+     * mapConcept2Genes & mapGene2Concepts. Author Singhatt
      * Updating to also give Concept2Gene per concept
      */
     private void displayGraphStats(String fileUrl) {
@@ -2657,6 +2674,22 @@ public class OndexServiceProvider {
     public List<String> getTaxId() {
         return this.taxID;
     }
+    
+    public void setVersion(String ver) {
+        this.version = ver;
+    }
+    
+    public String getVersion() {
+        return this.version;
+    }
+    
+    public void setSource(String src) {
+        this.sourceOrganization = src;
+    }
+    
+    public String getSource() {
+        return this.sourceOrganization;
+    }
 
     public void setReferenceGenome(boolean value) {
         this.referenceGenome = value;
@@ -2664,6 +2697,11 @@ public class OndexServiceProvider {
 
     public boolean getReferenceGenome() {
         return this.referenceGenome;
+    }
+    
+    public String getCreationDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+        return formatter.format(creationDate);
     }
 
     /**
