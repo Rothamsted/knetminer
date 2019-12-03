@@ -51,6 +51,8 @@
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
+                <knetminer.version>42</knetminer.version>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
