@@ -18,7 +18,7 @@ wall -n <<EOT
 *** WARNING: Continuous Integration Scripts are going to update Docker images automatically ***
 
 In few minutes, existing unused images will be DELETED. The container named wheat-ci will be restarted.
-EOT 
+EOT
 
 echo -e "--- Stopping, cleaning and updating Docker\n"
 docker stop wheat-ci || true
