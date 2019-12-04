@@ -15,9 +15,10 @@ cd ../common/quickstart
 echo -e "\n\n\tPreparing the environment\n"
 
 wall -n <<EOT
-*** WARNING: Continuous Integration Scripts are going to update Docker images automatically ***
+*** WARNING: Continuous Integration is going to update Docker images ***
 
-In few minutes, existing unused images will be DELETED. The container named wheat-ci will be restarted.
+In few minutes, existing unused images will be DELETED.
+The container named wheat-ci will be restarted.
 EOT
 
 echo -e "--- Stopping, cleaning and updating Docker\n"
