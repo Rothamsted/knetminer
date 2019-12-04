@@ -15,10 +15,16 @@ docker build --no-cache -t knetminer/knetminer-base -f common/quickstart/Dockerf
 echo -e "\n\n\tDocker"
 docker build --no-cache -t knetminer/knetminer -f common/quickstart/Dockerfile .
 
-if [[  "${TRAVIS_PULL_REQUEST}" == "true" ]]; then
+if [[ "${TRAVIS_PULL_REQUEST}" == "true" ]]; then
 	echo -e "\n\n\tWe're building a pull request, Not pushing to DockerHub\n"
 	exit
 fi
+
+if [[ "${TRAVIS_BRANCH}" != 'master' ]]; then
+	echo -e "\n\n\tThis isn't the master branch, Not pushing to DockerHub\n"
+	exit
+fi
+	
 
 echo -e "\n\n\tPushing Docker-base"
 docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
