@@ -4,10 +4,10 @@
 
 set -e # Fail fast upon the first error
 
-[[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && goal='install' || goal='deploy'
+[[ "${TRAVIS_PULL_REQUEST}" == "true" ]] && goal='install' || goal='deploy'
 
 # You need --quiet, Travis doesn't like too big logs.
-echo -e "\n\n\t MAVEN GOAL: $goal"
+echo -e "\n\n\tMAVEN GOAL: $goal"
 mvn --quiet --settings settings.xml $goal
 
 echo -e "\n\n\tDocker-base"
