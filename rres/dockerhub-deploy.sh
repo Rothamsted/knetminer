@@ -36,8 +36,7 @@ echo -e "--- Cleaning Knetminer dataset directory\n"
 if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	echo -e "\n\n\t(Re)launching Docker, Cypher-based traverser\n"
 
-	docker_run_opts="--with-neo4j 
-		--neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 
+	docker_run_opts="--with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 
 		--neo4j-user rouser --neo4j-pwd rouser"
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
@@ -45,7 +44,7 @@ fi
 
 
 ./docker-run.sh \
-  --dataset-id wheat --container-name wheat-ci \
+  --dataset-id wheat-directed --container-name wheat-ci \
   --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 24G \
   $docker_run_opts \
   --detach
