@@ -47,21 +47,15 @@ KNETMAPS.Menu = function() {
   
   // Export the graph as a .png image and allow users to save it.
  my.exportAsImage = function() {
-   var cy = $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-
-   // Export as .png image
-   var png64 = cy.png({
-                       "scale" : 2,
-                       }); // .setAttribute('crossOrigin', 'anonymous');
-   var cyWidth = ($('#cy').width() * 2), cyHeight = ($('#cy').width() * 2);   
-   //var knet_iframe_style= "border:1px solid black; top:0px; left:0px; bottom:0px; right:0px; width:"+ cy_width +"; height:"+ cy_height +";";
-   var knet_iframe_style= "top:0px; left:0px; bottom:0px; right:0px; width:" + cyWidth + "; height:" + cyHeight + ";";
-   var knet_iframe = '<iframe src="'+ png64 +'" frameborder="0" style="'+ knet_iframe_style +'" allowfullscreen></iframe>';
-   var pngTab= window.open();
-   pngTab.document.open();
-   pngTab.document.write(knet_iframe);
-   pngTab.document.title="kNetwork_png";
-   pngTab.document.close();
+    var cy = $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+    var png64 = cy.png({
+                    	"scale" : 6,
+                    	"output" : 'base64'
+    			}); // .setAttribute('crossOrigin', 'anonymous');
+    var a = document.createElement("a"); //Create <a>
+    a.href = png64; //Image Base64 Goes here
+    a.download = "knet_image.png"; //File name Here
+    a.click(); //Downloaded file
   }
 
   // Show all concepts & relations.
