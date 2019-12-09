@@ -13,7 +13,9 @@
 	<entry key="SpeciesTaxId">${knetminer.specieTaxId}</entry>
 	<entry key="reference_genome">true</entry>
 	<entry key="export_visible_network">true</entry>
-	
+	<entry key="version">${knetminer.version}</entry>
+        <entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
+	<entry key="provider">${knetminer.provider}</entry>	
 
 	<!-- 
 		This is the configuration for the new Neo4j-based backend

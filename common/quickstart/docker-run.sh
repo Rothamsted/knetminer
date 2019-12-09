@@ -122,7 +122,7 @@ fi
 # Typically you DO WANT this.
 # 
 # Default JAVA_TOOL_OPTIONS is:
-#   -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+#   -XX:MaxRAMPercentage=90.0
 # which tells the JVM to use all the RAM passed to the container
 #
 echo -e "\n"

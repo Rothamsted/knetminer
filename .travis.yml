@@ -27,3 +27,8 @@ install:
       
 script: 
   - ./travis-build.sh
+  
+branches:
+  only:
+  - master
+  - 201912_saveNetworks
