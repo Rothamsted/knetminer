@@ -126,6 +126,9 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
                 log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
                 this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
                 log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
+                this.ondexServiceProvider.setProvider(this.getProperty("provider"));
+                log.info("Datasource " + dsName + " provider source: " + this.ondexServiceProvider.getProvider());
+                
 
 		this.ondexServiceProvider.createGraph (
 			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
@@ -363,19 +366,24 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
         
-        public GraphSummaryResponse graphSummary (String dsName, KnetminerRequest request) throws IllegalArgumentException {
+        public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException {
             GraphSummaryResponse response = new GraphSummaryResponse();
             
             try {
                 // Parse the data into a JSON format & set the graphSummary as is - this data is obtained from the maven-settings.xml
                 JSONObject summaryJSON = new JSONObject();
-                summaryJSON.put("dateCreated", this.ondexServiceProvider.getCreationDate());
-                summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
-                summaryJSON.put("version", this.ondexServiceProvider.getVersion());
+                summaryJSON.put("db_version", this.ondexServiceProvider.getVersion());
+                summaryJSON.put("source_organization", this.ondexServiceProvider.getSource());
                 this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
                     summaryJSON.put("taxid", taxID);
                 });
-                response.graphSummary = summaryJSON.toString();
+                summaryJSON.put("db_created", this.ondexServiceProvider.getCreationDate());
+                summaryJSON.put("provider", this.ondexServiceProvider.getProvider());
+                String jsonString = summaryJSON.toString();
+                // Removing the pesky double qoutations
+                jsonString = jsonString.substring(1, jsonString.length() - 1);
+                response.dataSource = jsonString;
+                
             } catch (JSONException ex) {
                 log.error(ex);
                 throw new Error(ex);

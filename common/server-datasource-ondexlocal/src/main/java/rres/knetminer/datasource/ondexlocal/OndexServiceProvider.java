@@ -31,10 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -165,6 +163,11 @@ public class OndexServiceProvider {
      * The Date of graph creation
      */
     private final Date creationDate = new Date();
+    
+    /**
+     * The providers name
+     */
+    private String provider;
     
     /**
      * true if a reference genome is provided
@@ -2690,6 +2693,14 @@ public class OndexServiceProvider {
     public String getSource() {
         return this.sourceOrganization;
     }
+    
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProvider() {
+        return this.provider;
+    }
 
     public void setReferenceGenome(boolean value) {
         this.referenceGenome = value;
@@ -2700,7 +2711,7 @@ public class OndexServiceProvider {
     }
     
     public String getCreationDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");  
         return formatter.format(creationDate);
     }
 
