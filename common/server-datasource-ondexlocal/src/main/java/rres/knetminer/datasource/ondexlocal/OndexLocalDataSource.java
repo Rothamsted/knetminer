@@ -56,10 +56,12 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	
 	private Properties props = new Properties();
 	
-	public String getProperty(String key) {
-		return this.props.getProperty(key);
-	}
-
+	
+	/**
+	 * When it's initialised without parameters, it gets everything from the XML config file. This is fetched by 
+	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).
+	 * 
+	 */
 	public OndexLocalDataSource () {
 		init ();
 	}
@@ -138,6 +140,16 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		);
 	}
 	
+	public String getProperty(String key) {
+		return this.props.getProperty(key);
+	}
+
+	/** 
+	 * This is made available for debugging or tweaks like the ones in {@code CypherDebuggerService}.
+	 */
+	public OndexServiceProvider getOndexServiceProvider () {
+		return ondexServiceProvider;
+	}
 
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);

@@ -15,7 +15,6 @@ import org.apache.logging.log4j.message.ObjectMessage;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -239,7 +238,7 @@ public class KnetminerServer {
 			list = Collections.emptyList();
 		}
 
-		// TODO: We need VERY MUCH to pollute code this way! 
+		// TODO: We need VERY MUCH to stop polluting code this way! 
 		// This MUST go to some utilty and there there MUST BE only some invocation that clearly recalls the semantics 
 		// of these operations, eg, KnetminerServerUtils.logAnalytics ( logger, rawRequest, mode, list )
 		// This is filed under #462
