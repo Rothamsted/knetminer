@@ -27,8 +27,8 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
-			<artifactId>configurable-datasource</artifactId>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
+			<artifactId>ondex-server-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
