@@ -3,9 +3,80 @@ var genespreadsheet = new Array();
 var genes;
 */
 
+
+
+
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
+
+
+/* 
+ * Functions to get cookies and erase them.
+ */
+ function setCookie(cookieName, cookieValue, days) {
+    var expirationDate = "";
+    if (days) {
+        var cookieDate = new Date();
+        cookieDate.setTime(cookieDate.getTime() + (days * 24 * 60 * 60 * 1000));
+        expirationDate = "; expires=" + cookieDate.toUTCString();
+    }
+    // Create the cookie which will expire in X days
+    console.log("Setting cookie...");
+    document.cookie = cookieName + "=" + (cookieValue || "") + expirationDate + "; path=/";
+}
+ function getCookie(cookieName) {
+    //console.log("Raiding the cookie jar now!");
+    var nameEQ = cookieName + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+ function eraseCookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function cookieInterval(time) {
+    setInterval(function () {
+        var cookie = getCookie("knetspace_token");
+        
+        // If there's a token, we'll have the cookie, so change the class. 
+        if (cookie!==null) {
+            //console.log("Found a cookie! The cookie is: " + cookie);
+            if(!$('#login_icon').hasClass('fas fa-sign-out-alt')) {
+               $('#login_icon').attr("href", "");
+               $('#login_icon').attr("title", "Logout"); // insert new link
+               $('#login_icon').attr("target", "");
+               $('#login_icon').removeClass('fa fa-user');
+               $('#login_icon').addClass('fas fa-sign-out-alt');
+               //$('#login_icon').attr("href", " ") // insert new link
+               var parsedJson = parseJwt(cookie);
+               $('#login_icon').text(" " + parsedJson['username']);
+                // Change activity of button to logout (delete cookie)
+               $('#login_icon').click(function () {
+                     console.log("Logging out icon was clicked");
+                     eraseCookie(cookie);
+                     window.location.reload(true); // Reload the page
+               });
+        }
+        } else {
+            console.log("The cookie monster didn't find any cookies... ");
+        }
+    }, time);
+}
+
+
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
 
 /*
 Functions for show and hide structures when a button is pressed
@@ -220,6 +291,12 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); // set/ update species name from utils_config.js
+        // For testing below
+        //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
+        $('#login_icon').click(function() {
+            console.log("Login icon was clicked");
+             cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
+        });
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
