@@ -374,6 +374,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
                 JSONObject summaryJSON = new JSONObject();
                 summaryJSON.put("dbVersion", this.ondexServiceProvider.getVersion());
                 summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
+                summaryJSON.put("speciesName", dsName); // for now (e.g., araknet); can later get specieName from species/../maven-settings.xml
                 this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
                     summaryJSON.put("speciesTaxid", taxID);
                 });
