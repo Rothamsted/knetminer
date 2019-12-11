@@ -1473,7 +1473,7 @@ public class OndexServiceProvider {
 
         // special case when none of nodes contains keyword (no-keyword-match)
         // set path to visible if end-node is Trait or Phenotype
-        if (keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))) {
+        if (keywordConcepts.isEmpty() && !(keyword == null || keyword.equals("")) ) {
             for (EvidencePathNode path : pathSet) {
                 highlightPath(path, graphCloner, true);
             }
