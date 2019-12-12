@@ -294,7 +294,13 @@ $(document).ready(
         // For testing below
         //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
         $('#login_icon').click(function() {
-            console.log("Login icon was clicked");
+//            console.log("Login icon was clicked");
+            const posistion = {
+                x: (screen.width / 2) - (500 / 2),
+                y: (screen.height/2) - (500 / 2)
+            };
+            const features = `width=${500} height=${500} left=${posistion.x} top=${posistion.y}`;
+             window.open ("knetspace/auth/jwt", '_blank', features);
              cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
         });
 		
