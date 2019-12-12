@@ -968,7 +968,7 @@ function generateCyJSNetwork(url, requestParams) {
 	activateSpinner("#tabviewer");
 	//console.log("network: start spinner...");
         
-        url= "https://knetminer.rothamsted.ac.uk/KnetMaps/test.json"; // test
+        url= api_url +'/jsonData'; // test
         console.log("test>> read from url: "+ url);
  
     $.post({
@@ -987,7 +987,7 @@ function generateCyJSNetwork(url, requestParams) {
 		//	deactivateSpinner("#tabviewer");
         })
         .success(function (data) {
-            console.log("utils.js: data: ");
+            console.log("utils.js: response data: ");
             console.dir(data);
 			// Remove loading spinner from 'tabviewer' div
 		//	deactivateSpinner("#tabviewer");
@@ -995,15 +995,15 @@ function generateCyJSNetwork(url, requestParams) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+                                        if(data.jsonData.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            console.log("knetmaps.drawRaw ...");
                                            knetmaps.drawRaw('#knet-maps', data.graph);
                                           }
                                         else { // response contents (pure JSON).
                                           console.log("*new*: knetmaps.draw ...");
-                                          var eles_jsons= data.graph.graphJSON.elements;
-                                          var eles_styles= data.graph.graphJSON.style;
-                                          var metadata_json= data.graph.allGraphData;
+                                          var eles_jsons= data.jsonData.graph.graphJSON.elements; // remove jsonData after api test
+                                          var eles_styles= data.jsonData.graph.graphJSON.style;
+                                          var metadata_json= data.jsonData.graph.allGraphData;
                                           knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
