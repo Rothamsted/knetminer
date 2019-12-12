@@ -169,6 +169,11 @@ public class OndexServiceProvider {
      */
     private String provider;
     
+    /** 
+     * Species Name provided via maven-settings
+     */
+    private String speciesName;
+    
     /**
      * true if a reference genome is provided
      */
@@ -2700,6 +2705,14 @@ public class OndexServiceProvider {
     
     public String getProvider() {
         return this.provider;
+    }
+    
+    public void setSpecies(String speciesName) {
+        this.speciesName = speciesName;
+    }
+    
+    public String getSpecies() {
+        return this.speciesName;
     }
 
     public void setReferenceGenome(boolean value) {
