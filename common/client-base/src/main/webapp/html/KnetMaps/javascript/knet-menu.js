@@ -56,12 +56,13 @@ KNETMAPS.Menu = function() {
    
    // compose knet_metaData with the above fields.
    var knetwork_metaData= '"name":"'+ knet_name +'", "dateCreated":"'+ knet_date +'", "numNodes":'+ totalNodes +', "numEdges":'+ totalEdges;
-   // add api_graphSummary to the above as well.
-   knetwork_metaData= knetwork_metaData +', "speciesTaxid":"'+ api_graphSummary.speciesTaxid +'", "speciesName":"'+ 
-       api_graphSummary.speciesName +'", "dbVersion":'+ api_graphSummary.dbVersion +', "dbDateCreated":"'+ api_graphSummary.dbDateCreated 
-	   +'", "sourceOrganization":"'+ api_graphSummary.sourceOrganization +'", "provider":"'+ api_graphSummary.provider +'"';
+   // add api_graphSummary to the above as well, if exists.
+   if(api_graphSummary !== null) {
+     knetwork_metaData= knetwork_metaData +', "speciesTaxid":"'+ api_graphSummary.speciesTaxid +'", "speciesName":"'+ 
+             api_graphSummary.speciesName +'", "dbVersion":'+ api_graphSummary.dbVersion +', "dbDateCreated":"'+ api_graphSummary.dbDateCreated
+             +'", "sourceOrganization":"'+ api_graphSummary.sourceOrganization +'", "provider":"'+ api_graphSummary.provider +'"';
+    }
    knetwork_metaData= '{'+ knetwork_metaData +'}';
-
    /* final knetwork response JSON with metadata, thumbnail & the knetwork itself. */
    var knetSave_response= '{"metaData":'+ knetwork_metaData +', "graph":'+ exportedJson +', "image":"'+ thumbnail_image +'"}';
    
@@ -70,9 +71,8 @@ KNETMAPS.Menu = function() {
    //saveAs(kNet_json_Blob, knet_name);
    
    console.log("knetSave_response: "+ knetSave_response); // test
-   
-   // transfer response to knetspace
    // POST to knetspace: /api/v1/networks/
+   // TODO
   }
   
  // generate pure JSON to export from KnetMaps for graphJSON and metadata
@@ -103,9 +103,9 @@ KNETMAPS.Menu = function() {
   
  // fetch graphSummary from KnetMiner server API.
  my.getGraphDBSummary = function() {
-   var graphSummary= '';
-   if(api_url != null || api_url != undefined) {
-       console.log("get apiGraphSummary from: "+ api_url + '/dataSource');
+   var graphSummary= null; //'';
+   //if(api_url != null || api_url != undefined) {
+   if(typeof api_url !== "undefined") {
         $.post({
             url: api_url + '/dataSource',
             timeout: 1000000,
@@ -120,12 +120,10 @@ KNETMAPS.Menu = function() {
                 graphSummary= JSON.parse(data).dataSource;
             });
      }
-   else {
+ /*  else {
      var dummyText= '{"dataSource":{"speciesTaxid":"","speciesName":"","dbVersion":null,"dbDateCreated":"","sourceOrganization":"","provider":""}}';
      graphSummary= JSON.parse(dummyText).dataSource;
-    }
-    console.log("api_graphSummary: "+ graphSummary);
-    console.dir(graphSummary); // test
+    }*/
     
     return graphSummary;
   }
