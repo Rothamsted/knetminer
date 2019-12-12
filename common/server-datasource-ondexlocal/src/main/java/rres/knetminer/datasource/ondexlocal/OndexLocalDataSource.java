@@ -378,7 +378,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
                 summaryJSON.put("dbVersion ", this.ondexServiceProvider.getVersion());
                 summaryJSON.put("sourceOrganization ", this.ondexServiceProvider.getSource());
                 this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
-                    summaryJSON.put("taxid", taxID);
+                    summaryJSON.put("speciesTaxid", taxID);
                 });
                 summaryJSON.put("speciesName", this.ondexServiceProvider.getSpecies());
                 summaryJSON.put("dateCreated ", this.ondexServiceProvider.getCreationDate());
