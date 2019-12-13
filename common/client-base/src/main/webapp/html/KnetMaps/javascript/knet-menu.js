@@ -113,7 +113,7 @@ KNETMAPS.Menu = function() {
                 "Accept": "application/json; charset=utf-8",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            datatype: "json",
+            datatype: "json"
         })
             .fail(function (errorlog) { console.log("An error has ocurred " + errorlog); })
             .success(function (data) {
