@@ -57,10 +57,12 @@ function cookieInterval(time) {
                var parsedJson = parseJwt(cookie);
                $('#login_icon').text(" " + parsedJson['username']);
                 // Change activity of button to logout (delete cookie)
-               $('#login_icon').click(function () {
+               $('#login_icon').click(function (event) {
+                     event.preventDefault();
                      console.log("Logging out icon was clicked");
                      eraseCookie(cookie);
                      window.location.reload(true); // Reload the page
+                     return false;
                });
         }
         } else {
@@ -295,12 +297,9 @@ $(document).ready(
         //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
         $('#login_icon').click(function() {
 //            console.log("Login icon was clicked");
-            const posistion = {
-                x: (screen.width / 2) - (500 / 2),
-                y: (screen.height/2) - (500 / 2)
-            };
-            const features = `width=${500} height=${500} left=${posistion.x} top=${posistion.y}`;
-             window.open ("knetspace/auth/jwt", '_blank', features);
+             var x = (screen.width / 2) - (500 / 2),
+                 y = (screen.height/2) - (500 / 2);
+             window.open ("knetspace/auth/jwt", '_blank', `width=${500} height=${500} left=${x} top=${y}`);
              cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
         });
 		
