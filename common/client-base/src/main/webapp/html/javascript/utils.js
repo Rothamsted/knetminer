@@ -299,7 +299,7 @@ $(document).ready(
 //            console.log("Login icon was clicked");
              var x = (screen.width / 2) - (500 / 2),
                  y = (screen.height/2) - (500 / 2);
-             window.open ("knetspace/auth/jwt", '_blank', `width=${500} height=${500} left=${x} top=${y}`);
+             window.open ("knetspace/auth/jwt", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
              cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
         });
 		
