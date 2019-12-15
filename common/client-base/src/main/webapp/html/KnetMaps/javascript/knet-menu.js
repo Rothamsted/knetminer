@@ -73,7 +73,7 @@ KNETMAPS.Menu = function() {
    console.log("knetSave_response: "+ knetSave_response); // test
    // POST to knetspace: /api/v1/networks/
    // TODO
-  }
+  };
   
  // generate pure JSON to export from KnetMaps for graphJSON and metadata
  my.filterJsonToExport = function(cy, exportJson) {
@@ -99,26 +99,24 @@ KNETMAPS.Menu = function() {
    
    var json_response= '{"graphJSON":'+ JSON.stringify(exportJson) + ', "allGraphData":' + JSON.stringify(metaJSON) +'}';
    return json_response;
-  }
+  };
   
  // fetch graphSummary from KnetMiner server API.
  my.getGraphDBSummary = function() {
-   var graphSummary= null; //'';
+   var graphSummary= null;
+   var summary_url= api_url + '/dataSource';
+   console.log("knet-menu: summary_url: "+ summary_url);
    //if(api_url != null || api_url != undefined) {
    if(typeof api_url !== "undefined") {
-        $.post({
-            url: api_url + '/dataSource',
-            timeout: 1000000,
-            headers: {
-                "Accept": "application/json; charset=utf-8",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            datatype: "json"
-        })
-            .fail(function (errorlog) { console.log("An error has ocurred " + errorlog); })
-            .success(function (data) {
-                graphSummary= JSON.parse(data).dataSource;
-            });
+        $.get(summary_url).done(function (data) {
+            console.log("knet-menu: data: "+ data);
+            console.dir(data);
+            graphSummary= data.dataSource;//JSON.parse(data).dataSource;
+            console.log("graphSummary: "+ graphSummary);
+            console.dir(graphSummary);
+            console.log("graphSummary.provider: "+ graphSummary.provider);
+            console.dir(graphSummary.provider);
+           });
      }
  /*  else {
      var dummyText= '{"dataSource":{"speciesTaxid":"","speciesName":"","dbVersion":null,"dbDateCreated":"","sourceOrganization":"","provider":""}}';
@@ -126,7 +124,7 @@ KNETMAPS.Menu = function() {
     }*/
     
     return graphSummary;
-  }
+  };
   
   // Export the graph as a .png image and allow users to save it.
  my.exportAsImage = function() {
