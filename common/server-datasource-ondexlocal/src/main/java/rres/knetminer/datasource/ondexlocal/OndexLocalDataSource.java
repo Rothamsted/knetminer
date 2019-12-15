@@ -384,7 +384,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
                 summaryJSON.put("dbDateCreated", this.ondexServiceProvider.getCreationDate());
                 summaryJSON.put("provider", this.ondexServiceProvider.getProvider());
                 String jsonString = summaryJSON.toString();
-                // Removing the pesky double qoutations
+                // Removing pesky double quotes
                 jsonString = jsonString.substring(1, jsonString.length() - 1);
                 response.dataSource = jsonString;
                 
