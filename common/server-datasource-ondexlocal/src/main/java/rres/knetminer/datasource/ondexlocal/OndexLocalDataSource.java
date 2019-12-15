@@ -375,15 +375,16 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
             try {
                 // Parse the data into a JSON format & set the graphSummary as is - this data is obtained from the maven-settings.xml
                 JSONObject summaryJSON = new JSONObject();
-                summaryJSON.put("dbVersion", this.ondexServiceProvider.getVersion());
+                summaryJSON.put("dbVersion", this.ondexServiceProvider.getVersion()); // ToDo: change from String to integer
                 summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
                 this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
                     summaryJSON.put("speciesTaxid", taxID);
+                    // ToDo: replace overwritten string value for same key (field) with either a comma-separated string or a jsonArray [].
                 });
                 summaryJSON.put("speciesName", this.ondexServiceProvider.getSpecies());
                 summaryJSON.put("dbDateCreated", this.ondexServiceProvider.getCreationDate());
                 summaryJSON.put("provider", this.ondexServiceProvider.getProvider());
-                String jsonString = summaryJSON.toString();
+                String jsonString = summaryJSON.toString(); // ToDO: convert to jsonArray [] not string "" before returning response
                 // Removing pesky double quotes
                 jsonString = jsonString.substring(1, jsonString.length() - 1);
                 response.dataSource = jsonString;

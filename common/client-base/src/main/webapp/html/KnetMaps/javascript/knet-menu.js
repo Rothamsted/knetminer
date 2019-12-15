@@ -70,9 +70,10 @@ KNETMAPS.Menu = function() {
    //var kNet_json_Blob= new Blob([knetSave_response], {type: 'application/javascript;charset=utf-8'});
    //saveAs(kNet_json_Blob, knet_name);
    
-   console.log("knetSave_response: "+ knetSave_response); // test
-   // POST to knetspace: /api/v1/networks/
-   // TODO
+   // console.log("knetSave_response: "+ knetSave_response); // test
+
+   // ToDo: POST to knetspace API via /api/v1/networks/
+   // 
   };
   
  // generate pure JSON to export from KnetMaps for graphJSON and metadata
@@ -105,17 +106,13 @@ KNETMAPS.Menu = function() {
  my.getGraphDBSummary = function() {
    var graphSummary= null;
    var summary_url= api_url + '/dataSource';
-   console.log("knet-menu: summary_url: "+ summary_url);
    //if(api_url != null || api_url != undefined) {
    if(typeof api_url !== "undefined") {
         $.get(summary_url).done(function (data) {
-            console.log("knet-menu: data: "+ data);
-            console.dir(data);
+            console.dir(data);//test backend api rsponse
             graphSummary= data.dataSource;//JSON.parse(data).dataSource;
             console.log("graphSummary: "+ graphSummary);
-            console.dir(graphSummary);
-            console.log("graphSummary.provider: "+ graphSummary.provider);
-            console.dir(graphSummary.provider);
+            //console.log("graphSummary.provider: "+ graphSummary.provider);
            });
      }
  /*  else {
