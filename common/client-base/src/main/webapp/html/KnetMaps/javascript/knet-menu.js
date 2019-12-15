@@ -290,7 +290,7 @@ KNETMAPS.Menu = function() {
 
  // Import a saved network into KnetMaps.
  my.importJson = function() {
-   // open file dialog
+   // open file dialog, hidden by default for openKnetFile
    $("#openNetworkFile").trigger("click");
   }
   
