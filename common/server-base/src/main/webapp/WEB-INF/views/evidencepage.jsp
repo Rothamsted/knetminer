@@ -70,7 +70,12 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
                 list: ${list}
             })
         }).success(function (data) {
-            KNETMAPS.KnetMaps().drawRaw("#knetmap", data.graph);
+            if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+               KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph);
+              }
+            else { // response contents (pure JSON).
+                KNETMAPS.KnetMaps().draw('#knetmap', data.graph.graphJSON.elements, data.graph.allGraphData, data.graph.graphJSON.style);
+               }
         });
 		</script>
 </body>

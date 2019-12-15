@@ -12,12 +12,14 @@ KNETMAPS.Generator = function() {
 	var my = function() {};
 	
 	// initialize and generate the network from default global vars
- my.generateNetworkGraph=function() {
+ my.generateNetworkGraph=function(eles_jsons, metadata_json, eles_styles) {
    //console.log("Dataset file path: "+ json_File);
+	 graphJSON = eles_jsons; // set graphJSON to reloaded JSON.
+	 allGraphData = metadata_json;
 
      // Initialize the cytoscapeJS container for Network View.
 	 // NB graphJSON and allGraphData should be declared outside this script
-	   my.initializeNetworkView(graphJSON, allGraphData);
+	   my.initializeNetworkView(graphJSON, allGraphData, eles_styles);
 
      // Highlight nodes with hidden, connected nodes using Shadowing.
 	   my.blurNodesWithHiddenNeighborhood();
@@ -34,18 +36,26 @@ KNETMAPS.Generator = function() {
 //initialize and generate the network from provided JSON blob
  my.generateNetworkGraphRaw=function(json_blob) {
    //console.log("Dataset file path: "+ json_File);
-	eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
+   eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
   }
 
 // initialize the network
- my.initializeNetworkView=function(networkJSON, metadataJSON) {
+ my.initializeNetworkView=function(networkJSON, metadataJSON, existing_styles) {
 	graphJSON = networkJSON;
 	allGraphData = metadataJSON;
    // modify for networkJSON to read JSON object from file and retain contents from "elements" section for nodes and edges info.
 //   var metadataJSON= allGraphData; // using the dynamically included metadata JSON object directly.
 
+	var networkStylesheet= '';
+	var isReloaded= false;
+	if(existing_styles != null || existing_styles != undefined) {
+	   // load existing node x,y & style classes/selectors.
+	   networkStylesheet= existing_styles;
+	   isReloaded= true;
+	  }
+	else {
    // Define the stylesheet to be used for nodes & edges in the cytoscape.js container.
-   var networkStylesheet= cytoscape.stylesheet().selector('node').css({
+   networkStylesheet= cytoscape.stylesheet().selector('node').css({
           'content': 'data(displayValue)',
                      /*function(ele) {
                       var label= '';
@@ -171,11 +181,13 @@ KNETMAPS.Generator = function() {
               'text-background-color': '#FFFF00',
               'text-background-opacity': '1'
         });
+	}
 
 // On startup
 $(function() { // on dom ready
-  // load the cytoscapeJS network
-  container.load_reload_Network(networkJSON, networkStylesheet/*, true*/);
+  console.log("initialising...");
+  // load the cytoscapeJS network to render
+  container.load_reload_Network(networkJSON, networkStylesheet, isReloaded);
   
   my.append_visibility_and_label_classes(); // to all network nodes/ edges.
 }); // on dom ready

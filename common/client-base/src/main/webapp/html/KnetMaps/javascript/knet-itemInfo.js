@@ -343,7 +343,7 @@ KNETMAPS.ItemInfo = function() {
     selectedNode.connectedEdges().connectedNodes().forEach(function( elem ) {
         var its_connected_hidden_nodes= elem.connectedEdges().connectedNodes().filter('node[conceptDisplay = "none"]');
         var its_connected_hiddenNodesCount= its_connected_hidden_nodes.length;
-        console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
+        //console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
         if(its_connected_hiddenNodesCount </*<=*/ 1) {
            my.removeNodeBlur(elem);
           }

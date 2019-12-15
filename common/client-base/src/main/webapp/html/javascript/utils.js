@@ -299,7 +299,7 @@ $(document).ready(
 //            console.log("Login icon was clicked");
              var x = (screen.width / 2) - (500 / 2),
                  y = (screen.height/2) - (500 / 2);
-             window.open ("knetspace/auth/jwt", '_blank', `width=${500} height=${500} left=${x} top=${y}`);
+             window.open ("knetspace/auth/jwt", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
              cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
         });
 		
@@ -966,7 +966,7 @@ function generateCyJSNetwork(url, requestParams) {
 	// Show loading spinner on 'tabviewer' div
 	activateSpinner("#tabviewer");
 	//console.log("network: start spinner...");
- 
+        
     $.post({
         url: url,
         timeout: 1000000,
@@ -989,7 +989,15 @@ function generateCyJSNetwork(url, requestParams) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-					knetmaps.drawRaw('#knet-maps', data.graph);
+                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+                                           knetmaps.drawRaw('#knet-maps', data.graph);
+                                          }
+                                        else { // response contents (pure JSON).
+                                          var eles_jsons= data.graph.graphJSON.elements;
+                                          var eles_styles= data.graph.graphJSON.style;
+                                          var metadata_json= data.graph.allGraphData;
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles);
+                                        }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');

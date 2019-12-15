@@ -9,8 +9,8 @@ KNETMAPS.KnetMaps = function() {
 		$(target).html("<div id='knetmaps-menu'>"
 				+ "<input type='submit' id='maximizeOverlay' class='max unhover' value='' title='Toggle full screen' onclick='KNETMAPS.Menu().OnMaximizeClick();' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='showAll' value='' class='unhover' onclick='KNETMAPS.Menu().showAll();' title='Show all the concept & relations in the Network' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
-				+ "<input type='submit' id='relayoutNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().rerunLayout();' title='Re-run the Layout' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='openItemInfoBtn' value='' class='unhover' onclick='KNETMAPS.Menu().popupItemInfo();' title='Show Info box' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
+				+ "<input type='submit' id='relayoutNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().rerunLayout();' title='Re-run the Layout' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<span class='knet-dropdowns'>"
 				+ "<select id='layouts_dropdown' class='knet-dropdowns' onChange='KNETMAPS.Menu().rerunLayout();' title='Select network layout'>"
 				+ "<option value='cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"
@@ -43,9 +43,11 @@ KNETMAPS.KnetMaps = function() {
 				+ "</select>"
 				+ "</span>"
 				+ "<input type='submit' id='resetNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().resetGraph();' title='Reposition (reset and re-fit) the graph' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
+				+ "<input type='submit' id='saveJSON' value='' class='unhover' onclick='KNETMAPS.Menu().exportAsJson();' title='Save the knetwork to knetspace' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
+			/*	+ "<input type='submit' id='openJSON' value='' class='unhover' onclick='KNETMAPS.Menu().importJson();' title='Import a kNetwork json' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>" */
 				+ "<input type='submit' id='savePNG' value='' class='unhover' onclick='KNETMAPS.Menu().exportAsImage();' title='Export the network as a .png image' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
-				+ "<input type='submit' id='saveJSON' value='' class='unhover' onclick='KNETMAPS.Menu().exportAsJson();' title='Export the network in JSON format' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='helpURL' value='' class='unhover' onclick='KNETMAPS.Menu().openKnetHelpPage();' title='Go to help documentation' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
+				+ "<input type='file' accept='.json,.cyjs.json,.cyjs,.cx' id='openNetworkFile' style='display:none' onchange='KNETMAPS.Menu().OpenKnetFile(event);' >"
 				+ "</div> <!-- KnetMaps Menubar -->"
 				+ "<div id='itemInfo' class='infoDiv' style='display:none;'> <!-- Item Info pane -->"
 				+ "<table id='itemInfo_Table' class='infoTable' cellspacing=1>"
@@ -79,11 +81,11 @@ KNETMAPS.KnetMaps = function() {
 		maskloader.removeNetworkLoader(target);
 	};
 
-	my.draw = function(target) {
+	my.draw = function(target, eles_jsons, metadata_json, eles_styles) {
 		drawDiv(target);
 		showDiv(target);
 		maskloader.showNetworkLoader(target);
-		generator.generateNetworkGraph();
+		generator.generateNetworkGraph(eles_jsons, metadata_json, eles_styles);
 		maskloader.removeNetworkLoader(target);
 	};
 
