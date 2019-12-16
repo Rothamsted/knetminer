@@ -192,7 +192,7 @@ public class OndexServiceProvider {
     public void createGraph(String dataPath, String graphFileName, String smFileName)
     {
         log.info("Loading graph from " + graphFileName);
-
+        
         // new in-memory graph
         graph = new MemoryONDEXGraph("OndexKB");
 
@@ -207,7 +207,6 @@ public class OndexServiceProvider {
         // can just ignore them
         graphTraverser.setOption("StateMachineFilePath", smFileName);
         graphTraverser.setOption("ONDEXGraph", graph);
-        graphTraverser.setOption("LuceneEnv", luceneMgr);
 
         populateHashMaps(graphFileName, dataPath);
 

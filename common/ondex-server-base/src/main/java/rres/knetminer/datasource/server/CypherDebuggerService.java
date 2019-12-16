@@ -1,35 +1,30 @@
 package rres.knetminer.datasource.server;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.io.input.Tailer;
-import org.apache.commons.io.input.TailerListener;
-import org.apache.commons.io.input.TailerListenerAdapter;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
+import rres.knetminer.datasource.ondexlocal.OndexServiceProvider;
 import uk.ac.ebi.utils.exceptions.TooFewValuesException;
 import uk.ac.ebi.utils.exceptions.TooManyValuesException;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
-import uk.ac.ebi.utils.threading.HackedBlockingQueue;
+import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
 /**
  * TODO: comment me!
@@ -38,17 +33,17 @@ import uk.ac.ebi.utils.threading.HackedBlockingQueue;
  * <dl><dt>Date:</dt><dd>10 Dec 2019</dd></dl>
  *
  */
-@Controller
-@RequestMapping("/cydebug")
-// TODO? @ResponseBody, see also @RestController
+@RequestMapping( "/cydebug" )
+@RestController ()
 public class CypherDebuggerService
 {
 	
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
-
 	private OndexLocalDataSource dataSource;
 
+	private final static ExecutorService TRAVERSER_EXECUTOR = Executors.newSingleThreadExecutor ();
+	private Future<String> traverserStatsResult = null;
 	
 	public CypherDebuggerService ()
 	{
@@ -56,7 +51,7 @@ public class CypherDebuggerService
 
 	
 	@PostConstruct
-	private void init ()
+	private synchronized void init ()
 	{
 		if ( this.dataSources == null ) throw new NullPointerException (
 			"Cypher Debugger didn't get auto-wired with dataSources" 
@@ -76,57 +71,71 @@ public class CypherDebuggerService
 		
 		this.dataSource = (OndexLocalDataSource) ds;
 	}
-	
+
 	
 	@RequestMapping ( path = "/traverse", method = { RequestMethod.GET, RequestMethod.POST } )
-	public String newTraverser ( @RequestParam( required = true ) String queries )
+	public synchronized String newTraverser ( @RequestParam( required = true ) String queries )
 	{
-		/*
-		 * - TODO: new traversal must be run into an executor
-		 * - this must return asynchronously
-		 * - traverserReport must return a report, when ready (flag in the async task)
-		 * - PerformanceTracker must return a report string
-		 */
-		return null;
+		if ( this.traverserStatsResult != null 
+				 && traverserStatsResult.isDone () && !traverserStatsResult.isCancelled () )
+			return "Done. Invoke /traverser-report";
+		// else, if it was cancelled, restart
+		
+		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( this::traverseAgain );
+		return "Started. Check progress at /traverser-report";
 	}
 	
-	
-	@GetMapping ( "/traverser-report" )
-	public String traverserReport ()
+		
+	@GetMapping ( path = "/traverser-report", produces = "text/plain; charset=utf-8" )
+	public synchronized String traverserReport () throws InterruptedException, ExecutionException
 	{
-		// TODO: return string report from performance tracker, or KO, if the executor isn't
-		// ready.
-		return null;
-	}
-	
-	private final static ExecutorService EXECUTOR = HackedBlockingQueue.createExecutor ();
-	
-	@GetMapping ( path = "/log" )
-	public ResponseBodyEmitter streamTraverserLog ()
-	{
-		final ResponseBodyEmitter emitter = new ResponseBodyEmitter ( -1L );
-		
-		final TailerListener tailerListener = new TailerListenerAdapter ()
-		{
-	    @Override
-	    public void handle(final String line) 
-	    {
-	    	try {
-					emitter.send ( line + "\n", MediaType.TEXT_PLAIN );
-				}
-				catch ( IOException ex ) {
-					emitter.completeWithError ( ex );
-				}
-	    }
-		};
-		
-		final String fooFile = "/tmp/test.log";
-		
-		final Tailer tailer = new Tailer ( 
-			new File ( fooFile ), UTF_8, tailerListener, 1000l, false, false, (int) 100E3 
+		if ( this.traverserStatsResult == null ) throw new IllegalStateException ( 
+			"Wasn't invoked, use /traverse"
 		);
+		if ( traverserStatsResult.isCancelled () ) throw new IllegalAccessError (
+			"Was cancelled, invoke /traverse again"
+		);
+		if ( !traverserStatsResult.isDone () )
+			return "Result not ready. Please call me again later";
+		
+		return traverserStatsResult.get ();
+	}
+	
+	
+	private String traverseAgain ()
+	{
+		String dataPath = this.dataSource.getProperty ( "DataPath" );
+		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
+	
+		// TODO: we hack things this way to not toch the messy ODX Provider until it's refactored
+		CypherGraphTraverser traverser;
+		try {
+			traverser = (CypherGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
+		}
+		catch ( IllegalAccessException ex )
+		{
+			throw new IllegalStateException (
+				"For some reason the graph traverser isn't accessible ", ex 
+			); 
+		}
 
-		EXECUTOR.execute ( tailer );
-		return emitter;
-	} // streamWarLog1
+		// It's disabled after init, let's re-enable
+		traverser.setOption( "performanceReportFrequency", 0);
+
+		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
+    concept2GeneMapFile.delete ();
+    
+		odxService.populateHashMaps ( dataSource.getProperty ( "DataFile" ), dataPath );
+		// The previous method disabled it again, we need it on in order to make the reporting method
+		// behave
+		traverser.setOption("performanceReportFrequency", 0);
+
+		try {
+			return traverser.getPerformanceStats (); 
+		}
+		finally {
+			// Normally it's disabled.
+			traverser.setOption ( "performanceReportFrequency", -1);
+		}
+	}
 }
