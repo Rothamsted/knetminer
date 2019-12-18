@@ -70,7 +70,7 @@ KNETMAPS.Menu = function() {
    //var kNet_json_Blob= new Blob([knetSave_response], {type: 'application/javascript;charset=utf-8'});
    //saveAs(kNet_json_Blob, knet_name);
    
-   // console.log("knetSave_response: "+ knetSave_response); // test
+   console.log("knetSave_response: "+ knetSave_response); // test
 
    // ToDo: POST to knetspace API via /api/v1/networks/
    // 
@@ -105,9 +105,9 @@ KNETMAPS.Menu = function() {
  // fetch graphSummary from KnetMiner server API.
  my.getGraphDBSummary = function() {
    var graphSummary= null;
-   var summary_url= api_url + '/dataSource';
    //if(api_url != null || api_url != undefined) {
    if(typeof api_url !== "undefined") {
+	    var summary_url= api_url + '/dataSource';
         $.get(summary_url).done(function (data) {
             console.dir(data);//test backend api rsponse
             graphSummary= data.dataSource;//JSON.parse(data).dataSource;
