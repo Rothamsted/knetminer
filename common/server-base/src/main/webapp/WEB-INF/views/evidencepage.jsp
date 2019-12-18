@@ -74,7 +74,10 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph);
               }
             else { // response contents (pure JSON).
-                KNETMAPS.KnetMaps().draw('#knetmap', data.graph.graphJSON.elements, data.graph.allGraphData, data.graph.graphJSON.style);
+                var eles_jsons= data.graph.graphJSON.elements;
+                var eles_styles= data.graph.graphJSON.style;
+                var metadata_json= data.graph.allGraphData;
+                KNETMAPS.KnetMaps().draw('#knetmap', eles_jsons, metadata_json, eles_styles);
                }
         });
 		</script>
