@@ -139,7 +139,7 @@ KNETMAPS.Menu = function() {
   // Export the network thumbnail.
   my.exportThumbnail = function() {
    var png64 = cy.png({
-                    "scale" : 0.8,
+                    "scale" : 6/*0.8*/,
                     "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
                 
    return png64.replace("data:image/png;base64,", "");
