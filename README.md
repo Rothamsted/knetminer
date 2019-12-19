@@ -15,7 +15,7 @@ knowledge networks from other applications (see details on our [wiki][20]).
 The data that power the web application are also available as [FAIR data][30], through
 [linked data and knowledge graph endpoints][40].
 
-[10]: https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker)
+[10]: https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker
 [20]: https://github.com/Rothamsted/knetminer/wiki
 [30]: https://www.degruyter.com/view/j/jib.2018.15.issue-3/jib-2018-0023/jib-2018-0023.xml
 [40]: http://knetminer.org/data/
