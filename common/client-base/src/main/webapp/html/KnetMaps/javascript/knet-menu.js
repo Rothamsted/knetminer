@@ -78,6 +78,7 @@ KNETMAPS.Menu = function() {
    //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    var knetspace_api_host= ""; // relative domain
    var user_id= null, user_name= null;
+   //const networkId = '76b146d3-f1d6-4c41-aeb3-6f12312c8009'; // omit as in knetminer it's a new POST request, not a PATCH.
    $.ajax({
             type: 'POST', //'PATCH'
             url: knetspace_api_host + '/api/v1/networks/', // knetspace_api_host + '/api/v1/networks/' + networkId + '/',*/
@@ -88,6 +89,10 @@ KNETMAPS.Menu = function() {
             },
             datatype: "json",
             data: JSON.stringify({
+                name: knet_name,
+                dateCreated: knet_date,
+                numNodes: totalNodes,
+                numEdges: totalEdges,
                 graph: JSON.parse(exportedJson),
                 image: thumbnail_image
             })
