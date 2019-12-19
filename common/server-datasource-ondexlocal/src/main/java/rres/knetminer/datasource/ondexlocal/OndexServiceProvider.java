@@ -2724,7 +2724,7 @@ public class OndexServiceProvider {
     }
     
     public String getCreationDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");  
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
         return formatter.format(creationDate);
     }
 
