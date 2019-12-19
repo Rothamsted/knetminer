@@ -74,55 +74,33 @@ KNETMAPS.Menu = function() {
    //saveAs(kNet_json_Blob, knet_name);
    console.log("knetSave_response: "+ knetSave_response); // test
 
-   // POST to knetspace
+   // POST to knetspace via /api/v1/networks/
    //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
-   var knetspace_api_host= "knetspace"; // relative domain
+   var knetspace_api_host= ""; // relative domain
    var user_id= null, user_name= null;
-   // authenticate and add user info via cookie (knetspace_token).
-   var cookie= getCookie("knetspace_token");
-   if (cookie!==null) { // If there's a token, we'll have the cookie.
-       console.log("Found a cookie! The cookie is: " + cookie); // test
-       var parsedJson = parseJwt(cookie);
-       user_name= parsedJson['username'];
-       console.log("user_name: "+ user_name);
-       // ERROR! cookie from utils.js FAILING in knetmaps.js
-       
-       // GET authenticated status
-        $.ajax({
-            async: false,
-            type: 'GET',
-            url: knetspace_api_host + '/api/v1/me',
-            datatype: "json",
-            success: function (data) {
-                user_id= JSON.parse(data).id;
-                console.log("user_id:"+ user_id);
-               }
-        });
-       //
-       var owner= '"owner": { "id":'+ user_id +', "username":'+ user_name +'"}';
-       var knetSave_response_post= '{' + owner +","+ knetwork_metaData +', "graph":'+ exportedJson +', "image":"'+ thumbnail_image +"}"; // changed json format
-       /* in production: instead fetch knetSave_response and extract each attribute like in scratch_7.py to generate data jsonArray[] to pass in POST request instead. */
-       console.log("knetSave_response_post: "+ knetSave_response_post); // test2
-       
-       // POST to knetspace API via /api/v1/networks/
-        $.post({
-            url: knetspace_api_host + '/api/v1/networks/',
+   //const networkId = '76b146d3-f1d6-4c41-aeb3-6f12312c8009'; // omit as in knetminer it's a new POST request, not a PATCH.
+   $.ajax({
+            type: 'POST', //'PATCH'
+            url: knetspace_api_host + '/api/v1/networks/', // knetspace_api_host + '/api/v1/networks/' + networkId + '/',*/
             timeout: 1000000,
             headers: {
                 "Accept": "application/json; charset=utf-8",
                 "Content-Type": "application/json; charset=utf-8"
             },
             datatype: "json",
-            data: JSON.stringify(knetSave_response_post)
+            data: JSON.stringify({
+                name: knet_name,
+                dateCreated: knet_date,
+                numNodes: totalNodes,
+                numEdges: totalEdges,
+                graph: JSON.parse(exportedJson),
+                image: thumbnail_image
+            })
         })
             .fail(function (errorlog) { console.log("error: " + errorlog); })
             .success(function (data) { 
                 console.log("POST response: "+ data);
         });
-      }
-    else {
-      console.log("Not logged in...");
-    }
    
   };
   
