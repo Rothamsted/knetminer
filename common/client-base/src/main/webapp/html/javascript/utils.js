@@ -300,7 +300,9 @@ $(document).ready(
              var x = (screen.width / 2) - (500 / 2),
                  y = (screen.height/2) - (500 / 2);
              window.open ("knetspace/auth/jwt", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
-             cookieInterval(30000); // Wait 30 s and repeat every 30 s till logged out
+             //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; // "http://localhost:8000";
+             //window.open (knetspace_api_host+"/auth/jwt/", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
+             cookieInterval(30000); // Wait 30s and repeat every 30s till logged out
         });
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
