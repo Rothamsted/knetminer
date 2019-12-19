@@ -105,21 +105,12 @@ KNETMAPS.Menu = function() {
  // fetch graphSummary from KnetMiner server API.
  my.getGraphDBSummary = function() {
    var graphSummary= null;
-   //if(api_url != null || api_url != undefined) {
    if(typeof api_url !== "undefined") {
-	    var summary_url= api_url + '/dataSource';
-        $.get(summary_url).done(function (data) {
-            console.dir(data);//test backend api rsponse
+        $.get(api_url + '/dataSource').done(function (data) {
             graphSummary= data.dataSource;//JSON.parse(data).dataSource;
             console.log("graphSummary: "+ graphSummary);
-            //console.log("graphSummary.provider: "+ graphSummary.provider);
            });
      }
- /*  else {
-     var dummyText= '{"dataSource":{"speciesTaxid":"","speciesName":"","dbVersion":null,"dbDateCreated":"","sourceOrganization":"","provider":""}}';
-     graphSummary= JSON.parse(dummyText).dataSource;
-    }*/
-    
     return graphSummary;
   };
   
