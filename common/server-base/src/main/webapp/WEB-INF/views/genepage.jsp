@@ -83,13 +83,13 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             })
         }).success(function (data) {
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-               KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph);
+               KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph, null);
               }
             else { // response contents (pure JSON).
                 var eles_jsons= data.graph.graphJSON.elements;
                 var eles_styles= data.graph.graphJSON.style;
                 var metadata_json= data.graph.allGraphData;
-                KNETMAPS.KnetMaps().draw('#knetmap', eles_jsons, metadata_json, eles_styles);
+                KNETMAPS.KnetMaps().draw('#knetmap', eles_jsons, metadata_json, eles_styles, null);
                }
         });
 		</script>

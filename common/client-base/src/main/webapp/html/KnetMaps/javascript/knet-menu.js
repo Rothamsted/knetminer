@@ -35,18 +35,13 @@ KNETMAPS.Menu = function() {
   }
   
   // Export the graph as a JSON object in a new Tab and allow users to save it.
- my.exportAsJson = function() {
+ my.exportAsJson = function(networkId) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    var exportJson= cy.json(); // full graphJSON
    
    var exportedJson= my.filterJsonToExport(cy, exportJson); // the final "graph" to export
    var thumbnail_image= my.exportThumbnail(); // fetch knetwork thumbnail as well.
-   // fetch graphSummary from KnetMiner server API.
-   var api_graphSummary= my.getGraphDBSummary();
-
-   // compose knetwork metaData below (with name, date, etc.)
-   var knet_name= "myKnetwork.json";
    // fetch total node & edge count for this knetwork.
    var totalNodes= cy.$(':visible').nodes().size();
    var totalEdges= cy.$(':visible').edges().size();
@@ -54,34 +49,36 @@ KNETMAPS.Menu = function() {
    var currentDate= new Date();
    var knet_date= currentDate.getFullYear() +'-'+ String(currentDate.getMonth() + 1).padStart(2, '0') +'-'+ String(currentDate.getDate()).padStart(2, '0') 
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
-   // compose knet_metaData with the above fields.
-   var knetwork_metaData= '"name":"'+ knet_name +'", "date_created":"'+ knet_date +'", "num_nodes":'+ totalNodes +', "num_edges":'+ totalEdges;
    
+   console.log("network_id: "+ networkId); // test
+   var knet_name= null, apiGraphSummary= null;
+   if(networkId === null) { // for a new knetwork, generate a name and back-end summary_json
+      knet_name= "myKnetwork.json";
+      // fetch graphSummary from KnetMiner server API.
+      apiGraphSummary= my.getGraphDBSummary();
+     }
+
    // add api_graphSummary to the above as well, if exists.
+   var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
+   if(apiGraphSummary.size > 0) {
    //if(api_graphSummary !== null) {
-   if(api_graphSummary.size > 0) {
-     // naming dbDateCreated changed to db_date_created & so on, temporarily
-     knetwork_metaData= knetwork_metaData +', "species_taxid":"'+ api_graphSummary["speciesTaxid"] +'", "species_name":"'+ 
-             api_graphSummary["speciesName"] +'", "db_version":'+ api_graphSummary["dbVersion"] +', "db_date_created":"'+ api_graphSummary["dbDateCreated"]
-             +'", "source_organization":"'+ api_graphSummary["sourceOrganization"] +'", "provider":"'+ api_graphSummary["provider"] +'"';
-     // ERROR! back-end json to Map returning undefined error (debug later)
+     speciesTaxid= apiGraphSummary["speciesTaxid"];
+     speciesName= apiGraphSummary["speciesName"];
+     dbVersion= apiGraphSummary["speciesTaxid"];
+     dbDateCreated= apiGraphSummary["dbDateCreated"];
+     sourceOrganization= apiGraphSummary["sourceOrganization"];
+     provider= apiGraphSummary["provider"];
+     // ERROR! back-end json to Map returning undefined error (FIX later)
     }
-    
-   /* final knetwork response JSON with metadata, thumbnail & the knetwork itself. */
-   var knetSave_response= '{"metaData":{'+ knetwork_metaData +'}, "graph":'+ exportedJson +', "image":"'+ thumbnail_image +'"}';
-   // use FileSaver.js to save using file downloader (disable in production/demo).
-   //var kNet_json_Blob= new Blob([knetSave_response], {type: 'application/javascript;charset=utf-8'});
-   //saveAs(kNet_json_Blob, knet_name);
-   console.log("knetSave_response: "+ knetSave_response); // test
 
    // POST to knetspace via /api/v1/networks/
    //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    var knetspace_api_host= ""; // relative domain
-   var user_id= null, user_name= null;
-   //const networkId = '76b146d3-f1d6-4c41-aeb3-6f12312c8009'; // omit as in knetminer it's a new POST request, not a PATCH.
-   $.ajax({
-            type: 'POST', //'PATCH'
-            url: knetspace_api_host + '/api/v1/networks/', // knetspace_api_host + '/api/v1/networks/' + networkId + '/',*/
+   if(networkId === null ) {
+      // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields and this graph, image, numNodes, numEdges.
+      $.ajax({
+            type: 'POST',
+            url: knetspace_api_host + '/api/v1/networks/',
             timeout: 1000000,
             headers: {
                 "Accept": "application/json; charset=utf-8",
@@ -94,13 +91,43 @@ KNETMAPS.Menu = function() {
                 numNodes: totalNodes,
                 numEdges: totalEdges,
                 graph: JSON.parse(exportedJson),
-                image: thumbnail_image
+                image: thumbnail_image,
+                speciesTaxid: speciesTaxid,
+                speciesName: speciesName,
+                dbVersion: dbVersion,
+                dbDateCreated: dbDateCreated,
+                sourceOrganization: sourceOrganization,
+                provider: provider
             })
         })
-            .fail(function (errorlog) { console.log("error: " + errorlog); })
+            .fail(function (errorlog) { console.log("POST error: " + errorlog); })
             .success(function (data) { 
                 console.log("POST response: "+ data);
         });
+   }
+   else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
+      $.ajax({
+            type: 'PATCH',
+            url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
+            timeout: 1000000,
+            headers: {
+                "Accept": "application/json; charset=utf-8",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            datatype: "json",
+            data: JSON.stringify({
+                dateModified: knet_date,
+                numNodes: totalNodes,
+                numEdges: totalEdges,
+                graph: JSON.parse(exportedJson),
+                image: thumbnail_image
+            })
+        })
+            .fail(function (errorlog) { console.log("PATCH error: " + errorlog); })
+            .success(function (data) { 
+                console.log("PATCH response: "+ data);
+        });
+   }
    
   };
   
