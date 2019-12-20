@@ -60,8 +60,7 @@ KNETMAPS.Menu = function() {
 
    // add api_graphSummary to the above as well, if exists.
    var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
-   if(apiGraphSummary.size > 0) {
-   //if(api_graphSummary !== null) {
+   if(apiGraphSummary !== null && apiGraphSummary.size > 0) {
      speciesTaxid= apiGraphSummary["speciesTaxid"];
      speciesName= apiGraphSummary["speciesName"];
      dbVersion= apiGraphSummary["speciesTaxid"];
