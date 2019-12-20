@@ -43,30 +43,28 @@ var knetmaps = KNETMAPS.KnetMaps();
 function cookieInterval(time) {
     setInterval(function () {
         var cookie = getCookie("knetspace_token");
-        
         // If there's a token, we'll have the cookie, so change the class. 
-        if (cookie!==null) {
+        if (cookie !== null) {
             //console.log("Found a cookie! The cookie is: " + cookie);
-            if(!$('#login_icon').hasClass('fas fa-sign-out-alt')) {
-               $('#login_icon').attr("href", "");
-               $('#login_icon').attr("title", "Logout"); // insert new link
-               $('#login_icon').attr("target", "");
-               $('#login_icon').removeClass('fa fa-user');
-               $('#login_icon').addClass('fas fa-sign-out-alt');
-               //$('#login_icon').attr("href", " ") // insert new link
-               var parsedJson = parseJwt(cookie);
-               $('#login_icon').text(" " + parsedJson['username']);
+            if (!$('#profile_icon').hasClass('fas fa-sign-out-alt')) {
+                $('#login_icon').attr("href", "");
+                $('#login_icon').attr("title", "Logout"); // insert new link
+                $('#login_icon').attr("target", "");
+                $('#login_icon').attr("title", "");
+                $('#profile_icon').attr("title", "");
+                var parsedJson = parseJwt(cookie);
+                $('#login_icon').text(" " + parsedJson['username']);
+                $('#login_icon').off('click');
+                $('#profile_icon').removeClass('fa fa-user');
+                $('#profile_icon').addClass('fas fa-sign-out-alt');
                 // Change activity of button to logout (delete cookie)
-               $('#login_icon').click(function (event) {
-                     event.preventDefault();
-                     console.log("Logging out icon was clicked");
-                     eraseCookie(cookie);
-                     window.location.reload(true); // Reload the page
-                     return false;
-               });
-        }
-        } else {
-            console.log("The cookie monster didn't find any cookies... ");
+                $('#profile_icon').click(function (event) {
+                    event.preventDefault(); //Prevent opening a new window
+                    eraseCookie(cookie);
+                    window.location.reload(true); // Reload the page
+                    return false;
+                });
+            }
         }
     }, time);
 }
@@ -293,16 +291,15 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); // set/ update species name from utils_config.js
+        $('#login_icon').text("Login");
         // For testing below
         //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
+        cookieInterval(5000); // Wait 30 s and repeat every 30 s till logged out
         $('#login_icon').click(function() {
-//            console.log("Login icon was clicked");
+	     //console.log("Login icon was clicked");
              var x = (screen.width / 2) - (500 / 2),
                  y = (screen.height/2) - (500 / 2);
-             window.open ("knetspace/auth/jwt", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
-             //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; // "http://localhost:8000";
-             //window.open (knetspace_api_host+"/auth/jwt/", '_blank', 'width=${500} height=${500} left=${x} top=${y}');
-             cookieInterval(30000); // Wait 30s and repeat every 30s till logged out
+             window.open ("knetspace/auth/jwt", '_blank', 'width=${500}', 'height=${500}', 'left=${x}', 'top=${y}');
         });
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
