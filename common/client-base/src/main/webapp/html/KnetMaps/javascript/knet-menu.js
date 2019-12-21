@@ -50,8 +50,7 @@ KNETMAPS.Menu = function() {
    var knet_date= currentDate.getFullYear() +'-'+ String(currentDate.getMonth() + 1).padStart(2, '0') +'-'+ String(currentDate.getDate()).padStart(2, '0') 
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
-   networkId='1a39c6d6-8028-436d-bf83-d7de49635ea2'; // test
-   console.log("networkId: "+ networkId); // test
+   //console.log("networkId: "+ networkId); // test
    var knet_name= null, apiGraphSummary= null;
    if(networkId === "null") { // for a new knetwork, generate a name and back-end summary_json
       knet_name= "myKnetwork.json";
