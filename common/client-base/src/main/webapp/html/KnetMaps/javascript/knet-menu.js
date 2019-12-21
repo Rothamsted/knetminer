@@ -67,7 +67,7 @@ KNETMAPS.Menu = function() {
       dbDateCreated= apiGraphSummary.get("dbDateCreated");
       sourceOrganization= apiGraphSummary.get("sourceOrganization");
       provider= apiGraphSummary.get("provider");
-      console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
+      //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
      }
 
    // POST to knetspace via /api/v1/networks/
