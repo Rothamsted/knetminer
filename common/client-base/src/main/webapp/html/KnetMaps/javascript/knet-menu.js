@@ -73,6 +73,7 @@ KNETMAPS.Menu = function() {
    // POST to knetspace via /api/v1/networks/
    //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    var knetspace_api_host= ""; // relative domain
+   // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
    if(networkId === "null") {
       // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
