@@ -21,18 +21,18 @@ KNETMAPS.Menu = function() {
  my.popupItemInfo = function() {
 	 iteminfo.openItemInfoPane();
 	 iteminfo.showItemInfo(this);
- }
+ };
 
    // Go to Help docs.
  my.openKnetHelpPage = function() {
    var helpURL = 'https://github.com/Rothamsted/knetmaps.js/wiki/KnetMaps.js';
    window.open(helpURL, '_blank');
-  }
+  };
 
   // Reset: Re-position the network graph.
  my.resetGraph = function() {
    $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
-  }
+  };
   
   // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
