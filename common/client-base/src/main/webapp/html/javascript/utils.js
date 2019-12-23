@@ -300,6 +300,7 @@ $(document).ready(
              var x = (screen.width / 2) - (500 / 2),
                  y = (screen.height/2) - (500 / 2);
              window.open ("knetspace/auth/jwt", '_blank', 'width=${500}', 'height=${500}', 'left=${x}', 'top=${y}');
+             // ToDo: 1) add/use fixed knetspace_api_host url from main POM, 2) change login page from knetspace/auth/jwt to cleaner knetspace/login UI page for login handling.
         });
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome

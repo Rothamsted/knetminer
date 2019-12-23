@@ -21,18 +21,18 @@ KNETMAPS.Menu = function() {
  my.popupItemInfo = function() {
 	 iteminfo.openItemInfoPane();
 	 iteminfo.showItemInfo(this);
- }
+ };
 
    // Go to Help docs.
  my.openKnetHelpPage = function() {
    var helpURL = 'https://github.com/Rothamsted/knetmaps.js/wiki/KnetMaps.js';
    window.open(helpURL, '_blank');
-  }
+  };
 
   // Reset: Re-position the network graph.
  my.resetGraph = function() {
    $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
-  }
+  };
   
   // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
@@ -50,9 +50,9 @@ KNETMAPS.Menu = function() {
    var knet_date= currentDate.getFullYear() +'-'+ String(currentDate.getMonth() + 1).padStart(2, '0') +'-'+ String(currentDate.getDate()).padStart(2, '0') 
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
-   console.log("network_id: "+ networkId); // test
+   //console.log("networkId: "+ networkId); // test
    var knet_name= null, apiGraphSummary= null;
-   if(networkId === null) { // for a new knetwork, generate a name and back-end summary_json
+   if(networkId === "null") { // for a new knetwork, generate a name and back-end summary_json
       knet_name= "myKnetwork.json";
       // fetch graphSummary from KnetMiner server API.
       apiGraphSummary= my.getGraphDBSummary();
@@ -61,20 +61,22 @@ KNETMAPS.Menu = function() {
    // add api_graphSummary to the above as well, if exists.
    var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
    if(apiGraphSummary !== null && apiGraphSummary.size > 0) {
-     speciesTaxid= apiGraphSummary["speciesTaxid"];
-     speciesName= apiGraphSummary["speciesName"];
-     dbVersion= apiGraphSummary["speciesTaxid"];
-     dbDateCreated= apiGraphSummary["dbDateCreated"];
-     sourceOrganization= apiGraphSummary["sourceOrganization"];
-     provider= apiGraphSummary["provider"];
-     // ERROR! back-end json to Map returning undefined error (FIX later)
-    }
+      speciesTaxid= apiGraphSummary.get("speciesTaxid");
+      speciesName= apiGraphSummary.get("speciesName");
+      dbVersion= apiGraphSummary.get("dbVersion");
+      dbDateCreated= apiGraphSummary.get("dbDateCreated");
+      sourceOrganization= apiGraphSummary.get("sourceOrganization");
+      provider= apiGraphSummary.get("provider");
+      //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
+     }
 
    // POST to knetspace via /api/v1/networks/
    //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    var knetspace_api_host= ""; // relative domain
-   if(networkId === null ) {
-      // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields and this graph, image, numNodes, numEdges.
+   // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
+   if(networkId === "null") {
+      //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
+      // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
             type: 'POST',
             url: knetspace_api_host + '/api/v1/networks/',
@@ -103,6 +105,7 @@ KNETMAPS.Menu = function() {
             .success(function (data) { 
                 console.log("POST response: "+ data);
         });
+      //}
    }
    else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
       $.ajax({
@@ -159,20 +162,18 @@ KNETMAPS.Menu = function() {
  my.getGraphDBSummary = function() {
    var graphSummary= new Map();
    if(typeof api_url !== "undefined") {
-        //$.get(api_url + '/dataSource').done(function (data) { graphSummary= data.dataSource; });
         $.ajax({
             async: false,
             type: 'GET',
             url: api_url + '/dataSource',
             success: function (data) {
-                var resp= data.dataSource.split(",");
-                resp.forEach(function(item) {
-                	var items= item.split(":");
-                        var k= items[0];
-                        var v= items[1];
-                	if(k === "dbDateCreated") { v= items[1] +":"+ items[2]; }
-                	graphSummary.set(k, v);
-                	//console.log("k,v: "+ k +","+ v +" added.");
+                var api_response= data.dataSource.replace(/\"/g,"").trim().split(",");
+                api_response.forEach(function(val) {
+                    var values= val.split(":");
+                    var k= values[0].trim();
+                    var v= values[1].trim();
+                    if(k === "dbDateCreated") { v= values[1] +":"+ values[2]; }
+                    graphSummary.set(k, v);
                 });
            }
        });
