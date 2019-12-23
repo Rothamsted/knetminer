@@ -75,7 +75,7 @@ KNETMAPS.Menu = function() {
    var knetspace_api_host= ""; // relative domain
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
    if(networkId === "null") {
-      if(typeof api_url !== "undefined") { // if it's within knetminer
+      //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
       // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
             type: 'POST',
@@ -105,7 +105,7 @@ KNETMAPS.Menu = function() {
             .success(function (data) { 
                 console.log("POST response: "+ data);
         });
-      }
+      //}
    }
    else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
       $.ajax({
