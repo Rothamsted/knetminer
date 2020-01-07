@@ -24,6 +24,7 @@ import rres.knetminer.datasource.ondexlocal.OndexServiceProvider;
 import uk.ac.ebi.utils.exceptions.TooFewValuesException;
 import uk.ac.ebi.utils.exceptions.TooManyValuesException;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
+import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
 /**
@@ -66,7 +67,7 @@ public class CypherDebuggerService
 		KnetminerDataSource ds = this.dataSources.get ( 0 );
 		
 		if ( ! ( ds instanceof OndexLocalDataSource ) ) new UnexpectedValueException (
-			"Cypher Debugger can only worl with instances of " + OndexLocalDataSource.class.getSimpleName ()
+			"Cypher Debugger can only work with instances of " + OndexLocalDataSource.class.getSimpleName ()
 		);
 		
 		this.dataSource = (OndexLocalDataSource) ds;
@@ -77,16 +78,18 @@ public class CypherDebuggerService
 	public synchronized String newTraverser ( @RequestParam( required = true ) String queries )
 	{
 		if ( this.traverserStatsResult != null 
-				 && traverserStatsResult.isDone () && !traverserStatsResult.isCancelled () )
-			return "Done. Invoke /traverser-report";
-		// else, if it was cancelled, restart
+				 && !( traverserStatsResult.isDone () || traverserStatsResult.isCancelled () ) )
+			// Don't reinvoke until it's finished or cancelled
+			return "OK. Invoke /traverser-report";
 		
-		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( this::traverseAgain );
+		// else, if it was cancelled, restart
+		List<String> queriesList = CyQueriesReader.readQueriesFromString ( queries );
+		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( () -> traverseAgain ( queriesList ) );
 		return "Started. Check progress at /traverser-report";
 	}
 	
 		
-	@GetMapping ( path = "/traverser-report", produces = "text/plain; charset=utf-8" )
+	@GetMapping ( path = "/traverser/report", produces = "text/plain; charset=utf-8" )
 	public synchronized String traverserReport () throws InterruptedException, ExecutionException
 	{
 		if ( this.traverserStatsResult == null ) throw new IllegalStateException ( 
@@ -95,22 +98,65 @@ public class CypherDebuggerService
 		if ( traverserStatsResult.isCancelled () ) throw new IllegalAccessError (
 			"Was cancelled, invoke /traverse again"
 		);
+		
 		if ( !traverserStatsResult.isDone () )
-			return "Result not ready. Please call me again later";
+		{
+			// Still in progress, return completion percentage
+			double progress = this.getTraverser ().getPercentProgress ();
+			return String.format ( "Pending. %.0f%% done. Please, call me again later", progress );
+		}
 		
 		return traverserStatsResult.get ();
 	}
 	
 	
-	private String traverseAgain ()
+	@GetMapping ( path = "/traverser/cancel" )
+	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
+	{
+		if ( this.traverserStatsResult == null || traverserStatsResult.isCancelled () || traverserStatsResult.isDone () ) 
+			return "OK. Wasn't active.";
+		
+		traverserStatsResult.cancel ( true );
+		
+		return "OK.";
+	}	
+	
+	private String traverseAgain ( List<String> semanticMotifsQueries )
 	{
 		String dataPath = this.dataSource.getProperty ( "DataPath" );
 		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
-	
-		// TODO: we hack things this way to not toch the messy ODX Provider until it's refactored
-		CypherGraphTraverser traverser;
+		CypherGraphTraverser traverser = this.getTraverser ();
+
+		// It's disabled after init, let's re-enable
+		traverser.setOption( "performanceReportFrequency", 0);
+		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
+
+		// We need to delete files used to decide if the traverser has to be run
+		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
+    concept2GeneMapFile.delete ();
+    
+		odxService.populateHashMaps ( dataSource.getProperty ( "DataFile" ), dataPath );
+		// The previous method disabled it again, we need it on in order to make the reporting method
+		// behave
+		traverser.setOption ( "performanceReportFrequency", 0 );
+
 		try {
-			traverser = (CypherGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
+			return traverser.getPerformanceStats (); 
+		}
+		finally {
+			// Normally it's disabled.
+			traverser.setOption ( "performanceReportFrequency", -1 );
+		}
+	}
+	
+	private CypherGraphTraverser getTraverser ()
+	{
+		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
+		
+		// TODO: we hack things this way to not touch the messy ODX Provider until it's refactored
+		try {
+			CypherGraphTraverser traverser = (CypherGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
+			return traverser;
 		}
 		catch ( IllegalAccessException ex )
 		{
@@ -118,24 +164,8 @@ public class CypherDebuggerService
 				"For some reason the graph traverser isn't accessible ", ex 
 			); 
 		}
-
-		// It's disabled after init, let's re-enable
-		traverser.setOption( "performanceReportFrequency", 0);
-
-		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
-    concept2GeneMapFile.delete ();
-    
-		odxService.populateHashMaps ( dataSource.getProperty ( "DataFile" ), dataPath );
-		// The previous method disabled it again, we need it on in order to make the reporting method
-		// behave
-		traverser.setOption("performanceReportFrequency", 0);
-
-		try {
-			return traverser.getPerformanceStats (); 
-		}
-		finally {
-			// Normally it's disabled.
-			traverser.setOption ( "performanceReportFrequency", -1);
+		catch ( ClassCastException ex ) {
+			throw new ClassCastException ( "You need the Neo4j mode to use this" );
 		}
 	}
 }
