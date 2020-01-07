@@ -82,9 +82,9 @@ public class CypherDebuggerService
 			// Don't reinvoke until it's finished or cancelled
 			return "OK. Invoke /traverser-report";
 		
-		// else, if it was cancelled, restart
+		// You can issue a new traversal if it's the first time, or after termination/interruption
 		List<String> queriesList = CyQueriesReader.readQueriesFromString ( queries );
-		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( () -> traverseAgain ( queriesList ) );
+		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( () -> submitTraversal ( queriesList ) );
 		return "Started. Check progress at /traverser-report";
 	}
 	
@@ -121,13 +121,13 @@ public class CypherDebuggerService
 		return "OK.";
 	}	
 	
-	private String traverseAgain ( List<String> semanticMotifsQueries )
+	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		String dataPath = this.dataSource.getProperty ( "DataPath" );
 		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
 		CypherGraphTraverser traverser = this.getTraverser ();
 
-		// It's disabled after init, let's re-enable
+		// It's disabled after server init, let's re-enable
 		traverser.setOption( "performanceReportFrequency", 0);
 		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
 
