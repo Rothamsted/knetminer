@@ -58,10 +58,11 @@ function pageInitHandler ()
 function startTraverserHandler ()
 {
 	let queries = document.getElementById ( "queries" ).value;
-	// TODO: POST
-	let traverseUrl = cydebugBaseUrl + "/traverse?queries=" + encodeURI ( queries ); 
+	let traverseUrl = cydebugBaseUrl + "/traverse";
+	let httpHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
+	let httpQueryStr = "queries=" + encodeURIComponent ( queries );
 	
-	fetch ( traverseUrl )
+	fetch ( traverseUrl, { method: 'POST', headers: httpHeaders, body: httpQueryStr } )
 	.then ( resp => resp.text () )
 	.then ( text => {
 		if ( text.startsWith ( "Started." ) ) updateStatus ();
