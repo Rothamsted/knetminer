@@ -13,8 +13,8 @@
 	<entry key="SpeciesTaxId">${knetminer.specieTaxId}</entry>
 	<entry key="reference_genome">true</entry>
 	<entry key="export_visible_network">true</entry>
-        <entry key="version">${knetminer.version}</entry>
-        <entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
+	<entry key="version">${knetminer.version}</entry>
+  <entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
 	
 
 	<!-- 
@@ -46,4 +46,16 @@
 	  code for details. Again, this isn't something you're very interested in if you're not developing Knetminer. 
 	-->
 	<entry key = "knetminer.backend.traverserPerformanceTracking.reportFrequency">500000</entry>
+	
+	<!-- 
+		This enables the CypherDebugger service and corresponding UI interface at TODO.
+		It only applies when Neo4j mode is enabled.
+		It's normally disabled and enabled for internal test instances.
+		It can be enabled via MAVEN_ARGS, see examples in docker-run.sh.
+		
+		WARNING: THIS allows for completely BREAKING yor Knetminer instance by sending and registering
+		arbitrary Cypher queries for the traverser. DO NOT ENABLE in production!!!
+	-->
+	<entry key = "knetminer.backend.cypherDebugger.enabled">${knetminer.backend.cypherDebugger.enabled}</entry>
+	
 </properties>
