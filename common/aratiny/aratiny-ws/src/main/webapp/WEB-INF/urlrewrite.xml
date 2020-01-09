@@ -1,0 +1,11 @@
+<urlrewrite>
+	<!--
+		This is passed to /ws/cydebug and we allow all origins cause this service is only 
+		enabled on internal instances. 
+	-->
+	<rule>
+	  <from>.*</from>
+	  <!-- CORS rule, instructs the web browser to accept Javascript-originated requests to the data server -->
+	  <set type="response-header" name="Access-Control-Allow-Origin">*</set>
+  </rule>
+</urlrewrite>

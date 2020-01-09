@@ -31,6 +31,13 @@
 			<artifactId>ondex-server-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- 
+			This is used to setup CORS in the response. See main POM
+		 -->
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+		</dependency>	
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -107,7 +114,7 @@
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
             <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
-			      	<!-- Thes test dir contains things like logger config for test server -->
+			      	<!-- These test dir contains things like logger config for test server -->
 			      	<resourceBase>${project.basedir}/src/test/webapp</resourceBase>
 			      	<resourceBase>${project.basedir}/src/main/webapp</resourceBase>
 			      </resourceBases>

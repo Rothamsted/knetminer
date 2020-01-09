@@ -6,19 +6,8 @@
         version="3.0">
   <display-name>KnetMiner Client</display-name>
   <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
     <welcome-file>html/index.jsp</welcome-file>
   </welcome-file-list>
-	
-	<!-- See the POM -->
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	  <filter-name>UrlRewriteFilter</filter-name>
-	  <url-pattern>/*</url-pattern>
-	  <dispatcher>REQUEST</dispatcher>
-	  <dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
 	  
 </web-app>
