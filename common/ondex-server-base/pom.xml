@@ -10,6 +10,8 @@
 
 	<artifactId>ondex-server-base</artifactId>
 
+	<description>Contains a few specific compoments that are used with the Ondex-based data source only.</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>

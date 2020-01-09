@@ -131,7 +131,6 @@
 						html/image/**,
 						html/javascript/**,
 						html/KnetMaps/dist/**,
-						cydebug/**,
 						WEB-INF/**
 					</packagingIncludes>
 				</configuration>
