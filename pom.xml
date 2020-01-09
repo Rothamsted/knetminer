@@ -83,8 +83,10 @@
 		
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		<!-- Here, it is http://localhost:9090 -->
+		<knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl>
 		<!-- Here, it is http://localhost:9090/ws -->
-		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
+		<knetminer.api.baseUrl>${knetminer.api.rootUrl}/${knetminer.api.webContext}</knetminer.api.baseUrl>
 		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
 		
@@ -107,11 +109,13 @@
 		<neo4j.server.user>neo4j</neo4j.server.user>
 		<neo4j.server.password>test</neo4j.server.password>
 
+		<!-- See the description in aratiny-ws/src/test/resources/knetminer-dataset/config/data-source.xml -->
+		<knetminer.backend.cypherDebugger.enabled>false</knetminer.backend.cypherDebugger.enabled>
 			
+
 		<!--
 		 
 			Instead, these shouldn't need to be changed 
-		
 		-->
 		
 		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
@@ -625,6 +629,18 @@
 					</exclusion>			
 				</exclusions>
 			</dependency>
+			<!-- 
+				This is used to setup CORS in the response. See:
+				- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+				- http://tuckey.org/urlrewrite/
+				
+				We use this web filter in src/main/webapp/WEB-INF 
+			 -->
+			<dependency>
+				<groupId>org.tuckey</groupId>
+				<artifactId>urlrewritefilter</artifactId>
+				<version>4.0.4</version>
+			</dependency>	
 			
 		</dependencies>
 	</dependencyManagement>

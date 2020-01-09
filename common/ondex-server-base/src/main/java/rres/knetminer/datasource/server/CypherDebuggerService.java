@@ -3,21 +3,26 @@ package rres.knetminer.datasource.server;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.OndexServiceProvider;
@@ -38,6 +43,22 @@ import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser
 @RestController ()
 public class CypherDebuggerService
 {
+	/**
+	 * Used by {@link CypherDebuggerService#checkEnabled()}, to make Spring sending a proper status code
+	 * and message back to the client. 
+	 */
+	@ResponseStatus( value = HttpStatus.FORBIDDEN, reason = ForbiddenException.REASON )
+	@SuppressWarnings ( "serial" )
+	public static class ForbiddenException extends RuntimeException
+	{
+		public static final String REASON = 
+			"Unauthorized. Knetminer must be built with " + 
+			"knetminer.backend.cypherDebugger.enabled for this to work";
+		
+		public ForbiddenException () {
+			super ( REASON );
+		}
+	}
 	
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
@@ -77,6 +98,8 @@ public class CypherDebuggerService
 	@RequestMapping ( path = "/traverse", method = { RequestMethod.GET, RequestMethod.POST } )
 	public synchronized String newTraverser ( @RequestParam( required = true ) String queries )
 	{
+		this.checkEnabled ();
+		
 		if ( this.traverserStatsResult != null 
 				 && !( traverserStatsResult.isDone () || traverserStatsResult.isCancelled () ) )
 			// Don't reinvoke until it's finished or cancelled
@@ -92,12 +115,12 @@ public class CypherDebuggerService
 	@GetMapping ( path = "/traverser/report", produces = "text/plain; charset=utf-8" )
 	public synchronized String traverserReport () throws InterruptedException, ExecutionException
 	{
-		if ( this.traverserStatsResult == null ) throw new IllegalStateException ( 
-			"Wasn't invoked, use /traverse"
-		);
-		if ( traverserStatsResult.isCancelled () ) throw new IllegalAccessError (
-			"Was cancelled, invoke /traverse again"
-		);
+		this.checkEnabled ();
+		
+		if ( this.traverserStatsResult == null )
+			return "Wasn't invoked. Use /traverse";
+		if ( traverserStatsResult.isCancelled () )
+			return "Was cancelled. Invoke /traverse again";
 		
 		if ( !traverserStatsResult.isDone () )
 		{
@@ -113,6 +136,8 @@ public class CypherDebuggerService
 	@GetMapping ( path = "/traverser/cancel" )
 	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
 	{
+		this.checkEnabled ();
+		
 		if ( this.traverserStatsResult == null || traverserStatsResult.isCancelled () || traverserStatsResult.isDone () ) 
 			return "OK. Wasn't active.";
 		
@@ -149,14 +174,35 @@ public class CypherDebuggerService
 		}
 	}
 	
+	
+	@GetMapping ( path = "/traverser/queries" )
+	public synchronized String traverserQueries () 
+	{
+		this.checkEnabled ();
+		CypherGraphTraverser traverser = getTraverser ();
+		
+		// For the moment, the format is one query per line.
+		return Optional.ofNullable ( traverser.getSemanticMotifsQueries () )
+		.map ( list -> 
+			list.stream ()
+			.map ( query -> query.replace ( "\n", " " ) ) 
+			.collect ( Collectors.joining ( "\n" ) ) 
+		)
+		.orElse ( "" );
+	}	
+	
+	
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
 		
 		// TODO: we hack things this way to not touch the messy ODX Provider until it's refactored
 		try {
-			CypherGraphTraverser traverser = (CypherGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
-			return traverser;
+			AbstractGraphTraverser traverser = (AbstractGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
+			if ( ! ( traverser instanceof CypherGraphTraverser ) ) throw new IllegalStateException (
+				"You've to enable the Neo4j mode in order to run this CypherDebugger"
+			);
+			return (CypherGraphTraverser) traverser;
 		}
 		catch ( IllegalAccessException ex )
 		{
@@ -167,5 +213,20 @@ public class CypherDebuggerService
 		catch ( ClassCastException ex ) {
 			throw new ClassCastException ( "You need the Neo4j mode to use this" );
 		}
+	}
+	
+	/**
+	 * Every HTTP request is wrapped by this check that the {@code knetminer.backend.cypherDebugger.enabled} is enabled in
+	 * {@code data_source.xml}.
+	 *   
+	 */
+	private void checkEnabled ()
+	{
+		boolean isServiceEnabled = Optional.ofNullable ( 
+			this.dataSource.getProperty ( "knetminer.backend.cypherDebugger.enabled" )
+		).map ( Boolean::valueOf )
+		.orElse ( false );
+		
+		if ( !isServiceEnabled ) throw new ForbiddenException ();
 	}
 }
