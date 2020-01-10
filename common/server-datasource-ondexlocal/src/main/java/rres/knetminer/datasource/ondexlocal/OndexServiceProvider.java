@@ -2816,19 +2816,22 @@ public class OndexServiceProvider {
 
         if (!file1.exists()) {
 
+	          // We're going to need a lot of memory, so delete this in advance
+        		// (CyDebugger might trigger this multiple times)
+        		//
+        		mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
+	          mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+	          mapGene2PathLength = new HashMap<String, Integer>();
+	          
             // the results give us a map of every starting concept to every
             // valid path.
         		//
-        	          
             Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
             // Performance stats reporting about the Cypher-based traverser is disabled after the initial
         		// traversal. This option has no effect when the SM-based traverser is used.
             graphTraverser.setOption("performanceReportFrequency", -1);
 
-            mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-            mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-            mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
             PercentProgressLogger progressLogger = new PercentProgressLogger(
                     "{}% of paths stored", traverserPaths.values().size()
