@@ -2834,7 +2834,8 @@ public class OndexServiceProvider {
                     "{}% of paths stored", traverserPaths.values().size()
             );
             for (List<EvidencePathNode> paths : traverserPaths.values()) {
-                for (EvidencePathNode path : paths) {
+            		// We dispose them after use, cause this is big and causing memory overflow issues
+                paths.removeIf ( path -> {
 
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
@@ -2873,7 +2874,9 @@ public class OndexServiceProvider {
                             .computeIfAbsent(lastConID, _id -> new HashSet<>())
                             .add(gene.getId());
 
-                }
+                    // ALWAYS return this to clean up memory (see above)
+                    return true;
+                }); // paths.removeIf ()
                 progressLogger.updateWithIncrement();
             } // for traverserPaths.values()
             try {
