@@ -59,7 +59,7 @@ public class CypherDebuggerService
 			super ( REASON );
 		}
 	}
-	
+		
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
 	private OndexLocalDataSource dataSource;
