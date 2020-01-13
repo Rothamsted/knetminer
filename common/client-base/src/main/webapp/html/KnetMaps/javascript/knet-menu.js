@@ -1,4 +1,4 @@
-var KNETMAPS = KNETMAPS || {};
+worvar KNETMAPS = KNETMAPS || {};
 
 KNETMAPS.Menu = function() {
 
@@ -71,15 +71,15 @@ KNETMAPS.Menu = function() {
      }
 
    // POST to knetspace via /api/v1/networks/
-   var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000/api/v1/networks/"; //or "http://localhost:8000";
-   //var knetspace_api_host= ""; // relative domain
+   //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000/api/v1/networks/"; //or "http://localhost:8000";
+   var knetspace_api_host= ""; // relative domain
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
    if(networkId === "undefined") {
       //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
       // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
             type: 'POST',
-            url: knetspace_api_host,
+            url: knetspace_api_host + "/api/v1/networks/",
             timeout: 1000000,
             xhrFields: {
                withCredentials: true
@@ -112,8 +112,8 @@ KNETMAPS.Menu = function() {
    }
    else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
          $.ajax({
-            type: 'POST',
-            url: knetspace_api_host,
+            type: 'PATCH',
+            url: knetspace_api_host + "/api/v1/networks/" + networkId,
             timeout: 1000000,
             xhrFields: {
                withCredentials: true
