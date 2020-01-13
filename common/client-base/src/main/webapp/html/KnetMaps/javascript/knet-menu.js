@@ -79,7 +79,7 @@ KNETMAPS.Menu = function() {
       // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
             type: 'POST',
-            url: knetspace_api_host + "/api/v1/networks/",
+            url: knetspace_api_host + '/api/v1/networks/',
             timeout: 1000000,
             xhrFields: {
                withCredentials: true
@@ -113,7 +113,7 @@ KNETMAPS.Menu = function() {
    else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
          $.ajax({
             type: 'PATCH',
-            url: knetspace_api_host + "/api/v1/networks/" + networkId,
+            url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
             timeout: 1000000,
             xhrFields: {
                withCredentials: true
