@@ -1,4 +1,4 @@
-worvar KNETMAPS = KNETMAPS || {};
+var KNETMAPS = KNETMAPS || {};
 
 KNETMAPS.Menu = function() {
 
