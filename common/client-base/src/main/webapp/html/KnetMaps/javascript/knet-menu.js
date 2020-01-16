@@ -34,7 +34,7 @@ KNETMAPS.Menu = function() {
    $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
   };
   
-  // Export the graph as a JSON object in a new Tab and allow users to save it.
+   // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
@@ -52,7 +52,7 @@ KNETMAPS.Menu = function() {
    
    //console.log("networkId: "+ networkId); // test
    var knet_name= null, apiGraphSummary= null;
-   if(networkId === "null") { // for a new knetwork, generate a name and back-end summary_json
+   if(networkId === "undefined") { // for a new knetwork, generate a name and back-end summary_json
       knet_name= "myKnetwork.json";
       // fetch graphSummary from KnetMiner server API.
       apiGraphSummary= my.getGraphDBSummary();
@@ -71,17 +71,20 @@ KNETMAPS.Menu = function() {
      }
 
    // POST to knetspace via /api/v1/networks/
-   //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
+   //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000/api/v1/networks/"; //or "http://localhost:8000";
    var knetspace_api_host= ""; // relative domain
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
-   if(networkId === "null") {
+   if(networkId === "undefined") {
       //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
       // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
       $.ajax({
             type: 'POST',
             url: knetspace_api_host + '/api/v1/networks/',
             timeout: 1000000,
-            headers: {
+            xhrFields: {
+               withCredentials: true
+            },
+             headers: {
                 "Accept": "application/json; charset=utf-8",
                 "Content-Type": "application/json; charset=utf-8"
             },
@@ -108,11 +111,14 @@ KNETMAPS.Menu = function() {
       //}
    }
    else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
-      $.ajax({
+         $.ajax({
             type: 'PATCH',
             url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
             timeout: 1000000,
-            headers: {
+            xhrFields: {
+               withCredentials: true
+            },
+                headers: {
                 "Accept": "application/json; charset=utf-8",
                 "Content-Type": "application/json; charset=utf-8"
             },
