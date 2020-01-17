@@ -193,7 +193,7 @@ cy.elements().qtip({
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
-    menuRadius: 75, // the radius of the circular menu in pixels
+    menuRadius: 80, // the radius of the circular menu in pixels
 
     // Use selector: '*' to set this circular Context Menu on all the elements of the core.
     /** Note: Specify selector: 'node' or 'edge' to restrict the context menu to a specific type of element. e.g, 
@@ -234,41 +234,95 @@ cy.elements().qtip({
 			 conceptLegend.populateConceptLegend();
             }
         },
-
         {
-         content: 'Hide by Type',
-         select: function() { // Hide all concepts (nodes) of the same type.
-             if(this.isNode()) {
-                var thisConceptType= this.data('conceptType');
-        //        console.log("Hide Concept by Type: "+ thisConceptType);
-                cy.nodes().forEach(function( ele ) {
-                 if(ele.data('conceptType') === thisConceptType) {
-                    //ele.hide();
-                    ele.removeClass('ShowEle');
-                    ele.addClass('HideEle');
-                   }
-                });
-                // Relayout the graph.
-                //rerunLayout();
-               }
-             else if(this.isEdge()) { // Hide all relations (edges) of the same type.
-                var thisRelationType= this.data('label');
-        //        console.log("Hide Relation (by Label type): "+ thisRelationType);
-                cy.edges().forEach(function( ele ) {
-                 if(ele.data('label') === thisRelationType) {
-                    //ele.hide();
-                    ele.removeClass('ShowEle');
-                    ele.addClass('HideEle');
-                   }
-                });
-                // Relayout the graph.
-               // rerunLayout();
-               }
-            // Refresh network Stats.
-            stats.updateKnetStats();
-			conceptLegend.populateConceptLegend();
-           }
+          content: 'Highlighter on/off',
+          select: function () {
+              
+//              var myModal = new jBox('Modal', {
+//                  title: 'highlighter colour',
+//                  content: 'This is a modal!',
+//                  cancelButton: 'Exit',
+//                  draggable: 'title',
+//                  attributes: {
+//                        x: 'right',
+//                        y: 'top'
+//                  },
+//                  delayOpen: 100
+//              });
+//              
+//              myModal.open();
+              // Create the div
+              $('#infoDialog').slideToggle(300);
+//              var colour = this.css('text-background-color');
+//              var newCol = "";
+//              new Picker({
+//                  parent: $('#itemInfo'),
+//                  popup: false,
+//                  alpha: false,
+//                  color: colour,
+//                  editor: false,
+//                  layout: 'default',
+//                  editorFormat: 'hsl',
+//                  cancelButton: true,
+//                  onChange: function(color){
+//                      newCol = color;
+//                  }
+//              });
+             
+              
+//              console.log(newCol);
+//              if(newCol!=="") {
+//                this.css({
+//                            'text-background-color': newCol
+//                             });
+//                       }
+              if (this.isNode() && this.css('text-background-opacity') == '1') {
+                  this.css({
+                      'text-background-opacity': '0'
+                  });
+              }
+              else if (this.isNode() && this.css('text-background-opacity') == '0') {
+                    this.css({
+                        'text-background-opacity': '1'
+                    });
+              }
+          }
         },
+
+//        {
+//         content: 'Hide by Type',
+//         select: function() { // Hide all concepts (nodes) of the same type.
+//             if(this.isNode()) {
+//                var thisConceptType= this.data('conceptType');
+//        //        console.log("Hide Concept by Type: "+ thisConceptType);
+//                cy.nodes().forEach(function( ele ) {
+//                 if(ele.data('conceptType') === thisConceptType) {
+//                    //ele.hide();
+//                    ele.removeClass('ShowEle');
+//                    ele.addClass('HideEle');
+//                   }
+//                });
+//                // Relayout the graph.
+//                //rerunLayout();
+//               }
+//             else if(this.isEdge()) { // Hide all relations (edges) of the same type.
+//                var thisRelationType= this.data('label');
+//        //        console.log("Hide Relation (by Label type): "+ thisRelationType);
+//                cy.edges().forEach(function( ele ) {
+//                 if(ele.data('label') === thisRelationType) {
+//                    //ele.hide();
+//                    ele.removeClass('ShowEle');
+//                    ele.addClass('HideEle');
+//                   }
+//                });
+//                // Relayout the graph.
+//               // rerunLayout();
+//               }
+//            // Refresh network Stats.
+//            stats.updateKnetStats();
+//			conceptLegend.populateConceptLegend();
+//           }
+//        },
 
         {
          content: 'Label on/ off by Type',

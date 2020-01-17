@@ -34,6 +34,12 @@ KNETMAPS.Menu = function() {
    $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
   };
   
+function deleteVars (variable) {
+        variable = "";
+        delete variable;
+        console.log(variable);
+        return variable
+ }
    // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
@@ -71,72 +77,145 @@ KNETMAPS.Menu = function() {
      }
 
    // POST to knetspace via /api/v1/networks/
-   //var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000/api/v1/networks/"; //or "http://localhost:8000";
-   var knetspace_api_host= ""; // relative domain
+   var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
+   //var knetspace_api_host= ""; // relative domain
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
-   if(networkId === "undefined") {
-      //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
-      // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
-      $.ajax({
-            type: 'POST',
-            url: knetspace_api_host + '/api/v1/networks/',
-            timeout: 1000000,
-            xhrFields: {
-               withCredentials: true
+   var uploadHtml = "<form class='form' method='post' action='#'>"
+                          + "<label><font size='4'>Knetwork name</font></label>"
+                          + "<p></p>"
+                          + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>"
+			  + "<p></p>"
+                          + "<label><font size='4'>Description</font></label>"
+                          + "<p></p>"
+                          + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>"
+                          + "<p></p>"
+                          + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>"
+                          + "</form>";
+                              
+        var uploadModal = new jBox('Modal', {
+            animation: 'pulse',
+            title: '<font size="5"><font color="white">Upload to </font><font color="orange">Knet</font><font size="5"><font color="white">Space</font>',
+            content: uploadHtml,
+            width: 500,
+            cancelButton: 'Exit',
+            draggable: 'title',
+            attributes: {
+                x: 'right',
+                y: 'top'
             },
-             headers: {
-                "Accept": "application/json; charset=utf-8",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            datatype: "json",
-            data: JSON.stringify({
-                name: knet_name,
-                dateCreated: knet_date,
-                numNodes: totalNodes,
-                numEdges: totalEdges,
-                graph: JSON.parse(exportedJson),
-                image: thumbnail_image,
-                speciesTaxid: speciesTaxid,
-                speciesName: speciesName,
-                dbVersion: dbVersion,
-                dbDateCreated: dbDateCreated,
-                sourceOrganization: sourceOrganization,
-                provider: provider
-            })
-        })
-            .fail(function (errorlog) { console.log("POST error: " + errorlog); })
-            .success(function (data) { 
-                console.log("POST response: "+ data);
+            delayOpen: 50
         });
-      //}
-   }
-   else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
-         $.ajax({
-            type: 'PATCH',
-            url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
-            timeout: 1000000,
-            xhrFields: {
-               withCredentials: true
-            },
-                headers: {
-                "Accept": "application/json; charset=utf-8",
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            datatype: "json",
-            data: JSON.stringify({
-                dateModified: knet_date,
-                numNodes: totalNodes,
-                numEdges: totalEdges,
-                graph: JSON.parse(exportedJson),
-                image: thumbnail_image
-            })
-        })
-            .fail(function (errorlog) { console.log("PATCH error: " + errorlog); })
-            .success(function (data) { 
-                console.log("PATCH response: "+ data);
+        uploadModal.open();
+        var knetName = "";
+        var knetDesc = "";
+        knetName = $('input[name=knetName]').val();
+        knetDesc = $.trim($('textarea#knetDescription').val());
+        $(document).ready(function () {
+            $('.jBox-container').on('click', '#KnetSubmit', function () {
+                if (networkId === "undefined") {
+
+
+                    if (knetName === "undefined" || knetName === ''|| typeof knetName === "undefined" ) {knetName = "myKnetwork.json"};
+                    if (knetDesc === "undefined" || knetDesc === '' || typeof knetDesc === "undefined") {knetDesc = "Network for " + knetName};
+                    console.log("Name of knetwork given is: " + knetName + "\nName of description is: " + knetDesc);
+                    //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
+                    // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
+                    $.ajax({
+                        type: 'POST',
+                        url: knetspace_api_host + '/api/v1/networks/',
+                        timeout: 1000000,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        headers: {
+                            "Accept": "application/json; charset=utf-8",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        datatype: "json",
+                        data: JSON.stringify({
+                            name: knetName,
+                            dateCreated: knet_date,
+                            numNodes: totalNodes,
+                            numEdges: totalEdges,
+                            graph: JSON.parse(exportedJson),
+                            image: thumbnail_image,
+                            speciesTaxid: speciesTaxid,
+                            speciesName: speciesName,
+                            dbVersion: dbVersion,
+                            dbDateCreated: dbDateCreated,
+                            sourceOrganization: sourceOrganization,
+                            provider: provider,
+                            description: knetDesc
+                        })
+                    }).fail(function (errorlog) {
+                        uploadModal.toggle();
+                                new jBox('Notice', {
+                                    content: "Failed to upload Knetwork",
+                                    color: 'red',
+                                    autoClose: 1000,
+                                });
+                                console.log("POST error: " + JSON.stringify(errorlog));
+                             deleteVars(knetDesc);
+                             deleteVars(knetName);
+                            }).success(function (data) {
+                                deleteVars(knetDesc);
+                             deleteVars(knetName);
+                        uploadModal.toggle();
+                        new jBox('Notice', {
+                            content: "Network " + knetName + " submitted!",
+                            color: 'blue',
+                            autoClose: 1000,
+                        });
+                        console.log("POST response: " + data);
+                    });
+                    //}
+                } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
+                    $.ajax({
+                        type: 'PATCH',
+                        url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
+                        timeout: 1000000,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        headers: {
+                            "Accept": "application/json; charset=utf-8",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        datatype: "json",
+                        data: JSON.stringify({
+                            dateModified: knet_date,
+                            numNodes: totalNodes,
+                            numEdges: totalEdges,
+                            graph: JSON.parse(exportedJson),
+                            image: thumbnail_image
+                        })
+                    })
+                            .fail(function (errorlog) {
+                                deleteVars(knetDesc);
+                             deleteVars(knetName);
+                                uploadModal.toggle();
+                                new jBox('Notice', {
+                                    content: "Failed to upload Knetwork",
+                                    color: 'red',
+                                    autoClose: 1000,
+                                });
+                                console.log("PATCH error: " + JSON.stringify(errorlog));
+                            }).success(function (data) {
+                                deleteVars(knetDesc);
+                             deleteVars(knetName);
+                        uploadModal.toggle();
+                        new jBox('Notice', {
+                            content: "Network " + knetName + " submitted!",
+                            color: 'blue',
+                            autoClose: 1000,
+                        });
+                        console.log("PATCH response: " + data);
+                    });
+                }
+            });
+            deleteVars(knetDesc);
+            deleteVars(knetName);
         });
-   }
-   
   };
   
  // generate pure JSON to export from KnetMaps for graphJSON and metadata

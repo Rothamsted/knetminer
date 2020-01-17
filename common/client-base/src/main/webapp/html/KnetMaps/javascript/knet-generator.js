@@ -11,7 +11,7 @@ KNETMAPS.Generator = function() {
 
 	var my = function() {};
 	
-	// initialize and generate the network from default global vars
+ // initialize and generate the network from default global vars
  my.generateNetworkGraph=function(eles_jsons, metadata_json, eles_styles) {
    //console.log("Dataset file path: "+ json_File);
 	 graphJSON = eles_jsons; // set graphJSON to reloaded JSON.

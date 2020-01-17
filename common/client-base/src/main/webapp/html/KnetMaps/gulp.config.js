@@ -9,7 +9,8 @@ module.exports = function () {
     css: [ // ordering is important
     	'./css/knet-style.css',
     	'./css/jquery.qtip.min.css',
-    	'./css/maskloader.css'
+    	'./css/maskloader.css',
+        './css/jBox.all.min.css',
     	],
     js: ['./javascript/*.js','./config/url_mappings.js'],
     images: ['./image/*.png','./image_legend/*.png','./css/*.gif','./css/*.svg'],
@@ -19,6 +20,7 @@ module.exports = function () {
     	'./libs/FileSaver.min.js',
     	'./libs/cytoscape.min.js',
     	'./libs/cytoscape-*.js',
+        './libs/jBox.all.min.js',
     	],
 
     // the development output
