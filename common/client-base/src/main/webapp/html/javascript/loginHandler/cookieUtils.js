@@ -3,18 +3,8 @@
  * Author: hearnshawj
  */
 
-export function setCookie(cookieName, cookieValue, days) {
-    var expirationDate = "";
-    if (days) {
-        var cookieDate = new Date();
-        cookieDate.setTime(cookieDate.getTime() + (days * 24 * 60 * 60 * 1000));
-        expirationDate = "; expires=" + cookieDate.toUTCString();
-    }
-    // Create the cookie which will expire in X days
-    document.cookie = cookieName + "=" + (cookieValue || "") + expirationDate + "; path=/";
-}
-export function getCookie(cookieName) {
-    console.log("Raiding the cookie jar now!");
+/** Functions to get and erase cookies **/
+function getCookie(cookieName) {
     var updatedCookieName = cookieName + "=";
     var cookie = document.cookie.split(';'); // Obtain the cookie
     for (var i = 0; i < cookie.length; i++) {
@@ -27,8 +17,10 @@ export function getCookie(cookieName) {
     // If there's no cookie, then the length is 0 so return null.
     return null;
 }
-export function eraseCookie(cookieName) {
+
+function eraseCookie(cookieName) {
     document.cookie = cookieName + '=; Max-Age=-99999999;';
 }
+
 
 
