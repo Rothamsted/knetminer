@@ -38,7 +38,7 @@ function deleteVars (variable) {
         variable = "";
         delete variable;
         console.log(variable);
-        return variable
+        return variable;
  }
    // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
