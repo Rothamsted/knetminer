@@ -11,72 +11,234 @@ var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // chan
 var knetmaps = KNETMAPS.KnetMaps();
 
 
-/* 
- * Functions to get cookies and erase them.
- */
- function setCookie(cookieName, cookieValue, days) {
-    var expirationDate = "";
-    if (days) {
-        var cookieDate = new Date();
-        cookieDate.setTime(cookieDate.getTime() + (days * 24 * 60 * 60 * 1000));
-        expirationDate = "; expires=" + cookieDate.toUTCString();
+
+
+/** Functions to get and erase cookies **/
+function getCookie(cookieName) {
+    var updatedCookieName = cookieName + "=";
+    var cookie = document.cookie.split(';'); // Obtain the cookie
+    for (var i = 0; i < cookie.length; i++) {
+        var co = cookie[i];
+        while (co.charAt(0) == ' ')
+            co = co.substring(1, co.length);
+        if (co.indexOf(updatedCookieName) == 0)
+            return co.substring(updatedCookieName.length, co.length);
     }
-    // Create the cookie which will expire in X days
-    console.log("Setting cookie...");
-    document.cookie = cookieName + "=" + (cookieValue || "") + expirationDate + "; path=/";
-}
- function getCookie(cookieName) {
-    //console.log("Raiding the cookie jar now!");
-    var nameEQ = cookieName + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
+    // If there's no cookie, then the length is 0 so return null.
     return null;
 }
- function eraseCookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+function eraseCookie(cookieName) {
+    document.cookie = cookieName + '=; Max-Age=-99999999;';
 }
 
-function cookieInterval(time) {
-    setInterval(function () {
-        var cookie = getCookie("knetspace_token");
-        // If there's a token, we'll have the cookie, so change the class. 
-        if (cookie !== null) {
-            //console.log("Found a cookie! The cookie is: " + cookie);
-            if (!$('#profile_icon').hasClass('fas fa-sign-out-alt')) {
-                $('#login_icon').attr("href", "");
-                $('#login_icon').attr("title", "Logout"); // insert new link
-                $('#login_icon').attr("target", "");
-                $('#login_icon').attr("title", "");
-                $('#profile_icon').attr("title", "");
-                var parsedJson = parseJwt(cookie);
-                $('#login_icon').text(" " + parsedJson['username']);
-                $('#login_icon').off('click');
-                $('#profile_icon').removeClass('fa fa-user');
-                $('#profile_icon').addClass('fas fa-sign-out-alt');
-                // Change activity of button to logout (delete cookie)
-                $('#profile_icon').click(function (event) {
-                    event.preventDefault(); //Prevent opening a new window
-                    eraseCookie(cookie);
-                    window.location.reload(true); // Reload the page
-                    return false;
-                });
-            }
+function jboxNotice(content, colour, yPos) {
+    new jBox('Notice', {
+        content: content,
+        color: colour,
+        autoClose: 1000,
+        position: {
+            x: 0,
+            y: yPos
         }
-    }, time);
+    });
 }
 
 
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-};
+function loginModalToggle() {
+    $('#login_icon').click(function(e) {
+        e.preventDefault();
+            var loginHtml = "<form class='form' method='post' action='#'>"
+                          + "<label>Username or Email</label>"
+                          + "<input type='text' name='demail' id='email'>"
+                          + "<p></p>"
+                          + "<label>Password</label>"
+                          + "<input type='password' name='password' id='password'>"
+                          + "<p></p>"
+                          + "<input type='button' name='KnetSpacelogin' id='KnetSpacelogin' value='Sign in'>"
+                          + "<p></p>" 
+                          + "<a href='http://babvs72.rothamsted.ac.uk:8000/password-reset' style='text-decoration: none'>Forgot your password?</a>"
+                          + "<p></p>"
+                          + "<a href='http://babvs72.rothamsted.ac.uk:8000/sign-up' style='text-decoration: none'>Create an account</a>"
+                          + "</form>"
+                              
+            var loginModal = new jBox('Modal', {
+            	animation: 'pulse',
+                title: '<font size="5"><font color="white">Sign in to </font><font color="orange">Knet</font><font size="5"><font color="white">Miner</font>',
+                content: loginHtml,
+                cancelButton: 'Exit',
+                draggable: 'title',
+                attributes: {
+                    x: 'right',
+                    y: 'top'
+                },
+                delayOpen: 50
+            });
+            loginModal.open();
+
+            // Checking for blank fields on clicking login
+            $('.jBox-container').on('click','#KnetSpacelogin', function(){
+                fetchCredentials(loginModal);
+               loginHandler(loginModal);
+                   
+                });
+        });
+        return false;
+}
+
+/** Handles the logging in event for KnetSpace **/
+function loginHandler(loginModal) {
+    var email = $("#email").val();
+    var password = $("#password").val();
+    if (email == 'undefined' && password !== 'undefined' || email == '' && password !== '') {
+        jboxNotice("You haven't given an email!", 'red', 60);
+    } else if (password == 'undefined' && email !== 'undefined' || password == '' && email !== '') {
+        jboxNotice("You haven't given a password!", red, 60);
+    } else if (email == '' && password == '' || email == 'undefined' || password == 'undefined') {
+        jboxNotice("You haven't given an email and password!", 'red', 60);
+    } else {
+        // Send to KnetSpace - check if there's a returned JSON and add to the user login details, if successful alert user
+        $.ajax({
+            type: "POST",
+            url: 'http://babvs72.rothamsted.ac.uk:8000/auth/jwt/', // script to do the actual authentication, set session etc.
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {username_or_email: email, password: password},
+        }).success(function (data) {
+            // process result
+            fetchCredentials(null);
+            loginModal.toggle();
+
+            // Refactor i.e. put jboxes into a function and have the content and color changeable
+        }).fail(function () {
+            jboxNotice("Incorrect credentials given", 'red', 60);
+        });
+    }
+    email = "", password = "";
+}
+
+/** Fetches user credentials **/
+function fetchCredentials(loginModal) {
+    fetch('http://babvs72.rothamsted.ac.uk:8000/api/v1/me', {
+        credentials: 'include'
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            console.log("No Authentication found");
+        }
+    }).then((myJson) => {
+        if (typeof (myJson.username) !== 'undefined') {
+            if (loginModal === "undefined" || typeof loginModal === null) {
+                loginModal.toggle();
+            }
+            // JBox notice
+            var content = "Welcome, " + myJson.username;
+            jboxNotice(content, 'blue', 60);
+            
+            $('#login_icon').attr("title", "More"); // insert new link
+            $('#login_icon').attr("target", "");
+            $('#login_icon').attr("title", "");
+            $('#profile_icon').attr("title", "");
+            $('#login_icon').text(" " + myJson.username);
+            $('#login_icon').off('click');
+            $('#profile_icon').css('{backgroundColor:orange}');
+            $('#text').text("");
+
+            $('#login_icon').click(function () {
+                fetch('http://babvs72.rothamsted.ac.uk:8000/api/v1/me', {
+                    credentials: 'include'
+                }).then((response) => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        console.log("No Authentication found, retrying...");
+                        fetchCredentials(null);
+                    }
+                }).then((myJson) => {
+                    if (typeof (myJson.username) === 'undefined') {
+                        window.location.reload(true); // User must not be logged in.
+                    } 
+                });
+                var firstName = myJson.first_name,
+                                lastName = myJson.last_name,
+                                organisation = myJson.organisation,
+                                email = myJson.email;
+
+                if (organisation === "null" || typeof organisation == "object") { organisation = "Not given";}
+                if (email === "null" || typeof email == "object") { email = "Not given";}
+                
+                if (firstName !== "null" || typeof firstName == "object") {
+                   var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + firstName + '</font>';
+                } else {
+                     var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + myJson.username + '</font>';
+                }
+                
+                var profile_menu_html = "<font size='4'><a href='http://babvs72.rothamsted.ac.uk:8000/profile' style='text-decoration: none' class='profileClass'>Manage my profile</a>"
+                                        + "<hr>"
+                                        + "<a href='http://babvs72.rothamsted.ac.uk:8000/network' style='text-decoration: none' class='profileClass'>Manage my Knetworks</a>"
+                                        + "<hr></font>"
+                                        + "<font size='2'><label><b>Email</b></label>"
+                                        + "<p></p>"
+                                        + email
+                                        + "<p></p>"
+                                        + "<label><b>Organisation</b></label>"
+                                        + "<p></p>"
+                                        + organisation
+                                        + "<hr>"
+                                        + "<input type='button' name='KnetlogOut' id='logOutButton' value='Sign out' class='knetButton'>";
+
+                // Profile modal box
+                var profileModal = new jBox('Modal', {
+                    animation: 'pulse',
+                    title: profileTitle,
+                    content: profile_menu_html,
+                    target: $('#login_icon'),
+                    width: 350,
+                    offset: {
+                        x: 100,
+                        y: 200
+                    },
+                    delayOpen: 100
+                });
+                profileModal.open();
+                // Logic for logout ID on next jquery click function
+                $('#logOutButton').click(function () {
+                    fetch('http://babvs72.rothamsted.ac.uk:8000/api/v1/logout', {
+                        credentials: 'include'
+                    }).then((response) => {
+                        return response.json();
+
+                    }).then((myJson) => {
+
+                    });
+                    var cookie = getCookie("knetspace_token");
+                    eraseCookie(cookie);
+                    profileModal.toggle();
+                    $('#login_icon').attr("title", "Sign in"); // insert new link
+                    $('#login_icon').text("Login");
+//                    $('#profile_icon').removeClass('fas fa-rocket');
+//                    $('#profile_icon').addClass('fa fa-user');
+                    $('#profile_icon').css('{backgroundColor:white}');
+                    $('#login_icon').on('click');
+                    $('#login_icon').click(function (e) {
+                        loginModalToggle();
+                    });
+       
+                    
+                });
+
+            });
+        } else {
+            console.log("No Authentication found");
+        }
+    });
+}
+
+
+
+
 
 /*
 Functions for show and hide structures when a button is pressed
@@ -291,17 +453,10 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); // set/ update species name from utils_config.js
-        $('#login_icon').text("Login");
-        // For testing below
-        //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
-        cookieInterval(5000); // Wait 30 s and repeat every 30 s till logged out
-        $('#login_icon').click(function() {
-	     //console.log("Login icon was clicked");
-             var x = (screen.width / 2) - (500 / 2),
-                 y = (screen.height/2) - (500 / 2);
-             window.open ("knetspace/auth/jwt", '_blank', 'width=${500}', 'height=${500}', 'left=${x}', 'top=${y}');
-             // ToDo: 1) add/use fixed knetspace_api_host url from main POM, 2) change login page from knetspace/auth/jwt to cleaner knetspace/login UI page for login handling.
-        });
+        $('#profile_icon').css('{backgroundColor:white}');
+        fetchCredentials(null);
+        // Initalize login Modal
+        loginModalToggle();        
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -990,13 +1145,13 @@ function generateCyJSNetwork(url, requestParams) {
 				try {
 					activateButton('NetworkCanvas');
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           knetmaps.drawRaw('#knet-maps', data.graph, null);
+                                           knetmaps.drawRaw('#knet-maps', data.graph);
                                           }
                                         else { // response contents (pure JSON).
                                           var eles_jsons= data.graph.graphJSON.elements;
                                           var eles_styles= data.graph.graphJSON.style;
                                           var metadata_json= data.graph.allGraphData;
-                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles, null);
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
