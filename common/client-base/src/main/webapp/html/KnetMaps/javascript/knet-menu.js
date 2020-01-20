@@ -40,7 +40,8 @@ function deleteVars (variable) {
         console.log(variable);
         return variable;
  }
-   // Export the graph as a JSON object in a new Tab and allow users to save it.
+ 
+ // Export the graph as a JSON object in a new Tab and allow users to save it.
  my.exportAsJson = function(networkId) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
@@ -108,10 +109,10 @@ function deleteVars (variable) {
         uploadModal.open();
         var knetName = "";
         var knetDesc = "";
-        knetName = $('input[name=knetName]').val();
-        knetDesc = $.trim($('textarea#knetDescription').val());
         $(document).ready(function () {
             $('.jBox-container').on('click', '#KnetSubmit', function () {
+                knetName = $('input[name=knetName]').val();
+                knetDesc = $.trim($('textarea#knetDescription').val());
                 if (networkId === "undefined") {
 
 
@@ -164,7 +165,7 @@ function deleteVars (variable) {
                         new jBox('Notice', {
                             content: "Network " + knetName + " submitted!",
                             color: 'blue',
-                            autoClose: 1000,
+                            autoClose: 1000
                         });
                         console.log("POST response: " + data);
                     });
