@@ -109,10 +109,10 @@ public class CypherDebuggerService
 			{
 				if ( !this.traverserExecService.isShutdown () ) this.traverserExecService.shutdown ();
 				if ( !this.traverserExecService.awaitTermination ( 10, TimeUnit.SECONDS ) )
-					return "Waiting to close a cancelled traversal, try again later";
+					throw new IllegalStateException ( "Waiting to close a cancelled traversal, try again later" );
 			}
 			else if ( !traverserStatsResult.isDone () )
-				return "Waiting to complete a previously invoked traversal, try again later";
+				throw new IllegalStateException ( "Waiting to complete a previously invoked traversal, try again later" );
 		}
 		
 		// You can issue a new traversal if it's the first time, or after termination/interruption
