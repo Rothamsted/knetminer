@@ -153,7 +153,7 @@ function fetchCredentials(loginModal) {
                     fetchCredentials(null);
                 }
             }).then((myJson) => {
-                if (typeof myJson.username == 'undefined') {
+                if (typeof myJson.username !== 'undefined') {
                     $('#login_icon').click(function () {
                         // move block outside if logged in then do this
 
@@ -211,13 +211,14 @@ function fetchCredentials(loginModal) {
                             $('#login_icon').unbind('click');
                             var cookie = getCookie("knetspace_token");
                             if (cookie === 'undefined' || cookie === null) {
-                                sleep(1200).then(() => {
+                                sleep(300).then(() => {
                                     loginModalToggle(); // Currently delaying this to ensure both servers perform their respective HTTP requests before performing the next method
+                                    window.location.reload();
                                 });
                             }
                         });
                     });
-                }
+                } else { console.log("Not logged in"); }
             });
         } else {
             console.log("No Authentication found");
