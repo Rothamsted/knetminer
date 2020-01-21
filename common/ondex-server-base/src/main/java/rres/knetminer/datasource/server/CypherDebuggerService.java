@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -64,7 +65,7 @@ public class CypherDebuggerService
 	private List<KnetminerDataSource> dataSources;
 	private OndexLocalDataSource dataSource;
 
-	private final static ExecutorService TRAVERSER_EXECUTOR = Executors.newSingleThreadExecutor ();
+	private ExecutorService traverserExecService = null;
 	private Future<String> traverserStatsResult = null;
 	
 	public CypherDebuggerService ()
@@ -96,18 +97,28 @@ public class CypherDebuggerService
 
 	
 	@RequestMapping ( path = "/traverse", method = { RequestMethod.GET, RequestMethod.POST } )
-	public synchronized String newTraverser ( @RequestParam( required = true ) String queries )
+	public synchronized String newTraverser ( @RequestParam( required = true ) String queries ) throws InterruptedException
 	{
 		this.checkEnabled ();
 		
-		if ( this.traverserStatsResult != null 
-				 && !( traverserStatsResult.isDone () || traverserStatsResult.isCancelled () ) )
-			// Don't reinvoke until it's finished or cancelled
-			return "OK. Invoke /traverser-report";
+		if ( this.traverserStatsResult != null )
+		{
+			// Don't re-invoke until it's finished or cancelled and in a shutdown state
+			// 
+			if ( traverserStatsResult.isCancelled () )
+			{
+				if ( !this.traverserExecService.isShutdown () ) this.traverserExecService.shutdown ();
+				if ( !this.traverserExecService.awaitTermination ( 10, TimeUnit.SECONDS ) )
+					return "Waiting to close a cancelled traversal, try again later";
+			}
+			else if ( !traverserStatsResult.isDone () )
+				return "Waiting to complete a previously invoked traversal, try again later";
+		}
 		
 		// You can issue a new traversal if it's the first time, or after termination/interruption
 		List<String> queriesList = CyQueriesReader.readQueriesFromString ( queries );
-		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( () -> submitTraversal ( queriesList ) );
+		this.traverserExecService = Executors.newSingleThreadExecutor ();
+		this.traverserStatsResult = traverserExecService.submit ( () -> submitTraversal ( queriesList ) );
 		return "Started. Check progress at /traverser-report";
 	}
 	
