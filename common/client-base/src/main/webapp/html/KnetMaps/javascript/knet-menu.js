@@ -52,7 +52,8 @@ KNETMAPS.Menu = function() {
    
    //console.log("networkId: "+ networkId); // test
    var knet_name= "myKnetwork.json", apiGraphSummary= null;
-   if(networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
+   if(networkId === "undefined" || typeof networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
+      console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= my.getGraphDBSummary();
      }
 
@@ -74,9 +75,9 @@ KNETMAPS.Menu = function() {
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
    var uploadHtml= "<form class='form' method='post' action='#'>"
                           + "<label><font size='4'>Knetwork name</font></label>"+ "<p></p>"
-                          + "<input style='height:20px;width:450px;' placeholder="+ knet_name + " type='text' name='knetName' id='user_knetName'>" + "<p></p>"
+                          + "<input style='height:20px;width:450px;' placeholder="+ knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
                           + "<label><font size='4'>Description</font></label>"+ "<p></p>"
-                          + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='user_knetDescription'></textarea>"+ "<p></p>"
+                          + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>"+ "<p></p>"
                           + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>"+ "</form>";
    
    var uploadModal= new jBox('Modal', {
@@ -85,21 +86,18 @@ KNETMAPS.Menu = function() {
             attributes: { x: 'right', y: 'top' }, delayOpen: 50
         });
    uploadModal.open();
-   var knetName= knet_name;
-   var knetDesc= "Network for " + knetName;
-   console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc);// test
-   $(document).ready(function () {
+  // $(document).ready(function () {
             $('.jBox-container').on('click', '#KnetSubmit', function () {
+                var knetName= knet_name;
+                var knetDesc= "Network for " + knetName;
+                console.log("Name: "+ knetName + ", desc: "+ knetDesc); // test
                 
-                if($('#user_knetName').val()) { // new knetName from user
-                   knetName= $('#user_knetName').val();
-                  }
-                if($('#user_knetDescription').val()) { // new knetDesc from user
-                   knetDesc= $.trim($('#user_knetDescription').val());
-                  }
+                console.log("user inputs: "+ $('input[name=knetName]').val() +", "+ $('textarea#knetDescription').val());
+                if($('input[name=knetName]').val()) {  knetName= $('input[name=knetName]').val(); }
+                if($('textarea#knetDescription').val()) { knetDesc= $.trim($('textarea#knetDescription').val()); }
                 console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc);// test
                 
-                if (networkId === "undefined") {
+                if(networkId === "undefined" || typeof networkId === "undefined") {
                     //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                     console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc);
@@ -168,7 +166,7 @@ KNETMAPS.Menu = function() {
                 }
             });
             
-        });
+    //    });
   };
   
  // generate pure JSON to export from KnetMaps for graphJSON and metadata
