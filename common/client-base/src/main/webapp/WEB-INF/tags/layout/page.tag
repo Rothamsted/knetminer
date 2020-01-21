@@ -39,7 +39,9 @@
     </c:if>
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <!-- KnetMiner button.css -->
+        <!-- jBox modal popup css -->
+        <link rel="stylesheet" type="text/css" href="html/css/jBox.all.min.css"/>
+        <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
         <!-- Login css -->
         <link rel="stylesheet" type="text/css" href="html/css/loginStyle.css"/>
@@ -62,6 +64,9 @@
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
+        <!-- jBox modal popup js -->
+      	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+        
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
@@ -71,6 +76,7 @@
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
         <!-- interactive Legend for Evidence View -->
         <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>
+        
         <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
         <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
