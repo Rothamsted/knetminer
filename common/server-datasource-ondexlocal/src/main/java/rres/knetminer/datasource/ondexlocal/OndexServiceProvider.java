@@ -87,8 +87,8 @@ import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -2332,7 +2332,7 @@ public class OndexServiceProvider {
                 // Get this attr value, returns null if attr name doesn't exist (first flag) 
                 // or the gene is null (second flag). Same for the other calls below.
                 // TODO: use this utility function everywhere 
-                // TODO: whe don't neet attChr (and similar types) as objects, the string ID is enough
+                // TODO: we don't need attChr (and similar types) as objects, the string ID is enough
                 //
                 chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
 
