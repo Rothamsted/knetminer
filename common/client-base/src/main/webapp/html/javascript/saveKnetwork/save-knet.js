@@ -3,9 +3,9 @@
  * Author: Ajit Singh
  */
 
-/** Functions to save knet **/
-/*function eraseCookie(cookieName) {
-    document.cookie = cookieName + '=; Max-Age=-99999999;';
+/** Functions to save knetwork rendered in knetmaps (cyJS) to knetspace via POST. **/
+/*function exportJson() {
+    //
 }*/
 
 
