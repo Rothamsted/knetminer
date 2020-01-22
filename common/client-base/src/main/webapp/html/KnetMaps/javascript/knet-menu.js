@@ -73,6 +73,11 @@ KNETMAPS.Menu = function() {
    var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    //var knetspace_api_host= ""; // relative domain
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
+   
+   // knetName & knetDesc modal (jBox)
+   var knetName= knet_name;
+   var knetDesc= "Network for " + knetName;
+   console.log("Name: "+ knetName + ", desc: "+ knetDesc); // test
    var uploadHtml= "<form class='form' method='post' action='#'>"
                           + "<label><font size='4'>Knetwork name</font></label>"+ "<p></p>"
                           + "<input style='height:20px;width:450px;' placeholder="+ knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
@@ -88,19 +93,21 @@ KNETMAPS.Menu = function() {
    uploadModal.open();
   // $(document).ready(function () {
             $('.jBox-container').on('click', '#KnetSubmit', function () {
-                var knetName= knet_name;
-                var knetDesc= "Network for " + knetName;
-                console.log("Name: "+ knetName + ", desc: "+ knetDesc); // test
-                
                 console.log("user inputs: "+ $('input[name=knetName]').val() +", "+ $('textarea#knetDescription').val());
-                if($('input[name=knetName]').val()) {  knetName= $('input[name=knetName]').val(); }
-                if($('textarea#knetDescription').val()) { knetDesc= $.trim($('textarea#knetDescription').val()); }
-                console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc);// test
+                if($('input[name=knetName]').val()) { 
+                   knetName= $('input[name=knetName]').val();
+                  }
+                else { knetName= knet_name; }
+                if($('textarea#knetDescription').val()) {
+                   knetDesc= $.trim($('textarea#knetDescription').val());
+                  }
+                else { knetDesc= "Network for " + knetName; }
+                console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test
                 
                 if(networkId === "undefined" || typeof networkId === "undefined") {
                     //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
-                    console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc);
+                    console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test2
                     $.ajax({
                         type: 'POST',
                         url: knetspace_api_host + '/api/v1/networks/',
