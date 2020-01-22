@@ -182,6 +182,14 @@ public class OndexServiceProvider {
     private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
+	
+	    /**
+     * Node and relationship number for given gene
+     */
+    
+    private String nodeCount;
+    
+    private String relationshipCount;
 
     /**
      * Loads configuration for chromosomes and initialises map
@@ -547,6 +555,9 @@ public class OndexServiceProvider {
             jsonExport.setONDEXGraph(graph2);
             log.debug("Export JSON data: Total concepts= " + graph2.getConcepts().size() + " , Relations= "
                     + graph2.getRelations().size());
+            // Set the Node and rel counts
+            nodeCount = Integer.toString(graph2.getConcepts().size());
+            relationshipCount = Integer.toString(graph2.getRelations().size());
             // Export the contents of the 'graph' object as multiple JSON
             // objects to an output file.
             jsonExport.start();
@@ -2713,6 +2724,22 @@ public class OndexServiceProvider {
     
     public String getSpecies() {
         return this.speciesName;
+    }
+	
+	public void setNodeCount(String nodeCount) {
+        this.nodeCount = nodeCount;
+    }
+    
+    public String getNodeCount() {
+        return this.nodeCount;
+    }
+    
+    public void setRelationshipCount(String relationshipCount) {
+        this.relationshipCount = relationshipCount;
+    }
+    
+    public String getRelationshipCount(){
+        return this.relationshipCount;
     }
 
     public void setReferenceGenome(boolean value) {

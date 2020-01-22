@@ -23,6 +23,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import org.json.JSONException;
 import org.json.JSONObject;
+import rres.knetminer.datasource.api.CountGraphEntities;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.EvidencePathResponse;
@@ -396,4 +397,36 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
             return response;
             
         }
+		
+		public CountGraphEntities graphSize(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+        Set<ONDEXConcept> genes = new HashSet<>();
+
+        log.info("Call applet! Search genes " + request.getList().size());
+
+        // Search Genes
+        if (!request.getList().isEmpty()) {
+            genes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
+        }
+
+        // Search Regions
+        if (!request.getQtl().isEmpty()) {
+            genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+        }
+
+        // Find Semantic Motifs
+        ONDEXGraph subGraph = this.ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+        
+        CountGraphEntities response = new CountGraphEntities();
+        try {
+            // Set the graph
+            ondexServiceProvider.exportGraph(subGraph);
+            log.info("Set graph, now getting the number of nodes...");
+            response.setNodeCount(ondexServiceProvider.getNodeCount());
+            response.setRelationshipCount(ondexServiceProvider.getRelationshipCount());
+        } catch (InvalidPluginArgumentException e) {
+            log.error("Failed to export graph", e);
+            throw new Error(e);
+        }
+        return response;
+    }
 }
