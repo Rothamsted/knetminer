@@ -8,12 +8,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,8 +66,10 @@ public class CypherDebuggerService
 	private List<KnetminerDataSource> dataSources;
 	private OndexLocalDataSource dataSource;
 
-	private ExecutorService traverserExecService = null;
+	private static final ExecutorService traverserExecService = Executors.newSingleThreadExecutor ();
 	private Future<String> traverserStatsResult = null;
+	
+	private Logger log = LogManager.getLogger ( this.getClass () );
 	
 	public CypherDebuggerService ()
 	{
@@ -103,22 +106,21 @@ public class CypherDebuggerService
 		
 		if ( this.traverserStatsResult != null )
 		{
-			// Don't re-invoke until it's finished or cancelled and in a shutdown state
-			// 
-			if ( traverserStatsResult.isCancelled () )
+			// Don't re-invoke until it's completed or an initiated interruption is finalised.
+			//
+			if ( !traverserStatsResult.isDone () )
 			{
-				if ( !this.traverserExecService.isShutdown () ) this.traverserExecService.shutdown ();
-				if ( !this.traverserExecService.awaitTermination ( 10, TimeUnit.SECONDS ) )
+				if ( this.getTraverser ().isInterrupted () )
 					throw new IllegalStateException ( "Waiting to close a cancelled traversal, try again later" );
+				else
+					throw new IllegalStateException ( "Already invoked, try /traverser-report" );
 			}
-			else if ( !traverserStatsResult.isDone () )
-				throw new IllegalStateException ( "Waiting to complete a previously invoked traversal, try again later" );
 		}
 		
 		// You can issue a new traversal if it's the first time, or after termination/interruption
 		List<String> queriesList = CyQueriesReader.readQueriesFromString ( queries );
-		this.traverserExecService = Executors.newSingleThreadExecutor ();
 		this.traverserStatsResult = traverserExecService.submit ( () -> submitTraversal ( queriesList ) );
+		Thread.sleep ( 500 ); // Give it some time to initialise the progress logger
 		return "Started. Check progress at /traverser-report";
 	}
 	
@@ -130,8 +132,10 @@ public class CypherDebuggerService
 		
 		if ( this.traverserStatsResult == null )
 			return "Wasn't invoked. Use /traverse";
-		if ( traverserStatsResult.isCancelled () )
-			return "Was cancelled. Invoke /traverse again";
+		if ( this.getTraverser ().isInterrupted () )
+			return traverserStatsResult.isDone () 
+				? "Was cancelled. Invoke /traverse again"
+				: "Was cancelled. Abort operation still pending, invoke /traverse again in a while";
 		
 		if ( !traverserStatsResult.isDone () )
 		{
@@ -149,11 +153,12 @@ public class CypherDebuggerService
 	{
 		this.checkEnabled ();
 		
-		if ( this.traverserStatsResult == null || traverserStatsResult.isCancelled () || traverserStatsResult.isDone () ) 
+		CypherGraphTraverser traverser = this.getTraverser ();
+		
+		if ( this.traverserStatsResult == null || traverserStatsResult.isDone () || traverser.isInterrupted () ) 
 			return "OK. Wasn't active.";
 		
-		traverserStatsResult.cancel ( true );
-		
+		traverser.interrupt ();
 		return "OK.";
 	}	
 	
@@ -176,8 +181,10 @@ public class CypherDebuggerService
 		// behave
 		traverser.setOption ( "performanceReportFrequency", 0 );
 
-		try {
-			return traverser.getPerformanceStats (); 
+		try
+		{
+			return traverser.isInterrupted ()
+				? "Traversal was cancelled" : traverser.getPerformanceStats (); 
 		}
 		finally {
 			// Normally it's disabled.
