@@ -668,7 +668,7 @@ public class OndexServiceProvider {
         String NOTQuery = createsNotList(keyword);
         String crossTypesNotQuery = "";
         ScoredHits<ONDEXConcept> NOTList = null;
-        if (NOTQuery != "") {
+        if (!"".equals ( NOTQuery )) {
             crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
                     + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
                     + NOTQuery + ")";
@@ -794,7 +794,7 @@ public class OndexServiceProvider {
                     if (path_length == null) {
                         log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
                     }
-                    double distance = path_length == null ? 0 : (1 / path_length);
+                    double distance = path_length == null ? 0 : (1d / path_length);
 
                     // take the mean of all three components
                     double evidence_weight = (igf + luceneScore + distance) / 3;
@@ -1194,7 +1194,7 @@ public class OndexServiceProvider {
             }
 //				System.out.println("subkeyworkd: "+k);
         }
-        if (builtK != "") {
+        if ( !"".equals ( builtK )) {
             result.add(builtK);
         }
         log.info("keys: " + result);
@@ -1703,7 +1703,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && !keyword.equals("") && keyword != null) {
+        if (ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) ) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
@@ -2108,7 +2108,7 @@ public class OndexServiceProvider {
 
                     // FIXME re-factor chromosome string
                     if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if (infoQTL == "") {
+                        if ("".equals ( infoQTL )) {
                             infoQTL += loci.getLabel() + "//" + loci.getTrait();
                         } else {
                             infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
@@ -2626,7 +2626,7 @@ public class OndexServiceProvider {
         // cn = c.getAttribute(att).getValue().toString().trim();
         // }
         else {
-            if (getShortestPreferedName(cns) != "") {
+            if (!"".equals ( getShortestPreferedName(cns) ) ) {
                 cn = getShortestPreferedName(cns);
             } else {
                 cn = getShortestNotAmbiguousAccession(accs);

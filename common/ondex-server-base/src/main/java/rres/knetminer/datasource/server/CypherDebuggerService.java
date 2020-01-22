@@ -123,7 +123,7 @@ public class CypherDebuggerService
 		
 		KnetminerDataSource ds = this.dataSources.get ( 0 );
 		
-		if ( ! ( ds instanceof OndexLocalDataSource ) ) new UnexpectedValueException (
+		if ( ! ( ds instanceof OndexLocalDataSource ) ) throw new UnexpectedValueException (
 			"Cypher Debugger can only work with instances of " + OndexLocalDataSource.class.getSimpleName ()
 		);
 		
