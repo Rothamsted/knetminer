@@ -1,3 +1,7 @@
+/* 
+ * See index.html
+ */
+
 const cydebugBaseUrl = api_base_url + "/cydebug";
 
 
@@ -86,10 +90,6 @@ function startTraverserHandler ()
 
 function traverserCancelHandler ()
 {
-	// TODO: proper termination handling on the server
-	//alert ( "Sorry, cancellation doesn't work properly yet, wait it finishes" );
-	//return;
-	
 	fetch ( cydebugBaseUrl + "/traverser/cancel" )
 	.then ( resp => {
 		updateStatus ();

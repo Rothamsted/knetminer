@@ -35,7 +35,15 @@ import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
 /**
- * TODO: comment me!
+ * A small API to debug new Cypher queries with the {@link CypherGraphTraverser}.
+ * 
+ * <p>This allows for re-running the Knetminer gene traversal and recompute the in-memory,
+ * associations between genes and other entities with a new set of Cypher queries (ie, semantic motifs).</p>
+ * 
+ * <p>This is a test utility meant to be used in <b>test instances</b>, never in production. Indeed, all the 
+ * API calls (ie, the corresponding methods below) are disabled by default and they can be enabled by means 
+ * of a config property. see {@link #checkEnabled()}. Furthermore, You must be running Knetminer in Neo4j mode, else
+ * all the API methods below will raise an exception.</p>
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>10 Dec 2019</dd></dl>
@@ -61,12 +69,33 @@ public class CypherDebuggerService
 			super ( REASON );
 		}
 	}
-		
+	
+	/**
+	 * @see #checkEnabled
+	 */
+	public static final String ENABLED_PROPERTY = "knetminer.backend.cypherDebugger.enabled";
+	
+	/**
+	 * Binds the running Knetminer data sources. Knetminer was initially designed to support multiple DSs
+	 * per instance, however, we don't use this way anymore, so this class assumes that this list contains one
+	 * DS only and the initialisation code put it into {@link #dataSource} for later use.
+	 */
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
+	
+	/**
+	 * @see #dataSources
+	 */
 	private OndexLocalDataSource dataSource;
 
+	/**
+	 * Used to launch the new traversal ops in parallel.
+	 */
 	private static final ExecutorService traverserExecService = Executors.newSingleThreadExecutor ();
+	
+	/**
+	 * Used to manage asynchronous traversal running.
+	 */
 	private Future<String> traverserStatsResult = null;
 	
 	private Logger log = LogManager.getLogger ( this.getClass () );
@@ -76,6 +105,9 @@ public class CypherDebuggerService
 	}
 
 	
+	/**
+	 * @see #dataSources
+	 */
 	@PostConstruct
 	private synchronized void init ()
 	{
@@ -98,7 +130,9 @@ public class CypherDebuggerService
 		this.dataSource = (OndexLocalDataSource) ds;
 	}
 
-	
+	/**
+	 * Start a new traversal, after some checks that there isn't none ongoing or being cancelled. 
+	 */
 	@RequestMapping ( path = "/traverse", method = { RequestMethod.GET, RequestMethod.POST } )
 	public synchronized String newTraverser ( @RequestParam( required = true ) String queries ) throws InterruptedException
 	{
@@ -147,7 +181,12 @@ public class CypherDebuggerService
 		return traverserStatsResult.get ();
 	}
 	
-	
+	/**
+	 * Cancellation is asynchronous: this method triggers {@link CypherGraphTraverser#interrupt()} and then
+	 * returns immediately. The traverser receiving the interruption command will take a while to stop 
+	 * ongoing operations. #traverserReport tells if a traversal was cancelled but not completed.
+	 * 
+	 */
 	@GetMapping ( path = "/traverser/cancel" )
 	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
 	{
@@ -162,6 +201,9 @@ public class CypherDebuggerService
 		return "OK.";
 	}	
 	
+	/**
+	 * Used by {@link #newTraverser(String)}.
+	 */
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		String dataPath = this.dataSource.getProperty ( "DataPath" );
@@ -210,6 +252,11 @@ public class CypherDebuggerService
 	}	
 	
 	
+	/**
+	 * This will raise {@link IllegalStateException} if you're not running in Neo4j mode and the current traverser in 
+	 * {@link OndexServiceProvider} isn't a {@link CypherGraphTraverser}.
+	 * 
+	 */
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
@@ -234,14 +281,14 @@ public class CypherDebuggerService
 	}
 	
 	/**
-	 * Every HTTP request is wrapped by this check that the {@code knetminer.backend.cypherDebugger.enabled} is enabled in
+	 * Every HTTP request is wrapped by this check that {@link #ENABLED_PROPERTY} is enabled in
 	 * {@code data_source.xml}.
 	 *   
 	 */
 	private void checkEnabled ()
 	{
 		boolean isServiceEnabled = Optional.ofNullable ( 
-			this.dataSource.getProperty ( "knetminer.backend.cypherDebugger.enabled" )
+			this.dataSource.getProperty ( ENABLED_PROPERTY )
 		).map ( Boolean::valueOf )
 		.orElse ( false );
 		
