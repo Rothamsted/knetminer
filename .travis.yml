@@ -26,8 +26,7 @@ install:
   - sudo $npath 11.15.0 
       
 script:
-  # Avoids timeouts due to our Nexus instability
-  - travis_wait 30 ./travis-build.sh
+  - ./travis-build.sh
   
 branches:
   only:
