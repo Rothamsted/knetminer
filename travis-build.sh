@@ -1,5 +1,6 @@
+#!/bin/sh
+
 # This is invoked by Travis, as per .travis.yml
-#
 #
 
 set -e # Fail fast upon the first error
