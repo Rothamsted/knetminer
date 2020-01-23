@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This is invoked by Travis, as per .travis.yml
 #
