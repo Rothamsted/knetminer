@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -39,7 +40,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -86,6 +86,9 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -2348,20 +2351,24 @@ public class OndexServiceProvider {
                 String chr = null;
                 double beg = 0.0;
 
-                if (gene.getAttribute(attChr) != null) {
-                    chr = gene.getAttribute(attChr).getValue().toString();
-                }
+                // Get this attr value, returns null if attr name doesn't exist (first flag) 
+                // or the gene is null (second flag). Same for the other calls below.
+                // TODO: use this utility function everywhere 
+                // TODO: whe don't neet attChr (and similar types) as objects, the string ID is enough
+                //
+                chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
 
-                if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                if ( attCM != null )
+                {
+	                beg = Optional.ofNullable (
+	                	(Double) getAttrValue ( graph, gene, attCM.getId (), false, false )
+	                ).orElse ( 0d );
                 }
-
-                if (attCM != null) {
-                    if (gene.getAttribute(attCM) != null) {
-                        beg = (Double) gene.getAttribute(attCM).getValue();
-                    }
-                } else if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                else 
+                {
+	                beg = (int) Optional.ofNullable (
+	                	(Integer) getAttrValue ( graph, gene, attBeg.getId (), false, false )
+	                ).orElse ( 0 );
                 }
 
                 if (!qtls.isEmpty()) {
