@@ -72,7 +72,9 @@
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
-		<!-- interactive summary Legend for Gene View -->
+        <!-- KnetMaps - js utils to save knet to knetspace -->
+        <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
+        <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
         <!-- interactive Legend for Evidence View -->
         <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>

@@ -6,17 +6,17 @@ KNETMAPS.Menu = function() {
 	var container = KNETMAPS.Container();
 	var stats = KNETMAPS.Stats();
 	var conceptLegend = KNETMAPS.ConceptsLegend();
-	var generator = KNETMAPS.Generator();
+    //	var generator = KNETMAPS.Generator();
 
 	var my=function() {};
 	
  my.onHover = function(thisBtn) {
     $(thisBtn).removeClass('unhover').addClass('hover');
- }
+ };
 
  my.offHover = function(thisBtn) {
 	    $(thisBtn).removeClass('hover').addClass('unhover');
- }
+ };
 
  my.popupItemInfo = function() {
 	 iteminfo.openItemInfoPane();
@@ -34,222 +34,16 @@ KNETMAPS.Menu = function() {
    $('#cy').cytoscape('get').reset().fit(); // reset the graph's zooming & panning properties.
   };
   
- // Export the graph as a JSON object in a new Tab and allow users to save it.
- my.exportAsJson = function(networkId) {
-   var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-
-   var exportJson= cy.json(); // full graphJSON
-   
-   var exportedJson= my.filterJsonToExport(cy, exportJson); // the final "graph" to export
-   var thumbnail_image= my.exportThumbnail(); // fetch knetwork thumbnail as well.
-   // fetch total node & edge count for this knetwork.
-   var totalNodes= cy.$(':visible').nodes().size();
-   var totalEdges= cy.$(':visible').edges().size();
-   // formatted date: yyyy-mm-dd hh:mm (mm: January=0)
-   var currentDate= new Date();
-   var knet_date= currentDate.getFullYear() +'-'+ String(currentDate.getMonth() + 1).padStart(2, '0') +'-'+ String(currentDate.getDate()).padStart(2, '0') 
-           +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
-   
-   //console.log("networkId: "+ networkId); // test
-   var knet_name= "myKnetwork.json", apiGraphSummary= null;
-   if(networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
-      console.log("fetch graphSummary from KnetMiner server API..."); // test
-      apiGraphSummary= my.getGraphDBSummary();
-     }
-
-   // add api_graphSummary to the above as well, if exists.
-   var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
-   if(apiGraphSummary !== null && apiGraphSummary.size > 0) {
-      speciesTaxid= apiGraphSummary.get("speciesTaxid");
-      speciesName= apiGraphSummary.get("speciesName");
-      dbVersion= apiGraphSummary.get("dbVersion");
-      dbDateCreated= apiGraphSummary.get("dbDateCreated");
-      sourceOrganization= apiGraphSummary.get("sourceOrganization");
-      provider= apiGraphSummary.get("provider");
-      //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
-     }
-
-   // POST to knetspace via /api/v1/networks/
-   var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
-   //var knetspace_api_host= ""; // relative domain
-   // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
-   
-   // knetName & knetDesc modal (jBox)
-   var knetName= knet_name;
-   var knetDesc= "Network for " + knetName;
-   console.log("default name: "+ knetName + ", description: "+ knetDesc); // test
-   var uploadHtml= "<form class='form' method='post' action='#'>"
-                          + "<label><font size='4'>Knetwork name</font></label>"+ "<p></p>"
-                          + "<input style='height:20px;width:450px;' placeholder="+ knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
-                          + "<label><font size='4'>Description</font></label>"+ "<p></p>"
-                          + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>"+ "<p></p>"
-                          + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>"+ "</form>";
-   
-   var uploadModal= new jBox('Modal', {
-            title: '<font size="5"><font color="white">Upload to </font><font color="orange">Knet</font><font size="5"><font color="white">Space</font>',
-            animation: 'pulse', content: uploadHtml, width: 500, cancelButton: 'Exit', draggable: 'title',
-            attributes: { x: 'right', y: 'top' }, delayOpen: 50
-        });
-   uploadModal.open();
-  // $(document).ready(function () {
-            $('.jBox-container').on('click', '#KnetSubmit', function () {
-                console.log("user inputs: "+ $('input[name=knetName]').val() +", "+ $('textarea#knetDescription').val());
-                if($('input[name=knetName]').val()) { 
-                   knetName= $('input[name=knetName]').val();
-                  }
-                else { knetName= knet_name; }
-                if($('textarea#knetDescription').val()) {
-                   knetDesc= $.trim($('textarea#knetDescription').val());
-                  }
-                else { knetDesc= "Network for " + knetName; }
-                console.log("set: name: "+ knetName + ", description: "+ knetDesc); // test
-                
-                if(networkId === "undefined") {
-                    //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
-                    // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
-                    console.log("POST: name: "+ knetName + ", description: "+ knetDesc); // test2
-                    $.ajax({
-                        type: 'POST',
-                        url: knetspace_api_host + '/api/v1/networks/',
-                        timeout: 1000000,
-                        xhrFields: { withCredentials: true },
-                        headers: {
-                            "Accept": "application/json; charset=utf-8",
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                        datatype: "json",
-                        data: JSON.stringify({
-                            name: knetName,
-                            dateCreated: knet_date,
-                            numNodes: totalNodes,
-                            numEdges: totalEdges,
-                            graph: JSON.parse(exportedJson),
-                            image: thumbnail_image,
-                            speciesTaxid: speciesTaxid,
-                            speciesName: speciesName,
-                            dbVersion: dbVersion,
-                            dbDateCreated: dbDateCreated,
-                            sourceOrganization: sourceOrganization,
-                            provider: provider,
-                            description: knetDesc
-                        })
-                    }).fail(function (errorlog) {
-                        uploadModal.toggle();
-                        new jBox('Notice', { content: "Failed to upload kNetwork", color: 'red', autoClose: 1000 });
-                        console.log("POST error: " + JSON.stringify(errorlog));
-                    }).success(function (data) {
-                        uploadModal.toggle();
-                        new jBox('Notice', { content: "kNetwork " + knetName + " saved to knetspace!", color: 'blue', autoClose: 1000 });
-                        console.log("POST response: " + data);
-                    });
-                  //}
-                } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
-                    $.ajax({
-                        type: 'PATCH',
-                        url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
-                        timeout: 1000000,
-                        xhrFields: { withCredentials: true },
-                        headers: {
-                            "Accept": "application/json; charset=utf-8",
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                        datatype: "json",
-                        data: JSON.stringify({
-                            dateModified: knet_date,
-                            numNodes: totalNodes,
-                            numEdges: totalEdges,
-                            graph: JSON.parse(exportedJson),
-                            image: thumbnail_image
-                        })
-                    }).fail(function (errorlog) {
-                                uploadModal.toggle();
-                                new jBox('Notice', { content: "Failed to update saved kNetwork", color: 'red', autoClose: 1000 });
-                                console.log("PATCH error: " + JSON.stringify(errorlog));
-                            }).success(function (data) {
-                                uploadModal.toggle();
-                                new jBox('Notice', { content: "Saved kNetwork " + knetName + " updated!", color: 'blue', autoClose: 1000 });
-                                console.log("PATCH response: " + data);
-                            });
-                }
-             
-             // reset knetName & knetDesc.
-             knetName= knet_name;
-             knetDesc= "Network for " + knetName;
-             console.log("reset: Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test3
-            });
-    //    });
-  };
-  
- // generate pure JSON to export from KnetMaps for graphJSON and metadata
- my.filterJsonToExport = function(cy, exportJson) {
-   var elesToRetain= []; // to streamline content exported in exportJson (graphJSON) & metaJSON (allGraphData).
-   cy.$(':visible').forEach(function (ele) { elesToRetain.push(ele.id()); });
-   
-   // remove hidden nodes/edges metadata from exportJson.
-   exportJson.elements.nodes= exportJson.elements.nodes.filter( function( con ) {
-	   return elesToRetain.includes(con.data.id); });
-   exportJson.elements.edges= exportJson.elements.edges.filter( function( rel ) {
-	   return elesToRetain.includes(rel.data.id); });
-   
-   // remove hidden nodes/edges metadata from metaJSON (allGraphData).
-   var metaJSON= allGraphData;
-   metaJSON.ondexmetadata.concepts= metaJSON.ondexmetadata.concepts.filter( function( con ) {
-	   return elesToRetain.includes(con.id); });
-   metaJSON.ondexmetadata.relations= metaJSON.ondexmetadata.relations.filter( function( rel ) {
-	   return elesToRetain.includes(rel.id); });
-   // remove other redundant metaJSON entries.
-   var omit_redundant= ["graphName","numberOfConcepts","numberOfRelations","version"];
-   omit_redundant.forEach(function (entry) { delete metaJSON.ondexmetadata[entry]; });
-   
-   var json_response= '{"graphJSON":'+ JSON.stringify(exportJson) + ', "allGraphData":' + JSON.stringify(metaJSON) +'}';
-   return json_response;
-  };
-  
- // fetch graphSummary from KnetMiner server API.
- my.getGraphDBSummary = function() {
-   var graphSummary= new Map();
-   if(typeof api_url !== "undefined") {
-        $.ajax({
-            async: false,
-            type: 'GET',
-            url: api_url + '/dataSource',
-            success: function (data) {
-                var api_response= data.dataSource.replace(/\"/g,"").trim().split(",");
-                api_response.forEach(function(val) {
-                    var values= val.split(":");
-                    var k= values[0].trim();
-                    var v= values[1].trim();
-                    if(k === "dbDateCreated") { v= values[1] +":"+ values[2]; }
-                    graphSummary.set(k, v);
-                });
-           }
-       });
-     }
-    return graphSummary;
-  };
-  
-  // Export the graph as a .png image and allow users to save it.
+  // Export the graph as a .png image & let users to save it.
  my.exportAsImage = function() {
    var cy = $('#cy').cytoscape('get'); // now we have a global reference to `cy`
-    var png64 = cy.png({
-                    	"scale" : 6,
-                    	"output" : 'base64'
-    			}); // .setAttribute('crossOrigin', 'anonymous');
+    var png64 = cy.png({ "scale" : 6, "output" : 'base64' }); // .setAttribute('crossOrigin', 'anonymous');
     var a = document.createElement("a"); //Create <a>
     a.href = png64; //Image Base64 Goes here
     a.download = "knet_image.png"; //File name Here
     a.click(); //Downloaded file
-  }
+  };
   
-  // Export the network thumbnail.
-  my.exportThumbnail = function() {
-   var png64 = cy.png({
-                    "scale" : 6/*0.8*/,
-                    "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
-                
-   return png64.replace("data:image/png;base64,", "");
-  }
-
   // Show all concepts & relations.
  my.showAll = function() {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
@@ -268,7 +62,7 @@ KNETMAPS.Menu = function() {
    stats.updateKnetStats();
    // Update the stats legend
    conceptLegend.populateConceptLegend();
-  }
+  };
   
   // Re-run the entire graph's layout.
  my.rerunLayout = function() {
@@ -281,7 +75,7 @@ KNETMAPS.Menu = function() {
    
    // Reset the graph/ viewport.
    my.resetGraph();
-  }
+  };
 
   var layouts = KNETMAPS.Layouts();
   
@@ -306,7 +100,7 @@ KNETMAPS.Menu = function() {
    else if(ld_selected === "ngraph_force_layout") {
 	   layouts.setNgraphForceLayout(eles);
 	  }
-  }
+  };
 
   // Update the label font size for all the concepts and relations.
   my.changeLabelFontSize = function(new_size) {
@@ -315,54 +109,44 @@ KNETMAPS.Menu = function() {
      cy.style().selector('node').css({ 'font-size': new_size }).update();
      cy.style().selector('edge').css({ 'font-size': new_size }).update();
     }
-   catch(err) {
-          console.log("Error occurred while altering label font size. \n"+"Error Details: "+ err.stack);
-         }
-  }
+   catch(err) { console.log("Error occurred while altering label font size. \n"+"Error Details: "+ err.stack); }
+  };
 
   // Show/ Hide labels for concepts and relations.
   my.showHideLabels = function(val) {
-   if(val === "Concepts") {
-      my.displayConceptLabels();
-     }
-   else if(val === "Relations") {
-	   my.displayRelationLabels();
-     }
-   else if(val === "Both") {
-	   my.displayConRelLabels();
-     }
-   else if(val === "None") {
-	   my.hideConRelLabels();
-     }
-  }
+   if(val === "Concepts") { my.displayConceptLabels(); }
+   else if(val === "Relations") { my.displayRelationLabels(); }
+   else if(val === "Both") { my.displayConRelLabels(); }
+   else if(val === "None") { my.hideConRelLabels(); }
+  };
 
   // Show node labels.
   my.displayConceptLabels = function() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
    cy.nodes().removeClass("LabelOff").addClass("LabelOn");
    cy.edges().removeClass("LabelOn").addClass("LabelOff");
-  }
+  };
 
   // Show edge labels.
   my.displayRelationLabels = function() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
    cy.nodes().removeClass("LabelOn").addClass("LabelOff");
    cy.edges().removeClass("LabelOff").addClass("LabelOn");
-  }
+  };
 
   // Show node & edge labels.
   my.displayConRelLabels = function() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
    cy.nodes().removeClass("LabelOff").addClass("LabelOn");
    cy.edges().removeClass("LabelOff").addClass("LabelOn");
-  }
+  };
 
   // Show node labels.
   my.hideConRelLabels = function() {
    var cy= $('#cy').cytoscape('get'); // reference to `cy`
    cy.nodes().removeClass("LabelOn").addClass("LabelOff");
    cy.edges().removeClass("LabelOn").addClass("LabelOff");
-  }
+  };
 
 	// Full screen: Maximize/ Minimize overlay
   my.OnMaximizeClick = function() {
@@ -373,12 +157,12 @@ KNETMAPS.Menu = function() {
       $('#maximizeOverlay').removeClass('max').addClass('min'); // toggle image
 	// Maximize
       $('#knet-maps').addClass('full_screen');
-
-	// reload the network
-	container.load_reload_Network(currentEles_jsons, currentStylesheet_json, false);
+      
+      // reload the network
+      container.load_reload_Network(currentEles_jsons, currentStylesheet_json, false);
 
       // Show Item Info table
-	iteminfo.openItemInfoPane();
+      iteminfo.openItemInfoPane();
      }
      else {
       $('#maximizeOverlay').removeClass('min').addClass('max'); // toggle image
@@ -386,18 +170,18 @@ KNETMAPS.Menu = function() {
       $('#knet-maps').removeClass('full_screen');
 
       // reload the network
-	container.load_reload_Network(currentEles_jsons, currentStylesheet_json, false);
+      container.load_reload_Network(currentEles_jsons, currentStylesheet_json, false);
 
       // Hide Item Info table
-	iteminfo.closeItemInfoPane();
+      iteminfo.closeItemInfoPane();
    }
-}
+ };
 
  // Import a saved network into KnetMaps.
  my.importJson = function() {
    // open file dialog, hidden by default for openKnetFile
    $("#openNetworkFile").trigger("click");
-  }
+  };
   
  // Open selected cyjs JSON file to reload KnetMaps with.
  my.OpenKnetFile = function(event) {
@@ -410,7 +194,7 @@ KNETMAPS.Menu = function() {
 	  
    // start reading selectd file's contents
    reader.readAsText(selectedFile);
-  }
+  };
 
  // Re-initialise KnetMaps with imported/reloaded (pure) JSON.
  my.drawWithJson = function(fileContents) {
@@ -431,7 +215,7 @@ KNETMAPS.Menu = function() {
 	//container.load_reload_Network(graphJSON, /*currentStylesheet_json*/ JSON.parse(eles_styles), true);
 	container.load_reload_Network(eles_jsons, eles_styles, true);
 	eval('stats.updateKnetStats(); conceptLegend.populateConceptLegend();');
-  }
+  };
   
   return my;
 };
