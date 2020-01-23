@@ -254,10 +254,10 @@ cy.elements().qtip({
 //              if(newCol!=="") {
 //                this.css({ 'text-background-color': newCol });
 //               }
-              if (this.isNode() && this.css('text-background-opacity') == '1') {
+              if (this.isNode() && this.css('text-background-opacity') === '1') {
                   this.css({ 'text-background-opacity': '0' });
               }
-              else if (this.isNode() && this.css('text-background-opacity') == '0') {
+              else if (this.isNode() && this.css('text-background-opacity') === '0') {
                     this.css({ 'text-background-opacity': '1' });
               }
           }
