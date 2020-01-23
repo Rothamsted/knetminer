@@ -7,6 +7,7 @@ addons:
   apt:
     packages:
       - libxml2-utils
+      - python3-pip # To use travis-pls
 services:
   - docker      
   
@@ -23,10 +24,13 @@ install:
   # TODO: remove after the mentioned issue is fixed.
   - npm install -g n
   - npath=$(which n) # we need this, cause the installation is somewhere in $HOME and 'n' needs sudo
-  - sudo $npath 11.15.0 
+  - sudo $npath 11.15.0
+  - pip3 install git+https://github.com/naftulikay/travis-pls # See below
       
 script:
-  - ./travis-build.sh
+  # travis-pls prints periodic keepalive messages, so that Travis doesn't stop after 10 mins due to the
+  # no message timeout 
+  - travis-pls --max-timeout 1800 ./travis-build.sh
   
 branches:
   only:
