@@ -140,7 +140,7 @@
             <div id="evidenceTable" class="resultViewer" style="display:none;"></div>
             <!-- Network View tab -->
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
-            <!--    <div id="knetSaveButton" style="width:101%; margin-top:7px;"><button id="saveJSON" class="btn knet_button" onclick="saveKnetAsJson(\"null\");" title="Save the knetwork to knetspace" style="float:right;">Save</button></div> -->
+                <div id="knetSaveButton" style="width:101%; margin-top:7px;"></div>
                 <!-- KnetMaps.js -->
                 <div id="knet-maps" style="display: none;"></div>
             </div>

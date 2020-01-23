@@ -913,14 +913,19 @@ function generateCyJSNetwork(url, requestParams) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+                                        
+                                        // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
+                                        var networkId= null;
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson(\""+networkId+"\");' title='Save the knetwork to knetspace'>Save</button>");
+                                        
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           knetmaps.drawRaw('#knet-maps', data.graph, null);
+                                           knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
                                           var eles_jsons= data.graph.graphJSON.elements;
                                           var eles_styles= data.graph.graphJSON.style;
                                           var metadata_json= data.graph.allGraphData;
-                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles, null);
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
