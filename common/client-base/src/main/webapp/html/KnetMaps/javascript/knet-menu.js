@@ -52,7 +52,7 @@ KNETMAPS.Menu = function() {
    
    //console.log("networkId: "+ networkId); // test
    var knet_name= "myKnetwork.json", apiGraphSummary= null;
-   if(networkId === "undefined" || typeof networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
+   if(networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= my.getGraphDBSummary();
      }
@@ -77,7 +77,7 @@ KNETMAPS.Menu = function() {
    // knetName & knetDesc modal (jBox)
    var knetName= knet_name;
    var knetDesc= "Network for " + knetName;
-   console.log("Name: "+ knetName + ", desc: "+ knetDesc); // test
+   console.log("default name: "+ knetName + ", description: "+ knetDesc); // test
    var uploadHtml= "<form class='form' method='post' action='#'>"
                           + "<label><font size='4'>Knetwork name</font></label>"+ "<p></p>"
                           + "<input style='height:20px;width:450px;' placeholder="+ knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
@@ -102,12 +102,12 @@ KNETMAPS.Menu = function() {
                    knetDesc= $.trim($('textarea#knetDescription').val());
                   }
                 else { knetDesc= "Network for " + knetName; }
-                console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test
+                console.log("set: name: "+ knetName + ", description: "+ knetDesc); // test
                 
-                if(networkId === "undefined" || typeof networkId === "undefined") {
+                if(networkId === "undefined") {
                     //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
-                    console.log("Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test2
+                    console.log("POST: name: "+ knetName + ", description: "+ knetDesc); // test2
                     $.ajax({
                         type: 'POST',
                         url: knetspace_api_host + '/api/v1/networks/',
@@ -171,8 +171,12 @@ KNETMAPS.Menu = function() {
                                 console.log("PATCH response: " + data);
                             });
                 }
+             
+             // reset knetName & knetDesc.
+             knetName= knet_name;
+             knetDesc= "Network for " + knetName;
+             console.log("reset: Name of kNetwork: "+ knetName + ", description: "+ knetDesc); // test3
             });
-            
     //    });
   };
   
