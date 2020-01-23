@@ -21,7 +21,7 @@
    
    //console.log("networkId: "+ networkId); // test
    var knet_name= "myKnetwork.json", apiGraphSummary= null;
-   if(networkId === "undefined") { // for a new knetwork, fetch graphSummary from KnetMiner server API.
+   if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= getGraphDBSummary();
      }
@@ -73,7 +73,7 @@
                 else { knetDesc= "Network for " + knetName; }
                 console.log("set: name: "+ knetName + ", description: "+ knetDesc); // test
                 
-                if(networkId === "undefined") {
+                if(networkId === null) {
                     //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                     console.log("POST: name: "+ knetName + ", description: "+ knetDesc); // test2
