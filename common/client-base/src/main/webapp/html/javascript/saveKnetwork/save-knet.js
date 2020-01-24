@@ -112,7 +112,7 @@
         });
     //   });
        // destroy jBox modal when done.
-       uploadModal.destroy();
+      // uploadModal.destroy(); // fails
         //}
      } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
          $.ajax({
