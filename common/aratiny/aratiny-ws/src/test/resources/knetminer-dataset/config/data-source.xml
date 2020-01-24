@@ -17,6 +17,7 @@
         <entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
 	<entry key="provider">${knetminer.provider}</entry>
 	<entry key="speciesName">${knetminer.specieName}</entry>	
+	<entry key="knetSpaceHost">${knetminer.knetSpaceHost}</entry>
 
 	<!-- 
 		This is the configuration for the new Neo4j-based backend
