@@ -173,6 +173,12 @@ public class OndexServiceProvider {
      * Species Name provided via maven-settings
      */
     private String speciesName;
+	
+	/*
+    * Host url provided by mav args (otherwise default is assigned) for knetspace
+    */
+    private String knetspaceHost;
+
     
     /**
      * true if a reference genome is provided
@@ -2740,6 +2746,13 @@ public class OndexServiceProvider {
     
     public String getRelationshipCount(){
         return this.relationshipCount;
+    }
+    public void setKnetspaceHost(String knetspaceHost) {
+        this.knetspaceHost = knetspaceHost;
+    }
+
+    public String getKnetspaceHost() {
+        return this.knetspaceHost;
     }
 
     public void setReferenceGenome(boolean value) {
