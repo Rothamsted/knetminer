@@ -2649,7 +2649,8 @@ public class OndexServiceProvider {
      * @param map
      * @return
      */
-    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
+    {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
             @Override
             public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
@@ -2658,6 +2659,13 @@ public class OndexServiceProvider {
                 return res != 0 ? res : 1;
             }
         });
+
+        /* TODO: this might give troubles, see 
+         * https://stackoverflow.com/questions/11856391/findbugs-dmi-entry-sets-may-reuse-entry-objects 
+         *        
+         * A possible workaround is to add AbstractMap.SimpleImmutableEntry() wrappers, instead of the original
+         * entry set.
+         */
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
