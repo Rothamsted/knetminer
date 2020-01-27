@@ -235,47 +235,9 @@ cy.elements().qtip({
             }
         },
         {
+	  // Turn the highlighter on or off, respectively. 
           content: 'Highlighter on/off',
           select: function () {
-              
-//              var myModal = new jBox('Modal', {
-//                  title: 'highlighter colour',
-//                  content: 'This is a modal!',
-//                  cancelButton: 'Exit',
-//                  draggable: 'title',
-//                  attributes: {
-//                        x: 'right',
-//                        y: 'top'
-//                  },
-//                  delayOpen: 100
-//              });
-//              
-//              myModal.open();
-              // Create the div
-              $('#infoDialog').slideToggle(300);
-//              var colour = this.css('text-background-color');
-//              var newCol = "";
-//              new Picker({
-//                  parent: $('#itemInfo'),
-//                  popup: false,
-//                  alpha: false,
-//                  color: colour,
-//                  editor: false,
-//                  layout: 'default',
-//                  editorFormat: 'hsl',
-//                  cancelButton: true,
-//                  onChange: function(color){
-//                      newCol = color;
-//                  }
-//              });
-             
-              
-//              console.log(newCol);
-//              if(newCol!=="") {
-//                this.css({
-//                            'text-background-color': newCol
-//                             });
-//                       }
               if (this.isNode() && this.css('text-background-opacity') == '1') {
                   this.css({
                       'text-background-opacity': '0'
