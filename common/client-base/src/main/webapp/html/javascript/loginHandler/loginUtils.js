@@ -51,7 +51,7 @@ function jboxNotice(content, colour, yPos) {
  */
 function loginModalToggle() {
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        var knetspace_address = /*ksAddress*/ "http://babvs72.rothamsted.ac.uk:8000"; // for pc-test
 
         $('#login_icon').click(function (e) {
             //e.preventDefault();
