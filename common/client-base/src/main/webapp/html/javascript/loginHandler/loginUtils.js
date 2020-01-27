@@ -158,7 +158,7 @@ function logOut(knetspace_address) {
 function fetchCredentials(loginModal) {
     // Get the sever URL from KnetMiner API
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        var knetspace_address = /*ksAddress*/ "http://babvs72.rothamsted.ac.uk:8000"; // for pc-test
 
         // Initial check for credentials
         fetch(knetspace_address + '/api/v1/me', {
