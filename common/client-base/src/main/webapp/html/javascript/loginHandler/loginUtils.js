@@ -8,7 +8,7 @@
  * @returns {unresolved promise}
  */
 async function getKsAPI() {
-    var response = await fetch(api_url + '/ksHost')
+    const response = await fetch(api_url + '/ksHost')
             .then((r) => r.json())
             .then((rData) => {
                 return rData.ksHostUrl; 
@@ -23,9 +23,7 @@ async function getKsAPI() {
  * @param {type} time
  * @returns {Promise}
  */
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+let sleep = time => new Promise((resolve) => setTimeout(resolve, time));
 
 /*Function to create a jboxNotice - note that ypos is best left at 50 in my tests
  * 
@@ -51,11 +49,11 @@ function jboxNotice(content, colour, yPos) {
  */
 function loginModalToggle() {
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        let knetspace_address = ksAddress;
 
         $('#login_icon').click(function (e) {
             //e.preventDefault();
-            var loginHtml = "<form class='form' method='post' action='#'>"
+            let loginHtml = "<form class='form' method='post' action='#'>"
                             + "<label>Username or Email</label>"
                             + "<input type='text' name='demail' id='email'>"
                             + "<p></p>"
@@ -69,7 +67,7 @@ function loginModalToggle() {
                             + "<a href='" + knetspace_address + "/sign-up' style='text-decoration: none'>Create an account</a>"
                             + "</form>"
 
-            var loginModal = new jBox('Modal', {
+            let loginModal = new jBox('Modal', {
                 animation: 'pulse',
                 title: '<font size="5"><font color="white">Sign in to </font><font color="orange">Knet</font><font size="5"><font color="white">Miner</font>',
                 content: loginHtml,
@@ -99,8 +97,8 @@ function loginModalToggle() {
  * @param {type} knetspace_address
  */
 function loginHandler(loginModal, knetspace_address) {
-    var email = $("#email").val();
-    var password = $("#password").val();
+    let email = $("#email").val(),
+        password = $("#password").val();
     // Check user credentials are given and not false
     if (email == 'undefined' && password !== 'undefined' || email == '' && password !== '') {
         jboxNotice("You haven't given an email!", 'red', 60);
@@ -143,7 +141,7 @@ function logOut(knetspace_address) {
     }).then((myJson) => {
         console.log("Logged out, response is: " + myJson);
     });
-    var cookie = getCookie("knetspace_token");
+    let cookie = getCookie("knetspace_token");
     eraseCookie(cookie);
     $('#login_icon').attr("title", "Sign in"); // insert new link
     $('#login_icon').text("Sign in");
@@ -158,7 +156,7 @@ function logOut(knetspace_address) {
 function fetchCredentials(loginModal) {
     // Get the sever URL from KnetMiner API
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        let knetspace_address = ksAddress;
 
         // Initial check for credentials
         fetch(knetspace_address + '/api/v1/me', {
@@ -175,7 +173,7 @@ function fetchCredentials(loginModal) {
                     loginModal.toggle();
                 }
 
-                var content = "Welcome, " + myJson.username; // Welcome the user
+                let content = "Welcome, " + myJson.username; // Welcome the user
                 jboxNotice(content, 'blue', 60);
                 // Update the login icon & name
                 $('#login_icon').attr("title", "More"); // insert new link
@@ -201,7 +199,7 @@ function fetchCredentials(loginModal) {
                             // move block outside if logged in then do this
 
 
-                            var firstName = myJson.first_name,
+                            let firstName = myJson.first_name,
                                     lastName = myJson.last_name, // Not yet using the lastName, may be used in future.
                                     organisation = myJson.organisation,
                                     email = myJson.email;
@@ -210,12 +208,12 @@ function fetchCredentials(loginModal) {
                             if (email === "null" || typeof email == "object"){email = "Not given";}
                             // If the user doesn't give their first name, we should use the username instead.
                             if (firstName !== "null" || typeof firstName == "object") {
-                                var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + firstName + '</font>';
+                                let profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + firstName + '</font>';
                             } else {
-                                var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + myJson.username + '</font>';
+                                let profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + myJson.username + '</font>';
                             }
 
-                            var profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' style='text-decoration: none' class='profileClass'>Manage my profile</a>"
+                            let profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' style='text-decoration: none' class='profileClass'>Manage my profile</a>"
                                     + "<hr>"
                                     + "<a href='" + knetspace_address + "/network' style='text-decoration: none' class='profileClass'>Manage my Knetworks</a>"
                                     + "<hr></font>"
@@ -230,7 +228,7 @@ function fetchCredentials(loginModal) {
                                     + "<input type='button' name='KnetlogOut' id='logOutButton' value='Sign out' class='knetButton'>";
 
                             // Profile modal box
-                            var profileModal = new jBox('Modal', {
+                            let profileModal = new jBox('Modal', {
                                 animation: 'pulse',
                                 title: profileTitle,
                                 content: profile_menu_html,
@@ -248,7 +246,7 @@ function fetchCredentials(loginModal) {
                                 profileModal.destroy();
                                 logOut(knetspace_address);
                                 $('#login_icon').unbind('click');
-                                var cookie = getCookie("knetspace_token");
+                                let cookie = getCookie("knetspace_token");
                                 if (cookie === 'undefined' || cookie === null) {
                                     sleep(50).then(() => {
                                         //loginModalToggle(); // Currently delaying this to ensure both servers perform their respective HTTP requests before performing the next method
