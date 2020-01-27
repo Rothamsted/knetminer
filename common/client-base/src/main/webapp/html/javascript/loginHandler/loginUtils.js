@@ -16,7 +16,7 @@ async function getKsAPI() {
     return response;
 }
 
-//knetspace_address = 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
+var knetspace_address = 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
 
 /* 
  * Awaits for a promise to be completed first, useful for cross-server communication where delays may exist.
@@ -51,7 +51,7 @@ function jboxNotice(content, colour, yPos) {
  */
 function loginModalToggle() {
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = /*ksAddress*/ "http://babvs72.rothamsted.ac.uk:8000"; // for pc-test
+        var knetspace_address = ksAddress;
 
         $('#login_icon').click(function (e) {
             //e.preventDefault();
@@ -158,7 +158,7 @@ function logOut(knetspace_address) {
 function fetchCredentials(loginModal) {
     // Get the sever URL from KnetMiner API
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = /*ksAddress*/ "http://babvs72.rothamsted.ac.uk:8000"; // for pc-test
+        var knetspace_address = ksAddress;
 
         // Initial check for credentials
         fetch(knetspace_address + '/api/v1/me', {
