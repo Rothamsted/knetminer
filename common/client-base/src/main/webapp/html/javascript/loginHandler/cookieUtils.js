@@ -3,7 +3,10 @@
  * Author: hearnshawj
  */
 
-/** Functions to get and erase cookies **/
+/**
+ * @param {type} cookieName
+ * @returns {unresolved}
+ **/
 let getCookie = cookieName => {
     let updatedCookieName = cookieName + "=",
         cookie = document.cookie.split(';'); // Obtain the cookie
@@ -12,8 +15,7 @@ let getCookie = cookieName => {
         while (co.charAt(0) == ' ') co = co.substring(1, co.length);
         if (co.indexOf(updatedCookieName) == 0) return co.substring(updatedCookieName.length, co.length);
     }
-    // If there's no cookie, then the length is 0 so return null.
-    return null;
+    return null; // If there's no cookie, then the length is 0 so return null.
 }
 
-let eraseCookie = cookieName =>  document.cookie = cookieName + '=; Max-Age=-99999999;';
+let eraseCookie = cookieName =>  document.cookie = cookieName + '=; Max-Age=-99999999;'; // Func to remove cookie
