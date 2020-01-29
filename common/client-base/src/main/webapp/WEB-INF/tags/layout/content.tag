@@ -140,7 +140,7 @@
             <div id="evidenceTable" class="resultViewer" style="display:none;"></div>
             <!-- Network View tab -->
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
-                <div id="knetSaveButton" style="width:101%; margin-top:7px;"></div>
+                <div id="knetSaveButton" style="width:100%; margin-top:7px;"></div>
                 <!-- KnetMaps.js -->
                 <div id="knet-maps" style="display: none;"></div>
             </div>
