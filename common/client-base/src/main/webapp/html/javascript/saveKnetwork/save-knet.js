@@ -48,6 +48,7 @@
    // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
    if(networkId === null) {
    //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
+   
        // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
        var uploadHtml= "<form class='form' method='post' action='#'>"
                           + "<label><font size='4'>Knetwork name</font></label>"+ "<p></p>"
@@ -108,7 +109,7 @@
                              console.log("POST response: " + data);
                             });                 
            // jBox modal - tasks completed.
-           uploadModal.destroy(); // // destroy jBox modal when done
+           uploadModal.destroy(); // destroy jBox modal when done
         });
         //}
      } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
