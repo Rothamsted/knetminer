@@ -8,7 +8,7 @@
  * @returns {unresolved promise}
  */
 async function getKsAPI() {
-    var response = await fetch(api_url + '/ksHost')
+    const response = await fetch(api_url + '/ksHost')
             .then((r) => r.json())
             .then((rData) => {
                 return rData.ksHostUrl; 
@@ -23,9 +23,7 @@ knetspace_address= 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly 
  * @param {type} time
  * @returns {Promise}
  */
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+let sleep = time => new Promise((resolve) => setTimeout(resolve, time));
 
 /*Function to create a jboxNotice - note that ypos is best left at 50 in my tests
  * 
@@ -51,7 +49,7 @@ function jboxNotice(content, colour, yPos) {
  */
 function loginModalToggle() {
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        const knetspace_address = ksAddress;
 
         $('#login_icon').click(function (e) {
             //e.preventDefault();
@@ -99,8 +97,9 @@ function loginModalToggle() {
  * @param {type} knetspace_address
  */
 function loginHandler(loginModal, knetspace_address) {
-    var email = $("#email").val();
-    var password = $("#password").val();
+    var email, password;
+    email = $("#email").val();
+    password = $("#password").val();
     // Check user credentials are given and not false
     if (email == 'undefined' && password !== 'undefined' || email == '' && password !== '') {
         jboxNotice("You haven't given an email!", 'red', 60);
@@ -158,7 +157,7 @@ function logOut(knetspace_address) {
 function fetchCredentials(loginModal) {
     // Get the sever URL from KnetMiner API
     getKsAPI().then(function (ksAddress) {
-        var knetspace_address = ksAddress;
+        const knetspace_address = ksAddress;
 
         // Initial check for credentials
         fetch(knetspace_address + '/api/v1/me', {
@@ -175,7 +174,7 @@ function fetchCredentials(loginModal) {
                     loginModal.toggle();
                 }
 
-                var content = "Welcome, " + myJson.username; // Welcome the user
+                let content = "Welcome, " + myJson.username; // Welcome the user
                 jboxNotice(content, 'blue', 60);
                 // Update the login icon & name
                 $('#login_icon').attr("title", "More"); // insert new link
