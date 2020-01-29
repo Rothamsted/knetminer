@@ -133,7 +133,7 @@
         </div>
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
-            <!-- new GeneoMaps.js -->
+            <!-- new genomaps.js -->
             <div id="genemap-tab" class="resultViewer" style="display: none;">
                 <div id="genemap" class="bootstrap"></div>
             </div>
