@@ -109,10 +109,9 @@
                              console.log("POST response: " + data);
                             });                 
            // jBox modal - tasks completed.
+           uploadModal.destroy(); // // destroy jBox modal when done
         });
     //   });
-       // destroy jBox modal when done.
-      // uploadModal.destroy(); // fails
         //}
      } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
          $.ajax({
