@@ -16,7 +16,7 @@ async function getKsAPI() {
     return response;
 }
 
-var knetspace_address = 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
+knetspace_address= 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
 
 /* 
  * Awaits for a promise to be completed first, useful for cross-server communication where delays may exist.
