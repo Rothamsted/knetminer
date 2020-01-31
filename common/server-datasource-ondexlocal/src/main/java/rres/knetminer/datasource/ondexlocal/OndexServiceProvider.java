@@ -155,7 +155,7 @@ public class OndexServiceProvider {
     /**
      * Version of KnetMiner being used
      **/
-    private int version;
+    private String version;
     
     /**
      * The organisation source name
@@ -2714,11 +2714,11 @@ public class OndexServiceProvider {
         return this.taxID;
     }
     
-    public void setVersion(int ver) {
+    public void setVersion(String ver) {
         this.version = ver;
     }
     
-    public int getVersion() {
+    public String getVersion() {
         return this.version;
     }
     
