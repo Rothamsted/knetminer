@@ -44,7 +44,11 @@
    
    // POST to knetspace via /api/v1/networks/
   // var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
-   var knetspace_api_host= getKsAPI(); // relative domain
+   var knetspace_api_host; // relative domain
+   getKsAPI().then(function(ksAddress) { 
+       knetspace_api_host= ksAddress;
+       console.log("fetched knetspace_api_host: "+ knetspace_api_host);
+    });
    
    if(networkId === null) {
    //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
@@ -72,6 +76,7 @@
            if($('textarea#knetDescription').val()) { knetDesc= $.trim($('textarea#knetDescription').val()); }
            else { knetDesc= "Network for " + knetName; }
            console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
+           console.log("save: knetspace_api_host: "+ knetspace_api_host); // test
            
            // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
            $.ajax({
