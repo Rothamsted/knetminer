@@ -47,7 +47,7 @@
    var knetspace_api_host; // relative domain
    getKsAPI().then(function(ksAddress) { 
        knetspace_api_host= ksAddress;
-       console.log("fetched knetspace_api_host: "+ knetspace_api_host);
+       console.log("fetched knetspace_api_host: "+ knetspace_api_host); // test
     });
    
    if(networkId === null) {
