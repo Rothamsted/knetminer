@@ -81,10 +81,12 @@ function loginModalToggle() {
             });
             loginModal.open(); // New instance of modal (Not ideal)
             // Checking for blank fields on clicking login
-            $('.jBox-container').on('click', '#KnetSpacelogin', function () {
+            $('#KnetSpacelogin').on('click', function () {
                 fetchCredentials(loginModal);
                 loginHandler(loginModal, knetspace_address);
-
+                
+                // jBox modal - tasks completed.
+                loginModal.destroy(); // destroy jBox modal when done
             });
         });
         return false;
@@ -198,7 +200,6 @@ function fetchCredentials(loginModal) {
                     if (typeof myJson.username !== 'undefined') {
                         $('#login_icon').click(function () {
                             // move block outside if logged in then do this
-
 
                             var firstName = myJson.first_name,
                                     lastName = myJson.last_name, // Not yet using the lastName, may be used in future.
