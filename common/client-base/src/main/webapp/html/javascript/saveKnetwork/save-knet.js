@@ -43,9 +43,9 @@
    var knetDesc= "Network for " + knetName;
    
    // POST to knetspace via /api/v1/networks/
-   var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
-   //var knetspace_api_host= ""; // relative domain
-   // ToDo: add/use fixed knetspace_api_host url from main POM for post/patch.
+  // var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
+   var knetspace_api_host= getKsAPI(); // relative domain
+   
    if(networkId === null) {
    //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
    

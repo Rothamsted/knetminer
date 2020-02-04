@@ -72,8 +72,6 @@
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
-        <!-- KnetMaps - js utils to save knet to knetspace -->
-        <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
         <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
         <!-- interactive Legend for Evidence View -->
@@ -81,6 +79,8 @@
         
         <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
         <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>
+        <!-- KnetMaps - js utils to save knet to knetspace -->
+        <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->
