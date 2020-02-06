@@ -4,7 +4,7 @@
  */
 
 /* Function to save knetwork rendered in knetmaps (cyJS) to knetspace via POST. */
- function exportAsJson(networkId) {
+ function exportAsJson(networkId, requestParams) {
    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 
    var exportJson= cy.json(); // full graphJSON
@@ -38,6 +38,14 @@
       //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
      }
 
+   // get keyword and gene list too (if found) to save.
+   var keywords= null, gene_list= null;
+   if(requestParams !== null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
+      gene_list= JSON.stringify(requestParams.list);
+      if(requestParams.keyword !== null) { keywords= requestParams.keyword; }
+      console.log("gene_list: "+ gene_list +", keywords: "+ keywords); // test
+     }
+   
    // default knetName & knetDesc for modal (jBox)
    var knetName= knet_name;
    var knetDesc= "Network for " + knetName;
@@ -102,6 +110,8 @@
                    dbDateCreated: dbDateCreated,
                    sourceOrganization: sourceOrganization,
                    provider: provider,
+                   keyword: keywords,
+                   gene: gene_list,
                    description: knetDesc
                   })
            }).fail(function (errorlog) {
