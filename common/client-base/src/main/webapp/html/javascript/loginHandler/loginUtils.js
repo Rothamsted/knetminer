@@ -234,6 +234,8 @@ function fetchCredentials(loginModal) {
                                 animation: 'pulse',
                                 title: profileTitle,
                                 content: profile_menu_html,
+                                cancelButton: 'Exit',
+                                draggable: 'title',
                                 target: $('#release_icon'),
                                 width: 350,
                                 offset: {
@@ -244,8 +246,9 @@ function fetchCredentials(loginModal) {
                             });
                             profileModal.open();
                             // Sign out button logic, perform api request for logging out
-                            $('#logOutButton').click(function () {
-                                profileModal.destroy();
+                            $('#logOutButton').on('click', function () {
+                                console.log("logout clicked...");
+                                profileModal.destroy(); // destroy modal
                                 logOut(knetspace_address);
                                 $('#login_icon').unbind('click');
                                 var cookie = getCookie("knetspace_token");
