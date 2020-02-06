@@ -234,7 +234,7 @@ function fetchCredentials(loginModal) {
                                 animation: 'pulse',
                                 title: profileTitle,
                                 content: profile_menu_html,
-                                target: $('#login_icon'),
+                                target: $('#release_icon'),
                                 width: 350,
                                 offset: {
                                     x: 100,
