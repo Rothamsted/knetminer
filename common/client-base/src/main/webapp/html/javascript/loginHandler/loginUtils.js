@@ -215,9 +215,9 @@ function fetchCredentials(loginModal) {
                                 var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + myJson.username + '</font>';
                             }
 
-                            var profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' style='text-decoration: none' class='profileClass'>Manage my profile</a>"
+                            var profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' target='_blank' style='text-decoration: none' class='profileClass'>Manage my profile</a>"
                                     + "<hr>"
-                                    + "<a href='" + knetspace_address + "/network' style='text-decoration: none' class='profileClass'>Manage my Knetworks</a>"
+                                    + "<a href='" + knetspace_address + "/network' target='_blank' sstyle='text-decoration: none' class='profileClass'>Manage my Knetworks</a>"
                                     + "<hr></font>"
                                     + "<font size='2'><label><b>Email</b></label>"
                                     + "<p></p>"
