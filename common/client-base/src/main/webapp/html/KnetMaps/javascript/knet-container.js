@@ -73,60 +73,27 @@ cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning
 /* cy.nodes().forEach(function( ele ) {
   var conType= ele.data('conceptType');
   var imgName= 'Gene'; // default
-  if(conType === "Biological_Process") {
-     imgName= 'Biological_process';
-    }
-  else if(conType === "Cellular_Component") {
-       imgName= 'Cellular_component';
-      }
-  else if(conType === "Gene") {
-       imgName= 'Gene';
-      }
-  else if(conType === "Protein Domain") {
-     imgName= 'Protein_domain';
-    }
-  else if(conType === "Pathway") {
-     imgName= 'Pathway';
-    }
-  else if(conType === "Reaction") {
-     imgName= 'Reaction';
-    }
-  else if(conType === "Publication") {
-     imgName= 'Publication';
-    }
-  else if(conType === "Protein") {
-     imgName= 'Protein';
-    }
-  else if(conType === "Quantitative Trait Locus") {
-     imgName= 'QTL';
-    }
-  else if(conType === "Enzyme") {
-     imgName= 'Enzyme';
-    }
-  else if(conType === "Molecular_Function") {
-     imgName= 'Molecular_function';
-    }
-  else if((conType === "Enzyme_Classification") || (conType === "Enzyme Classification")) {
-     imgName= 'Enzyme_classification';
-    }
-  else if(conType === "Trait Ontology") {
-     imgName= 'Trait_ontology';
-    }
-  else if(conType === "Scaffold") {
-     imgName= 'Scaffold';
-    }
-  else if((conType === "Compound") || (conType === "SNP")) {
-     imgName= 'Compound';
-    }
-  else if(conType === "Phenotype") {
-     imgName= 'Phenotype';
-    }
+  if(conType === "Biological_Process") { imgName= 'Biological_process'; }
+  else if(conType === "Cellular_Component") { imgName= 'Cellular_component'; }
+  else if(conType === "Gene") { imgName= 'Gene'; }
+  else if(conType === "Protein Domain") { imgName= 'Protein_domain'; }
+  else if(conType === "Pathway") { imgName= 'Pathway'; }
+  else if(conType === "Reaction") { imgName= 'Reaction'; }
+  else if(conType === "Publication") { imgName= 'Publication'; }
+  else if(conType === "Protein") { imgName= 'Protein'; }
+  else if(conType === "Quantitative Trait Locus") { imgName= 'QTL'; }
+  else if(conType === "Enzyme") { imgName= 'Enzyme'; }
+  else if(conType === "Molecular_Function") { imgName= 'Molecular_function'; }
+  else if((conType === "Enzyme_Classification") || (conType === "Enzyme Classification")) { imgName= 'Enzyme_classification'; }
+  else if(conType === "Trait Ontology") { imgName= 'Trait_ontology'; }
+  else if(conType === "Scaffold") { imgName= 'Scaffold'; }
+  else if((conType === "Compound") || (conType === "SNP")) { imgName= 'Compound'; }
+  else if(conType === "Phenotype") { imgName= 'Phenotype'; }
   var eleImage= 'image/'+ imgName +'.png';
 //  var eleImage= data_url +'image/'+ imgName +'.png';
-
   // Add these properties to this element's JSON.
   ele.data('nodeImage', eleImage);
-//  console.log("data.nodeImage "+ ele.data('nodeImage'));
+//  console.log("set data.nodeImage "+ ele.data('nodeImage'));
  });
 
  // Update the stylesheet for the Network Graph to show background images for Nodes.
@@ -136,8 +103,7 @@ cy.boxSelectionEnabled(false); // to disable box selection & hence allow Panning
           }).update();
 */
 
-/** Add a Qtip message to all the nodes & edges using QTip displaying their Concept Type & value when a 
- * node/ edge is clicked.
+/** Add a Qtip message to all the nodes & edges using QTip displaying their Concept Type & value when a node/ edge is clicked.
  * Note: Specify 'node' or 'edge' to bind an event to a specific type of element.
  * e.g, cy.elements('node').qtip({ }); or cy.elements('edge').qtip({ }); */
 cy.elements().qtip({
@@ -160,10 +126,7 @@ cy.elements().qtip({
      },
   style: {
     classes: 'qtip-bootstrap',
-    tip: {
-      width: 12,
-      height: 6
-    }
+    tip: { width: 12, height: 6 }
   }
 });
 
@@ -185,7 +148,7 @@ cy.elements().qtip({
               info= info +"<br/><b>To:</b> "+ cy.$('#'+toID).data('value') +" ("+ cy.$('#'+toID).data('conceptType').toLowerCase() +")";
              }
       }
-      catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
+    catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
     console.log(info);
     iteminfo.showItemInfo(thisElement);
    });
@@ -193,7 +156,7 @@ cy.elements().qtip({
 
  /** Popup (context) menu: a circular Context Menu for each Node (concept) & Edge (relation) using the 'cxtmenu' jQuery plugin. */
  var contextMenu= {
-    menuRadius: 75, // the radius of the circular menu in pixels
+    menuRadius: 80, // the radius of the circular menu in pixels
 
     // Use selector: '*' to set this circular Context Menu on all the elements of the core.
     /** Note: Specify selector: 'node' or 'edge' to restrict the context menu to a specific type of element. e.g, 
@@ -206,7 +169,6 @@ cy.elements().qtip({
          select: function() {
              // Show Item Info Pane.
         	 iteminfo.openItemInfoPane();
-
              // Display Item Info.
         	 iteminfo.showItemInfo(this);
             }
@@ -231,11 +193,12 @@ cy.elements().qtip({
              this.addClass('HideEle');
              // Refresh network legend.
              stats.updateKnetStats();
-			 conceptLegend.populateConceptLegend();
+             conceptLegend.populateConceptLegend();
             }
         },
-
-        {
+        
+        // disabled Hide by Type feature (Jan. 2020)
+    /*    {
          content: 'Hide by Type',
          select: function() { // Hide all concepts (nodes) of the same type.
              if(this.isNode()) {
@@ -266,9 +229,61 @@ cy.elements().qtip({
                }
             // Refresh network Stats.
             stats.updateKnetStats();
-			conceptLegend.populateConceptLegend();
+            conceptLegend.populateConceptLegend();
            }
+        }, */
+        
+        {
+	  // Turn the highlighter on or off, respectively. 
+          content: 'Highlighter on/off',
+          select: function () {
+              if (this.isNode() && this.css('text-background-opacity') == '1') {
+                  this.css({
+                      'text-background-opacity': '0'
+                  });
+              }
+              else if (this.isNode() && this.css('text-background-opacity') == '0') {
+                    this.css({
+                        'text-background-opacity': '1'
+                    });
+              }
+          }
         },
+
+//        {
+//         content: 'Hide by Type',
+//         select: function() { // Hide all concepts (nodes) of the same type.
+//             if(this.isNode()) {
+//                var thisConceptType= this.data('conceptType');
+//        //        console.log("Hide Concept by Type: "+ thisConceptType);
+//                cy.nodes().forEach(function( ele ) {
+//                 if(ele.data('conceptType') === thisConceptType) {
+//                    //ele.hide();
+//                    ele.removeClass('ShowEle');
+//                    ele.addClass('HideEle');
+//                   }
+//                });
+//                // Relayout the graph.
+//                //rerunLayout();
+//               }
+//             else if(this.isEdge()) { // Hide all relations (edges) of the same type.
+//                var thisRelationType= this.data('label');
+//        //        console.log("Hide Relation (by Label type): "+ thisRelationType);
+//                cy.edges().forEach(function( ele ) {
+//                 if(ele.data('label') === thisRelationType) {
+//                    //ele.hide();
+//                    ele.removeClass('ShowEle');
+//                    ele.addClass('HideEle');
+//                   }
+//                });
+//                // Relayout the graph.
+//               // rerunLayout();
+//               }
+//            // Refresh network Stats.
+//            stats.updateKnetStats();
+//            conceptLegend.populateConceptLegend();
+//           }
+//        },
 
         {
          content: 'Label on/ off by Type',
@@ -342,7 +357,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    $('#infoDialog').slideToggle(300);
   });
 
-}
+};
 
 return my;
 };

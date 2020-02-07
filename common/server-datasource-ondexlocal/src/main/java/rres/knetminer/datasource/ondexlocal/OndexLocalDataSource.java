@@ -23,12 +23,14 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import org.json.JSONException;
 import org.json.JSONObject;
+import rres.knetminer.datasource.api.CountGraphEntities;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.EvidencePathResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
+import rres.knetminer.datasource.api.KnetSpaceHost;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
@@ -124,14 +126,16 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
-                this.ondexServiceProvider.setVersion(Integer.parseInt(this.getProperty("version")));
-                log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
-                this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
-                log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
-                this.ondexServiceProvider.setProvider(this.getProperty("provider"));
-                log.info("Datasource " + dsName + " provider source: " + this.ondexServiceProvider.getProvider());
-                this.ondexServiceProvider.setSpecies(this.getProperty("specieName"));
-                log.info("Datasource " + dsName + " species name: " + this.ondexServiceProvider.getSpecies());
+		this.ondexServiceProvider.setVersion(Integer.parseInt(this.getProperty("version")));
+		log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
+		this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
+		log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
+		this.ondexServiceProvider.setProvider(this.getProperty("provider"));
+		log.info("Datasource " + dsName + " provider source: " + this.ondexServiceProvider.getProvider());
+		this.ondexServiceProvider.setSpecies(this.getProperty("specieName"));
+		log.info("Datasource " + dsName + " species name: " + this.ondexServiceProvider.getSpecies());
+		this.ondexServiceProvider.setKnetspaceHost(this.getProperty("knetSpaceHost"));
+		//log.info("Datasource " + dsName + " KnetSpace host: " + this.ondexServiceProvider.getKnetspaceHost());
                 
                 
 
@@ -408,4 +412,42 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
             return response;
             
         }
+		
+		public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+        Set<ONDEXConcept> genes = new HashSet<>();
+
+        log.info("Call applet! Search genes " + request.getList().size());
+
+        // Search Genes
+        if (!request.getList().isEmpty()) {
+            genes.addAll(this.ondexServiceProvider.searchGenes(request.getList()));
+        }
+
+        // Search Regions
+        if (!request.getQtl().isEmpty()) {
+            genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+        }
+
+        // Find Semantic Motifs
+        ONDEXGraph subGraph = this.ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+        
+        CountGraphEntities response = new CountGraphEntities();
+        try {
+            // Set the graph
+            ondexServiceProvider.exportGraph(subGraph);
+            log.info("Set graph, now getting the number of nodes...");
+            response.setNodeCount(ondexServiceProvider.getNodeCount());
+            response.setRelationshipCount(ondexServiceProvider.getRelationshipCount());
+        } catch (InvalidPluginArgumentException e) {
+            log.error("Failed to export graph", e);
+            throw new Error(e);
+        }
+        return response;
+    }
+	
+    public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+        KnetSpaceHost response = new KnetSpaceHost();
+        response.setKsHostUrl(this.ondexServiceProvider.getKnetspaceHost());
+      return response;
+    }
 }

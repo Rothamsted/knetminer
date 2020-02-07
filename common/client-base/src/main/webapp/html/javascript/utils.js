@@ -5,78 +5,9 @@ var genes;
 
 
 
-
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
-
-
-/* 
- * Functions to get cookies and erase them.
- */
- function setCookie(cookieName, cookieValue, days) {
-    var expirationDate = "";
-    if (days) {
-        var cookieDate = new Date();
-        cookieDate.setTime(cookieDate.getTime() + (days * 24 * 60 * 60 * 1000));
-        expirationDate = "; expires=" + cookieDate.toUTCString();
-    }
-    // Create the cookie which will expire in X days
-    console.log("Setting cookie...");
-    document.cookie = cookieName + "=" + (cookieValue || "") + expirationDate + "; path=/";
-}
- function getCookie(cookieName) {
-    //console.log("Raiding the cookie jar now!");
-    var nameEQ = cookieName + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
- function eraseCookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-
-function cookieInterval(time) {
-    setInterval(function () {
-        var cookie = getCookie("knetspace_token");
-        // If there's a token, we'll have the cookie, so change the class. 
-        if (cookie !== null) {
-            //console.log("Found a cookie! The cookie is: " + cookie);
-            if (!$('#profile_icon').hasClass('fas fa-sign-out-alt')) {
-                $('#login_icon').attr("href", "");
-                $('#login_icon').attr("title", "Logout"); // insert new link
-                $('#login_icon').attr("target", "");
-                $('#login_icon').attr("title", "");
-                $('#profile_icon').attr("title", "");
-                var parsedJson = parseJwt(cookie);
-                $('#login_icon').text(" " + parsedJson['username']);
-                $('#login_icon').off('click');
-                $('#profile_icon').removeClass('fa fa-user');
-                $('#profile_icon').addClass('fas fa-sign-out-alt');
-                // Change activity of button to logout (delete cookie)
-                $('#profile_icon').click(function (event) {
-                    event.preventDefault(); //Prevent opening a new window
-                    eraseCookie(cookie);
-                    window.location.reload(true); // Reload the page
-                    return false;
-                });
-            }
-        }
-    }, time);
-}
-
-
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-};
 
 /*
 Functions for show and hide structures when a button is pressed
@@ -290,18 +221,11 @@ function evidencePath(id, genes) {
 $(document).ready(
     function () {
         // add species name to header
-        $('#species_header').text(species_name); // set/ update species name from utils_config.js
-        $('#login_icon').text("Login");
-        // For testing below
-        //setCookie("knetspace_token", "NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImowZSIsImV4cCI6MTU3NTk4NDA0MSwiZW1haWwiOiJqb3NlcGhoZWFybnNoYXdAZ29vZ2xlbWFpbC5jb20ifQ.ZHSGFDVbfSvXpkDUnwqKxo7r7xXfu483SpIGhwOXOcw", 1);
-        cookieInterval(5000); // Wait 30 s and repeat every 30 s till logged out
-        $('#login_icon').click(function() {
-	     //console.log("Login icon was clicked");
-             var x = (screen.width / 2) - (500 / 2),
-                 y = (screen.height/2) - (500 / 2);
-             window.open ("knetspace/auth/jwt", '_blank', 'width=${500}', 'height=${500}', 'left=${x}', 'top=${y}');
-             // ToDo: 1) add/use fixed knetspace_api_host url from main POM, 2) change login page from knetspace/auth/jwt to cleaner knetspace/login UI page for login handling.
-        });
+        $('#species_header').text(species_name); //update species name from utils_config.js
+        $('#login_icon').text("Sign in");
+        fetchCredentials(null);
+        // Initalize login Modal
+        loginModalToggle();        
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -962,10 +886,10 @@ function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-	
-	// Show loading spinner on 'tabviewer' div
-	activateSpinner("#tabviewer");
-	//console.log("network: start spinner...");
+    
+    // Show loading spinner on 'tabviewer' div
+    activateSpinner("#tabviewer");
+    //console.log("network: start spinner...");
         
     $.post({
         url: url,
@@ -976,27 +900,30 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams),
-		beforeSend: deactivateSpinner("#tabviewer")
-    })
-	    .fail(function (errorlog) {
+        beforeSend: deactivateSpinner("#tabviewer")
+    }).fail(function (errorlog) {
 			alert("An error has ocurred..." + errorlog);
 		//	deactivateSpinner("#tabviewer");
-        })
-        .success(function (data) {
+        }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 		//	deactivateSpinner("#tabviewer");
 			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+                                        
+                                        // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
+                                        var networkId= null;
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
+                                        
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           knetmaps.drawRaw('#knet-maps', data.graph, null);
+                                           knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
                                           var eles_jsons= data.graph.graphJSON.elements;
                                           var eles_styles= data.graph.graphJSON.style;
                                           var metadata_json= data.graph.allGraphData;
-                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles, null);
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');

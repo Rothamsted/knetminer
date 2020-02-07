@@ -74,4 +74,8 @@ public abstract class KnetminerDataSource {
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
         
 	public abstract GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	
+	public abstract CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	
+	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }
