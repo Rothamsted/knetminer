@@ -39,7 +39,7 @@
      }
 
    // get keyword and gene list too (if found) to save.
-   var keywords= null, gene_list= null;
+   var keywords= "", gene_list= null;
    if(requestParams !== null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       gene_list= JSON.stringify(requestParams.list);
       if(requestParams.keyword !== null) { keywords= requestParams.keyword; }
