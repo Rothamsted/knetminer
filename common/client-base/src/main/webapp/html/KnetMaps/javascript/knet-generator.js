@@ -37,7 +37,7 @@ KNETMAPS.Generator = function() {
  my.generateNetworkGraphRaw=function(json_blob) {
    //console.log("Dataset file path: "+ json_File);
    eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
-  }
+  };
 
 // initialize the network
  my.initializeNetworkView=function(networkJSON, metadataJSON, existing_styles) {

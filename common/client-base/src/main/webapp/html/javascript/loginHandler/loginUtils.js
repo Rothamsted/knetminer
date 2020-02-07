@@ -16,7 +16,7 @@ async function getKsAPI() {
     return response;
 }
 
-//knetspace_address = 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
+//knetspace_address= 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
 
 /* 
  * Awaits for a promise to be completed first, useful for cross-server communication where delays may exist.
@@ -81,10 +81,12 @@ function loginModalToggle() {
             });
             loginModal.open(); // New instance of modal (Not ideal)
             // Checking for blank fields on clicking login
-            $('.jBox-container').on('click', '#KnetSpacelogin', function () {
+            $('#KnetSpacelogin').on('click', function () {
                 fetchCredentials(loginModal);
                 loginHandler(loginModal, knetspace_address);
-
+                
+                // jBox modal - tasks completed.
+                loginModal.destroy(); // destroy jBox modal when done
             });
         });
         return false;
@@ -199,7 +201,6 @@ function fetchCredentials(loginModal) {
                         $('#login_icon').click(function () {
                             // move block outside if logged in then do this
 
-
                             var firstName = myJson.first_name,
                                     lastName = myJson.last_name, // Not yet using the lastName, may be used in future.
                                     organisation = myJson.organisation,
@@ -230,21 +231,14 @@ function fetchCredentials(loginModal) {
 
                             // Profile modal box
                             var profileModal = new jBox('Modal', {
-                                animation: 'pulse',
-                                title: profileTitle,
-                                content: profile_menu_html,
-                                target: $('#login_icon'),
-                                width: 350,
-                                offset: {
-                                    x: 100,
-                                    y: 200
-                                },
-                                delayOpen: 100
+                                animation: 'pulse', title: profileTitle, content: profile_menu_html, cancelButton: 'Exit', draggable: 'title',
+                                target: $('#release_icon'), width: 350, offset: { x: 100, y: 200 }, delayOpen: 100
                             });
                             profileModal.open();
                             // Sign out button logic, perform api request for logging out
-                            $('#logOutButton').click(function () {
-                                profileModal.destroy();
+                            $('#logOutButton').on('click', function () {
+                                //console.log("logout clicked...");
+                                profileModal.destroy(); // destroy modal
                                 logOut(knetspace_address);
                                 $('#login_icon').unbind('click');
                                 var cookie = getCookie("knetspace_token");

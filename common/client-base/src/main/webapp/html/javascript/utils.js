@@ -886,10 +886,10 @@ function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-	
-	// Show loading spinner on 'tabviewer' div
-	activateSpinner("#tabviewer");
-	//console.log("network: start spinner...");
+    
+    // Show loading spinner on 'tabviewer' div
+    activateSpinner("#tabviewer");
+    //console.log("network: start spinner...");
         
     $.post({
         url: url,
@@ -900,27 +900,30 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams),
-		beforeSend: deactivateSpinner("#tabviewer")
-    })
-	    .fail(function (errorlog) {
+        beforeSend: deactivateSpinner("#tabviewer")
+    }).fail(function (errorlog) {
 			alert("An error has ocurred..." + errorlog);
 		//	deactivateSpinner("#tabviewer");
-        })
-        .success(function (data) {
+        }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 		//	deactivateSpinner("#tabviewer");
 			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+                                        
+                                        // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
+                                        var networkId= null;
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
+                                        
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           knetmaps.drawRaw('#knet-maps', data.graph);
+                                           knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
                                           var eles_jsons= data.graph.graphJSON.elements;
                                           var eles_styles= data.graph.graphJSON.style;
                                           var metadata_json= data.graph.allGraphData;
-                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles);
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
