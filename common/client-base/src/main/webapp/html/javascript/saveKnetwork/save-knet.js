@@ -39,7 +39,7 @@
      }
 
    // get keyword and gene list too (if found) to save.
-   var keywords= "", gene_list= null;
+   var keywords= null, gene_list= null;
    if(requestParams !== null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       gene_list= JSON.stringify(requestParams.list);
       if(requestParams.keyword !== null) { keywords= requestParams.keyword; }
@@ -87,6 +87,14 @@
            console.log("save: knetspace_api_host: "+ knetspace_api_host); // test
            
            // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
+           var post_json= JSON.stringify({ name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
+               image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
+               sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords });
+           if(keywords === null) { // for non-keyword search
+              post_json= JSON.stringify({ name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
+                  image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
+                  sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list });
+             }
            $.ajax({
                type: 'POST',
                url: knetspace_api_host + '/api/v1/networks/',
@@ -97,23 +105,7 @@
                    "Content-Type": "application/json; charset=utf-8"
                   },
                datatype: "json",
-               data: JSON.stringify({
-                   name: knetName,
-                   dateCreated: knet_date,
-                   numNodes: totalNodes,
-                   numEdges: totalEdges,
-                   graph: JSON.parse(exportedJson),
-                   image: thumbnail_image,
-                   speciesTaxid: speciesTaxid,
-                   speciesName: speciesName,
-                   dbVersion: dbVersion,
-                   dbDateCreated: dbDateCreated,
-                   sourceOrganization: sourceOrganization,
-                   provider: provider,
-                   keyword: keywords,
-                   gene: gene_list,
-                   description: knetDesc
-                  })
+               data: post_json
            }).fail(function (errorlog) {
                    uploadModal.toggle();
                    new jBox('Notice', { content: "Failed to upload kNetwork", color: 'red', autoClose: 1000 });
@@ -128,6 +120,8 @@
         });
         //}
      } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
+         var patch_json= JSON.stringify({ dateModified: knet_date, numNodes: totalNodes, numEdges: totalEdges, 
+             graph: JSON.parse(exportedJson), image: thumbnail_image });
          $.ajax({
              type: 'PATCH',
              url: knetspace_api_host + '/api/v1/networks/' + networkId + '/',
@@ -138,13 +132,7 @@
                  "Content-Type": "application/json; charset=utf-8"
                 },
              datatype: "json",
-             data: JSON.stringify({
-                 dateModified: knet_date,
-                 numNodes: totalNodes,
-                 numEdges: totalEdges,
-                 graph: JSON.parse(exportedJson),
-                 image: thumbnail_image
-                })
+             data: patch_json
             })
             .fail(function (errorlog) { console.log("PATCH error: " + JSON.stringify(errorlog)); })
             .success(function (data) { console.log("PATCH response: " + data); });
