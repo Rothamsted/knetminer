@@ -1493,7 +1493,7 @@ public class OndexServiceProvider {
 
         // special case when none of nodes contains keyword (no-keyword-match)
         // set path to visible if end-node is Trait or Phenotype
-        if (keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))) {
+        if (keywordConcepts.isEmpty() && !(keyword == null || keyword.equals("")) ) {
             for (EvidencePathNode path : pathSet) {
                 highlightPath(path, graphCloner, true);
             }
@@ -2892,7 +2892,7 @@ public class OndexServiceProvider {
             // valid path.
         		//
         	          
-            Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, genes, null);
+            Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
             // Performance stats reporting about the Cypher-based traverser is disabled after the initial
         		// traversal. This option has no effect when the SM-based traverser is used.
@@ -2903,9 +2903,9 @@ public class OndexServiceProvider {
             mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
             PercentProgressLogger progressLogger = new PercentProgressLogger(
-                    "{}% of paths stored", results.values().size()
+                    "{}% of paths stored", traverserPaths.values().size()
             );
-            for (List<EvidencePathNode> paths : results.values()) {
+            for (List<EvidencePathNode> paths : traverserPaths.values()) {
                 for (EvidencePathNode path : paths) {
 
                     // search last concept of semantic motif for keyword
@@ -2947,7 +2947,7 @@ public class OndexServiceProvider {
 
                 }
                 progressLogger.updateWithIncrement();
-            }
+            } // for traverserPaths.values()
             try {
                 FileOutputStream f;
                 ObjectOutputStream s;
