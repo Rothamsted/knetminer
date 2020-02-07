@@ -43,7 +43,7 @@
    if(requestParams !== null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       gene_list= JSON.stringify(requestParams.list);
       if(requestParams.keyword !== null) { keywords= requestParams.keyword; }
-      console.log("gene_list: "+ gene_list +", keywords: "+ keywords); // test
+     // console.log("gene_list: "+ gene_list +", keywords: "+ keywords); // test
      }
    
    // default knetName & knetDesc for modal (jBox)
@@ -55,7 +55,7 @@
    var knetspace_api_host; // relative domain
    getKsAPI().then(function(ksAddress) { 
        knetspace_api_host= ksAddress;
-       console.log("fetched knetspace_api_host: "+ knetspace_api_host); // test
+      // console.log("fetched knetspace_api_host: "+ knetspace_api_host); // test
     });
    
    if(networkId === null) {
@@ -83,8 +83,7 @@
            
            if($('textarea#knetDescription').val()) { knetDesc= $.trim($('textarea#knetDescription').val()); }
            else { knetDesc= "Network for " + knetName; }
-           console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
-           console.log("save: knetspace_api_host: "+ knetspace_api_host); // test
+          // console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
            
            // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
            var post_json= JSON.stringify({ name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
