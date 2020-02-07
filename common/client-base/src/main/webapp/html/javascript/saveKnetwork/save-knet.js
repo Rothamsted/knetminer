@@ -90,7 +90,7 @@
            var post_json= JSON.stringify({ name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
                sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords });
-           if(keywords === null) { // for non-keyword search
+           if(keywords === null || keywords === "") { // for non-keyword search
               post_json= JSON.stringify({ name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                   image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
                   sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list });
