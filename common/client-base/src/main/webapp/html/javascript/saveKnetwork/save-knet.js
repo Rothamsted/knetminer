@@ -54,7 +54,7 @@
   // var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
    var knetspace_api_host; // relative domain
    getKsAPI().then(function(ksAddress) { 
-       knetspace_api_host= ksAddress;
+       knetspace_api_host = ksAddress;
       // console.log("fetched knetspace_api_host: "+ knetspace_api_host); // test
     });
    
@@ -107,12 +107,13 @@
                data: post_json
            }).fail(function (errorlog) {
                    uploadModal.toggle();
-                   new jBox('Notice', { content: "Failed to upload kNetwork", color: 'red', autoClose: 1000 });
+                   var failedMsg = "Failed to upload kNetwork " + knetName;
+                   jboxNotice(failedMsg, 'red', 55);
                    console.log("POST error: " + JSON.stringify(errorlog));
                   }).success(function (data) {
                              uploadModal.toggle();
-                             new jBox('Notice', { content: "kNetwork " + knetName + " saved to knetspace!", color: 'blue', autoClose: 1000 });
-                             console.log("POST response: " + data);
+                            var netContentSuccess = "Network " + knetName + " submitted!";
+                            jboxNotice(netContentSuccess, 'blue', 55);
                             });                 
            // jBox modal - tasks completed.
            uploadModal.destroy(); // destroy jBox modal when done
@@ -189,8 +190,7 @@
   
   // Export the network thumbnail.
   function exportThumbnail() {
-   var png64 = cy.png({ "scale" : 6/*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
+   var png64 = cy.png({ "scale" : 6/*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous'); // 6 may bita bit high!
                 
    return png64.replace("data:image/png;base64,", "");
   }
-
