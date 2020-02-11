@@ -50,47 +50,62 @@ function jboxNotice(content, colour, yPos) {
 function loginModalToggle() {
     getKsAPI().then(function (ksAddress) {
         const knetspace_address = ksAddress;
+        
+        // Initial check for credentials
+        fetch(knetspace_address + '/api/v1/me', {
+            credentials: 'include'
+        }).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                console.log("Non HTTP 200 status response code returned by KnetSpace Host");
+            }
+        }).then((myJson) => {
+            if (typeof (myJson.username) === 'undefined' || myJson.username == '') {
+                console.log("User isn't logged in, initalizing login Modal");
+            }
+                // If the user isn't logged in then we return undiefined so we can initalize the login button.
+                $('#login_icon').click(function (e) {
+            
+                var loginHtml = "<form class='form' method='post' action='#'>"
+                                + "<label>Username or Email</label>"
+                                + "<input type='text' name='demail' id='email'>"
+                                + "<p></p>"
+                                + "<label>Password</label>"
+                                + "<input type='password' name='password' id='password'>"
+                                + "<p></p>"
+                                + "<input type='button' name='KnetSpacelogin' id='KnetSpacelogin' value='Sign in'>"
+                                + "<p></p>"
+                                + "<a href='" + knetspace_address + "/password-reset' style='text-decoration: none'>Forgot your password?</a>"
+                                + "<p></p>"
+                                + "<a href='" + knetspace_address + "/sign-up' style='text-decoration: none'>Create an account</a>"
+                                + "</form>"
 
-        $('#login_icon').click(function (e) {
-            //e.preventDefault();
-            var loginHtml = "<form class='form' method='post' action='#'>"
-                            + "<label>Username or Email</label>"
-                            + "<input type='text' name='demail' id='email'>"
-                            + "<p></p>"
-                            + "<label>Password</label>"
-                            + "<input type='password' name='password' id='password'>"
-                            + "<p></p>"
-                            + "<input type='button' name='KnetSpacelogin' id='KnetSpacelogin' value='Sign in'>"
-                            + "<p></p>"
-                            + "<a href='" + knetspace_address + "/password-reset' style='text-decoration: none'>Forgot your password?</a>"
-                            + "<p></p>"
-                            + "<a href='" + knetspace_address + "/sign-up' style='text-decoration: none'>Create an account</a>"
-                            + "</form>"
+                var loginModal = new jBox('Modal', {
+                    animation: 'pulse',
+                    title: '<font size="5"><font color="white">Sign in to </font><font color="orange">Knet</font><font size="5"><font color="white">Miner</font>',
+                    content: loginHtml,
+                    cancelButton: 'Exit',
+                    draggable: 'title',
+                    attributes: {
+                        x: 'right',
+                        y: 'top'
+                    },
+                    delayOpen: 50
+                });
+                loginModal.open(); // New instance of modal (Not ideal)
+                // Checking for blank fields on clicking login
+                $('#KnetSpacelogin').on('click', function () {
+                    fetchCredentials(loginModal);
+                    loginHandler(loginModal, knetspace_address);
 
-            var loginModal = new jBox('Modal', {
-                animation: 'pulse',
-                title: '<font size="5"><font color="white">Sign in to </font><font color="orange">Knet</font><font size="5"><font color="white">Miner</font>',
-                content: loginHtml,
-                cancelButton: 'Exit',
-                draggable: 'title',
-                attributes: {
-                    x: 'right',
-                    y: 'top'
-                },
-                delayOpen: 50
+                    // jBox modal - tasks completed.
+                    loginModal.destroy(); // destroy jBox modal when done
+                });
             });
-            loginModal.open(); // New instance of modal (Not ideal)
-            // Checking for blank fields on clicking login
-            $('#KnetSpacelogin').on('click', function () {
-                fetchCredentials(loginModal);
-                loginHandler(loginModal, knetspace_address);
-                
-                // jBox modal - tasks completed.
-                loginModal.destroy(); // destroy jBox modal when done
+            return false;
             });
         });
-        return false;
-    });
 }
 
 /* Handles the logging in event for KnetSpace
@@ -237,7 +252,7 @@ function fetchCredentials(loginModal) {
                             profileModal.open();
                             // Sign out button logic, perform api request for logging out
                             $('#logOutButton').on('click', function () {
-                                //console.log("logout clicked...");
+                                console.log("logout clicked...");
                                 profileModal.destroy(); // destroy modal
                                 logOut(knetspace_address);
                                 $('#login_icon').unbind('click');
