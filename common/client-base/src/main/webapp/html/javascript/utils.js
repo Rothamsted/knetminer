@@ -223,6 +223,7 @@ $(document).ready(
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
         $('#login_icon').text("Sign in");
+        $('#login_icon').css('textDecoration','none');
         fetchCredentials(null);
         // Initalize login Modal
         loginModalToggle();        
@@ -914,7 +915,7 @@ function generateCyJSNetwork(url, requestParams) {
                                         
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
-                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);

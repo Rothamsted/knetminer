@@ -933,3 +933,4 @@ a.contact-button :hover {
     height: 620px;/*450px;*/
 }
 
+a { cursor: pointer; }
