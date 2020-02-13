@@ -87,8 +87,8 @@ import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -155,7 +155,7 @@ public class OndexServiceProvider {
     /**
      * Version of KnetMiner being used
      **/
-    private String version;
+    private int version;
     
     /**
      * The organisation source name
@@ -191,8 +191,8 @@ public class OndexServiceProvider {
     private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
-
-    /**
+	
+	    /**
      * Node and relationship number for given gene
      */
     
@@ -2714,11 +2714,11 @@ public class OndexServiceProvider {
         return this.taxID;
     }
     
-    public void setVersion(String ver) {
+    public void setVersion(int ver) {
         this.version = ver;
     }
     
-    public String getVersion() {
+    public int getVersion() {
         return this.version;
     }
     
@@ -2729,7 +2729,7 @@ public class OndexServiceProvider {
     public String getSource() {
         return this.sourceOrganization;
     }
-
+    
     public void setProvider(String provider) {
         this.provider = provider;
     }
@@ -2904,7 +2904,6 @@ public class OndexServiceProvider {
 	          
             // the results give us a map of every starting concept to every
             // valid path.
-        		//
             Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
             // Performance stats reporting about the Cypher-based traverser is disabled after the initial

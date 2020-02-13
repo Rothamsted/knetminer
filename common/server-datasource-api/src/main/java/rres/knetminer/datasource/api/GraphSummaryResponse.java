@@ -12,14 +12,14 @@ package rres.knetminer.datasource.api;
  */
 public class GraphSummaryResponse extends KnetminerResponse {
 
-    public String graphSummary;
+    public String dataSource;
 
-    public void setGraphSummary(String graphSummary) {
-        this.graphSummary = graphSummary;
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public String getGraphSummary() {
-        return graphSummary;
+    public String getDataSource() {
+        return dataSource;
     }
 
 }
