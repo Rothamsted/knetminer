@@ -32,7 +32,7 @@ install:
 script:
   # travis-pls prints periodic keepalive messages, so that Travis doesn't stop 
   # after 10 mins of stale output. 
-  - travis-pls --max-timeout 1800 ./travis-build.sh
+  - travis-pls --interval 300 --max-timeout 1800 ./travis-build.sh
   
 branches:
   only:
