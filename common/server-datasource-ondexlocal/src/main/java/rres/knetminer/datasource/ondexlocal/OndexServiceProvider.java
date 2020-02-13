@@ -201,14 +201,6 @@ public class OndexServiceProvider {
     private String relationshipCount;
 
     /**
-     * Node and relationship number for given gene
-     */
-    
-    private String nodeCount;
-    
-    private String relationshipCount;
-
-    /**
      * Loads configuration for chromosomes and initialises map
      */
     OndexServiceProvider() {
@@ -2738,45 +2730,6 @@ public class OndexServiceProvider {
         return this.sourceOrganization;
     }
     
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-    
-    public String getProvider() {
-        return this.provider;
-    }
-    
-    public void setSpecies(String speciesName) {
-        this.speciesName = speciesName;
-    }
-    
-    public String getSpecies() {
-        return this.speciesName;
-    }
-	
-	public void setNodeCount(String nodeCount) {
-        this.nodeCount = nodeCount;
-    }
-    
-    public String getNodeCount() {
-        return this.nodeCount;
-    }
-    
-    public void setRelationshipCount(String relationshipCount) {
-        this.relationshipCount = relationshipCount;
-    }
-    
-    public String getRelationshipCount(){
-        return this.relationshipCount;
-    }
-    public void setKnetspaceHost(String knetspaceHost) {
-        this.knetspaceHost = knetspaceHost;
-    }
-
-    public String getKnetspaceHost() {
-        return this.knetspaceHost;
-    }
-
     public void setProvider(String provider) {
         this.provider = provider;
     }
