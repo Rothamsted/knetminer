@@ -49,7 +49,7 @@ fi
 
 ./docker-run.sh \
   --dataset-id wheat-directed --container-name wheat-ci \
-  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 24G \
+  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 36G \
   $docker_run_opts \
   --detach
 
