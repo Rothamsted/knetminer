@@ -1,7 +1,7 @@
 {
   "name": "knetmaps",
-  "version": "1.1.0",
-  "license": "ISC",
+  "version": "2.0.0",
+  "license": "MIT",
   "description": "Interactive network visualization tool for intuitive exploratory analysis of heterogeneous knowledge graphs",
   "main": "knetmaps.js",
   "homepage": "http://knetminer.rothamsted.ac.uk/KnetMaps/",
