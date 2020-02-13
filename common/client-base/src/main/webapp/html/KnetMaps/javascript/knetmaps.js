@@ -11,7 +11,8 @@ KNETMAPS.KnetMaps = function() {
 				+ "<input type='submit' id='showAll' value='' class='unhover' onclick='KNETMAPS.Menu().showAll();' title='Show all the concept & relations in the Network' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='openItemInfoBtn' value='' class='unhover' onclick='KNETMAPS.Menu().popupItemInfo();' title='Show Info box' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='relayoutNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().rerunLayout();' title='Re-run the Layout' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
-				+ "<span class='knet-dropdowns'>"
+				+ "<input type='submit' id='resetNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().resetGraph();' title='Reposition (reset and re-fit) the graph' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
+                                + "<span class='knet-dropdowns'>"
 				+ "<select id='layouts_dropdown' class='knet-dropdowns' onChange='KNETMAPS.Menu().rerunLayout();' title='Select network layout'>"
 				+ "<option value='cose_layout' selected='selected' title='using CoSE layout algorithm (useful for larger networks with clustering)'>CoSE layout</option>"
 				+ "<option value='ngraph_force_layout' title='using ngraph_force layout (works well on planar graphs)'>Force layout</option>"
@@ -39,7 +40,6 @@ KNETMAPS.KnetMaps = function() {
 				+ "<option value='40'>Label size: 40px</option>"
 				+ "</select>"
 				+ "</span>"
-				+ "<input type='submit' id='resetNetwork' value='' class='unhover' onclick='KNETMAPS.Menu().resetGraph();' title='Reposition (reset and re-fit) the graph' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 			/*	+ "<input type='submit' id='saveJSON' value='' class='unhover' onclick='KNETMAPS.Menu().exportAsJson(\""+networkId+"\");' title='Save the knetwork to knetspace' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='openJSON' value='' class='unhover' onclick='KNETMAPS.Menu().importJson();' title='Import a kNetwork json' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>"
 				+ "<input type='submit' id='savePNG' value='' class='unhover' onclick='KNETMAPS.Menu().exportAsImage();' title='Export the network as a .png image' onmouseover='KNETMAPS.Menu().onHover($(this));' onmouseout='KNETMAPS.Menu().offHover($(this));'>" */
