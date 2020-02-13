@@ -11,7 +11,7 @@
 				<knetminer.specieName>Sortghum</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about: Sorghum</knetminer.appDescription>
 				<knetminer.appKeywords>sorghum, knetminer-sorghum, knetminer</knetminer.appKeywords>
-				<knetminer.specieTaxId>39947</knetminer.specieTaxId>
+				<knetminer.specieTaxId>4558</knetminer.specieTaxId>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
 				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>

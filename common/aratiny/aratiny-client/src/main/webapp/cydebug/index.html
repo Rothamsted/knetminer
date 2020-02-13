@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+  This and other files in the same directory is a simple front-end for the services
+  in CypherDebuggerService.
+-->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Knetminer - Cypher Debugger</title>
+	<script type = "text/javascript" src="../html/javascript/utils-config.js"></script>	
+	<script type = "text/javascript" src="cydebug.js"></script>	
+</head>
+<body onLoad = "pageInitHandler ();">
+
+  <h1>Debugger for Knetminer Cypher Queries</h1>
+
+	<p id = "status"></p>
+
+	<div id = "results" hidden>
+		<h2>Results</h2>
+		<p>
+			<a href = "" id = "download" download = "cy-traverser-report.csv">Download the report</a>
+			<a href = "" id = "redo" onclick = "displayEdit (); return false;">Redo it</a>
+		</p>
+		<p><textarea rows="23" cols="160" id = "report" disabled></textarea></p>
+	</div>
+
+  <form onsubmit = "startTraverserHandler (); return false;" action = "">
+  	<h2>Queries</h2>
+  	<p id = "queryEditButtons">
+			<i>One query per line. Use '#' for comments. Empty lines are ignored.</i><br/>  	
+  		<input type = "submit" value = "Submit" />
+			<a href = "" onclick = "getServerQueries(); return false;">reset to current server queries</a>
+			<i>(<b>WARNING</b>: yours will be deleted!)</i> 
+  	</p>
+  	<p><textarea rows="23" cols="160" id = "queries"></textarea></p>
+  </form>
+</body>
+</html>

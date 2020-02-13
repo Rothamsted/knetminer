@@ -18,6 +18,7 @@
 		<module>server-datasource-api</module>
 		<module>server-datasource-ondexlocal</module>
 		<module>configurable-datasource</module>
+		<module>ondex-server-base</module>
 		<module>aratiny</module>
 	</modules>
 </project>

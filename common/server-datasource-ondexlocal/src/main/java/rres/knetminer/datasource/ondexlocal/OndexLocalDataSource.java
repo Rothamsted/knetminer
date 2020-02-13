@@ -8,15 +8,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.HashMap;
 
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
@@ -25,6 +27,7 @@ import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.EvidencePathResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
+import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
@@ -53,10 +56,12 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	
 	private Properties props = new Properties();
 	
-	public String getProperty(String key) {
-		return this.props.getProperty(key);
-	}
-
+	
+	/**
+	 * When it's initialised without parameters, it gets everything from the XML config file. This is fetched by 
+	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).
+	 * 
+	 */
 	public OndexLocalDataSource () {
 		init ();
 	}
@@ -119,12 +124,26 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
 		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
 		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
+                this.ondexServiceProvider.setVersion(this.getProperty("version"));
+                log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
+                this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
+                log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
 
 		this.ondexServiceProvider.createGraph (
 			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
 		);
 	}
 	
+	public String getProperty(String key) {
+		return this.props.getProperty(key);
+	}
+
+	/** 
+	 * This is made available for debugging or tweaks like the ones in {@code CypherDebuggerService}.
+	 */
+	public OndexServiceProvider getOndexServiceProvider () {
+		return ondexServiceProvider;
+	}
 
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);
@@ -355,4 +374,26 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	    }
 		return response;
 	}
+        
+        public GraphSummaryResponse graphSummary (String dsName, KnetminerRequest request) throws IllegalArgumentException {
+            GraphSummaryResponse response = new GraphSummaryResponse();
+            
+            try {
+                // Parse the data into a JSON format & set the graphSummary as is - this data is obtained from the maven-settings.xml
+                JSONObject summaryJSON = new JSONObject();
+                summaryJSON.put("dateCreated", this.ondexServiceProvider.getCreationDate());
+                summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
+                summaryJSON.put("version", this.ondexServiceProvider.getVersion());
+                this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
+                    summaryJSON.put("taxid", taxID);
+                });
+                response.graphSummary = summaryJSON.toString();
+            } catch (JSONException ex) {
+                log.error(ex);
+                throw new Error(ex);
+            }
+            
+            return response;
+            
+        }
 }

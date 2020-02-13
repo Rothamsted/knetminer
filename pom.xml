@@ -35,6 +35,9 @@
 		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
 		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
+		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
+		<knetminer.version>44</knetminer.version>
+
 
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
 		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
@@ -81,8 +84,10 @@
 		
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		<!-- Here, it is http://localhost:9090 -->
+		<knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl>
 		<!-- Here, it is http://localhost:9090/ws -->
-		<knetminer.api.baseUrl>http://localhost:${knetminer.api.httpPort}/${knetminer.api.webContext}</knetminer.api.baseUrl>
+		<knetminer.api.baseUrl>${knetminer.api.rootUrl}/${knetminer.api.webContext}</knetminer.api.baseUrl>
 		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
 		
@@ -105,11 +110,13 @@
 		<neo4j.server.user>neo4j</neo4j.server.user>
 		<neo4j.server.password>test</neo4j.server.password>
 
+		<!-- See the description in aratiny-ws/src/test/resources/knetminer-dataset/config/data-source.xml -->
+		<knetminer.backend.cypherDebugger.enabled>false</knetminer.backend.cypherDebugger.enabled>
 			
+
 		<!--
 		 
 			Instead, these shouldn't need to be changed 
-		
 		-->
 		
 		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
@@ -130,9 +137,8 @@
 		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
-		<ondex.version>2.1.1-SNAPSHOT</ondex.version>
+		<ondex.version>2.1.2-SNAPSHOT</ondex.version>
 		<springframework.version>4.3.6.RELEASE</springframework.version>
-		<taglibs.version>1.1.2</taglibs.version>
 		<jackson.library.version>2.7.5</jackson.library.version>
 		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
 		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
@@ -450,9 +456,9 @@
 				<version>${javax.servlet.jstl.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>taglibs</groupId>
-				<artifactId>standard</artifactId>
-				<version>${taglibs.version}</version>
+				<groupId>org.apache.taglibs</groupId>
+				<artifactId>taglibs-standard-spec</artifactId>
+				<version>1.2.5</version>
 			</dependency>
 
 			<dependency>
@@ -624,6 +630,18 @@
 					</exclusion>			
 				</exclusions>
 			</dependency>
+			<!-- 
+				This is used to setup CORS in the response. See:
+				- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+				- http://tuckey.org/urlrewrite/
+				
+				We use this web filter in src/main/webapp/WEB-INF 
+			 -->
+			<dependency>
+				<groupId>org.tuckey</groupId>
+				<artifactId>urlrewritefilter</artifactId>
+				<version>4.0.4</version>
+			</dependency>	
 			
 		</dependencies>
 	</dependencyManagement>

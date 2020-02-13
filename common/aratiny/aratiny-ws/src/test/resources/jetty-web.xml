@@ -15,4 +15,16 @@
 		<param-value>file:///${knetminer.configFile}</param-value>
 	</context-param>
 	
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+	<!-- We need CORS for /cydebug and during tests -->
+	<filter-mapping>
+	  <filter-name>UrlRewriteFilter</filter-name>
+	  <url-pattern>/cydebug/*</url-pattern>
+	  <dispatcher>REQUEST</dispatcher>
+	  <dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+		
 </web-app>
