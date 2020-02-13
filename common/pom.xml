@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>parent</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
@@ -18,6 +18,7 @@
 		<module>server-datasource-api</module>
 		<module>server-datasource-ondexlocal</module>
 		<module>configurable-datasource</module>
+		<module>ondex-server-base</module>
 		<module>aratiny</module>
 	</modules>
 </project>

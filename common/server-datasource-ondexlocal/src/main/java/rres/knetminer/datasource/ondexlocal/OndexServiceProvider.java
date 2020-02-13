@@ -201,6 +201,14 @@ public class OndexServiceProvider {
     private String relationshipCount;
 
     /**
+     * Node and relationship number for given gene
+     */
+    
+    private String nodeCount;
+    
+    private String relationshipCount;
+
+    /**
      * Loads configuration for chromosomes and initialises map
      */
     OndexServiceProvider() {
@@ -217,7 +225,7 @@ public class OndexServiceProvider {
     public void createGraph(String dataPath, String graphFileName, String smFileName)
     {
         log.info("Loading graph from " + graphFileName);
-
+        
         // new in-memory graph
         graph = new MemoryONDEXGraph("OndexKB");
 
@@ -232,7 +240,6 @@ public class OndexServiceProvider {
         // can just ignore them
         graphTraverser.setOption("StateMachineFilePath", smFileName);
         graphTraverser.setOption("ONDEXGraph", graph);
-        graphTraverser.setOption("LuceneEnv", luceneMgr);
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -697,7 +704,7 @@ public class OndexServiceProvider {
         String NOTQuery = createsNotList(keyword);
         String crossTypesNotQuery = "";
         ScoredHits<ONDEXConcept> NOTList = null;
-        if (NOTQuery != "") {
+        if (!"".equals ( NOTQuery )) {
             crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
                     + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
                     + NOTQuery + ")";
@@ -823,7 +830,7 @@ public class OndexServiceProvider {
                     if (path_length == null) {
                         log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
                     }
-                    double distance = path_length == null ? 0 : (1 / path_length);
+                    double distance = path_length == null ? 0 : (1d / path_length);
 
                     // take the mean of all three components
                     double evidence_weight = (igf + luceneScore + distance) / 3;
@@ -1223,7 +1230,7 @@ public class OndexServiceProvider {
             }
 //				System.out.println("subkeyworkd: "+k);
         }
-        if (builtK != "") {
+        if ( !"".equals ( builtK )) {
             result.add(builtK);
         }
         log.info("keys: " + result);
@@ -1732,7 +1739,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && !keyword.equals("") && keyword != null) {
+        if (ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) ) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
@@ -2137,7 +2144,7 @@ public class OndexServiceProvider {
 
                     // FIXME re-factor chromosome string
                     if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if (infoQTL == "") {
+                        if ("".equals ( infoQTL )) {
                             infoQTL += loci.getLabel() + "//" + loci.getTrait();
                         } else {
                             infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
@@ -2360,7 +2367,7 @@ public class OndexServiceProvider {
                 // Get this attr value, returns null if attr name doesn't exist (first flag) 
                 // or the gene is null (second flag). Same for the other calls below.
                 // TODO: use this utility function everywhere 
-                // TODO: whe don't neet attChr (and similar types) as objects, the string ID is enough
+                // TODO: we don't need attChr (and similar types) as objects, the string ID is enough
                 //
                 chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
 
@@ -2659,7 +2666,7 @@ public class OndexServiceProvider {
         // cn = c.getAttribute(att).getValue().toString().trim();
         // }
         else {
-            if (getShortestPreferedName(cns) != "") {
+            if (!"".equals ( getShortestPreferedName(cns) ) ) {
                 cn = getShortestPreferedName(cns);
             } else {
                 cn = getShortestNotAmbiguousAccession(accs);
@@ -2677,7 +2684,8 @@ public class OndexServiceProvider {
      * @param map
      * @return
      */
-    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
+    {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
             @Override
             public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
@@ -2686,6 +2694,13 @@ public class OndexServiceProvider {
                 return res != 0 ? res : 1;
             }
         });
+
+        /* TODO: this might give troubles, see 
+         * https://stackoverflow.com/questions/11856391/findbugs-dmi-entry-sets-may-reuse-entry-objects 
+         *        
+         * A possible workaround is to add AbstractMap.SimpleImmutableEntry() wrappers, instead of the original
+         * entry set.
+         */
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
@@ -2723,6 +2738,45 @@ public class OndexServiceProvider {
         return this.sourceOrganization;
     }
     
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProvider() {
+        return this.provider;
+    }
+    
+    public void setSpecies(String speciesName) {
+        this.speciesName = speciesName;
+    }
+    
+    public String getSpecies() {
+        return this.speciesName;
+    }
+	
+	public void setNodeCount(String nodeCount) {
+        this.nodeCount = nodeCount;
+    }
+    
+    public String getNodeCount() {
+        return this.nodeCount;
+    }
+    
+    public void setRelationshipCount(String relationshipCount) {
+        this.relationshipCount = relationshipCount;
+    }
+    
+    public String getRelationshipCount(){
+        return this.relationshipCount;
+    }
+    public void setKnetspaceHost(String knetspaceHost) {
+        this.knetspaceHost = knetspaceHost;
+    }
+
+    public String getKnetspaceHost() {
+        return this.knetspaceHost;
+    }
+
     public void setProvider(String provider) {
         this.provider = provider;
     }
@@ -2888,25 +2942,28 @@ public class OndexServiceProvider {
 
         if (!file1.exists()) {
 
+	          // We're going to need a lot of memory, so delete this in advance
+        		// (CyDebugger might trigger this multiple times)
+        		//
+        		mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
+	          mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+	          mapGene2PathLength = new HashMap<String, Integer>();
+	          
             // the results give us a map of every starting concept to every
             // valid path.
-        		//
-        	          
             Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
             // Performance stats reporting about the Cypher-based traverser is disabled after the initial
         		// traversal. This option has no effect when the SM-based traverser is used.
             graphTraverser.setOption("performanceReportFrequency", -1);
 
-            mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-            mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-            mapGene2PathLength = new HashMap<String, Integer>();
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
             PercentProgressLogger progressLogger = new PercentProgressLogger(
                     "{}% of paths stored", traverserPaths.values().size()
             );
             for (List<EvidencePathNode> paths : traverserPaths.values()) {
-                for (EvidencePathNode path : paths) {
+            		// We dispose them after use, cause this is big and causing memory overflow issues
+                paths.removeIf ( path -> {
 
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
@@ -2945,7 +3002,9 @@ public class OndexServiceProvider {
                             .computeIfAbsent(lastConID, _id -> new HashSet<>())
                             .add(gene.getId());
 
-                }
+                    // ALWAYS return this to clean up memory (see above)
+                    return true;
+                }); // paths.removeIf ()
                 progressLogger.updateWithIncrement();
             } // for traverserPaths.values()
             try {

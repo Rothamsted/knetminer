@@ -7,25 +7,13 @@
 	<parent>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
 		<artifactId>aratiny</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>aratiny-client</artifactId>
 	<packaging>war</packaging>
 
 	<dependencies>
-		<!-- 
-			This is used to setup CORS in the response. See:
-			- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-			- http://tuckey.org/urlrewrite/
-			
-			We use this web filter in src/main/webapp/WEB-INF 
-		 -->
-		<dependency>
-			<groupId>org.tuckey</groupId>
-			<artifactId>urlrewritefilter</artifactId>
-			<version>4.0.4</version>
-		</dependency>	
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
 			<artifactId>client-base</artifactId>

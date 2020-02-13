@@ -6,6 +6,7 @@
         version="3.0">
   <display-name>KnetMiner Front End Application</display-name>
   <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
     <welcome-file>html/index.jsp</welcome-file>
   </welcome-file-list>
 	  

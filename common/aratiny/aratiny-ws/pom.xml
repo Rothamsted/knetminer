@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
 		<artifactId>aratiny</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>aratiny-ws</artifactId>
@@ -27,10 +27,17 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
-			<artifactId>configurable-datasource</artifactId>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
+			<artifactId>ondex-server-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- 
+			This is used to setup CORS in the response. See main POM
+		 -->
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+		</dependency>	
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -107,7 +114,7 @@
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
             <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
-			      	<!-- Thes test dir contains things like logger config for test server -->
+			      	<!-- These test dir contains things like logger config for test server -->
 			      	<resourceBase>${project.basedir}/src/test/webapp</resourceBase>
 			      	<resourceBase>${project.basedir}/src/main/webapp</resourceBase>
 			      </resourceBases>
