@@ -77,4 +77,6 @@
 		/>
 	</bean>
 	
+	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "40000"/></bean>
+	
 </beans>

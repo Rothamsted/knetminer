@@ -29,27 +29,7 @@
 	
 	<!-- This is for the new Neo4j-based graph traverser -->
 	<entry key = "knetminer.backend.configPath">${knetminer.neo4j.configFile}</entry>
-	
-	
-	<!-- 
-		Cypher queries used in components like the traverser are restricted to be executed within this time
-		limit. If one query takes longer, it is aborted with empty results, but without breaking the application.
-		-1 means no timeout, but it's not recommended.
-	-->
-	<entry key = "knetminer.backend.cypher.queryTimeoutMs">1500</entry>
-	
-	<!-- 
-		When enabled, the Cypher graph traverser reports some statistics about its interaction with Neo4j.
-		Probably you're not interested in this if you aren't a Knetminer developer.
-	-->
-	<entry key = "knetminer.backend.traverserPerformanceTracking.enabled">true</entry>
-	
-	<!-- 
-	  The performance tracker tells some stats from time to time. See CFGOPT_PERFORMANCE_REPORT_FREQ in the 
-	  code for details. Again, this isn't something you're very interested in if you're not developing Knetminer. 
-	-->
-	<entry key = "knetminer.backend.traverserPerformanceTracking.reportFrequency">500000</entry>
-	
+			
 	<!-- 
 		This enables the CypherDebugger service and corresponding UI interface at TODO.
 		It only applies when Neo4j mode is enabled.

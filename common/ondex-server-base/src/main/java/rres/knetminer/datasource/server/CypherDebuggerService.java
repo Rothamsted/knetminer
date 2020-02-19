@@ -62,8 +62,7 @@ public class CypherDebuggerService
 	public static class ForbiddenException extends RuntimeException
 	{
 		public static final String REASON = 
-			"Unauthorized. Knetminer must be built with " + 
-			"knetminer.backend.cypherDebugger.enabled for this to work";
+			"Unauthorized. Knetminer must be built with " + ENABLED_PROPERTY + " for this to work";
 		
 		public ForbiddenException () {
 			super ( REASON );
