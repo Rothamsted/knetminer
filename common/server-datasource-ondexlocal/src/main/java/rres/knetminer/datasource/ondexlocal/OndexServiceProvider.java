@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,18 +32,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static java.util.Map.Entry.comparingByValue;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -88,6 +86,9 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
 /**
  * Parent class to all ondex service provider classes implementing organism
@@ -154,7 +155,7 @@ public class OndexServiceProvider {
     /**
      * Version of KnetMiner being used
      **/
-    private String version;
+    private int version;
     
     /**
      * The organisation source name
@@ -167,6 +168,22 @@ public class OndexServiceProvider {
     private final Date creationDate = new Date();
     
     /**
+     * The providers name
+     */
+    private String provider;
+    
+    /** 
+     * Species Name provided via maven-settings
+     */
+    private String speciesName;
+	
+	/*
+    * Host url provided by mav args (otherwise default is assigned) for knetspace
+    */
+    private String knetspaceHost;
+
+    
+    /**
      * true if a reference genome is provided
      */
     private boolean referenceGenome;
@@ -174,6 +191,14 @@ public class OndexServiceProvider {
     private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
+	
+	    /**
+     * Node and relationship number for given gene
+     */
+    
+    private String nodeCount;
+    
+    private String relationshipCount;
 
     /**
      * Loads configuration for chromosomes and initialises map
@@ -538,6 +563,9 @@ public class OndexServiceProvider {
             jsonExport.setONDEXGraph(graph2);
             log.debug("Export JSON data: Total concepts= " + graph2.getConcepts().size() + " , Relations= "
                     + graph2.getRelations().size());
+            // Set the Node and rel counts
+            nodeCount = Integer.toString(graph2.getConcepts().size());
+            relationshipCount = Integer.toString(graph2.getRelations().size());
             // Export the contents of the 'graph' object as multiple JSON
             // objects to an output file.
             jsonExport.start();
@@ -668,7 +696,7 @@ public class OndexServiceProvider {
         String NOTQuery = createsNotList(keyword);
         String crossTypesNotQuery = "";
         ScoredHits<ONDEXConcept> NOTList = null;
-        if (NOTQuery != "") {
+        if (!"".equals ( NOTQuery )) {
             crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
                     + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
                     + NOTQuery + ")";
@@ -794,7 +822,7 @@ public class OndexServiceProvider {
                     if (path_length == null) {
                         log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
                     }
-                    double distance = path_length == null ? 0 : (1 / path_length);
+                    double distance = path_length == null ? 0 : (1d / path_length);
 
                     // take the mean of all three components
                     double evidence_weight = (igf + luceneScore + distance) / 3;
@@ -1194,7 +1222,7 @@ public class OndexServiceProvider {
             }
 //				System.out.println("subkeyworkd: "+k);
         }
-        if (builtK != "") {
+        if ( !"".equals ( builtK )) {
             result.add(builtK);
         }
         log.info("keys: " + result);
@@ -1703,7 +1731,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && !keyword.equals("") && keyword != null) {
+        if (ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) ) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
@@ -2108,7 +2136,7 @@ public class OndexServiceProvider {
 
                     // FIXME re-factor chromosome string
                     if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if (infoQTL == "") {
+                        if ("".equals ( infoQTL )) {
                             infoQTL += loci.getLabel() + "//" + loci.getTrait();
                         } else {
                             infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
@@ -2328,20 +2356,24 @@ public class OndexServiceProvider {
                 String chr = null;
                 double beg = 0.0;
 
-                if (gene.getAttribute(attChr) != null) {
-                    chr = gene.getAttribute(attChr).getValue().toString();
-                }
+                // Get this attr value, returns null if attr name doesn't exist (first flag) 
+                // or the gene is null (second flag). Same for the other calls below.
+                // TODO: use this utility function everywhere 
+                // TODO: we don't need attChr (and similar types) as objects, the string ID is enough
+                //
+                chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
 
-                if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                if ( attCM != null )
+                {
+	                beg = Optional.ofNullable (
+	                	(Double) getAttrValue ( graph, gene, attCM.getId (), false, false )
+	                ).orElse ( 0d );
                 }
-
-                if (attCM != null) {
-                    if (gene.getAttribute(attCM) != null) {
-                        beg = (Double) gene.getAttribute(attCM).getValue();
-                    }
-                } else if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                else 
+                {
+	                beg = (int) Optional.ofNullable (
+	                	(Integer) getAttrValue ( graph, gene, attBeg.getId (), false, false )
+	                ).orElse ( 0 );
                 }
 
                 if (!qtls.isEmpty()) {
@@ -2626,7 +2658,7 @@ public class OndexServiceProvider {
         // cn = c.getAttribute(att).getValue().toString().trim();
         // }
         else {
-            if (getShortestPreferedName(cns) != "") {
+            if (!"".equals ( getShortestPreferedName(cns) ) ) {
                 cn = getShortestPreferedName(cns);
             } else {
                 cn = getShortestNotAmbiguousAccession(accs);
@@ -2644,7 +2676,8 @@ public class OndexServiceProvider {
      * @param map
      * @return
      */
-    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
+    {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
             @Override
             public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
@@ -2653,6 +2686,13 @@ public class OndexServiceProvider {
                 return res != 0 ? res : 1;
             }
         });
+
+        /* TODO: this might give troubles, see 
+         * https://stackoverflow.com/questions/11856391/findbugs-dmi-entry-sets-may-reuse-entry-objects 
+         *        
+         * A possible workaround is to add AbstractMap.SimpleImmutableEntry() wrappers, instead of the original
+         * entry set.
+         */
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
@@ -2674,11 +2714,11 @@ public class OndexServiceProvider {
         return this.taxID;
     }
     
-    public void setVersion(String ver) {
+    public void setVersion(int ver) {
         this.version = ver;
     }
     
-    public String getVersion() {
+    public int getVersion() {
         return this.version;
     }
     
@@ -2688,6 +2728,45 @@ public class OndexServiceProvider {
     
     public String getSource() {
         return this.sourceOrganization;
+    }
+    
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProvider() {
+        return this.provider;
+    }
+    
+    public void setSpecies(String speciesName) {
+        this.speciesName = speciesName;
+    }
+    
+    public String getSpecies() {
+        return this.speciesName;
+    }
+	
+	public void setNodeCount(String nodeCount) {
+        this.nodeCount = nodeCount;
+    }
+    
+    public String getNodeCount() {
+        return this.nodeCount;
+    }
+    
+    public void setRelationshipCount(String relationshipCount) {
+        this.relationshipCount = relationshipCount;
+    }
+    
+    public String getRelationshipCount(){
+        return this.relationshipCount;
+    }
+    public void setKnetspaceHost(String knetspaceHost) {
+        this.knetspaceHost = knetspaceHost;
+    }
+
+    public String getKnetspaceHost() {
+        return this.knetspaceHost;
     }
 
     public void setReferenceGenome(boolean value) {
@@ -2699,7 +2778,7 @@ public class OndexServiceProvider {
     }
     
     public String getCreationDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
         return formatter.format(creationDate);
     }
 
@@ -2825,7 +2904,6 @@ public class OndexServiceProvider {
 	          
             // the results give us a map of every starting concept to every
             // valid path.
-        		//
             Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
             // Performance stats reporting about the Cypher-based traverser is disabled after the initial

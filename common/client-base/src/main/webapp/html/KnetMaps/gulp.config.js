@@ -18,11 +18,11 @@ module.exports = function () {
     	'./libs/jquery*.js',
     	'./libs/FileSaver.min.js',
     	'./libs/cytoscape.min.js',
-    	'./libs/cytoscape-*.js',
+    	'./libs/cytoscape-*.js'
     	],
 
     // the development output
-  	build: './dist/',
+    build: './dist/',
     outputImages: './dist/img',
     outputCss: './dist/css',
     outputJs: './dist/js',

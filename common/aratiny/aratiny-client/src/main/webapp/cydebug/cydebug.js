@@ -1,3 +1,7 @@
+/* 
+ * See index.html
+ */
+
 const cydebugBaseUrl = api_base_url + "/cydebug";
 
 
@@ -20,6 +24,13 @@ function updateStatus ()
 				let percent = text.replace ( /Pending. ([0-9]+)\%.*/, "$1" );
 				displayPending ( percent );
 				console.log ( "updateStatus(): pending" );
+				updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
+				return;
+			}
+			
+			if ( text.startsWith ( "Was cancelled. Abort operation still pending" ) ) {
+				displayAbortPending ( "Traversal was cancelled. Waiting for the abort operations to complete..." );
+				console.log ( "updateStatus(): cancellation pending" );
 				updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
 				return;
 			}
@@ -79,12 +90,12 @@ function startTraverserHandler ()
 
 function traverserCancelHandler ()
 {
-	// TODO: proper termination handling on the server
-	alert ( "Sorry, cancellation doesn't work properly yet, wait it finishes" );
-	return;
-	
 	fetch ( cydebugBaseUrl + "/traverser/cancel" )
-	.then ( resp => updateStatus () )
+	.then ( resp => {
+		updateStatus ();
+		return resp.text ();
+	})
+	.then ( text => console.log ( "Response from /traverser/cancel: " + text ) )
 	.catch ( err => {
 		alert ( "Error with API call /traverser/cancel: " + err.message );
 		console.log ( "Error with API call /traverser/cancel", err );
@@ -156,14 +167,24 @@ function displayFinished ( reportText )
 	document.getElementById ( "status" ).innerHTML = "Traversal finished, see results below";
 }
 
-/** Query edit disabled, results hidden, redo button, abosted status */
+/** Query edit disabled, results hidden, redo button, aborted status */
 function displayAborted ( statusText )
 {
 	document.getElementById ( "queries" ).disabled = true;
 	document.getElementById ( "queryEditButtons" ).style.display = "none";
 	document.getElementById ( "report" ).style.display = "none";
 	document.getElementById ( "download" ).style.display = "none";
-	document.getElementById ( "results" ).style.display = 'block';
+	document.getElementById ( "results" ).style.display = "block";
+	document.getElementById ( "redo" ).style.display = "block";
+
 	
 	document.getElementById ( "status" ).innerHTML = statusText;	
 }
+
+/** Like displayAborted(), but "redo" button is off, cause it has to complete the abortion op. */
+function displayAbortPending ( statusText )
+{
+	displayAborted ( statusText );
+	document.getElementById ( "redo" ).style.display = "none";
+}
+

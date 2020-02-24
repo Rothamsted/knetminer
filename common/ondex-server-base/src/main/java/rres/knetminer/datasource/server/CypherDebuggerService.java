@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,15 @@ import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
 /**
- * TODO: comment me!
+ * A small API to debug new Cypher queries with the {@link CypherGraphTraverser}.
+ * 
+ * <p>This allows for re-running the Knetminer gene traversal and recompute the in-memory,
+ * associations between genes and other entities with a new set of Cypher queries (ie, semantic motifs).</p>
+ * 
+ * <p>This is a test utility meant to be used in <b>test instances</b>, never in production. Indeed, all the 
+ * API calls (ie, the corresponding methods below) are disabled by default and they can be enabled by means 
+ * of a config property. see {@link #checkEnabled()}. Furthermore, You must be running Knetminer in Neo4j mode, else
+ * all the API methods below will raise an exception.</p>
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>10 Dec 2019</dd></dl>
@@ -52,26 +62,51 @@ public class CypherDebuggerService
 	public static class ForbiddenException extends RuntimeException
 	{
 		public static final String REASON = 
-			"Unauthorized. Knetminer must be built with " + 
-			"knetminer.backend.cypherDebugger.enabled for this to work";
+			"Unauthorized. Knetminer must be built with " + ENABLED_PROPERTY + " for this to work";
 		
 		public ForbiddenException () {
 			super ( REASON );
 		}
 	}
-		
+	
+	/**
+	 * @see #checkEnabled
+	 */
+	public static final String ENABLED_PROPERTY = "knetminer.backend.cypherDebugger.enabled";
+	
+	/**
+	 * Binds the running Knetminer data sources. Knetminer was initially designed to support multiple DSs
+	 * per instance, however, we don't use this way anymore, so this class assumes that this list contains one
+	 * DS only and the initialisation code put it into {@link #dataSource} for later use.
+	 */
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
+	
+	/**
+	 * @see #dataSources
+	 */
 	private OndexLocalDataSource dataSource;
 
-	private final static ExecutorService TRAVERSER_EXECUTOR = Executors.newSingleThreadExecutor ();
+	/**
+	 * Used to launch the new traversal ops in parallel.
+	 */
+	private static final ExecutorService traverserExecService = Executors.newSingleThreadExecutor ();
+	
+	/**
+	 * Used to manage asynchronous traversal running.
+	 */
 	private Future<String> traverserStatsResult = null;
+	
+	private Logger log = LogManager.getLogger ( this.getClass () );
 	
 	public CypherDebuggerService ()
 	{
 	}
 
 	
+	/**
+	 * @see #dataSources
+	 */
 	@PostConstruct
 	private synchronized void init ()
 	{
@@ -87,27 +122,38 @@ public class CypherDebuggerService
 		
 		KnetminerDataSource ds = this.dataSources.get ( 0 );
 		
-		if ( ! ( ds instanceof OndexLocalDataSource ) ) new UnexpectedValueException (
+		if ( ! ( ds instanceof OndexLocalDataSource ) ) throw new UnexpectedValueException (
 			"Cypher Debugger can only work with instances of " + OndexLocalDataSource.class.getSimpleName ()
 		);
 		
 		this.dataSource = (OndexLocalDataSource) ds;
 	}
 
-	
+	/**
+	 * Start a new traversal, after some checks that there isn't none ongoing or being cancelled. 
+	 */
 	@RequestMapping ( path = "/traverse", method = { RequestMethod.GET, RequestMethod.POST } )
-	public synchronized String newTraverser ( @RequestParam( required = true ) String queries )
+	public synchronized String newTraverser ( @RequestParam( required = true ) String queries ) throws InterruptedException
 	{
 		this.checkEnabled ();
 		
-		if ( this.traverserStatsResult != null 
-				 && !( traverserStatsResult.isDone () || traverserStatsResult.isCancelled () ) )
-			// Don't reinvoke until it's finished or cancelled
-			return "OK. Invoke /traverser-report";
+		if ( this.traverserStatsResult != null )
+		{
+			// Don't re-invoke until it's completed or an initiated interruption is finalised.
+			//
+			if ( !traverserStatsResult.isDone () )
+			{
+				if ( this.getTraverser ().isInterrupted () )
+					throw new IllegalStateException ( "Waiting to close a cancelled traversal, try again later" );
+				else
+					throw new IllegalStateException ( "Already invoked, try /traverser-report" );
+			}
+		}
 		
 		// You can issue a new traversal if it's the first time, or after termination/interruption
 		List<String> queriesList = CyQueriesReader.readQueriesFromString ( queries );
-		this.traverserStatsResult = TRAVERSER_EXECUTOR.submit ( () -> submitTraversal ( queriesList ) );
+		this.traverserStatsResult = traverserExecService.submit ( () -> submitTraversal ( queriesList ) );
+		Thread.sleep ( 500 ); // Give it some time to initialise the progress logger
 		return "Started. Check progress at /traverser-report";
 	}
 	
@@ -119,8 +165,10 @@ public class CypherDebuggerService
 		
 		if ( this.traverserStatsResult == null )
 			return "Wasn't invoked. Use /traverse";
-		if ( traverserStatsResult.isCancelled () )
-			return "Was cancelled. Invoke /traverse again";
+		if ( this.getTraverser ().isInterrupted () )
+			return traverserStatsResult.isDone () 
+				? "Was cancelled. Invoke /traverse again"
+				: "Was cancelled. Abort operation still pending, invoke /traverse again in a while";
 		
 		if ( !traverserStatsResult.isDone () )
 		{
@@ -132,20 +180,29 @@ public class CypherDebuggerService
 		return traverserStatsResult.get ();
 	}
 	
-	
+	/**
+	 * Cancellation is asynchronous: this method triggers {@link CypherGraphTraverser#interrupt()} and then
+	 * returns immediately. The traverser receiving the interruption command will take a while to stop 
+	 * ongoing operations. #traverserReport tells if a traversal was cancelled but not completed.
+	 * 
+	 */
 	@GetMapping ( path = "/traverser/cancel" )
 	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
 	{
 		this.checkEnabled ();
 		
-		if ( this.traverserStatsResult == null || traverserStatsResult.isCancelled () || traverserStatsResult.isDone () ) 
+		CypherGraphTraverser traverser = this.getTraverser ();
+		
+		if ( this.traverserStatsResult == null || traverserStatsResult.isDone () || traverser.isInterrupted () ) 
 			return "OK. Wasn't active.";
 		
-		traverserStatsResult.cancel ( true );
-		
+		traverser.interrupt ();
 		return "OK.";
 	}	
 	
+	/**
+	 * Used by {@link #newTraverser(String)}.
+	 */
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		String dataPath = this.dataSource.getProperty ( "DataPath" );
@@ -165,8 +222,10 @@ public class CypherDebuggerService
 		// behave
 		traverser.setOption ( "performanceReportFrequency", 0 );
 
-		try {
-			return traverser.getPerformanceStats (); 
+		try
+		{
+			return traverser.isInterrupted ()
+				? "Traversal was cancelled" : traverser.getPerformanceStats (); 
 		}
 		finally {
 			// Normally it's disabled.
@@ -192,6 +251,11 @@ public class CypherDebuggerService
 	}	
 	
 	
+	/**
+	 * This will raise {@link IllegalStateException} if you're not running in Neo4j mode and the current traverser in 
+	 * {@link OndexServiceProvider} isn't a {@link CypherGraphTraverser}.
+	 * 
+	 */
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
@@ -216,14 +280,14 @@ public class CypherDebuggerService
 	}
 	
 	/**
-	 * Every HTTP request is wrapped by this check that the {@code knetminer.backend.cypherDebugger.enabled} is enabled in
+	 * Every HTTP request is wrapped by this check that {@link #ENABLED_PROPERTY} is enabled in
 	 * {@code data_source.xml}.
 	 *   
 	 */
 	private void checkEnabled ()
 	{
 		boolean isServiceEnabled = Optional.ofNullable ( 
-			this.dataSource.getProperty ( "knetminer.backend.cypherDebugger.enabled" )
+			this.dataSource.getProperty ( ENABLED_PROPERTY )
 		).map ( Boolean::valueOf )
 		.orElse ( false );
 		
