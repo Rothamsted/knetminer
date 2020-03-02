@@ -57,7 +57,7 @@
 		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
     <knetminer.version>42</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>
-		<knetminer.knetSpaceHost>http://babvs72.rothamsted.ac.uk:8000</knetminer.knetSpaceHost>
+		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
