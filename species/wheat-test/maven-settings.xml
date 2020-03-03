@@ -7,7 +7,7 @@
 		<profile>
 			<id>docker</id>
 			<properties>
-				<knetminer.dataSourceId>beta/wheatknet</knetminer.dataSourceId>
+				<knetminer.dataSourceId>wheatknet-beta</knetminer.dataSourceId>
 				<knetminer.specieName>Triticum aestivum</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about: Triticum aestivum</knetminer.appDescription>
 				<knetminer.appKeywords>wheat, t.aestivum, knetminer</knetminer.appKeywords>
