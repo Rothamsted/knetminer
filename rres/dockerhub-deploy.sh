@@ -36,6 +36,7 @@ echo -e "--- Cleaning Knetminer dataset directory\n"
 if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	echo -e "\n\n\t(Re)launching Docker, Cypher-based traverser\n"
 
+	dataset_id="wheat-directed"
 	docker_run_opts="--with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 
 		--neo4j-user rouser --neo4j-pwd rouser"
 		
@@ -44,11 +45,12 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
+		dataset_id="wheat-beta"
 fi
 
 
 ./docker-run.sh \
-  --dataset-id wheat-directed --container-name wheat-ci \
+  --dataset-id "$dataset_id" --container-name wheat-ci \
   --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 48G \
   $docker_run_opts \
   --detach
