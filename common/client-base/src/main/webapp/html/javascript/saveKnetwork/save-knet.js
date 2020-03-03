@@ -10,7 +10,7 @@
    var exportJson= cy.json(); // full graphJSON
    
    var exportedJson= filterJsonToExport(cy, exportJson); // the final "graph" to export
-   var thumbnail_image= exportThumbnail(); // fetch knetwork thumbnail as well.
+   var thumbnail_image= exportThumbnail(cy); // fetch knetwork thumbnail as well.
    // fetch total node & edge count for this knetwork.
    var totalNodes= cy.$(':visible').nodes().size();
    var totalEdges= cy.$(':visible').edges().size();
@@ -192,7 +192,7 @@
 	   return elesToRetain.includes(rel.data.id); });
    
    // remove hidden nodes/edges metadata from metaJSON (allGraphData).
-   var metaJSON= allGraphData;
+   var metaJSON= allGraphData; // differs from knetspace/knetmaps
    metaJSON.ondexmetadata.concepts= metaJSON.ondexmetadata.concepts.filter( function( con ) {
 	   return elesToRetain.includes(con.id); });
    metaJSON.ondexmetadata.relations= metaJSON.ondexmetadata.relations.filter( function( rel ) {
@@ -229,8 +229,8 @@
   }
   
   // Export the network thumbnail.
-  function exportThumbnail() {
-   var png64 = cy.png({ "scale" : 1.2 /*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous'); // 6 may bita bit high!
+  function exportThumbnail(cy) {
+   var png64 = cy.png({ "scale" : 1.2 /*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
                 
    return png64.replace("data:image/png;base64,", "");
   }

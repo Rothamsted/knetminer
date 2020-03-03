@@ -8,6 +8,8 @@
 	<!-- 
 		Have a look at this test file for details on how to define Neo4j-related params:
 		https://github.com/Rothamsted/knetminer-backend/blob/master/cypher-client/src/test/resources/test-config/config.xml
+		
+		This is wheat dataset-specific and overrides the default config.xml
 	-->
 
   <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
@@ -17,45 +19,11 @@
   	<constructor-arg value = "${knetminer.configDir}/neo4j" />
   </bean> 
    
-   		
-	<!-- 
-		Custom-made queries are read from the root of the config dir
-	 -->
-	<bean name = "semanticMotifsQueriesCustom" class = "java.util.Arrays" factory-method = "asList" >
-		<constructor-arg>
-			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
-				<constructor-arg ref = "configDirPath" />
-				<constructor-arg>
-					<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
-						<constructor-arg value = "*.cypher" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
+	<bean name = "semanticMotifsQueries" 
+				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
+		<constructor-arg value = "${knetminer.configDir}/neo4j/new-queries.txt" />
 	</bean>
 
-	<!-- 
-		There might be other queries, produced from the SM converter
-	-->
-	<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
-		<constructor-arg>
-			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
-				<constructor-arg value = "#{configDirPath}/state-machine-queries" />
-				<constructor-arg>
-					<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
-						<constructor-arg value = "*.cypher" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-	</bean>
-	
-	<!-- They are all combined into the beanName that is searched by our graph traverser -->
-	<bean name = "semanticMotifsQueries" 
-				class = "org.apache.commons.collections15.ListUtils" factory-method = "union" >
-		<constructor-arg ref = "semanticMotifsQueriesCustom" />
-		<constructor-arg ref = "semanticMotifsQueriesStateMachine" />
-	</bean>
 
  	<!-- The Neo4j driver -->
 	<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" 
