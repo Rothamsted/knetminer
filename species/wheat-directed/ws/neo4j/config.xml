@@ -46,5 +46,5 @@
 	</bean>
 	
 	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "40000"/></bean>
-	
+	<bean name = "queryThreadPoolSize" class = "java.lang.Integer"><constructor-arg value = "4"/></bean>
 </beans>
