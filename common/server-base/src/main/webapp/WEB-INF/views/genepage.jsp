@@ -24,6 +24,8 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 <head>
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/css_demo/index-style.css">
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/css/knetmaps.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v1.0.6/dist/jBox.all.min.css">
+<script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v1.0.6/dist/jBox.all.min.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps-lib.min.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps.min.js"></script>
 <title>KnetMiner network</title>
@@ -33,10 +35,10 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/logo-regular.png" height="48" alt="Logo"></a>   
        <ul class="nav navbar-nav" id="top">
           <li>
-		    <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
-            <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
-		    <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
-		  </li>
+              <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
+              <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
+              <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
+          </li>
     </ul>
  	</nav>  <!-- end navbar -->
 
