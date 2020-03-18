@@ -20,7 +20,7 @@
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
    console.log("knet-save.js: networkId= "+ networkId); // test
-   var knet_name= "myKnetwork.json", apiGraphSummary= null;
+   var knet_name= "my knetwork", apiGraphSummary= null;
    if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= getGraphDBSummary();
@@ -48,7 +48,7 @@
    
    // default knetName & knetDesc for modal (jBox)
    var knetName= knet_name;
-   var knetDesc= "Network for " + knetName;
+   var knetDesc= knet_name;
    
    // POST to knetspace via /api/v1/networks/
   // var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
