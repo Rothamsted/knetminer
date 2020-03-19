@@ -73,6 +73,29 @@ function isLoggedIn(){
     return value;
 }
 
+function userPlan() {
+       var value = getKsAPI().then(function (ksAddress) {
+        const knetspace_address = ksAddress;
+       const bool = fetch(knetspace_address + '/api/v1/me', {
+            credentials: 'include'
+        }).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                console.log("Non HTTP 200 status response code returned by KnetSpace Host");
+            }
+        }).then((myJson) => {
+            if (myJson.plan.name === 'Pro') {
+                return false;
+            } else {
+                return true;
+            }
+        });
+            return bool;
+    });
+    return value;
+}
+
 function returnJson() {
     var jsonVal = getKsAPI().then(function (ksAddress) {
         const knetspace_address = ksAddress;
