@@ -27,7 +27,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps-lib.min.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps.min.js"></script>
-<jsp:include page="../../cssLoader.jsp"></jsp:include>
+<jsp:include page="../../cssLoader2.jsp" />
 <title>KnetMiner network</title>
 </head>
 <body>
@@ -78,6 +78,14 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
        </div>
 
 	<script type="text/javascript">
+            var api_url= "${knetminer.api.url}";
+            var req_url= "<%=request.getRequestURL()%>";
+            var req_uri= "<%=request.getRequestURI()%>";
+            var req_contextpath= "<%=request.getContextPath()%>";
+            var req_qs= "<%=request.getQueryString()%>";
+            var req_servletpath= "<%=request.getServletPath()%>";
+            var req_pathinfo= "<%=request.getPathInfo()%>";
+            var req_transpath= "<%=request.getPathTranslated()%>";
 		$.ajax({
             url: "network",
             type: "post",
@@ -93,7 +101,18 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
         }).success(function (data) {
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
-            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson("+networkId+");' title='Save the knetwork to knetspace'>Save</button>");
+            var requestParams= { keyword: "<%=keywords%>", list: ${list} };
+            console.log("api_url= "+ api_url);
+            console.log("requestParams= "+ requestParams);
+            console.dir(requestParams);
+            console.log("url: "+ req_url);
+            console.log("uri: "+ req_uri);
+            console.log("contextpath: "+ req_contextpath);
+            console.log("req_qs: "+ req_qs);
+            console.log("servletpath: "+ req_servletpath);
+            console.log("pathInfo: "+ req_pathinfo);
+            console.log("PathTranslated: "+ req_transpath);
+            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph/*, networkId*/);
