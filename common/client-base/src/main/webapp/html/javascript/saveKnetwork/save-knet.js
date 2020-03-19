@@ -48,7 +48,7 @@
    
    // default knetName & knetDesc for modal (jBox)
    var knetName= knet_name;
-   var knetDesc= knet_name;
+   var knetDesc= knetName;
    
    // POST to knetspace via /api/v1/networks/
   // var knetspace_api_host= "http://babvs72.rothamsted.ac.uk:8000"; //or "http://localhost:8000";
@@ -61,14 +61,31 @@
         if (bool) {
             if (networkId === null) {
                 //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
-
-                // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
-                var uploadHtml = "<form class='form' method='post' action='#'>"
-                        + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
-                        + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
-                        + "<label><font size='4'>Description</font></label>" + "<p></p>"
-                        + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
-                        + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>" + "</form>";
+                userPlan().then(function (userBool) {
+                    if (!userBool) {
+                        // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
+                        var uploadHtml = "<form class='form' method='post' action='#'>"
+                                + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<label><font size='4'>Description</font></label>" + "<p></p>"
+                                + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
+                                + "<label title='Turn this toggle on to make this Knetwork private'><font size='3'><b>Private:</b></font></label>"
+                                + "<label class='switch'>"
+                                + "<input type='checkbox' id='privateCheck'>"
+                                + "<span class='slider round'></span></label>" + "<p></p>"
+                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>" + "</form>";
+                    } else {
+                            var uploadHtml = "<form class='form' method='post' action='#'>"
+                                + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<label><font size='4'>Description</font></label>" + "<p></p>"
+                                + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
+                                + "<label title='This Knetwork is visible to others. Upgrade to a Pro plan to have private Knetworks.'><font size='3'><b>Private: </b></font></label>"
+                                + "<label class='switch-off'>"
+                                + "<input type='checkbox' id='privateCheck'>"
+                                + "<span class='slider-off round'></span></label>" + "<p></p>"
+                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>" + "</form>";
+                    }
 
                 var uploadModal = new jBox('Modal', {
                     title: '<font size="5"><font color="white">Save to </font><font color="orange">Knet</font><font size="5"><font color="white">Space</font>',
@@ -76,7 +93,8 @@
                     attributes: {x: 'right', y: 'top'}, delayOpen: 50
                 });
                 uploadModal.open(); // open
-
+                
+                
                 $('#KnetSubmit').on('click', function () {
                     //console.log("user inputs: "+ $('input[name=knetName]').val() +", "+ $('textarea#knetDescription').val());
                     if ($('input[name=knetName]').val()) {
@@ -90,16 +108,23 @@
                     } else {
                         knetDesc = "Network for " + knetName;
                     }
+                    if (!userBool) {
+                        var privateBool = document.getElementById('privateCheck').checked;
+                        if(privateBool === true) {privateBool = false;} else {privateBool = true;}
+                    } else {
+                        var privateBool = true;
+                    }   
+                    console.log("Public Knetwork? : " + privateBool);
                     // console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
 
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                     var post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                         image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: species_name, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
-                        sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords});
+                        sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords, is_public: privateBool });
                     if (keywords === null || keywords === "") { // for non-keyword search
                         post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                             image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: species_name, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
-                            sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list});
+                            sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, is_public: privateBool});
                     }
 
                     $.ajax({
@@ -137,6 +162,7 @@
                     // jBox modal - tasks completed.
                     uploadModal.destroy(); // destroy jBox modal when done
                 });
+            });
                 //}
             } else { // PATCH existing networkId with updated graph, image, numNodes, numEdges, dateModified.
                 var patch_json = JSON.stringify({dateModified: knet_date, numNodes: totalNodes, numEdges: totalEdges,
@@ -230,7 +256,7 @@
   
   // Export the network thumbnail.
   function exportThumbnail(cy) {
-   var png64 = cy.png({ "scale" : 1.2 /*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
+   var png64 = cy.png({ "scale" : 2.0 /*0.8*/, "output" : 'base64'}); // .setAttribute('crossOrigin', 'anonymous');
                 
    return png64.replace("data:image/png;base64,", "");
   }
