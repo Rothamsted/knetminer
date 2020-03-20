@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="../../static/css/loginStyle.css">
 <link rel="stylesheet" type="text/css" href="../../static/css/button.css">
 
+<script type="text/javascript" src="../../static/js/utils-config.js"></script>
 <script type="text/javascript" src="../../static/js/jBox.all.min.js"></script>
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v1.0.6/dist/jBox.all.min.js"></script> -->
 <script type="text/javascript" src="../../static/js/loginHandler/cookieUtils.js"></script>

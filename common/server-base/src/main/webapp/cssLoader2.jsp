@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/static/css/button.css">
 
 <!-- <script type="text/javascript" src="./static/js/jBox.all.min.js"></script> -->
+<script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/static/js/utils-config.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v1.0.6/dist/jBox.all.min.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/static/js/loginHandler/cookieUtils.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/static/js/loginHandler/loginUtils.js"></script>
