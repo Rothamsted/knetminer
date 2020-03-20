@@ -78,13 +78,9 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
        </div>
 
 	<script type="text/javascript">
-            //var api_url= "${knetminer.api.url}";
-            var req_url= "<%=request.getRequestURL()%>";
-            var req_uri= "<%=request.getRequestURI()%>";
-            var req_contextpath= "<%=request.getContextPath()%>";
-            var req_qs= "<%=request.getQueryString()%>";
-            var req_servletpath= "<%=request.getServletPath()%>";
-		$.ajax({
+            var this_url= window.location.href;
+            var api_url= this_url.substring(0, this_url.search("genepage")); // global
+            $.ajax({
             url: "network",
             type: "post",
             headers: {
@@ -100,14 +96,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
-            console.log("api_url from config (via js/pom)= "+ api_url);
-            console.log("requestParams= "+ requestParams);
-            console.dir(requestParams);
-            console.log("url: "+ req_url);
-            console.log("uri: "+ req_uri);
-            console.log("contextpath: "+ req_contextpath);
-            console.log("req_qs: "+ req_qs);
-            console.log("servletpath: "+ req_servletpath);
+            console.log("genepage: api_url: "+ api_url); // test
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
