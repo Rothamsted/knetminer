@@ -20,7 +20,7 @@
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
    console.log("knet-save.js: networkId= "+ networkId); // test
-   var knet_name= "my knetwork", apiGraphSummary= null;
+   var knet_name= "'my knetwork'", apiGraphSummary= null;
    if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= getGraphDBSummary();
@@ -69,7 +69,7 @@
                                 + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
-                                + "<label title='Turn this toggle on to make this Knetwork private'><font size='3'><b>Private:</b></font></label>"
+                                + "<label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
                                 + "<label class='switch'>"
                                 + "<input type='checkbox' id='privateCheck'>"
                                 + "<span class='slider round'></span></label>" + "<p></p>"
@@ -80,7 +80,7 @@
                                 + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
-                                + "<label title='This Knetwork is visible to others. Upgrade to a Pro plan to have private Knetworks.'><font size='3'><b>Private: </b></font></label>"
+                                + "<label id='priv-lab'><font size='3'><b>Private: </b></font></label>"
                                 + "<label class='switch-off'>"
                                 + "<input type='checkbox' id='privateCheck'>"
                                 + "<span class='slider-off round'></span></label>" + "<p></p>"
@@ -93,6 +93,19 @@
                     attributes: {x: 'right', y: 'top'}, delayOpen: 50
                 });
                 uploadModal.open(); // open
+                if (userBool) { 
+                    new jBox('Tooltip', {
+                        attach: '#priv-lab', 
+                        pointer: 'center', 
+                        content: "This Knetwork is visible to others. Upgrade to a Pro plan to have private Knetworks."
+                    });
+                } else {
+                    new jBox('Tooltip', {
+                        attach: '#priv-lab', 
+                        pointer: 'center', 
+                        content: "Turn this toggle on to make this Knetwork private"
+                    });
+                }
                 
                 
                 $('#KnetSubmit').on('click', function () {
