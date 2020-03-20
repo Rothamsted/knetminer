@@ -200,3 +200,4 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+a { cursor: pointer; }
