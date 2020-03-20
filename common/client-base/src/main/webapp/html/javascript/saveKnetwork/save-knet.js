@@ -66,7 +66,7 @@
                         // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
                         var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
-                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder='" + knet_name + "' type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
@@ -77,7 +77,7 @@
                     } else {
                             var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
-                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder='" + knet_name + "' type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<label id='priv-lab'><font size='3'><b>Private: </b></font></label>"
@@ -93,16 +93,16 @@
                     attributes: {x: 'right', y: 'top'}, delayOpen: 50
                 });
                 uploadModal.open(); // open
-		if (userBool) { 
+                if (userBool) { 
                     new jBox('Tooltip', {
                         attach: '#priv-lab', 
-                        pointer: 'right:60', 
+                        pointer: 'center', 
                         content: "This Knetwork is visible to others. Upgrade to a Pro plan to have private Knetworks."
                     });
                 } else {
                     new jBox('Tooltip', {
                         attach: '#priv-lab', 
-                        pointer: 'right:60', 
+                        pointer: 'center', 
                         content: "Turn this toggle on to make this Knetwork private"
                     });
                 }
