@@ -20,6 +20,7 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
 <!-- font-awesome js -->
 <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
+<jsp:include page="../../js_css_loader.jsp" />
 <title>KnetMiner network</title>
 </head>
 <body>
@@ -27,20 +28,24 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
 	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/logo-regular.png" height="48" alt="Logo"></a>   
        <ul class="nav navbar-nav" id="top">
           <li>
-		    <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
-            <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
-		    <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
-		  </li>
+              <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
+              <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
+              <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
+              <a id="login_icon" title="Sign in" style="text-decoration:none;padding-top:0;">Sign in</a>
+              <a id="profile_icon" title="Profile" style="padding-top:0;">
+                  <svg class="svg-inline--fa fa-user fa-w-14" aria-hidden="true" data-prefix="fa" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg><!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+              </a>
+          </li>
     </ul>
  	</nav>  <!-- end navbar -->
  
 <div id="content">
     <div id="dataset-description"><p id="dataset-desc"><%=datasetDescription%></p></div><br/>
-  <!--  <div id="NetworkCanvas">
-        <div id="knetSaveButton" style="width:101%; margin-top:7px;"></div> -->
+    <div id="NetworkCanvas">
+        <div id="knetSaveButton" style="width:101%; margin-top:7px;"></div>
         <!-- KnetMaps -->
         <div id="knetmap"></div>
-  <!--  </div> -->
+    </div>
 </div>  <!-- content -->
 
        <div class="contact-footer">
@@ -66,7 +71,9 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
        </div>
 
 	<script type="text/javascript">
-		$.ajax({
+          /*  var this_url= window.location.href;
+            var api_url= this_url.substring(0, this_url.search("genepage"));*/ // global
+            $.ajax({
             url: "evidencePath",
             type: "post",
             headers: {
@@ -81,7 +88,9 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
         }).success(function (data) {
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
-            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;' onclick='exportAsJson("+networkId+");' title='Save the knetwork to knetspace'>Save</button>");
+            var requestParams= { keyword: "<%=keywords%>", list: ${list} };
+            console.log("evidencepage: api_url: "+ api_url); // test
+            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph/*, networkId*/);
