@@ -35,7 +35,7 @@
       dbDateCreated= apiGraphSummary.get("dbDateCreated");
       sourceOrganization= apiGraphSummary.get("sourceOrganization");
       provider= apiGraphSummary.get("provider");
-      //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
+      console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
      }
 
    // get keyword and gene list too (if found) to save.

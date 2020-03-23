@@ -72,7 +72,11 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
 
 	<script type="text/javascript">
           /*  var this_url= window.location.href;
-            var api_url= this_url.substring(0, this_url.search("genepage"));*/ // global
+            var api_url= this_url.substring(0, this_url.search("genepage")); */
+            var request_url= "<%=request.getRequestURL().toString()%>";
+            var request_context_path= "<%=request.getContextPath()%>";
+            var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
+            var api_url= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("evidencepage")); // global
             $.ajax({
             url: "evidencePath",
             type: "post",
@@ -89,7 +93,7 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
-            console.log("evidencepage: api_url: "+ api_url); // test
+            console.log("evidence_page: api_url: "+ api_url); // test
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
