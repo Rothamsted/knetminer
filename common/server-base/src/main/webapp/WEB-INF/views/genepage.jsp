@@ -114,6 +114,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             console.log("req_contextPath= "+ req_cp);
             console.log("req_servletPath= "+ req_sp);
             console.log("req_URI= "+ req_uri);
+            console.log("uri= "+ uri);
             console.log("req_remoteAddr= "+ req_ra);
             console.log("req_remoteHost= "+ req_rh);
             console.log("req_queryString= "+ req_qs);
