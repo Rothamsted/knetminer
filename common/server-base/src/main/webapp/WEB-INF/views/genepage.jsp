@@ -32,7 +32,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 <!-- font-awesome js -->
 <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
-<jsp:include page="../../cssLoader2.jsp" />
+<jsp:include page="../../js_css_loader.jsp" />
 <title>KnetMiner network</title>
 </head>
 <body>
@@ -83,8 +83,8 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
        </div>
 
 	<script type="text/javascript">
-            var this_url= window.location.href;
-            var api_url= this_url.substring(0, this_url.search("genepage")); // global
+          /*  var this_url= window.location.href;
+            var api_url= this_url.substring(0, this_url.search("genepage"));*/ // global
             $.ajax({
             url: "network",
             type: "post",
