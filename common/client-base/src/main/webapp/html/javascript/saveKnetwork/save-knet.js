@@ -1,6 +1,6 @@
 /* 
  * Utils to extract the rendered kNetwork in KnetMaps (Network View), fetch back-end API summary/metadata and upload/save to knetspace via API.
- * Author: Ajit Singh
+ * Authors: Ajit Singh and Joseph Hearnshaw
  */
 
 /* Function to save knetwork rendered in knetmaps (cyJS) to knetspace via POST. */
@@ -20,7 +20,7 @@
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
    console.log("knet-save.js: networkId= "+ networkId); // test
-   var knet_name= "'my knetwork'", apiGraphSummary= null;
+   var knet_name= "knetwork", apiGraphSummary= null;
    if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= getGraphDBSummary();
@@ -66,7 +66,7 @@
                         // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
                         var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
-                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder="+knet_name+" type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
@@ -77,7 +77,7 @@
                     } else {
                             var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
-                                + "<input style='height:20px;width:450px;' placeholder=" + knet_name + " type='text' name='knetName' id='kNetName'>" + "<p></p>"
+                                + "<input style='height:20px;width:450px;' placeholder="+knet_name+" type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
                                 + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<label id='priv-lab'><font size='3'><b>Private: </b></font></label>"
