@@ -83,8 +83,16 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
        </div>
 
 	<script type="text/javascript">
-          /*  var this_url= window.location.href;
-            var api_url= this_url.substring(0, this_url.search("genepage"));*/ // global
+            var req_url= "<%=request.getRequestURL().toString()%>";
+            var req_cp= "<%=request.getContextPath()%>";
+            var req_sp= "<%=request.getServletPath()%>";
+            var req_uri= "<%=request.getRequestURI()%>";
+            var uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
+            var req_ra= "<%=request.getRemoteAddr()%>";
+            var req_rh= "<%=request.getRemoteHost()%>";
+            var req_qs= "<%=request.getQueryString()%>";
+            var this_url= window.location.href;
+            var api_url2= this_url.substring(0, this_url.search("genepage")); // global
             $.ajax({
             url: "network",
             type: "post",
@@ -102,6 +110,14 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
             console.log("genepage: api_url: "+ api_url); // test
+            console.log("req_URL= "+req_url);
+            console.log("req_contextPath= "+ req_cp);
+            console.log("req_servletPath= "+ req_sp);
+            console.log("req_URI= "+ req_uri);
+            console.log("req_remoteAddr= "+ req_ra);
+            console.log("req_remoteHost= "+ req_rh);
+            console.log("req_queryString= "+ req_qs);
+            console.log("genepage: api_url2 (tmp): "+ api_url2); // test
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
