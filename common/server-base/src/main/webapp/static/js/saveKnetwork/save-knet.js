@@ -259,6 +259,7 @@
                     var k= values[0].trim();
                     var v= values[1].trim();
                     if(k === "dbDateCreated") { v= values[1] +":"+ values[2]; }
+                    console.log("getGraphDBSummaryJSON: dataSource: k,v= " + k + v); // test
                     graphSummary.set(k, v);
                 });
            }

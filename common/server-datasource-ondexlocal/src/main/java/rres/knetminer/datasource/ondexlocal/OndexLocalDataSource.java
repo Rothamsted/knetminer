@@ -404,6 +404,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
                 String jsonString = summaryJSON.toString();
                 // Removing the pesky double qoutations
                 jsonString = jsonString.substring(1, jsonString.length() - 1);
+                log.info("response.dataSource= " + jsonString); // test
                 response.dataSource = jsonString;
                 
             } catch (JSONException ex) {
