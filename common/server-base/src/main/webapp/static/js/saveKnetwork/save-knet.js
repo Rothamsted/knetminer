@@ -73,7 +73,7 @@
                                 + "<label class='switch'>"
                                 + "<input type='checkbox' id='privateCheck'>"
                                 + "<span class='slider round'></span></label>" + "<p></p>"
-                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>" + "</form>";
+                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Save'>" + "</form>";
                     } else {
                             var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
@@ -84,7 +84,7 @@
                                 + "<label class='switch-off'>"
                                 + "<input type='checkbox' id='privateCheck'>"
                                 + "<span class='slider-off round'></span></label>" + "<p></p>"
-                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Submit'>" + "</form>";
+                                + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Save'>" + "</form>";
                     }
 
                 var uploadModal = new jBox('Modal', {
