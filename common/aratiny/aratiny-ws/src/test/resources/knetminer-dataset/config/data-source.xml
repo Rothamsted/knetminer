@@ -15,9 +15,9 @@
 	<entry key="export_visible_network">true</entry>
 	<entry key="version">${knetminer.version}</entry>
 	<entry key="provider">${knetminer.provider}</entry>
-	<entry key="speciesName">${knetminer.specieName}</entry>	
+	<entry key="specieName">${knetminer.specieName}</entry>	
 	<entry key="knetSpaceHost">${knetminer.knetSpaceHost}</entry>
-  <entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
+ 	<entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
 	
 
 	<!-- 
