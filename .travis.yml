@@ -32,11 +32,9 @@ install:
   - wget https://raw.githubusercontent.com/Rothamsted/knetminer-common/master/settings.xml
       
 script:
-  # TODO: we used this with the old Nexus, possibly to tbe removed
   # travis-pls prints periodic keepalive messages, so that Travis doesn't stop 
   # after 10 mins of stale output. 
-  # travis-pls --interval 300 --max-timeout 1800 ./travis-build.sh
-  - ./travis-build.sh
+  travis-pls --interval 300 --max-timeout 1800 ./travis-build.sh
   
 branches:
   only:
