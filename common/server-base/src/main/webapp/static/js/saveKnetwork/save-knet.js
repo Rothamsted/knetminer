@@ -22,7 +22,7 @@
    console.log("knet-save.js: networkId= "+ networkId); // test
    var knet_name= "knetwork", apiGraphSummary= null;
    if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
-      console.log("fetch graphSummary from KnetMiner server API..."); // test
+      //console.log("fetch graphSummary from KnetMiner server API..."); // test
       apiGraphSummary= getGraphDBSummary();
      }
 
@@ -35,7 +35,7 @@
       dbDateCreated= apiGraphSummary.get("dbDateCreated");
       sourceOrganization= apiGraphSummary.get("sourceOrganization");
       provider= apiGraphSummary.get("provider");
-      console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
+      //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
      }
 
    // get keyword and gene list too (if found) to save.
@@ -132,11 +132,11 @@
 
                     // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                     var post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
-                        image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: species_name, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
+                        image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
                         sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords, is_public: privateBool });
                     if (keywords === null || keywords === "") { // for non-keyword search
                         post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
-                            image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: species_name, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
+                            image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
                             sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, is_public: privateBool});
                     }
 
@@ -259,7 +259,6 @@
                     var k= values[0].trim();
                     var v= values[1].trim();
                     if(k === "dbDateCreated") { v= values[1] +":"+ values[2]; }
-                    console.log("getGraphDBSummaryJSON: dataSource: k,v= " + k + v); // test
                     graphSummary.set(k, v);
                 });
            }
