@@ -55,7 +55,7 @@
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
 		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
-    <knetminer.version>42</knetminer.version>
+    		<knetminer.version>45</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
