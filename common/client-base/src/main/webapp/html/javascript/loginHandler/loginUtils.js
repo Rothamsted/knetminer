@@ -116,6 +116,19 @@ function returnJson() {
     return jsonVal;
 }
 
+/*
+ * add new document.ready event to initalise login (to decouple login from utils.js completely)
+ * author: singha
+ */
+$(document).ready(
+    function () {
+        $('#login_icon').text("Sign in");
+        $('#login_icon').css('textDecoration','none');
+        fetchCredentials(null);
+        // Initalize login Modal
+        loginModalToggle();        
+    });
+
 /* 
  * initialize  loginModal
  * @returns {loginModal}

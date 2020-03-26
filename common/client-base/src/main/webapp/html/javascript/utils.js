@@ -222,11 +222,6 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
-        $('#login_icon').text("Sign in");
-        $('#login_icon').css('textDecoration','none');
-        fetchCredentials(null);
-        // Initalize login Modal
-        loginModalToggle();        
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
