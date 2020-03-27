@@ -41,7 +41,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
        <ul class="nav navbar-nav" id="top">
           <li>
               <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
-              <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
+              <a id="release_icon" target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
               <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
               <a id="login_icon" title="Sign in" style="padding-top:0;">Sign in</a>
               <a id="profile_icon" title="Profile" style="padding-top:0;"><i class="fa fa-user" aria-hidden="true"></i></a>
