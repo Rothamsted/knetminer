@@ -207,7 +207,7 @@
                             uploadModal.toggle();
                             var netContentSuccess = "Network " + knetName + " submitted!<br><br>" + "<a href='" + knetspace_api_host + "/network' target='_blank' style='color:white;' class='profileClass'><b>View it in KnetSpace</b></a>";
                             jboxNotice(netContentSuccess, 'blue', 60, 15000);
-                            console.log("PATCH response: " + data);
+                            //console.log("PATCH response: " + data);
                         });
             }
 
