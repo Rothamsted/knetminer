@@ -9,7 +9,6 @@
 	  <version>1.0-SNAPSHOT</version>
 	</parent>  
 
-	<groupId>uk.ac.rothamsted.knetminer</groupId>
 	<artifactId>parent</artifactId>
 	<name>parent</name>
 	<version>1.0.0-SNAPSHOT</version>
@@ -41,8 +40,6 @@
 		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
 		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
-		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
-		<knetminer.version>44</knetminer.version>
 
 
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
@@ -60,8 +57,9 @@
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
-		<knetminer.sourceOrganization>Rothamsted</knetminer.sourceOrganization>
-    <knetminer.version>42</knetminer.version>
+		
+		<knetminer.sourceOrganization>Rothamsted Research</knetminer.sourceOrganization>
+		<knetminer.version>45</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
