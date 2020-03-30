@@ -3,7 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.rothamsted.knetminer</groupId>
+	<parent>
+	  <groupId>uk.ac.rothamsted.knetminer</groupId>
+	  <artifactId>knetminer-common</artifactId>
+	  <version>1.0-SNAPSHOT</version>
+	</parent>  
+
 	<artifactId>parent</artifactId>
 	<name>parent</name>
 	<version>1.0.0-SNAPSHOT</version>
@@ -52,8 +57,9 @@
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+		
 		<knetminer.sourceOrganization>Rothamsted Research</knetminer.sourceOrganization>
-    		<knetminer.version>45</knetminer.version>
+		<knetminer.version>45</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
@@ -125,7 +131,8 @@
 	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro>
+		<!-- TODO: remove 
+		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro> -->
 
 		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
@@ -222,6 +229,7 @@
 		<url>http://ondex.rothamsted.ac.uk/hudson</url>
 	</ciManagement>
 
+	<!-- TODO: remove
 	<distributionManagement>
 	  <repository>
 			<id>ondex-releases</id>
@@ -238,7 +246,9 @@
 			<url>file:///var/www/html/ondex</url>
 		</site>
 	</distributionManagement>
-
+  -->
+  
+  
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -383,11 +393,16 @@
 	</profiles>
 
 	<repositories>
-		<repository>
-			<id>public</id>
-			<name>Public repository</name>
-			<url>http://central.maven.org/maven2/</url>
-		</repository>
+	  <repository>
+	  	<!-- This is needed to let Maven find the parent POM -->
+			<id>knetminer-repo</id>
+			<name>Knetminer Unified Repository</name>
+			<url>https://knetminer.org/artifactory/repository/maven-public</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>true</enabled></releases>
+	  </repository>
+	
+		<!-- TODO: remove
 		<repository>
 			<id>ondex_repro</id>
 			<name>ondex_repro</name>
@@ -397,17 +412,12 @@
 			<id>snapshot_releases</id>
 			<name>nexus.repro</name>
 			<url>${nexus.repro}/content/repositories/snapshots</url>
-			<!-- <url>${nexus.repro}/content/groups/public-snapshots</url> -->
 		</repository>
+		-->
 
-  	<!-- jutils -->
-		<repository>
-		  <id>EBIBioSamples-GH-repo</id>
-		  <url>https://raw.githubusercontent.com/EBIBioSamples/EBIBioSamples.github.io/maven-repo</url>
-		  <snapshots><enabled>true</enabled></snapshots>
-		</repository>
 	</repositories>
 
+	<!-- TODO: remove 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>ondex_repo</id>
@@ -415,7 +425,8 @@
 			<url>${nexus.repro}/content/groups/public</url>
 		</pluginRepository>
 	</pluginRepositories>
-
+  -->
+  
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
