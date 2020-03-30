@@ -68,11 +68,11 @@
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
                                 + "<input style='height:20px;width:450px;' placeholder="+knet_name+" type='text' name='knetName' id='kNetName'>" + "<p></p>"
                                 + "<label><font size='4'>Description</font></label>" + "<p></p>"
-                                + "<textarea style='height:200px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
-                                + "<label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
+                                + "<textarea style='height:100px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
+                                + "<div style='display:flex;'><label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
                                 + "<label class='switch'>"
                                 + "<input type='checkbox' id='privateCheck'>"
-                                + "<span class='slider round'></span></label>" + "<p></p>"
+                                + "<span class='slider round'></span></label></div>" + "<p></p>"
                                 + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Save'>" + "</form>";
                     } else {
                             var uploadHtml = "<form class='form' method='post' action='#'>"
