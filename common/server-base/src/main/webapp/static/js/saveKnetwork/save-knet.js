@@ -89,8 +89,8 @@
 
                 var uploadModal = new jBox('Modal', {
                     title: '<font size="5"><font color="white">Save to </font><font color="orange">Knet</font><font size="5"><font color="white">Space</font>',
-                    animation: 'pulse', content: uploadHtml, width: 500, cancelButton: 'Exit', draggable: 'title',
-                    attributes: {x: 'right', y: 'top'}, delayOpen: 50
+                    animation: 'pulse', content: uploadHtml, width: 500, cancelButton: 'Exit', draggable: 'title', 
+                    position: {x: 'center', y: 'top'}, offset: {x: 0, y: 150}, delayOpen: 50
                 });
                 uploadModal.open(); // open
                 if (userBool) { 
