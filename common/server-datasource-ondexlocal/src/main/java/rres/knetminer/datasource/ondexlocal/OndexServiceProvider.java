@@ -2877,14 +2877,7 @@ public class OndexServiceProvider {
             qtls = graph.getConceptsOfConceptClass(ccQTL);
         }
 
-        Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-        Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
-        for (ONDEXConcept gene : seed) {
-            if (gene.getAttribute(attTAXID) != null
-                    && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-                genes.add(gene);
-            }
-        }
+        Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, taxID, this.getOptions () );
 
         if (file1.exists() && (file1.lastModified() < graphFile.lastModified())) {
             log.info("Graph file updated since hashmaps last built, deleting old hashmaps");

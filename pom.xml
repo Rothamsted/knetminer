@@ -56,7 +56,17 @@
 		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo</knetminer.appKeywords>
+		
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+		
+		<!-- 
+			If this is non-empty, the genes used to seed the initial semantic motif graph traverser are taken from this
+			file. Its format is very simple, see the example mentioned here. This variable must be defined for
+			things to work, the empty default doesn't trigger this behaviour and causes the seed to be computed from
+			knetminer.specieTaxId. As usually, this can be redefined in a setting file, inside the docker profile.
+		-->
+		<knetminer.backend.seedGenesFile></knetminer.backend.seedGenesFile>
+		<!-- knetminer.backend.seedGenesFile>${knetminer.configDir}/seed-genes-example.tsv</knetminer.backend.seedGenesFile -->		
 		
 		<knetminer.sourceOrganization>Rothamsted Research</knetminer.sourceOrganization>
 		<knetminer.version>45</knetminer.version>
