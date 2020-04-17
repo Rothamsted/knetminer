@@ -68,6 +68,13 @@
 		<knetminer.backend.seedGenesFile></knetminer.backend.seedGenesFile>
 		<!-- knetminer.backend.seedGenesFile>${knetminer.configDir}/seed-genes-example.tsv</knetminer.backend.seedGenesFile -->		
 		
+		<!--
+			Used to add the number of publications one wants visibly exported in the KnetMiner instance, default set at 20,
+			edit this, or pass a mvn arg for it, to ammend it to a greater, or lesser, value.
+		-->
+		<knetminer.backend.pubCount>20</knetminer.backend.pubCount>
+
+		
 		<knetminer.sourceOrganization>Rothamsted Research</knetminer.sourceOrganization>
 		<knetminer.version>45</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>

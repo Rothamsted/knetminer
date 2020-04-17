@@ -64,7 +64,7 @@ public class PublicationUtils {
 		List<Integer> sortedAndLimitedPubs = setPub.parallelStream()
 				// - is to sort from the most recent (highest) year
 				.sorted((pub1, pub2) -> - Integer.compare (getComparableYear(pub1, attYear), getComparableYear(pub2, attYear) ) )
-				.limit(20)
+				.limit(limit)
 				.map(ONDEXConcept::getId)
 				.collect(Collectors.toList());
 		
