@@ -11,7 +11,7 @@
 
 	<artifactId>parent</artifactId>
 	<name>parent</name>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>5.0-SNAPSHOT</version>
 	<description>KnetMiner is a platform for fast candidate gene discovery using data mining techniques.</description>
 	<url>http://knetminer.rothamsted.ac.uk/</url>
 	<packaging>pom</packaging>
@@ -147,20 +147,23 @@
 		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
 	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+		<java.version>${maven.compiler.source}</java.version>
+
 		<!-- TODO: remove 
 		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro> -->
 
+		<!-- ===> !!! WARNING !!! <=== -->
+		<!-- 
+		  DO NOT DEFINE version properties UNLESS you need to use them multiple times (eg, multiple artifacts about
+		  the same product) in the DEPENDENCY MANAGEMENT SECTION.
+		  THIS IS THE PROPER WAY TO DO IT!!! 
+		 -->
 		<log4j.version>2.3</log4j.version>
-		<lucene.version>6.6.0</lucene.version>
-		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
-		<maven.war.plugin.version>2.4</maven.war.plugin.version>
-		<maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
-		<maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
-		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-	  <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
-		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
-		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
+		<surefire.version>3.0.0-M1</surefire.version>
+
 		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
 		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
 		<ondex.version>2.1.2-SNAPSHOT</ondex.version>
@@ -194,17 +197,17 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>${maven.surefire.report.plugin.version}</version>
+				<version>${surefire.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>${maven.project.info.reports.plugin.version}</version>
+				<version>2.1.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>${maven.pmd.plugin.version}</version>
+				<version>2.4</version>
 				<configuration>
 					<linkXref>true</linkXref>
 					<sourceEncoding>ISO-8859-1</sourceEncoding>
@@ -272,7 +275,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven.compiler.plugin.version}</version>
+					<version>3.8.1</version>
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
@@ -286,12 +289,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>${maven.war.plugin.version}</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>${mojo.exec.plugin.version}</version>
+					<version>1.6.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -299,7 +302,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven.surefire.plugin.version}</version>
+				<version>${surefire.version}</version>
 				<configuration>
 					<forkMode>always</forkMode>
 					<forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
@@ -314,7 +317,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>${maven.source.plugin.version}</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -576,7 +579,7 @@
 			<dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-analyzers-common</artifactId>
-				<version>${lucene.version}</version>
+				<version>6.6.0</version>
 			</dependency>
 
 			<dependency>
