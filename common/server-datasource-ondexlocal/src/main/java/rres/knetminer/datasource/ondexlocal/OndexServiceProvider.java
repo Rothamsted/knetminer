@@ -1529,7 +1529,7 @@ public class OndexServiceProvider {
             } else {
 
                 // if non of publication contains the keyword, just keep most recent papers from total set
-                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
+                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
             }
 
             // publications that we want to remove 
