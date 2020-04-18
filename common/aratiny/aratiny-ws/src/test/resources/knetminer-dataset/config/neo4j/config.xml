@@ -76,7 +76,8 @@
 			}"
 		/>
 	</bean>
-	
-	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "40000"/></bean>
+
+	<!-- Overall traverser timeout (see the documentation), 8hr is already the default -->	
+	<!--  bean name = "traverserTimeoutMins" class = "java.lang.Long"><constructor-arg value = "480"/></bean -->
 	
 </beans>

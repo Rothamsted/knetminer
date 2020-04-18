@@ -162,6 +162,12 @@ public class OndexServiceProvider {
      */
     private String sourceOrganization;
     
+    /**
+    * PubCount value
+    */
+    public static final String DEFAULT_EXPORTED_PUBS = "pubCount";
+    
+    
     /** 
      * The Date of graph creation
      */
@@ -1518,12 +1524,12 @@ public class OndexServiceProvider {
             if (!pubKeywordSet.isEmpty()) {
 
                 // if  publications with keyword exist, keep most recent papers from pub-keyword set
-                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
+                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
 
             } else {
 
                 // if non of publication contains the keyword, just keep most recent papers from total set
-                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
             }
 
             // publications that we want to remove 
@@ -2189,7 +2195,7 @@ public class OndexServiceProvider {
             }
 
             AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
-            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
 
             String pubString = "Publication__" + allPubs.size() + "__";
             for (Integer pid : newPubs) {
@@ -2877,14 +2883,7 @@ public class OndexServiceProvider {
             qtls = graph.getConceptsOfConceptClass(ccQTL);
         }
 
-        Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-        Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
-        for (ONDEXConcept gene : seed) {
-            if (gene.getAttribute(attTAXID) != null
-                    && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-                genes.add(gene);
-            }
-        }
+        Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, taxID, this.getOptions () );
 
         if (file1.exists() && (file1.lastModified() < graphFile.lastModified())) {
             log.info("Graph file updated since hashmaps last built, deleting old hashmaps");

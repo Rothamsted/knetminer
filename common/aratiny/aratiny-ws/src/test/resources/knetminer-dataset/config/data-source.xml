@@ -3,6 +3,11 @@
 <properties>
 	<comment>Configuration for Knetminer</comment>	
   
+  <!-- 
+  	===> TODO: please, stick to a naming convention for new variables! Cleaning is due for the old ones:
+  	     https://github.com/Rothamsted/knetminer/issues/489
+  -->
+  
   <entry key="DataSourceName">${knetminer.dataSourceId}</entry>
 
   <entry key="StateMachineFilePath">file:///${knetminer.configDir}/SemanticMotifs.txt</entry>
@@ -11,6 +16,11 @@
   <entry key="DataFile">${knetminer.oxlFile}</entry>
   
 	<entry key="SpeciesTaxId">${knetminer.specieTaxId}</entry>
+	<!-- See the main POM for a description of this option -->
+	<entry key="seedGenesFile">${knetminer.backend.seedGenesFile}</entry>
+	<!-- See the main POM with regard to the below option, too -->
+	<entry key="pubCount">${knetminer.backend.pubCount}</entry>
+	
 	<entry key="reference_genome">true</entry>
 	<entry key="export_visible_network">true</entry>
 	<entry key="version">${knetminer.version}</entry>
@@ -19,6 +29,7 @@
 	<entry key="knetSpaceHost">${knetminer.knetSpaceHost}</entry>
  	<entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
 	
+
 
 	<!-- 
 		This is the configuration for the new Neo4j-based backend
