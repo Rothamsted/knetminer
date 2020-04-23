@@ -541,8 +541,15 @@ public class OndexServiceProvider {
         uFA.addOption(ArgumentNames.REMOVE_TAG_ARG, true);
 
         // TODO
-        uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Publication");
-        uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Chromosome");
+        List<String> ccRestrictionList = Arrays.asList("Publication", "Phenotype", "Protein", "Drug", "Chromosome");
+        ccRestrictionList.stream().forEach(cc -> {
+            try {
+                uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc);
+            } catch (InvalidPluginArgumentException ex) {
+                log.info("Failed to restrict concept class " + cc + " due to error " + ex);
+            }
+        } );
+        log.info("Filtering concept classes " + ccRestrictionList);
 
         uFilter.setArguments(uFA);
         uFilter.setONDEXGraph(og);
