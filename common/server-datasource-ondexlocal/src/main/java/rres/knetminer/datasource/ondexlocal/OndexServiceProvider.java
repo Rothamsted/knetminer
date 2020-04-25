@@ -541,7 +541,9 @@ public class OndexServiceProvider {
         uFA.addOption(ArgumentNames.REMOVE_TAG_ARG, true);
 
         // TODO
-        List<String> ccRestrictionList = Arrays.asList("Publication", "Phenotype", "Protein", "Drug", "Chromosome");
+        List<String> ccRestrictionList = Arrays.asList("Publication", "Phenotype", "Protein", 
+                "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
+                "Disease", "BioProc", "Trait");
         ccRestrictionList.stream().forEach(cc -> {
             try {
                 uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc);
@@ -684,10 +686,12 @@ public class OndexServiceProvider {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
             if (geneList != null) {
                 for (ONDEXConcept gene : geneList) {
-                    for (int conceptId : mapGene2Concepts.get(gene.getId())) {
-                        ONDEXConcept concept = graph.getConcept(conceptId);
-                        if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
-                            hit2score.put(concept, 1.0f);
+                    if (gene != null) {
+                        for (int conceptId : mapGene2Concepts.get(gene.getId())) {
+                            ONDEXConcept concept = graph.getConcept(conceptId);
+                            if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+                                hit2score.put(concept, 1.0f);
+                            }
                         }
                     }
                 }
