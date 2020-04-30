@@ -38,15 +38,15 @@
 		<!-- This does some tuning on the kind of needs we have with Knetminer -->
 		<constructor-arg type="org.neo4j.driver.v1.Config" 
 			value = "#{T(org.neo4j.driver.v1.Config).build ()
-				.withConnectionAcquisitionTimeout ( 10, T(java.util.concurrent.TimeUnit).SECONDS )
-				.withConnectionTimeout ( 20, T(java.util.concurrent.TimeUnit).SECONDS )
+				.withConnectionAcquisitionTimeout ( 20, T(java.util.concurrent.TimeUnit).SECONDS )
+				.withConnectionTimeout ( 30, T(java.util.concurrent.TimeUnit).SECONDS )
 				.toConfig ()
 			}"
 		/>
 	</bean>
 
 	<!-- Per-query timeout version -->
- 	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "120000"/></bean>	
+ 	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "60000"/></bean>	
 	<!-- Overall timeout version -->
 	<bean name = "traverserTimeoutMins" class = "java.lang.Long"><constructor-arg value = "120"/></bean>
 	
