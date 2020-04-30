@@ -5,6 +5,24 @@
 
 set -e # Fail fast upon the first error
 
+if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then
+	
+	# Travis's cron doesn't consider if there have been changes or not, so...
+	#
+	nchanges=$(git log --since 'yesterday' --format=oneline | wc -l)
+	if [[ $(($nchanges)) == 0  ]]; then
+		cat <<EOT
+
+
+	This is a cron-triggered build and the code didn't change since last build, so we're not rebuilding.
+	This is based on github logs (--since 'yesterday'). Please, trigger a manual build if I didn't get it right.
+	
+EOT
+	exit
+	fi
+fi
+
+
 [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && goal='deploy' || goal='install'
 
 # You need --quiet, Travis doesn't like too big logs.
