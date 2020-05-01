@@ -99,7 +99,20 @@ MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [has_observ_pheno_9_13_d:has_observ_pheno] -> (phenotype_13:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [participates_in_9_4_d:participates_in] -> (bioProc_4:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [located_in_9_5_d:located_in] -> (celComp_5:CelComp) WHERE gene_1.iri IN $startGeneIris RETURN path
-#caution this is a slow query
-MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+
+# ---- caution this is a slow query
+# MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+
+# Attempt to replace the query above with simpler ones.
+# MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+# MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:physical] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+
+# And then we tried a further split
+MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic] -> (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) <- [rel_9_9_2:genetic] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:physical] -> (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) <- [rel_9_9_2:physical] - (gene_9b:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+# -----
+
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [has_function_9_3_d:has_function] -> (molFunc_3:MolFunc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [cooc_wi_9_21:cooc_wi] - (trait_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
