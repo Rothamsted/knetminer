@@ -2047,7 +2047,11 @@ public class OndexServiceProvider {
             for (ConceptAccession acc : gene.getConceptAccessions()) {
                 String accValue = acc.getAccession();
                 geneAcc = accValue;
-                if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
+                if (acc.getElementOf().getId().equalsIgnoreCase("ENSEMBL-HUMAN")) {
+                    geneAcc = accValue;
+                    break;
+                }
+                else if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
                         && (accValue.indexOf(".") == -1)) {
                     geneAcc = accValue;
                     break;

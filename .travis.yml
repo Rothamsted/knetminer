@@ -7,7 +7,7 @@ addons:
   apt:
     packages:
       - libxml2-utils
-      - python3-pip # To use travis-pls
+      # - python3-pip # To use travis-pls
 services:
   - docker      
   
@@ -25,16 +25,11 @@ install:
   - npm install -g n
   - npath=$(which n) # we need this, cause the installation is somewhere in $HOME and 'n' needs sudo
   - sudo $npath 11.15.0
-  # travis-pls, see below
-  - pip3 install setuptools
-  - pip3 install git+https://github.com/naftulikay/travis-pls
   # The common settings file used to build with Travis
   - wget https://raw.githubusercontent.com/Rothamsted/knetminer-common/master/settings.xml
       
 script:
-  # travis-pls prints periodic keepalive messages, so that Travis doesn't stop 
-  # after 10 mins of stale output. 
-  travis-pls --interval 300 --max-timeout 1800 ./travis-build.sh
+  ./travis-build.sh
   
 branches:
   only:
