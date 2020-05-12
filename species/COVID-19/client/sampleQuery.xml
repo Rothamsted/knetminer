@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Query 1</name>
+		<description>Coronavirus and drugs</description>
+		<term>"ascorbic acid" OR favipiravir OR chloroquine OR leflunomide OR Remdesivir OR methylprednisolone OR Tocilizumab OR Sarilumab</term>
+	</query>  
+	<query>
+		<name>Query 2</name>
+		<description>Coronavirus search terms</description>
+		<term>"SARS-CoV-2" OR "covid-19" OR coronavirus OR "MERS-CoV"</term>
+	</query>
+	<query>
+		<name>Query 3</name>
+		<description>Pneumonia, corticosteroid, and Covid-19</description>
+		<term>pneumonia AND methylprednisolone</term>
+	</query>
+	<query>
+		<name>Query 4</name>
+		<description>Genes and protein-protein interactions</description>
+		<term>coronavirus OR "covid-19" OR "SARS-CoV-2" OR virus</term>
+		<gene>ACE2</gene>
+		<gene>TMPRSS2</gene>
+		<gene>SERPING1</gene>
+		<gene>CHMP2B</gene>
+		<gene>YWHAE</gene>
+	</query>
+</sampleQueries>
