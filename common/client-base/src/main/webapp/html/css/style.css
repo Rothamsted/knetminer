@@ -161,7 +161,7 @@ div#leftnav {
 div#content {
     padding-top: /*100*/70px;
     height: auto;
-    padding-bottom: 140px;
+    padding-bottom: /*140*/40px;
 }
 
 .embeddable div#content {
