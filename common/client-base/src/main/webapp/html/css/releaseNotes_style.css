@@ -6,7 +6,8 @@
 
 #release-content a {
 	text-decoration:none; 
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 }
 .release-title {
 	padding-left:40px;
@@ -116,11 +117,13 @@ a.contact-button{
 	text-decoration:none !important;	
 	}
 a.contact-button :hover {
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 	font-weight:bold;
 	}
 .contact-page a:hover {
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 	text-decoration:none;
 	}
 

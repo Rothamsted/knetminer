@@ -17,7 +17,8 @@
     padding-right: 10px; 
     padding-top: 18px; 
     font-size: 20px;
-    color: orange;
+    color:#51CE7B;
+    /*color: orange;*/
 }
 
 #KnetSubmit, #KnetSpacelogin {
@@ -46,7 +47,8 @@
 }
 
 #KnetSubmit, #KnetSpacelogin a:hover {
-    color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
     text-decoration:none;
 }
 

@@ -29,7 +29,8 @@ p {
 }
 a {
     text-decoration:none;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
 }
 a img {
     border:none;
@@ -197,7 +198,8 @@ div#keyword_search input[type="text"] {
     height:30px;
     margin-right:5px;
     border: solid 2px;
-    border-color: orange;
+    border-color:#51CE7B;
+    /*border-color: orange;*/
 }
 div#keyword_search input[type="text"]:focus {
     outline-width: 0;
@@ -261,7 +263,8 @@ div#loadingNetworkDiv {
     height:30px;
     padding-top:13px;
     padding-right:5px;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-size:14px;
 }
 div#loadingNetworkDiv img {
@@ -273,7 +276,8 @@ div#loadingNetwork_Div {
     height:20px;
     padding-top:13px;
     padding-right:5px;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-size:14px;
 }
 div#loadingNetwork_Div img {
@@ -669,11 +673,13 @@ a.contact-button{
     text-decoration:none !important;	
 }
 a.contact-button :hover {
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-weight:bold;
 }
 .contact-page a:hover {
-    color:darkorange;
+    color:#51CE7B;
+	/*color:darkorange;*/
     text-decoration:none;
 }
 /* Tab Window */
@@ -682,7 +688,7 @@ a.contact-button :hover {
              -moz-border-radius:18px; 
              -webkit-border-radius:18px; 
              -o-border-radius:18px;}
-.button_off a {color:darkorange;text-decoration:none;}
+.button_off a {color:#51CE7B; /*color:darkorange;*/ text-decoration:none;}
 .button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif;background-color: #2A2A2A;
             margin-left: 10px; border-radius:18px;
             -moz-border-radius:18px; 
@@ -722,7 +728,7 @@ a.contact-button :hover {
 
 /* Gene View: interactive evidence summary filter */
 #evidenceSummary2 {cursor:pointer; padding-top:5px; padding-bottom:5px;}
-#loadingDiv_GeneView {float:right; color:darkOrange; font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
+#loadingDiv_GeneView {float:right; color:#51CE7B; /*color:darkorange;*/ font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
 #revertGeneView.unhover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter.png") no-repeat; }
 #revertGeneView.hover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter_hover.png") no-repeat; }
 
