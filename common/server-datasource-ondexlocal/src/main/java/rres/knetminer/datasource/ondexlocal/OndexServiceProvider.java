@@ -37,7 +37,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -163,8 +162,8 @@ public class OndexServiceProvider {
      */
     private String sourceOrganization;
     
-    /*
-    * PubCount val
+    /**
+    * PubCount value
     */
     public static final String DEFAULT_EXPORTED_PUBS = "pubCount";
     
@@ -683,11 +682,10 @@ public class OndexServiceProvider {
 
         HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
 
-	         if ("".equals(keywords) || keywords == null) {
+	if ("".equals(keywords) || keywords == null) {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
             if (geneList != null) {
                 for (ONDEXConcept gene : geneList) {
-                    log.info("gene is recorded as " + gene);
                     if (gene != null) {
                         if (mapGene2Concepts.get(gene.getId()) != null) {
                             for (int conceptId : mapGene2Concepts.get(gene.getId())) {
@@ -1541,19 +1539,13 @@ public class OndexServiceProvider {
             List<Integer> newPubIds = new ArrayList<Integer>();
 
             if (!pubKeywordSet.isEmpty()) {
-
                 // if  publications with keyword exist, keep most recent papers from pub-keyword set
-                log.info("pubCount is " + Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
                 newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
 
             } else {
-                
-                log.info("pubCount is " + Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
                 // if non of publication contains the keyword, just keep most recent papers from total set
                 newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
             }
-            log.info("pubCount is " + Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
-
             // publications that we want to remove 
             allPubIds.removeAll(newPubIds);
 
