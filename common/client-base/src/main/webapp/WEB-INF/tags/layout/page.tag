@@ -104,7 +104,7 @@
                 </c:when>
                 <c:otherwise>
                     <c:if test="${embeddable}">
-                        <div class="logo_embedded"><img src="html/image/netminer_logo_new.svg" alt="Logo" height="35" /></div>
+                        <div class="logo_embedded"><img src="html/image/KnetMiner_green_white.svg" alt="Logo" height="45" /></div>
                     </c:if>
                 </c:otherwise>
             </c:choose>
