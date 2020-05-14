@@ -163,9 +163,9 @@ public class OndexServiceProvider {
     private String sourceOrganization;
     
     /**
-    * PubCount value
+    * defaultExportedPublicationCount value
     */
-    public static final String DEFAULT_EXPORTED_PUBS = "pubCount";
+    public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
     
     /** 
      * The Date of graph creation
@@ -682,26 +682,22 @@ public class OndexServiceProvider {
 
         HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
 
-	if ("".equals(keywords) || keywords == null) {
+        if ("".equals(keywords) || keywords == null) {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
             if (geneList != null) {
                 for (ONDEXConcept gene : geneList) {
-                    if (gene != null) {
-                        if (mapGene2Concepts.get(gene.getId()) != null) {
-                            for (int conceptId : mapGene2Concepts.get(gene.getId())) {
-                                ONDEXConcept concept = graph.getConcept(conceptId);
-                                if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
-                                    hit2score.put(concept, 1.0f);
-                                }
-                            }
-                        } else {
-                            break;
+                    if (gene == null) continue;
+                    if (mapGene2Concepts.get(gene.getId()) == null) continue;
+                    for (int conceptId : mapGene2Concepts.get(gene.getId())) {
+                        ONDEXConcept concept = graph.getConcept(conceptId);
+                        if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
+                            hit2score.put(concept, 1.0f);
                         }
                     }
                 }
             }
             return hit2score;
-        } 
+        }
 
         // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Analyzer analyzer = new StandardAnalyzer();
@@ -1540,11 +1536,11 @@ public class OndexServiceProvider {
 
             if (!pubKeywordSet.isEmpty()) {
                 // if  publications with keyword exist, keep most recent papers from pub-keyword set
-                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
+                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
 
             } else {
                 // if non of publication contains the keyword, just keep most recent papers from total set
-                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
+                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
             }
             // publications that we want to remove 
             allPubIds.removeAll(newPubIds);
@@ -2216,7 +2212,7 @@ public class OndexServiceProvider {
             }
 
             AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
-            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(DEFAULT_EXPORTED_PUBS)));
+            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
 
             String pubString = "Publication__" + allPubs.size() + "__";
             for (Integer pid : newPubs) {
