@@ -23,8 +23,8 @@
 
 #KnetSubmit, #KnetSpacelogin {
     width: 100%;
-    background: linear-gradient(dimgrey 5%, dimgrey 100%);
-    border: 1px solid #ffa500;
+    background: #121212;
+    border: 1px solid #51CE7B;
     font-size: 20px;
     margin-top: 15px;
     padding: 8px;
@@ -39,11 +39,11 @@
     transition-duration: 0.3s;
     -webkit-transition-property: box-shadow;
     transition-property: box-shadow;
-    box-shadow: inset 0 0 0 1px #ff8c00, 0 0 0px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 0 1px #51CE7B, 0 0 0px rgba(0, 0, 0, 0);
 }
 
 #KnetSubmit:hover, #KnetSubmit:focus, #KnetSubmit:active, #KnetSpacelogin:hover, #KnetSpacelogin:focus, #KnetSpacelogin:active {
-    box-shadow: inset 0 0 0 2.5px #ff8c00, 0 0 0px rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 0 2.5px #51CE7B, 0 0 0px rgba(0, 0, 0, 0);
 }
 
 #KnetSubmit, #KnetSpacelogin a:hover {
@@ -58,17 +58,17 @@
     padding-left: 5px;
     margin-bottom: 20px;
     margin-top: 8px;
-    box-shadow: 0 0 5px #ffa500;
-    border: 0.5px solid #ffa500;
-    color: #232323;
+    box-shadow: 0 0 5px #51CE7B;
+    border: 0.5px solid #51CE7B;
+    color: #121212;
     font-size: 18px;
     font-weight:bold;
 }
 
 .knetButton {
     background-color: white; 
-    color: black; 
-    border: 2px solid #f44336;
+    color: #121212; 
+    border: 2px solid #51CE7B;
     padding: 5px 15px;
     text-align: center;
     text-decoration: none;
@@ -83,7 +83,7 @@
 
 
 .knetButton:hover {
-    background-color: #f44336;
+    background-color: #51CE7B;
     color: white;
 }
 
@@ -111,7 +111,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #121212;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -175,7 +175,7 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #121212;
   -webkit-transition: .4s;
   transition: .4s;
 }
