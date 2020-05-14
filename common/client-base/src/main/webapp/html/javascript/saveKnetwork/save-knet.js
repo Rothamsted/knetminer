@@ -1,6 +1,6 @@
 /* 
  * Utils to extract the rendered kNetwork in KnetMaps (Network View), fetch back-end API summary/metadata and upload/save to knetspace via API.
- * Authors: Ajit Singh and Joseph Hearnshaw
+ * Authors: singha, hearnshawj
  */
 
 /* Function to save knetwork rendered in knetmaps (cyJS) to knetspace via POST. */

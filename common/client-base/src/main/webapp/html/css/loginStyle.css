@@ -1,6 +1,6 @@
 /* 
 * Login form css styling
-* Author: hearnshawj
+* Author: hearnshawj, singha
 */
 
 #login_icon {
@@ -11,6 +11,7 @@
     color: white;
 }
 
+.jBox-title { background: #121212; }
  
 #profile_icon {
     float: right; 

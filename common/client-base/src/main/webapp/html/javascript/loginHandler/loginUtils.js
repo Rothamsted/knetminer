@@ -1,6 +1,6 @@
 /* 
  * Functions for logging into KnetSpace using the jBox libs
- * Author: hearnshawj
+ * Author: hearnshawj, singha
  */
 
 /*
