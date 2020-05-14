@@ -53,7 +53,8 @@
         <!-- KnetMaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
 
-        <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
+        <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
+		
 		<!-- bootstrap css -->
 	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 		<!-- font-awesome css -->
