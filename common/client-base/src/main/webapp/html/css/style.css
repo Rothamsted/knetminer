@@ -523,7 +523,7 @@ span.hint-big:hover {
 }
 
 /* Evidence pictures */
-.evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font:12px Arial, Helvetica, sans-serif}
+.evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font:10px 'Nexa Regular',sans-serif;/*12px Arial, Helvetica, sans-serif*/}
 .evidence_item_Gene {background:url(../image/Gene.png) no-repeat;padding-top:6px;height:16px;}
 .evidence_item_BioProc {background:url(../image/Biological_Process.png) no-repeat;}
 .evidence_item_CelComp {background:url(../image/Cellular_Component.png) no-repeat;}
@@ -566,8 +566,8 @@ body:after{
 .evidence_box span {font-size:17px; color:#003399;}
 
 /* QTL box Gene View*/
-.qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:14px Arial, Helvetica, sans-serif; color:#4184C1}
-.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:12px Arial, Helvetica, sans-serif; color:#3D3D3D; display:none;}
+.qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:12px 'Nexa Regular',sans-serif;/*14px Arial, Helvetica, sans-serif;*/ color:#4184C1}
+.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:10px 'Nexa Regular',sans-serif;/*12px Arial, Helvetica, sans-serif;*/ color:#3D3D3D; display:none;}
 .qtl_box span {font-size:17px; color:#003399; font-style:normal;}
 .qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
