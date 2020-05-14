@@ -1,7 +1,22 @@
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular.otf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular Italic.otf');
+  font-style: italic;
+}
+
 #release-body {
 	margin:0px; 
 	background-color: #F4F5F7;
-	font-family: 'Play', sans-serif;
+	/*font-family: 'Play', sans-serif;*/
+    font-family: 'Nexa Regular',sans-serif;
 }
 
 #release-content a {
@@ -133,5 +148,5 @@ a.contact-button :hover {
     font-size: 20px;
     font-style: italic;
     padding-right: 20px;
-    padding-top: 15px;
+    padding-top: 18px;
 }

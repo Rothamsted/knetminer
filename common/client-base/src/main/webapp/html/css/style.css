@@ -20,7 +20,7 @@ body {
     margin:0px;padding:0px;
     font-size:16px;
     /*font-family: 'Play', sans-serif;*/
-    font-family: "Nexa Regular", sans-serif;
+    font-family: 'Nexa Regular',sans-serif;
     position: relative;
     min-width: 960px;
     background: url("../image/background.jpg") no-repeat center center fixed;
@@ -35,7 +35,8 @@ body.embeddable {
 }
 
 h2 {
-    font-family:verdana;
+    /*font-family:verdana;*/
+    font-family: 'Nexa Regular',sans-serif;
     font-size: 12pt;
     padding:0px;
 }
@@ -207,7 +208,8 @@ div#keyword_search li {
     height:35px;
 }
 div#keyword_search input[type="text"] {
-    font-family:Verdana, Arial, Helvetica, sans-serif;
+    /*font-family:Verdana, Arial, Helvetica, sans-serif;*/
+    font-family: 'Nexa Regular',sans-serif;
     font-size:16px;
     width:/*740px*/80%;
     height:30px;
@@ -411,7 +413,8 @@ div.scrollTable table>thead tr {
 }
 /* tablesorter */
 table.tablesorter {
-    font-family:arial;
+    /*font-family:arial;*/
+    font-family: 'Nexa Regular',sans-serif;
     background-color:#C0C0C0;
     margin:10px 0pt 15px;
     font-size: 10pt;
