@@ -6,7 +6,8 @@
     height:35px; 
     color:white; 
     margin-left:0px; 
-    background-color:#121212; /*font-family:'Play', sans-serif;*/ 
+    background-color:#51CE7B;
+	/*font-family:'Play', sans-serif;*/ 
     font-size:15px; 
     cursor:pointer;
     border:none;
@@ -22,5 +23,6 @@
     box-shadow: inset 0 0 0 1px #51CE7B, 0 0 0px rgba(0, 0, 0, 0);
 }
 .knet_button:hover, .knet_button:focus, .knet_button:active {
-    box-shadow: inset 0 0 0 2.5px #51CE7B, 0 0 0px rgba(0, 0, 0, 0);
+    background-color:#38c768;
+    box-shadow: inset 0 0 0 2.5px #38c768, 0 0 0px rgba(0, 0, 0, 0);
 }

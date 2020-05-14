@@ -24,7 +24,7 @@
 
 #KnetSubmit, #KnetSpacelogin {
     width: 100%;
-    background: #121212;
+    background: #51CE7B;
     border: 1px solid #51CE7B;
     font-size: 20px;
     margin-top: 15px;
@@ -44,11 +44,12 @@
 }
 
 #KnetSubmit:hover, #KnetSubmit:focus, #KnetSubmit:active, #KnetSpacelogin:hover, #KnetSpacelogin:focus, #KnetSpacelogin:active {
-    box-shadow: inset 0 0 0 2.5px #51CE7B, 0 0 0px rgba(0, 0, 0, 0);
+    background: #38c768;
+    box-shadow: inset 0 0 0 2.5px #38c768, 0 0 0px rgba(0, 0, 0, 0);
 }
 
 #KnetSubmit, #KnetSpacelogin a:hover {
-    color:#51CE7B;
+    color:white;
     /*color: darkorange;*/
     text-decoration:none;
 }
@@ -66,10 +67,11 @@
     font-weight:bold;
 }
 
+/* sign out button */
 .knetButton {
     background-color: white; 
     color: #121212; 
-    border: 2px solid #51CE7B;
+    border: 2px solid #f44336;
     padding: 5px 15px;
     text-align: center;
     text-decoration: none;
@@ -82,9 +84,8 @@
     cursor: pointer;
 }
 
-
 .knetButton:hover {
-    background-color: #51CE7B;
+    background-color: #f44336;
     color: white;
 }
 
@@ -112,7 +113,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #51CE7B;
+  background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -176,7 +177,7 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #121212;
+  background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
 }
