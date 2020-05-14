@@ -122,7 +122,7 @@ fi
 # Typically you DO WANT this.
 # 
 # Default JAVA_TOOL_OPTIONS is:
-#   -XX:MaxRAMPercentage=90.0
+#   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport
 # which tells the JVM to use all the RAM passed to the container
 #
 echo -e "\n"

@@ -46,7 +46,7 @@ export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
   -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
-export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0"
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport"
 export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011 -p 5005:5005"
 
 
@@ -58,18 +58,19 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	dataset_id="wheat-directed"
 	docker_run_opts="--with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 
 		--neo4j-user rouser --neo4j-pwd rouser"
-		
+	memory='64G'
 	# Enables the Cypher Debugger, to profile Cypher queries
 	# WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
 	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"	
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
 		dataset_id="wheat-beta"
+		memory='48G'
 fi
 
 ./docker-run.sh \
   --dataset-id "$dataset_id" --container-name wheat-ci \
-  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory 48G \
+  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory $memory \
   $docker_run_opts \
   --detach
 

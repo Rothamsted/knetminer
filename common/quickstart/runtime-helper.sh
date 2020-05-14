@@ -63,7 +63,7 @@ export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
 # Default Java options to tell the JVM to use (almost) all the available memory+
 #
-export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0'}
+export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport'}
 
 
 # ---- Parameters/environment setup ends here
