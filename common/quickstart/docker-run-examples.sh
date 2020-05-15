@@ -63,5 +63,5 @@ export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
   -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
-export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0"
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
 export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011 -p 5005:5005"

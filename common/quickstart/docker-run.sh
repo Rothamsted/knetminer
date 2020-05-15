@@ -122,8 +122,11 @@ fi
 # Typically you DO WANT this.
 # 
 # Default JAVA_TOOL_OPTIONS is:
-#   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport
-# which tells the JVM to use all the RAM passed to the container
+#
+#   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:+UseContainerSupport -XX:-UseCompressedOops
+#   
+# which tells the JVM to use a quota of the RAM passed to the container. 
+# UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
 #
 echo -e "\n"
 for env_var in MAVEN_ARGS JAVA_TOOL_OPTIONS
