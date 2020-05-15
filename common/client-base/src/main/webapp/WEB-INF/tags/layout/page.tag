@@ -53,7 +53,8 @@
         <!-- KnetMaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
 
-        <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
+        <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
+		
 		<!-- bootstrap css -->
 	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 		<!-- font-awesome css -->
@@ -104,14 +105,14 @@
                 </c:when>
                 <c:otherwise>
                     <c:if test="${embeddable}">
-                        <div class="logo_embedded"><img src="html/image/logo-regular.png" alt="Logo" height="35" /></div>
+                        <div class="logo_embedded"><img src="html/image/KnetMiner_green_white.svg" alt="Logo" height="45" /></div>
                     </c:if>
                 </c:otherwise>
             </c:choose>
  			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
-            <c:if test="${!embeddable}">
+         <!--   <c:if test="${!embeddable}">
                 <layout:footer />
-            </c:if>
+            </c:if> -->
         </div>
         <jsp:invoke fragment="extraBottom"/>
     </body>

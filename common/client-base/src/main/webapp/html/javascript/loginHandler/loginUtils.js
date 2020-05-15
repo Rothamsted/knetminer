@@ -1,6 +1,6 @@
 /* 
  * Functions for logging into KnetSpace using the jBox libs
- * Author: hearnshawj
+ * Author: hearnshawj, singha
  */
 
 /*
@@ -153,7 +153,7 @@ function loginModalInit() {
         var loginModal = new jBox('Modal', {
             id: 'loginBox',
             animation: 'pulse',
-            title: '<font size="5"><font color="white">Sign in to </font><font color="orange">Knet</font><font size="5"><font color="white">Miner</font>',
+            title: '<font size="5"><font color="white">Sign in to </font><font color="#51CE7B">Knet</font><font size="5"><font color="white">Miner</font>',
             content: loginHtml,
             cancelButton: 'Exit',
             draggable: 'title',
@@ -298,9 +298,9 @@ function fetchCredentials(loginModal) {
                         }
                         // If the user doesn't give their first name, we should use the username instead.
                         if (firstName !== "null" || typeof firstName == "object") {
-                            var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + firstName + '</font>';
+                            var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="#51CE7B">' + firstName + '</font>';
                         } else {
-                            var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="orange">' + myJson.username + '</font>';
+                            var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="#51CE7B">' + myJson.username + '</font>';
                         }
 
                         var profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' target='_blank' style='text-decoration:none' class='profileClass'>My Profile</a>"

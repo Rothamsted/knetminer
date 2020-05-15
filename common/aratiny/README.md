@@ -88,7 +88,7 @@ While the API is running in Neo4j mode you can access the data using the web bro
 is at <http://localhost:17490/>  
 
 
-## Using the `aratinty` project for Cypher-based semantic motif queries.
+## Using the `aratiny` project for Cypher-based semantic motif queries.
 
 The neo4j mode uses Cypher-based queries for finding paths between genes to other entities. The queries are
 in the [test folder](aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j). Any
