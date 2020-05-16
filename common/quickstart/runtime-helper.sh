@@ -61,9 +61,10 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
-# Default Java options to tell the JVM to use (almost) all the available memory+
+# Default Java options to tell the JVM to use (almost) all the available memory
+# TODO: Future versions shouldn't need UseCompressedOops (https://stackoverflow.com/a/58121363/529286)
 #
-export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport'}
+export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops'}
 
 
 # ---- Parameters/environment setup ends here

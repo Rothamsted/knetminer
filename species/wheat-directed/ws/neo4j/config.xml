@@ -45,10 +45,8 @@
 		/>
 	</bean>
 
-	<!-- Per-query timeout version -->
+	<!-- Per-query timeout version 
  	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "60000"/></bean>	
-	<!-- Overall timeout version -->
-	<bean name = "traverserTimeoutMins" class = "java.lang.Long"><constructor-arg value = "120"/></bean>
-	
 	<bean name = "queryThreadPoolSize" class = "java.lang.Integer"><constructor-arg value = "4"/></bean>
+	-->
 </beans>
