@@ -306,7 +306,7 @@ div.loadingDiv ul li{
 #explainer {
     width:570px;
     height:35px;
-    color:black;
+    color:#121212/*black*/;
     position:relative;
     top:-10px;
     font-style:normal;
