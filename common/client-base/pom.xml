@@ -129,6 +129,7 @@
 						html/GeneMap/dist/**,
 						html/GeneView/**,
 						html/image/**,
+						html/fonts/**,
 						html/javascript/**,
 						html/KnetMaps/dist/**,
 						WEB-INF/**

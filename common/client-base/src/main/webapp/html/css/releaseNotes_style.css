@@ -1,12 +1,28 @@
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular.otf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular Italic.otf');
+  font-style: italic;
+}
+
 #release-body {
 	margin:0px; 
 	background-color: #F4F5F7;
-	font-family: 'Play', sans-serif;
+	/*font-family: 'Play', sans-serif;*/
+    font-family: 'Nexa Regular',sans-serif;
 }
 
 #release-content a {
 	text-decoration:none; 
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 }
 .release-title {
 	padding-left:40px;
@@ -17,7 +33,7 @@
 	display:block;
 	height:51px;
 	box-shadow: 0 1px 1px white;
-	background-color:#2A2A2A;
+	background-color:#121212 /*#2A2A2A*/;
 	position: fixed;
     overflow: auto;
     z-index: 10;
@@ -34,7 +50,7 @@
 
 /*Footer*/
 .contact-footer {
-	background-color:#2A2A2A;
+	background-color:#121212 /*#2A2A2A*/;
 	color:white;
 	padding-bottom:10px;
 	/*position: absolute;*/
@@ -116,11 +132,13 @@ a.contact-button{
 	text-decoration:none !important;	
 	}
 a.contact-button :hover {
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 	font-weight:bold;
 	}
 .contact-page a:hover {
-	color:darkorange;
+    color:#51CE7B;
+    /*color: darkorange;*/
 	text-decoration:none;
 	}
 
@@ -130,5 +148,5 @@ a.contact-button :hover {
     font-size: 20px;
     font-style: italic;
     padding-right: 20px;
-    padding-top: 15px;
+    padding-top: 18px;
 }

@@ -11,7 +11,6 @@
         </li>
         <li style="float:right;/*width:23%;*/">
             <a class="contact-button" target="_blank" title="Contact_Page" href="https://knetminer.org/KnetMiner/contact.html"><h4><i class="fas fa-user" aria-hidden="true"></i>&nbsp;&nbsp;Contact us</h4></a>
-			<!--<p>keywan.hassani-pak@rothamsted.ac.uk </p> -->
             <div class="twitter-buttons">
                 <a href="https://twitter.com/KnetMiner" class="twitter-follow-button" data-show-count="false">Follow @KnetMiner</a>
                 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
