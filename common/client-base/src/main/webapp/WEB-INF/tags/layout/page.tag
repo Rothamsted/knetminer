@@ -23,7 +23,7 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <!-- favicon added -->
-        <link rel="shortcut icon" href="html/image/favicon.ico" />
+        <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
 
         <!-- Google Analytics -->
         <!-- end Google Analytics -->
