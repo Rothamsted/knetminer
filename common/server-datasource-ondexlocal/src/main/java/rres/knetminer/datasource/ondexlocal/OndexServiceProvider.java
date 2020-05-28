@@ -513,8 +513,9 @@ public class OndexServiceProvider {
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
             luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-            luceneMgr.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
+            luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
             luceneMgr.setONDEXGraph(graph);
+            luceneMgr.setReadOnlyMode ( true );
             log.info("Lucene Index created");
         } 
         catch (Exception e)
