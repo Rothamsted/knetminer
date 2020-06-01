@@ -700,7 +700,6 @@ public class OndexServiceProvider {
             return hit2score;
         }
 
-        // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
         Analyzer analyzer = new StandardAnalyzer();
 
         String keyword = keywords;
@@ -719,8 +718,6 @@ public class OndexServiceProvider {
                     + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
                     + NOTQuery + ")";
             String fieldNameNQ = getFieldName("ConceptName", null);
-            // QueryParser parserNQ = new QueryParser(Version.LUCENE_36, fieldNameNQ,
-            // analyzer);
             QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
             Query qNQ = parserNQ.parse(crossTypesNotQuery);
             NOTList = luceneMgr.searchTopConcepts(qNQ, 2000);
@@ -736,7 +733,6 @@ public class OndexServiceProvider {
         // search concept attributes
         for (AttributeName att : atts) {
             String fieldName = getFieldName("ConceptAttribute", att.getId());
-            // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAtt = parser.parse(keyword);
             ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
@@ -749,7 +745,6 @@ public class OndexServiceProvider {
             // LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
             // false, dsAcc);
             String fieldName = getFieldName("ConceptAccession", dsAc);
-            // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAccessions = parser.parse(keyword);
             ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts(qAccessions, max_concepts);
@@ -760,8 +755,6 @@ public class OndexServiceProvider {
         // Query qNames =
         // LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
         String fieldNameCN = getFieldName("ConceptName", null);
-        // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
-        // analyzer);
         QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
         Query qNames = parserCN.parse(keyword);
         ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
@@ -771,8 +764,6 @@ public class OndexServiceProvider {
         // Query qDesc =
         // LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
         String fieldNameD = getFieldName("Description", null);
-        // QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD,
-        // analyzer);
         QueryParser parserD = new QueryParser(fieldNameD, analyzer);
         Query qDesc = parserD.parse(keyword);
         ScoredHits<ONDEXConcept> sHitsDesc = luceneMgr.searchTopConcepts(qDesc, max_concepts);
@@ -782,8 +773,6 @@ public class OndexServiceProvider {
         // Query qAnno =
         // LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
         String fieldNameCA = getFieldName("Annotation", null);
-        // QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA,
-        // analyzer);
         QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
         Query qAnno = parserCA.parse(keyword);
         ScoredHits<ONDEXConcept> sHitsAnno = luceneMgr.searchTopConcepts(qAnno, max_concepts);
@@ -1015,16 +1004,16 @@ public class OndexServiceProvider {
                 results.add(new QTL(chrName, type, start, end, label, "", 1.0f, trait, tax_id));
             }
         } else {
+        		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
+        	  // This chooses the appropriate analyzer depending on the field.
+        	
             // be careful with the choice of analyzer: ConceptClasses are not
             // indexed in lowercase letters which let the StandardAnalyzer crash
-            // Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+        		//
             Analyzer analyzerSt = new StandardAnalyzer();
-            // Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
             Analyzer analyzerWS = new WhitespaceAnalyzer();
 
             String fieldCC = getFieldName("ConceptClass", null);
-            // QueryParser parserCC = new QueryParser(Version.LUCENE_36, fieldCC,
-            // analyzerWS);
             QueryParser parserCC = new QueryParser(fieldCC, analyzerWS);
             Query cC = parserCC.parse("Trait");
 
@@ -2478,7 +2467,6 @@ public class OndexServiceProvider {
                 key = "\"" + key + "\"";
             }
             log.info("Checking synonyms for " + key);
-            // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
             Analyzer analyzer = new StandardAnalyzer();
             Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
             FloatValueComparator<Integer> comparator = new FloatValueComparator<Integer>(synonymsList);
@@ -2490,8 +2478,6 @@ public class OndexServiceProvider {
 
             // search concept names
             String fieldNameCN = getFieldName("ConceptName", null);
-            // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
-            // analyzer);
             QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
             Query qNames = parserCN.parse(key);
             ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts(qNames, 500/* 100 */);
