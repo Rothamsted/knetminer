@@ -105,10 +105,10 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
-            console.log("api_url_old: "+ api_url_old); // test
-            console.log("request_url= "+ request_url);
-            console.log("request_context_path= "+ request_context_path);
-            console.log("request_ds_uri= "+ request_ds_uri);
+            //console.log("api_url_old: "+ api_url_old); // test
+            //console.log("request_url= "+ request_url);
+            //console.log("request_context_path= "+ request_context_path);
+            //console.log("request_ds_uri= "+ request_ds_uri);
             console.log("gene_page: api_url: "+ api_url); // test
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         
