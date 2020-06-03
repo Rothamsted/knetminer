@@ -87,6 +87,8 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             var request_context_path= "<%=request.getContextPath()%>";
             var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
             var api_url= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("genepage")); // global
+            var prot= api_url_old.substring(0, 6); // to use correct http or https
+            api_url= prot + api_url.substring(6, api_url.length-1); // add http or https and trim last slash
             $.ajax({
             url: "network",
             type: "post",
