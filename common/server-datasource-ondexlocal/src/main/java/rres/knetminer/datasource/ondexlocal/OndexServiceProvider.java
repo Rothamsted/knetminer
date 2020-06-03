@@ -700,6 +700,8 @@ public class OndexServiceProvider {
             return hit2score;
         }
 
+        // TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
+        // consider different field types. See https://stackoverflow.com/questions/62119328
         Analyzer analyzer = new StandardAnalyzer();
 
         String keyword = keywords;
