@@ -70,13 +70,13 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
 
 	<script type="text/javascript">
             var this_url= window.location.href;
-            var api_url_old= this_url.substring(0, this_url.search("genepage"));
-            var request_url= "<%=request.getRequestURL().toString()%>";
-            var request_context_path= "<%=request.getContextPath()%>";
-            var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
-            var api_url= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("genepage")); // global
-            var prot= api_url_old.substring(0, 6); // to use correct http or https
-            api_url= prot + api_url.substring(6, api_url.length-1); // add http or https and trim last slash
+            var api_url= this_url.substring(0, this_url.search("/genepage"));
+            //var request_url= "<%=request.getRequestURL().toString()%>";
+            //var request_context_path= "<%=request.getContextPath()%>";
+            //var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
+            //var api_urlq= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("genepage")); // global
+            //var prot= api_url_old.substring(0, 6); // to use correct http or https
+            //var api_url= prot + api_url2.substring(6, api_url2.length-1); // add http or https and trim last slash
             $.ajax({
             url: "evidencePath",
             type: "post",
