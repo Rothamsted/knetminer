@@ -390,8 +390,7 @@ While `Cose` layout uses a wider range of complex parameters which can be set as
 - Install gulp: `npm install -g gulp@3.9.1`
 - To build: `gulp optimise`
 - Also, downgrade npm (if errors arise): `npm install -g npm@6.1.0`
-- Note: Make sure you use `Node v11.5.0` or older as new versions fail with gulp 3 (need gulp 4 which KnetMaps does not support)
-- Note: Our test environment uses `node 11.5.0, npm 6.1.0 , bower 1.8.8, gulp 3.9.1`. 
+- Note: Make sure you use `Node v10.21.0` as new versions fail with gulp 3 (need gulp 4 which KnetMaps does not support)
+- Note: Our test environment uses `node 10.21.0, npm 6.1.0 , bower 1.8.8, gulp 3.9.1`. 
 
-**Note:** As of last check, [Node.js 10.7.0](https://nodejs.org/download/release/v10.7.0/) can be downloaded with npm 6.1.0 , which works well with KnetMiner.
-## Install Node & npm from a previous release i.e. [Node.js 10.7.0](https://nodejs.org/download/release/v10.7.0/)
+**Note:** As of last check, [Node.js 10.7.0](https://nodejs.org/download/release/v10.7.0/) can be downloaded with npm 6.1.0 , which works well with KnetMaps/KnetMiner.
