@@ -1,6 +1,6 @@
 {
   "name": "knetmaps",
-  "version": "2.1.0",
+  "version": "2.0.2",
   "license": "MIT",
   "description": "Interactive network visualization tool for intuitive exploratory analysis of heterogeneous knowledge graphs",
   "main": "knetmaps.js",
@@ -19,11 +19,7 @@
   },
   "contributors": [
     {
-      "name": "Joseph Hearnshaw",
-      "email": "joseph.hearnshaw@rothamsted.ac.uk"
-    },
-    {
-      "name": "Dr. Keywan Hassani-Pak",
+      "name": "Keywan Hassani-Pak",
       "email": "keywan.hassani-pak@rothamsted.ac.uk"
     }
   ],
@@ -35,7 +31,6 @@
     "npm",
     "nodejs",
     "bower",
-    "gulp",
     "cytoscapejs",
     "biojs"
   ],
@@ -43,10 +38,7 @@
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {
-    "bower": "^1.8.8",
-    "node": "^11.5.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.1",
