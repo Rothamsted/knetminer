@@ -6,7 +6,7 @@ keywords = request.getParameter("keyword");
 keywords = keywords.replace("\"", "###");
 }
 // added to display evidencepage API - query summary above rendered network
-String datasetDescription= "Discover the KnetMiner knowledge network for the top <span style='color:darkOrange'>genes</span> linked to your <span style='color:darkOrange'>evidence</span> term. <i><u>Tip:</u> Right-click-hold on nodes to add labels or to show their properties. Use the Interactive Legend to add (single-click) or hide (double-click) other types of information to/from the network.</i>";
+String datasetDescription= "Discover the KnetMiner knowledge network for the top <b>genes</b> linked to your <b>evidence</b> term. <i><u>Tip:</u> Right-click-hold on nodes to add labels or to show their properties. Use the Interactive Legend to add (single-click) or hide (double-click) other types of information to/from the network.</i>";
 %>
 <html>
 <head>
