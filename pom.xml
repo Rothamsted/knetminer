@@ -51,7 +51,6 @@
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
 		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 
-
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
 		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
 
@@ -86,6 +85,10 @@
 
 		
 		<knetminer.sourceOrganization>Rothamsted Research</knetminer.sourceOrganization>
+		<!-- 
+			TODO: this appears to be the dataset version, Knetminer version should be ${project.version}.
+			It requires renaming to avoid confusion. 
+		-->
 		<knetminer.version>45</knetminer.version>
 		<knetminer.provider>RResVM</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
@@ -150,39 +153,30 @@
 			
 
 		<!--
-		 
-			Instead, these shouldn't need to be changed 
+			Instead, these shouldn't need to be changed
 		-->
 		
-		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
-	
+		<!-- 
+			=========> WARNING! <=========
+			
+			Unless you need to repeat it more times (eg, a group of modules produced by the same developer that have their 
+			versions aligned), IT IS ABSOLUTELY FORBIDDEN to set a plug-in or dependency version in a property and use it 
+			later ONLY ONCE, or for the sole purpose of inserting that dependency in multiple submodules. MAVEN HAS PLUG-IN 
+			AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
+
+			Violation of this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
+			to give IT support to biologists using Windows XP.      
+		-->
+			
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<!-- TODO: remove 
-		<nexus.repro>http://ondex.rothamsted.ac.uk/nexus</nexus.repro> -->
 
 		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
-		<maven.war.plugin.version>2.4</maven.war.plugin.version>
-		<maven.pmd.plugin.version>2.4</maven.pmd.plugin.version>
-		<maven.project.info.reports.plugin.version>2.1.2</maven.project.info.reports.plugin.version>
-		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-	  <maven.surefire.plugin.version>3.0.0-M1</maven.surefire.plugin.version>
-		<maven.surefire.report.plugin.version>${maven.surefire.plugin.version}</maven.surefire.report.plugin.version>    
-		<mojo.exec.plugin.version>1.6.0</mojo.exec.plugin.version>
-		<mojo.cobertura.maven.plugin.version>2.4</mojo.cobertura.maven.plugin.version>
-		<mojo.taglist.maven.plugin.version>2.4</mojo.taglist.maven.plugin.version>
 		<ondex.version>3.0.1-SNAPSHOT</ondex.version>
-		<springframework.version>4.3.6.RELEASE</springframework.version>
-		<jackson.library.version>2.7.5</jackson.library.version>
-		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
-		<javax.servlet.jsp.api.version>2.3.1</javax.servlet.jsp.api.version>
-		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
-		<junit.version>4.10</junit.version>
-		<json.version>20180130</json.version>
-		<ga.version>2.0.0</ga.version>
 		<commons.version>2.6</commons.version>
+		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
+		<springframework.version>4.3.6.RELEASE</springframework.version>
 	</properties>
 
 
@@ -191,22 +185,22 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
-				<version>${mojo.taglist.maven.plugin.version}</version>
+				<version>2.4</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>${maven.surefire.report.plugin.version}</version>
+				<version>3.0.0-M1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>${maven.project.info.reports.plugin.version}</version>
+				<version>2.1.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>${maven.pmd.plugin.version}</version>
+				<version>2.4</version>
 				<configuration>
 					<linkXref>true</linkXref>
 					<sourceEncoding>ISO-8859-1</sourceEncoding>
@@ -214,10 +208,11 @@
 					<targetJdk>${java.version}</targetJdk>
 				</configuration>
 			</plugin>
+			<!-- TODO: this needs to be updated. -->
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.plugin.version}</version>
 				<configuration>
 					<stylesheet>maven</stylesheet>
 					<additionalparam>
@@ -234,6 +229,7 @@
 					</additionalparam>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</reporting>
 
@@ -244,29 +240,9 @@
 	</scm>
 
 	<ciManagement>
-		<system>hudson</system>
-		<url>http://ondex.rothamsted.ac.uk/hudson</url>
+		<system>Travis</system>
+		<url>https://travis-ci.org/github/Rothamsted/knetminer</url>
 	</ciManagement>
-
-	<!-- TODO: remove
-	<distributionManagement>
-	  <repository>
-			<id>ondex-releases</id>
-			<name>Internal Releases</name>
-			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/releases</url>
-	  </repository>
-	  <snapshotRepository>
-			<id>ondex-snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://ondex.rothamsted.ac.uk/nexus/content/repositories/snapshots</url>
-	  </snapshotRepository>
-		<site>
-			<id>Ondex_site</id>
-			<url>file:///var/www/html/ondex</url>
-		</site>
-	</distributionManagement>
-  -->
-  
   
 	<build>
 		<pluginManagement>
@@ -274,7 +250,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven.compiler.plugin.version}</version>
+					<version>2.1</version>
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
@@ -288,45 +264,57 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>${maven.war.plugin.version}</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>${mojo.exec.plugin.version}</version>
+					<version>1.6.0</version>
 				</plugin>
-			</plugins>
+			
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M1</version>
+					<configuration>
+						<forkMode>always</forkMode>
+						<forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
+						<argLine>-Xms4G -Xmx4G</argLine>
+						<failIfNoTests>false</failIfNoTests>
+						<enableAssertions>true</enableAssertions>
+						<redirectTestOutputToFile>false</redirectTestOutputToFile>
+						<useFile>false</useFile>
+						<!--testFailureIgnore>true</testFailureIgnore -->
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>		
 		</pluginManagement>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven.surefire.plugin.version}</version>
-				<configuration>
-					<forkMode>always</forkMode>
-					<forkedProcessTimeoutInSeconds>700</forkedProcessTimeoutInSeconds>
-					<argLine>-Xms4G -Xmx4G</argLine>
-					<failIfNoTests>false</failIfNoTests>
-					<enableAssertions>true</enableAssertions>
-					<redirectTestOutputToFile>false</redirectTestOutputToFile>
-					<useFile>false</useFile>
-					<!--testFailureIgnore>true</testFailureIgnore -->
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>${maven.source.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
+			<!-- TODO: remove. The relase plug-in has a lot of problems and now we use CIs for releasing -->
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -334,6 +322,7 @@
 					<preparationGoals>clean verify install</preparationGoals>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
@@ -382,7 +371,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>
-						<version>${mojo.cobertura.maven.plugin.version}</version>
+						<version>2.4</version>
 						<configuration>
 							<formats>
 								<format>xml</format>
@@ -420,31 +409,7 @@
 			<snapshots><enabled>true</enabled></snapshots>
 			<releases><enabled>true</enabled></releases>
 	  </repository>
-	
-		<!-- TODO: remove
-		<repository>
-			<id>ondex_repro</id>
-			<name>ondex_repro</name>
-			<url>${nexus.repro}/content/groups/public</url>
-		</repository>
-		<repository>
-			<id>snapshot_releases</id>
-			<name>nexus.repro</name>
-			<url>${nexus.repro}/content/repositories/snapshots</url>
-		</repository>
-		-->
-
 	</repositories>
-
-	<!-- TODO: remove 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>ondex_repo</id>
-			<name>ondex_repo</name>
-			<url>${nexus.repro}/content/groups/public</url>
-		</pluginRepository>
-	</pluginRepositories>
-  -->
   
 	<dependencyManagement>
 		<dependencies>
@@ -475,17 +440,17 @@
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
-				<version>${javax.servlet.api.version}</version>
+				<version>3.1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet.jsp</groupId>
 				<artifactId>javax.servlet.jsp-api</artifactId>
-				<version>${javax.servlet.jsp.api.version}</version>
+				<version>2.3.1</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>jstl</artifactId>
-				<version>${javax.servlet.jstl.version}</version>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.taglibs</groupId>
@@ -529,7 +494,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.library.version}</version>
+				<version>2.7.5</version>
 			</dependency>
 
 	    <dependency>
@@ -578,7 +543,7 @@
 			<dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-analyzers-common</artifactId>
-				<version>${lucene.version}</version>
+				<version>6.6.0</version>
 			</dependency>
 
 			<dependency>
@@ -625,24 +590,24 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>${commons.version}</version>
+				<version>2.6</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
+				<version>4.10</version>
 			</dependency>
 
 			<dependency>
-    				<groupId>org.json</groupId>
-    				<artifactId>json</artifactId>
-    				<version>${json.version}</version>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>20180130</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.brsanthu</groupId>
 				<artifactId>google-analytics-java</artifactId>
-				<version>${ga.version}</version>
+				<version>2.0.0</version>
 			</dependency>
 			
 			<dependency>
