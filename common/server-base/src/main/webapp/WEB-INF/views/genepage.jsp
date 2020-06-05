@@ -10,9 +10,9 @@ String genelist="";
 if(request.getParameter("list")!=null) {
 genelist = request.getParameter("list");
 }
-String datasetDescription= "Discover the KnetMiner knowledge network for gene(s): <span style='color:darkOrange'>"+ genelist + "</span> (blue triangles with yellow label) and potential links ";
+String datasetDescription= "Discover the KnetMiner knowledge network for gene(s): <b>"+ genelist + "</b> (blue triangles with yellow label) and potential links ";
 if(request.getParameter("keyword")!=null) {
-datasetDescription= datasetDescription + "to <span style='color:darkOrange'>" + keywords + "</span> related nodes. If the genes do not have a link to <span style='color:darkOrange'>"+ keywords +"</span>, you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
+datasetDescription= datasetDescription + "to <b>" + keywords + "</b> related nodes. If the genes do not have a link to <b>"+ keywords +"</b>, you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
 }
 else {
 // when no keyword is provided
