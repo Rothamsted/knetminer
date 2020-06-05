@@ -121,6 +121,18 @@ KNETMAPS.ItemInfo = function() {
                                      }
                                   }
                               }
+                            else if (attrName === "iri") {
+                                    var iriAttrValue = attrValue;
+                                    attrValue = "";
+                                    iriAttrValue = iriAttrValue.split("/").pop();
+                                    iriAttrValue= iriAttrValue.replace(/\s/g,''); // remove spaces, if any exist
+                                    var iriUrls = iriAttrValue.split(",");
+                                    // Multiple IRIs could exist in future KM's, so index through all IRIs which are present 
+                                    iriUrls.forEach(function (e, i) {
+                                        attrValue = attrValue + "<a href=\"" + "http://knetminer.org/data/rdf/resources/" + e + "\" onclick=\"window.open(this.href,'_blank');return false;\">" + e + "</a>,<br/>";
+                                    });
+                                    attrValue = attrValue.substring(0,attrValue.lastIndexOf("<")-1); // omit last break & comma
+                                }
                             else if(attrName === "URL") {
                                     attrName="URL(s)";
                                     var urlAttrValue= attrValue;

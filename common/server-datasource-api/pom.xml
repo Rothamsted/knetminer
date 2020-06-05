@@ -8,6 +8,10 @@
 	<name>KnetMiner base datasource API</name>
 	<packaging>jar</packaging>
 
+	<description>
+		A set of core interfaces and components defining Knetminer functionality as a web service
+	</description>
+
 	<parent>
 		<artifactId>common</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>

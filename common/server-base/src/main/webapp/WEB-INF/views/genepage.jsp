@@ -10,9 +10,9 @@ String genelist="";
 if(request.getParameter("list")!=null) {
 genelist = request.getParameter("list");
 }
-String datasetDescription= "Discover the KnetMiner knowledge network for gene(s): <span style='color:darkOrange'>"+ genelist + "</span> (blue triangles with yellow label) and potential links ";
+String datasetDescription= "Discover the KnetMiner knowledge network for gene(s): <b>"+ genelist + "</b> (blue triangles with yellow label) and potential links ";
 if(request.getParameter("keyword")!=null) {
-datasetDescription= datasetDescription + "to <span style='color:darkOrange'>" + keywords + "</span> related nodes. If the genes do not have a link to <span style='color:darkOrange'>"+ keywords +"</span>, you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
+datasetDescription= datasetDescription + "to <b>" + keywords + "</b> related nodes. If the genes do not have a link to <b>"+ keywords +"</b>, you will see links to any phenotype/trait (<i>green rectangles and pentagons</i>). ";
 }
 else {
 // when no keyword is provided
@@ -82,11 +82,13 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 
 	<script type="text/javascript">
             var this_url= window.location.href;
-            var api_url_old= this_url.substring(0, this_url.search("genepage"));
-            var request_url= "<%=request.getRequestURL().toString()%>";
-            var request_context_path= "<%=request.getContextPath()%>";
-            var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
-            var api_url= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("genepage")); // global
+            var api_url= this_url.substring(0, this_url.search("/genepage"));
+            //var request_url= "<%=request.getRequestURL().toString()%>";
+            //var request_context_path= "<%=request.getContextPath()%>";
+            //var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
+            //var api_urlq= request_url.substring(0, request_url.search(request_context_path)) + request_ds_uri.substring(0, request_ds_uri.search("genepage")); // global
+            //var prot= api_url_old.substring(0, 6); // to use correct http or https
+            //var api_url= prot + api_url2.substring(6, api_url2.length-1); // add http or https and trim last slash
             $.ajax({
             url: "network",
             type: "post",
@@ -103,10 +105,6 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
-            console.log("api_url_old: "+ api_url_old); // test
-            console.log("request_url= "+ request_url);
-            console.log("request_context_path= "+ request_context_path);
-            console.log("request_ds_uri= "+ request_ds_uri);
             console.log("gene_page: api_url: "+ api_url); // test
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
                                         

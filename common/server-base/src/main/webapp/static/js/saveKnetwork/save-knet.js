@@ -108,7 +108,7 @@
                 }
                 
                 
-                $('#KnetSubmit').on('keypress click', function () {
+                $('#KnetSubmit').on('keypress click', function (e) {
 		    		if (e.which === 13 || e.type === 'click') {
 						//console.log("user inputs: "+ $('input[name=knetName]').val() +", "+ $('textarea#knetDescription').val());
 						if ($('input[name=knetName]').val()) {
