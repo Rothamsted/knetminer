@@ -38,7 +38,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 </head>
 <body>
    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="<c:url value="/static/img/KnetMiner_green_white.svg" />" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>   
+	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="<c:url value='/static/img/KnetMiner_green_white.svg' />" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>   
        <ul class="nav navbar-nav" id="top">
           <li>
               <a target="_blank" href="https://www.biorxiv.org/content/10.1101/2020.04.02.017004v2">Cite Us</a>

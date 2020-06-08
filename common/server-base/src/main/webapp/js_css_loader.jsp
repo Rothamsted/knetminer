@@ -12,4 +12,4 @@
 <script type="text/javascript" src="<c:url value="/static/js/loginHandler/loginUtils.js" />"></script>
 <script type="text/javascript" src="<c:url value="/static/js/saveKnetwork/save-knet.js" />"></script>
 
-<link rel="shortcut icon" href="<c:url value="/static/img/KnetMaps200.png" />" /> <!-- favicon change from knetmaps to knetminer -->
+<link rel="shortcut icon" href="<c:url value="/static/img/KnetMiner200.png" />" /> <!-- favicon change from knetmaps to knetminer -->
