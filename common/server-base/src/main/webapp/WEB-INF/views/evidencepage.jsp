@@ -97,7 +97,7 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
             console.log("evidence_page: api_url: "+ api_url); // test
-            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
+            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph/*, networkId*/);
