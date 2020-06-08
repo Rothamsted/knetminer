@@ -47,7 +47,7 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
     </div>
 </div>  <!-- content -->
 
-       <div class="contact-footer">
+ <!--      <div class="contact-footer">
 	      <ul style="overflow:hidden;margin-bottom: 0px;">
 		     <li class="left-footer">
 			   <a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/rothamsted_logo.png" width="80" height="80"/></a>
@@ -67,11 +67,11 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
 			   </ul>
 			 </li>
 		  </ul>
-       </div>
+       </div> -->
 
 	<script type="text/javascript">
             var this_url= window.location.href;
-            var api_url= this_url.substring(0, this_url.search("/genepage"));
+            var api_url= this_url.substring(0, this_url.search("/evidencepage"));
             //var request_url= "<%=request.getRequestURL().toString()%>";
             //var request_context_path= "<%=request.getContextPath()%>";
             //var request_ds_uri= "<%=request.getAttribute("javax.servlet.forward.request_uri")%>";
