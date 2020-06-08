@@ -205,3 +205,9 @@ input:checked + .slider:before {
 }
 
 a { cursor: pointer; }
+
+a {
+    text-decoration:none;
+    color:#51CE7B;
+    /*color:darkorange;*/
+}
