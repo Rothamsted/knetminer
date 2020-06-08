@@ -32,13 +32,15 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 <!-- font-awesome js -->
 <!-- <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script> -->
 
+<link rel="shortcut icon" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/img/KnetMiner200.png" /> <!-- favicon change from knetmaps to knetminer -->
+
 <!-- inject static js, css, img via JSP -->
 <jsp:include page="../../js_css_loader.jsp" />
 <title>KnetMiner network</title>
 </head>
 <body>
    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="<c:url value='/ws/static/img/KnetMiner_green_white.svg' />" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>   
+	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/img/KnetMiner_green_white.svg" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>   
        <ul class="nav navbar-nav" id="top">
           <li>
               <a target="_blank" href="https://www.biorxiv.org/content/10.1101/2020.04.02.017004v2">Cite Us</a>
