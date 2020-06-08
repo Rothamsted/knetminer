@@ -32,7 +32,8 @@ String datasetDescription= "Discover the KnetMiner knowledge network for the top
        <ul class="nav navbar-nav" id="top">
           <li>
               <a target="_blank" href="https://www.biorxiv.org/content/10.1101/2020.04.02.017004v2">Cite Us</a>
-              <a target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
+			  <!-- Note: #release_icon id added to User Guide to align jbox profile modal when signed in to the header -->
+              <a target="_blank" id="release_icon" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
               <a target="_blank" href="https://f1000research.com/articles/7-1651/v1">KnetMaps.js</a>
               <a id="login_icon" title="Sign in" style="padding-top:0;">Sign in</a>
               <a id="profile_icon" title="Profile" style="padding-top:0;"><i class="fa fa-user" aria-hidden="true"></i></a>
