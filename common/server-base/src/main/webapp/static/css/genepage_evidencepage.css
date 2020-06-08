@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular.otf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular Italic.otf');
+  font-style: italic;
+}
+
+.nav a:hover{
+	color:#51CE7B/*darkorange*/;
+	}

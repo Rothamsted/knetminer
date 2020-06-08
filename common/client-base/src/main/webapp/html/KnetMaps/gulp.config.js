@@ -12,7 +12,8 @@ module.exports = function () {
     	'./css/maskloader.css'
     	],
     js: ['./javascript/*.js','./config/url_mappings.js'],
-    images: ['./image/*.png','./image_legend/*.png','./css/*.gif','./css/*.svg'],
+    images: ['./image/*.png','./image/*.ico','./image/*.svg','./image_legend/*.png','./css/*.gif','./css/*.svg'],
+    fonts: ['./fonts/*.otf','./fonts/Licenses/*.html'],
     libs: [  // ordering is important
     	'./libs/jquery-1.11.2.min.js',
     	'./libs/jquery*.js',
@@ -23,6 +24,7 @@ module.exports = function () {
 
     // the development output
     build: './dist/',
+    outputFonts: './dist/fonts',
     outputImages: './dist/img',
     outputCss: './dist/css',
     outputJs: './dist/js',

@@ -25,24 +25,28 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/css_demo/index-style.css">
 <link rel="stylesheet" type="text/css" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/css/knetmaps.css"/>
 <!-- font-awesome css -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"> -->
     
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps-lib.min.js"></script>
 <script type="text/javascript" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/js/knetmaps.min.js"></script>
 <!-- font-awesome js -->
-<script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+<!-- <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script> -->
 
+<link rel="shortcut icon" href="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/img/KnetMiner200.png" /> <!-- favicon change from knetmaps to knetminer -->
+
+<!-- inject static js, css, img via JSP -->
 <jsp:include page="../../js_css_loader.jsp" />
 <title>KnetMiner network</title>
 </head>
 <body>
    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/logo-regular.png" height="48" alt="Logo"></a>   
+	   <a target="_blank" href="https://knetminer.org"><img class="logo-top" src="https://knetminer.rothamsted.ac.uk/KnetMaps/dist/img/KnetMiner_green_white.svg" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>   
        <ul class="nav navbar-nav" id="top">
           <li>
-              <a target="_blank" href="https://pub.uni-bielefeld.de/publication/2915227">Cite Us</a>
-              <a id="release_icon" target="_blank" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
-              <a target="_blank" href="https://github.com/Rothamsted/KnetMiner/issues">Report Issues</a>
+              <a target="_blank" href="https://www.biorxiv.org/content/10.1101/2020.04.02.017004v2">Cite Us</a>
+			  <!-- Note: #release_icon id added to User Guide to align jbox profile modal when signed in to the header -->
+              <a target="_blank" id="release_icon" href="http://knetminer.rothamsted.ac.uk/KnetMiner/KnetMiner_Tutorial-v3.1.pdf">User Guide</a>
+              <a target="_blank" href="https://f1000research.com/articles/7-1651/v1">KnetMaps.js</a>
               <a id="login_icon" title="Sign in" style="padding-top:0;">Sign in</a>
               <a id="profile_icon" title="Profile" style="padding-top:0;"><i class="fa fa-user" aria-hidden="true"></i></a>
           </li>
@@ -58,7 +62,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
     </div>
 </div>  <!-- content -->
 
-       <div class="contact-footer">
+ <!--      <div class="contact-footer">
 	      <ul style="overflow:hidden;margin-bottom: 0px;">
 		     <li class="left-footer">
 			   <a target="_blank" title="Rothamsted Research" href="http://www.rothamsted.ac.uk/" class="logos"><img src="https://knetminer.rothamsted.ac.uk/KnetMaps/image/rothamsted_logo.png" width="80" height="80"/></a>
@@ -78,7 +82,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
 			   </ul>
 			 </li>
 		  </ul>
-       </div>
+       </div> -->
 
 	<script type="text/javascript">
             var this_url= window.location.href;
@@ -106,7 +110,7 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             var networkId= null;
             var requestParams= { keyword: "<%=keywords%>", list: ${list} };
             console.log("gene_page: api_url: "+ api_url); // test
-            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save</button>");
+            $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph/*, networkId*/);
