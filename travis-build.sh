@@ -3,7 +3,7 @@
 # This is invoked by Travis, as per .travis.yml
 #
 
-set -e -x # Fail fast upon the first error
+set -e # Fail fast upon the first error
 
 if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then
 	
@@ -32,23 +32,23 @@ fi
 # Manage releasing too
 if [[ "$goal" == 'deploy' ]] \
 	 && [[ ! -z "${NEW_RELEASE_VER}" ]] \
-	 && [[ ! -z "${NEW_SNAPSHOT_VER}"]]
+	 && [[ ! -z "${NEW_SNAPSHOT_VER}" ]]
 then 
-  echo -e "\n\n\tRELEASSING ${NEW_RELEASE_VER}, new snapshot will be: ${NEW_SNAPSHOT_VER}\n" 
+  echo -e "\n\n\tRELEASING $NEW_RELEASE_VER, new snapshot will be: $NEW_SNAPSHOT_VER\n" 
   is_release='true'
 	: ${GIT_RELEASE_TAG:=$NEW_RELEASE_VER}
 	: ${DOCKER_RELEASE_TAG:=$NEW_RELEASE_VER}
 fi
   
 if [[ ! -z "$is_release" ]]; then
-  mvn versions:set -DnewVersion="${NEW_RELEASE_VER}" -DallowSnapshots=true
+  mvn versions:set -DnewVersion="$NEW_RELEASE_VER" -DallowSnapshots=true
   # Commit immediately, even if it fails, we will have a chance to give up
   mvn versions:commit
 fi
 
 echo -e "\n\n\t Building Maven goal: $goal"
 # You need --quiet, Travis doesn't like too big logs.
-mvn --quiet --settings settings.xml $goal
+mvn --quiet --settings maven-settings.xml $goal
 
 echo -e "\n\n\tBuilding Docker-base"
 docker build -t knetminer/knetminer-base -f common/quickstart/Dockerfile-base .
@@ -79,15 +79,18 @@ docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 
 for postfix in bare base ''
 do
-	[[ -z "postfix" ]] || postfix="-$postfix"
+	[[ -z "$postfix" ]] || postfix="-$postfix"
 	
 	if [[ ! -z "$is_release" ]]; then
 		echo "Tagging Docker$postfix"
-		docker tag knetminer/knetminer-$postfix knetminer/knetminer$postfix:${DOCKER_RELEASE_TAG}
+		docker_tag_str=":$DOCKER_RELEASE_TAG"
+		docker tag knetminer/knetminer$postfix knetminer/knetminer$postfix$docker_tag_str
+	else
+		[[ "$postfix" == '-bare' ]] && continue
 	fi
 
 	echo "Pushing Docker$postfix"
-	docker push knetminer/knetminer$postifix:${DOCKER_RELEASE_TAG}
+	docker push knetminer/knetminer$postfix$docker_tag_str
 	
 	echo 
 done

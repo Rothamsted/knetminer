@@ -14,7 +14,18 @@ cache:
   directories:
     - $HOME/.m2
     - $HOME/.npm
-          
+
+env:
+  # Use these to trigger a release. You can also uncomment them in a custom config that you can
+  # pass to the manual build trigger (in the web interface).
+  # Note that these two cannot go into multiple lines, else Travis interprets them as multiple builds
+  # This also requires that you define GIT_USER and GIT_PASSWORD, typically in the Travis settings for 
+  # your repo.  
+  # - NEW_RELEASE_VER='1.0' NEW_SNAPSHOT_VER='1.0-SNAPSHOT'
+  
+  # If these additional version-related vars are not set, they'll be set to $NEW_RELEASE_VER
+  # - NEW_RELEASE_VER='1.0' NEW_SNAPSHOT_VER='1.0-SNAPSHOT' GIT_RELEASE_TAG='1.0' DOCKER_RELEASE_TAG = '1.0'
+       
 install:
   - export PATH="/usr/local/bin:$PATH"
   - npm config set unsafe-perm true
@@ -33,4 +44,3 @@ script:
 branches:
   only:
   - master
-  - 201912_saveNetworks
