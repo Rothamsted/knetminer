@@ -7,7 +7,6 @@ addons:
   apt:
     packages:
       - libxml2-utils
-      # - python3-pip # To use travis-pls
 services:
   - docker      
   
@@ -26,7 +25,7 @@ install:
   - npath=$(which n) # we need this, cause the installation is somewhere in $HOME and 'n' needs sudo
   - sudo $npath 11.15.0
   # The common settings file used to build with Travis
-  - wget https://raw.githubusercontent.com/Rothamsted/knetminer-common/master/settings.xml
+  - wget https://raw.githubusercontent.com/Rothamsted/knetminer-common/master/travis/maven-settings.xml
       
 script:
   ./travis-build.sh

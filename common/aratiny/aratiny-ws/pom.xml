@@ -78,7 +78,7 @@
         		<artifactItem>
 							<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
 							<artifactId>test-data-server</artifactId>
-							<version>1.0-SNAPSHOT</version>
+							<version>${knetminer.backend.version}</version>
 							<includes>ara-tiny-neo4j.tar.bz2,ara-tiny.oxl</includes>
         		</artifactItem>
         	</artifactItems>  						
