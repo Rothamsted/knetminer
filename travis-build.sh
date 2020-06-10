@@ -3,7 +3,7 @@
 # This is invoked by Travis, as per .travis.yml
 #
 
-set -e # Fail fast upon the first error
+set -e -x # Fail fast upon the first error
 
 if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then
 	
@@ -101,14 +101,14 @@ if [[ ! -z "$is_release" ]]; then
 	ci_skip_tag=' [ci skip]'
 	msg="Releasing ${GIT_RELEASE_TAG}.${ci_skip_tag}"
 	
-	git commit -m "$msg"
+	git commit -a -m "$msg"
 	git tag --force --annotate "${GIT_RELEASE_TAG}" -m "$msg"
 	
 	echo -e "\n\n\tSwitching codebase version to ${NEW_SNAPSHOT_VER}\n"
 	mvn versions:set -DnewVersion="${NEW_SNAPSHOT_VER}" -DallowSnapshots=true
 	mvn versions:commit
 	
-	git commit -m "Switching version to ${NEW_SNAPSHOT_VER}.${ci_skip_tag}"
+	git commit -a -m "Switching version to ${NEW_SNAPSHOT_VER}.${ci_skip_tag}"
 	
 	git push --force --tags origin HEAD:"$TRAVIS_BRANCH"
 fi

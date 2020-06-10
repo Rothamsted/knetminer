@@ -21,3 +21,5 @@ common/client/nb-configuration.xml
 *.oxl
 package-lock.json
 .DS_Store
+# It is auto-downloaded by Travis
+/maven-settings.xml
