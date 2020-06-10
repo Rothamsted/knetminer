@@ -110,6 +110,8 @@ if [[ ! -z "$is_release" ]]; then
 	
 	git commit -a -m "Switching version to ${NEW_SNAPSHOT_VER}.${ci_skip_tag}"
 	
+	# Will replace regular URL with this. Vars come from Travis settings.
+	git config --global "url.https://$GIT_USER:$GIT_PASSWORD@github.com.insteadof" "https://github.com"	
 	git push --force --tags origin HEAD:"$TRAVIS_BRANCH"
 fi
 
