@@ -3,7 +3,7 @@
 # This is invoked by Travis, as per .travis.yml
 #
 
-set -e -x # Fail fast upon the first error
+set -e # Fail fast upon the first error
 
 if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then
 	
@@ -67,6 +67,9 @@ if [[ "${TRAVIS_BRANCH}" != 'master' ]]; then
 	exit
 fi
 	
+
+# The bare image is usually rebuilt manually, here we've only to tag it when releasing
+#
 if [[ ! -z "$is_release" ]]; then
 	echo -e "\n\n\tTagging and pushing new Docker images with ${NEW_RELEASE_VER}\n"
 	# We need it for the tag
@@ -80,16 +83,21 @@ docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 for postfix in bare base ''
 do
 	[[ -z "$postfix" ]] || postfix="-$postfix"
-	
-	if [[ ! -z "$is_release" ]]; then
-		echo "Tagging Docker$postfix"
-		docker_tag_str=":$DOCKER_RELEASE_TAG"
-		docker tag knetminer/knetminer$postfix knetminer/knetminer$postfix$docker_tag_str
-	else
-		[[ "$postfix" == '-bare' ]] && continue
-	fi
 
-	echo "Pushing Docker$postfix"
+  # See above
+  [[ "$postfix" == '-bare' ]] && [[ -z "$is_release" ]] && continue
+
+  echo "Pushing Docker$postfix"
+	docker push knetminer/knetminer$postfix
+
+
+  [[ -z "$is_release" ]] && continue 
+
+	echo "Tagging Docker$postfix with $DOCKER_RELEASE_TAG"
+	docker_tag_str=":$DOCKER_RELEASE_TAG"
+	docker tag knetminer/knetminer$postfix knetminer/knetminer$postfix$docker_tag_str
+	 
+	echo "Pushing Docker$postfix$docker_tag_str"
 	docker push knetminer/knetminer$postfix$docker_tag_str
 	
 	echo 
