@@ -11,7 +11,7 @@
 
 	<artifactId>parent</artifactId>
 	<name>parent</name>
-	<version>4.0.1-SNAPSHOT</version>
+	<version>4.0-RC1</version>
 	<description>
 		KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
 		See http://github.com/Rothamsted/knetminer/wiki for technical details.
