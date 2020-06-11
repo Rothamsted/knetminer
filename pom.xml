@@ -6,12 +6,12 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-	  <version>1.0-SNAPSHOT</version>
+	  <version>1.0</version>
 	</parent>  
 
 	<artifactId>parent</artifactId>
 	<name>parent</name>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>4.0.1-SNAPSHOT</version>
 	<description>
 		KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
 		See http://github.com/Rothamsted/knetminer/wiki for technical details.
@@ -153,18 +153,18 @@
 			
 
 		<!--
-			Instead, these shouldn't need to be changed
+			Instead, these shouldn't need to be changed (apart from development purposes).
 		-->
 		
 		<!-- 
 			=========> WARNING! <=========
 			
-			Unless you need to repeat it more times (eg, a group of modules produced by the same developer that have their 
-			versions aligned), IT IS ABSOLUTELY FORBIDDEN to set a plug-in or dependency version in a property and use it 
-			later ONLY ONCE, or for the sole purpose of inserting that dependency in multiple submodules. MAVEN HAS PLUG-IN 
-			AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
+			Unless you need to repeat a version more times (eg, a group of modules produced by the same developer that have 
+			their versions aligned), IT IS ABSOLUTELY FORBIDDEN to set a plug-in or dependency version in a property and use
+			it later ONLY ONCE, or doing it for the sole purpose of inserting that dependency in multiple submodules. 
+			MAVEN HAS PLUG-IN AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
 
-			Violation of this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
+			Violating of this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
 			to give IT support to biologists using Windows XP.      
 		-->
 			
@@ -173,9 +173,9 @@
 
 		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>3.0.1-SNAPSHOT</ondex.version>
+		<ondex.version>3.0</ondex.version>
 		<commons.version>2.6</commons.version>
-		<knetminer.backend.version>1.0-SNAPSHOT</knetminer.backend.version>
+		<knetminer.backend.version>1.0</knetminer.backend.version>
 		<springframework.version>4.3.6.RELEASE</springframework.version>
 	</properties>
 
@@ -613,7 +613,7 @@
 			<dependency>
 				<groupId>uk.ac.ebi</groupId>
 				<artifactId>jutils</artifactId>
-				<version>9.0.1-SNAPSHOT</version>
+				<version>9.1</version>
 			</dependency>
 			
 			<dependency>
