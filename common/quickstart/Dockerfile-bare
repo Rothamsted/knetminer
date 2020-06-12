@@ -1,5 +1,8 @@
 # A bare image, that prepares all the environment (OS, 3rd-party tools) to build/run Knetminer
 #
+# TODO: migrate to an official JDK8 image and stop using our own 
+# (which was a re-tagged copy from somewhere in github). 
+# 
 FROM knetminer/docker-tomcat:9-jdk8-alpine
 
 RUN set -x \
