@@ -90,7 +90,7 @@
 			It requires renaming to avoid confusion. 
 		-->
 		<knetminer.version>45</knetminer.version>
-		<knetminer.provider>RResVM</knetminer.provider>
+		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
@@ -164,7 +164,7 @@
 			it later ONLY ONCE, or doing it for the sole purpose of inserting that dependency in multiple submodules. 
 			MAVEN HAS PLUG-IN AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
 
-			Violating of this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
+			Violating this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
 			to give IT support to biologists using Windows XP.      
 		-->
 			
