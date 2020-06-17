@@ -4,7 +4,7 @@
 * Current snapshot version
 
 
-# 4.0
+# 4.0
 
 ## What's new?
 
