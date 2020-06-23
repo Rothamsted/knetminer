@@ -16,7 +16,7 @@ FROM knetminer/knetminer-base:${DOCKER_TAG}
 EXPOSE 8080
 
 # See the documentation for detains on what the dataset dir is
-ENV knet_build_dir=/root/knetminer-build \
+ENV knet_build_dir=/root/knetminer-build
 
 
 # ---- Here we go
