@@ -173,7 +173,9 @@
 
 		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>3.0</ondex.version>
+		<ondex.version>4.0-SNAPSHOT</ondex.version>
+		<!-- This is required to override the parent's POM -->
+		<jutils.version>9.1.1-SNAPSHOT</jutils.version>
 		<commons.version>2.6</commons.version>
 		<knetminer.backend.version>1.0</knetminer.backend.version>
 		<springframework.version>4.3.6.RELEASE</springframework.version>
@@ -609,13 +611,7 @@
 				<artifactId>google-analytics-java</artifactId>
 				<version>2.0.0</version>
 			</dependency>
-			
-			<dependency>
-				<groupId>uk.ac.ebi</groupId>
-				<artifactId>jutils</artifactId>
-				<version>9.1</version>
-			</dependency>
-			
+						
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>

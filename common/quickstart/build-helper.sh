@@ -62,6 +62,10 @@ cd common/aratiny/aratiny-ws
 # Put it under Tomcat
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
+# And also put the test OXL in place
+cp -f target/dependency/ara-tiny.oxl /root/knetminer-dataset/data/knowledge-network.oxl
+
+
 # The client is rebuilt by the container, cause its files need to be instantiated with the dataset-specific settings. 
 
 

@@ -1609,7 +1609,7 @@ public class OndexServiceProvider {
         if (geneNodeClone.getAttribute(attFlagged) == null) {
             geneNodeClone.createAttribute(attFlagged, true, false);
             geneNodeClone.createAttribute(attVisible, true, false);
-            geneNodeClone.createAttribute(attSize, new Integer(80), false);
+            geneNodeClone.createAttribute(attSize, 80, false);
         }
 
         // set all concepts to visible if filtering is turned off
@@ -1618,7 +1618,7 @@ public class OndexServiceProvider {
             for (ONDEXConcept c : cons) {
                 ONDEXConcept concept = graphCloner.cloneConcept(c);
                 if (concept.getAttribute(attVisible) == null) {
-                    concept.createAttribute(attSize, new Integer(50), false);
+                    concept.createAttribute(attSize, 50, false);
                     concept.createAttribute(attVisible, true, false);
                 }
             }
@@ -1631,7 +1631,7 @@ public class OndexServiceProvider {
                 ONDEXRelation r = graphCloner.cloneRelation(rel);
                 if (r.getAttribute(attVisible) == null) {
                     // initial size
-                    r.createAttribute(attSize, new Integer(5), false);
+                    r.createAttribute(attSize, 5, false);
                     r.createAttribute(attVisible, true, false);
                 }
             }
@@ -1647,11 +1647,11 @@ public class OndexServiceProvider {
                 ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
                 if (graphCloner.getNewGraph().getRelation(geneNodeClone, qtl, rt) == null) {
                     ONDEXRelation r = graphCloner.getNewGraph().getFactory().createRelation(geneNodeClone, qtl, rt, et);
-                    r.createAttribute(attSize, new Integer(2), false);
+                    r.createAttribute(attSize, 2, false);
                     r.createAttribute(attVisible, true, false);
                 }
                 if (qtl.getAttribute(attSize) == null) {
-                    qtl.createAttribute(attSize, new Integer(70), false);
+                    qtl.createAttribute(attSize, 70, false);
                     qtl.createAttribute(attVisible, true, false);
                 }
                 Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
@@ -1659,13 +1659,13 @@ public class OndexServiceProvider {
                     if (r.getOfType().getId().equals("has_mapped")) {
                         ONDEXRelation rel = graphCloner.cloneRelation(r);
                         if (rel.getAttribute(attSize) == null) {
-                            rel.createAttribute(attSize, new Integer(2), false);
+                            rel.createAttribute(attSize, 2, false);
                             rel.createAttribute(attVisible, true, false);
                         }
                         ONDEXConcept tC = r.getToConcept();
                         ONDEXConcept traitCon = graphCloner.cloneConcept(tC);
                         if (traitCon.getAttribute(attSize) == null) {
-                            traitCon.createAttribute(attSize, new Integer(70), false);
+                            traitCon.createAttribute(attSize, 70, false);
                             traitCon.createAttribute(attVisible, true, false);
                         }
                     }
