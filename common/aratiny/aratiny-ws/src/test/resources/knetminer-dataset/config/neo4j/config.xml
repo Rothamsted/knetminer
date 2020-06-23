@@ -35,7 +35,7 @@
 	</bean>
 
 	<!-- 
-		There might be other queries, produced from the SM converter
+		There might be other queries, produced by the SM converter
 	-->
 	<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
 		<constructor-arg>
@@ -46,6 +46,7 @@
 						<constructor-arg value = "*.cypher" />
 					</bean>
 				</constructor-arg>
+				<constructor-arg type = "boolean" value = "true" />
 			</bean>
 		</constructor-arg>
 	</bean>

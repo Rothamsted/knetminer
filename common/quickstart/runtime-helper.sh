@@ -82,8 +82,8 @@ cd "$mydir/../.."
 knet_codebase_dir="$(pwd)"
 
 # --- In this case, copy the original settings from the codebase into the settings dir
-if [ "$knet_dataset_id" != '' ]; then
-	[ "$knet_dataset_id" == 'aratiny' ] \
+if [[ "$knet_dataset_id" != '' ]]; then
+	[[ "$knet_dataset_id" == 'aratiny' ]] \
 		&& org_settings="$knet_codebase_dir/common/aratiny/aratiny-docker" \
 		|| org_settings="$knet_codebase_dir/species/$knet_dataset_id"
 	

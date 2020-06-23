@@ -2,7 +2,9 @@
 #
 
 # Can be usefult to change it, when developing and/or playing with different versions.
-ARG DOCKER_TAG='latest' 
+# TODO: this is the default in the JDK11 branch, eventually we'll merge into master and
+# this will go back to 'latest'. Same for Docker-base dependency on -bare
+ARG DOCKER_TAG='j11' 
 
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.
@@ -35,15 +37,7 @@ COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
 
-# TODO: AWS requires a specific image
-#
-RUN apk add --update \
-           python \
-           python-dev \
-           py-pip \
-           build-base \
-           && pip install awscli \
-  && touch /etc/crontab /etc/cron*/* \
+RUN touch /etc/crontab /etc/cron*/* \
   && cp -r .aws ~/ \
   && ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
