@@ -45,3 +45,5 @@ script:
 branches:
   only:
   - master
+  - 202006_jdk11
+
