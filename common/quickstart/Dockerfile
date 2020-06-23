@@ -15,7 +15,7 @@ FROM knetminer/knetminer-base:${DOCKER_TAG}
 
 EXPOSE 8080
 
-# See the documentation for detains on what the dataset dir is
+# See the documentation for details on what the dataset dir is
 ENV knet_build_dir=/root/knetminer-build
 
 
@@ -30,6 +30,12 @@ WORKDIR $knet_build_dir
 COPY . knetminer
 
 WORKDIR knetminer/common/quickstart
+
+# Note that this issue 'mvn install' from your local copy of the knetminer codebase, WITHOUT clean.
+# The idea is that it leverages Docker-base and adds up updates from your host copy. 
+# If you need to rebuild from clean code, just clean your host copy before building the Docker image.
+# (TODO: document this)
+#
 
 # TODO: AWS requires a specific image
 #
