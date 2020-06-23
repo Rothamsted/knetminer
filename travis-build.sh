@@ -48,7 +48,7 @@ fi
 
 echo -e "\n\n\t Building Maven goal: $goal"
 # You need --quiet, Travis doesn't like too big logs.
-mvn --quiet --settings maven-settings.xml $goal
+#mvn --quiet --settings maven-settings.xml $goal
 
 
 [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
@@ -66,7 +66,7 @@ if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
 fi
 
 # TODO: Fix this when no longer needed
-if [[ "$TRAVIS_BRANCH" =~ ^(master|202006_jdk11)$ ]]; then
+if [[ ! "$TRAVIS_BRANCH" =~ ^(master|202006_jdk11)$ ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
 	exit
 fi
