@@ -65,10 +65,6 @@ cd common/aratiny/aratiny-ws
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
 # And also put the test OXL in place
-cp -f target/dependency/ara-tiny.oxl /root/knetminer-dataset/data/knowledge-network.oxl
-
-
-# And also put the test OXL in place
 mkdir --parents /root/knetminer-dataset/data
 cp -f target/dependency/ara-tiny.oxl /root/knetminer-dataset/data/knowledge-network.oxl
 
