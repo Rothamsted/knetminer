@@ -173,7 +173,7 @@
 
 		<log4j.version>2.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>4.0-SNAPSHOT</ondex.version>
+		<ondex.version>3.0.1-SNAPSHOT</ondex.version>
 		<!-- This is required to override the parent's POM -->
 		<jutils.version>9.1.1-SNAPSHOT</jutils.version>
 		<commons.version>2.6</commons.version>
