@@ -23,8 +23,6 @@ import org.json.JSONObject;
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rres.knetminer.datasource.api.CountGraphEntities;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
