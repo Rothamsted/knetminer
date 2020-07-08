@@ -70,7 +70,7 @@ if [[ ! "$TRAVIS_BRANCH" =~ ^(master|202006_jdk11)$ ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
 	exit
 fi
-	
+
 
 # The bare image is usually rebuilt manually, here we've only to tag it when releasing
 #
@@ -93,7 +93,6 @@ do
 
   echo "Pushing Docker$postfix"
 	docker push knetminer/knetminer$postfix:$docker_tag
-
 
   [[ -z "$is_release" ]] && continue 
 
