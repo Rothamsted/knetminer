@@ -3,71 +3,74 @@
 2^	Publication
 3^	MolFunc
 4^	BioProc
-5^	CelComp
-6^	Disease
+5^ 	CelComp
 7^	Protein
+8^	Gene
+9	Gene
 10	Protein
-11^	Drug
-12	Drug
-13	SNP
-14^	Trait
+12	EC
+13^	Phenotype
+14^	ProtDomain
 15^	EC
-17	Gene 
-18^	ProtDomain
-19	Enzyme
-199^	Enzyme
-20	Reaction
-200^	Reaction
-21^	Path
-22	Comp
-222^	Comp
-
+16	Enzyme
+17^	Enzyme
+18	Reaction
+19^	Reaction
+20^	Path
+21	Phenotype
+22^	Disease
+23^	KO
+24^	Path
+25	Comp
+255^	Comp
 
 #Transitions
-1-7	enc
 1-10	enc
-10-17	enc
+1-7	enc
+1-2	pub_in
+9-2	pub_in
+9-3	has_function
+9-4	participates_in
+9-5	located_in
+9-13	has_observ_pheno
 
-10-7	it_wi	5	d
-10-10	it_wi	5	d
-
-10-11	has_target
-10-12	has_target
-
-10-18	has_domain
-10-10	ortho	5
-10-7	ortho	5
-
+10-10	ortho	4
+10-7	ortho	4
+10-10	h_s_s	4
+10-7	h_s_s	4
+10-10	xref	6
+10-7	xref	6
+10-10	physical	6	d
+10-7	physical	6	d
+10-10	genetic	6	d
+10-7	genetic	6	d
 10-2	pub_in
-10-6	inv_in
-
 10-3	has_function
 10-4	participates_in
 10-5	located_in
+10-9	enc
+10-8	enc
+10-12	cat_c
+10-14	has_domain
 10-15	cat_c
+10-16	is_a
+10-17	is_a
+16-18	ca_by
+16-19	ca_by
+18-20	part_of
 
-17-13	has_variation_within
-17-13	has_variation_downstream
-17-13	has_variation_upstream
-1-13	has_variation_within
-1-13	has_variation_downstream
-1-13	has_variation_upstream
-13-14	associated_with
+1-2	occ_in
+9-2	occ_in
+21-2	occ_in
 
-10-19	is_a
-10-199	is_a
-19-20	ca_by
-19-200	ca_by
-20-21	part_of
-20-22	pd_by
-20-222	pd_by
-10-20	pd_by
-10-200	pd_by
-10-20	cs_by
-10-200	cs_by
-20-22	cs_by
-20-222	cs_by
-19-22	ac_by
-19-222	ac_by
-19-22	in_by
-19-222	in_by
+9-13	cooc_wi
+1-13	cooc_wi
+10-13	cooc_wi
+
+1-13	has_observ_pheno
+10-13	has_observ_pheno
+1-22	inv_in
+10-23	has_function
+18-24	part_of
+18-25	pd_by
+18-255	pd_by
