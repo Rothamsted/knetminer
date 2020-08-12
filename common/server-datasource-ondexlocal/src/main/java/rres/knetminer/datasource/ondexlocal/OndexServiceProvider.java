@@ -3,6 +3,7 @@ package rres.knetminer.datasource.ondexlocal;
 import static java.util.stream.Collectors.toMap;
 
 import java.awt.Color;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -40,10 +42,12 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -76,6 +80,7 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
+import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
@@ -85,6 +90,7 @@ import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.io.IOUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
@@ -208,7 +214,7 @@ public class OndexServiceProvider {
     /**
      * Loads configuration for chromosomes and initialises map
      */
-    OndexServiceProvider() {
+    public OndexServiceProvider() {
 
     }
 
@@ -233,16 +239,17 @@ public class OndexServiceProvider {
             graphTraverser = AbstractGraphTraverser.getInstance(this.getOptions());
         }
 
-        // These might be needed by one implementation or the other. Those that don't need a property like these
-        // can just ignore them
+        // These might be needed by one implementation or the other. Those that don't use one of these properties 
+        // can just ignore them.
         graphTraverser.setOption("StateMachineFilePath", smFileName);
         graphTraverser.setOption("ONDEXGraph", graph);
 
         populateHashMaps(graphFileName, dataPath);
 
         // determine number of genes in given species (taxid)
-        AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
-        ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
+        ONDEXGraphMetaData gmeta = graph.getMetaData();
+        AttributeName attTAXID = gmeta.getAttributeName("TAXID");
+        ConceptClass ccGene = gmeta.getConceptClass("Gene");
         Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
 
         for (ONDEXConcept gene : seed) {
@@ -267,20 +274,21 @@ public class OndexServiceProvider {
     private void displayGraphStats(String fileUrl) {
         // Update the Network Stats file that holds the latest Stats information.
         String fileName = Paths.get(fileUrl, "latestNetwork_Stats.tab").toString();
+        int minValues, maxValues = 0, avgValues, allValuesCount = 0;
 
-        int minValues, maxValues = 0, avgValues, all_values_count = 0;
 
         // Also, create a timetamped Stats file to retain historic Stats
         // information.
         long timestamp = System.currentTimeMillis();
         String newFileName = Paths.get(fileUrl, timestamp + "_Network_Stats.tab").toString();
-        try {
+        try 
+        {
             int totalGenes = numGenesInGenome;
             int totalConcepts = graph.getConcepts().size();
             int totalRelations = graph.getRelations().size();
             int geneEvidenceConcepts = mapConcept2Genes.size();
             minValues = geneEvidenceConcepts > 0
-                    ? mapGene2Concepts.get(mapGene2Concepts.keySet().toArray()[0]).size()
+                    ? mapGene2Concepts.get(mapGene2Concepts.keySet().iterator ().next ()).size()
                     : 0; // initial value
             /*
              * Get the min., max. & average size (no. of values per key) for the
@@ -291,23 +299,21 @@ public class OndexServiceProvider {
             while (iterator.hasNext()) {
                 Map.Entry<Integer, Set<Integer>> mEntry = iterator.next();
                 Set<Integer> value = mEntry.getValue(); // Value HashSet<Integer>).
-                int number_of_values = value.size(); // size of the values
+                
+                int valuesNo = value.size(); // size of the values
+                
+                if (valuesNo < minValues) minValues = valuesNo;
+                if (valuesNo > maxValues) maxValues = valuesNo;
 
-                if (number_of_values < minValues) {
-                    minValues = number_of_values;
-                }
-                if (number_of_values > maxValues) {
-                    maxValues = number_of_values;
-                }
                 // Retain the sum of sizes of all the key-value pairs in the
                 // HashMap.
-                all_values_count = all_values_count + number_of_values;
+                allValuesCount += valuesNo;
             }
 
             // Total no. of keys in the HashMap.
-            int all_keys = mapGene2Concepts.keySet().size();
+            int genesCount = mapGene2Concepts.keySet().size();
             // Calculate average size of gene-evidence networks in the HashMap.
-            avgValues = all_keys > 0 ? all_values_count / all_keys : 0;
+            avgValues = genesCount > 0 ? allValuesCount / genesCount : 0;
 
             // Write the Stats to a .tab file.
             StringBuffer sb = new StringBuffer();
@@ -324,7 +330,7 @@ public class OndexServiceProvider {
             sb.append("</evidenceNetworkSizes>\n");
 
             Set<ConceptClass> conceptClasses = graph.getMetaData().getConceptClasses(); // get all concept classes
-            Set<ConceptClass> sortedConceptClasses = new TreeSet<ConceptClass>(conceptClasses); // sorted
+            Set<ConceptClass> sortedConceptClasses = new TreeSet<>(conceptClasses); // sorted
 
             // Display table breakdown of all conceptClasses in network
             sb.append("<conceptClasses>\n");
@@ -362,7 +368,7 @@ public class OndexServiceProvider {
                 }
             });
 
-            TreeMap<String, Long> sortedC2GcountMap = new TreeMap<String, Long>(C2GcountMap); 
+            TreeMap<String, Long> sortedC2GcountMap = new TreeMap<>(C2GcountMap); 
 
             sortedC2GcountMap.entrySet().stream().forEach(pair -> {
                 for (ConceptClass concept_class : sortedConceptClasses) {
@@ -396,14 +402,14 @@ public class OndexServiceProvider {
             sb.append("</stats>");
 
             // Update the file storing the latest Stats data.
-            BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-            out.write(sb.toString()); // write contents.
-            out.close();
+            try ( var out = new BufferedWriter(new FileWriter(fileName)) ) {
+            	out.write(sb.toString()); // write contents.
+            }
 
             // Also, create the timestamped Stats file.
-            BufferedWriter out2 = new BufferedWriter(new FileWriter(newFileName));
-            out2.write(sb.toString()); // write contents.
-            out2.close();
+            try ( var out = new BufferedWriter(new FileWriter(newFileName)) ) {
+            	out.write(sb.toString()); // write contents.
+            }
 
             /*
              * generate gene2evidence .tab file with contents of the mapGenes2Concepts
@@ -419,7 +425,8 @@ public class OndexServiceProvider {
     /**
      * Loads OndexKB Graph (OXL data file into memory)
      */
-    private void loadOndexKBGraph(String filename) {
+    private void loadOndexKBGraph(String filename)
+    {
         try {
             log.debug("Start Loading OndexKB Graph..." + filename);
             Parser.loadOXL(filename, graph);
@@ -427,7 +434,9 @@ public class OndexServiceProvider {
 
             // remove any pre-existing, visible, size and flagged attributes from concepts and relations
             removeOldAttributesFromKBGraph();
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             log.error("Failed to load graph", e);
             ExceptionUtils.throwEx (
             	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
@@ -439,74 +448,35 @@ public class OndexServiceProvider {
      * remove any pre-existing, visible, size and flagged attributes from
      * concepts and relations 29-07-2019
      */
-    private void removeOldAttributesFromKBGraph() {
-        try {
-            log.debug("Remove old 'visible' attributes from all concepts and relations...");
-
-            AttributeName attVisible = graph.getMetaData().getAttributeName("visible");
-            AttributeName attSize = graph.getMetaData().getAttributeName("size");
-            AttributeName attFlagged = graph.getMetaData().getAttributeName("flagged");
-
-            Set<Integer> removeMe = new HashSet<>();
-            if (graph.getConceptsOfAttributeName(attVisible) != null) {
-                Set<ONDEXConcept> visibleConcepts = graph.getConceptsOfAttributeName(attVisible);
-                visibleConcepts.forEach(con -> removeMe.add(con.getId()));
-            }
-            if (graph.getConceptsOfAttributeName(attSize) != null) {
-                Set<ONDEXConcept> sizedConcepts = graph.getConceptsOfAttributeName(attSize);
-                sizedConcepts.forEach(con -> removeMe.add(con.getId()));
-            }
-            if (graph.getConceptsOfAttributeName(attFlagged) != null) {
-                Set<ONDEXConcept> flaggedConcepts = graph.getConceptsOfAttributeName(attFlagged);
-                flaggedConcepts.forEach(con -> removeMe.add(con.getId()));
-            }
-
-            for (Integer con : removeMe) {
-                if (graph.getConcept(con).getAttribute(attVisible) != null) {
-                    graph.getConcept(con).deleteAttribute(attVisible);
-                }
-                if (graph.getConcept(con).getAttribute(attSize) != null) {
-                    graph.getConcept(con).deleteAttribute(attSize);
-                }
-                if (graph.getConcept(con).getAttribute(attFlagged) != null) {
-                    graph.getConcept(con).deleteAttribute(attFlagged);
-                }
-            }
-
-            // doing the same for relations
-            Set<Integer> removeMe2 = new HashSet<>();
-            if (graph.getRelationsOfAttributeName(attVisible) != null) {
-                Set<ONDEXRelation> visibleRelations = graph.getRelationsOfAttributeName(attVisible);
-                visibleRelations.forEach(rel -> removeMe2.add(rel.getId()));
-            }
-            if (graph.getRelationsOfAttributeName(attSize) != null) {
-                Set<ONDEXRelation> sizedRelations = graph.getRelationsOfAttributeName(attSize);
-                sizedRelations.forEach(rel -> removeMe2.add(rel.getId()));
-            }
-
-            for (Integer rel : removeMe2) {
-                if (graph.getRelation(rel).getAttribute(attVisible) != null) {
-                    graph.getRelation(rel).deleteAttribute(attVisible);
-                }
-                if (graph.getRelation(rel).getAttribute(attSize) != null) {
-                    graph.getRelation(rel).deleteAttribute(attSize);
-                }
-            }
-
-        } catch (Exception ex) {
-            log.warn("Failed to remove pre-existing attributes from graph: {}", ex.getMessage());
-            log.trace("Failed to remove pre-existing attributes from graph, detailed exception follows", ex);
-        }
+    private void removeOldAttributesFromKBGraph() 
+    {
+    	try
+    	{
+	      log.debug ( "Remove old 'visible' attributes from all concepts and relations..." );
+	      
+	      Stream.of ( "visible", "size", "flagged" )
+	      .forEach ( attrId -> ONDEXGraphUtils.removeConceptAttribute ( graph, attrId ) );
+	
+	      Stream.of ( "visible", "size" )
+	      .forEach ( attrId -> ONDEXGraphUtils.removeRelationAttribute ( graph, attrId ) );
+    	}
+    	catch (Exception ex)
+    	{
+        log.warn("Failed to remove pre-existing attributes from graph: {}", ex.getMessage());
+        log.trace("Failed to remove pre-existing attributes from graph, details: ", ex );
+      }
     }
 
     /**
      * Indexes Ondex Graph
      */
-    private void indexOndexGraph(String graphFileName, String dataPath) {
-        try {
+    private void indexOndexGraph(String graphFileName, String dataPath)
+    {
+        try 
+        {
             // index the Ondex graph
             File graphFile = new File(graphFileName);
-            File indexFile = Paths.get(dataPath, "index").toFile();
+            File indexFile = Paths.get ( dataPath, "index" ).toFile();
             if (indexFile.exists() && (indexFile.lastModified() < graphFile.lastModified())) {
                 log.info("Graph file updated since index last built, deleting old index");
                 FileUtils.deleteDirectory(indexFile);
@@ -520,7 +490,7 @@ public class OndexServiceProvider {
         } 
         catch (Exception e)
         {
-            log.fatal ( "Error while loading/creating graph index: " + e.getMessage (), e );
+            log.error ( "Error while loading/creating graph index: " + e.getMessage (), e );
             ExceptionUtils.throwEx (
             	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
             ); 
@@ -529,48 +499,50 @@ public class OndexServiceProvider {
 
     /**
      * Export the Ondex graph to file system as a .oxl file and also in JSON
-     * format using the new JSON Exporter plugin in Ondex.
+     * format using the JSON Exporter plugin in Ondex.
      *
      * @param ONDEXGraph graph
      * @throws InvalidPluginArgumentException
      */
-    public String exportGraph(ONDEXGraph og) throws InvalidPluginArgumentException {
+    public String exportGraph(ONDEXGraph og) throws InvalidPluginArgumentException
+    {
         // Unconnected filter
         Filter uFilter = new Filter();
         ONDEXPluginArguments uFA = new ONDEXPluginArguments(uFilter.getArgumentDefinitions());
         uFA.addOption(ArgumentNames.REMOVE_TAG_ARG, true);
 
-        // TODO
         List<String> ccRestrictionList = Arrays.asList("Publication", "Phenotype", "Protein",
                 "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
                 "Disease", "BioProc", "Trait");
-        ccRestrictionList.stream().forEach(cc -> {
-            try {
-                uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc);
-            } catch (InvalidPluginArgumentException ex) {
-                log.info("Failed to restrict concept class " + cc + " due to error " + ex);
-            }
-        } );
-        log.info("Filtering concept classes " + ccRestrictionList);
+        ccRestrictionList.stream().forEach(cc -> 
+        {
+          try {
+          	uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc);
+          } 
+          catch (InvalidPluginArgumentException ex) {
+          	// TODO: End user doesn't get this!
+          	log.error ( "Failed to restrict concept class " + cc + ": " + ex, ex );
+          }
+        });
+        log.info ( "Filtering concept classes " + ccRestrictionList );
 
         uFilter.setArguments(uFA);
         uFilter.setONDEXGraph(og);
         uFilter.start();
 
-        ONDEXGraph graph2 = new MemoryONDEXGraph("FilteredGraphUnconnected");
-        uFilter.copyResultsToNewGraph(graph2);
+        ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
+        uFilter.copyResultsToNewGraph ( graph2 );
 
         // Export the graph as JSON too, using the Ondex JSON Exporter plugin.
         Export jsonExport = new Export();
-        // JSON output file.
-        // String jsonExportPath = exportPath.substring(0, exportPath.length() - 4) +
-        // ".json";
-        byte[] encoded = new byte[0];
+        File exportFile = null;
         try {
-            File exportPath = File.createTempFile("knetminer", "graph");
-            exportPath.deleteOnExit(); // Just in case we don't get round to deleting it ourselves
+            exportFile = File.createTempFile ( "knetminer", "graph");
+            exportFile.deleteOnExit(); // Just in case we don't get round to deleting it ourselves
+            String exportPath = exportFile.getAbsolutePath (); 
+            
             ONDEXPluginArguments epa = new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
-            epa.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath.getAbsolutePath());
+            epa.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
 
             log.debug("JSON Export file: " + epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
 
@@ -584,15 +556,23 @@ public class OndexServiceProvider {
             // Export the contents of the 'graph' object as multiple JSON
             // objects to an output file.
             jsonExport.start();
-            log.debug("Network JSON file created:" + /* jsonExportPath */ exportPath.getAbsolutePath());
-            encoded = Files.readAllBytes(exportPath.toPath());
-            exportPath.delete();
-        } catch (IOException ex) {
-            log.error("Failed to export graph", ex);
+            
+            log.debug ( "Network JSON file created:" + exportPath );
+            
+            // TODO: not UTF-8?
+            return IOUtils.readFile ( exportPath, Charset.defaultCharset() );
+        } 
+        catch (IOException ex)
+        {
+        	// TODO: client side doesn't know anything about this, likely wrong
+          log.error ( "Failed to export graph", ex );
+          return "";
         }
-        return new String(encoded, Charset.defaultCharset());
+        finally {
+        	if ( exportFile != null ) exportFile.delete ();
+        }
     }
-
+    
     // JavaScript Document
     /**
      * Creates a new keyword for finding the NOT list
@@ -600,11 +580,10 @@ public class OndexServiceProvider {
      * @param keyword original keyword
      * @return new keyword for searching the NOT list
      */
-    private String createsNotList(String keyword) {
+    private String createsNotList(String keyword)
+    {
         String result = "";
-        if (keyword == null) {
-            keyword = "";
-        }
+        if (keyword == null) keyword = "";
 
         keyword = keyword.replace("(", "");
         keyword = keyword.replace(")", "");
@@ -636,7 +615,8 @@ public class OndexServiceProvider {
      * @param sHits map that holds search results
      */
     private void mergeHits(HashMap<ONDEXConcept, Float> hit2score, ScoredHits<ONDEXConcept> sHits,
-            ScoredHits<ONDEXConcept> NOTHits) {
+            ScoredHits<ONDEXConcept> NOTHits)
+    {
         for (ONDEXConcept c : sHits.getOndexHits()) {
             if (NOTHits == null || !NOTHits.getOndexHits().contains(c)) {
                 if (c instanceof LuceneConcept) {
@@ -730,33 +710,30 @@ public class OndexServiceProvider {
          * increased for now from 500 to 1500, until Lucene code is ported from Ondex to
          * QTLNetMiner, when we'll make changes to the QueryParser code instead.
          */
-        int max_concepts = 2000/* 500 */;
+        int max_concepts = 2000;
 
         // search concept attributes
-        for (AttributeName att : atts) {
+        for (AttributeName att : atts)
+        {
             String fieldName = getFieldName("ConceptAttribute", att.getId());
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAtt = parser.parse(keyword);
             ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
             mergeHits(hit2score, sHits, NOTList);
-
         }
-        for (String dsAc : dsAcc) {
-            // search concept accessions
-            // Query qAccessions =
-            // LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
-            // false, dsAcc);
-            String fieldName = getFieldName("ConceptAccession", dsAc);
-            QueryParser parser = new QueryParser(fieldName, analyzer);
+        
+        // Search concept accessions
+        for (String dsAc : dsAcc)
+        {
+            String fieldName = getFieldName ( "ConceptAccession", dsAc );
+            QueryParser parser = new QueryParser ( fieldName, analyzer );
             Query qAccessions = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts(qAccessions, max_concepts);
-            mergeHits(hit2score, sHitsAcc, NOTList);
+            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts ( qAccessions, max_concepts );
+            mergeHits ( hit2score, sHitsAcc, NOTList );
         }
 
-        // search concept names
-        // Query qNames =
-        // LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
-        String fieldNameCN = getFieldName("ConceptName", null);
+        // Search concept names
+        String fieldNameCN = getFieldName ( "ConceptName", null );
         QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
         Query qNames = parserCN.parse(keyword);
         ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
@@ -786,12 +763,17 @@ public class OndexServiceProvider {
         return hit2score;
     }
 
-    public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException {
-        Map<ONDEXConcept, Double> scoredCandidates = new HashMap<ONDEXConcept, Double>();
-        Map<ONDEXConcept, Double> sortedCandidates = new HashMap<ONDEXConcept, Double>(); // Sort via stream instead
-        log.info("total hits from lucene: " + hit2score.keySet().size());
+    public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException 
+    {
+        Map<ONDEXConcept, Double> scoredCandidates = new HashMap<>();
+        Map<ONDEXConcept, Double> sortedCandidates = new HashMap<>(); // Sort via stream instead
+    
+        log.info ( "Total hits from lucene: " + hit2score.keySet().size() );
 
-        synchronized (this) {
+        // TODO: the only thing to be synched here is mapGene2HitConcept, and only
+        // if this is needed, see https://github.com/Rothamsted/knetminer/issues/517
+        synchronized (this) 
+        {
             // 1st step: create map of genes to concepts that contain query terms
             mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
             for (ONDEXConcept c : hit2score.keySet()) {
@@ -814,12 +796,12 @@ public class OndexServiceProvider {
             for (int geneId : mapGene2HitConcept.keySet()) {
 
                 // weighted sum of all evidence concepts
-                double weighted_evidence_sum = 0;
+                double weightedEvidenceSum = 0;
 
                 // iterate over each evidence concept and compute a weight that is composed of
                 // three components
-                for (int cId : mapGene2HitConcept.get(geneId)) {
-
+                for (int cId : mapGene2HitConcept.get(geneId))
+                {
                     // relevance of search term to concept
                     float luceneScore = hit2score.get(graph.getConcept(cId));
 
@@ -827,17 +809,16 @@ public class OndexServiceProvider {
                     double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
 
                     // inverse distance from gene to evidence
-                    Integer path_length = mapGene2PathLength.get(geneId + "//" + cId);
-                    if (path_length == null) {
-                        log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
-                    }
-                    double distance = path_length == null ? 0 : (1d / path_length);
+                    Integer pathLen = mapGene2PathLength.get(geneId + "//" + cId);
+                    if (pathLen == null)
+                    	log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
+                    double distance = pathLen == null ? 0 : (1d / pathLen);
 
                     // take the mean of all three components
-                    double evidence_weight = (igf + luceneScore + distance) / 3;
+                    double evidenceWeight = (igf + luceneScore + distance) / 3;
 
                     // sum of all evidence weights
-                    weighted_evidence_sum += evidence_weight;
+                    weightedEvidenceSum += evidenceWeight;
                 }
 
                 // normalisation method 1: size of the gene knoweldge graph
@@ -846,7 +827,7 @@ public class OndexServiceProvider {
                 //double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
                 // No normalisation for now as it's too experimental.
                 // This meeans better studied genes will appear top of the list
-                double knetScore = /*normFactor * */ weighted_evidence_sum;
+                double knetScore = /*normFactor * */ weightedEvidenceSum;
 
                 scoredCandidates.put(graph.getConcept(geneId), knetScore);
             }
@@ -856,12 +837,15 @@ public class OndexServiceProvider {
              * use of ValueComparator *
              */
             sortedCandidates = scoredCandidates
-                    .entrySet()
-                    .stream()
-                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                    .collect(
-                            toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-                                    LinkedHashMap::new)); // Sort the candidate values
+	            .entrySet()
+	            .stream()
+	            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+	            .collect(
+	              toMap(
+	              	Map.Entry::getKey,
+	              	Map.Entry::getValue,
+	              	(e1, e2) -> e2, LinkedHashMap::new)
+	            ); // Sort the candidate values
 
         }//end of synchronised block
         return sortedCandidates;
@@ -873,9 +857,10 @@ public class OndexServiceProvider {
      * @param String keyword
      * @return list of spell corrected words
      */
-    public List<String> didyoumean(String keyword) throws ParseException {
+    public List<String> didyoumean(String keyword) throws ParseException 
+    {
+    		// TODO: WHAT?!?
         List<String> alternatives = new ArrayList<String>();
-
         return alternatives;
     }
 
@@ -885,23 +870,23 @@ public class OndexServiceProvider {
      * @param List<String> qtlsStr
      * @return Set<ONDEXConcept> concepts
      */
-    public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr) {
+    public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr)
+    {
         log.info("qtlsStr: " + qtlsStr); // qtl string
-        Set<ONDEXConcept> concepts = new HashSet<ONDEXConcept>();
+        Set<ONDEXConcept> concepts = new HashSet<>();
 
         // convert List<String> qtlStr to List<QTL> qtls
-        List<QTL> qtls = new ArrayList<QTL>();
-        for (String qtlStr : qtlsStr) {
-            qtls.add(QTL.fromString(qtlStr));
-        }
+        List<QTL> qtls = new ArrayList<>();
+        qtlsStr.stream ()
+        	.map ( QTL::fromString )
+        	.forEach ( qtls::add );
 
-        String chrQTL;
-        int startQTL, endQTL;
-        for (QTL qtl : qtls) {
+        for (QTL qtl : qtls)
+        {
             try {
-                chrQTL = qtl.getChromosome();
-                startQTL = qtl.getStart();
-                endQTL = qtl.getEnd();
+            		String chrQTL = qtl.getChromosome();
+                int startQTL = qtl.getStart();
+                int endQTL = qtl.getEnd();
                 log.info("user QTL (chr, start, end): " + chrQTL + " , " + startQTL + " , " + endQTL);
                 // swap start with stop if start larger than stop
                 if (startQTL > endQTL) {
@@ -909,41 +894,32 @@ public class OndexServiceProvider {
                     startQTL = endQTL;
                     endQTL = tmp;
                 }
-                ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
-                AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
-                AttributeName attCM = graph.getMetaData().getAttributeName("cM");
-                AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-                // AttributeName attLoc = graph.getMetaData().getAttributeName("Location");
-                AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
+                
+                var gmeta = graph.getMetaData ();
+                ConceptClass ccGene = gmeta.getConceptClass("Gene");
+                
                 Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
-                log.info("genes matched from entire network: " + genes.size());
-
-                for (ONDEXConcept c : genes) {
-                    String chrGene = null;
-                    int startGene = 0;
-                    if (c.getAttribute(attTAXID) == null
-                            || !taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
-                        continue;
-                    }
-                    if (c.getAttribute(attChromosome) != null) {
-                        chrGene = c.getAttribute(attChromosome).getValue().toString();
-                    }
-
-                    if (c.getAttribute(attBegin) != null) {
-                        startGene = /*(double)*/ ((Integer) c.getAttribute(attBegin).getValue());
-                    }
-                    if (chrGene != null && startGene != 0) {
-                        //log.info("Gene (chr, start) found: "+ chrGene +","+ startGene);
-                        if (chrQTL.equals(chrGene)) {
-                            if ((startGene >= startQTL) && (startGene <= endQTL)) {
-                                concepts.add(c);
-                            }
-                        }
-
-                    }
+                log.info ( "searchQTL, found {} matching gene(s)", genes.size() );
+                
+                for (ONDEXConcept c : genes)
+                {
+                    if ( !taxID.contains ( getAttrValueAsString ( graph, c, "TAXID", false ) ) )
+                    	continue;
+                    	    
+                    String chrGene = getAttrValueAsString ( graph, c, "Chromosome", false );
+                    int startGene = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "BEGIN" ) ).orElse ( 0 );
+                    		
+                    if (! ( chrGene != null && startGene != 0 ) ) continue;
+                    if ( !chrQTL.equals(chrGene) ) continue;
+                    if (! ( startGene >= startQTL && startGene <= endQTL ) ) continue;
+                    
+                    concepts.add(c);
                 }
-            } catch (Exception e) {
-                log.error("Not valid qtl", e);
+            } 
+            catch (Exception e)
+            {
+            	// TODO: the user doesn't get any of this!
+              log.error("Not valid qtl: " + e.getMessage (), e);
             }
         }
         return concepts;
@@ -957,128 +933,135 @@ public class OndexServiceProvider {
      * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
      * 
      */
-    private Set<QTL> findQTL(String keyword) throws ParseException {
-
-        ConceptClass ccTrait = graph.getMetaData().getConceptClass("Trait");
-        ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
-        ConceptClass ccSNP = graph.getMetaData().getConceptClass("SNP");
+    private Set<QTL> findQTL(String keyword) throws ParseException
+    {
+    		var gmeta = graph.getMetaData();
+        ConceptClass ccTrait = gmeta.getConceptClass("Trait");
+        ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+        ConceptClass ccSNP = gmeta.getConceptClass("SNP");
 
         // no Trait-QTL relations found
-        if (ccTrait == null && (ccQTL == null || ccSNP == null)) {
-            return new HashSet<QTL>();
-        }
+        if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
 
         // no keyword provided
-        if (keyword == null || keyword.equals("")) {
-            return new HashSet<QTL>();
-        }
+        if (keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
 
-        AttributeName attBegin = graph.getMetaData().getAttributeName("BEGIN");
-        AttributeName attEnd = graph.getMetaData().getAttributeName("END");
-        AttributeName attPvalue = graph.getMetaData().getAttributeName("PVALUE");
-        AttributeName attChromosome = graph.getMetaData().getAttributeName("Chromosome");
-        AttributeName attTrait = graph.getMetaData().getAttributeName("Trait");
-        AttributeName attTaxID = graph.getMetaData().getAttributeName("TAXID");
-
-        Set<QTL> results = new HashSet<QTL>();
-
-        log.debug("Looking for QTLs...");
+        log.debug ( "Looking for QTLs..." );
+        
         // If there is not traits but there is QTLs then we return all the QTLs
-        if (ccTrait == null) {
-            log.info("No Traits found: all QTLS will be shown...");
-            // results = graph.getConceptsOfConceptClass(ccQTL);
-            for (ONDEXConcept q : graph.getConceptsOfConceptClass(ccQTL)) {
-                String type = q.getOfType().getId();
-                String chrName = q.getAttribute(attChromosome).getValue().toString();
-                Integer start = (Integer) q.getAttribute(attBegin).getValue();
-                Integer end = (Integer) q.getAttribute(attEnd).getValue();
-                String label = q.getConceptName().getName();
-                String trait = "";
-                if (attTrait != null && q.getAttribute(attTrait) != null) {
-                    trait = q.getAttribute(attTrait).getValue().toString();
-                }
-                String tax_id = "";
-                if (attTaxID != null && q.getAttribute(attTaxID) != null) {
-                    tax_id = q.getAttribute(attTaxID).getValue().toString();
-                    // log.info("findQTL(): ccTrait=null; concept Type: "+ type +",
-                    // chrName: "+ chrName +", tax_id= "+ tax_id);
-                }
-                results.add(new QTL(chrName, type, start, end, label, "", 1.0f, trait, tax_id));
-            }
-        } else {
-        		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
-        	  // This chooses the appropriate analyzer depending on the field.
-        	
-            // be careful with the choice of analyzer: ConceptClasses are not
-            // indexed in lowercase letters which let the StandardAnalyzer crash
-        		//
-            Analyzer analyzerSt = new StandardAnalyzer();
-            Analyzer analyzerWS = new WhitespaceAnalyzer();
-
-            String fieldCC = getFieldName("ConceptClass", null);
-            QueryParser parserCC = new QueryParser(fieldCC, analyzerWS);
-            Query cC = parserCC.parse("Trait");
-
-            String fieldCN = getFieldName("ConceptName", null);
-            // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldCN,
-            // analyzerSt);
-            QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
-            Query cN = parserCN.parse(keyword);
-
-            /*
-             * BooleanQuery finalQuery = new BooleanQuery(); finalQuery.add(cC, Occur.MUST);
-             * finalQuery.add(cN, Occur.MUST);
-             */
-            BooleanQuery finalQuery = new BooleanQuery.Builder().add(cC, BooleanClause.Occur.MUST)
-                    .add(cN, BooleanClause.Occur.MUST).build();
-            log.info("QTL search query: " + finalQuery.toString());
-
-            ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts(finalQuery, 100);
-
-            for (ONDEXConcept c : hits.getOndexHits()) {
-                if (c instanceof LuceneConcept) {
-                    c = ((LuceneConcept) c).getParent();
-                }
-                Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
-                for (ONDEXRelation r : rels) {
-                    // get QTL concept
-                    if (r.getFromConcept().getOfType().equals(ccQTL) || r.getToConcept().getOfType().equals(ccQTL)
-                            || r.getFromConcept().getOfType().equals(ccSNP)
-                            || r.getToConcept().getOfType().equals(ccSNP)) {
-                        // QTL-->Trait or SNP-->Trait
-                        // log.info("QTL-->Trait or SNP-->Trait");
-                        ONDEXConcept conQTL = r.getFromConcept();
-                        // results.add(conQTL);
-                        if (conQTL.getAttribute(attChromosome) != null && conQTL.getAttribute(attBegin) != null
-                                && conQTL.getAttribute(attEnd) != null) {
-                            String type = conQTL.getOfType().getId();
-                            String chrName = conQTL.getAttribute(attChromosome).getValue().toString();
-                            Integer start = (Integer) conQTL.getAttribute(attBegin).getValue();
-                            Integer end = (Integer) conQTL.getAttribute(attEnd).getValue();
-                            String label = conQTL.getConceptName().getName();
-                            Float pValue = 1.0f;
-                            if (attPvalue != null && r.getAttribute(attPvalue) != null) {
-                                pValue = (Float) r.getAttribute(attPvalue).getValue();
-                            }
-                            String trait = c.getConceptName().getName();
-                            String tax_id = "";
-                            // log.info("findQTL(): conQTL.getAttribute(attTaxID): "+
-                            // conQTL.getAttribute(attTaxID) +", value= "+
-                            // conQTL.getAttribute(attTaxID).getValue().toString());
-                            if (attTaxID != null && conQTL.getAttribute(attTaxID) != null) {
-                                tax_id = conQTL.getAttribute(attTaxID).getValue().toString();
-                                // log.info("findQTL(): conQTL Type: "+ type +", chrName: "+ chrName
-                                // +", tax_id= "+ tax_id);
-                            }
-                            results.add(new QTL(chrName, type, start, end, label, "", pValue, trait, tax_id));
-                        }
-                    }
-                }
-            }
-        }
-        return results;
+        if (ccTrait == null) return findQTLAllTraits ();
+        return findQTLForTrait ( keyword );
     }
 
+    
+    private Set<QTL> findQTLAllTraits ()
+    {
+      log.info ( "No Traits found: all QTLS will be shown..." );
+
+      Set<QTL> results = new HashSet<>();
+      
+      var gmeta = graph.getMetaData ();
+      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+      
+      // results = graph.getConceptsOfConceptClass(ccQTL);
+      for (ONDEXConcept q : graph.getConceptsOfConceptClass(ccQTL))
+      {
+          String type = q.getOfType().getId();
+          String chrName = getAttrValue ( graph, q, "Chromosome" );
+          int start = (Integer) getAttrValue ( graph, q, "BEGIN" );
+          int end = (Integer) getAttrValue ( graph, q, "END" );
+          String trait = getAttrValueAsString ( graph, q, "Trait", false );
+          
+          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, q, "TAXID", false ) )
+          	.orElse ( "" );
+          
+          String label = q.getConceptName().getName();
+          
+          results.add ( new QTL ( chrName, type, start, end, label, "", 1.0f, trait, taxId ) );
+      }
+      return results;    	
+    }
+
+    
+    private Set<QTL> findQTLForTrait ( String keyword ) throws ParseException
+    {
+  		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
+  	  // This chooses the appropriate analyzer depending on the field.
+  	
+      // be careful with the choice of analyzer: ConceptClasses are not
+      // indexed in lowercase letters which let the StandardAnalyzer crash
+  		//
+      Analyzer analyzerSt = new StandardAnalyzer();
+      Analyzer analyzerWS = new WhitespaceAnalyzer();
+
+      String fieldCC = getFieldName ( "ConceptClass", null );
+      QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
+      Query cC = parserCC.parse("Trait");
+
+      String fieldCN = getFieldName("ConceptName", null);
+      QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
+      Query cN = parserCN.parse(keyword);
+
+      BooleanQuery finalQuery = new BooleanQuery.Builder()
+      	.add ( cC, BooleanClause.Occur.MUST )
+        .add ( cN, BooleanClause.Occur.MUST )
+        .build();
+      
+      log.info( "QTL search query: {}", finalQuery.toString() );
+
+      ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts ( finalQuery, 100 );
+      
+  		var gmeta = graph.getMetaData();
+      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+      ConceptClass ccSNP = gmeta.getConceptClass("SNP");
+      
+      Set<QTL> results = new HashSet<>();
+      
+      for ( ONDEXConcept c : hits.getOndexHits() ) 
+      {
+          if (c instanceof LuceneConcept) c = ((LuceneConcept) c).getParent();
+          Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
+          
+          for (ONDEXRelation r : rels) 
+          {
+          	var conQTL = r.getFromConcept();
+          	var conQTLType = conQTL.getOfType ();
+          	var toType = r.getToConcept ().getOfType ();
+          	
+            // get QTL concept
+            if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
+                 		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
+            	continue;
+              
+            // QTL-->Trait or SNP-->Trait
+            String chrName = getAttrValueAsString ( graph, conQTL, "Chromosome", false );
+            if ( chrName == null ) continue;
+
+            Integer start = (Integer) getAttrValue ( graph, conQTL, "BEGIN", false );
+            if ( start == null ) continue;
+
+            Integer end = (Integer) getAttrValue ( graph, conQTL, "END", false );
+            if ( end == null ) continue;
+            
+            String type = conQTLType.getId();
+            String label = conQTL.getConceptName().getName();
+            String trait = c.getConceptName().getName();
+            
+            float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
+            	.orElse ( 1.0f );
+
+            String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, conQTL, "TAXID", false ) )
+              	.orElse ( "" );
+            
+            
+            results.add ( new QTL ( chrName, type, start, end, label, "", pValue, trait, taxId ) );
+          } // for concept relations
+      } // for getOndexHits
+      return results;    	
+    }
+    
+    // TODO: REFACTORING TO BE CONTINUED FROM HERE
+    
     /**
      * Semantic Motif Search for list of genes
      *
@@ -2859,13 +2842,9 @@ public class OndexServiceProvider {
         return geneCount;
     }
 
-    public String getFieldName(String name, String value) {
-
-        if (value == null) {
-            return name;
-        } else {
-            return name + "_" + value;
-        }
+    public String getFieldName(String name, String value)
+    {
+    	return value == null ? name : name + "_" + value;
     }
 
     /**
