@@ -3,7 +3,6 @@ package rres.knetminer.datasource.ondexlocal;
 import static java.util.stream.Collectors.toMap;
 
 import java.awt.Color;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,11 +12,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -39,6 +36,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -1059,9 +1057,7 @@ public class OndexServiceProvider {
       } // for getOndexHits
       return results;    	
     }
-    
-    // TODO: REFACTORING TO BE CONTINUED FROM HERE
-    
+        
     /**
      * Semantic Motif Search for list of genes
      *
@@ -1069,117 +1065,121 @@ public class OndexServiceProvider {
      * @param regex trait-related
      * @return OndexGraph containing the gene network
      */
-    public ONDEXGraph getGenes(Integer[] ids, String regex) {
+    public ONDEXGraph findSemanticMotifs ( Integer[] ids, String regex )
+    {
         log.debug("get genes function " + ids.length);
-        AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
+        Set<ONDEXConcept> seed = new HashSet<>();
 
-        Set<ONDEXConcept> seed = new HashSet<ONDEXConcept>();
-
-        for (int id : ids) {
+        for (int id : ids) 
+        {
             ONDEXConcept c = graph.getConcept(id);
-            if (c.getAttribute(attTAXID) != null && taxID.contains(c.getAttribute(attTAXID).getValue().toString())) {
-                seed.add(c);
-            }
+            String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
+            if ( taxId == null ) continue;
+            seed.add ( c );
         }
-        log.debug("Now we will call findSemanticMotifs!");
+        log.debug("Now we will call findSemanticMotifs(seed)!");
         ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
         return subGraph;
     }
 
     /**
-     * Searches for ONDEXConcepts with the given accessions in the OndexGraph.
+     * Searches for ONDEXConcepts with the given accessions in the OndexGraph. Assumes a keyword-oriented syntax
+     * for the accessions, eg, characters like brackets are removed.
      *
      * @param List<String> accessions
      * @return Set<ONDEXConcept>
      */
-    public Set<ONDEXConcept> searchGenes(List<String> accessions) {
+		public Set<ONDEXConcept> searchGenesByAccessionKeywords ( List<String> accessions )
+		{
+			if ( accessions.size () == 0 ) return null;
+			
+			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
+			ConceptClass ccGene = graph.getMetaData ().getConceptClass ( "Gene" );
+			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
+			Set<ONDEXConcept> hits = new HashSet<> ();
 
-        if (accessions.size() > 0) {
-            AttributeName attTAXID = graph.getMetaData().getAttributeName("TAXID");
-            ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
-            Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-            Set<ONDEXConcept> hits = new HashSet<ONDEXConcept>();
-
-
-            for (ONDEXConcept gene : seed) {
-                if (gene.getAttribute(attTAXID) != null && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-                    accessions.stream().map((acc) -> acc.replaceAll("^[\"()]+", "").replaceAll("[\"()]+$", "").toUpperCase()).map((acc) -> {
-                        // User may use accession ID's instead
-                        gene.getConceptNames().stream().filter((cno) -> (cno.getName().toUpperCase().equals(acc))).forEachOrdered((_item) -> {
-                            hits.add(gene);
-                        });
-                        return acc;
-                    }).forEachOrdered((acc) -> {
-                        // User may use accession ID's instead
-                        gene.getConceptAccessions().stream().filter((ca) -> (ca.getAccession().toUpperCase().equals(acc))).forEachOrdered((_item) -> {
-                            hits.add(gene);
-                        });
-                    });
-                }
-            }
-            return hits;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Searches genes related to an evidence, finds semantic motifs and shows
-     * the path between them
-     *
-     * @param evidenceOndexId
-     * @return subGraph
-     */
-    public ONDEXGraph evidencePath(Integer evidenceOndexId, Set<ONDEXConcept> genes) {
-        log.info("Method evidencePath - evidenceOndexId: " + evidenceOndexId.toString());
-        // Searches genes related to the evidenceID. If user genes provided, only include those.
-        Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<ONDEXConcept>();
-        for (Integer rg : mapConcept2Genes.get(evidenceOndexId)) {
-            ONDEXConcept gene = graph.getConcept(rg);
-            if (genes == null || genes.isEmpty() || genes.contains(gene)) {
-                relatedONDEXConcepts.add(gene);
-            }
-        }
-
-        // the results give us a map of every starting concept to every valid
-        // path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, relatedONDEXConcepts, null);
-
-        // create new graph to return
-        ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
-        ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
-        ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
-        // Highlights the right path and hides the path that doesn't leads to
-        // the evidence
-        for (List<EvidencePathNode> paths : results.values()) {
-            for (EvidencePathNode path : paths) {
-                // search last concept of semantic motif for keyword
-                int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-                ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-                if (lastCon.getId() == evidenceOndexId) {
-                    highlightPath(path, graphCloner, false);
-                } else {
-                    //hidePath(path,graphCloner);
-                }
-            }
-        }
-        ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
-
-        return subGraph;
-    }
+			for ( ONDEXConcept gene : seed )
+			{
+        String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
+        if ( !taxID.contains ( thisTaxId ) ) continue;
+				
+				accessions.stream ()
+				.map ( acc -> 
+					acc.replaceAll ( "^[\"()]+", "" )
+					.replaceAll ( "[\"()]+$", "" )
+					.toUpperCase () 
+				)
+				.map ( acc -> 
+				{
+					// User may use accession ID's instead
+					gene.getConceptNames ().stream ()
+							.filter ( ( cno ) -> ( cno.getName ().toUpperCase ().equals ( acc ) ) )
+							.forEachOrdered ( ( _item ) -> {
+								hits.add ( gene );
+							} );
+					return acc;
+				})
+				.forEachOrdered ( acc ->
+					// User may use accession ID's instead
+					gene.getConceptAccessions ()
+					.stream ()
+					.filter ( ca -> ca.getAccession ().toUpperCase ().equals ( acc ) )
+					.forEachOrdered ( _item -> hits.add ( gene ) )
+				);
+			}
+			return hits;
+		}
 
     /**
-     * Tests if there is a match of this query within the search string
+     * Searches genes related to an evidence, fetches the corresponding semantic motifs and merges
+     * the paths between them into the resulting graph.
      *
-     * @param p the pattern (if null then literal match .contains is used)
-     * @param query the query to match
-     * @param target the target to match to
-     * @return is there a match
      */
-    private boolean isMatching(Pattern p, String target) {
-        return p.matcher(target).find(0);
-    }
+		@SuppressWarnings ( "rawtypes" )
+		public ONDEXGraph evidencePath ( Integer evidenceOndexId, Set<ONDEXConcept> genes )
+		{
+			log.info ( "Method evidencePath - evidenceOndexId: {}", evidenceOndexId );
+			
+			// Searches genes related to the evidenceID. If user genes provided, only include those.
+			Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<> ();
+			for ( Integer rg : mapConcept2Genes.get ( evidenceOndexId ) )
+			{
+				ONDEXConcept gene = graph.getConcept ( rg );
+				if ( genes == null || genes.isEmpty () || genes.contains ( gene ) )
+					relatedONDEXConcepts.add ( gene );
+			}
 
+			// the results give us a map of every starting concept to every valid
+			// path
+			Map<ONDEXConcept, List<EvidencePathNode>> evidencePaths = 
+				graphTraverser.traverseGraph ( graph, relatedONDEXConcepts, null );
+
+			// create new graph to return
+			ONDEXGraph subGraph = new MemoryONDEXGraph ( "evidencePathGraph" );
+			ONDEXGraphCloner graphCloner = new ONDEXGraphCloner ( graph, subGraph );
+			// TODO: what's for?
+			ONDEXGraphRegistry.graphs.put ( subGraph.getSID (), subGraph );
+			// Highlights the right path and hides the path that doesn't leads to
+			// the evidence
+			for ( List<EvidencePathNode> evidencePath : evidencePaths.values () )
+			{
+				for ( EvidencePathNode pathNode : evidencePath )
+				{
+					// search last concept of semantic motif for keyword
+					int indexLastCon = pathNode.getConceptsInPositionOrder ().size () - 1;
+					ONDEXConcept lastCon = (ONDEXConcept) pathNode.getConceptsInPositionOrder ().get ( indexLastCon );
+					if ( lastCon.getId () == evidenceOndexId ) highlightPath ( pathNode, graphCloner, false );
+					// else hidePath(path,graphCloner);
+				}
+			}
+			ONDEXGraphRegistry.graphs.remove ( subGraph.getSID () );
+
+			return subGraph;
+		}
+
+
+// TODO: refactoring to be continued from here
+		
     /**
      * Converts a keyword into a list of words
      *
@@ -1224,153 +1224,99 @@ public class OndexServiceProvider {
     }
 
     /**
+     * Helper for {@link #highlightSearchKeywords(ONDEXConcept, Map)}. If the pattern matches the path, it  
+     * {@link Matcher#replaceAll(String) replaces} the matching bits of the target with the new
+     * highligher string and passes the result to the consumer (for operations like assignments)
+     */
+    private boolean highlightFragment ( Pattern p, String target, String highlighter, Consumer<String> consumer )
+    {
+    	Matcher matcher = p.matcher ( target );
+    	if ( !matcher.find ( 0 ) ) return false;
+    	var highlightedStr = matcher.replaceAll ( highlighter );
+    	if ( consumer != null ) consumer.accept ( highlightedStr );
+    	return true;
+    }
+    
+    /**
+     * Helper for {@link #highlightSearchKeywords(ONDEXConcept, Map)}, manages the hightlighting of a single
+     * search keyword
+     */
+    private boolean highlightSearchKeyword ( ONDEXConcept concept, String keyword, String highlighter )
+    {
+			boolean found = false;
+
+			Pattern p = Pattern.compile ( keyword, Pattern.CASE_INSENSITIVE );
+
+			found |= this.highlightFragment ( p, concept.getAnnotation (), highlighter, concept::setAnnotation );
+			found |= this.highlightFragment ( p, concept.getDescription (), highlighter, concept::setDescription );
+			
+			// old name -> is preferred, new name
+			HashMap<String, Pair<Boolean, String>> namesToCreate = new HashMap<> ();
+			for ( ConceptName cno : concept.getConceptNames () )
+			{
+				String cname = cno.getName ();
+				if ( cname == null || cname.contains ( "</span>" ) ) continue;
+					
+				found |= this.highlightFragment ( 
+					p, cname, highlighter, 
+					newName -> namesToCreate.put ( cname, Pair.of ( cno.isPreferred (), newName ) ) 
+				);
+			}
+			
+			// And now do the replacements for real
+			namesToCreate.forEach ( ( oldName, newPair ) -> {
+				concept.deleteConceptName ( oldName );
+				concept.createConceptName ( newPair.getRight (), newPair.getLeft () );
+			});
+			
+
+			// search in concept attributes
+			for ( Attribute attribute : concept.getAttributes () )
+			{
+				String attrId = attribute.getOfType ().getId ();
+				
+				if ( attrId.equals ( "AA" ) || attrId.equals ( "NA" ) 
+						   || attrId.startsWith ( "AA_" ) || attrId.startsWith ( "NA_" ) )
+					continue;
+				
+				String value = attribute.getValue ().toString ();
+				found |= this.highlightFragment ( p, value, highlighter, attribute::setValue );
+			}
+			
+			return found;
+    }
+    
+    
+    /**
      * Searches different fields of a concept for a query or pattern and
-     * highlights them
+     * highlights them.
+     * 
+     * TODO: this is ugly, Lucene should already have methdods to do the same.
      *
-     * @param concept
-     * @param p
-     * @param search
      * @return true if one of the concept fields contains the query
      */
-    private boolean highlight(ONDEXConcept concept, Map<String, String> keywordColourMap) {
-//			System.out.println("Original keyword: "+regex);
-        boolean found = false;
+		private boolean highlightSearchKeywords ( ONDEXConcept concept, Map<String, String> keywordColourMap )
+		{
+			boolean found = false;
 
-        // Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
-        String[] orderedKeywords = keywordColourMap.keySet().toArray(new String[0]);
-        Arrays.sort(orderedKeywords, new Comparator<String>() {
-            public int compare(String o1, String o2) {
-                if (o1.length() == o2.length()) {
-                    return o1.compareTo(o2); // Same length? Compare alphabetically
-                } else {
-                    return o1.length() - o2.length(); // Otherwise put the shorter one first
-                }
-            }
-        });
+			// Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
+			String[] orderedKeywords = keywordColourMap.keySet ().toArray ( new String[ 0 ] );
+			
+			Comparator<String> strLenComp = (a, b) -> a.length () == b.length () 
+				? a.compareTo ( b ) 
+				: Integer.compare ( a.length(), b.length() );
 
-        // First pass: wrap matches in ____. Prevents substring interference
-        String marker = "____";
-        for (String key : orderedKeywords) {
-            Pattern p = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
-            String highlighter = marker + key + marker;
+			Arrays.sort ( orderedKeywords, strLenComp );
 
-            //Searchs in annotations
-            String anno = concept.getAnnotation();
-            if (this.isMatching(p, anno)) {
-                found = true;
-                // search and replace all matching expressions
-                String newAnno = p.matcher(anno).replaceAll(highlighter);
-                concept.setAnnotation(newAnno);
-            }
+			for ( String key : orderedKeywords )
+			{
+				var highlighter = "<span style=\"background-color:" + keywordColourMap.get ( key ) + "\">"
+						+ "<b>$1</b></span>";				
+				found |= highlightSearchKeyword ( concept, "(" + key + ")", highlighter );
+			}
 
-            //Searchs in descriptions
-            String desc = concept.getDescription();
-            if (this.isMatching(p, desc)) {
-                found = true;
-                // search and replace all matching expressions
-                String newDesc = p.matcher(desc).replaceAll(highlighter);
-                concept.setDescription(newDesc);
-            }
-
-            // search in concept names
-            HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
-            for (ConceptName cno : concept.getConceptNames()) {
-                String cn = cno.getName();
-                if (this.isMatching(p, cn)) {
-                    found = true;
-                    //Saves the conceptNames we want to update
-                    namesToCreate.put(cn, cno.isPreferred());
-                }
-            }
-            //For each conceptName of the update list deletes and creates a new conceptName
-            for (String ntc : namesToCreate.keySet()) {
-                if (!ntc.contains("</span>")) {
-                    String newName = p.matcher(ntc).replaceAll(highlighter);
-                    boolean isPref = namesToCreate.get(ntc);
-                    concept.deleteConceptName(ntc);
-                    concept.createConceptName(newName, isPref);
-                }
-            }
-
-            // search in concept attributes
-            for (Attribute attribute : concept.getAttributes()) {
-                if (!(attribute.getOfType().getId().equals("AA"))
-                        || !(attribute.getOfType().getId().equals("NA"))
-                        || !(attribute.getOfType().getId().startsWith("AA_"))
-                        || !(attribute.getOfType().getId().startsWith("NA_"))) {
-                    String value = attribute.getValue().toString();
-                    if (this.isMatching(p, value)) {
-                        found = true;
-                        // search and replace all matching expressions
-                        Matcher m = p.matcher(value);
-                        String newAttStr = m.replaceAll(highlighter);
-                        attribute.setValue(newAttStr);
-                    }
-
-                }
-            }
-        }
-
-        // Second pass: perform substitution
-        for (String key : orderedKeywords) {
-            Pattern p = Pattern.compile(marker + key + marker, Pattern.CASE_INSENSITIVE);
-            String highlighter = "<span style=\"background-color:" + keywordColourMap.get(key) + "\"><b>" + key + "</b></span>";
-
-            //Searchs in annotations
-            String anno = concept.getAnnotation();
-            if (this.isMatching(p, anno)) {
-                // search and replace all matching expressions
-                String newAnno = p.matcher(anno).replaceAll(highlighter);
-                concept.setAnnotation(newAnno);
-            }
-
-            //Searchs in descriptions
-            String desc = concept.getDescription();
-            if (this.isMatching(p, desc)) {
-                // search and replace all matching expressions
-                String newDesc = p.matcher(desc).replaceAll(highlighter);
-                concept.setDescription(newDesc);
-            }
-
-            // search in concept names
-            HashMap<String, Boolean> namesToCreate = new HashMap<String, Boolean>();
-            for (ConceptName cno : concept.getConceptNames()) {
-                String cn = cno.getName();
-                if (this.isMatching(p, cn)) {
-                    //Saves the conceptNames we want to update
-                    namesToCreate.put(cn, cno.isPreferred());
-                }
-            }
-            //For each conceptName of the update list deletes and creates a new conceptName
-            for (String ntc : namesToCreate.keySet()) {
-//                if (!ntc.contains("</span>")) {
-                String newName = p.matcher(ntc).replaceAll(highlighter);
-                boolean isPref = namesToCreate.get(ntc);
-                concept.deleteConceptName(ntc);
-                concept.createConceptName(newName, isPref);
-//                }
-            }
-
-            // search in concept attributes
-            for (Attribute attribute : concept.getAttributes()) {
-                if (!(attribute.getOfType().getId().equals("AA"))
-                        || !(attribute.getOfType().getId().equals("NA"))
-                        || !(attribute.getOfType().getId().startsWith("AA_"))
-                        || !(attribute.getOfType().getId().startsWith("NA_"))) {
-                    String value = attribute.getValue().toString();
-                    if (this.isMatching(p, value)) {
-                        // search and replace all matching expressions
-                        Matcher m = p.matcher(value);
-                        String newAttStr = m.replaceAll(highlighter);
-                        attribute.setValue(newAttStr);
-                    }
-
-                }
-            }
-        }
-
-        return found;
-    }
+			return true;
+		}
 
     /**
      * Searches with Lucene for documents, finds semantic motifs and by crossing
@@ -1380,15 +1326,18 @@ public class OndexServiceProvider {
      * @param keyword
      * @return subGraph
      */
-    public ONDEXGraph findSemanticMotifs(Set<ONDEXConcept> seed, String keyword) {
+    public ONDEXGraph findSemanticMotifs(Set<ONDEXConcept> seed, String keyword) 
+    {
         log.debug("Method findSemanticMotifs - keyword: " + keyword);
         // Searches with Lucene: luceneResults
-        HashMap<ONDEXConcept, Float> luceneResults = null;
+        Map<ONDEXConcept, Float> luceneResults = null;
         try {
             luceneResults = searchLucene(keyword, seed, false);
         }
         catch (Exception e) {
-            log.error("Lucene search failed", e);
+        	// TODO: does it make sense to continue?!
+          log.error("Lucene search failed", e);
+          luceneResults = Collections.emptyMap (); 
         }
 
         // the results give us a map of every starting concept to every valid path
@@ -1464,7 +1413,7 @@ public class OndexServiceProvider {
 
                     // highlight keyword in any concept attribute
                     if (!keywordConcepts.contains(cloneCon)) {
-                        this.highlight(cloneCon, keywordColourMap);
+                        this.highlightSearchKeywords(cloneCon, keywordColourMap);
                         keywordConcepts.add(cloneCon);
 
                         if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -1836,10 +1785,7 @@ public class OndexServiceProvider {
             //log.info("score: "+ score);
             sb.append("</feature>\n");
 
-            if (id++ > maxGenes) {
-                break;
-            }
-
+            if (id++ > maxGenes) break;
         }
 
         log.info("Display user QTLs... QTLs provided: " + userQtl.size());
@@ -1853,15 +1799,10 @@ public class OndexServiceProvider {
                 start = start * 1000000;
                 end = end * 1000000;
             }
-            String label = region.getLabel();
+            String label = Optional.ofNullable ( region.getLabel() )
+            	.filter ( lbl -> !lbl.isEmpty () )
+            	.orElse ( "QTL" );
 
-            if (label.length() == 0) {
-                label = "QTL";
-            }
-            // String query = "mode=network&keyword=" +
-            // keyword+"&qtl1="+chrLatin+":"+start+":"+end;
-            // Replace '&' with '&amp;' to make it comptaible with the new
-            // d3.js-based Map View.
             String query;
             try {
                 query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
@@ -1972,8 +1913,8 @@ public class OndexServiceProvider {
 
     // temporary...
     public void writeResultsFile(String filename, String sb_string) {
-        try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+        try ( BufferedWriter out = new BufferedWriter(new FileWriter(filename)) ) 
+        {
             out.write(sb_string);
             out.close();
         }
@@ -2287,7 +2228,6 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         int allGenesSize = mapGene2Concepts.keySet().size();
         int userGenesSize = userGenes == null ? 0 : userGenes.size();
-        FisherExact fisherExact = userGenesSize > 0 ? new FisherExact(allGenesSize) : null;
 
         log.info("generate Evidence table...");
         List<QTL> qtls = new ArrayList<QTL>();
@@ -2407,6 +2347,8 @@ public class OndexServiceProvider {
                 int notMatched_inGeneList = userGenesSize - matched_inGeneList;
                 int matched_notInGeneList = numberOfGenes - matched_inGeneList;
                 int notMatched_notInGeneList = allGenesSize - matched_notInGeneList - matched_inGeneList - notMatched_inGeneList;
+                
+                FisherExact fisherExact = new FisherExact(allGenesSize);
                 pvalue = fisherExact.getP(
                         matched_inGeneList,
                         matched_notInGeneList,
