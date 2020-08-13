@@ -1245,6 +1245,11 @@ public class OndexServiceProvider {
     {
 			boolean found = false;
 
+			// TODO: likely the end user isn't writing true REs, so we fix it this way, but it requires clarifications
+			//
+			keyword = keyword.replaceAll ( "\\*", "\\S*" )
+				.replaceAll ( "\\?", "\\S?" );
+			
 			Pattern p = Pattern.compile ( keyword, Pattern.CASE_INSENSITIVE );
 
 			found |= this.highlightFragment ( p, concept.getAnnotation (), highlighter, concept::setAnnotation );
@@ -1297,8 +1302,6 @@ public class OndexServiceProvider {
      */
 		private boolean highlightSearchKeywords ( ONDEXConcept concept, Map<String, String> keywordColourMap )
 		{
-			boolean found = false;
-
 			// Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
 			String[] orderedKeywords = keywordColourMap.keySet ().toArray ( new String[ 0 ] );
 			
@@ -1307,6 +1310,7 @@ public class OndexServiceProvider {
 				: Integer.compare ( a.length(), b.length() );
 
 			Arrays.sort ( orderedKeywords, strLenComp );
+			boolean found = false;
 
 			for ( String key : orderedKeywords )
 			{
@@ -1315,7 +1319,7 @@ public class OndexServiceProvider {
 				found |= highlightSearchKeyword ( concept, "(" + key + ")", highlighter );
 			}
 
-			return true;
+			return found;
 		}
 
     /**
