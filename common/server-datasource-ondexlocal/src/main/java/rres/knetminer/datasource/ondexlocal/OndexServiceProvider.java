@@ -1245,8 +1245,8 @@ public class OndexServiceProvider {
     {
 			boolean found = false;
 
-			// TODO: likely the end user isn't writing true REs, so we fix it this way, but it requires clarifications
-			//
+			// TODO: the end user is supposed to be writing Lucene expressions, 
+			// so we fix them this way. But using Lucene for highlighting should be simpler.
 			keyword = keyword.replaceAll ( "\\*", "\\S*" )
 				.replaceAll ( "\\?", "\\S?" );
 			
