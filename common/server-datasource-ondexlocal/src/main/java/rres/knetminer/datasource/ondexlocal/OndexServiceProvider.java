@@ -94,6 +94,10 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
+import static java.lang.Math.sqrt;
+import static java.lang.Math.pow;
+
+
 /**
  * Parent class to all ondex service provider classes implementing organism
  * specific searches.
@@ -1112,11 +1116,10 @@ public class OndexServiceProvider {
 				.map ( acc -> 
 				{
 					// User may use accession ID's instead
-					gene.getConceptNames ().stream ()
-							.filter ( ( cno ) -> ( cno.getName ().toUpperCase ().equals ( acc ) ) )
-							.forEachOrdered ( ( _item ) -> {
-								hits.add ( gene );
-							} );
+					gene.getConceptNames ()
+						.stream ()
+						.filter ( cname -> cname.getName ().toUpperCase ().equals ( acc ) )
+						.forEachOrdered ( _item -> hits.add ( gene ) );
 					return acc;
 				})
 				.forEachOrdered ( acc ->
@@ -1178,7 +1181,6 @@ public class OndexServiceProvider {
 		}
 
 
-// TODO: refactoring to be continued from here
 		
     /**
      * Converts a keyword into a list of words
@@ -1186,51 +1188,239 @@ public class OndexServiceProvider {
      * @param keyword
      * @return null or the list of words
      */
-    private Set<String> parseKeywordIntoSetOfWords(String keyword) {
-        Set<String> result = new HashSet<String>();
-        String key = keyword.replace("(", " ");
-        key = key.replace(")", " ");
-        key = key.replace("AND", " ");
-        key = key.replace("OR", " ");
-        key = key.replace("NOT", " ");
-        key = key.replaceAll("\\s+", " ").trim();
-        String builtK = "";
-        for (String k : key.split(" ")) {
-            if (k.startsWith("\"")) {
-                if (k.endsWith("\"")) {
-                   // result.add(k.substring(0, k.length() - 1));
-                   result.add(k.replace("\"", ""));
-                } else {
-                    builtK = k.substring(1);
-                }
-            } else if (k.endsWith("\"")) {
-                builtK += " " + k.substring(0, k.length() - 1);
-                result.add(builtK);
-                builtK = "";
-            } else {
-                if (builtK != "") {
-                    builtK += " " + k;
-                } else {
-                    result.add(k);
-                }
-            }
-//				System.out.println("subkeyworkd: "+k);
-        }
-        if ( !"".equals ( builtK )) {
-            result.add(builtK);
-        }
-        log.info("keys: " + result);
-        return result;
-    }
+		private Set<String> parseKeywordIntoSetOfWords ( String keyword )
+		{
+			Set<String> result = new HashSet<> ();
+			String key = keyword.replace ( "(", " " );
+			key = key.replace ( ")", " " );
+			key = key.replace ( "AND", " " );
+			key = key.replace ( "OR", " " );
+			key = key.replace ( "NOT", " " );
+			key = key.replaceAll ( "\\s+", " " ).trim ();
+			String builtK = "";
+			for ( String k : key.split ( " " ) )
+			{
+				if ( k.startsWith ( "\"" ) )
+				{
+					if ( k.endsWith ( "\"" ) )
+						// result.add(k.substring(0, k.length() - 1));
+						result.add ( k.replace ( "\"", "" ) );
+					else
+						builtK = k.substring ( 1 );
+				} 
+				else if ( k.endsWith ( "\"" ) )
+				{
+					builtK += " " + k.substring ( 0, k.length () - 1 );
+					result.add ( builtK );
+					builtK = "";
+				} 
+				else
+				{
+					if ( builtK != "" )
+						builtK += " " + k;
+					else
+						result.add ( k );
+				}
+		  }
+			if ( !"".equals ( builtK ) ) result.add ( builtK );
+			log.info ( "keys: " + result );
+			return result;
+		}
 
+
+
+    /**
+     * Searches with Lucene for documents, finds semantic motifs and by crossing
+     * this data makes concepts visible, changes the size and highlight the hits
+     *
+     * @param seed List of selected genes
+     * @param keyword
+     * @return subGraph
+     */
+		public ONDEXGraph findSemanticMotifs ( Set<ONDEXConcept> seed, String keyword )
+		{
+			log.debug ( "Method findSemanticMotifs - keyword: {}", keyword );
+			// Searches with Lucene: luceneResults
+			Map<ONDEXConcept, Float> luceneResults = null;
+			try
+			{
+				luceneResults = searchLucene ( keyword, seed, false );
+			}
+			catch ( Exception e )
+			{
+				// TODO: does it make sense to continue?!
+				log.error ( "Lucene search failed", e );
+				luceneResults = Collections.emptyMap ();
+			}
+
+			// the results give us a map of every starting concept to every valid path
+			Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph ( graph, seed, null );
+
+			Set<ONDEXConcept> keywordConcepts = new HashSet<> ();
+			Set<EvidencePathNode> pathSet = new HashSet<> ();
+
+			// added to overcome double quotes issue
+			// if changing this, need to change genepage.jsp and evidencepage.jsp
+			keyword = keyword.replace ( "###", "\"" );
+
+			Set<String> keywords = "".equals ( keyword ) 
+				? Collections.emptySet ()
+				: this.parseKeywordIntoSetOfWords ( keyword );
+					
+			Map<String, String> keywordColourMap = createHilightColors ( keywords );
+					
+			// create new graph to return
+			final ONDEXGraph subGraph = new MemoryONDEXGraph ( "SemanticMotifGraph" );
+			ONDEXGraphCloner graphCloner = new ONDEXGraphCloner ( graph, subGraph );
+
+			ONDEXGraphRegistry.graphs.put ( subGraph.getSID (), subGraph );
+
+			Set<ONDEXConcept> pubKeywordSet = new HashSet<> ();
+
+			for ( List<EvidencePathNode> paths : results.values () )
+			{
+				for ( EvidencePathNode path : paths )
+				{
+					// add all semantic motifs to the new graph
+					( (Set<ONDEXConcept>) path.getAllConcepts () )
+						.forEach ( graphCloner::cloneConcept );
+					
+					( (Set<ONDEXRelation>) path.getAllRelations () )
+						.forEach ( graphCloner::cloneRelation );
+
+					// search last concept of semantic motif for keyword
+					int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
+					ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
+
+					// no-keyword, set path to visible if end-node is Trait or Phenotype
+					if ( keyword == null || keyword.equals ( "" ) )
+					{
+// TODO: refactoring to be continued from this method. Check its visibility						
+						highlightPath ( path, graphCloner, true );
+						continue;
+					}
+
+					// keyword-mode and end concept contains keyword, set path to visible
+					if ( !luceneResults.containsKey ( endNode ) ) {
+						pathSet.add ( path );
+						continue;
+					}
+					
+					// keyword-mode -> do text and path highlighting
+					ONDEXConcept cloneCon = graphCloner.cloneConcept ( endNode );
+
+					// highlight keyword in any concept attribute
+					if ( keywordConcepts.contains ( cloneCon ) ) continue;
+					
+					this.highlightSearchKeywords ( cloneCon, keywordColourMap );
+					keywordConcepts.add ( cloneCon );
+
+					if ( !endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) ) continue;
+					
+					pubKeywordSet.add ( cloneCon );
+
+					// set only paths from gene to evidence nodes to visible
+					highlightPath ( path, graphCloner, false );
+					
+				} // for path
+			} // for paths
+
+			// special case when none of nodes contains keyword (no-keyword-match)
+			// set path to visible if end-node is Trait or Phenotype
+			if ( keywordConcepts.isEmpty () && ! ( keyword == null || keyword.equals ( "" ) ) )
+				for ( EvidencePathNode path : pathSet )
+					highlightPath ( path, graphCloner, true );
+
+			ConceptClass ccPub = subGraph.getMetaData ().getConceptClass ( "Publication" );
+			Set<Integer> allPubIds = new HashSet<Integer> ();
+
+			// if subgraph has publications do smart filtering of most interesting papers
+			if ( ccPub != null )
+			{
+
+				// get all publications in subgraph that have and don't have keyword
+				Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass ( ccPub );
+
+				allPubs.stream ()
+				.map ( ONDEXConcept::getId )
+				.forEach ( allPubIds::add );
+				
+				AttributeName attYear = subGraph.getMetaData ().getAttributeName ( "YEAR" );
+
+				// if publications with keyword exist, keep most recent papers from pub-keyword set
+				// else, just keep most recent papers from total set
+				Set<ONDEXConcept> selectedPubs = pubKeywordSet.isEmpty () ? allPubs : pubKeywordSet;
+				List<Integer> newPubIds = PublicationUtils.newPubsByNumber ( 
+					selectedPubs, attYear,
+					Integer.parseInt ( (String) getOptions ().get ( OPT_DEFAULT_NUMBER_PUBS ) )
+				);
+
+				// publications that we want to remove
+				allPubIds.removeAll ( newPubIds );
+
+				// Keep most recent publications that contain keyword and remove rest from subGraph
+				allPubIds.forEach ( subGraph::deleteConcept );
+			}
+
+			ONDEXGraphRegistry.graphs.remove ( subGraph.getSID () );
+
+			log.debug ( "Number of seed genes: " + seed.size () );
+			log.debug ( "Number of removed publications " + allPubIds.size () );
+
+			return subGraph;
+		}
+		
+		/**
+		 * Creates a mapping between keywords and random HTML colour codes, used by the search highlighting functions.
+		 */
+		private Map<String, String> createHilightColors ( Set<String> keywords )
+		{
+			Map<String, String> keywordColourMap = new HashMap<> ();
+			Random random = new Random ();
+			Set<Color> colArray = new HashSet<> (); // Compare each colour to ensure we never have duplicates
+			for ( String key: keywords ) 
+			{
+				int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
+				Color colorVal = null;
+				// Ensure colour luminance is >40 (git issue #466) and no colours are repeated and are never yellow
+				while ( colourBrightness < 40 && !colArray.contains ( colorVal ) && !Color.YELLOW.equals ( colorVal ) )
+				{
+					colourCode = random.nextInt ( 0x666666 + 1 ) + 0x999999; // lighter colours only
+					// Obtain the colourCode & brightness/luminance value
+					String colorHex = "#" + Integer.toHexString ( colourCode );
+					colorVal = Color.decode ( colorHex );
+					colourBrightness = (int) sqrt ( 
+						pow ( colorVal.getRed (), 2 ) * .241
+						+ pow ( colorVal.getGreen (), 2 ) * .691 
+						+ pow ( colorVal.getBlue (), 2 ) * .068 
+					);
+					colArray.add ( colorVal ); // Add to color ArrayList to track colours
+				}
+				// If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
+				if ( colourBrightness > 40 )
+					keywordColourMap.put ( key, String.format ( "#%06x", colourCode ) );
+			}
+			return keywordColourMap;
+		}
+		
+		
+		
     /**
      * Helper for {@link #highlightSearchKeywords(ONDEXConcept, Map)}. If the pattern matches the path, it  
      * {@link Matcher#replaceAll(String) replaces} the matching bits of the target with the new
      * highligher string and passes the result to the consumer (for operations like assignments)
+     * 
+     * Please note:
+     * 
+     * - target is assumed to be a Lucene token, "xxx*" or "xxx?" are translated into "\S*" or "\S?", in order to 
+     * match the RE semantics.
+     * - highlighter is a string for {@link Matcher#replaceAll(String)}, which should use "$1" to match a proper
+     * bracket expression in target
+     * - the matching is usually case-insensitive, but that depends on how you defined the pattern. 
      */
-    private boolean highlightFragment ( Pattern p, String target, String highlighter, Consumer<String> consumer )
+    private boolean highlightFragment ( Pattern pattern, String target, String highlighter, Consumer<String> consumer )
     {
-    	Matcher matcher = p.matcher ( target );
+    	Matcher matcher = pattern.matcher ( target );
     	if ( !matcher.find ( 0 ) ) return false;
     	var highlightedStr = matcher.replaceAll ( highlighter );
     	if ( consumer != null ) consumer.accept ( highlightedStr );
@@ -1239,32 +1429,35 @@ public class OndexServiceProvider {
     
     /**
      * Helper for {@link #highlightSearchKeywords(ONDEXConcept, Map)}, manages the hightlighting of a single
-     * search keyword
+     * search keyword.
+     * 
      */
     private boolean highlightSearchKeyword ( ONDEXConcept concept, String keyword, String highlighter )
     {
 			boolean found = false;
 
+			String keywordRe = '(' + keyword + ')';
 			// TODO: the end user is supposed to be writing Lucene expressions, 
 			// so we fix them this way. But using Lucene for highlighting should be simpler.
-			keyword = keyword.replaceAll ( "\\*", "\\S*" )
+			keywordRe = keywordRe.replaceAll ( "\\*", "\\S*" )
 				.replaceAll ( "\\?", "\\S?" );
 			
-			Pattern p = Pattern.compile ( keyword, Pattern.CASE_INSENSITIVE );
+			Pattern kwpattern = Pattern.compile ( keywordRe, Pattern.CASE_INSENSITIVE );
 
-			found |= this.highlightFragment ( p, concept.getAnnotation (), highlighter, concept::setAnnotation );
-			found |= this.highlightFragment ( p, concept.getDescription (), highlighter, concept::setDescription );
+			found |= this.highlightFragment ( kwpattern, concept.getAnnotation (), highlighter, concept::setAnnotation );
+			found |= this.highlightFragment ( kwpattern, concept.getDescription (), highlighter, concept::setDescription );
 			
 			// old name -> is preferred, new name
 			HashMap<String, Pair<Boolean, String>> namesToCreate = new HashMap<> ();
-			for ( ConceptName cno : concept.getConceptNames () )
+			for ( ConceptName cname : concept.getConceptNames () )
 			{
-				String cname = cno.getName ();
-				if ( cname == null || cname.contains ( "</span>" ) ) continue;
+				String cnameStr = cname.getName ();
+				// TODO: initially cnameStr.contains ( "</span>" ) was skipped too, probably to be removed
+				if ( cnameStr == null ) continue;
 					
 				found |= this.highlightFragment ( 
-					p, cname, highlighter, 
-					newName -> namesToCreate.put ( cname, Pair.of ( cno.isPreferred (), newName ) ) 
+					kwpattern, cnameStr, highlighter, 
+					newName -> namesToCreate.put ( cnameStr, Pair.of ( cname.isPreferred (), newName ) ) 
 				);
 			}
 			
@@ -1281,11 +1474,11 @@ public class OndexServiceProvider {
 				String attrId = attribute.getOfType ().getId ();
 				
 				if ( attrId.equals ( "AA" ) || attrId.equals ( "NA" ) 
-						   || attrId.startsWith ( "AA_" ) || attrId.startsWith ( "NA_" ) )
+						 || attrId.startsWith ( "AA_" ) || attrId.startsWith ( "NA_" ) )
 					continue;
 				
 				String value = attribute.getValue ().toString ();
-				found |= this.highlightFragment ( p, value, highlighter, attribute::setValue );
+				found |= this.highlightFragment ( kwpattern, value, highlighter, attribute::setValue );
 			}
 			
 			return found;
@@ -1316,175 +1509,12 @@ public class OndexServiceProvider {
 			{
 				var highlighter = "<span style=\"background-color:" + keywordColourMap.get ( key ) + "\">"
 						+ "<b>$1</b></span>";				
-				found |= highlightSearchKeyword ( concept, "(" + key + ")", highlighter );
+				found |= highlightSearchKeyword ( concept, key, highlighter );
 			}
 
 			return found;
 		}
-
-    /**
-     * Searches with Lucene for documents, finds semantic motifs and by crossing
-     * this data makes concepts visible, changes the size and highlight the hits
-     *
-     * @param seed List of selected genes
-     * @param keyword
-     * @return subGraph
-     */
-    public ONDEXGraph findSemanticMotifs(Set<ONDEXConcept> seed, String keyword) 
-    {
-        log.debug("Method findSemanticMotifs - keyword: " + keyword);
-        // Searches with Lucene: luceneResults
-        Map<ONDEXConcept, Float> luceneResults = null;
-        try {
-            luceneResults = searchLucene(keyword, seed, false);
-        }
-        catch (Exception e) {
-        	// TODO: does it make sense to continue?!
-          log.error("Lucene search failed", e);
-          luceneResults = Collections.emptyMap (); 
-        }
-
-        // the results give us a map of every starting concept to every valid path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, seed, null);
-
-        Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
-        Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
-
-        //added to overcome double quotes issue
-        //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replace("###", "\"");
-
-        log.info("Keyword is: " + keyword);
-        Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
-        Map<String, String> keywordColourMap = new HashMap<String, String>();
-        Random random = new Random();
-        ArrayList<Color> colArray = new ArrayList<Color>(); // Compare each colour to ensure we never have duplicates
-        keywords.forEach((key) -> {
-            int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
-            Color colorVal = null;
-            // Ensure colour lumence is >40 (git issue #466) and no colorus are repeated and are never yellow
-            while (colourBrightness < 40 && !colArray.contains(colorVal) && !Color.YELLOW.equals(colorVal)) {
-                colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
-                // Obtain the colourCode & brightness/lumence value
-                String colorHex = "#" + Integer.toHexString(colourCode);
-                colorVal = Color.decode(colorHex);
-                colourBrightness = (int) Math.sqrt(colorVal.getRed() * colorVal.getRed() * .241 +
-                                                    colorVal.getGreen() * colorVal.getGreen() * .691 +
-                                                    colorVal.getBlue() * colorVal.getBlue() * .068);
-                colArray.add(colorVal); // Add to color ArrayList to track colours
-            }
-            //If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
-            if (colourBrightness > 40) keywordColourMap.put(key, String.format("#%06x", colourCode));
-        });
-
-        // create new graph to return
-        final ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
-        ONDEXGraphCloner graphCloner = new ONDEXGraphCloner(graph, subGraph);
-
-        ONDEXGraphRegistry.graphs.put(subGraph.getSID(), subGraph);
-
-        Set<ONDEXConcept> pubKeywordSet = new HashSet<ONDEXConcept>();
-
-        for (List<EvidencePathNode> paths : results.values()) {
-            for (EvidencePathNode path : paths) {
-
-                // add all semantic motifs to the new graph
-                Set<ONDEXConcept> concepts = path.getAllConcepts();
-                Set<ONDEXRelation> relations = path.getAllRelations();
-                for (ONDEXConcept c : concepts) {
-                    graphCloner.cloneConcept(c);
-                }
-                for (ONDEXRelation r : relations) {
-                    graphCloner.cloneRelation(r);
-                }
-
-                // search last concept of semantic motif for keyword
-                int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-                ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-
-                // no-keyword, set path to visible if end-node is Trait or Phenotype
-                if (keyword == null || keyword.equals("")) {
-                    highlightPath(path, graphCloner, true);
-                    continue;
-
-                }
-
-                // keyword-mode and end concept contains keyword, set path to visible
-                if (luceneResults.containsKey(endNode)) {
-
-                    // keyword-mode -> do text and path highlighting
-                    ONDEXConcept cloneCon = graphCloner.cloneConcept(endNode);
-
-                    // highlight keyword in any concept attribute
-                    if (!keywordConcepts.contains(cloneCon)) {
-                        this.highlightSearchKeywords(cloneCon, keywordColourMap);
-                        keywordConcepts.add(cloneCon);
-
-                        if (endNode.getOfType().getId().equalsIgnoreCase("Publication")) {
-                            pubKeywordSet.add(cloneCon);
-                        }
-                    }
-
-                    // set only paths from gene to evidence nodes to visible
-                    highlightPath(path, graphCloner, false);
-
-                } else {
-
-                    // collect all paths that did not qualify
-                    pathSet.add(path);
-
-                }
-            }
-        }
-
-        // special case when none of nodes contains keyword (no-keyword-match)
-        // set path to visible if end-node is Trait or Phenotype
-        if (keywordConcepts.isEmpty() && !(keyword == null || keyword.equals("")) ) {
-            for (EvidencePathNode path : pathSet) {
-                highlightPath(path, graphCloner, true);
-            }
-        }
-
-        ConceptClass ccPub = subGraph.getMetaData().getConceptClass("Publication");
-        Set<Integer> allPubIds = new HashSet<Integer>();
-
-        // if subgraph has publications do smart filtering of most interesting papers
-        if (ccPub != null) {
-
-            // get all publications in subgraph that have and don't have keyword
-            Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass(ccPub);
-
-            for (ONDEXConcept c : allPubs) {
-                allPubIds.add(c.getId());
-            }
-
-            AttributeName attYear = subGraph.getMetaData().getAttributeName("YEAR");
-
-            List<Integer> newPubIds = new ArrayList<Integer>();
-
-            if (!pubKeywordSet.isEmpty()) {
-                // if  publications with keyword exist, keep most recent papers from pub-keyword set
-                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
-
-            } else {
-                // if non of publication contains the keyword, just keep most recent papers from total set
-                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
-            }
-            // publications that we want to remove 
-            allPubIds.removeAll(newPubIds);
-
-            // Keep most recent publications that contain keyword and remove rest from subGraph
-            allPubIds.forEach(pubId -> subGraph.deleteConcept(pubId));
-        }
-
-        ONDEXGraphRegistry.graphs.remove(subGraph.getSID());
-
-        log.debug("Number of seed genes: " + seed.size());
-        log.debug("Number of removed publications " + allPubIds.size());
-
-        return subGraph;
-
-    }
+		
 
     /**
      * Annotate first and last concept and relations of a given path Do
