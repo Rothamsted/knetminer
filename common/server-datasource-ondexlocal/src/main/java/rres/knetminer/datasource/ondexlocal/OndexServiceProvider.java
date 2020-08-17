@@ -68,7 +68,9 @@ import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
+import net.sourceforge.ondex.core.EntityFactory;
 import net.sourceforge.ondex.core.EvidenceType;
+import net.sourceforge.ondex.core.MetaDataFactory;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
@@ -78,6 +80,7 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
+import net.sourceforge.ondex.core.util.CachedGraphWrapper;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
@@ -93,6 +96,9 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateAttributeName;
+
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateConceptClass;
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
@@ -1295,7 +1301,6 @@ public class OndexServiceProvider {
 					// no-keyword, set path to visible if end-node is Trait or Phenotype
 					if ( keyword == null || keyword.equals ( "" ) )
 					{
-// TODO: refactoring to be continued from this method. Check its visibility						
 						highlightPath ( path, graphCloner, true );
 						continue;
 					}
@@ -1525,147 +1530,146 @@ public class OndexServiceProvider {
      * @param doFilter If true only a path to Trait and Phenotype nodes will be
      * made visible
      */
-    public void highlightPath(EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter) {
+		@SuppressWarnings ( "rawtypes" )
+		public void highlightPath ( EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter )
+		{
+			ONDEXGraph gclone = graphCloner.getNewGraph ();
+			
+			ONDEXGraphMetaData gcloneMeta = gclone.getMetaData ();
+			MetaDataFactory gcloneMetaFact = gcloneMeta.getFactory ();
+			EntityFactory gcloneFact = gclone.getFactory ();
+			AttributeName attSize = getOrCreateAttributeName ( gclone, "size", Integer.class ); 
+			AttributeName attVisible = getOrCreateAttributeName ( gclone, "visible", Boolean.class ); 
+			AttributeName attFlagged = getOrCreateAttributeName ( gclone, "flagged", Boolean.class ); 
+			
+			ConceptClass ccTrait = getOrCreateConceptClass ( gclone, "Trait" );
+			ConceptClass ccPhenotype = getOrCreateConceptClass ( gclone, "Phenotype" );
 
-        ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
+			Set<ConceptClass> ccFilter = new HashSet<> ();
+			ccFilter.add ( ccTrait );
+			ccFilter.add ( ccPhenotype );
 
-        AttributeName attSize = md.getAttributeName("size");
-        if (attSize == null) {
-            attSize = md.getFactory().createAttributeName("size", Integer.class);
-        }
+			// gene and evidence nodes of path in knowledge graph
+			int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
+			ONDEXConcept geneNode = (ONDEXConcept) path.getStartingEntity ();
+			ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
 
-        AttributeName attVisible = md.getAttributeName("visible");
-        if (attVisible == null) {
-            attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-        }
+			// get equivalent gene and evidence nodes in new sub-graph
+			ONDEXConcept endNodeClone = graphCloner.cloneConcept ( endNode );
+			ONDEXConcept geneNodeClone = graphCloner.cloneConcept ( geneNode );
 
-        AttributeName attFlagged = md.getAttributeName("flagged");
-        if (attFlagged == null) {
-            attFlagged = md.getFactory().createAttributeName("flagged", Boolean.class);
-        }
+			// all nodes and relations of given path
+			Set<ONDEXConcept> cons = path.getAllConcepts ();
+			Set<ONDEXRelation> rels = path.getAllRelations ();
 
-        ConceptClass ccTrait = md.getConceptClass("Trait");
-        if (ccTrait == null) {
-            ccTrait = md.getFactory().createConceptClass("Trait");
-        }
+			// seed gene should always be visible, flagged and bigger
+			if ( geneNodeClone.getAttribute ( attFlagged ) == null )
+			{
+				geneNodeClone.createAttribute ( attFlagged, true, false );
+				geneNodeClone.createAttribute ( attVisible, true, false );
+				geneNodeClone.createAttribute ( attSize, 80, false );
+			}
 
-        ConceptClass ccPhenotype = md.getConceptClass("Phenotype");
-        if (ccPhenotype == null) {
-            ccPhenotype = md.getFactory().createConceptClass("Phenotype");
-        }
+			// set all concepts to visible if filtering is turned off
+			// OR filter is turned on and end node is of specific type
+			if ( !doFilter || ccFilter.contains ( endNodeClone.getOfType () ) )
+			{
+				for ( ONDEXConcept c : cons )
+				{
+					ONDEXConcept concept = graphCloner.cloneConcept ( c );
+					if ( concept.getAttribute ( attVisible ) != null ) continue;
+					concept.createAttribute ( attSize, 50, false );
+					concept.createAttribute ( attVisible, true, false );
+				}
 
-        Set<ConceptClass> ccFilter = new HashSet<ConceptClass>();
-        ccFilter.add(ccTrait);
-        ccFilter.add(ccPhenotype);
+				// set all relations to visible if filtering is turned off
+				// OR filter is turned on and end node is of specific type
+				for ( ONDEXRelation rel : rels )
+				{
+					ONDEXRelation r = graphCloner.cloneRelation ( rel );
+					if ( r.getAttribute ( attVisible ) == null )
+					{
+						// initial size
+						r.createAttribute ( attSize, 5, false );
+						r.createAttribute ( attVisible, true, false );
+					}
+				}
+			} // if doFilter
 
-        // gene and evidence nodes of path in knowledge graph
-        int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-        ONDEXConcept geneNode = (ONDEXConcept) path.getStartingEntity();
-        ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
+			// add gene-QTL-Trait relations to the network
+			if ( !mapGene2QTL.containsKey ( geneNode.getId () ) ) return;
+			
+			RelationType rt = gcloneMetaFact.createRelationType ( "is_p" );
+			EvidenceType et = gcloneMetaFact.createEvidenceType ( "KnetMiner" );
 
-        // get equivalent gene and evidence nodes in new sub-graph
-        ONDEXConcept endNodeClone = graphCloner.cloneConcept(endNode);
-        ONDEXConcept geneNodeClone = graphCloner.cloneConcept(geneNode);
+			Set<Integer> qtlSet = mapGene2QTL.get ( geneNode.getId () );
+			for ( Integer qtlId : qtlSet )
+			{
+				ONDEXConcept qtl = graphCloner.cloneConcept ( graph.getConcept ( qtlId ) );
+				if ( gclone.getRelation ( geneNodeClone, qtl, rt ) == null )
+				{
+					ONDEXRelation r = gcloneFact.createRelation ( geneNodeClone, qtl, rt, et );
+					r.createAttribute ( attSize, 2, false );
+					r.createAttribute ( attVisible, true, false );
+				}
+				if ( qtl.getAttribute ( attSize ) == null )
+				{
+					qtl.createAttribute ( attSize, 70, false );
+					qtl.createAttribute ( attVisible, true, false );
+				}
+				
+				Set<ONDEXRelation> relSet = graph.getRelationsOfConcept ( graph.getConcept ( qtlId ) );
+				for ( ONDEXRelation r : relSet )
+				{
+					if ( !r.getOfType ().getId ().equals ( "has_mapped" ) ) continue;
+					
+					ONDEXRelation rel = graphCloner.cloneRelation ( r );
+					if ( rel.getAttribute ( attSize ) == null )
+					{
+						rel.createAttribute ( attSize, 2, false );
+						rel.createAttribute ( attVisible, true, false );
+					}
 
-        // all nodes and relations of given path 
-        Set<ONDEXConcept> cons = path.getAllConcepts();
-        Set<ONDEXRelation> rels = path.getAllRelations();
+					ONDEXConcept tC = r.getToConcept ();
+					ONDEXConcept traitCon = graphCloner.cloneConcept ( tC );
+					if ( traitCon.getAttribute ( attSize ) != null ) continue;
+					{
+						traitCon.createAttribute ( attSize, 70, false );
+						traitCon.createAttribute ( attVisible, true, false );
+					}
+				} // for relSet
+			} // for qtlSet
+		} // highlightPath ()
 
-        // seed gene should always be visible, flagged and bigger
-        if (geneNodeClone.getAttribute(attFlagged) == null) {
-            geneNodeClone.createAttribute(attFlagged, true, false);
-            geneNodeClone.createAttribute(attVisible, true, false);
-            geneNodeClone.createAttribute(attSize, 80, false);
-        }
-
-        // set all concepts to visible if filtering is turned off
-        // OR filter is turned on and end node is of specific type
-        if (!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))) {
-            for (ONDEXConcept c : cons) {
-                ONDEXConcept concept = graphCloner.cloneConcept(c);
-                if (concept.getAttribute(attVisible) == null) {
-                    concept.createAttribute(attSize, 50, false);
-                    concept.createAttribute(attVisible, true, false);
-                }
-            }
-        }
-
-        // set all relations to visible if filtering is turned off
-        // OR filter is turned on and end node is of specific type
-        if (!doFilter || (doFilter && ccFilter.contains(endNodeClone.getOfType()))) {
-            for (ONDEXRelation rel : rels) {
-                ONDEXRelation r = graphCloner.cloneRelation(rel);
-                if (r.getAttribute(attVisible) == null) {
-                    // initial size
-                    r.createAttribute(attSize, 5, false);
-                    r.createAttribute(attVisible, true, false);
-                }
-            }
-        }
-
-        // add gene-QTL-Trait relations to the network
-        if (mapGene2QTL.containsKey(geneNode.getId())) {
-            RelationType rt = md.getFactory().createRelationType("is_p");
-            EvidenceType et = md.getFactory().createEvidenceType("KnetMiner");
-
-            Set<Integer> qtlSet = mapGene2QTL.get(geneNode.getId());
-            for (Integer qtlId : qtlSet) {
-                ONDEXConcept qtl = graphCloner.cloneConcept(graph.getConcept(qtlId));
-                if (graphCloner.getNewGraph().getRelation(geneNodeClone, qtl, rt) == null) {
-                    ONDEXRelation r = graphCloner.getNewGraph().getFactory().createRelation(geneNodeClone, qtl, rt, et);
-                    r.createAttribute(attSize, 2, false);
-                    r.createAttribute(attVisible, true, false);
-                }
-                if (qtl.getAttribute(attSize) == null) {
-                    qtl.createAttribute(attSize, 70, false);
-                    qtl.createAttribute(attVisible, true, false);
-                }
-                Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
-                for (ONDEXRelation r : relSet) {
-                    if (r.getOfType().getId().equals("has_mapped")) {
-                        ONDEXRelation rel = graphCloner.cloneRelation(r);
-                        if (rel.getAttribute(attSize) == null) {
-                            rel.createAttribute(attSize, 2, false);
-                            rel.createAttribute(attVisible, true, false);
-                        }
-                        ONDEXConcept tC = r.getToConcept();
-                        ONDEXConcept traitCon = graphCloner.cloneConcept(tC);
-                        if (traitCon.getAttribute(attSize) == null) {
-                            traitCon.createAttribute(attSize, 70, false);
-                            traitCon.createAttribute(attVisible, true, false);
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
+		
     /**
      * hides the path between a gene and a concept
      *
      * @param path Contains concepts and relations of a semantic motif
      * @param graphCloner cloner for the new graph
      */
-    public void hidePath(EvidencePathNode path, ONDEXGraphCloner graphCloner) {
-        ONDEXGraphMetaData md = graphCloner.getNewGraph().getMetaData();
-        AttributeName attVisible = md.getAttributeName("visible");
-        if (attVisible == null) {
-            attVisible = md.getFactory().createAttributeName("visible", Boolean.class);
-        }
+		public void hidePath ( EvidencePathNode path, ONDEXGraphCloner graphCloner )
+		{
+			ONDEXGraph gclone = graphCloner.getNewGraph ();
+			ONDEXGraphMetaData gmeta = gclone.getMetaData ();
 
-        // hide every concept except by the last one
-        int indexLastCon = path.getConceptsInPositionOrder().size() - 1;
-        ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder().get(indexLastCon);
-        Set<ONDEXConcept> cons = path.getAllConcepts();
-        for (ONDEXConcept pconcept : cons) {
-            if (pconcept.getId() == lastCon.getId()) {
-                ONDEXConcept concept = graphCloner.cloneConcept(pconcept);
-                concept.createAttribute(attVisible, false, false);
-            }
-        }
-    }
+			AttributeName attVisible = getOrCreateAttributeName ( gclone, "visible", Boolean.class );
 
+			// hide every concept except by the last one
+			int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
+			ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
+			Set<ONDEXConcept> cons = path.getAllConcepts ();
+			cons.stream ()
+				.filter ( pconcept -> pconcept.getId () == lastCon.getId () )
+				.forEach ( pconcept -> {
+					ONDEXConcept concept = graphCloner.cloneConcept ( pconcept );
+					concept.createAttribute ( attVisible, false, false );
+				});
+		}
+
+		
+		// TODO: refactoring to be continued from here
+		
     /**
      * Write Genomaps XML file
      *
