@@ -1754,7 +1754,7 @@ public class OndexServiceProvider {
 				}
 				catch ( ParseException e )
 				{
-					// TODO: is it fine to continue!?
+					// TODO: is it fine to continue without any exception!?
 					log.error ( "Failed to find QTLs", e );
 				}
 			}

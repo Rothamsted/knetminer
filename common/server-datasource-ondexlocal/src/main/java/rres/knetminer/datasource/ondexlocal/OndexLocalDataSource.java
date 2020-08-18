@@ -274,7 +274,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
-			if (this.ondexServiceProvider.getReferenceGenome() == true) { // Generate Annotation file.
+			if (this.ondexServiceProvider.getReferenceGenome() == true) {
+				// Generate Annotation file.
 				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap);
 				log.debug("1.) Genomaps annotation ");
