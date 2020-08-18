@@ -46,6 +46,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -97,8 +98,9 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateAttributeName;
-
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateConceptClass;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
+
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
@@ -1273,7 +1275,7 @@ public class OndexServiceProvider {
 				? Collections.emptySet ()
 				: this.parseKeywordIntoSetOfWords ( keyword );
 					
-			Map<String, String> keywordColourMap = createHilightColors ( keywords );
+			Map<String, String> keywordColourMap = createHilightColorMap ( keywords );
 					
 			// create new graph to return
 			final ONDEXGraph subGraph = new MemoryONDEXGraph ( "SemanticMotifGraph" );
@@ -1377,35 +1379,72 @@ public class OndexServiceProvider {
 		
 		/**
 		 * Creates a mapping between keywords and random HTML colour codes, used by the search highlighting functions.
+		 * if colors is null, uses {@link #createHighlightColors(int)}.
+		 * If colours are not enough for the set of parameter keywords, they're reused cyclically.
 		 */
-		private Map<String, String> createHilightColors ( Set<String> keywords )
+		private Map<String, String> createHilightColorMap ( Set<String> keywords, List<String> colors )
 		{
-			Map<String, String> keywordColourMap = new HashMap<> ();
+			if ( colors == null ) colors = createHighlightColors ( keywords.size () );
+			Map<String, String> keywordColorMap = new HashMap<> ();
+			
+			int colIdx = 0;
+			for ( String key: keywords )
+				keywordColorMap.put ( key, colors.get ( colIdx++ % colors.size () ) );
+			
+			return keywordColorMap;
+		}
+
+		/**
+		 * Defaults to null.
+		 */
+		private Map<String, String> createHilightColorMap ( Set<String> keywords )
+		{
+			return createHilightColorMap ( keywords, null );
+		}
+
+		/**
+		 * Can be used with {@link #createHilightColorMap(Set, List)}. Indeed, this is 
+		 * what it's used when no color list is sent to it. It genereates a list of the size
+		 * sent and made of random different colors with visibility characteristics.
+		 * 
+		 */
+		private List<String> createHighlightColors ( int size )
+		{
 			Random random = new Random ();
-			Set<Color> colArray = new HashSet<> (); // Compare each colour to ensure we never have duplicates
-			for ( String key: keywords ) 
+			Set<Integer> colors = new HashSet<> (); // Compare each colour to ensure we never have duplicates
+			int colorCode = -1;
+
+			for ( int i = 0; i < size; i++ ) 
 			{
-				int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
-				Color colorVal = null;
-				// Ensure colour luminance is >40 (git issue #466) and no colours are repeated and are never yellow
-				while ( colourBrightness < 40 && !colArray.contains ( colorVal ) && !Color.YELLOW.equals ( colorVal ) )
+				// Ensure colour luminance is >40 (git issue #466),
+				// no colours are repeated and are never yellow
+				//
+				while ( true )
 				{
-					colourCode = random.nextInt ( 0x666666 + 1 ) + 0x999999; // lighter colours only
-					// Obtain the colourCode & brightness/luminance value
-					String colorHex = "#" + Integer.toHexString ( colourCode );
-					colorVal = Color.decode ( colorHex );
-					colourBrightness = (int) sqrt ( 
+					colorCode = random.nextInt ( 0x666666 + 1 ) + 0x999999; // lighter colours only
+					if ( colors.contains ( colorCode ) ) continue;
+										
+					String colorHex = "#" + Integer.toHexString ( colorCode );
+					
+					Color colorVal = Color.decode ( colorHex );
+					if ( Color.YELLOW.equals ( colorVal ) ) continue;
+					
+					int colorBrightness = (int) sqrt ( 
 						pow ( colorVal.getRed (), 2 ) * .241
 						+ pow ( colorVal.getGreen (), 2 ) * .691 
 						+ pow ( colorVal.getBlue (), 2 ) * .068 
 					);
-					colArray.add ( colorVal ); // Add to color ArrayList to track colours
+					
+					if ( colorBrightness <= 40 ) continue;
+					
+					break;
 				}
-				// If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
-				if ( colourBrightness > 40 )
-					keywordColourMap.put ( key, String.format ( "#%06x", colourCode ) );
+				colors.add ( colorCode ); // Add to colour ArrayList to track colours
 			}
-			return keywordColourMap;
+			
+			return colors.stream ()
+			.map ( colCode -> String.format ( "#%06x", colCode ) )
+			.collect ( Collectors.toList () );
 		}
 		
 		
@@ -1668,12 +1707,11 @@ public class OndexServiceProvider {
 		}
 
 		
-		// TODO: refactoring to be continued from here
-		
     /**
-     * Write Genomaps XML file
+     * Write Genomaps XML file (to a string).
+     * TODO: how is it that a URI has to be used to invoke functions that sit around here, in the same .WAR?!
      *
-     * @param api_url ws url for API
+     * @param apiUrl ws url for API
      * @param genes list of genes to be displayed (all genes for search result)
      * @param userGenes gene list from user
      * @param userQtlStr user QTLs
@@ -1683,284 +1721,267 @@ public class OndexServiceProvider {
      * @param listMode
      * @return
      */
-    public String writeAnnotationXML(String api_url, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-            String keyword, int maxGenes, Hits hits, String listMode, Map<ONDEXConcept, Double> scoredCandidates)
-    {
-        List<QTL> userQtl = new ArrayList<QTL>();
-        for (String qtlStr : userQtlStr) {
-            userQtl.add(QTL.fromString(qtlStr));
-        }
+		public String writeAnnotationXML ( String apiUrl, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes,
+			List<String> userQtlStr, String keyword, int maxGenes, Hits hits, String listMode,
+			Map<ONDEXConcept, Double> scoredCandidates )
+		{
+			List<QTL> userQtl = userQtlStr.stream ()
+			.map ( QTL::fromString )
+			.collect ( Collectors.toList () );
 
-        log.info("Genomaps: generate XML...");
-        // If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
-        /*if(userGenes != null) {
-         // use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes.
-         genes= new ArrayList<ONDEXConcept> (userGenes);
-         log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size());
-         }*/
-        // added user gene list restriction above (04/07/2018, singha)
+			log.info ( "Genomaps: generating XML..." );
 
-        ONDEXGraphMetaData md = graph.getMetaData();
-        AttributeName attChr = md.getAttributeName("Chromosome");
-        // AttributeName attLoc = md.getAttributeName("Location"); // for String
-        // chromomes (e.g, in Wheat)
-        AttributeName attBeg = md.getAttributeName("BEGIN");
-        AttributeName attEnd = md.getAttributeName("END");
-        AttributeName attCM = md.getAttributeName("cM");
-        ConceptClass ccQTL = md.getConceptClass("QTL");
-        Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) ) {
-            // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
-            try {
-                qtlDB = findQTL(keyword);
-            } catch (ParseException e) {
-                log.error("Failed to find QTLs", e);
-            }
-        }
+			// TODO: can we remove this?
+			// If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
+			/*
+			 * if(userGenes != null) { // use this (Set<ONDEXConcept> userGenes) in place of the genes
+			 * ArrayList<ONDEXConcept> genes. genes= new ArrayList<ONDEXConcept> (userGenes);
+			 * log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size()); }
+			 */
+			// added user gene list restriction above (04/07/2018, singha)
 
-        StringBuffer sb = new StringBuffer();
-        sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-        sb.append("<genome>\n");
-        int id = 0;
+			ONDEXGraphMetaData gmeta = graph.getMetaData ();
+			AttributeName attCM = gmeta.getAttributeName ( "cM" );
+			ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
+			
+			Set<QTL> qtlDB = new HashSet<> ();
+			if ( ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) )
+			{
+				// qtlDB = graph.getConceptsOfConceptClass(ccQTL);
+				try
+				{
+					qtlDB = findQTL ( keyword );
+				}
+				catch ( ParseException e )
+				{
+					// TODO: is it fine to continue!?
+					log.error ( "Failed to find QTLs", e );
+				}
+			}
 
-        // genes are grouped in three portions based on size
-        int size = genes.size();
-        if (genes.size() > maxGenes) {
-            size = maxGenes;
-        }
+			StringBuffer sb = new StringBuffer ();
+			sb.append ( "<?xml version=\"1.0\" standalone=\"yes\"?>\n" );
+			sb.append ( "<genome>\n" );
+			int id = 0;
 
-        log.info("visualize genes: " + genes.size());
-        for (ONDEXConcept c : genes) {
+			// genes are grouped in three portions based on size
+			int size = Math.min ( genes.size (), maxGenes );
 
-            // only genes that are on chromosomes (not scaffolds)
-            // can be displayed in Map View
-            if (c.getAttribute(attChr) == null || c.getAttribute(attChr).getValue().toString().equals("U")) {
-                continue;
-            }
+			log.info ( "visualize genes: " + genes.size () );
+			for ( ONDEXConcept c : genes )
+			{
+				// only genes that are on chromosomes (not scaffolds)
+				// can be displayed in Map View
+				String chr = getAttrValueAsString ( graph, c, "Chromosome", false );
+				if ( chr == null || "U".equals ( chr ) )
+					continue;
+				
+				int beg = 0;
+				double begCM = Optional.ofNullable ( (Double) getAttrValue ( graph, c, "cM", false ) )
+					.orElse ( -1d );
+				int begBP = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "BEGIN", false ) )
+					.orElse ( 0 );
+				int end = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "END", false ) )
+					.orElse ( 0 );
 
-            String chr = c.getAttribute(attChr).getValue().toString();
-            int end = 0;
-            c.getAttribute(attEnd).getValue();
+				
+				// TODO this can be a parameter CM/BP in future
+				if ( attCM != null )
+				{
+					// ignore genes that don't have cM attributes and mode is CM
+					if ( begCM == -1.00 ) continue;
+					beg = (int) ( begCM * 1000000 );
+					end = (int) ( begCM * 1000000 );
+				} 
+				else
+					beg = begBP;
 
-            int beg = 0;
-            double begCM = -1.00;
-            int begBP = 0;
+				String name = c.getPID ();
+				// TODO: this has no order! name gets a random value!
+				for ( ConceptAccession acc : c.getConceptAccessions () )
+					name = acc.getAccession ();
 
-            if (attCM != null && c.getAttribute(attCM) != null) {
-                begCM = (Double) c.getAttribute(attCM).getValue();
-            }
+				String label = getDefaultNameForGroupOfConcepts ( c );
+				String query = null;
+				try
+				{
+					query = "keyword=" + URLEncoder.encode ( keyword, "UTF-8" ) + "&amp;list="
+							+ URLEncoder.encode ( name, "UTF-8" );
+				}
+				catch ( UnsupportedEncodingException e )
+				{
+					log.error ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+					throw ExceptionUtils.buildEx ( RuntimeException.class, e,
+							"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" );
+				}
+				String uri = apiUrl + "/network?" + query; // KnetMaps (network) query
+				// log.info("Genomaps: add KnetMaps (network) query: "+ uri);
 
-            if (attBeg != null && c.getAttribute(attBeg) != null) {
-                begBP = (Integer) c.getAttribute(attBeg).getValue();
-            }
+				// Genes
+				sb.append ( "<feature id=\"" + id + "\">\n" );
+				sb.append ( "<chromosome>" + chr + "</chromosome>\n" );
+				sb.append ( "<start>" + beg + "</start>\n" );
+				sb.append ( "<end>" + end + "</end>\n" );
+				sb.append ( "<type>gene</type>\n" );
+				
+				if ( id <= size / 3 )
+					sb.append ( "<color>0x00FF00</color>\n" ); // Green
+				else if ( id > size / 3 && id <= 2 * size / 3 )
+					sb.append ( "<color>0xFFA500</color>\n" ); // Orange
+				else
+					sb.append ( "<color>0xFF0000</color>\n" ); // Red
+				
+				sb.append ( "<label>" + label + "</label>\n" );
+				sb.append ( "<link>" + uri + "</link>\n" );
+				
+				// Add 'score' tag as well.
+				Double score = 0.0;
+				if ( scoredCandidates != null && scoredCandidates.get ( c ) != null )
+					score = scoredCandidates.get ( c ); // fetch score
+				
+				sb.append ( "<score>" + score + "</score>\n" ); // score
+				sb.append ( "</feature>\n" );
 
-            if (attEnd != null && c.getAttribute(attEnd) != null) {
-                end = (Integer) c.getAttribute(attEnd).getValue();
-            }
+				if ( id++ > maxGenes )
+					break;
+			}
 
-            // TODO this can be a parameter CM/BP in future
-            if (attCM != null) {
+			log.info ( "Display user QTLs... QTLs provided: " + userQtl.size () );
+			for ( QTL region : userQtl )
+			{
+				String chr = region.getChromosome ();
+				int start = region.getStart ();
+				int end = region.getEnd ();
 
-                // ignore genes that don't have cM attributes and mode is CM
-                if (begCM == -1.00) {
-                    continue;
-                }
-                beg = (int) (begCM * 1000000);
-                end = (int) (begCM * 1000000);
-            } else {
-                beg = begBP;
-            }
+				// TODO check of MODE is CM/BP
+				if ( attCM != null )
+				{
+					start = start * 1000000;
+					end = end * 1000000;
+				}
+				String label = Optional.ofNullable ( region.getLabel () )
+					.filter ( lbl -> !lbl.isEmpty () )
+					.orElse ( "QTL" );
 
-            String name = c.getPID();
+				String query = null;
+				try
+				{
+					query = "keyword=" + URLEncoder.encode ( keyword, "UTF-8" ) + "&amp;qtl=" + URLEncoder.encode ( chr, "UTF-8" )
+							+ ":" + start + ":" + end;
+				}
+				catch ( UnsupportedEncodingException e )
+				{
+					log.error ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+					throw ExceptionUtils.buildEx ( RuntimeException.class, e,
+							"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" );
+				}
+				String uri = apiUrl + "/network?" + query;
 
-            for (ConceptAccession acc : c.getConceptAccessions())
-                name = acc.getAccession();
+				sb.append ( "<feature>\n" );
+				sb.append ( "<chromosome>" + chr + "</chromosome>\n" );
+				sb.append ( "<start>" + start + "</start>\n" );
+				sb.append ( "<end>" + end + "</end>\n" );
+				sb.append ( "<type>qtl</type>\n" );
+				sb.append ( "<color>0xFF0000</color>\n" ); // Orange
+				sb.append ( "<label>" + label + "</label>\n" );
+				sb.append ( "<link>" + uri + "</link>\n" );
+				sb.append ( "</feature>\n" );
+			}
 
-            String label = getDefaultNameForGroupOfConcepts(c);
-            //log.info("id, chr, start, end, label, type: "+ id +", "+ chr +", "+ beg +", "+ end +", "+ label + ", gene");
+			// TODO: move this to a constant
+			// TODO: createHilightColorMap() generates colours randomly by default, should we have different methdods?!
 
-            // String query = "mode=network&keyword=" + keyword+"&list="+name;
-            // Replace '&' with '&amp;' to make it comptaible with the new
-            // d3.js-based Map View.
-            String query;
-            try {
-                query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;list=" + URLEncoder.encode(name, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
-                throw ExceptionUtils.buildEx (
-                	RuntimeException.class, e,
-                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
-                );
-            }
-            String uri = api_url + "/network?" + query; // KnetMaps (network) query
-            //log.info("Genomaps: add KnetMaps (network) query: "+ uri);
+			List<String> colorHex = List.of ( "0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
+					"0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854", "0xC20061",
+					"0xFF7E3D", "0x008F8F", "0xFF00AA", "0xFFFFAA", "0xD4A8FF", "0xA8D4FF", "0xFFAAAA", "0xAA0000", "0xAA00FF",
+					"0xAA00AA", "0xAAFF00", "0xAAFFFF", "0xAAFFAA", "0xAAAA00", "0xAAAAFF", "0xAAAAAA", "0x000055", "0x00FF55",
+					"0x00AA55", "0x005500", "0x0055FF" );
+			// 0xFFB300, # Vivid Yellow
+			// 0x803E75, # Strong Purple
+			// 0xFF6800, # Vivid Orange
+			// 0xA6BDD7, # Very Light Blue
+			// 0xC10020, # Vivid Red
+			// 0xCEA262, # Grayish Yellow
+			// 0x817066, # Medium Gray
+			
+			Set<String> traits = qtlDB.stream ()
+			.map ( QTL::getTrait )
+			.collect ( Collectors.toSet () );
+			
+			Map<String, String> trait2color = createHilightColorMap ( traits );
 
-            // Genes
-            sb.append("<feature id=\"" + id + "\">\n");
-            sb.append("<chromosome>" + chr + "</chromosome>\n");
-            sb.append("<start>" + beg + "</start>\n");
-            sb.append("<end>" + end + "</end>\n");
-            sb.append("<type>gene</type>\n");
-            if (id <= size / 3) {
-                sb.append("<color>0x00FF00</color>\n"); // Green
-            } else if (id > size / 3 && id <= 2 * size / 3) {
-                sb.append("<color>0xFFA500</color>\n"); // Orange
-            } else {
-                sb.append("<color>0xFF0000</color>\n"); // Red
-            }
-            sb.append("<label>" + label + "</label>\n");
-            sb.append("<link>" + uri + "</link>\n");
-            // Add 'score' tag as well.
-            Double score = 0.0;
-            if (scoredCandidates != null) {
-                if (scoredCandidates.get(c) != null) {
-                    score = scoredCandidates.get(c); // fetch score
-                }
-            }
-            sb.append("<score>" + score + "</score>\n"); // score
-            //log.info("score: "+ score);
-            sb.append("</feature>\n");
+			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
+			log.info ( "TaxID(s): " + taxID );
+			for ( QTL loci : qtlDB )
+			{
+				String type = loci.getType ().trim ();
+				String chrQTL = loci.getChromosome ();
+				Integer startQTL = loci.getStart ();
+				Integer endQTL = loci.getEnd ();
+				String label = loci.getLabel ().replaceAll ( "\"", "" );
+				String trait = loci.getTrait ();
 
-            if (id++ > maxGenes) break;
-        }
+				Float pvalue = loci.getpValue ();
+				String color = trait2color.get ( trait );
 
-        log.info("Display user QTLs... QTLs provided: " + userQtl.size());
-        for (QTL region : userQtl) {
-            String chr = region.getChromosome();
-            int start = region.getStart();
-            int end = region.getEnd();
+				// TODO check of MODE is CM/BP
+				if ( attCM != null )
+				{
+					startQTL = startQTL * 1000000;
+					endQTL = endQTL * 1000000;
+				}
 
-            // TODO check of MODE is CM/BP
-            if (attCM != null) {
-                start = start * 1000000;
-                end = end * 1000000;
-            }
-            String label = Optional.ofNullable ( region.getLabel() )
-            	.filter ( lbl -> !lbl.isEmpty () )
-            	.orElse ( "QTL" );
+				// TODO get p-value of SNP-Trait relations
+				if ( type.equals ( "QTL" ) )
+				{
+					sb.append ( "<feature>\n" );
+					sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );
+					sb.append ( "<start>" + startQTL + "</start>\n" );
+					sb.append ( "<end>" + endQTL + "</end>\n" );
+					sb.append ( "<type>qtl</type>\n" );
+					sb.append ( "<color>" + color + "</color>\n" );
+					sb.append ( "<trait>" + trait + "</trait>\n" );
+					sb.append ( "<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=" + label + "</link>\n" );
+					sb.append ( "<label>" + label + "</label>\n" );
+					sb.append ( "</feature>\n" );
+					// log.info("add QTL: trait, label: "+ trait +", "+ label);
+				} 
+				else if ( type.equals ( "SNP" ) )
+				{
+					/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
+					if ( taxID.contains ( loci.getTaxID () ) )
+					{
+						sb.append ( "<feature>\n" );
+						sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );
+						sb.append ( "<start>" + startQTL + "</start>\n" );
+						sb.append ( "<end>" + endQTL + "</end>\n" );
+						sb.append ( "<type>snp</type>\n" );
+						sb.append ( "<color>" + color + "</color>\n" );
+						sb.append ( "<trait>" + trait + "</trait>\n" );
+						sb.append ( "<pvalue>" + pvalue + "</pvalue>\n" );
+						sb.append (
+								"<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label + "</link>\n" );
+						sb.append ( "<label>" + label + "</label>\n" );
+						sb.append ( "</feature>\n" );
+						// log.info("TaxID= "+ loci.getTaxID() +", add SNP: chr, trait, label, p-value: "+ chr +", "+ trait +", "+
+						// label +", "+ pvalue);
+					}
+				}
 
-            String query;
-            try {
-                query = "keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&amp;qtl=" + URLEncoder.encode(chr, "UTF-8") + ":" + start + ":" + end;
-            }
-            catch (UnsupportedEncodingException e) 
-            {
-              	log.error( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
-                throw ExceptionUtils.buildEx (
-                	RuntimeException.class, e,
-                	"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)"
-                );
-            }
-            String uri = api_url + "/network?" + query;
+			} // for loci
 
-            sb.append("<feature>\n");
-            sb.append("<chromosome>" + chr + "</chromosome>\n");
-            sb.append("<start>" + start + "</start>\n");
-            sb.append("<end>" + end + "</end>\n");
-            sb.append("<type>qtl</type>\n");
-            sb.append("<color>0xFF0000</color>\n"); // Orange
-            sb.append("<label>" + label + "</label>\n");
-            sb.append("<link>" + uri + "</link>\n");
-            sb.append("</feature>\n");
-            //log.info("add QTL: chr, start, end, label, type, uri: "+ chr +", "+ start +", "+ end +", "+ label + ", QTL, "+ uri);
-        }
+			sb.append ( "</genome>\n" );
+			return sb.toString ();
+		} // writeAnnotationXML()
 
-        String[] colorHex = {"0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
-            "0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854",
-            "0xC20061", "0xFF7E3D", "0x008F8F", "0xFF00AA", "0xFFFFAA", "0xD4A8FF", "0xA8D4FF", "0xFFAAAA",
-            "0xAA0000", "0xAA00FF", "0xAA00AA", "0xAAFF00", "0xAAFFFF", "0xAAFFAA", "0xAAAA00", "0xAAAAFF",
-            "0xAAAAAA", "0x000055", "0x00FF55", "0x00AA55", "0x005500", "0x0055FF"};
-        // 0xFFB300, # Vivid Yellow
-        // 0x803E75, # Strong Purple
-        // 0xFF6800, # Vivid Orange
-        // 0xA6BDD7, # Very Light Blue
-        // 0xC10020, # Vivid Red
-        // 0xCEA262, # Grayish Yellow
-        // 0x817066, # Medium Gray
-        HashMap<String, String> trait2color = new HashMap<String, String>();
-        int index = 0;
-
-        log.info("Display QTLs and SNPs... QTLs found: " + qtlDB.size());
-        log.info("TaxID(s): " + taxID);
-        for (QTL loci : qtlDB) {
-
-            String type = loci.getType().trim();
-            String chrQTL = loci.getChromosome();
-            Integer startQTL = loci.getStart();
-            Integer endQTL = loci.getEnd();
-            String label = loci.getLabel().replaceAll("\"", "");
-            String trait = loci.getTrait();
-            //    log.info("type= "+ type +", chrQTL: "+ chrQTL +", label: "+ label +" & loci.TaxID= "+ loci.getTaxID());
-
-            if (!trait2color.containsKey(trait)) {
-                trait2color.put(trait, colorHex[index]);
-                index = index + 1;
-                if (index == colorHex.length) {
-                    index = 0;
-                }
-            }
-            Float pvalue = loci.getpValue();
-            String color = trait2color.get(trait);
-
-            // TODO check of MODE is CM/BP
-            if (attCM != null) {
-                startQTL = startQTL * 1000000;
-                endQTL = endQTL * 1000000;
-            }
-
-            // TODO get p-value of SNP-Trait relations
-            if (type.equals("QTL")) {
-                sb.append("<feature>\n");
-                sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
-                sb.append("<start>" + startQTL + "</start>\n");
-                sb.append("<end>" + endQTL + "</end>\n");
-                sb.append("<type>qtl</type>\n");
-                sb.append("<color>" + color + "</color>\n");
-                sb.append("<trait>" + trait + "</trait>\n");
-                sb.append("<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=" + label + "</link>\n");
-                sb.append("<label>" + label + "</label>\n");
-                sb.append("</feature>\n");
-                //    log.info("add QTL: trait, label: "+ trait +", "+ label);
-            } else if (type.equals("SNP")) {
-                /* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
-                if (taxID.contains(loci.getTaxID())) {
-                    sb.append("<feature>\n");
-                    sb.append("<chromosome>" + chrQTL + "</chromosome>\n");
-                    sb.append("<start>" + startQTL + "</start>\n");
-                    sb.append("<end>" + endQTL + "</end>\n");
-                    sb.append("<type>snp</type>\n");
-                    sb.append("<color>" + color + "</color>\n");
-                    sb.append("<trait>" + trait + "</trait>\n");
-                    sb.append("<pvalue>" + pvalue + "</pvalue>\n");
-                    sb.append("<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label
-                            + "</link>\n");
-                    sb.append("<label>" + label + "</label>\n");
-                    sb.append("</feature>\n");
-                    //    log.info("TaxID= "+ loci.getTaxID() +", add SNP: chr, trait, label, p-value: "+ chr +", "+ trait +", "+ label +", "+ pvalue);
-                }
-            }
-
-        }
-
-        sb.append("</genome>\n");
-        //log.info("Genomaps generated...");
-        return sb.toString();
-    }
-
+		
     // temporary...
-    public void writeResultsFile(String filename, String sb_string) {
-        try ( BufferedWriter out = new BufferedWriter(new FileWriter(filename)) ) 
-        {
-            out.write(sb_string);
-            out.close();
-        }
-        catch (Exception ex) {
-        	log.error ( "Error while exporting '" + filename + "': " + ex.getMessage (), ex );
-        }
-    }
+		// TODO: REMOVE! If you need this for debugging purpose use 
+		// org.apache.commons.io.IOUtils.copy DON'T REINVENT THE DAMN WHEEL!
+    // public void writeResultsFile(String filename, String sb_string) {
 
+// TODO refactoring to be continued from here
+		
     /**
      * This table contains all possible candidate genes for given query
      *
