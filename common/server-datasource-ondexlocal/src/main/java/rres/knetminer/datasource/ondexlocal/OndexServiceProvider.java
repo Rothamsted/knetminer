@@ -46,7 +46,6 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -81,7 +80,6 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
-import net.sourceforge.ondex.core.util.CachedGraphWrapper;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
@@ -1979,10 +1977,10 @@ public class OndexServiceProvider {
 		// TODO: REMOVE! If you need this for debugging purpose use 
 		// org.apache.commons.io.IOUtils.copy DON'T REINVENT THE DAMN WHEEL!
     // public void writeResultsFile(String filename, String sb_string) {
-
 		
     /**
      * This table contains all possible candidate genes for given query
+     * TODO: too big! Split into separated functions.
      *
      * @param candidates
      * @param qtl
@@ -1990,284 +1988,244 @@ public class OndexServiceProvider {
      * @param listMode
      * @return
      */
-    public String writeGeneTable(ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
-            String listMode, Map<ONDEXConcept, Double> scoredCandidates) {
-        List<QTL> qtls = new ArrayList<QTL>();
-        for (String qtlStr : qtlsStr) {
-            qtls.add(QTL.fromString(qtlStr));
-        }
+		public String writeGeneTable ( ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes,
+			List<String> qtlsStr, String listMode, Map<ONDEXConcept, Double> scoredCandidates )
+		{
+			List<QTL> qtls = qtlsStr.stream ()
+				.map ( QTL::fromString )
+				.collect ( Collectors.toList () );
 
-        log.info("generate Gene table...");
-        Set<Integer> userGeneIds = new HashSet<Integer>();
+			log.info ( "generate Gene table..." );
+			Set<Integer> userGeneIds = new HashSet<> ();
 
-        if (userGenes != null) {
-            for (ONDEXConcept c : userGenes) {
-                userGeneIds.add(c.getId());
-            }
-        } else {
-            log.info("No user gene list defined.");
-        }
+			if ( userGenes != null )
+			{
+				userGeneIds = userGenes.stream ()
+					.map ( ONDEXConcept::getId )
+					.collect ( Collectors.toSet () );
+			} 
+			else
+				log.info ( "No user gene list defined." );
 
-        if (qtls.isEmpty()) {
-            log.info("No QTL regions defined.");
-        }
+			if ( qtls.isEmpty () )
+				log.info ( "No QTL regions defined." );
 
-        ONDEXGraphMetaData md = graph.getMetaData();
-        AttributeName attChromosome = md.getAttributeName("Chromosome");
-        AttributeName attTrait = md.getAttributeName("Trait");
-        AttributeName attBegin = md.getAttributeName("BEGIN");
-        AttributeName attCM = md.getAttributeName("cM");
-        AttributeName attTAXID = md.getAttributeName("TAXID");
-        // Removed ccSNP from Geneview table (12/09/2017)
-        // AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
-        // ConceptClass ccSNP = md.getConceptClass("SNP");
+			
+			ONDEXGraphMetaData gmeta = graph.getMetaData ();
+			AttributeName attCM = gmeta.getAttributeName ( "cM" );
+			
+			// Removed ccSNP from Geneview table (12/09/2017)
+			// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
+			// ConceptClass ccSNP = md.getConceptClass("SNP");
 
-        StringBuffer out = new StringBuffer();
-        //out.append("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
-        out.append("ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n");
-        for (ONDEXConcept gene : candidates) {
-            int id = gene.getId();
-            String geneAcc = "";
-            for (ConceptAccession acc : gene.getConceptAccessions()) {
-                String accValue = acc.getAccession();
-                geneAcc = accValue;
-                if (acc.getElementOf().getId() != null) {
-                    if (acc.getElementOf().getId().equalsIgnoreCase("ENSEMBL-HUMAN")) {
-                        geneAcc = accValue;
-                        break;
-                    } else if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
-                            && (accValue.indexOf(".") == -1)) {
-                        geneAcc = accValue;
-                        break;
-                    } else if (acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
-                        geneAcc = accValue;
-                        break;
-                    }
-                }
-            }
-            String chr = null;
-            String loc = "";
-            String beg = "NA";
-            double begCM = 0.00;
-            int begBP = 0;
+			StringBuffer out = new StringBuffer ();
+			// out.append("ONDEX-ID\tACCESSION\tGENE
+			// NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
+			out.append ( "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
+			for ( ONDEXConcept gene : candidates )
+			{
+				int id = gene.getId ();
+				String geneAcc = "";
+						
+				Set<ConceptAccession> geneAccs = gene.getConceptAccessions ();
+				
+				// TODO: What is this?! FACTORISE!
+				if ( geneAccs.size () > 0 )
+					geneAcc = geneAccs
+					.stream ()
+					.filter ( acc -> {
+						String accStr = acc.getAccession ();
+						String accSrcId = acc.getElementOf ().getId ();
+						if ( "ENSEMBL-HUMAN".equals ( accSrcId ) ) return true;
+						if ( "PHYTOZOME".equals ( accSrcId ) ) return true;
+						if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return true;
+						return false;
+					})
+					.map ( ConceptAccession::getAccession )
+					.findAny ()
+					.orElse ( geneAccs.iterator ().next ().getAccession () );
 
-            if (gene.getAttribute(attChromosome) != null) {
-                chr = gene.getAttribute(attChromosome).getValue().toString();
-            }
+				String loc = "";
 
-            if (attCM != null && gene.getAttribute(attCM) != null) {
-                begCM = (Double) gene.getAttribute(attCM).getValue();
-            }
+				String chr = getAttrValueAsString ( graph, gene, "Chromosome", false );
+				double begCM = Optional.ofNullable ( (Double) getAttrValue( graph, gene, "cM", false ) )
+					.orElse ( 0d );
+				int begBP = Optional.ofNullable ( (Integer) getAttrValue( graph, gene, "BEGIN", false ) )
+						.orElse ( 0 );
+				
+				// TODO: WTH?! Must go to a constant or function!
+				DecimalFormat doubleFormat = new DecimalFormat ( "0.00" );
+				
+				String beg = attCM != null 
+					? doubleFormat.format ( begCM )
+					: Integer.toString ( begBP );
+				
+				Double score = scoredCandidates != null && scoredCandidates.get ( gene ) != null
+					? score = scoredCandidates.get ( gene )
+					: 0d;
 
-            if (attBegin != null && gene.getAttribute(attBegin) != null) {
-                begBP = (Integer) gene.getAttribute(attBegin).getValue();
-            }
+				// use shortest preferred concept name
+				String geneName = getShortestPreferedName ( gene.getConceptNames () );
 
-            DecimalFormat fmt = new DecimalFormat("0.00");
+				String isInList = userGenes != null && userGeneIds.contains ( gene.getId () )
+					? "yes" : "no";
 
-            if (attCM != null) {
-                beg = fmt.format(begCM);
-            } else {
-                beg = Integer.toString(begBP);
-            }
-            
-            
+				String infoQTL = "";
+				if ( mapGene2QTL.containsKey ( gene.getId () ) )
+				{
+					for ( Integer cid : mapGene2QTL.get ( gene.getId () ) )
+					{
+						ONDEXConcept qtl = graph.getConcept ( cid );
 
-            Double score = 0.0;
-            if (scoredCandidates != null) {
-                if (scoredCandidates.get(gene) != null) {
-                    score = scoredCandidates.get(gene);
-                }
-            }
+						/*
+						 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
+						 * and hence we MUST move this code to some utility.
+						 */
+						if ( qtl == null )
+						{
+							log.error ( "writeTable(): no gene found for id: ", cid );
+							continue;
+						}
+						String acc = Optional.ofNullable ( qtl.getConceptName () )
+							.map ( ConceptName::getName )
+							.map ( StringEscapeUtils::escapeCsv )
+							.orElseGet ( () -> {
+								log.error ( "writeTable(): gene name not found for id: {}", cid );
+								return "";
+							});
 
-            // use shortest preferred concept name
-            String geneName = getShortestPreferedName(gene.getConceptNames());
+						String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
+							.orElse ( acc );
 
-            String isInList = "no";
-            if (userGenes != null && userGeneIds.contains(gene.getId())) {
-                isInList = "yes";
-            }
+						if ( !infoQTL.isEmpty () ) infoQTL += "||";
+						infoQTL += traitDesc + "//" + traitDesc;
+					}
+				} // mapGene2QTL.containsKey ( gene.getId () )
 
-            String infoQTL = "";
-            if (mapGene2QTL.containsKey(gene.getId())) {
-                for (Integer cid : mapGene2QTL.get(gene.getId())) {
-                    ONDEXConcept qtl = graph.getConcept(cid);
+				
+				if ( !qtls.isEmpty () )
+				{
+					for ( QTL loci : qtls )
+					{
+						String qtlChrom = loci.getChromosome ();
+						Integer qtlStart = loci.getStart ();
+						Integer qtlEnd = loci.getEnd ();
 
-                    /* TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage
-                     * to ALL cases like this, and hence we MUST move this code to some utility. 
-                     */
-                    if (qtl == null) {
-                        log.error("writeTable(): no gene found for id: ", cid);
-                        continue;
-                    }
-                    String acc = Optional.ofNullable(qtl.getConceptName())
-                            .map(ConceptName::getName)
-                            .map(StringEscapeUtils::escapeCsv)
-                            .orElseGet(() -> {
-                                log.error("writeTable(): gene name not found for id: {}", cid);
-                                return "";
-                            });
+						// FIXME re-factor chromosome string
+						if ( qtlChrom.equals ( loc ) && begCM >= qtlStart && begCM <= qtlEnd )
+						{
+							if ( !infoQTL.isEmpty () ) infoQTL += "||";
+							infoQTL += loci.getLabel () + "//" + loci.getTrait ();
 
-                    String traitDesc = null;
-                    if (attTrait != null && qtl.getAttribute(attTrait) != null) {
-                        traitDesc = qtl.getAttribute(attTrait).getValue().toString();
-                    } else {
-                        traitDesc = acc;
-                    }
+// TODO: remove! WTH!? See the approach above!
+//							if ( "".equals ( infoQTL ) )
+//							{
+//								infoQTL += loci.getLabel () + "//" + loci.getTrait ();
+//							} else
+//							{
+//								infoQTL += "||" + loci.getLabel () + "//" + loci.getTrait ();
+//							}
+						}
+					}
+				} // !qtls.isEmpty ()
 
-                    if (infoQTL == "") {
-                        infoQTL += traitDesc + "//" + traitDesc;
-                    } else {
-                        infoQTL += "||" + traitDesc + "//" + traitDesc;
-                    }
+				Set<Integer> luceneHits = Collections.<Integer> emptySet ();
+				// TODO: this is very poor and error-prone, 
+				// WE MUST fix https://github.com/Rothamsted/knetminer/issues/517
+				synchronized ( this )
+				{
+					// get lucene hits per gene
+					luceneHits = mapGene2HitConcept.get ( id );
+				}
+				if ( luceneHits == null )
+					luceneHits = new HashSet<> ();
 
-                }
+				// organise by concept class
+				Map<String, String> cc2name = new HashMap<> ();
 
-            }
+				Set<Integer> evidencesIDs = new HashSet<> ();
+				for ( int hitID : luceneHits )
+				{
+					ONDEXConcept c = graph.getConcept ( hitID );
+					evidencesIDs.add ( c.getId () ); // retain all evidences' ID's
+					String ccId = c.getOfType ().getId ();
 
-            if (!qtls.isEmpty()) {
-                for (QTL loci : qtls) {
-                    String qtlChrom = loci.getChromosome();
-                    Integer qtlStart = loci.getStart();
-                    Integer qtlEnd = loci.getEnd();
+					// skip publications as handled differently (see below)
+					if ( ccId.equals ( "Publication" ) ) continue;
 
-                    // FIXME re-factor chromosome string
-                    if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if ("".equals(infoQTL)) {
-                            infoQTL += loci.getLabel() + "//" + loci.getTrait();
-                        } else {
-                            infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
-                        }
-                    }
-                }
-            }
+					String name = getDefaultNameForGroupOfConcepts ( c );
 
-            Set<Integer> luceneHits = Collections.<Integer>emptySet();
-            synchronized (this) {
-                // get lucene hits per gene
-                luceneHits = mapGene2HitConcept.get(id);
-            }
-            // organise by concept class
-            HashMap<String, String> cc2name = new HashMap<String, String>();
+					cc2name.compute ( 
+						ccId, 
+					  (_id, _oldName ) ->	_oldName == null ? name : _oldName + "//" + name
+					);
+				}
 
-            if (luceneHits == null) {
-                luceneHits = new HashSet<Integer>();
-            }
+				// special case for publications to sort and filter most recent publications
+				Set<ONDEXConcept> allPubs = luceneHits.stream ()
+					.map ( graph::getConcept )
+					.filter ( c -> "Publication".equals ( c.getOfType ().getId () ) )
+					.collect ( Collectors.toSet () );
+				
+				
+				AttributeName attYear = getAttributeName ( graph, "YEAR" );
+				List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
+					allPubs, 
+					attYear, 
+					Integer.parseInt ( (String) getOptions ().get ( OPT_DEFAULT_NUMBER_PUBS ) ) 
+				);
 
-            Set<Integer> evidencesIDs = new HashSet<Integer>();
-            for (int hitID : luceneHits) {
-                ONDEXConcept c = graph.getConcept(hitID);
-                evidencesIDs.add(c.getId()); // retain all evidences' ID's
-                String ccId = c.getOfType().getId();
+				// add most recent publications here
+				if ( !newPubs.isEmpty () )
+				{
+					String pubString = "Publication__" + allPubs.size () + "__";
+					pubString += newPubs.stream ()
+						.map ( graph::getConcept )
+					  .map ( this::getDefaultNameForGroupOfConcepts )
+					  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
+					  .collect ( Collectors.joining ( "//" ) );
+					cc2name.put ( "Publication", pubString );
+				}
 
-                // skip publications as handled differently (see below)
-                if (ccId.equals("Publication")) {
-                    continue;
-                }
+				// create output string for evidences column in GeneView table
+				// TODO: MEH! This should be managed by keeping the structure ( type, and list of values)
+				// and translating it to string only when writing.
+				//
+				String evidenceStr = cc2name.entrySet ()
+				.stream ()
+				.map ( e -> 
+					"Publication".equals ( e.getKey () )  
+						? e.getValue ()
+						: e.getKey () + "__" + e.getValue ().split ( "//" ).length + "__" + e.getValue ()
+				)
+				.collect ( Collectors.joining ( "||" ) );
+								
+				String geneTaxID = getAttrValueAsString ( graph, gene, "TAXID", false );
 
-                String name = getDefaultNameForGroupOfConcepts(c);
+				if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 
-                if (!cc2name.containsKey(ccId)) {
-                    cc2name.put(ccId, name);
-                } else {
-                    String act_name = cc2name.get(ccId);
-                    act_name = act_name + "//" + name;
-                    cc2name.put(ccId, act_name);
-                }
-            }
+				// TODO: was initially used in the append() below. TO BE REMOVED?!
+				//String allEvidences = evidencesIDs.stream ()
+				//	.map ( evId -> Integer.toString ( evId ) )
+				//	.collect ( Collectors.joining ( "," ));
+				
+				if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
+				if ( userGenes != null && !"yes".equals ( isInList ) ) continue;
+				
+				out.append (
+					id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
+					+ doubleFormat.format ( score ) + "\t" + isInList + "\t" + infoQTL + "\t"
+					+ evidenceStr + "\n" 
+				);
 
-            // special case for publications to sort and filter most recent publications
-            Set<ONDEXConcept> allPubs = new HashSet<ONDEXConcept>();
-            for (int lid : luceneHits) {
-                ONDEXConcept c = graph.getConcept(lid);
-                if (c.getOfType().getId().equals("Publication")) {
-                    allPubs.add(c);
-                }
-            }
-
-            AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
-            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
-
-            String pubString = "Publication__" + allPubs.size() + "__";
-            for (Integer pid : newPubs) {
-                String name = getDefaultNameForGroupOfConcepts(graph.getConcept(pid));
-                // All publications will have the format PMID:15487445
-                if (!name.contains("PMID:")) {
-                    name = "PMID:" + name;
-                }
-                pubString = pubString + name + "//";
-
-            }
-
-            String tidyPubString = "";
-            if (pubString.endsWith("//")) {
-                tidyPubString = pubString.substring(0, pubString.length() - 2);
-            }
-
-            // add most recent publications here
-            if (!newPubs.isEmpty()) {
-                cc2name.put("Publication", tidyPubString);
-            }
-
-            int evidences_linked = luceneHits.size(); // no. of evidences linked per gene
-
-            // create output string for evidences column in GeneView table
-            String evidence = "";
-            for (String ccId : cc2name.keySet()) {
-                if (ccId.equals("Publication")) {
-                    evidence += cc2name.get(ccId) + "||";
-                } else {
-                    evidence += ccId + "__" + cc2name.get(ccId).split("//").length + "__" + cc2name.get(ccId) + "||";
-                }
-            }
-
-            String geneTaxID = gene.getAttribute(attTAXID) != null ? gene.getAttribute(attTAXID).getValue().toString() : null;
-
-            if (!evidence.equals("")) {
-                evidence = evidence.substring(0, evidence.length() - 2);
-            }
-
-            if (luceneHits.isEmpty() && listMode.equals("GLrestrict")) {
-                continue;
-            }
-
-            String all_evidences = "";
-            for (int ev_id : evidencesIDs) {
-                // comma-separated ID's for all evidences for a geneID
-                all_evidences = all_evidences + String.valueOf(ev_id) + ",";
-            }
-            if (!all_evidences.equals("")) {
-                all_evidences = all_evidences.substring(0, all_evidences.length() - 1);
-                // log.info("GeneTable.tab: evidenceIDs: "+ all_evidences);
-            }
-            /*
-             * out.write(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg +
-             * "\t" + geneTaxID + "\t" + fmt.format(score) + "\t" + isInList + "\t" +
-             * infoQTL + "\t" + evidence + "\n");
-             */
-            if (!"".equals(evidence) || qtls.isEmpty()) {
-                if (userGenes != null) {
-                    // if GeneList was provided by the user, display only those genes.
-                    if (isInList.equals("yes")) {
-                        out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-                                + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                                 + evidences_linked + "\t" + all_evidences*/ + "\n");
-                    }
-                } else { // default
-                    out.append(id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-                            + fmt.format(score) + "\t" + isInList + "\t" + infoQTL + "\t" + evidence /*+ "\t"
-                             + evidences_linked + "\t" + all_evidences*/ + "\n");
-                }
-            }
-
-           
-
-        }
-         log.info("Gene table generated...");
-        return out.toString();
-    }
+			} // for candidates
+			log.info ( "Gene table generated..." );
+			return out.toString ();
+		}
 
 
+// TODO refactoring to be continued from here
+		
     /**
      * Write Evidence Table for Evidence View file
      *
@@ -2424,8 +2382,6 @@ public class OndexServiceProvider {
         return out.toString();
     }
 
-// TODO refactoring to be continued from here
-    
     /**
      * Write Synonym Table for Query suggestor
      *
