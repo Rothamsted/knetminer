@@ -1980,7 +1980,6 @@ public class OndexServiceProvider {
 		// org.apache.commons.io.IOUtils.copy DON'T REINVENT THE DAMN WHEEL!
     // public void writeResultsFile(String filename, String sb_string) {
 
-// TODO refactoring to be continued from here
 		
     /**
      * This table contains all possible candidate genes for given query
@@ -2425,6 +2424,8 @@ public class OndexServiceProvider {
         return out.toString();
     }
 
+// TODO refactoring to be continued from here
+    
     /**
      * Write Synonym Table for Query suggestor
      *
