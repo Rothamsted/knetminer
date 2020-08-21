@@ -44,6 +44,7 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -147,7 +148,7 @@ public class OndexServiceProvider {
     private HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
     /**
-     * Gene to QTL mapping
+     * Helper from Gene to QTL mapping
      */
     private HashMap<Integer, Set<Integer>> mapGene2QTL;
 
@@ -884,10 +885,7 @@ public class OndexServiceProvider {
         Set<ONDEXConcept> concepts = new HashSet<>();
 
         // convert List<String> qtlStr to List<QTL> qtls
-        List<QTL> qtls = new ArrayList<>();
-        qtlsStr.stream ()
-        	.map ( QTL::fromString )
-        	.forEach ( qtls::add );
+        List<QTL> qtls = QTL.fromStringList ( qtlsStr );
 
         for (QTL qtl : qtls)
         {
@@ -1723,11 +1721,9 @@ public class OndexServiceProvider {
 			List<String> userQtlStr, String keyword, int maxGenes, Hits hits, String listMode,
 			Map<ONDEXConcept, Double> scoredCandidates )
 		{
-			List<QTL> userQtl = userQtlStr.stream ()
-			.map ( QTL::fromString )
-			.collect ( Collectors.toList () );
-
 			log.info ( "Genomaps: generating XML..." );
+
+			List<QTL> userQtl = QTL.fromStringList ( userQtlStr );  
 
 			// TODO: can we remove this?
 			// If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
@@ -1768,34 +1764,25 @@ public class OndexServiceProvider {
 			log.info ( "visualize genes: " + genes.size () );
 			for ( ONDEXConcept c : genes )
 			{
+				var geneHelper = new GeneHelper ( graph, c );
+				
 				// only genes that are on chromosomes (not scaffolds)
 				// can be displayed in Map View
-				String chr = getAttrValueAsString ( graph, c, "Chromosome", false );
+				String chr = geneHelper.getChromosome ();
 				if ( chr == null || "U".equals ( chr ) )
 					continue;
 				
-				int beg = 0;
-				double begCM = Optional.ofNullable ( (Double) getAttrValue ( graph, c, "cM", false ) )
-					.orElse ( -1d );
-				int begBP = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "BEGIN", false ) )
-					.orElse ( 0 );
-				int end = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "END", false ) )
-					.orElse ( 0 );
+				// TODO: this can be a parameter CM/BP in future
+				//
 
-				
-				// TODO this can be a parameter CM/BP in future
-				if ( attCM != null )
-				{
-					// ignore genes that don't have cM attributes and mode is CM
-					if ( begCM == -1.00 ) continue;
-					beg = (int) ( begCM * 1000000 );
-					end = (int) ( begCM * 1000000 );
-				} 
-				else
-					beg = begBP;
+				int beg = (int) Math.round ( geneHelper.computeBegin ( true, true ) );
+
+				// TODO: initially, this was set to begin when cM is present, but doesn't make sense
+				int end = (int) Math.round ( geneHelper.computeEnd ( true, true ) );
+
 
 				String name = c.getPID ();
-				// TODO: this has no order! name gets a random value!
+				// TODO: What the hell does this mean?!
 				for ( ConceptAccession acc : c.getConceptAccessions () )
 					name = acc.getAccession ();
 
@@ -1991,11 +1978,8 @@ public class OndexServiceProvider {
 		public String writeGeneTable ( ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes,
 			List<String> qtlsStr, String listMode, Map<ONDEXConcept, Double> scoredCandidates )
 		{
-			List<QTL> qtls = qtlsStr.stream ()
-				.map ( QTL::fromString )
-				.collect ( Collectors.toList () );
-
 			log.info ( "generate Gene table..." );
+			List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 			Set<Integer> userGeneIds = new HashSet<> ();
 
 			if ( userGenes != null )
@@ -2012,7 +1996,6 @@ public class OndexServiceProvider {
 
 			
 			ONDEXGraphMetaData gmeta = graph.getMetaData ();
-			AttributeName attCM = gmeta.getAttributeName ( "cM" );
 			
 			// Removed ccSNP from Geneview table (12/09/2017)
 			// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
@@ -2025,41 +2008,9 @@ public class OndexServiceProvider {
 			for ( ONDEXConcept gene : candidates )
 			{
 				int id = gene.getId ();
-				String geneAcc = "";
-						
-				Set<ConceptAccession> geneAccs = gene.getConceptAccessions ();
-				
-				// TODO: What is this?! FACTORISE!
-				if ( geneAccs.size () > 0 )
-					geneAcc = geneAccs
-					.stream ()
-					.filter ( acc -> {
-						String accStr = acc.getAccession ();
-						String accSrcId = acc.getElementOf ().getId ();
-						if ( "ENSEMBL-HUMAN".equals ( accSrcId ) ) return true;
-						if ( "PHYTOZOME".equals ( accSrcId ) ) return true;
-						if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return true;
-						return false;
-					})
-					.map ( ConceptAccession::getAccession )
-					.findAny ()
-					.orElse ( geneAccs.iterator ().next ().getAccession () );
 
-				String loc = "";
-
-				String chr = getAttrValueAsString ( graph, gene, "Chromosome", false );
-				double begCM = Optional.ofNullable ( (Double) getAttrValue( graph, gene, "cM", false ) )
-					.orElse ( 0d );
-				int begBP = Optional.ofNullable ( (Integer) getAttrValue( graph, gene, "BEGIN", false ) )
-						.orElse ( 0 );
-				
-				// TODO: WTH?! Must go to a constant or function!
-				DecimalFormat doubleFormat = new DecimalFormat ( "0.00" );
-				
-				String beg = attCM != null 
-					? doubleFormat.format ( begCM )
-					: Integer.toString ( begBP );
-				
+				var geneHelper = new GeneHelper ( graph, gene );
+												
 				Double score = scoredCandidates != null && scoredCandidates.get ( gene ) != null
 					? score = scoredCandidates.get ( gene )
 					: 0d;
@@ -2112,7 +2063,8 @@ public class OndexServiceProvider {
 						Integer qtlEnd = loci.getEnd ();
 
 						// FIXME re-factor chromosome string
-						if ( qtlChrom.equals ( loc ) && begCM >= qtlStart && begCM <= qtlEnd )
+						// TODO: this was qtlChrom.equals ( "" ), but loc was always ""!
+						if ( qtlChrom.equals ( "" ) && geneHelper.getcM ( true ) >= qtlStart && geneHelper.getcM ( true ) <= qtlEnd )
 						{
 							if ( !infoQTL.isEmpty () ) infoQTL += "||";
 							infoQTL += loci.getLabel () + "//" + loci.getTrait ();
@@ -2200,8 +2152,6 @@ public class OndexServiceProvider {
 				)
 				.collect ( Collectors.joining ( "||" ) );
 								
-				String geneTaxID = getAttrValueAsString ( graph, gene, "TAXID", false );
-
 				if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 
 				// TODO: was initially used in the append() below. TO BE REMOVED?!
@@ -2212,19 +2162,21 @@ public class OndexServiceProvider {
 				if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 				if ( userGenes != null && !"yes".equals ( isInList ) ) continue;
 				
+				var numFmt = new DecimalFormat ( "0.00" );
+				
 				out.append (
-					id + "\t" + geneAcc + "\t" + geneName + "\t" + chr + "\t" + beg + "\t" + geneTaxID + "\t"
-					+ doubleFormat.format ( score ) + "\t" + isInList + "\t" + infoQTL + "\t"
-					+ evidenceStr + "\n" 
+					id + "\t" + geneHelper.getBestAccession () + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
+					+ numFmt.format ( geneHelper.computeBegin ( true ) ) + "\t" + geneHelper.getTaxID () + "\t" 
+					+ numFmt.format ( score ) + "\t" + isInList + "\t" + infoQTL + "\t" + evidenceStr + "\n" 
 				);
 
 			} // for candidates
 			log.info ( "Gene table generated..." );
 			return out.toString ();
-		}
+		
+		} // writeGeneTable()
 
 
-// TODO refactoring to be continued from here
 		
     /**
      * Write Evidence Table for Evidence View file
@@ -2235,153 +2187,115 @@ public class OndexServiceProvider {
      * @param filename
      * @return boolean
      */
-    public String writeEvidenceTable(String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes,
-            List<String> qtlsStr) {
+		public String writeEvidenceTable ( 
+			String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
+		)
+		{
+			StringBuffer out = new StringBuffer ();
+			out.append ( "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" );
+			
+			if ( userGenes == null || userGenes.isEmpty () ) return out.toString ();
+			
+			ONDEXGraphMetaData md = graph.getMetaData ();
+			AttributeName attChr = md.getAttributeName ( "Chromosome" );
+			AttributeName attBeg = md.getAttributeName ( "BEGIN" );
+			AttributeName attCM = md.getAttributeName ( "cM" );
+			int allGenesSize = mapGene2Concepts.keySet ().size ();
+			int userGenesSize = userGenes.size ();
+			FisherExact fisherExact = new FisherExact ( allGenesSize );
 
-        ONDEXGraphMetaData md = graph.getMetaData();
-        AttributeName attChr = md.getAttributeName("Chromosome");
-        AttributeName attBeg = md.getAttributeName("BEGIN");
-        AttributeName attCM = md.getAttributeName("cM");
-        int allGenesSize = mapGene2Concepts.keySet().size();
-        int userGenesSize = userGenes == null ? 0 : userGenes.size();
+			log.info ( "generate Evidence table..." );
+			List<QTL> qtls = QTL.fromStringList ( qtlsStr );					
 
-        log.info("generate Evidence table...");
-        List<QTL> qtls = new ArrayList<QTL>();
-        for (String qtlStr : qtlsStr) {
-            qtls.add(QTL.fromString(qtlStr));
-        }
+			DecimalFormat sfmt = new DecimalFormat ( "0.00" );
+			DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
 
-        StringBuffer out = new StringBuffer();
-        // writes the header of the table
-        out.append("TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n");
+			for ( ONDEXConcept lc : luceneConcepts.keySet () )
+			{
+				// Creates type,name,score and numberOfGenes
+				String type = lc.getOfType ().getId ();
+				String name = getDefaultNameForGroupOfConcepts ( lc );
+				// All publications will have the format PMID:15487445
+				// if (type == "Publication" && !name.contains("PMID:"))
+				// name = "PMID:" + name;
+				// Do not print publications or proteins or enzymes in evidence view
+				if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( type ) ) ) 
+					continue;
+				
+				Float score = luceneConcepts.get ( lc );
+				Integer ondexId = lc.getId ();
+				if ( !mapConcept2Genes.containsKey ( lc.getId () ) ) continue;
+				Set<Integer> listOfGenes = mapConcept2Genes.get ( lc.getId () );
+				Integer numberOfGenes = listOfGenes.size ();
+				Set<String> userGenesStrings = new HashSet<> ();
+				Integer numberOfQTL = 0;
 
-        DecimalFormat sfmt = new DecimalFormat("0.00");
-        DecimalFormat pfmt = new DecimalFormat("0.00000");
+				for ( int log : listOfGenes )
+				{
+					ONDEXConcept gene = graph.getConcept ( log );
+					var geneHelper = new GeneHelper ( graph, gene );
+					
+					if ( ( userGenes != null ) && ( gene != null ) && ( userGenes.contains ( gene ) ) )
+					{
+						// numberOfUserGenes++;
+						// retain gene Accession/Name (18/07/18)
+						userGenesStrings.add ( geneHelper.getBestAccession () );
+						
+						// TODO: can we remove it?!
+						// use shortest preferred concept name
+						/*  
+						 * String geneName = getShortestPreferedName(gene.getConceptNames()); geneAcc= geneName;
+						 */
+					}
 
-        for (ONDEXConcept lc : luceneConcepts.keySet()) {
-            // Creates type,name,score and numberOfGenes
-            String type = lc.getOfType().getId();
-            String name = getDefaultNameForGroupOfConcepts(lc);
-            // All publications will have the format PMID:15487445
-            //if (type == "Publication" && !name.contains("PMID:"))
-            //    name = "PMID:" + name;
-            // Do not print publications or proteins  or enzymes in evidence view
-            if (type == "Publication" || type == "Protein" || type == "Enzyme") {
-                continue;
-            }
-            Float score = luceneConcepts.get(lc);
-            Integer ondexId = lc.getId();
-            if (!mapConcept2Genes.containsKey(lc.getId())) {
-                continue;
-            }
-            Set<Integer> listOfGenes = mapConcept2Genes.get(lc.getId());
-            Integer numberOfGenes = listOfGenes.size();
-            // Creates numberOfUserGenes and numberOfQTL
-            //Integer numberOfUserGenes = 0;
-            String user_genes = "";
-            Integer numberOfQTL = 0;
+					if ( mapGene2QTL.containsKey ( log ) )
+						numberOfQTL++;
 
-            for (int log : listOfGenes) {
+					// TODO: we don't need attChr (and similar types) as objects, the string ID is enough
+					// TODO: what does this mean?!
+					
+					String chr = geneHelper.getChromosome ();
+					double beg = geneHelper.computeEnd ( true );
+					
+					
+					// if ( !qtls.isEmpty () ) TODO: REMOVE! COME ON!!!
+					for ( QTL loci : qtls )
+					{
+						String qtlChrom = loci.getChromosome ();
+						Integer qtlStart = loci.getStart ();
+						Integer qtlEnd = loci.getEnd ();
 
-                ONDEXConcept gene = graph.getConcept(log);
-                if ((userGenes != null) && (gene != null) && (userGenes.contains(gene))) {
-                    // numberOfUserGenes++;
-                    // retain gene Accession/Name (18/07/18)
-                    String geneAcc = "";
-                    for (ConceptAccession acc : gene.getConceptAccessions()) {
-                        String accValue = acc.getAccession();
-                        geneAcc = accValue;
-                        if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
-                                && (accValue.indexOf(".") == -1)) {
-                            geneAcc = accValue;
-                            break;
-                        } else if (acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
-                            geneAcc = accValue;
-                            break;
-                        }
-                    }
-                    // use shortest preferred concept name
-                    /*  String geneName = getShortestPreferedName(gene.getConceptNames());
-                     geneAcc= geneName; */
-                    user_genes = user_genes + geneAcc + ",";
-                }
+						if ( qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd ) numberOfQTL++;
+					}
 
-                if (mapGene2QTL.containsKey(log)) {
-                    numberOfQTL++;
+				} // for log
 
-                }
+				if ( userGenesStrings.isEmpty () ) continue;
+				
+				double pvalue = 0.0;
 
-                String chr = null;
-                double beg = 0.0;
+				// quick adjustment to the score to make it a P-value from F-test instead
+				int matchedInGeneList = userGenesStrings.size ();
+				int notMatchedInGeneList = userGenesSize - matchedInGeneList;
+				int matchedNotInGeneList = numberOfGenes - matchedInGeneList;
+				int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
+				pvalue = fisherExact.getP ( 
+					matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
+				);
+				
+				var userGenesStr = userGenesStrings.stream ().collect ( Collectors.joining ( "," ) ); 
+				out.append ( 
+					type + "\t" + name + "\t" + sfmt.format ( score ) + "\t" + pfmt.format ( pvalue ) + "\t"
+					+ numberOfGenes + "\t" + userGenesStr + "\t" + numberOfQTL + "\t" + ondexId + "\n" 
+				);
+			} // for luceneConcepts()
+			
+			return out.toString ();
+		} // writeEvidenceTable()
 
-                // Get this attr value, returns null if attr name doesn't exist (first flag) 
-                // or the gene is null (second flag). Same for the other calls below.
-                // TODO: use this utility function everywhere 
-                // TODO: we don't need attChr (and similar types) as objects, the string ID is enough
-                //
-                chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
-
-                if ( attCM != null )
-                {
-	                beg = Optional.ofNullable (
-	                	(Double) getAttrValue ( graph, gene, attCM.getId (), false, false )
-	                ).orElse ( 0d );
-                }
-                else 
-                {
-	                beg = (int) Optional.ofNullable (
-	                	(Integer) getAttrValue ( graph, gene, attBeg.getId (), false, false )
-	                ).orElse ( 0 );
-                }
-
-                if (!qtls.isEmpty()) {
-                    for (QTL loci : qtls) {
-                        String qtlChrom = loci.getChromosome();
-                        Integer qtlStart = loci.getStart();
-                        Integer qtlEnd = loci.getEnd();
-
-                        if (qtlChrom.equals(chr) && beg >= qtlStart && beg <= qtlEnd) {
-
-                            numberOfQTL++;
-
-                        }
-                    }
-                }
-
-            }
-
-            // omit last comma from user_genes String
-            if (user_genes.contains(",")) {
-                user_genes = user_genes.substring(0, user_genes.length() - 1);
-            }
-
-            double pvalue = 0.0;
-
-            if (userGenesSize > 0) {
-                // quick adjustment to the score to make it a P-value from F-test instead
-                int matched_inGeneList = "".equals(user_genes) ? 0 : user_genes.split(",").length;
-                int notMatched_inGeneList = userGenesSize - matched_inGeneList;
-                int matched_notInGeneList = numberOfGenes - matched_inGeneList;
-                int notMatched_notInGeneList = allGenesSize - matched_notInGeneList - matched_inGeneList - notMatched_inGeneList;
-                
-                FisherExact fisherExact = new FisherExact(allGenesSize);
-                pvalue = fisherExact.getP(
-                        matched_inGeneList,
-                        matched_notInGeneList,
-                        notMatched_inGeneList,
-                        notMatched_notInGeneList);
-            }
-            // writes the row - unless user genes provided and none match this row
-            if (userGenes != null && !userGenes.isEmpty() && "".equals(user_genes)) {
-                continue;
-            }
-            out.append(type + "\t" + name + "\t" + sfmt.format(score) + "\t" + pfmt.format(pvalue) + "\t" + numberOfGenes + "\t" + /*numberOfUserGenes*/ user_genes
-                    + "\t" + numberOfQTL + "\t" + ondexId + "\n");
-        }
-        //log.info("Evidence table generated...");
-        return out.toString();
-    }
-
+		
+// TODO: refactoring to be continued from here. 
+		
     /**
      * Write Synonym Table for Query suggestor
      *
@@ -2703,12 +2617,12 @@ public class OndexServiceProvider {
         return this.speciesName;
     }
 	
-	public void setNodeCount(String nodeCount) {
-        this.nodeCount = nodeCount;
-    }
+		public void setNodeCount(String nodeCount) {
+			this.nodeCount = nodeCount;
+	  }
     
     public String getNodeCount() {
-        return this.nodeCount;
+      return this.nodeCount;
     }
     
     public void setRelationshipCount(String relationshipCount) {
@@ -2826,7 +2740,7 @@ public class OndexServiceProvider {
         ConceptClass ccGene = graph.getMetaData().getConceptClass("Gene");
         ConceptClass ccQTL = graph.getMetaData().getConceptClass("QTL");
 
-        Set<ONDEXConcept> qtls = new HashSet<ONDEXConcept>();
+        Set<ONDEXConcept> qtls = new HashSet<>();
         if (ccQTL != null) {
             qtls = graph.getConceptsOfConceptClass(ccQTL);
         }
