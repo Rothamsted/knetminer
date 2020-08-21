@@ -48,7 +48,7 @@ fi
 
 echo -e "\n\n\t Building Maven goal: $goal"
 # You need --quiet, Travis doesn't like too big logs.
-mvn --quiet --settings maven-settings.xml $goal
+mvn --quiet --settings maven-settings.xml --update-snapshots $goal
 
 
 [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
