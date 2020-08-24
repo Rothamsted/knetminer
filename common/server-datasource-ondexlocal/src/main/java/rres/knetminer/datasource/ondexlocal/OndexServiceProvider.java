@@ -2288,9 +2288,7 @@ public class OndexServiceProvider {
 			return out.toString ();
 		} // writeEvidenceTable()
 
-				
-// TODO: refactoring to be continued from here. 
-		
+						
     /**
      * Write Synonym Table for Query suggestor
      *
@@ -2405,6 +2403,9 @@ public class OndexServiceProvider {
 			return out.toString ();
 		} //
 
+		
+// TODO: refactoring to be continued from here. 
+		
     public HashMap<Integer, Set<Integer>> getMapEvidences2Genes(HashMap<ONDEXConcept, Float> luceneConcepts) {
         HashMap<Integer, Set<Integer>> mapEvidences2Genes = new HashMap<Integer, Set<Integer>>();
         for (ONDEXConcept lc : luceneConcepts.keySet()) {
