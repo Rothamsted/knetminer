@@ -44,7 +44,6 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -840,11 +839,7 @@ public class OndexServiceProvider {
 
                 scoredCandidates.put(graph.getConcept(geneId), knetScore);
             }
-            //sortedCandidates.putAll(scoredCandidates); 
-            /**
-             * sorting via stream instead. Resolves issues otherwise caused by
-             * use of ValueComparator *
-             */
+            // Sort by best scores
             sortedCandidates = scoredCandidates
 	            .entrySet()
 	            .stream()
@@ -853,9 +848,9 @@ public class OndexServiceProvider {
 	              toMap(
 	              	Map.Entry::getKey,
 	              	Map.Entry::getValue,
-	              	(e1, e2) -> e2, LinkedHashMap::new)
-	            ); // Sort the candidate values
-
+	              	(e1, e2) -> e2, LinkedHashMap::new
+	              )
+	            );
         }//end of synchronised block
         return sortedCandidates;
     }
@@ -2293,7 +2288,7 @@ public class OndexServiceProvider {
 			return out.toString ();
 		} // writeEvidenceTable()
 
-		
+				
 // TODO: refactoring to be continued from here. 
 		
     /**
@@ -2306,128 +2301,109 @@ public class OndexServiceProvider {
      * @return boolean
      * @throws ParseException
      */
-    public String writeSynonymTable(String keyword) throws ParseException 
-    {
-        StringBuffer out = new StringBuffer();
-        int topX = 25;
-        // to store top 25 values for each concept type instead of just 25
-        // values per keyword.
-        int existingCount = 0;
-        /* Set<String> */
-        Set<String> keys = this.parseKeywordIntoSetOfWords(keyword);
-        // Convert the LinkedHashSet to a String[] array.
-        String[] synonymKeys = keys.toArray(new String[keys.size()]);
-        // for (String key : keys) {
-        for (int k = synonymKeys.length - 1; k >= 0; k--) {
-            String key = synonymKeys[k];
-            if (key.contains(" ") && !key.startsWith("\"")) {
-                key = "\"" + key + "\"";
-            }
-            log.info("Checking synonyms for " + key);
-            Analyzer analyzer = new StandardAnalyzer();
-            Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
-            FloatValueComparator<Integer> comparator = new FloatValueComparator<Integer>(synonymsList);
-            TreeMap<Integer, Float> sortedSynonymsList = new TreeMap<Integer, Float>(comparator);
-            // log.info("writeSynonymTable: Keyword: "+ key);
-            // a HashMap to store the count for the number of values written
-            // to the Synonym Table (for each Concept Type).
-            Map<String, Integer> entryCounts_byType = new HashMap<String, Integer>();
+		public String writeSynonymTable ( String keyword ) throws ParseException
+		{
+			StringBuffer out = new StringBuffer ();
+			// TODO: Lucene shouldn't be used directly
+			Analyzer analyzer = new StandardAnalyzer ();
+			
+			Set<String> synonymKeys = this.parseKeywordIntoSetOfWords ( keyword );
+			for ( var synonymKey: synonymKeys )
+			{
+				log.info ( "Checking synonyms for \"{}\"", synonymKey );
+				if ( synonymKey.contains ( " " ) && !synonymKey.startsWith ( "\"" ) ) 
+					synonymKey = "\"" + synonymKey + "\"";
 
-            // search concept names
-            String fieldNameCN = getFieldName("ConceptName", null);
-            QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
-            Query qNames = parserCN.parse(key);
-            ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts(qNames, 500/* 100 */);
-            /*
-             * number of top concepts searched for each Lucene field, increased for now from
-             * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
-             * make changes to the QueryParser code instead.
-             */
+				Map<Integer, Float> synonyms2Scores = new HashMap<> ();
 
-            for (ONDEXConcept c : hitSynonyms.getOndexHits()) {
-                if (c instanceof LuceneConcept) {
-                    c = ((LuceneConcept) c).getParent();
-                }
-                if (!synonymsList.containsKey(c.getId())) {
-                    synonymsList.put(c.getId(), hitSynonyms.getScoreOnEntity(c));
-                } else {
-                    float scoreA = hitSynonyms.getScoreOnEntity(c);
-                    float scoreB = synonymsList.get(c.getId());
-                    if (scoreA > scoreB) {
-                        synonymsList.put(c.getId(), scoreA);
-                    }
-                }
-            }
+				// search concept names
+				String fieldNameCN = getFieldName ( "ConceptName", null );
+				QueryParser parserCN = new QueryParser ( fieldNameCN, analyzer );
+				Query qNames = parserCN.parse ( synonymKey );
+				ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts ( qNames, 500 );
 
-            if (synonymsList != null) {
+        /*
+         * TODO: does this still apply?
+         * 
+         * number of top concepts searched for each Lucene field, increased for now from
+         * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
+         * make changes to the QueryParser code instead.
+         */
 
-                // Only start a KEY tag if it will have contents. Otherwise skip it.
-                out.append("<" + key + ">\n");
+				for ( ONDEXConcept c : hitSynonyms.getOndexHits () )
+				{
+					if ( c instanceof LuceneConcept )
+						c = ( (LuceneConcept) c ).getParent ();
+					
+					int cid = c.getId ();
+					float cscore = hitSynonyms.getScoreOnEntity ( c );
+					
+					synonyms2Scores.compute ( cid, (thisId, thisScore) ->
+						thisId == null ? cscore : Math.max ( cscore, thisScore )	
+					);
 
-                // Creates a sorted list of synonyms
-                sortedSynonymsList.putAll(synonymsList);
+				}
 
-                // writes the topX values in table
-                for (Integer entry : sortedSynonymsList.keySet()) {
-                    ONDEXConcept eoc = graph.getConcept(entry);
-                    Float score = synonymsList.get(entry);
-                    String type = eoc.getOfType().getId().toString();
-                    Integer id = eoc.getId();
-                    Set<ConceptName> cNames = eoc.getConceptNames();
+				
+				if ( synonyms2Scores.isEmpty () ) continue;
 
-                    // write top 25 suggestions for every entry (concept
-                    // class) in the list.
-                    if (entryCounts_byType.containsKey(type)) {
-                        // get existing count
-                        existingCount = entryCounts_byType.get(type);
-                    } else {
-                        existingCount = 0;
-                    }
+				// Only start a KEY tag if it will have contents. Otherwise skip it.
+				out.append ( "<" + synonymKey + ">\n" );
 
-                    for (ConceptName cName : cNames) {
-                        // if(topAux < topX){
-                        if (existingCount < topX) {
-                            // if(type == "Gene" || type == "BioProc" ||
-                            // type == "MolFunc" || type == "CelComp"){
-                            // Exclude Publications from the Synonym Table
-                            // for the Query Suggestor
-                            if (!(type.equals("Publication") || type.equals("Thing"))) {
-                                if (cName.isPreferred()) {
-                                    String name = cName.getName().toString();
+				Stream<Map.Entry<Integer, Float>> sortedSynonyms = synonyms2Scores.entrySet ()
+				.stream ()
+				.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) );
 
-                                    // error going around for publication
-                                    // suggestions
-                                    if (name.contains("\n")) {
-                                        name = name.replace("\n", "");
-                                    }
-                                    // error going around for qtl
-                                    // suggestions
-                                    if (name.contains("\"")) {
-                                        name = name.replaceAll("\"", "");
-                                    }
-                                    out.append(name + "\t" + type + "\t" + score.toString() + "\t" + id + "\n");
-                                    existingCount++;
-                                    // store the count per concept Type for
-                                    // every entry added to the Query
-                                    // Suggestor (synonym) table.
-                                    entryCounts_byType.put(type, existingCount);
-                                    // System.out.println("\t *Query
-                                    // Suggestor table: new entry: synonym
-                                    // name: "+ name +" , Type: "+ type + "
-                                    // , entries_of_this_type= "+
-                                    // existingCount);
-                                }
-                            }
-                        }
+				Map<String, Integer> entryCountsByType = new HashMap<> ();
+				final int MAX_SYNONYMS = 25; // we store this no of top synonyms per concept
+						
+				// writes the topX values in table
+				sortedSynonyms.forEach ( entry -> 
+				{
+					int synonymId = entry.getKey ();
+					float score = entry.getValue ();
+					
+					ONDEXConcept eoc = graph.getConcept ( synonymId );
+					String type = eoc.getOfType ().getId ();
+					// Integer id = eoc.getId (); TODO: WHAT?!
 
-                    }
-                }
+					if ( ( type.equals ( "Publication" ) || type.equals ( "Thing" ) ) ) return;
+					
+					// TODO: before this count was incremented in the cNames loop below, however, that way either we
+					// get the same because there's one preferred name only,
+					// or the count computed that way is likely wrong cause it increases with names
+					//
+					int synCount = entryCountsByType.compute ( type, 
+						(thisType, thisCount) -> thisType == null ? 1 : ++thisCount
+					); 
 
-                out.append("</" + key + ">\n");
-            }
-        }
-        return out.toString();
-    }
+					if ( synCount > MAX_SYNONYMS ) return;
+
+					
+					Set<ConceptName> cNames = eoc.getConceptNames ();
+
+					cNames.stream ()
+					.filter ( ConceptName::isPreferred )
+					.map ( ConceptName::getName )
+					.forEach ( name ->
+					{
+						// error going around for publication
+						// suggestions
+						if ( name.contains ( "\n" ) ) name = name.replace ( "\n", "" );
+
+						// error going around for qtl
+						// suggestions
+						if ( name.contains ( "\"" ) ) name = name.replaceAll ( "\"", "" );
+						
+						out.append ( name + "\t" + type + "\t" + Float.toString ( score ) + "\t" + synonymId + "\n" );
+					});
+				}); // forEach synonym
+
+				out.append ( "</" + synonymKey + ">\n" );
+					
+			} // for synonymKeys
+			return out.toString ();
+		} //
 
     public HashMap<Integer, Set<Integer>> getMapEvidences2Genes(HashMap<ONDEXConcept, Float> luceneConcepts) {
         HashMap<Integer, Set<Integer>> mapEvidences2Genes = new HashMap<Integer, Set<Integer>>();
@@ -2714,6 +2690,9 @@ public class OndexServiceProvider {
         return geneCount;
     }
 
+    /**
+     * TODO: WTH?!? This is an Ondex module utility
+     */
     public String getFieldName(String name, String value)
     {
     	return value == null ? name : name + "_" + value;
@@ -3053,42 +3032,3 @@ public class OndexServiceProvider {
     
 }
 
-class ValueComparator<T> implements Comparator<T> {
-
-    Map<T, Double> base;
-
-    public ValueComparator(Map<T, Double> base) {
-        this.base = base;
-    }
-
-    public int compare(Object a, Object b) {
-
-        if (base.get(a) < base.get(b)) {
-            return 1;
-        } else if (base.get(a) == base.get(b)) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-}
-
-class FloatValueComparator<T> implements Comparator<T> {
-
-    Map<T, Float> base;
-
-    public FloatValueComparator(Map<T, Float> base) {
-        this.base = base;
-    }
-
-    public int compare(Object a, Object b) {
-        if (base.get(a) < base.get(b)) {
-            return 1;
-        } else if (base.get(a) == base.get(b)) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-
-}
