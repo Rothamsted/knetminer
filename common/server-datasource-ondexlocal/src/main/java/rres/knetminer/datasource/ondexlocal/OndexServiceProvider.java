@@ -2937,6 +2937,8 @@ public class OndexServiceProvider {
     }
 
     /*
+     * // TODO: no longer in use. Can we remove it?
+     *  
      * generate gene2evidence .tab file with contents of the mapGenes2Concepts
      * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
      * author singha
@@ -3029,7 +3031,5 @@ public class OndexServiceProvider {
 		{
 			return mapConcept2Genes;
 		}
-    
-    
+  
 }
-
