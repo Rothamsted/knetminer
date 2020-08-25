@@ -29,7 +29,6 @@ public class GeneHelper
 	private ONDEXConcept gene;
 	
 	private String chromosome;
-	private Double cM;
 	private Integer beginBP;
 	private Integer endBP;
 	private String taxID;
@@ -46,8 +45,6 @@ public class GeneHelper
 	private void init ()
 	{
 		this.chromosome = getAttrValueAsString ( graph, gene, "Chromosome", false );
-		this.cM = Optional.ofNullable ( (Double) getAttrValue ( graph, gene, "cM", false ) )
-			.orElse ( 0d );
 		this.beginBP = Optional.ofNullable ( (Integer) getAttrValue ( graph, gene, "BEGIN", false ) )
 			.orElse ( 0 );
 		this.endBP = Optional.ofNullable ( (Integer) getAttrValue ( graph, gene, "END", false ) )
@@ -55,21 +52,6 @@ public class GeneHelper
 		this.taxID = getAttrValueAsString ( graph, gene, "TAXID", false );		
 	}
 
-	/**
-	 * No default.
-	 */
-	public Double getcM ()
-	{
-		return getcM ( false );
-	}
-
-	/**
-	 * The gene's attribute 'cM'. if the flag is false, possibly returns null, else returns 0 as default for nulls.
-	 */
-	public Double getcM ( boolean withDefault )
-	{
-		return defaultedGetter ( cM, 0d, withDefault );
-	}
 	
 	/**
 	 * no default value
@@ -101,72 +83,8 @@ public class GeneHelper
 	 */
 	public Integer getEndBP ( boolean withDefault )
 	{
-		return defaultedGetter ( beginBP, 0, withDefault );
+		return defaultedGetter ( endBP, 0, withDefault );
 	}
-	
-
-	/**
-	 * When {@link #getcM(boolean))} is available, returns this value
-	 * If no cM is available, returns {@link #getBeginBP(boolean))}. In this case, if
-	 * the begin BP value is non null and convertCM is true, returns the BP value multiplied by 1E6.
-	 * When cM is null, usues a default value for BP (multiplied or not), if the withDefaultBP is true.
-	 */
-	public Double computeBegin ( boolean withDefaultBP, boolean convertCM )
-	{
-		Integer result = getBeginBP ( withDefaultBP );
-		if ( cM == null ) 
-			return result == null ? null : convertCM ? 1E6 * result : result ;
-		return cM;
-	}
-
-	/**
-	 * Doesn't convert to cM.
-	 */
-	public Double computeBegin ( boolean withDefaults )
-	{
-		return computeBegin ( withDefaults, false );
-	}
-
-	/**
-	 * Doesn't convert to cM, no defaults
-	 */
-	public Double computeBegin ()
-	{
-		return computeBegin ( false );
-	}
-	
-	/**
-	 * Returns {@link #getEndBP(boolean))}, which might be null (affected by withDefault flag). 
-	 * If that's not null and convertCM is true, returns {@link #getEndBP()} multiplied by 1E6.
-	 * 
-	 * TODO: Some code in {@link OndexServiceProvider} uses the same {@link #getcM()} * 1E6 for 
-	 * both begin and end. Likely, that's an error and it's not  supported use case here.
-	 * 
-	 */
-	public Double computeEnd ( boolean withDefaultBP, boolean convertCM )
-	{
-		Integer result = getEndBP ( withDefaultBP );
-		if ( result == null ) return null;
-		return result * (convertCM ? 1E6 : 1d );
-	}
-	
-	/**
-	 * Doesn't convert to cM.
-	 */
-	public Double computeEnd ( boolean withDefaults )
-	{
-		return computeEnd ( withDefaults, false );
-	}
-
-	/**
-	 * Doesn't convert to cM, no defaults
-	 */
-	public Double computeEnd ()
-	{
-		return computeBegin ( false );
-	}
-	
-	
 	
 	public String getTaxID ()
 	{

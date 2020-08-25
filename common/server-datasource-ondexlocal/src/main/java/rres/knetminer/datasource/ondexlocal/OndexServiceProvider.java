@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -1733,7 +1734,8 @@ public class OndexServiceProvider {
 			// added user gene list restriction above (04/07/2018, singha)
 
 			ONDEXGraphMetaData gmeta = graph.getMetaData ();
-			AttributeName attCM = gmeta.getAttributeName ( "cM" );
+			// TODO: remove, cM no longer supported 
+//			AttributeName attCM = gmeta.getAttributeName ( "cM" );
 			ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
 			
 			Set<QTL> qtlDB = new HashSet<> ();
@@ -1770,13 +1772,8 @@ public class OndexServiceProvider {
 				if ( chr == null || "U".equals ( chr ) )
 					continue;
 				
-				// TODO: this can be a parameter CM/BP in future
-				//
-
-				int beg = (int) Math.round ( geneHelper.computeBegin ( true, true ) );
-
-				// TODO: initially, this was set to begin when cM is present, but doesn't make sense
-				int end = (int) Math.round ( geneHelper.computeEnd ( true, true ) );
+				int beg = geneHelper.getBeginBP ( true );
+				int end = geneHelper.getEndBP ( true );
 
 
 				String name = c.getPID ();
@@ -1836,12 +1833,13 @@ public class OndexServiceProvider {
 				int start = region.getStart ();
 				int end = region.getEnd ();
 
-				// TODO check of MODE is CM/BP
-				if ( attCM != null )
-				{
-					start = start * 1000000;
-					end = end * 1000000;
-				}
+				// TODO: remove cM isn't supported anymore.
+//				if ( attCM != null )
+//				{
+//					start = start * 1000000;
+//					end = end * 1000000;
+//				}
+				
 				String label = Optional.ofNullable ( region.getLabel () )
 					.filter ( lbl -> !lbl.isEmpty () )
 					.orElse ( "QTL" );
@@ -1907,12 +1905,12 @@ public class OndexServiceProvider {
 				Float pvalue = loci.getpValue ();
 				String color = trait2color.get ( trait );
 
-				// TODO check of MODE is CM/BP
-				if ( attCM != null )
-				{
-					startQTL = startQTL * 1000000;
-					endQTL = endQTL * 1000000;
-				}
+				// TODO: remove cM isn't supported anymore.
+//				if ( attCM != null )
+//				{
+//					startQTL = startQTL * 1000000;
+//					endQTL = endQTL * 1000000;
+//				}
 
 				// TODO get p-value of SNP-Trait relations
 				if ( type.equals ( "QTL" ) )
@@ -1989,11 +1987,7 @@ public class OndexServiceProvider {
 			else
 				log.info ( "No user gene list defined." );
 
-			if ( qtls.isEmpty () )
-				log.info ( "No QTL regions defined." );
-
-			
-			ONDEXGraphMetaData gmeta = graph.getMetaData ();
+			if ( qtls.isEmpty () ) log.info ( "No QTL regions defined." );
 			
 			// Removed ccSNP from Geneview table (12/09/2017)
 			// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
@@ -2016,56 +2010,45 @@ public class OndexServiceProvider {
 				// use shortest preferred concept name
 				String geneName = getShortestPreferedName ( gene.getConceptNames () );
 
-				String isInList = userGenes != null && userGeneIds.contains ( gene.getId () )
-					? "yes" : "no";
-
-				String infoQTL = "";
-				if ( mapGene2QTL.containsKey ( gene.getId () ) )
+				boolean isInList = userGenes != null && userGeneIds.contains ( gene.getId () );
+ 
+				List<String> infoQTL = new LinkedList<> ();
+				for ( Integer cid : mapGene2QTL.getOrDefault ( gene.getId (), Collections.emptySet () ) )
 				{
-					for ( Integer cid : mapGene2QTL.get ( gene.getId () ) )
+					ONDEXConcept qtl = graph.getConcept ( cid );
+
+					/*
+					 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
+					 * and hence we MUST move this code to some utility.
+					 */
+					if ( qtl == null )
 					{
-						ONDEXConcept qtl = graph.getConcept ( cid );
-
-						/*
-						 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
-						 * and hence we MUST move this code to some utility.
-						 */
-						if ( qtl == null )
-						{
-							log.error ( "writeTable(): no gene found for id: ", cid );
-							continue;
-						}
-						String acc = Optional.ofNullable ( qtl.getConceptName () )
-							.map ( ConceptName::getName )
-							.map ( StringEscapeUtils::escapeCsv )
-							.orElseGet ( () -> {
-								log.error ( "writeTable(): gene name not found for id: {}", cid );
-								return "";
-							});
-
-						String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
-							.orElse ( acc );
-
-						if ( !infoQTL.isEmpty () ) infoQTL += "||";
-						infoQTL += traitDesc + "//" + traitDesc;
+						log.error ( "writeTable(): no gene found for id: ", cid );
+						continue;
 					}
-				} // mapGene2QTL.containsKey ( gene.getId () )
+					String acc = Optional.ofNullable ( qtl.getConceptName () )
+						.map ( ConceptName::getName )
+						.map ( StringEscapeUtils::escapeCsv )
+						.orElseGet ( () -> {
+							log.error ( "writeTable(): gene name not found for id: {}", cid );
+							return "";
+						});
 
-				
-				if ( !qtls.isEmpty () )
-				{
-					for ( QTL loci : qtls )
-					{
-						String qtlChrom = loci.getChromosome ();
-						Integer qtlStart = loci.getStart ();
-						Integer qtlEnd = loci.getEnd ();
+					String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
+						.orElse ( acc );
 
-						// FIXME re-factor chromosome string
-						// TODO: this was qtlChrom.equals ( "" ), but loc was always ""!
-						if ( qtlChrom.equals ( "" ) && geneHelper.getcM ( true ) >= qtlStart && geneHelper.getcM ( true ) <= qtlEnd )
-						{
-							if ( !infoQTL.isEmpty () ) infoQTL += "||";
-							infoQTL += loci.getLabel () + "//" + loci.getTrait ();
+					infoQTL.add ( traitDesc + "//" + traitDesc ); // TODO: traitDesc twice?! Looks wrong.
+				} // for mapGene2QTL
+
+
+				qtls.stream ()
+				.filter ( loci -> !loci.getChromosome ().isEmpty () )
+				.filter ( loci -> geneHelper.getBeginBP ( true ) >= loci.getStart () )
+				.filter ( loci -> geneHelper.getEndBP ( true ) <= loci.getEnd () )
+				.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
+				.forEach ( infoQTL::add );
+
+				String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
 
 // TODO: remove! WTH!? See the approach above!
 //							if ( "".equals ( infoQTL ) )
@@ -2075,9 +2058,6 @@ public class OndexServiceProvider {
 //							{
 //								infoQTL += "||" + loci.getLabel () + "//" + loci.getTrait ();
 //							}
-						}
-					}
-				} // !qtls.isEmpty ()
 
 				Set<Integer> luceneHits = Collections.<Integer> emptySet ();
 				// TODO: this is very poor and error-prone, 
@@ -2158,14 +2138,12 @@ public class OndexServiceProvider {
 				//	.collect ( Collectors.joining ( "," ));
 				
 				if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
-				if ( userGenes != null && !"yes".equals ( isInList ) ) continue;
-				
-				var numFmt = new DecimalFormat ( "0.00" );
 				
 				out.append (
 					id + "\t" + geneHelper.getBestAccession () + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-					+ numFmt.format ( geneHelper.computeBegin ( true ) ) + "\t" + geneHelper.getTaxID () + "\t" 
-					+ numFmt.format ( score ) + "\t" + isInList + "\t" + infoQTL + "\t" + evidenceStr + "\n" 
+					+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
+					+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
+					+ evidenceStr + "\n" 
 				);
 
 			} // for candidates
@@ -2194,10 +2172,6 @@ public class OndexServiceProvider {
 			
 			if ( userGenes == null || userGenes.isEmpty () ) return out.toString ();
 			
-			ONDEXGraphMetaData md = graph.getMetaData ();
-			AttributeName attChr = md.getAttributeName ( "Chromosome" );
-			AttributeName attBeg = md.getAttributeName ( "BEGIN" );
-			AttributeName attCM = md.getAttributeName ( "cM" );
 			int allGenesSize = mapGene2Concepts.keySet ().size ();
 			int userGenesSize = userGenes.size ();
 			FisherExact fisherExact = new FisherExact ( allGenesSize );
@@ -2246,14 +2220,13 @@ public class OndexServiceProvider {
 						 */
 					}
 
-					if ( mapGene2QTL.containsKey ( log ) )
-						numberOfQTL++;
+					if ( mapGene2QTL.containsKey ( log ) ) numberOfQTL++;
 
 					// TODO: we don't need attChr (and similar types) as objects, the string ID is enough
 					// TODO: what does this mean?!
 					
 					String chr = geneHelper.getChromosome ();
-					double beg = geneHelper.computeEnd ( true );
+					int beg = geneHelper.getBeginBP ( true );
 					
 					
 					// if ( !qtls.isEmpty () ) TODO: REMOVE! COME ON!!!
