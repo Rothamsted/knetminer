@@ -47,6 +47,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -2423,7 +2424,6 @@ public class OndexServiceProvider {
 			.collect ( Collectors.toMap ( Function.identity (), mapConcept2Genes::get ) );
 		}
 
-// TODO: refactoring to be continued from here
 		
     /**
      * Returns the shortest preferred Name from a set of concept Names or ""
@@ -2432,16 +2432,15 @@ public class OndexServiceProvider {
      * @param cns Set<ConceptName>
      * @return String name
      */
-    private String getShortestPreferedName(Set<ConceptName> cns) {
-        String result = "";
-        int length = 100000;
-        for (ConceptName cn : cns) {
-            if ((cn.isPreferred()) && (cn.getName().trim().length() < length)) {
-                result = cn.getName().trim();
-                length = cn.getName().trim().length();
-            }
-        }
-        return result;
+    private String getShortestPreferedName ( Set<ConceptName> cns ) 
+    {
+    	return cns.stream ()
+      .filter ( ConceptName::isPreferred )
+    	.map ( ConceptName::getName )
+    	.map ( String::trim )
+    	.sorted ( Comparator.comparing ( String::length ) )
+    	.findFirst ()
+    	.orElse ( "" );
     }
 
     /**
@@ -2450,18 +2449,20 @@ public class OndexServiceProvider {
      * @param accs Set<ConceptAccession>
      * @return String name
      */
-    private String getShortestNotAmbiguousAccession(Set<ConceptAccession> accs) {
-        String result = "";
-        int length = 100000;
-        for (ConceptAccession acc : accs) {
-            if (!(acc.isAmbiguous()) && (acc.getAccession().trim().length() < length)) {
-                result = acc.getAccession().trim();
-                length = acc.getAccession().trim().length();
-            }
-        }
-        return result;
+    private String getShortestNotAmbiguousAccession(Set<ConceptAccession> accs) 
+    {
+    	return accs.stream ()
+      .filter ( acc -> !acc.isAmbiguous () )
+    	.map ( ConceptAccession::getAccession )
+    	.map ( String::trim )
+    	.sorted ( Comparator.comparing ( String::length ) )
+    	.findFirst ()
+    	.orElse ( "" );
     }
 
+
+// TODO: refactoring to be continued from here
+    
     /**
      * Returns the best name for each group of concept classes
      * [Gene|Protein][Phenotype][The rest]
