@@ -1784,7 +1784,7 @@ public class OndexServiceProvider {
 				for ( ConceptAccession acc : c.getConceptAccessions () )
 					name = acc.getAccession ();
 
-				String label = getDefaultNameForGroupOfConcepts ( c );
+				String label = getMolBioDefaultLabel ( c );
 				String query = null;
 				try
 				{
@@ -2103,7 +2103,7 @@ public class OndexServiceProvider {
 					// skip publications as handled differently (see below)
 					if ( ccId.equals ( "Publication" ) ) continue;
 
-					String name = getDefaultNameForGroupOfConcepts ( c );
+					String name = getMolBioDefaultLabel ( c );
 
 					cc2name.compute ( 
 						ccId, 
@@ -2131,7 +2131,7 @@ public class OndexServiceProvider {
 					String pubString = "Publication__" + allPubs.size () + "__";
 					pubString += newPubs.stream ()
 						.map ( graph::getConcept )
-					  .map ( this::getDefaultNameForGroupOfConcepts )
+					  .map ( this::getMolBioDefaultLabel )
 					  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
 					  .collect ( Collectors.joining ( "//" ) );
 					cc2name.put ( "Publication", pubString );
@@ -2212,7 +2212,7 @@ public class OndexServiceProvider {
 			{
 				// Creates type,name,score and numberOfGenes
 				String type = lc.getOfType ().getId ();
-				String name = getDefaultNameForGroupOfConcepts ( lc );
+				String name = getMolBioDefaultLabel ( lc );
 				// All publications will have the format PMID:15487445
 				// if (type == "Publication" && !name.contains("PMID:"))
 				// name = "PMID:" + name;
@@ -2461,94 +2461,33 @@ public class OndexServiceProvider {
     }
 
 
-// TODO: refactoring to be continued from here
     
     /**
-     * Returns the best name for each group of concept classes
-     * [Gene|Protein][Phenotype][The rest]
-     *
-     * @param c ONDEXConcept
-     * @return normalised name
+     * Returns the best name for certain molecular biology entities, like Gene, Protein, falls back to a default
+     * label in the other cases. 
+     * 
      */
-    private String getDefaultNameForGroupOfConcepts(ONDEXConcept c) {
+		private String getMolBioDefaultLabel ( ONDEXConcept c )
+		{
+			String type = c.getOfType ().getId ();
+			String bestAcc = StringUtils.trimToEmpty ( getShortestNotAmbiguousAccession ( c.getConceptAccessions () ) );
+			String bestName = StringUtils.trimToEmpty ( getShortestPreferedName ( c.getConceptNames () ) );
 
-        // this is the preferred concept name
-        String ct = c.getOfType().getId();
-        String cn = "";
-        Set<ConceptName> cns = c.getConceptNames();
-        Set<ConceptAccession> accs = c.getConceptAccessions();
-        if ((ct == "Gene") || (ct == "Protein")) {
-            /*
-             * if(getShortestNotAmbiguousAccession(accs) != ""){ cn =
-             * getShortestNotAmbiguousAccession(accs); } else { cn =
-             * getShortestPreferedName(cns); }
-             */
-            // Get shortest, non-ambiguous concept accession.
-            String shortest_acc = getShortestNotAmbiguousAccession(accs);
-            // Get shortest, preferred concept name.
-            String shortest_coname = getShortestPreferedName(cns);
-            int shortest_coname_length = 100000, shortest_acc_length = 100000;
-            if (!shortest_acc.equals(" ")) {
-                shortest_acc_length = shortest_acc.length();
-            }
-            if (!shortest_coname.equals(" ")) {
-                shortest_coname_length = shortest_coname.length();
-            }
-            // Compare the sizes of both the values
-            if (shortest_acc_length < shortest_coname_length) {
-                cn = shortest_acc; // use shortest, non-ambiguous concept
-                // accession.
-            } else {
-                cn = shortest_coname; // use shortest, preferred concept name.
-            }
-        } // } else if (ct == "Phenotype") {
-        // AttributeName att = graph.getMetaData().getAttributeName("Phenotype");
-        // cn = c.getAttribute(att).getValue().toString().trim();
-        //
-        // }
-        // else if (ct == "Trait") {
-        // AttributeName att = graph.getMetaData().getAttributeName("Study");
-        // cn = c.getAttribute(att).getValue().toString().trim();
-        // }
-        else {
-            if (!"".equals ( getShortestPreferedName(cns) ) ) {
-                cn = getShortestPreferedName(cns);
-            } else {
-                cn = getShortestNotAmbiguousAccession(accs);
-            }
-        }
-        if (cn.length() > 30) {
-            cn = cn.substring(0, 29) + "...";
-        }
-        return cn;
-    }
+			String result = "";
+			
+			if ( type == "Gene" || type == "Protein" )
+			{
+				// TODO: initially this condition was on " ", but that's likely to be wrong. Must be checked
+				if ( bestAcc.isEmpty () ) result = bestName;
+				else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
+			}
+			else
+				result = !bestName.isEmpty () ? bestName : bestAcc;
 
-    /**
-     * Does sort a given map according to the values
-     *
-     * @param map
-     * @return
-     */
-    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
-    {
-        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
-            @Override
-            public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-                int res = e2.getValue().compareTo(e1.getValue());
-                // Special fix to preserve items with equal values
-                return res != 0 ? res : 1;
-            }
-        });
+			return StringUtils.abbreviate ( result, 30 );
+		}
 
-        /* TODO: this might give troubles, see 
-         * https://stackoverflow.com/questions/11856391/findbugs-dmi-entry-sets-may-reuse-entry-objects 
-         *        
-         * A possible workaround is to add AbstractMap.SimpleImmutableEntry() wrappers, instead of the original
-         * entry set.
-         */
-        sortedEntries.addAll(map.entrySet());
-        return sortedEntries;
-    }
+
 
     public void setTaxId(List<String> id) {
         this.taxID = id;
@@ -2635,6 +2574,10 @@ public class OndexServiceProvider {
         return formatter.format(creationDate);
     }
 
+    
+// TODO: refactoring to be continued from here
+// TODO: before touching geneCount(), review GeneHelper and remove the cM case
+    
     /**
      * Returns number of organism (taxID) genes at a given loci
      *
