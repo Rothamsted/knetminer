@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -37,6 +38,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -2404,23 +2406,25 @@ public class OndexServiceProvider {
 		} //
 
 		
-// TODO: refactoring to be continued from here. 
-		
-    public HashMap<Integer, Set<Integer>> getMapEvidences2Genes(HashMap<ONDEXConcept, Float> luceneConcepts) {
-        HashMap<Integer, Set<Integer>> mapEvidences2Genes = new HashMap<Integer, Set<Integer>>();
-        for (ONDEXConcept lc : luceneConcepts.keySet()) {
-            Integer luceneOndexId = lc.getId();
-            // Checks if the document is related to a gene
-            if (!mapConcept2Genes.containsKey(luceneOndexId)) {
-                continue;
-            }
-            // Creates de set of Concepts ids
-            Set<Integer> listOfGenes = mapConcept2Genes.get(luceneOndexId);
-            mapEvidences2Genes.put(luceneOndexId, listOfGenes);
-        }
-        return mapEvidences2Genes;
-    }
+		/**
+		 * TODO: this is only used by {@link OndexLocalDataSource} and only to know the size of 
+		 * concepts that match. So, do we need to compute the map, or do wee need the count only?
+		 * 
+		 * The two tasks are different, see below.
+		 * 
+		 */
+		public Map<Integer, Set<Integer>> getMapEvidences2Genes ( HashMap<ONDEXConcept, Float> luceneConcepts )
+		{
+			return luceneConcepts.keySet ()
+			.stream ()
+			.map ( ONDEXConcept::getId )
+			.filter ( mapConcept2Genes::containsKey )
+			// .count () As said above, this would be enough if we need a count only
+			.collect ( Collectors.toMap ( Function.identity (), mapConcept2Genes::get ) );
+		}
 
+// TODO: refactoring to be continued from here
+		
     /**
      * Returns the shortest preferred Name from a set of concept Names or ""
      * [Gene|Protein][Phenotype][The rest]
