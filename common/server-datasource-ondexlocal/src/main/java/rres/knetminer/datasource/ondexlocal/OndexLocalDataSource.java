@@ -222,7 +222,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 		// Also search Regions - only if no genes provided
 		if (userGenes.isEmpty() && !request.getQtl().isEmpty()) {
-			userGenes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+			userGenes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
 		}
 		if (userGenes.isEmpty()) {
 			userGenes = null;
@@ -324,7 +324,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 		// Search Regions
 		if (!request.getQtl().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+			genes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
 		}
 
 		// Find Semantic Motifs
@@ -416,7 +416,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
         // Search Regions
         if (!request.getQtl().isEmpty()) {
-            genes.addAll(this.ondexServiceProvider.searchQTLs(request.getQtl()));
+            genes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
         }
 
         // Find Semantic Motifs

@@ -633,9 +633,7 @@ public class OndexServiceProvider
     	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
 		}
 
-    
-// TODO: refactoring to be continued from here
-    
+        
     /**
      * Search for concepts in OndexKB which contain the keyword and find genes
      * connected to them.
@@ -645,276 +643,259 @@ public class OndexServiceProvider
      * @throws IOException
      * @throws ParseException
      */
-    public HashMap<ONDEXConcept, Float> searchLucene(String keywords, Collection<ONDEXConcept> geneList, boolean includePublications)
-    	throws IOException, ParseException
-    {
-        Set<AttributeName> atts = graph.getMetaData().getAttributeNames();
-        String[] datasources = {"PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
-            "ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL"};
-        // sources identified in KNETviewer
-        /*
-         * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY",
-         * "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT",
-         * "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB",
-         * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
-         * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV",
-         * "ENSEMBL-HUMAN"};
-         */
-        Set<String> dsAcc = new HashSet<>(Arrays.asList(datasources));
+		public HashMap<ONDEXConcept, Float> searchLucene ( 
+			String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
+		) throws IOException, ParseException
+		{
+			Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
+			String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
+					"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" };
+			// sources identified in KNETviewer
+			/*
+			 * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", "CHEMBLTARGET", "EC", "EMBL",
+			 * "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT", "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM",
+			 * "OMIM", "PDB", "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE", "PUBCHEM",
+			 * "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV", "ENSEMBL-HUMAN"};
+			 */
+			Set<String> dsAcc = new HashSet<> ( Arrays.asList ( datasources ) );
 
-        HashMap<ONDEXConcept, Float> hit2score = new HashMap<>();
+			HashMap<ONDEXConcept, Float> hit2score = new HashMap<> ();
 
-        if ("".equals(keywords) || keywords == null) {
-            log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
-            if (geneList != null) {
-                for (ONDEXConcept gene : geneList) {
-                    if (gene == null) continue;
-                    if (mapGene2Concepts.get(gene.getId()) == null) continue;
-                    for (int conceptId : mapGene2Concepts.get(gene.getId())) {
-                        ONDEXConcept concept = graph.getConcept(conceptId);
-                        if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
-                            hit2score.put(concept, 1.0f);
-                        }
-                    }
-                }
-            }
-            return hit2score;
-        }
+			keywords = StringUtils.trimToEmpty ( keywords );
+			
+			if ( keywords.isEmpty () && geneList != null && !geneList.isEmpty () )
+			{
+				log.info ( "No keyword, skipping Lucene stage, using mapGene2Concept instead" );
+				for ( ONDEXConcept gene : geneList )
+				{
+					if ( gene == null ) continue;
+					if ( mapGene2Concepts.get ( gene.getId () ) == null ) continue;
+					for ( int conceptId : mapGene2Concepts.get ( gene.getId () ) )
+					{
+						ONDEXConcept concept = graph.getConcept ( conceptId );
+						if ( includePublications || !concept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
+							hit2score.put ( concept, 1.0f );
+					}
+				}
 
-        // TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
-        // consider different field types. See https://stackoverflow.com/questions/62119328
-        Analyzer analyzer = new StandardAnalyzer();
+				return hit2score;
+			}
 
-        String keyword = keywords;
+			// TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which
+			// consider different field types. See https://stackoverflow.com/questions/62119328
+			Analyzer analyzer = new StandardAnalyzer ();
 
-        //added to overcome double quotes issue
-        //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replace("###", "\"");
-        log.debug("Keyword is:" + keyword);
+			// added to overcome double quotes issue
+			// if changing this, need to change genepage.jsp and evidencepage.jsp
+			keywords = keywords.replace ( "###", "\"" );
+			log.debug ( "Keyword is:" + keywords );
 
-        // creates the NOT list (list of all the forbidden documents)
-        String NOTQuery = createsNotList(keyword);
-        String crossTypesNotQuery = "";
-        ScoredHits<ONDEXConcept> NOTList = null;
-        if (!"".equals ( NOTQuery )) {
-            crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
-                    + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
-                    + NOTQuery + ")";
-            String fieldNameNQ = getFieldName("ConceptName", null);
-            QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
-            Query qNQ = parserNQ.parse(crossTypesNotQuery);
-            NOTList = luceneMgr.searchTopConcepts(qNQ, 2000);
-        }
+			// creates the NOT list (list of all the forbidden documents)
+			String notQuery = createsNotList ( keywords );
+			String crossTypesNotQuery = "";
+			ScoredHits<ONDEXConcept> notList = null;
+			if ( !"".equals ( notQuery ) )
+			{
+				crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + notQuery + ") OR ConceptAttribute_Abstract:("
+					+ notQuery + ") OR Annotation:(" + notQuery + ") OR ConceptName:(" + notQuery + ") OR ConceptID:("
+					+ notQuery + ")";
+				String fieldNameNQ = getLuceneFieldName ( "ConceptName", null );
+				QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
+				Query qNQ = parserNQ.parse ( crossTypesNotQuery );
+				notList = luceneMgr.searchTopConcepts ( qNQ, 2000 );
+			}
 
-        // number of top concepts retrieved for each Lucene field
-        /*
-         * increased for now from 500 to 1500, until Lucene code is ported from Ondex to
-         * QTLNetMiner, when we'll make changes to the QueryParser code instead.
-         */
-        int max_concepts = 2000;
+			// number of top concepts retrieved for each Lucene field
+			/*
+			 * increased for now from 500 to 1500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll make
+			 * changes to the QueryParser code instead.
+			 */
+			int maxConcepts = 2000;
 
-        // search concept attributes
-        for (AttributeName att : atts)
-        {
-            String fieldName = getFieldName("ConceptAttribute", att.getId());
-            QueryParser parser = new QueryParser(fieldName, analyzer);
-            Query qAtt = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
-            mergeHits(hit2score, sHits, NOTList);
-        }
-        
-        // Search concept accessions
-        for (String dsAc : dsAcc)
-        {
-            String fieldName = getFieldName ( "ConceptAccession", dsAc );
-            QueryParser parser = new QueryParser ( fieldName, analyzer );
-            Query qAccessions = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts ( qAccessions, max_concepts );
-            mergeHits ( hit2score, sHitsAcc, NOTList );
-        }
+			// search concept attributes
+			for ( AttributeName att : atts )
+				luceneConceptSearchHelper ( 
+					keywords, "ConceptAttribute", att.getId (), maxConcepts, hit2score, notList,
+					analyzer
+				);				
 
-        // Search concept names
-        String fieldNameCN = getFieldName ( "ConceptName", null );
-        QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
-        Query qNames = parserCN.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
-        mergeHits(hit2score, sHitsNames, NOTList);
+			// Search concept accessions
+			for ( String dsAc : dsAcc )
+				luceneConceptSearchHelper ( 
+					keywords,  "ConceptAccession", dsAc, maxConcepts, hit2score, notList,
+					analyzer
+				);				
+				
 
-        // search concept description
-        // Query qDesc =
-        // LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
-        String fieldNameD = getFieldName("Description", null);
-        QueryParser parserD = new QueryParser(fieldNameD, analyzer);
-        Query qDesc = parserD.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsDesc = luceneMgr.searchTopConcepts(qDesc, max_concepts);
-        mergeHits(hit2score, sHitsDesc, NOTList);
+			// Search concept names
+			luceneConceptSearchHelper ( 
+				keywords, "ConceptName", null, maxConcepts, hit2score, notList,
+				analyzer
+			);				
+			
+			// search concept description
+			luceneConceptSearchHelper ( 
+				keywords, "Description", null, maxConcepts, hit2score, notList,
+				analyzer
+			);				
+			
+			// search concept annotation
+			// Query qAnno =
+			// LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
+			luceneConceptSearchHelper ( 
+				keywords, "Annotation", null, maxConcepts, hit2score, notList,
+				analyzer
+			);				
+			
+			// TODO: remove, if you want to log this, do it in luceneConceptSearchHelper() (and NOT with info level)
+			// log.info ( "searchLucene(), query for annotation: " + qAnno.toString ( fieldNameCA ) );
+			// log.info ( "Resulting Annotation hits: " + sHitsAnno.getOndexHits ().size () );
 
-        // search concept annotation
-        // Query qAnno =
-        // LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
-        String fieldNameCA = getFieldName("Annotation", null);
-        QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
-        Query qAnno = parserCA.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsAnno = luceneMgr.searchTopConcepts(qAnno, max_concepts);
-        mergeHits(hit2score, sHitsAnno, NOTList);
+			return hit2score;
+		}
 
-        log.info("searchLucene(), query for annotation: " + qAnno.toString(fieldNameCA));
-        log.info("Resulting Annotation hits: " + sHitsAnno.getOndexHits().size());
+		
+		public Map<ONDEXConcept, Double> getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) throws IOException
+		{
+			Map<ONDEXConcept, Double> scoredCandidates = new HashMap<> ();
+			// Sort via stream instead
+			Map<ONDEXConcept, Double> sortedCandidates = new HashMap<> ();
+		
+			log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
+		
+			// TODO: the only thing to be synched here is mapGene2HitConcept, and only
+			// if this is needed, see https://github.com/Rothamsted/knetminer/issues/517
+			synchronized ( this )
+			{
+				// 1st step: create map of genes to concepts that contain query terms
+				mapGene2HitConcept = new HashMap<Integer, Set<Integer>> ();
+				
+				hit2score.keySet ()
+				.stream ()
+				.map ( ONDEXConcept::getId )
+				.filter ( mapConcept2Genes::containsKey )
+				.forEach ( conceptId ->
+				{
+					for ( int geneId: mapConcept2Genes.get ( conceptId ) )
+						mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
+						.add ( conceptId );
+				});
+				
+		
+				// 2nd step: calculate a score for each candidate gene
+				for ( int geneId : mapGene2HitConcept.keySet () )
+				{
+					// weighted sum of all evidence concepts
+					double weightedEvidenceSum = 0;
+		
+					// iterate over each evidence concept and compute a weight that is composed of
+					// three components
+					for ( int cId : mapGene2HitConcept.get ( geneId ) )
+					{
+						// relevance of search term to concept
+						float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
+		
+						// specificity of evidence to gene
+						double igf = Math.log10 ( (double) numGenesInGenome / mapConcept2Genes.get ( cId ).size () );
+		
+						// inverse distance from gene to evidence
+						Integer pathLen = mapGene2PathLength.get ( geneId + "//" + cId );
+						if ( pathLen == null ) 
+							log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
+						
+						double distance = pathLen == null ? 0 : ( 1d / pathLen );
+		
+						// take the mean of all three components
+						double evidenceWeight = ( igf + luceneScore + distance ) / 3;
+		
+						// sum of all evidence weights
+						weightedEvidenceSum += evidenceWeight;
+					}
+		
+					// normalisation method 1: size of the gene knoweldge graph
+					// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+					// normalistion method 2: size of matching evidence concepts only (mean score)
+					// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
+					// No normalisation for now as it's too experimental.
+					// This meeans better studied genes will appear top of the list
+					double knetScore = /* normFactor * */ weightedEvidenceSum;
+		
+					scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
+				}
+				// Sort by best scores
+				sortedCandidates = scoredCandidates.entrySet ().stream ()
+				.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
+				.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
+			} // end of synchronised block
+			return sortedCandidates;
+		}
 
-        return hit2score;
-    }
-
-    public Map<ONDEXConcept, Double> getScoredGenesMap(Map<ONDEXConcept, Float> hit2score) throws IOException 
-    {
-        Map<ONDEXConcept, Double> scoredCandidates = new HashMap<>();
-        Map<ONDEXConcept, Double> sortedCandidates = new HashMap<>(); // Sort via stream instead
-    
-        log.info ( "Total hits from lucene: " + hit2score.keySet().size() );
-
-        // TODO: the only thing to be synched here is mapGene2HitConcept, and only
-        // if this is needed, see https://github.com/Rothamsted/knetminer/issues/517
-        synchronized (this) 
-        {
-            // 1st step: create map of genes to concepts that contain query terms
-            mapGene2HitConcept = new HashMap<Integer, Set<Integer>>();
-            for (ONDEXConcept c : hit2score.keySet()) {
-
-                // hit concept not connected via valid path to any gene
-                if (!mapConcept2Genes.containsKey(c.getId())) {
-                    continue;
-                }
-                Set<Integer> genes = mapConcept2Genes.get(c.getId());
-                for (int geneId : genes) {
-                    if (!mapGene2HitConcept.containsKey(geneId)) {
-                        mapGene2HitConcept.put(geneId, new HashSet<Integer>());
-                    }
-
-                    mapGene2HitConcept.get(geneId).add(c.getId());
-                }
-            }
-
-            // 2nd step: calculate a score for each candidate gene
-            for (int geneId : mapGene2HitConcept.keySet()) {
-
-                // weighted sum of all evidence concepts
-                double weightedEvidenceSum = 0;
-
-                // iterate over each evidence concept and compute a weight that is composed of
-                // three components
-                for (int cId : mapGene2HitConcept.get(geneId))
-                {
-                    // relevance of search term to concept
-                    float luceneScore = hit2score.get(graph.getConcept(cId));
-
-                    // specificity of evidence to gene
-                    double igf = Math.log10((double) numGenesInGenome / mapConcept2Genes.get(cId).size());
-
-                    // inverse distance from gene to evidence
-                    Integer pathLen = mapGene2PathLength.get(geneId + "//" + cId);
-                    if (pathLen == null)
-                    	log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
-                    double distance = pathLen == null ? 0 : (1d / pathLen);
-
-                    // take the mean of all three components
-                    double evidenceWeight = (igf + luceneScore + distance) / 3;
-
-                    // sum of all evidence weights
-                    weightedEvidenceSum += evidenceWeight;
-                }
-
-                // normalisation method 1: size of the gene knoweldge graph
-                // double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
-                // normalistion method 2: size of matching evidence concepts only (mean score)
-                //double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
-                // No normalisation for now as it's too experimental.
-                // This meeans better studied genes will appear top of the list
-                double knetScore = /*normFactor * */ weightedEvidenceSum;
-
-                scoredCandidates.put(graph.getConcept(geneId), knetScore);
-            }
-            // Sort by best scores
-            sortedCandidates = scoredCandidates.entrySet().stream ()
-            .sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue() ) )
-            .collect( toMap(
-            	Map.Entry::getKey,
-            	Map.Entry::getValue,
-            	(e1, e2) -> e2, LinkedHashMap::new
-            ));
-        }//end of synchronised block
-        return sortedCandidates;
-    }
-
+		
     /**
-     * Did you mean function for spelling correction
+     * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
      *
-     * @param String keyword
-     * @return list of spell corrected words
      */
-    public List<String> didyoumean(String keyword) throws ParseException 
-    {
-    		// TODO: WHAT?!?
-        List<String> alternatives = new ArrayList<String>();
-        return alternatives;
-    }
+		public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
+		{
+			log.info ( "searching QTL against: {}", qtlsStr );
+			Set<ONDEXConcept> concepts = new HashSet<> ();
 
-    /**
-     * Searches for genes within genomic regions (QTLs)
-     *
-     * @param List<String> qtlsStr
-     * @return Set<ONDEXConcept> concepts
-     */
-    public Set<ONDEXConcept> searchQTLs(List<String> qtlsStr)
-    {
-        log.info("qtlsStr: " + qtlsStr); // qtl string
-        Set<ONDEXConcept> concepts = new HashSet<>();
+			// convert List<String> qtlStr to List<QTL> qtls
+			List<QTL> qtls = QTL.fromStringList ( qtlsStr );
 
-        // convert List<String> qtlStr to List<QTL> qtls
-        List<QTL> qtls = QTL.fromStringList ( qtlsStr );
+			for ( QTL qtl : qtls )
+			{
+				try
+				{
+					String chrQTL = qtl.getChromosome ();
+					int startQTL = qtl.getStart ();
+					int endQTL = qtl.getEnd ();
+					log.info ( "user QTL (chr, start, end): " + chrQTL + " , " + startQTL + " , " + endQTL );
+					// swap start with stop if start larger than stop
+					if ( startQTL > endQTL )
+					{
+						int tmp = startQTL;
+						startQTL = endQTL;
+						endQTL = tmp;
+					}
 
-        for (QTL qtl : qtls)
-        {
-            try {
-            		String chrQTL = qtl.getChromosome();
-                int startQTL = qtl.getStart();
-                int endQTL = qtl.getEnd();
-                log.info("user QTL (chr, start, end): " + chrQTL + " , " + startQTL + " , " + endQTL);
-                // swap start with stop if start larger than stop
-                if (startQTL > endQTL) {
-                    int tmp = startQTL;
-                    startQTL = endQTL;
-                    endQTL = tmp;
-                }
-                
-                var gmeta = graph.getMetaData ();
-                ConceptClass ccGene = gmeta.getConceptClass("Gene");
-                
-                Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass(ccGene);
-                log.info ( "searchQTL, found {} matching gene(s)", genes.size() );
-                
-                for (ONDEXConcept c : genes)
-                {
-                    if ( !taxID.contains ( getAttrValueAsString ( graph, c, "TAXID", false ) ) )
-                    	continue;
-                    	    
-                    String chrGene = getAttrValueAsString ( graph, c, "Chromosome", false );
-                    int startGene = Optional.ofNullable ( (Integer) getAttrValue ( graph, c, "BEGIN" ) ).orElse ( 0 );
-                    		
-                    if (! ( chrGene != null && startGene != 0 ) ) continue;
-                    if ( !chrQTL.equals(chrGene) ) continue;
-                    if (! ( startGene >= startQTL && startGene <= endQTL ) ) continue;
-                    
-                    concepts.add(c);
-                }
-            } 
-            catch (Exception e)
-            {
-            	// TODO: the user doesn't get any of this!
-              log.error("Not valid qtl: " + e.getMessage (), e);
-            }
-        }
-        return concepts;
-    }
+					var gmeta = graph.getMetaData ();
+					ConceptClass ccGene = gmeta.getConceptClass ( "Gene" );
 
+					Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
+					log.info ( "searchQTL, found {} matching gene(s)", genes.size () );
+
+					for ( ONDEXConcept gene : genes )
+					{
+						GeneHelper geneHelper = new GeneHelper ( graph, gene );
+
+						String geneChr = geneHelper.getChromosome ();
+						if ( geneChr == null ) continue;
+						if ( !chrQTL.equals ( geneChr )) continue;
+
+						int geneStart = geneHelper.getBeginBP ( true );
+						if ( geneStart == 0 ) continue;
+
+						int geneEnd = geneHelper.getEndBP ( true );
+						if ( geneEnd == 0 ) continue;
+
+						if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
+						
+						if ( !taxID.contains ( geneHelper.getTaxID () ) ) continue;
+
+						concepts.add ( gene );
+					}
+				}
+				catch ( Exception e )
+				{
+					// TODO: the user doesn't get any of this!
+					log.error ( "Not valid qtl: " + e.getMessage (), e );
+				}
+			}
+			return concepts;
+		}
+
+		
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
      * input terms.
@@ -923,28 +904,28 @@ public class OndexServiceProvider
      * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
      * 
      */
-    private Set<QTL> findQTL(String keyword) throws ParseException
+    private Set<QTL> getQTLHelpers ( String keyword ) throws ParseException
     {
-    		var gmeta = graph.getMetaData();
-        ConceptClass ccTrait = gmeta.getConceptClass("Trait");
-        ConceptClass ccQTL = gmeta.getConceptClass("QTL");
-        ConceptClass ccSNP = gmeta.getConceptClass("SNP");
+  		var gmeta = graph.getMetaData();
+      ConceptClass ccTrait = gmeta.getConceptClass("Trait");
+      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+      ConceptClass ccSNP = gmeta.getConceptClass("SNP");
 
-        // no Trait-QTL relations found
-        if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
+      // no Trait-QTL relations found
+      if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
 
-        // no keyword provided
-        if (keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
+      // no keyword provided
+      if (keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
 
-        log.debug ( "Looking for QTLs..." );
-        
-        // If there is not traits but there is QTLs then we return all the QTLs
-        if (ccTrait == null) return findQTLAllTraits ();
-        return findQTLForTrait ( keyword );
+      log.debug ( "Looking for QTLs..." );
+      
+      // If there is not traits but there is QTLs then we return all the QTLs
+      if (ccTrait == null) return getAllQTLHelpers ();
+      return findQTLForTrait ( keyword );
     }
 
     
-    private Set<QTL> findQTLAllTraits ()
+    private Set<QTL> getAllQTLHelpers ()
     {
       log.info ( "No Traits found: all QTLS will be shown..." );
 
@@ -954,20 +935,20 @@ public class OndexServiceProvider
       ConceptClass ccQTL = gmeta.getConceptClass("QTL");
       
       // results = graph.getConceptsOfConceptClass(ccQTL);
-      for (ONDEXConcept q : graph.getConceptsOfConceptClass(ccQTL))
+      for (ONDEXConcept qtl : graph.getConceptsOfConceptClass(ccQTL))
       {
-          String type = q.getOfType().getId();
-          String chrName = getAttrValue ( graph, q, "Chromosome" );
-          int start = (Integer) getAttrValue ( graph, q, "BEGIN" );
-          int end = (Integer) getAttrValue ( graph, q, "END" );
-          String trait = getAttrValueAsString ( graph, q, "Trait", false );
-          
-          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, q, "TAXID", false ) )
-          	.orElse ( "" );
-          
-          String label = q.getConceptName().getName();
-          
-          results.add ( new QTL ( chrName, type, start, end, label, "", 1.0f, trait, taxId ) );
+        String type = qtl.getOfType().getId();
+        String chrName = getAttrValue ( graph, qtl, "Chromosome" );
+        int start = (Integer) getAttrValue ( graph, qtl, "BEGIN" );
+        int end = (Integer) getAttrValue ( graph, qtl, "END" );
+        String trait = getAttrValueAsString ( graph, qtl, "Trait", false );
+        
+        String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "TAXID", false ) )
+        	.orElse ( "" );
+        
+        String label = qtl.getConceptName().getName();
+        
+        results.add ( new QTL ( chrName, type, start, end, label, "", 1.0f, trait, taxId ) );
       }
       return results;    	
     }
@@ -984,11 +965,11 @@ public class OndexServiceProvider
       Analyzer analyzerSt = new StandardAnalyzer();
       Analyzer analyzerWS = new WhitespaceAnalyzer();
 
-      String fieldCC = getFieldName ( "ConceptClass", null );
+      String fieldCC = getLuceneFieldName ( "ConceptClass", null );
       QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
       Query cC = parserCC.parse("Trait");
 
-      String fieldCN = getFieldName("ConceptName", null);
+      String fieldCN = getLuceneFieldName ( "ConceptName", null);
       QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
       Query cN = parserCN.parse(keyword);
 
@@ -1050,6 +1031,7 @@ public class OndexServiceProvider
       return results;    	
     }
         
+    
     /**
      * Semantic Motif Search for list of genes
      *
@@ -1059,21 +1041,22 @@ public class OndexServiceProvider
      */
     public ONDEXGraph findSemanticMotifs ( Integer[] ids, String regex )
     {
-        log.debug("get genes function " + ids.length);
-        Set<ONDEXConcept> seed = new HashSet<>();
+      log.debug("get genes function " + ids.length);
+      Set<ONDEXConcept> seed = new HashSet<>();
 
-        for (int id : ids) 
-        {
-            ONDEXConcept c = graph.getConcept(id);
-            String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
-            if ( taxId == null ) continue;
-            seed.add ( c );
-        }
-        log.debug("Now we will call findSemanticMotifs(seed)!");
-        ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
-        return subGraph;
+      for (int id : ids) 
+      {
+        ONDEXConcept c = graph.getConcept(id);
+        String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
+        if ( taxId == null ) continue;
+        seed.add ( c );
+      }
+      log.debug("Now we will call findSemanticMotifs(seed)!");
+      ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
+      return subGraph;
     }
 
+    
     /**
      * Searches for ONDEXConcepts with the given accessions in the OndexGraph. Assumes a keyword-oriented syntax
      * for the accessions, eg, characters like brackets are removed.
@@ -1121,6 +1104,7 @@ public class OndexServiceProvider
 			return hits;
 		}
 
+		
     /**
      * Searches genes related to an evidence, fetches the corresponding semantic motifs and merges
      * the paths between them into the resulting graph.
@@ -1169,49 +1153,57 @@ public class OndexServiceProvider
 		}
 
 
-		
     /**
-     * Converts a keyword into a list of words
+     * Converts a search string into a list of words
      *
-     * @param keyword
      * @return null or the list of words
      */
-		private Set<String> parseKeywordIntoSetOfWords ( String keyword )
+		private Set<String> parseKeywordIntoSetOfWords ( String searchString )
 		{
 			Set<String> result = new HashSet<> ();
-			String key = keyword.replace ( "(", " " );
-			key = key.replace ( ")", " " );
-			key = key.replace ( "AND", " " );
-			key = key.replace ( "OR", " " );
-			key = key.replace ( "NOT", " " );
-			key = key.replaceAll ( "\\s+", " " ).trim ();
-			String builtK = "";
-			for ( String k : key.split ( " " ) )
+			searchString = searchString
+			.replace ( "(", " " )
+			.replace ( ")", " " )
+			.replace ( "AND", " " )
+			.replace ( "OR", " " )
+			.replace ( "NOT", " " )
+			.replaceAll ( "\\s+", " " )
+			.trim ();
+			
+			for ( String token : searchString.split ( " " ) )
 			{
-				if ( k.startsWith ( "\"" ) )
-				{
-					if ( k.endsWith ( "\"" ) )
-						// result.add(k.substring(0, k.length() - 1));
-						result.add ( k.replace ( "\"", "" ) );
-					else
-						builtK = k.substring ( 1 );
-				} 
-				else if ( k.endsWith ( "\"" ) )
-				{
-					builtK += " " + k.substring ( 0, k.length () - 1 );
-					result.add ( builtK );
-					builtK = "";
-				} 
-				else
-				{
-					if ( builtK != "" )
-						builtK += " " + k;
-					else
-						result.add ( k );
-				}
+				// Removes any wrapping double quotes
+				// TODO: this reproduces the rubbish below, but might be still be wrong, since it 
+				// doesn't consider in-between quotes. Basically, we need Lucene here.
+				token = token.replace ( "^\"", "" )
+				.replace ( "\"$", "" );
+				
+				result.add ( token );
+				
+// TODO: REMOVE!!! WHAT THE HELL!!!				
+//				if ( token.startsWith ( "\"" ) )
+//				{
+//					if ( token.endsWith ( "\"" ) )
+//						result.add ( token.replace ( "\"", "" ) );
+//					else
+//						builtK = token.substring ( 1 );
+//				} 
+//				else if ( token.endsWith ( "\"" ) )
+//				{
+//					builtK += " " + token.substring ( 0, token.length () - 1 );
+//					result.add ( builtK );
+//					builtK = "";
+//				} 
+//				else
+//				{
+//					if ( builtK != "" )
+//						builtK += " " + token;
+//					else
+//						result.add ( token );
+//				}
 		  }
-			if ( !"".equals ( builtK ) ) result.add ( builtK );
-			log.info ( "keys: " + result );
+
+			log.info ( "tokens: {}", result );
 			return result;
 		}
 
@@ -1679,11 +1671,11 @@ public class OndexServiceProvider
 			ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
 			Set<ONDEXConcept> cons = path.getAllConcepts ();
 			cons.stream ()
-				.filter ( pconcept -> pconcept.getId () == lastCon.getId () )
-				.forEach ( pconcept -> {
-					ONDEXConcept concept = graphCloner.cloneConcept ( pconcept );
-					concept.createAttribute ( attVisible, false, false );
-				});
+			.filter ( pconcept -> pconcept.getId () == lastCon.getId () )
+			.forEach ( pconcept -> {
+				ONDEXConcept concept = graphCloner.cloneConcept ( pconcept );
+				concept.createAttribute ( attVisible, false, false );
+			});
 		}
 
 		
@@ -1729,7 +1721,7 @@ public class OndexServiceProvider
 				// qtlDB = graph.getConceptsOfConceptClass(ccQTL);
 				try
 				{
-					qtlDB = findQTL ( keyword );
+					qtlDB = getQTLHelpers ( keyword );
 				}
 				catch ( ParseException e )
 				{
@@ -2138,11 +2130,6 @@ public class OndexServiceProvider
     /**
      * Write Evidence Table for Evidence View file
      *
-     * @param luceneConcepts
-     * @param userGenes
-     * @param qtl
-     * @param filename
-     * @return boolean
      */
 		public String writeEvidenceTable ( 
 			String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
@@ -2272,7 +2259,7 @@ public class OndexServiceProvider
 				Map<Integer, Float> synonyms2Scores = new HashMap<> ();
 
 				// search concept names
-				String fieldNameCN = getFieldName ( "ConceptName", null );
+				String fieldNameCN = getLuceneFieldName ( "ConceptName", null );
 				QueryParser parserCN = new QueryParser ( fieldNameCN, analyzer );
 				Query qNames = parserCN.parse ( synonymKey );
 				ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts ( qNames, 500 );
@@ -2553,11 +2540,25 @@ public class OndexServiceProvider
     /**
      * TODO: WTH?!? This is an Ondex module utility
      */
-    public String getFieldName(String name, String value)
+    private String getLuceneFieldName ( String name, String value )
     {
     	return value == null ? name : name + "_" + value;
     }
 
+    /**
+     * TODO: This is more Lucene module stuff 
+     */
+    private void luceneConceptSearchHelper ( 
+    	String keywords, String fieldName, String fieldValue, int resultLimit, 
+    	HashMap<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits, 
+    	Analyzer analyzer ) throws ParseException
+    {
+			fieldName = getLuceneFieldName ( fieldName, fieldValue );
+			QueryParser parser = new QueryParser ( fieldName, analyzer );
+			Query qAtt = parser.parse ( keywords );
+			ScoredHits<ONDEXConcept> thisHits = luceneMgr.searchTopConcepts ( qAtt, resultLimit );
+			mergeHits ( allResults, thisHits, notHits );
+    }
     
     /**
      * This method populates a HashMap with concepts from KB as keys and list of
@@ -2714,7 +2715,7 @@ public class OndexServiceProvider
 
     public ArrayList<ONDEXConcept> filterQTLs ( ArrayList<ONDEXConcept> genes, List<String> qtls ) 
     {
-      Set<ONDEXConcept> genesQTL = searchQTLs(qtls);
+      Set<ONDEXConcept> genesQTL = fetchQTLs(qtls);
       genes.retainAll(genesQTL);
       return genes;
     }
