@@ -90,6 +90,7 @@ import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
+import uk.ac.ebi.utils.regex.RegEx;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
@@ -1158,7 +1159,7 @@ public class OndexServiceProvider
      *
      * @return null or the list of words
      */
-		private Set<String> parseKeywordIntoSetOfWords ( String searchString )
+		private Set<String> getSearchWords ( String searchString )
 		{
 			Set<String> result = new HashSet<> ();
 			searchString = searchString
@@ -1169,41 +1170,23 @@ public class OndexServiceProvider
 			.replace ( "NOT", " " )
 			.replaceAll ( "\\s+", " " )
 			.trim ();
-			
-			for ( String token : searchString.split ( " " ) )
+					
+			for (
+				// TODO: cache the pattern
+				var tokenMatcher = Pattern.compile ( "\"[^\"]+\"|[^\\s]+" ).matcher ( searchString );
+				tokenMatcher.find ();
+			)
 			{
-				// Removes any wrapping double quotes
-				// TODO: this reproduces the rubbish below, but might be still be wrong, since it 
-				// doesn't consider in-between quotes. Basically, we need Lucene here.
-				token = token.replace ( "^\"", "" )
-				.replace ( "\"$", "" );
-				
-				result.add ( token );
-				
-// TODO: REMOVE!!! WHAT THE HELL!!!				
-//				if ( token.startsWith ( "\"" ) )
-//				{
-//					if ( token.endsWith ( "\"" ) )
-//						result.add ( token.replace ( "\"", "" ) );
-//					else
-//						builtK = token.substring ( 1 );
-//				} 
-//				else if ( token.endsWith ( "\"" ) )
-//				{
-//					builtK += " " + token.substring ( 0, token.length () - 1 );
-//					result.add ( builtK );
-//					builtK = "";
-//				} 
-//				else
-//				{
-//					if ( builtK != "" )
-//						builtK += " " + token;
-//					else
-//						result.add ( token );
-//				}
-		  }
+				String token = tokenMatcher.group ();
+				// Also fixes errors like odd no. of quotes
+				if ( token.startsWith ( "\"") ) token = token.substring ( 1 );
+				if ( token.endsWith ( "\"" ) ) token = token.substring ( 0, token.length () - 1 );
+				token = token.trim ();
 
-			log.info ( "tokens: {}", result );
+				result.add ( token );
+			}
+
+			log.info ( "getSearchWords(), tokens: {}", result );
 			return result;
 		}
 
@@ -1245,7 +1228,7 @@ public class OndexServiceProvider
 
 			Set<String> keywords = "".equals ( keyword ) 
 				? Collections.emptySet ()
-				: this.parseKeywordIntoSetOfWords ( keyword );
+				: this.getSearchWords ( keyword );
 					
 			Map<String, String> keywordColourMap = createHilightColorMap ( keywords );
 					
@@ -2249,7 +2232,7 @@ public class OndexServiceProvider
 			// TODO: Lucene shouldn't be used directly
 			Analyzer analyzer = new StandardAnalyzer ();
 			
-			Set<String> synonymKeys = this.parseKeywordIntoSetOfWords ( keyword );
+			Set<String> synonymKeys = this.getSearchWords ( keyword );
 			for ( var synonymKey: synonymKeys )
 			{
 				log.info ( "Checking synonyms for \"{}\"", synonymKey );
