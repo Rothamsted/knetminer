@@ -1,3 +1,11 @@
+
+
+
+
+# ==================================> TODO:DISABLED <==================================
+
+
+
 FROM knetminer/knetminer-bare
 
 # The bare image + a full maven build of the entire knetminer codebase.

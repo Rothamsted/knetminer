@@ -53,8 +53,9 @@ mvn --quiet --settings maven-settings.xml --update-snapshots $goal
 
 [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
 
-echo -e "\n\n\tBuilding Docker-base"
-docker build -t knetminer/knetminer-base:$docker_tag -f common/quickstart/Dockerfile-base .
+# TODO: remove
+#echo -e "\n\n\tBuilding Docker-base"
+#docker build -t knetminer/knetminer-base:$docker_tag -f common/quickstart/Dockerfile-base .
 
 echo -e "\n\n\tBuilding Docker"
 docker build -t knetminer/knetminer:$docker_tag -f common/quickstart/Dockerfile .
@@ -65,8 +66,7 @@ if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
 	exit
 fi
 
-# TODO: Fix this when no longer needed
-if [[ ! "$TRAVIS_BRANCH" =~ ^(master|202006_jdk11)$ ]]; then
+if [[ "$TRAVIS_BRANCH" != "master" ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
 	exit
 fi
@@ -84,6 +84,8 @@ fi
 
 docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 
+# TODO: remove
+#for postfix in bare base ''
 for postfix in bare base ''
 do
 	[[ -z "$postfix" ]] || postfix="-$postfix"
