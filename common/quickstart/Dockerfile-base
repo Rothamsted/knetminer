@@ -15,9 +15,5 @@ WORKDIR knetminer
 
 RUN echo -e "\n\n\tBuilding knetminer codebase and pulling all dependencies\n" \
   && mvn clean install --update-snapshots -DskipTests -DskipITs
-
-#RUN echo -e "\n\n\tBuilding knetminer codebase and pulling all dependencies\n" \
-#  && cd common/server-datasource-ondexlocal \
-#	&& mvn clean install --update-snapshots -DskipTests -DskipITs -X
 		
 #CMD [ "echo", "DO NOT RUN ME, This is a base image, used to build the Knetminer runtime" ]
