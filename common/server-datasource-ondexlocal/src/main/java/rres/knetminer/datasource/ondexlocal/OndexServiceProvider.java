@@ -90,7 +90,6 @@ import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
-import uk.ac.ebi.utils.regex.RegEx;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
@@ -337,8 +336,8 @@ public class OndexServiceProvider
 				int conCount = graph.getConceptsOfConceptClass ( conClass ).size ();
 				if ( conCount == 0 ) continue;
 				
-				conID = conID.equalsIgnoreCase ( "Path" ) ? "Pathway" : conID;
-				conID = conID.equalsIgnoreCase ( "Comp" ) ? "Compound" : conID;
+				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
+				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
 				
 				sb.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
 			}
@@ -353,7 +352,8 @@ public class OndexServiceProvider
 			));
 
 			// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-			sortedConceptClasses.stream ().forEach ( conceptClass -> 
+			sortedConceptClasses.stream ()
+			.forEach ( conceptClass -> 
 			{
 				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
 				String conceptID = conceptClass.getId ();
@@ -391,7 +391,8 @@ public class OndexServiceProvider
 			{
 				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
 				String conID = conceptClass.getId ();
-				if ( conID.equalsIgnoreCase ( "Thing" ) || conID.equalsIgnoreCase ( "TestCC" ) ) continue;
+				if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
+				if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
 				
 				int relationCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
 				int conCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
@@ -629,7 +630,7 @@ public class OndexServiceProvider
     )
 		{
     	sHits.getOndexHits ().stream ()
-    	.filter ( c -> notHits == null || notHits.getOndexHits ().contains ( c ) )
+    	.filter ( c -> notHits == null || !notHits.getOndexHits ().contains ( c ) )
     	.map ( c -> c instanceof LuceneConcept ? ( (LuceneConcept) c ).getParent () : c )
     	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
 		}
@@ -752,6 +753,7 @@ public class OndexServiceProvider
 			// log.info ( "searchLucene(), query for annotation: " + qAnno.toString ( fieldNameCA ) );
 			// log.info ( "Resulting Annotation hits: " + sHitsAnno.getOndexHits ().size () );
 
+			log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
 			return hit2score;
 		}
 
@@ -896,6 +898,7 @@ public class OndexServiceProvider
 			return concepts;
 		}
 
+// TODO: Review to be continued from here
 		
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
@@ -942,7 +945,9 @@ public class OndexServiceProvider
         String chrName = getAttrValue ( graph, qtl, "Chromosome" );
         int start = (Integer) getAttrValue ( graph, qtl, "BEGIN" );
         int end = (Integer) getAttrValue ( graph, qtl, "END" );
-        String trait = getAttrValueAsString ( graph, qtl, "Trait", false );
+        
+        String trait = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "Trait", false ) )
+        	.orElse ( "" );
         
         String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "TAXID", false ) )
         	.orElse ( "" );
