@@ -315,7 +315,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		Set<ONDEXConcept> genes = new HashSet<>();
 
-		log.info("Call applet! Search genes " + request.getList().size());
+		log.info("network() Search genes " + request.getList().size());
 
 		// Search Genes
 		if (!request.getList().isEmpty()) {
@@ -407,7 +407,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException {
         Set<ONDEXConcept> genes = new HashSet<>();
 
-        log.info("Call applet! Search genes " + request.getList().size());
+        log.info("geneCount() Search genes " + request.getList().size());
 
         // Search Genes
         if (!request.getList().isEmpty()) {

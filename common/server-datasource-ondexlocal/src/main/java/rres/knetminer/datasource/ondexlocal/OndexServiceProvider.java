@@ -1077,37 +1077,37 @@ public class OndexServiceProvider
 			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
 			ConceptClass ccGene = graph.getMetaData ().getConceptClass ( "Gene" );
 			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
-			Set<ONDEXConcept> hits = new HashSet<> ();
 
-			for ( ONDEXConcept gene : seed )
-			{
+			Set<String> normAccs = accessions.stream ()
+			.map ( acc -> 
+				acc.replaceAll ( "^[\"()]+", "" )
+				.replaceAll ( "[\"()]+$", "" )
+				.toUpperCase () 
+			).collect ( Collectors.toSet () );			
+			
+			return seed.stream ()
+			.filter ( gene -> {
         String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-        if ( !taxID.contains ( thisTaxId ) ) continue;
+        return taxID.contains ( thisTaxId );
+			})
+			.filter ( gene ->
+			{
+				if ( gene.getConceptAccessions ()
+				.stream ()
+				.map ( ConceptAccession::getAccession )
+				.map ( String::toUpperCase )
+				.anyMatch ( normAccs::contains ) ) return true;
+
+				// Search the input in names too, it might be there
+				if ( gene.getConceptNames ()
+				.stream ()
+				.map ( ConceptName::getName )
+				.map ( String::toUpperCase )
+				.anyMatch ( normAccs::contains ) ) return true;
 				
-				accessions.stream ()
-				.map ( acc -> 
-					acc.replaceAll ( "^[\"()]+", "" )
-					.replaceAll ( "[\"()]+$", "" )
-					.toUpperCase () 
-				)
-				.map ( acc -> 
-				{
-					// User may use accession ID's instead
-					gene.getConceptNames ()
-						.stream ()
-						.filter ( cname -> cname.getName ().toUpperCase ().equals ( acc ) )
-						.forEachOrdered ( _item -> hits.add ( gene ) );
-					return acc;
-				})
-				.forEachOrdered ( acc ->
-					// User may use accession ID's instead
-					gene.getConceptAccessions ()
-					.stream ()
-					.filter ( ca -> ca.getAccession ().toUpperCase ().equals ( acc ) )
-					.forEachOrdered ( _item -> hits.add ( gene ) )
-				);
-			}
-			return hits;
+				return false;
+			})
+			.collect ( Collectors.toSet () );
 		}
 
 		
@@ -1207,7 +1207,7 @@ public class OndexServiceProvider
      */
 		public ONDEXGraph findSemanticMotifs ( Set<ONDEXConcept> seed, String keyword )
 		{
-			log.debug ( "Method findSemanticMotifs - keyword: {}", keyword );
+			log.info ( "findSemanticMotifs(), keyword: {}", keyword );
 			// Searches with Lucene: luceneResults
 			Map<ONDEXConcept, Float> luceneResults = null;
 			try
@@ -1294,7 +1294,7 @@ public class OndexServiceProvider
 
 			// special case when none of nodes contains keyword (no-keyword-match)
 			// set path to visible if end-node is Trait or Phenotype
-			if ( keywordConcepts.isEmpty () && ! ( keyword == null || keyword.equals ( "" ) ) )
+			if ( keywordConcepts.isEmpty () && ! ( keyword == null || keyword.isEmpty () ) )
 				for ( EvidencePathNode path : pathSet )
 					highlightPath ( path, graphCloner, true );
 
@@ -1304,7 +1304,6 @@ public class OndexServiceProvider
 			// if subgraph has publications do smart filtering of most interesting papers
 			if ( ccPub != null )
 			{
-
 				// get all publications in subgraph that have and don't have keyword
 				Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass ( ccPub );
 
