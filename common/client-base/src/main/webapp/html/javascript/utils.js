@@ -1011,8 +1011,12 @@ function createGenesTable(text, keyword, rows) {
         table = '';
         // Gene View: interactive summary legend for evidence types.
         var interactive_summary_Legend = getInteractiveSummaryLegend(text);
+        var utf8Bytes = "";
+        utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+          });
 
-        table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(text) + '" target="_blank">Download as TAB delimited file</a><br />';
+        table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
         table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
         table = table + '<form name="checkbox_form">';
         table = table + '<u>Max</u> number of genes to show: ';
