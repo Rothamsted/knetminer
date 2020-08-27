@@ -1261,17 +1261,19 @@ public class OndexServiceProvider
 					ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
 
 					// no-keyword, set path to visible if end-node is Trait or Phenotype
-					if ( keyword == null || keyword.equals ( "" ) )
+					if ( keyword == null || keyword.isEmpty() )
 					{
 						highlightPath ( path, graphCloner, true );
 						continue;
 					}
 
 					// keyword-mode and end concept contains keyword, set path to visible
-					if ( luceneResults.containsKey ( endNode ) ) {
+					if ( !luceneResults.containsKey ( endNode ) ) {
+            // collect all paths that did not qualify
 						pathSet.add ( path );
 						continue;
 					}
+					
 					// keyword-mode -> do text and path highlighting
 					ONDEXConcept cloneCon = graphCloner.cloneConcept ( endNode );
 
@@ -1283,9 +1285,10 @@ public class OndexServiceProvider
 	
 						if ( endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
 							pubKeywordSet.add ( cloneCon );
-						// set only paths from gene to evidence nodes to visible
-						highlightPath ( path, graphCloner, false );
 					}
+
+					// set only paths from gene to evidence nodes to visible
+					highlightPath ( path, graphCloner, false );
 				} // for path
 			} // for paths
 
