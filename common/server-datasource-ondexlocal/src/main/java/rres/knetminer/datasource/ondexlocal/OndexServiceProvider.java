@@ -232,7 +232,7 @@ public class OndexServiceProvider
      * @throws ArrayIndexOutOfBoundsException
      * @throws PluginConfigurationException
      */
-    public void createGraph(String dataPath, String graphFileName, String smFileName)
+    public void createGraph ( String dataPath, String graphFileName, String smFileName )
 		{
 			log.info ( "Loading graph from " + graphFileName );
 
@@ -1268,27 +1268,24 @@ public class OndexServiceProvider
 					}
 
 					// keyword-mode and end concept contains keyword, set path to visible
-					if ( !luceneResults.containsKey ( endNode ) ) {
+					if ( luceneResults.containsKey ( endNode ) ) {
 						pathSet.add ( path );
 						continue;
 					}
-					
 					// keyword-mode -> do text and path highlighting
 					ONDEXConcept cloneCon = graphCloner.cloneConcept ( endNode );
 
 					// highlight keyword in any concept attribute
-					if ( keywordConcepts.contains ( cloneCon ) ) continue;
-					
-					this.highlightSearchKeywords ( cloneCon, keywordColourMap );
-					keywordConcepts.add ( cloneCon );
-
-					if ( !endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) ) continue;
-					
-					pubKeywordSet.add ( cloneCon );
-
-					// set only paths from gene to evidence nodes to visible
-					highlightPath ( path, graphCloner, false );
-					
+					if ( !keywordConcepts.contains ( cloneCon ) )
+					{
+						this.highlightSearchKeywords ( cloneCon, keywordColourMap );
+						keywordConcepts.add ( cloneCon );
+	
+						if ( endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
+							pubKeywordSet.add ( cloneCon );
+						// set only paths from gene to evidence nodes to visible
+						highlightPath ( path, graphCloner, false );
+					}
 				} // for path
 			} // for paths
 
