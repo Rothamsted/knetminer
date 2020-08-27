@@ -50,8 +50,12 @@ echo -e "\n\n\t Building Maven goal: $goal"
 # You need --quiet, Travis doesn't like too big logs.
 mvn --quiet --settings maven-settings.xml --update-snapshots $goal
 
+echo -e "\n\n\t Cleaning local Maven for Docker"
+mvn --quiet clean
 
-[[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
+# Might be useful when developing on a branch.
+# [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
+docker_tag='latest'
 
 # TODO: remove
 #echo -e "\n\n\tBuilding Docker-base"
@@ -86,7 +90,7 @@ docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 
 # TODO: remove
 #for postfix in bare base ''
-for postfix in bare base ''
+for postfix in bare ''
 do
 	[[ -z "$postfix" ]] || postfix="-$postfix"
 
