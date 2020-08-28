@@ -44,6 +44,12 @@ public class ApiIT
 	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	private Logger log = LogManager.getLogger ( this.getClass () );
 	
+	/**
+	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
+	 * @param callName appended to {@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
+	 * @param jsonFields appended to the HTTP request.
+	 * 
+	 */
 	public static JSONObject invokeApi ( String callName, Object... jsonFields )
 	{
 		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + callName;

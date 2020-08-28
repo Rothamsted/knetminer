@@ -137,7 +137,6 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		this.ondexServiceProvider.setKnetspaceHost(this.getProperty("knetSpaceHost"));
 		//log.info("Datasource " + dsName + " KnetSpace host: " + this.ondexServiceProvider.getKnetspaceHost());
                 
-                
 
 		this.ondexServiceProvider.createGraph (
 			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
