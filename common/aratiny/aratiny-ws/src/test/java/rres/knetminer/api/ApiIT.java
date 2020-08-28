@@ -43,6 +43,92 @@ public class ApiIT
 {
 	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	private Logger log = LogManager.getLogger ( this.getClass () );
+
+	
+	@Test
+	public void testCountHits () throws JSONException, IOException, URISyntaxException {
+		testCountHits ( "seed" );
+	}
+
+	/**
+	 * Testing indexing of accessions.
+	 */
+	@Test
+	public void testCountHitsPhraseQuery () throws JSONException, IOException, URISyntaxException {
+		testCountHits ( "cell cycle" );
+	}
+	
+	/**
+	 * Invokes /countHits with the given keyword and verifies that the result is >0.
+	 * This is used by test methods below with various keywords.
+	 */
+	private void testCountHits ( String keyword ) throws JSONException, IOException, URISyntaxException
+	{
+		String encKeyword = URLEncoder.encode ( keyword, "UTF-8" );
+		JSONObject js = new JSONObject ( IOUtils.toString ( 
+			new URI ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits?keyword=" + encKeyword ),
+			"UTF-8"
+		));
+		
+		Stream.of ( "luceneCount", "luceneLinkedCount", "geneCount" )
+		.forEach ( key -> 
+		  assertTrue ( 
+		  	"countHits for '" + keyword + "' returned a wrong result (" + key + ")!", 
+		  	js.getInt ( key ) > 0 )
+		);
+	}	
+
+	
+	@Test
+	public void testGenomeGrowth () {
+		testGenome ( "growth", "ABI3" );
+	}
+	
+	@Test
+	public void testGenomeASK7 () {
+		testGenome ( "'AT5G14750'", "ASK7" );
+	}
+
+	/**
+	 * This is actually run only if we're running the neo4j profile (we receive a flag by Maven, reporting that).
+	 */
+	@Test
+	public void testGenomeNeo4j () 
+	{
+		if ( !"neo4j".equals ( getMavenProfileId () ) ) {
+			log.warn ( "Skipping test for neo4j profile-only" );
+			return;
+		}
+		
+		testGenome ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
+	}
+		
+	
+	/**
+	 * Invokes {@code /genome?keyword=XXX&qtl=}, then verifies the result
+	 * (eg, geneCount is > 0, gviewer != null).
+	 * 
+	 * @param expectedGeneLabel is checked against the 'gviewer' result, 
+	 * to see if {@code /genome/feature/geneLabel} has the expected value.
+	 * 
+	 */
+	private void testGenome ( String keyword, String expectedGeneLabel )
+	{
+		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0] );
+		
+		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
+		
+		String xmlView = js.getString ( "gviewer" );
+		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
+		
+		XPathReader xpath = new XPathReader ( xmlView );
+		
+		assertNotNull (
+			"Gene " + expectedGeneLabel + " not returned by /genome", 
+			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
+		);
+	}
+	
 	
 	/**
 	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
@@ -86,96 +172,11 @@ public class ApiIT
 		}
 	}
 	
-	/**
-	 * Using a property set by it, returns the current profile in use.
-	 * This is used by tests like {@link #blockingPseudoTest()} to establish
-	 * what to do.
-	 */
-	public static String getMavenProfileId ()
-	{
-		String neoPropType = "maven.profileId";
-		String result = System.getProperty ( neoPropType, null );
-		
-		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", result );
-		return result;
-	}
-
-	private void testCountHits ( String keyword ) throws JSONException, IOException, URISyntaxException
-	{
-		String encKeyword = URLEncoder.encode ( keyword, "UTF-8" );
-		JSONObject js = new JSONObject ( IOUtils.toString ( 
-			new URI ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits?keyword=" + encKeyword ),
-			"UTF-8"
-		));
-		
-		Stream.of ( "luceneCount", "luceneLinkedCount", "geneCount" )
-		.forEach ( key -> 
-		  assertTrue ( 
-		  	"countHits for '" + keyword + "' returned a wrong result (" + key + ")!", 
-		  	js.getInt ( key ) > 0 )
-		);
-	}
-
-	
-	@Test
-	public void testCountHits () throws JSONException, IOException, URISyntaxException {
-		testCountHits ( "seed" );
-	}
-
-	/**
-	 * Testing indexing of accessions.
-	 */
-	@Test
-	public void testCountHitsPhraseQuery () throws JSONException, IOException, URISyntaxException {
-		testCountHits ( "cell cycle" );
-	}
-
-	
-	@Test
-	public void testGenomeGrowth () {
-		testGenome ( "growth", "ABI3" );
-	}
-	
-	@Test
-	public void testGenomeASK7 () {
-		testGenome ( "'AT5G14750'", "ASK7" );
-	}
-
-	/**
-	 * This is actually run only if we're running the neo4j profile (we receive a flag by Maven, reporting that).
-	 */
-	@Test
-	public void testGenomeNeo4j () 
-	{
-		if ( !"neo4j".equals ( getMavenProfileId () ) ) {
-			log.warn ( "Skipping test for neo4j profile-only" );
-			return;
-		}
-		
-		testGenome ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
-	}
-		
-	
-	
-	private void testGenome ( String keyword, String expectedGeneLabel )
-	{
-		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0] );
-		
-		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
-		
-		String xmlView = js.getString ( "gviewer" );
-		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
-		
-		XPathReader xpath = new XPathReader ( xmlView );
-		
-		assertNotNull (
-			"Gene " + expectedGeneLabel + " not returned by /genome", 
-			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
-		);
-	}
 	
 	/**
-	 * It's a pseudo-test that works with the 'run' profile, to stop the maven build at the integration-test phase.
+	 * It's a pseudo-test that works with the 'run' profile. It just stops the Maven build at the integration-test phase,
+	 * so that the test Jetty server is kept on for manual inspection.
+	 *  
 	 * See the POM for details.
 	 */
 	@Test
@@ -188,4 +189,18 @@ public class ApiIT
 		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
+	
+	/**
+	 * Using a property set by it, returns the current profile in use.
+	 * This is used by tests like {@link #blockingPseudoTest()} to establish
+	 * what to do.
+	 */
+	public static String getMavenProfileId ()
+	{
+		String neoPropType = "maven.profileId";
+		String result = System.getProperty ( neoPropType, null );
+		
+		assertNotNull ( "Property '" + neoPropType + "' is null! It must be set on Maven and failsafe plugin", result );
+		return result;
+	}	
 }
