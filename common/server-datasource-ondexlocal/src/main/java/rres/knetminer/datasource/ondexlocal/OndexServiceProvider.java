@@ -317,8 +317,8 @@ public class OndexServiceProvider
 			sb.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
 			sb.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
 			sb.append ( "<evidenceNetworkSizes>\n" );
-			sb.append ( "<minSize>" ).append ( minValues ).append ( "</minSize>\n" );
-			sb.append ( "<maxSize>" ).append ( maxValues ).append ( "</maxSize>\n" );
+			sb.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
+			sb.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
 			sb.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
 			sb.append ( "</evidenceNetworkSizes>\n" );
 
