@@ -652,7 +652,7 @@ public class OndexServiceProvider
      * @throws IOException
      * @throws ParseException
      */
-		public HashMap<ONDEXConcept, Float> searchLucene ( 
+		public Map<ONDEXConcept, Float> searchLucene ( 
 			String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
 		) throws IOException, ParseException
 		{
@@ -1684,7 +1684,7 @@ public class OndexServiceProvider
      * @param listMode
      * @return
      */
-		public String writeAnnotationXML ( String apiUrl, ArrayList<ONDEXConcept> genes, Set<ONDEXConcept> userGenes,
+		public String writeAnnotationXML ( String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes,
 			List<String> userQtlStr, String keyword, int maxGenes, Hits hits, String listMode,
 			Map<ONDEXConcept, Double> scoredCandidates )
 		{
@@ -1937,7 +1937,7 @@ public class OndexServiceProvider
      *
      */
 		public String writeGeneTable ( 
-			ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
+			List<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
 			String listMode,  SemanticMotifsSearchResult searchResult 
 		)
 		{
@@ -2115,7 +2115,7 @@ public class OndexServiceProvider
      *
      */
 		public String writeEvidenceTable ( 
-			String keywords, HashMap<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
+			String keywords, Map<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
 		)
 		{
 			StringBuffer out = new StringBuffer ();
@@ -2329,7 +2329,7 @@ public class OndexServiceProvider
 		 * The two tasks are different, see below.
 		 * 
 		 */
-		public Map<Integer, Set<Integer>> getMapEvidences2Genes ( HashMap<ONDEXConcept, Float> luceneConcepts )
+		public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
 		{
 			return luceneConcepts.keySet ()
 			.stream ()
@@ -2693,12 +2693,6 @@ public class OndexServiceProvider
 			log.info ( "Populated Gene2QTL with #mappings: " + mapGene2QTL.size () );
 		}
 
-    public ArrayList<ONDEXConcept> filterQTLs ( ArrayList<ONDEXConcept> genes, List<String> qtls ) 
-    {
-      Set<ONDEXConcept> genesQTL = fetchQTLs(qtls);
-      genes.retainAll(genesQTL);
-      return genes;
-    }
 		
     /*
      * // TODO: no longer in use. Can we remove it?

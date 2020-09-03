@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONException;
@@ -267,7 +269,9 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			if (response.getClass().equals(QtlResponse.class)) {
 				log.info("QTL response...");
 				// filter QTL's as well
-				genes = this.ondexServiceProvider.filterQTLs(genes, request.getQtl());
+				Set<ONDEXConcept> genesQTL = ondexServiceProvider.fetchQTLs(request.getQtl());
+				genes.retainAll(genesQTL);
+				
 				log.info("Genes after QTL filter: " + genes.size());
 			}
 		}
@@ -299,8 +303,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
 			log.debug("3.) Evidence table ");
-
-			// Document count (only related with genes)
+			
 			int docSize = this.ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
 					.size();
 

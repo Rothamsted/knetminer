@@ -25,7 +25,7 @@ public class Hits {
     protected final Logger log = LogManager.getLogger(getClass());
 	
 	private OndexServiceProvider ondexProvider;
-	private HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
+	private Map<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
 	private SemanticMotifsSearchResult searchResult = null;
@@ -74,7 +74,7 @@ public class Hits {
 		return numConnectedGenes;
 	}
 
-	public HashMap<ONDEXConcept, Float> getLuceneConcepts(){
+	public Map<ONDEXConcept, Float> getLuceneConcepts(){
 		return this.luceneConcepts;
 	}
 

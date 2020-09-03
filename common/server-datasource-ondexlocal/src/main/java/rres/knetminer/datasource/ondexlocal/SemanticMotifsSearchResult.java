@@ -1,18 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
-import static java.util.Collections.unmodifiableMap;
-import static java.util.stream.Collectors.toMap;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 
