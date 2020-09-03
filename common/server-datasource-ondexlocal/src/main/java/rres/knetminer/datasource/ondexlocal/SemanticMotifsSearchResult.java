@@ -24,7 +24,9 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  * This has been introduced to cope with methods like {@link OndexServiceProvider#getScoredGenesMap(Map)} and
  * other methods that used these two structures separately.
  * 
- * TODO: Probably to be changed during a more compheensive OSP review. 
+ * TODO: Probably to be changed during a more comprehensive OSP review. 
+ * TODO: the returned maps aren't immutable, we need to review things around and then protect it.
+ * 
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>2 Sep 2020</dd></dl>
@@ -44,8 +46,8 @@ public class SemanticMotifsSearchResult
 	)
 	{
 		super ();
-		this.geneId2RelatedConceptIds = unmodifiableMap ( geneId2RelatedConceptIds );
-		this.relatedConcept2Score = unmodifiableMap ( relatedConcept2Score ); 
+		this.geneId2RelatedConceptIds = geneId2RelatedConceptIds;
+		this.relatedConcept2Score = relatedConcept2Score; 
 	}
 
 	/**

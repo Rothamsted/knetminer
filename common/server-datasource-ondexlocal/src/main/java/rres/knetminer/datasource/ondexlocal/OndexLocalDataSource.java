@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -229,9 +230,9 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 		// Genome search
 		log.info("Search mode: " + response.getClass().getName());
-		ArrayList<ONDEXConcept> genes = new ArrayList<ONDEXConcept>();
+		List<ONDEXConcept> genes = new ArrayList<>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider, userGenes);
-		Map<ONDEXConcept, Double> geneMap = new HashMap<ONDEXConcept, Double>();
+		Map<ONDEXConcept, Double> geneMap = new HashMap<>();
 		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class)) {
 			log.info("Genome or QTL response...");
 
