@@ -283,8 +283,14 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			}
 
 			// Gene table file
-			String geneTable = this.ondexServiceProvider.writeGeneTable(genes, userGenes, request.getQtl(),
-					request.getListMode(),geneMap);                        
+			// TODO: no idea why geneMap is recalculated here insted of a more proper place, anyway, let's 
+			// adapt to it
+			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
+				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap
+			);
+			String geneTable = this.ondexServiceProvider.writeGeneTable ( 
+				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
+			);                        
                                 
 			log.debug("2.) Gene table ");
 

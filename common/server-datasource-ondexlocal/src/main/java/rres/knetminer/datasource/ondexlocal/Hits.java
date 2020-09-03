@@ -16,6 +16,8 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 
 /**
  * 
+ * TODO: very messy, with computed stuff made stateful fields or viceversa, needs serious review.
+ * 
  * @author zorc, pakk, singha
  *
  */
@@ -26,10 +28,10 @@ public class Hits {
 	private HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
-	private Map<ONDEXConcept, Double> sortedCandidates;
+	private SemanticMotifsSearchResult searchResult = null;
 	private String keyword = "";
 	
-	
+	// TODO: keyword is not used!
 	public Hits(String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList) {
 		this.ondexProvider = ondexProvider;
 		this.keyword = keyword;
@@ -38,9 +40,7 @@ public class Hits {
 			//remove from constructor if it slows down search noticeably
 			this.countLinkedGenes();
 		} 
-		catch (IOException e) {			
-			log.error("Hits failed", e);
-		} catch (ParseException e) {
+		catch (IOException | ParseException e) {
 			log.error("Hits failed", e);
 		}
 	}
@@ -76,13 +76,20 @@ public class Hits {
 		return this.luceneConcepts;
 	}
 
-	public Map<ONDEXConcept, Double> getSortedCandidates(){
-		try {
-			this.sortedCandidates = ondexProvider.getScoredGenesMap(luceneConcepts);
-		} 
-		catch (IOException e) {			
-			log.error("Candidate sorting failed", e);
-		}
-		return this.sortedCandidates;
+	public Map<ONDEXConcept, Double> getSortedCandidates()
+	{
+		return getSearchResult ().getRelatedConcept2Score ();
+	}
+
+	public Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()
+	{
+		return getSearchResult ().getGeneId2RelatedConceptIds ();
+	}
+
+	public SemanticMotifsSearchResult getSearchResult ()
+	{
+		// TODO: I hope I got the semantics found in the original code right
+		if ( searchResult != null ) return searchResult;
+		return searchResult = ondexProvider.getScoredGenesMap ( luceneConcepts );
 	}
 }

@@ -128,27 +128,33 @@ public class OndexServiceProvider
      */
     private ONDEXGraph graph;
 
+    /*
+     * TODO: For most of the fields below, it doesn't make sense to have them
+     * as static. OSP is an application-scoped instance, which shares its fields.
+     * Making  them static is incoherent with the rest (eg, graph) and error-prone.
+     * 
+     */
+    
     /**
      * Query-independent Ondex motifs as a hash map
+     * 
+     * TODO: notice declarations like HashMap were replaced by Map, COME ON!!! 
+     * (https://en.wikipedia.org/wiki/Dependency_inversion_principle)
+     * 
      */
-    private static HashMap<Integer, Set<Integer>> mapGene2Concepts;
-    private static HashMap<Integer, Set<Integer>> mapConcept2Genes;
+    private static Map<Integer, Set<Integer>> mapGene2Concepts;
+    private static Map<Integer, Set<Integer>> mapConcept2Genes;
 
     /**
      * HashMap of geneID -> endNodeID_pathLength
      */
-    private static HashMap<String, Integer> mapGene2PathLength;
+    private static Map<String, Integer> mapGene2PathLength;
 
-    /**
-     * Query-dependent mapping between genes and concepts that contain query
-     * terms
-     */
-    private HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
     /**
      * Helper from Gene to QTL mapping
      */
-    private HashMap<Integer, Set<Integer>> mapGene2QTL;
+    private Map<Integer, Set<Integer>> mapGene2QTL;
 
     /**
      * number of genes in genome
@@ -757,80 +763,77 @@ public class OndexServiceProvider
 			return hit2score;
 		}
 
-		
-		public Map<ONDEXConcept, Double> getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) throws IOException
+		/**
+		 * Computes a @SemanticMotifsSearchResult from the result of a gene search.
+		 * 
+		 */
+		public SemanticMotifsSearchResult getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) 
 		{
 			Map<ONDEXConcept, Double> scoredCandidates = new HashMap<> ();
-			// Sort via stream instead
-			Map<ONDEXConcept, Double> sortedCandidates = new HashMap<> ();
 		
 			log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
 		
-			// TODO: the only thing to be synched here is mapGene2HitConcept, and only
-			// if this is needed, see https://github.com/Rothamsted/knetminer/issues/517
-			synchronized ( this )
+			// 1st step: create map of genes to concepts that contain query terms
+			Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
+			
+			hit2score.keySet ()
+			.stream ()
+			.map ( ONDEXConcept::getId )
+			.filter ( mapConcept2Genes::containsKey )
+			.forEach ( conceptId ->
 			{
-				// 1st step: create map of genes to concepts that contain query terms
-				mapGene2HitConcept = new HashMap<Integer, Set<Integer>> ();
-				
-				hit2score.keySet ()
-				.stream ()
-				.map ( ONDEXConcept::getId )
-				.filter ( mapConcept2Genes::containsKey )
-				.forEach ( conceptId ->
+				for ( int geneId: mapConcept2Genes.get ( conceptId ) )
+					mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
+					.add ( conceptId );
+			});
+			
+	
+			// 2nd step: calculate a score for each candidate gene
+			for ( int geneId : mapGene2HitConcept.keySet () )
+			{
+				// weighted sum of all evidence concepts
+				double weightedEvidenceSum = 0;
+	
+				// iterate over each evidence concept and compute a weight that is composed of
+				// three components
+				for ( int cId : mapGene2HitConcept.get ( geneId ) )
 				{
-					for ( int geneId: mapConcept2Genes.get ( conceptId ) )
-						mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
-						.add ( conceptId );
-				});
-				
-		
-				// 2nd step: calculate a score for each candidate gene
-				for ( int geneId : mapGene2HitConcept.keySet () )
-				{
-					// weighted sum of all evidence concepts
-					double weightedEvidenceSum = 0;
-		
-					// iterate over each evidence concept and compute a weight that is composed of
-					// three components
-					for ( int cId : mapGene2HitConcept.get ( geneId ) )
-					{
-						// relevance of search term to concept
-						float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
-		
-						// specificity of evidence to gene
-						double igf = Math.log10 ( (double) numGenesInGenome / mapConcept2Genes.get ( cId ).size () );
-		
-						// inverse distance from gene to evidence
-						Integer pathLen = mapGene2PathLength.get ( geneId + "//" + cId );
-						if ( pathLen == null ) 
-							log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
-						
-						double distance = pathLen == null ? 0 : ( 1d / pathLen );
-		
-						// take the mean of all three components
-						double evidenceWeight = ( igf + luceneScore + distance ) / 3;
-		
-						// sum of all evidence weights
-						weightedEvidenceSum += evidenceWeight;
-					}
-		
-					// normalisation method 1: size of the gene knoweldge graph
-					// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
-					// normalistion method 2: size of matching evidence concepts only (mean score)
-					// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
-					// No normalisation for now as it's too experimental.
-					// This meeans better studied genes will appear top of the list
-					double knetScore = /* normFactor * */ weightedEvidenceSum;
-		
-					scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
+					// relevance of search term to concept
+					float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
+	
+					// specificity of evidence to gene
+					double igf = Math.log10 ( (double) numGenesInGenome / mapConcept2Genes.get ( cId ).size () );
+	
+					// inverse distance from gene to evidence
+					Integer pathLen = mapGene2PathLength.get ( geneId + "//" + cId );
+					if ( pathLen == null ) 
+						log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
+					
+					double distance = pathLen == null ? 0 : ( 1d / pathLen );
+	
+					// take the mean of all three components
+					double evidenceWeight = ( igf + luceneScore + distance ) / 3;
+	
+					// sum of all evidence weights
+					weightedEvidenceSum += evidenceWeight;
 				}
-				// Sort by best scores
-				sortedCandidates = scoredCandidates.entrySet ().stream ()
-				.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
-				.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
-			} // end of synchronised block
-			return sortedCandidates;
+	
+				// normalisation method 1: size of the gene knoweldge graph
+				// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+				// normalisation method 2: size of matching evidence concepts only (mean score)
+				// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
+				// No normalisation for now as it's too experimental.
+				// This means better studied genes will appear top of the list
+				double knetScore = /* normFactor * */ weightedEvidenceSum;
+	
+				scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
+			}
+			
+			// Sort by best scores
+			Map<ONDEXConcept, Double> sortedCandidates = scoredCandidates.entrySet ().stream ()
+			.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
+			.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
+			return new SemanticMotifsSearchResult ( mapGene2HitConcept, sortedCandidates );
 		}
 
 		
@@ -1929,14 +1932,11 @@ public class OndexServiceProvider
      * This table contains all possible candidate genes for given query
      * TODO: too big! Split into separated functions.
      *
-     * @param candidates
-     * @param qtl
-     * @param filename
-     * @param listMode
-     * @return
      */
-		public String writeGeneTable ( ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes,
-			List<String> qtlsStr, String listMode, Map<ONDEXConcept, Double> scoredCandidates )
+		public String writeGeneTable ( 
+			ArrayList<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
+			String listMode,  SemanticMotifsSearchResult searchResult 
+		)
 		{
 			log.info ( "generate Gene table..." );
 			List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
@@ -1953,6 +1953,12 @@ public class OndexServiceProvider
 
 			if ( qtls.isEmpty () ) log.info ( "No QTL regions defined." );
 			
+			var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
+			
+			// TODO: but could it be null?!
+			var scoredCandidates = Optional.ofNullable ( searchResult.getRelatedConcept2Score () )
+				.orElse ( Collections.emptyMap () );			
+			
 			// Removed ccSNP from Geneview table (12/09/2017)
 			// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
 			// ConceptClass ccSNP = md.getConceptClass("SNP");
@@ -1966,10 +1972,7 @@ public class OndexServiceProvider
 				int id = gene.getId ();
 
 				var geneHelper = new GeneHelper ( graph, gene );
-												
-				Double score = scoredCandidates != null && scoredCandidates.get ( gene ) != null
-					? score = scoredCandidates.get ( gene )
-					: 0d;
+				Double score = scoredCandidates.getOrDefault ( gene, 0d );
 
 				// use shortest preferred concept name
 				String geneName = getShortestPreferedName ( gene.getConceptNames () );
@@ -2022,17 +2025,9 @@ public class OndexServiceProvider
 //							{
 //								infoQTL += "||" + loci.getLabel () + "//" + loci.getTrait ();
 //							}
-
-				Set<Integer> luceneHits = Collections.<Integer> emptySet ();
-				// TODO: this is very poor and error-prone, 
-				// WE MUST fix https://github.com/Rothamsted/knetminer/issues/517
-				synchronized ( this )
-				{
-					// get lucene hits per gene
-					luceneHits = mapGene2HitConcept.get ( id );
-				}
-				if ( luceneHits == null )
-					luceneHits = new HashSet<> ();
+				
+				// get lucene hits per gene
+				Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( id, Collections.emptySet () );
 
 				// organise by concept class
 				Map<String, String> cc2name = new HashMap<> ();
@@ -2798,7 +2793,7 @@ public class OndexServiceProvider
     	this.options = options;
     }
 
-		public static HashMap<Integer, Set<Integer>> getMapConcept2Genes () {
+		public static Map<Integer, Set<Integer>> getMapConcept2Genes () {
 			return mapConcept2Genes;
 		}
 }
