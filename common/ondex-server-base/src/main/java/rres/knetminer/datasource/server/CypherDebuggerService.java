@@ -217,7 +217,7 @@ public class CypherDebuggerService
 		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
     concept2GeneMapFile.delete ();
     
-		odxService.populateHashMaps ( dataSource.getProperty ( "DataFile" ), dataPath );
+		odxService.populateSemanticMotifData ( dataSource.getProperty ( "DataFile" ), dataPath );
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
 		traverser.setOption ( "performanceReportFrequency", 0 );

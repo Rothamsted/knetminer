@@ -124,8 +124,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
 		this.ondexServiceProvider.setTaxId(Arrays.asList(this.getProperty("SpeciesTaxId").split(",")));
 		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
-		this.ondexServiceProvider.setExportVisible(Boolean.parseBoolean(this.getProperty("export_visible_network")));
-		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisible());
+		this.ondexServiceProvider.setExportVisibleNetwork(Boolean.parseBoolean(this.getProperty("export_visible_network")));
+		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisibleNetwork());
 		this.ondexServiceProvider.setVersion(Integer.parseInt(this.getProperty("version")));
 		log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
 		this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
@@ -195,7 +195,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 		log.info("Counting loci "+chr+":"+start+":"+end);
 		CountLociResponse response = new CountLociResponse();
-		response.setGeneCount(this.ondexServiceProvider.getGeneCount(chr, start, end));
+		response.setGeneCount(this.ondexServiceProvider.getLociGeneCount(chr, start, end));
 		return response;
 	}
 

@@ -49,14 +49,16 @@ public class Hits {
 		int linkedDocs = 0;
 		Set<Integer> uniqGenes = new HashSet<>();
 		log.info("Matching Lucene concepts: "+luceneConcepts.keySet().size());
+		
+		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getMapConcept2Genes ();
 		for(ONDEXConcept lc : luceneConcepts.keySet()){
 			Integer luceneOndexId = lc.getId();
 			//Checks if the document is related to a gene
-			if(!OndexServiceProvider.getMapConcept2Genes ().containsKey(luceneOndexId)){
+			if(!concept2Genes.containsKey(luceneOndexId)){
 				continue;
 			}
 			linkedDocs++;
-			uniqGenes.addAll(OndexServiceProvider.getMapConcept2Genes ().get(luceneOndexId));	
+			uniqGenes.addAll(concept2Genes.get(luceneOndexId));	
 		}
 		
 		log.info("Matching unique genes: "+uniqGenes.size());

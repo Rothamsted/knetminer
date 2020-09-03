@@ -129,10 +129,11 @@ public class OndexServiceProvider
     private ONDEXGraph graph;
 
     /*
-     * TODO: For most of the fields below, it doesn't make sense to have them
+     * TODO: For most of the fields below, it didn't make sense to have them
      * as static. OSP is an application-scoped instance, which shares its fields.
      * Making  them static is incoherent with the rest (eg, graph) and error-prone.
      * 
+     * Keeping this comment until we're sure this change didn't introduce bugs
      */
     
     /**
@@ -142,13 +143,13 @@ public class OndexServiceProvider
      * (https://en.wikipedia.org/wiki/Dependency_inversion_principle)
      * 
      */
-    private static Map<Integer, Set<Integer>> mapGene2Concepts;
-    private static Map<Integer, Set<Integer>> mapConcept2Genes;
+    private Map<Integer, Set<Integer>> mapGene2Concepts;
+    private Map<Integer, Set<Integer>> mapConcept2Genes;
 
     /**
      * HashMap of geneID -> endNodeID_pathLength
      */
-    private static Map<String, Integer> mapGene2PathLength;
+    private Map<String, Integer> mapGene2PathLength;
 
 
     /**
@@ -212,7 +213,7 @@ public class OndexServiceProvider
      */
     private boolean referenceGenome;
 
-    private boolean export_visible_network;
+    private boolean exportVisibleNetwork;
 
     private Map<String, Object> options = new HashMap<>();
 	
@@ -233,10 +234,10 @@ public class OndexServiceProvider
 
     /**
      * Load OXL data file into memory Build Lucene index for the Ondex graph
-     * Create a state machine for semantic motif search
-     *
-     * @throws ArrayIndexOutOfBoundsException
-     * @throws PluginConfigurationException
+     * Invokes {@link #populateSemanticMotifData(String, String)}, to do the semantic motif traversal
+     * and save the results for later use.
+     * 
+     * TODO: having parameters here is messy, they should be part of {@link #getOptions()}.
      */
     public void createGraph ( String dataPath, String graphFileName, String smFileName )
 		{
@@ -256,7 +257,7 @@ public class OndexServiceProvider
 			graphTraverser.setOption ( "StateMachineFilePath", smFileName );
 			graphTraverser.setOption ( "ONDEXGraph", graph );
 
-			populateHashMaps ( graphFileName, dataPath );
+			populateSemanticMotifData ( graphFileName, dataPath );
 
 			// determine number of genes in given species (taxid)
 			ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
@@ -755,10 +756,6 @@ public class OndexServiceProvider
 				analyzer
 			);				
 			
-			// TODO: remove, if you want to log this, do it in luceneConceptSearchHelper() (and NOT with info level)
-			// log.info ( "searchLucene(), query for annotation: " + qAnno.toString ( fieldNameCA ) );
-			// log.info ( "Resulting Annotation hits: " + sHitsAnno.getOndexHits ().size () );
-
 			log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
 			return hit2score;
 		}
@@ -901,7 +898,6 @@ public class OndexServiceProvider
 			return concepts;
 		}
 
-// TODO: Review to be continued from here
 		
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
@@ -1038,31 +1034,6 @@ public class OndexServiceProvider
           } // for concept relations
       } // for getOndexHits
       return results;    	
-    }
-        
-    
-    /**
-     * Semantic Motif Search for list of genes
-     *
-     * @param accessions
-     * @param regex trait-related
-     * @return OndexGraph containing the gene network
-     */
-    public ONDEXGraph findSemanticMotifs ( Integer[] ids, String regex )
-    {
-      log.debug("get genes function " + ids.length);
-      Set<ONDEXConcept> seed = new HashSet<>();
-
-      for (int id : ids) 
-      {
-        ONDEXConcept c = graph.getConcept(id);
-        String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
-        if ( taxId == null ) continue;
-        seed.add ( c );
-      }
-      log.debug("Now we will call findSemanticMotifs(seed)!");
-      ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
-      return subGraph;
     }
 
     
@@ -1339,6 +1310,35 @@ public class OndexServiceProvider
 			return subGraph;
 		}
 		
+		
+		
+    /**
+     * TODO: not used, can we remove it?!
+     * Semantic Motif Search for list of genes
+     *
+     * @param accessions
+     * @param regex trait-related
+     * @return OndexGraph containing the gene network
+     */
+    private ONDEXGraph findSemanticMotifs ( Integer[] ids, String regex )
+    {
+      log.debug("get genes function " + ids.length);
+      Set<ONDEXConcept> seed = new HashSet<>();
+
+      for (int id : ids) 
+      {
+        ONDEXConcept c = graph.getConcept(id);
+        String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
+        if ( taxId == null ) continue;
+        seed.add ( c );
+      }
+      log.debug("Now we will call findSemanticMotifs(seed)!");
+      ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
+      return subGraph;
+    }		
+		
+    
+    
 		/**
 		 * Creates a mapping between keywords and random HTML colour codes, used by the search highlighting functions.
 		 * if colors is null, uses {@link #createHighlightColors(int)}.
@@ -1424,7 +1424,7 @@ public class OndexServiceProvider
      * bracket expression in target
      * - the matching is usually case-insensitive, but that depends on how you defined the pattern. 
      */
-    private boolean highlightFragment ( Pattern pattern, String target, String highlighter, Consumer<String> consumer )
+    private boolean highlightSearchStringFragment ( Pattern pattern, String target, String highlighter, Consumer<String> consumer )
     {
     	Matcher matcher = pattern.matcher ( target );
     	if ( !matcher.find ( 0 ) ) return false;
@@ -1450,8 +1450,8 @@ public class OndexServiceProvider
 			
 			Pattern kwpattern = Pattern.compile ( keywordRe, Pattern.CASE_INSENSITIVE );
 
-			found |= this.highlightFragment ( kwpattern, concept.getAnnotation (), highlighter, concept::setAnnotation );
-			found |= this.highlightFragment ( kwpattern, concept.getDescription (), highlighter, concept::setDescription );
+			found |= this.highlightSearchStringFragment ( kwpattern, concept.getAnnotation (), highlighter, concept::setAnnotation );
+			found |= this.highlightSearchStringFragment ( kwpattern, concept.getDescription (), highlighter, concept::setDescription );
 			
 			// old name -> is preferred, new name
 			HashMap<String, Pair<Boolean, String>> namesToCreate = new HashMap<> ();
@@ -1461,7 +1461,7 @@ public class OndexServiceProvider
 				// TODO: initially cnameStr.contains ( "</span>" ) was skipped too, probably to be removed
 				if ( cnameStr == null ) continue;
 					
-				found |= this.highlightFragment ( 
+				found |= this.highlightSearchStringFragment ( 
 					kwpattern, cnameStr, highlighter, 
 					newName -> namesToCreate.put ( cnameStr, Pair.of ( cname.isPreferred (), newName ) ) 
 				);
@@ -1484,7 +1484,7 @@ public class OndexServiceProvider
 					continue;
 				
 				String value = attribute.getValue ().toString ();
-				found |= this.highlightFragment ( kwpattern, value, highlighter, attribute::setValue );
+				found |= this.highlightSearchStringFragment ( kwpattern, value, highlighter, attribute::setValue );
 			}
 			
 			return found;
@@ -1495,7 +1495,7 @@ public class OndexServiceProvider
      * Searches different fields of a concept for a query or pattern and
      * highlights them.
      * 
-     * TODO: this is ugly, Lucene should already have methdods to do the same.
+     * TODO: this is ugly, Lucene should already have methods to do the same.
      *
      * @return true if one of the concept fields contains the query
      */
@@ -1652,8 +1652,6 @@ public class OndexServiceProvider
 		public void hidePath ( EvidencePathNode path, ONDEXGraphCloner graphCloner )
 		{
 			ONDEXGraph gclone = graphCloner.getNewGraph ();
-			ONDEXGraphMetaData gmeta = gclone.getMetaData ();
-
 			AttributeName attVisible = getOrCreateAttributeName ( gclone, "visible", Boolean.class );
 
 			// hide every concept except by the last one
@@ -1671,8 +1669,11 @@ public class OndexServiceProvider
 		
     /**
      * Write Genomaps XML file (to a string).
+     * 
      * TODO: how is it that a URI has to be used to invoke functions that sit around here, in the same .WAR?!
-     *
+     * This is bad design, we want a functional layer that could be invoked independently on the higher HTTP 
+     * layers, possibly open a ticket to clean this in the medium/long term.
+     * 
      * @param apiUrl ws url for API
      * @param genes list of genes to be displayed (all genes for search result)
      * @param userGenes gene list from user
@@ -1744,7 +1745,8 @@ public class OndexServiceProvider
 
 
 				String name = c.getPID ();
-				// TODO: What the hell does this mean?!
+				// TODO: What does this mean?! Getting a random accession?! Why
+				// not using the methods for the shortest name/accession?
 				for ( ConceptAccession acc : c.getConceptAccessions () )
 					name = acc.getAccession ();
 
@@ -1836,8 +1838,8 @@ public class OndexServiceProvider
 				sb.append ( "</feature>\n" );
 			}
 
-			// TODO: move this to a constant
-			// TODO: createHilightColorMap() generates colours randomly by default, should we have different methdods?!
+			// TODO: createHilightColorMap() generates colours randomly by default, why doing the same differently, here?!
+			// TODO: possibly, move this to a constant
 
 			List<String> colorHex = List.of ( "0xFFB300", "0x803E75", "0xFF6800", "0xA6BDD7", "0xC10020", "0xCEA262", "0x817066",
 					"0x0000FF", "0x00FF00", "0x00FFFF", "0xFF0000", "0xFF00FF", "0xFFFF00", "0xDBDB00", "0x00A854", "0xC20061",
@@ -1856,7 +1858,7 @@ public class OndexServiceProvider
 			.map ( QTL::getTrait )
 			.collect ( Collectors.toSet () );
 			
-			Map<String, String> trait2color = createHilightColorMap ( traits );
+			Map<String, String> trait2color = createHilightColorMap ( traits, colorHex );
 
 			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
 			log.info ( "TaxID(s): " + taxID );
@@ -1924,8 +1926,9 @@ public class OndexServiceProvider
 
 		
     // temporary...
-		// TODO: REMOVE! If you need this for debugging purpose use 
-		// org.apache.commons.io.IOUtils.copy DON'T REINVENT THE DAMN WHEEL!
+		// TODO: REMOVE! If you need this for debugging purposes, use 
+		// uk.ac.ebi.utils.io.IOUtils.writeFile() or org.apache.commons.io.IOUtils
+		// DON'T REINVENT THE DAMN WHEEL!
     // public void writeResultsFile(String filename, String sb_string) {
 		
     /**
@@ -2004,7 +2007,8 @@ public class OndexServiceProvider
 					String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
 						.orElse ( acc );
 
-					infoQTL.add ( traitDesc + "//" + traitDesc ); // TODO: traitDesc twice?! Looks wrong.
+					// TODO: traitDesc twice?! Looks wrong.
+					infoQTL.add ( traitDesc + "//" + traitDesc ); 
 				} // for mapGene2QTL
 
 
@@ -2073,9 +2077,6 @@ public class OndexServiceProvider
 				}
 
 				// create output string for evidences column in GeneView table
-				// TODO: MEH! This should be managed by keeping the structure ( type, and list of values)
-				// and translating it to string only when writing.
-				//
 				String evidenceStr = cc2name.entrySet ()
 				.stream ()
 				.map ( e -> 
@@ -2172,14 +2173,10 @@ public class OndexServiceProvider
 
 					if ( mapGene2QTL.containsKey ( log ) ) numberOfQTL++;
 
-					// TODO: we don't need attChr (and similar types) as objects, the string ID is enough
-					// TODO: what does this mean?!
-					
 					String chr = geneHelper.getChromosome ();
 					int beg = geneHelper.getBeginBP ( true );
-					
-					
-					// if ( !qtls.isEmpty () ) TODO: REMOVE! COME ON!!!
+										
+					// if ( !qtls.isEmpty () ) { TODO: REMOVE! COME ON!!!
 					for ( QTL loci : qtls )
 					{
 						String qtlChrom = loci.getChromosome ();
@@ -2285,7 +2282,6 @@ public class OndexServiceProvider
 					
 					ONDEXConcept eoc = graph.getConcept ( synonymId );
 					String type = eoc.getOfType ().getId ();
-					// Integer id = eoc.getId (); TODO: WHAT?!
 
 					if ( ( type.equals ( "Publication" ) || type.equals ( "Thing" ) ) ) return;
 					
@@ -2412,13 +2408,13 @@ public class OndexServiceProvider
         this.taxID = id;
     }
 
-    public void setExportVisible(boolean export_visible_network) {
-        this.export_visible_network = export_visible_network;
+    public void setExportVisibleNetwork(boolean exportVisibleNetwork) {
+        this.exportVisibleNetwork = exportVisibleNetwork;
 
     }
 
-    public boolean getExportVisible() {
-        return this.export_visible_network;
+    public boolean getExportVisibleNetwork() {
+        return this.exportVisibleNetwork;
     }
 
     public List<String> getTaxId() {
@@ -2472,6 +2468,7 @@ public class OndexServiceProvider
     public String getRelationshipCount(){
         return this.relationshipCount;
     }
+    
     public void setKnetspaceHost(String knetspaceHost) {
         this.knetspaceHost = knetspaceHost;
     }
@@ -2502,7 +2499,7 @@ public class OndexServiceProvider
      * @param end end position
      * @return 0 if no genes found, otherwise number of genes at specified loci
      */
-		public int getGeneCount ( String chr, int start, int end )
+		public int getLociGeneCount ( String chr, int start, int end )
 		{
 			// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
 			if ( chr == null ) return 0; 
@@ -2543,10 +2540,11 @@ public class OndexServiceProvider
     }
     
     /**
-     * This method populates a HashMap with concepts from KB as keys and list of
-     * genes presented in their motifs
+     * Populates internal data about semantic motif paths, either using the configured {@link AbstractGraphTraverser}
+     * or loading previously saved data from files.
+     * 
      */
-		public void populateHashMaps ( String graphFileName, String dataPath )
+		public void populateSemanticMotifData ( String graphFileName, String dataPath )
 		{
 			log.info ( "Populate HashMaps" );
 			File graphFile = new File ( graphFileName );
@@ -2793,7 +2791,7 @@ public class OndexServiceProvider
     	this.options = options;
     }
 
-		public static Map<Integer, Set<Integer>> getMapConcept2Genes () {
+		public Map<Integer, Set<Integer>> getMapConcept2Genes () {
 			return mapConcept2Genes;
 		}
 }
