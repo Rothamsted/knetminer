@@ -279,6 +279,9 @@ public class OndexServiceProvider
      * Generate Stats about the created Ondex graph and its mappings:
      * mapConcept2Genes & mapGene2Concepts. Author Singhatt
      * Updating to also give Concept2Gene per concept
+     *
+     * TODO - KHP: Change this to return JSON, break it down into smaller components 
+     * and add API endpoint for this. To be aligned with KnetSpace resource pages.
      */
 		private void displayGraphStats ( String fileUrl )
 		{
@@ -512,8 +515,7 @@ public class OndexServiceProvider
     }
 
     /**
-     * Export the Ondex graph to file system as a .oxl file and also in JSON
-     * format using the JSON Exporter plugin in Ondex.
+     * Export the Ondex graph as a JSON file using the Ondex JSON Exporter plugin.
      *
      * @param ONDEXGraph graph
      * @throws InvalidPluginArgumentException
@@ -598,6 +600,8 @@ public class OndexServiceProvider
      *
      * @param keyword original keyword
      * @return new keyword for searching the NOT list
+     *
+     * TODO - KHP: There must be a smarter way (regex?) for getting the NOT "terms"
      */
     private String createsNotList(String keyword)
     {
@@ -690,8 +694,8 @@ public class OndexServiceProvider
 				return hit2score;
 			}
 
-			// TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which
-			// consider different field types. See https://stackoverflow.com/questions/62119328
+			// TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
+			// consider different field types. See https://stackoverflow.com/questions/62119328 
 			Analyzer analyzer = new StandardAnalyzer ();
 
 			// added to overcome double quotes issue
@@ -711,14 +715,11 @@ public class OndexServiceProvider
 				String fieldNameNQ = getLuceneFieldName ( "ConceptName", null );
 				QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
 				Query qNQ = parserNQ.parse ( crossTypesNotQuery );
+				//TODO: The top 2000 restriction should be configurable and documented
 				notList = luceneMgr.searchTopConcepts ( qNQ, 2000 );
 			}
 
 			// number of top concepts retrieved for each Lucene field
-			/*
-			 * increased for now from 500 to 1500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll make
-			 * changes to the QueryParser code instead.
-			 */
 			int maxConcepts = 2000;
 
 			// search concept attributes
