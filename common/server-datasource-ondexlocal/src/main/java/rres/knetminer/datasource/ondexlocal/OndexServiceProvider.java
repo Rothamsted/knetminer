@@ -631,7 +631,9 @@ public class OndexServiceProvider
 
         
     /**
-     * Merge two maps using the greater scores
+     * Merge two maps using the greater scores. This is needed when a keyword matches more than 
+     * one concept field eg. name, description and attribute. It will ensure that the highest
+     * Lucene score is used in the Gene Rank.
      *
      * @param hit2score map that holds all hits and scores
      * @param sHits map that holds search results
@@ -648,11 +650,10 @@ public class OndexServiceProvider
 
         
     /**
-     * Search for concepts in OndexKB which contain the keyword and find genes
-     * connected to them.
+     * Search for concepts in Knowledge Graph which contain the keywords
      *
      * @param keyword user-specified keyword
-     * @return set of genes related to the keyword
+     * @return concepts that match the keyword and their Lucene score
      * @throws IOException
      * @throws ParseException
      */
@@ -661,8 +662,11 @@ public class OndexServiceProvider
 		) throws IOException, ParseException
 		{
 			Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
+			
+			// TODO: We should search across all accession datasources or make this configurable in settings
 			String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
 					"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" };
+			
 			// sources identified in KNETviewer
 			/*
 			 * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", "CHEMBLTARGET", "EC", "EMBL",
@@ -715,7 +719,7 @@ public class OndexServiceProvider
 				String fieldNameNQ = getLuceneFieldName ( "ConceptName", null );
 				QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
 				Query qNQ = parserNQ.parse ( crossTypesNotQuery );
-				//TODO: The top 2000 restriction should be configurable and documented
+				//TODO: The top 2000 restriction should be configurable in settings and documented
 				notList = luceneMgr.searchTopConcepts ( qNQ, 2000 );
 			}
 
@@ -750,8 +754,6 @@ public class OndexServiceProvider
 			);				
 			
 			// search concept annotation
-			// Query qAnno =
-			// LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
 			luceneConceptSearchHelper ( 
 				keywords, "Annotation", null, maxConcepts, hit2score, notList,
 				analyzer
@@ -762,8 +764,9 @@ public class OndexServiceProvider
 		}
 
 		/**
+		 * KnetMiner Gene Rank algorithm
 		 * Computes a @SemanticMotifsSearchResult from the result of a gene search.
-		 * 
+		 * Described in detail in Hassani-Pak et al. (2020)
 		 */
 		public SemanticMotifsSearchResult getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) 
 		{
@@ -772,6 +775,7 @@ public class OndexServiceProvider
 			log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
 		
 			// 1st step: create map of genes to concepts that contain query terms
+			// In other words: Filter the global gene2concept map for concept that contain the keyword
 			Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
 			
 			hit2score.keySet ()
