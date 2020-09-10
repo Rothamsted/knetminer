@@ -964,6 +964,11 @@ public class OndexServiceProvider
     }
 
     
+    /**
+     * Find all QTL and SNP that are linked to Trait concepts that contain a keyword
+     * Assumes that KG is modelled as Trait->QTL and Trait->SNP with PVALUE on relations
+     * 
+     */	
     private Set<QTL> findQTLForTrait ( String keyword ) throws ParseException
     {
   		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
@@ -1005,11 +1010,12 @@ public class OndexServiceProvider
           
           for (ONDEXRelation r : rels) 
           {
-          	var conQTL = r.getFromConcept();
+          	// TODO better variable names: con, fromType and toType
+		var conQTL = r.getFromConcept();
           	var conQTLType = conQTL.getOfType ();
           	var toType = r.getToConcept ().getOfType ();
           	
-            // get QTL concept
+            // skip if not QTL or SNP concept
             if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
                  		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
             	continue;
@@ -1177,8 +1183,8 @@ public class OndexServiceProvider
 
 
     /**
-     * Searches with Lucene for documents, finds semantic motifs and by crossing
-     * this data makes concepts visible, changes the size and highlight the hits
+     * Generates a subgraph for a set of genes and graph queries. The subgraph is annotated by setting node,ege visibility and size attributes.
+     * Annotation is based on either paths to keyword concepts (if provided) or a set of rules based on paths to Trait/Phenotype concepts.
      *
      * @param seed List of selected genes
      * @param keyword
@@ -1196,6 +1202,7 @@ public class OndexServiceProvider
 			catch ( Exception e )
 			{
 				// TODO: does it make sense to continue?!
+				// KHP: Does it go here when the keyword is null?
 				log.error ( "Lucene search failed", e );
 				luceneResults = Collections.emptyMap ();
 			}
@@ -1316,33 +1323,6 @@ public class OndexServiceProvider
 		}
 		
 		
-		
-    /**
-     * TODO: not used, can we remove it?!
-     * Semantic Motif Search for list of genes
-     *
-     * @param accessions
-     * @param regex trait-related
-     * @return OndexGraph containing the gene network
-     */
-    private ONDEXGraph findSemanticMotifs ( Integer[] ids, String regex )
-    {
-      log.debug("get genes function " + ids.length);
-      Set<ONDEXConcept> seed = new HashSet<>();
-
-      for (int id : ids) 
-      {
-        ONDEXConcept c = graph.getConcept(id);
-        String taxId = getAttrValueAsString ( graph, c, "TAXID", false );
-        if ( taxId == null ) continue;
-        seed.add ( c );
-      }
-      log.debug("Now we will call findSemanticMotifs(seed)!");
-      ONDEXGraph subGraph = findSemanticMotifs(seed, regex);
-      return subGraph;
-    }		
-		
-    
     
 		/**
 		 * Creates a mapping between keywords and random HTML colour codes, used by the search highlighting functions.
@@ -1707,8 +1687,7 @@ public class OndexServiceProvider
 			// added user gene list restriction above (04/07/2018, singha)
 
 			ONDEXGraphMetaData gmeta = graph.getMetaData ();
-			// TODO: remove, cM no longer supported 
-//			AttributeName attCM = gmeta.getAttributeName ( "cM" );
+
 			ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
 			
 			Set<QTL> qtlDB = new HashSet<> ();
@@ -1806,13 +1785,6 @@ public class OndexServiceProvider
 				String chr = region.getChromosome ();
 				int start = region.getStart ();
 				int end = region.getEnd ();
-
-				// TODO: remove cM isn't supported anymore.
-//				if ( attCM != null )
-//				{
-//					start = start * 1000000;
-//					end = end * 1000000;
-//				}
 				
 				String label = Optional.ofNullable ( region.getLabel () )
 					.filter ( lbl -> !lbl.isEmpty () )
@@ -1878,13 +1850,6 @@ public class OndexServiceProvider
 
 				Float pvalue = loci.getpValue ();
 				String color = trait2color.get ( trait );
-
-				// TODO: remove cM isn't supported anymore.
-//				if ( attCM != null )
-//				{
-//					startQTL = startQTL * 1000000;
-//					endQTL = endQTL * 1000000;
-//				}
 
 				// TODO get p-value of SNP-Trait relations
 				if ( type.equals ( "QTL" ) )
@@ -2252,7 +2217,7 @@ public class OndexServiceProvider
          * TODO: does this still apply?
          * 
          * number of top concepts searched for each Lucene field, increased for now from
-         * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
+         * 100 to 500, until Lucene code is ported from Ondex to KnetMiner, when we'll
          * make changes to the QueryParser code instead.
          */
 
@@ -2700,7 +2665,7 @@ public class OndexServiceProvider
 
 		
     /*
-     * // TODO: no longer in use. Can we remove it?
+     * // TODO: no longer in use. Can we remove it? KHP: This generated data for Vasiliki, could still be useful?
      *  
      * generate gene2evidence .tab file with contents of the mapGenes2Concepts
      * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
