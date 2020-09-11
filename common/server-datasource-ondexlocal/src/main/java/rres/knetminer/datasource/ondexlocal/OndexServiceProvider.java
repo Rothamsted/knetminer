@@ -580,7 +580,7 @@ public class OndexServiceProvider
         
         log.debug ( "Network JSON file created:" + exportPath );
         
-        // TODO: not UTF-8?
+        // TODO: The JSON exporter uses this too, both should become UTF-8
         return IOUtils.readFile ( exportPath, Charset.defaultCharset() );
       } 
       catch (IOException ex)
@@ -594,7 +594,6 @@ public class OndexServiceProvider
       }
     }
     
-    // JavaScript Document
     /**
      * Creates a new keyword for finding the NOT list
      *
@@ -2134,11 +2133,12 @@ public class OndexServiceProvider
 						// retain gene Accession/Name (18/07/18)
 						userGenesStrings.add ( geneHelper.getBestAccession () );
 						
-						// TODO: can we remove it?!
-						// use shortest preferred concept name
-						/*  
-						 * String geneName = getShortestPreferedName(gene.getConceptNames()); geneAcc= geneName;
-						 */
+						// This was commented at some point and it's still unclear if needed. Keeping for further verifications
+
+						
+						
+						// String geneName = getShortestPreferedName(gene.getConceptNames()); geneAcc= geneName;
+
 					}
 
 					if ( mapGene2QTL.containsKey ( log ) ) numberOfQTL++;
@@ -2665,7 +2665,8 @@ public class OndexServiceProvider
 
 		
     /*
-     * // TODO: no longer in use. Can we remove it? KHP: This generated data for Vasiliki, could still be useful?
+     * Not in use right now. Might still be useful in future, so, keeping it. Needs
+     * cleaning/rewriting. 
      *  
      * generate gene2evidence .tab file with contents of the mapGenes2Concepts
      * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
@@ -2724,11 +2725,7 @@ public class OndexServiceProvider
             BufferedWriter out3 = new BufferedWriter(
                     new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2pl_fileName))));
             out3.write("Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n");
-            /*
-             * for(String key : mapGene2PathLength.keySet()) { out3.write(key +"\t"+
-             * mapGene2PathLength.get(key) +"\n"); // write contents. }
-             */
-            for (Map.Entry<String, Integer> plEntry : mapGene2PathLength.entrySet()) { // for each <K,V> entry
+            for (Map.Entry<String, Integer> plEntry : mapGene2PathLength.entrySet()) {
                 String key = plEntry.getKey();
                 int pl = plEntry.getValue();
                 String pl_txt = key + "\t" + pl + "\n";
