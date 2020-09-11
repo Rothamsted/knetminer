@@ -2572,10 +2572,10 @@ public class OndexServiceProvider
 						int pathLength = ( path.getLength () - 1 ) / 2; // get Path Length
 						ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder ()
 							.get ( path.getConceptsInPositionOrder ().size () - 1 );
+
 						int lastConID = con.getId (); // endNode ID.
 						int geneId = gene.getId ();
 						String gplKey = geneId + "//" + lastConID;
-
 						mapGene2PathLength.merge ( gplKey, pathLength, Math::min );
 
 						mapGene2Concepts.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
