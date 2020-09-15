@@ -166,9 +166,10 @@ public class CypherDebuggerService
 		if ( this.traverserStatsResult == null )
 			return "Wasn't invoked. Use /traverse";
 		if ( this.getTraverser ().isInterrupted () )
-			return traverserStatsResult.isDone () 
-				? "Was cancelled. Invoke /traverse again"
-				: "Was cancelled. Abort operation still pending, invoke /traverse again in a while";
+			return "Was cancelled. " + 
+				(traverserStatsResult.isDone () 
+					? "Invoke /traverse again"
+					: "Abort operation still pending, invoke /traverse again in a while");
 		
 		if ( !traverserStatsResult.isDone () )
 		{
@@ -271,7 +272,7 @@ public class CypherDebuggerService
 		catch ( IllegalAccessException ex )
 		{
 			throw new IllegalStateException (
-				"For some reason the graph traverser isn't accessible ", ex 
+				"For some reason the graph traverser isn't accessible: " + ex.getMessage (), ex 
 			); 
 		}
 		catch ( ClassCastException ex ) {
