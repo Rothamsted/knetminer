@@ -136,13 +136,6 @@ public class OndexServiceProvider
      * Keeping this comment until we're sure this change didn't introduce bugs
      */
     
-    /**
-     * Query-independent Ondex motifs as a hash map
-     * 
-     * TODO: notice declarations like HashMap were replaced by Map, COME ON!!! 
-     * (https://en.wikipedia.org/wiki/Dependency_inversion_principle)
-     * 
-     */
     private Map<Integer, Set<Integer>> mapGene2Concepts;
     private Map<Integer, Set<Integer>> mapConcept2Genes;
 
@@ -233,9 +226,8 @@ public class OndexServiceProvider
     }
 
     /**
-     * Load OXL data file into memory Build Lucene index for the Ondex graph
-     * Invokes {@link #populateSemanticMotifData(String, String)}, to do the semantic motif traversal
-     * and save the results for later use.
+     * Performs several data inititalisation operations, including, OXL loading, Lucene indexing, semantic motif search
+     * and storage of its results.
      * 
      * TODO: having parameters here is messy, they should be part of {@link #getOptions()}.
      */
@@ -426,11 +418,7 @@ public class OndexServiceProvider
 				IOUtils.writeFile ( newFileName, sb.toString () );
 
 				// TODO: remove?
-				/*
-				 * generate gene2evidence .tab file with contents of the mapGenes2Concepts HashMap & evidence2gene .tab file
-				 * with contents of the mapConcepts2Genes HashMap
-				 */
-				// generateGeneEvidenceStats(fileUrl); // DISABLED
+				// generateGeneEvidenceStats(fileUrl);
 			}
 			catch ( IOException ex )
 			{
@@ -520,7 +508,7 @@ public class OndexServiceProvider
      * @param ONDEXGraph graph
      * @throws InvalidPluginArgumentException
      */
-    public String exportGraph(ONDEXGraph og) throws InvalidPluginArgumentException
+    public String exportGraph2Json(ONDEXGraph og) throws InvalidPluginArgumentException
     {
       // Unconnected filter
       Filter uFilter = new Filter();
@@ -602,7 +590,7 @@ public class OndexServiceProvider
      *
      * TODO - KHP: There must be a smarter way (regex?) for getting the NOT "terms"
      */
-    private String createsNotList(String keyword)
+    private String createNotList(String keyword)
     {
       String result = "";
       if (keyword == null) keyword = "";
@@ -621,10 +609,6 @@ public class OndexServiceProvider
           result += keySplitedNOT [ i ];
         }
       }
-// TODO: REMOVE! SEE THE APPROACH ABOVE TO AVOID ADDING+REMOVING, WTH!!!
-//        if (result != "") {
-//            result = result.substring(0, (result.length() - 3));
-//        }
       return result;
     }
 
@@ -707,7 +691,7 @@ public class OndexServiceProvider
 			log.debug ( "Keyword is:" + keywords );
 
 			// creates the NOT list (list of all the forbidden documents)
-			String notQuery = createsNotList ( keywords );
+			String notQuery = createNotList ( keywords );
 			String crossTypesNotQuery = "";
 			ScoredHits<ONDEXConcept> notList = null;
 			if ( !"".equals ( notQuery ) )
@@ -764,7 +748,7 @@ public class OndexServiceProvider
 
 		/**
 		 * KnetMiner Gene Rank algorithm
-		 * Computes a @SemanticMotifsSearchResult from the result of a gene search.
+		 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
 		 * Described in detail in Hassani-Pak et al. (2020)
 		 */
 		public SemanticMotifsSearchResult getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) 
@@ -906,9 +890,6 @@ public class OndexServiceProvider
     /**
      * Searches the knowledge base for QTL concepts that match any of the user
      * input terms.
-     *
-     * TODO: made private, cause it seems being used by {@link #writeAnnotationXML(String, ArrayList, Set, List, String, int, Hits, String, Map)}
-     * only. If it needs to become public, it will also need try/finally and {@link LuceneEnv#closeAll()}
      * 
      */
     private Set<QTL> getQTLHelpers ( String keyword ) throws ParseException
@@ -1010,7 +991,7 @@ public class OndexServiceProvider
           for (ONDEXRelation r : rels) 
           {
           	// TODO better variable names: con, fromType and toType
-		var conQTL = r.getFromConcept();
+          	var conQTL = r.getFromConcept();
           	var conQTLType = conQTL.getOfType ();
           	var toType = r.getToConcept ().getOfType ();
           	
@@ -1103,7 +1084,7 @@ public class OndexServiceProvider
 		@SuppressWarnings ( "rawtypes" )
 		public ONDEXGraph evidencePath ( Integer evidenceOndexId, Set<ONDEXConcept> genes )
 		{
-			log.info ( "Method evidencePath - evidenceOndexId: {}", evidenceOndexId );
+			log.info ( "evidencePath() - evidenceOndexId: {}", evidenceOndexId );
 			
 			// Searches genes related to the evidenceID. If user genes provided, only include those.
 			Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<> ();
@@ -1894,11 +1875,6 @@ public class OndexServiceProvider
 		} // writeAnnotationXML()
 
 		
-    // temporary...
-		// TODO: REMOVE! If you need this for debugging purposes, use 
-		// uk.ac.ebi.utils.io.IOUtils.writeFile() or org.apache.commons.io.IOUtils
-		// DON'T REINVENT THE DAMN WHEEL!
-    // public void writeResultsFile(String filename, String sb_string) {
 		
     /**
      * This table contains all possible candidate genes for given query
@@ -1989,15 +1965,6 @@ public class OndexServiceProvider
 				.forEach ( infoQTL::add );
 
 				String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
-
-// TODO: remove! WTH!? See the approach above!
-//							if ( "".equals ( infoQTL ) )
-//							{
-//								infoQTL += loci.getLabel () + "//" + loci.getTrait ();
-//							} else
-//							{
-//								infoQTL += "||" + loci.getLabel () + "//" + loci.getTrait ();
-//							}
 				
 				// get lucene hits per gene
 				Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( id, Collections.emptySet () );
@@ -2056,11 +2023,6 @@ public class OndexServiceProvider
 				.collect ( Collectors.joining ( "||" ) );
 								
 				if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
-
-				// TODO: was initially used in the append() below. TO BE REMOVED?!
-				//String allEvidences = evidencesIDs.stream ()
-				//	.map ( evId -> Integer.toString ( evId ) )
-				//	.collect ( Collectors.joining ( "," ));
 				
 				if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 				
@@ -2146,7 +2108,6 @@ public class OndexServiceProvider
 					String chr = geneHelper.getChromosome ();
 					int beg = geneHelper.getBeginBP ( true );
 										
-					// if ( !qtls.isEmpty () ) { TODO: REMOVE! COME ON!!!
 					for ( QTL loci : qtls )
 					{
 						String qtlChrom = loci.getChromosome ();
@@ -2185,12 +2146,6 @@ public class OndexServiceProvider
     /**
      * Write Synonym Table for Query suggestor
      *
-     * @param luceneConcepts
-     * @param userGenes
-     * @param qtl
-     * @param filename
-     * @return boolean
-     * @throws ParseException
      */
 		public String writeSynonymTable ( String keyword ) throws ParseException
 		{
@@ -2255,9 +2210,9 @@ public class OndexServiceProvider
 
 					if ( ( type.equals ( "Publication" ) || type.equals ( "Thing" ) ) ) return;
 					
-					// TODO: before this count was incremented in the cNames loop below, however, that way either we
+					// TODO: before, this count was incremented in the cNames loop below, however, that way either we
 					// get the same because there's one preferred name only,
-					// or the count computed that way is likely wrong cause it increases with names
+					// or the count computed that way is likely wrong, cause it increases with names
 					//
 					int synCount = entryCountsByType.compute ( type, 
 						(thisType, thisCount) -> thisType == null ? 1 : ++thisCount
@@ -2362,7 +2317,6 @@ public class OndexServiceProvider
 			
 			if ( type == "Gene" || type == "Protein" )
 			{
-				// TODO: initially this condition was on " ", but that's likely to be wrong. Must be checked
 				if ( bestAcc.isEmpty () ) result = bestName;
 				else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
 			}
@@ -2516,7 +2470,7 @@ public class OndexServiceProvider
      */
 		public void populateSemanticMotifData ( String graphFileName, String dataPath )
 		{
-			log.info ( "Populate HashMaps" );
+			log.info ( "Setting semantic motif data" );
 			File graphFile = new File ( graphFileName );
 			File fileConcept2Genes = Paths.get ( dataPath, "mapConcept2Genes" ).toFile ();
 			File fileGene2Concepts = Paths.get ( dataPath, "mapGene2Concepts" ).toFile ();
@@ -2537,7 +2491,7 @@ public class OndexServiceProvider
 
 			if ( !fileConcept2Genes.exists () )
 			{
-
+				log.info ( "Creating semantic motif data" );
 				// We're going to need a lot of memory, so delete this in advance
 				// (CyDebugger might trigger this multiple times)
 				//
@@ -2607,7 +2561,8 @@ public class OndexServiceProvider
 			else
 			{
 				// Files exist and are up-to-date, try to read them
-				// TODO: this doesn't currently work, cause the OXL parser regenerates IDs
+				//
+				log.info ( "Loading semantic motif data from existing support files" );
 				
 				try
 				{
@@ -2622,7 +2577,10 @@ public class OndexServiceProvider
 							e.getMessage () );
 				}
 			}
-
+			
+			// Moving forward with motif data in place.
+			//
+			
 			BiConsumer<String, Map<?,?>> nullChecker = (name, coll) -> 
 			{
 				if ( coll == null || coll.isEmpty () ) log.warn ( "{} is null", name );

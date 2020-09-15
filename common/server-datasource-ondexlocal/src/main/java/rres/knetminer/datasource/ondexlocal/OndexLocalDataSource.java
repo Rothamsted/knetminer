@@ -342,7 +342,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		// Export graph
 		NetworkResponse response = new NetworkResponse();
 		try {
-			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
+			response.setGraph(this.ondexServiceProvider.exportGraph2Json(subGraph));
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -364,7 +364,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
 		try {
-			response.setGraph(this.ondexServiceProvider.exportGraph(subGraph));
+			response.setGraph(this.ondexServiceProvider.exportGraph2Json(subGraph));
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -434,7 +434,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
         CountGraphEntities response = new CountGraphEntities();
         try {
             // Set the graph
-            ondexServiceProvider.exportGraph(subGraph);
+            ondexServiceProvider.exportGraph2Json(subGraph);
             log.info("Set graph, now getting the number of nodes...");
             response.setNodeCount(ondexServiceProvider.getNodeCount());
             response.setRelationshipCount(ondexServiceProvider.getRelationshipCount());
