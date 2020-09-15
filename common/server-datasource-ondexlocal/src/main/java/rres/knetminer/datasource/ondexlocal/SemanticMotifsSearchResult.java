@@ -14,7 +14,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  * other methods that used these two structures separately.
  * 
  * TODO: Probably to be changed during a more comprehensive OSP review. 
- * TODO: the returned maps aren't immutable, we need to review things around and then protect it.
+ * TODO: the returned maps aren't immutable, we need to review things around and then protect them.
  * 
  *
  * @author brandizi

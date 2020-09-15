@@ -2056,7 +2056,6 @@ public class OndexServiceProvider
 			
 			int allGenesSize = mapGene2Concepts.keySet ().size ();
 			int userGenesSize = userGenes.size ();
-			FisherExact fisherExact = new FisherExact ( allGenesSize );
 
 			log.info ( "generate Evidence table..." );
 			List<QTL> qtls = QTL.fromStringList ( qtlsStr );					
@@ -2128,6 +2127,8 @@ public class OndexServiceProvider
 				int notMatchedInGeneList = userGenesSize - matchedInGeneList;
 				int matchedNotInGeneList = numberOfGenes - matchedInGeneList;
 				int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
+
+				FisherExact fisherExact = new FisherExact ( allGenesSize );
 				pvalue = fisherExact.getP ( 
 					matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
 				);
