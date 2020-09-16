@@ -1,23 +1,22 @@
-package rres.knetminer.datasource.ondexlocal;
+package rres.knetminer.datasource.ondexlocal.service.utils;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
-import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.Set;
 
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
  * An helper for {@link ONDEXConcept} representing genes, which computes several gene-related information that are 
  * useful for the Knetminer API and interfaces, eg, chromosome, label, genome coordinates.
  *  
- * TODO: For the moment, this code has been inferred from the many copy-pasted variants found in 
- * {@link OndexServiceProvider} and needs review, see https://github.com/Rothamsted/knetminer/issues/518.
+ * This code has been inferred from the many copy-pasted variants found in 
+ * {@link OndexServiceProvider}, see https://github.com/Rothamsted/knetminer/issues/518.
  * 
  * @author brandizi
  * <dl><dt>Date:</dt><dd>20 Aug 2020</dd></dl>

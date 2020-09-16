@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
-import rres.knetminer.datasource.ondexlocal.OndexServiceProvider;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import uk.ac.ebi.utils.exceptions.TooFewValuesException;
 import uk.ac.ebi.utils.exceptions.TooManyValuesException;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;

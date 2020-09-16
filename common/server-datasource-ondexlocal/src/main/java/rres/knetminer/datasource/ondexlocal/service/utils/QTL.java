@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.api;
+package rres.knetminer.datasource.ondexlocal.service.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;

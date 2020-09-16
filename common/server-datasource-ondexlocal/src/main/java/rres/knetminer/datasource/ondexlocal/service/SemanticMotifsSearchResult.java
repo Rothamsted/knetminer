@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal;
+package rres.knetminer.datasource.ondexlocal.service;
 
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +13,6 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  * This has been introduced to cope with methods like {@link OndexServiceProvider#getScoredGenesMap(Map)} and
  * other methods that used these two structures separately.
  * 
- * TODO: Probably to be changed during a more comprehensive OSP review. 
  * TODO: the returned maps aren't immutable, we need to review things around and then protect them.
  * 
  *
@@ -44,7 +43,7 @@ public class SemanticMotifsSearchResult
 	 * semantic motif search.
 	 * 
 	 */
-	Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()
+	public Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()
 	{
 		return geneId2RelatedConceptIds;
 	}
@@ -54,7 +53,7 @@ public class SemanticMotifsSearchResult
 	 * best scores.
 	 * 
 	 */
-	Map<ONDEXConcept, Double> getRelatedConcept2Score ()
+	public Map<ONDEXConcept, Double> getRelatedConcept2Score ()
 	{
 		return relatedConcept2Score;
 	}

@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal;
+package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -79,14 +79,18 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
-import net.sourceforge.ondex.exception.type.PluginConfigurationException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.logging.ONDEXLogger;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
-import rres.knetminer.datasource.api.QTL;
+import rres.knetminer.datasource.ondexlocal.Hits;
+import rres.knetminer.datasource.ondexlocal.OndexServiceProviderHelper;
+import rres.knetminer.datasource.ondexlocal.PublicationUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;

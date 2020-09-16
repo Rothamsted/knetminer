@@ -40,6 +40,8 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
