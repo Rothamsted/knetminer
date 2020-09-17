@@ -42,7 +42,7 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
-import rres.knetminer.datasource.ondexlocal.service.OndexServiceData;
+import rres.knetminer.datasource.ondexlocal.service.OndexDataService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import uk.ac.ebi.utils.collections.OptionsMap;
@@ -99,7 +99,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		);
 		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		var odxData = ondexServiceProvider.getServiceData ();
+		var odxData = ondexServiceProvider.getDataService ();
 		
 		odxData.loadOptions ( configXmlPath );
 		
@@ -248,7 +248,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
-			if (ondexServiceProvider.getServiceData ().isReferenceGenome () ) {
+			if (ondexServiceProvider.getDataService ().isReferenceGenome () ) {
 				// Generate Annotation file.
 				xmlGViewer = ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap);
@@ -348,7 +348,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
 		try {
-			var opts = OndexServiceProvider.getInstance ().getServiceData ().getOptions ();
+			var opts = OndexServiceProvider.getInstance ().getDataService ().getOptions ();
 			byte[] encoded = Files.readAllBytes(Paths.get(opts.getString("DataPath"), "latestNetwork_Stats.tab"));
 			response.stats = new String(encoded, Charset.defaultCharset());
 		} catch (IOException ex) {
@@ -364,7 +364,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
         
         try {
         		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-        		var odxData = ondexServiceProvider.getServiceData ();
+        		var odxData = ondexServiceProvider.getDataService ();
         		
             // Parse the data into a JSON format & set the graphSummary as is.
         		// This data is obtained from the maven-settings.xml
@@ -436,7 +436,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 	
     public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
         KnetSpaceHost response = new KnetSpaceHost();
-        response.setKsHostUrl(OndexServiceProvider.getInstance ().getServiceData ().getKnetSpaceHost ());
+        response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
       return response;
     }
 }

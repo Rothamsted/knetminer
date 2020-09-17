@@ -29,7 +29,7 @@ import uk.ac.ebi.utils.collections.OptionsMap;
  *
  */
 @Component
-public class OndexServiceData
+public class OndexDataService
 {
   private OptionsMap options = null;
 	  
@@ -38,7 +38,7 @@ public class OndexServiceData
 	private final Logger log = LogManager.getLogger(getClass());
 
 	
-	private OndexServiceData ()
+	private OndexDataService ()
 	{
 	}
 

@@ -162,7 +162,7 @@ public class CypherDebuggerService
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		OptionsMap odxOpts = odxService.getServiceData ().getOptions ();
+		OptionsMap odxOpts = odxService.getDataService ().getOptions ();
 
 		String dataPath = odxOpts.getString ( "DataPath" );
 		CypherGraphTraverser traverser = this.getTraverser ();
@@ -245,7 +245,7 @@ public class CypherDebuggerService
 	private void checkEnabled ()
 	{
 		boolean isServiceEnabled = OndexServiceProvider.getInstance ()
-			.getServiceData ()
+			.getDataService ()
 			.getOptions ()
 			.getBoolean ( ENABLED_PROPERTY, false );
 		

@@ -124,7 +124,7 @@ import static java.lang.Math.pow;
 public class OndexServiceProvider 
 {
 	@Autowired
-	private OndexServiceData serviceData;
+	private OndexDataService dataService;
 	
 	private static AbstractApplicationContext springContext;
 	
@@ -134,8 +134,8 @@ public class OndexServiceProvider
   private OndexServiceProvider () {}
   
 	
-	public OndexServiceData getServiceData () {
-		return serviceData;
+	public OndexDataService getDataService () {
+		return dataService;
 	}
 	
 	public static OndexServiceProvider getInstance () 
@@ -246,7 +246,7 @@ public class OndexServiceProvider
      */
     public void createGraph ()
 		{
-    	OptionsMap opts = this.getServiceData ().getOptions ();
+    	OptionsMap opts = this.getDataService ().getOptions ();
     	String dataPath = opts.getString ( "DataPath" );
     	String graphFileName = opts.getString ( "DataFile" );
     			
@@ -274,7 +274,7 @@ public class OndexServiceProvider
 			numGenesInGenome = (int) seed.stream ()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
 			.map ( GeneHelper::getTaxID )
-			.filter ( this.serviceData::containsTaxId )
+			.filter ( this.dataService::containsTaxId )
 			.count ();
 
 			// Write Stats about the created Ondex graph & its mappings to a file.
@@ -890,7 +890,7 @@ public class OndexServiceProvider
 
 						if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
 						
-						if ( !this.serviceData.containsTaxId ( geneHelper.getTaxID () ) ) continue;
+						if ( !this.dataService.containsTaxId ( geneHelper.getTaxID () ) ) continue;
 
 						concepts.add ( gene );
 					}
@@ -1071,7 +1071,7 @@ public class OndexServiceProvider
 			return seed.stream ()
 			.filter ( gene -> {
         String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-        return serviceData.containsTaxId ( thisTaxId );
+        return dataService.containsTaxId ( thisTaxId );
 			})
 			.filter ( gene ->
 			{
@@ -1835,7 +1835,7 @@ public class OndexServiceProvider
 			
 			Map<String, String> trait2color = createHilightColorMap ( traits, colorHex );
 
-			final var taxIds = this.serviceData.getTaxIds ();
+			final var taxIds = this.dataService.getTaxIds ();
 			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
 			log.info ( "TaxID(s): {}", taxIds );
 			
@@ -1869,7 +1869,7 @@ public class OndexServiceProvider
 				else if ( type.equals ( "SNP" ) )
 				{
 					/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
-					if ( this.serviceData.containsTaxId ( loci.getTaxID () ) )
+					if ( this.dataService.containsTaxId ( loci.getTaxID () ) )
 					{
 						sb.append ( "<feature>\n" );
 						sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );
@@ -2390,7 +2390,7 @@ public class OndexServiceProvider
 			return (int) genes.stream()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
 			.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-			.filter ( geneHelper -> serviceData.containsTaxId ( geneHelper.getTaxID () ) )
+			.filter ( geneHelper -> dataService.containsTaxId ( geneHelper.getTaxID () ) )
 			.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 			.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 			.count ();
@@ -2435,7 +2435,7 @@ public class OndexServiceProvider
 
 			ConceptClass ccQTL = graph.getMetaData ().getConceptClass ( "QTL" );
 			Set<ONDEXConcept> qtls = ccQTL == null ? new HashSet<> () : graph.getConceptsOfConceptClass ( ccQTL );
-			Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, this.serviceData.getTaxIds (), this.getOptions () );
+			Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, this.dataService.getTaxIds (), this.getOptions () );
 
 			if ( fileConcept2Genes.exists () && ( fileConcept2Genes.lastModified () < graphFile.lastModified () ) )
 			{
@@ -2654,10 +2654,10 @@ public class OndexServiceProvider
     
     /**
      * TODO: this is under refactoring. For the moment, it's a wrapper of  
-     * {@link #getServiceData()}.{@link OndexServiceData#getOptions()}.
+     * {@link #getDataService()}.{@link OndexDataService#getOptions()}.
      */
     public Map<String, Object> getOptions() {
-    	return this.serviceData.getOptions ();
+    	return this.dataService.getOptions ();
     }
 
 		public Map<Integer, Set<Integer>> getMapConcept2Genes () {
