@@ -14,7 +14,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,6 +53,11 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
@@ -91,6 +95,7 @@ import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
+import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
@@ -111,11 +116,62 @@ import static java.lang.Math.pow;
  * Parent class to all ondex service provider classes implementing organism
  * specific searches.
  *
+ * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha
  */
+@Component
 public class OndexServiceProvider 
 {
-    private final Logger log = LogManager.getLogger(getClass());
+	@Autowired
+	private OndexServiceData serviceData;
+	
+	private static AbstractApplicationContext springContext;
+	
+	/**
+	 * It's a singleton, use {@link #getInstance()}.
+	 */
+  private OndexServiceProvider () {}
+  
+	
+	public OndexServiceData getServiceData () {
+		return serviceData;
+	}
+	
+	public static OndexServiceProvider getInstance () 
+	{
+		initSpring ();
+		return springContext.getBean ( OndexServiceProvider.class );
+	}
+  
+  private static void initSpring ()
+	{
+		// Double-check lazy init (https://www.geeksforgeeks.org/java-singleton-design-pattern-practices-examples/)
+		if ( springContext != null ) return;
+		
+		synchronized ( OndexServiceProvider.class )
+		{
+			if ( springContext != null ) return;
+			
+			springContext = new AnnotationConfigApplicationContext ( "rres.knetminer.datasource.ondexlocal.service" );
+			springContext.registerShutdownHook ();
+			
+			getInstance ().log.info ( "Spring context for {} initialised", OndexServiceProvider.class.getSimpleName () );
+		}		
+	}	
+	
+	
+	
+	
+	
+	
+	
+	// -------------------------------- OLD STUFF --------------------------------------------
+	
+	/**
+	 * Old code for OSP is temporary DOWN here, waiting to be reviewed.
+	 */
+	
+	private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * ChromosomeID mapping for different datasets
@@ -164,57 +220,16 @@ public class OndexServiceProvider
      */
     private LuceneEnv luceneMgr;
 
-    /**
-     * TaxID of organism for which the knowledgebase was created
-     */
-    private List<String> taxID;
     
-    /**
-     * Version of KnetMiner being used
-     **/
-    private int version;
     
-    /**
-     * The organisation source name
-     */
-    private String sourceOrganization;
     
     /**
     * defaultExportedPublicationCount value
     */
     public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
-    
-    /** 
-     * The Date of graph creation
-     */
-    private final Date creationDate = new Date();
-    
-    /**
-     * The providers name
-     */
-    private String provider;
-    
-    /** 
-     * Species Name provided via maven-settings
-     */
-    private String speciesName;
+        
 	
-	/*
-    * Host url provided by mav args (otherwise default is assigned) for knetspace
-    */
-    private String knetspaceHost;
-
-    
-    /**
-     * true if a reference genome is provided
-     */
-    private boolean referenceGenome;
-
-    private boolean exportVisibleNetwork;
-
-    private Map<String, Object> options = new HashMap<>();
-	
-	    /**
+	   /**
      * Node and relationship number for given gene
      */
     
@@ -222,21 +237,18 @@ public class OndexServiceProvider
     
     private String relationshipCount;
 
-    /**
-     * Loads configuration for chromosomes and initialises map
-     */
-    public OndexServiceProvider() {
-
-    }
 
     /**
      * Performs several data inititalisation operations, including, OXL loading, Lucene indexing, semantic motif search
      * and storage of its results.
      * 
-     * TODO: having parameters here is messy, they should be part of {@link #getOptions()}.
      */
-    public void createGraph ( String dataPath, String graphFileName, String smFileName )
+    public void createGraph ()
 		{
+    	OptionsMap opts = this.getServiceData ().getOptions ();
+    	String dataPath = opts.getString ( "DataPath" );
+    	String graphFileName = opts.getString ( "DataFile" );
+    			
 			log.info ( "Loading graph from " + graphFileName );
 
 			// new in-memory graph
@@ -246,11 +258,10 @@ public class OndexServiceProvider
 			indexOndexGraph ( graphFileName, dataPath );
 
 			if ( graphTraverser == null )
-				graphTraverser = AbstractGraphTraverser.getInstance ( this.getOptions () );
+				// The traverser will get all these config opts, its initial configuration
+				// is possibly overridden/extended
+				graphTraverser = AbstractGraphTraverser.getInstance ( opts );
 
-			// These might be needed by one implementation or the other. Those that don't use one of these properties
-			// can just ignore them.
-			graphTraverser.setOption ( "StateMachineFilePath", smFileName );
 			graphTraverser.setOption ( "ONDEXGraph", graph );
 
 			populateSemanticMotifData ( graphFileName, dataPath );
@@ -259,9 +270,11 @@ public class OndexServiceProvider
 			ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
+			final var taxIds = this.serviceData.getTaxIds ();
+
 			numGenesInGenome = (int) seed.stream ()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
-			.filter ( gh -> taxID.contains ( gh.getTaxID () ) )
+			.filter ( gh -> taxIds.contains ( gh.getTaxID () ) )
 			.count ();
 
 			// Write Stats about the created Ondex graph & its mappings to a file.
@@ -858,6 +871,8 @@ public class OndexServiceProvider
 					ConceptClass ccGene = gmeta.getConceptClass ( "Gene" );
 
 					Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
+					final var taxIds = this.serviceData.getTaxIds ();
+
 					log.info ( "searchQTL, found {} matching gene(s)", genes.size () );
 
 					for ( ONDEXConcept gene : genes )
@@ -876,7 +891,7 @@ public class OndexServiceProvider
 
 						if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
 						
-						if ( !taxID.contains ( geneHelper.getTaxID () ) ) continue;
+						if ( !taxIds.contains ( geneHelper.getTaxID () ) ) continue;
 
 						concepts.add ( gene );
 					}
@@ -1054,10 +1069,11 @@ public class OndexServiceProvider
 				.toUpperCase () 
 			).collect ( Collectors.toSet () );			
 			
+			final var taxIds = this.serviceData.getTaxIds ();
 			return seed.stream ()
 			.filter ( gene -> {
         String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-        return taxID.contains ( thisTaxId );
+        return taxIds.contains ( thisTaxId );
 			})
 			.filter ( gene ->
 			{
@@ -1822,7 +1838,8 @@ public class OndexServiceProvider
 			Map<String, String> trait2color = createHilightColorMap ( traits, colorHex );
 
 			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
-			log.info ( "TaxID(s): " + taxID );
+			log.info ( "TaxID(s): " + this.serviceData.getTaxIds () );
+			final var taxIds = this.serviceData.getTaxIds ();
 			for ( QTL loci : qtlDB )
 			{
 				String type = loci.getType ().trim ();
@@ -1853,7 +1870,7 @@ public class OndexServiceProvider
 				else if ( type.equals ( "SNP" ) )
 				{
 					/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
-					if ( taxID.contains ( loci.getTaxID () ) )
+					if ( taxIds.contains ( loci.getTaxID () ) )
 					{
 						sb.append ( "<feature>\n" );
 						sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );
@@ -2333,54 +2350,12 @@ public class OndexServiceProvider
 
 
 
-    public void setTaxId(List<String> id) {
-        this.taxID = id;
-    }
 
-    public void setExportVisibleNetwork(boolean exportVisibleNetwork) {
-        this.exportVisibleNetwork = exportVisibleNetwork;
 
-    }
-
-    public boolean getExportVisibleNetwork() {
-        return this.exportVisibleNetwork;
-    }
-
-    public List<String> getTaxId() {
-        return this.taxID;
-    }
     
-    public void setVersion(int ver) {
-        this.version = ver;
-    }
     
-    public int getVersion() {
-        return this.version;
-    }
     
-    public void setSource(String src) {
-        this.sourceOrganization = src;
-    }
     
-    public String getSource() {
-        return this.sourceOrganization;
-    }
-    
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-    
-    public String getProvider() {
-        return this.provider;
-    }
-    
-    public void setSpecies(String speciesName) {
-        this.speciesName = speciesName;
-    }
-    
-    public String getSpecies() {
-        return this.speciesName;
-    }
 	
 		public void setNodeCount(String nodeCount) {
 			this.nodeCount = nodeCount;
@@ -2398,27 +2373,6 @@ public class OndexServiceProvider
         return this.relationshipCount;
     }
     
-    public void setKnetspaceHost(String knetspaceHost) {
-        this.knetspaceHost = knetspaceHost;
-    }
-
-    public String getKnetspaceHost() {
-        return this.knetspaceHost;
-    }
-
-    public void setReferenceGenome(boolean value) {
-        this.referenceGenome = value;
-    }
-
-    public boolean getReferenceGenome() {
-        return this.referenceGenome;
-    }
-    
-    public String getCreationDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
-        return formatter.format(creationDate);
-    }
-
         
     /**
      * Returns number of organism (taxID) genes at a given loci
@@ -2436,10 +2390,11 @@ public class OndexServiceProvider
 			ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 			Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
 			
+			final var taxIds = this.serviceData.getTaxIds ();
 			return (int) genes.stream()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
 			.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-			.filter ( geneHelper -> taxID.contains ( geneHelper.getTaxID () ) )
+			.filter ( geneHelper -> taxIds.contains ( geneHelper.getTaxID () ) )
 			.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 			.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 			.count ();
@@ -2484,7 +2439,7 @@ public class OndexServiceProvider
 
 			ConceptClass ccQTL = graph.getMetaData ().getConceptClass ( "QTL" );
 			Set<ONDEXConcept> qtls = ccQTL == null ? new HashSet<> () : graph.getConceptsOfConceptClass ( ccQTL );
-			Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, taxID, this.getOptions () );
+			Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, this.serviceData.getTaxIds (), this.getOptions () );
 
 			if ( fileConcept2Genes.exists () && ( fileConcept2Genes.lastModified () < graphFile.lastModified () ) )
 			{
@@ -2702,17 +2657,11 @@ public class OndexServiceProvider
     }
     
     /**
-     * We receive options set from the main config.xml file. These are further
-     * passed to the specific {@link AbstractGraphTraverser} that is selected
-     * via the 'GraphTraverserClass' option in the main config file (together
-     * with a couple of other parameters, see
+     * TODO: this is under refactoring. For the moment, it's a wrapper of  
+     * {@link #getServiceData()}.{@link OndexServiceData#getOptions()}.
      */
     public Map<String, Object> getOptions() {
-    	return options;
-    }
-
-    public void setOptions(Map<String, Object> options) {
-    	this.options = options;
+    	return this.serviceData.getOptions ();
     }
 
 		public Map<Integer, Set<Integer>> getMapConcept2Genes () {

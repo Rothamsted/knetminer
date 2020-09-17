@@ -6,8 +6,10 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,8 +42,10 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceData;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
+import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -57,10 +61,8 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * @author holland
  *
  */
-public abstract class OndexLocalDataSource extends KnetminerDataSource {
-
-	private OndexServiceProvider ondexServiceProvider;
-	
+public abstract class OndexLocalDataSource extends KnetminerDataSource 
+{	
 	private Properties props = new Properties();
 	
 	
@@ -82,85 +84,50 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		init ( null, null, null );
 	}
 
-	@SuppressWarnings ( { "rawtypes", "unchecked" } )
 	private void init ( String dsName, String configXmlPath, String semanticMotifsPath )
 	{
-		// Config.xml location can be specified in different ways, see the constructors
-		if ( configXmlPath == null )
-		{
-			configXmlPath = ConfigFileHarvester.getConfigFilePath ();
-			if ( configXmlPath == null ) throw new IllegalStateException ( 
-				"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
-				+ ", either as a Java property, a <context-param> in web.xml, or" 
-				+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
-			);
-		}
+		// TODO: we're transitioning to the arrangement where the config is only read
+		// via config file harverster and this method parameters are ignored
+		if ( dsName != null || configXmlPath != null || semanticMotifsPath != null )
+			throw new UnsupportedOperationException ( 
+				"Parameterised version of " + this.getClass ().getSimpleName () +
+				"'s constructor is no longer supported and will be removed. All params must come from the config file like data_source.xml" 
+		);
 		
-		try 
-		{
-			URL configUrl = configXmlPath.startsWith ( "file://" )
-				? new URL ( configXmlPath )
-				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
-			
-			this.props.loadFromXML(configUrl.openStream());
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
-		}
-
-		if ( dsName == null ) dsName = this.props.getProperty ( "DataSourceName", null );
+		configXmlPath = ConfigFileHarvester.getConfigFilePath ();
+		if ( configXmlPath == null ) throw new IllegalStateException ( 
+			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
+			+ ", either as a Java property, a <context-param> in web.xml, or" 
+			+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
+		);
+		
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		var odxData = ondexServiceProvider.getServiceData ();
+		
+		odxData.loadOptions ( configXmlPath );
+		
+		dsName = odxData.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
-		this.setDataSourceNames(new String[] {dsName});
-		
-		if ( semanticMotifsPath == null )
-			// We need it here, to support legacy method interfaces. It is later put back into properties
-			semanticMotifsPath = this.props.getProperty ( "StateMachineFilePath", null );
-		
-		this.ondexServiceProvider = new OndexServiceProvider();
-
+		this.setDataSourceNames ( new String[] {dsName} );
+		log.info ( "Setting up data source is '{}'", dsName );
+				
 		// All the properties from config.xml are forwarded to the 
 		// service provider, so that further configuration can be bootstrapped from
 		// base properties.
-		this.ondexServiceProvider.setOptions ( (Map) this.props );
-
-		this.ondexServiceProvider.setReferenceGenome(Boolean.parseBoolean(this.getProperty("reference_genome")));
-		log.info("Datasource "+dsName+" reference genome: "+this.ondexServiceProvider.getReferenceGenome());
-		this.ondexServiceProvider.setTaxId(Arrays.asList(this.getProperty("SpeciesTaxId").split(",")));
-		log.info("Datasource "+dsName+" tax ID: "+Arrays.toString(this.ondexServiceProvider.getTaxId().toArray()));
-		this.ondexServiceProvider.setExportVisibleNetwork(Boolean.parseBoolean(this.getProperty("export_visible_network")));
-		log.info("Datasource "+dsName+" export visible: "+this.ondexServiceProvider.getExportVisibleNetwork());
-		this.ondexServiceProvider.setVersion(Integer.parseInt(this.getProperty("version")));
-		log.info("Datasource " + dsName + " species version: " + this.ondexServiceProvider.getVersion());
-		this.ondexServiceProvider.setSource(this.getProperty("sourceOrganization"));
-		log.info("Datasource " + dsName + " organisation source: " + this.ondexServiceProvider.getSource());
-		this.ondexServiceProvider.setProvider(this.getProperty("provider"));
-		log.info("Datasource " + dsName + " provider source: " + this.ondexServiceProvider.getProvider());
-		this.ondexServiceProvider.setSpecies(this.getProperty("specieName"));
-		log.info("Datasource " + dsName + " species name: " + this.ondexServiceProvider.getSpecies());
-		this.ondexServiceProvider.setKnetspaceHost(this.getProperty("knetSpaceHost"));
-		//log.info("Datasource " + dsName + " KnetSpace host: " + this.ondexServiceProvider.getKnetspaceHost());
-                
-
-		this.ondexServiceProvider.createGraph (
-			this.getProperty("DataPath"), this.getProperty("DataFile"), semanticMotifsPath
-		);
+		
+		// TODO: continue refactoring from here
+		// TODO: get rid of ConfigurableOndexDataSource
+		// this.ondexServiceProvider.setOptions ( (Map) this.props );
+		
+		ondexServiceProvider.createGraph ();
 	}
 	
-	public String getProperty(String key) {
-		return this.props.getProperty(key);
-	}
-
-	/** 
-	 * This is made available for debugging or tweaks like the ones in {@code CypherDebuggerService}.
-	 */
-	public OndexServiceProvider getOndexServiceProvider () {
-		return ondexServiceProvider;
-	}
-
-	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-		Hits hits = new Hits(request.getKeyword(), this.ondexServiceProvider, null);
+	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	{
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		Hits hits = new Hits(request.getKeyword(), ondexServiceProvider, null);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
 		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
@@ -168,10 +135,13 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-		try {
+	public SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	{
+		try 
+		{
+			var ondexServiceProvider = OndexServiceProvider.getInstance ();
 			SynonymsResponse response = new SynonymsResponse();
-			response.setSynonyms(this.ondexServiceProvider.writeSynonymTable(request.getKeyword()));
+			response.setSynonyms(ondexServiceProvider.writeSynonymTable(request.getKeyword()));
 			return response;
 		} 
 		catch (ParseException e) 
@@ -200,7 +170,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		}
 		log.info("Counting loci "+chr+":"+start+":"+end);
 		CountLociResponse response = new CountLociResponse();
-		response.setGeneCount(this.ondexServiceProvider.getLociGeneCount(chr, start, end));
+		response.setGeneCount(OndexServiceProvider.getInstance ().getLociGeneCount(chr, start, end));
 		return response;
 	}
 
@@ -216,17 +186,18 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request)
-			throws IllegalArgumentException {
+	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request) throws IllegalArgumentException 
+	{
 		// Find genes from the user's gene list
 		Set<ONDEXConcept> userGenes = new HashSet<ONDEXConcept>();
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes.addAll(this.ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			userGenes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
 			log.info("Number of user provided genes: " + userGenes.size());
 		}
 		// Also search Regions - only if no genes provided
 		if (userGenes.isEmpty() && !request.getQtl().isEmpty()) {
-			userGenes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
+			userGenes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
 		}
 		if (userGenes.isEmpty()) {
 			userGenes = null;
@@ -235,7 +206,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		// Genome search
 		log.info("Search mode: " + response.getClass().getName());
 		List<ONDEXConcept> genes = new ArrayList<>();
-		Hits qtlnetminerResults = new Hits(request.getKeyword(), this.ondexServiceProvider, userGenes);
+		Hits qtlnetminerResults = new Hits(request.getKeyword(), ondexServiceProvider, userGenes);
 		Map<ONDEXConcept, Double> geneMap = new HashMap<>();
 		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class)) {
 			log.info("Genome or QTL response...");
@@ -280,9 +251,9 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
-			if (this.ondexServiceProvider.getReferenceGenome() == true) {
+			if (ondexServiceProvider.getServiceData ().isReferenceGenome () ) {
 				// Generate Annotation file.
-				xmlGViewer = this.ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
+				xmlGViewer = ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
 						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap);
 				log.debug("1.) Genomaps annotation ");
 			} else {
@@ -295,18 +266,18 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap
 			);
-			String geneTable = this.ondexServiceProvider.writeGeneTable ( 
+			String geneTable = ondexServiceProvider.writeGeneTable ( 
 				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
 			);                        
                                 
 			log.debug("2.) Gene table ");
 
 			// Evidence table file
-			String evidenceTable = this.ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
+			String evidenceTable = ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
 			log.debug("3.) Evidence table ");
 			
-			int docSize = this.ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
+			int docSize = ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
 					.size();
 
 			// Total documents
@@ -323,28 +294,29 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	{
 		Set<ONDEXConcept> genes = new HashSet<>();
-
 		log.info( "network(), searching {} gene(s)",  request.getList().size() );
 
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		// Search Genes
 		if (!request.getList().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
 		}
 
 		// Search Regions
 		if (!request.getQtl().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
+			genes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
 		}
 
 		// Find Semantic Motifs
-		ONDEXGraph subGraph = this.ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+		ONDEXGraph subGraph = ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
 
 		// Export graph
 		NetworkResponse response = new NetworkResponse();
 		try {
-			response.setGraph(this.ondexServiceProvider.exportGraph2Json(subGraph));
+			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph));
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -352,21 +324,23 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
 
-	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
-		Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
+		Set<ONDEXConcept> genes = new HashSet<>();
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 
 		// Search Genes
 		if (!request.getList().isEmpty()) {
-			genes.addAll(this.ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
 		}
 
-		ONDEXGraph subGraph = this.ondexServiceProvider.evidencePath(evidenceOndexID, genes);
+		ONDEXGraph subGraph = ondexServiceProvider.evidencePath(evidenceOndexID, genes);
 
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
 		try {
-			response.setGraph(this.ondexServiceProvider.exportGraph2Json(subGraph));
+			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph));
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -377,7 +351,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
 		try {
-			byte[] encoded = Files.readAllBytes(Paths.get(this.getProperty("DataPath"), "latestNetwork_Stats.tab"));
+			var opts = OndexServiceProvider.getInstance ().getServiceData ().getOptions ();
+			byte[] encoded = Files.readAllBytes(Paths.get(opts.getString("DataPath"), "latestNetwork_Stats.tab"));
 			response.stats = new String(encoded, Charset.defaultCharset());
 		} catch (IOException ex) {
 	    	log.error(ex);
@@ -386,52 +361,67 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 		return response;
 	}
         
-        public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-            GraphSummaryResponse response = new GraphSummaryResponse();
+    public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+    {
+        GraphSummaryResponse response = new GraphSummaryResponse();
+        
+        try {
+        		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+        		var odxData = ondexServiceProvider.getServiceData ();
+        		
+            // Parse the data into a JSON format & set the graphSummary as is.
+        		// This data is obtained from the maven-settings.xml
+            JSONObject summaryJSON = new JSONObject();
+            summaryJSON.put("dbVersion", odxData.getDatasetVersion () );
+            summaryJSON.put("sourceOrganization", odxData.getDatasetOrganization ());
+            odxData.getTaxIds ().forEach((taxID) -> {
+                summaryJSON.put("speciesTaxid", taxID);
+            });
+            summaryJSON.put("speciesName", odxData.getSpecies());
+
+            // TODO: initially, this was set with ondexServiceProvider.getCreationDate()
+            // which corresponded to the server's starting time.
+            // TODO: after discussion, we require this to come from the OXL's last-modified date
+            // (and later, from inside the OXL, together with graph metadata
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+            var timestampStr = formatter.format ( new Date() );
+            summaryJSON.put("dbDateCreated", timestampStr);
+
+            summaryJSON.put("provider", odxData.getDatasetProvider () );
+            String jsonString = summaryJSON.toString();
+            // Removing the pesky double quotes
+            jsonString = jsonString.substring(1, jsonString.length() - 1);
+            log.info("response.dataSource= " + jsonString); // test
+            response.dataSource = jsonString;
             
-            try {
-                // Parse the data into a JSON format & set the graphSummary as is - this data is obtained from the maven-settings.xml
-                JSONObject summaryJSON = new JSONObject();
-                summaryJSON.put("dbVersion", this.ondexServiceProvider.getVersion());
-                summaryJSON.put("sourceOrganization", this.ondexServiceProvider.getSource());
-                this.ondexServiceProvider.getTaxId().forEach((taxID) -> {
-                    summaryJSON.put("speciesTaxid", taxID);
-                });
-                summaryJSON.put("speciesName", this.ondexServiceProvider.getSpecies());
-                summaryJSON.put("dbDateCreated", this.ondexServiceProvider.getCreationDate());
-                summaryJSON.put("provider", this.ondexServiceProvider.getProvider());
-                String jsonString = summaryJSON.toString();
-                // Removing the pesky double qoutations
-                jsonString = jsonString.substring(1, jsonString.length() - 1);
-                log.info("response.dataSource= " + jsonString); // test
-                response.dataSource = jsonString;
-                
-            } catch (JSONException ex) {
-                log.error(ex);
-                throw new Error(ex);
-            }
-            
-            return response;
-            
+        } catch (JSONException ex) {
+            log.error(ex);
+            throw new Error(ex);
         }
+        
+        return response;
+        
+    }
 		
-		public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+		public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+		{
+				log.info("geneCount() Search genes " + request.getList().size());
         Set<ONDEXConcept> genes = new HashSet<>();
 
-        log.info("geneCount() Search genes " + request.getList().size());
+    		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 
         // Search Genes
         if (!request.getList().isEmpty()) {
-            genes.addAll(this.ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+            genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
         }
 
         // Search Regions
         if (!request.getQtl().isEmpty()) {
-            genes.addAll(this.ondexServiceProvider.fetchQTLs(request.getQtl()));
+            genes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
         }
 
         // Find Semantic Motifs
-        ONDEXGraph subGraph = this.ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+        ONDEXGraph subGraph = ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
         
         CountGraphEntities response = new CountGraphEntities();
         try {
@@ -449,7 +439,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource {
 	
     public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
         KnetSpaceHost response = new KnetSpaceHost();
-        response.setKsHostUrl(this.ondexServiceProvider.getKnetspaceHost());
+        response.setKsHostUrl(OndexServiceProvider.getInstance ().getServiceData ().getKnetSpaceHost ());
       return response;
     }
 }
