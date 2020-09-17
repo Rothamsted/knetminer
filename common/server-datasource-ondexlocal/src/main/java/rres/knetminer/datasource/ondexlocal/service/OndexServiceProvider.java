@@ -13,12 +13,10 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -57,7 +54,6 @@ import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
@@ -2654,7 +2650,8 @@ public class OndexServiceProvider
     
     /**
      * TODO: this is under refactoring. For the moment, it's a wrapper of  
-     * {@link #getDataService()}.{@link OndexDataService#getOptions()}.
+     * {@link #getDataService()}.{@link OndexDataService#getOptions()}. Eventually, it will be eliminated from
+     * here.
      */
     public Map<String, Object> getOptions() {
     	return this.dataService.getOptions ();
