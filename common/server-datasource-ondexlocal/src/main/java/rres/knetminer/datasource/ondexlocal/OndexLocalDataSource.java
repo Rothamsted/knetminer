@@ -63,9 +63,6 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  */
 public abstract class OndexLocalDataSource extends KnetminerDataSource 
 {	
-	private Properties props = new Properties();
-	
-	
 	/**
 	 * When it's initialised without parameters, it gets everything from the XML config file. This is fetched by 
 	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).

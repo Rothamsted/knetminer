@@ -5,18 +5,12 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -25,7 +19,10 @@ import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import uk.ac.ebi.utils.collections.OptionsMap;
 
 /**
- * TODO: comment me!
+ * A component served by {@link OndexServiceProvider} that provides the data structures
+ * needed by the Knetminer application. This includes the {@link #getOptions() configuration options},
+ * 
+ * the Ondex graph and the gene/semantic motif associations.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>16 Sep 2020</dd></dl>
