@@ -86,7 +86,7 @@ public class OndexServiceData
 			options.entrySet ()
 			.stream ()
 			.map ( e -> 
-				"    " + e.getKey () + ": " 
+				"  " + e.getKey () + ": " 
 				+ Optional.ofNullable ( e.getValue () )
 					.map ( v -> "\"" + v.toString () + "\"" )
 					.orElse ( "<null>" ) 
@@ -160,6 +160,16 @@ public class OndexServiceData
   	return this.taxIds;
   }
 
+  /**
+   * USE THIS to test if a possibly null taxId is contained by the configured taxonomy IDs
+   * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException 
+   */
+  public boolean containsTaxId ( String taxId )
+  {
+  	if ( taxId == null ) return false;
+  	return taxIds.contains ( taxId );
+  }
+  
   public boolean isExportVisibleNetwork ()
   {
     return this.options.getBoolean ( "export_visible_network", false );

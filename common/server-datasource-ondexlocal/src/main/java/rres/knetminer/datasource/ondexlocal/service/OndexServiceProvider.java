@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -270,11 +271,10 @@ public class OndexServiceProvider
 			ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-			final var taxIds = this.serviceData.getTaxIds ();
-
 			numGenesInGenome = (int) seed.stream ()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
-			.filter ( gh -> taxIds.contains ( gh.getTaxID () ) )
+			.map ( GeneHelper::getTaxID )
+			.filter ( this.serviceData::containsTaxId )
 			.count ();
 
 			// Write Stats about the created Ondex graph & its mappings to a file.
@@ -871,7 +871,6 @@ public class OndexServiceProvider
 					ConceptClass ccGene = gmeta.getConceptClass ( "Gene" );
 
 					Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
-					final var taxIds = this.serviceData.getTaxIds ();
 
 					log.info ( "searchQTL, found {} matching gene(s)", genes.size () );
 
@@ -891,7 +890,7 @@ public class OndexServiceProvider
 
 						if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
 						
-						if ( !taxIds.contains ( geneHelper.getTaxID () ) ) continue;
+						if ( !this.serviceData.containsTaxId ( geneHelper.getTaxID () ) ) continue;
 
 						concepts.add ( gene );
 					}
@@ -1069,11 +1068,10 @@ public class OndexServiceProvider
 				.toUpperCase () 
 			).collect ( Collectors.toSet () );			
 			
-			final var taxIds = this.serviceData.getTaxIds ();
 			return seed.stream ()
 			.filter ( gene -> {
         String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-        return taxIds.contains ( thisTaxId );
+        return serviceData.containsTaxId ( thisTaxId );
 			})
 			.filter ( gene ->
 			{
@@ -1837,9 +1835,10 @@ public class OndexServiceProvider
 			
 			Map<String, String> trait2color = createHilightColorMap ( traits, colorHex );
 
-			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
-			log.info ( "TaxID(s): " + this.serviceData.getTaxIds () );
 			final var taxIds = this.serviceData.getTaxIds ();
+			log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
+			log.info ( "TaxID(s): {}", taxIds );
+			
 			for ( QTL loci : qtlDB )
 			{
 				String type = loci.getType ().trim ();
@@ -1870,7 +1869,7 @@ public class OndexServiceProvider
 				else if ( type.equals ( "SNP" ) )
 				{
 					/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
-					if ( taxIds.contains ( loci.getTaxID () ) )
+					if ( this.serviceData.containsTaxId ( loci.getTaxID () ) )
 					{
 						sb.append ( "<feature>\n" );
 						sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );
@@ -1884,8 +1883,6 @@ public class OndexServiceProvider
 								"<link>http://plants.ensembl.org/arabidopsis_thaliana/Variation/Summary?v=" + label + "</link>\n" );
 						sb.append ( "<label>" + label + "</label>\n" );
 						sb.append ( "</feature>\n" );
-						// log.info("TaxID= "+ loci.getTaxID() +", add SNP: chr, trait, label, p-value: "+ chr +", "+ trait +", "+
-						// label +", "+ pvalue);
 					}
 				}
 
@@ -2390,11 +2387,10 @@ public class OndexServiceProvider
 			ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 			Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
 			
-			final var taxIds = this.serviceData.getTaxIds ();
 			return (int) genes.stream()
 			.map ( gene -> new GeneHelper ( graph, gene ) )
 			.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-			.filter ( geneHelper -> taxIds.contains ( geneHelper.getTaxID () ) )
+			.filter ( geneHelper -> serviceData.containsTaxId ( geneHelper.getTaxID () ) )
 			.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 			.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 			.count ();
