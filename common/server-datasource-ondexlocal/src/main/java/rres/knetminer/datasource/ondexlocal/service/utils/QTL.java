@@ -1,4 +1,7 @@
-package rres.knetminer.datasource.api;
+package rres.knetminer.datasource.ondexlocal.service.utils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a QTL in a structured form.
@@ -133,4 +136,12 @@ public class QTL {
 		}
 		throw new IllegalArgumentException(qtlStr + " not valid qtl region");
 	}
+	
+	public static List<QTL> fromStringList ( List<String> qtlStrings )
+	{
+		return qtlStrings.stream ()
+		.map ( QTL::fromString )
+		.collect ( Collectors.toList () );
+	}
+	
 }

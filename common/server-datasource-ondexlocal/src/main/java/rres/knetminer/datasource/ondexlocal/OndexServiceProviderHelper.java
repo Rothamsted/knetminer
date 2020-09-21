@@ -16,6 +16,7 @@ import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
  * This is a TODO:temporary class of utilities, written separately from the {@link OndexServiceProvider}

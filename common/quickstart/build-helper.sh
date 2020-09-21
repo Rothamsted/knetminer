@@ -11,6 +11,8 @@
 # any other host, independently on Docker. In the latter case, you need to pre-install requirements manually
 # and to pass the correct parameters to this script (see local-env-ex/ for details about this case).
 #
+# NOTE: this script builds knetminer by issuing "mvn install", WITHOUT install, that's up to you, if you need it. 
+#
 if [ "$1" == '--help' ]; then
 	cat <<EOT
 	
@@ -51,16 +53,21 @@ echo -e "\n\n\tBuilding Knetminer\n"
 cd ../.. 
 
 # ---- Regular full build of the server web reference application (aratiny-ws.war) ----
-mvn clean install $MAVEN_ARGS -DskipTests -DskipITs
+mvn install $MAVEN_ARGS -DskipTests -DskipITs
 cd common/aratiny/aratiny-ws
 # --- Alternatively, you can enable fast build during debugging
 # mvn dependency:resolve
 # cd common/aratiny/aratiny-ws
-# mvn clean install $MAVEN_ARGS -DskipTests -DskipITs
+# mvn install $MAVEN_ARGS -DskipTests -DskipITs
 # ---
 
 # Put it under Tomcat
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
+
+# And also put the test OXL in place
+mkdir --parents /root/knetminer-dataset/data
+cp -f target/dependency/ara-tiny.oxl /root/knetminer-dataset/data/knowledge-network.oxl
+
 
 # The client is rebuilt by the container, cause its files need to be instantiated with the dataset-specific settings. 
 

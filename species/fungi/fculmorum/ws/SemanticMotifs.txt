@@ -18,7 +18,7 @@
 19^	Reaction
 20^	Path
 21	Phenotype
-22^	Disease
+22	Disease
 23^	KO
 24^	Path
 25	Comp
@@ -69,7 +69,7 @@
 
 1-13	has_observ_pheno
 10-13	has_observ_pheno
-1-22	inv_in
+1-22	is_involved_in
 10-23	has_function
 18-24	part_of
 18-25	pd_by

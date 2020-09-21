@@ -48,13 +48,21 @@ fi
 
 echo -e "\n\n\t Building Maven goal: $goal"
 # You need --quiet, Travis doesn't like too big logs.
-mvn --quiet --settings maven-settings.xml $goal
+mvn --quiet --settings maven-settings.xml --update-snapshots $goal
 
-echo -e "\n\n\tBuilding Docker-base"
-docker build -t knetminer/knetminer-base -f common/quickstart/Dockerfile-base .
+echo -e "\n\n\t Cleaning local Maven for Docker"
+mvn --quiet clean
+
+# Might be useful when developing on a branch.
+# [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
+docker_tag='latest'
+
+# TODO: remove
+#echo -e "\n\n\tBuilding Docker-base"
+#docker build -t knetminer/knetminer-base:$docker_tag -f common/quickstart/Dockerfile-base .
 
 echo -e "\n\n\tBuilding Docker"
-docker build -t knetminer/knetminer -f common/quickstart/Dockerfile .
+docker build -t knetminer/knetminer:$docker_tag -f common/quickstart/Dockerfile .
 
 
 if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
@@ -62,11 +70,11 @@ if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
 	exit
 fi
 
-if [[ "${TRAVIS_BRANCH}" != 'master' ]]; then
-	echo -e "\n\n\tThis isn't the master branch, Not pushing to DockerHub\n"
+if [[ "$TRAVIS_BRANCH" != "master" ]]; then
+	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
 	exit
 fi
-	
+
 
 # The bare image is usually rebuilt manually, here we've only to tag it when releasing
 #
@@ -80,7 +88,9 @@ fi
 
 docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 
-for postfix in bare base ''
+# TODO: remove
+#for postfix in bare base ''
+for postfix in bare ''
 do
 	[[ -z "$postfix" ]] || postfix="-$postfix"
 
@@ -88,10 +98,12 @@ do
   [[ "$postfix" == '-bare' ]] && [[ -z "$is_release" ]] && continue
 
   echo "Pushing Docker$postfix"
-	docker push knetminer/knetminer$postfix
-
+	docker push knetminer/knetminer$postfix:$docker_tag
 
   [[ -z "$is_release" ]] && continue 
+
+  # When we're releasing, we further tag the same images with the release tag and
+  # push them too. This should only happen for the master branch
 
 	echo "Tagging Docker$postfix with $DOCKER_RELEASE_TAG"
 	docker_tag_str=":$DOCKER_RELEASE_TAG"

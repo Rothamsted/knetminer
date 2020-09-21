@@ -10,12 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
-import rres.knetminer.datasource.api.KnetminerDataSource;
-import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
-import rres.knetminer.datasource.ondexlocal.OndexServiceProvider;
-import uk.ac.ebi.utils.exceptions.TooFewValuesException;
-import uk.ac.ebi.utils.exceptions.TooManyValuesException;
-import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
+import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
@@ -73,19 +66,6 @@ public class CypherDebuggerService
 	 * @see #checkEnabled
 	 */
 	public static final String ENABLED_PROPERTY = "knetminer.backend.cypherDebugger.enabled";
-	
-	/**
-	 * Binds the running Knetminer data sources. Knetminer was initially designed to support multiple DSs
-	 * per instance, however, we don't use this way anymore, so this class assumes that this list contains one
-	 * DS only and the initialisation code put it into {@link #dataSource} for later use.
-	 */
-	@Autowired
-	private List<KnetminerDataSource> dataSources;
-	
-	/**
-	 * @see #dataSources
-	 */
-	private OndexLocalDataSource dataSource;
 
 	/**
 	 * Used to launch the new traversal ops in parallel.
@@ -103,31 +83,6 @@ public class CypherDebuggerService
 	{
 	}
 
-	
-	/**
-	 * @see #dataSources
-	 */
-	@PostConstruct
-	private synchronized void init ()
-	{
-		if ( this.dataSources == null ) throw new NullPointerException (
-			"Cypher Debugger didn't get auto-wired with dataSources" 
-		);
-		if ( this.dataSources.isEmpty () ) throw new TooFewValuesException (
-			"Cypher Debugger got an empty dataSources field" 
-		);
-		if ( this.dataSources.size () > 1 ) throw new TooManyValuesException (
-			"Cypher Debugger doesn't support multiple dataSources, which is deprecated anyway"
-		);
-		
-		KnetminerDataSource ds = this.dataSources.get ( 0 );
-		
-		if ( ! ( ds instanceof OndexLocalDataSource ) ) throw new UnexpectedValueException (
-			"Cypher Debugger can only work with instances of " + OndexLocalDataSource.class.getSimpleName ()
-		);
-		
-		this.dataSource = (OndexLocalDataSource) ds;
-	}
 
 	/**
 	 * Start a new traversal, after some checks that there isn't none ongoing or being cancelled. 
@@ -166,9 +121,10 @@ public class CypherDebuggerService
 		if ( this.traverserStatsResult == null )
 			return "Wasn't invoked. Use /traverse";
 		if ( this.getTraverser ().isInterrupted () )
-			return traverserStatsResult.isDone () 
-				? "Was cancelled. Invoke /traverse again"
-				: "Was cancelled. Abort operation still pending, invoke /traverse again in a while";
+			return "Was cancelled. " + 
+				(traverserStatsResult.isDone () 
+					? "Invoke /traverse again"
+					: "Abort operation still pending, invoke /traverse again in a while");
 		
 		if ( !traverserStatsResult.isDone () )
 		{
@@ -205,8 +161,10 @@ public class CypherDebuggerService
 	 */
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
-		String dataPath = this.dataSource.getProperty ( "DataPath" );
-		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
+		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
+		OptionsMap odxOpts = odxService.getDataService ().getOptions ();
+
+		String dataPath = odxOpts.getString ( "DataPath" );
 		CypherGraphTraverser traverser = this.getTraverser ();
 
 		// It's disabled after server init, let's re-enable
@@ -217,7 +175,7 @@ public class CypherDebuggerService
 		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
     concept2GeneMapFile.delete ();
     
-		odxService.populateHashMaps ( dataSource.getProperty ( "DataFile" ), dataPath );
+		odxService.populateSemanticMotifData ( odxOpts.getString ( "DataFile" ), dataPath );
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
 		traverser.setOption ( "performanceReportFrequency", 0 );
@@ -258,7 +216,7 @@ public class CypherDebuggerService
 	 */
 	private CypherGraphTraverser getTraverser ()
 	{
-		OndexServiceProvider odxService = this.dataSource.getOndexServiceProvider ();
+		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
 		
 		// TODO: we hack things this way to not touch the messy ODX Provider until it's refactored
 		try {
@@ -271,7 +229,7 @@ public class CypherDebuggerService
 		catch ( IllegalAccessException ex )
 		{
 			throw new IllegalStateException (
-				"For some reason the graph traverser isn't accessible ", ex 
+				"For some reason the graph traverser isn't accessible: " + ex.getMessage (), ex 
 			); 
 		}
 		catch ( ClassCastException ex ) {
@@ -286,10 +244,10 @@ public class CypherDebuggerService
 	 */
 	private void checkEnabled ()
 	{
-		boolean isServiceEnabled = Optional.ofNullable ( 
-			this.dataSource.getProperty ( ENABLED_PROPERTY )
-		).map ( Boolean::valueOf )
-		.orElse ( false );
+		boolean isServiceEnabled = OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getOptions ()
+			.getBoolean ( ENABLED_PROPERTY, false );
 		
 		if ( !isServiceEnabled ) throw new ForbiddenException ();
 	}

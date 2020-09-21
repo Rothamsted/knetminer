@@ -35,7 +35,7 @@
 	</bean>
 
 	<!-- 
-		There might be other queries, produced from the SM converter
+		There might be other queries, produced by the SM converter
 	-->
 	<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
 		<constructor-arg>
@@ -46,6 +46,7 @@
 						<constructor-arg value = "*.cypher" />
 					</bean>
 				</constructor-arg>
+				<constructor-arg type = "boolean" value = "true" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -56,6 +57,19 @@
 		<constructor-arg ref = "semanticMotifsQueriesCustom" />
 		<constructor-arg ref = "semanticMotifsQueriesStateMachine" />
 	</bean>
+
+	<!-- 
+		This is an alternative way to define all the queries in one file.
+		For the moment, you must write one query per line and you can use '#' as comments.
+		See the class CyQueriesReader for details.
+	  
+	<bean name = "semanticMotifsQueries" 
+				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
+		<constructor-arg value = "${knetminer.configDir}/neo4j/new-queries.txt" />
+	</bean>
+	-->
+	
+
 
  	<!-- The Neo4j driver -->
 	<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" 

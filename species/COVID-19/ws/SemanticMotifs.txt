@@ -46,8 +46,8 @@
 11-6	cooc_wi
 
 10-18	has_domain	5
-10-10	ortho	5
-10-7	ortho	5
+10-10	ortho	7
+10-7	ortho	7
 
 
 1-2	occ_in

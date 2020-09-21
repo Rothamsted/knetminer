@@ -6,12 +6,12 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-	  <version>1.0</version>
+	  <version>1.0.1-SNAPSHOT</version>
 	</parent>  
 
 	<artifactId>parent</artifactId>
 	<name>parent</name>
-	<version>4.0.1-SNAPSHOT</version>
+	<version>5.0-SNAPSHOT</version>
 	<description>
 		KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
 		See http://github.com/Rothamsted/knetminer/wiki for technical details.
@@ -90,7 +90,7 @@
 			It requires renaming to avoid confusion. 
 		-->
 		<knetminer.version>45</knetminer.version>
-		<knetminer.provider>RResVM</knetminer.provider>
+		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
@@ -164,18 +164,20 @@
 			it later ONLY ONCE, or doing it for the sole purpose of inserting that dependency in multiple submodules. 
 			MAVEN HAS PLUG-IN AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
 
-			Violating of this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
+			Violating this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
 			to give IT support to biologists using Windows XP.      
 		-->
 			
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 
-		<log4j.version>2.3</log4j.version>
+		<log4j.version>2.13.3</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>3.0</ondex.version>
+		<ondex.version>4.0-SNAPSHOT</ondex.version>
+		<!-- This is required to override the parent's POM -->
+		<jutils.version>10.0-SNAPSHOT</jutils.version>
 		<commons.version>2.6</commons.version>
-		<knetminer.backend.version>1.0</knetminer.backend.version>
+		<knetminer.backend.version>2.0-SNAPSHOT</knetminer.backend.version>
 		<springframework.version>4.3.6.RELEASE</springframework.version>
 	</properties>
 
@@ -609,13 +611,7 @@
 				<artifactId>google-analytics-java</artifactId>
 				<version>2.0.0</version>
 			</dependency>
-			
-			<dependency>
-				<groupId>uk.ac.ebi</groupId>
-				<artifactId>jutils</artifactId>
-				<version>9.1</version>
-			</dependency>
-			
+						
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
@@ -639,6 +635,13 @@
 				<artifactId>urlrewritefilter</artifactId>
 				<version>4.0.4</version>
 			</dependency>	
+			
+			<!-- Needed in Java >= 11 -->	  
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>javax.annotation-api</artifactId>
+				<version>1.3.2</version>
+			</dependency>
 			
 		</dependencies>
 	</dependencyManagement>
