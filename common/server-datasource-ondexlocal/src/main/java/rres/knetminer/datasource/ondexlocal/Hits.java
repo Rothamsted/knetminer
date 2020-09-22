@@ -56,7 +56,7 @@ public class Hits
 		Set<Integer> uniqGenes = new HashSet<> ();
 		log.info ( "Matching Lucene concepts: " + luceneConcepts.keySet ().size () );
 
-		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getMapConcept2Genes ();
+		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getSemanticMotifService ().getConcepts2Genes ();
 		for ( ONDEXConcept lc : luceneConcepts.keySet () )
 		{
 			Integer luceneOndexId = lc.getId ();

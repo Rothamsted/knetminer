@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -170,12 +169,9 @@ public class CypherDebuggerService
 		// It's disabled after server init, let's re-enable
 		traverser.setOption( "performanceReportFrequency", 0);
 		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
-
-		// We need to delete files used to decide if the traverser has to be run
-		File concept2GeneMapFile = Paths.get ( dataPath, "mapConcept2Genes" ).toFile();
-    concept2GeneMapFile.delete ();
     
-		odxService.populateSemanticMotifData ( odxOpts.getString ( "DataFile" ), dataPath );
+		odxService.getSemanticMotifService ().initSemanticMotifData ( true );
+
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
 		traverser.setOption ( "performanceReportFrequency", 0 );
@@ -217,24 +213,13 @@ public class CypherDebuggerService
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
+		var traverser = odxService.getSemanticMotifService ().getGraphTraverser ();
 		
-		// TODO: we hack things this way to not touch the messy ODX Provider until it's refactored
-		try {
-			AbstractGraphTraverser traverser = (AbstractGraphTraverser) FieldUtils.readField ( odxService, "graphTraverser", true );
-			if ( ! ( traverser instanceof CypherGraphTraverser ) ) throw new IllegalStateException (
-				"You've to enable the Neo4j mode in order to run this CypherDebugger"
-			);
-			return (CypherGraphTraverser) traverser;
-		}
-		catch ( IllegalAccessException ex )
-		{
-			throw new IllegalStateException (
-				"For some reason the graph traverser isn't accessible: " + ex.getMessage (), ex 
-			); 
-		}
-		catch ( ClassCastException ex ) {
-			throw new ClassCastException ( "You need the Neo4j mode to use this" );
-		}
+		if ( ! (traverser instanceof CypherGraphTraverser ) ) throw new ClassCastException ( 
+			"You need the Neo4j mode to use the CypherDebugger"
+		);
+		
+		return (CypherGraphTraverser) traverser;
 	}
 	
 	/**

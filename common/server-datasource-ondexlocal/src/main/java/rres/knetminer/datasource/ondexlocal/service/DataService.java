@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,8 +16,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
+import net.sourceforge.ondex.core.ConceptClass;
+import net.sourceforge.ondex.core.ONDEXConcept;
+import net.sourceforge.ondex.core.ONDEXGraph;
+import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
+import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
+import net.sourceforge.ondex.parser.oxl.Parser;
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * A component served by {@link OndexServiceProvider} that provides the data structures
@@ -29,16 +40,25 @@ import uk.ac.ebi.utils.collections.OptionsMap;
  *
  */
 @Component
-public class OndexDataService
+public class DataService
 {
   private OptionsMap options = null;
-	  
   private List<String> taxIds = null;
+
+  private ONDEXGraph graph;
   
-	private final Logger log = LogManager.getLogger(getClass());
+  /**
+   * TODO: was numGenesInGenome 
+   */
+  private int genomeGenesCount = -1;
+
+  
+  private AbstractGraphTraverser graphTraverser;
+  
+	private final Logger log = LogManager.getLogger ( getClass() );
 
 	
-	private OndexDataService ()
+	private DataService ()
 	{
 	}
 
@@ -55,7 +75,7 @@ public class OndexDataService
 	 * looked up in the classpath.
 	 * 
 	 */
-	public void loadOptions ( String configXmlPath )
+	void loadOptions ( String configXmlPath )
 	{
 		try 
 		{
@@ -94,7 +114,69 @@ public class OndexDataService
 		this.taxIds = this.options.getOpt ( "SpeciesTaxId", List.of (), s -> List.of ( s.split ( "," ) ) );
 	}
 	
+	/**
+	 * An helper that is used internally to get an expected option and throw an {@link IllegalArgumentException}
+	 * if that option doesn't exist. The selector should use methods from {@link #options} to fetch the option
+	 * value.
+	 */
+	private <T> T getRequiredOption ( String key, Function<String, T> optionSelector )
+	{
+		return Optional.ofNullable ( optionSelector.apply ( key ) )
+			.orElseThrow ( () -> new IllegalArgumentException ( format ( "Missing '%s' config option", key )) );
+	}
+
+
 	
+  /**
+   * Performs several data inititalisation operations, including, OXL loading, Lucene indexing, semantic motif search
+   * and storage of its results.
+   * 
+   */
+  void initGraph ()
+	{
+  	String oxlPath = getOxlPath ();
+  			
+		log.info ( "Loading graph from " + oxlPath );
+
+		this.graph = new MemoryONDEXGraph ( "OndexKB" );
+
+		loadGraph ( oxlPath );
+    UIUtils.removeOldGraphAttributes ( graph );
+		
+		// determine number of genes in given species (taxid)
+		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
+		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
+
+		genomeGenesCount = (int) seed.stream ()
+		.map ( gene -> new GeneHelper ( graph, gene ) )
+		.map ( GeneHelper::getTaxID )
+		.filter ( this::containsTaxId )
+		.count ();
+
+		log.info ( "OXL Graph loaded from '" + oxlPath + "'" );
+	}	
+	
+  /**
+   *  Just a small helper to load an OXL and do proper error reporting
+   */
+  private void loadGraph ( String oxlFilePath )
+  {
+    try 
+    {
+      log.debug ( "Start Loading OndexKB Graph..." + oxlFilePath );
+      Parser.loadOXL(oxlFilePath, graph);
+      log.debug("OndexKB Graph Loaded Into Memory");
+    } 
+    catch (Exception e) 
+    {
+      log.error("Failed to load graph", e);
+      ExceptionUtils.throwEx (
+      	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
+      ); 
+    }
+  }  
+  
+  
 	/**
 	 * BEWARE!!! This is AN OPTIONS MAP. It means that YOU DON'T NEED to do things like type casting 
 	 * or integer conversions from strings, since the {@link OptionsMap} is already designed for that, 
@@ -112,15 +194,22 @@ public class OndexDataService
 		return OptionsMap.unmodifiableOptionsMap ( this.options );
 	}
 	
-	private <T> T getRequiredOption ( String key, Function<String, T> optionSelector )
-	{
-		return Optional.ofNullable ( optionSelector.apply ( key ) )
-			.orElseThrow ( () -> new IllegalArgumentException ( format ( "Missing '%s' config option", key )) );
-	}
 	
+  public ONDEXGraph getGraph () {
+		return graph;
+	}
 
-
+  
+  
   /**
+   * TODO: was numGenesInGenome
+   */
+	int getGenomeGenesCount ()
+	{
+		return genomeGenesCount;
+	}
+
+	/**
    * TODO: should this become DatasetName?
    */
   public String getDataSourceName ()
@@ -175,5 +264,15 @@ public class OndexDataService
   public int getDatasetVersion ()
   {
   	return getRequiredOption ( "version", options::getInt );
-  }  
+  }
+  
+  public String getOxlPath ()
+  {
+  	return this.options.getString ( "DataFile" );
+  }
+  
+  public String getDataPath ()
+  {
+  	return this.options.getString ( "DataPath" );
+  }
 }
