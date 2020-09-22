@@ -43,8 +43,9 @@
 9-3	has_function
 9-4	participates_in
 9-5	located_in
-9-6	has_observ_pheno
+9-6	has_phenotype
 9-16	cooc_wi
+9-15	has_variation
 
 10-7	h_s_s	4
 10-10	h_s_s	4
