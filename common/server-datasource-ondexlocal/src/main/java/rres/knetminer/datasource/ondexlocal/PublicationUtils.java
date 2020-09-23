@@ -66,11 +66,14 @@ public class PublicationUtils
 	 * 
 	 * @param pubs
 	 * @param attYear
-	 * @param limit
+	 * @param limit if -1, an arbitrary limit will be chosen.
 	 * @return list of n most recent publication concepts
 	 */
-	public static List<Integer> newPubsByNumber ( Set<ONDEXConcept> pubs, AttributeName attYear, Integer limit )
-	{		
+	public static List<Integer> newPubsByNumber ( Set<ONDEXConcept> pubs, AttributeName attYear, int limit )
+	{	
+		// TODO: this is an arbitrary default limit, which before was completely missing
+		if ( limit == -1 ) limit = 20;
+		
 		List<Integer> sortedAndLimitedPubs = pubs.parallelStream ()
 			.sorted ( getPubMostRecentComparator ( attYear ) )
 			.limit ( limit )

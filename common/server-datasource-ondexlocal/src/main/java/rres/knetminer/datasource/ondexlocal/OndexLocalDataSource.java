@@ -42,7 +42,7 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
-import rres.knetminer.datasource.ondexlocal.service.OndexDataService;
+import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import uk.ac.ebi.utils.collections.OptionsMap;
@@ -99,26 +99,15 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		);
 		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		ondexServiceProvider.initGraph ( configXmlPath );
+
 		var odxData = ondexServiceProvider.getDataService ();
-		
-		odxData.loadOptions ( configXmlPath );
-		
 		dsName = odxData.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
 		this.setDataSourceNames ( new String[] {dsName} );
 		log.info ( "Setting up data source is '{}'", dsName );
-				
-		// All the properties from config.xml are forwarded to the 
-		// service provider, so that further configuration can be bootstrapped from
-		// base properties.
-		
-		// TODO: continue refactoring from here
-		// TODO: get rid of ConfigurableOndexDataSource
-		// this.ondexServiceProvider.setOptions ( (Map) this.props );
-		
-		ondexServiceProvider.createGraph ();
 	}
 	
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
@@ -313,7 +302,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		// Export graph
 		NetworkResponse response = new NetworkResponse();
 		try {
-			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph));
+			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph).getLeft());
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -337,7 +326,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
 		try {
-			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph));
+			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph).getLeft ());
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -423,10 +412,10 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
         CountGraphEntities response = new CountGraphEntities();
         try {
             // Set the graph
-            ondexServiceProvider.exportGraph2Json(subGraph);
+            var jsonGraph = ondexServiceProvider.exportGraph2Json(subGraph).getRight ();
             log.info("Set graph, now getting the number of nodes...");
-            response.setNodeCount(ondexServiceProvider.getNodeCount());
-            response.setRelationshipCount(ondexServiceProvider.getRelationshipCount());
+            response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
+            response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
         } catch (InvalidPluginArgumentException e) {
             log.error("Failed to export graph", e);
             throw new Error(e);

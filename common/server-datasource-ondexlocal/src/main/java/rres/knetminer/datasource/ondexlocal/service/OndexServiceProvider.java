@@ -3,15 +3,11 @@ package rres.knetminer.datasource.ondexlocal.service;
 import static java.util.stream.Collectors.toMap;
 
 import java.awt.Color;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,7 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,17 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -58,7 +49,6 @@ import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
 import net.sourceforge.ondex.config.ONDEXGraphRegistry;
@@ -77,26 +67,19 @@ import net.sourceforge.ondex.core.ONDEXRelation;
 import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
-import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
-import net.sourceforge.ondex.logging.ONDEXLogger;
-import net.sourceforge.ondex.parser.oxl.Parser;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.ondexlocal.Hits;
-import rres.knetminer.datasource.ondexlocal.OndexServiceProviderHelper;
 import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
-import uk.ac.ebi.utils.io.SerializationUtils;
-import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
@@ -120,9 +103,22 @@ import static java.lang.Math.pow;
 public class OndexServiceProvider 
 {
 	@Autowired
-	private OndexDataService dataService;
+	private DataService dataService;
+
+	@Autowired
+	private SearchService searchService;
+	
+	// TODO: continue with migrating stuff into this component
+	@Autowired
+	private SemanticMotifService semanticMotifService;
+	
+	@Autowired
+	private ExportService exportService;
+	
 	
 	private static AbstractApplicationContext springContext;
+	
+	private final Logger log = LogManager.getLogger ( getClass() );
 	
 	/**
 	 * It's a singleton, use {@link #getInstance()}.
@@ -130,10 +126,26 @@ public class OndexServiceProvider
   private OndexServiceProvider () {}
   
 	
-	public OndexDataService getDataService () {
+	public DataService getDataService () {
 		return dataService;
 	}
 	
+	public SearchService getSearchService ()
+	{
+		return searchService;
+	}
+
+	public SemanticMotifService getSemanticMotifService ()
+	{
+		return semanticMotifService;
+	}
+
+	public ExportService getExportService ()
+	{
+		return exportService;
+	}
+
+
 	public static OndexServiceProvider getInstance () 
 	{
 		initSpring ();
@@ -157,7 +169,16 @@ public class OndexServiceProvider
 	}	
 	
 	
-	
+	public void initGraph ( String configXmlPath )
+	{
+		this.dataService.loadOptions ( configXmlPath );
+		dataService.initGraph ();
+		
+		this.searchService.indexOndexGraph ();
+		this.semanticMotifService.initSemanticMotifData ();
+		
+		this.exportService.exportGraphStats ();
+	}
 	
 	
 	
@@ -168,360 +189,23 @@ public class OndexServiceProvider
 	 * Old code for OSP is temporary DOWN here, waiting to be reviewed.
 	 */
 	
-	private final Logger log = LogManager.getLogger(getClass());
-
-    /**
-     * ChromosomeID mapping for different datasets
-     */
-    // BidiMap<Integer, String> chromBidiMap = new DualHashBidiMap<Integer,
-    // String>();
-    /**
-     * GraphTraverser will be initiated with a state machine
-     */
-    private AbstractGraphTraverser graphTraverser;
-
-    /**
-     * Ondex knowledge base as memory graph
-     */
-    private ONDEXGraph graph;
-
-    /*
-     * TODO: For most of the fields below, it didn't make sense to have them
-     * as static. OSP is an application-scoped instance, which shares its fields.
-     * Making  them static is incoherent with the rest (eg, graph) and error-prone.
-     * 
-     * Keeping this comment until we're sure this change didn't introduce bugs
-     */
-    
-    private Map<Integer, Set<Integer>> mapGene2Concepts;
-    private Map<Integer, Set<Integer>> mapConcept2Genes;
-
-    /**
-     * HashMap of geneID -> endNodeID_pathLength
-     */
-    private Map<String, Integer> mapGene2PathLength;
-
-
-    /**
-     * Helper from Gene to QTL mapping
-     */
-    private Map<Integer, Set<Integer>> mapGene2QTL;
-
-    /**
-     * number of genes in genome
-     */
-    private int numGenesInGenome;
-
-    /**
-     * index the graph
-     */
-    private LuceneEnv luceneMgr;
-
-    
-    
-    
     /**
     * defaultExportedPublicationCount value
     */
     public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
         
-	
-	   /**
-     * Node and relationship number for given gene
-     */
-    
-    private String nodeCount;
-    
-    private String relationshipCount;
-
-
-    /**
-     * Performs several data inititalisation operations, including, OXL loading, Lucene indexing, semantic motif search
-     * and storage of its results.
-     * 
-     */
-    public void createGraph ()
-		{
-    	OptionsMap opts = this.getDataService ().getOptions ();
-    	String dataPath = opts.getString ( "DataPath" );
-    	String graphFileName = opts.getString ( "DataFile" );
-    			
-			log.info ( "Loading graph from " + graphFileName );
-
-			// new in-memory graph
-			graph = new MemoryONDEXGraph ( "OndexKB" );
-
-			loadOndexKBGraph ( graphFileName );
-			indexOndexGraph ( graphFileName, dataPath );
-
-			if ( graphTraverser == null )
-				// The traverser will get all these config opts, its initial configuration
-				// is possibly overridden/extended
-				graphTraverser = AbstractGraphTraverser.getInstance ( opts );
-
-			graphTraverser.setOption ( "ONDEXGraph", graph );
-
-			populateSemanticMotifData ( graphFileName, dataPath );
-
-			// determine number of genes in given species (taxid)
-			ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
-			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
-
-			numGenesInGenome = (int) seed.stream ()
-			.map ( gene -> new GeneHelper ( graph, gene ) )
-			.map ( GeneHelper::getTaxID )
-			.filter ( this.dataService::containsTaxId )
-			.count ();
-
-			// Write Stats about the created Ondex graph & its mappings to a file.
-			log.info ( "Saving graph stats to " + dataPath );
-			displayGraphStats ( dataPath );
-
-			log.info ( "Done loading " + graphFileName + ". Waiting for queries..." );
-		}
-
-    /*
-     * Generate Stats about the created Ondex graph and its mappings:
-     * mapConcept2Genes & mapGene2Concepts. Author Singhatt
-     * Updating to also give Concept2Gene per concept
-     *
-     * TODO - KHP: Change this to return JSON, break it down into smaller components 
-     * and add API endpoint for this. To be aligned with KnetSpace resource pages.
-     */
-		private void displayGraphStats ( String fileUrl )
-		{
-			// Update the Network Stats file that holds the latest Stats information.
-			String fileName = Paths.get ( fileUrl, "latestNetwork_Stats.tab" ).toString ();
-			
-			// Also, create a timetamped Stats file to retain historic Stats
-			// information.
-			long timestamp = System.currentTimeMillis ();
-			String newFileName = Paths.get ( fileUrl, timestamp + "_Network_Stats.tab" ).toString ();
-
-			int totalGenes = numGenesInGenome;
-			int totalConcepts = graph.getConcepts ().size ();
-			int totalRelations = graph.getRelations ().size ();
-			int geneEvidenceConcepts = mapConcept2Genes.size ();
-
-			int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
-					maxValues = new int [] { 0 }, 
-					allValuesCount = new int [] { 0 }; 
-
-			// Min/Max/avg per each gene-related concept group
-			mapGene2Concepts.entrySet ().stream ()
-			.map ( Map.Entry::getValue )
-			.map ( Collection::size )
-			.forEach ( thisSetSize ->
-			{
-				if ( thisSetSize < minValues [ 0 ] ) minValues [ 0 ] = thisSetSize;
-				if ( thisSetSize > maxValues [ 0 ] ) maxValues [ 0 ] = thisSetSize;
-				allValuesCount [ 0 ] += thisSetSize;					
-			});
-
-			// Total no. of keys in the HashMap.
-			int genesCount = mapGene2Concepts.keySet ().size ();
-			// Calculate average size of gene-evidence networks in the HashMap.
-			int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
-
-			// Write the Stats to a .tab file.
-			StringBuffer sb = new StringBuffer ();
-			// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-			sb.append ( "<stats>\n" );
-			sb.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
-			sb.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
-			sb.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
-			sb.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
-			sb.append ( "<evidenceNetworkSizes>\n" );
-			sb.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
-			sb.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
-			sb.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
-			sb.append ( "</evidenceNetworkSizes>\n" );
-
-			Set<ConceptClass> conceptClasses = graph.getMetaData ().getConceptClasses (); // get all concept classes
-			Set<ConceptClass> sortedConceptClasses = new TreeSet<> ( conceptClasses ); // sorted
-
-			// Display table breakdown of all conceptClasses in network
-			sb.append ( "<conceptClasses>\n" );
-			for ( ConceptClass conClass : sortedConceptClasses )
-			{
-				String conID = conClass.getId ();
-				if ( conID.equalsIgnoreCase ( "Thing" ) ) continue; 
-				if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-
-				int conCount = graph.getConceptsOfConceptClass ( conClass ).size ();
-				if ( conCount == 0 ) continue;
-				
-				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				
-				sb.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
-			}
-			sb.append ( "</conceptClasses>\n" );
-			sb.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
-
-			final Map<String, Long> concept2GenesCounts = mapConcept2Genes.entrySet ()
-			.stream ()
-			.collect ( Collectors.groupingBy ( 
-				v -> graph.getConcept ( v.getKey () ).getOfType ().getId (), 
-				Collectors.counting ()  
-			));
-
-			// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-			sortedConceptClasses.stream ()
-			.forEach ( conceptClass -> 
-			{
-				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
-				String conceptID = conceptClass.getId ();
-				if ( concept2GenesCounts.containsKey ( conceptID ) ) return;
-				if ( conceptID.equalsIgnoreCase ( "Thing" ) ) return;
-				if ( conceptID.equalsIgnoreCase ( "TestCC" ) ) return;
-				concept2GenesCounts.put ( conceptID, Long.valueOf ( 0 ) );
-			});
-			
-			// Prints concept -> gene counts
-			concept2GenesCounts.entrySet ()
-			.stream ()
-			.sorted ( Map.Entry.comparingByKey () )
-			.forEach ( pair ->
-			{
-				for ( ConceptClass conceptClass : sortedConceptClasses )
-				{
-					if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-					
-					String conID = conceptClass.getId ();
-					if ( !pair.getKey ().equals ( conID ) ) continue;
-
-					if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-					else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-					sb.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
-						.append ( "</ccEvi>\n" );
-				}
-			});
-
-			sb.append ( "</ccgeneEviCount>\n" );
-			sb.append ( "<connectivity>\n" ); // Relationships per concept
-			
-			// Print connectivity for each CC
-			for ( ConceptClass conceptClass : sortedConceptClasses )
-			{
-				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-				String conID = conceptClass.getId ();
-				if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
-				if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-				
-				int relationCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
-				int conCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
-				
-				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-
-				float connectivity = ( (float) relationCount / (float) conCount );
-				sb.append ( "<hubiness>" ).append ( conID ).append ( "->" )
-					.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
-			}
-			sb.append ( "</connectivity>\n" );
-			sb.append ( "</stats>" );
-			
-			try
-			{
-				
-				IOUtils.writeFile ( fileName, sb.toString () );
-				
-				// Also, create the timestamped Stats file.
-				IOUtils.writeFile ( newFileName, sb.toString () );
-
-				// TODO: remove?
-				// generateGeneEvidenceStats(fileUrl);
-			}
-			catch ( IOException ex )
-			{
-				log.error ( "Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex );
-			}
-		}
-
-    /**
-     * Loads OndexKB Graph (OXL data file into memory)
-     */
-    private void loadOndexKBGraph(String filename)
-    {
-      try 
-      {
-        log.debug("Start Loading OndexKB Graph..." + filename);
-        Parser.loadOXL(filename, graph);
-        log.debug("OndexKB Graph Loaded Into Memory");
-
-        // remove any pre-existing, visible, size and flagged attributes from concepts and relations
-        removeOldAttributesFromKBGraph();
-      } 
-      catch (Exception e) 
-      {
-        log.error("Failed to load graph", e);
-        ExceptionUtils.throwEx (
-        	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
-        ); 
-      }
-    }
-
-    /**
-     * remove any pre-existing, visible, size and flagged attributes from
-     * concepts and relations 29-07-2019
-     */
-    private void removeOldAttributesFromKBGraph() 
-    {
-    	try
-    	{
-	      log.debug ( "Remove old 'visible' attributes from all concepts and relations..." );
-	      
-	      Stream.of ( "visible", "size", "flagged" )
-	      .forEach ( attrId -> ONDEXGraphUtils.removeConceptAttribute ( graph, attrId ) );
-	
-	      Stream.of ( "visible", "size" )
-	      .forEach ( attrId -> ONDEXGraphUtils.removeRelationAttribute ( graph, attrId ) );
-    	}
-    	catch (Exception ex)
-    	{
-        log.warn("Failed to remove pre-existing attributes from graph: {}", ex.getMessage());
-        log.trace("Failed to remove pre-existing attributes from graph, details: ", ex );
-      }
-    }
-
-    /**
-     * Indexes Ondex Graph
-     */
-    private void indexOndexGraph(String graphFileName, String dataPath)
-    {
-      try 
-      {
-        // index the Ondex graph
-        File graphFile = new File(graphFileName);
-        File indexFile = Paths.get ( dataPath, "index" ).toFile();
-        if (indexFile.exists() && (indexFile.lastModified() < graphFile.lastModified())) {
-            log.info("Graph file updated since index last built, deleting old index");
-            FileUtils.deleteDirectory(indexFile);
-        }
-        log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-        luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-        luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
-        luceneMgr.setONDEXGraph(graph);
-        luceneMgr.setReadOnlyMode ( true );
-        log.info("Lucene Index created");
-      } 
-      catch (Exception e)
-      {
-        log.error ( "Error while loading/creating graph index: " + e.getMessage (), e );
-        ExceptionUtils.throwEx (
-        	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
-        ); 
-      }
-    }
 
     /**
      * Export the Ondex graph as a JSON file using the Ondex JSON Exporter plugin.
      *
-     * @param ONDEXGraph graph
-     * @throws InvalidPluginArgumentException
+     * @return a pair containing the JSON result and the the graph that was actually exported
+     * (ie, the one computed by {@link Filter filtering isolated entities}.
+     * 
+     * Note that this used to return just a string and to set nodeCount and relationshipCount
+     * WE MUST STOP PROGRAMMING THIS BAD DAMN IT!!!
+     * 
      */
-    public String exportGraph2Json(ONDEXGraph og) throws InvalidPluginArgumentException
+    public Pair<String, ONDEXGraph> exportGraph2Json(ONDEXGraph og) throws InvalidPluginArgumentException
     {
       // Unconnected filter
       Filter uFilter = new Filter();
@@ -564,7 +248,7 @@ public class OndexServiceProvider
         ONDEXPluginArguments epa = new ONDEXPluginArguments(jsonExport.getArgumentDefinitions());
         epa.setOption(FileArgumentDefinition.EXPORT_FILE, exportPath);
 
-        log.debug("JSON Export file: " + epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE));
+        log.debug ( "JSON Export file: " + epa.getOptions().get(FileArgumentDefinition.EXPORT_FILE) );
 
         jsonExport.setArguments(epa);
         jsonExport.setONDEXGraph(graph2);
@@ -572,9 +256,6 @@ public class OndexServiceProvider
         	"Export JSON data: Total concepts= " + graph2.getConcepts().size() + " , Relations= "
         	+ graph2.getRelations().size()
         );
-        // Set the Node and rel counts
-        nodeCount = Integer.toString(graph2.getConcepts().size());
-        relationshipCount = Integer.toString(graph2.getRelations().size());
         // Export the contents of the 'graph' object as multiple JSON
         // objects to an output file.
         jsonExport.start();
@@ -582,13 +263,13 @@ public class OndexServiceProvider
         log.debug ( "Network JSON file created:" + exportPath );
         
         // TODO: The JSON exporter uses this too, both should become UTF-8
-        return IOUtils.readFile ( exportPath, Charset.defaultCharset() );
+        return Pair.of ( IOUtils.readFile ( exportPath, Charset.defaultCharset() ), graph2 );
       } 
       catch (IOException ex)
       {
       	// TODO: client side doesn't know anything about this, likely wrong
         log.error ( "Failed to export graph", ex );
-        return "";
+        return Pair.of ( "", graph2 );
       }
       finally {
       	if ( exportFile != null ) exportFile.delete ();
@@ -657,6 +338,8 @@ public class OndexServiceProvider
 			String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
 		) throws IOException, ParseException
 		{
+			var graph = dataService.getGraph ();
+			var genes2Concepts = semanticMotifService.getGenes2Concepts ();
 			Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
 			
 			// TODO: We should search across all accession datasources or make this configurable in settings
@@ -682,8 +365,8 @@ public class OndexServiceProvider
 				for ( ONDEXConcept gene : geneList )
 				{
 					if ( gene == null ) continue;
-					if ( mapGene2Concepts.get ( gene.getId () ) == null ) continue;
-					for ( int conceptId : mapGene2Concepts.get ( gene.getId () ) )
+					if ( genes2Concepts.get ( gene.getId () ) == null ) continue;
+					for ( int conceptId : genes2Concepts.get ( gene.getId () ) )
 					{
 						ONDEXConcept concept = graph.getConcept ( conceptId );
 						if ( includePublications || !concept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
@@ -716,7 +399,7 @@ public class OndexServiceProvider
 				QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
 				Query qNQ = parserNQ.parse ( crossTypesNotQuery );
 				//TODO: The top 2000 restriction should be configurable in settings and documented
-				notList = luceneMgr.searchTopConcepts ( qNQ, 2000 );
+				notList = searchService.luceneMgr.searchTopConcepts ( qNQ, 2000 );
 			}
 
 			// number of top concepts retrieved for each Lucene field
@@ -767,6 +450,7 @@ public class OndexServiceProvider
 		public SemanticMotifsSearchResult getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) 
 		{
 			Map<ONDEXConcept, Double> scoredCandidates = new HashMap<> ();
+			var graph = dataService.getGraph ();
 		
 			log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
 		
@@ -774,13 +458,17 @@ public class OndexServiceProvider
 			// In other words: Filter the global gene2concept map for concept that contain the keyword
 			Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
 			
+			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+			var genes2PathLengths = semanticMotifService.getGenes2PathLengths ();
+			var genesCount = dataService.getGenomeGenesCount ();
+			
 			hit2score.keySet ()
 			.stream ()
 			.map ( ONDEXConcept::getId )
-			.filter ( mapConcept2Genes::containsKey )
+			.filter ( concepts2Genes::containsKey )
 			.forEach ( conceptId ->
 			{
-				for ( int geneId: mapConcept2Genes.get ( conceptId ) )
+				for ( int geneId: concepts2Genes.get ( conceptId ) )
 					mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
 					.add ( conceptId );
 			});
@@ -800,10 +488,10 @@ public class OndexServiceProvider
 					float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
 	
 					// specificity of evidence to gene
-					double igf = Math.log10 ( (double) numGenesInGenome / mapConcept2Genes.get ( cId ).size () );
+					double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( cId ).size () );
 	
 					// inverse distance from gene to evidence
-					Integer pathLen = mapGene2PathLength.get ( geneId + "//" + cId );
+					Integer pathLen = genes2PathLengths.get ( geneId + "//" + cId );
 					if ( pathLen == null ) 
 						log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
 					
@@ -817,7 +505,7 @@ public class OndexServiceProvider
 				}
 	
 				// normalisation method 1: size of the gene knoweldge graph
-				// double normFactor = 1 / (double) mapGene2Concepts.get(geneId).size();
+				// double normFactor = 1 / (double) genes2Concepts.get(geneId).size();
 				// normalisation method 2: size of matching evidence concepts only (mean score)
 				// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
 				// No normalisation for now as it's too experimental.
@@ -863,6 +551,7 @@ public class OndexServiceProvider
 						endQTL = tmp;
 					}
 
+					var graph = dataService.getGraph ();
 					var gmeta = graph.getMetaData ();
 					ConceptClass ccGene = gmeta.getConceptClass ( "Gene" );
 
@@ -908,6 +597,7 @@ public class OndexServiceProvider
      */
     private Set<QTL> getQTLHelpers ( String keyword ) throws ParseException
     {
+    	var graph = dataService.getGraph ();
   		var gmeta = graph.getMetaData();
       ConceptClass ccTrait = gmeta.getConceptClass("Trait");
       ConceptClass ccQTL = gmeta.getConceptClass("QTL");
@@ -933,6 +623,7 @@ public class OndexServiceProvider
 
       Set<QTL> results = new HashSet<>();
       
+      var graph = dataService.getGraph ();
       var gmeta = graph.getMetaData ();
       ConceptClass ccQTL = gmeta.getConceptClass("QTL");
       
@@ -989,8 +680,9 @@ public class OndexServiceProvider
       
       log.info( "QTL search query: {}", finalQuery.toString() );
 
-      ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts ( finalQuery, 100 );
+      ScoredHits<ONDEXConcept> hits = searchService.luceneMgr.searchTopConcepts ( finalQuery, 100 );
       
+      var graph = dataService.getGraph ();
   		var gmeta = graph.getMetaData();
       ConceptClass ccQTL = gmeta.getConceptClass("QTL");
       ConceptClass ccSNP = gmeta.getConceptClass("SNP");
@@ -1053,6 +745,7 @@ public class OndexServiceProvider
 		{
 			if ( accessions.size () == 0 ) return null;
 			
+      var graph = dataService.getGraph ();
 			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
 			ConceptClass ccGene = graph.getMetaData ().getConceptClass ( "Gene" );
 			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
@@ -1099,10 +792,12 @@ public class OndexServiceProvider
 		public ONDEXGraph evidencePath ( Integer evidenceOndexId, Set<ONDEXConcept> genes )
 		{
 			log.info ( "evidencePath() - evidenceOndexId: {}", evidenceOndexId );
-			
+      var graph = dataService.getGraph ();
+			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+
 			// Searches genes related to the evidenceID. If user genes provided, only include those.
 			Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<> ();
-			for ( Integer rg : mapConcept2Genes.get ( evidenceOndexId ) )
+			for ( Integer rg : concepts2Genes.get ( evidenceOndexId ) )
 			{
 				ONDEXConcept gene = graph.getConcept ( rg );
 				if ( genes == null || genes.isEmpty () || genes.contains ( gene ) )
@@ -1112,7 +807,7 @@ public class OndexServiceProvider
 			// the results give us a map of every starting concept to every valid
 			// path
 			Map<ONDEXConcept, List<EvidencePathNode>> evidencePaths = 
-				graphTraverser.traverseGraph ( graph, relatedONDEXConcepts, null );
+				semanticMotifService.getGraphTraverser ().traverseGraph ( graph, relatedONDEXConcepts, null );
 
 			// create new graph to return
 			ONDEXGraph subGraph = new MemoryONDEXGraph ( "evidencePathGraph" );
@@ -1201,8 +896,12 @@ public class OndexServiceProvider
 				luceneResults = Collections.emptyMap ();
 			}
 
+			var graph = dataService.getGraph ();
+			var options = dataService.getOptions ();
+			
 			// the results give us a map of every starting concept to every valid path
-			Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph ( graph, seed, null );
+			Map<ONDEXConcept, List<EvidencePathNode>> results = semanticMotifService.getGraphTraverser ()
+				.traverseGraph ( graph, seed, null );
 
 			Set<ONDEXConcept> keywordConcepts = new HashSet<> ();
 			Set<EvidencePathNode> pathSet = new HashSet<> ();
@@ -1298,7 +997,7 @@ public class OndexServiceProvider
 				Set<ONDEXConcept> selectedPubs = pubKeywordSet.isEmpty () ? allPubs : pubKeywordSet;
 				List<Integer> newPubIds = PublicationUtils.newPubsByNumber ( 
 					selectedPubs, attYear,
-					Integer.parseInt ( (String) getOptions ().get ( OPT_DEFAULT_NUMBER_PUBS ) )
+					options.getInt ( OPT_DEFAULT_NUMBER_PUBS, -1 )
 				);
 
 				// publications that we want to remove
@@ -1513,6 +1212,7 @@ public class OndexServiceProvider
 		@SuppressWarnings ( "rawtypes" )
 		public void highlightPath ( EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter )
 		{
+      var graph = dataService.getGraph ();
 			ONDEXGraph gclone = graphCloner.getNewGraph ();
 			
 			ONDEXGraphMetaData gcloneMeta = gclone.getMetaData ();
@@ -1577,12 +1277,13 @@ public class OndexServiceProvider
 			} // if doFilter
 
 			// add gene-QTL-Trait relations to the network
-			if ( !mapGene2QTL.containsKey ( geneNode.getId () ) ) return;
+			var genes2QTLs = semanticMotifService.getGenes2QTLs ();
+			if ( !genes2QTLs.containsKey ( geneNode.getId () ) ) return;
 			
 			RelationType rt = gcloneMetaFact.createRelationType ( "is_p" );
 			EvidenceType et = gcloneMetaFact.createEvidenceType ( "KnetMiner" );
 
-			Set<Integer> qtlSet = mapGene2QTL.get ( geneNode.getId () );
+			Set<Integer> qtlSet = genes2QTLs.get ( geneNode.getId () );
 			for ( Integer qtlId : qtlSet )
 			{
 				ONDEXConcept qtl = graphCloner.cloneConcept ( graph.getConcept ( qtlId ) );
@@ -1680,6 +1381,7 @@ public class OndexServiceProvider
 			 */
 			// added user gene list restriction above (04/07/2018, singha)
 
+      var graph = dataService.getGraph ();
 			ONDEXGraphMetaData gmeta = graph.getMetaData ();
 
 			ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
@@ -1901,8 +1603,12 @@ public class OndexServiceProvider
 		)
 		{
 			log.info ( "generate Gene table..." );
+			
 			List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 			Set<Integer> userGeneIds = new HashSet<> ();
+      var graph = dataService.getGraph ();
+			var genes2QTLs = semanticMotifService.getGenes2QTLs ();
+			var options = dataService.getOptions ();
 
 			if ( userGenes != null )
 			{
@@ -1942,7 +1648,7 @@ public class OndexServiceProvider
 				boolean isInList = userGenes != null && userGeneIds.contains ( gene.getId () );
  
 				List<String> infoQTL = new LinkedList<> ();
-				for ( Integer cid : mapGene2QTL.getOrDefault ( gene.getId (), Collections.emptySet () ) )
+				for ( Integer cid : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
 				{
 					ONDEXConcept qtl = graph.getConcept ( cid );
 
@@ -1968,7 +1674,7 @@ public class OndexServiceProvider
 
 					// TODO: traitDesc twice?! Looks wrong.
 					infoQTL.add ( traitDesc + "//" + traitDesc ); 
-				} // for mapGene2QTL
+				} // for genes2QTLs
 
 
 				qtls.stream ()
@@ -2011,7 +1717,7 @@ public class OndexServiceProvider
 				List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 					allPubs, 
 					attYear, 
-					Integer.parseInt ( (String) getOptions ().get ( OPT_DEFAULT_NUMBER_PUBS ) ) 
+					options.getInt ( OPT_DEFAULT_NUMBER_PUBS, -1 ) 
 				);
 
 				// add most recent publications here
@@ -2063,12 +1769,15 @@ public class OndexServiceProvider
 			String keywords, Map<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
 		)
 		{
+      var graph = dataService.getGraph ();
+			
 			StringBuffer out = new StringBuffer ();
 			out.append ( "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" );
 			
 			if ( userGenes == null || userGenes.isEmpty () ) return out.toString ();
 			
-			int allGenesSize = mapGene2Concepts.keySet ().size ();
+			var genes2Concepts = semanticMotifService.getGenes2Concepts ();			
+			int allGenesSize = genes2Concepts.keySet ().size ();
 			int userGenesSize = userGenes.size ();
 
 			log.info ( "generate Evidence table..." );
@@ -2089,10 +1798,13 @@ public class OndexServiceProvider
 				if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( type ) ) ) 
 					continue;
 				
+				var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+				var genes2QTLs = semanticMotifService.getGenes2QTLs ();
+
 				Float score = luceneConcepts.get ( lc );
 				Integer ondexId = lc.getId ();
-				if ( !mapConcept2Genes.containsKey ( lc.getId () ) ) continue;
-				Set<Integer> listOfGenes = mapConcept2Genes.get ( lc.getId () );
+				if ( !concepts2Genes.containsKey ( lc.getId () ) ) continue;
+				Set<Integer> listOfGenes = concepts2Genes.get ( lc.getId () );
 				Integer numberOfGenes = listOfGenes.size ();
 				Set<String> userGenesStrings = new HashSet<> ();
 				Integer numberOfQTL = 0;
@@ -2116,7 +1828,7 @@ public class OndexServiceProvider
 
 					}
 
-					if ( mapGene2QTL.containsKey ( log ) ) numberOfQTL++;
+					if ( genes2QTLs.containsKey ( log ) ) numberOfQTL++;
 
 					String chr = geneHelper.getChromosome ();
 					int beg = geneHelper.getBeginBP ( true );
@@ -2167,6 +1879,7 @@ public class OndexServiceProvider
 			StringBuffer out = new StringBuffer ();
 			// TODO: Lucene shouldn't be used directly
 			Analyzer analyzer = new StandardAnalyzer ();
+      var graph = dataService.getGraph ();
 			
 			Set<String> synonymKeys = this.getSearchWords ( keyword );
 			for ( var synonymKey: synonymKeys )
@@ -2181,7 +1894,7 @@ public class OndexServiceProvider
 				String fieldNameCN = getLuceneFieldName ( "ConceptName", null );
 				QueryParser parserCN = new QueryParser ( fieldNameCN, analyzer );
 				Query qNames = parserCN.parse ( synonymKey );
-				ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts ( qNames, 500 );
+				ScoredHits<ONDEXConcept> hitSynonyms = searchService.luceneMgr.searchTopConcepts ( qNames, 500 );
 
         /*
          * TODO: does this still apply?
@@ -2271,12 +1984,14 @@ public class OndexServiceProvider
 		 */
 		public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
 		{
+			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+
 			return luceneConcepts.keySet ()
 			.stream ()
 			.map ( ONDEXConcept::getId )
-			.filter ( mapConcept2Genes::containsKey )
+			.filter ( concepts2Genes::containsKey )
 			// .count () As said above, this would be enough if we need a count only
-			.collect ( Collectors.toMap ( Function.identity (), mapConcept2Genes::get ) );
+			.collect ( Collectors.toMap ( Function.identity (), concepts2Genes::get ) );
 		}
 
 		
@@ -2341,30 +2056,6 @@ public class OndexServiceProvider
 			return StringUtils.abbreviate ( result, 30 );
 		}
 
-
-
-
-
-    
-    
-    
-    
-	
-		public void setNodeCount(String nodeCount) {
-			this.nodeCount = nodeCount;
-	  }
-    
-    public String getNodeCount() {
-      return this.nodeCount;
-    }
-    
-    public void setRelationshipCount(String relationshipCount) {
-        this.relationshipCount = relationshipCount;
-    }
-    
-    public String getRelationshipCount(){
-        return this.relationshipCount;
-    }
     
         
     /**
@@ -2379,6 +2070,8 @@ public class OndexServiceProvider
 		{
 			// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
 			if ( chr == null ) return 0; 
+		
+      var graph = dataService.getGraph ();
 			
 			ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 			Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
@@ -2411,253 +2104,8 @@ public class OndexServiceProvider
 			fieldName = getLuceneFieldName ( fieldName, fieldValue );
 			QueryParser parser = new QueryParser ( fieldName, analyzer );
 			Query qAtt = parser.parse ( keywords );
-			ScoredHits<ONDEXConcept> thisHits = luceneMgr.searchTopConcepts ( qAtt, resultLimit );
+			ScoredHits<ONDEXConcept> thisHits = searchService.luceneMgr.searchTopConcepts ( qAtt, resultLimit );
 			mergeHits ( allResults, thisHits, notHits );
     }
-    
-    /**
-     * Populates internal data about semantic motif paths, either using the configured {@link AbstractGraphTraverser}
-     * or loading previously saved data from files.
-     * 
-     */
-		public void populateSemanticMotifData ( String graphFileName, String dataPath )
-		{
-			log.info ( "Setting semantic motif data" );
-			File graphFile = new File ( graphFileName );
-			File fileConcept2Genes = Paths.get ( dataPath, "mapConcept2Genes" ).toFile ();
-			File fileGene2Concepts = Paths.get ( dataPath, "mapGene2Concepts" ).toFile ();
-			File fileGene2PathLength = Paths.get ( dataPath, "mapGene2PathLength" ).toFile ();
-			log.info ( "Generate HashMap files: mapConcept2Genes & mapGene2Concepts..." );
-
-			ConceptClass ccQTL = graph.getMetaData ().getConceptClass ( "QTL" );
-			Set<ONDEXConcept> qtls = ccQTL == null ? new HashSet<> () : graph.getConceptsOfConceptClass ( ccQTL );
-			Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, this.dataService.getTaxIds (), this.getOptions () );
-
-			if ( fileConcept2Genes.exists () && ( fileConcept2Genes.lastModified () < graphFile.lastModified () ) )
-			{
-				log.info ( "Graph file updated since hashmaps last built, deleting old hashmaps" );
-				fileConcept2Genes.delete ();
-				fileGene2Concepts.delete ();
-				fileGene2PathLength.delete ();
-			}
-
-			if ( !fileConcept2Genes.exists () )
-			{
-				log.info ( "Creating semantic motif data" );
-				// We're going to need a lot of memory, so delete this in advance
-				// (CyDebugger might trigger this multiple times)
-				//
-				mapConcept2Genes = new HashMap<> ();
-				mapGene2Concepts = new HashMap<> ();
-				mapGene2PathLength = new HashMap<> ();
-
-				// the results give us a map of every starting concept to every
-				// valid path.
-				@SuppressWarnings ( "rawtypes" )
-				Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph ( graph, genes, null );
-
-				// Performance stats reporting about the Cypher-based traverser is disabled after the initial
-				// traversal. This option has no effect when the SM-based traverser is used.
-				graphTraverser.setOption ( "performanceReportFrequency", -1 );
-
-				log.info ( "Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength..." );
-				PercentProgressLogger progressLogger = new PercentProgressLogger ( 
-					"{}% of paths stored", traverserPaths.values ().size () 
-				);
-				for ( List<EvidencePathNode> paths : traverserPaths.values () )
-				{
-					// We dispose them after use, cause this is big and causing memory overflow issues
-					paths.removeIf ( path -> {
-
-						// search last concept of semantic motif for keyword
-						ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity ();
-
-						// add all semantic motifs to the new graph
-						// Set<ONDEXConcept> concepts = path.getAllConcepts();
-						// Extract pathLength and endNode ID.
-						int pathLength = ( path.getLength () - 1 ) / 2; // get Path Length
-						ONDEXConcept con = (ONDEXConcept) path.getConceptsInPositionOrder ()
-							.get ( path.getConceptsInPositionOrder ().size () - 1 );
-
-						int lastConID = con.getId (); // endNode ID.
-						int geneId = gene.getId ();
-						String gplKey = geneId + "//" + lastConID;
-						mapGene2PathLength.merge ( gplKey, pathLength, Math::min );
-
-						mapGene2Concepts.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
-						.add ( lastConID );
-						
-						mapConcept2Genes.computeIfAbsent ( lastConID, thisGeneId -> new HashSet<> () )
-						.add ( geneId );
-
-						// ALWAYS return this to clean up memory (see above)
-						return true;
-					} ); // paths.removeIf ()
-					progressLogger.updateWithIncrement ();
-				} // for traverserPaths.values()
-
-				try
-				{
-					SerializationUtils.serialize ( fileConcept2Genes, mapConcept2Genes );
-					SerializationUtils.serialize ( fileGene2Concepts, mapGene2Concepts );
-					SerializationUtils.serialize ( fileGene2PathLength, mapGene2PathLength );
-				}
-				catch ( Exception ex )
-				{
-					log.error ( "Failed while creating internal map files: " + ex.getMessage (), ex );
-					ExceptionUtils.throwEx ( 
-						RuntimeException.class, ex, "Failed while creating internal map files: %s", ex.getMessage () 
-					);
-				}
-			} 
-			else
-			{
-				// Files exist and are up-to-date, try to read them
-				//
-				log.info ( "Loading semantic motif data from existing support files" );
-				
-				try
-				{
-					mapConcept2Genes = SerializationUtils.deserialize ( fileConcept2Genes );
-					mapGene2Concepts = SerializationUtils.deserialize ( fileGene2Concepts );
-					mapGene2PathLength = SerializationUtils.deserialize ( fileGene2PathLength );
-				}
-				catch ( Exception e )
-				{
-					log.error ( "Failed while reading internal map files: " + e.getMessage (), e );
-					ExceptionUtils.throwEx ( RuntimeException.class, e, "Failed while reading internal map files: %s",
-							e.getMessage () );
-				}
-			}
-			
-			// Moving forward with motif data in place.
-			//
-			
-			BiConsumer<String, Map<?,?>> nullChecker = (name, coll) -> 
-			{
-				if ( coll == null || coll.isEmpty () ) log.warn ( "{} is null", name );
-				else log.info ( "{} populated with {} elements", name, coll.size () );
-			};
-			
-			nullChecker.accept ( "mapGene2Concepts", mapGene2Concepts );
-			nullChecker.accept ( "mapConcept2Genes", mapConcept2Genes );
-			nullChecker.accept ( "mapGene2PathLength", mapGene2PathLength );
-
-
-			log.info ( "Create Gene2QTL map now..." );
-
-			mapGene2QTL = new HashMap<> ();
-			PercentProgressLogger progressLogger = new PercentProgressLogger ( "{}% of genes processed", genes.size () );
-
-			for ( ONDEXConcept gene : genes )
-			{
-				GeneHelper geneHelper = new GeneHelper ( graph, gene );
-				String geneChromosome = geneHelper.getChromosome ();
-				if ( geneChromosome == null ) continue;
-				
-				int gbegin = geneHelper.getBeginBP ( true );
-				int gend = geneHelper.getEndBP ( true );
-
-				for ( ONDEXConcept qtl: qtls )
-				{
-					GeneHelper qtlHelper = new GeneHelper ( graph, qtl );
-					if ( ! ( gbegin >= qtlHelper.getBeginBP ( true ) ) ) continue;
-					if ( ! ( gend <= qtlHelper.getEndBP ( true ) ) ) continue;
-					
-					mapGene2QTL.computeIfAbsent ( gene.getId (), thisQtlId -> new HashSet<> () )
-					.add ( qtl.getId () );
-				}
-				progressLogger.updateWithIncrement ();
-			}
-
-			log.info ( "Populated Gene2QTL with #mappings: " + mapGene2QTL.size () );
-		}
-
-		
-    /*
-     * Not in use right now. Might still be useful in future, so, keeping it. Needs
-     * cleaning/rewriting. 
-     *  
-     * generate gene2evidence .tab file with contents of the mapGenes2Concepts
-     * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
-     * author singha
-     */
-    private void generateGeneEvidenceStats(String fileUrl) {
-        try {
-            String g2c_fileName = Paths.get(fileUrl, "gene2evidences.tab.gz").toString(); // gene2evidences.tab
-            String c2g_fileName = Paths.get(fileUrl, "evidence2genes.tab.gz").toString(); // evidence2genes.tab
-            String g2pl_fileName = Paths.get(fileUrl, "gene2PathLength.tab.gz").toString(); // gene2PathLength.tab
-
-            log.debug("Print mapGene2Concepts Stats in a new .tab file: " + g2c_fileName);
-            // Generate mapGene2Concepts HashMap contents in a new .tab file
-            // BufferedWriter out1= new BufferedWriter(new FileWriter(g2c_fileName));
-            BufferedWriter out1 = new BufferedWriter(
-                    new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2c_fileName))));
-            // GZIPOutputStream gzip= new GZIPOutputStream(new FileOutputStream(new
-            // File(g2c_fileName))); // gzip the file.
-            // BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(gzip,
-            // "UTF-8"));
-            out1.write("Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n");
-            for (Map.Entry<Integer, Set<Integer>> mEntry : mapGene2Concepts.entrySet()) { // for each <K,V> entry
-                int geneID = mEntry.getKey();
-                Set<Integer> conIDs = mEntry.getValue(); // Set<Integer> value
-                String txt = geneID + "\t" + conIDs.size() + "\t";
-                Iterator<Integer> itr = conIDs.iterator();
-                while (itr.hasNext()) {
-                    txt = txt + itr.next().toString() + ",";
-                }
-                txt = txt.substring(0, txt.length() - 1) + "\n"; // omit last comma character
-                out1.write(txt); // write contents.
-            }
-            out1.close();
-
-            log.debug("Print mapConcept2Genes Stats in a new .tab file: " + c2g_fileName);
-            // Generate mapConcept2Genes HashMap contents in a new .tab file
-            // BufferedWriter out2= new BufferedWriter(new FileWriter(c2g_fileName));
-            BufferedWriter out2 = new BufferedWriter(
-                    new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(c2g_fileName))));
-            out2.write("Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n");
-            for (Map.Entry<Integer, Set<Integer>> mapEntry : mapConcept2Genes.entrySet()) { // for each <K,V> entry
-                int eviID = (Integer) mapEntry.getKey();
-                Set<Integer> geneIDs = mapEntry.getValue(); // Set<Integer> value
-                String evi_txt = eviID + "\t" + geneIDs.size() + "\t";
-                Iterator<Integer> iter = geneIDs.iterator();
-                while (iter.hasNext()) {
-                    evi_txt = evi_txt + iter.next().toString() + ",";
-                }
-                evi_txt = evi_txt.substring(0, evi_txt.length() - 1) + "\n"; // omit last comma character
-                out2.write(evi_txt); // write contents.
-            }
-            out2.close();
-
-            // Generate gene2PathLength .tab file
-            log.debug("Print mapGene2PathLength Stats in a new .tab file: " + g2pl_fileName);
-            BufferedWriter out3 = new BufferedWriter(
-                    new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(g2pl_fileName))));
-            out3.write("Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n");
-            for (Map.Entry<String, Integer> plEntry : mapGene2PathLength.entrySet()) {
-                String key = plEntry.getKey();
-                int pl = plEntry.getValue();
-                String pl_txt = key + "\t" + pl + "\n";
-                // log.info("mapGene2PathLength: "+ pl_txt);
-                out3.write(pl_txt); // write contents.
-            }
-            out3.close();
-        } catch (Exception ex) {
-            log.error("Error while writing stats: " + ex.getMessage (), ex);
-        }
-    }
-    
-    /**
-     * TODO: this is under refactoring. For the moment, it's a wrapper of  
-     * {@link #getDataService()}.{@link OndexDataService#getOptions()}. Eventually, it will be eliminated from
-     * here.
-     */
-    public Map<String, Object> getOptions() {
-    	return this.dataService.getOptions ();
-    }
-
-		public Map<Integer, Set<Integer>> getMapConcept2Genes () {
-			return mapConcept2Genes;
-		}
+   
 }
