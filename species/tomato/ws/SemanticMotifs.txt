@@ -72,6 +72,7 @@
 12-3	equ
 
 9-21	cooc_wi
+8-21	coco_wi
 1-21	cooc_wi
 10-17	is_a
 10-177	is_a
