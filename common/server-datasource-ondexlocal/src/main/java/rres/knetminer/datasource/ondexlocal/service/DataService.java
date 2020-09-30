@@ -41,7 +41,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  */
 @Component
 public class DataService
-{
+{  
   private OptionsMap options = null;
   private List<String> taxIds = null;
 
@@ -52,9 +52,7 @@ public class DataService
    */
   private int genomeGenesCount = -1;
 
-  
-  private AbstractGraphTraverser graphTraverser;
-  
+    
 	private final Logger log = LogManager.getLogger ( getClass() );
 
 	

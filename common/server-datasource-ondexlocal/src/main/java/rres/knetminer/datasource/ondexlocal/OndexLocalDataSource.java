@@ -297,7 +297,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		}
 
 		// Find Semantic Motifs
-		ONDEXGraph subGraph = ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
 
 		// Export graph
 		NetworkResponse response = new NetworkResponse();
@@ -321,7 +321,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 			genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
 		}
 
-		ONDEXGraph subGraph = ondexServiceProvider.evidencePath(evidenceOndexID, genes);
+		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ().findEvidencePaths(evidenceOndexID, genes);
 
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
@@ -407,7 +407,8 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
         }
 
         // Find Semantic Motifs
-        ONDEXGraph subGraph = ondexServiceProvider.findSemanticMotifs(genes, request.getKeyword());
+        ONDEXGraph subGraph = 
+        	ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
         
         CountGraphEntities response = new CountGraphEntities();
         try {

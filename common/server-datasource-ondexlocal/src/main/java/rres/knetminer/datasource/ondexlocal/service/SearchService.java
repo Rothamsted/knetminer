@@ -24,6 +24,12 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 @Component
 public class SearchService
 {
+	/**
+	 * Used to set the max no. of publications that a search should return by default. 
+	 */
+  public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
+	
+  
 	// TODO: must become private when the refactoring is over
   LuceneEnv luceneMgr;
   
