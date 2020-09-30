@@ -59,7 +59,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * pure JSON.
  * 
  * @author holland
- *
+ * 
  */
 public abstract class OndexLocalDataSource extends KnetminerDataSource 
 {	

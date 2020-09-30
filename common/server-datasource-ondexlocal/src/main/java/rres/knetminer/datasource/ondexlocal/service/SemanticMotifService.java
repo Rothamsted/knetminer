@@ -37,11 +37,14 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.ondexlocal.OndexServiceProviderHelper;
 import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
+ * The semantic motif sub-service for {@link OndexServiceProvider}.
+ * 
  * Deals with semantic motif functions, including graph traversing, searching over
  * semantic motifs, modifying a graph based on semantic motif evidence.
  *
@@ -332,7 +335,7 @@ public class SemanticMotifService
 		Map<ONDEXConcept, Float> luceneResults = null;
 		try
 		{
-			luceneResults = odxService.searchLucene ( keyword, seed, false );
+			luceneResults = odxService.getSearchService ().searchGeneRelatedConcepts ( keyword, seed, false );
 		}
 		catch ( Exception e )
 		{
@@ -358,7 +361,7 @@ public class SemanticMotifService
 
 		Set<String> keywords = "".equals ( keyword ) 
 			? Collections.emptySet ()
-			: odxService.getSearchWords ( keyword );
+			: SearchUtils.getSearchWords ( keyword );
 				
 		Map<String, String> keywordColourMap = odxService.createHilightColorMap ( keywords );
 				

@@ -20,13 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.core.ConceptClass;
-import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
 /**
- * TODO: comment me!
+ * The export sub-service for {@link ExportService}.
+ * 
+ * Contains functions to export the data that OSP manages. Please, do not let this class grow too much.
+ * Things like new export formats should go in their independent component and possibly have delegating
+ * wrappers here.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>21 Sep 2020</dd></dl>
