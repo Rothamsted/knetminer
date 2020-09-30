@@ -487,7 +487,7 @@ public class OndexServiceProvider
 					double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( cId ).size () );
 	
 					// inverse distance from gene to evidence
-					Integer pathLen = genes2PathLengths.get ( geneId + "//" + cId );
+					Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, cId ) );
 					if ( pathLen == null ) 
 						log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
 					

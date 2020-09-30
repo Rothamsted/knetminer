@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class SemanticMotifService
 	
   private Map<Integer, Set<Integer>> genes2Concepts;
   private Map<Integer, Set<Integer>> concepts2Genes;
-  private Map<String, Integer> genes2PathLengths;
+  private Map<Pair<Integer, Integer>, Integer> genes2PathLengths;
   private Map<Integer, Set<Integer>> genes2QTLs;
   
 	@Autowired
@@ -155,7 +156,7 @@ public class SemanticMotifService
 
 					int lastConID = con.getId (); // endNode ID.
 					int geneId = gene.getId ();
-					String gplKey = geneId + "//" + lastConID;
+					var gplKey = Pair.of ( geneId, lastConID );
 					genes2PathLengths.merge ( gplKey, pathLength, Math::min );
 
 					genes2Concepts.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
@@ -631,7 +632,11 @@ public class SemanticMotifService
 		return concepts2Genes;
 	}
 
-	Map<String, Integer> getGenes2PathLengths ()
+	/**
+	 * Maps pairs of ONDEX gene IDs + concept IDs to the corresponding length of the semantic motif that links the 
+	 * gene to the concept.
+	 */
+	Map<Pair<Integer, Integer>, Integer> getGenes2PathLengths ()
 	{
 		return genes2PathLengths;
 	}

@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -286,9 +287,10 @@ public class ExportService
 			BufferedWriter out3 = new BufferedWriter (
 					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2pl_fileName ) ) ) );
 			out3.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
-			for ( Map.Entry<String, Integer> plEntry : semanticMotifService.getGenes2PathLengths ().entrySet () )
+			for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifService.getGenes2PathLengths ().entrySet () )
 			{
-				String key = plEntry.getKey ();
+				var idPair = plEntry.getKey ();
+				String key = idPair.getLeft () + "//" + idPair.getRight ();
 				int pl = plEntry.getValue ();
 				String pl_txt = key + "\t" + pl + "\n";
 				// log.info("mapGene2PathLength: "+ pl_txt);
