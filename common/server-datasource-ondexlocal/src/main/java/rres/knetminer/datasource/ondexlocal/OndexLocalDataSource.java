@@ -1,14 +1,11 @@
 package rres.knetminer.datasource.ondexlocal;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,10 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONException;
@@ -42,10 +36,8 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
-import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -59,9 +51,10 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * pure JSON.
  * 
  * @author holland
+ * @author Marco Brandizi (I replaced the parameterised constructor and introduced the config harvester)
  * 
  */
-public abstract class OndexLocalDataSource extends KnetminerDataSource 
+public class OndexLocalDataSource extends KnetminerDataSource 
 {	
 	/**
 	 * When it's initialised without parameters, it gets everything from the XML config file. This is fetched by 
@@ -71,27 +64,10 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 	public OndexLocalDataSource () {
 		init ();
 	}
-	
-	public OndexLocalDataSource(String dsName, String configXmlPath, String semanticMotifsPath) {
-		init ( dsName, configXmlPath, semanticMotifsPath );
-	}
 
-	
-	private void init () {
-		init ( null, null, null );
-	}
-
-	private void init ( String dsName, String configXmlPath, String semanticMotifsPath )
+	private void init ()
 	{
-		// TODO: we're transitioning to the arrangement where the config is only read
-		// via config file harverster and this method parameters are ignored
-		if ( dsName != null || configXmlPath != null || semanticMotifsPath != null )
-			throw new UnsupportedOperationException ( 
-				"Parameterised version of " + this.getClass ().getSimpleName () +
-				"'s constructor is no longer supported and will be removed. All params must come from the config file like data_source.xml" 
-		);
-		
-		configXmlPath = ConfigFileHarvester.getConfigFilePath ();
+		var configXmlPath = ConfigFileHarvester.getConfigFilePath ();
 		if ( configXmlPath == null ) throw new IllegalStateException ( 
 			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
 			+ ", either as a Java property, a <context-param> in web.xml, or" 
@@ -102,7 +78,7 @@ public abstract class OndexLocalDataSource extends KnetminerDataSource
 		ondexServiceProvider.initGraph ( configXmlPath );
 
 		var odxData = ondexServiceProvider.getDataService ();
-		dsName = odxData.getDataSourceName ();
+		var dsName = odxData.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);

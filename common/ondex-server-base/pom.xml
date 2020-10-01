@@ -15,8 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
-			<artifactId>configurable-datasource</artifactId>
-			<version>${project.version}</version>
+			<artifactId>server-datasource-ondexlocal</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
