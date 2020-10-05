@@ -36,9 +36,12 @@
 .contact-footer {
 	background-color:#2A2A2A;
 	color:white;
-	/*padding-bottom:10px;*/
-	position: absolute;
+	padding-bottom:10px;
+	/*position: absolute;*/
     width: 100%;
+    bottom: 0;
+    right: 0;
+    left: 0;
 	}
 .contact-footer p {
 	font-size:12px;

@@ -37,3 +37,25 @@ exit 1
   --container-name 'wheat' \
   --container-memory 20G
 
+
+# RRes-specific test
+./docker-run.sh \
+  --dataset-id wheat-directed \
+  --dataset-dir /root/knetminer-test/knetminer-datasets/wheat-directed \
+  --host-port 9090 \
+  --container-name 'wheat-directed' \
+  --container-memory 20G \
+  --with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 --neo4j-user rouser --neo4j-pwd rouser \
+  --detach
+
+# Options to setup JMX and use jvisualvm. this makes jvisualvm accessible on 9010 (RMI on 9011), you can start jvisualvm from the
+# host and connect these ports (or you can use tricks like SSH tunnelling). Clearly, every new container needs its own ports.
+#
+export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
+ -Dcom.sun.management.jmxremote.authenticate=false
+ -Dcom.sun.management.jmxremote.port=9010
+ -Dcom.sun.management.jmxremote.rmi.port=9011
+ -Djava.rmi.server.hostname=localhost
+ -Dcom.sun.management.jmxremote.local.only=false"
+# 
+export DOCKER_OPTS="-it -p 9010:9010 -p 9011:9011"
