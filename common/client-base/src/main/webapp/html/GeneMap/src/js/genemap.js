@@ -296,9 +296,11 @@ GENEMAP.GeneMap = function (userConfig) {
 
     var closeFunction = function(event){
       //Exceptions - don't close the popopver we are trying to interact with
-      if (event.target.tagName.toLowerCase() === 'a') {
-        return;
-      }
+	    if (event.target !== 'undefined') {
+				if (event.target.tagName.toLowerCase() === 'a') {
+		    	return;
+				}
+	    }
 
       if ($(event.target).closest('.genemap-advanced-menu').length > 0){
         return;

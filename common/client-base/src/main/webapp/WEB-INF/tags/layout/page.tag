@@ -23,7 +23,7 @@
         <meta name="description" content="${description}" />
         <title>${title}</title>
         <!-- favicon added -->
-        <link rel="shortcut icon" href="html/image/favicon.ico" />
+        <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
 
         <!-- Google Analytics -->
         <!-- end Google Analytics -->
@@ -39,8 +39,12 @@
     </c:if>
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <!-- KnetMiner button.css -->
+        <!-- jBox modal popup css -->
+        <link rel="stylesheet" type="text/css" href="html/css/jBox.all.min.css"/>
+        <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
+        <!-- Login css -->
+        <link rel="stylesheet" type="text/css" href="html/css/loginStyle.css"/>
         <!-- loader/spinner css -->
         <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
         <!-- Genomaps.js css -->
@@ -49,7 +53,8 @@
         <!-- KnetMaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
 
-        <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
+        <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
+		
 		<!-- bootstrap css -->
 	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 		<!-- font-awesome css -->
@@ -60,15 +65,23 @@
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
+        <!-- jBox modal popup js -->
+      	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+        
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
-		<!-- interactive summary Legend for Gene View -->
+        <!-- interactive summary Legend for Gene View -->
         <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
         <!-- interactive Legend for Evidence View -->
         <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>
+        
+        <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
+        <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>
+        <!-- KnetMaps - js utils to save knet to knetspace -->
+        <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->
@@ -92,14 +105,14 @@
                 </c:when>
                 <c:otherwise>
                     <c:if test="${embeddable}">
-                        <div class="logo_embedded"><img src="html/image/logo-regular.png" alt="Logo" height="35" /></div>
+                        <div class="logo_embedded"><img src="html/image/KnetMiner_green_white.svg" alt="Logo" height="45" /></div>
                     </c:if>
                 </c:otherwise>
             </c:choose>
  			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
-            <c:if test="${!embeddable}">
+         <!--   <c:if test="${!embeddable}">
                 <layout:footer />
-            </c:if>
+            </c:if> -->
         </div>
         <jsp:invoke fragment="extraBottom"/>
     </body>

@@ -1,12 +1,11 @@
 package rres.knetminer.datasource.ondexlocal;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,12 +22,12 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 public class Hits {	
     protected final Logger log = LogManager.getLogger(getClass());
 	
-	OndexServiceProvider ondexProvider;
-	HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
-	int luceneDocumentsLinked;
-	int numConnectedGenes;
-	Map<ONDEXConcept, Double> sortedCandidates;
-	String keyword = "";
+	private OndexServiceProvider ondexProvider;
+	private HashMap<ONDEXConcept, Float> luceneConcepts;	//concept and Lucene score
+	private int luceneDocumentsLinked;
+	private int numConnectedGenes;
+	private Map<ONDEXConcept, Double> sortedCandidates;
+	private String keyword = "";
 	
 	
 	public Hits(String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList) {
@@ -48,16 +47,16 @@ public class Hits {
 	
 	public void countLinkedGenes(){
 		int linkedDocs = 0;
-		Set<Integer> uniqGenes = new HashSet<Integer>();
+		Set<Integer> uniqGenes = new HashSet<>();
 		log.info("Matching Lucene concepts: "+luceneConcepts.keySet().size());
 		for(ONDEXConcept lc : luceneConcepts.keySet()){
 			Integer luceneOndexId = lc.getId();
 			//Checks if the document is related to a gene
-			if(!OndexServiceProvider.mapConcept2Genes.containsKey(luceneOndexId)){
+			if(!OndexServiceProvider.getMapConcept2Genes ().containsKey(luceneOndexId)){
 				continue;
 			}
 			linkedDocs++;
-			uniqGenes.addAll(OndexServiceProvider.mapConcept2Genes.get(luceneOndexId));	
+			uniqGenes.addAll(OndexServiceProvider.getMapConcept2Genes ().get(luceneOndexId));	
 		}
 		
 		log.info("Matching unique genes: "+uniqGenes.size());

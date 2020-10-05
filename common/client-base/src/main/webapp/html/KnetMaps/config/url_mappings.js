@@ -56,6 +56,8 @@ var url_mappings= {
      {"cv": "TX", "weblink": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=", "cc_restriction": ""},
      {"cv": "UNIPROTKB", "weblink": "http://www.uniprot.org/uniprot/", "cc_restriction": ""},
      {"cv": "YeastCyc", "weblink": "https://yeast.biocyc.org/YEAST/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""},
-     {"cv": "HumanCyc", "weblink": "https://humancyc.org/HUMAN/substring-search?type=NIL&object=", "cc_restriction": ""}
+     {"cv": "HumanCyc", "weblink": "https://humancyc.org/HUMAN/substring-search?type=NIL&object=", "cc_restriction": ""},
+     {"cv": "UNIPROTKB-COV", "weblink": "https://covid-19.uniprot.org/uniprotkb/", "cc_restriction": ""},
+     {"cv": "HPO", "weblink": "https://hpo.jax.org/app/browse/term/", "cc_restriction": ""}
  ]
 };

@@ -107,7 +107,7 @@ fi
 	
 # Neo4j mode
 if [ "$is_neo4j" != '' ]; then
-	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS='-Pdocker'
+	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS="$MAVEN_ARGS -Pdocker"
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
@@ -122,8 +122,11 @@ fi
 # Typically you DO WANT this.
 # 
 # Default JAVA_TOOL_OPTIONS is:
-#   -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
-# which tells the JVM to use all the RAM passed to the container
+#
+#   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:+UseContainerSupport -XX:-UseCompressedOops
+#   
+# which tells the JVM to use a quota of the RAM passed to the container. 
+# UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
 #
 echo -e "\n"
 for env_var in MAVEN_ARGS JAVA_TOOL_OPTIONS

@@ -3,6 +3,8 @@ var genespreadsheet = new Array();
 var genes;
 */
 
+
+
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
@@ -219,7 +221,7 @@ function evidencePath(id, genes) {
 $(document).ready(
     function () {
         // add species name to header
-        $('#species_header').text(species_name); // set/ update species name from utils_config.js
+        $('#species_header').text(species_name); //update species name from utils_config.js
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -880,11 +882,11 @@ function generateCyJSNetwork(url, requestParams) {
     // Preloader for KnetMaps
     $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
-	
-	// Show loading spinner on 'tabviewer' div
-	activateSpinner("#tabviewer");
-	//console.log("network: start spinner...");
- 
+    
+    // Show loading spinner on 'tabviewer' div
+    activateSpinner("#tabviewer");
+    //console.log("network: start spinner...");
+        
     $.post({
         url: url,
         timeout: 1000000,
@@ -894,20 +896,31 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams),
-		beforeSend: deactivateSpinner("#tabviewer")
-    })
-	    .fail(function (errorlog) {
+        beforeSend: deactivateSpinner("#tabviewer")
+    }).fail(function (errorlog) {
 			alert("An error has ocurred..." + errorlog);
 		//	deactivateSpinner("#tabviewer");
-        })
-        .success(function (data) {
+        }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 		//	deactivateSpinner("#tabviewer");
 			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-					knetmaps.drawRaw('#knet-maps', data.graph);
+                                        
+                                        // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
+                                        var networkId= null;
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
+                                        
+                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+                                           knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
+                                          }
+                                        else { // response contents (pure JSON).
+                                          var eles_jsons= data.graph.graphJSON.elements;
+                                          var eles_styles= data.graph.graphJSON.style;
+                                          var metadata_json= data.graph.allGraphData;
+                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
+                                        }
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
@@ -1012,7 +1025,7 @@ function createGenesTable(text, keyword, rows) {
         table = table + '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
         table = table + '<select>';
         table = table + '<div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
-            '<div id="selectedGenesCount"><span style="color:darkOrange; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
+            '<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
         table = table + '<br>';
         // dynamic Evidence Summary to be displayed above Gene View table
         table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">' + interactive_summary_Legend + '</div>';

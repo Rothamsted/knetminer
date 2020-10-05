@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular.otf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  /*src: url('../fonts/*.otf');*/
+  src: url('../fonts/Fontfabric - Nexa Regular Italic.otf');
+  font-style: italic;
+}
+
 html{
     height: 100%;
     /*background-color: #F4F5F7;*/
@@ -5,7 +19,8 @@ html{
 body {
     margin:0px;padding:0px;
     font-size:16px;
-    font-family: 'Play', sans-serif;
+    /*font-family: 'Play', sans-serif;*/
+    font-family: 'Nexa Regular',sans-serif;
     position: relative;
     min-width: 960px;
     background: url("../image/background.jpg") no-repeat center center fixed;
@@ -20,7 +35,8 @@ body.embeddable {
 }
 
 h2 {
-    font-family:verdana;
+    /*font-family:verdana;*/
+    font-family: 'Nexa Regular',sans-serif;
     font-size: 12pt;
     padding:0px;
 }
@@ -29,7 +45,8 @@ p {
 }
 a {
     text-decoration:none;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
 }
 a img {
     border:none;
@@ -40,7 +57,7 @@ a img {
 }
 #release_icon {
     float: right; 
-    padding-right: 50px; 
+    padding-right: 10px; 
     padding-top: 18px; 
     font-size: 22px;
 }
@@ -51,7 +68,7 @@ a img {
     font-size: 20px;
     font-style: italic;
     padding-right: 20px;
-    padding-top: 15px;
+    padding-top: 18px;
 }
 a:hover {
     text-decoration:underline;
@@ -144,7 +161,7 @@ div#leftnav {
     display:block;
     height:55px;
     box-shadow: 0 1px 1px white;
-    background-color:#2A2A2A;
+    background-color:#121212 /*#2A2A2A*/;
     position: fixed;
     overflow: auto;
     z-index: 10;
@@ -160,7 +177,7 @@ div#leftnav {
 div#content {
     padding-top: /*100*/70px;
     height: auto;
-    padding-bottom: 140px;
+    padding-bottom: /*140*/40px;
 }
 
 .embeddable div#content {
@@ -191,13 +208,15 @@ div#keyword_search li {
     height:35px;
 }
 div#keyword_search input[type="text"] {
-    font-family:Verdana, Arial, Helvetica, sans-serif;
+    /*font-family:Verdana, Arial, Helvetica, sans-serif;*/
+    font-family: 'Nexa Regular',sans-serif;
     font-size:16px;
     width:/*740px*/80%;
     height:30px;
     margin-right:5px;
     border: solid 2px;
-    border-color: orange;
+    border-color:#51CE7B;
+    /*border-color: orange;*/
 }
 div#keyword_search input[type="text"]:focus {
     outline-width: 0;
@@ -261,7 +280,8 @@ div#loadingNetworkDiv {
     height:30px;
     padding-top:13px;
     padding-right:5px;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-size:14px;
 }
 div#loadingNetworkDiv img {
@@ -273,7 +293,8 @@ div#loadingNetwork_Div {
     height:20px;
     padding-top:13px;
     padding-right:5px;
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-size:14px;
 }
 div#loadingNetwork_Div img {
@@ -285,7 +306,7 @@ div.loadingDiv ul li{
 #explainer {
     width:570px;
     height:35px;
-    color:black;
+    color:#121212/*black*/;
     position:relative;
     top:-10px;
     font-style:normal;
@@ -295,7 +316,7 @@ div#region_search_area li {
     list-style:none;
 }
 div#region_search_area {
-    //text-align:center;
+    /* text-align:center; */
     padding:20px 0px 20px 0px;
     width:100%;
     position:relative;
@@ -392,7 +413,8 @@ div.scrollTable table>thead tr {
 }
 /* tablesorter */
 table.tablesorter {
-    font-family:arial;
+    /*font-family:arial;*/
+    font-family: 'Nexa Regular',sans-serif;
     background-color:#C0C0C0;
     margin:10px 0pt 15px;
     font-size: 10pt;
@@ -472,7 +494,7 @@ span.hint-small {
 }
 
 span.hint-small:hover {
-    //background-position: -19px 0;
+   /* background-position: -19px 0; */
 }
 
 span.hint-big {
@@ -501,7 +523,7 @@ span.hint-big:hover {
 }
 
 /* Evidence pictures */
-.evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font:12px Arial, Helvetica, sans-serif}
+.evidence_item {margin:0px 3px 3px 0px;float:left;position:relative; height:18px;padding-top:4px; width:22px;text-align:center; font-size:14px/*font:12px Arial, Helvetica, sans-serif*/}
 .evidence_item_Gene {background:url(../image/Gene.png) no-repeat;padding-top:6px;height:16px;}
 .evidence_item_BioProc {background:url(../image/Biological_Process.png) no-repeat;}
 .evidence_item_CelComp {background:url(../image/Cellular_Component.png) no-repeat;}
@@ -544,8 +566,8 @@ body:after{
 .evidence_box span {font-size:17px; color:#003399;}
 
 /* QTL box Gene View*/
-.qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:14px Arial, Helvetica, sans-serif; color:#4184C1}
-.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:12px Arial, Helvetica, sans-serif; color:#3D3D3D; display:none;}
+.qtl_item {margin: 0px 3px 3px 0px; float:left; position:relative; height:18px; padding-top:4px; width:22px; text-align:left; font:12px 'Nexa Regular',sans-serif;/*14px Arial, Helvetica, sans-serif;*/ color:#4184C1}
+.qtl_box {position:absolute; width:180px; top:0px; left:25px; border: solid 3px #C0C0C0;background-color:#FFFFFF;padding:0px 9px;z-index:2; text-align:left; font:10px 'Nexa Regular',sans-serif;/*12px Arial, Helvetica, sans-serif;*/ color:#3D3D3D; display:none;}
 .qtl_box span {font-size:17px; color:#003399; font-style:normal;}
 .qtl_box_close {position:absolute;top:-10px;left:-12px;background:url(../image/close.png) no-repeat;height:18px;width:18px}
 
@@ -573,7 +595,7 @@ body:after{
 */
 /*Footer*/
 .contact-footer {
-    background-color:#2A2A2A;
+    background-color:#121212 /*#2A2A2A*/;
     color:white;
     position: absolute; /* relative; */
     width: 100%;
@@ -669,27 +691,29 @@ a.contact-button{
     text-decoration:none !important;	
 }
 a.contact-button :hover {
-    color:darkorange;
+    color:#51CE7B;
+    /*color:darkorange;*/
     font-weight:bold;
 }
 .contact-page a:hover {
-    color:darkorange;
+    color:#51CE7B;
+	/*color:darkorange;*/
     text-decoration:none;
 }
 /* Tab Window */
 #tabviewer_buttons {margin:auto; width:70%;padding-bottom:45px;padding-top:15px;}
-.button_off {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif;background-color: #2A2A2A;margin-left: 10px; border-radius:18px;
+.button_off {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font-size:14px;background-color:#51CE7B/*#2A2A2A*/;margin-left: 10px; border-radius:18px;
              -moz-border-radius:18px; 
              -webkit-border-radius:18px; 
              -o-border-radius:18px;}
-.button_off a {color:darkorange;text-decoration:none;}
-.button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font:14px bold Arial, Helvetica, sans-serif;background-color: #2A2A2A;
+.button_off a {color:#FFF;/*color:darkorange;*/ text-decoration:none;}
+.button_on {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font-size:14px;background-color:#51CE7B/*#2A2A2A*/;
             margin-left: 10px; border-radius:18px;
             -moz-border-radius:18px; 
             -webkit-border-radius:18px; 
             -o-border-radius:18px;}
-.button_on a {color:#FFF;text-decoration:none;}
-.button_on:hover {background-color:grey;}
+.button_on a {color:#121212;text-decoration:none;}
+.button_on:hover {background-color:#38c768;/*dimgray*/}
 #pGViewer {float:left;}
 #resultsTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
 #evidenceTable {position:relative;/*padding-bottom:80px;*/margin:auto;width:90%;}
@@ -705,10 +729,10 @@ a.contact-button :hover {
         -moz-border-radius:18px; 
         -webkit-border-radius:18px; 
         -o-border-radius:18px;}
-//.knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ font-size:15px; cursor:pointer;}
-//.knet_button:hover {color:white; background-color:darkgray;}
-#pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:12px;margin:auto; width:70%;}
-.pGViewer_title_line {background-color: #2A2A2A; color: white; padding: 1px 3px;}
+/* .knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ /* font-size:15px; cursor:pointer;} */
+/* .knet_button:hover {color:white; background-color:darkgray;} */
+#pGViewer_title {padding-bottom:10px;padding-top:10px;font-size:14px;margin:auto; width:70%;}
+.pGViewer_title_line {background-color:#F4F5F7; color:#121212; padding:1px 3px;}
 .preloader_bar {left:250px;position:relative;}
 #matchesResultDiv {font-size:12px; color:#9B9B9B; padding-bottom:10px; padding-top:10px;}
 #genemap-tab {position: relative;width: 95%;height: 95%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
@@ -718,11 +742,11 @@ a.contact-button :hover {
 
 /* Evidence View */
 .evidenceSummary {position:relative; width:100%;}
-.evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:11px;}
+.evidenceSummary .evidenceSummaryItem {position:relative;float:left;width:50px;font-size:14px;}
 
 /* Gene View: interactive evidence summary filter */
 #evidenceSummary2 {cursor:pointer; padding-top:5px; padding-bottom:5px;}
-#loadingDiv_GeneView {float:right; color:darkOrange; font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
+#loadingDiv_GeneView {float:right; color:#51CE7B; /*color:darkorange;*/ font-size:15px; font-weight:bold; width:120px; height:25px; display:none;}
 #revertGeneView.unhover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter.png") no-repeat; }
 #revertGeneView.hover { cursor:pointer; border: none; width:30px; height:30px; background:url("../image/reset_filter_hover.png") no-repeat; }
 
@@ -916,3 +940,5 @@ a.contact-button :hover {
 #genemap {
     height: 620px;/*450px;*/
 }
+
+a { cursor: pointer; }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- 
+		Have a look at this test file for details on how to define Neo4j-related params:
+		https://github.com/Rothamsted/knetminer-backend/blob/master/cypher-client/src/test/resources/test-config/config.xml
+		
+		This is wheat dataset-specific and overrides the default config.xml
+	-->
+
+  <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
+  
+  
+  <bean name = "configDirPath" class = "java.lang.String">
+  	<constructor-arg value = "${knetminer.configDir}/neo4j" />
+  </bean> 
+   
+	<bean name = "semanticMotifsQueries" 
+				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
+		<constructor-arg value = "${knetminer.configDir}/neo4j/new-queries.txt" />
+	</bean>
+
+
+ 	<!-- The Neo4j driver -->
+	<bean id = "neoDriver" class = "org.neo4j.driver.v1.GraphDatabase" 
+			factory-method="driver">
+		<constructor-arg value = "${neo4j.server.boltUrl}" />
+		<constructor-arg>
+			<bean class = "org.neo4j.driver.v1.AuthTokens" factory-method = "basic">
+				<constructor-arg value = "${neo4j.server.user}" />
+				<constructor-arg value = "${neo4j.server.password}" />
+			</bean>
+		</constructor-arg>
+		<!-- This does some tuning on the kind of needs we have with Knetminer -->
+		<constructor-arg type="org.neo4j.driver.v1.Config" 
+			value = "#{T(org.neo4j.driver.v1.Config).build ()
+				.withConnectionAcquisitionTimeout ( 20, T(java.util.concurrent.TimeUnit).SECONDS )
+				.withConnectionTimeout ( 30, T(java.util.concurrent.TimeUnit).SECONDS )
+				.toConfig ()
+			}"
+		/>
+	</bean>
+
+	<!-- Per-query timeout version 
+ 	<bean name = "queryTimeoutMs" class = "java.lang.Long"><constructor-arg value = "60000"/></bean>	
+	<bean name = "queryThreadPoolSize" class = "java.lang.Integer"><constructor-arg value = "4"/></bean>
+	-->
+</beans>

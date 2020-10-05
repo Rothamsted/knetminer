@@ -74,6 +74,12 @@ gulp.task('copy-libs-nojquery', function() {
 	    .pipe(gulp.dest(config.outputJs, {overwrite : true}));
 });
 
+//*** Fonts copying ***
+gulp.task('copy-fonts', function() {
+	  return gulp.src(config.fonts)
+	    .pipe(gulp.dest(config.outputFonts, {overwrite : true}));
+});
+
 //*** Image copying ***
 gulp.task('copy-images', function() {
 	  return gulp.src(config.images)
@@ -86,6 +92,6 @@ gulp.task('help', $.taskListing);
 // create a default task and just log a message
 gulp.task('default', ['help']);
 
-gulp.task('optimise', ['copy-css','copy-js','copy-libs-nojquery','copy-libs','copy-images']);
+gulp.task('optimise', ['copy-fonts','copy-css','copy-js','copy-libs-nojquery','copy-libs','copy-images']);
 
 ////////////

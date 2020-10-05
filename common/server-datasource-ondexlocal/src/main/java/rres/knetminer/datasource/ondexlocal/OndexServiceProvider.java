@@ -1,5 +1,8 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,31 +18,32 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Map.Entry.comparingByValue;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toMap;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -83,6 +87,9 @@ import rres.knetminer.datasource.api.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
+
 /**
  * Parent class to all ondex service provider classes implementing organism
  * specific searches.
@@ -91,7 +98,7 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  */
 public class OndexServiceProvider {
 
-    protected final Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * ChromosomeID mapping for different datasets
@@ -101,58 +108,102 @@ public class OndexServiceProvider {
     /**
      * GraphTraverser will be initiated with a state machine
      */
-    AbstractGraphTraverser gt;
+    private AbstractGraphTraverser graphTraverser;
 
     /**
      * Ondex knowledge base as memory graph
      */
-    ONDEXGraph graph;
+    private ONDEXGraph graph;
 
     /**
      * Query-independent Ondex motifs as a hash map
      */
-    static HashMap<Integer, Set<Integer>> mapGene2Concepts;
-    static HashMap<Integer, Set<Integer>> mapConcept2Genes;
+    private static HashMap<Integer, Set<Integer>> mapGene2Concepts;
+    private static HashMap<Integer, Set<Integer>> mapConcept2Genes;
 
     /**
      * HashMap of geneID -> endNodeID_pathLength
      */
-    static HashMap<String, Integer> mapGene2PathLength;
+    private static HashMap<String, Integer> mapGene2PathLength;
 
     /**
      * Query-dependent mapping between genes and concepts that contain query
      * terms
      */
-    HashMap<Integer, Set<Integer>> mapGene2HitConcept;
+    private HashMap<Integer, Set<Integer>> mapGene2HitConcept;
 
     /**
      * Gene to QTL mapping
      */
-    HashMap<Integer, Set<Integer>> mapGene2QTL;
+    private HashMap<Integer, Set<Integer>> mapGene2QTL;
 
     /**
      * number of genes in genome
      */
-    int numGenesInGenome;
+    private int numGenesInGenome;
 
     /**
      * index the graph
      */
-    LuceneEnv lenv;
+    private LuceneEnv luceneMgr;
 
     /**
      * TaxID of organism for which the knowledgebase was created
      */
-    List<String> taxID;
+    private List<String> taxID;
+    
+    /**
+     * Version of KnetMiner being used
+     **/
+    private int version;
+    
+    /**
+     * The organisation source name
+     */
+    private String sourceOrganization;
+    
+    /**
+    * defaultExportedPublicationCount value
+    */
+    public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
+    
+    /** 
+     * The Date of graph creation
+     */
+    private final Date creationDate = new Date();
+    
+    /**
+     * The providers name
+     */
+    private String provider;
+    
+    /** 
+     * Species Name provided via maven-settings
+     */
+    private String speciesName;
+	
+	/*
+    * Host url provided by mav args (otherwise default is assigned) for knetspace
+    */
+    private String knetspaceHost;
 
+    
     /**
      * true if a reference genome is provided
      */
-    boolean referenceGenome;
+    private boolean referenceGenome;
 
-    boolean export_visible_network;
+    private boolean export_visible_network;
 
     private Map<String, Object> options = new HashMap<>();
+	
+	    /**
+     * Node and relationship number for given gene
+     */
+    
+    private String nodeCount;
+    
+    private String relationshipCount;
 
     /**
      * Loads configuration for chromosomes and initialises map
@@ -171,22 +222,21 @@ public class OndexServiceProvider {
     public void createGraph(String dataPath, String graphFileName, String smFileName)
     {
         log.info("Loading graph from " + graphFileName);
-
+        
         // new in-memory graph
         graph = new MemoryONDEXGraph("OndexKB");
 
         loadOndexKBGraph(graphFileName);
         indexOndexGraph(graphFileName, dataPath);
 
-        if (gt == null) {
-            gt = AbstractGraphTraverser.getInstance(this.getOptions());
+        if (graphTraverser == null) {
+            graphTraverser = AbstractGraphTraverser.getInstance(this.getOptions());
         }
 
         // These might be needed by one implementation or the other. Those that don't need a property like these
         // can just ignore them
-        gt.setOption("StateMachineFilePath", smFileName);
-        gt.setOption("ONDEXGraph", graph);
-        gt.setOption("LuceneEnv", lenv);
+        graphTraverser.setOption("StateMachineFilePath", smFileName);
+        graphTraverser.setOption("ONDEXGraph", graph);
 
         populateHashMaps(graphFileName, dataPath);
 
@@ -211,7 +261,7 @@ public class OndexServiceProvider {
 
     /*
      * Generate Stats about the created Ondex graph and its mappings:
-     * mapConcept2Genes & mapGene2Concepts. Author Singha
+     * mapConcept2Genes & mapGene2Concepts. Author Singhatt
      * Updating to also give Concept2Gene per concept
      */
     private void displayGraphStats(String fileUrl) {
@@ -462,9 +512,10 @@ public class OndexServiceProvider {
                 FileUtils.deleteDirectory(indexFile);
             }
             log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-            lenv = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-            lenv.addONDEXListener(new ONDEXLogger()); // sends certain events to the logger.
-            lenv.setONDEXGraph(graph);
+            luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
+            luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
+            luceneMgr.setONDEXGraph(graph);
+            luceneMgr.setReadOnlyMode ( true );
             log.info("Lucene Index created");
         } 
         catch (Exception e)
@@ -490,8 +541,17 @@ public class OndexServiceProvider {
         uFA.addOption(ArgumentNames.REMOVE_TAG_ARG, true);
 
         // TODO
-        uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Publication");
-        uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, "Chromosome");
+        List<String> ccRestrictionList = Arrays.asList("Publication", "Phenotype", "Protein",
+                "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
+                "Disease", "BioProc", "Trait");
+        ccRestrictionList.stream().forEach(cc -> {
+            try {
+                uFA.addOption(ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc);
+            } catch (InvalidPluginArgumentException ex) {
+                log.info("Failed to restrict concept class " + cc + " due to error " + ex);
+            }
+        } );
+        log.info("Filtering concept classes " + ccRestrictionList);
 
         uFilter.setArguments(uFA);
         uFilter.setONDEXGraph(og);
@@ -518,6 +578,9 @@ public class OndexServiceProvider {
             jsonExport.setONDEXGraph(graph2);
             log.debug("Export JSON data: Total concepts= " + graph2.getConcepts().size() + " , Relations= "
                     + graph2.getRelations().size());
+            // Set the Node and rel counts
+            nodeCount = Integer.toString(graph2.getConcepts().size());
+            relationshipCount = Integer.toString(graph2.getRelations().size());
             // Export the contents of the 'graph' object as multiple JSON
             // objects to an output file.
             jsonExport.start();
@@ -613,7 +676,8 @@ public class OndexServiceProvider {
          * "CHEMBLTARGET", "EC", "EMBL", "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT",
          * "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM", "OMIM", "PDB",
          * "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE",
-         * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB"};
+         * "PUBCHEM", "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV",
+         * "ENSEMBL-HUMAN"};
          */
         Set<String> dsAcc = new HashSet<>(Arrays.asList(datasources));
 
@@ -623,6 +687,8 @@ public class OndexServiceProvider {
             log.info("No keyword, skipping Lucene stage, using mapGene2Concept instead");
             if (geneList != null) {
                 for (ONDEXConcept gene : geneList) {
+                    if (gene == null) continue;
+                    if (mapGene2Concepts.get(gene.getId()) == null) continue;
                     for (int conceptId : mapGene2Concepts.get(gene.getId())) {
                         ONDEXConcept concept = graph.getConcept(conceptId);
                         if (includePublications || !concept.getOfType().getId().equalsIgnoreCase("Publication")) {
@@ -634,30 +700,29 @@ public class OndexServiceProvider {
             return hit2score;
         }
 
-        // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+        // TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
+        // consider different field types. See https://stackoverflow.com/questions/62119328
         Analyzer analyzer = new StandardAnalyzer();
 
         String keyword = keywords;
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
         log.debug("Keyword is:" + keyword);
 
         // creates the NOT list (list of all the forbidden documents)
         String NOTQuery = createsNotList(keyword);
         String crossTypesNotQuery = "";
         ScoredHits<ONDEXConcept> NOTList = null;
-        if (NOTQuery != "") {
+        if (!"".equals ( NOTQuery )) {
             crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + NOTQuery + ") OR ConceptAttribute_Abstract:("
                     + NOTQuery + ") OR Annotation:(" + NOTQuery + ") OR ConceptName:(" + NOTQuery + ") OR ConceptID:("
                     + NOTQuery + ")";
             String fieldNameNQ = getFieldName("ConceptName", null);
-            // QueryParser parserNQ = new QueryParser(Version.LUCENE_36, fieldNameNQ,
-            // analyzer);
             QueryParser parserNQ = new QueryParser(fieldNameNQ, analyzer);
             Query qNQ = parserNQ.parse(crossTypesNotQuery);
-            NOTList = lenv.searchTopConcepts(qNQ, 2000);
+            NOTList = luceneMgr.searchTopConcepts(qNQ, 2000);
         }
 
         // number of top concepts retrieved for each Lucene field
@@ -670,10 +735,9 @@ public class OndexServiceProvider {
         // search concept attributes
         for (AttributeName att : atts) {
             String fieldName = getFieldName("ConceptAttribute", att.getId());
-            // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAtt = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHits = lenv.searchTopConcepts(qAtt, max_concepts);
+            ScoredHits<ONDEXConcept> sHits = luceneMgr.searchTopConcepts(qAtt, max_concepts);
             mergeHits(hit2score, sHits, NOTList);
 
         }
@@ -683,10 +747,9 @@ public class OndexServiceProvider {
             // LuceneQueryBuilder.searchConceptByConceptAccessionExact(keyword,
             // false, dsAcc);
             String fieldName = getFieldName("ConceptAccession", dsAc);
-            // QueryParser parser = new QueryParser(Version.LUCENE_36, fieldName, analyzer);
             QueryParser parser = new QueryParser(fieldName, analyzer);
             Query qAccessions = parser.parse(keyword);
-            ScoredHits<ONDEXConcept> sHitsAcc = lenv.searchTopConcepts(qAccessions, max_concepts);
+            ScoredHits<ONDEXConcept> sHitsAcc = luceneMgr.searchTopConcepts(qAccessions, max_concepts);
             mergeHits(hit2score, sHitsAcc, NOTList);
         }
 
@@ -694,33 +757,27 @@ public class OndexServiceProvider {
         // Query qNames =
         // LuceneQueryBuilder.searchConceptByConceptNameExact(keyword);
         String fieldNameCN = getFieldName("ConceptName", null);
-        // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
-        // analyzer);
         QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
         Query qNames = parserCN.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsNames = lenv.searchTopConcepts(qNames, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsNames = luceneMgr.searchTopConcepts(qNames, max_concepts);
         mergeHits(hit2score, sHitsNames, NOTList);
 
         // search concept description
         // Query qDesc =
         // LuceneQueryBuilder.searchConceptByDescriptionExact(keyword);
         String fieldNameD = getFieldName("Description", null);
-        // QueryParser parserD = new QueryParser(Version.LUCENE_36, fieldNameD,
-        // analyzer);
         QueryParser parserD = new QueryParser(fieldNameD, analyzer);
         Query qDesc = parserD.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsDesc = lenv.searchTopConcepts(qDesc, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsDesc = luceneMgr.searchTopConcepts(qDesc, max_concepts);
         mergeHits(hit2score, sHitsDesc, NOTList);
 
         // search concept annotation
         // Query qAnno =
         // LuceneQueryBuilder.searchConceptByAnnotationExact(keyword);
         String fieldNameCA = getFieldName("Annotation", null);
-        // QueryParser parserCA = new QueryParser(Version.LUCENE_36, fieldNameCA,
-        // analyzer);
         QueryParser parserCA = new QueryParser(fieldNameCA, analyzer);
         Query qAnno = parserCA.parse(keyword);
-        ScoredHits<ONDEXConcept> sHitsAnno = lenv.searchTopConcepts(qAnno, max_concepts);
+        ScoredHits<ONDEXConcept> sHitsAnno = luceneMgr.searchTopConcepts(qAnno, max_concepts);
         mergeHits(hit2score, sHitsAnno, NOTList);
 
         log.info("searchLucene(), query for annotation: " + qAnno.toString(fieldNameCA));
@@ -774,7 +831,7 @@ public class OndexServiceProvider {
                     if (path_length == null) {
                         log.info("WARNING: Path length is null for: " + geneId + "//" + cId);
                     }
-                    double distance = path_length == null ? 0 : (1 / path_length);
+                    double distance = path_length == null ? 0 : (1d / path_length);
 
                     // take the mean of all three components
                     double evidence_weight = (igf + luceneScore + distance) / 3;
@@ -949,16 +1006,16 @@ public class OndexServiceProvider {
                 results.add(new QTL(chrName, type, start, end, label, "", 1.0f, trait, tax_id));
             }
         } else {
+        		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
+        	  // This chooses the appropriate analyzer depending on the field.
+        	
             // be careful with the choice of analyzer: ConceptClasses are not
             // indexed in lowercase letters which let the StandardAnalyzer crash
-            // Analyzer analyzerSt = new StandardAnalyzer(Version.LUCENE_36);
+        		//
             Analyzer analyzerSt = new StandardAnalyzer();
-            // Analyzer analyzerWS = new WhitespaceAnalyzer(Version.LUCENE_36);
             Analyzer analyzerWS = new WhitespaceAnalyzer();
 
             String fieldCC = getFieldName("ConceptClass", null);
-            // QueryParser parserCC = new QueryParser(Version.LUCENE_36, fieldCC,
-            // analyzerWS);
             QueryParser parserCC = new QueryParser(fieldCC, analyzerWS);
             Query cC = parserCC.parse("Trait");
 
@@ -976,7 +1033,7 @@ public class OndexServiceProvider {
                     .add(cN, BooleanClause.Occur.MUST).build();
             log.info("QTL search query: " + finalQuery.toString());
 
-            ScoredHits<ONDEXConcept> hits = lenv.searchTopConcepts(finalQuery, 100);
+            ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts(finalQuery, 100);
 
             for (ONDEXConcept c : hits.getOndexHits()) {
                 if (c instanceof LuceneConcept) {
@@ -1060,20 +1117,21 @@ public class OndexServiceProvider {
             Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
             Set<ONDEXConcept> hits = new HashSet<ONDEXConcept>();
 
-            // create one regex string for efficient search
-            String query = "";
-            for (String acc : accessions) {
-                query += acc + "|";
-            }
-            query = query.substring(0, query.length() - 1);
-            for (ONDEXConcept gene : seed) {
-                if (gene.getAttribute(attTAXID) != null
-                        && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
 
-                    // search gene accessions, names, attributes
-                    if (OndexSearch.find(gene, query)) {
-                        hits.add(gene);
-                    }
+            for (ONDEXConcept gene : seed) {
+                if (gene.getAttribute(attTAXID) != null && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
+                    accessions.stream().map((acc) -> acc.replaceAll("^[\"()]+", "").replaceAll("[\"()]+$", "").toUpperCase()).map((acc) -> {
+                        // User may use accession ID's instead
+                        gene.getConceptNames().stream().filter((cno) -> (cno.getName().toUpperCase().equals(acc))).forEachOrdered((_item) -> {
+                            hits.add(gene);
+                        });
+                        return acc;
+                    }).forEachOrdered((acc) -> {
+                        // User may use accession ID's instead
+                        gene.getConceptAccessions().stream().filter((ca) -> (ca.getAccession().toUpperCase().equals(acc))).forEachOrdered((_item) -> {
+                            hits.add(gene);
+                        });
+                    });
                 }
             }
             return hits;
@@ -1102,7 +1160,7 @@ public class OndexServiceProvider {
 
         // the results give us a map of every starting concept to every valid
         // path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, relatedONDEXConcepts, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, relatedONDEXConcepts, null);
 
         // create new graph to return
         ONDEXGraph subGraph = new MemoryONDEXGraph("evidencePathGraph");
@@ -1157,7 +1215,8 @@ public class OndexServiceProvider {
         for (String k : key.split(" ")) {
             if (k.startsWith("\"")) {
                 if (k.endsWith("\"")) {
-                    result.add(k.substring(1, k.length() - 2));
+                   // result.add(k.substring(0, k.length() - 1));
+                   result.add(k.replace("\"", ""));
                 } else {
                     builtK = k.substring(1);
                 }
@@ -1174,7 +1233,7 @@ public class OndexServiceProvider {
             }
 //				System.out.println("subkeyworkd: "+k);
         }
-        if (builtK != "") {
+        if ( !"".equals ( builtK )) {
             result.add(builtK);
         }
         log.info("keys: " + result);
@@ -1350,24 +1409,37 @@ public class OndexServiceProvider {
         }
 
         // the results give us a map of every starting concept to every valid path
-        Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, seed, null);
+        Map<ONDEXConcept, List<EvidencePathNode>> results = graphTraverser.traverseGraph(graph, seed, null);
 
         Set<ONDEXConcept> keywordConcepts = new HashSet<ONDEXConcept>();
         Set<EvidencePathNode> pathSet = new HashSet<EvidencePathNode>();
 
         //added to overcome double quotes issue
         //if changing this, need to change genepage.jsp and evidencepage.jsp
-        keyword = keyword.replaceAll("^###|###$", "\"");
+        keyword = keyword.replace("###", "\"");
 
         log.info("Keyword is: " + keyword);
         Set<String> keywords = "".equals(keyword) ? Collections.EMPTY_SET : this.parseKeywordIntoSetOfWords(keyword);
         Map<String, String> keywordColourMap = new HashMap<String, String>();
         Random random = new Random();
-        for (String key : keywords) {
-            int colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
-            // format it as hexadecimal string (with hashtag and leading zeros)
-            keywordColourMap.put(key, String.format("#%06x", colourCode));
-        }
+        ArrayList<Color> colArray = new ArrayList<Color>(); // Compare each colour to ensure we never have duplicates
+        keywords.forEach((key) -> {
+            int colourBrightness = 0, colourCode = 0; // Initialize the colourBrightness/code on each new keyword
+            Color colorVal = null;
+            // Ensure colour lumence is >40 (git issue #466) and no colorus are repeated and are never yellow
+            while (colourBrightness < 40 && !colArray.contains(colorVal) && !Color.YELLOW.equals(colorVal)) {
+                colourCode = random.nextInt(0x666666 + 1) + 0x999999;  // lighter colours only
+                // Obtain the colourCode & brightness/lumence value
+                String colorHex = "#" + Integer.toHexString(colourCode);
+                colorVal = Color.decode(colorHex);
+                colourBrightness = (int) Math.sqrt(colorVal.getRed() * colorVal.getRed() * .241 +
+                                                    colorVal.getGreen() * colorVal.getGreen() * .691 +
+                                                    colorVal.getBlue() * colorVal.getBlue() * .068);
+                colArray.add(colorVal); // Add to color ArrayList to track colours
+            }
+            //If the colour brightness is > 40, then format it as hexadecimal string (with a hashtag and leading zeros)
+            if (colourBrightness > 40) keywordColourMap.put(key, String.format("#%06x", colourCode));
+        });
 
         // create new graph to return
         final ONDEXGraph subGraph = new MemoryONDEXGraph("SemanticMotifGraph");
@@ -1431,7 +1503,7 @@ public class OndexServiceProvider {
 
         // special case when none of nodes contains keyword (no-keyword-match)
         // set path to visible if end-node is Trait or Phenotype
-        if (keywordConcepts.isEmpty() && (keyword != null || !keyword.equals(""))) {
+        if (keywordConcepts.isEmpty() && !(keyword == null || keyword.equals("")) ) {
             for (EvidencePathNode path : pathSet) {
                 highlightPath(path, graphCloner, true);
             }
@@ -1455,16 +1527,13 @@ public class OndexServiceProvider {
             List<Integer> newPubIds = new ArrayList<Integer>();
 
             if (!pubKeywordSet.isEmpty()) {
-
                 // if  publications with keyword exist, keep most recent papers from pub-keyword set
-                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, 20);
+                newPubIds = PublicationUtils.newPubsByNumber(pubKeywordSet, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
 
             } else {
-
                 // if non of publication contains the keyword, just keep most recent papers from total set
-                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+                newPubIds = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
             }
-
             // publications that we want to remove 
             allPubIds.removeAll(newPubIds);
 
@@ -1587,7 +1656,7 @@ public class OndexServiceProvider {
                 }
                 Set<ONDEXRelation> relSet = graph.getRelationsOfConcept(graph.getConcept(qtlId));
                 for (ONDEXRelation r : relSet) {
-                    if (r.getOfType().getId().equals("control")) {
+                    if (r.getOfType().getId().equals("has_mapped")) {
                         ONDEXRelation rel = graphCloner.cloneRelation(r);
                         if (rel.getAttribute(attSize) == null) {
                             rel.createAttribute(attSize, new Integer(2), false);
@@ -1670,7 +1739,7 @@ public class OndexServiceProvider {
         AttributeName attCM = md.getAttributeName("cM");
         ConceptClass ccQTL = md.getConceptClass("QTL");
         Set<QTL> qtlDB = new HashSet<QTL>();
-        if (ccQTL != null && !keyword.equals("") && keyword != null) {
+        if (ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) ) {
             // qtlDB = graph.getConceptsOfConceptClass(ccQTL);
             try {
                 qtlDB = findQTL(keyword);
@@ -1980,13 +2049,18 @@ public class OndexServiceProvider {
             for (ConceptAccession acc : gene.getConceptAccessions()) {
                 String accValue = acc.getAccession();
                 geneAcc = accValue;
-                if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
-                        && (accValue.indexOf(".") == -1)) {
-                    geneAcc = accValue;
-                    break;
-                } else if (acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
-                    geneAcc = accValue;
-                    break;
+                if (acc.getElementOf().getId() != null) {
+                    if (acc.getElementOf().getId().equalsIgnoreCase("ENSEMBL-HUMAN")) {
+                        geneAcc = accValue;
+                        break;
+                    } else if (acc.getElementOf().getId().equalsIgnoreCase("TAIR") && accValue.startsWith("AT")
+                            && (accValue.indexOf(".") == -1)) {
+                        geneAcc = accValue;
+                        break;
+                    } else if (acc.getElementOf().getId().equalsIgnoreCase("PHYTOZOME")) {
+                        geneAcc = accValue;
+                        break;
+                    }
                 }
             }
             String chr = null;
@@ -2014,6 +2088,8 @@ public class OndexServiceProvider {
             } else {
                 beg = Integer.toString(begBP);
             }
+            
+            
 
             Double score = 0.0;
             if (scoredCandidates != null) {
@@ -2035,7 +2111,20 @@ public class OndexServiceProvider {
                 for (Integer cid : mapGene2QTL.get(gene.getId())) {
                     ONDEXConcept qtl = graph.getConcept(cid);
 
-                    String acc = qtl.getConceptName().getName().replaceAll("\"", "");
+                    /* TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage
+                     * to ALL cases like this, and hence we MUST move this code to some utility. 
+                     */
+                    if (qtl == null) {
+                        log.error("writeTable(): no gene found for id: ", cid);
+                        continue;
+                    }
+                    String acc = Optional.ofNullable(qtl.getConceptName())
+                            .map(ConceptName::getName)
+                            .map(StringEscapeUtils::escapeCsv)
+                            .orElseGet(() -> {
+                                log.error("writeTable(): gene name not found for id: {}", cid);
+                                return "";
+                            });
 
                     String traitDesc = null;
                     if (attTrait != null && qtl.getAttribute(attTrait) != null) {
@@ -2062,7 +2151,7 @@ public class OndexServiceProvider {
 
                     // FIXME re-factor chromosome string
                     if (qtlChrom.equals(loc) && begCM >= qtlStart && begCM <= qtlEnd) {
-                        if (infoQTL == "") {
+                        if ("".equals(infoQTL)) {
                             infoQTL += loci.getLabel() + "//" + loci.getTrait();
                         } else {
                             infoQTL += "||" + loci.getLabel() + "//" + loci.getTrait();
@@ -2115,7 +2204,7 @@ public class OndexServiceProvider {
             }
 
             AttributeName attYear = graph.getMetaData().getAttributeName("YEAR");
-            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, 20);
+            List<Integer> newPubs = PublicationUtils.newPubsByNumber(allPubs, attYear, Integer.parseInt((String) getOptions().get(OPT_DEFAULT_NUMBER_PUBS)));
 
             String pubString = "Publication__" + allPubs.size() + "__";
             for (Integer pid : newPubs) {
@@ -2150,7 +2239,7 @@ public class OndexServiceProvider {
                 }
             }
 
-            String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
+            String geneTaxID = gene.getAttribute(attTAXID) != null ? gene.getAttribute(attTAXID).getValue().toString() : null;
 
             if (!evidence.equals("")) {
                 evidence = evidence.substring(0, evidence.length() - 2);
@@ -2188,10 +2277,14 @@ public class OndexServiceProvider {
                              + evidences_linked + "\t" + all_evidences*/ + "\n");
                 }
             }
+
+           
+
         }
-        log.info("Gene table generated...");
+         log.info("Gene table generated...");
         return out.toString();
     }
+
 
     /**
      * Write Evidence Table for Evidence View file
@@ -2282,20 +2375,24 @@ public class OndexServiceProvider {
                 String chr = null;
                 double beg = 0.0;
 
-                if (gene.getAttribute(attChr) != null) {
-                    chr = gene.getAttribute(attChr).getValue().toString();
-                }
+                // Get this attr value, returns null if attr name doesn't exist (first flag) 
+                // or the gene is null (second flag). Same for the other calls below.
+                // TODO: use this utility function everywhere 
+                // TODO: we don't need attChr (and similar types) as objects, the string ID is enough
+                //
+                chr = getAttrValueAsString ( graph, gene, attChr.getId (), false, false );
 
-                if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                if ( attCM != null )
+                {
+	                beg = Optional.ofNullable (
+	                	(Double) getAttrValue ( graph, gene, attCM.getId (), false, false )
+	                ).orElse ( 0d );
                 }
-
-                if (attCM != null) {
-                    if (gene.getAttribute(attCM) != null) {
-                        beg = (Double) gene.getAttribute(attCM).getValue();
-                    }
-                } else if (gene.getAttribute(attBeg) != null) {
-                    beg = (Integer) gene.getAttribute(attBeg).getValue();
+                else 
+                {
+	                beg = (int) Optional.ofNullable (
+	                	(Integer) getAttrValue ( graph, gene, attBeg.getId (), false, false )
+	                ).orElse ( 0 );
                 }
 
                 if (!qtls.isEmpty()) {
@@ -2372,7 +2469,6 @@ public class OndexServiceProvider {
                 key = "\"" + key + "\"";
             }
             log.info("Checking synonyms for " + key);
-            // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
             Analyzer analyzer = new StandardAnalyzer();
             Map<Integer, Float> synonymsList = new HashMap<Integer, Float>();
             FloatValueComparator<Integer> comparator = new FloatValueComparator<Integer>(synonymsList);
@@ -2384,11 +2480,9 @@ public class OndexServiceProvider {
 
             // search concept names
             String fieldNameCN = getFieldName("ConceptName", null);
-            // QueryParser parserCN = new QueryParser(Version.LUCENE_36, fieldNameCN,
-            // analyzer);
             QueryParser parserCN = new QueryParser(fieldNameCN, analyzer);
             Query qNames = parserCN.parse(key);
-            ScoredHits<ONDEXConcept> hitSynonyms = lenv.searchTopConcepts(qNames, 500/* 100 */);
+            ScoredHits<ONDEXConcept> hitSynonyms = luceneMgr.searchTopConcepts(qNames, 500/* 100 */);
             /*
              * number of top concepts searched for each Lucene field, increased for now from
              * 100 to 500, until Lucene code is ported from Ondex to QTLNetMiner, when we'll
@@ -2580,7 +2674,7 @@ public class OndexServiceProvider {
         // cn = c.getAttribute(att).getValue().toString().trim();
         // }
         else {
-            if (getShortestPreferedName(cns) != "") {
+            if (!"".equals ( getShortestPreferedName(cns) ) ) {
                 cn = getShortestPreferedName(cns);
             } else {
                 cn = getShortestNotAmbiguousAccession(accs);
@@ -2598,7 +2692,8 @@ public class OndexServiceProvider {
      * @param map
      * @return
      */
-    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+    public <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
+    {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
             @Override
             public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
@@ -2607,6 +2702,13 @@ public class OndexServiceProvider {
                 return res != 0 ? res : 1;
             }
         });
+
+        /* TODO: this might give troubles, see 
+         * https://stackoverflow.com/questions/11856391/findbugs-dmi-entry-sets-may-reuse-entry-objects 
+         *        
+         * A possible workaround is to add AbstractMap.SimpleImmutableEntry() wrappers, instead of the original
+         * entry set.
+         */
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
@@ -2627,6 +2729,61 @@ public class OndexServiceProvider {
     public List<String> getTaxId() {
         return this.taxID;
     }
+    
+    public void setVersion(int ver) {
+        this.version = ver;
+    }
+    
+    public int getVersion() {
+        return this.version;
+    }
+    
+    public void setSource(String src) {
+        this.sourceOrganization = src;
+    }
+    
+    public String getSource() {
+        return this.sourceOrganization;
+    }
+    
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+    
+    public String getProvider() {
+        return this.provider;
+    }
+    
+    public void setSpecies(String speciesName) {
+        this.speciesName = speciesName;
+    }
+    
+    public String getSpecies() {
+        return this.speciesName;
+    }
+	
+	public void setNodeCount(String nodeCount) {
+        this.nodeCount = nodeCount;
+    }
+    
+    public String getNodeCount() {
+        return this.nodeCount;
+    }
+    
+    public void setRelationshipCount(String relationshipCount) {
+        this.relationshipCount = relationshipCount;
+    }
+    
+    public String getRelationshipCount(){
+        return this.relationshipCount;
+    }
+    public void setKnetspaceHost(String knetspaceHost) {
+        this.knetspaceHost = knetspaceHost;
+    }
+
+    public String getKnetspaceHost() {
+        return this.knetspaceHost;
+    }
 
     public void setReferenceGenome(boolean value) {
         this.referenceGenome = value;
@@ -2634,6 +2791,11 @@ public class OndexServiceProvider {
 
     public boolean getReferenceGenome() {
         return this.referenceGenome;
+    }
+    
+    public String getCreationDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+        return formatter.format(creationDate);
     }
 
     /**
@@ -2659,8 +2821,9 @@ public class OndexServiceProvider {
         for (ONDEXConcept gene : genes) {
             if (gene.getAttribute(attTAXID) != null && gene.getAttribute(attChr) != null
                     && gene.getAttribute(attBeg) != null) {
-
-                String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
+                
+                //String geneTaxID = gene.getAttribute(attTAXID).getValue().toString();
+                String geneTaxID = Optional.ofNullable(gene.getAttribute(attTAXID).getValue().toString()).orElseGet(() -> " ");
                 String geneChr = gene.getAttribute(attChr).getValue().toString();
                 Integer geneBeg = (Integer) gene.getAttribute(attBeg).getValue();
                 // TEMPORARY FIX, to be disabled for new .oxl species networks that have string
@@ -2731,14 +2894,7 @@ public class OndexServiceProvider {
             qtls = graph.getConceptsOfConceptClass(ccQTL);
         }
 
-        Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass(ccGene);
-        Set<ONDEXConcept> genes = new HashSet<ONDEXConcept>();
-        for (ONDEXConcept gene : seed) {
-            if (gene.getAttribute(attTAXID) != null
-                    && taxID.contains(gene.getAttribute(attTAXID).getValue().toString())) {
-                genes.add(gene);
-            }
-        }
+        Set<ONDEXConcept> genes = OndexServiceProviderHelper.getSeedGenes ( graph, taxID, this.getOptions () );
 
         if (file1.exists() && (file1.lastModified() < graphFile.lastModified())) {
             log.info("Graph file updated since hashmaps last built, deleting old hashmaps");
@@ -2749,23 +2905,28 @@ public class OndexServiceProvider {
 
         if (!file1.exists()) {
 
+	          // We're going to need a lot of memory, so delete this in advance
+        		// (CyDebugger might trigger this multiple times)
+        		//
+        		mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
+	          mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
+	          mapGene2PathLength = new HashMap<String, Integer>();
+	          
             // the results give us a map of every starting concept to every
-            // valid path
-            // Causes the Cypher-based traverser to report some performance stats
-            gt.setOption("isPerformanceTrackingEnabled", true);
-            Map<ONDEXConcept, List<EvidencePathNode>> results = gt.traverseGraph(graph, genes, null);
-            // Let's disable it after the initial population
-            gt.setOption("isPerformanceTrackingEnabled", false);
+            // valid path.
+            Map<ONDEXConcept, List<EvidencePathNode>> traverserPaths = graphTraverser.traverseGraph(graph, genes, null);
 
-            mapConcept2Genes = new HashMap<Integer, Set<Integer>>();
-            mapGene2Concepts = new HashMap<Integer, Set<Integer>>();
-            mapGene2PathLength = new HashMap<String, Integer>();
+            // Performance stats reporting about the Cypher-based traverser is disabled after the initial
+        		// traversal. This option has no effect when the SM-based traverser is used.
+            graphTraverser.setOption("performanceReportFrequency", -1);
+
             log.info("Also, generate geneID//endNodeID & pathLength in HashMap mapGene2PathLength...");
             PercentProgressLogger progressLogger = new PercentProgressLogger(
-                    "{}% of paths stored", results.values().size()
+                    "{}% of paths stored", traverserPaths.values().size()
             );
-            for (List<EvidencePathNode> paths : results.values()) {
-                for (EvidencePathNode path : paths) {
+            for (List<EvidencePathNode> paths : traverserPaths.values()) {
+            		// We dispose them after use, cause this is big and causing memory overflow issues
+                paths.removeIf ( path -> {
 
                     // search last concept of semantic motif for keyword
                     ONDEXConcept gene = (ONDEXConcept) path.getStartingEntity();
@@ -2804,9 +2965,11 @@ public class OndexServiceProvider {
                             .computeIfAbsent(lastConID, _id -> new HashSet<>())
                             .add(gene.getId());
 
-                }
+                    // ALWAYS return this to clean up memory (see above)
+                    return true;
+                }); // paths.removeIf ()
                 progressLogger.updateWithIncrement();
-            }
+            } // for traverserPaths.values()
             try {
                 FileOutputStream f;
                 ObjectOutputStream s;
@@ -3030,6 +3193,13 @@ public class OndexServiceProvider {
     public void setOptions(Map<String, Object> options) {
         this.options = options;
     }
+
+		public static HashMap<Integer, Set<Integer>> getMapConcept2Genes ()
+		{
+			return mapConcept2Genes;
+		}
+    
+    
 }
 
 class ValueComparator<T> implements Comparator<T> {

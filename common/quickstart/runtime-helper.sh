@@ -61,8 +61,10 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 
-# Default Java options to tell the JVM to use all the available memory
-export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1'}
+# Default Java options to tell the JVM to use (almost) all the available memory
+# TODO: Future versions shouldn't need UseCompressedOops (https://stackoverflow.com/a/58121363/529286)
+#
+export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops'}
 
 
 # ---- Parameters/environment setup ends here
@@ -127,7 +129,7 @@ cd /tmp/aratiny-ws
 # Also, note that this command DOESN'T rebuild the server app, it just prepares some files into target/
 mvn $MAVEN_ARGS --settings "$knet_dataset_dir/config/actual-maven-settings.xml" clean test-compile
 
-# End eventually, deploy the instantiated config files
+# And eventually, deploy the instantiated config files
 cp -Rf target/test-classes/knetminer-dataset/config/* "$knet_dataset_dir/config"
 
 

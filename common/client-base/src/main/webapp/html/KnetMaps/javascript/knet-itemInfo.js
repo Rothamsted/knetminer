@@ -121,6 +121,18 @@ KNETMAPS.ItemInfo = function() {
                                      }
                                   }
                               }
+                            else if (attrName === "iri") {
+                                    var iriAttrValue = attrValue;
+                                    attrValue = "";
+                                    iriAttrValue = iriAttrValue.split("/").pop();
+                                    iriAttrValue= iriAttrValue.replace(/\s/g,''); // remove spaces, if any exist
+                                    var iriUrls = iriAttrValue.split(",");
+                                    // Multiple IRIs could exist in future KM's, so index through all IRIs which are present 
+                                    iriUrls.forEach(function (e, i) {
+                                        attrValue = attrValue + "<a href=\"" + "http://knetminer.org/data/rdf/resources/" + e + "\" onclick=\"window.open(this.href,'_blank');return false;\">" + e + "</a>,<br/>";
+                                    });
+                                    attrValue = attrValue.substring(0,attrValue.lastIndexOf("<")-1); // omit last break & comma
+                                }
                             else if(attrName === "URL") {
                                     attrName="URL(s)";
                                     var urlAttrValue= attrValue;
@@ -281,6 +293,18 @@ KNETMAPS.ItemInfo = function() {
                                     pmidAttrValue= pmidAttrValue.substring(0,pmidAttrValue.lastIndexOf("<")-1); // omit last break & comma
                                     attrValue= pmidAttrValue; // return urls
                                    }
+                                   else if (attrName === "iri") {
+                                    var iriAttrValue = attrValue;
+                                    attrValue = "";
+                                    iriAttrValue = iriAttrValue.split("/").pop();
+                                    iriAttrValue= iriAttrValue.replace(/\s/g,''); // remove spaces, if any exist
+                                    var iriUrls = iriAttrValue.split(",");
+                                    // Multiple IRIs could exist in future KM's, so index through all IRIs which are present 
+                                    iriUrls.forEach(function (e, i) {
+                                        attrValue = attrValue + "<a href=\"" + "http://knetminer.org/data/rdf/resources/" + e + "\" onclick=\"window.open(this.href,'_blank');return false;\">" + e + "</a>,<br/>";
+                                    });
+                                    attrValue = attrValue.substring(0,attrValue.lastIndexOf("<")-1); // omit last break & comma
+                                }
                                 cell1.innerHTML= attrName;
                                 cell2.innerHTML= attrValue;
                                }
@@ -343,7 +367,7 @@ KNETMAPS.ItemInfo = function() {
     selectedNode.connectedEdges().connectedNodes().forEach(function( elem ) {
         var its_connected_hidden_nodes= elem.connectedEdges().connectedNodes().filter('node[conceptDisplay = "none"]');
         var its_connected_hiddenNodesCount= its_connected_hidden_nodes.length;
-        console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
+        //console.log("connectedNode: id: "+ elem.id() +", label: "+ elem.data('value') +", its_connected_hiddenNodesCount= "+ its_connected_hiddenNodesCount);
         if(its_connected_hiddenNodesCount </*<=*/ 1) {
            my.removeNodeBlur(elem);
           }

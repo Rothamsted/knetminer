@@ -31,7 +31,7 @@
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 						 <span style="vertical-align:middle">
-						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:7px; width:30px; height:30px; display:none;">
+						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:0; width:30px; height:30px; display:none;">
 						 </span>
 						<!-- </div> -->
 						 <div id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
@@ -133,16 +133,17 @@
         </div>
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
-            <!-- new GeneoMaps.js -->
-	     	<div id="genemap-tab" class="resultViewer" style="display: none;">
-				<div id="genemap" class="bootstrap"></div>
-			</div>
-			<div id="evidenceTable" class="resultViewer" style="display:none;"></div>
-			<!-- new KnetMaps.js -->
-			<div id="NetworkCanvas" class="resultViewer" style="display: none;">
-			<!-- KnetMaps -->
-				<div id="knet-maps" style="display: none;"></div>
-			</div>
-		</div>
-	</div>  <!-- tabviewer -->
+            <!-- new genomaps.js -->
+            <div id="genemap-tab" class="resultViewer" style="display: none;">
+                <div id="genemap" class="bootstrap"></div>
+            </div>
+            <div id="evidenceTable" class="resultViewer" style="display:none;"></div>
+            <!-- Network View tab -->
+            <div id="NetworkCanvas" class="resultViewer" style="display: none;">
+                <div id="knetSaveButton" style="width:100%; margin-top:7px;"></div>
+                <!-- KnetMaps.js -->
+                <div id="knet-maps" style="display: none;"></div>
+            </div>
+        </div>
+    </div>  <!-- tabviewer -->
 </div>

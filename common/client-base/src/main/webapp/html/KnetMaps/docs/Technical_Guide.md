@@ -386,6 +386,11 @@ While `Cose` layout uses a wider range of complex parameters which can be set as
 ### To build/package and test locally:
 - Install Node.js (https://nodejs.org/en/download/) & NPM
 - Install Git (https://git-scm.com/)
-- Install bower: `npm install -g bower`
-- Install gulp: `npm install -g gulp`
-- Note: Our test environment uses `npm 6.1.0 , bower 1.8.4, gulp 1.8.4`, but newer versions of bower/gulp should work too. 
+- Install bower: `npm install -g bower@1.8.8` (optional)
+- Install gulp: `npm install -g gulp@3.9.1`
+- To build: `gulp optimise`
+- Also, downgrade npm (if errors arise): `npm install -g npm@6.1.0`
+- Note: Make sure you use `Node v10.21.0` as new versions fail with gulp 3 (need gulp 4 which KnetMaps does not support)
+- Note: Our test environment uses `node 10.21.0, npm 6.1.0 , bower 1.8.8, gulp 3.9.1`. 
+
+**Note:** As of last check, [Node.js 10.7.0](https://nodejs.org/download/release/v10.7.0/) can be downloaded with npm 6.1.0 , which works well with KnetMaps/KnetMiner.
