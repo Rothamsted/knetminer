@@ -6,11 +6,13 @@ import java.util.Set;
 import net.sourceforge.ondex.core.ONDEXConcept;
 
 /**
+ * The semantic motif search result container.
+ * 
  * A Simple record-like class that contains a map of gene -> related concepts plus
  * a map of concept -> significance score (for the search that associated it to one or more of
  * the gene set ).
  * 
- * This has been introduced to cope with methods like {@link OndexServiceProvider#getScoredGenesMap(Map)} and
+ * This has been introduced to cope with methods like {@link SearchService#getScoredGenes(Map)} and
  * other methods that used these two structures separately.
  * 
  * TODO: the returned maps aren't immutable, we need to review things around and then protect them.
@@ -26,7 +28,7 @@ public class SemanticMotifsSearchResult
 	private Map<ONDEXConcept, Double> relatedConcept2Score;
 
 	/**
-	 * This object is usually created by {@link OndexServiceProvider#getScoredGenesMap(Map)}
+	 * This object is usually created by {@link SearchService#getScoredGenes(Map)}
 	 * Note that this constructor sets these map components as-is, without changing anything
 	 */
 	public SemanticMotifsSearchResult ( 

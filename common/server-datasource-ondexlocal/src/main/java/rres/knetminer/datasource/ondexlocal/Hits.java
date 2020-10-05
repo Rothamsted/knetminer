@@ -31,7 +31,7 @@ public class Hits
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
 	private SemanticMotifsSearchResult searchResult = null;
-	private String keyword = "";
+	private String keyword = ""; // TODO: not used
 
 	// TODO: keyword is not used!
 	public Hits ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
@@ -40,7 +40,7 @@ public class Hits
 		this.keyword = keyword;
 		try
 		{
-			this.luceneConcepts = ondexProvider.searchLucene ( keyword, geneList, true );
+			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
 			// remove from constructor if it slows down search noticeably
 			this.countLinkedGenes ();
 		}
@@ -104,6 +104,6 @@ public class Hits
 		// TODO: I hope I got the semantics found in the original code right
 		if ( searchResult != null )
 			return searchResult;
-		return searchResult = ondexProvider.getScoredGenesMap ( luceneConcepts );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
 	}
 }

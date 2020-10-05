@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
@@ -30,7 +29,9 @@ import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
- * A component served by {@link OndexServiceProvider} that provides the data structures
+ * The data sub-service for {@link OndexServiceProvider}.
+ * 
+ * A component served by OndexServiceProvider that provides the data structures
  * needed by the Knetminer application. This includes the {@link #getOptions() configuration options},
  * 
  * the Ondex graph and the gene/semantic motif associations.
@@ -41,7 +42,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  */
 @Component
 public class DataService
-{
+{  
   private OptionsMap options = null;
   private List<String> taxIds = null;
 
@@ -52,9 +53,7 @@ public class DataService
    */
   private int genomeGenesCount = -1;
 
-  
-  private AbstractGraphTraverser graphTraverser;
-  
+    
 	private final Logger log = LogManager.getLogger ( getClass() );
 
 	

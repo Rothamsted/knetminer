@@ -1,6 +1,10 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
-import static java.util.stream.Collectors.toMap;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
 import java.awt.Color;
 import java.io.File;
@@ -10,12 +14,10 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -49,22 +51,16 @@ import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPluginArguments;
-import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
-import net.sourceforge.ondex.config.ONDEXGraphRegistry;
 import net.sourceforge.ondex.core.Attribute;
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
-import net.sourceforge.ondex.core.EntityFactory;
-import net.sourceforge.ondex.core.EvidenceType;
-import net.sourceforge.ondex.core.MetaDataFactory;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.ONDEXRelation;
-import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
@@ -72,30 +68,33 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
-import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
+import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.Hits;
+import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
+import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateAttributeName;
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateConceptClass;
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
-
-
-import static java.lang.Math.sqrt;
-import static java.lang.Math.pow;
-
 
 /**
- * Parent class to all ondex service provider classes implementing organism
- * specific searches.
+ * 
+ * The Ondex-based service provider for Knetminer.
+ * 
+ * This class is rather central in the current Knetminer architecture. It realises most of the data-related functions
+ * that are needed to serve the Knetminer web application, such as loading an Ondex file, indexing it, performing
+ * Lucene-based searches rendering and exporting results.
+ * 
+ * <b>=====> WARNING <======</b>: this used to be an horrible mess of over 3k lines, DO NOT let it to happen again!
+ * As you can see below, the class is mostly a wrapper of different sub-services, where functionality is split according
+ * to types of functions. The wiring between all the components is done via Spring, with a 
+ * {@link #springContext specific Spring context}, which is initialised here.  
  *
+ * TODO: refactoring, continue from moving all methods that still access luceneMgr
+ * 
  * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha
  */
@@ -108,7 +107,6 @@ public class OndexServiceProvider
 	@Autowired
 	private SearchService searchService;
 	
-	// TODO: continue with migrating stuff into this component
 	@Autowired
 	private SemanticMotifService semanticMotifService;
 	
@@ -167,8 +165,15 @@ public class OndexServiceProvider
 			getInstance ().log.info ( "Spring context for {} initialised", OndexServiceProvider.class.getSimpleName () );
 		}		
 	}	
-	
-	
+
+  /**
+   * Coordinates the initialisation of several sub-services.
+   * 
+   * This is called before anything can be used. The config file comes from 
+   * initialisation mechanisms like {@link ConfigFileHarvester}, see {@link OndexLocalDataSource#init()}.
+   * 
+   * @param configXmlPath
+   */
 	public void initGraph ( String configXmlPath )
 	{
 		this.dataService.loadOptions ( configXmlPath );
@@ -181,18 +186,12 @@ public class OndexServiceProvider
 	}
 	
 	
-	
-	
 	// -------------------------------- OLD STUFF --------------------------------------------
 	
 	/**
 	 * Old code for OSP is temporary DOWN here, waiting to be reviewed.
 	 */
 	
-    /**
-    * defaultExportedPublicationCount value
-    */
-    public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
         
 
     /**
@@ -202,7 +201,7 @@ public class OndexServiceProvider
      * (ie, the one computed by {@link Filter filtering isolated entities}.
      * 
      * Note that this used to return just a string and to set nodeCount and relationshipCount
-     * WE MUST STOP PROGRAMMING THIS BAD DAMN IT!!!
+     * WE MUST STOP PROGRAMMING SO BADLY, DAMN IT!!!
      * 
      */
     public Pair<String, ONDEXGraph> exportGraph2Json(ONDEXGraph og) throws InvalidPluginArgumentException
@@ -275,252 +274,7 @@ public class OndexServiceProvider
       	if ( exportFile != null ) exportFile.delete ();
       }
     }
-    
-    /**
-     * Creates a new keyword for finding the NOT list
-     *
-     * @param keyword original keyword
-     * @return new keyword for searching the NOT list
-     *
-     * TODO - KHP: There must be a smarter way (regex?) for getting the NOT "terms"
-     */
-    private String createNotList(String keyword)
-    {
-      String result = "";
-      if (keyword == null) keyword = "";
 
-      keyword = keyword.replace("(", "");
-      keyword = keyword.replace(")", "");
-
-      String[] keySplitedOrAnd = keyword.split ( " *(AND|OR) *" );
-      for (String keyOA : keySplitedOrAnd)
-      {
-        String[] keySplitedNOT = keyOA.split ( "NOT" );
-        // Initial value is skipped
-        for ( int i = 1; i < keySplitedNOT.length; i++ )
-        {
-        	if ( !result.isEmpty () ) result += " OR ";
-          result += keySplitedNOT [ i ];
-        }
-      }
-      return result;
-    }
-
-        
-    /**
-     * Merge two maps using the greater scores. This is needed when a keyword matches more than 
-     * one concept field eg. name, description and attribute. It will ensure that the highest
-     * Lucene score is used in the Gene Rank.
-     *
-     * @param hit2score map that holds all hits and scores
-     * @param sHits map that holds search results
-     */
-    private void mergeHits ( 
-    	HashMap<ONDEXConcept, Float> hit2score, ScoredHits<ONDEXConcept> sHits, ScoredHits<ONDEXConcept> notHits
-    )
-		{
-    	sHits.getOndexHits ().stream ()
-    	.filter ( c -> notHits == null || !notHits.getOndexHits ().contains ( c ) )
-    	.map ( c -> c instanceof LuceneConcept ? ( (LuceneConcept) c ).getParent () : c )
-    	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
-		}
-
-        
-    /**
-     * Search for concepts in Knowledge Graph which contain the keywords
-     *
-     * @param keyword user-specified keyword
-     * @return concepts that match the keyword and their Lucene score
-     * @throws IOException
-     * @throws ParseException
-     */
-		public Map<ONDEXConcept, Float> searchLucene ( 
-			String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
-		) throws IOException, ParseException
-		{
-			var graph = dataService.getGraph ();
-			var genes2Concepts = semanticMotifService.getGenes2Concepts ();
-			Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
-			
-			// TODO: We should search across all accession datasources or make this configurable in settings
-			String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
-					"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" };
-			
-			// sources identified in KNETviewer
-			/*
-			 * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", "CHEMBLTARGET", "EC", "EMBL",
-			 * "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT", "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM",
-			 * "OMIM", "PDB", "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE", "PUBCHEM",
-			 * "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV", "ENSEMBL-HUMAN"};
-			 */
-			Set<String> dsAcc = new HashSet<> ( Arrays.asList ( datasources ) );
-
-			HashMap<ONDEXConcept, Float> hit2score = new HashMap<> ();
-
-			keywords = StringUtils.trimToEmpty ( keywords );
-			
-			if ( keywords.isEmpty () && geneList != null && !geneList.isEmpty () )
-			{
-				log.info ( "No keyword, skipping Lucene stage, using mapGene2Concept instead" );
-				for ( ONDEXConcept gene : geneList )
-				{
-					if ( gene == null ) continue;
-					if ( genes2Concepts.get ( gene.getId () ) == null ) continue;
-					for ( int conceptId : genes2Concepts.get ( gene.getId () ) )
-					{
-						ONDEXConcept concept = graph.getConcept ( conceptId );
-						if ( includePublications || !concept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
-							hit2score.put ( concept, 1.0f );
-					}
-				}
-
-				return hit2score;
-			}
-
-			// TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
-			// consider different field types. See https://stackoverflow.com/questions/62119328 
-			Analyzer analyzer = new StandardAnalyzer ();
-
-			// added to overcome double quotes issue
-			// if changing this, need to change genepage.jsp and evidencepage.jsp
-			keywords = keywords.replace ( "###", "\"" );
-			log.debug ( "Keyword is:" + keywords );
-
-			// creates the NOT list (list of all the forbidden documents)
-			String notQuery = createNotList ( keywords );
-			String crossTypesNotQuery = "";
-			ScoredHits<ONDEXConcept> notList = null;
-			if ( !"".equals ( notQuery ) )
-			{
-				crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + notQuery + ") OR ConceptAttribute_Abstract:("
-					+ notQuery + ") OR Annotation:(" + notQuery + ") OR ConceptName:(" + notQuery + ") OR ConceptID:("
-					+ notQuery + ")";
-				String fieldNameNQ = getLuceneFieldName ( "ConceptName", null );
-				QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
-				Query qNQ = parserNQ.parse ( crossTypesNotQuery );
-				//TODO: The top 2000 restriction should be configurable in settings and documented
-				notList = searchService.luceneMgr.searchTopConcepts ( qNQ, 2000 );
-			}
-
-			// number of top concepts retrieved for each Lucene field
-			int maxConcepts = 2000;
-
-			// search concept attributes
-			for ( AttributeName att : atts )
-				luceneConceptSearchHelper ( 
-					keywords, "ConceptAttribute", att.getId (), maxConcepts, hit2score, notList,
-					analyzer
-				);				
-
-			// Search concept accessions
-			for ( String dsAc : dsAcc )
-				luceneConceptSearchHelper ( 
-					keywords,  "ConceptAccession", dsAc, maxConcepts, hit2score, notList,
-					analyzer
-				);				
-				
-
-			// Search concept names
-			luceneConceptSearchHelper ( 
-				keywords, "ConceptName", null, maxConcepts, hit2score, notList,
-				analyzer
-			);				
-			
-			// search concept description
-			luceneConceptSearchHelper ( 
-				keywords, "Description", null, maxConcepts, hit2score, notList,
-				analyzer
-			);				
-			
-			// search concept annotation
-			luceneConceptSearchHelper ( 
-				keywords, "Annotation", null, maxConcepts, hit2score, notList,
-				analyzer
-			);				
-			
-			log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
-			return hit2score;
-		}
-
-		/**
-		 * KnetMiner Gene Rank algorithm
-		 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
-		 * Described in detail in Hassani-Pak et al. (2020)
-		 */
-		public SemanticMotifsSearchResult getScoredGenesMap ( Map<ONDEXConcept, Float> hit2score ) 
-		{
-			Map<ONDEXConcept, Double> scoredCandidates = new HashMap<> ();
-			var graph = dataService.getGraph ();
-		
-			log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
-		
-			// 1st step: create map of genes to concepts that contain query terms
-			// In other words: Filter the global gene2concept map for concept that contain the keyword
-			Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
-			
-			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
-			var genes2PathLengths = semanticMotifService.getGenes2PathLengths ();
-			var genesCount = dataService.getGenomeGenesCount ();
-			
-			hit2score.keySet ()
-			.stream ()
-			.map ( ONDEXConcept::getId )
-			.filter ( concepts2Genes::containsKey )
-			.forEach ( conceptId ->
-			{
-				for ( int geneId: concepts2Genes.get ( conceptId ) )
-					mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
-					.add ( conceptId );
-			});
-			
-	
-			// 2nd step: calculate a score for each candidate gene
-			for ( int geneId : mapGene2HitConcept.keySet () )
-			{
-				// weighted sum of all evidence concepts
-				double weightedEvidenceSum = 0;
-	
-				// iterate over each evidence concept and compute a weight that is composed of
-				// three components
-				for ( int cId : mapGene2HitConcept.get ( geneId ) )
-				{
-					// relevance of search term to concept
-					float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
-	
-					// specificity of evidence to gene
-					double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( cId ).size () );
-	
-					// inverse distance from gene to evidence
-					Integer pathLen = genes2PathLengths.get ( geneId + "//" + cId );
-					if ( pathLen == null ) 
-						log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
-					
-					double distance = pathLen == null ? 0 : ( 1d / pathLen );
-	
-					// take the mean of all three components
-					double evidenceWeight = ( igf + luceneScore + distance ) / 3;
-	
-					// sum of all evidence weights
-					weightedEvidenceSum += evidenceWeight;
-				}
-	
-				// normalisation method 1: size of the gene knoweldge graph
-				// double normFactor = 1 / (double) genes2Concepts.get(geneId).size();
-				// normalisation method 2: size of matching evidence concepts only (mean score)
-				// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
-				// No normalisation for now as it's too experimental.
-				// This means better studied genes will appear top of the list
-				double knetScore = /* normFactor * */ weightedEvidenceSum;
-	
-				scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
-			}
-			
-			// Sort by best scores
-			Map<ONDEXConcept, Double> sortedCandidates = scoredCandidates.entrySet ().stream ()
-			.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
-			.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
-			return new SemanticMotifsSearchResult ( mapGene2HitConcept, sortedCandidates );
-		}
 
 		
     /**
@@ -607,7 +361,7 @@ public class OndexServiceProvider
       if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
 
       // no keyword provided
-      if (keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
+      if ( keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
 
       log.debug ( "Looking for QTLs..." );
       
@@ -621,11 +375,11 @@ public class OndexServiceProvider
     {
       log.info ( "No Traits found: all QTLS will be shown..." );
 
-      Set<QTL> results = new HashSet<>();
+      Set<QTL> results = new HashSet<> ();
       
       var graph = dataService.getGraph ();
       var gmeta = graph.getMetaData ();
-      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+      ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
       
       // results = graph.getConceptsOfConceptClass(ccQTL);
       for (ONDEXConcept qtl : graph.getConceptsOfConceptClass(ccQTL))
@@ -665,11 +419,11 @@ public class OndexServiceProvider
       Analyzer analyzerSt = new StandardAnalyzer();
       Analyzer analyzerWS = new WhitespaceAnalyzer();
 
-      String fieldCC = getLuceneFieldName ( "ConceptClass", null );
+      String fieldCC = SearchUtils.getLuceneFieldName ( "ConceptClass", null );
       QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
       Query cC = parserCC.parse("Trait");
 
-      String fieldCN = getLuceneFieldName ( "ConceptName", null);
+      String fieldCN = SearchUtils.getLuceneFieldName ( "ConceptName", null);
       QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
       Query cN = parserCN.parse(keyword);
 
@@ -783,237 +537,11 @@ public class OndexServiceProvider
 		}
 
 		
-    /**
-     * Searches genes related to an evidence, fetches the corresponding semantic motifs and merges
-     * the paths between them into the resulting graph.
-     *
-     */
-		@SuppressWarnings ( "rawtypes" )
-		public ONDEXGraph evidencePath ( Integer evidenceOndexId, Set<ONDEXConcept> genes )
-		{
-			log.info ( "evidencePath() - evidenceOndexId: {}", evidenceOndexId );
-      var graph = dataService.getGraph ();
-			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
-
-			// Searches genes related to the evidenceID. If user genes provided, only include those.
-			Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<> ();
-			for ( Integer rg : concepts2Genes.get ( evidenceOndexId ) )
-			{
-				ONDEXConcept gene = graph.getConcept ( rg );
-				if ( genes == null || genes.isEmpty () || genes.contains ( gene ) )
-					relatedONDEXConcepts.add ( gene );
-			}
-
-			// the results give us a map of every starting concept to every valid
-			// path
-			Map<ONDEXConcept, List<EvidencePathNode>> evidencePaths = 
-				semanticMotifService.getGraphTraverser ().traverseGraph ( graph, relatedONDEXConcepts, null );
-
-			// create new graph to return
-			ONDEXGraph subGraph = new MemoryONDEXGraph ( "evidencePathGraph" );
-			ONDEXGraphCloner graphCloner = new ONDEXGraphCloner ( graph, subGraph );
-			// TODO: what's for?
-			ONDEXGraphRegistry.graphs.put ( subGraph.getSID (), subGraph );
-			// Highlights the right path and hides the path that doesn't leads to
-			// the evidence
-			for ( List<EvidencePathNode> evidencePath : evidencePaths.values () )
-			{
-				for ( EvidencePathNode pathNode : evidencePath )
-				{
-					// search last concept of semantic motif for keyword
-					int indexLastCon = pathNode.getConceptsInPositionOrder ().size () - 1;
-					ONDEXConcept lastCon = (ONDEXConcept) pathNode.getConceptsInPositionOrder ().get ( indexLastCon );
-					if ( lastCon.getId () == evidenceOndexId ) highlightPath ( pathNode, graphCloner, false );
-					// else hidePath(path,graphCloner);
-				}
-			}
-			ONDEXGraphRegistry.graphs.remove ( subGraph.getSID () );
-
-			return subGraph;
-		}
-
-
-    /**
-     * Converts a search string into a list of words
-     *
-     * @return null or the list of words
-     */
-		private Set<String> getSearchWords ( String searchString )
-		{
-			Set<String> result = new HashSet<> ();
-			searchString = searchString
-			.replace ( "(", " " )
-			.replace ( ")", " " )
-			.replace ( "AND", " " )
-			.replace ( "OR", " " )
-			.replace ( "NOT", " " )
-			.replaceAll ( "\\s+", " " )
-			.trim ();
-					
-			for (
-				// TODO: cache the pattern
-				var tokenMatcher = Pattern.compile ( "\"[^\"]+\"|[^\\s]+" ).matcher ( searchString );
-				tokenMatcher.find ();
-			)
-			{
-				String token = tokenMatcher.group ();
-				// Also fixes errors like odd no. of quotes
-				if ( token.startsWith ( "\"") ) token = token.substring ( 1 );
-				if ( token.endsWith ( "\"" ) ) token = token.substring ( 0, token.length () - 1 );
-				token = token.trim ();
-
-				result.add ( token );
-			}
-
-			log.info ( "getSearchWords(), tokens: {}", result );
-			return result;
-		}
 
 
 
-    /**
-     * Generates a subgraph for a set of genes and graph queries. The subgraph is annotated by setting node,ege visibility and size attributes.
-     * Annotation is based on either paths to keyword concepts (if provided) or a set of rules based on paths to Trait/Phenotype concepts.
-     *
-     * @param seed List of selected genes
-     * @param keyword
-     * @return subGraph
-     */
-		public ONDEXGraph findSemanticMotifs ( Set<ONDEXConcept> seed, String keyword )
-		{
-			log.info ( "findSemanticMotifs(), keyword: {}", keyword );
-			// Searches with Lucene: luceneResults
-			Map<ONDEXConcept, Float> luceneResults = null;
-			try
-			{
-				luceneResults = searchLucene ( keyword, seed, false );
-			}
-			catch ( Exception e )
-			{
-				// TODO: does it make sense to continue?!
-				// KHP: Does it go here when the keyword is null?
-				log.error ( "Lucene search failed", e );
-				luceneResults = Collections.emptyMap ();
-			}
 
-			var graph = dataService.getGraph ();
-			var options = dataService.getOptions ();
-			
-			// the results give us a map of every starting concept to every valid path
-			Map<ONDEXConcept, List<EvidencePathNode>> results = semanticMotifService.getGraphTraverser ()
-				.traverseGraph ( graph, seed, null );
 
-			Set<ONDEXConcept> keywordConcepts = new HashSet<> ();
-			Set<EvidencePathNode> pathSet = new HashSet<> ();
-
-			// added to overcome double quotes issue
-			// if changing this, need to change genepage.jsp and evidencepage.jsp
-			keyword = keyword.replace ( "###", "\"" );
-
-			Set<String> keywords = "".equals ( keyword ) 
-				? Collections.emptySet ()
-				: this.getSearchWords ( keyword );
-					
-			Map<String, String> keywordColourMap = createHilightColorMap ( keywords );
-					
-			// create new graph to return
-			final ONDEXGraph subGraph = new MemoryONDEXGraph ( "SemanticMotifGraph" );
-			ONDEXGraphCloner graphCloner = new ONDEXGraphCloner ( graph, subGraph );
-
-			ONDEXGraphRegistry.graphs.put ( subGraph.getSID (), subGraph );
-
-			Set<ONDEXConcept> pubKeywordSet = new HashSet<> ();
-
-			for ( List<EvidencePathNode> paths : results.values () )
-			{
-				for ( EvidencePathNode path : paths )
-				{
-					// add all semantic motifs to the new graph
-					( (Set<ONDEXConcept>) path.getAllConcepts () )
-						.forEach ( graphCloner::cloneConcept );
-					
-					( (Set<ONDEXRelation>) path.getAllRelations () )
-						.forEach ( graphCloner::cloneRelation );
-
-					// search last concept of semantic motif for keyword
-					int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
-					ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
-
-					// no-keyword, set path to visible if end-node is Trait or Phenotype
-					if ( keyword == null || keyword.isEmpty() )
-					{
-						highlightPath ( path, graphCloner, true );
-						continue;
-					}
-
-					// keyword-mode and end concept contains keyword, set path to visible
-					if ( !luceneResults.containsKey ( endNode ) ) {
-            // collect all paths that did not qualify
-						pathSet.add ( path );
-						continue;
-					}
-					
-					// keyword-mode -> do text and path highlighting
-					ONDEXConcept cloneCon = graphCloner.cloneConcept ( endNode );
-
-					// highlight keyword in any concept attribute
-					if ( !keywordConcepts.contains ( cloneCon ) )
-					{
-						this.highlightSearchKeywords ( cloneCon, keywordColourMap );
-						keywordConcepts.add ( cloneCon );
-	
-						if ( endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
-							pubKeywordSet.add ( cloneCon );
-					}
-
-					// set only paths from gene to evidence nodes to visible
-					highlightPath ( path, graphCloner, false );
-				} // for path
-			} // for paths
-
-			// special case when none of nodes contains keyword (no-keyword-match)
-			// set path to visible if end-node is Trait or Phenotype
-			if ( keywordConcepts.isEmpty () && ! ( keyword == null || keyword.isEmpty () ) )
-				for ( EvidencePathNode path : pathSet )
-					highlightPath ( path, graphCloner, true );
-
-			ConceptClass ccPub = subGraph.getMetaData ().getConceptClass ( "Publication" );
-			Set<Integer> allPubIds = new HashSet<Integer> ();
-
-			// if subgraph has publications do smart filtering of most interesting papers
-			if ( ccPub != null )
-			{
-				// get all publications in subgraph that have and don't have keyword
-				Set<ONDEXConcept> allPubs = subGraph.getConceptsOfConceptClass ( ccPub );
-
-				allPubs.stream ()
-				.map ( ONDEXConcept::getId )
-				.forEach ( allPubIds::add );
-				
-				AttributeName attYear = subGraph.getMetaData ().getAttributeName ( "YEAR" );
-
-				// if publications with keyword exist, keep most recent papers from pub-keyword set
-				// else, just keep most recent papers from total set
-				Set<ONDEXConcept> selectedPubs = pubKeywordSet.isEmpty () ? allPubs : pubKeywordSet;
-				List<Integer> newPubIds = PublicationUtils.newPubsByNumber ( 
-					selectedPubs, attYear,
-					options.getInt ( OPT_DEFAULT_NUMBER_PUBS, -1 )
-				);
-
-				// publications that we want to remove
-				allPubIds.removeAll ( newPubIds );
-
-				// Keep most recent publications that contain keyword and remove rest from subGraph
-				allPubIds.forEach ( subGraph::deleteConcept );
-			}
-
-			ONDEXGraphRegistry.graphs.remove ( subGraph.getSID () );
-
-			log.debug ( "Number of seed genes: " + seed.size () );
-			log.debug ( "Number of removed publications " + allPubIds.size () );
-
-			return subGraph;
-		}
 		
 		
     
@@ -1036,8 +564,9 @@ public class OndexServiceProvider
 
 		/**
 		 * Defaults to null.
+		 * TODO: package visibility until refactoring is completed
 		 */
-		private Map<String, String> createHilightColorMap ( Set<String> keywords )
+		Map<String, String> createHilightColorMap ( Set<String> keywords )
 		{
 			return createHilightColorMap ( keywords, null );
 		}
@@ -1174,10 +703,11 @@ public class OndexServiceProvider
      * highlights them.
      * 
      * TODO: this is ugly, Lucene should already have methods to do the same.
+     * TODO: change visibility after refactoring
      *
      * @return true if one of the concept fields contains the query
      */
-		private boolean highlightSearchKeywords ( ONDEXConcept concept, Map<String, String> keywordColourMap )
+		boolean highlightSearchKeywords ( ONDEXConcept concept, Map<String, String> keywordColourMap )
 		{
 			// Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
 			String[] orderedKeywords = keywordColourMap.keySet ().toArray ( new String[ 0 ] );
@@ -1197,153 +727,6 @@ public class OndexServiceProvider
 			}
 
 			return found;
-		}
-		
-
-    /**
-     * Annotate first and last concept and relations of a given path Do
-     * annotations on a new graph and not on the original graph
-     *
-     * @param path Contains concepts and relations of a semantic motif
-     * @param graphCloner cloner for the new graph
-     * @param doFilter If true only a path to Trait and Phenotype nodes will be
-     * made visible
-     */
-		@SuppressWarnings ( "rawtypes" )
-		public void highlightPath ( EvidencePathNode path, ONDEXGraphCloner graphCloner, boolean doFilter )
-		{
-      var graph = dataService.getGraph ();
-			ONDEXGraph gclone = graphCloner.getNewGraph ();
-			
-			ONDEXGraphMetaData gcloneMeta = gclone.getMetaData ();
-			MetaDataFactory gcloneMetaFact = gcloneMeta.getFactory ();
-			EntityFactory gcloneFact = gclone.getFactory ();
-			AttributeName attSize = getOrCreateAttributeName ( gclone, "size", Integer.class ); 
-			AttributeName attVisible = getOrCreateAttributeName ( gclone, "visible", Boolean.class ); 
-			AttributeName attFlagged = getOrCreateAttributeName ( gclone, "flagged", Boolean.class ); 
-			
-			ConceptClass ccTrait = getOrCreateConceptClass ( gclone, "Trait" );
-			ConceptClass ccPhenotype = getOrCreateConceptClass ( gclone, "Phenotype" );
-
-			Set<ConceptClass> ccFilter = new HashSet<> ();
-			ccFilter.add ( ccTrait );
-			ccFilter.add ( ccPhenotype );
-
-			// gene and evidence nodes of path in knowledge graph
-			int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
-			ONDEXConcept geneNode = (ONDEXConcept) path.getStartingEntity ();
-			ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
-
-			// get equivalent gene and evidence nodes in new sub-graph
-			ONDEXConcept endNodeClone = graphCloner.cloneConcept ( endNode );
-			ONDEXConcept geneNodeClone = graphCloner.cloneConcept ( geneNode );
-
-			// all nodes and relations of given path
-			Set<ONDEXConcept> cons = path.getAllConcepts ();
-			Set<ONDEXRelation> rels = path.getAllRelations ();
-
-			// seed gene should always be visible, flagged and bigger
-			if ( geneNodeClone.getAttribute ( attFlagged ) == null )
-			{
-				geneNodeClone.createAttribute ( attFlagged, true, false );
-				geneNodeClone.createAttribute ( attVisible, true, false );
-				geneNodeClone.createAttribute ( attSize, 80, false );
-			}
-
-			// set all concepts to visible if filtering is turned off
-			// OR filter is turned on and end node is of specific type
-			if ( !doFilter || ccFilter.contains ( endNodeClone.getOfType () ) )
-			{
-				for ( ONDEXConcept c : cons )
-				{
-					ONDEXConcept concept = graphCloner.cloneConcept ( c );
-					if ( concept.getAttribute ( attVisible ) != null ) continue;
-					concept.createAttribute ( attSize, 50, false );
-					concept.createAttribute ( attVisible, true, false );
-				}
-
-				// set all relations to visible if filtering is turned off
-				// OR filter is turned on and end node is of specific type
-				for ( ONDEXRelation rel : rels )
-				{
-					ONDEXRelation r = graphCloner.cloneRelation ( rel );
-					if ( r.getAttribute ( attVisible ) == null )
-					{
-						// initial size
-						r.createAttribute ( attSize, 5, false );
-						r.createAttribute ( attVisible, true, false );
-					}
-				}
-			} // if doFilter
-
-			// add gene-QTL-Trait relations to the network
-			var genes2QTLs = semanticMotifService.getGenes2QTLs ();
-			if ( !genes2QTLs.containsKey ( geneNode.getId () ) ) return;
-			
-			RelationType rt = gcloneMetaFact.createRelationType ( "is_p" );
-			EvidenceType et = gcloneMetaFact.createEvidenceType ( "KnetMiner" );
-
-			Set<Integer> qtlSet = genes2QTLs.get ( geneNode.getId () );
-			for ( Integer qtlId : qtlSet )
-			{
-				ONDEXConcept qtl = graphCloner.cloneConcept ( graph.getConcept ( qtlId ) );
-				if ( gclone.getRelation ( geneNodeClone, qtl, rt ) == null )
-				{
-					ONDEXRelation r = gcloneFact.createRelation ( geneNodeClone, qtl, rt, et );
-					r.createAttribute ( attSize, 2, false );
-					r.createAttribute ( attVisible, true, false );
-				}
-				if ( qtl.getAttribute ( attSize ) == null )
-				{
-					qtl.createAttribute ( attSize, 70, false );
-					qtl.createAttribute ( attVisible, true, false );
-				}
-				
-				Set<ONDEXRelation> relSet = graph.getRelationsOfConcept ( graph.getConcept ( qtlId ) );
-				for ( ONDEXRelation r : relSet )
-				{
-					if ( !r.getOfType ().getId ().equals ( "has_mapped" ) ) continue;
-					
-					ONDEXRelation rel = graphCloner.cloneRelation ( r );
-					if ( rel.getAttribute ( attSize ) == null )
-					{
-						rel.createAttribute ( attSize, 2, false );
-						rel.createAttribute ( attVisible, true, false );
-					}
-
-					ONDEXConcept tC = r.getToConcept ();
-					ONDEXConcept traitCon = graphCloner.cloneConcept ( tC );
-					if ( traitCon.getAttribute ( attSize ) != null ) continue;
-					{
-						traitCon.createAttribute ( attSize, 70, false );
-						traitCon.createAttribute ( attVisible, true, false );
-					}
-				} // for relSet
-			} // for qtlSet
-		} // highlightPath ()
-
-		
-    /**
-     * hides the path between a gene and a concept
-     *
-     * @param path Contains concepts and relations of a semantic motif
-     * @param graphCloner cloner for the new graph
-     */
-		public void hidePath ( EvidencePathNode path, ONDEXGraphCloner graphCloner )
-		{
-			ONDEXGraph gclone = graphCloner.getNewGraph ();
-			AttributeName attVisible = getOrCreateAttributeName ( gclone, "visible", Boolean.class );
-
-			// hide every concept except by the last one
-			int indexLastCon = path.getConceptsInPositionOrder ().size () - 1;
-			ONDEXConcept lastCon = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
-			Set<ONDEXConcept> cons = path.getAllConcepts ();
-			cons.stream ()
-			.filter ( pconcept -> pconcept.getId () == lastCon.getId () )
-			.forEach ( pconcept -> {
-				ONDEXConcept concept = graphCloner.cloneConcept ( pconcept );
-				concept.createAttribute ( attVisible, false, false );
-			});
 		}
 
 		
@@ -1717,7 +1100,7 @@ public class OndexServiceProvider
 				List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 					allPubs, 
 					attYear, 
-					options.getInt ( OPT_DEFAULT_NUMBER_PUBS, -1 ) 
+					options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 ) 
 				);
 
 				// add most recent publications here
@@ -1881,7 +1264,7 @@ public class OndexServiceProvider
 			Analyzer analyzer = new StandardAnalyzer ();
       var graph = dataService.getGraph ();
 			
-			Set<String> synonymKeys = this.getSearchWords ( keyword );
+			Set<String> synonymKeys = SearchUtils.getSearchWords ( keyword );
 			for ( var synonymKey: synonymKeys )
 			{
 				log.info ( "Checking synonyms for \"{}\"", synonymKey );
@@ -1891,7 +1274,7 @@ public class OndexServiceProvider
 				Map<Integer, Float> synonyms2Scores = new HashMap<> ();
 
 				// search concept names
-				String fieldNameCN = getLuceneFieldName ( "ConceptName", null );
+				String fieldNameCN = SearchUtils.getLuceneFieldName ( "ConceptName", null );
 				QueryParser parserCN = new QueryParser ( fieldNameCN, analyzer );
 				Query qNames = parserCN.parse ( synonymKey );
 				ScoredHits<ONDEXConcept> hitSynonyms = searchService.luceneMgr.searchTopConcepts ( qNames, 500 );
@@ -2084,28 +1467,5 @@ public class OndexServiceProvider
 			.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 			.count ();
 		}
-
-    /**
-     * TODO: WTH?!? This is an Ondex module utility
-     */
-    private String getLuceneFieldName ( String name, String value )
-    {
-    	return value == null ? name : name + "_" + value;
-    }
-
-    /**
-     * TODO: This is more Lucene module stuff 
-     */
-    private void luceneConceptSearchHelper ( 
-    	String keywords, String fieldName, String fieldValue, int resultLimit, 
-    	HashMap<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits, 
-    	Analyzer analyzer ) throws ParseException
-    {
-			fieldName = getLuceneFieldName ( fieldName, fieldValue );
-			QueryParser parser = new QueryParser ( fieldName, analyzer );
-			Query qAtt = parser.parse ( keywords );
-			ScoredHits<ONDEXConcept> thisHits = searchService.luceneMgr.searchTopConcepts ( qAtt, resultLimit );
-			mergeHits ( allResults, thisHits, notHits );
-    }
-   
+ 
 }

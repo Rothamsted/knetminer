@@ -12,6 +12,8 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
+ * The Gene helper for an Ondex graph.
+ * 
  * An helper for {@link ONDEXConcept} representing genes, which computes several gene-related information that are 
  * useful for the Knetminer API and interfaces, eg, chromosome, label, genome coordinates.
  *  

@@ -89,7 +89,7 @@
 			TODO: this appears to be the dataset version, Knetminer version should be ${project.version}.
 			It requires renaming to avoid confusion. 
 		-->
-		<knetminer.version>45</knetminer.version>
+		<knetminer.version>48</knetminer.version>
 		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
