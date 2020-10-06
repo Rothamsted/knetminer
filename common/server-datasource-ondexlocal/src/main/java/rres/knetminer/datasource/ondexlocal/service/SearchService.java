@@ -1,6 +1,8 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.util.stream.Collectors.toMap;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getLuceneFieldName;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
@@ -14,7 +16,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -23,25 +27,37 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.core.AttributeName;
+import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
+import net.sourceforge.ondex.core.ONDEXRelation;
+import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.logging.ONDEXLogger;
+import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
+import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * The search service subcomponent of {@link OndexServiceProvider}.
  * 
- * Roughly. this realises the more complex search functions, those requiring not only the 
- * {@link DataService#getGraph() knowledge base}, but other support data too, such as the Lucene index. 
+ * Roughly, this realises the more complex search functions, those requiring not only the 
+ * {@link DataService#getGraph() knowledge base}, but other support data too, such as the Lucene index.
+ * 
+ * Roughly, we name methods as searchXXX when we involve indexes or complex infrastructure (eg,
+ * databases, API, etc), we tend to give other names (eg, fetchXXX(), getXXX()) to the rest.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>21 Sep 2020</dd></dl>
@@ -317,5 +333,110 @@ public class SearchService
 		.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
 		.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
 		return new SemanticMotifsSearchResult ( mapGene2HitConcept, sortedCandidates );
-	}	 
+	}
+	
+	
+  /**
+   * Find all QTL and SNP that are linked to Trait concepts that contain a keyword
+   * Assumes that KG is modelled as Trait->QTL and Trait->SNP with PVALUE on relations
+   * 
+   * Was named findQTLForTrait.
+   * 
+   * TODO: probably it should go somewhere else like QTLUtils, after having separated 
+   * the too tight dependencies on Lucene.
+   */	
+  public Set<QTL> searchQTLForTrait ( String keyword ) throws ParseException
+  {
+		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
+	  // This chooses the appropriate analyzer depending on the field.
+	
+    // be careful with the choice of analyzer: ConceptClasses are not
+    // indexed in lowercase letters which let the StandardAnalyzer crash
+		//
+    Analyzer analyzerSt = new StandardAnalyzer();
+    Analyzer analyzerWS = new WhitespaceAnalyzer();
+
+    String fieldCC = SearchUtils.getLuceneFieldName ( "ConceptClass", null );
+    QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
+    Query cC = parserCC.parse("Trait");
+
+    String fieldCN = SearchUtils.getLuceneFieldName ( "ConceptName", null);
+    QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
+    Query cN = parserCN.parse(keyword);
+
+    BooleanQuery finalQuery = new BooleanQuery.Builder()
+    	.add ( cC, BooleanClause.Occur.MUST )
+      .add ( cN, BooleanClause.Occur.MUST )
+      .build();
+    
+    log.info( "QTL search query: {}", finalQuery.toString() );
+
+    ScoredHits<ONDEXConcept> hits = this.luceneMgr.searchTopConcepts ( finalQuery, 100 );
+    
+    var graph = dataService.getGraph ();
+		var gmeta = graph.getMetaData();
+    ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+    ConceptClass ccSNP = gmeta.getConceptClass("SNP");
+    
+    Set<QTL> results = new HashSet<>();
+    
+    for ( ONDEXConcept c : hits.getOndexHits() ) 
+    {
+        if (c instanceof LuceneConcept) c = ((LuceneConcept) c).getParent();
+        Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
+        
+        for (ONDEXRelation r : rels) 
+        {
+        	// TODO better variable names: con, fromType and toType
+        	var conQTL = r.getFromConcept();
+        	var conQTLType = conQTL.getOfType ();
+        	var toType = r.getToConcept ().getOfType ();
+        	
+          // skip if not QTL or SNP concept
+          if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
+               		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
+          	continue;
+            
+          // QTL-->Trait or SNP-->Trait
+          String chrName = getAttrValueAsString ( graph, conQTL, "Chromosome", false );
+          if ( chrName == null ) continue;
+
+          Integer start = (Integer) getAttrValue ( graph, conQTL, "BEGIN", false );
+          if ( start == null ) continue;
+
+          Integer end = (Integer) getAttrValue ( graph, conQTL, "END", false );
+          if ( end == null ) continue;
+          
+          String type = conQTLType.getId();
+          String label = conQTL.getConceptName().getName();
+          String trait = c.getConceptName().getName();
+          
+          float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
+          	.orElse ( 1.0f );
+
+          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, conQTL, "TAXID", false ) )
+            	.orElse ( "" );
+          
+          results.add ( new QTL ( chrName, type, start, end, label, "", pValue, trait, taxId ) );
+        } // for concept relations
+    } // for getOndexHits
+    return results;    	
+  }
+
+  /**
+   * A conveninet wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
+   */
+	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
+	{
+		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, accessions );
+	}
+
+	
+	/**
+	 * A convenient wrapper for {@link SearchUtils#getMapEvidences2Genes(SemanticMotifService, Map)}
+	 */
+	public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
+	{
+		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifService, luceneConcepts );
+	}
 }

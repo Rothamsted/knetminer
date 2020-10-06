@@ -93,7 +93,7 @@ import uk.ac.ebi.utils.io.IOUtils;
  * to types of functions. The wiring between all the components is done via Spring, with a 
  * {@link #springContext specific Spring context}, which is initialised here.  
  *
- * TODO: refactoring, continue from moving all methods that still access luceneMgr
+ * TODO: refactoring, continue with UI-related stuff.
  * 
  * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha
@@ -367,7 +367,7 @@ public class OndexServiceProvider
       
       // If there is not traits but there is QTLs then we return all the QTLs
       if (ccTrait == null) return getAllQTLHelpers ();
-      return findQTLForTrait ( keyword );
+      return searchService.searchQTLForTrait ( keyword );
     }
 
     
@@ -403,138 +403,10 @@ public class OndexServiceProvider
     }
 
     
-    /**
-     * Find all QTL and SNP that are linked to Trait concepts that contain a keyword
-     * Assumes that KG is modelled as Trait->QTL and Trait->SNP with PVALUE on relations
-     * 
-     */	
-    private Set<QTL> findQTLForTrait ( String keyword ) throws ParseException
-    {
-  		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
-  	  // This chooses the appropriate analyzer depending on the field.
-  	
-      // be careful with the choice of analyzer: ConceptClasses are not
-      // indexed in lowercase letters which let the StandardAnalyzer crash
-  		//
-      Analyzer analyzerSt = new StandardAnalyzer();
-      Analyzer analyzerWS = new WhitespaceAnalyzer();
 
-      String fieldCC = SearchUtils.getLuceneFieldName ( "ConceptClass", null );
-      QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
-      Query cC = parserCC.parse("Trait");
-
-      String fieldCN = SearchUtils.getLuceneFieldName ( "ConceptName", null);
-      QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
-      Query cN = parserCN.parse(keyword);
-
-      BooleanQuery finalQuery = new BooleanQuery.Builder()
-      	.add ( cC, BooleanClause.Occur.MUST )
-        .add ( cN, BooleanClause.Occur.MUST )
-        .build();
-      
-      log.info( "QTL search query: {}", finalQuery.toString() );
-
-      ScoredHits<ONDEXConcept> hits = searchService.luceneMgr.searchTopConcepts ( finalQuery, 100 );
-      
-      var graph = dataService.getGraph ();
-  		var gmeta = graph.getMetaData();
-      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
-      ConceptClass ccSNP = gmeta.getConceptClass("SNP");
-      
-      Set<QTL> results = new HashSet<>();
-      
-      for ( ONDEXConcept c : hits.getOndexHits() ) 
-      {
-          if (c instanceof LuceneConcept) c = ((LuceneConcept) c).getParent();
-          Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
-          
-          for (ONDEXRelation r : rels) 
-          {
-          	// TODO better variable names: con, fromType and toType
-          	var conQTL = r.getFromConcept();
-          	var conQTLType = conQTL.getOfType ();
-          	var toType = r.getToConcept ().getOfType ();
-          	
-            // skip if not QTL or SNP concept
-            if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
-                 		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
-            	continue;
-              
-            // QTL-->Trait or SNP-->Trait
-            String chrName = getAttrValueAsString ( graph, conQTL, "Chromosome", false );
-            if ( chrName == null ) continue;
-
-            Integer start = (Integer) getAttrValue ( graph, conQTL, "BEGIN", false );
-            if ( start == null ) continue;
-
-            Integer end = (Integer) getAttrValue ( graph, conQTL, "END", false );
-            if ( end == null ) continue;
-            
-            String type = conQTLType.getId();
-            String label = conQTL.getConceptName().getName();
-            String trait = c.getConceptName().getName();
-            
-            float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
-            	.orElse ( 1.0f );
-
-            String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, conQTL, "TAXID", false ) )
-              	.orElse ( "" );
-            
-            
-            results.add ( new QTL ( chrName, type, start, end, label, "", pValue, trait, taxId ) );
-          } // for concept relations
-      } // for getOndexHits
-      return results;    	
-    }
 
     
-    /**
-     * Searches for ONDEXConcepts with the given accessions in the OndexGraph. Assumes a keyword-oriented syntax
-     * for the accessions, eg, characters like brackets are removed.
-     *
-     * @param List<String> accessions
-     * @return Set<ONDEXConcept>
-     */
-		public Set<ONDEXConcept> searchGenesByAccessionKeywords ( List<String> accessions )
-		{
-			if ( accessions.size () == 0 ) return null;
-			
-      var graph = dataService.getGraph ();
-			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
-			ConceptClass ccGene = graph.getMetaData ().getConceptClass ( "Gene" );
-			Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-			Set<String> normAccs = accessions.stream ()
-			.map ( acc -> 
-				acc.replaceAll ( "^[\"()]+", "" )
-				.replaceAll ( "[\"()]+$", "" )
-				.toUpperCase () 
-			).collect ( Collectors.toSet () );			
-			
-			return seed.stream ()
-			.filter ( gene -> {
-        String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-        return dataService.containsTaxId ( thisTaxId );
-			})
-			.filter ( gene ->
-			{
-				if ( gene.getConceptAccessions ()
-				.stream ()
-				.map ( ConceptAccession::getAccession )
-				.map ( String::toUpperCase )
-				.anyMatch ( normAccs::contains ) ) return true;
-
-				// Search the input in names too, it might be there
-				if ( gene.getConceptNames ()
-				.stream ()
-				.map ( ConceptName::getName )
-				.map ( String::toUpperCase )
-				.anyMatch ( normAccs::contains ) ) return true;
-				
-				return false;
-			})
-			.collect ( Collectors.toSet () );
-		}
 
 		
 
@@ -1356,26 +1228,6 @@ public class OndexServiceProvider
 			} // for synonymKeys
 			return out.toString ();
 		} //
-
-		
-		/**
-		 * TODO: this is only used by {@link OndexLocalDataSource} and only to know the size of 
-		 * concepts that match. So, do we need to compute the map, or do wee need the count only?
-		 * 
-		 * The two tasks are different, see below.
-		 * 
-		 */
-		public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
-		{
-			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
-
-			return luceneConcepts.keySet ()
-			.stream ()
-			.map ( ONDEXConcept::getId )
-			.filter ( concepts2Genes::containsKey )
-			// .count () As said above, this would be enough if we need a count only
-			.collect ( Collectors.toMap ( Function.identity (), concepts2Genes::get ) );
-		}
 
 		
     /**

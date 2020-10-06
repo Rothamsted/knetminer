@@ -151,10 +151,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		// Find genes from the user's gene list
-		Set<ONDEXConcept> userGenes = new HashSet<ONDEXConcept>();
+		Set<ONDEXConcept> userGenes = new HashSet<>();
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		var searchService = ondexServiceProvider.getSearchService ();
+		
 		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			userGenes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
 			log.info("Number of user provided genes: " + userGenes.size());
 		}
 		// Also search Regions - only if no genes provided
@@ -239,7 +241,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 					userGenes, request.getQtl());
 			log.debug("3.) Evidence table ");
 			
-			int docSize = ondexServiceProvider.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
+			int docSize = searchService.getMapEvidences2Genes(qtlnetminerResults.getLuceneConcepts())
 					.size();
 
 			// Total documents
@@ -262,9 +264,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		log.info( "network(), searching {} gene(s)",  request.getList().size() );
 
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		var searchService = ondexServiceProvider.getSearchService ();
+
 		// Search Genes
 		if (!request.getList().isEmpty()) {
-			genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
 		}
 
 		// Search Regions
@@ -291,13 +295,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		int evidenceOndexID = Integer.parseInt(request.getKeyword());
 		Set<ONDEXConcept> genes = new HashSet<>();
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-
+		var searchService = ondexServiceProvider.getSearchService ();
+		var semanticMotifService = ondexServiceProvider.getSemanticMotifService (); 
+		
 		// Search Genes
 		if (!request.getList().isEmpty()) {
-			genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+			genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
 		}
 
-		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ().findEvidencePaths(evidenceOndexID, genes);
+		ONDEXGraph subGraph = semanticMotifService.findEvidencePaths(evidenceOndexID, genes);
 
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
@@ -371,10 +377,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
         Set<ONDEXConcept> genes = new HashSet<>();
 
     		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+    		var searchService = ondexServiceProvider.getSearchService ();
 
         // Search Genes
         if (!request.getList().isEmpty()) {
-            genes.addAll(ondexServiceProvider.searchGenesByAccessionKeywords(request.getList()));
+            genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
         }
 
         // Search Regions

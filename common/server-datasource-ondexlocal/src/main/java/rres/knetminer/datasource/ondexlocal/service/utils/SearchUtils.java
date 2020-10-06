@@ -3,7 +3,9 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +13,9 @@ import org.apache.logging.log4j.Logger;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
+import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
+import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
 
 /**
  * Search utilities
@@ -124,4 +128,25 @@ public class SearchUtils
   {
   	return value == null ? name : name + "_" + value;
   }
+  
+	/**
+	 * TODO: this is only used by {@link OndexLocalDataSource} and only to know the size of 
+	 * concepts that match. So, do we need to compute the map, or do wee need the count only?
+	 * 
+	 * The two tasks are different, see below.
+	 * 
+	 */
+	public static Map<Integer, Set<Integer>> getMapEvidences2Genes ( 
+		SemanticMotifService semanticMotifService, Map<ONDEXConcept, Float> luceneConcepts
+	)
+	{
+		var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+
+		return luceneConcepts.keySet ()
+		.stream ()
+		.map ( ONDEXConcept::getId )
+		.filter ( concepts2Genes::containsKey )
+		// .count () As said above, this would be enough if we need a count only
+		.collect ( Collectors.toMap ( Function.identity (), concepts2Genes::get ) );
+	}  
 }
