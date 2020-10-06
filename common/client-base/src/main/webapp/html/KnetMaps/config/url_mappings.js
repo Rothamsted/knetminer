@@ -16,6 +16,7 @@ var url_mappings= {
      {"cv": "EC", "weblink": "http://www.expasy.org/enzyme/", "cc_restriction": ""},
      {"cv": "EMBL", "weblink": "http://www.ebi.ac.uk/ena/data/view/", "cc_restriction": ""},
      {"cv": "ENSEMBL", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
+     {"cv": "ENSEMBL-PLANTS", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
      {"cv": "ENSV", "weblink": "http://plants.ensembl.org/Search/Results?q=", "cc_restriction": ""},
      {"cv": "ENSEMBL-HUMAN", "weblink": "https://www.ensembl.org/Human/Search/Results?q=", "cc_restriction": ""},
      {"cv": "ENSV-HUMAN", "weblink": "http://www.ensembl.org/Homo_sapiens/Variation/Explore?db=core;v=", "cc_restriction": ""},
