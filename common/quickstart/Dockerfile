@@ -1,6 +1,11 @@
 # The image for the Knetminer application (WS/API + Client/Front-end).
 #
-FROM knetminer/knetminer-bare
+
+# Sometimes, it can be usefult to change it, when developing and/or playing with different versions
+# of the bare image beneat us.
+ARG DOCKER_TAG='latest' 
+
+FROM knetminer/knetminer-bare:${DOCKER_TAG}
 
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.
