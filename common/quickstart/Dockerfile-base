@@ -1,4 +1,5 @@
-FROM knetminer/knetminer-bare
+FROM knetminer/knetminer-bare:4.0
+# i.e., not the default/latest/J11-based
 
 # The bare image + a full maven build of the entire knetminer codebase.
 # Having this as a separated image allows for smaller builds when updating just a couple of maven 
