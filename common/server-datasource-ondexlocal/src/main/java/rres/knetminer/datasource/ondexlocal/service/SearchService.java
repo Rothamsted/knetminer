@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
+import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXRelation;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
@@ -337,7 +338,7 @@ public class SearchService
 	
 	
   /**
-   * Find all QTL and SNP that are linked to Trait concepts that contain a keyword
+   * Find all QTLs and SNPs that are linked to Trait concepts that contain a keyword
    * Assumes that KG is modelled as Trait->QTL and Trait->SNP with PVALUE on relations
    * 
    * Was named findQTLForTrait.
@@ -345,7 +346,7 @@ public class SearchService
    * TODO: probably it should go somewhere else like QTLUtils, after having separated 
    * the too tight dependencies on Lucene.
    */	
-  public Set<QTL> searchQTLForTrait ( String keyword ) throws ParseException
+  public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
   {
 		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
 	  // This chooses the appropriate analyzer depending on the field.
@@ -439,4 +440,40 @@ public class SearchService
 	{
 		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifService, luceneConcepts );
 	}
+	
+	/**
+	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}
+	 * @param qtlsStr
+	 * @return
+	 */
+	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
+	{
+		return KGUtils.fetchQTLs ( dataService.getGraph (), dataService.getTaxIds (), qtlsStr );
+	}
+	
+  /**
+   * Searches the knowledge base for QTL concepts that match any of the user
+   * input terms.
+   * 
+   */
+  public Set<QTL> searchQTLs ( String keyword ) throws ParseException
+  {
+  	var graph = this.dataService.getGraph ();
+		var gmeta = graph.getMetaData();
+    ConceptClass ccTrait = gmeta.getConceptClass("Trait");
+    ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+    ConceptClass ccSNP = gmeta.getConceptClass("SNP");
+
+    // no Trait-QTL relations found
+    if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
+
+    // no keyword provided
+    if ( keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
+
+    log.debug ( "Looking for QTLs..." );
+    
+    // If there is not traits but there is QTLs then we return all the QTLs
+    if (ccTrait == null) return KGUtils.getQTLs ( graph );
+    return this.searchQTLsForTrait ( keyword );
+  }		
 }

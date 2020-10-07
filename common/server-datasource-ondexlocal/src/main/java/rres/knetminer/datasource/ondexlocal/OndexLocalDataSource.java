@@ -161,7 +161,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 		// Also search Regions - only if no genes provided
 		if (userGenes.isEmpty() && !request.getQtl().isEmpty()) {
-			userGenes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
+			userGenes.addAll(searchService.fetchQTLs(request.getQtl()));
 		}
 		if (userGenes.isEmpty()) {
 			userGenes = null;
@@ -206,7 +206,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			if (response.getClass().equals(QtlResponse.class)) {
 				log.info("QTL response...");
 				// filter QTL's as well
-				Set<ONDEXConcept> genesQTL = ondexServiceProvider.fetchQTLs(request.getQtl());
+				Set<ONDEXConcept> genesQTL = searchService.fetchQTLs(request.getQtl());
 				genes.retainAll(genesQTL);
 				
 				log.info("Genes after QTL filter: " + genes.size());
@@ -230,7 +230,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap
 			);
-			String geneTable = ondexServiceProvider.writeGeneTable ( 
+			String geneTable = ondexServiceProvider.getUIService ().writeGeneTable ( 
 				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
 			);                        
                                 
@@ -273,7 +273,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// Search Regions
 		if (!request.getQtl().isEmpty()) {
-			genes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
+			genes.addAll(searchService.fetchQTLs(request.getQtl()));
 		}
 
 		// Find Semantic Motifs
@@ -386,7 +386,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
         // Search Regions
         if (!request.getQtl().isEmpty()) {
-            genes.addAll(ondexServiceProvider.fetchQTLs(request.getQtl()));
+            genes.addAll(searchService.fetchQTLs(request.getQtl()));
         }
 
         // Find Semantic Motifs

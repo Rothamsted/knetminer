@@ -24,6 +24,7 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -57,9 +58,7 @@ public class DataService
 	private final Logger log = LogManager.getLogger ( getClass() );
 
 	
-	private DataService ()
-	{
-	}
+	private DataService () {}
 
 	/**
 	 * 
@@ -247,12 +246,13 @@ public class DataService
 
   /**
    * USE THIS to test if a possibly null taxId is contained by the configured taxonomy IDs
-   * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException 
+   * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException
+   * 
+   * This is a wrapper of {@link KGUtils#containsTaxId(String, String)}.
    */
   public boolean containsTaxId ( String taxId )
   {
-  	if ( taxId == null ) return false;
-  	return taxIds.contains ( taxId );
+  	return KGUtils.containsTaxId ( this.taxIds, taxId );
   }
   
   public boolean isExportVisibleNetwork ()

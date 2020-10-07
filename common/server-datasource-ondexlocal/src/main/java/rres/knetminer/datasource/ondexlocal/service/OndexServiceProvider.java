@@ -69,8 +69,10 @@ import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
@@ -88,7 +90,7 @@ import uk.ac.ebi.utils.io.IOUtils;
  * to types of functions. The wiring between all the components is done via Spring, with a 
  * {@link #springContext specific Spring context}, which is initialised here.  
  *
- * TODO: refactoring, continue with UI-related stuff.
+ * TODO: refactoring, continue with UI-related stuff and other small functions about UI or KG.
  * 
  * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha
@@ -104,6 +106,10 @@ public class OndexServiceProvider
 	
 	@Autowired
 	private SemanticMotifService semanticMotifService;
+	
+	
+	@Autowired
+	private UIService uiService;
 	
 	@Autowired
 	private ExportService exportService;
@@ -131,6 +137,11 @@ public class OndexServiceProvider
 	public SemanticMotifService getSemanticMotifService ()
 	{
 		return semanticMotifService;
+	}
+	
+	public UIService getUIService ()
+	{
+		return uiService;
 	}
 
 	public ExportService getExportService ()
@@ -271,131 +282,8 @@ public class OndexServiceProvider
     }
 
 
-		
-    /**
-     * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
-     *
-     */
-		public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
-		{
-			log.info ( "searching QTL against: {}", qtlsStr );
-			Set<ONDEXConcept> concepts = new HashSet<> ();
-
-			// convert List<String> qtlStr to List<QTL> qtls
-			List<QTL> qtls = QTL.fromStringList ( qtlsStr );
-
-			for ( QTL qtl : qtls )
-			{
-				try
-				{
-					String chrQTL = qtl.getChromosome ();
-					int startQTL = qtl.getStart ();
-					int endQTL = qtl.getEnd ();
-					log.info ( "user QTL (chr, start, end): " + chrQTL + " , " + startQTL + " , " + endQTL );
-					// swap start with stop if start larger than stop
-					if ( startQTL > endQTL )
-					{
-						int tmp = startQTL;
-						startQTL = endQTL;
-						endQTL = tmp;
-					}
-
-					var graph = dataService.getGraph ();
-					var gmeta = graph.getMetaData ();
-					ConceptClass ccGene = gmeta.getConceptClass ( "Gene" );
-
-					Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
-
-					log.info ( "searchQTL, found {} matching gene(s)", genes.size () );
-
-					for ( ONDEXConcept gene : genes )
-					{
-						GeneHelper geneHelper = new GeneHelper ( graph, gene );
-
-						String geneChr = geneHelper.getChromosome ();
-						if ( geneChr == null ) continue;
-						if ( !chrQTL.equals ( geneChr )) continue;
-
-						int geneStart = geneHelper.getBeginBP ( true );
-						if ( geneStart == 0 ) continue;
-
-						int geneEnd = geneHelper.getEndBP ( true );
-						if ( geneEnd == 0 ) continue;
-
-						if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
-						
-						if ( !this.dataService.containsTaxId ( geneHelper.getTaxID () ) ) continue;
-
-						concepts.add ( gene );
-					}
-				}
-				catch ( Exception e )
-				{
-					// TODO: the user doesn't get any of this!
-					log.error ( "Not valid qtl: " + e.getMessage (), e );
-				}
-			}
-			return concepts;
-		}
-
-		
-    /**
-     * Searches the knowledge base for QTL concepts that match any of the user
-     * input terms.
-     * 
-     */
-    private Set<QTL> getQTLHelpers ( String keyword ) throws ParseException
-    {
-    	var graph = dataService.getGraph ();
-  		var gmeta = graph.getMetaData();
-      ConceptClass ccTrait = gmeta.getConceptClass("Trait");
-      ConceptClass ccQTL = gmeta.getConceptClass("QTL");
-      ConceptClass ccSNP = gmeta.getConceptClass("SNP");
-
-      // no Trait-QTL relations found
-      if (ccTrait == null && (ccQTL == null || ccSNP == null)) return new HashSet<>();
-
-      // no keyword provided
-      if ( keyword == null || keyword.equals ( "" ) ) return new HashSet<>();
-
-      log.debug ( "Looking for QTLs..." );
-      
-      // If there is not traits but there is QTLs then we return all the QTLs
-      if (ccTrait == null) return getAllQTLHelpers ();
-      return searchService.searchQTLForTrait ( keyword );
-    }
-
     
-    private Set<QTL> getAllQTLHelpers ()
-    {
-      log.info ( "No Traits found: all QTLS will be shown..." );
 
-      Set<QTL> results = new HashSet<> ();
-      
-      var graph = dataService.getGraph ();
-      var gmeta = graph.getMetaData ();
-      ConceptClass ccQTL = gmeta.getConceptClass ( "QTL" );
-      
-      // results = graph.getConceptsOfConceptClass(ccQTL);
-      for (ONDEXConcept qtl : graph.getConceptsOfConceptClass(ccQTL))
-      {
-        String type = qtl.getOfType().getId();
-        String chrName = getAttrValue ( graph, qtl, "Chromosome" );
-        int start = (Integer) getAttrValue ( graph, qtl, "BEGIN" );
-        int end = (Integer) getAttrValue ( graph, qtl, "END" );
-        
-        String trait = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "Trait", false ) )
-        	.orElse ( "" );
-        
-        String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "TAXID", false ) )
-        	.orElse ( "" );
-        
-        String label = qtl.getConceptName().getName();
-        
-        results.add ( new QTL ( chrName, type, start, end, label, "", 1.0f, trait, taxId ) );
-      }
-      return results;    	
-    }
 
     
 
@@ -640,9 +528,8 @@ public class OndexServiceProvider
 			if ( ccQTL != null && ! ( keyword == null || "".equals ( keyword ) ) )
 			{
 				// qtlDB = graph.getConceptsOfConceptClass(ccQTL);
-				try
-				{
-					qtlDB = getQTLHelpers ( keyword );
+				try {
+					qtlDB = searchService.searchQTLs ( keyword );
 				}
 				catch ( ParseException e )
 				{
@@ -680,7 +567,7 @@ public class OndexServiceProvider
 				for ( ConceptAccession acc : c.getConceptAccessions () )
 					name = acc.getAccession ();
 
-				String label = getMolBioDefaultLabel ( c );
+				String label = KGUtils.getMolBioDefaultLabel ( c );
 				String query = null;
 				try
 				{
@@ -842,172 +729,7 @@ public class OndexServiceProvider
 
 		
 		
-    /**
-     * This table contains all possible candidate genes for given query
-     * TODO: too big! Split into separated functions.
-     *
-     */
-		public String writeGeneTable ( 
-			List<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
-			String listMode,  SemanticMotifsSearchResult searchResult 
-		)
-		{
-			log.info ( "generate Gene table..." );
-			
-			List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
-			Set<Integer> userGeneIds = new HashSet<> ();
-      var graph = dataService.getGraph ();
-			var genes2QTLs = semanticMotifService.getGenes2QTLs ();
-			var options = dataService.getOptions ();
 
-			if ( userGenes != null )
-			{
-				userGeneIds = userGenes.stream ()
-					.map ( ONDEXConcept::getId )
-					.collect ( Collectors.toSet () );
-			} 
-			else
-				log.info ( "No user gene list defined." );
-
-			if ( qtls.isEmpty () ) log.info ( "No QTL regions defined." );
-			
-			var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
-			
-			// TODO: but could it be null?!
-			var scoredCandidates = Optional.ofNullable ( searchResult.getRelatedConcept2Score () )
-				.orElse ( Collections.emptyMap () );			
-			
-			// Removed ccSNP from Geneview table (12/09/2017)
-			// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
-			// ConceptClass ccSNP = md.getConceptClass("SNP");
-
-			StringBuffer out = new StringBuffer ();
-			// out.append("ONDEX-ID\tACCESSION\tGENE
-			// NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
-			out.append ( "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
-			for ( ONDEXConcept gene : candidates )
-			{
-				int id = gene.getId ();
-
-				var geneHelper = new GeneHelper ( graph, gene );
-				Double score = scoredCandidates.getOrDefault ( gene, 0d );
-
-				// use shortest preferred concept name
-				String geneName = getShortestPreferedName ( gene.getConceptNames () );
-
-				boolean isInList = userGenes != null && userGeneIds.contains ( gene.getId () );
- 
-				List<String> infoQTL = new LinkedList<> ();
-				for ( Integer cid : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
-				{
-					ONDEXConcept qtl = graph.getConcept ( cid );
-
-					/*
-					 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
-					 * and hence we MUST move this code to some utility.
-					 */
-					if ( qtl == null )
-					{
-						log.error ( "writeTable(): no gene found for id: ", cid );
-						continue;
-					}
-					String acc = Optional.ofNullable ( qtl.getConceptName () )
-						.map ( ConceptName::getName )
-						.map ( StringEscapeUtils::escapeCsv )
-						.orElseGet ( () -> {
-							log.error ( "writeTable(): gene name not found for id: {}", cid );
-							return "";
-						});
-
-					String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
-						.orElse ( acc );
-
-					// TODO: traitDesc twice?! Looks wrong.
-					infoQTL.add ( traitDesc + "//" + traitDesc ); 
-				} // for genes2QTLs
-
-
-				qtls.stream ()
-				.filter ( loci -> !loci.getChromosome ().isEmpty () )
-				.filter ( loci -> geneHelper.getBeginBP ( true ) >= loci.getStart () )
-				.filter ( loci -> geneHelper.getEndBP ( true ) <= loci.getEnd () )
-				.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
-				.forEach ( infoQTL::add );
-
-				String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
-				
-				// get lucene hits per gene
-				Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( id, Collections.emptySet () );
-
-				// organise by concept class
-				Map<String, String> cc2name = new HashMap<> ();
-
-				Set<Integer> evidencesIDs = new HashSet<> ();
-				for ( int hitID : luceneHits )
-				{
-					ONDEXConcept c = graph.getConcept ( hitID );
-					evidencesIDs.add ( c.getId () ); // retain all evidences' ID's
-					String ccId = c.getOfType ().getId ();
-
-					// skip publications as handled differently (see below)
-					if ( ccId.equals ( "Publication" ) ) continue;
-
-					String name = getMolBioDefaultLabel ( c );
-					cc2name.merge ( ccId, name, (thisId, oldName) -> oldName + "//" + name );
-				}
-
-				// special case for publications to sort and filter most recent publications
-				Set<ONDEXConcept> allPubs = luceneHits.stream ()
-					.map ( graph::getConcept )
-					.filter ( c -> "Publication".equals ( c.getOfType ().getId () ) )
-					.collect ( Collectors.toSet () );
-				
-				
-				AttributeName attYear = getAttributeName ( graph, "YEAR" );
-				List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
-					allPubs, 
-					attYear, 
-					options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 ) 
-				);
-
-				// add most recent publications here
-				if ( !newPubs.isEmpty () )
-				{
-					String pubString = "Publication__" + allPubs.size () + "__";
-					pubString += newPubs.stream ()
-						.map ( graph::getConcept )
-					  .map ( this::getMolBioDefaultLabel )
-					  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-					  .collect ( Collectors.joining ( "//" ) );
-					cc2name.put ( "Publication", pubString );
-				}
-
-				// create output string for evidences column in GeneView table
-				String evidenceStr = cc2name.entrySet ()
-				.stream ()
-				.map ( e -> 
-					"Publication".equals ( e.getKey () )  
-						? e.getValue ()
-						: e.getKey () + "__" + e.getValue ().split ( "//" ).length + "__" + e.getValue ()
-				)
-				.collect ( Collectors.joining ( "||" ) );
-								
-				if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
-				
-				if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
-				
-				out.append (
-					id + "\t" + geneHelper.getBestAccession () + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-					+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
-					+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
-					+ evidenceStr + "\n" 
-				);
-
-			} // for candidates
-			log.info ( "Gene table generated..." );
-			return out.toString ();
-		
-		} // writeGeneTable()
 
 
 		
@@ -1040,7 +762,7 @@ public class OndexServiceProvider
 			{
 				// Creates type,name,score and numberOfGenes
 				String type = lc.getOfType ().getId ();
-				String name = getMolBioDefaultLabel ( lc );
+				String name = KGUtils.getMolBioDefaultLabel ( lc );
 				// All publications will have the format PMID:15487445
 				// if (type == "Publication" && !name.contains("PMID:"))
 				// name = "PMID:" + name;
@@ -1225,66 +947,12 @@ public class OndexServiceProvider
 		} //
 
 		
-    /**
-     * Returns the shortest preferred Name from a set of concept Names or ""
-     * [Gene|Protein][Phenotype][The rest]
-     *
-     * @param cns Set<ConceptName>
-     * @return String name
-     */
-    private String getShortestPreferedName ( Set<ConceptName> cns ) 
-    {
-    	return cns.stream ()
-      .filter ( ConceptName::isPreferred )
-    	.map ( ConceptName::getName )
-    	.map ( String::trim )
-    	.sorted ( Comparator.comparing ( String::length ) )
-    	.findFirst ()
-    	.orElse ( "" );
-    }
 
-    /**
-     * Returns the shortest not ambiguous accession or ""
-     *
-     * @param accs Set<ConceptAccession>
-     * @return String name
-     */
-    private String getShortestNotAmbiguousAccession(Set<ConceptAccession> accs) 
-    {
-    	return accs.stream ()
-      .filter ( acc -> !acc.isAmbiguous () )
-    	.map ( ConceptAccession::getAccession )
-    	.map ( String::trim )
-    	.sorted ( Comparator.comparing ( String::length ) )
-    	.findFirst ()
-    	.orElse ( "" );
-    }
+
 
 
     
-    /**
-     * Returns the best name for certain molecular biology entities, like Gene, Protein, falls back to a default
-     * label in the other cases. 
-     * 
-     */
-		private String getMolBioDefaultLabel ( ONDEXConcept c )
-		{
-			String type = c.getOfType ().getId ();
-			String bestAcc = StringUtils.trimToEmpty ( getShortestNotAmbiguousAccession ( c.getConceptAccessions () ) );
-			String bestName = StringUtils.trimToEmpty ( getShortestPreferedName ( c.getConceptNames () ) );
 
-			String result = "";
-			
-			if ( type == "Gene" || type == "Protein" )
-			{
-				if ( bestAcc.isEmpty () ) result = bestName;
-				else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
-			}
-			else
-				result = !bestName.isEmpty () ? bestName : bestAcc;
-
-			return StringUtils.abbreviate ( result, 30 );
-		}
 
     
         
