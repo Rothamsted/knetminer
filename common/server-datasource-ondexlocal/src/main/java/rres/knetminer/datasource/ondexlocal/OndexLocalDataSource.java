@@ -38,6 +38,7 @@ import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
+import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -103,7 +104,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		{
 			var ondexServiceProvider = OndexServiceProvider.getInstance ();
 			SynonymsResponse response = new SynonymsResponse();
-			response.setSynonyms(ondexServiceProvider.writeSynonymTable(request.getKeyword()));
+			response.setSynonyms(ondexServiceProvider.getUIService ().renderSynonymTable(request.getKeyword()));
 			return response;
 		} 
 		catch (ParseException e) 
@@ -132,7 +133,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 		log.info("Counting loci "+chr+":"+start+":"+end);
 		CountLociResponse response = new CountLociResponse();
-		response.setGeneCount(OndexServiceProvider.getInstance ().getLociGeneCount(chr, start, end));
+		response.setGeneCount (
+			OndexServiceProvider.getInstance ()
+				.getDataService() 
+				.getLociGeneCount(chr, start, end)
+		);
 		return response;
 	}
 
@@ -154,6 +159,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		Set<ONDEXConcept> userGenes = new HashSet<>();
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
+		var exportService = ondexServiceProvider.getExportService ();
 		
 		if (request.getList() != null && request.getList().size() > 0) {
 			userGenes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
@@ -217,8 +223,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			String xmlGViewer = "";
 			if (ondexServiceProvider.getDataService ().isReferenceGenome () ) {
 				// Generate Annotation file.
-				xmlGViewer = ondexServiceProvider.writeAnnotationXML(this.getApiUrl(), genes, userGenes, request.getQtl(),
-						request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap);
+				xmlGViewer = exportService.exportGenomapXML ( 
+					this.getApiUrl(), genes, userGenes, request.getQtl(),
+					request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(),geneMap
+				);
 				log.debug("1.) Genomaps annotation ");
 			} else {
 				log.debug("1.) No reference genome for Genomaps annotation ");
@@ -230,14 +238,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap
 			);
-			String geneTable = ondexServiceProvider.getUIService ().writeGeneTable ( 
+			String geneTable = exportService.exportGeneTable ( 
 				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
 			);                        
                                 
 			log.debug("2.) Gene table ");
 
 			// Evidence table file
-			String evidenceTable = ondexServiceProvider.writeEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
+			String evidenceTable = exportService.exportEvidenceTable(request.getKeyword(), qtlnetminerResults.getLuceneConcepts(),
 					userGenes, request.getQtl());
 			log.debug("3.) Evidence table ");
 			
@@ -282,7 +290,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Export graph
 		NetworkResponse response = new NetworkResponse();
 		try {
-			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph).getLeft());
+			response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft());
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -308,7 +316,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Export graph
 		EvidencePathResponse response = new EvidencePathResponse();
 		try {
-			response.setGraph(ondexServiceProvider.exportGraph2Json(subGraph).getLeft ());
+			response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft ());
 		} catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
@@ -396,7 +404,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
         CountGraphEntities response = new CountGraphEntities();
         try {
             // Set the graph
-            var jsonGraph = ondexServiceProvider.exportGraph2Json(subGraph).getRight ();
+            var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
             log.info("Set graph, now getting the number of nodes...");
             response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
             response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );

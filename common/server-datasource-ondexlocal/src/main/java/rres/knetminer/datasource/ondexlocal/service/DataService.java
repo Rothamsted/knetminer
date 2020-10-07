@@ -197,10 +197,36 @@ public class DataService
 		return graph;
 	}
 
+
+  /**
+   * Returns number of organism (taxID) genes at a given loci
+   *
+   * @param chr chromosome name as used in GViewer
+   * @param start start position
+   * @param end end position
+   * @return 0 if no genes found, otherwise number of genes at specified loci
+   */
+	public int getLociGeneCount ( String chr, int start, int end )
+	{
+		// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
+		if ( chr == null ) return 0; 
+		
+		ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
+		Set<ONDEXConcept> genes = this.graph.getConceptsOfConceptClass ( ccGene );
+		
+		return (int) genes.stream()
+		.map ( gene -> new GeneHelper ( graph, gene ) )
+		.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
+		.filter ( geneHelper -> this.containsTaxId ( geneHelper.getTaxID () ) )
+		.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
+		.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
+		.count ();
+	}    
   
+	
   
   /**
-   * TODO: was numGenesInGenome
+   * Was numGenesInGenome
    */
 	int getGenomeGenesCount ()
 	{
@@ -208,7 +234,7 @@ public class DataService
 	}
 
 	/**
-   * TODO: should this become DatasetName?
+   * Should this become DatasetName?
    */
   public String getDataSourceName ()
   {

@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.lucene.queryparser.classic.ParseException;
 
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
@@ -194,8 +193,8 @@ public class KGUtils
     }
     return results;    	
   }	
-	
   
+	
 	/** 
 	 * A simple facility that checks if taxId is in the reference.
 	 * Before comparing, it checks that taxId isn't null and return false if it is.

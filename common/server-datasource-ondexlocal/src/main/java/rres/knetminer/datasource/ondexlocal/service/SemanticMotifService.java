@@ -38,6 +38,7 @@ import rres.knetminer.datasource.ondexlocal.OndexServiceProviderHelper;
 import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
@@ -363,7 +364,7 @@ public class SemanticMotifService
 			? Collections.emptySet ()
 			: SearchUtils.getSearchWords ( keyword );
 				
-		Map<String, String> keywordColourMap = odxService.createHilightColorMap ( keywords );
+		Map<String, String> keywordColourMap = UIUtils.createHilightColorMap ( keywords );
 				
 		// create new graph to return
 		final ONDEXGraph subGraph = new MemoryONDEXGraph ( "SemanticMotifGraph" );
@@ -408,7 +409,7 @@ public class SemanticMotifService
 				// highlight keyword in any concept attribute
 				if ( !keywordConcepts.contains ( cloneCon ) )
 				{
-					odxService.highlightSearchKeywords ( cloneCon, keywordColourMap );
+					UIUtils.highlightSearchKeywords ( cloneCon, keywordColourMap );
 					keywordConcepts.add ( cloneCon );
 
 					if ( endNode.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
