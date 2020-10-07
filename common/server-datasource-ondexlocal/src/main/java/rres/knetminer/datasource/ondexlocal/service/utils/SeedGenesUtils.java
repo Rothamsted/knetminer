@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal;
+package rres.knetminer.datasource.ondexlocal.service.utils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,25 +16,25 @@ import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
-import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
 
 /**
- * This is a TODO:temporary class of utilities, written separately from the {@link OndexServiceProvider}
- * beast, in the attempt to avoid that that class becomes even bigger and more awful. This class is to be
- * removed when we (eventually) will do a big refactory of the OSP. 
+ * 
+ * Utilities to load a list of seed genes to be used to bootstrap a 
+ * {@link AbstractGraphTraverser semantic motif traverser}.
+ * It is used by {@link SemanticMotifService}.
  * 
  * @author brandizi
  * <dl><dt>Date:</dt><dd>9 Apr 2020</dd></dl>
  *
  */
-public class OndexServiceProviderHelper
+public class SeedGenesUtils
 {
 	public static final String OPT_SEED_GENES_FILE = "seedGenesFile";
-
-	// Only static functions please
-	private OndexServiceProviderHelper () {}
 	
   private final static Logger log = LogManager.getLogger();
+
+  private SeedGenesUtils () {}
 
 	
 	/**
@@ -46,7 +46,7 @@ public class OndexServiceProviderHelper
 	 * {@link #getSeedGenesFromTaxIds(ONDEXGraph, List)}.
 	 * 
 	 */
-	public static Set<ONDEXConcept> getSeedGenes ( ONDEXGraph graph, List<String> taxIds, Map<String, Object> opts )
+	public static Set<ONDEXConcept> loadSeedGenes ( ONDEXGraph graph, List<String> taxIds, Map<String, Object> opts )
 	{
 		String seedGenesPath = StringUtils.trimToNull ( (String) opts.get ( OPT_SEED_GENES_FILE ) );
 		if ( seedGenesPath == null ) {

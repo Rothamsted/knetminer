@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal;
+package rres.knetminer.datasource.ondexlocal.service.utils;
 
 import java.util.Calendar;
 import java.util.Collections;

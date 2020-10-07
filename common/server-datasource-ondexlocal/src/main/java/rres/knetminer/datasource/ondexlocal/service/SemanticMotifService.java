@@ -34,9 +34,9 @@ import net.sourceforge.ondex.core.ONDEXRelation;
 import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
-import rres.knetminer.datasource.ondexlocal.OndexServiceProviderHelper;
-import rres.knetminer.datasource.ondexlocal.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.SeedGenesUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -109,7 +109,7 @@ public class SemanticMotifService
 		File fileGene2PathLength = Paths.get ( dataPath, "genes2PathLengths" ).toFile ();
 		log.info ( "Generate HashMap files: concepts2Genes & genes2Concepts..." );
 
-		var seedGenes = OndexServiceProviderHelper.getSeedGenes ( 
+		var seedGenes = SeedGenesUtils.loadSeedGenes ( 
 			graph, this.dataService.getTaxIds (), dataService.getOptions ()
 		);
 
