@@ -676,7 +676,7 @@ public class SemanticMotifService
 	}
 
 	/**
-	 * Maps pairs of ONDEX gene IDs + concept IDs to the corresponding length of the semantic motif that links the 
+	 * Maps pairs of ONDEX gene ID + concept ID to the corresponding length of the semantic motif that links the 
 	 * gene to the concept.
 	 */
 	Map<Pair<Integer, Integer>, Integer> getGenes2PathLengths ()
