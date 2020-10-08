@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +37,6 @@ import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
-import rres.knetminer.datasource.ondexlocal.service.utils.SeedGenesUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
@@ -56,6 +57,8 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 @Component
 public class SemanticMotifService
 {
+	public static final String OPT_SEED_GENES_FILE = "seedGenesFile";
+	
   private AbstractGraphTraverser graphTraverser;
 	
   private Map<Integer, Set<Integer>> genes2Concepts;
@@ -109,9 +112,7 @@ public class SemanticMotifService
 		File fileGene2PathLength = Paths.get ( dataPath, "genes2PathLengths" ).toFile ();
 		log.info ( "Generate HashMap files: concepts2Genes & genes2Concepts..." );
 
-		var seedGenes = SeedGenesUtils.loadSeedGenes ( 
-			graph, this.dataService.getTaxIds (), dataService.getOptions ()
-		);
+		var seedGenes = this.loadSeedGenes ();
 
 		if ( doReset || fileConcept2Genes.exists () && ( fileConcept2Genes.lastModified () < graphFile.lastModified () ) )
 		{
@@ -625,6 +626,44 @@ public class SemanticMotifService
 
 		graphTraverser.setOption ( "ONDEXGraph", dataService.getGraph () );
 	}
+	
+	/**
+	 * Gets the genes to seed the {@link AbstractGraphTraverser semantic motif traverser}.
+	 * 
+	 * If the {@link #OPT_SEED_GENES_FILE} is set in opts, gets such list from
+	 * {@link AbstractGraphTraverser#ids2Genes(ONDEXGraph, java.io.File) the corresponding file}, else
+	 * it gets all the genes in graph that have their TAXID attribute within the taxIds list, as per 
+	 * {@link #getSeedGenesFromTaxIds(ONDEXGraph, List)}.
+	 * 
+	 */
+	private Set<ONDEXConcept> loadSeedGenes ()
+	{
+		String seedGenesPath = StringUtils.trimToNull ( dataService.getOptions ().getString ( OPT_SEED_GENES_FILE ) );
+		if ( seedGenesPath == null ) {
+			log.info ( "Initialising seed genes from TAXID list" );
+			return fetchSeedGenesFromTaxIds ();
+		}
+		
+		log.info ( "Initialising seed genes from file: '{}' ", seedGenesPath );
+		return AbstractGraphTraverser.ids2Genes ( dataService.getGraph (), seedGenesPath );
+	}
+
+	private Set<ONDEXConcept> fetchSeedGenesFromTaxIds ()
+	{
+		Set<String> myTaxIds = new HashSet<> ( dataService.getTaxIds () );
+		var graph = dataService.getGraph ();
+		ONDEXGraphMetaData meta = graph.getMetaData ();
+		ConceptClass ccGene = meta.getConceptClass ( "Gene" );
+		AttributeName attTaxId = meta.getAttributeName ( "TAXID" );
+
+		Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
+		return genes.parallelStream ().filter ( gene -> gene.getAttribute ( attTaxId ) != null )
+			.filter ( gene -> myTaxIds.contains ( gene.getAttribute ( attTaxId ).getValue ().toString () ) )
+			.collect ( Collectors.toSet () );
+	}		
+	
+	
+	
 
 	Map<Integer, Set<Integer>> getGenes2Concepts ()
 	{
