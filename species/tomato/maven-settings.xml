@@ -7,10 +7,10 @@
 		<profile>
 			<id>docker</id>
 			<properties>
-				<knetminer.dataSourceId></knetminer.dataSourceId>
-				<knetminer.specieName></knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about: </knetminer.appDescription>
-				<knetminer.appKeywords></knetminer.appKeywords>
+				<knetminer.dataSourceId>tomato</knetminer.dataSourceId>
+				<knetminer.specieName>Solanum lycopersiumc</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about domestic tomato (solanum lycopersiumc)</knetminer.appDescription>
+				<knetminer.appKeywords>Tomato, Solanum lycopersiumc, Knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>4081</knetminer.specieTaxId>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
