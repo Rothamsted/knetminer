@@ -182,7 +182,7 @@ if grep -q "docker" /proc/self/cgroup; then
 		crond
 		echo -e "\ncrond started\n"
 	else
-		echo -e "\nNo credentials given, skipping\n"
+		echo -e "\nNo .aws/credentials found, skipping crond startup\n"
 	fi 
 else
 	echo -e "\nSkipping crond (running outside Docker)"
