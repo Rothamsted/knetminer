@@ -12,7 +12,6 @@
 				<knetminer.appDescription>Knetminer instance about: Hordeum vulgare</knetminer.appDescription>
 				<knetminer.appKeywords>barley, h.vulgare, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>112509</knetminer.specieTaxId>
-				<!-- <knetminer.specieTaxId>4513</knetminer.specieTaxId> -->
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
 				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
