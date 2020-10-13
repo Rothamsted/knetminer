@@ -1,7 +1,48 @@
+<p><strong>ENSEMBL PLANTS</strong></p>
 <ul>
-	<p><strong>Datasets used for integration</strong> - Pepper</br>
-	(Datasets used for Potato see Release Notes <a href="http://knetminer.rothamsted.ac.uk/Solanum_tuberosum/html/release.html">here.</a>)</br>
-	(Datasets used for Tomato see Release Notes <a href="http://knetminer.rothamsted.ac.uk/Solanum_lycopersicum/html/release.html">here.</a>)</p>
-	<ul>
-  	</ul>
+	<li>Gene-[enc]-Protein</li>
+	<li>Protein-[has]-Domain</li>
+	<li>Protein-[xref]-Protein (ENSEMBL-UNIPROTKB mapping)</li>
+	<li>Protein-[ortholog]-Protein (to Arabidopsis)</li>
+	<li>Putative gene names from Arabidopsis orthologs</li>
+</ul>	
+
+<p><strong>GRAMENE REACTOME</strong></p>
+<ul>
+	<li>Protein-[is_a]-Enzyme</li>
+	<li>Enzyme-[catalyzed_by]-Reaction</li>
+	<li>Enzyme-[part_of]-Pathway</li>
+</ul>
+
+<p><strong>PUBMED</strong></p>	
+<ul>
+	<li>Organism specific publications</li>
+</ul>
+
+<p><strong>UNIPROTKB-SP (Organism, All Plants proteins)</strong></p>	
+<ul>
+	<li>Protein-[has_function]-MolecularFunction</li>
+	<li>Protein-[participates_in]-BiologicalProcess</li>
+	<li>Protein-[located_in]-CellularComponent</li>
+	<li>Protein-[pub_in]-Publication</li>
+	<li>Protein-[has]-EC</li>
+</ul>
+
+<p><strong>Ontologies (OBO Foundry)</strong></p>
+<ul>
+	<li>Gene Ontology (OWL)</li>
+	<li>Plant Trait Ontology (OWL)</li>
+</ul>	
+
+<p><strong>Made by KnetMiner</strong></p>	
+<ul>
+	<li>Gene-[occurs_in]-Publication</li>
+	<li>Gene-[cooc_with]-TraitOntology (sentence-level co-occurence)</li>
+	<li>Protein-[has_similar_sequence]-Protein (Top 10 BLASTP hits to UNIPROTKB-SP Plants)</li>
+</ul>
+
+
+<p><strong>KnetMiner KGs</strong></p>
+<ul>
+	<li><a href="https://knetminer.com/Arabidopsis_thaliana/html/release.html">Arabidopsis KG</a></li>
 </ul>

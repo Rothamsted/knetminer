@@ -1,32 +1,48 @@
+<p><strong>ENSEMBL PLANTS</strong></p>
 <ul>
-	<p><strong>Datasets used for integration</strong></p>
-	<ul>
-    	<li>Gene-Protein [Ensembl]</li>
-	<ul>
-	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/gff3/solanum_tuberosum/Solanum_tuberosum.SolTub_3.0.36.gff3.gz">Solanum_tuberosum.SolTub_3.0.36.gff3.gz</a></li>
-	    <li><a href="ftp://ftp.ensemblgenomes.org/pub/plants/current/fasta/solanum_tuberosum/pep/Solanum_tuberosum.SolTub_3.0.pep.all.fa.gz">Solanum_tuberosum.SolTub_3.0.pep.all.fa.gz</a></li>
-	    <li>Mapping File from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
-	    <li>Ensembl-UniprotKB-SP Mapping File from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
-	</ul>
-    	<li>Protein-Domain [Ensembl]</li>
-    	<ul>
-	    <li>InterPro Protein Domains from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
-    	</ul>
-	<li>Protein-Publication [UniprotKB, Ensembl]</li>
-	<ul>
-	    <li><a href="http://www.uniprot.org/uniprot/?query=reviewed:yes%20taxonomy:4113&compress=yes&format=xml">St UniprotKB-SwissProt</a></li>
-	</ul>
-    	<li>Homology</li>
-    	<ul>
-	    <li>Potato-Arabidopsis homologs from <a href="http://plants.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
-	    <li>Sequence alignments to other Plants</li>
-	    <ul>
-		<li>Protein@Potato-Protein@Plants::UniProtKB-SP [Smith-Waterman]</li>
-	    </ul>
-    	</ul>
-	<li>References</li>
-    	<ul>
-	    <li>Arabidopsis (TAIR) see Release notes for <a href="http://knetminer.rothamsted.ac.uk/Arabidopsis_thaliana/html/release.html">Arabidopsis</a></li>
-    	</ul>
-  	</ul>
+	<li>Gene-[enc]-Protein</li>
+	<li>Protein-[has]-Domain</li>
+	<li>Protein-[xref]-Protein (ENSEMBL-UNIPROTKB mapping)</li>
+	<li>Protein-[ortholog]-Protein (to Arabidopsis)</li>
+	<li>Putative gene names from Arabidopsis orthologs</li>
+</ul>	
+
+<p><strong>GRAMENE REACTOME</strong></p>
+<ul>
+	<li>Protein-[is_a]-Enzyme</li>
+	<li>Enzyme-[catalyzed_by]-Reaction</li>
+	<li>Enzyme-[part_of]-Pathway</li>
+</ul>
+
+<p><strong>PUBMED</strong></p>	
+<ul>
+	<li>Organism specific publications</li>
+</ul>
+
+<p><strong>UNIPROTKB-SP (Organism, All Plants proteins)</strong></p>	
+<ul>
+	<li>Protein-[has_function]-MolecularFunction</li>
+	<li>Protein-[participates_in]-BiologicalProcess</li>
+	<li>Protein-[located_in]-CellularComponent</li>
+	<li>Protein-[pub_in]-Publication</li>
+	<li>Protein-[has]-EC</li>
+</ul>
+
+<p><strong>Ontologies (OBO Foundry)</strong></p>
+<ul>
+	<li>Gene Ontology (OWL)</li>
+	<li>Plant Trait Ontology (OWL)</li>
+</ul>	
+
+<p><strong>Made by KnetMiner</strong></p>	
+<ul>
+	<li>Gene-[occurs_in]-Publication</li>
+	<li>Gene-[cooc_with]-TraitOntology (sentence-level co-occurence)</li>
+	<li>Protein-[has_similar_sequence]-Protein (Top 10 BLASTP hits to UNIPROTKB-SP Plants)</li>
+</ul>
+
+
+<p><strong>KnetMiner KGs</strong></p>
+<ul>
+	<li><a href="https://knetminer.com/Arabidopsis_thaliana/html/release.html">Arabidopsis KG</a></li>
 </ul>
