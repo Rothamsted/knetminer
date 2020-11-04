@@ -1,4 +1,4 @@
-# Helper for the AWS specific host, to run a species/dataset instance of the Knetminer Docker container with AWS logging.
+# Helper for the AWS specific host, to run a datasets/dataset instance of the Knetminer Docker container with AWS logging.
 #
 # See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details. See https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#deploying-with-aws-analytics-enabled for additional help.
 

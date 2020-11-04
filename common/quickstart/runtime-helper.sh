@@ -85,7 +85,7 @@ knet_codebase_dir="$(pwd)"
 if [[ "$knet_dataset_id" != '' ]]; then
 	[[ "$knet_dataset_id" == 'aratiny' ]] \
 		&& org_settings="$knet_codebase_dir/common/aratiny/aratiny-docker" \
-		|| org_settings="$knet_codebase_dir/species/$knet_dataset_id"
+		|| org_settings="$knet_codebase_dir/datasets/$knet_dataset_id"
 	
 	if [ ! -d "$org_settings" ]; then
 		echo -e "\n\n\tFile $org_settings doesn't exist, check the dataset id '$knet_dataset_id' is correct\n"

@@ -22,7 +22,7 @@ do
   	--dataset-dir)
   		dataset_dir="$2"; shift 2;;
   	#--: If non-null, the dataset settings are taken from the Knetminer codebase in the container, 
-  	#--: under species/$dataset-id (see the documentation for details).
+  	#--: under datasets/$dataset-id (see the documentation for details).
   	--dataset-id)
   		dataset_id="$2"; shift 2;;
   	#--: The host port to which the container HTTP port is mapped.
