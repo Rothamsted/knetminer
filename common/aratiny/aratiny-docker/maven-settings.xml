@@ -5,7 +5,7 @@
                             
 	<profiles>
 		<!-- 
-			See quickstart/local-env-ex
+			See docker/local-env-ex
 			
 			This shows how to use the Docker scripts (plus additional Maven profiles) to deploy on a regular
 			system, without Docker.

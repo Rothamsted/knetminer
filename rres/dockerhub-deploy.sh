@@ -14,7 +14,7 @@ debug_port=5005
 cd "$(dirname $0)"
 my_dir=$(pwd)
 
-cd ../common/quickstart
+cd ../common/docker
 
 echo -e "\n\n\tPreparing the environment\n"
 
