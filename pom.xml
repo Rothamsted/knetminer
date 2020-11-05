@@ -9,8 +9,8 @@
 	  <version>1.0.1-SNAPSHOT</version>
 	</parent>  
 
-	<artifactId>parent</artifactId>
-	<name>parent</name>
+	<artifactId>app-common</artifactId>
+	<name>app-common - KnetMiner App top/common POM container</name>
 	<version>5.0-SNAPSHOT</version>
 	<description>
 		KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
@@ -31,12 +31,13 @@
 		</license>
 	</licenses>
 
-	<!-- 
-		TODO: parent needs a merge with common and pom files in species/ need to be removed.
-		At the same time, the folders in common need to be raised one level.
-	-->
 	<modules>
-		<module>common</module>
+    <module>client-base</module>
+    <module>server-base</module>
+    <module>server-datasource-api</module>
+    <module>server-datasource-ondexlocal</module>
+    <module>ondex-server-base</module>
+    <module>aratiny</module>
 	</modules>
 
 	<properties>
@@ -416,7 +417,7 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+				<groupId>uk.ac.rothamsted.knetminer</groupId>
 				<artifactId>server-datasource-ondexlocal</artifactId>
 				<version>${project.version}</version>
 				<exclusions>

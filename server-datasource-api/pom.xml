@@ -3,20 +3,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+	<parent>
+		<artifactId>app-common</artifactId>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>5.0-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>server-datasource-api</artifactId>
-	<name>KnetMiner base datasource API</name>
+	<name>server-datasource-api - KnetMiner base data access API</name>
 	<packaging>jar</packaging>
 
 	<description>
 		A set of core interfaces and components defining Knetminer functionality as a web service
 	</description>
 
-	<parent>
-		<artifactId>common</artifactId>
-		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>5.0-SNAPSHOT</version>
-	</parent>
 
 	<dependencies>
 		<dependency>

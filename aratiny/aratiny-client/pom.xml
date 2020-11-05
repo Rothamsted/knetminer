@@ -15,7 +15,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>client-base</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>

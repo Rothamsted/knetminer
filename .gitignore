@@ -17,7 +17,7 @@ stderr.log
 stdout.log
 *.swp
 .vagrant/
-common/client/nb-configuration.xml
+nb-configuration.xml
 *.oxl
 package-lock.json
 .DS_Store

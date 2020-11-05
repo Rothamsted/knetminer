@@ -78,13 +78,13 @@ do
 	mkdir --parents "$knet_dataset_dir/$dir"
 done
 
-cd "$mydir/../.."
+cd "$mydir/.."
 knet_codebase_dir="$(pwd)"
 
 # --- In this case, copy the original settings from the codebase into the settings dir
 if [[ "$knet_dataset_id" != '' ]]; then
 	[[ "$knet_dataset_id" == 'aratiny' ]] \
-		&& org_settings="$knet_codebase_dir/common/aratiny/aratiny-docker" \
+		&& org_settings="$knet_codebase_dir/aratiny/aratiny-docker" \
 		|| org_settings="$knet_codebase_dir/datasets/$knet_dataset_id"
 	
 	if [ ! -d "$org_settings" ]; then
@@ -113,8 +113,8 @@ echo -e "\n\n\tBuilding the server-side config\n"
 
 # We need a copy where we can replace the knetminer test config with the one we need
 # We're in the knetminer codebase root now
-rm -Rf /tmp/aratiny-ws common/aratiny/aratiny-ws/target
-cp -Rf common/aratiny/aratiny-ws /tmp
+rm -Rf /tmp/aratiny-ws aratiny/aratiny-ws/target
+cp -Rf aratiny/aratiny-ws /tmp
 
 # We don't need the test queries used for aratiny, let's remove them from the build location
 rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/*.cypher
@@ -148,8 +148,8 @@ client_html_dir="$client_src_dir/src/main/webapp/html"
 
 # Common client files
 cd "$knet_codebase_dir"
-rm -Rf common/aratiny/aratiny-client/target
-cp -Rf common/aratiny/aratiny-client/* "$client_src_dir"
+rm -Rf aratiny/aratiny-client/target
+cp -Rf aratiny/aratiny-client/* "$client_src_dir"
 
 # Additions and overridings from the dataset instance-specific dir
 cp "$knet_dataset_dir/settings/client/"*.xml "$client_html_dir/data"

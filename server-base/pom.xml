@@ -4,14 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>common</artifactId>
+		<artifactId>app-common</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
 		<version>5.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+	<groupId>uk.ac.rothamsted.knetminer</groupId>
 	<artifactId>server-base</artifactId>
-	<name>KnetMiner base server</name>
+	
+	<name>server-base - KnetMiner web service skeleton</name>
 	<packaging>war</packaging>
 
 	<description>
@@ -79,7 +80,7 @@
 			<artifactId>google-analytics-java</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>uk.ac.rothamsted.knetminer.common</groupId>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-datasource-api</artifactId>
 			<version>${project.version}</version>			
 		</dependency>

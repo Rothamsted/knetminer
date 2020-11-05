@@ -20,8 +20,8 @@ if [ -d "$aws_dir" ]; then
 	if [ -f "$aws_dir/.aws/credentials" ] && [ -f "$aws_dir/analytics-s3-sync.sh" ]; then
 		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/.aws/credentials:ro" 
 		# Added as a check so we know whether to run crond or not - it'll check to see this volume exists
-		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/common/docker/.aws/credentials:ro" 
-		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/common/docker/analytics-s3-sync.sh" 
+		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/.aws/credentials:/root/knetminer-build/knetminer/docker/.aws/credentials:ro" 
+		DOCKER_OPTS="$DOCKER_OPTS -v $aws_dir/analytics-s3-sync.sh:/root/knetminer-build/knetminer/docker/analytics-s3-sync.sh" 
 	else
 		echo -e "\n\nCan't find the correct file(s) in the directory ("$aws_dir") given.\n" 
 		echo -e "Please check that you have the "$aws_dir"/.aws/credentials and "$aws_dir"/analytics-s3-sync.sh files present in this directory\n\nExiting script\n"; 

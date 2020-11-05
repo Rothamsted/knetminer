@@ -3,7 +3,6 @@
 **/bower_components
 **/node_modules
 **/target
-common/ws-example
 # Remember to issue cat .dockerignore-template .gitignore >.dockerignore
 # when you change .gitignore
 #
@@ -23,7 +22,7 @@ stderr.log
 stdout.log
 *.swp
 .vagrant/
-common/client/nb-configuration.xml
+nb-configuration.xml
 *.oxl
 package-lock.json
 .DS_Store

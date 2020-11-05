@@ -9,7 +9,7 @@
 #
 mydir="$(pwd)"
 
-cd ../../../common/aratiny/aratiny-docker
+cd ../../../aratiny/aratiny-docker
 settings_dir="$(pwd)"
 cd "$mydir"
 

@@ -26,7 +26,7 @@ ENV knet_build_dir=/root/knetminer-build
 #
 WORKDIR $knet_build_dir
 COPY . knetminer
-WORKDIR knetminer/common/docker
+WORKDIR knetminer/docker
 
 # Note that this issues 'mvn install' from your local copy of the knetminer codebase, WITHOUT clean.
 # The idea is that it leverages Docker-base and adds up updates from your host copy. 

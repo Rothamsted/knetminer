@@ -50,14 +50,14 @@ export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'}
 echo -e "\n\n\tBuilding Knetminer\n"
 
 # Move from the location of this script to the root of the Knetminer codebase 
-cd ../.. 
+cd ..
 
 # ---- Regular full build of the server web reference application (aratiny-ws.war) ----
 mvn install $MAVEN_ARGS -DskipTests -DskipITs
-cd common/aratiny/aratiny-ws
+cd aratiny/aratiny-ws
 # --- Alternatively, you can enable fast build during debugging
 # mvn dependency:resolve
-# cd common/aratiny/aratiny-ws
+# cd aratiny/aratiny-ws
 # mvn install $MAVEN_ARGS -DskipTests -DskipITs
 # ---
 
