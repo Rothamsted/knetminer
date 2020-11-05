@@ -47,6 +47,7 @@ if check_readable_dir "$dataset_dir/data"; then
 	cd data
 	echo -e "Cleaning data"
 	rm -Rf *.tab index map*
+	rm -f concepts2Genes genes2Concepts genes2PathLengths
 fi
 
 dir_list="client-src config"
