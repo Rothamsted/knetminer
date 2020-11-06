@@ -31,7 +31,7 @@ do
   	#--: Passed to Docker, as --name, useful to manage running containers. 
   	--container-name)
   	  container_name="$2"; shift 2;;
-  	#--: Passed to Docker as --memory (eg, container_memory 12G).
+  	#--: Passed to Docker as --memory (eg, --container-memory 12G).
   	--container-memory)
   	  container_memory="$2"; shift 2;;
   	#--: Docker is invoked with --detach, ie, container is run in background and this script ends immediately 

@@ -1,7 +1,7 @@
 # AraTiny, Test Knetminer Instance
 
 This project and its submodules contains an instance of Knetminer, working on a tiny version of the Arabidopsis 
-dataset (the same as the one used for the [Docker example](/Rothamsted/knetminer/tree/master/docker)).
+dataset (the same as the one used for [Docker](../docker)).
 
 The project has the double function of running automated integration tests (currently inside [aratiny-ws](aratiny-ws))
 and to run a sample instance manually from your computer, [using simple commands](manual-test), so that you can try
@@ -27,7 +27,7 @@ Knetminer and see the effect of new changes on your local (development) copy.
 
 ### Requirements:
 
-  * Java >=8 and <9 (we tried 1.8.0_171 and above). 9 version still doesn't work with Ondex code.
+  * Java >=11
   * Maven
   * Some [git distribution](https://git-scm.com/downloads)
   * If under Windows, something able to run .sh scripts via Bash (eg, 
@@ -98,38 +98,13 @@ test data and find the paths specified by the queries.
 Queries are re-read once you re-start the API (stop the current one and re-run `./run-ws-neo4j.sh`, no need to re-run the
 UI).
 
-**Do not change existing .cypher files**. since there are unit tests depending on them.
-
 
 ### Rules for valid semantic motif queries 
 
-Let's look at [an example](aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/simple-protein-publication.cypher):
+This is described in our [wiki](https://github.com/Rothamsted/knetminer/wiki/Semantic-Motif-Searching-in-Knetminer).  
 
-```sql
-MATCH path =  
-	(g:Gene{ iri: $startIri }) - [enc:enc] -> (p:Protein)
-  - [hss:h_s_s] -> (p1:Protein)
-	- [pubref:pub_in] -> (pub:Publication)
-RETURN path
-ORDER BY hss.E_VALUE, hss.PERCENTALIGNMENT DESC
-```
-
-  * First rule is you have to use Cypher for Neo4j (of course)
-  * You must return a path pattern (`path=...`), NOT a list of projected variables (`RETURN g, enc, p`).
-  * Each path pattern must be compatible with the [Ondex graph traverser interface](https://github.com/Rothamsted/ondex-base/blob/master/core/algorithms/src/main/java/net/sourceforge/ondex/algorithm/graphquery/AbstractGraphTraverser.java), 
-  which implies you have to alternate valid Ondex concepts (existing in the test data) and valid concept relations.
-  You can use the names you like for defining the path elements, as long as the result complies with the hereby rules.
-  * The first element in the returned paths must always be a Gene instance.
-  * You must use the `iri: $startIri` restriction. Knetminer instantiates thid placeholder with all the genes it finds in 
-  its dataset, so that it can find all gene-related entities using your query.
-  * Each query is expected to be about one path pattern only. You can use complex constructs in it (eg, `UNION`, sub-path
-  based constraints), but the result must comply with the single path-pattern rule (it's recommended that `UNION`-based
-  complex queries are split into multiple files and queries, the `$startIri` mechanism described above is de-facto a form
-	of implicit union).
-  * As long as you comply with the hereby rules (Cypher syntax included), you can define clauses like `WHERE` and 
-`ORDER BY`, to prioritise and filter your results.
-  * The types and the data model you find in the sample dataset (as well as in all other Knetminer datasets) are based
-  on the [BioKNO ontology](https://github.com/Rothamsted/bioknet-onto).
+We have test queries [here](aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j).  
+**Do not change existing .cypher files**. since there are unit tests depending on them.
   
   
 ## Troubleshooting
