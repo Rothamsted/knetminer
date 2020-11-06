@@ -1,11 +1,11 @@
 # AraTiny, Test Knetminer Instance
 
-This project and its submodules contains an instance of Knetminer, working on a tiny version of the Arabidopsis 
+This project and its submodules define an instance of Knetminer, working on a tiny sample of the Arabidopsis 
 dataset (the same as the one used for [Docker](../docker)).
 
 The project has the double function of running automated integration tests (currently inside [aratiny-ws](aratiny-ws))
-and to run a sample instance manually from your computer, [using simple commands](manual-test), so that you can try
-Knetminer and see the effect of new changes on your local (development) copy.
+and running a Knetminer sample instance manually from your computer, [using simple commands](manual-test), so that you 
+can try Knetminer and see the effect of new changes on your local (development) copy.
 
 ## Summary
 
