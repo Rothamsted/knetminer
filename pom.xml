@@ -36,7 +36,7 @@
     <module>server-base</module>
     <module>server-datasource-api</module>
     <module>server-datasource-ondexlocal</module>
-    <module>ondex-server-base</module>
+    <module>server-ondex</module>
     <module>aratiny</module>
 	</modules>
 
