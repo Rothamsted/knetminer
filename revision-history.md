@@ -32,7 +32,7 @@
 References and further details:
    * overview of the new Knetminer architecture, https://www.degruyter.com/view/journals/jib/15/3/article-20180023.xml
    * Details on the Knetminer backend and sample Cypher motif queries, https://www.slideshare.net/mbrandizi/knetminer-backend-training-nov-2018-124145829
-   * Real use cases can be found on our dataset files (eg, https://github.com/Rothamsted/knetminer/blob/master/species/wheat-beta/ws/cypher-queries.txt). More documentation will be released soon.
+   * Real use cases can be found on our dataset files, [example](https://github.com/Rothamsted/knetminer/blob/master/datasets/wheat-beta/ws/cypher-queries.txt). More documentation will be released soon.
 
 ## Bug fixes and software improvements
 

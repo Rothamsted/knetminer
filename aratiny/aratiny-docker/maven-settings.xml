@@ -1,0 +1,31 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                            
+	<profiles>
+		<!-- 
+			See docker/local-env-ex
+			
+			This shows how to use the Docker scripts (plus additional Maven profiles) to deploy on a regular
+			system, without Docker.
+			
+			Normally the Docker settings for running aratinty in the Docker containerì are in the POM and no specific
+			settings file/profile is required. 
+		 -->
+		<profile>
+			<id>local-env-ex</id>
+			<activation><activeByDefault>false</activeByDefault></activation>
+			<properties>
+				<knetminer.datasetDir>/tmp/knetminer-sample-dataset</knetminer.datasetDir>
+				<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
+				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
+				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
+				<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
+				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
+				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
+				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
+			</properties>
+		</profile>
+	</profiles>
+</settings>

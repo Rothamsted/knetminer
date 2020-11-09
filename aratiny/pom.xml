@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>5.0-SNAPSHOT</version>
+		<artifactId>app-common</artifactId>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>aratiny</artifactId>
+	<packaging>pom</packaging>
+	<name>aratiny - Arabidobsis-based Tiny Test Site</name>
+		
+	<description>A small Knetminer instance, based on a reduced version of the Arabidopsis dataset, which is used for
+	automated tests of the Knetminer code base, as well as to run a testbed for manual testing and inspection of the
+	Knetminer functionality and interface.</description>	
+		
+	<properties>
+	
+		<!-- This is used for the Neo4j server plug-in for Maven -->		
+		<neo4j.server.version>3.5.12</neo4j.server.version>
+		
+	</properties>
+	
+	<modules>
+		<module>aratiny-client</module>
+		<module>aratiny-ws</module>
+	</modules>
+	
+		
+	<build>	
+		<pluginManagement>
+			<plugins>
+				<plugin>
+				  <groupId>org.eclipse.jetty</groupId>
+				  <artifactId>jetty-maven-plugin</artifactId>
+			    <version>9.4.14.v20181114</version>
+				  <executions>
+				  	<execution>
+				  		<id>start</id>
+				  		<phase>pre-integration-test</phase>
+				  		<goals><goal>start</goal></goals>
+				  	</execution>
+				  	<execution>
+				  		<id>stop</id>
+				  		<phase>post-integration-test</phase>
+				  		<goals><goal>stop</goal></goals>
+				  	</execution>
+				  </executions>
+				  <configuration>
+				    <scanIntervalSeconds>10</scanIntervalSeconds>
+		        <httpConnector>
+		        	<!-- We might want a less common port, since this might be already used in our CI servers  -->
+		          <port>8080</port>
+		        </httpConnector>			    
+				    <webApp>
+				      <contextPath>/</contextPath>
+							<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+				    </webApp>
+				    <stopPort>8081</stopPort>
+				    <stopKey>araTinyJetty</stopKey>
+				    <stopWait>10</stopWait>			    
+				  </configuration>
+				</plugin>	
+				
+								
+			  <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-surefire-plugin</artifactId>
+			    <version>3.0.0-M1</version>
+			    <configuration combine.self = "override">
+						<forkCount>0</forkCount>
+			      <properties>
+			        <property>
+			        	<!-- Prints out spaces and test name before/after every test method and automatically -->
+			          <name>listener</name>
+			          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
+			        </property>
+			       </properties>
+			    </configuration>
+			  </plugin>
+				
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-failsafe-plugin</artifactId>
+		      <version>3.0.0-M1</version>
+		      <configuration combine.self = "override">
+		      	<forkCount>0</forkCount>
+		        <trimStackTrace>false</trimStackTrace>
+		        <systemPropertyVariables>
+		        	<!-- Forwarded to Java -->
+		          <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
+							<knetminer.api.baseUrl>${knetminer.api.baseUrl}</knetminer.api.baseUrl>
+		        </systemPropertyVariables>
+			      <properties>
+			        <property>
+			        	<!-- Prints out spaces and test name before/after every test method and automatically -->
+			          <name>listener</name>
+			          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
+			        </property>
+			       </properties>
+		      </configuration>
+				  <dependencies>
+				  </dependencies>
+					<executions combine.self = "override">
+	          <execution>
+	          	<id>failsafe-test</id>
+	            <goals><goal>integration-test</goal></goals>
+	          </execution>
+	          <execution>
+		      		<id>failsafe-verify</id>
+		      		<goals><goal>verify</goal></goals>
+	          </execution>
+	        </executions>      
+				</plugin>		
+									
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+
+			<!-- Disabling stuff from the parent level -->
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-site</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+		
+		</plugins>
+	</build>
+  <reporting />		
+</project>

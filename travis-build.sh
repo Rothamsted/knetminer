@@ -59,10 +59,10 @@ docker_tag='latest'
 
 # TODO: remove
 #echo -e "\n\n\tBuilding Docker-base"
-#docker build -t knetminer/knetminer-base:$docker_tag -f common/quickstart/Dockerfile-base .
+#docker build -t knetminer/knetminer-base:$docker_tag -f docker/Dockerfile-base .
 
 echo -e "\n\n\tBuilding Docker"
-docker build -t knetminer/knetminer:$docker_tag -f common/quickstart/Dockerfile .
+docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
 
 
 if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then

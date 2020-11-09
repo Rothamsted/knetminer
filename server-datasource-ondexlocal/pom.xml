@@ -1,0 +1,85 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>app-common</artifactId>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>5.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>server-datasource-ondexlocal</artifactId>
+	<name>server-datasource-ondexlocal - KnetMiner Ondex-based datasource</name>
+
+	<description>
+		An implementation of the Knetminer API web service based on Ondex. 
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
+			<artifactId>server-datasource-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<!-- Re-routes slf4j to log4j V2 -->
+		 	<groupId>org.apache.logging.log4j</groupId>
+		 	<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Re-routes the old log4j to log4j V2 -->
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
+		<!-- 
+			The new backend, based on Neo4j. We choose to include this dependency anyway. It can be used or not, using
+			the configuration, it doesn't hurt anything if not used. 
+		-->
+		<dependency>
+	    <groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+	    <artifactId>cypher-client</artifactId>
+		</dependency>			
+		<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-api</artifactId>
+    </dependency>    
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>    
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>workflow-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>memory</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>lucene</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>generic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>oxl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>cyjs_json</artifactId>
+		</dependency>
+		<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <scope>provided</scope>
+		</dependency>		
+	</dependencies>
+</project>
