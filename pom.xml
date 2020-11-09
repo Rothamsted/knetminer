@@ -179,7 +179,7 @@
 		<jutils.version>10.0-SNAPSHOT</jutils.version>
 		<commons.version>2.6</commons.version>
 		<knetminer.backend.version>2.0-SNAPSHOT</knetminer.backend.version>
-		<springframework.version>4.3.6.RELEASE</springframework.version>
+		<springframework.version>5.3.0</springframework.version>
 	</properties>
 
 
