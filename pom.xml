@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-	  <version>1.0.1-SNAPSHOT</version>
+	  <version>2.0-SNAPSHOT</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -178,7 +178,6 @@
 		<!-- This is required to override the parent's POM -->
 		<jutils.version>10.0-SNAPSHOT</jutils.version>
 		<knetminer.backend.version>2.0-SNAPSHOT</knetminer.backend.version>
-		<springframework.version>5.3.1</springframework.version>
 	</properties>
 
 
@@ -460,26 +459,6 @@
 				<version>1.2.5</version>
 			</dependency>
 
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
