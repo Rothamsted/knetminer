@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
  * 
  * @author holland
  *
+ * NOTE: Since Spring 5, you need @Component on the implementing subclasses.
+ * 
+ *
  */
 @Component
 @Inherited

@@ -18,6 +18,7 @@ import java.util.Set;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
@@ -54,11 +55,14 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * @author holland
  * @author Marco Brandizi (I replaced the parameterised constructor and introduced the config harvester)
  * 
+ * Note that the @Component annotation is necessary since Spring 5, it's not recognised as a bean otherwise and 
+ * despite extending a @Component interface.
  */
+@Component 
 public class OndexLocalDataSource extends KnetminerDataSource 
-{	
+{		
 	/**
-	 * When it's initialised without parameters, it gets everything from the XML config file. This is fetched by 
+	 * it's initialised without parameters, then it gets everything from the XML config file. This is fetched by 
 	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).
 	 * 
 	 */

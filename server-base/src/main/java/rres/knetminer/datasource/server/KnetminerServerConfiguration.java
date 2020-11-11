@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -23,7 +23,7 @@ import rres.knetminer.datasource.api.KnetminerDataSourceProvider;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "rres.knetminer.datasource" }, includeFilters = @ComponentScan.Filter(KnetminerDataSourceProvider.class))
-public class KnetminerServerConfiguration extends WebMvcConfigurerAdapter {
+public class KnetminerServerConfiguration implements WebMvcConfigurer {
     
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {

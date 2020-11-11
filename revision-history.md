@@ -1,7 +1,17 @@
 # Revision History
 
 # 4.0.1-SNAPSHOT
-* Current snapshot version
+
+*This was last updated on 11/11/2020*
+
+* Migration to Java 11. **You do need Java >= 11 to make knetminer working** If you use Docker, our images
+  use the right Java version automatically.
+
+## Internals
+* Significant review of the codebase file structure and names
+* Third-party dependency updates
+* Big refactoring of the `OndexServiceProvider` component
+* Docker-base removed, now there are only two image levels
 
 
 # 4.0
