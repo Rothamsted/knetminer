@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Single Gene</description>
+		<term></term>
+		<gene>PSY</gene>
+	</query>
+	
+	<query>
+		<name>Example 2</name>
+		<description>Gene List</description>
+		<term>sugar OR "fruit color"</term>
+		<gene>SOLYC02G063070.3</gene>
+		<gene>SOLYC03G034180.3</gene>
+		<gene>SOLYC12G006010.2</gene>
+		<gene>SOLYC02G093110.3</gene>
+		<gene>SOLYC03G044260.3</gene>
+		<gene>SOLYC08G062940.3</gene>
+		<gene>SOLYC04G076060.3</gene>
+		<gene>SOLYC11G010470.2</gene>
+		<gene>SOLYC12G019460.2</gene>
+		<gene>SOLYC08G014420.3</gene>
+		<gene>SOLYC03G123660.3</gene>
+		<gene>SOLYC06G063100.3</gene>
+		<gene>SOLYC12G010480.2</gene>
+		<gene>SOLYC07G006020.3</gene>
+		<gene>SOLYC03G063970.3</gene>
+		<gene>SOLYC06G005170.3</gene>
+		<gene>SOLYC10G081980.2</gene>
+		<gene>SOLYC10G081970.2</gene>
+		<gene>SOLYC01G007230.3</gene>
+		<gene>SOLYC01G007240.3</gene>
+		<gene>SOLYC01G058280.3</gene>
+		<gene>SOLYC05G049970.3</gene>
+		<gene>SOLYC01G094960.3</gene>
+		<gene>SOLYC02G063075.1</gene>
+		<gene>SOLYC04G074940.3</gene>
+		<gene>SOLYC12G014140.2</gene>
+		<gene>SOLYC07G062680.2</gene>
+		<gene>SOLYC04G011670.3</gene>
+		<gene>SOLYC04G054320.3</gene>
+		<gene>SOLYC11G068750.2</gene>
+		<gene>SOLYC06G074170.3</gene>
+		<gene>SOLYC07G040990.3</gene>
+		<gene>SOLYC03G013030.3</gene>
+		<gene>SOLYC10G006153.1</gene>
+		<gene>SOLYC10G006157.1</gene>
+		<gene>SOLYC10G006215.1</gene>
+		<gene>SOLYC12G014397.1</gene>
+		<gene>SOLYC02G067030.3</gene>
+		<gene>SOLYC05G052980.3</gene>
+		<gene>SOLYC03G096670.3</gene>
+		<gene>SOLYC11G032010.1</gene>
+		<gene>SOLYC04G009800.3</gene>
+		<gene>SOLYC11G006370.2</gene>
+		<gene>SOLYC02G086145.1</gene>
+		<gene>SOLYC09G089630.3</gene>
+		<gene>SOLYC04G078840.3</gene>
+		<gene>SOLYC03G043930.3</gene>
+		<gene>SOLYC02G092230.3</gene>
+		<gene>SOLYC07G053410.3</gene>
+	</query>
+</sampleQueries>
