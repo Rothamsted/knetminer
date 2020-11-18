@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>aratiny</artifactId>
 	<packaging>pom</packaging>
-	<name>aratiny - Arabidobsis-based Tiny Test Site</name>
+	<name>aratiny - Arabidobsis-based Tiny Test/Template App</name>
 		
 	<description>A small Knetminer instance, based on a reduced version of the Arabidopsis dataset, which is used for
 	automated tests of the Knetminer code base, as well as to run a testbed for manual testing and inspection of the
@@ -34,7 +34,7 @@
 				<plugin>
 				  <groupId>org.eclipse.jetty</groupId>
 				  <artifactId>jetty-maven-plugin</artifactId>
-			    <version>9.4.14.v20181114</version>
+			    <version>9.4.34.v20201102</version>
 				  <executions>
 				  	<execution>
 				  		<id>start</id>

@@ -58,7 +58,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * Note that the @Component annotation is necessary since Spring 5, it's not recognised as a bean otherwise and 
  * despite extending a @Component interface.
  */
-@Component 
+@Component
 public class OndexLocalDataSource extends KnetminerDataSource 
 {		
 	/**
@@ -88,7 +88,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
 		this.setDataSourceNames ( new String[] {dsName} );
-		log.info ( "Setting up data source is '{}'", dsName );
+		log.info ( "Setting data source '{}'", dsName );
 	}
 	
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
