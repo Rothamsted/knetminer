@@ -234,7 +234,8 @@ $(document).ready(
         }
         else {
             activateButton('resultsTable');
-            $('#genemap-tab_button').hide();
+            $('#genomeorqtlsearchbox').hide(); // hide QTL search
+            $('#genemap-tab_button').hide(); // hide Map View option
             $('#genemap-tab').hide();
         }
         $("#keywords").focus();
