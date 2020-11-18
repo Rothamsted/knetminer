@@ -14,7 +14,7 @@ debug_port=5005
 cd "$(dirname $0)"
 my_dir=$(pwd)
 
-cd ../common/quickstart
+cd ../docker
 
 echo -e "\n\n\tPreparing the environment\n"
 
@@ -28,7 +28,7 @@ EOT
 echo -e "--- Stopping, cleaning and updating Docker\n"
 docker stop wheat-ci || true
 docker rm wheat-ci || true
-yes | docker system prune --all
+docker system prune --all --force
 docker pull knetminer/knetminer
 
 echo -e "--- Cleaning Knetminer dataset directory\n"

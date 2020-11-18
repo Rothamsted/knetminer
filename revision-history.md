@@ -1,7 +1,17 @@
 # Revision History
 
 # 4.0.1-SNAPSHOT
-* Current snapshot version
+
+*This was last updated on 11/11/2020*
+
+* Migration to Java 11. **You do need Java >= 11 to make knetminer working** If you use Docker, our images
+  use the right Java version automatically.
+
+## Internals
+* Significant review of the codebase file structure and names
+* Third-party dependency updates
+* Big refactoring of the `OndexServiceProvider` component
+* Docker-base removed, now there are only two image levels
 
 
 # 4.0
@@ -32,7 +42,7 @@
 References and further details:
    * overview of the new Knetminer architecture, https://www.degruyter.com/view/journals/jib/15/3/article-20180023.xml
    * Details on the Knetminer backend and sample Cypher motif queries, https://www.slideshare.net/mbrandizi/knetminer-backend-training-nov-2018-124145829
-   * Real use cases can be found on our dataset files (eg, https://github.com/Rothamsted/knetminer/blob/master/species/wheat-beta/ws/cypher-queries.txt). More documentation will be released soon.
+   * Real use cases can be found on our dataset files, [example](https://github.com/Rothamsted/knetminer/blob/master/datasets/wheat-beta/ws/cypher-queries.txt). More documentation will be released soon.
 
 ## Bug fixes and software improvements
 
