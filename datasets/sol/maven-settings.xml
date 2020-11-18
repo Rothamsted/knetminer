@@ -7,17 +7,17 @@
 		<profile>
 			<id>docker</id>
 			<properties>
-				<knetminer.dataSourceId>tomatoknet</knetminer.dataSourceId>
-				<knetminer.specieName>Solanum lycopersicum</knetminer.specieName>
-				<knetminer.appDescription>Knetminer instance about: Solanum lycopersicum</knetminer.appDescription>
-				<knetminer.appKeywords>s.lycopersicum, tomato, knetminer</knetminer.appKeywords>
-				<knetminer.specieTaxId>4081</knetminer.specieTaxId>
+				<knetminer.dataSourceId>solknet</knetminer.dataSourceId>
+				<knetminer.specieName>Solanum lycopersium, Capsicum annuum, Solanum tuberosum</knetminer.specieName>
+				<knetminer.appDescription>Knetminer instance about domestic tomato (solanum lycopersium), pepper (Capsicum annuum) and potato (Solanum tuberosum)</knetminer.appDescription>
+				<knetminer.appKeywords>tomato, pepper, potato, knetminer</knetminer.appKeywords>
+				<knetminer.specieTaxId>4081,4072,4113</knetminer.specieTaxId>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
-				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
+			<!--	<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList> -->
 				
 				<!--  true if you are providing a reference genome -->
-				<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+				<knetminer.isReferenceGenomeProvided>false</knetminer.isReferenceGenomeProvided>
 		
 				<!-- 
 					The contents of client/release_notes.html take priority over this, so it doesn't really matter
