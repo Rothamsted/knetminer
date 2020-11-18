@@ -61,18 +61,4 @@
 		<gene>SOLYC02G092230.3</gene>
 		<gene>SOLYC07G053410.3</gene>
 	</query>
-	
-	<query>
-		<name>Example 3</name>
-		<description>QTL</description>
-		<term>Potassium content</term>
-		<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>12</chromosome>
-			<start>100000</start>
-			<end>800000</end>
-			<label>Potassium_content</label>
-		</region>
-
-	</query>	
 </sampleQueries>

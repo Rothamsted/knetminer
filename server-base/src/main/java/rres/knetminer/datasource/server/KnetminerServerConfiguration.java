@@ -22,7 +22,10 @@ import rres.knetminer.datasource.api.KnetminerDataSourceProvider;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "rres.knetminer.datasource" }, includeFilters = @ComponentScan.Filter(KnetminerDataSourceProvider.class))
+@ComponentScan( 
+	basePackages = { "rres.knetminer.datasource" },
+	includeFilters = @ComponentScan.Filter( KnetminerDataSourceProvider.class )
+)
 public class KnetminerServerConfiguration implements WebMvcConfigurer {
     
         @Override

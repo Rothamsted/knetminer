@@ -16,7 +16,7 @@
 	  	This is passed to Java tests, to allow them to know what is the current profile, see the <profile> section below 
 	  	for	details.
 	  -->
-	<maven.profileId>default</maven.profileId>
+		<maven.profileId>default</maven.profileId>
 	</properties>
 
 	<dependencies>
@@ -28,7 +28,7 @@
 	</dependency>
 	<dependency>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<artifactId>ondex-server-base</artifactId>
+		<artifactId>server-ondex</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<!-- 

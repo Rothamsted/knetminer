@@ -54,7 +54,7 @@ import rres.knetminer.datasource.api.KnetminerResponse;
 @RequestMapping("/")
 public class KnetminerServer {
 	protected final Logger log = LogManager.getLogger(getClass());
-
+	
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
 
@@ -75,7 +75,7 @@ public class KnetminerServer {
 	 * matching '/hello/**'.
 	 */
 	@PostConstruct
-	public void _buildDataSourceCache() {
+	public void _buildDataSourceCache() {		
 		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
 		for (KnetminerDataSource dataSource : this.dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
