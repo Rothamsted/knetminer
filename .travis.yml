@@ -10,10 +10,10 @@ addons:
 services:
   - docker      
   
-#cache:
-#  directories:
-#    - $HOME/.m2
-#    - $HOME/.npm
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.npm
 
 #env:
   # Use these to trigger a release. You can also uncomment them in a custom config that you can
