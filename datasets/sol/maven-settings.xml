@@ -8,7 +8,7 @@
 			<id>docker</id>
 			<properties>
 				<knetminer.dataSourceId>solknet</knetminer.dataSourceId>
-				<knetminer.specieName>Solanum lycopersium, Capsicum annuum, Solanum tuberosum</knetminer.specieName>
+				<knetminer.specieName>Solanaceae</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about domestic tomato (solanum lycopersium), pepper (Capsicum annuum) and potato (Solanum tuberosum)</knetminer.appDescription>
 				<knetminer.appKeywords>tomato, pepper, potato, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>4081,4072,4113</knetminer.specieTaxId>
