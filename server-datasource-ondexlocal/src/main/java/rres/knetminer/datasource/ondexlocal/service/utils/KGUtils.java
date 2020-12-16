@@ -69,10 +69,12 @@ public class KGUtils
 		).collect ( Collectors.toSet () );			
 		
 		return seed.stream ()
+		// TAXID filter
 		.filter ( gene -> {
       String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
       return dataService.containsTaxId ( thisTaxId );
 		})
+		// filter against the input accessions
 		.filter ( gene ->
 		{
 			if ( gene.getConceptAccessions ()

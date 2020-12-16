@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toMap;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
-import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getLuceneFieldName;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
 import java.io.File;
@@ -44,6 +43,7 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXRelation;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
+import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.logging.ONDEXLogger;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
@@ -189,11 +189,8 @@ public class SearchService
 			crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + notQuery + ") OR ConceptAttribute_Abstract:("
 				+ notQuery + ") OR Annotation:(" + notQuery + ") OR ConceptName:(" + notQuery + ") OR ConceptID:("
 				+ notQuery + ")";
-			String fieldNameNQ = getLuceneFieldName ( "ConceptName", null );
-			QueryParser parserNQ = new QueryParser ( fieldNameNQ, analyzer );
-			Query qNQ = parserNQ.parse ( crossTypesNotQuery );
 			//TODO: The top 2000 restriction should be configurable in settings and documented
-			notList = this.luceneMgr.searchTopConcepts ( qNQ, 2000 );
+			notList = this.searchTopConceptsByName ( crossTypesNotQuery, 2000 );
 		}
 
 		// number of top concepts retrieved for each Lucene field
@@ -201,59 +198,57 @@ public class SearchService
 
 		// search concept attributes
 		for ( AttributeName att : atts )
-			searchConceptByField ( 
-				keywords, "ConceptAttribute", att.getId (), maxConcepts, hit2score, notList,
-				analyzer
+			searchConceptByIdxField ( 
+				keywords, ONDEXLuceneFields.CONATTRIBUTE_FIELD, att.getId (), maxConcepts, hit2score, notList
 			);				
 
 		// Search concept accessions
 		for ( String dsAc : dsAcc )
-			searchConceptByField ( 
-				keywords,  "ConceptAccession", dsAc, maxConcepts, hit2score, notList,
-				analyzer
-			);				
-			
+			searchConceptByIdxField ( keywords, ONDEXLuceneFields.CONACC_FIELD, dsAc, maxConcepts, hit2score, notList );				
 
 		// Search concept names
-		searchConceptByField ( 
-			keywords, "ConceptName", null, maxConcepts, hit2score, notList,
-			analyzer
-		);				
+		searchConceptByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, maxConcepts, hit2score, notList );				
 		
 		// search concept description
-		searchConceptByField ( 
-			keywords, "Description", null, maxConcepts, hit2score, notList,
-			analyzer
-		);				
+		searchConceptByIdxField ( keywords, ONDEXLuceneFields.DESC_FIELD, maxConcepts, hit2score, notList );
 		
 		// search concept annotation
-		searchConceptByField ( 
-			keywords, "Annotation", null, maxConcepts, hit2score, notList,
-			analyzer
-		);				
+		searchConceptByIdxField ( keywords, ONDEXLuceneFields.ANNO_FIELD, maxConcepts, hit2score, notList );
 		
 		log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
 		return hit2score;
 	}
   
+
+  private void searchConceptByIdxField ( 
+    	String keywords, String idxFieldName, int resultLimit, 
+    	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
+  {
+  	searchConceptByIdxField ( keywords, idxFieldName, null, resultLimit, allResults, notHits );
+  }
 	
   /**
    * Was luceneConceptSearchHelper()
-   * TODO: This is more Lucene module stuff
    */
-  private void searchConceptByField ( 
-  	String keywords, String fieldName, String fieldValue, int resultLimit, 
-  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits, 
-  	Analyzer analyzer ) throws ParseException
+  private void searchConceptByIdxField ( 
+  	String keywords, String idxFieldName, String idxFieldSubName, int resultLimit, 
+  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
   {
-		fieldName = getLuceneFieldName ( fieldName, fieldValue );
-		QueryParser parser = new QueryParser ( fieldName, analyzer );
-		Query qAtt = parser.parse ( keywords );
-		ScoredHits<ONDEXConcept> thisHits = this.luceneMgr.searchTopConcepts ( qAtt, resultLimit );
+		ScoredHits<ONDEXConcept> thisHits = this.luceneMgr.searchTopConceptsByIdxField ( 
+			keywords, idxFieldName, idxFieldSubName, resultLimit 
+		);
 		mergeHits ( allResults, thisHits, notHits );
   }
 	
-	
+  /**
+   * Wrapper of {@link #searchTopConceptsByName(String, int)}.
+   */
+	public ScoredHits<ONDEXConcept> searchTopConceptsByName ( String keywords, int sizeLimit )
+	{
+		return this.luceneMgr.searchTopConceptsByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, sizeLimit );
+	}
+  
+  
 	/**
 	 * KnetMiner Gene Rank algorithm
 	 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
@@ -348,22 +343,11 @@ public class SearchService
    */	
   public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
   {
-		// TODO: actually LuceneEnv.DEFAULTANALYZER should be used for all fields
-	  // This chooses the appropriate analyzer depending on the field.
-	
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
 		//
-    Analyzer analyzerSt = new StandardAnalyzer();
-    Analyzer analyzerWS = new WhitespaceAnalyzer();
-
-    String fieldCC = SearchUtils.getLuceneFieldName ( "ConceptClass", null );
-    QueryParser parserCC = new QueryParser ( fieldCC, analyzerWS );
-    Query cC = parserCC.parse("Trait");
-
-    String fieldCN = SearchUtils.getLuceneFieldName ( "ConceptName", null);
-    QueryParser parserCN = new QueryParser(fieldCN, analyzerSt);
-    Query cN = parserCN.parse(keyword);
+    Query cC = luceneMgr.getIdxFieldQuery ( "Trait", ONDEXLuceneFields.CC_FIELD );
+    Query cN = luceneMgr.getIdxFieldQuery ( keyword, ONDEXLuceneFields.CONNAME_FIELD );
 
     BooleanQuery finalQuery = new BooleanQuery.Builder()
     	.add ( cC, BooleanClause.Occur.MUST )

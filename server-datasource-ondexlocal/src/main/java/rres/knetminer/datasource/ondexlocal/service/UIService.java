@@ -51,8 +51,6 @@ public class UIService
 	public String renderSynonymTable ( String keyword ) throws ParseException
 	{
 		StringBuffer out = new StringBuffer ();
-		// TODO: Lucene shouldn't be used directly
-		Analyzer analyzer = new StandardAnalyzer ();
     var graph = dataService.getGraph ();
 		
 		Set<String> synonymKeys = SearchUtils.getSearchWords ( keyword );
@@ -64,11 +62,7 @@ public class UIService
 
 			Map<Integer, Float> synonyms2Scores = new HashMap<> ();
 
-			// search concept names
-			String fieldNameCN = SearchUtils.getLuceneFieldName ( "ConceptName", null );
-			QueryParser parserCN = new QueryParser ( fieldNameCN, analyzer );
-			Query qNames = parserCN.parse ( synonymKey );
-			ScoredHits<ONDEXConcept> hitSynonyms = searchService.luceneMgr.searchTopConcepts ( qNames, 500 );
+			ScoredHits<ONDEXConcept> hitSynonyms = searchService.searchTopConceptsByName ( synonymKey, 5000 );
 
       /*
        * TODO: does this still apply?

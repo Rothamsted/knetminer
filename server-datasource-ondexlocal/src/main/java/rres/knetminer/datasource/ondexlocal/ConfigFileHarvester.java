@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * An implementation of {@link ServletContextListener}, which allows to get a config file for
+ * An implementation of {@link ServletContextListener}, which allows for getting a config file for
  * ConfigurableOndexDataSource from a we context parameter.
  * 
  * See {@code WEB-INF/web.xml} in the {@code aratiny-ws} module for an example of how this is setup.

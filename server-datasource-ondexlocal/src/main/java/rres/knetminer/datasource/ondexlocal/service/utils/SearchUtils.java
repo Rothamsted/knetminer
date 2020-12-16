@@ -118,17 +118,7 @@ public class SearchUtils
   	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
 	}	
 	
-  
-  /**
-   * Gets a Lucene field name as it is structured in an Ondex Lucene index. 
-   * 
-   * TODO: WTH?!? This is an Ondex module utility
-   */
-  public static String getLuceneFieldName ( String name, String value )
-  {
-  	return value == null ? name : name + "_" + value;
-  }
-  
+    
 	/**
 	 * TODO: this is only used by {@link OndexLocalDataSource} and only to know the size of 
 	 * concepts that match. So, do we need to compute the map, or do wee need the count only?
