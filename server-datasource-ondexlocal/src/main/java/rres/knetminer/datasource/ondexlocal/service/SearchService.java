@@ -221,8 +221,8 @@ public class SearchService
   
 
   private void searchConceptByIdxField ( 
-    	String keywords, String idxFieldName, int resultLimit, 
-    	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
+  	String keywords, String idxFieldName, int resultLimit, 
+  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
   {
   	searchConceptByIdxField ( keywords, idxFieldName, null, resultLimit, allResults, notHits );
   }
