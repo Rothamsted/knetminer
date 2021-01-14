@@ -7,10 +7,9 @@
 
 echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
-docker pull knetminer/knetminer-bare:$docker_tag
-exit
+#docker pull --quiet knetminer/knetminer-bare:$docker_tag
 
-docker run -it --rm \
+echo docker run -it --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \
   --workdir /root/knetminer-build/knetminer \
@@ -18,4 +17,8 @@ docker run -it --rm \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
   knetminer/knetminer-bare:$docker_tag \
-  /bin/bash -c "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+  /bin/bash -c "bower --help"
+   
+# "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+
+exit

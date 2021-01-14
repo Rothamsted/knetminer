@@ -50,6 +50,4 @@ do
 	echo 
 done
 
-$IS_RELEASE; || exit
-
 # git push is managed by the main build.sh script	
