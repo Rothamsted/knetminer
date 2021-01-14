@@ -7,7 +7,8 @@
 
 echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
-#docker pull --quiet knetminer/knetminer-bare:$docker_tag
+# TODO: the Maven in the container is old and doesn't support export --no-transfer-progress, update
+export MAVEN_ARGS='--batch-mode'
 
 docker run -i --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
