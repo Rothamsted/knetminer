@@ -1,5 +1,5 @@
 echo -e "\n\n\t Cleaning local Maven for Docker\n"
-mvn $MAVEN_ARGS clean
+sudo mvn $MAVEN_ARGS clean # The build inside docker created files we don't own
 
 echo -e "\n\n\tBuilding Docker image\n"
 docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
