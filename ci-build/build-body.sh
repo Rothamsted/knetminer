@@ -9,7 +9,7 @@ echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
 #docker pull --quiet knetminer/knetminer-bare:$docker_tag
 
-echo docker run -it --rm \
+docker run -it --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \
   --workdir /root/knetminer-build/knetminer \
