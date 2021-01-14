@@ -20,7 +20,7 @@ RUN set -x \
   && apt-get -y install maven git libxml2-utils npm \
   && apt-get -y install python python-pip \
 	&& npm config set unsafe-perm true \
-	&& npm install bower gulp -g \
+	&& npm install -g bower gulp \
   && npm install -g n \
   && n 11.15.0 \\
 	&& echo '{"allow_root":true}' > /root/.bowerrc \

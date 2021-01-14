@@ -10,8 +10,3 @@ docker_tag='latest'
 # This might be useful when developing on a branch. Here, the images knetminer-base:j11 and knetminer:j11
 # will be used/rebuilt
 # [[ "$GIT_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
-
-echo -e "\n\nTHE DAMN PATH IS `pwd`"
-ls -lh
-
-chmod ugo+x client-base/src/main/webapp/html/KnetMaps/node_modules/bower/bin/bower
