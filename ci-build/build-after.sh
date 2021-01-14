@@ -1,7 +1,7 @@
-echo -e "\n\n\t Cleaning local Maven for Docker"
-mvn --quiet clean
+echo -e "\n\n\t Cleaning local Maven for Docker\n"
+mvn $MAVEN_ARGS clean
 
-echo -e "\n\n\tBuilding Docker"
+echo -e "\n\n\tBuilding Docker\n"
 docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
 
 
@@ -31,7 +31,7 @@ do
 
   # See above
   if [[ "$postfix" != '-bare' ]]; then
-  	echo "Pushing Docker$postfix:$docker_tag"
+  	echo -e "\nPushing Docker$postfix:$docker_tag"
 		docker push knetminer/knetminer$postfix:$docker_tag
 	fi
 
@@ -40,11 +40,11 @@ do
   # When we're releasing, we further tag the same images with the release tag and
   # push them too. This should only happen for the master branch
 
-	echo "Tagging Docker$postfix with $docker_release_tag"
+	echo -e "\nTagging Docker$postfix with $docker_release_tag"
 	tag_str=":$docker_release_tag"
 	docker tag knetminer/knetminer$postfix knetminer/knetminer$postfix$tag_str
 	 
-	echo "Pushing Docker$postfix$tag_str"
+	echo -e "\nPushing Docker$postfix$tag_str"
 	docker push knetminer/knetminer$postfix$tag_str
 	
 	echo 
