@@ -2,8 +2,8 @@ echo -e "\n\n\t Cleaning local Maven for Docker\n"
 mvn $MAVEN_ARGS clean
 
 echo -e "\n\n\tBuilding Docker image\n"
-echo docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
-return
+docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
+
 
 if [[ "$GIT_BRANCH" != 'master' ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
