@@ -5,7 +5,7 @@
 # and to make binaries available for the next steps like runtime images building.
 #
 
-echo "\n\n\t$MAVEN_GOAL via Docker bare image\n"
+echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
 docker run -it --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
