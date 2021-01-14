@@ -44,7 +44,7 @@
 						<id>exec-bower-install-genemap</id>
 						<phase>compile</phase>
 						<configuration>
-							<executable>bower</executable>
+							<executable>src/main/webapp/html/KnetMaps/node_modules/.bin/bower</executable>
 							<arguments>
 								<argument>install</argument>
 							</arguments>
