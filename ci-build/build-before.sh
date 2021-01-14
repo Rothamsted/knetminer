@@ -11,4 +11,5 @@ docker_tag='latest'
 # will be used/rebuilt
 # [[ "$GIT_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
 
+echo -e "\n\nTHE DAMN PATH IS `pwd`"
 chmod ugo+x client-base/src/main/webapp/html/KnetMaps/node_modules/bower/bin/bower
