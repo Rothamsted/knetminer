@@ -7,8 +7,8 @@
 
 echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
-# TODO: the Maven in the container is old and doesn't support export --no-transfer-progress, update
-export MAVEN_ARGS='--batch-mode'
+# TODO: we don't use MAVEN_ARGS, cause the Maven in the container is old and doesn't support 
+# --no-transfer-progress, update
 
 echo docker run -i --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
@@ -18,5 +18,5 @@ echo docker run -i --rm \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
   knetminer/knetminer-bare:$docker_tag \
-  /bin/bash -c "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+  /bin/bash -c "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots --batch-mode"
 
