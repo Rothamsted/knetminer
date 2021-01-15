@@ -1,8 +1,8 @@
 # We build on an image that already has the right environment.
-# This makes it independent on the CI system that is being used
+# This makes it independent on the CI system that is being used.
 # 
 # Built files are still landed locally thanks to --volume. This allows for CI-based caching
-# and to make binaries available for the next steps like runtime images building.
+# and to makes binaries available for the next steps like runtime images building.
 #
 
 echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
