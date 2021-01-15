@@ -54,6 +54,7 @@ jobs:
         # If you use on: schedule:, this will tell build.sh how often you try to trigger a build
         # It uses it to know if there are git changes since the last scheduled build
         CI_SCHEDULE_PERIOD: 24 # hours
+        KNET_JENKINS_USER: ${{secrets.KNET_JENKINS_USER}}
         KNET_JENKINS_TOKEN: ${{secrets.KNET_JENKINS_TOKEN}}
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}

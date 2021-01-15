@@ -41,7 +41,7 @@ knet_tomcat_pwd="$2"
 #
 # Custom Maven arguments can be provided by the invoker (export MAVEN_ARGS='...') or the Docker image file
 # This is usually useful for custom Docker-independent builds, see local-env-ex     
-export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'} 
+export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'} 
 
 
 # ---- Parameters/environment setup ends here
