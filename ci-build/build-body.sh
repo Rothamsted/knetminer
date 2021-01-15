@@ -7,10 +7,7 @@
 
 echo -e "\n\n\t$MAVEN_GOAL via Docker bare image\n"
 
-# TODO: we don't use MAVEN_ARGS, cause the Maven in the container is old and doesn't support 
-# --no-transfer-progress, update
-
-docker run -i --rm \
+echo docker run -i --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \
   --workdir /root/knetminer-build/knetminer \

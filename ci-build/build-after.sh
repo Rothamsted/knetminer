@@ -50,4 +50,8 @@ do
 	echo 
 done
 
+job='Knetminer - Deploy from DockerHub'
+curl --user "$KNET_JENKINS_USER:$KNET_JENKINS_TOKEN" -X POST -o - \
+     "https://knetminer.org/build/job/$job/buildWithParameters" 
+
 # git push is managed by the main build.sh script	
