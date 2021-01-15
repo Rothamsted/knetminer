@@ -35,7 +35,7 @@ do
 		docker push knetminer/knetminer$postfix:$docker_tag
 	fi
 
-  $IS_RELEASE || continue 
+  `$IS_RELEASE` || continue 
 
   # When we're releasing, we further tag the same images with the release tag and
   # push them too. This should only happen for the master branch
