@@ -105,9 +105,14 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 	
+# Default MAVEN_ARGS is -Pdocker --offline. If no '-P' is used, this profile is added automatically.
+# Typically you DO WANT both these options.
+#
+MAVEN_ARGS="$MAVEN_ARGS --no-transfer-progress --batch-mode --no-snapshot-updates" # TODO: document this addition
+[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS="$MAVEN_ARGS -Pdocker"	
+	
 # Neo4j mode
 if [ "$is_neo4j" != '' ]; then
-	[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS="$MAVEN_ARGS -Pdocker"
 	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
 	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
 	# the maven command line. So, this is a way to customise things like local installations, and doing so while
@@ -118,9 +123,6 @@ if [ "$is_neo4j" != '' ]; then
 	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
 fi
 
-# Default MAVEN_ARGS is -Pdocker. If no '-P' is used, this profile is added automatically.
-# Typically you DO WANT this.
-# 
 # Default JAVA_TOOL_OPTIONS is:
 #
 #   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:+UseContainerSupport -XX:-UseCompressedOops

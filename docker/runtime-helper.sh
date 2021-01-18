@@ -59,7 +59,7 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 #
 # Custom Maven arguments can be provided by the invoker (export MAVEN_ARGS='...') or the Docker image file
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
-export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'}
+export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode --no-snapshot-updates'}
 
 # Default Java options to tell the JVM to use (almost) all the available memory
 # TODO: Future versions shouldn't need UseCompressedOops (https://stackoverflow.com/a/58121363/529286)

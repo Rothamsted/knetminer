@@ -53,7 +53,13 @@ echo -e "\n\n\tBuilding Knetminer\n"
 cd ..
 
 # ---- Regular full build of the server web reference application (aratiny-ws.war) ----
+mvn $MAVEN_ARGS dependency:go-offline dependency:resolve-plugins
+# This is to force the download of the clean plugin (the command above is not enough)
+# TODO: might be a problem if we have 
+mvn clean -N 
+
 mvn install $MAVEN_ARGS -DskipTests -DskipITs
+
 cd aratiny/aratiny-ws
 # --- Alternatively, you can enable fast build during debugging
 # mvn dependency:resolve
