@@ -51,7 +51,8 @@ do
   	--neo4j-pwd)
   		neo4j_pwd="$2"; shift 2;;
   	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
-  	#--: will pick knetminer/knetminer:test). Default is 'latest' (which corresponds to '').
+  	#--: will pick knetminer/knetminer:test). Default is 'latest' for the latest version in github, or a given 
+  	#--: version, depending on the release distribution you are using.
   	--image-version)
   		image_version="$2"; shift 2;;
   	#--: yields this help output and then exits with 1
