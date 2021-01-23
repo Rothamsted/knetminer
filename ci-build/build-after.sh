@@ -54,6 +54,9 @@ done
 # The script that goes into this $NEW_RELEASE_VER distribution should use the corresponding version as
 # a default, not 'latest'. TODO: document it in the wiki.
 # 
-sed --in-place "s/image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
+if $IS_RELEASE; then
+	echo -e "\n\n\tSetting '$NEW_RELEASE_VER' as default --image-version in docker-run.sh\n"
+	sed --in-place "s/image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
+fi
 
 # git push is managed by the main build.sh script	
