@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -44,6 +45,12 @@ public class ApiIT
 	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	private Logger log = LogManager.getLogger ( this.getClass () );
 
+	@BeforeClass
+	public static void initialDelay () throws InterruptedException
+	{
+		clog.info ( "Making a pause to give the server time to initialise." );
+		Thread.sleep ( 3 * 1000 );
+	}
 	
 	@Test
 	public void testCountHits () throws JSONException, IOException, URISyntaxException {

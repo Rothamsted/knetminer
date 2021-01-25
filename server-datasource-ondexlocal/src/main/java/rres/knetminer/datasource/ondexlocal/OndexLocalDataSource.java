@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import static uk.ac.ebi.utils.lambda.LambdaUtils.toSupplier;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,11 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+
+import com.machinezoo.noexception.Exceptions;
 
 import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
@@ -37,10 +43,13 @@ import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.lambda.LambdaUtils;
+import uk.ac.ebi.utils.runcontrol.MultipleAttemptsExecutor;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -80,17 +89,29 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		);
 		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		ondexServiceProvider.initGraph ( configXmlPath );
 
-		var odxData = ondexServiceProvider.getDataService ();
-		var dsName = odxData.getDataSourceName ();
+		// We do it asynchronously, so that the JDK and the web container aren't stuck on this.
+		// The ondexServiceProvider.getInstance() will return a NotReadyException exception until this isn't finished, 
+		// that will be forwarded back to the client by any call requiring the OSP.  
+		ExecutorService asyncRunner = Executors.newSingleThreadExecutor ();
+		asyncRunner.submit ( () -> ondexServiceProvider.initData ( configXmlPath ) );
+
+		// This is dirty: let's wait that the parallel task loads the options and then let's set the dataSource,
+		// so that URLs that depend on it don't return 404.
+		var dataService = ondexServiceProvider.getDataService ();
+		var attempter = new MultipleAttemptsExecutor ( 150, 500, 500 );
+		attempter.execute ( () -> dataService.getDataSourceName () );
+
+		var dsName = dataService.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
-		this.setDataSourceNames ( new String[] {dsName} );
+		this.setDataSourceNames ( new String[] { dsName } );
 		log.info ( "Setting data source '{}'", dsName );
+		
+		log.info ( "Asynchronous Ondex initialisation started" );
 	}
-	
+		
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();

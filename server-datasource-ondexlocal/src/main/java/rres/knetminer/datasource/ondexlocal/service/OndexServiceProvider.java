@@ -1,5 +1,8 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
+import uk.ac.ebi.utils.exceptions.NotReadyException;
+import uk.ac.ebi.utils.lambda.LambdaUtils;
 
 
 /**
@@ -53,6 +58,8 @@ public class OndexServiceProvider
 	@Autowired
 	private ExportService exportService;
 	
+	private AtomicBoolean isInitialisingData = new AtomicBoolean ( false );
+	
 	
 	private static AbstractApplicationContext springContext;
 	
@@ -93,11 +100,17 @@ public class OndexServiceProvider
 		return exportService;
 	}
 
-	
+	/**
+	 * @throws NotReadyException as explained in {@link #initData(String, Supplier)}, if the current instance is 
+	 * initialising its data, this is exception is thrown and the invoker should try again later.
+	 */
 	public static OndexServiceProvider getInstance () 
 	{
 		initSpring ();
-		return springContext.getBean ( OndexServiceProvider.class );
+		var instance = springContext.getBean ( OndexServiceProvider.class );
+		if ( instance.isInitialisingData.get () ) 
+			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try later" );
+		return instance;
 	}
   
   private static void initSpring ()
@@ -122,16 +135,37 @@ public class OndexServiceProvider
    * This is called before anything can be used. The config file comes from 
    * initialisation mechanisms like {@link ConfigFileHarvester}, see {@link OndexLocalDataSource#init()}.
    * 
-   * @param configXmlPath
-   */
-	public void initGraph ( String configXmlPath )
+	 * This method wraps the whole initialisation into a critical block, when {@link #getInstance()} is
+	 * invoked asynchronously (ie, by another thread), it will throws an exception if the initialisation
+	 * isn't finished.
+	 * 
+	 * This is designed mainly to allow that long-running Knetminer initialisations don't block the whole JVM and
+	 * hence the whole web container.
+	 * 
+	 */
+	public void initData ( String configXmlPath )
 	{
-		this.dataService.loadOptions ( configXmlPath );
-		dataService.initGraph ();
-		
-		this.searchService.indexOndexGraph ();
-		this.semanticMotifDataService.initSemanticMotifData ();
-		
-		this.exportService.exportGraphStats ();
-	} 
+		this.isInitialisingData.getAndSet ( true );
+		try
+		{
+			this.dataService.loadOptions ( configXmlPath );
+			dataService.initGraph ();
+			
+			this.searchService.indexOndexGraph ();
+			this.semanticMotifDataService.initSemanticMotifData ();
+			
+			this.exportService.exportGraphStats ();
+		}
+		finally {
+			this.isInitialisingData.getAndSet ( false );
+		}
+	}
+
+	/**
+	 * @see #initData(String, Supplier).
+	 */
+	public boolean isInitialisingData ()
+	{
+		return isInitialisingData.get ();
+	}
 }
