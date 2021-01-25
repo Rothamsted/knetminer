@@ -60,7 +60,7 @@ public class OndexServiceProvider
 	private AtomicBoolean isInitialisingData = new AtomicBoolean ( false );
 	
 	
-	private static AbstractApplicationContext springContext;
+	private static volatile AbstractApplicationContext springContext;
 	
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
