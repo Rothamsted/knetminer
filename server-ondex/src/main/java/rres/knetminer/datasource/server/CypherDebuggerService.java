@@ -161,16 +161,13 @@ public class CypherDebuggerService
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		OptionsMap odxOpts = odxService.getDataService ().getOptions ();
-
-		String dataPath = odxOpts.getString ( "DataPath" );
 		CypherGraphTraverser traverser = this.getTraverser ();
 
 		// It's disabled after server init, let's re-enable
 		traverser.setOption( "performanceReportFrequency", 0);
 		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
     
-		odxService.getSemanticMotifService ().initSemanticMotifData ( true );
+		odxService.getSemanticMotifDataService ().initSemanticMotifData ( true );
 
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
@@ -213,7 +210,7 @@ public class CypherDebuggerService
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		var traverser = odxService.getSemanticMotifService ().getGraphTraverser ();
+		var traverser = odxService.getSemanticMotifDataService ().getGraphTraverser ();
 		
 		if ( ! (traverser instanceof CypherGraphTraverser ) ) throw new ClassCastException ( 
 			"You need the Neo4j mode to use the CypherDebugger"

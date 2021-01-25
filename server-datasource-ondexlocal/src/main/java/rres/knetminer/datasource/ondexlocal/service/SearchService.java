@@ -80,7 +80,7 @@ public class SearchService
 	private DataService dataService;
 	
 	@Autowired
-	private SemanticMotifService semanticMotifService;
+	private SemanticMotifDataService semanticMotifDataService;
   
   private final Logger log = LogManager.getLogger(getClass());
 
@@ -133,7 +133,7 @@ public class SearchService
 	) throws IOException, ParseException
 	{
 		var graph = dataService.getGraph ();
-		var genes2Concepts = semanticMotifService.getGenes2Concepts ();
+		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
 		Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
 		
 		// TODO: We should search across all accession datasources or make this configurable in settings
@@ -171,10 +171,6 @@ public class SearchService
 			return hit2score;
 		}
 
-		// TODO: Actually, we should use LuceneEnv.DEFAULTANALYZER, which 
-		// consider different field types. See https://stackoverflow.com/questions/62119328 
-		Analyzer analyzer = new StandardAnalyzer ();
-
 		// added to overcome double quotes issue
 		// if changing this, need to change genepage.jsp and evidencepage.jsp
 		keywords = keywords.replace ( "###", "\"" );
@@ -184,17 +180,19 @@ public class SearchService
 		String notQuery = getExcludingSearchExp ( keywords );
 		String crossTypesNotQuery = "";
 		ScoredHits<ONDEXConcept> notList = null;
+
+		// number of top concepts retrieved for each Lucene field
+		//TODO: The top 2000 restriction should be configurable in settings and documented
+		int maxConcepts = 2000;
+
 		if ( !"".equals ( notQuery ) )
 		{
 			crossTypesNotQuery = "ConceptAttribute_AbstractHeader:(" + notQuery + ") OR ConceptAttribute_Abstract:("
 				+ notQuery + ") OR Annotation:(" + notQuery + ") OR ConceptName:(" + notQuery + ") OR ConceptID:("
 				+ notQuery + ")";
-			//TODO: The top 2000 restriction should be configurable in settings and documented
-			notList = this.searchTopConceptsByName ( crossTypesNotQuery, 2000 );
+			notList = this.searchTopConceptsByName ( crossTypesNotQuery, maxConcepts );
 		}
 
-		// number of top concepts retrieved for each Lucene field
-		int maxConcepts = 2000;
 
 		// search concept attributes
 		for ( AttributeName att : atts )
@@ -267,8 +265,8 @@ public class SearchService
 		// In other words: Filter the global gene2concept map for concept that contain the keyword
 		Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
 		
-		var concepts2Genes = semanticMotifService.getConcepts2Genes ();
-		var genes2PathLengths = semanticMotifService.getGenes2PathLengths ();
+		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
+		var genes2PathLengths = semanticMotifDataService.getGenes2PathLengths ();
 		var genesCount = dataService.getGenomeGenesCount ();
 		
 		hit2score.keySet ()
@@ -422,7 +420,7 @@ public class SearchService
 	 */
 	public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
 	{
-		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifService, luceneConcepts );
+		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifDataService, luceneConcepts );
 	}
 	
 	/**

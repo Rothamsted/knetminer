@@ -5,26 +5,20 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
-import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
@@ -151,7 +145,7 @@ public class DataService
 		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-		genomeGenesCount = (int) seed.stream ()
+		this.genomeGenesCount = (int) seed.stream ()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
 		.map ( GeneHelper::getTaxID )
 		.filter ( this::containsTaxId )

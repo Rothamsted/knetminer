@@ -40,6 +40,10 @@ public class OndexServiceProvider
 	private SearchService searchService;
 	
 	@Autowired
+	private SemanticMotifDataService semanticMotifDataService;
+
+	
+	@Autowired
 	private SemanticMotifService semanticMotifService;
 	
 	
@@ -74,6 +78,11 @@ public class OndexServiceProvider
 		return semanticMotifService;
 	}
 	
+	public SemanticMotifDataService getSemanticMotifDataService ()
+	{
+		return semanticMotifDataService;
+	}
+
 	public UIService getUIService ()
 	{
 		return uiService;
@@ -121,7 +130,7 @@ public class OndexServiceProvider
 		dataService.initGraph ();
 		
 		this.searchService.indexOndexGraph ();
-		this.semanticMotifService.initSemanticMotifData ();
+		this.semanticMotifDataService.initSemanticMotifData ();
 		
 		this.exportService.exportGraphStats ();
 	} 
