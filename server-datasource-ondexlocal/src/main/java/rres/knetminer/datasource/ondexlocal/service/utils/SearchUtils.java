@@ -16,7 +16,6 @@ import net.sourceforge.ondex.core.searchable.ScoredHits;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifDataService;
-import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
 
 /**
  * Search utilities

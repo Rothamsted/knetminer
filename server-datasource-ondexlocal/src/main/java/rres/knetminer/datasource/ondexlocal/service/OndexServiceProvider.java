@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
-import uk.ac.ebi.utils.lambda.LambdaUtils;
 
 
 /**

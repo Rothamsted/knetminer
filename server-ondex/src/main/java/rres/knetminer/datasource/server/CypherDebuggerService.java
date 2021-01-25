@@ -1,7 +1,5 @@
 package rres.knetminer.datasource.server;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 

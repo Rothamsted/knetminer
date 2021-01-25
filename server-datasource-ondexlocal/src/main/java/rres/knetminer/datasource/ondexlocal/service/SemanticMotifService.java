@@ -3,25 +3,17 @@ package rres.knetminer.datasource.ondexlocal.service;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateAttributeName;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getOrCreateConceptClass;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import net.sourceforge.ondex.algorithm.graphquery.nodepath.EvidencePathNode;
 import net.sourceforge.ondex.config.ONDEXGraphRegistry;
 import net.sourceforge.ondex.core.AttributeName;
@@ -36,13 +28,9 @@ import net.sourceforge.ondex.core.ONDEXRelation;
 import net.sourceforge.ondex.core.RelationType;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.ebi.utils.io.SerializationUtils;
-import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
 /**
  * The semantic motif sub-service for {@link OndexServiceProvider}.
