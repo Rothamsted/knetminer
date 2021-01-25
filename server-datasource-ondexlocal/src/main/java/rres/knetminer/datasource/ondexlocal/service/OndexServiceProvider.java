@@ -109,7 +109,7 @@ public class OndexServiceProvider
 		initSpring ();
 		var instance = springContext.getBean ( OndexServiceProvider.class );
 		if ( instance.isInitialisingData.get () ) 
-			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try later" );
+			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try again later" );
 		return instance;
 	}
   
