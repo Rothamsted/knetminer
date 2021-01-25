@@ -139,7 +139,7 @@ public class SemanticMotifDataService
 	@SuppressWarnings ( "rawtypes" )
 	public void initSemanticMotifData ( boolean doReset )
 	{
-		log.info ( "Setting semantic motif data" );
+		log.info ( "Initializing semantic motif data" );
 		
 		initGraphTraverser ();		
 		
@@ -252,6 +252,8 @@ public class SemanticMotifDataService
 			}
 		}
 		
+		log.info ( "Semantic motif data initialization ended, post-processing" );
+
 		// Moving forward with putting motif data in place.
 		//
 		postInit ( seedGenes );
@@ -301,7 +303,8 @@ public class SemanticMotifDataService
 			progressLogger.updateWithIncrement ();
 		}
 
-		log.info ( "Populated Gene2QTL with #mappings: " + genes2QTLs.size () );		
+		log.info ( "Populated Gene2QTL with {} mapping(s)", genes2QTLs.size () );		
+		log.info ( "End of semantic motif initialization post-processing" );		
 	}	
 	
 	/**

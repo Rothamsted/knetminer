@@ -148,6 +148,7 @@ public class OndexServiceProvider
 		this.isInitialisingData.getAndSet ( true );
 		try
 		{
+			log.info ( "Starting Ondex/Knetminer data initialization" );
 			this.dataService.loadOptions ( configXmlPath );
 			dataService.initGraph ();
 			
@@ -155,6 +156,7 @@ public class OndexServiceProvider
 			this.semanticMotifDataService.initSemanticMotifData ();
 			
 			this.exportService.exportGraphStats ();
+			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
 		finally {
 			this.isInitialisingData.getAndSet ( false );

@@ -247,6 +247,8 @@ public class ExportService
 		{
 			log.error ( "Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex );
 		}
+		
+		log.info ( "End of graph stats export" );
 	}
 	
 	

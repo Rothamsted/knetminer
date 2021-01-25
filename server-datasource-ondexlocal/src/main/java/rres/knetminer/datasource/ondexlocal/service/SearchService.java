@@ -89,6 +89,8 @@ public class SearchService
 
   void indexOndexGraph ()
   {
+  	log.info ( "Indexing the Ondex graph" );
+  	
   	var graph = dataService.getGraph ();
   	var oxlGraphPath = dataService.getOxlPath ();
   	var dataPath = dataService.getDataPath (); 
@@ -108,7 +110,7 @@ public class SearchService
       luceneMgr.setONDEXGraph ( graph );
       luceneMgr.setReadOnlyMode ( true );
 
-      log.info ( "Lucene index created");
+      log.info ( "Ondex graph indexed");
     } 
     catch (Exception e)
     {

@@ -81,10 +81,12 @@ public class DataService
 				? new URL ( configXmlPath )
 				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
 			
+			log.info ( "Loading Ondex/Knetminer configuration from '{}'", configUrl );
 			Properties props = new Properties ();
 			props.loadFromXML ( configUrl.openStream() );
 			this.options = OptionsMap.from ( props );
 			this.updateFromOptions ();
+			log.info ( "Ondex/Knetminer loaded" );
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
