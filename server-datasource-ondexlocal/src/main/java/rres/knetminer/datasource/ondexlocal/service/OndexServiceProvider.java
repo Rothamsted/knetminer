@@ -141,6 +141,9 @@ public class OndexServiceProvider
 	 * This is designed mainly to allow that long-running Knetminer initialisations don't block the whole JVM and
 	 * hence the whole web container.
 	 * 
+	 * @param configXmlPath the path of the configuration file. This can be null if 
+	 * {@link #loadOptions options were already loaded}, see {@link #initData()}. 
+	 * 
 	 */
 	public void initData ( String configXmlPath )
 	{
@@ -148,7 +151,17 @@ public class OndexServiceProvider
 		try
 		{
 			log.info ( "Starting Ondex/Knetminer data initialization" );
-			this.dataService.loadOptions ( configXmlPath );
+			
+			if ( configXmlPath != null )
+				this.dataService.loadOptions ( configXmlPath );
+			else
+			{
+				if ( this.dataService.getOptions ().isEmpty () ) throw new IllegalStateException ( 
+					"OndexServiceProvider.initData() requires a config file path or that you first load options from it" 
+				);
+				log.warn ( "Knetminer config path is null, relying on existing/previous config options" );
+			}
+			
 			dataService.initGraph ();
 			
 			this.searchService.indexOndexGraph ();
@@ -161,6 +174,20 @@ public class OndexServiceProvider
 			this.isInitialisingData.getAndSet ( false );
 		}
 	}
+	
+	/**
+	 * Calls {@link #initData(String)} with null. This is to be used when 
+	 * {@link DataService#loadOptions(String) you loaded the configuration} in advance and you don't need to repeat it. 
+	 * 
+	 * In turn, this is used in {@link OndexLocalDataSource} to get some basic information before starting the long-running
+	 * data load and setup.
+	 * 
+	 */
+	public void initData ()
+	{
+		initData ( null );
+	}
+
 
 	/**
 	 * @see #initData(String, Supplier).

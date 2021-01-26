@@ -43,7 +43,6 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.ebi.utils.runcontrol.MultipleAttemptsExecutor;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -83,25 +82,23 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		);
 		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-
-		// We do it asynchronously, so that the JDK and the web container aren't stuck on this.
-		// The ondexServiceProvider.getInstance() will return a NotReadyException exception until this isn't finished, 
-		// that will be forwarded back to the client by any call requiring the OSP.  
-		ExecutorService asyncRunner = Executors.newSingleThreadExecutor ();
-		asyncRunner.submit ( () -> ondexServiceProvider.initData ( configXmlPath ) );
-
-		// This is dirty: let's wait that the parallel task loads the options and then let's set the dataSource,
-		// so that URLs that depend on it don't return 404.
 		var dataService = ondexServiceProvider.getDataService ();
-		var attempter = new MultipleAttemptsExecutor ( 150, 500, 500 );
-		attempter.execute ( () -> dataService.getDataSourceName () );
 
+		// this is quick and can be done in advance, so that we have what we need to be able to start answering the
+		// URLs
+		dataService.loadOptions ( configXmlPath );
 		var dsName = dataService.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
 		this.setDataSourceNames ( new String[] { dsName } );
 		log.info ( "Setting data source '{}'", dsName );
+		
+		// Now we load the data asynchronously, so that the JDK and the web container aren't stuck on it.
+		// The ondexServiceProvider.getInstance() will return a NotReadyException exception until this isn't finished, 
+		// that will be forwarded back to the client by any call requiring the OSP.
+		ExecutorService asyncRunner = Executors.newSingleThreadExecutor ();
+		asyncRunner.submit ( () -> ondexServiceProvider.initData () );
 		
 		log.info ( "Asynchronous Ondex initialisation started" );
 	}
