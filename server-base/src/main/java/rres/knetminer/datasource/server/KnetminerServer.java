@@ -38,6 +38,7 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
+import rres.knetminer.datasource.api.KnetminerExceptionResponse;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 
@@ -346,14 +347,20 @@ public class KnetminerServer {
 	 * @param rawRequest
 	 * @return
 	 */
-	private ResponseEntity<KnetminerResponse> _handle(String ds, String mode, KnetminerRequest request,
-			HttpServletRequest rawRequest) {
+	private ResponseEntity<KnetminerResponse> _handle(
+		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) 
+	{
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
+			return handleException ( new IllegalStateException ( 
+				"data source name isn't set, probably a Knetminer configuration error" ), 
+				"dataSource is null", 
+				rawRequest, HttpStatus.NOT_FOUND
+			);
 		}
 
-		try {
+		try 
+		{
 			if (log.isDebugEnabled()) {
 				String paramsStr = "Keyword:" + request.getKeyword() + " , List:"
 						+ Arrays.toString(request.getList().toArray()) + " , ListMode:" + request.getListMode()
@@ -364,19 +371,31 @@ public class KnetminerServer {
 			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
 			this._googlePageView(ds, mode, rawRequest);
 			response = (KnetminerResponse) method.invoke(dataSource, ds, request);
-			return new ResponseEntity<KnetminerResponse>(response, HttpStatus.OK);
-		} catch (NoSuchMethodException e) {
-			log.info("Invalid mode requested: " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
-		} catch (IllegalArgumentException e) {
-			log.info("Invalid parameters passed to " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.BAD_REQUEST);
-		} catch (Error e) {
-			log.error("Error while running " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (Exception e) {
-			log.error("Exception while running " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} 
+		catch (NoSuchMethodException ex) {
+			return handleException ( ex, "Invalid mode requested: " + mode, rawRequest, HttpStatus.NOT_FOUND );
+		} 
+		catch (IllegalArgumentException ex) {
+			return handleException ( ex, "Invalid parameters passed to " + mode, rawRequest, HttpStatus.BAD_REQUEST );
+		} 
+		catch (Error ex) {
+			return handleException ( ex, "System error while running " + mode, rawRequest, HttpStatus.INTERNAL_SERVER_ERROR );
+		} 
+		catch (Exception ex) {
+			return handleException ( ex, "Application error while running " + mode, rawRequest, HttpStatus.INTERNAL_SERVER_ERROR );
 		}
 	}
+	
+	private ResponseEntity<KnetminerResponse> 
+		handleException ( Throwable ex, String logMsg, HttpServletRequest request, HttpStatus httpStatus )
+	{
+		log.error( logMsg, ex );
+				
+		ResponseEntity.status ( httpStatus ).
+		
+		KnetminerResponse response = new KnetminerExceptionResponse ( ex, request, httpStatus );
+		return new ResponseEntity<> ( response, httpStatus );
+	}
+
 }
