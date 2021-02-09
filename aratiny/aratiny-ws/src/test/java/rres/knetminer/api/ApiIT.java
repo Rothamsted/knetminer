@@ -224,7 +224,7 @@ public class ApiIT
 		/*
 			{
 				"status" : 500,
-				"detail" : "<the whole stack trace"
+				"detail" : "<the whole stack trace>"
 				"title" : "Application error while running countHits: null",
 				"statusReasonPhrase" : "Internal Server Error",
 				"path" : "http://localhost:9090/ws/aratiny/countHits",
