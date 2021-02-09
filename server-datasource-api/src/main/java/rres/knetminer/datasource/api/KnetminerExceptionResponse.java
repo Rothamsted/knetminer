@@ -2,7 +2,6 @@ package rres.knetminer.datasource.api;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +20,7 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class KnetminerExceptionResponse extends KnetminerResponse
 {
-	private String type, title, detail, path;
+	private String type, title, detail, path, statusReasonPhrase;
 	private int status;
 	
 	public KnetminerExceptionResponse ( Throwable ex, HttpServletRequest request, HttpStatus httpStatus )
@@ -67,10 +66,11 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	{
 		StringWriter sw = new StringWriter ();
 		ex.printStackTrace ( new PrintWriter ( sw ) );
-		
+				
   	type = ex.getClass ().getName ();
   	title = ex.getMessage ();
   	status = httpStatus.value ();
+  	statusReasonPhrase = httpStatus.getReasonPhrase ();
   	detail = sw.toString ();
   	path = requestURI;
 	}
@@ -117,5 +117,13 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	public int getStatus ()
 	{
 		return status;
-	}	
+	}
+
+	/**
+	 * This also comes from {@link HttpStatus#getReasonPhrase()}.
+	 */
+	public String getStatusReasonPhrase ()
+	{
+		return statusReasonPhrase;
+	}
 }

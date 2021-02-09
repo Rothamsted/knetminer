@@ -28,8 +28,6 @@ import uk.ac.ebi.utils.exceptions.NotReadyException;
  * to types of functions. The wiring between all the components is done via Spring, with a 
  * {@link #springContext specific Spring context}, which is initialised here and populated via package scanning and
  * class annotations (no config file).  
- *
- * TODO: refactoring, continue with UI-related stuff and other small functions about UI or KG.
  * 
  * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha

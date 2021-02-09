@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +46,7 @@ public class CypherDebuggerService
 	 */
 	@ResponseStatus( value = HttpStatus.FORBIDDEN, reason = ForbiddenException.REASON )
 	@SuppressWarnings ( "serial" )
-	public static class ForbiddenException extends RuntimeException
+	public static class ForbiddenException extends IllegalStateException
 	{
 		public static final String REASON = 
 			"Unauthorized. Knetminer must be built with " + ENABLED_PROPERTY + " for this to work";
@@ -108,7 +107,11 @@ public class CypherDebuggerService
 	}
 	
 		
-	@GetMapping ( path = "/traverser/report", produces = "text/plain; charset=utf-8" )
+	@RequestMapping (
+		path = "/traverser/report", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserReport () throws InterruptedException, ExecutionException
 	{
 		this.checkEnabled ();
@@ -137,7 +140,11 @@ public class CypherDebuggerService
 	 * ongoing operations. #traverserReport tells if a traversal was cancelled but not completed.
 	 * 
 	 */
-	@GetMapping ( path = "/traverser/cancel" )
+	@RequestMapping (
+		path = "/traverser/cancel", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
 	{
 		this.checkEnabled ();
@@ -181,7 +188,11 @@ public class CypherDebuggerService
 	}
 	
 	
-	@GetMapping ( path = "/traverser/queries" )
+	@RequestMapping (
+		path = "/traverser/queries", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserQueries () 
 	{
 		this.checkEnabled ();

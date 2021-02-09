@@ -1,10 +1,12 @@
 package rres.knetminer.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -22,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -136,22 +139,39 @@ public class ApiIT
 		);
 	}
 	
+	/**
+	 * Defaults to true
+	 * 
+	 * @param callName
+	 * @param jsonFields
+	 * @return
+	 */
+	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
+	{
+		return invokeApi ( urlOrCallName, true, jsonFields );
+	}
+
 	
 	/**
 	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
-	 * @param callName appended to {@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
+	 * @param callName the call URL, if it doesn't start with http://, the URL is composed by prepending 
+	 * 				{@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
+	 * @param failOnError true if the HTTP request doesn't return the 200 status.
 	 * @param jsonFields appended to the HTTP request.
 	 * 
 	 */
-	public static JSONObject invokeApi ( String callName, Object... jsonFields )
+	public static JSONObject invokeApi ( String urlOrCallName, boolean failOnError, Object... jsonFields )
 	{
-		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + callName;
+		String url = urlOrCallName.startsWith ( "http://" )
+			? urlOrCallName 
+			: System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + urlOrCallName;
+		
 		try
 		{
 			JSONObject js = new JSONObject ();
 			for ( int i = 0; i < jsonFields.length; i++ )
 				js.put ( (String) jsonFields [ i ], jsonFields [ ++i ] );
-			
+			 
 			HttpPost post = new HttpPost ( url );
 			StringEntity jsEntity = new StringEntity( js.toString (), ContentType.APPLICATION_JSON );
 			post.setEntity ( jsEntity );
@@ -160,12 +180,16 @@ public class ApiIT
 
 			HttpResponse response = client.execute ( post );
 			int httpCode = response.getStatusLine ().getStatusCode ();
-			if ( httpCode != 200 ) ExceptionUtils.throwEx ( 
-				HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
-			);
+			if ( httpCode != 200 ) 
+			{
+				if ( failOnError ) ExceptionUtils.throwEx ( 
+					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
+				);
+				clog.warn ( "Return code for {} is {}", url, httpCode );				
+			}
+			
 			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
 			clog.info ( "JSON got from <{}>:\n{}", url, jsStr );
-			
 			return new JSONObject ( jsStr );
 		}
 		catch ( JSONException | IOException | HttpException ex )
@@ -178,6 +202,76 @@ public class ApiIT
 			);
 		}
 	}
+
+	@Test
+	public void testBadCallError ()
+	{
+		JSONObject js = invokeApi ( "foo", false, new Object[ 0 ] );
+		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.client.HttpClientErrorException", js.getString ( "type" ) );
+		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
+		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
+		assertEquals ( 
+			"Bad path for the /foo call!",
+			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/foo", js.getString ( "path" )
+		);
+		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
+		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
+	}
+	
+	@Test
+	public void testBadParametersCallError ()
+	{
+		/*
+			{
+				"status" : 500,
+				"detail" : "<the whole stack trace"
+				"title" : "Application error while running countHits: null",
+				"statusReasonPhrase" : "Internal Server Error",
+				"path" : "http://localhost:9090/ws/aratiny/countHits",
+				"type" : "java.lang.RuntimeException"
+			}		 
+		 */
+		JSONObject js = invokeApi ( "countHits", false, new Object[ 0 ] );
+		assertEquals ( "Bad type for the /countHits call!", "java.lang.RuntimeException", js.getString ( "type" ) );
+		assertEquals ( "Bad status for the /countHits call!", 500, js.getInt ( "status" ) );
+		assertTrue ( "Bad title for the /countHits call!", js.getString ( "title" ).contains ( "Application error while running countHits: null" ) );
+		assertEquals ( 
+			"Bad path for the /countHits call!",
+			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
+		);
+		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
+		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Internal Server Error", js.getString ( "statusReasonPhrase" ) );
+	}
+	
+	@Test
+	public void testForbiddenEx ()
+	{
+		// in this mode it might return a regular answer, not an error
+		if ( "console".equals ( getMavenProfileId () ) ) return;
+		
+		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/cydebug/traverser/report";
+		JSONObject js = invokeApi ( url, false, new Object[ 0 ] );
+		assertEquals ( 
+			"Bad type for the /cydebug call!",
+			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
+			js.getString ( "type" )
+		);
+		assertEquals ( "Bad status for the /cydebug call!", 403, js.getInt ( "status" ) );
+		assertTrue (
+			"Bad title for the /cydebug call!",
+			js.getString ( "title" ).contains (
+				"Unauthorized. Knetminer must be built with knetminer.backend.cypherDebugger.enabled for this to work"
+			)
+		);
+		assertEquals ( "Bad path for the /cydebug call!", url, js.getString ( "path" ) );
+		assertTrue (
+			"Bad detail for the /cydebug call!",
+			js.getString ( "detail" ).contains (
+				"ForbiddenException: Unauthorized. Knetminer must be built with knetminer.backend"
+			)
+		);
+		assertEquals ( "Bad statusReasonPhrase for the /cydebug call!", "Forbidden", js.getString ( "statusReasonPhrase" ) );
+	}	
 	
 	
 	/**
