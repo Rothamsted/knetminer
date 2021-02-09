@@ -13,7 +13,7 @@ fi
 
 # The bare image is usually rebuilt manually, here we've only to tag it when releasing
 #
-if [[ ! `$IS_RELEASE` ]]; then
+if $IS_RELEASE; then
 	echo -e "\n\n\tTagging and pushing new Docker images with ${NEW_RELEASE_VER}\n"
 	# We need it for the tag
 	docker pull knetminer/knetminer-bare
