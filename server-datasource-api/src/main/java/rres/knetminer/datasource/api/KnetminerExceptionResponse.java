@@ -11,8 +11,8 @@ import org.springframework.web.context.request.WebRequest;
 
 /**
  * This is used to return an error/exception via HTTP. The fields in this response are defined according to the
- * <a href = "https://www.baeldung.com/rest-api-error-handling-best-practices">RFC-7807</a> specification.
- * 
+ * <a href = "https://www.baeldung.com/rest-api-error-handling-best-practices">RFC-7807</a> specification, with the
+ * addition of {@link #getStatusReasonPhrase()}.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>6 Feb 2021</dd></dl>
@@ -56,11 +56,11 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 		this ( ex, request, HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 	
+	
 	private void init ( Throwable ex, HttpServletRequest request, HttpStatus httpStatus )
 	{
 		init ( ex, request.getRequestURL ().toString (), httpStatus );
 	}
-
 	
 	private void init ( Throwable ex, String requestURI, HttpStatus httpStatus )
 	{
@@ -73,8 +73,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
   	statusReasonPhrase = httpStatus.getReasonPhrase ();
   	detail = sw.toString ();
   	path = requestURI;
-	}
-	
+	}	
 	
 	
 	
@@ -111,8 +110,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	}
 
 	/**
-	 * This is set by the constructor, using a {@link HttpStatus} parameter.
-	 * @return
+	 * The constructor uses a {@link HttpStatus} parameter for this.
 	 */
 	public int getStatus ()
 	{
@@ -120,7 +118,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	}
 
 	/**
-	 * This also comes from {@link HttpStatus#getReasonPhrase()}.
+	 * The constructor uses a {@link HttpStatus} parameter for this.
 	 */
 	public String getStatusReasonPhrase ()
 	{
