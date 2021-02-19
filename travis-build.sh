@@ -57,10 +57,6 @@ mvn --quiet clean
 # [[ "$TRAVIS_BRANCH" == '202006_jdk11' ]] && docker_tag='j11' || docker_tag='latest'
 docker_tag='latest'
 
-# TODO: remove
-#echo -e "\n\n\tBuilding Docker-base"
-#docker build -t knetminer/knetminer-base:$docker_tag -f docker/Dockerfile-base .
-
 echo -e "\n\n\tBuilding Docker"
 docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
 
@@ -88,8 +84,6 @@ fi
 
 docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
 
-# TODO: remove
-#for postfix in bare base ''
 for postfix in bare ''
 do
 	[[ -z "$postfix" ]] || postfix="-$postfix"

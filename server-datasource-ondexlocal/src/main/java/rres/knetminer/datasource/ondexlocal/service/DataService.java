@@ -5,26 +5,21 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
-import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
@@ -71,7 +66,8 @@ public class DataService
 	 * Loads config properties from a Knetminer config file.
 	 * 
 	 * This is usually {@code <dataset>/config/data-source.xml} and the web API gets its path from
-	 * {@link ConfigFileHarvester}. 
+	 * {@link ConfigFileHarvester}. However, options can be loaded separately, see {@link OndexServiceProvider#initData()}.
+	 * 
 	 * 
 	 * @param configXmlPath it's a path to a local file system URL, if it starts with "file://".
 	 * If it hasn't such a prefix, the string is passed to 
@@ -79,7 +75,7 @@ public class DataService
 	 * looked up in the classpath.
 	 * 
 	 */
-	void loadOptions ( String configXmlPath )
+	public void loadOptions ( String configXmlPath )
 	{
 		try 
 		{
@@ -87,16 +83,18 @@ public class DataService
 				? new URL ( configXmlPath )
 				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
 			
+			log.info ( "Loading Ondex/Knetminer configuration from '{}'", configUrl );
 			Properties props = new Properties ();
 			props.loadFromXML ( configUrl.openStream() );
 			this.options = OptionsMap.from ( props );
 			this.updateFromOptions ();
+			log.info ( "Ondex/Knetminer configuration loaded" );
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
 		}		
 	}
-	
+		
 	/**
 	 * Update some of the class fields from {@link #getOptions()}.
 	 */
@@ -151,7 +149,7 @@ public class DataService
 		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-		genomeGenesCount = (int) seed.stream ()
+		this.genomeGenesCount = (int) seed.stream ()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
 		.map ( GeneHelper::getTaxID )
 		.filter ( this::containsTaxId )
@@ -189,13 +187,15 @@ public class DataService
 	 * If you feel that your special method to access an option is general enough, please, contribute to
 	 * OptionsMap! 
 	 * 
-	 * This returns a read-only map. Options here can only be loaded and then changed via class
+	 * This returns a read-only map (never null). Options here can only be loaded and then changed via class
 	 * setters. 
 	 * 
 	 */
 	public OptionsMap getOptions ()
 	{
-		return OptionsMap.unmodifiableOptionsMap ( this.options );
+		return this.options != null 
+			? OptionsMap.unmodifiableOptionsMap ( this.options )
+			: OptionsMap.from ( Collections.emptyMap () );
 	}
 	
 	

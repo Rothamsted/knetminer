@@ -72,7 +72,7 @@ public class ExportService
 	private SearchService searchService;
 	
 	@Autowired
-	private SemanticMotifService semanticMotifService;
+	private SemanticMotifDataService semanticMotifDataService;
 	
 
 	private static final Logger log = LogManager.getLogger ( ExportService.class );
@@ -107,7 +107,7 @@ public class ExportService
 		int totalConcepts = graph.getConcepts ().size ();
 		int totalRelations = graph.getRelations ().size ();
 		
-		var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 		int geneEvidenceConcepts = concepts2Genes.size ();
 
 		int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
@@ -115,7 +115,7 @@ public class ExportService
 				allValuesCount = new int [] { 0 }; 
 
 		// Min/Max/avg per each gene-related concept group
-		var genes2Concepts = semanticMotifService.getGenes2Concepts ();
+		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
 		
 		genes2Concepts
 		.entrySet ()
@@ -247,6 +247,8 @@ public class ExportService
 		{
 			log.error ( "Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex );
 		}
+		
+		log.info ( "End of graph stats export" );
 	}
 	
 	
@@ -279,7 +281,7 @@ public class ExportService
 			// "UTF-8"));
 			
 			out1.write ( "Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n" );
-			for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifService.getGenes2Concepts ().entrySet () )
+			for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifDataService.getGenes2Concepts ().entrySet () )
 			{ // for each <K,V> entry
 				int geneID = mEntry.getKey ();
 				Set<Integer> conIDs = mEntry.getValue (); // Set<Integer> value
@@ -300,7 +302,7 @@ public class ExportService
 			BufferedWriter out2 = new BufferedWriter (
 					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( c2g_fileName ) ) ) );
 			out2.write ( "Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n" );
-			for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifService.getConcepts2Genes ().entrySet () )
+			for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifDataService.getConcepts2Genes ().entrySet () )
 			{ // for each <K,V> entry
 				int eviID = (Integer) mapEntry.getKey ();
 				Set<Integer> geneIDs = mapEntry.getValue (); // Set<Integer> value
@@ -320,7 +322,7 @@ public class ExportService
 			BufferedWriter out3 = new BufferedWriter (
 					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2pl_fileName ) ) ) );
 			out3.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
-			for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifService.getGenes2PathLengths ().entrySet () )
+			for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifDataService.getGenes2PathLengths ().entrySet () )
 			{
 				var idPair = plEntry.getKey ();
 				String key = idPair.getLeft () + "//" + idPair.getRight ();
@@ -355,7 +357,7 @@ public class ExportService
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 		Set<Integer> userGeneIds = new HashSet<> ();
 	  var graph = dataService.getGraph ();
-		var genes2QTLs = semanticMotifService.getGenes2QTLs ();
+		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 		var options = dataService.getOptions ();
 	
 		if ( userGenes != null )
@@ -760,7 +762,7 @@ public class ExportService
 		
 		if ( userGenes == null || userGenes.isEmpty () ) return out.toString ();
 		
-		var genes2Concepts = semanticMotifService.getGenes2Concepts ();			
+		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
 
@@ -782,8 +784,8 @@ public class ExportService
 			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( type ) ) ) 
 				continue;
 			
-			var concepts2Genes = semanticMotifService.getConcepts2Genes ();
-			var genes2QTLs = semanticMotifService.getGenes2QTLs ();
+			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
+			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 
 			Float score = luceneConcepts.get ( lc );
 			Integer ondexId = lc.getId ();

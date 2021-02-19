@@ -15,7 +15,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
-import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
+import rres.knetminer.datasource.ondexlocal.service.SemanticMotifDataService;
 
 /**
  * Search utilities
@@ -118,17 +118,7 @@ public class SearchUtils
   	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
 	}	
 	
-  
-  /**
-   * Gets a Lucene field name as it is structured in an Ondex Lucene index. 
-   * 
-   * TODO: WTH?!? This is an Ondex module utility
-   */
-  public static String getLuceneFieldName ( String name, String value )
-  {
-  	return value == null ? name : name + "_" + value;
-  }
-  
+    
 	/**
 	 * TODO: this is only used by {@link OndexLocalDataSource} and only to know the size of 
 	 * concepts that match. So, do we need to compute the map, or do wee need the count only?
@@ -137,10 +127,10 @@ public class SearchUtils
 	 * 
 	 */
 	public static Map<Integer, Set<Integer>> getMapEvidences2Genes ( 
-		SemanticMotifService semanticMotifService, Map<ONDEXConcept, Float> luceneConcepts
+		SemanticMotifDataService semanticMotifDataService, Map<ONDEXConcept, Float> luceneConcepts
 	)
 	{
-		var concepts2Genes = semanticMotifService.getConcepts2Genes ();
+		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 
 		return luceneConcepts.keySet ()
 		.stream ()

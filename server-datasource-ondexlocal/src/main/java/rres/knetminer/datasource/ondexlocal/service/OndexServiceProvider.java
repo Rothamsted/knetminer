@@ -1,5 +1,8 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
+import uk.ac.ebi.utils.exceptions.NotReadyException;
 
 
 /**
@@ -24,8 +28,6 @@ import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
  * to types of functions. The wiring between all the components is done via Spring, with a 
  * {@link #springContext specific Spring context}, which is initialised here and populated via package scanning and
  * class annotations (no config file).  
- *
- * TODO: refactoring, continue with UI-related stuff and other small functions about UI or KG.
  * 
  * @author Marco Brandizi (refactored heavily in 2020)
  * @author taubertj, pakk, singha
@@ -40,6 +42,10 @@ public class OndexServiceProvider
 	private SearchService searchService;
 	
 	@Autowired
+	private SemanticMotifDataService semanticMotifDataService;
+
+	
+	@Autowired
 	private SemanticMotifService semanticMotifService;
 	
 	
@@ -49,8 +55,10 @@ public class OndexServiceProvider
 	@Autowired
 	private ExportService exportService;
 	
+	private AtomicBoolean isInitialisingData = new AtomicBoolean ( false );
 	
-	private static AbstractApplicationContext springContext;
+	
+	private static volatile AbstractApplicationContext springContext;
 	
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
@@ -74,6 +82,11 @@ public class OndexServiceProvider
 		return semanticMotifService;
 	}
 	
+	public SemanticMotifDataService getSemanticMotifDataService ()
+	{
+		return semanticMotifDataService;
+	}
+
 	public UIService getUIService ()
 	{
 		return uiService;
@@ -84,11 +97,17 @@ public class OndexServiceProvider
 		return exportService;
 	}
 
-	
+	/**
+	 * @throws NotReadyException as explained in {@link #initData(String, Supplier)}, if the current instance is 
+	 * initialising its data, this is exception is thrown and the invoker should try again later.
+	 */
 	public static OndexServiceProvider getInstance () 
 	{
 		initSpring ();
-		return springContext.getBean ( OndexServiceProvider.class );
+		var instance = springContext.getBean ( OndexServiceProvider.class );
+		if ( instance.isInitialisingData.get () ) 
+			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try again later" );
+		return instance;
 	}
   
   private static void initSpring ()
@@ -113,16 +132,66 @@ public class OndexServiceProvider
    * This is called before anything can be used. The config file comes from 
    * initialisation mechanisms like {@link ConfigFileHarvester}, see {@link OndexLocalDataSource#init()}.
    * 
-   * @param configXmlPath
-   */
-	public void initGraph ( String configXmlPath )
+	 * This method wraps the whole initialisation into a critical block, when {@link #getInstance()} is
+	 * invoked asynchronously (ie, by another thread), it will throws an exception if the initialisation
+	 * isn't finished.
+	 * 
+	 * This is designed mainly to allow that long-running Knetminer initialisations don't block the whole JVM and
+	 * hence the whole web container.
+	 * 
+	 * @param configXmlPath the path of the configuration file. This can be null if 
+	 * {@link #loadOptions options were already loaded}, see {@link #initData()}. 
+	 * 
+	 */
+	public void initData ( String configXmlPath )
 	{
-		this.dataService.loadOptions ( configXmlPath );
-		dataService.initGraph ();
-		
-		this.searchService.indexOndexGraph ();
-		this.semanticMotifService.initSemanticMotifData ();
-		
-		this.exportService.exportGraphStats ();
-	} 
+		this.isInitialisingData.getAndSet ( true );
+		try
+		{
+			log.info ( "Starting Ondex/Knetminer data initialization" );
+			
+			if ( configXmlPath != null )
+				this.dataService.loadOptions ( configXmlPath );
+			else
+			{
+				if ( this.dataService.getOptions ().isEmpty () ) throw new IllegalStateException ( 
+					"OndexServiceProvider.initData() requires a config file path or that you first load options from it" 
+				);
+				log.warn ( "Knetminer config path is null, relying on existing/previous config options" );
+			}
+			
+			dataService.initGraph ();
+			
+			this.searchService.indexOndexGraph ();
+			this.semanticMotifDataService.initSemanticMotifData ();
+			
+			this.exportService.exportGraphStats ();
+			log.info ( "Ondex/Knetminer data initialization ended" );
+		}
+		finally {
+			this.isInitialisingData.getAndSet ( false );
+		}
+	}
+	
+	/**
+	 * Calls {@link #initData(String)} with null. This is to be used when 
+	 * {@link DataService#loadOptions(String) you loaded the configuration} in advance and you don't need to repeat it. 
+	 * 
+	 * In turn, this is used in {@link OndexLocalDataSource} to get some basic information before starting the long-running
+	 * data load and setup.
+	 * 
+	 */
+	public void initData ()
+	{
+		initData ( null );
+	}
+
+
+	/**
+	 * @see #initData(String, Supplier).
+	 */
+	public boolean isInitialisingData ()
+	{
+		return isInitialisingData.get ();
+	}
 }

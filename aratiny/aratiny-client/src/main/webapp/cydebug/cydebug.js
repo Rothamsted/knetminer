@@ -16,7 +16,11 @@ function updateStatus ()
 	const pollingTime = 1000 * 10;
 	
 	fetch ( cydebugBaseUrl + "/traverser/report" )
-		.then ( resp => resp.text () )
+		.then ( resp => 
+		{
+			if ( !resp.ok ) throw Error ( resp.statusText );		
+			return resp.text ();
+		})
 		.then ( text =>
 		{
 			if ( text.startsWith ( "Pending." ) ) 

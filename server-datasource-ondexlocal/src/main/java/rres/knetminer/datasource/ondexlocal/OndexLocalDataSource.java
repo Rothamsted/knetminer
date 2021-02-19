@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONException;
@@ -57,6 +59,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * 
  * Note that the @Component annotation is necessary since Spring 5, it's not recognised as a bean otherwise and 
  * despite extending a @Component interface.
+ * 
  */
 @Component
 public class OndexLocalDataSource extends KnetminerDataSource 
@@ -80,17 +83,27 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		);
 		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		ondexServiceProvider.initGraph ( configXmlPath );
+		var dataService = ondexServiceProvider.getDataService ();
 
-		var odxData = ondexServiceProvider.getDataService ();
-		var dsName = odxData.getDataSourceName ();
+		// this is quick and can be done in advance, so that we have what we need to be able to start answering the
+		// URLs
+		dataService.loadOptions ( configXmlPath );
+		var dsName = dataService.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
 		);
-		this.setDataSourceNames ( new String[] {dsName} );
+		this.setDataSourceNames ( new String[] { dsName } );
 		log.info ( "Setting data source '{}'", dsName );
+		
+		// Now we load the data asynchronously, so that the JDK and the web container aren't stuck on it.
+		// The ondexServiceProvider.getInstance() will return a NotReadyException exception until this isn't finished, 
+		// that will be forwarded back to the client by any call requiring the OSP.
+		ExecutorService asyncRunner = Executors.newSingleThreadExecutor ();
+		asyncRunner.submit ( () -> ondexServiceProvider.initData () );
+		
+		log.info ( "Asynchronous Ondex initialisation started" );
 	}
-	
+		
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();

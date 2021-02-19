@@ -248,6 +248,10 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+		  	<plugin>
+		    	<artifactId>maven-clean-plugin</artifactId>
+		    	<version>3.1.0</version>
+		    </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -314,6 +318,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+			
 			<!-- TODO: remove. The relase plug-in has a lot of problems and now we use CIs for releasing -->
 			<!-- 
 			<plugin>

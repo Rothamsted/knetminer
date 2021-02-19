@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
@@ -46,9 +47,10 @@ import rres.knetminer.datasource.api.KnetminerResponse;
  * sources. To make a server with data sources, just add one or more JARs to the
  * classpath which include classes that implement KnetminerDataSourceProvider
  * (and are in package rres.knetminer.datasource). They are detected and loaded
- * via autowiring. See the sister server-example project for how this is done.
+ * via autowiring. See the sister server-example project for how this is done. 
  * 
  * @author holland
+ * @author Marco Brandizi (2021, removed custom exception management and linked it to {@link KnetminerExceptionHandler}) 
  */
 @Controller
 @RequestMapping("/")
@@ -173,7 +175,7 @@ public class KnetminerServer {
 
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Data source '" + ds + "' doesn't exist" );
 		}
 		this._googlePageView(ds, "genepage", rawRequest);
 		model.addAttribute("list", new JSONArray(list).toString());
@@ -201,7 +203,7 @@ public class KnetminerServer {
 						       @RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model) {
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Data source '" + ds + "' doesn't exist" );
 		}
 		this._googlePageView(ds, "evidencepage", rawRequest);
 
@@ -346,14 +348,19 @@ public class KnetminerServer {
 	 * @param rawRequest
 	 * @return
 	 */
-	private ResponseEntity<KnetminerResponse> _handle(String ds, String mode, KnetminerRequest request,
-			HttpServletRequest rawRequest) {
+	private ResponseEntity<KnetminerResponse> _handle(
+		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) 
+	{
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
+			throw new HttpServerErrorException ( 
+				HttpStatus.BAD_REQUEST,  
+				"data source name isn't set, probably a Knetminer configuration error" 
+			);
 		}
 
-		try {
+		try 
+		{
 			if (log.isDebugEnabled()) {
 				String paramsStr = "Keyword:" + request.getKeyword() + " , List:"
 						+ Arrays.toString(request.getList().toArray()) + " , ListMode:" + request.getListMode()
@@ -364,19 +371,20 @@ public class KnetminerServer {
 			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
 			this._googlePageView(ds, mode, rawRequest);
 			response = (KnetminerResponse) method.invoke(dataSource, ds, request);
-			return new ResponseEntity<KnetminerResponse>(response, HttpStatus.OK);
-		} catch (NoSuchMethodException e) {
-			log.info("Invalid mode requested: " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.NOT_FOUND);
-		} catch (IllegalArgumentException e) {
-			log.info("Invalid parameters passed to " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.BAD_REQUEST);
-		} catch (Error e) {
-			log.error("Error while running " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (Exception e) {
-			log.error("Exception while running " + mode, e);
-			return new ResponseEntity<KnetminerResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} 
+		catch (NoSuchMethodException ex) {
+			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "'" );
+		} 
+		catch (IllegalArgumentException ex) {
+			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Bad parameters passed to the API call '" + mode + "'" );
+		} 
+		catch (Error ex) {
+			throw new RuntimeException ( "System error while running " + mode + ": " + ex.getMessage (), ex );
+		} 
+		catch (Exception ex) {
+			throw new RuntimeException ( "Application error while running " + mode + ": " + ex.getMessage (), ex );
 		}
 	}
+	
 }

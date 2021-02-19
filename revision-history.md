@@ -4,7 +4,7 @@
 
 *This was last updated on 11/11/2020*
 
-* Migration to Java 11. **You do need Java >= 11 to make knetminer working** If you use Docker, our images
+* Migration to Java 11. **Now you do need Java >= 11 to make knetminer working** If you use Docker, our images
   use the right Java version automatically.
 
 ## Internals

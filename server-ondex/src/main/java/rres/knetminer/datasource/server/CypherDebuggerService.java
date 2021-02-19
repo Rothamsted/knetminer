@@ -1,7 +1,5 @@
 package rres.knetminer.datasource.server;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -13,16 +11,13 @@ import java.util.stream.Collectors;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
@@ -51,7 +46,7 @@ public class CypherDebuggerService
 	 */
 	@ResponseStatus( value = HttpStatus.FORBIDDEN, reason = ForbiddenException.REASON )
 	@SuppressWarnings ( "serial" )
-	public static class ForbiddenException extends RuntimeException
+	public static class ForbiddenException extends IllegalStateException
 	{
 		public static final String REASON = 
 			"Unauthorized. Knetminer must be built with " + ENABLED_PROPERTY + " for this to work";
@@ -112,7 +107,11 @@ public class CypherDebuggerService
 	}
 	
 		
-	@GetMapping ( path = "/traverser/report", produces = "text/plain; charset=utf-8" )
+	@RequestMapping (
+		path = "/traverser/report", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserReport () throws InterruptedException, ExecutionException
 	{
 		this.checkEnabled ();
@@ -141,7 +140,11 @@ public class CypherDebuggerService
 	 * ongoing operations. #traverserReport tells if a traversal was cancelled but not completed.
 	 * 
 	 */
-	@GetMapping ( path = "/traverser/cancel" )
+	@RequestMapping (
+		path = "/traverser/cancel", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserCancel () throws InterruptedException, ExecutionException
 	{
 		this.checkEnabled ();
@@ -161,16 +164,13 @@ public class CypherDebuggerService
 	private String submitTraversal ( List<String> semanticMotifsQueries )
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		OptionsMap odxOpts = odxService.getDataService ().getOptions ();
-
-		String dataPath = odxOpts.getString ( "DataPath" );
 		CypherGraphTraverser traverser = this.getTraverser ();
 
 		// It's disabled after server init, let's re-enable
 		traverser.setOption( "performanceReportFrequency", 0);
 		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
     
-		odxService.getSemanticMotifService ().initSemanticMotifData ( true );
+		odxService.getSemanticMotifDataService ().initSemanticMotifData ( true );
 
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
@@ -188,7 +188,11 @@ public class CypherDebuggerService
 	}
 	
 	
-	@GetMapping ( path = "/traverser/queries" )
+	@RequestMapping (
+		path = "/traverser/queries", 
+		produces = "text/plain; charset=utf-8",
+		method = { RequestMethod.GET, RequestMethod.POST }
+	)
 	public synchronized String traverserQueries () 
 	{
 		this.checkEnabled ();
@@ -213,7 +217,7 @@ public class CypherDebuggerService
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		var traverser = odxService.getSemanticMotifService ().getGraphTraverser ();
+		var traverser = odxService.getSemanticMotifDataService ().getGraphTraverser ();
 		
 		if ( ! (traverser instanceof CypherGraphTraverser ) ) throw new ClassCastException ( 
 			"You need the Neo4j mode to use the CypherDebugger"

@@ -142,6 +142,19 @@
 					</packagingIncludes>
 				</configuration>
 			</plugin>
+		  <plugin>
+		    <artifactId>maven-clean-plugin</artifactId>
+		    <configuration>
+		      <filesets>
+		        <fileset>
+		          <directory>client-base/src/main/webapp/html/KnetMaps/node_modules</directory>
+		        </fileset>
+		        <fileset>
+		          <directory>client-base/src/main/webapp/html/GeneMap/bower_components</directory>
+		        </fileset>
+		      </filesets>
+		    </configuration>
+		  </plugin>		
 		</plugins>
 	</build>
 

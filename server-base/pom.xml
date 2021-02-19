@@ -9,7 +9,6 @@
 		<version>5.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>uk.ac.rothamsted.knetminer</groupId>
 	<artifactId>server-base</artifactId>
 	
 	<name>server-base - KnetMiner web service skeleton</name>

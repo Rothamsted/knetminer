@@ -41,7 +41,7 @@ knet_tomcat_pwd="$2"
 #
 # Custom Maven arguments can be provided by the invoker (export MAVEN_ARGS='...') or the Docker image file
 # This is usually useful for custom Docker-independent builds, see local-env-ex     
-export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker'} 
+export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'} 
 
 
 # ---- Parameters/environment setup ends here
@@ -53,7 +53,13 @@ echo -e "\n\n\tBuilding Knetminer\n"
 cd ..
 
 # ---- Regular full build of the server web reference application (aratiny-ws.war) ----
+mvn $MAVEN_ARGS dependency:go-offline dependency:resolve-plugins
+# This is to force the download of the clean plugin (the command above is not enough)
+# TODO: might be a problem if we have 
+mvn clean -N 
+
 mvn install $MAVEN_ARGS -DskipTests -DskipITs
+
 cd aratiny/aratiny-ws
 # --- Alternatively, you can enable fast build during debugging
 # mvn dependency:resolve
