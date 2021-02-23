@@ -1,10 +1,3 @@
-# These settings are for any web project
-
-#
-## These files are binary and should be left untouched
-#
-
-# (binary is a macro for -text -diff)
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -28,18 +21,17 @@
 *.bz2 binary
 *.swp binary
 
+# lf = \n (Unix), crfl = \r\n (Win)
+# Nowadays there's little point with win style, since almost all Win editors can 
+# handle Unix style autoamtically.
 
-# Handle line endings automatically for files detected as text
-# and leave all files detected as binary untouched.
-* text=auto
+*.sh text eol=lf
+.js text eol=lf
+.less text eol=lf
+.css text eol=lf
+.html text eol=lf
+.md text eol=lf
+*.json  text eol=lf
+*.yml   text eol=lf
 
-# Force the following filetypes to have unix eols, so Windows does not break them
-# WARNING *.* causes problems with image files in GeneMap (see #448).
-#*.* text eol=lf
-
-*.sh
-
-
-# Windows forced line-endings
-/.idea/* text eol=crlf
-
+* text=auto eol=lf
