@@ -25,8 +25,6 @@
 # Nowadays there's little point with win style, since almost all Win editors can 
 # handle Unix style autoamtically.
 
-* text=auto eol=lf
-
 *.sh text eol=lf
 .js text eol=lf
 .less text eol=lf
@@ -35,3 +33,5 @@
 .md text eol=lf
 *.json  text eol=lf
 *.yml   text eol=lf
+
+* text=auto eol=lf
