@@ -31,38 +31,6 @@
 	<build>	
 		<pluginManagement>
 			<plugins>
-				<plugin>
-				  <groupId>org.eclipse.jetty</groupId>
-				  <artifactId>jetty-maven-plugin</artifactId>
-			    <version>9.4.34.v20201102</version>
-				  <executions>
-				  	<execution>
-				  		<id>start</id>
-				  		<phase>pre-integration-test</phase>
-				  		<goals><goal>start</goal></goals>
-				  	</execution>
-				  	<execution>
-				  		<id>stop</id>
-				  		<phase>post-integration-test</phase>
-				  		<goals><goal>stop</goal></goals>
-				  	</execution>
-				  </executions>
-				  <configuration>
-				    <scanIntervalSeconds>10</scanIntervalSeconds>
-		        <httpConnector>
-		        	<!-- We might want a less common port, since this might be already used in our CI servers  -->
-		          <port>8080</port>
-		        </httpConnector>			    
-				    <webApp>
-				      <contextPath>/</contextPath>
-							<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-				    </webApp>
-				    <stopPort>8081</stopPort>
-				    <stopKey>araTinyJetty</stopKey>
-				    <stopWait>10</stopWait>			    
-				  </configuration>
-				</plugin>	
-				
 								
 			  <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
