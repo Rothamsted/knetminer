@@ -353,6 +353,7 @@
 							<configuration>
 								<properties>
 									<property>
+										<!-- WS scanning sometimes times out with the default (#551) -->
 										<name>org.eclipse.jetty.annotations.maxWait</name>
 										<value>600</value>
 									</property>
