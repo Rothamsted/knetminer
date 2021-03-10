@@ -17,12 +17,13 @@ jobs:
     - uses: uraimo/run-on-arch-action@v2.0.9
       name: Run aratiny
       id: docker-cmd
-      env:
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       with:
         arch: aarch64
         distro: ubuntu20.04
         run: |
+          apt-get update
+          apt install docker.io
+          systemctl enable --now docker
+          
           cd docker
           ./docker-run.sh
