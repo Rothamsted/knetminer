@@ -22,7 +22,7 @@ jobs:
         distro: ubuntu20.04
         run: |
           apt-get update
-          apt install docker.io
+          apt-get -y install docker.io
           systemctl enable --now docker
           
           cd docker
