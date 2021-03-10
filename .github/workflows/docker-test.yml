@@ -25,4 +25,9 @@ jobs:
           apt-get -y install docker.io
           
           cd docker
-          ./docker-run.sh
+          ./docker-run.sh --container-name aratiny &
+          
+          echo -e "\n\n\t**** Sleeping ****\n"
+          sleep 60
+          docker stop aratiny
+          
