@@ -21,11 +21,11 @@ jobs:
         arch: aarch64
         distro: ubuntu20.04
         run: |
-          apt-get update
-          apt-get -y install docker.io
+          apt-get -yq update
+          apt-get -yq install docker.io
           
           cd docker
-          ./docker-run.sh --container-name aratiny &
+          ./docker-run.sh --container-name aratiny --detach
           
           echo -e "\n\n\t**** Sleeping ****\n"
           sleep 60
