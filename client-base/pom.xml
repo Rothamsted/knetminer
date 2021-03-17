@@ -82,7 +82,7 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<execution>
+					<!--<execution>
 						<id>exec-npm-install-knetmaps</id>
 						<phase>compile</phase>
 						<configuration>
@@ -109,7 +109,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution>-->
 					<execution>
 						<id>exec-gulp-optimise-knetmaps</id>
 						<phase>compile</phase>
