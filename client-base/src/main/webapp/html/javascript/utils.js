@@ -767,10 +767,9 @@ function searchKeyword() {
             timeout: 1000000, cache: false, 
             headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" }, 
             success: function (data) {
-                //if logged out, keep current restriction (boolean restrict_knetspace_genelist=true).
+                //if logged out, keep default restrictions.
                 if((typeof data.id === "undefined") || (data.id === null)) {
-                   $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>User provided Gene list = 10 exceeded, please reduce list or login if KnetSpace Pro user to search with unlimited gene IDs.</b></div>');
-                   console.log("User provided Gene list limit = 10 exceeded, please reduce list or login if KnetSpace Pro user to search with unlimited gene IDs.");
+                   $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Genelist limit (10) reached, trim list or login if KnetSpace Pro user to search with unlimited genes</b></div>');
                    enforce_genelist_limit= true; // back to default
                    enforce_knetview_limit= 20; // back to default
                   }
@@ -781,8 +780,7 @@ function searchKeyword() {
                         enforce_knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
                        }
                     else if(data.plan.name === "Free") {
-                        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>User provided Gene list = 10 exceeded, please reduce list or login if KnetSpace Pro user to search with unlimited gene IDs.</b></div>');
-                        console.log("User provided Gene list limit = 10 exceeded, please buy KnetSpace Pro plan to search with unlimited gene IDs.");
+                        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Genelist limit (10) reached, trim list or login if KnetSpace Pro user to search with unlimited genes</b></div>');
                         enforce_genelist_limit= true; // back to default
                         enforce_knetview_limit= 20; // back to default
                        }
