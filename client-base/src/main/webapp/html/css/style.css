@@ -266,7 +266,7 @@ div#list_search {
 
 
 div.loadingDiv {
-    width:450px;
+    width:80%/*450px*/;
     height:35px;
     color:#D56048;
     position:relative;
