@@ -757,7 +757,7 @@ function searchKeyword() {
     var request = "/" + searchMode;
     //console.log("api_url/request= "+ api_url + request);
     
-    console.log("knetSpaceHost: "+ knetspace_api_host);
+    //console.log("knetSpaceHost: "+ knetspace_api_host);
     var login_check_url= knetspace_api_host + "/api/v1/me";
 
     //if(geneList_size > 10) {
@@ -810,15 +810,27 @@ function searchKeyword() {
             data: JSON.stringify(requestParams)
         })
             .fail(function (errorlog) {
-                alert("An error has ocurred " + errorlog);
+                alert("A search error has ocurred: " + errorlog);
 				// Remove loading spinner from 'search' div
 				deactivateSpinner("#search");
-				//console.log("search>> error >> remove spinner...");
             })
             .success(function (data) {
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-                if (data.geneCount == 0) {
+                if (data.geneCount == 0) { // for failed search with no results.
+                    // default search error display msg.
                     var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry, no results were found.</span><br /><span class="pGViewer_title_line">Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span></div>'
+                    if(keyword.length > 0) { // msg for keyword search error
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search <b>' + keyword + ' did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.</span></div>';
+                       if(geneList_size > 0) { // msg for keyword + genelist search error
+                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                         }
+                      }
+                    if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search error
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                      }
+                    if(searchMode === "qtl") { // msg for QTL search error
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                      }
 
                     if (typeof gviewer != "undefined" && gviewer != false) {
 
@@ -845,11 +857,11 @@ function searchKeyword() {
 
                 }
                 else {
-                    // For a valid response
+                    // For a valid response, i.e., search output.
                     var candidateGenes = data.geneCount;
-                    var docSize = data.docSize;
-                    var totalDocSize = data.totalDocSize;
-                    var results = data.geneCount;
+                    var docSize = data.docSize; // for pGViewer_title_line display msg
+                    var totalDocSize = data.totalDocSize; // for pGViewer_title_line display msg
+                    var results = data.geneCount; // for pGViewer_title_line display msg
 
                     var longestChromosomeLength = "";
                     if (typeof longest_chr != "undefined") {
@@ -857,9 +869,22 @@ function searchKeyword() {
                             longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
                         }
                     }
-
+                    
+                    // default search display msg.
                     var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
-                    if (candidateGenes > 1000) {
+                    if(keyword.length > 0) { // msg for keyword search
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span></div>';
+                       if(geneList_size > 0) { // msg for keyword + genelist search
+                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' linked genes</b> and '+'? unlinked genes were found.</span></div>';
+                         }
+                      }
+                    if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span></div>';
+                      }
+                    if(searchMode === "qtl") { // msg for QTL search
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' linked genes</b> and '+'? unlinked genes were found.</span></div>';
+                      }
+                    if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                         candidateGenes = 1000;
                         genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Map view.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
                     }
