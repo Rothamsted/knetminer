@@ -760,7 +760,7 @@ function searchKeyword() {
     console.log("knetSpaceHost: "+ knetspace_api_host);
     var login_check_url= knetspace_api_host + "/api/v1/me";
 
-    if(geneList_size > 10) {
+    //if(geneList_size > 10) {
       // check if user logged in and if yes, get user_id
       $.ajax({
             type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
@@ -787,7 +787,7 @@ function searchKeyword() {
                 }
             }
     	});
-     }
+     //}
 	
    if (list.length <= 10 || enforce_genelist_limit === false) {
         $('#tabviewer').show(); // show Tab buttons and viewer
