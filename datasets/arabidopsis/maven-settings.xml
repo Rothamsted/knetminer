@@ -25,6 +25,8 @@
 				-->				
 				<knetminer.releaseNotesHtml></knetminer.releaseNotesHtml>
 						
+				<!-- to enable or disable knetminer google anlytics logging, overrides default in main POM -->
+				<knetminer.enableAnalytics>true</knetminer.enableAnalytics>
 			</properties>
 		</profile>
 	</profiles>

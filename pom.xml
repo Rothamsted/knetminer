@@ -92,9 +92,7 @@
 		-->
 		<knetminer.version>48</knetminer.version>
 		<knetminer.provider>Rothamsted Research</knetminer.provider>
-		<knetminer.enableKnetSpace>true</knetminer.enableKnetSpace>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
-		<knetminer.knetSpaceType>rres</knetminer.knetSpaceType> <!-- can be 'rres' or 'private' -->
 		<knetminer.enableAnalytics>true</knetminer.enableAnalytics>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
