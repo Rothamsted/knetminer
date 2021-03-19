@@ -1,5 +1,6 @@
 var enforce_genelist_limit= true; // default search limits.
-var enforce_knetview_limit= 20; // default search limits.
+var freegenelist_limit= 20; // default search limits.
+var knetview_limit= 10; // default search limits.
 
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
@@ -214,7 +215,7 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
-        console.log("enableGoogleAnalytics: "+ enableGA +", enableKnetSpace: "+ enableKS + ", knetSpaceType: "+ ksType); // test
+        console.log("enableGoogleAnalytics: "+ enableGA); // test
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -760,7 +761,7 @@ function searchKeyword() {
     //console.log("knetSpaceHost: "+ knetspace_api_host);
     var login_check_url= knetspace_api_host + "/api/v1/me";
 
-    //if(geneList_size > 10) {
+    //if(geneList_size > freegenelist_limit) {
       // check if user logged in and if yes, get user_id
       $.ajax({
             type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
@@ -769,27 +770,27 @@ function searchKeyword() {
             success: function (data) {
                 //if logged out, keep default restrictions.
                 if((typeof data.id === "undefined") || (data.id === null)) {
-                   $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Genelist limit (10) reached, trim list or login if KnetSpace Pro user to search with unlimited genes</b></div>');
+                   $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                    enforce_genelist_limit= true; // back to default
-                   enforce_knetview_limit= 20; // back to default
+                   knetview_limit= 10; // back to default
                   }
                 else { // check logged in (valid) user's plan
                     console.log("knetspace user_id= "+ data.id +", plan= "+ data.plan.name);
                     if(data.plan.name === "Pro") {
                         enforce_genelist_limit= false; // let user search with unlimited genelist
-                        enforce_knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
+                        knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
                        }
                     else if(data.plan.name === "Free") {
-                        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>Genelist limit (10) reached, trim list or login if KnetSpace Pro user to search with unlimited genes</b></div>');
+                        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                         enforce_genelist_limit= true; // back to default
-                        enforce_knetview_limit= 20; // back to default
+                        knetview_limit= 10; // back to default
                        }
                 }
             }
     	});
      //}
 	
-   if (list.length <= 10 || enforce_genelist_limit === false) {
+   if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
         $('#tabviewer').show(); // show Tab buttons and viewer
 		
         //$(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
@@ -955,7 +956,7 @@ function generateCyJSNetwork(url, requestParams) {
                                         
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
-                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
+                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'>Save Knetwork</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
@@ -997,8 +998,8 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     if (candidatelist == "") {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
-    else if (candidatelist.length > enforce_knetview_limit/*20*/) {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>This version of KnetMiner is limited to '+enforce_knetview_limit+' genes.</b></div>');
+    else if (candidatelist.length > knetview_limit/*20*/) {
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to '+knetview_limit+' genes.</b></div>');
     }
     else {
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
