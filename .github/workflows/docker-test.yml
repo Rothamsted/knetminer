@@ -1,7 +1,10 @@
 name: Docker Test
 
+# Just a rough attempt to test an ARM image with GH Actions 
+# 
+
 on:
-  workflow_dispatch
+  workflow_dispatch # Ran
     
 jobs:
 
