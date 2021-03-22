@@ -316,7 +316,7 @@ KNETMAPS.ItemInfo = function() {
     catch(err) {
           itemInfo= "Selected element is neither a Concept nor a Relation"; 
           itemInfo= itemInfo +"<br/>Error details:<br/>"+ err.stack; // error details
-          console.log(itemInfo);
+          //console.log(itemInfo);
          }
    }
 
