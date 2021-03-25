@@ -880,14 +880,18 @@ function searchKeyword() {
                     if(keyword.length > 0) { // msg for keyword search
                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                        if(geneList_size > 0) { // msg for keyword + genelist search
-                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + '? linked genes</b> and '+'? unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                          var count_linked= countLinkedUserGenes(data.GeneTable);
+                          var count_unlinked= results - count_linked;
+                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                          }
                       }
                     if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                       }
                     if(searchMode === "qtl") { // msg for QTL search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + '? linked genes</b> and '+'? unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                       var count_linked= countLinkedUserGenes(data.GeneTable);
+                       var count_unlinked= results - count_linked;
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                       }
                     if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                         candidateGenes = 1000;
@@ -924,6 +928,25 @@ function searchKeyword() {
     else {
         $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
     }
+}
+
+/*
+ * Function
+ * Generates the number of user genes with evidence links in gene view .tab results
+ * @author: Ajit Singh.
+ */
+function countLinkedUserGenes(geneview_table) {
+    var numResults= geneview_table.length - 2, linkedcount=0;
+    for(var i = 1; i <= numResults; i++) {
+        var values = geneview_table[i].split("\t");
+        console.log("test:" + values);
+        if (values[7] === "yes") {
+            if (values[9].length > 0) { // counting known targets, i.e., user=yes and evidence present
+                linkedcount= linkedcount + 1;
+               }
+            }
+        }
+  return linkedcount;
 }
 
 /*
