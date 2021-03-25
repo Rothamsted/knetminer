@@ -770,7 +770,7 @@ function searchKeyword() {
             success: function (data) {
                 //if logged out, keep default restrictions.
                 if((typeof data.id === "undefined") || (data.id === null)) {
-                   $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
+                   //$(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                    enforce_genelist_limit= true; // back to default
                    knetview_limit= 10; // back to default
                   }
@@ -781,7 +781,7 @@ function searchKeyword() {
                         knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
                        }
                     else if(data.plan.name === "Free") {
-                        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
+                        //$(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                         enforce_genelist_limit= true; // back to default
                         knetview_limit= 10; // back to default
                        }
@@ -920,6 +920,9 @@ function searchKeyword() {
 			 deactivateSpinner("#search");
 			 //console.log("search: success; remove spinner...");
             });
+    }
+    else {
+        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
     }
 }
 
