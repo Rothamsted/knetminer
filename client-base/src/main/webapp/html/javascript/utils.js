@@ -765,7 +765,7 @@ function searchKeyword() {
       // check if user logged in and if yes, get user_id
       $.ajax({
             type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
-            timeout: 1000000, cache: false, 
+            timeout: 1000000, cache: false,
             headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" }, 
             success: function (data) {
                 //if logged out, keep default restrictions.
@@ -803,6 +803,7 @@ function searchKeyword() {
         $.post({
             url: api_url + request,
             timeout: 1000000,
+            startTime: performance.now(),
             headers: {
                 "Accept": "application/json; charset=utf-8",
                 "Content-Type": "application/json; charset=utf-8"
@@ -816,8 +817,11 @@ function searchKeyword() {
 				deactivateSpinner("#search");
             })
             .success(function (data) {
+                var querytime= performance.now() - this.startTime; // query response time
+                var queryseconds= querytime/1000;
+                queryseconds= queryseconds.toFixed(1); // rounded to 1 decimal place
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-                if (data.geneCount == 0) { // for failed search with no results.
+                if (data.geneCount === 0) { // for failed search with no results.
                     // default search error display msg.
                     var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry, no results were found.</span><br /><span class="pGViewer_title_line">Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span></div>'
                     if(keyword.length > 0) { // msg for keyword search error
@@ -872,22 +876,22 @@ function searchKeyword() {
                     }
                     
                     // default search display msg.
-                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
+                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
                     if(keyword.length > 0) { // msg for keyword search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span></div>';
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                        if(geneList_size > 0) { // msg for keyword + genelist search
-                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' linked genes</b> and '+'? unlinked genes were found.</span></div>';
+                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + '? linked genes</b> and '+'? unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                          }
                       }
                     if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found.</span></div>';
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                       }
                     if(searchMode === "qtl") { // msg for QTL search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' linked genes</b> and '+'? unlinked genes were found.</span></div>';
+                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + '? linked genes</b> and '+'? unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                       }
                     if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                         candidateGenes = 1000;
-                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Map view.</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
+                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps map view ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
                     }
 
                     $("#pGViewer_title").replaceWith(genomicViewTitle);
