@@ -819,7 +819,7 @@ function searchKeyword() {
             .success(function (data) {
                 var querytime= performance.now() - this.startTime; // query response time
                 var queryseconds= querytime/1000;
-                queryseconds= queryseconds.toFixed(1); // rounded to 1 decimal place
+                queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                 if (data.geneCount === 0) { // for failed search with no results.
                     // default search error display msg.
