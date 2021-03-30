@@ -7,3 +7,4 @@ var multiorganisms = false; // Code support the multi-organism case, but now it'
 var species_name = "${knetminer.specieName}";
 var knetspace_api_host= "${knetminer.knetSpaceHost}"; // from base knetminer POM for client-side JS
 var enableGA = "${knetminer.enableAnalytics}"; // from base knetminer POM for client-side JS to use
+var ga_id = "${knetminer.gaIdUi}"; // ga_id from base knetminer POM for UI JS to use
