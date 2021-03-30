@@ -151,6 +151,7 @@ public class KnetminerServer {
 
 		if (this.gaTrackingId!=null) {
 			String pageName = ds+"/"+mode;
+                        log.info("GoogleAnalytics using ga_id" + this.gaTrackingId);
 			GoogleAnalytics ga = new GoogleAnalyticsBuilder().withTrackingId(this.gaTrackingId).build();
 			ga.pageView().documentTitle(pageName).documentPath("/" + pageName)
 					.userIp(ipAddress).send();
