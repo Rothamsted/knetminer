@@ -35,7 +35,7 @@
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         
         if("${enableGA}" === "true") {
-          ga('create', ${ga_id}, 'auto');
+          ga('create', '${ga_id}', 'auto');
           ga('send', 'pageview');
          }
         </script>

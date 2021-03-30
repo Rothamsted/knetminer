@@ -936,7 +936,8 @@ function searchKeyword() {
  * @author: Ajit Singh.
  */
 function countLinkedUserGenes(geneview_table) {
-    var numResults= geneview_table.length - 2, linkedcount=0;
+    var numResults= geneview_table.length - 2;
+    var linkedcount=0;
     for(var i = 1; i <= numResults; i++) {
         var values = geneview_table[i].split("\t");
         console.log("test:" + values);
