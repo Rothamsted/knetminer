@@ -93,7 +93,12 @@
 		<knetminer.version>48</knetminer.version>
 		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
+                <!-- google analytics (enabled by default with knetminer's own 2 ga_id's for api and ui). Setting this 
+                to false will disable google analytics entirely. Alternatively, users can set true AND change the 2 
+                ga_id's to redirect to their own google analytics tracking if they wish -->
 		<knetminer.enableAnalytics>true</knetminer.enableAnalytics>
+		<knetminer.gaIdUi>UA-88753233-1</knetminer.gaIdUi>
+		<knetminer.gaIdApi>UA-88753233-2</knetminer.gaIdApi>
 
 		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
