@@ -18,7 +18,7 @@ stdout.log
 *.swp
 .vagrant/
 nb-configuration.xml
-*.oxl
+# *.oxl
 package-lock.json
 .DS_Store
 # It is auto-downloaded by Travis
