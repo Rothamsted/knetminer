@@ -880,7 +880,7 @@ function searchKeyword() {
                     if(keyword.length > 0) { // msg for keyword search
                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                        if(geneList_size > 0) { // msg for keyword + genelist search
-                          var count_linked= countLinkedUserGenes(data.GeneTable);
+                          var count_linked= countLinkedUserGenes(data.geneTable);
                           var count_unlinked= results - count_linked;
                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                          }
@@ -889,7 +889,7 @@ function searchKeyword() {
                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                       }
                     if(searchMode === "qtl") { // msg for QTL search
-                       var count_linked= countLinkedUserGenes(data.GeneTable);
+                       var count_linked= countLinkedUserGenes(data.geneTable);
                        var count_unlinked= results - count_linked;
                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                       }
