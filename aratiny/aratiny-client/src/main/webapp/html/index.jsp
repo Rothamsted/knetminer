@@ -6,6 +6,8 @@
 	keywords="${knetminer.appKeywords}"
 	chromosomes="${knetminer.chromosomeList}"
 	embeddable="${knetminer.ui.embeddableLayout}"
+        enableGA = "${knetminer.enableAnalytics}"
+        ga_id = "${knetminer.gaIdUi}"
 >
     <jsp:attribute name="extraHeader">
     </jsp:attribute>

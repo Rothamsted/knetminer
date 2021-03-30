@@ -11,6 +11,8 @@
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
 <%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
+<%@ attribute name="enableGA" type="java.lang.Boolean" description="Is google analytics enabled" %>
+<%@ attribute name="ga_id" description="If analytics enabled then use this ga_id" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -32,8 +34,8 @@
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         
-        if('${knetminer.enableAnalytics}' === true) {
-          ga('create', '${knetminer.gaIdUi}', 'auto');
+        if("${enableGA}" === "true") {
+          ga('create', ${ga_id}, 'auto');
           ga('send', 'pageview');
          }
         </script>
