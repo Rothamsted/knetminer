@@ -13,6 +13,10 @@ debug_port=5005
 # Used below with JMX options. Our security policies require password-protected JMX
 # This file is available on our test servers. In other environments, this will make the JVM to exit immediately, together with
 # the Docker container (unless, of course, you create a similar file)
+#
+# TODO: maybe, at some point we will try a safer environment-injected credentials, which would
+# require a custom authenticator: https://stackoverflow.com/a/21166202/529286
+# 
 jmx_user_path=/opt/config/jmx.user
 
 cd "$(dirname $0)"
