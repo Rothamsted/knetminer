@@ -10,6 +10,10 @@ jmx_port=9010
 rmi_port=9011
 debug_port=5005
 
+# Used below with JMX options. Our security policies require password-protected JMX
+# This file is available on our test servers. In other environments, this will make the JVM to exit immediately, together with
+# the Docker container (unless, of course, you create a similar file)
+jmx_user_path=/opt/config/jmx.user
 
 cd "$(dirname $0)"
 my_dir=$(pwd)
@@ -28,8 +32,8 @@ EOT
 echo -e "--- Stopping, cleaning and updating Docker\n"
 docker stop wheat-ci || true
 docker rm wheat-ci || true
-docker system prune --all --force
-docker pull knetminer/knetminer
+#docker system prune --all --force
+#docker pull knetminer/knetminer
 
 echo -e "--- Cleaning Knetminer dataset directory\n"
 ./cleanup-volume.sh --all "$dataset_dir"
@@ -38,8 +42,10 @@ echo -e "--- Cleaning Knetminer dataset directory\n"
 # Options to setup JMX and use jvisualvm. this makes jvisualvm accessible on 9010 (RMI on 9011), you can start jvisualvm from the
 # host and connect these ports (or you can use tricks like SSH tunnelling). Clearly, every new container needs its own ports.
 #
+
 export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
-	-Dcom.sun.management.jmxremote.authenticate=false
+	-Dcom.sun.management.jmxremote.authenticate=true
+	-Dcom.sun.management.jmxremote.password.file=$jmx_user_path
  	-Dcom.sun.management.jmxremote.port=$jmx_port
  	-Dcom.sun.management.jmxremote.rmi.port=$rmi_port
  	-Djava.rmi.server.hostname=localhost
@@ -51,14 +57,14 @@ export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
 
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
-# Remove '_' to enable. We can't keep on all the time due to complaints from security software  
-export JAVA_TOOL_OPTIONS="$_JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
 export DOCKER_OPTS="-it"
 for port in $jmx_port $rmi_port $debug_port
 do
-	 # Remove '_' to actually enable it (see note above)
-	 _DOCKER_OPTS="$DOCKER_OPTS -p $port:$port"
+	 DOCKER_OPTS="$DOCKER_OPTS -p $port:$port"
 done
+DOCKER_OPTS="$DOCKER_OPTS --volume $jmx_user_path:$jmx_user_path"
+
 
 # Let's use the two Docker servers for two different test instances
 #
