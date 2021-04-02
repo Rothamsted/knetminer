@@ -38,23 +38,26 @@ echo -e "--- Cleaning Knetminer dataset directory\n"
 # Options to setup JMX and use jvisualvm. this makes jvisualvm accessible on 9010 (RMI on 9011), you can start jvisualvm from the
 # host and connect these ports (or you can use tricks like SSH tunnelling). Clearly, every new container needs its own ports.
 #
-#export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
-#	-Dcom.sun.management.jmxremote.authenticate=false
-# 	-Dcom.sun.management.jmxremote.port=$jmx_port
-# 	-Dcom.sun.management.jmxremote.rmi.port=$rmi_port
-# 	-Djava.rmi.server.hostname=localhost
-# 	-Dcom.sun.management.jmxremote.local.only=false"
+export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
+	-Dcom.sun.management.jmxremote.authenticate=false
+ 	-Dcom.sun.management.jmxremote.port=$jmx_port
+ 	-Dcom.sun.management.jmxremote.rmi.port=$rmi_port
+ 	-Djava.rmi.server.hostname=localhost
+ 	-Dcom.sun.management.jmxremote.local.only=false"
 # and these can be used for debugging
-#export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
-#	-Djava.compiler=NONE
-#  -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$debug_port"
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
+	-Djava.compiler=NONE
+  -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$debug_port"
+
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
-export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
+# Remove '_' to enable. We can't keep on all the time due to complaints from security software  
+export JAVA_TOOL_OPTIONS="$_JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
 export DOCKER_OPTS="-it"
 for port in $jmx_port $rmi_port $debug_port
 do
-	 DOCKER_OPTS="$DOCKER_OPTS -p $port:$port"
+	 # Remove '_' to actually enable it (see note above)
+	 _DOCKER_OPTS="$DOCKER_OPTS -p $port:$port"
 done
 
 # Let's use the two Docker servers for two different test instances
