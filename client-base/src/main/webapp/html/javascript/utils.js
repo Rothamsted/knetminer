@@ -811,8 +811,9 @@ function searchKeyword() {
             datatype: "json",
             data: JSON.stringify(requestParams)
         })
-            .fail(function (errorlog) {
-                alert("A search error has ocurred: " + errorlog);
+            .fail(function (xhr,status,errorlog) {
+                console.log(status+": "+xhr.status+" ("+errorlog+")");
+                alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
 				// Remove loading spinner from 'search' div
 				deactivateSpinner("#search");
             })
@@ -975,8 +976,9 @@ function generateCyJSNetwork(url, requestParams) {
         datatype: "json",
         data: JSON.stringify(requestParams),
         beforeSend: deactivateSpinner("#tabviewer")
-    }).fail(function (errorlog) {
-			alert("An error has ocurred..." + errorlog);
+    }).fail(function (xhr,status,errorlog) {
+                console.log(status+": "+xhr.status+" ("+errorlog+")");
+                alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
 		//	deactivateSpinner("#tabviewer");
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
