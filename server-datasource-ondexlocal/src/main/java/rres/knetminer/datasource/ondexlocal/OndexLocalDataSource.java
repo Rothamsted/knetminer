@@ -85,8 +85,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var dataService = ondexServiceProvider.getDataService ();
 
-		// this is quick and can be done in advance, so that we have what we need to be able to start answering the
-		// URLs
+		// this pre-loads some properties in advance, so that we have what we need (ie, data source name) to be able 
+		// to start answering the API URLs
+		// This is also quick enough to be done synchronously.
 		dataService.loadOptions ( configXmlPath );
 		var dsName = dataService.getDataSourceName ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
