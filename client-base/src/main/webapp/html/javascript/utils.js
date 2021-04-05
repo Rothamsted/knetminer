@@ -935,12 +935,13 @@ function searchKeyword() {
  * Generates the number of user genes with evidence links in gene view .tab results
  * @author: Ajit Singh.
  */
-function countLinkedUserGenes(geneview_table) {
+function countLinkedUserGenes(gv_table) {
+    var geneview_table = gv_table.split("\n");
     var numResults= geneview_table.length - 2;
     var linkedcount=0;
     for(var i = 1; i <= numResults; i++) {
         var values = geneview_table[i].split("\t");
-        console.log("test:" + values);
+        //console.log("linked: " + values[7] +", evidences: "+ values[9]);
         if (values[7] === "yes") {
             if (values[9].length > 0) { // counting known targets, i.e., user=yes and evidence present
                 linkedcount= linkedcount + 1;
