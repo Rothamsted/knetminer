@@ -36,8 +36,8 @@ EOT
 echo -e "--- Stopping, cleaning and updating Docker\n"
 docker stop wheat-ci || true
 docker rm wheat-ci || true
-#docker system prune --all --force
-#docker pull knetminer/knetminer
+docker system prune --all --force
+docker pull knetminer/knetminer
 
 echo -e "--- Cleaning Knetminer dataset directory\n"
 ./cleanup-volume.sh --all "$dataset_dir"
