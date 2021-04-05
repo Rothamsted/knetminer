@@ -18,6 +18,18 @@
 		A .war skeleton to implement a Knetminer API web service, based on some extension of
 		the server-datasource-api module.
 	</description>
+        
+        <build>
+            <resources>
+                <resource>
+                    <directory>src/main/resources</directory>
+                    <filtering>true</filtering>
+                    <includes>
+                        <include>ga.properties</include>
+                    </includes>
+                </resource>
+            </resources>
+        </build>
 
 	<dependencies>
 		<dependency>

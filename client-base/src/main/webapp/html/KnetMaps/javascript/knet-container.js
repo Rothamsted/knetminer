@@ -149,7 +149,7 @@ cy.elements().qtip({
              }
       }
     catch(err) { info= "Selected element is neither a Concept nor a Relation"; }
-    console.log(info);
+    //console.log(info);
     iteminfo.showItemInfo(thisElement);
    });
 // cxttap - normalised right click or 2-finger tap event.

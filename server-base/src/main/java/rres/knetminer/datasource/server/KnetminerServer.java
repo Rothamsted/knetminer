@@ -99,11 +99,13 @@ public class KnetminerServer {
 		Properties props = new Properties();
 		try {
 			props.load(input);
+                        log.info("GA enabled= "+ props.getProperty("GOOGLE_ANALYTICS_ENABLED")); // test passing val
+                        log.info("ga_id to use= "+ props.getProperty("GOOGLE_ANALYTICS_TRACKING_ID")); // test passed val
 		} catch (IOException ex) {
 			log.warn("Failed to load Google Analytics properties file", ex);
 			return;
 		}
-		if (Boolean.parseBoolean(props.getProperty("GOOGLE_ANALYTICS_ENABLED", "False"))) {
+		if (Boolean.parseBoolean(props.getProperty("GOOGLE_ANALYTICS_ENABLED", "false"))) {
 			this.gaTrackingId = props.getProperty("GOOGLE_ANALYTICS_TRACKING_ID", null);
 			if (this.gaTrackingId == null)
 				log.warn("Google Analytics properties file enabled analytics but did not provide tracking ID");
