@@ -82,7 +82,8 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!--<execution>
+                                        <!-- can comment-out/disable from below (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
+					<execution>
 						<id>exec-npm-install-knetmaps</id>
 						<phase>compile</phase>
 						<configuration>
@@ -109,7 +110,8 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>-->
+					</execution>
+                                        <!-- can comment-out/disable upto here (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
 					<execution>
 						<id>exec-gulp-optimise-knetmaps</id>
 						<phase>compile</phase>
