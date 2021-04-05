@@ -11,8 +11,8 @@
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
 <%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
-<%@ attribute name="enableGA" type="java.lang.Boolean" description="Is google analytics enabled" %>
-<%@ attribute name="ga_id" description="If analytics enabled then use this ga_id" %>
+<%@ attribute name="enableGA" description="Is google analytics enabled" %>
+<%@ attribute name="ga_id" description="If analytics enabled then use this UI ga_id" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
