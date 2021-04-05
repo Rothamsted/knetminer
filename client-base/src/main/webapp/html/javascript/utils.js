@@ -786,149 +786,150 @@ function searchKeyword() {
                         knetview_limit= 10; // back to default
                        }
                 }
-            }
-    	});
-     //}
-	
-   if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-        $('#tabviewer').show(); // show Tab buttons and viewer
-		
-        //$(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
-		// Show loading spinner on 'search' div
-		activateSpinner("#search");
-		//console.log("search>> start spinner...");
-		
-		//console.log("requestParams:");
-		//console.dir(requestParams);
-        $.post({
-            url: api_url + request,
-            timeout: 1000000,
-            startTime: performance.now(),
-            headers: {
-                "Accept": "application/json; charset=utf-8",
-                "Content-Type": "application/json; charset=utf-8"
             },
-            datatype: "json",
-            data: JSON.stringify(requestParams)
-        })
-            .fail(function (xhr,status,errorlog) {
-                console.log(status+": "+xhr.status+" ("+errorlog+")");
-                alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
-				// Remove loading spinner from 'search' div
-				deactivateSpinner("#search");
-            })
-            .success(function (data) {
-                var querytime= performance.now() - this.startTime; // query response time
-                var queryseconds= querytime/1000;
-                queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
-                $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-                if (data.geneCount === 0) { // for failed search with no results.
-                    // default search error display msg.
-                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry, no results were found.</span><br /><span class="pGViewer_title_line">Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span></div>'
-                    if(keyword.length > 0) { // msg for keyword search error
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search <b>' + keyword + ' did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.</span></div>';
-                       if(geneList_size > 0) { // msg for keyword + genelist search error
-                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
-                         }
-                      }
-                    if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search error
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
-                      }
-                    if(searchMode === "qtl") { // msg for QTL search error
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
-                      }
+            complete: function (data) {
+                if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
+                     $('#tabviewer').show(); // show Tab buttons and viewer
 
-                    if (typeof gviewer != "undefined" && gviewer != false) {
+                     //$(".loadingDiv").replaceWith('<div class="loadingDiv"><img src="html/image/spinner.gif" alt="Loading, please wait..." /></div>');
+                             // Show loading spinner on 'search' div
+                             activateSpinner("#search");
+                             //console.log("search>> start spinner...");
 
-                        var longestChromosomeLength = "";
-                        if (typeof longest_chr != "undefined") {
-                            if (longest_chr != null) {
-                                longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
-                            }
-                        }
+                             //console.log("requestParams:");
+                             //console.dir(requestParams);
+                     $.post({
+                         url: api_url + request,
+                         timeout: 1000000,
+                         startTime: performance.now(),
+                         headers: {
+                             "Accept": "application/json; charset=utf-8",
+                             "Content-Type": "application/json; charset=utf-8"
+                         },
+                         datatype: "json",
+                         data: JSON.stringify(requestParams)
+                     })
+                         .fail(function (xhr,status,errorlog) {
+                             console.log(status+": "+xhr.status+" ("+errorlog+")");
+                             alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
+                                             // Remove loading spinner from 'search' div
+                                             deactivateSpinner("#search");
+                         })
+                         .success(function (data) {
+                             var querytime= performance.now() - this.startTime; // query response time
+                             var queryseconds= querytime/1000;
+                             queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
+                             $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+                             if (data.geneCount === 0) { // for failed search with no results.
+                                 // default search error display msg.
+                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry, no results were found.</span><br /><span class="pGViewer_title_line">Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span></div>'
+                                 if(keyword.length > 0) { // msg for keyword search error
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search <b>' + keyword + ' did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.</span></div>';
+                                    if(geneList_size > 0) { // msg for keyword + genelist search error
+                                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                                      }
+                                   }
+                                 if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search error
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                                   }
+                                 if(searchMode === "qtl") { // msg for QTL search error
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Your search did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).</span></div>';
+                                   }
 
-                        //Collapse Suggestor view
-                        $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
-                        $('#suggestor_search_area').slideUp(500);
-						//$('#suggestor_search').dialog('close');
-                    }
+                                 if (typeof gviewer != "undefined" && gviewer != false) {
 
-                    $("#pGViewer_title").replaceWith(genomicViewTitle);
+                                     var longestChromosomeLength = "";
+                                     if (typeof longest_chr != "undefined") {
+                                         if (longest_chr != null) {
+                                             longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
+                                         }
+                                     }
 
+                                     //Collapse Suggestor view
+                                     $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
+                                     $('#suggestor_search_area').slideUp(500);
+                                                             //$('#suggestor_search').dialog('close');
+                                 }
 
-                    activateButton('resultsTable');
-                    document.getElementById('resultsTable').innerHTML = "";
-                    document.getElementById('evidenceTable').innerHTML = "";
-                    document.getElementById('NetworkCanvas').innerHTML = "";
-
-                }
-                else {
-                    // For a valid response, i.e., search output.
-                    var candidateGenes = data.geneCount;
-                    var docSize = data.docSize; // for pGViewer_title_line display msg
-                    var totalDocSize = data.totalDocSize; // for pGViewer_title_line display msg
-                    var results = data.geneCount; // for pGViewer_title_line display msg
-
-                    var longestChromosomeLength = "";
-                    if (typeof longest_chr != "undefined") {
-                        if (longest_chr != null) {
-                            longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
-                        }
-                    }
-                    
-                    // default search display msg.
-                    var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
-                    if(keyword.length > 0) { // msg for keyword search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
-                       if(geneList_size > 0) { // msg for keyword + genelist search
-                          var count_linked= countLinkedUserGenes(data.geneTable);
-                          var count_unlinked= results - count_linked;
-                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
-                         }
-                      }
-                    if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
-                      }
-                    if(searchMode === "qtl") { // msg for QTL search
-                       var count_linked= countLinkedUserGenes(data.geneTable);
-                       var count_unlinked= results - count_linked;
-                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
-                      }
-                    if (candidateGenes > 1000) { // for over 1000 results in any searchMode
-                        candidateGenes = 1000;
-                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps map view ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
-                    }
-
-                    $("#pGViewer_title").replaceWith(genomicViewTitle);
-                    // Setup the mapview component
-                    var annotationsMap = data.gviewer;
-
-                    // create new basemap with bands for genes and pass it as well to the Map Viewer.
-                    genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
-
-                    //Collapse Suggestor view
-                    $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
-                    $('#suggestor_search_area').slideUp(500);
-					//$('#suggestor_search').dialog('close');
+                                 $("#pGViewer_title").replaceWith(genomicViewTitle);
 
 
-                    activateButton('resultsTable');
-                    createGenesTable(data.geneTable, keyword, candidateGenes);
-                    createEvidenceTable(data.evidenceTable, keyword);
-					// show linked/unlinked genes checkboxes only if a gene list was provided by the user
-                    if(geneList_size > 0) {
-                       $('#selectUser').show();
-                      }
-                      else { $('#selectUser').hide(); }
-                }
-			 // Remove loading spinner from 'search' div
-			 deactivateSpinner("#search");
-			 //console.log("search: success; remove spinner...");
-            });
-    }
-    else {
-        $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
-    }
+                                 activateButton('resultsTable');
+                                 document.getElementById('resultsTable').innerHTML = "";
+                                 document.getElementById('evidenceTable').innerHTML = "";
+                                 document.getElementById('NetworkCanvas').innerHTML = "";
+
+                             }
+                             else {
+                                 // For a valid response, i.e., search output.
+                                 var candidateGenes = data.geneCount;
+                                 var docSize = data.docSize; // for pGViewer_title_line display msg
+                                 var totalDocSize = data.totalDocSize; // for pGViewer_title_line display msg
+                                 var results = data.geneCount; // for pGViewer_title_line display msg
+
+                                 var longestChromosomeLength = "";
+                                 if (typeof longest_chr != "undefined") {
+                                     if (longest_chr != null) {
+                                         longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
+                                     }
+                                 }
+
+                                 // default search display msg.
+                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
+                                 if(keyword.length > 0) { // msg for keyword search
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
+                                    if(geneList_size > 0) { // msg for keyword + genelist search
+                                       var count_linked= countLinkedUserGenes(data.geneTable);
+                                       var count_unlinked= results - count_linked;
+                                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                                      }
+                                   }
+                                 if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
+                                   }
+                                 if(searchMode === "qtl") { // msg for QTL search
+                                    var count_linked= countLinkedUserGenes(data.geneTable);
+                                    var count_unlinked= results - count_linked;
+                                    genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                                   }
+                                 if (candidateGenes > 1000) { // for over 1000 results in any searchMode
+                                     candidateGenes = 1000;
+                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps map view ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
+                                 }
+
+                                 $("#pGViewer_title").replaceWith(genomicViewTitle);
+                                 // Setup the mapview component
+                                 var annotationsMap = data.gviewer;
+
+                                 // create new basemap with bands for genes and pass it as well to the Map Viewer.
+                                 genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
+
+                                 //Collapse Suggestor view
+                                 $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
+                                 $('#suggestor_search_area').slideUp(500);
+                                                     //$('#suggestor_search').dialog('close');
+
+
+                                 activateButton('resultsTable');
+                                 createGenesTable(data.geneTable, keyword, candidateGenes);
+                                 createEvidenceTable(data.evidenceTable, keyword);
+                                                     // show linked/unlinked genes checkboxes only if a gene list was provided by the user
+                                 if(geneList_size > 0) {
+                                    $('#selectUser').show();
+                                   }
+                                   else { $('#selectUser').hide(); }
+                             }
+                                      // Remove loading spinner from 'search' div
+                                      deactivateSpinner("#search");
+                                      //console.log("search: success; remove spinner...");
+                         });
+                 }
+                 else {
+                     $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
+                 }
+               }
+    	});
+	
 }
 
 /*
