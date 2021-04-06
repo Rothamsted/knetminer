@@ -19,18 +19,6 @@
 		the server-datasource-api module.
 	</description>
         
-        <build>
-            <resources>
-                <resource>
-                    <directory>src/main/resources</directory>
-                    <filtering>true</filtering>
-                    <includes>
-                        <include>ga.properties</include>
-                    </includes>
-                </resource>
-            </resources>
-        </build>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -100,4 +88,21 @@
 			<artifactId>javax.annotation-api</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+						<include>ga.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>				
+			</resource>
+		</resources>
+	</build>
+
 </project>
