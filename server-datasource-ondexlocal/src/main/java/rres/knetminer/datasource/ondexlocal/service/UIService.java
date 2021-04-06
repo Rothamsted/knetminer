@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -84,12 +86,16 @@ public class UIService
 			// Only start a KEY tag if it will have contents. Otherwise skip it.
 			out.append ( "<" + synonymKey + ">\n" );
 
+			// we store this no of top synonyms per concept type. That is, in the ordered loop below, we scan
+			// key-associated concepts in order of search score and, we skip the rendering of those concepts 
+			// which of type count has reached this threshold. 
+			final int MAX_SYNONYMS = 25;
+			
 			Stream<Map.Entry<Integer, Float>> sortedSynonyms = synonyms2Scores.entrySet ()
 			.stream ()
 			.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) );
 
 			Map<String, Integer> entryCountsByType = new HashMap<> ();
-			final int MAX_SYNONYMS = 25; // we store this no of top synonyms per concept
 					
 			// writes the topX values in table
 			sortedSynonyms.forEach ( entry -> 
@@ -97,23 +103,24 @@ public class UIService
 				int synonymId = entry.getKey ();
 				float score = entry.getValue ();
 				
-				ONDEXConcept eoc = graph.getConcept ( synonymId );
-				String type = eoc.getOfType ().getId ();
+				ONDEXConcept synonymConcept = graph.getConcept ( synonymId );
+				String synonymType = synonymConcept.getOfType ().getId ();
 
-				if ( ( type.equals ( "Publication" ) || type.equals ( "Thing" ) ) ) return;
+				if ( StringUtils.trimToNull ( synonymType ) == null ) return;
+				if ( ( synonymType.equals ( "Publication" ) || synonymType.equals ( "Thing" ) ) ) return;
 				
 				// TODO: before, this count was incremented in the cNames loop below, however, that way either we
 				// get the same because there's one preferred name only,
-				// or the count computed that way is likely wrong, cause it increases with names
+				// or the computed count is likely wrong, cause it increases with names
 				//
-				int synCount = entryCountsByType.compute ( type, 
-					(thisType, thisCount) -> thisType == null ? 1 : ++thisCount
+				int typeCount = entryCountsByType.compute ( synonymType, 
+					(thisType, thisCount) -> thisCount == null ? 1 : ++thisCount
 				); 
 
-				if ( synCount > MAX_SYNONYMS ) return;
-
+				// See above for details
+				if ( typeCount > MAX_SYNONYMS ) return;
 				
-				Set<ConceptName> cNames = eoc.getConceptNames ();
+				Set<ConceptName> cNames = synonymConcept.getConceptNames ();
 
 				cNames.stream ()
 				.filter ( ConceptName::isPreferred )
@@ -128,7 +135,7 @@ public class UIService
 					// suggestions
 					if ( name.contains ( "\"" ) ) name = name.replaceAll ( "\"", "" );
 					
-					out.append ( name + "\t" + type + "\t" + Float.toString ( score ) + "\t" + synonymId + "\n" );
+					out.append ( name + "\t" + synonymType + "\t" + Float.toString ( score ) + "\t" + synonymId + "\n" );
 				});
 			}); // forEach synonym
 
@@ -136,6 +143,7 @@ public class UIService
 				
 		} // for synonymKeys
 		return out.toString ();
-	} //
+		
+	} // renderSynonymTable()
 	
 }
