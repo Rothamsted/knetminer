@@ -70,6 +70,9 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	 * status code if present. Else, let {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatus, WebRequest)}
 	 * to set a generic {@link HttpStatus#INTERNAL_SERVER_ERROR}.
 	 * 
+	 * TODO: NotReadyException requires {@link HttpStatus#SERVICE_UNAVAILABLE}, including this exception here requires
+	 * jutils dependency.
+	 * 
 	 */
 	@ExceptionHandler
 	@SuppressWarnings ( "unchecked" )
@@ -85,7 +88,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 		return (ResponseEntity<KnetminerExceptionResponse>) (ResponseEntity<?>) 
 			this.handleExceptionInternal ( ex, null, new HttpHeaders (), status, request );
 	}
-
+	
 	/**
 	 * Takes the status code from {@link ResponseStatusException#getStatus() code}.
 	 */
