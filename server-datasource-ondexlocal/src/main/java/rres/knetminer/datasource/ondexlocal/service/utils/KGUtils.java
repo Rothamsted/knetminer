@@ -63,8 +63,8 @@ public class KGUtils
 
 		Set<String> normAccs = accessions.stream ()
 		.map ( acc -> 
-			acc.replaceAll ( "^[\"()]+", "" )
-			.replaceAll ( "[\"()]+$", "" )
+			acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
+			.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
 			.toUpperCase () 
 		).collect ( Collectors.toSet () );			
 		

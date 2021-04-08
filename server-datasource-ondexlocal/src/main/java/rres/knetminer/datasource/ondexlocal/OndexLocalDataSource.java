@@ -203,12 +203,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			genes.addAll(geneMap.keySet());
 			log.info("Number of genes: " + genes.size());
 
-			if (userGenes != null) {
-				/* use this (Set<ONDEXConcept> userGenes) in place of the genes ArrayList<ONDEXConcept> genes. */
-				//   genes= new ArrayList<ONDEXConcept> (userGenes);
-                            
-                           /* filter scored results (ArrayList<ONDEXConcept> genes) to only retain sorted genes (by KnetScore) 
-                             from user gene list (Set<ONDEXConcept> userGenes) */
+			if (userGenes != null)
+			{
+				// Filter by user-provided list
 				Iterator<ONDEXConcept> itr = genes.iterator();
 				while (itr.hasNext()) {
 					ONDEXConcept gene = itr.next();
@@ -216,16 +213,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 						itr.remove();
 					}
 				}
-                          
-                           /* also, add any missing genes from user list (Set<ONDEXConcept> userGenes) that weren't already in the scored results 
-                           (ArrayList<ONDEXConcept> genes) due to no evidences */
+
+				// And re-add missing user-genes (which possibly, didn't score well)
 				for (ONDEXConcept userGene : userGenes) {
 					if (!genes.contains(userGene)) {
 						genes.add(userGene);
-                                                geneMap.put(userGene, 0.0); // Ensure the gene is placed into the HashMap
+						geneMap.put(userGene, 0.0);
 					}
 				}
-				log.info("Using user gene list... genes: " + genes.size());
+				log.info("Using user gene list, genes: " + genes.size());
 			}
 			if (response.getClass().equals(QtlResponse.class)) {
 				log.info("QTL response...");
