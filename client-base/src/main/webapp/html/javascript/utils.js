@@ -875,7 +875,7 @@ function searchKeyword() {
                                  }
 
                                  // default search display msg.
-                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
+                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>'
                                  if(keyword.length > 0) { // msg for keyword search
                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                                     if(geneList_size > 0) { // msg for keyword + genelist search
@@ -894,7 +894,7 @@ function searchKeyword() {
                                    }
                                  if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                                      candidateGenes = 1000;
-                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps map view ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
+                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
                                  }
 
                                  $("#pGViewer_title").replaceWith(genomicViewTitle);
