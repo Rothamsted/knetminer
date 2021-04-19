@@ -925,7 +925,7 @@ function searchKeyword() {
                          });
                  }
                  else {
-                     $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
+                     $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to search with unlimited genes</b></div>');
                  }
                }
     	});
@@ -1034,7 +1034,12 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
     else if (candidatelist.length > knetview_limit/*20*/) {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to '+knetview_limit+' genes.</b></div>');
+        if(enforce_genelist_limit === false) { // Pro plan user
+           $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to max. '+knetview_limit+' genes.</b></div>');
+          }
+          else { // Free plan user
+            $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>The KnetMiner Free Plan is limited to a network of '+knetview_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks for 200 genes</b></div>');
+          }
     }
     else {
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
