@@ -182,7 +182,7 @@ public class SemanticMotifDataService
 			graphTraverser.setOption ( "performanceReportFrequency", -1 );
 
 			log.info ( "Also, generate geneID//endNodeID & pathLength in HashMap genes2PathLengths..." );
-			PercentProgressLogger progressLogger = new PercentProgressLogger ( 
+			var progressLogger = new PercentProgressLogger ( 
 				"{}% of paths stored", traverserPaths.values ().size () 
 			);
 			for ( List<EvidencePathNode> paths : traverserPaths.values () )
@@ -281,7 +281,7 @@ public class SemanticMotifDataService
 
 		genes2QTLs = new HashMap<> ();
 		PercentProgressLogger progressLogger = new PercentProgressLogger ( "{}% of genes processed", seedGenes.size () );
-
+		
 		for ( ONDEXConcept gene : seedGenes )
 		{
 			GeneHelper geneHelper = new GeneHelper ( graph, gene );
