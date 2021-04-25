@@ -1,7 +1,3 @@
-var enforce_genelist_limit= true; // default search limits.
-var freegenelist_limit= 20; // default search limits.
-var knetview_limit= 10; // default search limits.
-
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
@@ -215,7 +211,7 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
-        console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
+        //console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
@@ -875,7 +871,7 @@ function searchKeyword() {
                                  }
 
                                  // default search display msg.
-                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>'
+                                 var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>'
                                  if(keyword.length > 0) { // msg for keyword search
                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                                     if(geneList_size > 0) { // msg for keyword + genelist search
@@ -894,7 +890,7 @@ function searchKeyword() {
                                    }
                                  if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                                      candidateGenes = 1000;
-                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps map view ('+queryseconds+' seconds).</span><br /><span class="pGViewer_title_line">Query was found in <b>' + docSize + ' documents</b> related with genes (' + totalDocSize + ' documents in total)</span></div>';
+                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
                                  }
 
                                  $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -925,7 +921,7 @@ function searchKeyword() {
                          });
                  }
                  else {
-                     $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
+                     $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to search with unlimited genes</b></div>');
                  }
                }
     	});
@@ -1034,7 +1030,12 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
         $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
     }
     else if (candidatelist.length > knetview_limit/*20*/) {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to '+knetview_limit+' genes.</b></div>');
+        if(enforce_genelist_limit === false) { // Pro plan user
+           $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to max. '+knetview_limit+' genes.</b></div>');
+          }
+          else { // Free plan user
+            $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>The KnetMiner Free Plan is limited to a network of '+knetview_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks for 200 genes</b></div>');
+          }
     }
     else {
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
