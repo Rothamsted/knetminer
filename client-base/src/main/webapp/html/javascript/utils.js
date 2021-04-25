@@ -1,7 +1,3 @@
-var enforce_genelist_limit= true; // default search limits.
-var freegenelist_limit= 20; // default search limits.
-var knetview_limit= 10; // default search limits.
-
 // Map View
 var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // changed from 750x400 to 800x550
 var knetmaps = KNETMAPS.KnetMaps();
