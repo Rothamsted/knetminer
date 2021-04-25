@@ -211,7 +211,7 @@ $(document).ready(
     function () {
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
-        console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
+        //console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
 		
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
