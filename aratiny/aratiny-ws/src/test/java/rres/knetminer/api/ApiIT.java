@@ -52,7 +52,7 @@ public class ApiIT
 	public static void initialDelay () throws InterruptedException
 	{
 		clog.info ( "Making a pause to give the server time to initialise." );
-		Thread.sleep ( 5 * 1000 );
+		Thread.sleep ( 10 * 1000 );
 	}
 	
 	@Test
