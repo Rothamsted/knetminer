@@ -178,7 +178,9 @@ public class KGUtils
     // results = graph.getConceptsOfConceptClass(ccQTL);
     for (ONDEXConcept qtl : graph.getConceptsOfConceptClass(ccQTL))
     {
+      String label = ONDEXGraphUtils.getConceptName ( qtl );
       String type = qtl.getOfType().getId();
+
       String chrName = getAttrValue ( graph, qtl, "Chromosome" );
       int start = (Integer) getAttrValue ( graph, qtl, "BEGIN" );
       int end = (Integer) getAttrValue ( graph, qtl, "END" );
@@ -188,8 +190,6 @@ public class KGUtils
       
       String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, qtl, "TAXID", false ) )
       	.orElse ( "" );
-      
-      String label = qtl.getConceptName().getName();
       
       results.add ( new QTL ( chrName, type, start, end, label, "", 1.0f, trait, taxId ) );
     }

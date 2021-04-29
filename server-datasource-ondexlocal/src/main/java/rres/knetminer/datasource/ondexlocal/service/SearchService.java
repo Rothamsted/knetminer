@@ -3,6 +3,7 @@ package rres.knetminer.datasource.ondexlocal.service;
 import static java.util.stream.Collectors.toMap;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
+import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
@@ -41,6 +42,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
+import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.logging.ONDEXLogger;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
@@ -361,10 +363,10 @@ public class SearchService
     
     Set<QTL> results = new HashSet<>();
     
-    for ( ONDEXConcept c : hits.getOndexHits() ) 
+    for ( ONDEXConcept hitConcept : hits.getOndexHits() ) 
     {
-        if (c instanceof LuceneConcept) c = ((LuceneConcept) c).getParent();
-        Set<ONDEXRelation> rels = graph.getRelationsOfConcept(c);
+        if (hitConcept instanceof LuceneConcept) hitConcept = ((LuceneConcept) hitConcept).getParent();
+        Set<ONDEXRelation> rels = graph.getRelationsOfConcept(hitConcept);
         
         for (ONDEXRelation r : rels) 
         {
@@ -389,9 +391,9 @@ public class SearchService
           if ( end == null ) continue;
           
           String type = conQTLType.getId();
-          String label = conQTL.getConceptName().getName();
-          String trait = c.getConceptName().getName();
-          
+          String label = getConceptName ( conQTL );
+          String trait = getConceptName ( hitConcept );
+                    
           float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
           	.orElse ( 1.0f );
 
