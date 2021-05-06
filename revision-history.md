@@ -1,9 +1,9 @@
 # Revision History
 
-# 4.0.1-SNAPSHOT
+# 5.0-SNAPSHOT
 
-*This was last updated on 11/11/2020*
-
+*This was last updated on 6/5/2021*
+* Updates and additions to datasets (covid-19, 
 * Migration to Java 11. **Now you do need Java >= 11 to make knetminer working** If you use Docker, our images
   use the right Java version automatically.
 
@@ -12,6 +12,7 @@
 * Third-party dependency updates
 * Big refactoring of the `OndexServiceProvider` component
 * Docker-base removed, now there are only two image levels
+* Migration from Travis to GitHub Actions
 
 
 # 4.0
