@@ -1453,7 +1453,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '<thead>';
         table = table + '<tr>';
         var header = evidenceTable[0].split("\t");
-        table = table + '<th width="60">Exclude</th>';
+        table = table + '<th width="70">Omit/Add</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
         table = table + '<th width="212">DESCRIPTION</th>';
         table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
@@ -1472,7 +1472,9 @@ function createEvidenceTable(text, keyword) {
         for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
             table = table + '<tr>';
-            table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+            table = table + '<td><p id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
+                    '<p id="evidence_include_' + ev_i + '" class="addKeyword evidenceTableIncludeKeyword" title="Include term"></p></td>';
 
             //link publications with pubmed
             pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
@@ -1542,6 +1544,18 @@ function createEvidenceTable(text, keyword) {
                 excludeKeyword('ConceptID:' + values[7], targetID, 'keywords');
             } else {
                 excludeKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
+            }
+        });
+
+        $(".evidenceTableIncludeKeyword").bind("click", {x: evidenceTable}, function (e) {
+            e.preventDefault();
+            var targetID = $(e.target).attr("id");
+            var evidenceNum = targetID.replace("evidence_include_", "");
+            var values = e.data.x[evidenceNum].split("\t");
+            if ($(e.target).hasClass("addKeyword")) {
+                addKeyword('ConceptID:' + values[7], targetID, 'keywords');
+            } else {
+                addKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
             }
         });
 
