@@ -1463,7 +1463,13 @@ function createEvidenceTable(text, keyword) {
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
-        for (var ev_i = 1; ev_i < (evidenceTable.length - 1); ev_i++) {
+        //console.log("number of evidences found= "+ evidenceTable.length);
+        var eviTableLimit= evidenceTable.length-1;
+        if(eviTableLimit > 1000) { // limit evidence view table to top 1000 evidences
+           eviTableLimit= 1001;
+          }
+        //console.log("evidence view: show top "+eviTableLimit+" evidences");
+        for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
             table = table + '<tr>';
             table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
