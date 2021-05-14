@@ -1474,7 +1474,7 @@ function createEvidenceTable(text, keyword) {
             table = table + '<tr>';
             //table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
             table = table + '<td><p id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
-                    '<p id="evidence_include_' + ev_i + '" class="addKeyword evidenceTableIncludeKeyword" title="Include term"></p></td>';
+                    '<p id="evidence_add_' + ev_i + '" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>';
 
             //link publications with pubmed
             pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
@@ -1547,10 +1547,10 @@ function createEvidenceTable(text, keyword) {
             }
         });
 
-        $(".evidenceTableIncludeKeyword").bind("click", {x: evidenceTable}, function (e) {
+        $(".evidenceTableAddKeyword").bind("click", {x: evidenceTable}, function (e) {
             e.preventDefault();
             var targetID = $(e.target).attr("id");
-            var evidenceNum = targetID.replace("evidence_include_", "");
+            var evidenceNum = targetID.replace("evidence_add_", "");
             var values = e.data.x[evidenceNum].split("\t");
             if ($(e.target).hasClass("addKeyword")) {
                 addKeyword('ConceptID:' + values[7], targetID, 'keywords');
@@ -1776,12 +1776,13 @@ function createSynonymTable(text) {
             e.preventDefault();
             var currentTarget = $(e.currentTarget);
 			console.log("query suggester... currentTarget.id: "+currentTarget.attr("id"));
-			console.log("evidenceTable: "+evidenceTable);
-            var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").split("_")[1];
+            var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").replace("evidence_", "").split("_")[1];
 			console.log("synonymNum: "+synonymNum);
 			console.log("evidenceTable[synonymNum]: "+evidenceTable[synonymNum]);
             var keyword = evidenceTable[synonymNum].split("\t")[0];
+            console.log(".buttonSynonym_on.id= "+$('.buttonSynonym_on').attr('id'));
             var originalTermName = $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", "").replace("_1_buttonSynonym", "").replace(/_/g, " ");
+            console.log("originalTermName: "+ originalTermName);
 
             if (originalTermName.indexOf(' ') >= 0) {
                 if (!originalTermName.startsWith('"')) {
