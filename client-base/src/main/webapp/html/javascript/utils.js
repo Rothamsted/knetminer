@@ -1775,14 +1775,12 @@ function createSynonymTable(text) {
         $(".addKeyword,.excludeKeyword,.replaceKeyword").click(function (e) {
             e.preventDefault();
             var currentTarget = $(e.currentTarget);
-			console.log("query suggester... currentTarget.id: "+currentTarget.attr("id"));
             var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").replace("evidence_", "").split("_")[1];
-            console.log("synonymNum: "+synonymNum);
-            console.log("evidenceTable[synonymNum]: "+evidenceTable[synonymNum]);
             var keyword = evidenceTable[synonymNum].split("\t")[0];
-            console.log(".buttonSynonym_on ID= "+$('.buttonSynonym_on').attr('id'));
-            var originalTermName = $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", ""),replace("tablesorterEvidence","").replace("_1_buttonSynonym", "").replace(/_/g, " ");
-            console.log("originalTermName: "+ originalTermName);
+            var originalTermName="";
+            if(typeof $('.buttonSynonym_on').attr('id') !== "undefined") {
+               originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", "").replace("tablesorterEvidence", "").replace("_1_buttonSynonym", "").replace(/_/g, " ");
+              }
 
             if (originalTermName.indexOf(' ') >= 0) {
                 if (!originalTermName.startsWith('"')) {
