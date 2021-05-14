@@ -1472,8 +1472,8 @@ function createEvidenceTable(text, keyword) {
         for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
             table = table + '<tr>';
-            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
-            table = table + '<td><p id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
+            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+            table = table + '<td><p id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
                     '<p id="evidence_include_' + ev_i + '" class="addKeyword evidenceTableIncludeKeyword" title="Include term"></p></td>';
 
             //link publications with pubmed
@@ -1775,7 +1775,11 @@ function createSynonymTable(text) {
         $(".addKeyword,.excludeKeyword,.replaceKeyword").click(function (e) {
             e.preventDefault();
             var currentTarget = $(e.currentTarget);
+			console.log("query suggester... currentTarget.id: "+currentTarget.attr("id"));
+			console.log("evidenceTable: "+evidenceTable);
             var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").split("_")[1];
+			console.log("synonymNum: "+synonymNum);
+			console.log("evidenceTable[synonymNum]: "+evidenceTable[synonymNum]);
             var keyword = evidenceTable[synonymNum].split("\t")[0];
             var originalTermName = $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", "").replace("_1_buttonSynonym", "").replace(/_/g, " ");
 
