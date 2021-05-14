@@ -1472,7 +1472,7 @@ function createEvidenceTable(text, keyword) {
         for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
             table = table + '<tr>';
-            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
             table = table + '<td><p id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
                     '<p id="evidence_include_' + ev_i + '" class="addKeyword evidenceTableIncludeKeyword" title="Include term"></p></td>';
 
