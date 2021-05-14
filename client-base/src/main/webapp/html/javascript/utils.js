@@ -1777,11 +1777,11 @@ function createSynonymTable(text) {
             var currentTarget = $(e.currentTarget);
 			console.log("query suggester... currentTarget.id: "+currentTarget.attr("id"));
             var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").replace("evidence_", "").split("_")[1];
-			console.log("synonymNum: "+synonymNum);
-			console.log("evidenceTable[synonymNum]: "+evidenceTable[synonymNum]);
+            console.log("synonymNum: "+synonymNum);
+            console.log("evidenceTable[synonymNum]: "+evidenceTable[synonymNum]);
             var keyword = evidenceTable[synonymNum].split("\t")[0];
-            console.log(".buttonSynonym_on.id= "+$('.buttonSynonym_on').attr('id'));
-            var originalTermName = $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", "").replace("_1_buttonSynonym", "").replace(/_/g, " ");
+            console.log(".buttonSynonym_on ID= "+$('.buttonSynonym_on').attr('id'));
+            var originalTermName = $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", ""),replace("tablesorterEvidence","").replace("_1_buttonSynonym", "").replace(/_/g, " ");
             console.log("originalTermName: "+ originalTermName);
 
             if (originalTermName.indexOf(' ') >= 0) {
