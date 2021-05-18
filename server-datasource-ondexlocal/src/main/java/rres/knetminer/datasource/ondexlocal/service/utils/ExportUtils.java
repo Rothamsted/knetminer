@@ -44,8 +44,6 @@ public class ExportUtils
    */
   public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph ) throws InvalidPluginArgumentException
   {
-		// Unconnected filter
-		Filter uFilter = new Filter ();
 		ONDEXPluginArguments uFA = new ONDEXPluginArguments ( uFilter.getArgumentDefinitions () );
 		uFA.addOption ( ArgumentNames.REMOVE_TAG_ARG, true );
 
@@ -67,20 +65,24 @@ public class ExportUtils
     });
     log.info ( "Filtering concept classes " + ccRestrictionList );
 
-		uFilter.setArguments ( uFA );
-		uFilter.setONDEXGraph ( graph );
-		uFilter.start ();
+		var uconnFilter = new Filter ();
+		uconnFilter.setArguments ( uFA );
+		uconnFilter.setONDEXGraph ( graph );
+		uconnFilter.start ();
 
 		ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
-		uFilter.copyResultsToNewGraph ( graph2 );
+		uconnFilter.copyResultsToNewGraph ( graph2 );
 
 		// Export the graph as JSON too, using the Ondex JSON Exporter plugin.
 		Export jsonExport = new Export ();
 		File exportFile = null;
     try 
     {
+    	// TODO: just change the plugin, so that the functionality is available outside of it and
+    	// it can return a string instead of only writing to a file.
+    	
 			exportFile = File.createTempFile ( "knetminer", "graph" );
-			exportFile.deleteOnExit (); // Just in case we don't get round to deleting it ourselves
+			exportFile.deleteOnExit ();
 			String exportPath = exportFile.getAbsolutePath ();
 
 			ONDEXPluginArguments epa = new ONDEXPluginArguments ( jsonExport.getArgumentDefinitions () );

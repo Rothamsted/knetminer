@@ -305,7 +305,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		NetworkResponse response = new NetworkResponse();
 		try {
 			response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft());
-		} catch (InvalidPluginArgumentException e) {
+		} 
+		catch (InvalidPluginArgumentException e) {
 			log.error("Failed to export graph", e);
 			throw new Error(e);
 		}
