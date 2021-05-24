@@ -5,7 +5,7 @@
   */
  function filterKnetworkJson(json_blob) {
 	 
-  console.log(json_blob);
+  console.log("knetworkJSON from server..."+ json_blob);
   eval(json_blob); // gets the 2 JS vars from it to be avilable in local scope
   console.dir(graphJSON); // graphJSON
   console.dir(allGraphData); // metadata JSON that hold numberOfCOncepts too
@@ -13,7 +13,7 @@
   var graphjson2_nodes= [], graphjson2_edges=[], graphJSON2= {}; // 2 empty new jsonArrays and 1 jsonObject
   var retained_ids= [];
   console.log("numberOfConcepts= "+ allGraphData.ondexmetadata.numberOfConcepts);
-  if(allGraphData.ondexmetadata.numberOfConcepts > 10/*3000*/) {
+  if(allGraphData.ondexmetadata.numberOfConcepts > 100/*3000*/) {
 	 console.log("filter knetwork json...");
 	 // filter out nodes/edges from graphJSON with conceptDisplay/relationDisplay:none, and keep their id's to later filter allGraphData too.
 	 // for each node in nodes, check conceptDisplay:none and if yes, delete the node, and if no, retain id.
@@ -51,14 +51,13 @@
 	 omd= {"graphName": allGraphData.ondexmetadata.graphName, "concepts": agd2_nodes, "relations": agd2_edges, "numberOfConcepts": allGraphData.ondexmetadata.numberOfConcepts, "numberOfRelations": allGraphData.ondexmetadata.numberOfRelations, "version": allGraphData.ondexmetadata.version };
 	 allGraphData2= {"ondexmetadata": omd};
 	 
-	 console.log("filtered...");
+	 console.log("filtered new knetworkJSON...");
 	 console.dir(graphJSON2);
 	 console.dir(allGraphData2);
-       }
-       
-    // new filtered output knetwork blob
-    json_blob= "var graphJSON= "+ JSON.stringify(graphJSON2) +";\n\n"+"var allGraphData= "+ JSON.stringify(allGraphData2) +";";
-    console.log(json_blob); // new json contents with nested JS vars
+	 // new filtered output knetwork blob
+     json_blob= "var graphJSON= "+ JSON.stringify(graphJSON2) +";\n\n"+"var allGraphData= "+ JSON.stringify(allGraphData2) +";";
+     console.log(json_blob); // new json contents with nested JS vars
+	}
     
     return json_blob;
  };
