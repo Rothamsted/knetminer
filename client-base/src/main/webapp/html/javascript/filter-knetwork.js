@@ -5,7 +5,8 @@
   */
  function filterKnetworkJson(json_blob) {
 	 
-  console.log("knetworkJSON from server..."+ json_blob);
+  console.log("knetworkJSON from server/network API...");
+  //console.log("knetworkJSON from server..."+ json_blob);
   eval(json_blob); // gets the 2 JS vars from it to be avilable in local scope
   console.dir(graphJSON); // graphJSON
   console.dir(allGraphData); // metadata JSON that hold numberOfCOncepts too
@@ -13,8 +14,8 @@
   var graphjson2_nodes= [], graphjson2_edges=[], graphJSON2= {}; // 2 empty new jsonArrays and 1 jsonObject
   var retained_ids= [];
   console.log("numberOfConcepts= "+ allGraphData.ondexmetadata.numberOfConcepts);
-  if(allGraphData.ondexmetadata.numberOfConcepts > 100/*3000*/) {
-	 console.log("filter knetwork json...");
+  if(allGraphData.ondexmetadata.numberOfConcepts > 3000) {
+	 console.log("filter large knetwork json...");
 	 // filter out nodes/edges from graphJSON with conceptDisplay/relationDisplay:none, and keep their id's to later filter allGraphData too.
 	 // for each node in nodes, check conceptDisplay:none and if yes, delete the node, and if no, retain id.
 	 // for each edge in in edges, check relationDisplay:none and yes, delete the edge and if no, retain id.
@@ -33,7 +34,7 @@
 	 // make new graphJSON object with only visible nodes/edges.
 	 graphJSON2= {"nodes": graphjson2_nodes, "edges": graphjson2_edges };
 	 
-	 console.log("retained_ids to filter allGraphData: "+ retained_ids);
+	 //console.log("retained_ids to filter allGraphData: "+ retained_ids);
 	 
 	 // now filter metadata json (allGraphData).
 	 var allGraphData2= {}, omd= {}, agd2_nodes=[], agd2_edges= []; // 3 empty new jsonArrays and 1 jsonObject
@@ -56,7 +57,7 @@
 	 console.dir(allGraphData2);
 	 // new filtered output knetwork blob
      json_blob= "var graphJSON= "+ JSON.stringify(graphJSON2) +";\n\n"+"var allGraphData= "+ JSON.stringify(allGraphData2) +";";
-     console.log(json_blob); // new json contents with nested JS vars
+     //console.log(json_blob); // new json contents with nested JS vars
 	}
     
     return json_blob;
