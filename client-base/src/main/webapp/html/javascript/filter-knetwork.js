@@ -54,10 +54,11 @@
 	 console.log("filtered...");
 	 console.dir(graphJSON2);
 	 console.dir(allGraphData2);
-	 
-	 // new filtered output knetwork blob
-	 json_blob= "var graphJSON= "+ JSON.stringify(graphJSON2) +";\n\n"+"var allGraphData= "+ JSON.stringify(allGraphData2) +";";
-	 console.log(json_blob); // new json contents with nested JS vars
-	 
-	 return json_blob;
- }
+       }
+       
+    // new filtered output knetwork blob
+    json_blob= "var graphJSON= "+ JSON.stringify(graphJSON2) +";\n\n"+"var allGraphData= "+ JSON.stringify(allGraphData2) +";";
+    console.log(json_blob); // new json contents with nested JS vars
+    
+    return json_blob;
+ };

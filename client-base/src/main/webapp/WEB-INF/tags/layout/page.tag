@@ -84,9 +84,9 @@
         
         <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
         <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>
+        <script type="text/javascript" src="html/javascript/filter-knetwork.js"></script>
         <!-- KnetMaps - js utils to save knet to knetspace -->
         <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
-        <script type="text/javascript" src="html/javascript/filter-knetwork.js"></script>
         <script type="text/javascript" src="html/javascript/utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->
