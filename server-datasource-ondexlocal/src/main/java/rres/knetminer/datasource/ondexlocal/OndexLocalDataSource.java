@@ -302,14 +302,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
 
 		// Export graph
-		NetworkResponse response = new NetworkResponse();
-		try {
-			response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft());
-		} 
-		catch (InvalidPluginArgumentException e) {
-			log.error("Failed to export graph", e);
-			throw new Error(e);
-		}
+		var response = new NetworkResponse();
+		response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft());
+
 		return response;
 	}
 
@@ -329,13 +324,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		ONDEXGraph subGraph = semanticMotifService.findEvidencePaths(evidenceOndexID, genes);
 
 		// Export graph
-		EvidencePathResponse response = new EvidencePathResponse();
-		try {
-			response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft ());
-		} catch (InvalidPluginArgumentException e) {
-			log.error("Failed to export graph", e);
-			throw new Error(e);
-		}
+		var response = new EvidencePathResponse();
+		response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft ());
+		
 		return response;
 	}
 	
@@ -416,17 +407,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
         ONDEXGraph subGraph = 
         	ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
         
-        CountGraphEntities response = new CountGraphEntities();
-        try {
-            // Set the graph
-            var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
-            log.info("Set graph, now getting the number of nodes...");
-            response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
-            response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
-        } catch (InvalidPluginArgumentException e) {
-            log.error("Failed to export graph", e);
-            throw new Error(e);
-        }
+        var response = new CountGraphEntities();
+        // Set the graph
+        var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
+        log.info("Set graph, now getting the number of nodes...");
+        
+        response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
+        response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
+
         return response;
     }
 	

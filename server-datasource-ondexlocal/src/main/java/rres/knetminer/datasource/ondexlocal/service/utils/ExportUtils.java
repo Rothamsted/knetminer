@@ -6,28 +6,21 @@ import static net.sourceforge.ondex.filter.unconnected.ArgumentNames.REMOVE_TAG_
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.base.Functions;
-
-import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.ONDEXPlugin;
-import net.sourceforge.ondex.ONDEXPluginArguments;
-import net.sourceforge.ondex.args.FileArgumentDefinition;
+import net.sourceforge.ondex.UncheckedPluginException;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
-import net.sourceforge.ondex.exception.type.PluginException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
-import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import uk.ac.ebi.utils.io.IOUtils;
 
@@ -53,7 +46,7 @@ public class ExportUtils
    * 
    * 
    */
-  public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph ) throws InvalidPluginArgumentException
+  public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph )
   {
   	File exportFile = null;
   	ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
@@ -100,12 +93,23 @@ public class ExportUtils
       
       // TODO: The JSON exporter uses this too, both should become UTF-8
       return Pair.of ( IOUtils.readFile ( exportPath, Charset.defaultCharset() ), graph2 );
-    } 
-    catch ( Exception ex )
+    }
+  	catch ( UncheckedPluginException ex ) {
+    	String msg = "Failed to export graph due to an Ondex plug-in problem: " + ex.getMessage ();
+      log.error ( msg, ex );
+      throw new UncheckedPluginException ( msg, ex );
+  	}
+    catch ( IOException ex )
     {
-    	// TODO: client side doesn't know anything about this, likely wrong
-      log.error ( "Failed to export graph", ex );
-      return Pair.of ( "", graph2 );
+    	String msg = "Failed to export graph due to an I/O problem: " + ex.getMessage ();
+      log.error ( msg, ex );
+      throw new UncheckedIOException ( msg, ex );
+    }
+    catch ( RuntimeException ex )
+    {
+    	String msg = "Failed to export graph due to: " + ex.getMessage ();
+      log.error ( msg, ex );
+      throw new RuntimeException ( msg, ex );
     }
     finally {
     	if ( exportFile != null ) exportFile.delete ();
