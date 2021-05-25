@@ -11,6 +11,17 @@ window.onload = function () {
 function fetchStats() {
     var fileUrl = api_url + "/latestNetworkStats";
 //console.log("Fetching Network stats from: "+ fileUrl);
+    // get database version from dataSource API endpoint.
+    var dbUrl = api_url + "/dataSource";
+    var db_version='';
+    $.get(dbUrl).done(function (dbData) { 
+        var resp= dbData.dataSource.replace(/\"/g,"").trim().split(",");
+        resp.forEach(function(val) {
+            var values= val.split(":");
+            if(values[0].trim() === "dbVersion") { db_version= values[1].trim(); }
+           });
+       }).fail(function () { console.log("Error fetching dbVersion"); });
+
     $.get(fileUrl).done(function (data) {
         var resp = data.stats.split("\n");
         var totalGenes = fetchValue(resp[1]);
@@ -23,9 +34,10 @@ function fetchStats() {
         // calculate concept occurrence percentage.
         var conceptPercentage = (geneEvidenceConcepts / (totalConcepts - totalGenes)) * 100;
         conceptPercentage = conceptPercentage.toFixed(2);
-
+        
         // Display stats data.
-        var statsText = "<br/><ul><li>Total number of genes: " + totalGenes + "</li>" +
+        var statsText = "<br/><ul><li>KnetMiner KG version: " + db_version + "</li>" +
+                "<li>number of genes: " + totalGenes + "</li>" +
                 "<li>Total concepts: <strong>" + totalConcepts + "</strong></li>" +
                 "<li>Total relations: <strong>" + totalRelations + "</strong></li>" +
                 "<li>Concept2Gene #mappings: " + geneEvidenceConcepts + " (" + conceptPercentage + "%)</li>" +

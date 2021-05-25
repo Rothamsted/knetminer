@@ -1028,7 +1028,9 @@ function generateCyJSNetwork(url, requestParams) {
                                         $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'>Save Knetwork</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           knetmaps.drawRaw('#knet-maps', data.graph/*, networkId*/);
+                                           var knetwork_blob= data.graph;
+                                           knetwork_blob= filterKnetworkJson(knetwork_blob); 
+                                           knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
                                           var eles_jsons= data.graph.graphJSON.elements;
