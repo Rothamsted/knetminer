@@ -1,20 +1,31 @@
 package rres.knetminer.datasource.ondexlocal.service.utils;
 
+import static net.sourceforge.ondex.args.FileArgumentDefinition.EXPORT_FILE;
+import static net.sourceforge.ondex.filter.ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG;
+import static net.sourceforge.ondex.filter.unconnected.ArgumentNames.REMOVE_TAG_ARG;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.base.Functions;
+
 import net.sourceforge.ondex.InvalidPluginArgumentException;
+import net.sourceforge.ondex.ONDEXPlugin;
 import net.sourceforge.ondex.ONDEXPluginArguments;
 import net.sourceforge.ondex.args.FileArgumentDefinition;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
+import net.sourceforge.ondex.exception.type.PluginException;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.ArgumentNames;
 import net.sourceforge.ondex.filter.unconnected.Filter;
@@ -44,69 +55,53 @@ public class ExportUtils
    */
   public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph ) throws InvalidPluginArgumentException
   {
-		ONDEXPluginArguments uFA = new ONDEXPluginArguments ( uFilter.getArgumentDefinitions () );
-		uFA.addOption ( ArgumentNames.REMOVE_TAG_ARG, true );
-
-    List<String> ccRestrictionList = Arrays.asList (
-    	"Publication", "Phenotype", "Protein",
-      "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
-      "Disease", "BioProc", "Trait"
-    );
-    
-    ccRestrictionList.stream().forEach ( cc -> 
+  	File exportFile = null;
+  	ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
+  	try 
     {
-      try {
-				uFA.addOption ( ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG, cc );
-      } 
-      catch (InvalidPluginArgumentException ex) {
-      	// TODO: End user doesn't get this!
-      	log.error ( "Failed to restrict concept class " + cc + ": " + ex, ex );
-      }
-    });
-    log.info ( "Filtering concept classes " + ccRestrictionList );
-
-		var uconnFilter = new Filter ();
-		uconnFilter.setArguments ( uFA );
-		uconnFilter.setONDEXGraph ( graph );
-		uconnFilter.start ();
-
-		ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
-		uconnFilter.copyResultsToNewGraph ( graph2 );
-
-		// Export the graph as JSON too, using the Ondex JSON Exporter plugin.
-		Export jsonExport = new Export ();
-		File exportFile = null;
-    try 
-    {
+	    List<String> ccRestrictionList = List.of (
+	    	"Publication", "Phenotype", "Protein",
+	      "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
+	      "Disease", "BioProc", "Trait"
+	    );
+	
+	    log.info ( "Filtering concept classes " + ccRestrictionList );
+			
+	  	var uconnFilter = new Filter ();
+	    Map<String, Object> filterOpts = ccRestrictionList
+	    	.stream()
+	    	.collect ( Collectors.toMap ( 
+	    		cc -> CONCEPTCLASS_RESTRICTION_ARG,
+	    		cc -> (Object) cc
+	    ));
+	    filterOpts.put ( REMOVE_TAG_ARG, true );
+			ONDEXPlugin.runPlugin ( uconnFilter, graph, filterOpts );
+			uconnFilter.copyResultsToNewGraph ( graph2 );
+	
+			
+			// Export the graph as JSON too, using the Ondex JSON Exporter plugin.
+		
     	// TODO: just change the plugin, so that the functionality is available outside of it and
     	// it can return a string instead of only writing to a file.
-    	
+    	//
 			exportFile = File.createTempFile ( "knetminer", "graph" );
 			exportFile.deleteOnExit ();
 			String exportPath = exportFile.getAbsolutePath ();
-
-			ONDEXPluginArguments epa = new ONDEXPluginArguments ( jsonExport.getArgumentDefinitions () );
-			epa.setOption ( FileArgumentDefinition.EXPORT_FILE, exportPath );
-
-			log.debug ( "JSON Export file: " + epa.getOptions ().get ( FileArgumentDefinition.EXPORT_FILE ) );
-
-			jsonExport.setArguments ( epa );
-			jsonExport.setONDEXGraph ( graph2 );
+			
+			ONDEXPlugin.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ) );
+      
+      log.debug ( "Network JSON file created:" + exportPath );
+			log.debug ( "JSON Export done to file: '{}'", exportPath );
       log.debug ( 
-      	"Export JSON data: Total concepts = {} , Relations= {}", 
+      	"Exported JSON data: Total concepts = {} , Relations= {}", 
       	graph2.getConcepts().size(), 
       	graph2.getRelations().size()
       );
-      // Export the contents of the 'graph' object as multiple JSON
-      // objects to an output file.
-      jsonExport.start ();
-      
-      log.debug ( "Network JSON file created:" + exportPath );
       
       // TODO: The JSON exporter uses this too, both should become UTF-8
       return Pair.of ( IOUtils.readFile ( exportPath, Charset.defaultCharset() ), graph2 );
     } 
-    catch ( IOException ex )
+    catch ( Exception ex )
     {
     	// TODO: client side doesn't know anything about this, likely wrong
       log.error ( "Failed to export graph", ex );
