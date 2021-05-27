@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.InvalidPluginArgumentException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.api.CountGraphEntities;
@@ -247,7 +246,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			}
 
 			// Gene table file
-			// TODO: no idea why geneMap is recalculated here insted of a more proper place, anyway, let's 
+			// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
 			// adapt to it
 			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap

@@ -10,7 +10,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +32,7 @@ import uk.ac.ebi.utils.io.IOUtils;
  */
 public class ExportUtils
 {
-	private static final Logger log = LogManager.getLogger ( UIUtils.class );
+	private static final Logger log = LogManager.getLogger ( ExportUtils.class );
 	
 	private ExportUtils () {}
 
@@ -52,23 +51,22 @@ public class ExportUtils
   	ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
   	try 
     {
-	    List<String> ccRestrictionList = List.of (
+	    List<String> filteredConceptClasses = List.of (
 	    	"Publication", "Phenotype", "Protein",
 	      "Drug", "Chromosome", "Path", "Comp", "Reaction", "Enzyme", "ProtDomain", "SNP",
 	      "Disease", "BioProc", "Trait"
 	    );
-	
-	    log.info ( "Filtering concept classes " + ccRestrictionList );
+	    log.info ( "Filtering concept classes " + filteredConceptClasses );
 			
 	  	var uconnFilter = new Filter ();
-	    Map<String, Object> filterOpts = ccRestrictionList
-	    	.stream()
-	    	.collect ( Collectors.toMap ( 
-	    		cc -> CONCEPTCLASS_RESTRICTION_ARG,
-	    		cc -> (Object) cc
-	    ));
-	    filterOpts.put ( REMOVE_TAG_ARG, true );
-			ONDEXPlugin.runPlugin ( uconnFilter, graph, filterOpts );
+			ONDEXPlugin.runPlugin ( 
+				uconnFilter,
+				graph,  
+				Map.of ( 
+					CONCEPTCLASS_RESTRICTION_ARG, filteredConceptClasses,
+					REMOVE_TAG_ARG, true 	
+				)
+			);
 			uconnFilter.copyResultsToNewGraph ( graph2 );
 	
 			

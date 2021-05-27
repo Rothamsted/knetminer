@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -24,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -112,7 +110,17 @@ public class ApiIT
 		
 		testGenome ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
 	}
-		
+
+	
+	@Test
+	public void testGeneFilter () 
+	{
+		Stream.of ( "ABI3", "ABI4", "CPC", "EGL3" )
+		.forEach ( expectedGeneLabel ->
+			testGenome ( "flowering FLC FT", expectedGeneLabel, "AT1G63650", "aBi?", "MYB*" )
+		);
+	}
+	
 	
 	/**
 	 * Invokes {@code /genome?keyword=XXX&qtl=}, then verifies the result
@@ -121,10 +129,16 @@ public class ApiIT
 	 * @param expectedGeneLabel is checked against the 'gviewer' result, 
 	 * to see if {@code /genome/feature/geneLabel} has the expected value.
 	 * 
+	 * @param geneAccFilters (optional), the list of genes to restrict the search on. This is 
+	 * the same as the "Gene List Search" box, it's case-insensitive and can contains Lucene 
+	 * wildcards ('*', '?', '-').
+	 * 
 	 */
-	private void testGenome ( String keyword, String expectedGeneLabel )
+	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
 	{
-		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0] );
+		if ( geneAccFilters == null ) geneAccFilters = new String [ 0 ];
+		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0], "list", geneAccFilters );
+					
 		
 		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
 		

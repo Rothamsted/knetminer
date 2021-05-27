@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,8 @@ import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
+import net.sourceforge.ondex.core.searchable.LuceneConcept;
+import net.sourceforge.ondex.core.searchable.LuceneQueryBuilder;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
@@ -47,52 +50,51 @@ public class KGUtils
 	private KGUtils (){}
 	
   /**
-   * Searches for ONDEXConcepts with the given accessions in the OndexGraph. Assumes a keyword-oriented syntax
+   * Filters for ONDEXConcepts with the given accessions in the OndexGraph. Assumes a keyword-oriented syntax
    * for the accessions, eg, characters like brackets are removed.
+   * 
+   * This makes use of {@link LuceneQueryBuilder#searchByTypeAndAccession(String, String, boolean)}
+   * and {@link LuceneQueryBuilder#searchByTypeAndName(String, String, boolean)}, which means each accession can 
+   * have Lucene operator ('*', '?', '-')
    *
    * Was named searchGenesByAccessionKeywords
    */
-	public static Set<ONDEXConcept> filterGenesByAccessionKeywords ( DataService dataService, List<String> accessions )
+	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
+		DataService dataService, SearchService searchService, List<String> accessions
+	)
 	{
-		if ( accessions.size () == 0 ) return null;
+		if ( accessions.size () == 0 ) return new HashSet<>();
+				
+		var graph = dataService.getGraph ();
 		
-    var graph = dataService.getGraph ();
-		AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
-		ConceptClass ccGene = graph.getMetaData ().getConceptClass ( "Gene" );
-		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
-
+		// TODO: probably it's not needed anymore
 		Set<String> normAccs = accessions.stream ()
 		.map ( acc -> 
 			acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
 			.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
 			.toUpperCase () 
 		).collect ( Collectors.toSet () );			
+				
+		AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
 		
-		return seed.stream ()
-		// TAXID filter
+		Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
+		.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
+
+		Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
+		.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
+		
+		
+		Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
+		.flatMap ( Set::parallelStream )
 		.filter ( gene -> {
       String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
       return dataService.containsTaxId ( thisTaxId );
 		})
-		// filter against the input accessions
-		.filter ( gene ->
-		{
-			if ( gene.getConceptAccessions ()
-			.stream ()
-			.map ( ConceptAccession::getAccession )
-			.map ( String::toUpperCase )
-			.anyMatch ( normAccs::contains ) ) return true;
-
-			// Search the input in names too, it might be there
-			if ( gene.getConceptNames ()
-			.stream ()
-			.map ( ConceptName::getName )
-			.map ( String::toUpperCase )
-			.anyMatch ( normAccs::contains ) ) return true;
-			
-			return false;
-		})
+		// Components like the semantic motif traverser need the original internal IDs.
+		.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
 		.collect ( Collectors.toSet () );
+		
+		return result;
 	}
 	
 	
