@@ -42,7 +42,6 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
-import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.logging.ONDEXLogger;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
@@ -69,10 +68,8 @@ public class SearchService
 	 * Used to set the max no. of publications that a search should return by default. 
 	 */
   public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
-	
   
-	// TODO: must become private when the refactoring is over
-  LuceneEnv luceneMgr;
+  private LuceneEnv luceneMgr;
   
 	@Autowired
 	private DataService dataService;
@@ -239,14 +236,53 @@ public class SearchService
   }
 	
   /**
-   * Wrapper of {@link #searchTopConceptsByName(String, int)}.
+   * Wrapper of {@link LuceneEnv#searchTopConceptsByIdxField(String, String, String, int)}.
    */
 	public ScoredHits<ONDEXConcept> searchTopConceptsByName ( String keywords, int sizeLimit )
 	{
 		return this.luceneMgr.searchTopConceptsByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, sizeLimit );
 	}
-  
-  
+
+	/** 
+	 * A convenience wrapper of {@link LuceneEnv#searchByTypeAndAccession(String, String, boolean)}.  
+	 */
+	public Set<ONDEXConcept> searchConceptByTypeAndAccession ( 
+		String conceptClassId, String accessionTerm, boolean isCaseSensitive 
+	)
+	{
+		return luceneMgr.searchByTypeAndAccession ( conceptClassId, accessionTerm, isCaseSensitive );
+	}
+
+	/**
+	 * Defaults to true
+	 */
+	public Set<ONDEXConcept> searchConceptByTypeAndAccession ( String conceptClassId, String accessionTerm )
+	{
+		return this.searchConceptByTypeAndAccession ( conceptClassId, accessionTerm, true );
+	}
+
+	
+	/** 
+	 * A convenience wrapper of {@link LuceneEnv#searchByTypeAndName(String, String, boolean)}.  
+	 */
+	public Set<ONDEXConcept> searchConceptByTypeAndName ( 
+		String conceptClassId, String nameTerm, boolean isCaseSensitive 
+	)
+	{
+		return luceneMgr.searchByTypeAndName ( conceptClassId, nameTerm, isCaseSensitive );
+	}
+
+	/**
+	 * Defaults to true
+	 */
+	public Set<ONDEXConcept> searchConceptByTypeAndName ( String conceptClassId, String nameTerm )
+	{
+		return this.searchConceptByTypeAndName ( conceptClassId, nameTerm, true );
+	}
+	
+	
+	
+	
 	/**
 	 * KnetMiner Gene Rank algorithm
 	 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
@@ -407,11 +443,11 @@ public class SearchService
   }
 
   /**
-   * A conveninet wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
+   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
    */
 	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
 	{
-		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, accessions );
+		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions );
 	}
 
 	
