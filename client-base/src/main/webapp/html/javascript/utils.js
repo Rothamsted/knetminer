@@ -1455,7 +1455,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '<thead>';
         table = table + '<tr>';
         var header = evidenceTable[0].split("\t");
-        table = table + '<th width="70">Omit/Add</th>';
+        table = table + '<th width="75">Omit/Add</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
         table = table + '<th width="212">DESCRIPTION</th>';
         table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
@@ -1541,11 +1541,24 @@ function createEvidenceTable(text, keyword) {
             var targetID = $(e.target).attr("id");
             var evidenceNum = targetID.replace("evidence_exclude_", "");
             var values = e.data.x[evidenceNum].split("\t");
-
             if ($(e.target).hasClass("excludeKeyword")) {
-                excludeKeyword('ConceptID:' + values[7], targetID, 'keywords');
+            	if($("#keywords").val() === '') {
+            	   $("#keywords").val('ConceptID:' + values[7]);
+            	   $('#' + targetID).toggleClass('excludeKeywordUndo excludeKeyword');
+            	   matchCounter();
+            	  }
+            	else { 
+                 excludeKeyword('ConceptID:' + values[7], targetID, 'keywords');
+                }
             } else {
-                excludeKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
+            	if($("#keywords").val() === '') {
+            	   $("#keywords").val('ConceptID:' + values[7]);
+            	   $('#' + targetID).toggleClass('excludeKeywordUndo excludeKeyword');
+            	   matchCounter();
+            	  }
+            	else { 
+                 excludeKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
+                }
             }
         });
 
@@ -1555,9 +1568,23 @@ function createEvidenceTable(text, keyword) {
             var evidenceNum = targetID.replace("evidence_add_", "");
             var values = e.data.x[evidenceNum].split("\t");
             if ($(e.target).hasClass("addKeyword")) {
-                addKeyword('ConceptID:' + values[7], targetID, 'keywords');
+            	if($("#keywords").val() === '') {
+            	   $("#keywords").val('ConceptID:' + values[7]);
+            	   $('#' + targetID).toggleClass('addKeywordUndo addKeyword');
+            	   matchCounter();
+            	  }
+            	else { 
+                 addKeyword('ConceptID:' + values[7], targetID, 'keywords');
+                }
             } else {
-                addKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
+            	if($("#keywords").val() === '') {
+            	   $("#keywords").val('ConceptID:' + values[7]);
+            	   $('#' + targetID).toggleClass('addKeywordUndo addKeyword');
+            	   matchCounter();
+            	  }
+            	else { 
+                 addKeywordUndo('ConceptID:' + values[7], targetID, 'keywords'); 
+                }
             }
         });
 
