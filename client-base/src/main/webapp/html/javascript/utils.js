@@ -1011,23 +1011,20 @@ function generateCyJSNetwork(url, requestParams) {
             "Content-Type": "application/json; charset=utf-8"
         },
         datatype: "json",
-        data: JSON.stringify(requestParams),
-        beforeSend: deactivateSpinner("#tabviewer")
+        data: JSON.stringify(requestParams)//,
+        //beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= "Failed to render knetwork.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title;
+		// deactivateSpinner("#tabviewer");
                 console.log(errorMsg);
                 alert(errorMsg);
-
-		//	deactivateSpinner("#tabviewer");
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
 		//	deactivateSpinner("#tabviewer");
-			/* $.when(deactivateSpinner("#tabviewer")).done(function() { activateButton('NetworkCanvas'); }); */
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-                                        
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
                                         $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'>Save Knetwork</button>");
@@ -1052,7 +1049,7 @@ function generateCyJSNetwork(url, requestParams) {
 					console.log(errorMsg);
 					//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 				   }
-        });
+        }).always(function() { deactivateSpinner("#tabviewer"); });
 }
 
 /*
