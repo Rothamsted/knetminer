@@ -195,7 +195,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		List<ONDEXConcept> genes = new ArrayList<>();
 		Hits qtlnetminerResults = new Hits(request.getKeyword(), ondexServiceProvider, userGenes);
 		Map<ONDEXConcept, Double> geneMap = new HashMap<>();
-		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class)) {
+		if (response.getClass().equals(GenomeResponse.class) || response.getClass().equals(QtlResponse.class))
+		{
 			log.info("Genome or QTL response...");
 
 			geneMap = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
@@ -230,7 +231,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 				
 				log.info("Genes after QTL filter: " + genes.size());
 			}
-		}
+		} // genome & qtl cases
 
 		if (genes.size() > 0) {
 			String xmlGViewer = "";
@@ -248,7 +249,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			// Gene table file
 			// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
 			// adapt to it
-			SemanticMotifsSearchResult newSearchResult = new SemanticMotifsSearchResult (
+			var newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), geneMap
 			);
 			String geneTable = exportService.exportGeneTable ( 
