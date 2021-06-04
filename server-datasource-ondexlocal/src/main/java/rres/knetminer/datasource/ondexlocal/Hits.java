@@ -33,7 +33,6 @@ public class Hits
 	private SemanticMotifsSearchResult searchResult = null;
 	private String keyword = ""; // TODO: not used
 
-	// TODO: keyword is not used!
 	public Hits ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
 	{
 		this.ondexProvider = ondexProvider;
