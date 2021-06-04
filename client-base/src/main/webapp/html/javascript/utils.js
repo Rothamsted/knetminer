@@ -807,9 +807,11 @@ function searchKeyword() {
                          data: JSON.stringify(requestParams)
                      })
                          .fail(function (xhr,status,errorlog) {
-                             console.log(status+": "+xhr.status+" ("+errorlog+"). Please use valid keywords, gene IDs or QTL.");
                              $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
-                             alert("Search failed: "+xhr.status+" ("+errorlog+"). Please use valid keywords, gene IDs or QTL.");
+                             var server_error= JSON.parse(xhr.responseText); // full error json from server
+                             var errorMsg= "Search failed.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title +"\n\nPlease use valid keywords, gene IDs or QTLs.";
+                             console.log(errorMsg);
+                             alert(errorMsg);
                                              // Remove loading spinner from 'search' div
                                              deactivateSpinner("#search");
                          })
@@ -928,7 +930,7 @@ function searchKeyword() {
                                    }
                                  if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                                      candidateGenes = 1000;
-                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
+                                     //genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
                                  }
 
                                  $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -1012,8 +1014,11 @@ function generateCyJSNetwork(url, requestParams) {
         data: JSON.stringify(requestParams),
         beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
-                console.log(status+": "+xhr.status+" ("+errorlog+")");
-                alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
+                var server_error= JSON.parse(xhr.responseText); // full error json from server
+                var errorMsg= "Failed to render knetwork.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title;
+                console.log(errorMsg);
+                alert(errorMsg);
+
 		//	deactivateSpinner("#tabviewer");
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
