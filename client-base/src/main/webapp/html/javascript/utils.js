@@ -928,7 +928,7 @@ function searchKeyword() {
                                    }
                                  if (candidateGenes > 1000) { // for over 1000 results in any searchMode
                                      candidateGenes = 1000;
-                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
+                                     //genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
                                  }
 
                                  $("#pGViewer_title").replaceWith(genomicViewTitle);
