@@ -1014,8 +1014,11 @@ function generateCyJSNetwork(url, requestParams) {
         data: JSON.stringify(requestParams),
         beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
-                console.log(status+": "+xhr.status+" ("+errorlog+")");
-                alert("A search error has ocurred: "+xhr.status+" ("+errorlog+")");
+                var server_error= JSON.parse(xhr.responseText); // full error json from server
+                var errorMsg= "Failed to render knetwork.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title;
+                console.log(errorMsg);
+                alert(errorMsg);
+
 		//	deactivateSpinner("#tabviewer");
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
