@@ -807,9 +807,11 @@ function searchKeyword() {
                          data: JSON.stringify(requestParams)
                      })
                          .fail(function (xhr,status,errorlog) {
-                             console.log(status+": "+xhr.status+" ("+errorlog+"). Please use valid keywords, gene IDs or QTL.");
                              $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
-                             alert("Search failed: "+xhr.status+" ("+errorlog+"). Please use valid keywords, gene IDs or QTL.");
+                             var server_error= JSON.parse(xhr.responseText); // full error json from server
+                             var errorMsg= "Search failed.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title +"\n\nPlease use valid keywords, gene IDs or QTLs.";
+                             console.log(errorMsg);
+                             alert(errorMsg);
                                              // Remove loading spinner from 'search' div
                                              deactivateSpinner("#search");
                          })
