@@ -162,7 +162,7 @@ public class ApiIT
 	 */
 	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
 	{
-		return invokeApi ( urlOrCallName, true, jsonFields );
+		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
 	}
 
 	
@@ -174,7 +174,7 @@ public class ApiIT
 	 * @param jsonFields appended to the HTTP request.
 	 * 
 	 */
-	public static JSONObject invokeApi ( String urlOrCallName, boolean failOnError, Object... jsonFields )
+	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
 	{
 		String url = urlOrCallName.startsWith ( "http://" )
 			? urlOrCallName 
@@ -220,7 +220,7 @@ public class ApiIT
 	@Test
 	public void testBadCallError ()
 	{
-		JSONObject js = invokeApi ( "foo", false, new Object[ 0 ] );
+		JSONObject js = invokeApiFailOpt ( "foo", false );
 		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.client.HttpClientErrorException", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
@@ -245,10 +245,18 @@ public class ApiIT
 				"type" : "java.lang.RuntimeException"
 			}		 
 		 */
-		JSONObject js = invokeApi ( "countHits", false, new Object[ 0 ] );
+		JSONObject js = invokeApiFailOpt ( "countHits", false, "keyword", "*" );
+		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
 		assertEquals ( "Bad type for the /countHits call!", "java.lang.RuntimeException", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /countHits call!", 500, js.getInt ( "status" ) );
-		assertTrue ( "Bad title for the /countHits call!", js.getString ( "title" ).contains ( "Application error while running countHits: null" ) );
+		assertTrue (
+			"Bad title for the /countHits call!", 
+			js.getString ( "title" )
+			.contains ( 
+					"Application error while running the API call 'countHits': "
+				+ "Internal error while searchin over Ondex index: Cannot parse '*': '*' or '?' not allowed "
+				+ "as first character in WildcardQuery" )
+		);
 		assertEquals ( 
 			"Bad path for the /countHits call!",
 			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
@@ -264,7 +272,7 @@ public class ApiIT
 		if ( "console".equals ( getMavenProfileId () ) ) return;
 		
 		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/cydebug/traverser/report";
-		JSONObject js = invokeApi ( url, false, new Object[ 0 ] );
+		JSONObject js = invokeApiFailOpt ( url, false );
 		assertEquals ( 
 			"Bad type for the /cydebug call!",
 			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
