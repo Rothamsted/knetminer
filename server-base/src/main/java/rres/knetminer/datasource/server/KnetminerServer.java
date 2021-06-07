@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.server;
 
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -41,6 +43,7 @@ import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * KnetminerServer is a fully working server, except that it lacks any data
@@ -376,16 +379,26 @@ public class KnetminerServer {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} 
 		catch (NoSuchMethodException ex) {
-			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "'" );
+			throw new HttpClientErrorException (
+				HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "': " + ex.getMessage ()
+			);
 		} 
 		catch (IllegalArgumentException ex) {
-			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Bad parameters passed to the API call '" + mode + "'" );
+			throw new HttpClientErrorException (
+				HttpStatus.BAD_REQUEST, "Bad parameters passed to the API call '" + mode + "': " + ex.getMessage ()
+			);
 		} 
 		catch (Error ex) {
-			throw new RuntimeException ( "System error while running " + mode + ": " + ex.getMessage (), ex );
+			throw new RuntimeException ( 
+				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
+				ex
+			);
 		} 
 		catch (Exception ex) {
-			throw new RuntimeException ( "Application error while running " + mode + ": " + ex.getMessage (), ex );
+			throw new RuntimeException (
+				"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
+				ex
+			);
 		}
 	}
 	
