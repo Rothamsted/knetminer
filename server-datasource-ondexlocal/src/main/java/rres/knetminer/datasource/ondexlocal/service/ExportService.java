@@ -433,27 +433,27 @@ public class ExportService
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 	
-			// organise by concept class
-			Map<String, String> cc2name = new HashMap<> ();
-	
-			for ( int hitID : luceneHits )
-			{
-				ONDEXConcept relatedConcept = graph.getConcept ( hitID );
-				String relatedCCId = relatedConcept.getOfType ().getId ();
-	
-				// skip publications as handled differently (see below)
-				if ( relatedCCId.equals ( "Publication" ) ) continue;
-	
-				String name = KGUtils.getMolBioDefaultLabel ( relatedConcept );
-				cc2name.merge ( relatedCCId, name, (oldName, newName) -> oldName + "//" + newName );
-			}
-	
-			// special case for publications to sort and filter most recent publications
+			
+			
+			// group related concepts by their type and map each concept to its best label
+			//
+			
+			Map<String, List<String>> byCCRelatedLabels = luceneHits.stream ()
+			.map ( graph::getConcept )
+			// We deal with these below
+			.filter ( relatedConcept -> !"Publication".equals ( relatedConcept.getOfType ().getId () ) )
+			.collect ( Collectors.groupingBy (
+				relatedConcept -> relatedConcept.getOfType ().getId (),
+				Collectors.mapping ( KGUtils::getMolBioDefaultLabel, Collectors.toList () )
+			)); 
+				
+			
+			// Publications need filtering for most recent ones and then sorting
+			//
 			Set<ONDEXConcept> allPubs = luceneHits.stream ()
 				.map ( graph::getConcept )
 				.filter ( c -> "Publication".equals ( c.getOfType ().getId () ) )
 				.collect ( Collectors.toSet () );
-			
 			
 			AttributeName attYear = getAttributeName ( graph, "YEAR" );
 			List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
@@ -461,39 +461,34 @@ public class ExportService
 				attYear, 
 				options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 ) 
 			);
-	
-			// add most recent publications here
+			
+			// Most recent ones
 			if ( !newPubs.isEmpty () )
-			{
-				var pubString = newPubs.stream ()
-				.map ( graph::getConcept )
-			  .map ( KGUtils::getMolBioDefaultLabel )
-			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-			  .collect ( Collectors.joining ( "//" ) );
-				
-				/*
-				String pubString = "Publication__" + allPubs.size () + "__";
-				pubString += newPubs.stream ()
+				byCCRelatedLabels.put ( 
+					"Publication", 
+					newPubs.stream ()
 					.map ( graph::getConcept )
 				  .map ( KGUtils::getMolBioDefaultLabel )
+				  // TODO: is this right?! What if the name IS NOT a PMID?!
 				  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-				  .collect ( Collectors.joining ( "//" ) );
-				 */
-				cc2name.put ( "Publication", pubString );
-			}
+				  .collect ( Collectors.toList () )
+			);
+
 	
 			// create output string for evidences column in GeneView table
-			String evidenceStr = cc2name.entrySet ()
+			// 
+			String evidenceStr = byCCRelatedLabels.entrySet ()
 			.stream ()
-			.map ( e -> 
-				"Publication1".equals ( e.getKey () )  
-					? e.getValue ()
-					: e.getKey () + "__" + e.getValue ().split ( "//" ).length + "__" + e.getValue ()
-			)
+			.map ( e -> {
+				// Values in the results are like: "Protein__23__name1//name2//..."
+				List<String> labels = e.getValue ();
+				return e.getKey () + "__" + labels.size () + "__" + String.join ( "//", labels );
+			})
 			.collect ( Collectors.joining ( "||" ) );
 							
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 			
+			// TODO: is this right?!
 			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 			
 			out.append (
