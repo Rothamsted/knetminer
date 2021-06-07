@@ -14,6 +14,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * 
@@ -40,12 +41,13 @@ public class Hits
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
-			// remove from constructor if it slows down search noticeably
 			this.countLinkedGenes ();
 		}
-		catch ( IOException | ParseException e )
+		catch ( ParseException ex )
 		{
-			log.error ( "Hits failed", e );
+			ExceptionUtils.throwEx ( 
+				IllegalArgumentException.class, ex, "Serch for: \"%s\" failed: ", keyword, ex.getMessage ()
+			);
 		}
 	}
 
@@ -101,8 +103,7 @@ public class Hits
 	public SemanticMotifsSearchResult getSearchResult ()
 	{
 		// TODO: I hope I got the semantics found in the original code right
-		if ( searchResult != null )
-			return searchResult;
+		if ( searchResult != null ) return searchResult;
 		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
 	}
 }

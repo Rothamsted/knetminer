@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -348,27 +348,23 @@ public class ExportService
 	 * Was named writeGeneTable
 	 */
 	public String exportGeneTable ( 
-		List<ONDEXConcept> candidates, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
+		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
 		String listMode,  SemanticMotifsSearchResult searchResult 
 	)
 	{
 		log.info ( "Exporting gene table..." );
 		
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
-		Set<Integer> userGeneIds = new HashSet<> ();
 	  var graph = dataService.getGraph ();
 		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 		var options = dataService.getOptions ();
-	
-		if ( userGenes != null )
-		{
-			userGeneIds = userGenes.stream ()
+
+		if ( userGenes == null ) userGenes = Set.of ();
+		var userGeneIds = userGenes.stream ()
 				.map ( ONDEXConcept::getId )
 				.collect ( Collectors.toSet () );
-		} 
-		else
-			log.info ( "No user gene list defined." );
-	
+
+		if ( userGenes.isEmpty () ) log.info ( "No user gene list defined." );
 		if ( qtls.isEmpty () ) log.info ( "No QTL regions defined." );
 		
 		var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
@@ -382,12 +378,10 @@ public class ExportService
 		// ConceptClass ccSNP = md.getConceptClass("SNP");
 	
 		StringBuffer out = new StringBuffer ();
-		// out.append("ONDEX-ID\tACCESSION\tGENE
-		// NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\tEVIDENCES_LINKED\tEVIDENCES_IDs\n");
 		out.append ( "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
-		for ( ONDEXConcept gene : candidates )
+		for ( ONDEXConcept gene : candidateGenes )
 		{
-			int id = gene.getId ();
+			int geneId = gene.getId ();
 	
 			var geneHelper = new GeneHelper ( graph, gene );
 			Double score = scoredCandidates.getOrDefault ( gene, 0d );
@@ -395,7 +389,7 @@ public class ExportService
 			// use shortest preferred concept name
 			String geneName = KGUtils.getShortestPreferedName ( gene.getConceptNames () );
 	
-			boolean isInList = userGenes != null && userGeneIds.contains ( gene.getId () );
+			boolean isInList = userGeneIds.contains ( gene.getId () );
 	
 			List<String> infoQTL = new LinkedList<> ();
 			for ( Integer cid : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
@@ -437,23 +431,21 @@ public class ExportService
 			String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
 			
 			// get lucene hits per gene
-			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( id, Collections.emptySet () );
+			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 	
 			// organise by concept class
 			Map<String, String> cc2name = new HashMap<> ();
 	
-			Set<Integer> evidencesIDs = new HashSet<> ();
 			for ( int hitID : luceneHits )
 			{
-				ONDEXConcept c = graph.getConcept ( hitID );
-				evidencesIDs.add ( c.getId () ); // retain all evidences' ID's
-				String ccId = c.getOfType ().getId ();
+				ONDEXConcept relatedConcept = graph.getConcept ( hitID );
+				String relatedCCId = relatedConcept.getOfType ().getId ();
 	
 				// skip publications as handled differently (see below)
-				if ( ccId.equals ( "Publication" ) ) continue;
+				if ( relatedCCId.equals ( "Publication" ) ) continue;
 	
-				String name = KGUtils.getMolBioDefaultLabel ( c );
-				cc2name.merge ( ccId, name, (thisId, oldName) -> oldName + "//" + name );
+				String name = KGUtils.getMolBioDefaultLabel ( relatedConcept );
+				cc2name.merge ( relatedCCId, name, (oldName, newName) -> oldName + "//" + newName );
 			}
 	
 			// special case for publications to sort and filter most recent publications
@@ -473,12 +465,20 @@ public class ExportService
 			// add most recent publications here
 			if ( !newPubs.isEmpty () )
 			{
+				var pubString = newPubs.stream ()
+				.map ( graph::getConcept )
+			  .map ( KGUtils::getMolBioDefaultLabel )
+			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
+			  .collect ( Collectors.joining ( "//" ) );
+				
+				/*
 				String pubString = "Publication__" + allPubs.size () + "__";
 				pubString += newPubs.stream ()
 					.map ( graph::getConcept )
 				  .map ( KGUtils::getMolBioDefaultLabel )
 				  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
 				  .collect ( Collectors.joining ( "//" ) );
+				 */
 				cc2name.put ( "Publication", pubString );
 			}
 	
@@ -486,7 +486,7 @@ public class ExportService
 			String evidenceStr = cc2name.entrySet ()
 			.stream ()
 			.map ( e -> 
-				"Publication".equals ( e.getKey () )  
+				"Publication1".equals ( e.getKey () )  
 					? e.getValue ()
 					: e.getKey () + "__" + e.getValue ().split ( "//" ).length + "__" + e.getValue ()
 			)
@@ -497,7 +497,7 @@ public class ExportService
 			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 			
 			out.append (
-				id + "\t" + geneHelper.getBestAccession () + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
+				geneId + "\t" + geneHelper.getBestAccession () + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
 				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
@@ -566,9 +566,9 @@ public class ExportService
 		int size = Math.min ( genes.size (), maxGenes );
 
 		log.info ( "visualize genes: " + genes.size () );
-		for ( ONDEXConcept c : genes )
+		for ( ONDEXConcept gene : genes )
 		{
-			var geneHelper = new GeneHelper ( graph, c );
+			var geneHelper = new GeneHelper ( graph, gene );
 			
 			// only genes that are on chromosomes (not scaffolds)
 			// can be displayed in Map View
@@ -580,13 +580,13 @@ public class ExportService
 			int end = geneHelper.getEndBP ( true );
 
 
-			String name = c.getPID ();
+			String name = gene.getPID ();
 			// TODO: What does this mean?! Getting a random accession?! Why
 			// not using the methods for the shortest name/accession?
-			for ( ConceptAccession acc : c.getConceptAccessions () )
+			for ( ConceptAccession acc : gene.getConceptAccessions () )
 				name = acc.getAccession ();
 
-			String label = KGUtils.getMolBioDefaultLabel ( c );
+			String label = KGUtils.getMolBioDefaultLabel ( gene );
 			String query = null;
 			try
 			{
@@ -621,14 +621,13 @@ public class ExportService
 			
 			// Add 'score' tag as well.
 			Double score = 0.0;
-			if ( scoredCandidates != null && scoredCandidates.get ( c ) != null )
-				score = scoredCandidates.get ( c ); // fetch score
+			if ( scoredCandidates != null && scoredCandidates.get ( gene ) != null )
+				score = scoredCandidates.get ( gene ); // fetch score
 			
 			sb.append ( "<score>" + score + "</score>\n" ); // score
 			sb.append ( "</feature>\n" );
 
-			if ( id++ > maxGenes )
-				break;
+			if ( ++id >= maxGenes ) break;
 		}
 
 		log.info ( "Display user QTLs... QTLs provided: " + userQtl.size () );

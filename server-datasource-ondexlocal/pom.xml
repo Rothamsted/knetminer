@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-		</dependency>    
+		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.ondex.core</groupId>
 			<artifactId>workflow-api</artifactId>
@@ -80,6 +80,6 @@
 	    <groupId>javax.servlet</groupId>
 	    <artifactId>javax.servlet-api</artifactId>
 	    <scope>provided</scope>
-		</dependency>		
+		</dependency>
 	</dependencies>
 </project>

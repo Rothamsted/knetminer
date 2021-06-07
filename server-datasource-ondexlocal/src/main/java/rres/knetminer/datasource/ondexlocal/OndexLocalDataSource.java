@@ -199,7 +199,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		{
 			log.info("Genome or QTL response...");
 
-			geneMap = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list!
+			geneMap = qtlnetminerResults.getSortedCandidates(); // find qtl and add to qtl list
 			genes.addAll(geneMap.keySet());
 			log.info("Number of genes: " + genes.size());
 

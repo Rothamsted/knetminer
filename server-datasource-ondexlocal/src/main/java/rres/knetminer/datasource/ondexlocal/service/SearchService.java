@@ -127,7 +127,7 @@ public class SearchService
    */
 	public Map<ONDEXConcept, Float> searchGeneRelatedConcepts ( 
 		String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
-	) throws IOException, ParseException
+	) throws ParseException
 	{
 		var graph = dataService.getGraph ();
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
@@ -150,18 +150,26 @@ public class SearchService
 
 		keywords = StringUtils.trimToEmpty ( keywords );
 		
-		if ( keywords.isEmpty () && geneList != null && !geneList.isEmpty () )
+		if ( keywords.isEmpty () )
 		{
+			if ( geneList == null || geneList.isEmpty () )
+			{
+				log.info ( "All the search parameters are empty, returning empty result" );
+				return hit2score;
+			}
+			
 			log.info ( "No keyword, skipping Lucene stage, using mapGene2Concept instead" );
 			for ( ONDEXConcept gene : geneList )
 			{
 				if ( gene == null ) continue;
 				if ( genes2Concepts.get ( gene.getId () ) == null ) continue;
-				for ( int conceptId : genes2Concepts.get ( gene.getId () ) )
+				for ( int relatedConceptId : genes2Concepts.get ( gene.getId () ) )
 				{
-					ONDEXConcept concept = graph.getConcept ( conceptId );
-					if ( includePublications || !concept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
-						hit2score.put ( concept, 1.0f );
+					ONDEXConcept relatedConcept = graph.getConcept ( relatedConceptId );
+					if ( !includePublications && relatedConcept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )
+						continue;
+					
+					hit2score.put ( relatedConcept, 1.0f );
 				}
 			}
 
@@ -171,7 +179,7 @@ public class SearchService
 		// added to overcome double quotes issue
 		// if changing this, need to change genepage.jsp and evidencepage.jsp
 		keywords = keywords.replace ( "###", "\"" );
-		log.debug ( "Keyword is:" + keywords );
+		log.debug ( "Search string is: \"{}\"", keywords );
 
 		// creates the NOT list (list of all the forbidden documents)
 		String notQuery = getExcludingSearchExp ( keywords );
@@ -212,7 +220,8 @@ public class SearchService
 		
 		log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
 		return hit2score;
-	}
+		
+	} // searchGeneRelatedConcepts()
   
 
   private void searchConceptByIdxField ( 
