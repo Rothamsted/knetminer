@@ -443,7 +443,9 @@ public class ExportService
 			// We deal with these below
 			.filter ( relatedConcept -> !"Publication".equals ( relatedConcept.getOfType ().getId () ) )
 			.collect ( Collectors.groupingBy (
+				// group by CC
 				relatedConcept -> relatedConcept.getOfType ().getId (),
+				// for each CC, make a list of labels
 				Collectors.mapping ( KGUtils::getMolBioDefaultLabel, Collectors.toList () )
 			)); 
 				
@@ -462,28 +464,32 @@ public class ExportService
 				options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 ) 
 			);
 			
-			// Most recent ones
+			// Get best labels for publications and add to the rest
 			if ( !newPubs.isEmpty () )
-				byCCRelatedLabels.put ( 
-					"Publication", 
-					newPubs.stream ()
-					.map ( graph::getConcept )
-				  .map ( KGUtils::getMolBioDefaultLabel )
-				  // TODO: is this right?! What if the name IS NOT a PMID?!
-				  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-				  .collect ( Collectors.toList () )
-			);
+			{
+				List<String> pubLabels = newPubs.stream ()
+				.map ( graph::getConcept )
+			  .map ( KGUtils::getMolBioDefaultLabel )
+			  // TODO: is this right?! What if the name IS NOT a PMID?!
+			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
+			  .collect ( Collectors.toList () );
+				
+				byCCRelatedLabels.put ( "Publication", pubLabels );
+			}
 
 	
-			// create output string for evidences column in GeneView table
+			// And eventually, create output string for evidences column in GeneView table
 			// 
 			String evidenceStr = byCCRelatedLabels.entrySet ()
 			.stream ()
-			.map ( e -> {
-				// Values in the results are like: "Protein__23__name1//name2//..."
-				List<String> labels = e.getValue ();
-				return e.getKey () + "__" + labels.size () + "__" + String.join ( "//", labels );
+			.map ( cc2Labels -> {
+				// Values in the results are like: "Protein__23__label1//label2//...||Publication__12__..."
+				// Here we spawn each string in a ||-delimited block
+				String ccId = cc2Labels.getKey ();
+				List<String> labels = cc2Labels.getValue ();
+				return ccId + "__" + labels.size () + "__" + String.join ( "//", labels );
 			})
+			// And then we join all the per-CC strings 
 			.collect ( Collectors.joining ( "||" ) );
 							
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
