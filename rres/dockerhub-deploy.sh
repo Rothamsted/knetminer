@@ -57,7 +57,7 @@ export JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false
 # and these can be used for debugging
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
 	-Djava.compiler=NONE
-  -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$debug_port"
+  -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:$debug_port"
 
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
