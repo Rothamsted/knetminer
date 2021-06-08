@@ -100,7 +100,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// that will be forwarded back to the client by any call requiring the OSP.
 		ExecutorService asyncRunner = Executors.newSingleThreadExecutor ();
 		asyncRunner.submit ( () -> ondexServiceProvider.initData () );
-		
+	
 		log.info ( "Asynchronous Ondex initialisation started" );
 	}
 		
