@@ -221,7 +221,10 @@ public class ApiIT
 	public void testBadCallError ()
 	{
 		JSONObject js = invokeApiFailOpt ( "foo", false );
-		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.server.ResponseStatusException", js.getString ( "type" ) );
+		assertEquals ( 
+			"Bad type for the /foo call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2",
+			js.getString ( "type" )
+		);
 		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
 		assertEquals ( 
@@ -237,20 +240,18 @@ public class ApiIT
 	{
 		/*
 			{
-				"statusReasonPhrase" : "Bad Request",
-				"title" : """400 BAD_REQUEST \"Bad parameters passed to the API call 'countHits': Internal error while 
-					searching over Ondex index: Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery\"; 
-					nested exception is java.lang.IllegalArgumentException: Internal error while searching over Ondex index: 
-					Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery""",
-				"type" : "org.springframework.web.server.ResponseStatusException",
+				"title" : "Bad parameters passed to the API call 'countHits': Internal error while searching over Ondex index: 
+				  Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery (HTTP 400 BAD_REQUEST)",
+				"type" : "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2",
 				"status" : 400,
+   			"statusReasonPhrase" : "Bad Request",				
 				"path" : "http://localhost:9090/ws/aratiny/countHits",
    			"detail" : "<the whole stack trace>"
 			}
 		 */
 		JSONObject js = invokeApiFailOpt ( "countHits", false, "keyword", "*" );
 		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
-		assertEquals ( "Bad type for the /countHits call!", "org.springframework.web.server.ResponseStatusException", js.getString ( "type" ) );
+		assertEquals ( "Bad type for the /countHits call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
 		assertTrue (
 			"Bad title for the /countHits call!", 

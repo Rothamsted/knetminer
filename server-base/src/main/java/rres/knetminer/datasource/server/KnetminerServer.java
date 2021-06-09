@@ -46,6 +46,7 @@ import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
 /**
  * KnetminerServer is a fully working server, except that it lacks any data
@@ -389,18 +390,13 @@ public class KnetminerServer {
 				throw ( (Exception) ExceptionUtils.getSignificantException ( ex ) );
 			}
 		} 
-		// TODO: the message format for ResponseStatusException sucks, we would need to instantiate our own 
-		// subclass of it, with our own decent way to yield the message
-		//
-		// Note that HttpClientErrorException, being used previously, doesn't allow for attaching a cause
-		//
 		catch (NoSuchMethodException|IllegalAccessException|SecurityException ex) {
-			throw new ResponseStatusException (
+			throw new ResponseStatusException2 (
 				HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex 
 			);
 		} 
 		catch (IllegalArgumentException ex) {
-			throw new ResponseStatusException (
+			throw new ResponseStatusException2 (
 				HttpStatus.BAD_REQUEST, 
 				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ),
 				ex 
