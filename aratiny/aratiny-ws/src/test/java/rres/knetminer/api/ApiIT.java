@@ -221,7 +221,7 @@ public class ApiIT
 	public void testBadCallError ()
 	{
 		JSONObject js = invokeApiFailOpt ( "foo", false );
-		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.client.HttpClientErrorException", js.getString ( "type" ) );
+		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.server.ResponseStatusException", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
 		assertEquals ( 
@@ -237,32 +237,32 @@ public class ApiIT
 	{
 		/*
 			{
-				"status" : 500,
-				"detail" : "<the whole stack trace>"
-				"title" : "Application error while running countHits: null",
-				"statusReasonPhrase" : "Internal Server Error",
+				"statusReasonPhrase" : "Bad Request",
+				"title" : """400 BAD_REQUEST \"Bad parameters passed to the API call 'countHits': Internal error while 
+					searching over Ondex index: Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery\"; 
+					nested exception is java.lang.IllegalArgumentException: Internal error while searching over Ondex index: 
+					Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery""",
+				"type" : "org.springframework.web.server.ResponseStatusException",
+				"status" : 400,
 				"path" : "http://localhost:9090/ws/aratiny/countHits",
-				"type" : "java.lang.RuntimeException"
-			}		 
+   			"detail" : "<the whole stack trace>"
+			}
 		 */
 		JSONObject js = invokeApiFailOpt ( "countHits", false, "keyword", "*" );
 		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
-		assertEquals ( "Bad type for the /countHits call!", "java.lang.RuntimeException", js.getString ( "type" ) );
-		assertEquals ( "Bad status for the /countHits call!", 500, js.getInt ( "status" ) );
+		assertEquals ( "Bad type for the /countHits call!", "org.springframework.web.server.ResponseStatusException", js.getString ( "type" ) );
+		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
 		assertTrue (
 			"Bad title for the /countHits call!", 
 			js.getString ( "title" )
-			.contains ( 
-					"Application error while running the API call 'countHits': "
-				+ "Internal error while searchin over Ondex index: Cannot parse '*': '*' or '?' not allowed "
-				+ "as first character in WildcardQuery" )
+			.contains ( "Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery" )
 		);
 		assertEquals ( 
 			"Bad path for the /countHits call!",
 			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
-		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Internal Server Error", js.getString ( "statusReasonPhrase" ) );
+		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
 	}
 	
 	@Test

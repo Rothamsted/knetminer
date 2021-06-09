@@ -4,6 +4,7 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
@@ -356,6 +358,9 @@ public class KnetminerServer {
 	private ResponseEntity<KnetminerResponse> _handle(
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) 
 	{
+		if ( mode == null || mode.isEmpty () || mode.isBlank () )
+			throw new IllegalArgumentException ( "Knetminer API invoked with null/empty method name" );
+			
 		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
 		if (dataSource == null) {
 			throw new HttpServerErrorException ( 
@@ -364,34 +369,41 @@ public class KnetminerServer {
 			);
 		}
 
+		if (log.isDebugEnabled()) {
+			String paramsStr = "Keyword:" + request.getKeyword() + " , List:"
+					+ Arrays.toString ( request.getList().toArray() ) + " , ListMode:" + request.getListMode()
+					+ " , QTL:" + Arrays.toString(request.getQtl().toArray());
+			log.debug ( "Calling " + mode + " with " + paramsStr );
+		}
+		this._googlePageView(ds, mode, rawRequest);
+		
 		try 
 		{
-			if (log.isDebugEnabled()) {
-				String paramsStr = "Keyword:" + request.getKeyword() + " , List:"
-						+ Arrays.toString(request.getList().toArray()) + " , ListMode:" + request.getListMode()
-						+ " , QTL:" + Arrays.toString(request.getQtl().toArray());
-				log.debug("Calling " + mode + " with " + paramsStr);
-			}
-			KnetminerResponse response;
 			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
-			this._googlePageView(ds, mode, rawRequest);
-			response = (KnetminerResponse) method.invoke(dataSource, ds, request);
-			return new ResponseEntity<>(response, HttpStatus.OK);
+			try {
+				KnetminerResponse response = (KnetminerResponse) method.invoke(dataSource, ds, request);
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+			catch ( InvocationTargetException ex ) {
+				// This was caused by a underlying more significant exception, best is to try to catch and re-throw it.
+				throw ( (Exception) ExceptionUtils.getSignificantException ( ex ) );
+			}
 		} 
-		catch (NoSuchMethodException ex) {
-			throw new HttpClientErrorException (
-				HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "': " + ex.getMessage ()
+		// TODO: the message format for ResponseStatusException sucks, we would need to instantiate our own 
+		// subclass of it, with our own decent way to yield the message
+		//
+		// Note that HttpClientErrorException, being used previously, doesn't allow for attaching a cause
+		//
+		catch (NoSuchMethodException|IllegalAccessException|SecurityException ex) {
+			throw new ResponseStatusException (
+				HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex 
 			);
 		} 
 		catch (IllegalArgumentException ex) {
-			throw new HttpClientErrorException (
-				HttpStatus.BAD_REQUEST, "Bad parameters passed to the API call '" + mode + "': " + ex.getMessage ()
-			);
-		} 
-		catch (Error ex) {
-			throw new RuntimeException ( 
-				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
-				ex
+			throw new ResponseStatusException (
+				HttpStatus.BAD_REQUEST, 
+				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ),
+				ex 
 			);
 		} 
 		catch (Exception ex) {
@@ -400,6 +412,13 @@ public class KnetminerServer {
 				ex
 			);
 		}
+		catch (Error ex) {
+			// TODO: should we really catch this?!
+			throw new Error ( 
+				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
+				ex
+			);
+		} 
 	}
 	
 }

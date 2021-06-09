@@ -54,7 +54,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * pure JSON.
  * 
  * @author holland
- * @author Marco Brandizi (I replaced the parameterised constructor and introduced the config harvester)
+ * @author Marco Brandizi Replaced the parameterised constructor + introduced the config harvester, several improvements
  * 
  * Note that the @Component annotation is necessary since Spring 5, it's not recognised as a bean otherwise and 
  * despite extending a @Component interface.
