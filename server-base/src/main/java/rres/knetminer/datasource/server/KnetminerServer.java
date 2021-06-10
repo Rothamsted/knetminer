@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
@@ -401,7 +400,14 @@ public class KnetminerServer {
 				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ),
 				ex 
 			);
-		} 
+		}
+		catch ( RuntimeException ex )
+		{
+			// Let's re-throw the same exception, with a wrapping message
+			throw ExceptionUtils.buildEx (
+				ex.getClass(), ex, "Application error while running the API call '%s': %s", mode, getSignificantMessage ( ex ) 
+			);
+		}
 		catch (Exception ex) {
 			throw new RuntimeException (
 				"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),

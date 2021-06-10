@@ -174,7 +174,9 @@ public class SearchService
 			}
 
 			return hit2score;
-		}
+		
+		} // if empty edge cases
+		
 
 		// added to overcome double quotes issue
 		// if changing this, need to change genepage.jsp and evidencepage.jsp

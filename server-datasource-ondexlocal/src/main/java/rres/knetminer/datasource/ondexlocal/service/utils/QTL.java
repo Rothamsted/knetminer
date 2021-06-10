@@ -139,6 +139,7 @@ public class QTL {
 	
 	public static List<QTL> fromStringList ( List<String> qtlStrings )
 	{
+		if ( qtlStrings == null ) qtlStrings = List.of (); 
 		return qtlStrings.stream ()
 		.map ( QTL::fromString )
 		.collect ( Collectors.toList () );

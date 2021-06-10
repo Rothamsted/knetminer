@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -25,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.opencsv.bean.OpencsvUtils;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
@@ -52,6 +56,7 @@ public class ApiIT
 		clog.info ( "Making a pause to give the server time to initialise." );
 		Thread.sleep ( 10 * 1000 );
 	}
+	
 	
 	@Test
 	public void testCountHits () throws JSONException, IOException, URISyntaxException {
@@ -120,102 +125,25 @@ public class ApiIT
 			testGenome ( "flowering FLC FT", expectedGeneLabel, "AT1G63650", "aBi?", "MYB*" )
 		);
 	}
+
 	
-	
-	/**
-	 * Invokes {@code /genome?keyword=XXX&qtl=}, then verifies the result
-	 * (eg, geneCount is > 0, gviewer != null).
-	 * 
-	 * @param expectedGeneLabel is checked against the 'gviewer' result, 
-	 * to see if {@code /genome/feature/geneLabel} has the expected value.
-	 * 
-	 * @param geneAccFilters (optional), the list of genes to restrict the search on. This is 
-	 * the same as the "Gene List Search" box, it's case-insensitive and can contains Lucene 
-	 * wildcards ('*', '?', '-').
-	 * 
-	 */
-	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
+	@Test
+	public void testEvidence ()
 	{
-		if ( geneAccFilters == null ) geneAccFilters = new String [ 0 ];
-		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0], "list", geneAccFilters );
-					
+		JSONObject js = invokeApi ( "genome", "keyword", "flowering" );
+		assertNotNull ( "No JSON returned!", js );
+		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
+		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
+		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
 		
-		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
-		
-		String xmlView = js.getString ( "gviewer" );
-		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
-		
-		XPathReader xpath = new XPathReader ( xmlView );
-		
-		assertNotNull (
-			"Gene " + expectedGeneLabel + " not returned by /genome", 
-			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
+		var rows = List.of ( evidenceTable.split ( "\n" ) );
+		var rowFound = rows.stream ().anyMatch ( 
+			row -> row.contains ( "Phenotype\tEARLY FLOWERING COMPARED TO...\t4.28\t1.00000\t3\t\t0\t697" ) 
 		);
+		assertTrue ( "Expected evidence table row not found!", rowFound );
 	}
 	
-	/**
-	 * Defaults to true
-	 * 
-	 * @param callName
-	 * @param jsonFields
-	 * @return
-	 */
-	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
-	{
-		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
-	}
-
 	
-	/**
-	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
-	 * @param callName the call URL, if it doesn't start with http://, the URL is composed by prepending 
-	 * 				{@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
-	 * @param failOnError true if the HTTP request doesn't return the 200 status.
-	 * @param jsonFields appended to the HTTP request.
-	 * 
-	 */
-	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
-	{
-		String url = urlOrCallName.startsWith ( "http://" )
-			? urlOrCallName 
-			: System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + urlOrCallName;
-		
-		try
-		{
-			JSONObject js = new JSONObject ();
-			for ( int i = 0; i < jsonFields.length; i++ )
-				js.put ( (String) jsonFields [ i ], jsonFields [ ++i ] );
-			 
-			HttpPost post = new HttpPost ( url );
-			StringEntity jsEntity = new StringEntity( js.toString (), ContentType.APPLICATION_JSON );
-			post.setEntity ( jsEntity );
-
-			HttpClient client = HttpClientBuilder.create ().build ();
-
-			HttpResponse response = client.execute ( post );
-			int httpCode = response.getStatusLine ().getStatusCode ();
-			if ( httpCode != 200 ) 
-			{
-				if ( failOnError ) ExceptionUtils.throwEx ( 
-					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
-				);
-				clog.warn ( "Return code for {} is {}", url, httpCode );				
-			}
-			
-			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
-			clog.info ( "JSON got from <{}>:\n{}", url, jsStr );
-			return new JSONObject ( jsStr );
-		}
-		catch ( JSONException | IOException | HttpException ex )
-		{
-			throw buildEx (
-				UnexpectedEventException.class,
-				"Error while invoking <%s>: %s",
-				url,
-				ex.getMessage ()
-			);
-		}
-	}
 
 	@Test
 	public void testBadCallError ()
@@ -294,6 +222,103 @@ public class ApiIT
 			)
 		);
 		assertEquals ( "Bad statusReasonPhrase for the /cydebug call!", "Forbidden", js.getString ( "statusReasonPhrase" ) );
+	}	
+
+	
+	/**
+	 * Invokes {@code /genome?keyword=XXX&qtl=}, then verifies the result
+	 * (eg, geneCount is > 0, gviewer != null).
+	 * 
+	 * @param expectedGeneLabel is checked against the 'gviewer' result, 
+	 * to see if {@code /genome/feature/geneLabel} has the expected value.
+	 * 
+	 * @param geneAccFilters (optional), the list of genes to restrict the search on. This is 
+	 * the same as the "Gene List Search" box, it's case-insensitive and can contains Lucene 
+	 * wildcards ('*', '?', '-').
+	 * 
+	 */
+	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
+	{
+		if ( geneAccFilters == null ) geneAccFilters = new String [ 0 ];
+		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0], "list", geneAccFilters );
+					
+		
+		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
+		
+		String xmlView = js.getString ( "gviewer" );
+		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
+		
+		XPathReader xpath = new XPathReader ( xmlView );
+		
+		assertNotNull (
+			"Gene " + expectedGeneLabel + " not returned by /genome", 
+			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
+		);
+	}	
+	
+	
+	
+	/**
+	 * Defaults to true
+	 * 
+	 * @param callName
+	 * @param jsonFields
+	 * @return
+	 */
+	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
+	{
+		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
+	}
+	
+	/**
+	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
+	 * @param callName the call URL, if it doesn't start with http://, the URL is composed by prepending 
+	 * 				{@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
+	 * @param failOnError true if the HTTP request doesn't return the 200 status.
+	 * @param jsonFields appended to the HTTP request.
+	 * 
+	 */
+	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
+	{
+		String url = urlOrCallName.startsWith ( "http://" )
+			? urlOrCallName 
+			: System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + urlOrCallName;
+		
+		try
+		{
+			JSONObject js = new JSONObject ();
+			for ( int i = 0; i < jsonFields.length; i++ )
+				js.put ( (String) jsonFields [ i ], jsonFields [ ++i ] );
+			 
+			HttpPost post = new HttpPost ( url );
+			StringEntity jsEntity = new StringEntity( js.toString (), ContentType.APPLICATION_JSON );
+			post.setEntity ( jsEntity );
+
+			HttpClient client = HttpClientBuilder.create ().build ();
+
+			HttpResponse response = client.execute ( post );
+			int httpCode = response.getStatusLine ().getStatusCode ();
+			if ( httpCode != 200 ) 
+			{
+				if ( failOnError ) ExceptionUtils.throwEx ( 
+					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
+				);
+				clog.warn ( "Return code for {} is {}", url, httpCode );				
+			}
+			
+			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
+			clog.info ( "JSON got from <{}>:\n{}", url, jsStr );
+			return new JSONObject ( jsStr );
+		}
+		catch ( JSONException | IOException | HttpException ex )
+		{
+			throw buildEx (
+				UnexpectedEventException.class,
+				"Error while invoking <%s>: %s",
+				url,
+				ex.getMessage ()
+			);
+		}
 	}	
 	
 	

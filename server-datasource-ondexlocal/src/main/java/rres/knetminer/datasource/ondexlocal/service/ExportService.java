@@ -41,6 +41,7 @@ import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
+import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import rres.knetminer.datasource.ondexlocal.Hits;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
@@ -752,66 +753,67 @@ public class ExportService
    *
    */
 	public String exportEvidenceTable ( 
-		String keywords, Map<ONDEXConcept, Float> luceneConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
+		String keywords, Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
 	)
 	{
+		if ( userGenes == null ) userGenes = Set.of ();
+		if ( foundConcepts == null ) foundConcepts = Map.of ();
+		
     var graph = dataService.getGraph ();
 		
 		StringBuffer out = new StringBuffer ();
 		out.append ( "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" );
 		
-		if ( userGenes == null || userGenes.isEmpty () ) return out.toString ();
-		
+
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
 
-		log.info ( "generate Evidence table..." );
-		List<QTL> qtls = QTL.fromStringList ( qtlsStr );					
+		log.info ( "Generating Evidence table" );
+		
+		List<QTL> qtls = QTL.fromStringList ( qtlsStr ); // it's never null					
 
 		DecimalFormat sfmt = new DecimalFormat ( "0.00" );
 		DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
 
-		for ( ONDEXConcept lc : luceneConcepts.keySet () )
+		for ( ONDEXConcept foundConcept : foundConcepts.keySet () )
 		{
+			Float score = foundConcepts.get ( foundConcept );
+			
+			if ( foundConcept instanceof LuceneConcept )
+				foundConcept = ((LuceneConcept) foundConcept).getParent ();
+
 			// Creates type,name,score and numberOfGenes
-			String type = lc.getOfType ().getId ();
-			String name = KGUtils.getMolBioDefaultLabel ( lc );
-			// All publications will have the format PMID:15487445
-			// if (type == "Publication" && !name.contains("PMID:"))
-			// name = "PMID:" + name;
-			// Do not print publications or proteins or enzymes in evidence view
-			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( type ) ) ) 
+			String foundType = foundConcept.getOfType ().getId ();
+			String foundName = KGUtils.getMolBioDefaultLabel ( foundConcept );
+			
+			// We don't want these in the evidence view 
+			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( foundType ) ) ) 
 				continue;
 			
 			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
-
-			Float score = luceneConcepts.get ( lc );
-			Integer ondexId = lc.getId ();
-			if ( !concepts2Genes.containsKey ( lc.getId () ) ) continue;
-			Set<Integer> listOfGenes = concepts2Genes.get ( lc.getId () );
-			Integer numberOfGenes = listOfGenes.size ();
+			
+			Integer ondexId = foundConcept.getId ();
+			if ( !concepts2Genes.containsKey ( ondexId ) ) continue;
+			
+			Set<Integer> startGeneIds = concepts2Genes.get ( ondexId );
+			Integer startGenesSize = startGeneIds.size ();
+			
 			Set<String> userGenesStrings = new HashSet<> ();
-			Integer numberOfQTL = 0;
+			Integer qtlsSize = 0;
 
-			for ( int log : listOfGenes )
+			// Consider the genes to which this concept is related
+			//
+			for ( int startGeneId : startGeneIds )
 			{
-				ONDEXConcept gene = graph.getConcept ( log );
-				var geneHelper = new GeneHelper ( graph, gene );
+				ONDEXConcept startGene = graph.getConcept ( startGeneId );
+				var geneHelper = new GeneHelper ( graph, startGene );
 				
-				if ( ( userGenes != null ) && ( gene != null ) && ( userGenes.contains ( gene ) ) )
-				{
-					// numberOfUserGenes++;
-					// retain gene Accession/Name (18/07/18)
+				if ( startGene != null && userGenes.contains ( startGene ) )
 					userGenesStrings.add ( geneHelper.getBestAccession () );
-					
-					// TODO: This was commented at some point and it's still unclear if needed.
-					// Keeping for further verifications
-					// String geneName = getShortestPreferedName(gene.getConceptNames()); geneAcc= geneName;
-				}
 
-				if ( genes2QTLs.containsKey ( log ) ) numberOfQTL++;
+				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize++;
 
 				String chr = geneHelper.getChromosome ();
 				int beg = geneHelper.getBeginBP ( true );
@@ -822,19 +824,17 @@ public class ExportService
 					Integer qtlStart = loci.getStart ();
 					Integer qtlEnd = loci.getEnd ();
 
-					if ( qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd ) numberOfQTL++;
+					if ( qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd ) qtlsSize++;
 				}
+			} // for searchedGeneId
 
-			} // for log
-
-			if ( userGenesStrings.isEmpty () ) continue;
 			
 			double pvalue = 0.0;
 
 			// quick adjustment to the score to make it a P-value from F-test instead
 			int matchedInGeneList = userGenesStrings.size ();
 			int notMatchedInGeneList = userGenesSize - matchedInGeneList;
-			int matchedNotInGeneList = numberOfGenes - matchedInGeneList;
+			int matchedNotInGeneList = startGenesSize - matchedInGeneList;
 			int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
 
 			FisherExact fisherExact = new FisherExact ( allGenesSize );
@@ -843,13 +843,14 @@ public class ExportService
 			);
 			
 			var userGenesStr = userGenesStrings.stream ().collect ( Collectors.joining ( "," ) ); 
+			
 			out.append ( 
-				type + "\t" + name + "\t" + sfmt.format ( score ) + "\t" + pfmt.format ( pvalue ) + "\t"
-				+ numberOfGenes + "\t" + userGenesStr + "\t" + numberOfQTL + "\t" + ondexId + "\n" 
+				foundType + "\t" + foundName + "\t" + sfmt.format ( score ) + "\t" + pfmt.format ( pvalue ) + "\t"
+				+ startGenesSize + "\t" + userGenesStr + "\t" + qtlsSize + "\t" + ondexId + "\n" 
 			);
-		} // for luceneConcepts()
+		} // for foundConcepts()
 		
 		return out.toString ();
 		
-	} // writeEvidenceTable()	
+	} // exportEvidenceTable()	
 }
