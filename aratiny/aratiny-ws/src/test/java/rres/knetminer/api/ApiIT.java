@@ -136,7 +136,7 @@ public class ApiIT
 		
 		var rows = List.of ( evidenceTable.split ( "\n" ) );
 		var rowFound = rows.stream ().anyMatch ( 
-			row -> row.contains ( "Phenotype\tEARLY FLOWERING COMPARED TO...\t4.28\t1.00000\t3\t\t0\t697" ) 
+			row -> row.contains ( "Phenotype\tEARLY FLOWERING COMPARED TO...\t4.28\t0.00000\t3\t\t0\t697" ) 
 		);
 		assertTrue ( "Expected evidence table row not found!", rowFound );
 	}

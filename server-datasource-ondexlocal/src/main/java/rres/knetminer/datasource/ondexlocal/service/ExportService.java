@@ -851,10 +851,14 @@ public class ExportService
 			int matchedNotInGeneList = startGenesSize - matchedInGeneList;
 			int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
 
-			FisherExact fisherExact = new FisherExact ( allGenesSize );
-			double pvalue = fisherExact.getP ( 
-				matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
-			);
+			double pvalue = 0d;
+			if ( matchedInGeneList > 0 )
+			{
+				FisherExact fisherExact = new FisherExact ( allGenesSize );
+				pvalue = fisherExact.getP ( 
+					matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
+				);
+			}
 			
 			var result = OptionsMap.from ( Map.of ( 
 				"type", foundType,
