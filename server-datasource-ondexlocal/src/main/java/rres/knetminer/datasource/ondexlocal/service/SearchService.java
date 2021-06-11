@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +35,9 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.google.common.base.Functions;
+import com.google.common.util.concurrent.AtomicDouble;
 
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptClass;
@@ -303,51 +309,61 @@ public class SearchService
 	 */
 	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score ) 
 	{
-		Map<ONDEXConcept, Double> scoredCandidates = new HashMap<> ();
 		var graph = dataService.getGraph ();
 	
-		log.info ( "Total hits from lucene: " + hit2score.keySet ().size () );
+		log.info ( "Getting genes from {} Lucene hits " + hit2score.keySet ().size () );
 	
-		// 1st step: create map of genes to concepts that contain query terms
-		// In other words: Filter the global gene2concept map for concept that contain the keyword
-		Map<Integer, Set<Integer>> mapGene2HitConcept = new HashMap<> ();
-		
 		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 		var genes2PathLengths = semanticMotifDataService.getGenes2PathLengths ();
 		var genesCount = dataService.getGenomeGenesCount ();
-		
-		hit2score.keySet ()
-		.stream ()
-		.map ( ONDEXConcept::getId )
-		.filter ( concepts2Genes::containsKey )
-		.forEach ( conceptId ->
-		{
-			for ( int geneId: concepts2Genes.get ( conceptId ) )
-				mapGene2HitConcept.computeIfAbsent ( geneId, thisGeneId -> new HashSet<> () )
-				.add ( conceptId );
-		});
-		
+
+		// 1st step: create map of genes to concepts that contain query terms
+		// In other words: Filter the global gene2concept map for concept that contain the keyword
+		//
+		Map<Integer, Set<Integer>> gene2HitConcepts =
+			hit2score.keySet ()
+			.parallelStream ()
+			.map ( ONDEXConcept::getId ) // conceptId
+			.filter ( concepts2Genes::containsKey ) // Has related concepts
+			.flatMap ( conceptId -> 
+				concepts2Genes.get ( conceptId )
+				// flat into a stream of Pair(geneId, conceptId)
+				.parallelStream ().map ( geneId -> Pair.of ( geneId, conceptId ) ) 
+			)
+			.collect ( Collectors.groupingByConcurrent ( 
+				Pair::getLeft, // group the pairs by geneId
+				Collectors.mapping ( 
+					Pair::getRight, // Map each pair to its conceptId
+					Collectors.toSet () ) // collect the conceptIds and merge them into the per-geneId groups
+			));
+
 
 		// 2nd step: calculate a score for each candidate gene
-		for ( int geneId : mapGene2HitConcept.keySet () )
+		ConcurrentMap<ONDEXConcept, Double> scoredCandidates =  new ConcurrentHashMap<> ();
+
+		gene2HitConcepts.keySet ().
+		parallelStream ()
+		.forEach ( geneId ->
 		{
 			// weighted sum of all evidence concepts
-			double weightedEvidenceSum = 0;
+			var weightedEvidenceSum = new AtomicDouble ( 0d );
 
 			// iterate over each evidence concept and compute a weight that is composed of
 			// three components
-			for ( int cId : mapGene2HitConcept.get ( geneId ) )
+			gene2HitConcepts.get ( geneId )
+			.parallelStream ()
+			.forEach ( conceptId -> 
 			{
 				// relevance of search term to concept
-				float luceneScore = hit2score.get ( graph.getConcept ( cId ) );
+				float luceneScore = hit2score.get ( graph.getConcept ( conceptId ) );
 
 				// specificity of evidence to gene
-				double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( cId ).size () );
+				double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( conceptId ).size () );
 
 				// inverse distance from gene to evidence
-				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, cId ) );
+				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, conceptId ) );
 				if ( pathLen == null ) 
-					log.info ( "WARNING: Path length is null for: " + geneId + "//" + cId );
+					log.info ( "WARNING: Path length is null for: " + geneId + "//" + conceptId );
 				
 				double distance = pathLen == null ? 0 : ( 1d / pathLen );
 
@@ -355,8 +371,9 @@ public class SearchService
 				double evidenceWeight = ( igf + luceneScore + distance ) / 3;
 
 				// sum of all evidence weights
-				weightedEvidenceSum += evidenceWeight;
-			}
+				weightedEvidenceSum.addAndGet ( evidenceWeight );
+				
+			}); // for conceptId
 
 			// normalisation method 1: size of the gene knoweldge graph
 			// double normFactor = 1 / (double) genes2Concepts.get(geneId).size();
@@ -364,16 +381,19 @@ public class SearchService
 			// double normFactor = 1 / Math.max((double) mapGene2HitConcept.get(geneId).size(), 3.0);
 			// No normalisation for now as it's too experimental.
 			// This means better studied genes will appear top of the list
-			double knetScore = /* normFactor * */ weightedEvidenceSum;
+			double knetScore = /* normFactor * */ weightedEvidenceSum.get ();
 
 			scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
-		}
+			
+		}); // for geneId
 		
 		// Sort by best scores
-		Map<ONDEXConcept, Double> sortedCandidates = scoredCandidates.entrySet ().stream ()
+		Map<ONDEXConcept, Double> sortedCandidates = scoredCandidates.entrySet ()
+		.stream ()
 		.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
 		.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
-		return new SemanticMotifsSearchResult ( mapGene2HitConcept, sortedCandidates );
+		
+		return new SemanticMotifsSearchResult ( gene2HitConcepts, sortedCandidates );
 	}
 	
 	
