@@ -11,9 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,11 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +51,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
+import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
@@ -749,7 +752,7 @@ public class ExportService
 	
 	
   /**
-   * Export the evidence Table for the evidence view file
+   * Export the evidence Table for the evidence view file.
    *
    */
 	public String exportEvidenceTable ( 
@@ -761,10 +764,22 @@ public class ExportService
 		
     var graph = dataService.getGraph ();
 		
-		StringBuffer out = new StringBuffer ();
-		out.append ( "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" );
+    /*
+   	 * Edge cases:
+   	 * keywords          user genes                   result
+   	 * no match          !null, no match							empty
+ 		 * some match        !null, no match              total genes, 0 for user genes
+ 		 * some match        some match                   filter user genes = 0
+ 		 * null              sem motif matches            total genes, user genes
+ 		 *  
+ 		 * So, this should do:
+ 		 *   for a result list, if there is at least one user gene that isn't 0, filter 0s
+ 		 *   else, user genes are all at 0, don't filter
+     */
 		
-
+		List<OptionsMap> results = new ArrayList<> ();
+		var hasMatchingUserGenes = new MutableBoolean ( false );
+		
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
@@ -778,19 +793,20 @@ public class ExportService
 
 		for ( ONDEXConcept foundConcept : foundConcepts.keySet () )
 		{
-			Float score = foundConcepts.get ( foundConcept );
+			double score = 1d * foundConcepts.get ( foundConcept );
 			
 			if ( foundConcept instanceof LuceneConcept )
 				foundConcept = ((LuceneConcept) foundConcept).getParent ();
 
 			// Creates type,name,score and numberOfGenes
 			String foundType = foundConcept.getOfType ().getId ();
-			String foundName = KGUtils.getMolBioDefaultLabel ( foundConcept );
 			
 			// We don't want these in the evidence view 
 			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( foundType ) ) ) 
 				continue;
-			
+
+			String foundName = KGUtils.getMolBioDefaultLabel ( foundConcept );
+
 			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 			
@@ -800,7 +816,7 @@ public class ExportService
 			Set<Integer> startGeneIds = concepts2Genes.get ( ondexId );
 			Integer startGenesSize = startGeneIds.size ();
 			
-			Set<String> userGenesStrings = new HashSet<> ();
+			Set<String> userGeneLabels = new HashSet<> ();
 			Integer qtlsSize = 0;
 
 			// Consider the genes to which this concept is related
@@ -811,7 +827,7 @@ public class ExportService
 				var geneHelper = new GeneHelper ( graph, startGene );
 				
 				if ( startGene != null && userGenes.contains ( startGene ) )
-					userGenesStrings.add ( geneHelper.getBestAccession () );
+					userGeneLabels.add ( geneHelper.getBestAccession () );
 
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize++;
 
@@ -829,28 +845,67 @@ public class ExportService
 			} // for searchedGeneId
 
 			
-			double pvalue = 0.0;
-
 			// quick adjustment to the score to make it a P-value from F-test instead
-			int matchedInGeneList = userGenesStrings.size ();
+			int matchedInGeneList = userGeneLabels.size ();
 			int notMatchedInGeneList = userGenesSize - matchedInGeneList;
 			int matchedNotInGeneList = startGenesSize - matchedInGeneList;
 			int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
 
 			FisherExact fisherExact = new FisherExact ( allGenesSize );
-			pvalue = fisherExact.getP ( 
+			double pvalue = fisherExact.getP ( 
 				matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
 			);
 			
-			var userGenesStr = userGenesStrings.stream ().collect ( Collectors.joining ( "," ) ); 
+			var result = OptionsMap.from ( Map.of ( 
+				"type", foundType,
+				"name", foundName,
+				"score", score,
+				"pvalue", pvalue,
+				"genesSize", startGenesSize,
+				"userGeneLabels", userGeneLabels,
+				"qtlsSize", qtlsSize,
+				"ondexId", ondexId
+			));			
+			results.add ( result );
 			
-			out.append ( 
-				foundType + "\t" + foundName + "\t" + sfmt.format ( score ) + "\t" + pfmt.format ( pvalue ) + "\t"
-				+ startGenesSize + "\t" + userGenesStr + "\t" + qtlsSize + "\t" + ondexId + "\n" 
-			);
+			// It doesn't need synch, cause it is only set to to true and doesn't matter if it's done more times
+			if ( hasMatchingUserGenes.isFalse () && !userGeneLabels.isEmpty () ) 
+				hasMatchingUserGenes.setTrue ();
+			
 		} // for foundConcepts()
 		
-		return out.toString ();
+		
+		String tableStr = 
+		results.stream ()
+		.filter ( result -> {
+			// As explained above, let's keep user genes with > 0 count, if any
+			if ( hasMatchingUserGenes.isFalse () ) return true;
+			
+			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
+			return userGeneLabels.size () > 0;
+		})
+		// Yields a row
+		.map ( result -> {
+			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
+			var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
+						
+			return 
+				result.getString ( "type" ) + "\t" + 
+				result.getString ( "name" ) + "\t" +
+				sfmt.format ( result.getDouble ( "score" ) ) + "\t" + 
+				pfmt.format ( result.getDouble ( "pvalue" ) ) + "\t" + 
+				result.getInt ( "genesSize" ) + "\t" + 
+				userGenesStr + "\t" + 
+				result.getInt ( "qtlsSize" ) + "\t" +
+				result.getInt ( "ondexId" );
+		})
+		// Joins all the rows
+		.collect ( Collectors.joining ( "\n" ) );
+		
+		// Required by the client TSV reader
+		if ( !tableStr.isEmpty () ) tableStr += "\n";
+		
+		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" + tableStr;
 		
 	} // exportEvidenceTable()	
 }
