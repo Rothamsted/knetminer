@@ -311,7 +311,7 @@ public class SearchService
 	{
 		var graph = dataService.getGraph ();
 	
-		log.info ( "Getting genes from {} Lucene hits " + hit2score.keySet ().size () );
+		log.info ( "Getting genes from {} Lucene hits ", hit2score.keySet ().size () );
 	
 		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 		var genes2PathLengths = semanticMotifDataService.getGenes2PathLengths ();
