@@ -28,8 +28,6 @@ import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.opencsv.bean.OpencsvUtils;
-
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
 import uk.ac.ebi.utils.xml.XPathReader;
@@ -143,8 +141,31 @@ public class ApiIT
 		assertTrue ( "Expected evidence table row not found!", rowFound );
 	}
 	
+	@Test
+	public void testEvidenceFilters ()
+	{
+		JSONObject js = invokeApi ( 
+			"genome", 
+			"keyword", "\"cell size\" OR \"cell division\" OR \"cell cycle\"",
+			"list", new String [] { "At4g18330", "ABI*" }
+		);
+		assertNotNull ( "No JSON returned!", js );
+		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
+		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
+		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
+		
+		var rows = List.of ( evidenceTable.split ( "\n" ) );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 2, rows.size () );
+		
+		var rowFound = rows.stream ().anyMatch ( 
+			row -> row.contains ( "CelComp\tcytoskeleton\t2.04\t0.01049\t11\tAT4G26080,AT3G24650,AT2G40220,AT5G57050\t0\t1639" ) 
+		);
+		assertTrue ( "Expected evidence table row not found!", rowFound );
+	}
 	
 
+	
+	
 	@Test
 	public void testBadCallError ()
 	{
