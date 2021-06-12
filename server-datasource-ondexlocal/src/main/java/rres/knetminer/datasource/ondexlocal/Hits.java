@@ -1,10 +1,9 @@
 package rres.knetminer.datasource.ondexlocal;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,26 +52,27 @@ public class Hits
 
 	public void countLinkedGenes ()
 	{
-		int linkedDocs = 0;
-		Set<Integer> uniqGenes = new HashSet<> ();
-		log.info ( "Matching Lucene concepts: " + luceneConcepts.keySet ().size () );
+		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
+		log.info ( 
+			"Counting unique genes for {} matching Lucene concept(s)", luceneConceptsSet.size () 
+		);
 
 		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getSemanticMotifDataService ().getConcepts2Genes ();
-		for ( ONDEXConcept lc : luceneConcepts.keySet () )
-		{
-			Integer luceneOndexId = lc.getId ();
-			// Checks if the document is related to a gene
-			if ( !concept2Genes.containsKey ( luceneOndexId ) )
-			{
-				continue;
-			}
-			linkedDocs++;
-			uniqGenes.addAll ( concept2Genes.get ( luceneOndexId ) );
-		}
+		
+		long linkedConceptsSize = luceneConceptsSet.parallelStream ()
+			.map ( ONDEXConcept::getId )
+			.filter ( concept2Genes::containsKey )
+			.count ();
+		
+		Set<Integer> uniqGenes = luceneConceptsSet.parallelStream ()
+		.map ( ONDEXConcept::getId )
+		.filter ( concept2Genes::containsKey )
+		.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
+		.collect ( Collectors.toSet () );
 
-		log.info ( "Matching unique genes: " + uniqGenes.size () );
+		log.info ( "Matching {} unique gene(s): ", uniqGenes.size () );
 		this.numConnectedGenes = uniqGenes.size ();
-		this.luceneDocumentsLinked = linkedDocs;
+		this.luceneDocumentsLinked = (int) linkedConceptsSize;
 	}
 
 	public int getLuceneDocumentsLinked ()
