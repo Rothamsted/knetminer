@@ -64,14 +64,15 @@ public class Hits
 			.filter ( concept2Genes::containsKey )
 			.count ();
 		
-		Set<Integer> uniqGenes = luceneConceptsSet.parallelStream ()
+		long uniqGenesSize = luceneConceptsSet.parallelStream ()
 		.map ( ONDEXConcept::getId )
 		.filter ( concept2Genes::containsKey )
 		.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
-		.collect ( Collectors.toSet () );
+		.distinct ()
+		.count ();
 
-		log.info ( "Matching {} unique gene(s): ", uniqGenes.size () );
-		this.numConnectedGenes = uniqGenes.size ();
+		log.info ( "Matching {} unique gene(s): ", uniqGenesSize );
+		this.numConnectedGenes = (int) uniqGenesSize;
 		this.luceneDocumentsLinked = (int) linkedConceptsSize;
 	}
 
