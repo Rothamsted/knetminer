@@ -262,9 +262,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			Collectors.toConcurrentMap ( Functions.identity (), gene -> mapProxy.getValue ().getOrDefault ( gene, 0d ) )
 		);
 		mapProxy.setValue ( candidateGenesMap = null ); // Free-up memory
-		// TODO: A few functions below want a list, but these don't seem ordered or duped
-		List<ONDEXConcept> genes =  new ArrayList<> ( genesMap.keySet () );
-				
+		
+	
+		// Genes are expected in order
+		List<ONDEXConcept> genes = genesMap.keySet ()
+			.parallelStream ()
+			.sorted (  (g1, g2) ->  - Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
+			.collect ( Collectors.toList () );
+		
 		
 		if ( genes.size() > 0 ) 
 		{
