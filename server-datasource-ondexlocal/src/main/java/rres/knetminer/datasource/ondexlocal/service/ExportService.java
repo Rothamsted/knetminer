@@ -20,9 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -775,9 +778,14 @@ public class ExportService
  		 *   else, user genes are all at 0, don't filter
      */
 		
-		List<OptionsMap> results = new ArrayList<> ();
+    // We're going to update it in parallel, need to support it 
+		Queue<OptionsMap> results = new ConcurrentLinkedQueue<> ();
+
+		// This doesn't need concurrency management, cause it can only be toggled to true 
 		var hasMatchingUserGenes = new MutableBoolean ( false );
 		
+		// The rest is r-o or not used in parallel
+		//
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
@@ -789,7 +797,7 @@ public class ExportService
 		DecimalFormat sfmt = new DecimalFormat ( "0.00" );
 		DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
 
-		// final proxies needed withing lambdas
+		// final proxies needed within lambdas
 		final var foundConceptsRo = foundConcepts;
 		final var userGenesRo = userGenes;
 		
@@ -889,7 +897,9 @@ public class ExportService
 			
 		}); // for foundConcepts()
 		
-				
+		// Final filtering of 0-size user gene rows, translation to string and counting
+		//
+		var tableSize = new MutableInt ( 0 );	
 		String tableStr = 
 		results.stream ()
 		.filter ( result -> {
@@ -900,7 +910,10 @@ public class ExportService
 			return userGeneLabels.size () > 0;
 		})
 		// Yields a row
-		.map ( result -> {
+		.map ( result -> 
+		{
+			tableSize.increment ();
+			
 			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
 			var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
 						
@@ -914,13 +927,12 @@ public class ExportService
 				result.getInt ( "qtlsSize" ) + "\t" +
 				result.getInt ( "ondexId" );
 		})
-		// Joins all the rows
 		.collect ( Collectors.joining ( "\n" ) );
 		
 		// Required by the client TSV reader
 		if ( !tableStr.isEmpty () ) tableStr += "\n";
 		
-		log.info ( "Returning {} row(s) for the evidence table", results.size () );
+		log.info ( "Returning {} row(s) for the evidence table", tableSize.getValue () );
 		
 		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" + tableStr;
 		
