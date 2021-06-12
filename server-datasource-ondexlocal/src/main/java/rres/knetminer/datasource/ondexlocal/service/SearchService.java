@@ -164,7 +164,7 @@ public class SearchService
 				return hit2score;
 			}
 			
-			log.info ( "No keyword, skipping Lucene stage, using mapGene2Concept instead" );
+			log.info ( "No keyword, skipping Lucene stage, using genes2Concepts instead" );
 			for ( ONDEXConcept gene : geneList )
 			{
 				if ( gene == null ) continue;
