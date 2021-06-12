@@ -339,6 +339,7 @@ public class SearchService
 
 
 		// 2nd step: calculate a score for each candidate gene
+		//
 		ConcurrentMap<ONDEXConcept, Double> scoredCandidates =  new ConcurrentHashMap<> ();
 
 		gene2HitConcepts.keySet ().

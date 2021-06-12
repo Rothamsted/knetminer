@@ -22,7 +22,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
@@ -787,9 +789,15 @@ public class ExportService
 		DecimalFormat sfmt = new DecimalFormat ( "0.00" );
 		DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
 
-		for ( ONDEXConcept foundConcept : foundConcepts.keySet () )
+		// final proxies needed withing lambdas
+		final var foundConceptsRo = foundConcepts;
+		final var userGenesRo = userGenes;
+		
+		foundConcepts.keySet () 
+		.parallelStream ()
+		.forEach ( (ONDEXConcept foundConcept) -> 
 		{
-			double score = 1d * foundConcepts.get ( foundConcept );
+			double score = 1d * foundConceptsRo.get ( foundConcept );
 			
 			if ( foundConcept instanceof LuceneConcept )
 				foundConcept = ((LuceneConcept) foundConcept).getParent ();
@@ -799,7 +807,7 @@ public class ExportService
 			
 			// We don't want these in the evidence view 
 			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( foundType ) ) ) 
-				continue;
+				return;
 
 			String foundName = KGUtils.getMolBioDefaultLabel ( foundConcept );
 
@@ -807,38 +815,45 @@ public class ExportService
 			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 			
 			Integer ondexId = foundConcept.getId ();
-			if ( !concepts2Genes.containsKey ( ondexId ) ) continue;
+			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
 			
 			Set<Integer> startGeneIds = concepts2Genes.get ( ondexId );
 			Integer startGenesSize = startGeneIds.size ();
 			
-			Set<String> userGeneLabels = new HashSet<> ();
-			Integer qtlsSize = 0;
+			Set<String> userGeneLabels = ConcurrentHashMap.newKeySet ();
+			var qtlsSize = new AtomicInteger ( 0 );
 
 			// Consider the genes to which this concept is related
 			//
-			for ( int startGeneId : startGeneIds )
+			startGeneIds.parallelStream ()
+			.forEach ( (Integer startGeneId) ->
 			{
 				ONDEXConcept startGene = graph.getConcept ( startGeneId );
 				var geneHelper = new GeneHelper ( graph, startGene );
 				
-				if ( startGene != null && userGenes.contains ( startGene ) )
+				if ( startGene != null && userGenesRo.contains ( startGene ) )
 					userGeneLabels.add ( geneHelper.getBestAccession () );
 
-				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize++;
+				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 
 				String chr = geneHelper.getChromosome ();
 				int beg = geneHelper.getBeginBP ( true );
-									
-				for ( QTL loci : qtls )
-				{
+					
+				
+				// Count the matching QTLs
+				//
+				int matchingQtls = (int) qtls.parallelStream ()
+				.filter ( (QTL loci) -> {
 					String qtlChrom = loci.getChromosome ();
 					Integer qtlStart = loci.getStart ();
 					Integer qtlEnd = loci.getEnd ();
-
-					if ( qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd ) qtlsSize++;
-				}
-			} // for searchedGeneId
+					return qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd;
+				})
+				.count ();
+				
+				if ( matchingQtls > 0 ) qtlsSize.addAndGet ( matchingQtls );
+				
+			}); // for searchedGeneId
 
 			
 			// quick adjustment to the score to make it a P-value from F-test instead
@@ -863,7 +878,7 @@ public class ExportService
 				"pvalue", pvalue,
 				"genesSize", startGenesSize,
 				"userGeneLabels", userGeneLabels,
-				"qtlsSize", qtlsSize,
+				"qtlsSize", qtlsSize.get (),
 				"ondexId", ondexId
 			));			
 			results.add ( result );
@@ -872,9 +887,9 @@ public class ExportService
 			if ( hasMatchingUserGenes.isFalse () && !userGeneLabels.isEmpty () ) 
 				hasMatchingUserGenes.setTrue ();
 			
-		} // for foundConcepts()
+		}); // for foundConcepts()
 		
-		
+				
 		String tableStr = 
 		results.stream ()
 		.filter ( result -> {
@@ -904,6 +919,8 @@ public class ExportService
 		
 		// Required by the client TSV reader
 		if ( !tableStr.isEmpty () ) tableStr += "\n";
+		
+		log.info ( "Returning {} row(s) for the evidence table", results.size () );
 		
 		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" + tableStr;
 		
