@@ -184,7 +184,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var exportService = ondexServiceProvider.getExportService ();
 		
 		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords( request.getList() ) );
 			log.info("Number of user provided genes: " + userGenes.size());
 		}
 		
@@ -192,27 +192,41 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() ) {
 			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl() ) );
 		}
-		if ( userGenes.isEmpty() ) userGenes = null;
 
 		
 		// Genome search
-		log.info ( "Search mode: {}", response.getClass().getName() );
+		log.info ( "Processing search mode: {}", response.getClass().getName() );
 						
 		Hits qtlnetminerResults = new Hits ( request.getKeyword(), ondexServiceProvider, userGenes );
-		Map<ONDEXConcept, Double> candidateGenesMap = qtlnetminerResults.getSortedCandidates();
-		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
-		Stream<ONDEXConcept> genesStream = candidateGenes.parallelStream ();
+
+		Map<ONDEXConcept, Double> candidateGenesMap = Map.of();
+		Stream<ONDEXConcept> genesStream = Stream.of ();
+
 		
 		if (response.getClass().equals( GenomeResponse.class ) || response.getClass().equals ( QtlResponse.class ) )
 		{
 			log.info ( "Computing response to /genome or /qtl" );
 
-			if (userGenes != null)
+			candidateGenesMap = qtlnetminerResults.getSortedCandidates();
+			Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
+			genesStream = candidateGenes.parallelStream ();
+			
+			if ( !userGenes.isEmpty () )
 			{
 				log.info ( "Filtering {} user genes from {} candidate gene(s)", userGenes.size (), candidateGenes.size() );
 
+				/* TODO: remove. If I get this right, it's computing this:
+				 * 
+				 *  filtered = candidate intersection user
+				 *  lowScore = user \ candidates
+				 *  final = candidate int user U ( user \ candidates ) => user
+				 *  
+				 *  Note that the version with streams is a parallel translation of the original code, which
+				 *  was using sequential iterations
+				 *  
+				 
 				// Filter by user-provided list
-				Stream<ONDEXConcept> filteredGenes = candidateGenes.parallelStream ()
+				Stream<ONDEXConcept> filteredGenes = genesStream
 					.filter ( userGenes::contains );
 					
 				// And re-add missing user-genes (which possibly, didn't score well)
@@ -220,6 +234,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 					.filter ( userGene -> !candidateGenes.contains ( userGene ) );
 						
 				genesStream = Stream.concat ( filteredGenes, lowScoreGenes );
+				*/
+				
+				genesStream = userGenes.parallelStream ();
 
 				// TODO: log.info("Using user gene list, genes: " + genes.size());
 			
@@ -248,6 +265,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// TODO: A few functions below want a list, but these don't seem ordered or duped
 		List<ONDEXConcept> genes =  new ArrayList<> ( genesMap.keySet () );
 				
+		
 		if ( genes.size() > 0 ) 
 		{
 			String xmlGViewer = "";
