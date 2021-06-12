@@ -377,10 +377,7 @@ public class ExportService
 		var scoredCandidates = Optional.ofNullable ( searchResult.getRelatedConcept2Score () )
 			.orElse ( Collections.emptyMap () );			
 		
-		// Removed ccSNP from Geneview table (12/09/2017)
-		// AttributeName attSnpCons = md.getAttributeName("Transcript_Consequence");
-		// ConceptClass ccSNP = md.getConceptClass("SNP");
-	
+		
 		StringBuffer out = new StringBuffer ();
 		out.append ( "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
 		for ( ONDEXConcept gene : candidateGenes )
@@ -396,9 +393,9 @@ public class ExportService
 			boolean isInList = userGeneIds.contains ( gene.getId () );
 	
 			List<String> infoQTL = new LinkedList<> ();
-			for ( Integer cid : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
+			for ( Integer qtlConceptId : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
 			{
-				ONDEXConcept qtl = graph.getConcept ( cid );
+				ONDEXConcept qtl = graph.getConcept ( qtlConceptId );
 	
 				/*
 				 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
@@ -406,14 +403,14 @@ public class ExportService
 				 */
 				if ( qtl == null )
 				{
-					log.error ( "writeTable(): no gene found for id: ", cid );
+					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
 					continue;
 				}
 				String acc = Optional.ofNullable ( qtl.getConceptName () )
 					.map ( ConceptName::getName )
 					.map ( StringEscapeUtils::escapeCsv )
 					.orElseGet ( () -> {
-						log.error ( "writeTable(): gene name not found for id: {}", cid );
+						log.error ( "exportTable(): gene name not found for id: {}", qtlConceptId );
 						return "";
 					});
 	
@@ -436,8 +433,7 @@ public class ExportService
 			
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
-	
-			
+
 			
 			// group related concepts by their type and map each concept to its best label
 			//
@@ -458,7 +454,7 @@ public class ExportService
 			//
 			Set<ONDEXConcept> allPubs = luceneHits.stream ()
 				.map ( graph::getConcept )
-				.filter ( c -> "Publication".equals ( c.getOfType ().getId () ) )
+				.filter ( relatedConcept -> "Publication".equals ( relatedConcept.getOfType ().getId () ) )
 				.collect ( Collectors.toSet () );
 			
 			AttributeName attYear = getAttributeName ( graph, "YEAR" );
