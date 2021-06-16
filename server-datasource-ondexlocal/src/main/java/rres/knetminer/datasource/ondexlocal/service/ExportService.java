@@ -411,11 +411,12 @@ public class ExportService
 					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
 					continue;
 				}
+				
 				String acc = Optional.ofNullable ( qtl.getConceptName () )
 					.map ( ConceptName::getName )
 					.map ( StringEscapeUtils::escapeCsv )
 					.orElseGet ( () -> {
-						log.error ( "exportTable(): gene name not found for id: {}", qtlConceptId );
+						log.error ( "exportGeneTable(): gene name not found for id: {}", qtlConceptId );
 						return "";
 					});
 	
