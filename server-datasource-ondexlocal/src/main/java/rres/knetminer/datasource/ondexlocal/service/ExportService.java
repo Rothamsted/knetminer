@@ -361,7 +361,7 @@ public class ExportService
 		String listMode,  SemanticMotifsSearchResult searchResult 
 	)
 	{
-		log.info ( "Exporting gene table..." );
+		log.info ( "Exporting gene table" );
 		
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 	  var graph = dataService.getGraph ();
@@ -462,6 +462,8 @@ public class ExportService
 				.filter ( relatedConcept -> "Publication".equals ( relatedConcept.getOfType ().getId () ) )
 				.collect ( Collectors.toSet () );
 			
+			var allPubSize = allPubs.size (); // we want this to be shown, despite the filter
+			
 			AttributeName attYear = getAttributeName ( graph, "YEAR" );
 			List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 				allPubs, 
@@ -492,7 +494,8 @@ public class ExportService
 				// Here we spawn each string in a ||-delimited block
 				String ccId = cc2Labels.getKey ();
 				List<String> labels = cc2Labels.getValue ();
-				return ccId + "__" + labels.size () + "__" + String.join ( "//", labels );
+				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : labels.size (); 
+				return ccId + "__" + reportedSize + "__" + String.join ( "//", labels );
 			})
 			// And then we join all the per-CC strings 
 			.collect ( Collectors.joining ( "||" ) );
@@ -510,7 +513,7 @@ public class ExportService
 			);
 	
 		} // for candidates
-		log.info ( "Gene table generated..." );
+		log.info ( "Gene table generated" );
 		return out.toString ();
 	
 	} // exportGeneTable()
