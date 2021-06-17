@@ -182,7 +182,7 @@ function matchCounter() {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
                 $('#matchesResultDiv').html('<span class="redText">'+errorMsg+'</span>');
-                //console.log(errorMsg);
+                console.log(server_error.detail); // detailed stacktrace
             });
         } else {
             $('#matchesResultDiv').html('');
@@ -814,7 +814,7 @@ function searchKeyword() {
                              $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
                              var server_error= JSON.parse(xhr.responseText); // full error json from server
                              var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
-                             console.log(errorMsg);
+                             console.log(server_error.detail);
                              alert(errorMsg);
                                              // Remove loading spinner from 'search' div
                                              deactivateSpinner("#search");
@@ -1027,7 +1027,7 @@ function generateCyJSNetwork(url, requestParams) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
 		// deactivateSpinner("#tabviewer");
-                console.log(errorMsg);
+                console.log(server_error.detail);
                 alert(errorMsg);
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
