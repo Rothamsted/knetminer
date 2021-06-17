@@ -82,7 +82,7 @@
 			Used to add the number of publications one wants visibly exported in the KnetMiner instance, default set at 20,
 			edit this, or pass a mvn arg for it, to ammend it to a greater, or lesser, value.
 		-->
-		<knetminer.backend.defaultExportedPublicationCount>20</knetminer.backend.defaultExportedPublicationCount>
+		<knetminer.backend.defaultExportedPublicationCount>100</knetminer.backend.defaultExportedPublicationCount>
 
 		
 		<!-- 
