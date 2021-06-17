@@ -177,8 +177,12 @@ function matchCounter() {
 				  // hide query suggestor icon
 				  $('#suggestor_search').css('display', 'none');
 				}
-            }).fail(function () {
-                $('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
+            }).fail(function (xhr,status,errorlog) {
+                //$('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
+                var server_error= JSON.parse(xhr.responseText); // full error json from server
+                var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
+                $('#matchesResultDiv').html('<span class="redText">'+errorMsg+'</span>');
+                //console.log(errorMsg);
             });
         } else {
             $('#matchesResultDiv').html('');
@@ -809,7 +813,7 @@ function searchKeyword() {
                          .fail(function (xhr,status,errorlog) {
                              $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
                              var server_error= JSON.parse(xhr.responseText); // full error json from server
-                             var errorMsg= "Search failed.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title +"\n\nPlease use valid keywords, gene IDs or QTLs.";
+                             var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
                              console.log(errorMsg);
                              alert(errorMsg);
                                              // Remove loading spinner from 'search' div
@@ -1015,7 +1019,7 @@ function generateCyJSNetwork(url, requestParams) {
         //beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= "Failed to render knetwork.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title;
+                var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
 		// deactivateSpinner("#tabviewer");
                 console.log(errorMsg);
                 alert(errorMsg);
