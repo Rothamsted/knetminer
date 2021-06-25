@@ -3,7 +3,7 @@ name: Standard Build
 on:
   schedule:
   #  m h d M wd(MON-SUN)
-  - cron: "0 12 * * *"
+  - cron: "0 11 * * *"
   
   workflow_dispatch:
     inputs:
