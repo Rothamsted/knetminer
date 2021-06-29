@@ -1503,12 +1503,13 @@ function createEvidenceTable(text, keyword) {
             table = table + '<td>' + values[3] + '</td>';
 
             // all genes
-            if(values[4] < 500) {
+            /*if(values[4] < 500) {
                 table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
                }
             else {
                 table = table + '<td>' + values[4] + '</td>';
-            }
+            }*/
+            table = table + '<td>' + values[4] + '</td>';
 
 
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
