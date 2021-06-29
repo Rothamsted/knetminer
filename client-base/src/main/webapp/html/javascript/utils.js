@@ -1470,7 +1470,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '<th width="75">Omit/Add</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
         table = table + '<th width="212">DESCRIPTION</th>';
-        table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
+        //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78">' + header[3] + '</th>';
         table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
         table = table + '<th width="103">' + header[5] + '</th>';
@@ -1499,7 +1499,7 @@ function createEvidenceTable(text, keyword) {
 
             table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
-            table = table + '<td>' + values[2] + '</td>';
+            //table = table + '<td>' + values[2] + '</td>';
             table = table + '<td>' + values[3] + '</td>';
 
             // all genes
