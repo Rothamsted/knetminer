@@ -1456,9 +1456,13 @@ function createEvidenceTable(text, keyword) {
     if (evidenceTable.length > 2) {
         // Evidence View: interactive legend for evidences.
         var evi_legend= getEvidencesLegend(text);
+        var utf8Bytes = "";
+        utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+          });
         
         table = '';
-        table = table + '<p></p>';
+        table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
         //table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
         // display dynamic Evidence Summary legend above Evidence View.
         table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
