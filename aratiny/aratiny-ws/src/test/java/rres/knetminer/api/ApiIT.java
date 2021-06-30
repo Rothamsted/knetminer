@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -52,6 +54,7 @@ public class ApiIT
 		clog.info ( "Making a pause to give the server time to initialise." );
 		Thread.sleep ( 10 * 1000 );
 	}
+	
 	
 	@Test
 	public void testCountHits () throws JSONException, IOException, URISyntaxException {
@@ -120,7 +123,130 @@ public class ApiIT
 			testGenome ( "flowering FLC FT", expectedGeneLabel, "AT1G63650", "aBi?", "MYB*" )
 		);
 	}
+
 	
+	@Test
+	public void testEvidence ()
+	{
+		JSONObject js = invokeApi ( "genome", "keyword", "flowering" );
+		assertNotNull ( "No JSON returned!", js );
+		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
+		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
+		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
+		
+		var rows = List.of ( evidenceTable.split ( "\n" ) );
+		var rowFound = rows.stream ().anyMatch ( 
+			row -> row.contains ( "Phenotype\tEARLY FLOWERING COMPARED TO...\t4.28\t0.00000\t3\t\t0\t697" ) 
+		);
+		assertTrue ( "Expected evidence table row not found!", rowFound );
+	}
+	
+	@Test
+	public void testEvidenceFilters ()
+	{
+		JSONObject js = invokeApi ( 
+			"genome", 
+			"keyword", "\"cell size\" OR \"cell division\" OR \"cell cycle\"",
+			"list", new String [] { "At4g18330", "ABI*" }
+		);
+		assertNotNull ( "No JSON returned!", js );
+		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
+		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
+		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
+		
+		var rows = List.of ( evidenceTable.split ( "\n" ) );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 2, rows.size () );
+		
+		var rowFound = rows.stream ().anyMatch ( 
+			row -> row.matches ( 
+				"CelComp\tcytoskeleton\t2\\.04\t0\\.01049\t11\t((AT4G26080|AT3G24650|AT2G40220|AT5G57050)\\,?){4}\t0\t1639" 
+			) 
+		);
+		assertTrue ( "Expected evidence table row not found!", rowFound );
+	}
+	
+
+	
+	
+	@Test
+	public void testBadCallError ()
+	{
+		JSONObject js = invokeApiFailOpt ( "foo", false );
+		assertEquals ( 
+			"Bad type for the /foo call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2",
+			js.getString ( "type" )
+		);
+		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
+		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
+		assertEquals ( 
+			"Bad path for the /foo call!",
+			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/foo", js.getString ( "path" )
+		);
+		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
+		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
+	}
+	
+	@Test
+	public void testBadParametersCallError ()
+	{
+		/*
+			{
+				"title" : "Bad parameters passed to the API call 'countHits': Internal error while searching over Ondex index: 
+				  Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery (HTTP 400 BAD_REQUEST)",
+				"type" : "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2",
+				"status" : 400,
+   			"statusReasonPhrase" : "Bad Request",				
+				"path" : "http://localhost:9090/ws/aratiny/countHits",
+   			"detail" : "<the whole stack trace>"
+			}
+		 */
+		JSONObject js = invokeApiFailOpt ( "countHits", false, "keyword", "*" );
+		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
+		assertEquals ( "Bad type for the /countHits call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2", js.getString ( "type" ) );
+		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
+		assertTrue (
+			"Bad title for the /countHits call!", 
+			js.getString ( "title" )
+			.contains ( "Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery" )
+		);
+		assertEquals ( 
+			"Bad path for the /countHits call!",
+			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
+		);
+		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
+		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
+	}
+	
+	@Test
+	public void testForbiddenEx ()
+	{
+		// in this mode it might return a regular answer, not an error
+		if ( "console".equals ( getMavenProfileId () ) ) return;
+		
+		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/cydebug/traverser/report";
+		JSONObject js = invokeApiFailOpt ( url, false );
+		assertEquals ( 
+			"Bad type for the /cydebug call!",
+			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
+			js.getString ( "type" )
+		);
+		assertEquals ( "Bad status for the /cydebug call!", 403, js.getInt ( "status" ) );
+		assertTrue (
+			"Bad title for the /cydebug call!",
+			js.getString ( "title" ).contains (
+				"Unauthorized. Knetminer must be built with knetminer.backend.cypherDebugger.enabled for this to work"
+			)
+		);
+		assertEquals ( "Bad path for the /cydebug call!", url, js.getString ( "path" ) );
+		assertTrue (
+			"Bad detail for the /cydebug call!",
+			js.getString ( "detail" ).contains (
+				"ForbiddenException: Unauthorized. Knetminer must be built with knetminer.backend"
+			)
+		);
+		assertEquals ( "Bad statusReasonPhrase for the /cydebug call!", "Forbidden", js.getString ( "statusReasonPhrase" ) );
+	}	
+
 	
 	/**
 	 * Invokes {@code /genome?keyword=XXX&qtl=}, then verifies the result
@@ -151,7 +277,9 @@ public class ApiIT
 			"Gene " + expectedGeneLabel + " not returned by /genome", 
 			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
-	}
+	}	
+	
+	
 	
 	/**
 	 * Defaults to true
@@ -162,9 +290,8 @@ public class ApiIT
 	 */
 	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
 	{
-		return invokeApi ( urlOrCallName, true, jsonFields );
+		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
 	}
-
 	
 	/**
 	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
@@ -174,7 +301,7 @@ public class ApiIT
 	 * @param jsonFields appended to the HTTP request.
 	 * 
 	 */
-	public static JSONObject invokeApi ( String urlOrCallName, boolean failOnError, Object... jsonFields )
+	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
 	{
 		String url = urlOrCallName.startsWith ( "http://" )
 			? urlOrCallName 
@@ -215,76 +342,6 @@ public class ApiIT
 				ex.getMessage ()
 			);
 		}
-	}
-
-	@Test
-	public void testBadCallError ()
-	{
-		JSONObject js = invokeApi ( "foo", false, new Object[ 0 ] );
-		assertEquals ( "Bad type for the /foo call!", "org.springframework.web.client.HttpClientErrorException", js.getString ( "type" ) );
-		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );
-		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
-		assertEquals ( 
-			"Bad path for the /foo call!",
-			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/foo", js.getString ( "path" )
-		);
-		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
-		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
-	}
-	
-	@Test
-	public void testBadParametersCallError ()
-	{
-		/*
-			{
-				"status" : 500,
-				"detail" : "<the whole stack trace>"
-				"title" : "Application error while running countHits: null",
-				"statusReasonPhrase" : "Internal Server Error",
-				"path" : "http://localhost:9090/ws/aratiny/countHits",
-				"type" : "java.lang.RuntimeException"
-			}		 
-		 */
-		JSONObject js = invokeApi ( "countHits", false, new Object[ 0 ] );
-		assertEquals ( "Bad type for the /countHits call!", "java.lang.RuntimeException", js.getString ( "type" ) );
-		assertEquals ( "Bad status for the /countHits call!", 500, js.getInt ( "status" ) );
-		assertTrue ( "Bad title for the /countHits call!", js.getString ( "title" ).contains ( "Application error while running countHits: null" ) );
-		assertEquals ( 
-			"Bad path for the /countHits call!",
-			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
-		);
-		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
-		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Internal Server Error", js.getString ( "statusReasonPhrase" ) );
-	}
-	
-	@Test
-	public void testForbiddenEx ()
-	{
-		// in this mode it might return a regular answer, not an error
-		if ( "console".equals ( getMavenProfileId () ) ) return;
-		
-		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/cydebug/traverser/report";
-		JSONObject js = invokeApi ( url, false, new Object[ 0 ] );
-		assertEquals ( 
-			"Bad type for the /cydebug call!",
-			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
-			js.getString ( "type" )
-		);
-		assertEquals ( "Bad status for the /cydebug call!", 403, js.getInt ( "status" ) );
-		assertTrue (
-			"Bad title for the /cydebug call!",
-			js.getString ( "title" ).contains (
-				"Unauthorized. Knetminer must be built with knetminer.backend.cypherDebugger.enabled for this to work"
-			)
-		);
-		assertEquals ( "Bad path for the /cydebug call!", url, js.getString ( "path" ) );
-		assertTrue (
-			"Bad detail for the /cydebug call!",
-			js.getString ( "detail" ).contains (
-				"ForbiddenException: Unauthorized. Knetminer must be built with knetminer.backend"
-			)
-		);
-		assertEquals ( "Bad statusReasonPhrase for the /cydebug call!", "Forbidden", js.getString ( "statusReasonPhrase" ) );
 	}	
 	
 	

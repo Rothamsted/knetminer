@@ -7,9 +7,6 @@
 
 echo -e "\n\n\tGoal '$MAVEN_GOAL' via Docker bare image\n"
 
-# Invalidate the cache. TODO: remove!
-rm -Rf ~/.m2/repository
-
 docker run -i --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \

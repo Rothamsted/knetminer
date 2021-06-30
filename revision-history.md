@@ -1,12 +1,13 @@
 # Revision History
 
-*This file was last reviewed on 6/5/2021*
+*This file was last reviewed on 9/6/2021*
 
 # 5.0-SNAPSHOT
 
 * Updates and additions to datasets (covid-19, tomato, potato).
 * Migration to Java 11. **Now you do need Java >= 11 to make knetminer working** If you use Docker, our images
   use the right Java version automatically.
+* Wildcards support in the Gene List Search box (eg, 'MYB*', 'TT?')
 
 ## Internals
 * Significant review of the codebase file structure and names.

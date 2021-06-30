@@ -177,8 +177,12 @@ function matchCounter() {
 				  // hide query suggestor icon
 				  $('#suggestor_search').css('display', 'none');
 				}
-            }).fail(function () {
-                $('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
+            }).fail(function (xhr,status,errorlog) {
+                //$('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
+                var server_error= JSON.parse(xhr.responseText); // full error json from server
+                var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
+                $('#matchesResultDiv').html('<span class="redText">'+errorMsg+'</span>');
+                console.log(server_error.detail); // detailed stacktrace
             });
         } else {
             $('#matchesResultDiv').html('');
@@ -809,8 +813,8 @@ function searchKeyword() {
                          .fail(function (xhr,status,errorlog) {
                              $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
                              var server_error= JSON.parse(xhr.responseText); // full error json from server
-                             var errorMsg= "Search failed.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title +"\n\nPlease use valid keywords, gene IDs or QTLs.";
-                             console.log(errorMsg);
+                             var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
+                             console.log(server_error.detail);
                              alert(errorMsg);
                                              // Remove loading spinner from 'search' div
                                              deactivateSpinner("#search");
@@ -882,6 +886,8 @@ function searchKeyword() {
                                        var count_linked= countLinkedUserGenes(data.geneTable);
                                        var count_unlinked= results - count_linked;
                                        var count_notfound= geneList_size - count_linked - count_unlinked;
+                                       // for wildcard in genelist when all matches will be found
+                                       if(results === (count_linked+count_unlinked)) { count_notfound=0; }
                                        if(count_notfound === 0) {
                                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                                          }
@@ -899,6 +905,8 @@ function searchKeyword() {
                                     var count_linked= countLinkedUserGenes(data.geneTable);
                                     var count_unlinked= results - count_linked;
                                     var count_notfound= geneList_size - count_linked - count_unlinked;
+                                    // for wildcard in genelist when all matches will be found
+                                    if(results === (count_linked+count_unlinked)) { count_notfound=0; }
                                     if(count_notfound === 0) {
                                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                                       }
@@ -916,6 +924,8 @@ function searchKeyword() {
                                        var count_linked= countLinkedUserGenes(data.geneTable);
                                        var count_unlinked= results - count_linked;
                                        var count_notfound= geneList_size - count_linked - count_unlinked;
+                                       // for wildcard in genelist when all matches will be found
+                                       if(results === (count_linked+count_unlinked)) { count_notfound=0; }
                                        if(count_notfound === 0) {
                                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
                                          }
@@ -1015,9 +1025,9 @@ function generateCyJSNetwork(url, requestParams) {
         //beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= "Failed to render knetwork.\n\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\n\t"+ server_error.title;
+                var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
 		// deactivateSpinner("#tabviewer");
-                console.log(errorMsg);
+                console.log(server_error.detail);
                 alert(errorMsg);
         }).success(function (data) {
 			// Remove loading spinner from 'tabviewer' div
@@ -1446,9 +1456,13 @@ function createEvidenceTable(text, keyword) {
     if (evidenceTable.length > 2) {
         // Evidence View: interactive legend for evidences.
         var evi_legend= getEvidencesLegend(text);
+        var utf8Bytes = "";
+        utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+          });
         
         table = '';
-        table = table + '<p></p>';
+        table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
         //table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
         // display dynamic Evidence Summary legend above Evidence View.
         table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
@@ -1460,7 +1474,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '<th width="75">Omit/Add</th>';
         table = table + '<th width="50">' + header[0] + '</th>';
         table = table + '<th width="212">DESCRIPTION</th>';
-        table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
+        //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78">' + header[3] + '</th>';
         table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
         table = table + '<th width="103">' + header[5] + '</th>';
@@ -1489,16 +1503,17 @@ function createEvidenceTable(text, keyword) {
 
             table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
-            table = table + '<td>' + values[2] + '</td>';
+            //table = table + '<td>' + values[2] + '</td>';
             table = table + '<td>' + values[3] + '</td>';
 
             // all genes
-            if(values[4] < 500) {
+            /*if(values[4] < 500) {
                 table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
                }
             else {
                 table = table + '<td>' + values[4] + '</td>';
-            }
+            }*/
+            table = table + '<td>' + values[4] + '</td>';
 
 
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)

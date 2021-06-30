@@ -55,8 +55,8 @@ public class OndexServiceProvider
 	@Autowired
 	private ExportService exportService;
 	
-	private AtomicBoolean isInitialisingData = new AtomicBoolean ( false );
-	
+	private AtomicBoolean isInitializingData = new AtomicBoolean ( false );
+	private Exception initException = null;
 	
 	private static volatile AbstractApplicationContext springContext;
 	
@@ -100,13 +100,21 @@ public class OndexServiceProvider
 	/**
 	 * @throws NotReadyException as explained in {@link #initData(String, Supplier)}, if the current instance is 
 	 * initialising its data, this is exception is thrown and the invoker should try again later.
+	 * 
+	 * @throws RuntimeException if {@link #initData()} failed with an exception (which is wrapped by the one returned
+	 * here). 
 	 */
 	public static OndexServiceProvider getInstance () 
 	{
 		initSpring ();
 		var instance = springContext.getBean ( OndexServiceProvider.class );
-		if ( instance.isInitialisingData.get () ) 
+		if ( instance.isInitializingData.get () ) 
 			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try again later" );
+		if ( instance.initException != null ) throw new RuntimeException ( 
+			"Ondex/Knetminer failed to initialise due to: " + instance.initException.getMessage (),
+			instance.initException
+		);
+		
 		return instance;
 	}
   
@@ -145,10 +153,12 @@ public class OndexServiceProvider
 	 */
 	public void initData ( String configXmlPath )
 	{
-		this.isInitialisingData.getAndSet ( true );
+		this.isInitializingData.getAndSet ( true );
 		try
 		{
 			log.info ( "Starting Ondex/Knetminer data initialization" );
+			
+			this.initException = null;
 			
 			if ( configXmlPath != null )
 				this.dataService.loadOptions ( configXmlPath );
@@ -166,10 +176,15 @@ public class OndexServiceProvider
 			this.semanticMotifDataService.initSemanticMotifData ();
 			
 			this.exportService.exportGraphStats ();
+
 			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
+		catch ( Exception ex ) {
+			log.error ( "Ondex Data initialisation failed: " + ex.getMessage (), ex );
+			this.initException = ex;
+		}
 		finally {
-			this.isInitialisingData.getAndSet ( false );
+			this.isInitializingData.getAndSet ( false );
 		}
 	}
 	
@@ -190,8 +205,9 @@ public class OndexServiceProvider
 	/**
 	 * @see #initData(String, Supplier).
 	 */
-	public boolean isInitialisingData ()
+	public boolean isInitializingData ()
 	{
-		return isInitialisingData.get ();
+		return isInitializingData.get ();
 	}
+	
 }

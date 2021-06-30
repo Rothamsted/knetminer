@@ -2,6 +2,7 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -105,17 +106,53 @@ public class SearchUtils
    * one concept field eg. name, description and attribute. It will ensure that the highest
    * Lucene score is used in the Gene Rank.
    *
-   * @param hit2score map that holds all hits and scores
+   * @param hit2scoreResult the result of the merge. This always contains OndexConcept instances (not LuceneConcept)
    * @param sHits map that holds search results
+   * @param exclusionHits concepts to be excluded from the result, can be null
    */
   public static void mergeHits ( 
-  	Map<ONDEXConcept, Float> hit2score, ScoredHits<ONDEXConcept> sHits, ScoredHits<ONDEXConcept> notHits
+  	Map<ONDEXConcept, Float> hit2scoreResult, ScoredHits<ONDEXConcept> sHits, ScoredHits<ONDEXConcept> exclusionHits
   )
 	{
-  	sHits.getOndexHits ().stream ()
-  	.filter ( c -> notHits == null || !notHits.getOndexHits ().contains ( c ) )
-  	.map ( c -> c instanceof LuceneConcept ? ( (LuceneConcept) c ).getParent () : c )
-  	.forEach ( c -> hit2score.merge ( c, sHits.getScoreOnEntity ( c ), Math::max ) );
+  	var exclusions = Optional.ofNullable ( exclusionHits )
+  		.map ( ScoredHits::getOndexHits )
+  		.orElse ( Set.of () );
+  	var hasExclusions = !exclusions.isEmpty ();
+
+  	// Usually the notHits contains LuceneConcept only, but just in case
+  	var hasLuceneExclusions = hasExclusions 
+  			&& exclusions.iterator ().next () instanceof LuceneConcept; 
+  	
+  	sHits.getOndexHits ()
+  	.stream ()
+  	.filter ( c ->
+  	{
+  		if ( !hasExclusions ) return true;
+  		if ( hasLuceneExclusions )
+  		{
+  			if ( !( c instanceof LuceneConcept) ) throw new IllegalArgumentException ( 
+  				"Can't merge lucene hits that aren't LuceneConcept instances" 
+  			);
+  		}
+  		else
+  			// exclusions are based on OndexConcept, extract the OndexConcept if not already done
+  			if ( c instanceof LuceneConcept ) c = ((LuceneConcept) c).getParent ();
+
+  		// Now we can compare
+			return !exclusions.contains ( c );
+  	})
+  	.forEach ( c ->
+  	{ 
+  		var score = sHits.getScoreOnEntity ( c );
+  		if ( c instanceof LuceneConcept )
+  		{ 
+  			// Results are always OndexConcept
+  			c = ( (LuceneConcept) c ).getParent ();
+    		// sHits usually contains Lucene concepts, but just in case
+    		if ( score == -1 ) score = sHits.getScoreOnEntity ( c );
+  		}
+  		hit2scoreResult.merge ( c, score, Math::max ); 
+  	});
 	}	
 	
     

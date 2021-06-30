@@ -3,7 +3,7 @@ name: Standard Build
 on:
   schedule:
   #  m h d M wd(MON-SUN)
-  - cron: "0 7 * * *"
+  - cron: "0 12 * * *"
   
   workflow_dispatch:
     inputs:
@@ -39,8 +39,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        key: ${{ runner.os }}-m2-v2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2-v2-
 
     - name: Build
       env:

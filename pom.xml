@@ -82,14 +82,14 @@
 			Used to add the number of publications one wants visibly exported in the KnetMiner instance, default set at 20,
 			edit this, or pass a mvn arg for it, to ammend it to a greater, or lesser, value.
 		-->
-		<knetminer.backend.defaultExportedPublicationCount>20</knetminer.backend.defaultExportedPublicationCount>
+		<knetminer.backend.defaultExportedPublicationCount>100</knetminer.backend.defaultExportedPublicationCount>
 
 		
 		<!-- 
 			TODO: this appears to be the dataset version, Knetminer version should be ${project.version}.
 			It requires renaming to avoid confusion. 
 		-->
-		<knetminer.version>48</knetminer.version>
+		<knetminer.version>51</knetminer.version>
 		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<!-- TODO: What's the difference between this and provider?! -->
 		<knetminer.sourceOrganization>${knetminer.provider}</knetminer.sourceOrganization>
@@ -470,7 +470,7 @@
 	  	<!-- This is needed to let Maven find the parent POM -->
 			<id>knetminer-repo</id>
 			<name>Knetminer Unified Repository</name>
-			<url>https://knetminer.org/artifactory/repository/maven-public</url>
+			<url>https://knetminer.com/artifactory/repository/maven-public</url>
 			<snapshots><enabled>true</enabled></snapshots>
 			<releases><enabled>true</enabled></releases>
 	  </repository>
@@ -645,7 +645,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.5.7</version>
+				<version>4.5.13</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>

@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.server;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import rres.knetminer.datasource.api.KnetminerExceptionResponse;
+import uk.ac.ebi.utils.exceptions.NotReadyException;
 
 /**
  * Generic Exception handler for Knetminer.
@@ -41,17 +44,37 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	private final Logger log = LogManager.getLogger ( this.getClass () );
 	
 	/**
+	 * Maps known exceptions to HTTP statuses. This is scanned in the order you define the classes
+	 * and that MUST be from the most specific one to the more generic.
+	 * 
+	 */
+	@SuppressWarnings ( "serial" )
+	private static final Map<Class<? extends Exception>, HttpStatus> MAPPED_EXCEPTIONS = new LinkedHashMap<> () 
+	{{
+		this.put ( NotReadyException.class, HttpStatus.SERVICE_UNAVAILABLE );
+	}};
+	
+	/**
 	 * This manages a response for all the other methods that receive some exception to return. 
 	 * We set the response with a {@link KnetminerExceptionResponse} and its status code with the one
 	 * received here. 
 	 * 
-	 * @param body is ignored, since we always return {@link KnetminerExceptionResponse}, it's always null anyway.
+	 * @param body is ignored, since we always return {@link KnetminerExceptionResponse}. In the parent class, it's always 
+	 * null anyway.
+	 * 
+	 * @param headers is set to a new {@link HttpHeaders} if null.
+	 * 
+	 * @param status if this is non-null, and >= 400, it uses it for the response, if it's < 400, it 
+	 * sets the response with {@link HttpStatus#INTERNAL_SERVER_ERROR} (because having an exception with a lower 
+	 * status doesn't make sense).
 	 * 
 	 */
 	@Override
 	protected final ResponseEntity<Object> handleExceptionInternal ( 
 		Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request )
 	{
+		if ( headers == null ) headers = new HttpHeaders ();
+		
 		if ( status == null || status.value () < 400 )
 			// We're dealing with an exception, so it cannot be less than that, override the original code
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -64,14 +87,28 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 		log.error ( "Returning exception from web request processing, HTTP status: '" + status.toString () + "'", ex );
 		return super.handleExceptionInternal ( ex, response, headers, status, request );
 	}
+	
+	/**
+	 * This is an extended version that we use internally.
+	 */
+	@SuppressWarnings ( "unchecked" )
+	private ResponseEntity<KnetminerExceptionResponse> handleExceptionInternal (
+		Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request, HttpServletResponse response
+	)
+	{
+		return (ResponseEntity<KnetminerExceptionResponse>) (ResponseEntity<?>) 
+			this.handleExceptionInternal ( ex, null, headers, status, request );
+	}
+	
 
 	/**
 	 * This checks if the generic exception class is annotated with {@link ResponseStatus} and uses the specified
-	 * status code if present. Else, let {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatus, WebRequest)}
-	 * to set a generic {@link HttpStatus#INTERNAL_SERVER_ERROR}.
+	 * status code if present. If there isn't any such annotation, it further checks if the current exception 
+	 * is within MAPPED_EXCEPTIONS, via {@link #findExceptionMapping(Exception)}. 
 	 * 
-	 * TODO: NotReadyException requires {@link HttpStatus#SERVICE_UNAVAILABLE}, including this exception here requires
-	 * jutils dependency.
+	 * If none of the above succeds, the method lets 
+	 * {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatus, WebRequest)} to set a generic 
+	 * {@link HttpStatus#INTERNAL_SERVER_ERROR}.
 	 * 
 	 */
 	@ExceptionHandler
@@ -83,44 +120,53 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 			AnnotatedElementUtils.findMergedAnnotation ( ex.getClass(), ResponseStatus.class ) 
 		).map ( ResponseStatus::value )
 		.orElse ( null );
+
+		// If there isn't an annotation, try to see if there is a local mapping
+		if ( status == null ) status = findExceptionMapping ( ex );
 		
-		// status can still be null at this point, the generic method defaults to 500
+		// status can still be null at this point, in which case the generic method defaults to 500
 		return (ResponseEntity<KnetminerExceptionResponse>) (ResponseEntity<?>) 
-			this.handleExceptionInternal ( ex, null, new HttpHeaders (), status, request );
+			this.handleExceptionInternal ( ex, null, null, status, request );
 	}
 	
 	/**
+	 * Used within handleGenericException() when the status is null. It tries to find
+	 * one class in MAPPED_EXCEPTIONS that is the same class of ex or a parent of it. Returns 
+	 * the corresponding status if it finds something, null otherwise. 
+	 * 
+	 */
+	private HttpStatus findExceptionMapping ( Exception ex )
+	{
+		for ( var exClass: MAPPED_EXCEPTIONS.keySet () )
+		{
+			if ( exClass.isAssignableFrom ( ex.getClass () ) )
+				return MAPPED_EXCEPTIONS.get ( exClass );
+		}
+		return null;
+	}
+	
+	
+	/**
 	 * Takes the status code from {@link ResponseStatusException#getStatus() code}.
+	 * 
 	 */
 	@ExceptionHandler
 	public ResponseEntity<KnetminerExceptionResponse> handleStatusBasedException (
 		ResponseStatusException ex, WebRequest request, HttpServletResponse response
 	)
 	{
-		return handleStatusBasedException ( ex, ex.getResponseHeaders (), ex.getStatus (), request, response );
+		return handleExceptionInternal ( ex, ex.getResponseHeaders (), ex.getStatus (), request, response );
 	}
 
 	/**
-	 * Takes the status code from {@link ResponseStatusException#getStatus() code}.
+	 * Takes the status code from {@link HttpStatusCodeException#getStatus() code}.
 	 */
 	@ExceptionHandler
 	public ResponseEntity<KnetminerExceptionResponse> handleStatusBasedException (
 		HttpStatusCodeException ex, WebRequest request, HttpServletResponse response
 	)
 	{
-		return handleStatusBasedException ( ex, ex.getResponseHeaders (), ex.getStatusCode (), request, response );
+		return handleExceptionInternal ( ex, ex.getResponseHeaders (), ex.getStatusCode (), request, response );
 	}
-	
-	@SuppressWarnings ( "unchecked" )
-	private ResponseEntity<KnetminerExceptionResponse> handleStatusBasedException (
-		Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request, HttpServletResponse response
-	)
-	{
-		if ( headers != null )
-			headers
-			.forEach( (name, values) -> values.forEach ( value -> response.addHeader ( name, value ) ) );
-		
-		return (ResponseEntity<KnetminerExceptionResponse>) (ResponseEntity<?>) 
-			this.handleExceptionInternal ( ex, null, new HttpHeaders (), status, request );
-	}
+
 }

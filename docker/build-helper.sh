@@ -47,32 +47,37 @@ export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'}
 # ---- Parameters/environment setup ends here
 #
 
-echo -e "\n\n\tBuilding Knetminer\n"
+echo -e "\n\n\tBuilding Knetminer via build-helper.sh\n"
 
 # Move from the location of this script to the root of the Knetminer codebase 
 cd ..
 
 # ---- Regular full build of the server web reference application (aratiny-ws.war) ----
+echo -e "\n Going offline first\n"
 mvn $MAVEN_ARGS dependency:go-offline dependency:resolve-plugins
 # This is to force the download of the clean plugin (the command above is not enough)
-# TODO: might be a problem if we have 
+# TODO: might it be a problem? 
+echo -e "\n Forcing clean plugin updates\n"
 mvn clean -N 
 
+echo -e "\n mvn install\n"
 mvn install $MAVEN_ARGS -DskipTests -DskipITs
 
 cd aratiny/aratiny-ws
+
 # --- Alternatively, you can enable fast build during debugging
 # mvn dependency:resolve
 # cd aratiny/aratiny-ws
 # mvn install $MAVEN_ARGS -DskipTests -DskipITs
 # ---
 
-# Put it under Tomcat
+echo -e "\n Copying aratiny's WAR to Tomcat and adding the test OXL\n"
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
 # And also put the test OXL in place
 mkdir --parents /root/knetminer-dataset/data
 cp -f target/dependency/ara-tiny.oxl /root/knetminer-dataset/data/knowledge-network.oxl
+
 
 
 # The client is rebuilt by the container, cause its files need to be instantiated with the dataset-specific settings. 
