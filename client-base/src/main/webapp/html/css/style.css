@@ -334,7 +334,9 @@ div#region_search_area input[type="text"], select {
     margin-bottom:5px;
 }
 
-#numGenes { width: 75px; height: 25px; }
+#numGenes {
+    width: /*60*/100px;
+}
 #selectUser {
     float:right;
     text-align:right;
@@ -363,6 +365,12 @@ a[id="generateMultiGeneNetworkButton"] {
 
 /* New button to show the network in KnetMaps */
 #new_generateMultiGeneNetworkButton {
+    float:right;
+    margin-top:10px;
+    width:120px;
+}
+
+#new_generateMultiEvidenceNetworkButton {
     float:right;
     margin-top:10px;
     width:120px;

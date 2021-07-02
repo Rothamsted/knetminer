@@ -1110,6 +1110,7 @@ function findGenes(id, chr_name, start, end) {
     }
 }
 
+
 /*
  * Function
  *
@@ -1478,6 +1479,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '<th width="78">' + header[3] + '</th>';
         table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
         table = table + '<th width="103">' + header[5] + '</th>';
+        table = table + '<th width="70">Select</th>';
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
@@ -1537,6 +1539,8 @@ function createEvidenceTable(text, keyword) {
                 table = table + '<td>' + userGenes + '</td>'; // zero user genes
             }
 
+            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7] + '">';
+            table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
             table = table + '</tr>';
             //Calculates the summary box; OLD
           /*  if (containsKey(values[0], summaryArr)) {
@@ -1549,7 +1553,9 @@ function createEvidenceTable(text, keyword) {
         table = table + '</table>';
         table = table + '</div>';
         // Insert a preloader to be used for KnetMaps
-        table = table + '<div id="loadingNetwork_Div"></div>';
+        //table = table + '<div id="loadingNetwork_Div"></div>';
+        table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Network</button>';
+        table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
         $('#evidenceTable').html(table);
 
@@ -1627,6 +1633,10 @@ function createEvidenceTable(text, keyword) {
             evidencePath(values[7], evi_userGenes.split(","));
         });
         
+        $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
+            generateMultiEvidenceNetwork(keyword); 
+        });
+
         $("#tablesorterEvidence").tablesorter({
             // sort by p-value (displayed in JS table as col3) in ascending order (0) in all cases
             sortList: [[3,0]],
@@ -1663,6 +1673,39 @@ function createEvidenceTable(text, keyword) {
 
         // display dynamic Evidence Summary legend above Evidence View.
         $("#evidenceSummary1").html(summaryText); */
+    }
+}
+
+/*
+ * Function
+ * Generates multi evidence network in KnetMaps
+ * @author: Ajit Singh.
+ */
+function generateMultiEvidenceNetwork(keyword) {
+    console.log("generateMultiEvidenceNetwork: keyword:"+ keyword);
+    var evidences_list = [];
+    var ev_list = $("input[name=evidences");
+    var ev_list_len = ev_list.length;
+    for (var i = 0; i < ev_list_len; i++) {
+        if (ev_list[i].checked) {
+            evidences_list.push(ev_list[i].value);
+        }
+    }
+    console.log(evidences_list.length +" gene(s) selected.");
+    console.log(evidences_list);
+    if (candidatelist == "") {
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+    }
+    else {
+    	console.log("here...");
+        // get all saved ONDEXIDs and for each, add evidenceID (no repeats) and use for evidence api
+        // iterate over values[] and for each values[7] id, find its values[5] evidences and add to a new unique list
+        //var evi_userGenes = values[5].trim(); // user gene(s) provided
+        //evidencePath(values[7], evi_userGenes.split(","));
+        //var params = {keyword: keyword};
+        //if (genes.length > 0) { params.list = genes; }
+        // Generate the Network in KnetMaps.
+        //generateCyJSNetwork(api_url + '/evidencePath', params);
     }
 }
 
