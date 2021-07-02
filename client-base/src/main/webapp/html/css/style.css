@@ -334,9 +334,7 @@ div#region_search_area input[type="text"], select {
     margin-bottom:5px;
 }
 
-#numGenes {
-    width: /*60*/100px;
-}
+#numGenes { width: 75px; height: 25px; }
 #selectUser {
     float:right;
     text-align:right;

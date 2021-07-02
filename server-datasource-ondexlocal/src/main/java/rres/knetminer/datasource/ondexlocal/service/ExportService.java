@@ -384,7 +384,7 @@ public class ExportService
 		
 		
 		StringBuffer out = new StringBuffer ();
-		out.append ( "ONDEX-ID\tACCESSION\tGENE NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
+		out.append ( "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
 		for ( ONDEXConcept gene : candidateGenes )
 		{
 			int geneId = gene.getId ();
@@ -938,7 +938,7 @@ public class ExportService
 		
 		log.info ( "Returning {} row(s) for the evidence table", tableSize.getValue () );
 		
-		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER GENES\tQTLS\tONDEXID\n" + tableStr;
+		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\n" + tableStr;
 		
 	} // exportEvidenceTable()	
 }
