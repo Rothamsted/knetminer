@@ -200,7 +200,7 @@ function evidencePath(id, genes) {
     if (genes.length > 0) {
         params.list = genes;
     }
-    console.dir(params);
+    //console.dir(params);
 	
     // Generate the Network in KnetMaps.
     //generateCyJSNetwork(api_url + '/evidencePath', params);
@@ -1015,8 +1015,6 @@ function generateCyJSNetwork(url, requestParams) {
     // Show loading spinner on 'tabviewer' div
     activateSpinner("#tabviewer");
     //console.log("network: start spinner...");
-    console.log("api:"+ url);
-    console.dir(requestParams);
         
     $.post({
         url: url,
