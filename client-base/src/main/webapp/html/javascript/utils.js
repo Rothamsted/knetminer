@@ -196,13 +196,16 @@ function matchCounter() {
  */
 function evidencePath(id, genes) {
 	
-    var params = {keyword: id};
+    var params = {keyword: 'ConceptID:'+id};
     if (genes.length > 0) {
         params.list = genes;
     }
+    console.dir(params);
 	
     // Generate the Network in KnetMaps.
-    generateCyJSNetwork(api_url + '/evidencePath', params);
+    //generateCyJSNetwork(api_url + '/evidencePath', params);
+    // harmonized now to use 'network' api only
+    generateCyJSNetwork(api_url + '/network', params);
 }
 
 /*
@@ -1614,7 +1617,7 @@ function createEvidenceTable(text, keyword) {
         });
 
         /*
-         * click handler for generating the evidence path network
+         * click handler for generating the evidence path network for total genes (UNUSED now)
          */
         $(".generateEvidencePath").bind("click", {x: evidenceTable}, function (e) {
             e.preventDefault();
@@ -1629,6 +1632,7 @@ function createEvidenceTable(text, keyword) {
          */
         $(".userGenes_evidenceNetwork").bind("click", {x: evidenceTable}, function (e) {
             e.preventDefault();
+            // for user genes column in evidence view
             var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_", "");
             var values = e.data.x[evidenceNum].split("\t");
             var evi_userGenes = values[5].trim(); // user gene(s) provided
@@ -1636,6 +1640,7 @@ function createEvidenceTable(text, keyword) {
         });
         
         $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
+            // new multi select checkboxes in evidence view to render knetwork via 'network' api
             generateMultiEvidenceNetwork(); 
         });
 
@@ -1703,8 +1708,8 @@ function generateMultiEvidenceNetwork() {
                }
            }
        }
-    console.log("evidences elected: "+evidences_ondexid_list);
-    console.log("Selected evidence(s) are linked to genes:" + geneids);
+    //console.log("evidences elected: "+evidences_ondexid_list);
+    //console.log("Selected evidence(s) are linked to genes:" + geneids);
     if (evidences_ondexid_list === "") {
         $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please select evidence terms.</b></div>');
     }
