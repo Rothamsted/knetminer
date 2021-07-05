@@ -1557,7 +1557,7 @@ function createEvidenceTable(text, keyword) {
         // Insert a preloader to be used for KnetMaps
         //table = table + '<div id="loadingNetwork_Div"></div>';
         table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Network</button>';
-        table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
+        table = table + '</insert><div id="loadingNetwork_Div"></div></div>';
 
         $('#evidenceTable').html(table);
 
@@ -1683,18 +1683,23 @@ function createEvidenceTable(text, keyword) {
  * Generates multi evidence network in KnetMaps
  * @author: Ajit Singh.
  */
+/*
+ * Function
+ * Generates multi evidence network in KnetMaps
+ * @author: Ajit Singh.
+ */
 function generateMultiEvidenceNetwork(keyword) {
-    console.log("generateMultiEvidenceNetwork: keyword:"+ keyword);
-    var evidence_ondexids_and_genes = [], evidences_ondexid_list = [], geneids = [];
+    var evidence_ondexids_and_genes = [];
+    var evidences_ondexid_list = "";
+    var geneids = [];
     var ev_list = $("input[name=evidences");
-    var ev_list_len = ev_list.length;
-    for(var i = 0; i < ev_list_len; i++) {
+    for(var i = 0; i < ev_list.length; i++) {
         if (ev_list[i].checked) {
             // each ev_list[i].value has evidence_ondexID:any_comma_separated_geneIDs
             evidence_ondexids_and_genes= ev_list[i].value.split(':');
             // get all saved ONDEXIDs and for each, add evidenceID and use for 'network' api
-            evidences_ondexid_list.push('ConceptID:'+evidence_ondexids_and_genes[0]); // ondex IDs of all selected evidences via checkboxes
-            var geneids_row= evidence_ondexids_and_genes[0].split(',');
+            evidences_ondexid_list= evidences_ondexid_list +' ConceptID:'+evidence_ondexids_and_genes[0]; // ondex IDs of all selected evidences via checkboxes
+            var geneids_row= evidence_ondexids_and_genes[1].split(',');
             for(var j=0; j<geneids_row.length; j++) {
                 // for each evidence ondexID (values[7]), find its values[5] geneIDs and add to a new unique list
                 if(geneids.indexOf(geneids_row[j]) === -1) { 
@@ -1703,16 +1708,12 @@ function generateMultiEvidenceNetwork(keyword) {
                }
            }
        }
-    console.log(evidences_ondexid_list.length +" evidence(s) selected.");
-    console.log(evidences_ondexid_list);
-    console.log("Selected evidence(s) are linked to genes:" + geneids.length);
-    console.log(geneids);
-    if (evidences_ondexid_list== "") {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select evidence terms.</b></div>');
+    console.log("evidences elected: "+evidences_ondexid_list);
+    console.log("Selected evidence(s) are linked to genes:" + geneids);
+    if (evidences_ondexid_list === "") {
+        $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please select evidence terms.</b></div>');
     }
     else {
-    	console.log("here...");
-        //evidencePath(values[7], evi_userGenes.split(","));
         var params = {keyword: evidences_ondexid_list};
         if (geneids.length > 0) { params.list = geneids; }
         // Generate the Network in KnetMaps.
