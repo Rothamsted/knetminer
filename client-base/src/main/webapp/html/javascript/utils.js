@@ -1012,6 +1012,8 @@ function generateCyJSNetwork(url, requestParams) {
     // Show loading spinner on 'tabviewer' div
     activateSpinner("#tabviewer");
     //console.log("network: start spinner...");
+    console.log("api:"+ url);
+    console.dir(requestParams);
         
     $.post({
         url: url,
@@ -1539,7 +1541,7 @@ function createEvidenceTable(text, keyword) {
                 table = table + '<td>' + userGenes + '</td>'; // zero user genes
             }
 
-            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7] + '">';
+            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7]+':'+values[5] + '">';
             table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
             table = table + '</tr>';
             //Calculates the summary box; OLD
@@ -1683,29 +1685,38 @@ function createEvidenceTable(text, keyword) {
  */
 function generateMultiEvidenceNetwork(keyword) {
     console.log("generateMultiEvidenceNetwork: keyword:"+ keyword);
-    var evidences_list = [];
+    var evidence_ondexids_and_genes = [], evidences_ondexid_list = [], geneids = [];
     var ev_list = $("input[name=evidences");
     var ev_list_len = ev_list.length;
-    for (var i = 0; i < ev_list_len; i++) {
+    for(var i = 0; i < ev_list_len; i++) {
         if (ev_list[i].checked) {
-            evidences_list.push(ev_list[i].value);
-        }
-    }
-    console.log(evidences_list.length +" gene(s) selected.");
-    console.log(evidences_list);
-    if (candidatelist == "") {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+            // each ev_list[i].value has evidence_ondexID:any_comma_separated_geneIDs
+            evidence_ondexids_and_genes= ev_list[i].value.split(':');
+            // get all saved ONDEXIDs and for each, add evidenceID and use for 'network' api
+            evidences_ondexid_list.push('ConceptID:'+evidence_ondexids_and_genes[0]); // ondex IDs of all selected evidences via checkboxes
+            var geneids_row= evidence_ondexids_and_genes[0].split(',');
+            for(var j=0; j<geneids_row.length; j++) {
+                // for each evidence ondexID (values[7]), find its values[5] geneIDs and add to a new unique list
+                if(geneids.indexOf(geneids_row[j]) === -1) { 
+                   geneids.push(geneids_row[j]); // insert unique geneID
+                  }
+               }
+           }
+       }
+    console.log(evidences_ondexid_list.length +" evidence(s) selected.");
+    console.log(evidences_ondexid_list);
+    console.log("Selected evidence(s) are linked to genes:" + geneids.length);
+    console.log(geneids);
+    if (evidences_ondexid_list== "") {
+        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select evidence terms.</b></div>');
     }
     else {
     	console.log("here...");
-        // get all saved ONDEXIDs and for each, add evidenceID (no repeats) and use for evidence api
-        // iterate over values[] and for each values[7] id, find its values[5] evidences and add to a new unique list
-        //var evi_userGenes = values[5].trim(); // user gene(s) provided
         //evidencePath(values[7], evi_userGenes.split(","));
-        //var params = {keyword: keyword};
-        //if (genes.length > 0) { params.list = genes; }
+        var params = {keyword: evidences_ondexid_list};
+        if (geneids.length > 0) { params.list = geneids; }
         // Generate the Network in KnetMaps.
-        //generateCyJSNetwork(api_url + '/evidencePath', params);
+        generateCyJSNetwork(api_url + '/network', params);
     }
 }
 
