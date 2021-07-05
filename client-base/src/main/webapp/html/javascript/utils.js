@@ -1636,7 +1636,7 @@ function createEvidenceTable(text, keyword) {
         });
         
         $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
-            generateMultiEvidenceNetwork(keyword); 
+            generateMultiEvidenceNetwork(); 
         });
 
         $("#tablesorterEvidence").tablesorter({
@@ -1683,12 +1683,7 @@ function createEvidenceTable(text, keyword) {
  * Generates multi evidence network in KnetMaps
  * @author: Ajit Singh.
  */
-/*
- * Function
- * Generates multi evidence network in KnetMaps
- * @author: Ajit Singh.
- */
-function generateMultiEvidenceNetwork(keyword) {
+function generateMultiEvidenceNetwork() {
     var evidence_ondexids_and_genes = [];
     var evidences_ondexid_list = "";
     var geneids = [];
