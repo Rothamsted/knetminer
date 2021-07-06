@@ -1643,8 +1643,8 @@ function createEvidenceTable(text, keyword) {
         });
 
         $("#tablesorterEvidence").tablesorter({
-            // sort by score in descending order if with keywords, or p-value ascending if without keywords
-            sortList: [[$('#keywords').val()!=='' ? 3:4, $('#keywords').val()!=='' ? 1:0]],
+            // sort by p-value (displayed in JS table as col3) in ascending order (0) in all cases
+            sortList: [[3,0]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {
