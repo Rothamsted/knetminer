@@ -370,6 +370,13 @@ a[id="generateMultiGeneNetworkButton"] {
     width:120px;
 }
 
+/* New evidence view button to show the selected evidences subgraph or knetwork in KnetMaps */
+#new_generateMultiEvidenceNetworkButton {
+    float:right;
+    margin-top:10px;
+    width:120px;
+}
+
 /*
 div#footer {
         padding:15px;
