@@ -16,8 +16,9 @@
    elements.forEach(function( ele ) {
        // fetch all visble genes
        if((ele.data('conceptType') === 'Gene') && (ele.data('conceptDisplay') === 'element')) {
-          var this_id= ele.data('id');
-          var this_name= ele.data('displayValue');
+          var this_conID= ele.data('id');
+          var this_name= ele.data('displayValue'); // node label
+          var this_id= ele.data('displayValue'); // default (to be changed by coaccessions later)
           var this_seed= "no"; // check flagged attribute of this node
           if(ele.data('flagged') === "true") { this_seed="yes"; }
           else { this_seed="no"; }
@@ -26,7 +27,7 @@
           // Get all metadata for this gene concept ID from the metadataJSON.
           for(var i=0; i<metadata_json.ondexmetadata.concepts.length;i++) {
               // if matching concept ID found
-              if(this_id === metadata_json.ondexmetadata.concepts[i].id) {
+              if(this_conID === metadata_json.ondexmetadata.concepts[i].id) {
                  // traverse attributes to get TAXID
                  for(var j=0; j<metadata_json.ondexmetadata.concepts[i].attributes.length; j++) {
                      if((metadata_json.ondexmetadata.concepts[i].attributes[j].attrname === "TAXID") || (metadata_json.ondexmetadata.concepts[i].attributes[j].attrnameName === "TX")) {
@@ -42,7 +43,7 @@
                   // get shortest accession now via sorting this_accessions by ascending order of length
                   //console.dir(this_accessions);
                   this_accessions.sort(function(a, b){return a.length - b.length});
-                  this_name= this_accessions[0]; // set gene name
+                  this_id= this_accessions[0]; // set gene id as shortest coaccession
                 }
              }
              
