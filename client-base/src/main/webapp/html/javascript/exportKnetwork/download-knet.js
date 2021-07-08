@@ -42,8 +42,10 @@
                     }
                   // get shortest accession now via sorting this_accessions by ascending order of length
                   //console.dir(this_accessions);
-                  this_accessions.sort(function(a, b){return a.length - b.length});
-                  this_id= this_accessions[0]; // set gene id as shortest coaccession
+                  if(this_accessions.length > 0) { // check added as some genes may have zero coaccessions or none from ENSEMBL/TAIR
+                     this_accessions.sort(function(a, b){return a.length - b.length}); // sort in ascending order of length to get shortest coaccession from ENSEMBL/TAIR
+                     this_id= this_accessions[0]; // set gene id as shortest coaccession
+                    }
                 }
              }
              
