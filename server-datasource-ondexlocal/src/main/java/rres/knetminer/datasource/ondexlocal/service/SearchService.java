@@ -23,8 +23,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.base.Functions;
 import com.google.common.util.concurrent.AtomicDouble;
 
+import io.vavr.collection.Array;
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
@@ -412,67 +415,73 @@ public class SearchService
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
 		//
-    Query cC = luceneMgr.getIdxFieldQuery ( "Trait", ONDEXLuceneFields.CC_FIELD );
-    Query cN = luceneMgr.getIdxFieldQuery ( keyword, ONDEXLuceneFields.CONNAME_FIELD );
+    Query traitQuery = luceneMgr.getIdxFieldQuery ( "Trait", ONDEXLuceneFields.CC_FIELD );
+    Query nameQuery = luceneMgr.getIdxFieldQuery ( keyword, ONDEXLuceneFields.CONNAME_FIELD );
 
     BooleanQuery finalQuery = new BooleanQuery.Builder()
-    	.add ( cC, BooleanClause.Occur.MUST )
-      .add ( cN, BooleanClause.Occur.MUST )
+    	.add ( traitQuery, BooleanClause.Occur.MUST )
+      .add ( nameQuery, BooleanClause.Occur.MUST )
       .build();
     
     log.info( "QTL search query: {}", finalQuery.toString() );
 
     ScoredHits<ONDEXConcept> hits = this.luceneMgr.searchTopConcepts ( finalQuery, 100 );
-    
     var graph = dataService.getGraph ();
-		var gmeta = graph.getMetaData();
-    ConceptClass ccQTL = gmeta.getConceptClass("QTL");
-    ConceptClass ccSNP = gmeta.getConceptClass("SNP");
-    
     Set<QTL> results = new HashSet<>();
-    
-    for ( ONDEXConcept hitConcept : hits.getOndexHits() ) 
+
+    hits.getOndexHits ()
+    .parallelStream ()
+    .forEach ( trait ->
     {
-        if (hitConcept instanceof LuceneConcept) hitConcept = ((LuceneConcept) hitConcept).getParent();
-        Set<ONDEXRelation> rels = graph.getRelationsOfConcept(hitConcept);
-        
-        for (ONDEXRelation r : rels) 
-        {
-        	// TODO better variable names: con, fromType and toType
-        	var conQTL = r.getFromConcept();
-        	var conQTLType = conQTL.getOfType ();
-        	var toType = r.getToConcept ().getOfType ();
-        	
-          // skip if not QTL or SNP concept
-          if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
-               		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
-          	continue;
-            
-          // QTL-->Trait or SNP-->Trait
-          String chrName = getAttrValueAsString ( graph, conQTL, "Chromosome", false );
+    	if ( trait instanceof LuceneConcept ) trait = ((LuceneConcept) trait).getParent();
+    	
+    	// Go to the incoming concept
+    	for ( ONDEXRelation traitRel: graph.getRelationsOfConcept ( trait ) )
+    	{
+    		if ( !"Trait".equals ( traitRel.getToConcept ().getOfType ().getId () ) ) continue;
+
+    		ONDEXConcept traitFrom = traitRel.getFromConcept ();
+    		if ( !"Phenotype".equals ( traitFrom.getOfType ().getId () ) ) continue;
+    		
+    		// Go back one more, and check it is Gene or SNP
+    		for ( ONDEXRelation phenoRel: graph.getRelationsOfConcept ( traitFrom ) )
+    		{
+      		if ( !"Phenotype".equals ( phenoRel.getToConcept ().getOfType ().getId () ) ) continue;
+      		
+      		ONDEXConcept phenoFrom = phenoRel.getFromConcept ();
+      		String phenoFromTypeId = phenoFrom.getOfType ().getId ();
+      		
+      		// TODO: QTL used to be here in the past (2021), not sure it's still needed.
+      		if ( !Stream.of ( "Gene", "SNP", "QTL" ).anyMatch ( phenoFromTypeId::equals ) ) continue;
+
+      		
+          String chrName = getAttrValueAsString ( graph, phenoFrom, "Chromosome", false );
           if ( chrName == null ) continue;
 
-          Integer start = (Integer) getAttrValue ( graph, conQTL, "BEGIN", false );
+          Integer start = (Integer) getAttrValue ( graph, phenoFrom, "BEGIN", false );
           if ( start == null ) continue;
 
-          Integer end = (Integer) getAttrValue ( graph, conQTL, "END", false );
+          Integer end = (Integer) getAttrValue ( graph, phenoFrom, "END", false );
           if ( end == null ) continue;
           
-          String type = conQTLType.getId();
-          String label = getConceptName ( conQTL );
-          String trait = getConceptName ( hitConcept );
+          String geneLabel = getConceptName ( phenoFrom );
+          String traitLabel = getConceptName ( trait );
                     
-          float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
+          float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, phenoRel, "PVALUE", false ) )
           	.orElse ( 1.0f );
 
-          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, conQTL, "TAXID", false ) )
-            	.orElse ( "" );
+          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, phenoFrom, "TAXID", false ) )
+            .orElse ( "" );
           
-          results.add ( new QTL ( chrName, type, start, end, label, "", pValue, trait, taxId ) );
-        } // for concept relations
-    } // for getOndexHits
+          results.add ( new QTL ( chrName, phenoFromTypeId, start, end, geneLabel, "", pValue, traitLabel, taxId ) );
+          
+    		} // for phenoRel
+    	} // for traitRel
+    }); // forEach ( trait )
+
     return results;    	
-  }
+    
+  } // searchQTLsForTrait()
 
   /**
    * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
