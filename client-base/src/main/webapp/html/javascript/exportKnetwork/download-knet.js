@@ -15,7 +15,8 @@
    var elements= cy.nodes();
    elements.forEach(function( ele ) {
        // fetch all visble genes
-       if((ele.data('conceptType') === 'Gene') && (ele.data('conceptDisplay') === 'element')) {
+       if((ele.data('conceptType') === 'Gene') && ((ele.data('conceptDisplay') === 'element') || (ele.hasClass("ShowEle")))) {
+          // as originally visible genes have conceptDisplay=element while newly added genes from legend or context menu have selector-class=ShowEle added. 
           var this_conID= ele.data('id');
           var this_name= ele.data('displayValue'); // node label
           var this_id= ele.data('displayValue'); // default (to be changed by coaccessions later)
