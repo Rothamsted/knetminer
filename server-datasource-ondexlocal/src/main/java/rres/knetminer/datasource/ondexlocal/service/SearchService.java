@@ -409,8 +409,80 @@ public class SearchService
    * 
    * TODO: probably it should go somewhere else like QTLUtils, after having separated 
    * the too tight dependencies on Lucene.
-   */	
-  public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
+   */
+	public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
+  {
+    // be careful with the choice of analyzer: ConceptClasses are not
+    // indexed in lowercase letters which let the StandardAnalyzer crash
+		//
+    Query cC = luceneMgr.getIdxFieldQuery ( "Trait", ONDEXLuceneFields.CC_FIELD );
+    Query cN = luceneMgr.getIdxFieldQuery ( keyword, ONDEXLuceneFields.CONNAME_FIELD );
+
+    BooleanQuery finalQuery = new BooleanQuery.Builder()
+    	.add ( cC, BooleanClause.Occur.MUST )
+      .add ( cN, BooleanClause.Occur.MUST )
+      .build();
+    
+    log.info( "QTL search query: {}", finalQuery.toString() );
+
+    ScoredHits<ONDEXConcept> hits = this.luceneMgr.searchTopConcepts ( finalQuery, 100 );
+    
+    var graph = dataService.getGraph ();
+		var gmeta = graph.getMetaData();
+    ConceptClass ccQTL = gmeta.getConceptClass("QTL");
+    ConceptClass ccSNP = gmeta.getConceptClass("SNP");
+    
+    Set<QTL> results = new HashSet<>();
+    
+    for ( ONDEXConcept hitConcept : hits.getOndexHits() ) 
+    {
+        if (hitConcept instanceof LuceneConcept) hitConcept = ((LuceneConcept) hitConcept).getParent();
+        Set<ONDEXRelation> rels = graph.getRelationsOfConcept(hitConcept);
+        
+        for (ONDEXRelation r : rels) 
+        {
+        	// TODO better variable names: con, fromType and toType
+        	var conQTL = r.getFromConcept();
+        	var conQTLType = conQTL.getOfType ();
+        	var toType = r.getToConcept ().getOfType ();
+        	
+          // skip if not QTL or SNP concept
+          if ( !( conQTLType.equals(ccQTL) || toType.equals(ccQTL)
+               		|| conQTLType.equals(ccSNP) || toType.equals(ccSNP) ) )
+          	continue;
+            
+          // QTL-->Trait or SNP-->Trait
+          String chrName = getAttrValueAsString ( graph, conQTL, "Chromosome", false );
+          if ( chrName == null ) continue;
+
+          Integer start = (Integer) getAttrValue ( graph, conQTL, "BEGIN", false );
+          if ( start == null ) continue;
+
+          Integer end = (Integer) getAttrValue ( graph, conQTL, "END", false );
+          if ( end == null ) continue;
+          
+          String type = conQTLType.getId();
+          String label = getConceptName ( conQTL );
+          String trait = getConceptName ( hitConcept );
+                    
+          float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, r, "PVALUE", false ) )
+          	.orElse ( 1.0f );
+
+          String taxId = Optional.ofNullable ( getAttrValueAsString ( graph, conQTL, "TAXID", false ) )
+            	.orElse ( "" );
+          
+          results.add ( new QTL ( chrName, type, start, end, label, "", pValue, trait, taxId ) );
+        } // for concept relations
+    } // for getOndexHits
+    return results;    	
+  }
+	
+	/**
+	 * TODO: this is the new version, which uses the new model gene->pheno->Trait, to be 
+	 * tested and activated when switching to the new test dataset.
+	 * 
+	 */
+  public Set<QTL> searchQTLsForTraitNew ( String keyword ) throws ParseException
   {
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
