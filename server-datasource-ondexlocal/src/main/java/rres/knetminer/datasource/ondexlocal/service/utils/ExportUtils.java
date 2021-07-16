@@ -21,6 +21,7 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.Filter;
+import net.sourceforge.ondex.utils.OndexPluginUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
 /**
@@ -59,7 +60,7 @@ public class ExportUtils
 	    log.info ( "Filtering concept classes " + filteredConceptClasses );
 			
 	  	var uconnFilter = new Filter ();
-			ONDEXPlugin.runPlugin ( 
+			OndexPluginUtils.runPlugin ( 
 				uconnFilter,
 				graph,  
 				Map.of ( 
@@ -79,7 +80,7 @@ public class ExportUtils
 			exportFile.deleteOnExit ();
 			String exportPath = exportFile.getAbsolutePath ();
 			
-			ONDEXPlugin.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ) );
+			OndexPluginUtils.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ) );
       
       log.debug ( "Network JSON file created:" + exportPath );
 			log.debug ( "JSON Export done to file: '{}'", exportPath );
