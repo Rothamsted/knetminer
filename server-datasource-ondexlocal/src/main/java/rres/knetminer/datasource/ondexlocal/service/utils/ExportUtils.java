@@ -22,6 +22,7 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.utils.OndexPluginUtils;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.IOUtils;
 
 /**
@@ -48,6 +49,8 @@ public class ExportUtils
    */
   public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph )
   {
+  	exportOXL ( graph );
+  	
   	File exportFile = null;
   	ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
   	try 
@@ -113,6 +116,29 @@ public class ExportUtils
     finally {
     	if ( exportFile != null ) exportFile.delete ();
     }
-  }	
+  }
   
+  /**
+   * Sometimes is used for debugging
+   * @param graph
+   */
+  private static void exportOXL ( ONDEXGraph graph )
+  { 
+  	String outPath = null;
+  	try
+		{
+			var outFile = File.createTempFile ( "knetminer", ".oxl" );
+			outFile.deleteOnExit ();
+			outPath = outFile.getAbsolutePath ();
+			net.sourceforge.ondex.export.oxl.Export.exportOXL ( graph, outPath );
+			log.info ( "OXL exported to {}", outPath );
+		}
+		catch ( IOException ex )
+		{
+			ExceptionUtils.throwEx ( UncheckedIOException.class, ex, 
+				"Error while exporting to OXL file '%s'",
+				outPath
+			);
+		}
+  } 
 }
