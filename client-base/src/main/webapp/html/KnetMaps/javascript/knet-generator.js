@@ -138,21 +138,21 @@ KNETMAPS.Generator = function() {
           'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
           //'line-color': 'data(relationColor)', // e.g., 'grey',
           'line-color': function(rel) {
-                    var linecolor=rel.data('relationColor'); //default
-                    // new line color for 3 edge cases
+			var linecolor=rel.data('relationColor'); //default
+			// new line color for 3 edge cases as per relation label
 		    if(rel.data('label') === "xref") { linecolor='darkGrey'; }
 		    if(rel.data('label') === "associated_with") { linecolor='darkGrey'; }
 		    if(rel.data('label') === "occurs_in") { linecolor='orange'; }
-                    return linecolor;
-                   },
+			return linecolor;
+			},
           //'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
           'line-style': function(rel) {
-                    var linestyle='solid'; //default
-		    // use dashed line style for type: cooccurs_with, occurs_in, regulates, has_similar_sequence, enriched_for.
+			var linestyle='solid'; //default
+		    // use dashed line style for relation type: cooccurs_with, occurs_in, regulates, has_similar_sequence, enriched_for.
 		    var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence", "enriched_for" ];
-                    if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
-                    return linestyle;
-                   },
+			if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
+			return linestyle;
+			},
           'target-arrow-shape': 'triangle',
           'target-arrow-color': 'gray',
           'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
