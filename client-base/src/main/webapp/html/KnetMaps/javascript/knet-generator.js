@@ -136,12 +136,20 @@ KNETMAPS.Generator = function() {
           'control-point-distance': '20px', /* overrides control-point-step-size to curves single edges as well, in addition to parallele edges */
           'control-point-weight': '50'/*'0.7'*/, // '0': curve towards source node, '1': curve towards target node.
           'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
-          'line-color': 'data(relationColor)', // 'gray',
+          //'line-color': 'data(relationColor)', // e.g., 'grey',
+          'line-color': function(rel) {
+                    var linecolor= rel.data('relationColor'); // default
+                    // new: 3 edge cases
+		    if(rel.data('label') === "xref") { linecolor='darkGrey'; }
+		    if(rel.data('label') === "associated_with") { linecolor='darkGrey'; }
+		    if(rel.data('label') === "occurs_in") { linecolor='orange'; }
+                    return linecolor;
+                   },
           //'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
           'line-style': function(rel) {
                     var linestyle= 'solid'; // default
-					// use dotted line for type: cooccurs_with, occurs_in, regulates, has_similar_sequence.
-					var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence" ];
+		    // use dotted line for type: cooccurs_with, occurs_in, regulates, has_similar_sequence.
+		    var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence" ];
                     if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
                     return linestyle;
                    },
