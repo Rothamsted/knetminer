@@ -69,13 +69,11 @@ KNETMAPS.Generator = function() {
                       return label;
                      },*/
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
-          'text-background-color': 'data(conceptTextBGcolor)',//'black',
-                   /*function(ele) { // text background color
-                    var labelColor= '';
-                    if(ele.data('value').indexOf('<span') > -1) { labelColor= 'gold'; }
-                    else { labelColor= 'black'; }
+          'text-background-color': function(ele) { // text background color
+                    var labelColor= ele.data('conceptTextBGcolor');
+                    if(labelColor=== 'black') { labelColor='lightGreen'; }
                     return labelColor;
-                   },*/
+                   },
           'text-background-opacity': 'data(conceptTextBGopacity)',//'0', // default: '0' (disabled).
                    /*function(ele) { // text background opacity
                     var textBackgroundOpacity= '0';
