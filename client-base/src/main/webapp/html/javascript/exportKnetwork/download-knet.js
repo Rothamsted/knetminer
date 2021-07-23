@@ -35,9 +35,9 @@
                          this_taxid= metadata_json.ondexmetadata.concepts[i].attributes[j].value;
                         }
                     }
-                 // traverse coaccessions to get shortest gene name from ENSEMBL or TAIR
+                 // traverse coaccessions to get shortest gene name from ENSEMBL, ENSEMBL-PLANTS or TAIR
                  for(var k=0; k<metadata_json.ondexmetadata.concepts[i].coaccessions.length; k++) {
-                     if((metadata_json.ondexmetadata.concepts[i].coaccessions[k].elementOf === "ENSEMBL") || (metadata_json.ondexmetadata.concepts[i].coaccessions[k].elementOf === "TAIR")) {
+                     if((metadata_json.ondexmetadata.concepts[i].coaccessions[k].elementOf === "ENSEMBL") || (metadata_json.ondexmetadata.concepts[i].coaccessions[k].elementOf === "TAIR") || (metadata_json.ondexmetadata.concepts[i].coaccessions[k].elementOf === "ENSEMBL-PLANTS")) {
                         this_accessions.push(metadata_json.ondexmetadata.concepts[i].coaccessions[k].accession);
                        }
                     }
