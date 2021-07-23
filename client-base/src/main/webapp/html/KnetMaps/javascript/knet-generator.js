@@ -225,6 +225,16 @@ $(function() { // on dom ready
        if(rel.style('text-opacity') === '0') { rel.addClass('LabelOff'); }
        else { rel.addClass('LabelOn'); }
     });
+
+    // new: also show labels for all Genes, Biological Process and Trait nodes.
+    cy.nodes().forEach(function( conc ) { // for concepts/nodes
+      if((conc.data('conceptType') === "Gene") || (conc.data('conceptType') === "Biological_Process") || (conc.data('conceptType') === "Trait") || (conc.data('conceptType') === "Trait Ontology")) {
+      	// then display labels for these nodes if they are visble already.
+      	if(conc.data('conceptDisplay') === 'element') {
+          conc.removeClass('LabelOff').addClass('LabelOn');
+         }
+      }
+    });
  }
 
   // Show concept neighbourhood.
