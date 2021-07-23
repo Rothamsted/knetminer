@@ -69,13 +69,7 @@ KNETMAPS.Generator = function() {
                       return label;
                      },*/
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
-          'text-background-color': 'data(conceptTextBGcolor)',//'black',
-                   /*function(ele) { // text background color
-                    var labelColor= '';
-                    if(ele.data('value').indexOf('<span') > -1) { labelColor= 'gold'; }
-                    else { labelColor= 'black'; }
-                    return labelColor;
-                   },*/
+          'text-background-color': 'data(conceptTextBGcolor)',
           'text-background-opacity': 'data(conceptTextBGopacity)',//'0', // default: '0' (disabled).
                    /*function(ele) { // text background opacity
                     var textBackgroundOpacity= '0';
@@ -142,8 +136,23 @@ KNETMAPS.Generator = function() {
           'control-point-distance': '20px', /* overrides control-point-step-size to curves single edges as well, in addition to parallele edges */
           'control-point-weight': '50'/*'0.7'*/, // '0': curve towards source node, '1': curve towards target node.
           'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
-          'line-color': 'data(relationColor)', // 'gray',
-          'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
+          //'line-color': 'data(relationColor)', // e.g., 'grey',
+          'line-color': function(rel) {
+                    var linecolor=rel.data('relationColor'); //default
+                    // new line color for 3 edge cases
+		    if(rel.data('label') === "xref") { linecolor='darkGrey'; }
+		    if(rel.data('label') === "associated_with") { linecolor='darkGrey'; }
+		    if(rel.data('label') === "occurs_in") { linecolor='orange'; }
+                    return linecolor;
+                   },
+          //'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
+          'line-style': function(rel) {
+                    var linestyle='solid'; //default
+		    // use dashed line style for type: cooccurs_with, occurs_in, regulates, has_similar_sequence, enriched_for.
+		    var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence", "enriched_for" ];
+                    if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
+                    return linestyle;
+                   },
           'target-arrow-shape': 'triangle',
           'target-arrow-color': 'gray',
           'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
@@ -225,6 +234,24 @@ $(function() { // on dom ready
        if(rel.style('text-opacity') === '0') { rel.addClass('LabelOff'); }
        else { rel.addClass('LabelOn'); }
     });
+
+    // new: also show labels for all Genes, Biological Process and Trait nodes.
+    cy.nodes().forEach(function( conc ) { // for concepts/nodes
+      if((conc.data('conceptType') === "Gene") || (conc.data('conceptType') === "Biological_Process") || (conc.data('conceptType') === "Trait") || (conc.data('conceptType') === "Trait Ontology")) {
+      	// then display labels for these nodes if they are visble already.
+      	if(conc.data('conceptDisplay') === 'element') {
+          conc.removeClass('LabelOff').addClass('LabelOn');
+         }
+      }
+    });
+	
+	// fix any nodes with black conceptTextBGcolor in json
+	cy.nodes().forEach(function( conc ) {
+       if(conc.data('conceptTextBGcolor') === 'black') {
+          conc.data('conceptTextBGcolor','lightGreen'); // set new color (lightGreen)
+         }
+	  });
+
  }
 
   // Show concept neighbourhood.
