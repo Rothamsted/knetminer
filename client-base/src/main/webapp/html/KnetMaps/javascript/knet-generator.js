@@ -69,11 +69,7 @@ KNETMAPS.Generator = function() {
                       return label;
                      },*/
      //     'text-valign': 'center', // to have 'content' displayed in the middle of the node.
-          'text-background-color': function(ele) { // text background color
-                    var labelColor= ele.data('conceptTextBGcolor');
-                    if(labelColor=== 'black') { labelColor='lightGreen'; }
-                    return labelColor;
-                   },
+          'text-background-color': 'data(conceptTextBGcolor)',
           'text-background-opacity': 'data(conceptTextBGopacity)',//'0', // default: '0' (disabled).
                    /*function(ele) { // text background opacity
                     var textBackgroundOpacity= '0';
@@ -141,7 +137,14 @@ KNETMAPS.Generator = function() {
           'control-point-weight': '50'/*'0.7'*/, // '0': curve towards source node, '1': curve towards target node.
           'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
           'line-color': 'data(relationColor)', // 'gray',
-          'line-style': 'solid', // 'solid' or 'dotted' or 'dashed'
+          //'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
+          'line-style': function(rel) {
+                    var linestyle= 'solid'; // default
+					// use dotted line for type: cooccurs_with, occurs_in, regulates, has_similar_sequence.
+					var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence" ];
+                    if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
+                    return linestyle;
+                   },
           'target-arrow-shape': 'triangle',
           'target-arrow-color': 'gray',
           'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
@@ -233,6 +236,14 @@ $(function() { // on dom ready
          }
       }
     });
+	
+	// fix any nodes with black conceptTextBGcolor in json
+	cy.nodes().forEach(function( conc ) {
+       if(conc.data('conceptTextBGcolor') === 'black') {
+          conc.data('conceptTextBGcolor','lightGreen'); // set new color (lightGreen)
+         }
+	  });
+
  }
 
   // Show concept neighbourhood.
