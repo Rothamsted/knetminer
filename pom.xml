@@ -59,7 +59,7 @@
 			In most cases, probably you'll be fine with the overriding provided below, in the 'docker' profile.
 			For aratiny, we need this non-common value since it's difficult to rename a downloaded test file. 
 		-->
-		<knetminer.oxlFile>${project.build.directory}/dependency/ara-tiny.oxl</knetminer.oxlFile>
+		<knetminer.oxlFile>${project.build.directory}/dependency/poaceae-sample.oxl</knetminer.oxlFile>
 		 
 		<!--  Change these variables as appropriate or use maven args to provide them ! -->
 		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
@@ -156,6 +156,8 @@
 		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
 		<neo4j.server.user>neo4j</neo4j.server.user>
 		<neo4j.server.password>test</neo4j.server.password>
+
+		<neo4j.server.version>4.3.2</neo4j.server.version>
 
 		<!-- See the description in aratiny-ws/src/test/resources/knetminer-dataset/config/data-source.xml -->
 		<knetminer.backend.cypherDebugger.enabled>false</knetminer.backend.cypherDebugger.enabled>

@@ -92,12 +92,12 @@ public class ApiIT
 	
 	@Test
 	public void testGenomeGrowth () {
-		testGenome ( "growth", "ABI3" );
+		testGenome ( "growth", "ILR1" );
 	}
 	
 	@Test
-	public void testGenomeASK7 () {
-		testGenome ( "'AT5G14750'", "ASK7" );
+	public void testGenomeWithAccession () {
+		testGenome ( "\"vha-D\"", "VHA-D" );
 	}
 
 	/**
@@ -118,9 +118,9 @@ public class ApiIT
 	@Test
 	public void testGeneFilter () 
 	{
-		Stream.of ( "ABI3", "ABI4", "CPC", "EGL3" )
+		Stream.of ( "MIR172B", "MIR172A", "at1g07350", "MBD12", "MBD3", "MBD5" )
 		.forEach ( expectedGeneLabel ->
-			testGenome ( "flowering FLC FT", expectedGeneLabel, "AT1G63650", "aBi?", "MYB*" )
+			testGenome ( "flowering FLC FT", expectedGeneLabel, "MIR*", "at1g07350", "mBd*"	)
 		);
 	}
 
@@ -128,7 +128,7 @@ public class ApiIT
 	@Test
 	public void testEvidence ()
 	{
-		JSONObject js = invokeApi ( "genome", "keyword", "flowering" );
+		JSONObject js = invokeApi ( "genome", "keyword", "response" );
 		assertNotNull ( "No JSON returned!", js );
 		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
 		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
@@ -136,7 +136,7 @@ public class ApiIT
 		
 		var rows = List.of ( evidenceTable.split ( "\n" ) );
 		var rowFound = rows.stream ().anyMatch ( 
-			row -> row.contains ( "Phenotype\tEARLY FLOWERING COMPARED TO...\t4.28\t0.00000\t3\t\t0\t697" ) 
+			row -> row.contains ( "BioProc\tPositive Regulation Of Resp...\t4.52\t0.00000\t1\t\t0\t6648077" ) 
 		);
 		assertTrue ( "Expected evidence table row not found!", rowFound );
 	}
@@ -147,7 +147,7 @@ public class ApiIT
 		JSONObject js = invokeApi ( 
 			"genome", 
 			"keyword", "\"cell size\" OR \"cell division\" OR \"cell cycle\"",
-			"list", new String [] { "At4g18330", "ABI*" }
+			"list", new String [] { "at1G69840", "ILL*", "At4G26570" }
 		);
 		assertNotNull ( "No JSON returned!", js );
 		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
@@ -155,11 +155,12 @@ public class ApiIT
 		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
 		
 		var rows = List.of ( evidenceTable.split ( "\n" ) );
-		assertEquals ( "Wrong no. of rows for filtered genes!", 2, rows.size () );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 3, rows.size () );
 		
 		var rowFound = rows.stream ().anyMatch ( 
-			row -> row.matches ( 
-				"CelComp\tcytoskeleton\t2\\.04\t0\\.01049\t11\t((AT4G26080|AT3G24650|AT2G40220|AT5G57050)\\,?){4}\t0\t1639" 
+			row -> row.matches (
+			  // gene lists is in undetermined order
+				"CelComp\tPlant-type Vacuole Membrane\t6.72\t0.00007\t3\t((AT1G69840|AT4G26570)\\,?){2}\t0\t6647099"	
 			) 
 		);
 		assertTrue ( "Expected evidence table row not found!", rowFound );
