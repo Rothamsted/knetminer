@@ -7,13 +7,14 @@
 
 	<!-- This is used for tests, config.xml is used in production (look at it for details) -->
 
-   <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
+	<context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
+	
+	<bean name = "configDirPath" class = "java.lang.String">
+		<constructor-arg value = "${knetminer.configDir}/neo4j" />
+	</bean> 
    
-   <bean name = "configDirPath" class = "java.lang.String">
-   	<constructor-arg value = "${knetminer.configDir}/neo4j" />
-   </bean> 
-   
-   <!-- The path queries for the Cypher-based traverser -->
+  <!-- TODO: remove?
+       The path queries for the Cypher-based traverser 
 	<bean name = "semanticMotifsQueries" class = "java.util.Arrays" factory-method = "asList" >
 		<constructor-arg>
 			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
@@ -25,7 +26,13 @@
 				</constructor-arg>
 			</bean>
 		</constructor-arg>
+	</bean> -->
+	
+	<bean name = "semanticMotifsQueries" 
+				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
+		<constructor-arg value = "${knetminer.configDir}/neo4j/cypher-queries.txt" />
 	</bean>
+	
 		
         
  	<!-- The Neo4j driver -->

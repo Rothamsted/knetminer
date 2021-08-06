@@ -7,10 +7,11 @@
 #
 # WARNING: you should run me with 'source make.sh', in order to keep env definitions I define. 
 #
-mydir="$(pwd)"
+set -e
+mydir=`pwd`
 
-cd ../../../aratiny/aratiny-docker
-settings_dir="$(pwd)"
+cd ../../aratiny/aratiny-docker
+settings_dir=`pwd`
 cd "$mydir"
 
 
@@ -36,8 +37,13 @@ do
 	mkdir --parents "$knet_dataset_dir/$dir"
 done
 
-wget 'https://s3.eu-west-2.amazonaws.com/nfventures-testing.knetminer/default.oxl' \
-		 -O "$knet_dataset_dir/data/knowledge-network.oxl"
+# Gets the test OXL. Typically, you'll already have your own and this little mess won't be needed
+#
+cd ../../aratiny/aratiny-ws
+mvn generate-test-resources
+cp target/dependency/poaceae-sample.oxl "$knet_dataset_dir/data/knowledge-network.oxl"
+cd "$mydir"
+
 
 cat <<EOT
 

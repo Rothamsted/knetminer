@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,7 +31,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
+import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
+import uk.ac.ebi.utils.runcontrol.MultipleAttemptsExecutor;
 import uk.ac.ebi.utils.xml.XPathReader;
 
 
@@ -47,12 +52,31 @@ public class ApiIT
 {
 	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	private Logger log = LogManager.getLogger ( this.getClass () );
+	private static Logger slog = LogManager.getLogger ( ApiIT.class );
 
 	@BeforeClass
-	public static void initialDelay () throws InterruptedException
+	/**
+	 * Keeps probing the API server until it seems initialised. 
+	 * Ran before anything else, in order to have it up and running.
+	 */
+	public static void synchToServer () throws Exception
 	{
-		clog.info ( "Making a pause to give the server time to initialise." );
-		Thread.sleep ( 10 * 1000 );
+		clog.info ( "Waiting for server init." );
+		Thread.sleep ( 20 * 1000 );
+		
+		for ( int attempt = 1; attempt <= 4; attempt++ )
+		{
+			slog.info ( "Waiting for the API server, attempt {}", attempt );
+			JSONObject js = invokeApiFailOpt ( "countHits?keyword=foo", false );
+			if ( js.has ( "luceneCount" ) ) return;
+			if ( js.has ( "type" ) && NotReadyException.class.getName ().equals ( js.getString ( "type" ) ) )
+			{
+				Thread.sleep ( 10 * 1000 );
+				continue;
+			}
+			throw new HttpException ( "Error from the API server:\n" +  js.toString () );
+		}
+		throw new HttpException ( "API server didn't initialise in time" ); 
 	}
 	
 	
@@ -97,7 +121,7 @@ public class ApiIT
 	
 	@Test
 	public void testGenomeWithAccession () {
-		testGenome ( "\"vha-D\"", "VHA-D" );
+		testGenome ( "\"NuDt19\"", "NUDT19" );
 	}
 
 	/**
@@ -135,9 +159,15 @@ public class ApiIT
 		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
 		
 		var rows = List.of ( evidenceTable.split ( "\n" ) );
-		var rowFound = rows.stream ().anyMatch ( 
-			row -> row.contains ( "BioProc\tPositive Regulation Of Resp...\t4.52\t0.00000\t1\t\t0\t6648077" ) 
-		);
+		var rowFound = rows.stream ().anyMatch ( row -> 
+		{
+			var cols = row.split ( "\t" );
+			if ( !"Trait".equals ( cols [ 0 ]) ) return false;
+			if ( !"disease resistance".equals ( cols [ 1 ]) ) return false;
+			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( cols [ 7 ] ) < 0 ) return false; // ondexId
+			return true;
+		});
 		assertTrue ( "Expected evidence table row not found!", rowFound );
 	}
 	
@@ -146,8 +176,8 @@ public class ApiIT
 	{
 		JSONObject js = invokeApi ( 
 			"genome", 
-			"keyword", "\"cell size\" OR \"cell division\" OR \"cell cycle\"",
-			"list", new String [] { "at1G69840", "ILL*", "At4G26570" }
+			"keyword", "growth OR \"process\" OR \"seed growth\"",
+			"list", new String [] { "vps*", "tpr2", "AT4G35020" }
 		);
 		assertNotNull ( "No JSON returned!", js );
 		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
@@ -155,15 +185,44 @@ public class ApiIT
 		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
 		
 		var rows = List.of ( evidenceTable.split ( "\n" ) );
-		assertEquals ( "Wrong no. of rows for filtered genes!", 3, rows.size () );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 4, rows.size () );
 		
-		var rowFound = rows.stream ().anyMatch ( 
-			row -> row.matches (
-			  // gene lists is in undetermined order
-				"CelComp\tPlant-type Vacuole Membrane\t6.72\t0.00007\t3\t((AT1G69840|AT4G26570)\\,?){2}\t0\t6647099"	
-			) 
-		);
-		assertTrue ( "Expected evidence table row not found!", rowFound );
+		var rowFound = rows.stream ().anyMatch ( row ->
+		{
+			var cols = row.split ( "\t" );
+			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
+			if ( !"Regulation Of Transcription...".equals ( cols [ 1 ]) ) return false;
+			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( cols [ 4 ] ) <= 0 ) return false; // genes count
+			if ( !"AT3G16830".equals ( cols [ 5 ] ) ) return false; // genes
+			return true;
+		});
+		assertTrue ( "Expected evidence table row not found (single gene)!", rowFound );
+		
+		rowFound = rows.stream ().anyMatch ( row ->
+		{
+			var cols = row.split ( "\t" );
+			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
+			if ( !"Vesicle-mediated Transport".equals ( cols [ 1 ]) ) return false;
+			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( cols [ 4 ] ) <= 0 ) return false; // genes count
+			var genes = cols [ 5 ].split ( "," ); // genes
+			if ( genes == null ) return false;
+			if ( !"neo4j".equals ( getMavenProfileId () ) )
+			{
+				if ( genes.length != 3 ) return false;
+				if ( !ArrayUtils.contains ( genes, "AT1G03950" ) ) return false;
+				if ( !ArrayUtils.contains ( genes, "AT5G44560" ) ) return false;
+				if ( !ArrayUtils.contains ( genes, "AT2G19830" ) ) return false;
+				return true;
+			}
+			// Neo4j queries are slightly different
+			if ( genes.length != 2 ) return false;
+			if ( !ArrayUtils.contains ( genes, "AT2G19830" ) ) return false;
+			if ( !ArrayUtils.contains ( genes, "AT3G10640" ) ) return false;
+			return true;
+		});
+		assertTrue ( "Expected evidence table row not found (multi-genes)!", rowFound );
 	}
 	
 
@@ -174,7 +233,8 @@ public class ApiIT
 	{
 		JSONObject js = invokeApiFailOpt ( "foo", false );
 		assertEquals ( 
-			"Bad type for the /foo call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2",
+			"Bad type for the /foo call!", 
+			ResponseStatusException2.class.getName (),
 			js.getString ( "type" )
 		);
 		assertEquals ( "Bad status for the /foo call!", 400, js.getInt ( "status" ) );

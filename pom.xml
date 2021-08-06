@@ -67,6 +67,7 @@
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
 		
+		<!-- 3702=Ara,4565=Wheat -->
 		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
 		
 		<!-- 
