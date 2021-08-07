@@ -410,7 +410,7 @@ public class SearchService
    * TODO: probably it should go somewhere else like QTLUtils, after having separated 
    * the too tight dependencies on Lucene.
    */
-	public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
+	public Set<QTL> searchQTLsForTraitOld ( String keyword ) throws ParseException
   {
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
@@ -481,8 +481,9 @@ public class SearchService
 	 * TODO: this is the new version, which uses the new model gene->pheno->Trait, to be 
 	 * tested and activated when switching to the new test dataset.
 	 * 
+	 * TODO: wrap the exception rubbish
 	 */
-  public Set<QTL> searchQTLsForTraitNew ( String keyword ) throws ParseException
+  public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
   {
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
@@ -524,8 +525,7 @@ public class SearchService
       		String phenoFromTypeId = phenoFrom.getOfType ().getId ();
       		
       		// TODO: QTL used to be here in the past (2021), not sure it's still needed.
-      		if ( !Stream.of ( "Gene", "SNP", "QTL" ).anyMatch ( phenoFromTypeId::equals ) ) continue;
-
+      		if ( !ArrayUtils.contains ( new String[] { "Gene", "SNP", "QTL" }, phenoFromTypeId ) ) continue;
       		
           String chrName = getAttrValueAsString ( graph, phenoFrom, "Chromosome", false );
           if ( chrName == null ) continue;
@@ -591,6 +591,9 @@ public class SearchService
   {
   	var graph = this.dataService.getGraph ();
 		var gmeta = graph.getMetaData();
+		
+		// TODO: the new chain is Gene|SNP|QTL -  Phenotype - Trait and this isn't consideding that
+		
     ConceptClass ccTrait = gmeta.getConceptClass("Trait");
     ConceptClass ccQTL = gmeta.getConceptClass("QTL");
     ConceptClass ccSNP = gmeta.getConceptClass("SNP");
@@ -603,8 +606,10 @@ public class SearchService
 
     log.debug ( "Looking for QTLs..." );
     
-    // If there is not traits but there is QTLs then we return all the QTLs
+    // There aren't traits, but maybe there are QTLs
     if (ccTrait == null) return KGUtils.getQTLs ( graph );
+
+    // Else, lookup for trait/QTL relations
     return this.searchQTLsForTrait ( keyword );
   }		
 }

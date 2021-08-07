@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,7 +35,6 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
-import uk.ac.ebi.utils.runcontrol.MultipleAttemptsExecutor;
 import uk.ac.ebi.utils.xml.XPathReader;
 
 
@@ -325,9 +325,11 @@ public class ApiIT
 	{
 		if ( geneAccFilters == null ) geneAccFilters = new String [ 0 ];
 		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0], "list", geneAccFilters );
-					
 		
 		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
+
+		
+		// TODO: this is the chromosome view, we need to test 'geneTable' first
 		
 		String xmlView = js.getString ( "gviewer" );
 		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
@@ -339,8 +341,6 @@ public class ApiIT
 			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
 	}	
-	
-	
 	
 	/**
 	 * Defaults to true
