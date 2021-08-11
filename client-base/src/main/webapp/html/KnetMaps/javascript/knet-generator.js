@@ -222,7 +222,7 @@ $(function() { // on dom ready
        // show flagged gene's labels
        if(conc.data('flagged') === 'true') {
        	  conc.removeClass('LabelOff').addClass('LabelOn');
-          // conc.addClass('FlaggedGene'); // DISABLED, as new blue shades now used for all gene labels (Aug 2021)
+          conc.addClass('FlaggedGene');
        	 }
     });
     cy.edges().forEach(function( rel ) { // for relations
@@ -306,7 +306,7 @@ $(function() { // on dom ready
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
 	
 	// re-color genes based on different taxid (range of 7 blues)
-	var gene_colors= ['#82cbfc','#e6f5fe','#50b7fb','lightBlue','#0598fa','#74b9e7','#64bcf7'];
+	var gene_colors= ['#e6f5fe','#82cbfc','#50b7fb','lightBlue','#0598fa','#74b9e7','#64bcf7'];
 	var all_taxids= [];
 	
 	// get all gene taxID's and make a list[] of them
