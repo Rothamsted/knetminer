@@ -49,7 +49,7 @@ public class ExportUtils
    */
   public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph )
   {
-  	exportOXL ( graph );
+  	// DEBUG exportOXL ( graph );
   	
   	File exportFile = null;
   	ONDEXGraph graph2 = new MemoryONDEXGraph ( "FilteredGraphUnconnected" );
@@ -119,7 +119,7 @@ public class ExportUtils
   }
   
   /**
-   * Sometimes is used for debugging
+   * Sometimes is used in {@link #exportGraph2Json(ONDEXGraph)} for debugging
    * @param graph
    */
   private static void exportOXL ( ONDEXGraph graph )

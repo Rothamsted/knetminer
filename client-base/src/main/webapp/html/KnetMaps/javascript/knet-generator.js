@@ -23,6 +23,9 @@ KNETMAPS.Generator = function() {
 
      // Highlight nodes with hidden, connected nodes using Shadowing.
 	   my.blurNodesWithHiddenNeighborhood();
+	   
+	   // re-color gene labels using various shades of blue, based on TAXID
+	   my.colorGeneLabelsByTaxID(allGraphData);
 
      // Set the default layout.
 //     setDefaultLayout();
@@ -36,7 +39,7 @@ KNETMAPS.Generator = function() {
 //initialize and generate the network from provided JSON blob
  my.generateNetworkGraphRaw=function(json_blob) {
    //console.log("Dataset file path: "+ json_File);
-   eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); stats.updateKnetStats(); legend.populateConceptLegend();');
+   eval(json_blob+'; my.initializeNetworkView(graphJSON, allGraphData); my.blurNodesWithHiddenNeighborhood(); my.colorGeneLabelsByTaxID(allGraphData); stats.updateKnetStats(); legend.populateConceptLegend();');
   };
 
 // initialize the network
@@ -298,6 +301,67 @@ $(function() { // on dom ready
          }
    });
   }
+ 
+ my.colorGeneLabelsByTaxID=function(metadata_json) {
+    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+	
+	// re-color genes based on different taxid (range of 7 blues)
+	var gene_colors= ['#e6f5fe','#82cbfc','#50b7fb','lightBlue','#0598fa','#74b9e7','#64bcf7'];
+	var all_taxids= [];
+	
+	// get all gene taxID's and make a list[] of them
+	cy.nodes().forEach(function( conc ) {
+        if(conc.data('conceptType') === "Gene") {
+	   var this_taxid="";
+	   for(var i=0; i<metadata_json.ondexmetadata.concepts.length;i++) {
+	       // if matching concept ID found, traverse attributes to get TAXID
+               if(conc.data('id') === metadata_json.ondexmetadata.concepts[i].id) {
+                  for(var j=0; j<metadata_json.ondexmetadata.concepts[i].attributes.length; j++) {
+                      if((metadata_json.ondexmetadata.concepts[i].attributes[j].attrname === "TAXID") || (metadata_json.ondexmetadata.concepts[i].attributes[j].attrnameName === "TX")) {
+			  this_taxid= metadata_json.ondexmetadata.concepts[i].attributes[j].value;
+			  // store unique taxID in list[]
+			  if(all_taxids.indexOf(this_taxid) === -1) { all_taxids.push(this_taxid); }
+			 }
+                     }
+		 }
+	     }
+           }
+	  });
+	  
+	//console.log("all_taxids: "+ all_taxids);
+	var genes_taxid = new Map();
+	var k=0;
+	// make k,v map of all taxID and blue shades/colors for gene labels
+	for(var j=0; j<all_taxids.length;j++) { 
+	    genes_taxid.set(all_taxids[j], gene_colors[j]);
+		k= k+1;
+		// reset color counter if no. of taxID's exceedes our label blue shades range (though unlikely)
+		if(k > gene_colors.length) { k=0; }
+	   }
+	
+	// now change label color for genes accordingly
+     cy.nodes().forEach(function( conc ) {
+       if(conc.data('conceptType') === "Gene") {
+	  var this_taxid="";
+	  // fetch TAXID again
+	  for(var i=0; i<metadata_json.ondexmetadata.concepts.length;i++) {
+              if(conc.data('id') === metadata_json.ondexmetadata.concepts[i].id) {
+                 for(var j=0; j<metadata_json.ondexmetadata.concepts[i].attributes.length; j++) {
+                     if((metadata_json.ondexmetadata.concepts[i].attributes[j].attrname === "TAXID") || (metadata_json.ondexmetadata.concepts[i].attributes[j].attrnameName === "TX")) {
+			 this_taxid= metadata_json.ondexmetadata.concepts[i].attributes[j].value;
+                        }
+                    }
+		 }
+	     }
+	       
+	  // get color (which shade of blue) from map
+	  var genelabel_color= genes_taxid.get(this_taxid);
+	  // set new label blue color/shade accordingly
+	  conc.data('conceptTextBGcolor',genelabel_color);
+	  conc.css({ 'text-background-opacity': '1' });
+	 }
+      });
+ }
  
  return my;
 };
