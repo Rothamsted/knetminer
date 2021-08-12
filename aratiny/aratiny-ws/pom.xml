@@ -68,7 +68,7 @@
   		<artifactId>maven-dependency-plugin</artifactId>	  		
   		<executions>
 	  		<execution>
-	  			<phase>generate-test-resources</phase>
+	  			<phase>pre-integration-test</phase>
 	  			<goals><goal>unpack</goal></goals>
 	  		</execution>
   		</executions>
@@ -129,27 +129,27 @@
 		</plugin>
 
 		<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-failsafe-plugin</artifactId>
-	      <configuration combine.self = "merge">
-	      	<systemProperties>
-	      	<maven.profileId>${maven.profileId}</maven.profileId>
-	      	</systemProperties>
-	      </configuration>
+			<groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-failsafe-plugin</artifactId>
+      <configuration combine.self = "merge">
+      	<systemProperties>
+      		<maven.profileId>${maven.profileId}</maven.profileId>
+      	</systemProperties>
+      </configuration>
 		</plugin>
 		
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webResources>
-            <resource>
-              <directory>src/main/webapp</directory>
-              <filtering>true</filtering>
-            </resource>
-          </webResources>
-        </configuration>
-      </plugin>			
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-war-plugin</artifactId>
+      <configuration>
+        <webResources>
+          <resource>
+            <directory>src/main/webapp</directory>
+            <filtering>true</filtering>
+          </resource>
+        </webResources>
+      </configuration>
+    </plugin>			
 
 	</plugins>
 	
@@ -198,7 +198,7 @@
 		 			<artifactId>maven-dependency-plugin</artifactId>	  			
 		 			<executions>
 		 				<execution>
-		 					<phase>generate-test-resources</phase>
+		 					<phase>pre-integration-test</phase>
 		 					<goals><goal>unpack</goal></goals>
 		 				</execution>
 		 			</executions>
@@ -235,7 +235,7 @@
 				  <executions>
 				    <execution>
 				    	<id>Setup Neo4j test DB</id>
-				      <phase>process-test-resources</phase>
+				      <phase>pre-integration-test</phase>
 				      <goals>
 				        <goal>exec</goal>
 				      </goals>
@@ -273,7 +273,7 @@
 						<!-- Start/stop just to download it before the restore command above -->
 						<execution>
 						<id>neo4j-server-download</id>
-						<phase>generate-test-resources</phase>
+						<phase>process-test-resources</phase>
 						<goals>
 							<goal>start</goal>
 							<goal>stop</goal>
