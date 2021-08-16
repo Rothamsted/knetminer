@@ -898,7 +898,7 @@ function searchKeyword() {
                                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
                                        }
                                        // for rare edge cases when no genes in list are found in search, then search is keyword-centric only.
-                                       if((count_linked === 0) && (count_unlinked > geneList_size)) {
+                                       if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
                                          }
                                       }
@@ -917,7 +917,7 @@ function searchKeyword() {
                                       genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
                                      }
                                     // for rare edge cases when no genes in list are found in search, then search is empty.
-                                    if((count_linked === 0) && (count_unlinked > geneList_size)) {
+                                    if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                                        genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs to see results.</span></div>';
                                       }
                                    }
@@ -936,7 +936,7 @@ function searchKeyword() {
                                          genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
                                         }
                                        // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
-                                       if((count_linked === 0) && (count_unlinked > geneList_size)) {
+                                       if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                                           genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Shwoing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
                                          }
                                       }
