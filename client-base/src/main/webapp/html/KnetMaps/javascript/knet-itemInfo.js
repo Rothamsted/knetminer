@@ -183,6 +183,7 @@ KNETMAPS.ItemInfo = function() {
                         for(var u=0; u < url_mappings.html_acc.length; u++) {
                             if(url_mappings.html_acc[u].cv === accessionID) {
                                coAccUrl= url_mappings.html_acc[u].weblink + co_acc; // co-accession url.
+                               if(accessionID === "wheatexp") { coAccUrl= coAccUrl +"&search_by=gene"; }
                                if(accessionID === "CO") { coAccUrl= coAccUrl +"/"; }
 							   coAccUrl= coAccUrl.replace('TO:','').replace('PO:',''); // remove TO: or PO:, if exists
                                coAccUrl= coAccUrl.replace(/\s/g,''); // remove spaces, if any
