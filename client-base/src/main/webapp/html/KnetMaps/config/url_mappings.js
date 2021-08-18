@@ -61,7 +61,7 @@ var url_mappings= {
      {"cv": "YeastCyc", "weblink": "https://yeast.biocyc.org/YEAST/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""},
      {"cv": "HumanCyc", "weblink": "https://humancyc.org/HUMAN/substring-search?type=NIL&object=", "cc_restriction": ""},
      {"cv": "UNIPROTKB-COV", "weblink": "https://covid-19.uniprot.org/uniprotkb/", "cc_restriction": ""},
-     {"cv": "WHEATEXP", "weblink": "http://www.wheat-expression.com/genes/show?gene_set=RefSeq1.1&name=", "cc_restriction": ""}
+     {"cv": "WHEATEXP", "weblink": "http://www.wheat-expression.com/genes/show?gene_set=RefSeq1.1&name=", "cc_restriction": ""},
      {"cv": "HPO", "weblink": "https://hpo.jax.org/app/browse/term/", "cc_restriction": ""}
  ]
 };
