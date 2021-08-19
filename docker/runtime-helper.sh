@@ -118,6 +118,7 @@ cp -Rf aratiny/aratiny-ws /tmp
 
 # We don't need the test queries used for aratiny, let's remove them from the build location
 rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/*.cypher
+rm -Rf /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config/neo4j/cypher-queries.txt
 
 # And then copy the dataset-specific config to the build place (in /tmp) 
 cp -Rf "$knet_dataset_dir/settings/ws/"* /tmp/aratiny-ws/src/test/resources/knetminer-dataset/config

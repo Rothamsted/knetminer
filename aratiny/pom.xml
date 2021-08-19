@@ -16,10 +16,6 @@
 	Knetminer functionality and interface.</description>	
 		
 	<properties>
-	
-		<!-- This is used for the Neo4j server plug-in for Maven -->		
-		<neo4j.server.version>3.5.12</neo4j.server.version>
-		
 	</properties>
 	
 	<modules>
