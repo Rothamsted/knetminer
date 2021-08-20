@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toMap;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
+import static rres.knetminer.datasource.ondexlocal.service.utils.KGUtils.getMolBioDefaultLabel;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
@@ -527,8 +528,8 @@ public class SearchService
         Integer end = (Integer) getAttrValue ( graph, geneLikeEntity, "END", false );
         if ( end == null ) continue;
         
-        String geneLabel = getConceptName ( geneLikeEntity );
-        String phenoLabel = getConceptName ( pheno );
+        String geneLabel =  getMolBioDefaultLabel ( geneLikeEntity );
+        String phenoLabel = getMolBioDefaultLabel ( pheno );
                   
         float pValue = Optional.ofNullable ( (Float) getAttrValue ( graph, phenoRel, "PVALUE", false ) )
         	.orElse ( 1.0f );
