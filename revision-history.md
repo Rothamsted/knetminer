@@ -1,20 +1,58 @@
 # Revision History
 
-*This file was last reviewed on 9/6/2021*
+*This file was last reviewed on 20/08/2021*
 
-# 5.0-SNAPSHOT
+# 5.0
 
-* Updates and additions to datasets (covid-19, tomato, potato).
-* Migration to Java 11. **Now you do need Java >= 11 to make knetminer working** If you use Docker, our images
-  use the right Java version automatically.
-* Wildcards support in the Gene List Search box (eg, 'MYB*', 'TT?')
+## What's new?
 
-## Internals
-* Significant review of the codebase file structure and names.
-* Third-party dependency updates.
-* Big refactoring of the `OndexServiceProvider` component.
-* Docker-base removed, now there are only two image levels.
-* Migration from Travis to GitHub Actions.
+1. Our new multi-species knowledge graph (KG) integrates a vast amount of: genetic, genomic and literature data from the four most important global cereal crops: wheat, rice, maize, barley, combined with the model plant species Arabidopsis and Brachypodium. We have cleaned, processed, and integrated over 100 datasets which has resulted in a KG of 2 million nodes and 10 million relationships between them.
+2. Several new datasets have been added (poaceae, sorghum, maize, f.culmorum, solanaceae, tomato, potato, pepper, barley).
+3. KnetMiner (https://knetminer.com) now also offers a range of Free and Pro features. The free version is a perfect starting point for using or testing the platform with a small number of genes. The Pro version enables searching the knowledge graph with any number of genes, creating very large gene networks and storing as many networks as you wish. 
+4. The gene list search feature has received a major performance enhancement. It now supports wildcards (eg. search for all TPS* genes) and can perform a novel KG enrichment analysis. 
+5. The Evidence View has seen major upgrades to allow users download the content and to generate gene networks for multiple enriched terms. 
+6. The Network View has been vastly improved as well, with auto-filtering when the knetworks are too big and a new feature to export the content of the network (all visible genes) as a table. 
+7. The network visualisation has been enhanced with better node labelling to highlight important parts of the graph and to distinguish genes from different species by taxID. A new type of edge (dashed lines) has also been introduced to flag relationships which need to be treated with caution.
+8. KnetMiner generated gene networks can be easily saved to KnetSpace (https://knetminer.com/beta/knetspace/) and shared with colleagues and published online.
+
+References and further details:
+   * Latest publication: https://onlinelibrary.wiley.com/doi/10.1111/pbi.13583
+
+## Software improvements and big fixes:
+
+### Search and analysis
+ * Free and Pro KnetMiner features added. Free users are those without a KnetSpace account or those on a KnetSpace `Free` Plan wile Pro users are subscribers of the KnetSpace Pro plan. Under the free version, users can search KnetMiner with upto 20 genes in their gene list and visualize a knetwork of max. 10 genes. Pro users can search KnetMiner with no limits on gene list size and can render knetworks to analyse upto 200 genes at once.
+ * Search results messages now show detailed information such as number of linked, unlinked and not-found user genes based on user query and gene list, and also the time taken for the query to run.
+ * Error messages now return more detailed and user-friendly information.
+ * Users can now directly add/omit evidence terms to their search box from Evidence View.
+ * Evidence view table can now be downloaded by users as a tab-delimited file.
+ * Users can render a combined knetwork of multiple evidence terms from Evidence View.
+
+### KnetMiner API
+   * New auto-generated explainer implemented for KnetMiner genepage API that analysises the user query to generate a word summary of what the resulting knetwork contains.
+   * KnetMiner knowledge graph (dataset) version now added to `latestNetworkStats` API to have it displayed in release_notes html page.
+
+### KnetMiner back-end
+   * Migration to Java 11. **Now you do need Java >= 11 to make knetminer work** If you use Docker, our images use the right Java version automatically.
+   * Big refactoring of the `OndexServiceProvider` component.
+   * Wildcards now supported in the Gene List Search box (eg, 'MYB*', 'TT?')
+   * knetminer-base image removed, now there are only `two` docker image levels.
+   * Migration from Travis to GitHub Actions for CI builds.
+   * KnetMiner now allows developer users to enable/disable knetspace login in their KnetMiners, and to enable/disable or re-route google analytics to an Amazon S3 bucket.
+   * Extensive review of the codebase file structure and names.
+   * Third-party dependency updates.
+
+### Network View (KnetMaps)
+  * Users can now export all visible genes and associated information as a tab-delimited file
+  * Network View now auto-filters large knetworks to let users visualize subsets and avoid browser issues.
+  * The network visualization now has more advanced node labelling to highlight important parts of the graph and to distinguish genes by taxID as well, by coloring gene node labels appropriately, which is highly useful for multi-species KGs. 
+  * Network visualization now also used "dashed" edges to flag relationships that are not abdolute and need to be treated with caution.
+  * Multiple new data sources hyperlinks added/updated to enable users to explore ARA-GWAS, ENSEMBL_PLANTS, wheat-expression, ARA-PHENO and other sources.
+
+### Other updates
+   * KnetMiner wiki (https://github.com/Rothamsted/knetminer/wiki) updated with new instructions for developers.
+
+
 
 
 # 4.0
