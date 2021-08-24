@@ -2,6 +2,8 @@ export JAVA_TOOL_OPTIONS="-Xms1G -Xmx4G"
 # Let's make it less verbose
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.slf4j.simpleLogger.defaultLogLevel=INFO"
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=ERROR"
+# Copes with timeouts from our Nexus
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dsun.net.client.defaultConnectTimeout=300000 -Dsun.net.client.defaultReadTimeout=300000"
 
 # This is both the knetminer-bare image version that is used for the current builds, and the 
 # knetminer image that is currently build.
