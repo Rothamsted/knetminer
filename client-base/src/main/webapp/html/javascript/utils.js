@@ -1708,16 +1708,21 @@ function generateMultiEvidenceNetwork() {
                }
            }
        }
-    //console.log("evidences elected: "+evidences_ondexid_list);
-    //console.log("Selected evidence(s) are linked to genes:" + geneids);
+    //console.log("evidence terms elected: "+ evidences_ondexid_list);
+    //console.log("Selected evidence(s) are linked to these user_genes: "+ geneids);
     if (evidences_ondexid_list === "") {
         $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please select evidence terms.</b></div>');
     }
     else {
         var params = {keyword: evidences_ondexid_list};
-        if (geneids.length > 0) { params.list = geneids; }
-        // Generate the Network in KnetMaps.
-        generateCyJSNetwork(api_url + '/network', params);
+	params.list = geneids;
+        if(geneids.length>0 && geneids[0].length>1) { 
+          // Generate the evidence knetwork in KnetMaps.
+          generateCyJSNetwork(api_url + '/network', params);
+	}
+       else {
+       	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please evidence terms with user genes.</b></div>');
+       }
     }
 }
 
