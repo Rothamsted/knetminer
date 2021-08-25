@@ -69,9 +69,9 @@ do
 done
 DOCKER_OPTS="$DOCKER_OPTS --volume $jmx_user_path:$jmx_user_path"
 
-memory='60G'
+memory='70G'
 # else the same $memory amount is used for swap and that doesn't play very well with our servers.
-DOCKER_OPTS="$DOCKER_OPTS --memory-swap 80G"
+DOCKER_OPTS="$DOCKER_OPTS --memory-swap 90G"
 
 # Let's use the two Docker servers for two different test instances
 #
@@ -83,7 +83,11 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 		--neo4j-user rouser --neo4j-pwd rouser"
 	# Enables the Cypher Debugger, to profile Cypher queries
 	# WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
-	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"	
+	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"
+	
+  memory='80G'
+  DOCKER_OPTS="$DOCKER_OPTS --memory-swap 100G"
+	
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
 		dataset_id="wheat-beta"
