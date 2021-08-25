@@ -69,12 +69,12 @@ do
 done
 DOCKER_OPTS="$DOCKER_OPTS --volume $jmx_user_path:$jmx_user_path"
 
+memory='60G'
+# else the same $memory amount is used for swap and that doesn't play very well with our servers.
+DOCKER_OPTS="$DOCKER_OPTS --memory-swap 80G"
 
 # Let's use the two Docker servers for two different test instances
 #
-memory='60G'
-DOCKER_OPTS="$DOCKER_OPTS --memory-swap='80G'" # else 60G of swap are used and doesn't play very well
-
 if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	echo -e "\n\n\t(Re)launching Docker, Cypher-based traverser\n"
 
