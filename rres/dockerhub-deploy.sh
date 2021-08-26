@@ -71,7 +71,7 @@ DOCKER_OPTS="$DOCKER_OPTS --volume $jmx_user_path:$jmx_user_path"
 
 memory='70G'
 # else the same $memory amount is used for swap and that doesn't play very well with our servers.
-DOCKER_OPTS="$DOCKER_OPTS --memory-swap 90G"
+mem_swap='90G'
 
 # Let's use the two Docker servers for two different test instances
 #
@@ -86,7 +86,7 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"
 	
   memory='80G'
-  DOCKER_OPTS="$DOCKER_OPTS --memory-swap 100G"
+	mem_swap='100G'
 	
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
@@ -95,7 +95,8 @@ fi
 
 ./docker-run.sh \
   --dataset-id "$dataset_id" --container-name wheat-ci \
-  --dataset-dir "$dataset_dir" --host-port $host_port --container-memory $memory \
+  --dataset-dir "$dataset_dir" --host-port $host_port \
+  --container-memory $memory --container-memory-swap $mem_swap \
   $docker_run_opts \
   --detach
 

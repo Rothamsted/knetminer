@@ -34,6 +34,9 @@ do
   	#--: Passed to Docker as --memory (eg, --container-memory 12G).
   	--container-memory)
   	  container_memory="$2"; shift 2;;
+  	#--: Passed to Docker as --memory-swap (eg, --memory-swap 16G).
+  	--container-memory-swap)
+  	  container_memory_swap="$2"; shift 2;;
   	#--: Docker is invoked with --detach, ie, container is run in background and this script ends immediately 
   	#--: (it's useful to use it with --container-name)
   	--detach)
@@ -98,6 +101,8 @@ done
 DOCKER_OPTS="$DOCKER_OPTS -p $host_port:8080"
 [ "$container_name" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --name $container_name"
 [ "$container_memory" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory $container_memory"
+[ "$container_memory_swap" == "" ] || DOCKER_OPTS="$DOCKER_OPTS --memory-swap $container_memory_swap"
+
 
 # If neither --dataset-dir nor --dataset-id are specified, then you want the continer default aratiny 
 if [ "$dataset_dir" == '' ]; then
