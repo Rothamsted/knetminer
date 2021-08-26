@@ -2,54 +2,54 @@
 <sampleQueries>
 	<query>
 		<name>Example 1</name>
-		<description>Sugar content</description>
-		<term>"sugar content" OR glucose</term>
-		<withinRegion>true</withinRegion>
-		<region>
-			<chromosome>1</chromosome>
-			<start>227000000</start>
-			<end>267000000</end>
-			<label>AQFS466</label>
-		</region>
-		<region>
-			<chromosome>10</chromosome>
-			<start>127000000</start>
-			<end>146000000</end>
-			<label>AQFS472</label>
-		</region>
+		<description>Genelist search</description>
+		<term></term>
+		<gene>TPS*</gene>
+		<gene>TPP*</gene>
 	</query>	
 	
 	<query>
 		<name>Example 2</name>
-		<description>Drought</description>
-		<term>drought OR trehalose</term>
-		<withinRegion>false</withinRegion>
-		<region>
-			<chromosome>1</chromosome>
-			<start>10000000</start>
-			<end>13000000</end>
-			<label>QTL1</label>
-		</region>
-		<region>
-			<chromosome>4</chromosome>
-			<start>14000000</start>
-			<end>15000000</end>
-			<label>QTL2</label>
-		</region>
-		<mapGLWithoutRestriction>true</mapGLWithoutRestriction>
-		<gene>Zm00001d049252</gene>
-		<gene>Zm00001d005687</gene>
-		<gene>Zm00001d037211</gene>
-		<gene>Zm00001d008338</gene>
-		<gene>Zm00001d047110</gene>
-		<gene>Zm00001d022193</gene>
-		<gene>Zm00001d010662</gene>
-		<gene>Zm00001d032311</gene>
-		<gene>Zm00001d028267</gene>
-		<gene>Zm00001d020396</gene>
-		<gene>Zm00001d023673</gene>
-		<gene>Zm00001d017502</gene>
-		<gene>Zm00001d050293</gene>
-		<gene>Zm00001d052060</gene>		
+		<description>List+keyword search</description>
+		<term>drought</term>
+		<gene>ZM00001EB038010</gene>
+		<gene>ZM00001EB176680</gene>
+		<gene>ZM00001EB149160</gene>
+		<gene>ZM00001EB300010</gene>
+		<gene>ZM00001EB160470</gene>
+		<gene>ZM00001EB158420</gene>
+		<gene>ZM00001EB393150</gene>
+		<gene>ZM00001EB073420</gene>
+		<gene>ZM00001EB274190</gene>
+		<gene>ZM00001EB343590</gene>
+		<gene>ZM00001EB214530</gene>
+		<gene>ZM00001EB387090</gene>
+		<gene>ZM00001EB324540</gene>
+		<gene>ZM00001EB071930</gene>
+		<gene>ZM00001EB270240</gene>
+		<gene>ZM00001EB110650</gene>
+		<gene>ZM00001EB144000</gene>
+		<gene>ZM00001EB329590</gene>
+		<gene>ZM00001EB119320</gene>
+		<gene>ZM00001EB386560</gene>
+		<gene>ZM00001EB030890</gene>
+		<gene>ZM00001EB058980</gene>
+		<gene>ZM00001EB030900</gene>
+		<gene>ZM00001EB073430</gene>
+		<gene>ZM00001EB086800</gene>
+		<gene>ZM00001EB119310</gene>
+		<gene>ZM00001EB127670</gene>
+		<gene>ZM00001EB131280</gene>
+		<gene>ZM00001EB286850</gene>
+		<gene>ZM00001EB166990</gene>
+		<gene>ZM00001EB219160</gene>
+		<gene>ZM00001EB064480</gene>
+		<gene>ZM00001EB240630</gene>
 	</query>
+	
+	<query>
+		<name>Example 3</name>
+		<description>Genome search</description>
+		<term>"seed germination" AND flavon*</term>
+	</query>	
 </sampleQueries>
