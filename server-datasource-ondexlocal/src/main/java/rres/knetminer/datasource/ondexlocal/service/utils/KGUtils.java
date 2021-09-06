@@ -221,12 +221,12 @@ public class KGUtils
 	public static String getMolBioDefaultLabel ( ONDEXConcept c )
 	{
 		String type = c.getOfType ().getId ();
-		String bestAcc = StringUtils.trimToEmpty ( getShortestNotAmbiguousAccession ( c.getConceptAccessions () ) );
+		String bestAcc = StringUtils.trimToEmpty ( getBestAccession ( c.getConceptAccessions (), false ) );
 		String bestName = StringUtils.trimToEmpty ( getShortestPreferedName ( c.getConceptNames () ) );
 	
 		String result = "";
 		
-		if ( type == "Gene" || type == "Protein" )
+		if ( "Gene".equals ( type ) || "Protein".equals ( type ) )
 		{
 			if ( bestAcc.isEmpty () ) result = bestName;
 			else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
@@ -237,22 +237,60 @@ public class KGUtils
 		return StringUtils.abbreviate ( result, 30 );
 	}
 
+	
 	/**
-	 * Returns the shortest not ambiguous accession or ""
-	 *
-	 * @param accs Set<ConceptAccession>
-	 * @return String name
+	 * Finds the best accession in a set. It mainly applies the criteria of shortest and lexicographically
+	 * first value, making exceptions for a few special cases.
+	 * 
+	 * If the input is null or empty, returns ""
+	 * If includeAmbiguous is false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
+	 * set (might return "" if none available), else ignores ambiguity and considers all the input.
+	 *  
 	 */
-	public static String getShortestNotAmbiguousAccession ( Set<ConceptAccession> accs ) 
+	public static String getBestAccession ( Set<ConceptAccession> accs, boolean includeAmbiguous )
 	{
-		return accs.stream ()
-	  .filter ( acc -> !acc.isAmbiguous () )
-		.map ( ConceptAccession::getAccession )
-		.map ( String::trim )
-		.sorted ( Comparator.comparing ( String::length ) )
+		if ( accs == null || accs.size () == 0 ) return "";
+				
+		var accsStrm = accs.parallelStream ();
+		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
+		
+		// This is to privilege maize genes of type EB (#593)
+		Comparator<String> accCmp = (acc1, acc2) ->	
+		{
+			final var zmebRe = "^ZM.+EB[0-9].*";
+			final var zmdRe = "^ZM.+D[0-9].*"; 
+			if ( acc1.matches ( zmebRe ) && acc2.matches ( zmdRe  ) ) return -1;
+			if ( acc2.matches ( zmebRe ) && acc1.matches ( zmdRe ) ) return 1;
+			return 0;
+		};
+
+		// In all the other cases, first compare the lengths and then the string values.
+		accCmp = accCmp.thenComparingInt ( String::length )
+			.thenComparing ( Comparator.naturalOrder () );
+		
+		return accsStrm.map ( ConceptAccession::getAccession )
+    .map ( String::trim )
+		.sorted ( accCmp )
 		.findFirst ()
 		.orElse ( "" );
 	}
+
+	/**
+	 * Defaults to all the accessions. 
+	 */
+	public static String getBestAccession ( Set<ConceptAccession> accs )
+	{
+		return getBestAccession ( accs, true );
+	}
+
+	/**
+	 * Just a wrapper, concept must be non-null
+	 */
+	public static String getBestAccession ( ONDEXConcept concept )
+	{
+		return getBestAccession ( concept.getConceptAccessions () );
+	}
+	
 
 	/**
 	 * Returns the shortest preferred Name from a set of concept Names or ""
@@ -267,7 +305,10 @@ public class KGUtils
 	  .filter ( ConceptName::isPreferred )
 		.map ( ConceptName::getName )
 		.map ( String::trim )
-		.sorted ( Comparator.comparing ( String::length ) )
+		.sorted ( 
+			Comparator.comparing ( String::length )
+				.thenComparing ( Comparator.naturalOrder () ) 
+		)
 		.findFirst ()
 		.orElse ( "" );
 	}

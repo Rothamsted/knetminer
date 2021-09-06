@@ -68,7 +68,7 @@
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
 		
 		<!-- 3702=Ara,4565=Wheat,4577=Maize -->
-		<knetminer.specieTaxId>3702</knetminer.specieTaxId>
+		<knetminer.specieTaxId>3702,4577</knetminer.specieTaxId>
 		
 		<!-- 
 			If this is non-empty, the genes used to seed the initial semantic motif graph traverser are taken from this
