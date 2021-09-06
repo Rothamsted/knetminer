@@ -3,13 +3,18 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import uk.ac.ebi.utils.regex.RegEx;
 
 /**
  * The Gene helper for an Ondex graph.
@@ -102,6 +107,9 @@ public class GeneHelper
 	 * Gets the best accession string for the gene. This considers special sources like 
 	 * TAIR, ENSEMBL, PHYTOZOME.
 	 * 
+	 * This is specific of genes and the gene view, a more generic facility is 
+	 * {@link KGUtils#getShortestNotAmbiguousAccession(Set)}.
+	 * 
 	 */
 	public String getBestAccession ()
 	{
@@ -109,9 +117,8 @@ public class GeneHelper
 		
 		if ( geneAccs.size () == 0 ) return "";
 		
-		// TODO: What is this?! FACTORISE!
 		return geneAccs
-		.stream ()
+		.parallelStream ()
 		.filter ( acc -> {
 			String accStr = acc.getAccession ();
 			String accSrcId = acc.getElementOf ().getId ();
@@ -121,7 +128,21 @@ public class GeneHelper
 			return false;
 		})
 		.map ( ConceptAccession::getAccession )
-		.findAny ()
+		// Makes the result predictable by preferring them in order (and hence the shortest ones)
+		.sorted ( (acc1, acc2) -> 
+		{
+			// This is to privilege maize genes of type EB (#593)
+			if ( acc1.length () == acc2.length () ) return 0;
+			if ( acc1.length () > acc2.length () ) {
+				if ( acc1.matches ( "^ZM.+EB[0-9].*" ) && acc2.matches ( "^ZM.+D[0-9].*" ) )
+					return -1;
+			}
+			else if ( acc2.matches ( "^ZM.+EB[0-9].*" ) && acc1.matches ( "^ZM.+D[0-9].*" ) )
+				return 1;
+			
+			return acc1.compareTo ( acc2 );
+		})
+		.findFirst ()
 		.orElse ( geneAccs.iterator ().next ().getAccession () );		
 	}
 	

@@ -351,7 +351,9 @@ public class ExportService
 	
 	
 	/**
-	 * This table contains all possible candidate genes for given query
+	 * This table contains all possible candidate genes for given query, that is, the KnetMiner left-most
+	 * 'Gene View'.
+	 * 
 	 * TODO: too big! Split into separated functions.
 	 *
 	 * Was named writeGeneTable
@@ -521,7 +523,7 @@ public class ExportService
 	
 	
   /**
-   * Renders Genomap XML.
+   * Renders Genomap XML, that is the KnetMiner chromosome view, in the second UI tab ('Map View').
    * 
    * @param apiUrl the URL of the invocation that generated current results, used to be included in the result
    * @param genes list of genes to be displayed (all genes for search result)
@@ -757,7 +759,7 @@ public class ExportService
 	
 	
   /**
-   * Export the evidence Table for the evidence view file.
+   * Export the evidence Table for the KnetMiner 'Evidence View' tab (the third one).
    *
    */
 	public String exportEvidenceTable ( 
