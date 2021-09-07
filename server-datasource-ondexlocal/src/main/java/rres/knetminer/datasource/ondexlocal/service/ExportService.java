@@ -394,8 +394,8 @@ public class ExportService
 			var geneHelper = new GeneHelper ( graph, gene );
 			Double score = scoredCandidates.getOrDefault ( gene, 0d );
 	
-			// use shortest preferred concept name
-			String geneName = KGUtils.getShortestPreferedName ( gene.getConceptNames () );
+			// TODO: this considers the name only, getBestConceptLabel() instead?
+			String geneName = KGUtils.getBestName ( gene.getConceptNames () );
 	
 			boolean isInList = userGeneIds.contains ( gene.getId () );
 	
@@ -454,7 +454,7 @@ public class ExportService
 				// group by CC
 				relatedConcept -> relatedConcept.getOfType ().getId (),
 				// for each CC, make a list of labels
-				Collectors.mapping ( KGUtils::getMolBioDefaultLabel, Collectors.toList () )
+				Collectors.mapping ( KGUtils::getBestConceptLabel, Collectors.toList () )
 			)); 
 				
 			
@@ -479,7 +479,7 @@ public class ExportService
 			{
 				List<String> pubLabels = newPubs.stream ()
 				.map ( graph::getConcept )
-			  .map ( KGUtils::getMolBioDefaultLabel )
+			  .map ( KGUtils::getBestConceptLabel )
 			  // TODO: is this right?! What if the name IS NOT a PMID?!
 			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
 			  .collect ( Collectors.toList () );
@@ -509,7 +509,7 @@ public class ExportService
 			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 			
 			out.append (
-				geneId + "\t" + KGUtils.getBestAccessionForGene ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
+				geneId + "\t" + KGUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
 				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
@@ -591,19 +591,18 @@ public class ExportService
 			int beg = geneHelper.getBeginBP ( true );
 			int end = geneHelper.getEndBP ( true );
 
-
-			String name = gene.getPID ();
-			// TODO: What does this mean?! Getting a random accession?! Why
-			// not using the methods for the shortest name/accession?
+			// TODO: shortest acc methods? This is just a bit faster and picks the first one because
+			// any is fine for querying.
+			String queryAcc = gene.getPID ();
 			for ( ConceptAccession acc : gene.getConceptAccessions () )
-				name = acc.getAccession ();
+				queryAcc = acc.getAccession ();
 
-			String label = KGUtils.getMolBioDefaultLabel ( gene );
+			String label = KGUtils.getBestConceptLabel ( gene );
 			String query = null;
 			try
 			{
 				query = "keyword=" + URLEncoder.encode ( keyword, "UTF-8" ) + "&amp;list="
-						+ URLEncoder.encode ( name, "UTF-8" );
+						+ URLEncoder.encode ( queryAcc, "UTF-8" );
 			}
 			catch ( UnsupportedEncodingException e )
 			{
@@ -823,7 +822,7 @@ public class ExportService
 			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( foundType ) ) ) 
 				return;
 
-			String foundName = KGUtils.getMolBioDefaultLabel ( foundConcept );
+			String foundName = KGUtils.getBestConceptLabel ( foundConcept );
 
 			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
@@ -846,7 +845,7 @@ public class ExportService
 				var geneHelper = new GeneHelper ( graph, startGene );
 				
 				if ( startGene != null && userGenesRo.contains ( startGene ) )
-					userGeneLabels.add ( KGUtils.getBestAccessionForGene ( startGene ) );
+					userGeneLabels.add ( KGUtils.getBestGeneAccession ( startGene ) );
 
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 
