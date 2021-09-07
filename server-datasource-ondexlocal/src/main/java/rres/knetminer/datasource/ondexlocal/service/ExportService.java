@@ -509,7 +509,7 @@ public class ExportService
 			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 			
 			out.append (
-				geneId + "\t" + KGUtils.getBestAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
+				geneId + "\t" + KGUtils.getBestAccessionForGene ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
 				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
@@ -846,7 +846,7 @@ public class ExportService
 				var geneHelper = new GeneHelper ( graph, startGene );
 				
 				if ( startGene != null && userGenesRo.contains ( startGene ) )
-					userGeneLabels.add ( KGUtils.getBestAccession ( startGene ) );
+					userGeneLabels.add ( KGUtils.getBestAccessionForGene ( startGene ) );
 
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 

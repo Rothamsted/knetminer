@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -239,44 +241,98 @@ public class KGUtils
 
 	
 	/**
+	 * This is a low-level implementation of {@link #getBestAccession(Set, boolean)}, probably you don't
+	 * want to use it, use the public versions instead.
+	 * 
 	 * Finds the best accession in a set. It mainly applies the criteria of shortest and lexicographically
 	 * first value, making exceptions for a few special cases.
 	 * 
 	 * If the input is null or empty, returns ""
-	 * If includeAmbiguous is false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
+	 * 
+	 * @param includeAmbiguous, if false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
 	 * set (might return "" if none available), else ignores ambiguity and considers all the input.
+	 * 
+	 * @param priorityCriteria, if non-null, it gives priority to the accessions that have the lowest values for 
+	 * this function. This is a low-level feature, use the other more abstract labelling criteria if you're in 
+	 * doubt about it.
 	 *  
 	 */
-	public static String getBestAccession ( Set<ConceptAccession> accs, boolean includeAmbiguous )
+	private static String getBestAccession (
+		Set<ConceptAccession> accs, boolean includeAmbiguous, ToIntFunction<ConceptAccession> priorityCriteria 
+	)
 	{
 		if ( accs == null || accs.size () == 0 ) return "";
 				
 		var accsStrm = accs.parallelStream ();
 		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
-		
-		// This is to privilege maize genes of type EB (#593)
-		Comparator<String> accCmp = (acc1, acc2) ->	
-		{
-			final var zmebRe = "^ZM.+EB[0-9].*";
-			final var zmdRe = "^ZM.+D[0-9].*"; 
-			if ( acc1.matches ( zmebRe ) && acc2.matches ( zmdRe  ) ) return -1;
-			if ( acc2.matches ( zmebRe ) && acc1.matches ( zmdRe ) ) return 1;
-			return 0;
-		};
 
+		// Our own comparisons
+		Comparator<String> accStrCmp = (acc1, acc2) -> specialAccessionCompare ( acc1, acc2 );
+		
 		// In all the other cases, first compare the lengths and then the string values.
-		accCmp = accCmp.thenComparingInt ( String::length )
+		accStrCmp = accStrCmp.thenComparingInt ( String::length )
 			.thenComparing ( Comparator.naturalOrder () );
 		
-		return accsStrm.map ( ConceptAccession::getAccession )
-    .map ( String::trim )
+		// Then, prefix it with the priority criteria and string trimming
+		Comparator<ConceptAccession> accCmp = Comparator.comparing ( 
+			(ConceptAccession acc) -> acc.getAccession ().trim(), accStrCmp
+		);
+		if ( priorityCriteria != null ) 
+			accCmp = Comparator.comparingInt ( priorityCriteria ).thenComparing ( accCmp );
+		
+		return accsStrm
 		.sorted ( accCmp )
 		.findFirst ()
+		// Unfortunately, we have to do a final re-map, in order to be able to apply whole-ConceptAccession
+		// comparisons
+		.map ( ConceptAccession::getAccession )
+		.map ( String::trim )
 		.orElse ( "" );
+	}
+	
+	/**
+	 * Doesn't use any priority criteria. 
+	 */
+	private static String getBestAccession ( Set<ConceptAccession> accs, boolean includeAmbiguous )
+	{
+		return getBestAccession ( accs, includeAmbiguous, null );
+	}
+	
+	/**
+	 * Uses special comparison/priority between accession strings.
+	 * 
+	 * It assumes, trimmed accessions. This is always included in the {@link #getBestAccession(Set, boolean, ToIntFunction)}
+	 * comparisons.
+	 */
+	private static int specialAccessionCompare ( String acc1, String acc2 )
+	{
+		// This is to privilege maize genes of type EB (#593)
+		final var zmebRe = "^ZM.+EB[0-9].*";
+		final var zmdRe = "^ZM.+D[0-9].*"; 
+		if ( acc1.matches ( zmebRe ) && acc2.matches ( zmdRe  ) ) return -1;
+		if ( acc2.matches ( zmebRe ) && acc1.matches ( zmdRe ) ) return 1;
+		return 0;
+	}
+	
+	/**
+	 * This is used for the gene accession field in certain views, it gives priority to ENSEMBL and other
+	 * sources.   
+	 */
+	private static int getKnownSourcesAccessionPriority ( ConceptAccession acc )
+	{
+		String accStr = acc.getAccession ();
+		String accSrcId = acc.getElementOf ().getId ();
+		if ( accSrcId.startsWith ( "ENSEMBL" ) ) return -1;
+		if ( "PHYTOZOME".equals ( accSrcId ) ) return -1;
+		if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return -1;
+		return 1;
 	}
 
 	/**
-	 * Defaults to all the accessions. 
+	 *  Yields the best accession in the set.
+	 *  
+	 *  You should use this for generic concepts and end-user visualisations of accessions. 
+	 *  For generic labelling, which is also based on names, use {@link #getMolBioDefaultLabel(ONDEXConcept)}.
 	 */
 	public static String getBestAccession ( Set<ConceptAccession> accs )
 	{
@@ -291,7 +347,20 @@ public class KGUtils
 		return getBestAccession ( concept.getConceptAccessions () );
 	}
 	
+	/**
+	 * Best accession selector for genes.
+	 * 
+	 * This uses {@link #getKnownSourcesAccessionPriority(ConceptAccession)}, which is used in certain views
+	 * for the accession field.
+	 */
+	public static String getBestAccessionForGene ( ONDEXConcept geneConcept )
+	{
+		return getBestAccession ( 
+			geneConcept.getConceptAccessions (), true, KGUtils::getKnownSourcesAccessionPriority
+		);
+	}
 
+	
 	/**
 	 * Returns the shortest preferred Name from a set of concept Names or ""
 	 * [Gene|Protein][Phenotype][The rest]
