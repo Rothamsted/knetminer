@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -216,6 +215,7 @@ public class KGUtils
   }
 
 	/**
+	 * 
 	 * Returns the best name for certain molecular biology entities, like Gene, Protein, falls back to a default
 	 * label in the other cases. 
 	 * 
