@@ -12,6 +12,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -216,26 +217,36 @@ public class KGUtils
 
 	/**
 	 * 
-	 * Returns the best name for certain molecular biology entities, like Gene, Protein, falls back to a default
-	 * label in the other cases. 
+	 * Returns the best label for a concept, considering several criteria, including the concept type (eg,
+	 * if it's a gene or not). 
 	 * 
 	 */
-	public static String getMolBioDefaultLabel ( ONDEXConcept c )
+	public static String getBestConceptLabel ( ONDEXConcept c )
 	{
-		String type = c.getOfType ().getId ();
-		String bestAcc = StringUtils.trimToEmpty ( getBestAccession ( c.getConceptAccessions (), false ) );
-		String bestName = StringUtils.trimToEmpty ( getShortestPreferedName ( c.getConceptNames () ) );
-	
-		String result = "";
+		String typeId = c.getOfType ().getId ();
 		
-		if ( "Gene".equals ( type ) || "Protein".equals ( type ) )
+		String result = getBestName ( c.getConceptNames (), false ); // preferred name
+		
+		if ( result.isEmpty () ) result = getBestName ( c ); // all names
+		
+		if ( result.isEmpty () )
 		{
-			if ( bestAcc.isEmpty () ) result = bestName;
-			else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
+			// non-ambiguous accession, discriminate by type
+			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
+				? getBestGeneAccession ( c.getConceptAccessions (), false )
+				: getBestAccession ( c.getConceptAccessions (), false, null );
 		}
-		else
-			result = !bestName.isEmpty () ? bestName : bestAcc;
-	
+			
+		if ( result.isEmpty () )
+		{
+			// all accessions, discriminate by type
+			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
+				? getBestGeneAccession ( c )
+				: getBestAccession ( c );
+		}
+
+		if ( result.isEmpty () ) result = StringUtils.trimToEmpty ( c.getPID () );
+
 		return StringUtils.abbreviate ( result, 30 );
 	}
 
@@ -289,15 +300,7 @@ public class KGUtils
 		.map ( String::trim )
 		.orElse ( "" );
 	}
-	
-	/**
-	 * Doesn't use any priority criteria. 
-	 */
-	private static String getBestAccession ( Set<ConceptAccession> accs, boolean includeAmbiguous )
-	{
-		return getBestAccession ( accs, includeAmbiguous, null );
-	}
-	
+		
 	/**
 	 * Uses special comparison/priority between accession strings.
 	 * 
@@ -325,18 +328,18 @@ public class KGUtils
 		if ( accSrcId.startsWith ( "ENSEMBL" ) ) return -1;
 		if ( "PHYTOZOME".equals ( accSrcId ) ) return -1;
 		if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return -1;
-		return 1;
+		return 0;
 	}
 
 	/**
 	 *  Yields the best accession in the set.
 	 *  
 	 *  You should use this for generic concepts and end-user visualisations of accessions. 
-	 *  For generic labelling, which is also based on names, use {@link #getMolBioDefaultLabel(ONDEXConcept)}.
+	 *  For generic labelling, which is also based on names, use {@link #getBestConceptLabel(ONDEXConcept)}.
 	 */
 	public static String getBestAccession ( Set<ConceptAccession> accs )
 	{
-		return getBestAccession ( accs, true );
+		return getBestAccession ( accs, true, null );
 	}
 
 	/**
@@ -353,32 +356,61 @@ public class KGUtils
 	 * This uses {@link #getKnownSourcesAccessionPriority(ConceptAccession)}, which is used in certain views
 	 * for the accession field.
 	 */
-	public static String getBestAccessionForGene ( ONDEXConcept geneConcept )
+	public static String getBestGeneAccession ( ONDEXConcept geneConcept )
 	{
-		return getBestAccession ( 
-			geneConcept.getConceptAccessions (), true, KGUtils::getKnownSourcesAccessionPriority
-		);
+		return getBestGeneAccession ( geneConcept.getConceptAccessions (), true );
 	}
 
+	private static String getBestGeneAccession ( Set<ConceptAccession> geneAccs, boolean includeAmbiguous )
+	{
+		return getBestAccession ( 
+			geneAccs, includeAmbiguous, KGUtils::getKnownSourcesAccessionPriority
+		);
+	}
+	
 	
 	/**
-	 * Returns the shortest preferred Name from a set of concept Names or ""
-	 * [Gene|Protein][Phenotype][The rest]
-	 *
-	 * @param cns Set<ConceptName>
-	 * @return String name
+	 * Selects the best name for a set, giving priority to the shortest first and then 
+	 * to the canonical string order.
+	 * 
+	 * @param includeAltNames if not set, consider the {@link ConceptName#isPreferred() preferred name} only. This is 
+	 * supposed to be unique, but data are often dirty, hence we don't trust that and we still prioritise 
+	 * possible multiple preferred names.
+	 * 
+	 * This method version is for internal use in this class, typically, you don't want to ignore non-preferred ones, 
+	 * so use {@link #getBestName(Set)} instead, which is public.
+	 * 
 	 */
-	public static String getShortestPreferedName ( Set<ConceptName> cns ) 
+	private static String getBestName ( Set<ConceptName> cns, boolean includeAltNames ) 
 	{
-		return cns.stream ()
-	  .filter ( ConceptName::isPreferred )
+		var cnsStrm = cns.parallelStream ();
+		if ( !includeAltNames ) cnsStrm = cnsStrm.filter ( ConceptName::isPreferred );
+		
+		return cnsStrm
 		.map ( ConceptName::getName )
 		.map ( String::trim )
 		.sorted ( 
 			Comparator.comparing ( String::length )
-				.thenComparing ( Comparator.naturalOrder () ) 
+			.thenComparing ( Comparator.naturalOrder () ) 
 		)
 		.findFirst ()
 		.orElse ( "" );
 	}
+	
+	/**
+	 * Defaults to including all names.
+	 */
+	public static String getBestName ( Set<ConceptName> cns ) 
+	{
+		return getBestName ( cns, true );
+	}
+
+	/**
+	 * Just a wrapper, the concept is assumed to be non-null.
+	 */
+	public static String getBestName ( ONDEXConcept concept )
+	{
+		return getBestName ( concept.getConceptNames () );
+	}
+
 }
