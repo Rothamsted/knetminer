@@ -220,6 +220,8 @@ public class KGUtils
 	 * Returns the best label for a concept, considering several criteria, including the concept type (eg,
 	 * if it's a gene or not). 
 	 * 
+	 * TODO: Move these labelling methods into Ondex.
+	 * 
 	 */
 	public static String getBestConceptLabel ( ONDEXConcept c )
 	{
