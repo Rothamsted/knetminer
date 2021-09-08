@@ -1721,7 +1721,7 @@ function generateMultiEvidenceNetwork() {
           generateCyJSNetwork(api_url + '/network', params);
 	}
        else {
-       	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please evidence terms with user genes.</b></div>');
+       	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Search with a genelist to view network.</b></div>');
        }
     }
 }
