@@ -49,7 +49,7 @@
 1-9	physical	2
 1-20	has_mutant
 1-20	has_variation
-1-13	has_observ_pheno
+1-13	has_phenotype
 
 10-10	h_s_s	4
 10-7	h_s_s	4
@@ -79,7 +79,7 @@
 9-8	physical	8
 9-9	genetic	8
 9-9	physical	8
-9-13	has_observ_pheno
+9-13	has_phenotype
 9-20	has_variation
 9-22	differentially_expressed
 9-21	cooc_wi
