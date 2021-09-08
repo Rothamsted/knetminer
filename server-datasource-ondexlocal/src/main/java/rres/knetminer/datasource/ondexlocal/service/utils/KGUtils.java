@@ -8,9 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -214,61 +216,203 @@ public class KGUtils
   }
 
 	/**
-	 * Returns the best name for certain molecular biology entities, like Gene, Protein, falls back to a default
-	 * label in the other cases. 
+	 * 
+	 * Returns the best label for a concept, considering several criteria, including the concept type (eg,
+	 * if it's a gene or not). 
+	 * 
+	 * TODO: Move these labelling methods into Ondex.
 	 * 
 	 */
-	public static String getMolBioDefaultLabel ( ONDEXConcept c )
+	public static String getBestConceptLabel ( ONDEXConcept c )
 	{
-		String type = c.getOfType ().getId ();
-		String bestAcc = StringUtils.trimToEmpty ( getShortestNotAmbiguousAccession ( c.getConceptAccessions () ) );
-		String bestName = StringUtils.trimToEmpty ( getShortestPreferedName ( c.getConceptNames () ) );
-	
-		String result = "";
+		String typeId = c.getOfType ().getId ();
 		
-		if ( type == "Gene" || type == "Protein" )
+		String result = getBestName ( c.getConceptNames (), false ); // preferred name
+		
+		if ( result.isEmpty () ) result = getBestName ( c ); // all names
+		
+		if ( result.isEmpty () )
 		{
-			if ( bestAcc.isEmpty () ) result = bestName;
-			else result = bestAcc.length () < bestName.length () ? bestAcc : bestName;
+			// non-ambiguous accession, discriminate by type
+			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
+				? getBestGeneAccession ( c.getConceptAccessions (), false )
+				: getBestAccession ( c.getConceptAccessions (), false, null );
 		}
-		else
-			result = !bestName.isEmpty () ? bestName : bestAcc;
-	
+			
+		if ( result.isEmpty () )
+		{
+			// all accessions, discriminate by type
+			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
+				? getBestGeneAccession ( c )
+				: getBestAccession ( c );
+		}
+
+		if ( result.isEmpty () ) result = StringUtils.trimToEmpty ( c.getPID () );
+
 		return StringUtils.abbreviate ( result, 30 );
 	}
 
+	
 	/**
-	 * Returns the shortest not ambiguous accession or ""
-	 *
-	 * @param accs Set<ConceptAccession>
-	 * @return String name
+	 * This is a low-level implementation of {@link #getBestAccession(Set, boolean)}, probably you don't
+	 * want to use it, use the public versions instead.
+	 * 
+	 * Finds the best accession in a set. It mainly applies the criteria of shortest and lexicographically
+	 * first value, making exceptions for a few special cases.
+	 * 
+	 * If the input is null or empty, returns ""
+	 * 
+	 * @param includeAmbiguous, if false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
+	 * set (might return "" if none available), else ignores ambiguity and considers all the input.
+	 * 
+	 * @param priorityCriteria, if non-null, it gives priority to the accessions that have the lowest values for 
+	 * this function. This is a low-level feature, use the other more abstract labelling criteria if you're in 
+	 * doubt about it.
+	 *  
 	 */
-	public static String getShortestNotAmbiguousAccession ( Set<ConceptAccession> accs ) 
+	private static String getBestAccession (
+		Set<ConceptAccession> accs, boolean includeAmbiguous, ToIntFunction<ConceptAccession> priorityCriteria 
+	)
 	{
-		return accs.stream ()
-	  .filter ( acc -> !acc.isAmbiguous () )
+		if ( accs == null || accs.size () == 0 ) return "";
+				
+		var accsStrm = accs.parallelStream ();
+		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
+
+		// Our own comparisons
+		Comparator<String> accStrCmp = (acc1, acc2) -> specialAccessionCompare ( acc1, acc2 );
+		
+		// In all the other cases, first compare the lengths and then the string values.
+		accStrCmp = accStrCmp.thenComparingInt ( String::length )
+			.thenComparing ( Comparator.naturalOrder () );
+		
+		// Then, prefix it with the priority criteria and string trimming
+		Comparator<ConceptAccession> accCmp = Comparator.comparing ( 
+			(ConceptAccession acc) -> acc.getAccession ().trim(), accStrCmp
+		);
+		if ( priorityCriteria != null ) 
+			accCmp = Comparator.comparingInt ( priorityCriteria ).thenComparing ( accCmp );
+		
+		return accsStrm
+		.sorted ( accCmp )
+		.findFirst ()
+		// Unfortunately, we have to do a final re-map, in order to be able to apply whole-ConceptAccession
+		// comparisons
 		.map ( ConceptAccession::getAccession )
 		.map ( String::trim )
-		.sorted ( Comparator.comparing ( String::length ) )
-		.findFirst ()
 		.orElse ( "" );
+	}
+		
+	/**
+	 * Uses special comparison/priority between accession strings.
+	 * 
+	 * It assumes, trimmed accessions. This is always included in the {@link #getBestAccession(Set, boolean, ToIntFunction)}
+	 * comparisons.
+	 */
+	private static int specialAccessionCompare ( String acc1, String acc2 )
+	{
+		// This is to privilege maize genes of type EB (#593)
+		final var zmebRe = "^ZM.+EB[0-9].*";
+		final var zmdRe = "^ZM.+D[0-9].*"; 
+		if ( acc1.matches ( zmebRe ) && acc2.matches ( zmdRe  ) ) return -1;
+		if ( acc2.matches ( zmebRe ) && acc1.matches ( zmdRe ) ) return 1;
+		return 0;
+	}
+	
+	/**
+	 * This is used for the gene accession field in certain views, it gives priority to ENSEMBL and other
+	 * sources.   
+	 */
+	private static int getKnownSourcesAccessionPriority ( ConceptAccession acc )
+	{
+		String accStr = acc.getAccession ();
+		String accSrcId = acc.getElementOf ().getId ();
+		if ( accSrcId.startsWith ( "ENSEMBL" ) ) return -1;
+		if ( "PHYTOZOME".equals ( accSrcId ) ) return -1;
+		if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return -1;
+		return 0;
 	}
 
 	/**
-	 * Returns the shortest preferred Name from a set of concept Names or ""
-	 * [Gene|Protein][Phenotype][The rest]
-	 *
-	 * @param cns Set<ConceptName>
-	 * @return String name
+	 *  Yields the best accession in the set.
+	 *  
+	 *  You should use this for generic concepts and end-user visualisations of accessions. 
+	 *  For generic labelling, which is also based on names, use {@link #getBestConceptLabel(ONDEXConcept)}.
 	 */
-	public static String getShortestPreferedName ( Set<ConceptName> cns ) 
+	public static String getBestAccession ( Set<ConceptAccession> accs )
 	{
-		return cns.stream ()
-	  .filter ( ConceptName::isPreferred )
+		return getBestAccession ( accs, true, null );
+	}
+
+	/**
+	 * Just a wrapper, concept must be non-null
+	 */
+	public static String getBestAccession ( ONDEXConcept concept )
+	{
+		return getBestAccession ( concept.getConceptAccessions () );
+	}
+	
+	/**
+	 * Best accession selector for genes.
+	 * 
+	 * This uses {@link #getKnownSourcesAccessionPriority(ConceptAccession)}, which is used in certain views
+	 * for the accession field.
+	 */
+	public static String getBestGeneAccession ( ONDEXConcept geneConcept )
+	{
+		return getBestGeneAccession ( geneConcept.getConceptAccessions (), true );
+	}
+
+	private static String getBestGeneAccession ( Set<ConceptAccession> geneAccs, boolean includeAmbiguous )
+	{
+		return getBestAccession ( 
+			geneAccs, includeAmbiguous, KGUtils::getKnownSourcesAccessionPriority
+		);
+	}
+	
+	
+	/**
+	 * Selects the best name for a set, giving priority to the shortest first and then 
+	 * to the canonical string order.
+	 * 
+	 * @param includeAltNames if not set, consider the {@link ConceptName#isPreferred() preferred name} only. This is 
+	 * supposed to be unique, but data are often dirty, hence we don't trust that and we still prioritise 
+	 * possible multiple preferred names.
+	 * 
+	 * This method version is for internal use in this class, typically, you don't want to ignore non-preferred ones, 
+	 * so use {@link #getBestName(Set)} instead, which is public.
+	 * 
+	 */
+	private static String getBestName ( Set<ConceptName> cns, boolean includeAltNames ) 
+	{
+		var cnsStrm = cns.parallelStream ();
+		if ( !includeAltNames ) cnsStrm = cnsStrm.filter ( ConceptName::isPreferred );
+		
+		return cnsStrm
 		.map ( ConceptName::getName )
 		.map ( String::trim )
-		.sorted ( Comparator.comparing ( String::length ) )
+		.sorted ( 
+			Comparator.comparing ( String::length )
+			.thenComparing ( Comparator.naturalOrder () ) 
+		)
 		.findFirst ()
 		.orElse ( "" );
 	}
+	
+	/**
+	 * Defaults to including all names.
+	 */
+	public static String getBestName ( Set<ConceptName> cns ) 
+	{
+		return getBestName ( cns, true );
+	}
+
+	/**
+	 * Just a wrapper, the concept is assumed to be non-null.
+	 */
+	public static String getBestName ( ONDEXConcept concept )
+	{
+		return getBestName ( concept.getConceptNames () );
+	}
+
 }

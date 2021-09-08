@@ -274,18 +274,22 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			if (ondexServiceProvider.getDataService ().isReferenceGenome () ) 
 			{
 				// Generate Annotation file.
+				log.debug("1.) API, doing chrome annotation");
 				xmlGViewer = exportService.exportGenomapXML ( 
 					this.getApiUrl(), genes, userGenes, request.getQtl(),
 					request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(), genesMap
 				);
-				log.debug("1.) Genomaps annotation ");
+				log.debug("Chrome annotation done");
 			} 
 			else
-				log.debug("1.) No reference genome for Genomaps annotation ");
+				log.debug("1.) API, no reference genome for Genomaps annotation, skipping ");
 
 			// Gene table file
 			// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
 			// adapt to it
+
+			log.debug("2.) API, doing gene table view");
+
 			var newSearchResult = new SemanticMotifsSearchResult (
 				qtlnetminerResults.getGeneId2RelatedConceptIds (), genesMap
 			);
@@ -293,13 +297,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
 			);                        
                                 
-			log.debug("2.) Gene table ");
+			log.debug("Gene table done");
+
 
 			// Evidence table file
+			log.debug("3) API, doing evidence table");
 			String evidenceTable = exportService.exportEvidenceTable (
 				request.getKeyword(), qtlnetminerResults.getLuceneConcepts(), userGenes, request.getQtl()
 			);
-			log.debug("3.) Evidence table ");
+			log.debug("Evidence table done");
 			
 			int docSize = searchService
 				.getMapEvidences2Genes ( qtlnetminerResults.getLuceneConcepts() )

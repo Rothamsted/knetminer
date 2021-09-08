@@ -40,7 +40,9 @@ public class ExportUtils
 
 	
   /**
-   * Export the Ondex graph as a JSON file using the Ondex JSON Exporter plugin.
+   * Builds the KnetMiner 'Network View' (4th tab).
+   * 
+   * It works by exporting the Ondex graph as a JSON file using the Ondex JSON Exporter plugin.
    *
    * @return a pair containing the JSON result and the the graph that was actually exported
    * (ie, the one computed by {@link Filter filtering isolated entities}. 
@@ -97,7 +99,7 @@ public class ExportUtils
       return Pair.of ( IOUtils.readFile ( exportPath, Charset.defaultCharset() ), graph2 );
     }
   	catch ( UncheckedPluginException ex ) {
-    	String msg = "Failed to export graph due to an Ondex plug-in problem: " + ex.getMessage ();
+    	String msg = "Failed to export graph due to a KnetBuilder plug-in problem: " + ex.getMessage ();
       log.error ( msg, ex );
       throw new UncheckedPluginException ( msg, ex );
   	}

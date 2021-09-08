@@ -3,13 +3,18 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import uk.ac.ebi.utils.regex.RegEx;
 
 /**
  * The Gene helper for an Ondex graph.
@@ -95,34 +100,6 @@ public class GeneHelper
 	public String getChromosome ()
 	{
 		return chromosome;
-	}
-
-
-	/**
-	 * Gets the best accession string for the gene. This considers special sources like 
-	 * TAIR, ENSEMBL, PHYTOZOME.
-	 * 
-	 */
-	public String getBestAccession ()
-	{
-		Set<ConceptAccession> geneAccs = gene.getConceptAccessions ();
-		
-		if ( geneAccs.size () == 0 ) return "";
-		
-		// TODO: What is this?! FACTORISE!
-		return geneAccs
-		.stream ()
-		.filter ( acc -> {
-			String accStr = acc.getAccession ();
-			String accSrcId = acc.getElementOf ().getId ();
-			if ( "ENSEMBL-HUMAN".equals ( accSrcId ) ) return true;
-			if ( "PHYTOZOME".equals ( accSrcId ) ) return true;
-			if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return true;
-			return false;
-		})
-		.map ( ConceptAccession::getAccession )
-		.findAny ()
-		.orElse ( geneAccs.iterator ().next ().getAccession () );		
 	}
 	
 	
