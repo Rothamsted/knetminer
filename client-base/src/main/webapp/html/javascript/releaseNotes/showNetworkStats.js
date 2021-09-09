@@ -37,7 +37,7 @@ function fetchStats() {
         
         // Display stats data.
         var statsText = "<br/><ul><li>KnetMiner KG version: " + db_version + "</li>" +
-                "<li>number of genes: " + totalGenes + "</li>" +
+                "<li>Number of genes: " + totalGenes + "</li>" +
                 "<li>Total concepts: <strong>" + totalConcepts + "</strong></li>" +
                 "<li>Total relations: <strong>" + totalRelations + "</strong></li>" +
                 "<li>Concept2Gene #mappings: " + geneEvidenceConcepts + " (" + conceptPercentage + "%)</li>" +
