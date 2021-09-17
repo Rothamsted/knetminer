@@ -18,7 +18,7 @@
 References and further details:
    * Latest publication: https://onlinelibrary.wiley.com/doi/10.1111/pbi.13583
 
-## Software improvements and big fixes:
+## Software improvements and bug fixes:
 
 ### Search and analysis
  * Free and Pro KnetMiner features added. Free users are those without a KnetSpace account or those on a KnetSpace `Free` Plan wile Pro users are subscribers of the KnetSpace Pro plan. Under the free version, users can search KnetMiner with upto 20 genes in their gene list and visualize a knetwork of max. 10 genes. Pro users can search KnetMiner with no limits on gene list size and can render knetworks to analyse upto 200 genes at once.

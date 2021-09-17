@@ -28,7 +28,7 @@
 1-10	enc
 1-7	enc
 1-2	occ_in
-1-13	has_observ_pheno
+1-13	has_phenotype
 1-20	has_variation
 1-188	inv_in
 1-19	part_of
@@ -63,7 +63,7 @@
 9-8	physical	8
 9-9	genetic	8
 9-9	physical	8
-9-13	has_observ_pheno
+9-13	has_phenotype
 9-20	has_variation
 11-3	has_function
 11-4	participates_in
