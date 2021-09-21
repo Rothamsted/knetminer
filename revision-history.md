@@ -12,7 +12,8 @@ Data:
 
 Features:
 1. KnetMiner (https://knetminer.com) now also offers a range of Free and Pro features. The free version is a perfect starting point for using or testing the platform with a small number of genes. The Pro version enables searching the knowledge graph with any number of genes, creating very large gene networks and storing as many networks as you wish. 
-2. The gene list search feature has received a major performance enhancement. It now supports wildcards (eg. search for all TPS* genes) and can perform a novel KG enrichment analysis. 
+2. The gene list search feature has received a major performance enhancement. It now supports wildcards (eg. search for all TPS* genes) and can perform a novel KG enrichment analysis. <img width="939" alt="wheat_genelist_wildcard_search" src="https://user-images.githubusercontent.com/1078989/134174683-a7970f2f-8eda-455c-afad-54ace9632d58.png">
+
 3. The Evidence View has seen major upgrades to allow users download the content and to generate gene networks for multiple enriched terms. 
 4. The Network View has been vastly improved as well, with auto-filtering when the knetworks are too big and a new feature to export the content of the network (all visible genes) as a table. 
 5. The network visualisation has been enhanced with better node labelling to highlight important parts of the graph and to distinguish genes from different species by taxID. A new type of edge (dashed lines) has also been introduced to flag relationships which need to be treated with caution.
