@@ -386,6 +386,7 @@ div.scrollTable {
     max-height:/*400*/550px;    /* must be greater than tbody*/
     overflow:auto;
     margin:0 auto;
+    position:sticky;
 }
 div.scrollTable table {
     width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
