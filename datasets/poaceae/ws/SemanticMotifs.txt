@@ -11,6 +11,7 @@
 11	ProtDomain
 12	EC
 13^	Phenotype
+133	Phenotype
 14^	ProtDomain
 15^	EC
 
@@ -83,11 +84,11 @@
 9-22	differentially_expressed
 9-21	cooc_wi
 
-20-21	associated_with
+20-13	associated_with
 20-26	leads_to
-20-211	associated_with
-211-2	pub_in
-211-21	is_part_of
+20-133	associated_with
+133-2	pub_in
+133-21	part_of
 
 11-3	has_function
 11-4	participates_in
