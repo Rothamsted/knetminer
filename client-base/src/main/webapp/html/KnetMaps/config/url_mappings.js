@@ -3,8 +3,8 @@ var url_mappings= {
  "html_acc": [
      {"cv": "AC", "weblink": "http://pmn.plantcyc.org/ARA/NEW-IMAGE?type=NIL&object=", "cc_restriction": ""},
      {"cv": "AspGD", "weblink": "http://www.aspergillusgenome.org/cgi-bin/locus.pl?dbid=", "cc_restriction": ""},
-     {"cv": "AraPheno", "weblink" : "https://arapheno.1001genomes.org/study/", "cc_restriction": ""},
-     {"cv": "ARAPHENO", "weblink" : "https://arapheno.1001genomes.org/study/", "cc_restriction": ""},
+     {"cv": "AraPheno", "weblink" : "https://arapheno.1001genomes.org/phenotype/", "cc_restriction": ""},
+     {"cv": "ARAPHENO", "weblink" : "https://arapheno.1001genomes.org/phenotype/", "cc_restriction": ""},
      {"cv": "AraGWAS", "weblink" : "https://aragwas.1001genomes.org/#/study/", "cc_restriction": ""},
      {"cv": "ARAGWAS", "weblink" : "https://aragwas.1001genomes.org/#/study/", "cc_restriction": ""},
      {"cv": "CHEBI", "weblink": "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=", "cc_restriction": ""},
