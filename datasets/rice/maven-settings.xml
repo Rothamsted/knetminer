@@ -11,7 +11,7 @@
 				<knetminer.specieName>Oryza sativa Japonica</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about: Oryza sativa Japonica</knetminer.appDescription>
 				<knetminer.appKeywords>rice, o.sativa, knetminer</knetminer.appKeywords>
-				<knetminer.specieTaxId>4530</knetminer.specieTaxId>
+				<knetminer.specieTaxId>39947</knetminer.specieTaxId>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
 				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
