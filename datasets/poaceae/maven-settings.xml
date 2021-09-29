@@ -11,7 +11,7 @@
 				<knetminer.specieName>poaceae</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about: wheat, maize, rice, barley, brachypodium</knetminer.appDescription>
 				<knetminer.appKeywords>wheat, maize, rice, barley, brachypodium, poaceae, knetminer</knetminer.appKeywords>
-				<knetminer.specieTaxId>4565,4577,4530</knetminer.specieTaxId>
+				<knetminer.specieTaxId>4565,4577,39947</knetminer.specieTaxId>
 				<knetminer.version>51</knetminer.version>
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
