@@ -3,7 +3,7 @@ Interactive network visualisation tool for exploration of heterogeneous biologic
 
 KnetMaps **paper** at https://f1000research.com/articles/7-1651/v1.
 
-![KnetMaps_screenshot](https://raw.githubusercontent.com/Rothamsted/knetmaps.js/master/docs/KnetMaps_demo.png)
+![KnetMaps_screenshot](https://raw.githubusercontent.com/Rothamsted/knetmaps.js/master/docs/knetmaps2.2.0.png)
 
 **Note**:
 - KnetMaps feature documentation is available, for new users, in the [User_Guide](docs/User_Guide.md)
