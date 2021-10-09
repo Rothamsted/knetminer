@@ -140,22 +140,8 @@ KNETMAPS.Generator = function() {
           'control-point-weight': '50'/*'0.7'*/, // '0': curve towards source node, '1': curve towards target node.
           'width': 'data(relationSize)', // 'mapData(relationSize, 70, 100, 2, 6)', // '3px',
           //'line-color': 'data(relationColor)', // e.g., 'grey',
-          'line-color': function(rel) {
-			var linecolor=rel.data('relationColor'); //default
-			// new line color for 3 edge cases as per relation label
-		    if(rel.data('label') === "xref") { linecolor='darkGrey'; }
-		    if(rel.data('label') === "associated_with") { linecolor='darkGrey'; }
-		    if(rel.data('label') === "occurs_in") { linecolor='orange'; }
-			return linecolor;
-			},
-          //'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
-          'line-style': function(rel) {
-			var linestyle='solid'; //default
-		    // use dashed line style for relation type: cooccurs_with, occurs_in, regulates, has_similar_sequence, enriched_for.
-		    var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence", "enriched_for" ];
-			if(special_edges.includes(rel.data('label'))) { linestyle='dashed'; }
-			return linestyle;
-			},
+          'line-color': 'data(relationColor)',
+          'line-style': 'solid', // 'solid' (or 'dotted', 'dashed')
           'target-arrow-shape': 'triangle',
           'target-arrow-color': 'gray',
           'display': 'data(relationDisplay)', // display: 'element' (show) or 'none' (hide).
@@ -188,6 +174,15 @@ KNETMAPS.Generator = function() {
         })
       .selector('.LabelOff').css({ // settings to show Label on node/ edge
               'text-opacity': '0'
+        })
+      .selector('.darkgreyEdge').css({
+              'line-color': 'darkGrey'
+        })
+      .selector('.orangeEdge').css({
+              'line-color': 'orange'
+        })
+      .selector('.dashedEdge').css({ // dashed edge
+              'line-style': 'dashed'
         })
       .selector('.FlaggedGene').css({ // to show highlighed label on flagged gene
               'text-background-color': '#FFFF00',
@@ -255,6 +250,15 @@ $(function() { // on dom ready
          }
 	  });
 
+	// modify to dashed edges (line-style) for certain cases, and assign new line-color in some cases too
+     cy.edges().forEach(function( rel ) {
+	  if(rel.data('label') === "xref") { rel.addClass('darkgreyEdge'); }
+	  if(rel.data('label') === "associated_with") { rel.addClass('darkgreyEdge'); }
+	  if(rel.data('label') === "occurs_in") { rel.addClass('orangeEdge'); }
+	  // use dashed line style for relation type: cooccurs_with, occurs_in, regulates, has_similar_sequence, enriched_for.
+	  var special_edges= [ "cooccurs_with", "occurs_in", "regulates", "has_similar_sequence", "enriched_for" ];
+	  if(special_edges.includes(rel.data('label'))) { rel.addClass('dashedEdge'); }
+    });
  }
 
   // Show concept neighbourhood.
@@ -360,7 +364,7 @@ $(function() { // on dom ready
 	  conc.data('conceptTextBGcolor',genelabel_color);
 	  conc.css({ 'text-background-opacity': '1' });
 	 }
-      });
+    });
  }
  
  return my;
