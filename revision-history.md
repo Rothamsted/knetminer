@@ -38,7 +38,7 @@ References and further details:
  * Users can render a combined knetwork of multiple evidence terms from Evidence View.
 
 ### KnetMiner API
- * New auto-generated explainer implemented for KnetMiner genepage API that analysises the user query to generate a word summary of what the resulting knetwork contains.
+ * New **explainer** implemented for KnetMiner genepage API that analyses the user query to generate a word summary of what the resulting knetwork contains.
  * KnetMiner knowledge graph (dataset) version now added to `latestNetworkStats` API to have it displayed in release_notes html page.
 
 ### KnetMiner back-end
@@ -47,15 +47,15 @@ References and further details:
  * Wildcards now supported in the Gene List Search box (eg, 'MYB*', 'TT?')
  * knetminer-base image removed, now there are only `two` docker image levels.
  * Migration from Travis to GitHub Actions for CI builds.
- * KnetMiner now allows developer users to enable/disable knetspace login in their KnetMiners, and to enable/disable or re-route google analytics to an Amazon S3 bucket.
+ * KnetMiner now allows developer users to enable/disable knetspace login in their KnetMiners, and to enable/disable or **re-route** google **analytics** (keywords, gene lists, QTLs) to an Amazon S3 bucket as a set of useful metrics for internal analysis.
  * Extensive review of the codebase file structure and names.
  * Third-party dependency updates.
 
-### Network View (KnetMaps)
+### Network View (KnetMaps.js)
  * Users can now export all visible genes and associated information as a tab-delimited file
  * Network View now auto-filters large knetworks to let users visualize subsets and avoid browser issues.
  * The network visualization now has more advanced node labelling to highlight important parts of the graph and to distinguish genes by taxID as well, by coloring gene node labels appropriately, which is highly useful for multi-species KGs. 
- * Network visualization now also used "dashed" edges to flag relationships that are not abdolute and need to be treated with caution.
+ * Network visualization now uses "dashed" edges to flag relationships that are not abdolute and need to be treated with caution.
  * Multiple new data sources hyperlinks added/updated to enable users to explore ARA-GWAS, ENSEMBL_PLANTS, wheat-expression, ARA-PHENO and other sources.
 
 ### Other updates
