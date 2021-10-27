@@ -4,13 +4,11 @@
 
 # 5.0
 
-## What's new?
+# What's new?
 
-Data:
-1. Our new multi-species knowledge graph (KG) integrates a vast amount of: genetic, genomic and literature data from the four most important global cereal crops: wheat, rice, maize, barley, combined with the model plant species Arabidopsis and Brachypodium. We have cleaned, processed, and integrated over 100 datasets which has resulted in a KG of 2 million nodes and 10 million relationships between them.
-2. Several new datasets have been added (poaceae, sorghum, maize, f.culmorum, solanaceae, tomato, potato, pepper, barley).
+KnetMiner 5.0 comes with a number of new features, speed improvements and a new freemium/premium version.
 
-Features:
+## Key Features
 1. KnetMiner (https://knetminer.com) now also offers a range of Free and Pro features. The free version is a perfect starting point for using or testing the platform with a small number of genes. The Pro version enables searching the knowledge graph with any number of genes, creating very large gene networks and storing as many networks as you wish. 
 2. The gene list search feature has received a major performance enhancement. It now supports wildcards (eg. search for all TPS* genes) and can perform a novel KG enrichment analysis. <img width="939" alt="wheat_genelist_wildcard_search" src="https://user-images.githubusercontent.com/1078989/134174683-a7970f2f-8eda-455c-afad-54ace9632d58.png">
 
@@ -27,7 +25,7 @@ References and further details:
 1. Latest KnetMiner publication: https://onlinelibrary.wiley.com/doi/10.1111/pbi.13583
 2. KnetMiner covid19 data note: https://f1000research.com/articles/10-703/v1
 
-## Software improvements and bug fixes:
+## Software improvements and bug fixes
 
 ### Search and analysis
  * Free and Pro KnetMiner features added. Free users are those without a KnetSpace account or those on a KnetSpace `Free` Plan wile Pro users are subscribers of the KnetSpace Pro plan. Under the free version, users can search KnetMiner with upto 20 genes in their gene list and visualize a knetwork of max. 10 genes. Pro users can search KnetMiner with no limits on gene list size and can render knetworks to analyse upto 200 genes at once.
@@ -61,6 +59,8 @@ References and further details:
 ### Other updates
  * KnetMiner wiki (https://github.com/Rothamsted/knetminer/wiki) updated with new instructions for developers.
 
+## Poaceae multi-species knowledge graph
+A new multi-species poaceae knowledge graph (KG) integrates a vast amount of: genetic, genomic and literature data from the four most important global cereal crops: wheat, rice, maize, barley, combined with the model plant species Arabidopsis and Brachypodium. We have cleaned, processed, and integrated over 100 datasets which has resulted in a KG of 2 million nodes and 10 million relationships between them. This KG is available through through a paid KnetMiner resource subscribtion (request quote) and our free RDF-SPARQL and Neo4j-Cypher graph query endpoints (https://knetminer.com/data).
 
 # 4.0
 
