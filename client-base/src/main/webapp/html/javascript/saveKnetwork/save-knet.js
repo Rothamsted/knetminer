@@ -63,7 +63,7 @@
                 //if(typeof api_url !== "undefined") { // if it's within knetminer (DISABLED: as it breaks genepage api)
                 userPlan().then(function (userBool) {
                     if (!userBool) {
-                        // jBox modal to let users enter knetName & knetDesc and save when POSTing a new kNetwork.
+                        // jBox modal to let Pro users enter knetName & knetDesc and save when POSTing a new kNetwork. also set private slider as set true/private by default.
                         var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
                                 + "<input style='height:20px;width:450px;' maxlength='30' placeholder="+knet_name+" type='text' name='knetName' id='kNetName'>" + "<p></p>"
@@ -71,10 +71,10 @@
                                 + "<textarea style='height:100px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<div style='display:flex;'><label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
                                 + "<label class='switch'>"
-                                + "<input type='checkbox' id='privateCheck'>"
+                                + "<input type='checkbox' id='privateCheck' checked=true>"
                                 + "<span class='slider round'></span></label></div>" + "<p></p>"
                                 + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Save'>" + "</form>";
-                    } else {
+                    } else { //free user (now also enable private slider and set true/private by default)
                             var uploadHtml = "<form class='form' method='post' action='#'>"
                                 + "<label><font size='4'>Knetwork name</font></label>" + "<p></p>"
                                 + "<input style='height:20px;width:450px;' maxlength='30' placeholder="+knet_name+" type='text' name='knetName' id='kNetName'>" + "<p></p>"
@@ -82,8 +82,8 @@
                                 + "<textarea style='height:100px;width:450px;' placeholder='Enter your description here...' name='knetDesc' id='knetDescription'></textarea>" + "<p></p>"
                                 + "<div style='display:flex;'><label id='priv-lab'><font size='3'><b>Private:</b></font></label>"
                                 + "<label class='switch-off'>"
-                                + "<input type='checkbox' id='privateCheck'>"
-                                + "<span class='slider-off round'></span></label></div>" + "<p></p>"
+                                + "<input type='checkbox' id='privateCheck' checked=true>"
+                                + "<span class='slider round'></span></label></div>" + "<p></p>"
                                 + "<input type='button' name='KnetSubmit' id='KnetSubmit' value='Save'>" + "</form>";
                     }
 
@@ -97,13 +97,13 @@
                     new jBox('Tooltip', {
                         attach: '#priv-lab', 
                         pointer: 'center', 
-                        content: "This Knetwork is visible to others. Upgrade to a Pro plan to have private Knetworks."
+                        content: "Knetwork is private. Turn this toggle off to make it public."
                     });
                 } else {
                     new jBox('Tooltip', {
                         attach: '#priv-lab', 
                         pointer: 'center', 
-                        content: "Turn this toggle on to make this Knetwork private"
+                        content: "Knetwork is private. Turn this toggle off to make it public."
                     });
                 }
                 
@@ -122,11 +122,12 @@
                         } else {
                             knetDesc = "Network for " + knetName;
                         }
-                        if (!userBool) {
+                        if (!userBool) { // pro user
                             var privateBool = document.getElementById('privateCheck').checked;
-                            if(privateBool === true) {privateBool = false;} else {privateBool = true;}
-                        } else {
-                            var privateBool = true;
+                            var isknetpublic= !privateBool;
+                        } else { // free user
+                            var privateBool = document.getElementById('privateCheck').checked;
+                            var isknetpublic= !privateBool;
                         }   
                         console.log("Public Knetwork? : " + privateBool);
                         // console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
@@ -134,11 +135,11 @@
                         // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                         var post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                             image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
-                            sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords, is_public: privateBool });
+                            sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, keyword: keywords, is_public: isknetpublic });
                         if (keywords === null || keywords === "") { // for non-keyword search
                             post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
                                 image: thumbnail_image, speciesTaxid: speciesTaxid, speciesName: speciesName, dbVersion: dbVersion, dbDateCreated: dbDateCreated,
-                                sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, is_public: privateBool});
+                                sourceOrganization: sourceOrganization, provider: provider, description: knetDesc, gene: gene_list, is_public: isknetpublic });
                         }
 
                         $.ajax({
