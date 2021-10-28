@@ -19,7 +19,7 @@
    var knet_date= currentDate.getFullYear() +'-'+ String(currentDate.getMonth() + 1).padStart(2, '0') +'-'+ String(currentDate.getDate()).padStart(2, '0') 
            +' '+ currentDate.getHours() +':'+ ('0'+currentDate.getMinutes()).slice(-2);
    
-   console.log("knet-save.js: networkId= "+ networkId); // test
+   //console.log("knet-save.js: networkId= "+ networkId); // test
    var knet_name= "knetwork", apiGraphSummary= null;
    if(networkId === null) { // for a new knetwork, fetch graphSummary from KnetMiner server API.
       //console.log("fetch graphSummary from KnetMiner server API..."); // test
@@ -129,7 +129,7 @@
                             var privateBool = document.getElementById('privateCheck').checked;
                             var isknetpublic= !privateBool;
                         }   
-                        console.log("Public Knetwork? : " + privateBool);
+                        //console.log("Public Knetwork? : " + privateBool);
                         // console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
 
                         // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
