@@ -129,8 +129,8 @@
                             var privateBool = document.getElementById('privateCheck').checked;
                             var isknetpublic= !privateBool;
                         }   
-                        //console.log("Public Knetwork? : " + privateBool);
-                        // console.log("from user: knetName: "+ knetName + ", desc: "+ knetDesc); // test
+                        console.log("added by user: knetName= "+ knetName + ", desc= "+ knetDesc); // test
+                        console.log("Free user? : " + userBool +", public knet? : "+ isknetpublic);
 
                         // POST a new knetwork to knetspace with name, date_created, apiGraphSummary fields plus this graph, image, numNodes, numEdges.
                         var post_json = JSON.stringify({name: knetName, dateCreated: knet_date, numNodes: totalNodes, numEdges: totalEdges, graph: JSON.parse(exportedJson),
