@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
 		<artifactId>aratiny</artifactId>
-		<version>5.0RC</version>
+		<version>5.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>aratiny-ws</artifactId>

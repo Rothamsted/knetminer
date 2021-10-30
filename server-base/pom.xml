@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>app-common</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>5.0RC</version>
+		<version>5.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>server-base</artifactId>
