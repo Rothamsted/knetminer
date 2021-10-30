@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-	  <version>2.0.1-SNAPSHOT</version>
+	  <version>2.0RC7</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -185,10 +185,10 @@
 
 		<log4j.version>2.14.0</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>4.0-SNAPSHOT</ondex.version>
+		<ondex.version>4.0RC2</ondex.version>
 		<!-- This is required to override the parent's POM -->
-		<jutils.version>10.0-SNAPSHOT</jutils.version>
-		<knetminer.backend.version>2.0-SNAPSHOT</knetminer.backend.version>
+		<jutils.version>10.0</jutils.version>
+		<knetminer.backend.version>2.0RC</knetminer.backend.version>
 	</properties>
 
 
@@ -253,8 +253,8 @@
 	</scm>
 
 	<ciManagement>
-		<system>Travis</system>
-		<url>https://travis-ci.org/github/Rothamsted/knetminer</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/Rothamsted/knetminer/actions</url>
 	</ciManagement>
   
 	<build>
