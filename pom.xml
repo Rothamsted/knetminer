@@ -11,7 +11,7 @@
 
 	<artifactId>app-common</artifactId>
 	<name>app-common - KnetMiner App top/common POM container</name>
-	<version>5.0-SNAPSHOT</version>
+	<version>5.0RC</version>
 	<description>
 		KnetMiner is a platform for fast candidate gene discovery using data mining techniques.
 		See http://github.com/Rothamsted/knetminer/wiki for technical details.
