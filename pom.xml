@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-	  <version>2.0RC7</version>
+	  <version>2.0</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -46,7 +46,7 @@
 		  Several of these properties can be overriden by instance-specific Maven profiles.
 		  Here, we give values suitable for maven tests (eg, in aratiny).
 		  
-		  See TODO.
+		  See https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker
 		 -->
 		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
@@ -177,7 +177,7 @@
 			MAVEN HAS PLUG-IN AND MODULE MANAGEMENT SECTIONS FOR THIS PURPOSE. USE MAVEN PROPERLY! 
 
 			Violating this rule might condemn you to an afterlife in the Hell of Developers, where the damned are forced 
-			to give IT support to biologists using Windows XP.      
+			to give IT support to biologists who are still using Windows XP.      
 		-->
 			
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -185,10 +185,10 @@
 
 		<log4j.version>2.14.0</log4j.version>
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>4.0RC2</ondex.version>
+		<ondex.version>5.0</ondex.version>
 		<!-- This is required to override the parent's POM -->
 		<jutils.version>10.0</jutils.version>
-		<knetminer.backend.version>2.0RC</knetminer.backend.version>
+		<knetminer.backend.version>2.0</knetminer.backend.version>
 	</properties>
 
 
