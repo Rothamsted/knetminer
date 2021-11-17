@@ -57,8 +57,8 @@
 10-7	ortho	4
 10-10	equivalent	4
 10-7	equivalent	4
-10-10	xref	8
-10-7	xref	8
+10-10	xref	6
+10-7	xref	6
 10-2	pub_in
 10-3	has_function
 10-4	participates_in
