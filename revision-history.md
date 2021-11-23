@@ -1,10 +1,14 @@
 # Revision History
 
-*This file was last reviewed on 21/09/2021*
+*This file was last reviewed on 30/10/2021*
+
+# 5.0.1-SNAPSHOT
+* Current snapshot
+
 
 # 5.0
 
-# What's new?
+## What's new?
 
 KnetMiner 5.0 comes with a number of new features, speed improvements and a new freemium/premium version.
 
@@ -61,6 +65,7 @@ References and further details:
 
 ## Poaceae multi-species knowledge graph
 A new multi-species poaceae knowledge graph (KG) integrates a vast amount of: genetic, genomic and literature data from the four most important global cereal crops: wheat, rice, maize, barley, combined with the model plant species Arabidopsis and Brachypodium. We have cleaned, processed, and integrated over 100 datasets which has resulted in a KG of 2 million nodes and 10 million relationships between them. This KG is available through through a paid KnetMiner resource subscribtion (request quote) and our free RDF-SPARQL and Neo4j-Cypher graph query endpoints (https://knetminer.com/data).
+
 
 # 4.0
 

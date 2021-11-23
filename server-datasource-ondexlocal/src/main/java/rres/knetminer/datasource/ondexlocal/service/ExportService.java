@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -103,15 +104,6 @@ public class ExportService
 		
 		log.info ( "Saving graph stats to '{}'", exportDirPath );
 
-		
-		// Update the Network Stats file that holds the latest Stats information.
-		String fileName = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
-		
-		// Also, create a timetamped Stats file to retain historic Stats
-		// information.
-		long timestamp = System.currentTimeMillis ();
-		String newFileName = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
-
 		int totalGenes = dataService.getGenomeGenesCount ();
 		int totalConcepts = graph.getConcepts ().size ();
 		int totalRelations = graph.getRelations ().size ();
@@ -144,25 +136,24 @@ public class ExportService
 		int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
 
 		// Write the Stats to a .tab file.
-		StringBuffer sb = new StringBuffer ();
+		StringBuffer out = new StringBuffer ();
 		// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-		sb.append ( "<stats>\n" );
-		sb.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
-		sb.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
-		sb.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
-		sb.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
-		sb.append ( "<evidenceNetworkSizes>\n" );
-		sb.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
-		sb.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
-		sb.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
-		sb.append ( "</evidenceNetworkSizes>\n" );
+		out.append ( "<stats>\n" );
+		out.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
+		out.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
+		out.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
+		out.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
+		out.append ( "<evidenceNetworkSizes>\n" );
+		out.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
+		out.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
+		out.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
+		out.append ( "</evidenceNetworkSizes>\n" );
 
-		Set<ConceptClass> conceptClasses = graph.getMetaData ().getConceptClasses (); // get all concept classes
-		Set<ConceptClass> sortedConceptClasses = new TreeSet<> ( conceptClasses ); // sorted
-
+		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
+		
 		// Display table breakdown of all conceptClasses in network
-		sb.append ( "<conceptClasses>\n" );
-		for ( ConceptClass conClass : sortedConceptClasses )
+		out.append ( "<conceptClasses>\n" );
+		for ( ConceptClass conClass : conceptClasses )
 		{
 			String conID = conClass.getId ();
 			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue; 
@@ -174,10 +165,10 @@ public class ExportService
 			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
 			
-			sb.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
+			out.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
 		}
-		sb.append ( "</conceptClasses>\n" );
-		sb.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
+		out.append ( "</conceptClasses>\n" );
+		out.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
 
 		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
 		.stream ()
@@ -187,7 +178,7 @@ public class ExportService
 		));
 
 		// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-		sortedConceptClasses.stream ()
+		conceptClasses.stream ()
 		.forEach ( conceptClass -> 
 		{
 			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
@@ -204,7 +195,7 @@ public class ExportService
 		.sorted ( Map.Entry.comparingByKey () )
 		.forEach ( pair ->
 		{
-			for ( ConceptClass conceptClass : sortedConceptClasses )
+			for ( ConceptClass conceptClass : conceptClasses )
 			{
 				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
 				
@@ -213,16 +204,16 @@ public class ExportService
 
 				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				sb.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
+				out.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
 					.append ( "</ccEvi>\n" );
 			}
 		});
 
-		sb.append ( "</ccgeneEviCount>\n" );
-		sb.append ( "<connectivity>\n" ); // Relationships per concept
+		out.append ( "</ccgeneEviCount>\n" );
+		out.append ( "<connectivity>\n" ); // Relationships per concept
 		
 		// Print connectivity for each CC
-		for ( ConceptClass conceptClass : sortedConceptClasses )
+		for ( ConceptClass conceptClass : conceptClasses )
 		{
 			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
 			String conID = conceptClass.getId ();
@@ -236,18 +227,22 @@ public class ExportService
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
 
 			float connectivity = ( (float) relationCount / (float) conCount );
-			sb.append ( "<hubiness>" ).append ( conID ).append ( "->" )
+			out.append ( "<hubiness>" ).append ( conID ).append ( "->" )
 				.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
 		}
-		sb.append ( "</connectivity>\n" );
-		sb.append ( "</stats>" );
+		out.append ( "</connectivity>\n" );
+		out.append ( "</stats>" );
 		
 		try
 		{
-			IOUtils.writeFile ( fileName, sb.toString () );
+			// The latest stats
+			String statsPath = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
+			IOUtils.writeFile ( statsPath, out.toString () );
 			
-			// Also, create the timestamped Stats file.
-			IOUtils.writeFile ( newFileName, sb.toString () );
+			// Also, create a copy to keep an historic track of it.
+			long timestamp = System.currentTimeMillis ();
+			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
+			IOUtils.writeFile ( newStatsPath, out.toString () );
 
 			// TODO: remove?
 			// generateGeneEvidenceStats(exportPathDirUrl);
@@ -280,67 +275,68 @@ public class ExportService
 			String g2pl_fileName = Paths.get ( exportDirPath, "gene2PathLength.tab.gz" ).toString (); // gene2PathLength.tab
 
 			log.debug ( "Print mapGene2Concepts Stats in a new .tab file: " + g2c_fileName );
-			// Generate mapGene2Concepts HashMap contents in a new .tab file
-			// BufferedWriter out1= new BufferedWriter(new FileWriter(g2c_fileName));
-			BufferedWriter out1 = new BufferedWriter (
-					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2c_fileName ) ) ) );
-			// GZIPOutputStream gzip= new GZIPOutputStream(new FileOutputStream(new
-			// File(g2c_fileName))); // gzip the file.
-			// BufferedWriter out1= new BufferedWriter(new OutputStreamWriter(gzip,
-			// "UTF-8"));
-			
-			out1.write ( "Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n" );
-			for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifDataService.getGenes2Concepts ().entrySet () )
-			{ // for each <K,V> entry
-				int geneID = mEntry.getKey ();
-				Set<Integer> conIDs = mEntry.getValue (); // Set<Integer> value
-				String txt = geneID + "\t" + conIDs.size () + "\t";
-				Iterator<Integer> itr = conIDs.iterator ();
-				while ( itr.hasNext () )
-				{
-					txt = txt + itr.next ().toString () + ",";
+			try ( 
+				Writer out = 
+					new BufferedWriter ( new OutputStreamWriter ( 
+						new GZIPOutputStream ( new FileOutputStream ( g2c_fileName ) ) ) )
+			)
+			{
+				out.write ( "Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n" );
+				for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifDataService.getGenes2Concepts ().entrySet () )
+				{ // for each <K,V> entry
+					int geneID = mEntry.getKey ();
+					Set<Integer> conIDs = mEntry.getValue (); // Set<Integer> value
+					String txt = geneID + "\t" + conIDs.size () + "\t";
+					Iterator<Integer> itr = conIDs.iterator ();
+					while ( itr.hasNext () )
+					{
+						txt = txt + itr.next ().toString () + ",";
+					}
+					txt = txt.substring ( 0, txt.length () - 1 ) + "\n"; // omit last comma character
+					out.write ( txt ); // write contents.
 				}
-				txt = txt.substring ( 0, txt.length () - 1 ) + "\n"; // omit last comma character
-				out1.write ( txt ); // write contents.
 			}
-			out1.close ();
 
 			log.debug ( "Print mapConcept2Genes Stats in a new .tab file: " + c2g_fileName );
-			// Generate mapConcept2Genes HashMap contents in a new .tab file
-			// BufferedWriter out2= new BufferedWriter(new FileWriter(c2g_fileName));
-			BufferedWriter out2 = new BufferedWriter (
-					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( c2g_fileName ) ) ) );
-			out2.write ( "Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n" );
-			for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifDataService.getConcepts2Genes ().entrySet () )
-			{ // for each <K,V> entry
-				int eviID = (Integer) mapEntry.getKey ();
-				Set<Integer> geneIDs = mapEntry.getValue (); // Set<Integer> value
-				String evi_txt = eviID + "\t" + geneIDs.size () + "\t";
-				Iterator<Integer> iter = geneIDs.iterator ();
-				while ( iter.hasNext () )
-				{
-					evi_txt = evi_txt + iter.next ().toString () + ",";
-				}
-				evi_txt = evi_txt.substring ( 0, evi_txt.length () - 1 ) + "\n"; // omit last comma character
-				out2.write ( evi_txt ); // write contents.
-			}
-			out2.close ();
 
-			// Generate gene2PathLength .tab file
-			log.debug ( "Print mapGene2PathLength Stats in a new .tab file: " + g2pl_fileName );
-			BufferedWriter out3 = new BufferedWriter (
-					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2pl_fileName ) ) ) );
-			out3.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
-			for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifDataService.getGenes2PathLengths ().entrySet () )
+			try ( 
+				Writer out = new BufferedWriter (
+					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( c2g_fileName ) ) ) )
+			)
 			{
-				var idPair = plEntry.getKey ();
-				String key = idPair.getLeft () + "//" + idPair.getRight ();
-				int pl = plEntry.getValue ();
-				String pl_txt = key + "\t" + pl + "\n";
-				// log.info("mapGene2PathLength: "+ pl_txt);
-				out3.write ( pl_txt ); // write contents.
+				out.write ( "Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n" );
+				for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifDataService.getConcepts2Genes ().entrySet () )
+				{ // for each <K,V> entry
+					int eviID = (Integer) mapEntry.getKey ();
+					Set<Integer> geneIDs = mapEntry.getValue (); // Set<Integer> value
+					String evi_txt = eviID + "\t" + geneIDs.size () + "\t";
+					Iterator<Integer> iter = geneIDs.iterator ();
+					while ( iter.hasNext () )
+					{
+						evi_txt = evi_txt + iter.next ().toString () + ",";
+					}
+					evi_txt = evi_txt.substring ( 0, evi_txt.length () - 1 ) + "\n"; // omit last comma character
+					out.write ( evi_txt ); // write contents.
+				}
 			}
-			out3.close ();
+
+			log.debug ( "Print mapGene2PathLength Stats in a new .tab file: " + g2pl_fileName );
+			try ( 
+				Writer out = new BufferedWriter (
+					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2pl_fileName ) ) ) )
+			)
+			{
+				out.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
+				for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifDataService.getGenes2PathLengths ().entrySet () )
+				{
+					var idPair = plEntry.getKey ();
+					String key = idPair.getLeft () + "//" + idPair.getRight ();
+					int pl = plEntry.getValue ();
+					String pl_txt = key + "\t" + pl + "\n";
+					// log.info("mapGene2PathLength: "+ pl_txt);
+					out.write ( pl_txt ); // write contents.
+				}
+			}
 		}
 		catch ( Exception ex )
 		{

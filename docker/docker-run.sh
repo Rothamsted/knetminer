@@ -10,7 +10,7 @@
 dataset_id=''
 dataset_dir=''
 host_port=8080
-image_version='latest'
+image_version='5.0RC'
 
 while [[ $# -gt 0 ]]
 do
