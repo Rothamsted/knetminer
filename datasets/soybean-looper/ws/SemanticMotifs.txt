@@ -38,6 +38,7 @@
 9-10	suppressible	8
 6-9	enc
 6-7	ortho	4
+6-6	ortho	4
 22-12	occ_in
 9-12	cooc_wi
 8-11	has_phenotype
