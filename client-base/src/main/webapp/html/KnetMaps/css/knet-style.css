@@ -1,5 +1,5 @@
 /* 
-    Last Modified on : 27-Mar-2017
+    Last Modified on : 25/11/21
     Author     : Ajit Singh
     Description: CSS for KnetMaps
 */
@@ -67,6 +67,7 @@ input.knetCon_Cellular_Component { border: none; width:22px; height:22px; backgr
 input.knetCon_CoExpCluster { border: none; width:22px; height:22px; background:url("../img/CoExpCluster.png") }
 input.knetCon_CoExpStudy { border: none; width:22px; height:22px; background:url("../img/CoExpStudy.png") }
 input.knetCon_Compound { border: none; width:22px; height:22px; background:url("../img/Compound.png") }
+input.knetCon_Comp { border: none; width:22px; height:22px; background:url("../img/Compound.png") }
 input.knetCon_DGES { border: none; width:22px; height:22px; background:url("../img/DGES.png") }
 input.knetCon_Disease { border: none; width:22px; height:22px; background:url("../img/Disease.png") }
 input.knetCon_Drug { border: none; width:22px; height:22px; background:url("../img/Drug.png") }
@@ -84,6 +85,7 @@ input.knetCon_QTL { border: none; width:22px; height:22px; background:url("../im
 input.knetCon_Quantitative_Trait_Locus { border: none; width:22px; height:22px; background:url("../img/Quantitative_Trait_Locus.png") }
 input.knetCon_Reaction { border: none; width:22px; height:22px; background:url("../img/Reaction.png") }
 input.knetCon_Scaffold { border: none; width:22px; height:22px; background:url("../img/Scaffold.png") }
+input.knetCon_Allele { border: none; width:22px; height:22px; background:url("../img/Allele.png") }
 input.knetCon_SNP { border: none; width:22px; height:22px; background:url("../img/SNP.png") }
 input.knetCon_SNPEffect { border: none; width:22px; height:22px; background:url("../img/SNPEffect.png") }
 input.knetCon_Trait { border: none; width:22px; height:22px; background:url("../img/Trait.png") }
