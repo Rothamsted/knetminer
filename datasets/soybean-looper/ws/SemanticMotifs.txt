@@ -12,6 +12,7 @@
 10^	Gene
 11^	Phenotype
 12^	Compound
+13^	ProtDomain
 
 #Transitions
 1-9	enhanceable	2
@@ -37,6 +38,7 @@
 6-9	enc
 6-7	ortho	4
 6-6	ortho	4
+6-13	has_domain
 22-12	occ_in
 9-12	cooc_wi
 8-11	has_phenotype
