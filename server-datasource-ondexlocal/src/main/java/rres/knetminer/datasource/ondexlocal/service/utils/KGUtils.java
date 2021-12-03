@@ -227,10 +227,8 @@ public class KGUtils
 	{
 		String typeId = c.getOfType ().getId ();
 		
-		String result = getBestName ( c.getConceptNames (), false ); // preferred name
-		
-		if ( result.isEmpty () ) result = getBestName ( c ); // all names
-		
+		String result = getBestName ( c.getConceptNames () ); // priority to the shortest preferred name
+				
 		if ( result.isEmpty () )
 		{
 			// non-ambiguous accession, discriminate by type
@@ -263,7 +261,9 @@ public class KGUtils
 	 * If the input is null or empty, returns ""
 	 * 
 	 * @param includeAmbiguous, if false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
-	 * set (might return "" if none available), else ignores ambiguity and considers all the input.
+	 * set (might return "" if none available), else ignores ambiguity and considers all the input. Not that this is 
+	 * different than the similar flag in {@link #getBestName(Set, boolean)}, there we use a XOR switch for the preferred
+	 * flag, here we consider what to include in the list of valid accessions. TODO: maybe we need to change it, see #584  
 	 * 
 	 * @param priorityCriteria, if non-null, it gives priority to the accessions that have the lowest values for 
 	 * this function. This is a low-level feature, use the other more abstract labelling criteria if you're in 
@@ -377,7 +377,7 @@ public class KGUtils
 	 * Selects the best name for a set, giving priority to the shortest first and then 
 	 * to the canonical string order.
 	 * 
-	 * @param includeAltNames if not set, consider the {@link ConceptName#isPreferred() preferred name} only. This is 
+	 * @param usePreferredOrAltNames whether to use {@link ConceptName#isPreferred() preferred name} or not. This is 
 	 * supposed to be unique, but data are often dirty, hence we don't trust that and we still prioritise 
 	 * possible multiple preferred names.
 	 * 
@@ -385,16 +385,16 @@ public class KGUtils
 	 * so use {@link #getBestName(Set)} instead, which is public.
 	 * 
 	 */
-	private static String getBestName ( Set<ConceptName> cns, boolean includeAltNames ) 
-	{
-		var cnsStrm = cns.parallelStream ();
-		if ( !includeAltNames ) cnsStrm = cnsStrm.filter ( ConceptName::isPreferred );
+	private static String getBestName ( Set<ConceptName> cns, boolean usePreferredOrAltNames ) 
+	{	
+		var cnsStrm = cns.parallelStream ()
+		.filter ( cname -> usePreferredOrAltNames ? cname.isPreferred () : !cname.isPreferred () );
 		
 		return cnsStrm
 		.map ( ConceptName::getName )
 		.map ( String::trim )
 		.filter ( nameStr -> !nameStr.isEmpty () )
-		.sorted ( 
+		.sorted (
 			Comparator.comparing ( String::length )
 			.thenComparing ( Comparator.naturalOrder () ) 
 		)
@@ -403,11 +403,16 @@ public class KGUtils
 	}
 	
 	/**
-	 * Defaults to including all names.
+	 * This tries to use {@link #getBestName(Set, boolean) the best preferred name} first, and then, if none is available,
+	 * it further tries the alternative names.
+	 * 
 	 */
 	public static String getBestName ( Set<ConceptName> cns ) 
 	{
-		return getBestName ( cns, true );
+		String result = getBestName ( cns, true );
+		if ( !result.isEmpty () ) return result;
+		
+		return getBestName ( cns, false );
 	}
 
 	/**
