@@ -275,10 +275,7 @@ public class KGUtils
 	)
 	{
 		if ( accs == null || accs.size () == 0 ) return "";
-				
-		var accsStrm = accs.parallelStream ();
-		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
-
+						
 		// Our own comparisons
 		Comparator<String> accStrCmp = (acc1, acc2) -> specialAccessionCompare ( acc1, acc2 );
 		
@@ -293,7 +290,12 @@ public class KGUtils
 		if ( priorityCriteria != null ) 
 			accCmp = Comparator.comparingInt ( priorityCriteria ).thenComparing ( accCmp );
 		
+
+		var accsStrm = accs.parallelStream ();
+		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
+		
 		return accsStrm
+		.filter ( acc -> StringUtils.trimToNull ( acc.getAccession () ) != null )
 		.sorted ( accCmp )
 		.findFirst ()
 		// Unfortunately, we have to do a final re-map, in order to be able to apply whole-ConceptAccession
@@ -391,6 +393,7 @@ public class KGUtils
 		return cnsStrm
 		.map ( ConceptName::getName )
 		.map ( String::trim )
+		.filter ( nameStr -> !nameStr.isEmpty () )
 		.sorted ( 
 			Comparator.comparing ( String::length )
 			.thenComparing ( Comparator.naturalOrder () ) 
