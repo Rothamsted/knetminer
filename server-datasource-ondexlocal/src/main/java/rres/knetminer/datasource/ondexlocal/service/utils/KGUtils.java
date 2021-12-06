@@ -233,18 +233,10 @@ public class KGUtils
 		{
 			// non-ambiguous accession, discriminate by type
 			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
-				? getBestGeneAccession ( c.getConceptAccessions (), false )
-				: getBestAccession ( c.getConceptAccessions (), false, null );
-		}
-			
-		if ( result.isEmpty () )
-		{
-			// all accessions, discriminate by type
-			result = ArrayUtils.contains ( new String [] { "Gene", "Protein" }, typeId )
 				? getBestGeneAccession ( c )
 				: getBestAccession ( c );
 		}
-
+			
 		if ( result.isEmpty () ) result = StringUtils.trimToEmpty ( c.getPID () );
 
 		return StringUtils.abbreviate ( result, 30 );
@@ -260,10 +252,8 @@ public class KGUtils
 	 * 
 	 * If the input is null or empty, returns ""
 	 * 
-	 * @param includeAmbiguous, if false, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
-	 * set (might return "" if none available), else ignores ambiguity and considers all the input. Not that this is 
-	 * different than the similar flag in {@link #getBestName(Set, boolean)}, there we use a XOR switch for the preferred
-	 * flag, here we consider what to include in the list of valid accessions. TODO: maybe we need to change it, see #584  
+	 * @param useUniques, if true, considers only accessions with {@link ConceptAccession#isAmbiguous()} not
+	 * set (might return "" if none available), else consider only ambiguous accessions.  
 	 * 
 	 * @param priorityCriteria, if non-null, it gives priority to the accessions that have the lowest values for 
 	 * this function. This is a low-level feature, use the other more abstract labelling criteria if you're in 
@@ -271,7 +261,7 @@ public class KGUtils
 	 *  
 	 */
 	private static String getBestAccession (
-		Set<ConceptAccession> accs, boolean includeAmbiguous, ToIntFunction<ConceptAccession> priorityCriteria 
+		Set<ConceptAccession> accs, boolean useUniques, ToIntFunction<ConceptAccession> priorityCriteria 
 	)
 	{
 		if ( accs == null || accs.size () == 0 ) return "";
@@ -292,7 +282,7 @@ public class KGUtils
 		
 
 		var accsStrm = accs.parallelStream ();
-		if ( !includeAmbiguous ) accsStrm = accsStrm.filter ( acc -> !acc.isAmbiguous () );
+		accsStrm = accsStrm.filter ( acc -> useUniques ? !acc.isAmbiguous () : acc.isAmbiguous () );
 		
 		return accsStrm
 		.filter ( acc -> StringUtils.trimToNull ( acc.getAccession () ) != null )
@@ -340,10 +330,18 @@ public class KGUtils
 	 *  
 	 *  You should use this for generic concepts and end-user visualisations of accessions. 
 	 *  For generic labelling, which is also based on names, use {@link #getBestConceptLabel(ONDEXConcept)}.
+	 *  
+	 *  This tries to use a non-ambiguous accession first, and then possibly, it falls back to considering 
+	 *  ambiguous accessions too.
+	 *  
+	 *  @see #getBestAccession(Set, boolean, ToIntFunction)
 	 */
 	public static String getBestAccession ( Set<ConceptAccession> accs )
 	{
-		return getBestAccession ( accs, true, null );
+		String result = getBestAccession ( accs, true, null );
+		if ( !result.isEmpty () ) return result;		
+		
+		return getBestAccession ( accs, false, null );
 	}
 
 	/**
@@ -359,16 +357,42 @@ public class KGUtils
 	 * 
 	 * This uses {@link #getKnownSourcesAccessionPriority(ConceptAccession)}, which is used in certain views
 	 * for the accession field.
+	 * 
+	 * As for {@link #getBestAccession(ONDEXConcept)}, this also gives priority to non-ambiguous accessions, then it  
+	 * possibly considers ambiguous ones.
+	 * 
+	 * @see #getBestGeneAccession(Set, boolean)
+	 * @see #getBestAccession(Set, boolean, ToIntFunction)
+	 * @see #getKnownSourcesAccessionPriority(ConceptAccession)
+	 */
+	public static String getBestGeneAccession ( Set<ConceptAccession> geneAccessions )
+	{	
+		String result = getBestGeneAccession ( geneAccessions, true );
+		if ( !result.isEmpty () ) return result;		
+		
+		return getBestGeneAccession ( geneAccessions, false );
+	}
+
+	
+	/**
+	 * Just a wrapper of {@link #getBestGeneAccession(ONDEXConcept)}
+	 * 
 	 */
 	public static String getBestGeneAccession ( ONDEXConcept geneConcept )
 	{
-		return getBestGeneAccession ( geneConcept.getConceptAccessions (), true );
+		return getBestGeneAccession ( geneConcept.getConceptAccessions () );
 	}
-
-	private static String getBestGeneAccession ( Set<ConceptAccession> geneAccs, boolean includeAmbiguous )
+	
+	
+	
+	/**
+	 * Uses {@link #getBestAccession(Set, boolean, ToIntFunction)} with {@link #getKnownSourcesAccessionPriority(ConceptAccession)}, 
+	 * which is a special priority criterion we require for genes. 
+	 */
+	private static String getBestGeneAccession ( Set<ConceptAccession> geneAccs, boolean useUniques )
 	{
 		return getBestAccession ( 
-			geneAccs, includeAmbiguous, KGUtils::getKnownSourcesAccessionPriority
+			geneAccs, useUniques, KGUtils::getKnownSourcesAccessionPriority
 		);
 	}
 	
