@@ -239,7 +239,7 @@ public class KGUtils
 			
 		if ( result.isEmpty () ) result = StringUtils.trimToEmpty ( c.getPID () );
 
-		return StringUtils.abbreviate ( result, 30 );
+		return StringUtils.abbreviate ( result, 63 );
 	}
 
 	
