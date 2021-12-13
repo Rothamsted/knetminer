@@ -57,6 +57,12 @@ done
 if $IS_RELEASE; then
 	echo -e "\n\n\tSetting '$NEW_RELEASE_VER' as default --image-version in docker-run.sh\n"
 	sed --in-place "s/image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
+else
+	# Else, we might need to restore latest
+	if ! egrep -q "^image_version='latest'"; then
+		echo -e "\n\n\tRestoring 'latest' version for --image-version in docker-run.sh\n"
+		sed --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
+	fi
 fi
 
 # git push is managed by the main build.sh script	
