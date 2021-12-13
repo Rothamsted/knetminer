@@ -61,7 +61,7 @@ else
 	# Else, we might need to restore latest
 	if ! egrep -q "^image_version='latest'"; then
 		echo -e "\n\n\tRestoring 'latest' version for --image-version in docker-run.sh\n"
-		sed --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
+		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
 		export NEEDS_PUSH=true
 	fi
 fi
