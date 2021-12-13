@@ -191,7 +191,7 @@ public class ApiIT
 		{
 			var cols = row.split ( "\t" );
 			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
-			if ( !"Regulation Of Transcription...".equals ( cols [ 1 ]) ) return false;
+			if ( !"Regulation Of Transcription, DNA-templated".equals ( cols [ 1 ]) ) return false;
 			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
 			if ( NumberUtils.toInt ( cols [ 4 ] ) <= 0 ) return false; // genes count
 			if ( !"AT3G16830".equals ( cols [ 5 ] ) ) return false; // genes
