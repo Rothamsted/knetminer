@@ -23,3 +23,9 @@ package-lock.json
 .DS_Store
 # It is auto-downloaded by Travis
 /maven-settings.xml
+# Common CI scripts that are auto-downloaded
+/ci-build/build.sh
+/ci-build/install.sh
+/ci-build/maven-settings.xml
+# GH Actions
+/settings.xml
