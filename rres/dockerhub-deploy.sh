@@ -25,12 +25,13 @@ cd ../docker
 
 echo -e "\n\n\tPreparing the environment\n"
 
-wall -n <<EOT
-*** WARNING: Continuous Integration is going to update Docker images ***
-
-In few minutes, existing unused images will be DELETED.
-The container named wheat-ci will be restarted.
-EOT
+# Don't work with regular users.
+#wall -n <<EOT
+#*** WARNING: Continuous Integration is going to update Docker images ***
+#
+#In few minutes, existing unused images will be DELETED.
+#The container named wheat-ci will be restarted.
+#EOT
 
 echo -e "--- Stopping, cleaning and updating Docker\n"
 docker stop wheat-ci || true
