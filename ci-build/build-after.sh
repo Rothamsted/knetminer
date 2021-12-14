@@ -59,7 +59,7 @@ if $IS_RELEASE; then
 	sed -E --in-place "s/^image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
 else
 	# Else, we might need to restore latest
-	if ! egrep -q "^image_version='latest'"; then
+	if ! egrep -q "^image_version='latest'" docker/docker-run.sh; then
 		echo -e "\n\n\tRestoring 'latest' version for --image-version in docker-run.sh\n"
 		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
 		git commit -m "Restoring 'latest' version for --image-version in docker-run.sh (ci script). [ci skip]" \
