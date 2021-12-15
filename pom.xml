@@ -188,7 +188,7 @@
 		<ondex.version>5.0.1-SNAPSHOT</ondex.version>
 		<!-- This is required to override the parent's POM -->
 		<jutils.version>10.0</jutils.version>
-		<knetminer.backend.version>2.0</knetminer.backend.version>
+		<knetminer.backend.version>2.0.1-SNAPSHOT</knetminer.backend.version>
 	</properties>
 
 
