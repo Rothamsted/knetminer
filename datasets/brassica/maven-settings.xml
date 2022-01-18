@@ -7,8 +7,8 @@
 		<profile>
 			<id>docker</id>
 			<properties>
-				<knetminer.dataSourceId>brassicaeknet</knetminer.dataSourceId>
-				<knetminer.specieName>brassicae</knetminer.specieName>
+				<knetminer.dataSourceId>brassicaknet</knetminer.dataSourceId>
+				<knetminer.specieName>brassica</knetminer.specieName>
 				<knetminer.appDescription>Knetminer instance about: rapeseed/canola, sprouts, camelina, turnip rape</knetminer.appDescription>
 				<knetminer.appKeywords>rapeseed, canola, sprouts, turnip rape, camelina, knetminer</knetminer.appKeywords>
 				<knetminer.specieTaxId>3708, 109376, 3711, 90675</knetminer.specieTaxId>
