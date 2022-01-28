@@ -3,7 +3,7 @@
 *This file was last reviewed on 30/10/2021*
 
 # 5.0.1-SNAPSHOT
-* Current snapshot
+* Current snapshot.
 
 
 # 5.0
