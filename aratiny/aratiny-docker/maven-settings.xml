@@ -10,7 +10,7 @@
 			This shows how to use the Docker scripts (plus additional Maven profiles) to deploy on a regular
 			system, without Docker.
 			
-			Normally the Docker settings for running aratinty in the Docker containerì are in the POM and no specific
+			Normally the Docker settings for running aratinty in the Docker container are in the POM and no specific
 			settings file/profile is required. 
 		 -->
 		<profile>

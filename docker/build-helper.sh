@@ -72,10 +72,11 @@ cd aratiny/aratiny-ws
 echo -e "\n Copying aratiny's WAR to Tomcat and adding the test OXL\n"
 cp -f target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
-# And also put the test OXL in place
-mkdir --parents /root/knetminer-dataset/data
-cp -f target/dependency/poaceae-sample.oxl /root/knetminer-dataset/data/knowledge-network.oxl
-
+# Also, when we're under a container, put the test OXL in place
+if [[ -e /root/knetminer-build ]]; then
+	mkdir --parents /root/knetminer-dataset/data
+	cp -f target/dependency/poaceae-sample.oxl /root/knetminer-dataset/data/knowledge-network.oxl
+fi
 
 
 # The client is rebuilt by the container, cause its files need to be instantiated with the dataset-specific settings. 
