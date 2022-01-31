@@ -19,4 +19,3 @@ The data that power the web application are also available as [FAIR data][30], t
 [20]: https://github.com/Rothamsted/knetminer/wiki
 [30]: https://www.degruyter.com/view/j/jib.2018.15.issue-3/jib-2018-0023/jib-2018-0023.xml
 [40]: http://knetminer.org/data/
- 
