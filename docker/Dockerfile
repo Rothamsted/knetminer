@@ -37,5 +37,5 @@ RUN touch /etc/crontab /etc/cron*/* \
   && cp -r .aws ~/ \
   && ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
-ENTRYPOINT ["./runtime-helper.sh"] 
-CMD ["aratiny"] # The id of the default dataset
+ENTRYPOINT [ "./runtime-helper.sh" ] 
+CMD [ "aratiny" ] # The id of the default dataset

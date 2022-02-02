@@ -26,5 +26,6 @@ RUN set -x \
 	&& echo '{"allow_root":true}' > /root/.bowerrc \
 	&& pip3 install awscli \
 	&& ln -fs /bin/bash /bin/sh
-  
-#CMD [ "echo", "DO NOT RUN ME, This is a base image, used to build the Knetminer runtime" ]
+
+ENTRYPOINT [ "/bin/sh", "-c" ] 
+CMD [ "echo -e '\n\n\tDO NOT RUN ME, This is a base image, used to build the Knetminer runtime\n'" ]
