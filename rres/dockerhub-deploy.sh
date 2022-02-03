@@ -63,7 +63,8 @@ export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Xdebug -Xnoagent
 # If you set the JAVA_TOOL_OPTIONS var, you DO NEED some memory option too, in order to avoid
 # limited defaults
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops"
-export DOCKER_OPTS="-it"
+
+export DOCKER_OPTS="-it --restart unless-stopped"
 for port in $jmx_port $rmi_port $debug_port
 do
 	 DOCKER_OPTS="$DOCKER_OPTS -p $port:$port"
