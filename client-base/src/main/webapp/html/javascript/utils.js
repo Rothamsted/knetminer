@@ -155,6 +155,7 @@ function bracketsAreBalanced(str) {
  */
 function matchCounter() {
     var keyword = $('#keywords').val();
+
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
     if (keyword.length == 0) {
         $('#matchesResultDiv').html('Please, start typing your query');
@@ -215,8 +216,46 @@ function evidencePath(id, genes) {
 * 	- tooltips
 */
 
+// function gets all inputs in the search form and check if value is present
+// if value is present it activates the reset button
+function ActivateResetButton(){
+
+    var knetInputs = $(':input').filter('input,select,textarea');
+    knetInputs.each(function(index,element){
+        $(element).keyup(function(){
+            var resetBtnEle = $("#resetKnet")
+            if(element.value !== ''){
+                resetBtnEle.show();
+            }else{
+                resetBtnEle.hide();
+            }
+        })
+    })
+}
+
+// functions create the reset button Elements and add it to the Search button through it li parent element
+function createResetBtn(){
+    var resetBtn = $('<button id="resetKnet"><i style="margin-right:1rem;" class="fas fa-power-off"></i> Reset</button>',).css({
+        "background":"red",
+        "padding":".5rem 1rem",
+        "borderRadius":"8px",
+        "margin-left":"2rem",
+        "color":"white"
+        ,});
+        resetBtn.hide()
+        $(".knet_button").after(resetBtn);
+        $(".knet_button").parent().css({"display":"flex","align-items": "center"}); 
+
+}
+
+
+
+
 $(document).ready(
     function () {
+
+        createResetBtn();
+
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
         //console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
@@ -330,6 +369,9 @@ $(document).ready(
                 if ($('#region_search_area tr').length >= 7) {
                     $('#addRow').attr('disabled', true);
                 }
+
+                ActivateResetButton(); 
+
                 return false;
             });
         // Remove QTL region
@@ -682,6 +724,17 @@ $(document).ready(
         });
 
         genemap.draw('#genemap', 'html/data/basemap.xml', null);
+
+
+        // on click event that reset all form input including the genenome icon and the suggestor text values
+        $('#resetKnet').click(function (event){
+            event.preventDefault();
+            $('form')[0].reset();
+            $('#matchesResultDiv').empty();
+            $('#suggestor_search').hide();
+            $("#resetKnet").hide();
+        }); 
+
     });
 
 
