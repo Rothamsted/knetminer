@@ -5,9 +5,16 @@
 # 
 # See the comments below for details.
 #
-# WARNING: you should run me with 'source make.sh', in order to keep env definitions I define. 
+# WARNING: you should run me with 'source make.sh', in order to keep env vars I define. 
 #
-set -e
+
+# Where our scripts find the Tomcat home
+if [[ -z "$CATALINA_HOME" ]]; then
+   echo -e "\n\n\tSet CATALINA_HOME to point to Tomcat, run me with 'source'\n"
+   return 2 2>/dev/null
+   exit 2
+fi
+
 mydir=`pwd`
 
 cd ../../aratiny/aratiny-docker
@@ -22,11 +29,11 @@ cd "$mydir"
 #
 knet_dataset_dir=/tmp/knetminer-sample-dataset 
 
-# Where our scripts find the Tomcat home
-export CATALINA_HOME=/tmp/tomcat
-
 # docker is the profile to be used with our scripts, local-env-ex overrides it with specific 
 # settings about the directories used in this example.
+# 
+# TODO: I never tested -Pneo4j in this example
+#
 export MAVEN_ARGS="-Pdocker,local-env-ex --settings "$settings_dir/maven-settings.xml""
 
 
@@ -34,15 +41,16 @@ export MAVEN_ARGS="-Pdocker,local-env-ex --settings "$settings_dir/maven-setting
 # 
 for dir in settings config data
 do
-	mkdir --parents "$knet_dataset_dir/$dir"
+	mkdir --parents "$knet_dataset_dir/$dir" || return 1
 done
 
 # Gets the test OXL. Typically, you'll already have your own and this little mess won't be needed
 #
-cd ../../aratiny/aratiny-ws
-mvn generate-test-resources
-cp target/dependency/poaceae-sample.oxl "$knet_dataset_dir/data/knowledge-network.oxl"
-cd "$mydir"
+cd ../../aratiny/aratiny-ws \
+&& mvn generate-test-resources \
+&& cp target/dependency/poaceae-sample.oxl "$knet_dataset_dir/data/knowledge-network.oxl" \
+&& cd "$mydir" \
+|| return 1
 
 
 cat <<EOT

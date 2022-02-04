@@ -61,11 +61,12 @@ knet_tomcat_home=${3-$CATALINA_HOME}
 # This is usually useful for custom Docker-independent builds, see local-env-ex/ 
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode --no-snapshot-updates'}
 
-# Default Java options to tell the JVM to use (almost) all the available memory
+# Default Java options inside the container, to tell the JVM to use (almost) all the available memory
 # TODO: Future versions shouldn't need UseCompressedOops (https://stackoverflow.com/a/58121363/529286)
 #
-export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops'}
-
+if [[ -e /root/knetminer-build ]]; then
+	export JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops'}
+fi
 
 # ---- Parameters/environment setup ends here
 #
@@ -176,7 +177,8 @@ cp target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
 
 # Periodic task used for analytics under AWS
 # 
-if grep -q "docker" /proc/self/cgroup; then
+if [[ -e /root/knetminer-build ]]; then
+#if grep -q "docker" /proc/self/cgroup; then
 	if [[ -f "$mydir/.aws/credentials" ]]; then 
 		echo -e "\n\n\tRunning crond in Docker container\n"
 		crontab $mydir/analytics-cron 
