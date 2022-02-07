@@ -15,7 +15,7 @@ function activateResetButton(){
     })
 }
 
-
+// on click event that reset all form input including the genenome icon and the suggestor text values
 function resetInputs(){
     resetBtnEle.click(function (event){
         event.preventDefault();
@@ -46,7 +46,7 @@ $(document).ready(function(){
     })
 
 
-     // on click event that reset all form input including the genenome icon and the suggestor text values
+     
      
 
 
