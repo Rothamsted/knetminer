@@ -25,6 +25,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+				 <version>1.6.0</version>
 				<executions>
 					<execution>
 						<id>exec-npm-install-genemap</id>
@@ -83,7 +84,7 @@
 						</goals>
 					</execution>
                                         <!-- can comment-out/disable from below (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
-					<execution>
+					<!-- <execution>
 						<id>exec-npm-install-knetmaps</id>
 						<phase>compile</phase>
 						<configuration>
@@ -96,8 +97,8 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
-					<execution>
+					</execution> -->
+					<!-- <execution>
 						<id>exec-gulp-clean-knetmaps</id>
 						<phase>compile</phase>
 						<configuration>
@@ -110,7 +111,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution> -->
                                         <!-- can comment-out/disable upto here (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
 					<execution>
 						<id>exec-gulp-optimise-knetmaps</id>

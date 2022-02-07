@@ -90,6 +90,7 @@
        <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
         <script type="text/javascript" src="html/javascript/exportKnetwork/download-knet.js"></script>
          <script type="text/javascript" src="html/javascript/utils.js"></script>
+         <script type="text/javascript" src="html/javascript/testFeatures.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->
         <script type="text/javascript" src="html/javascript/maskloader-spinner.js"></script>
