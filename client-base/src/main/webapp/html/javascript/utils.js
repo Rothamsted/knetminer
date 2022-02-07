@@ -155,6 +155,7 @@ function bracketsAreBalanced(str) {
  */
 function matchCounter() {
     var keyword = $('#keywords').val();
+
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
     if (keyword.length == 0) {
         $('#matchesResultDiv').html('Please, start typing your query');
@@ -215,8 +216,12 @@ function evidencePath(id, genes) {
 * 	- tooltips
 */
 
+
+
+
 $(document).ready(
     function () {
+
         // add species name to header
         $('#species_header').text(species_name); //update species name from utils_config.js
         //console.log("enableGoogleAnalytics: "+ enableGA + ", UI ga_id= "+ ga_id); // testing
@@ -330,6 +335,7 @@ $(document).ready(
                 if ($('#region_search_area tr').length >= 7) {
                     $('#addRow').attr('disabled', true);
                 }
+
                 return false;
             });
         // Remove QTL region
@@ -682,6 +688,17 @@ $(document).ready(
         });
 
         genemap.draw('#genemap', 'html/data/basemap.xml', null);
+
+
+        // on click event that reset all form input including the genenome icon and the suggestor text values
+        $('#resetKnet').click(function (event){
+            event.preventDefault();
+            $('form')[0].reset();
+            $('#matchesResultDiv').empty();
+            $('#suggestor_search').hide();
+            $("#resetKnet").hide();
+        }); 
+
     });
 
 
