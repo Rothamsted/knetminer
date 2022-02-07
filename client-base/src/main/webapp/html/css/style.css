@@ -956,12 +956,12 @@ a { cursor: pointer; }
 
 /* test features styles */
 
-.KnetBtns{
+.knetbtns{
     display:flex;
     align-items:center; 
 }
 
-.resetKnet{
+.resetknet{
         background:red;
         padding:.5rem 1rem;
         border-radius:8px;

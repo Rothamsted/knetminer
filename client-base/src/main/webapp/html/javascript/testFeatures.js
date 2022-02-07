@@ -1,8 +1,8 @@
-var resetBtnEle = $("#resetKnet")
+var resetBtnEle = $("#resetknet")
 
 // function gets all inputs in the search form and check if value is present
 // if value is present it activates the reset button
-function ActivateResetButton(){
+function activateResetButton(){
     var knetInputs = $(':input').filter('input,select,textarea');
     knetInputs.each(function(index,element){
         $(element).keyup(function(){
@@ -25,11 +25,12 @@ $(document).ready(function(){
 
     // adding a gonome region search row
     $('#addRow').click(function(){
-        ActivateResetButton()
+        activateResetButton()
     });
+    
     // removing gonome region search row
     $('#removeRow').click(function(){
-        ActivateResetButton()
+        activateResetButton()
     })
 
 
@@ -39,7 +40,7 @@ $(document).ready(function(){
         $('form')[0].reset();
         $('#matchesResultDiv').empty();
         $('#suggestor_search').hide();
-        $("#resetKnet").hide();
+        resetBtnEle.hide();
     });
 
 
