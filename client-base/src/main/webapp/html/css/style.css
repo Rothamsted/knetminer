@@ -972,3 +972,7 @@ a { cursor: pointer; }
         -ms-border-radius:8px;
         -o-border-radius:8px;
 }
+
+.reseticon{
+    margin-right:1rem;
+}

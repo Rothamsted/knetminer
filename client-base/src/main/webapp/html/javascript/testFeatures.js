@@ -17,23 +17,17 @@ function ActivateResetButton(){
 
 
 
-
-
 $(document).ready(function(){
     console.log("DOM content Loaded"); 
 
     // hide reset btn on page load
-    $(".resetKnet").hide(); 
+    resetBtnEle.hide(); 
 
-
-    $(body).click(function(){
-        resetBtnEle.show(); 
-    })
-
+    // adding a gonome region search row
     $('#addRow').click(function(){
         ActivateResetButton()
     });
-
+    // removing gonome region search row
     $('#removeRow').click(function(){
         ActivateResetButton()
     })

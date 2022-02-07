@@ -113,7 +113,7 @@
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
 				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
 					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-					<button type="submit" title="Reset KnetMiner knowledge network" class="resetKnet" id="resetKnet"><i style="margin-right:1rem;" class="fas fa-power-off"></i> Reset</button>
+					<button type="submit" title="Reset KnetMiner knowledge network" class="resetKnet" id="resetKnet"><i class="fas fa-power-off reseticon"></i> Reset</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>
