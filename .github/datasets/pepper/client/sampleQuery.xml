@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+	<query>
+		<name>Example 1</name>
+		<description>Single Gene</description>
+		<term></term>
+		<gene>T459_14900</gene>
+	</query>
+	
+	<query>
+		<name>Example 2</name>
+		<description>Gene List</description>
+		<term>synthetase</term>
+		<gene>T459_14900</gene>
+		<gene>T459_13782</gene>
+		<gene>T459_29165</gene>
+		<gene>T459_22335</gene>
+		<gene>T459_02814</gene>
+		<gene>T459_31781</gene>
+	</query>
+	
+	<query>
+		<name>Example 3</name>
+		<description>Keywords</description>
+		<term>asparagine OR glutamine</term>
+	</query>	
+</sampleQueries>

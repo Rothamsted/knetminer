@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This is identical to the main web.xml, it's duplicated here cause jetty doesn't filter
+	web resources.
+-->
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        version="3.0">
+  <display-name>KnetMiner Ara-Tiny WS</display-name>
+  
+	<context-param>
+		<param-name>knetminer.dataSource.configFilePath</param-name>
+		<param-value>file:///${knetminer.configFile}</param-value>
+	</context-param>
+	
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+	<!-- We need CORS for /cydebug and during tests -->
+	<filter-mapping>
+	  <filter-name>UrlRewriteFilter</filter-name>
+	  <url-pattern>/cydebug/*</url-pattern>
+	  <dispatcher>REQUEST</dispatcher>
+	  <dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+		
+</web-app>

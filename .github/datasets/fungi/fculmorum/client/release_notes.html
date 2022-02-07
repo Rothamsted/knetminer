@@ -1,0 +1,197 @@
+<ul>
+	<p><strong>Datasets used for integration</strong></p>
+	<ul>
+	    <li>Gene-Protein [Ensembl]</li>
+		<ul>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/gff3/fusarium_graminearum/Fusarium_graminearum.RR1.36.gff3.gz">Fusarium_graminearum.RR1.36.gff3</a></li>
+		    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/fasta/fusarium_graminearum/pep/Fusarium_graminearum.RR1.pep.all.fa.gz">Fusarium_graminearum.RR1.pep.all.fa</a></li>
+		    <li>Mapping File from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+		    <li><a href="http://fungidb.org/common/downloads/release-33/FgraminearumPH-1/txt/FungiDB-33_FgraminearumPH-1_GeneAliases.txt">Old Gene Id</a></li>
+		</ul>
+	    <li>Protein Domain [Ensembl]</li>
+		<ul>
+		    <li>InterPro Protein Domains from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+		</ul>
+	    <li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
+		<ul>
+		    <li>Protein@F.graminearum-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]</li>
+		    <li><a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A%22Ascomycota+%5B4890%5D%22+NOT+taxonomy%3A227321+NOT+taxonomy%3A559292+AND+reviewed%3Ayes+NOT+taxonomy%3A367110&sort=score&compress=yes&format=xml">Ascomycetes XML</a></li>
+		</ul>
+	    <li>Publications [PubMed]</li>
+	        <ul>
+		    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=fusarium+graminearum+OR+gibberella+zeae">F.graminearum publications XML</a></li>
+		    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=virulence+AND+pathogen*+NOT+virus">XML</a></li>
+		    <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
+		</ul>
+	    <li>Gene-Phenotype [PHI-base]</li>
+		<ul>
+		    <li>PHI-base Pathogen Phenotypes from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+		</ul>
+	    <li>Protein-Phenotype [PHI-base]</li>
+		<ul>
+		    <li><a href="http://www.phi-base.org/">TAB</a></li>
+		    <li>Sequence alignments to PHI-base Proteins [Decypher]</li>
+			<ul>
+			    <li>Protein@F.graminearum-Protein@PHI-base [Smith-Waterman]</li>
+		        </ul>
+		</ul>
+	    <li>Gene-Phenotype [Text-Mining]</li>
+		<ul>
+		    <li>Created Gene-Phenotype sentence based co-occurences in PubMed abstracts</li>
+		    <li><a href="http://purl.obolibrary.org/obo/apo.owl">apo.owl</a></li>
+		    <li><a href="http://purl.obolibrary.org/obo/omp.owl">omp.owl</a></li>
+		    <li><a href="http://purl.obolibrary.org/obo/fypo.owl">fypo.owl</a></li>			    
+		</ul>
+	    <li>Yeast (<i>Saccharomyces cerevisiae</i>)</li>
+	        <ul>
+		    <li>Gene-Protein [Ensembl]</li>
+			<ul>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/gff3/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.36.gff3.gz">Saccharomyces_cerevisiae.R64-1-1.36.gff3</a></li>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/fasta/saccharomyces_cerevisiae/pep/Saccharomyces_cerevisiae.R64-1-1.pep.all.fa.gz">Saccharomyces_cerevisiae.R64-1-1.pep.all.fa</a></li>
+			    <li>Ensembl - SGD Mapping from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			    <li>Ensembl - UniProtKB Mapping from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Protein Pathway [YeastCyc, UniProtKB]</li>
+		        <ul>
+			    <li><a href="ftp://ftp.yeastgenome.org/ptools_data/yeast.tar.gz">YeastCyc Release 15</a></li>
+			    <li>biopax-level2.owl</li>
+			    <li>translation.tab</li>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000002311&columns=id,database(BioCyc)&format=tab&compress=no">UniProtKB - BioCyc Mapping File</a></li>
+			</ul>
+		    <li>Gene-Phenotype [SGD]</li>
+		        <ul>
+			    <li><a href="ftp://ftp.yeastgenome.org/curation/literature/phenotype_data.tab">phenotype_data.tab</a></li>
+			</ul>
+		    <li>Gene-Publication [SGD]</li>
+			<ul>
+			    <li><a href="ftp://ftp.yeastgenome.org/curation/literature/gene_literature.tab">gene_literature.tab</a></li>
+			</ul>
+		    <li>Protein-Publication [UniProtKB]</li>
+			<ul>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000002311&compress=yes&format=xml">Sc Proteome xml</a></li>
+			</ul>
+		    <li>Protein-Protein Interactions [BioGRID]</li>
+			<ul>
+			    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.146/BIOGRID-ORGANISM-3.4.146.tab2.zip">TAB</a></li>
+			    <li>Version 3.4.146</li>
+			</ul>
+		    <li>Gene-GO [GOA]</li>
+			<ul>
+			    <li>Include all evidence types</li>
+			    <li><a href="ftp://ftp.yeastgenome.org/curation/literature/gene_association.sgd.gz">GAF 2.0</a></li>
+			    <li>Ondex GAF parser requires additional mapping file of feature type -> <i>Ondex Concept Class</i></li>
+			</ul>
+		    <li>Protein Domain [SGD]</li>
+			<ul>
+			    <li><a href="ftp://ftp.yeastgenome.org/curation/calculated_protein_info/domains/domains.tab">domains.tab</a></li>
+			</ul>
+		</ul>
+	    <li>Aspergillus nidulans</li>
+	        <ul>
+		    <li>Gene-Protein [Ensembl, AspGD]</li>
+		        <ul>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/gff3/aspergillus_nidulans/Aspergillus_nidulans.ASM1142v1.36.gff3.gz">Aspergillus_nidulans.ASM1142v1.36.gff3</a></li>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/fasta/aspergillus_nidulans/pep/Aspergillus_nidulans.ASM1142v1.pep.all.fa.gz">Aspergillus_nidulans.ASM1142v1.pep.all.fa</a></li>
+			    <li>Mapping File from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			    <li>Ensembl - AspGD Mapping from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			    <li>AspGD - UniProtKB Mapping from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Protein-Protein Interactions [BioGRID, Ensembl]</li>
+		        <ul>
+			    <li><a href="http://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.146/BIOGRID-ORGANISM-3.4.146.tab2.zip">TAB</a></li>
+			    <li>Version 3.4.146</li>
+			    <li>Protein ID Mapping File from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Gene-GO [GOA]</li>
+			<ul>
+			    <li>Include all evidence types</li>
+			    <li><a href="http://www.aspergillusgenome.org/download/go/gene_association.aspgd.gz">GAF 2.0</a></li>
+			    <li>Ondex GAF parser requires additional mapping file of feature type -> <i>Ondex Concept Class</i></li>
+			</ul>
+		    <li>Gene-Phenotype [AspGD]</li>
+		        <ul>
+			    <li><a href="http://www.aspergillusgenome.org/download/phenotype/A_nidulans_phenotype_data.tab">A_nidulans_phenotype_data.tab</a></li>
+			</ul>
+		    <li>Protein Domain [AspGD]</li>
+		        <ul>
+			    <li><a href="http://www.aspergillusgenome.org/download/domains/A_nidulans_FGSC_A4/A_nidulans_FGSC_A4_iprscan.out">A_nidulans_FGSC_A4_iprscan.out</a></li>
+			    <li><a href="http://www.aspergillusgenome.org/download/chromosomal_feature_files/A_nidulans_FGSC_A4/A_nidulans_FGSC_A4_current_chromosomal_feature.tab">Protein ID Mapping</a></li>
+			</ul>
+		    <li>Protein-Publication [UniProtKB]</li>
+			<ul>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000000560&compress=yes&format=xml">An Proteome xml</a></li>
+			</ul>
+		</ul>
+	    <li>Neurospora crassa</li>
+	        <ul>
+		    <li>Gene-Protein [Ensembl]</li>
+		        <ul>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/release-36/fungi/fasta/neurospora_crassa/pep/Neurospora_crassa.NC12.pep.all.fa.gz">Neurospora_crassa.NC12.pep.all.fa</a></li>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/release-36/fungi/gff3/neurospora_crassa/Neurospora_crassa.NC12.36.gff3.gz.">Neurospora_crassa.NC12.36.gff3</a></li>
+			    <li>Mapping File from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-35/tsv/neurospora_crassa/Neurospora_crassa.NC12.35.uniprot.tsv.gz">Ensembl - UniProtKB Mapping</a></li>
+			</ul>
+		    <li>Protein Domain [Ensembl]</li>
+			<ul>
+			    <li>InterPro Protein Domains from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Protein-Publication [UniProtKB]</li>
+			<ul>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=proteome:UP000001805&compress=yes&format=xml">Nc Proteome xml</a></li>
+			</ul>
+		</ul>
+	    <li>Zymoseptoria tritici</li>
+		<ul>
+		    <li>Gene-Protein [Ensembl]</li>
+			<ul>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/gff3/zymoseptoria_tritici/Zymoseptoria_tritici.MG2.36.gff3.gz">Zymoseptoria_tritici.MG2.36.gff3</a></li>
+			    <li><a href="ftp://ftp.ensemblgenomes.org/pub/fungi/release-36/fasta/zymoseptoria_tritici/pep/Zymoseptoria_tritici.MG2.pep.all.fa.gz">Zymoseptoria_tritici.MG2.pep.all.fa</a></li>
+			    <li>Mapping File from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Protein Domain [Ensembl]</li>
+			<ul>
+			    <li>InterPro Protein Domains from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Sequence alignments to other Ascomycetes [Decypher, UniprotKB]</li>
+			<ul>
+			    <li>Protein@Z.tritici-Protein@Ascomycetes::UniProtKB-SP [Smith-Waterman]</li>
+			    <li><a href="http://www.uniprot.org/uniprot/?query=taxonomy%3A%22Ascomycota+%5B4890%5D%22+NOT+taxonomy%3A227321+NOT+taxonomy%3A559292+AND+reviewed%3Ayes+NOT+taxonomy%3A367110&sort=score&compress=yes&format=xml">Ascomycetes XML</a></li>
+			</ul>
+		    <li>Publications [PubMed]</li>
+			<ul>
+			    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=zymoseptoria+tritici+OR+mycospherella+graminicola">Z.tritici publications XML</a></li>
+			    <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=virulence+AND+pathogen*+NOT+virus">XML</a></li>
+			    <li>filter publications that are unconnected, i.e. not linked via citation or text-mining</li>
+			</ul>
+		    <li>Gene-Phenotype [PHI-base]</li>
+			<ul>
+			    <li>PHI-base Pathogen Phenotypes from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+			</ul>
+		    <li>Protein-Phenotype [PHI-base]</li>
+			<ul>
+			    <li><a href="http://www.phi-base.org/">TAB</a></li>
+			    <li>Sequence alignments to PHI-base Proteins [Decypher]</li>
+				<ul>
+				    <li>Protein@Z.tritici-Protein@PHI-base [Smith-Waterman]</li>
+				</ul>
+			</ul>
+		</ul>
+	    <li>Homology [Ensembl]</li>
+		<ul>
+		    <li>Data was downloaded from <a href="http://fungi.ensembl.org/biomart/martview">Ensembl BioMart</a></li>
+		    <li>Homologs F. graminearum - A. nidulans</li>
+		    <li>Homologs F. graminearum - Yeast</li>
+		    <li>Homologs F. graminearum - N. crassa</li>
+		    <li>Homologs F. graminearum - Z. tritici</li>
+		    <li>Homologs Z. tritici - A. nidulans</li>
+		    <li>Homologs Z. tritici - Yeast</li>
+		    <li>Homologs Z. tritici - N. crassa</li>
+		    <li>Homologs Z. tritici - F. graminearum</li>
+		</ul>
+	    <li>Ontologies</li>
+		<ul>
+		    <li><a href="ftp://ftp.geneontology.org/pub/go/ontology/go-basic.obo">go-basic.obo</a></li>
+		    <li><a href="ftp://ftp.geneontology.org/pub/go/external2go/ec2go">ec2go.txt</a></li>
+		</ul>
+	    
+</ul>

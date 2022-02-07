@@ -1,0 +1,939 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>I</chromosome>
+<start>3265577</start>
+<end>3268269</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045100</link>
+</feature>
+<feature id="1">
+<chromosome>V</chromosome>
+<start>3730678</start>
+<end>3734154</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G052200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G052200</link>
+</feature>
+<feature id="2">
+<chromosome>III</chromosome>
+<start>8470485</start>
+<end>8473569</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.003G057000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G057000</link>
+</feature>
+<feature id="3">
+<chromosome>VII</chromosome>
+<start>4691165</start>
+<end>4692354</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.007G049200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.007G049200</link>
+</feature>
+<feature id="4">
+<chromosome>I</chromosome>
+<start>3412759</start>
+<end>3415423</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G046100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G046100</link>
+</feature>
+<feature id="5">
+<chromosome>V</chromosome>
+<start>24892598</start>
+<end>24893262</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G243700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G243700</link>
+</feature>
+<feature id="6">
+<chromosome>V</chromosome>
+<start>2087268</start>
+<end>2089190</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G028400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G028400</link>
+</feature>
+<feature id="7">
+<chromosome>I</chromosome>
+<start>3250119</start>
+<end>3251996</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045000</link>
+</feature>
+<feature id="8">
+<chromosome>III</chromosome>
+<start>19015508</start>
+<end>19020338</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.003G183900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G183900</link>
+</feature>
+<feature id="9">
+<chromosome>I</chromosome>
+<start>3289045</start>
+<end>3289390</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045400</link>
+</feature>
+<feature id="10">
+<chromosome>XVIII</chromosome>
+<start>13224030</start>
+<end>13227086</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.018G105400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.018G105400</link>
+</feature>
+<feature id="11">
+<chromosome>III</chromosome>
+<start>18841741</start>
+<end>18844704</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.003G181400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G181400</link>
+</feature>
+<feature id="12">
+<chromosome>I</chromosome>
+<start>3303344</start>
+<end>3306131</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045500</link>
+</feature>
+<feature id="13">
+<chromosome>I</chromosome>
+<start>3314572</start>
+<end>3315306</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045600</link>
+</feature>
+<feature id="14">
+<chromosome>I</chromosome>
+<start>3452737</start>
+<end>3455521</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G046400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G046400</link>
+</feature>
+<feature id="15">
+<chromosome>I</chromosome>
+<start>30432058</start>
+<end>30432812</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G300000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G300000</link>
+</feature>
+<feature id="16">
+<chromosome>I</chromosome>
+<start>3285791</start>
+<end>3286266</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045300</link>
+</feature>
+<feature id="17">
+<chromosome>XVIII</chromosome>
+<start>13198725</start>
+<end>13201508</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.018G104800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.018G104800</link>
+</feature>
+<feature id="18">
+<chromosome>XVIII</chromosome>
+<start>13233390</start>
+<end>13238918</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.018G105500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.018G105500</link>
+</feature>
+<feature id="19">
+<chromosome>I</chromosome>
+<start>3318446</start>
+<end>3321642</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045700</link>
+</feature>
+<feature id="20">
+<chromosome>I</chromosome>
+<start>11319771</start>
+<end>11324408</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G140700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G140700</link>
+</feature>
+<feature id="21">
+<chromosome>V</chromosome>
+<start>2056952</start>
+<end>2058865</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G028100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G028100</link>
+</feature>
+<feature id="22">
+<chromosome>I</chromosome>
+<start>3385607</start>
+<end>3387126</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045900</link>
+</feature>
+<feature id="23">
+<chromosome>I</chromosome>
+<start>3337853</start>
+<end>3343846</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G045800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G045800</link>
+</feature>
+<feature id="24">
+<chromosome>XVIII</chromosome>
+<start>13187656</start>
+<end>13189689</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.018G104700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.018G104700</link>
+</feature>
+<feature id="25">
+<chromosome>V</chromosome>
+<start>2049629</start>
+<end>2051766</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.005G028000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G028000</link>
+</feature>
+<feature id="26">
+<chromosome>XIV</chromosome>
+<start>2193272</start>
+<end>2194961</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.014G025600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.014G025600</link>
+</feature>
+<feature id="27">
+<chromosome>II</chromosome>
+<start>196450</start>
+<end>198144</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.002G003200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G003200</link>
+</feature>
+<feature id="28">
+<chromosome>I</chromosome>
+<start>3107642</start>
+<end>3112488</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.001G042900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G042900</link>
+</feature>
+<feature id="29">
+<chromosome>VI</chromosome>
+<start>1705608</start>
+<end>1706496</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.006G024400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G024400</link>
+</feature>
+<feature id="30">
+<chromosome>VIII</chromosome>
+<start>3944225</start>
+<end>3945900</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.008G065000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.008G065000</link>
+</feature>
+<feature id="31">
+<chromosome>X</chromosome>
+<start>18697569</start>
+<end>18699277</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.010G192400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.010G192400</link>
+</feature>
+<feature id="32">
+<chromosome>XIII</chromosome>
+<start>6910714</start>
+<end>6915323</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.013G079500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.013G079500</link>
+</feature>
+<feature id="33">
+<chromosome>IV</chromosome>
+<start>23617293</start>
+<end>23621312</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>POTRI.004G230900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.004G230900</link>
+</feature>
+<feature id="34">
+<chromosome>XVI</chromosome>
+<start>14353708</start>
+<end>14360577</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G142500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G142500</link>
+</feature>
+<feature id="35">
+<chromosome>VIII</chromosome>
+<start>9106805</start>
+<end>9108004</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.008G136700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.008G136700</link>
+</feature>
+<feature id="36">
+<chromosome>XVI</chromosome>
+<start>14351922</start>
+<end>14353566</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G142400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G142400</link>
+</feature>
+<feature id="37">
+<chromosome>I</chromosome>
+<start>30772404</start>
+<end>30774048</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G304800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G304800</link>
+</feature>
+<feature id="38">
+<chromosome>VIII</chromosome>
+<start>14198146</start>
+<end>14207939</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.008G201600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.008G201600</link>
+</feature>
+<feature id="39">
+<chromosome>IX</chromosome>
+<start>8651535</start>
+<end>8653872</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G095800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G095800</link>
+</feature>
+<feature id="40">
+<chromosome>II</chromosome>
+<start>19807418</start>
+<end>19817623</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.002G215600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G215600</link>
+</feature>
+<feature id="41">
+<chromosome>IX</chromosome>
+<start>6442325</start>
+<end>6442848</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G062900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G062900</link>
+</feature>
+<feature id="42">
+<chromosome>XVIII</chromosome>
+<start>8925252</start>
+<end>8927718</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.018G070300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.018G070300</link>
+</feature>
+<feature id="43">
+<chromosome>X</chromosome>
+<start>12492024</start>
+<end>12494463</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.010G104400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.010G104400</link>
+</feature>
+<feature id="44">
+<chromosome>XVI</chromosome>
+<start>5972301</start>
+<end>5976275</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G078300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G078300</link>
+</feature>
+<feature id="45">
+<chromosome>XIV</chromosome>
+<start>10577998</start>
+<end>10587269</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.014G138400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.014G138400</link>
+</feature>
+<feature id="46">
+<chromosome>XVI</chromosome>
+<start>11560533</start>
+<end>11562895</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G112400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G112400</link>
+</feature>
+<feature id="47">
+<chromosome>VI</chromosome>
+<start>7470260</start>
+<end>7471992</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.006G097500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G097500</link>
+</feature>
+<feature id="48">
+<chromosome>IX</chromosome>
+<start>8863870</start>
+<end>8865909</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G099800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G099800</link>
+</feature>
+<feature id="49">
+<chromosome>XIV</chromosome>
+<start>11314291</start>
+<end>11316353</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.014G148000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.014G148000</link>
+</feature>
+<feature id="50">
+<chromosome>I</chromosome>
+<start>35607275</start>
+<end>35610294</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G349600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G349600</link>
+</feature>
+<feature id="51">
+<chromosome>XI</chromosome>
+<start>7317989</start>
+<end>7323258</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.011G075500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.011G075500</link>
+</feature>
+<feature id="52">
+<chromosome>III</chromosome>
+<start>8506916</start>
+<end>8508553</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.003G057200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G057200</link>
+</feature>
+<feature id="53">
+<chromosome>XVI</chromosome>
+<start>13846940</start>
+<end>13851484</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.016G135100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G135100</link>
+</feature>
+<feature id="54">
+<chromosome>IV</chromosome>
+<start>5288375</start>
+<end>5295176</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.004G064000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.004G064000</link>
+</feature>
+<feature id="55">
+<chromosome>I</chromosome>
+<start>38671701</start>
+<end>38673394</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G372400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G372400</link>
+</feature>
+<feature id="56">
+<chromosome>VI</chromosome>
+<start>8410970</start>
+<end>8415397</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.006G107900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G107900</link>
+</feature>
+<feature id="57">
+<chromosome>II</chromosome>
+<start>9543134</start>
+<end>9549000</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.002G127400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G127400</link>
+</feature>
+<feature id="58">
+<chromosome>VIII</chromosome>
+<start>9102855</start>
+<end>9105139</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.008G136600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.008G136600</link>
+</feature>
+<feature id="59">
+<chromosome>II</chromosome>
+<start>14355445</start>
+<end>14359610</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.002G183600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G183600</link>
+</feature>
+<feature id="60">
+<chromosome>II</chromosome>
+<start>260799</start>
+<end>263307</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.002G004500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G004500</link>
+</feature>
+<feature id="61">
+<chromosome>XV</chromosome>
+<start>15179507</start>
+<end>15182168</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.015G147300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.015G147300</link>
+</feature>
+<feature id="62">
+<chromosome>IX</chromosome>
+<start>6469241</start>
+<end>6471700</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G063400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G063400</link>
+</feature>
+<feature id="63">
+<chromosome>I</chromosome>
+<start>27647690</start>
+<end>27649914</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.001G268600</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G268600</link>
+</feature>
+<feature id="64">
+<chromosome>III</chromosome>
+<start>18225743</start>
+<end>18226047</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.003G172700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G172700</link>
+</feature>
+<feature id="65">
+<chromosome>IX</chromosome>
+<start>6020480</start>
+<end>6022704</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.009G057700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G057700</link>
+</feature>
+<feature id="66">
+<chromosome>IV</chromosome>
+<start>9243378</start>
+<end>9245512</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>POTRI.004G105000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.004G105000</link>
+</feature>
+<feature id="67">
+<chromosome>III</chromosome>
+<start>19951207</start>
+<end>19952808</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G196700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G196700</link>
+</feature>
+<feature id="68">
+<chromosome>XII</chromosome>
+<start>15678893</start>
+<end>15681528</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.012G144500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.012G144500</link>
+</feature>
+<feature id="69">
+<chromosome>III</chromosome>
+<start>12076449</start>
+<end>12079494</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G093700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G093700</link>
+</feature>
+<feature id="70">
+<chromosome>XVII</chromosome>
+<start>12603294</start>
+<end>12605523</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.017G110500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.017G110500</link>
+</feature>
+<feature id="71">
+<chromosome>XVI</chromosome>
+<start>1313497</start>
+<end>1315441</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.016G023300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G023300</link>
+</feature>
+<feature id="72">
+<chromosome>III</chromosome>
+<start>8692451</start>
+<end>8695488</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G059200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G059200</link>
+</feature>
+<feature id="73">
+<chromosome>VI</chromosome>
+<start>2086644</start>
+<end>2087897</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G030800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G030800</link>
+</feature>
+<feature id="74">
+<chromosome>XI</chromosome>
+<start>16725936</start>
+<end>16728818</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.011G148100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.011G148100</link>
+</feature>
+<feature id="75">
+<chromosome>VI</chromosome>
+<start>1988723</start>
+<end>1990000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G029300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G029300</link>
+</feature>
+<feature id="76">
+<chromosome>V</chromosome>
+<start>6087657</start>
+<end>6088835</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G082700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G082700</link>
+</feature>
+<feature id="77">
+<chromosome>VI</chromosome>
+<start>1704589</start>
+<end>1709977</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G024300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G024300</link>
+</feature>
+<feature id="78">
+<chromosome>XI</chromosome>
+<start>16725936</start>
+<end>16733181</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.011G148200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.011G148200</link>
+</feature>
+<feature id="79">
+<chromosome>I</chromosome>
+<start>31002408</start>
+<end>31006489</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G307200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G307200</link>
+</feature>
+<feature id="80">
+<chromosome>XIV</chromosome>
+<start>2189768</start>
+<end>2191337</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.014G025500</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.014G025500</link>
+</feature>
+<feature id="81">
+<chromosome>I</chromosome>
+<start>14846705</start>
+<end>14848920</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G175000</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G175000</link>
+</feature>
+<feature id="82">
+<chromosome>XIX</chromosome>
+<start>11045929</start>
+<end>11047313</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.019G076300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.019G076300</link>
+</feature>
+<feature id="83">
+<chromosome>II</chromosome>
+<start>249474</start>
+<end>252034</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.002G004100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G004100</link>
+</feature>
+<feature id="84">
+<chromosome>V</chromosome>
+<start>25718042</start>
+<end>25720777</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G257700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G257700</link>
+</feature>
+<feature id="85">
+<chromosome>VI</chromosome>
+<start>21428735</start>
+<end>21431924</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G199100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G199100</link>
+</feature>
+<feature id="86">
+<chromosome>VI</chromosome>
+<start>10249101</start>
+<end>10252655</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.006G126800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.006G126800</link>
+</feature>
+<feature id="87">
+<chromosome>XVI</chromosome>
+<start>7482820</start>
+<end>7486204</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.016G091100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.016G091100</link>
+</feature>
+<feature id="88">
+<chromosome>X</chromosome>
+<start>20822276</start>
+<end>20825759</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.010G224200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.010G224200</link>
+</feature>
+<feature id="89">
+<chromosome>II</chromosome>
+<start>1054274</start>
+<end>1057047</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.002G018300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.002G018300</link>
+</feature>
+<feature id="90">
+<chromosome>V</chromosome>
+<start>20527437</start>
+<end>20531451</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.005G187900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.005G187900</link>
+</feature>
+<feature id="91">
+<chromosome>XVII</chromosome>
+<start>2588793</start>
+<end>2591088</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.017G029400</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.017G029400</link>
+</feature>
+<feature id="92">
+<chromosome>I</chromosome>
+<start>42926423</start>
+<end>42927711</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.001G406900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.001G406900</link>
+</feature>
+<feature id="93">
+<chromosome>VII</chromosome>
+<start>14473454</start>
+<end>14474383</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.007G129100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.007G129100</link>
+</feature>
+<feature id="94">
+<chromosome>VIII</chromosome>
+<start>2123928</start>
+<end>2128275</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.008G038200</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.008G038200</link>
+</feature>
+<feature id="95">
+<chromosome>XV</chromosome>
+<start>203640</start>
+<end>204896</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.015G002900</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.015G002900</link>
+</feature>
+<feature id="96">
+<chromosome>X</chromosome>
+<start>20815419</start>
+<end>20819184</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.010G224100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.010G224100</link>
+</feature>
+<feature id="97">
+<chromosome>IV</chromosome>
+<start>23592335</start>
+<end>23595001</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.004G230800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.004G230800</link>
+</feature>
+<feature id="98">
+<chromosome>III</chromosome>
+<start>6415677</start>
+<end>6418583</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.003G046700</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.003G046700</link>
+</feature>
+<feature id="99">
+<chromosome>IX</chromosome>
+<start>6462657</start>
+<end>6464735</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.009G063300</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G063300</link>
+</feature>
+<feature id="100">
+<chromosome>IX</chromosome>
+<start>6450076</start>
+<end>6452218</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.009G063100</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G063100</link>
+</feature>
+<feature id="101">
+<chromosome>IX</chromosome>
+<start>6426412</start>
+<end>6428527</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>POTRI.009G062800</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;list=POTRI.009G062800</link>
+</feature>
+<feature>
+<chromosome>I</chromosome>
+<start>29000000</start>
+<end>30000000</end>
+<type>qtl</type>
+<color>0xFF0000</color>
+<label>QTL1</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;qtl1=I:29000000:30000000</link>
+</feature>
+<feature>
+<chromosome>IX</chromosome>
+<start>8000000</start>
+<end>9000000</end>
+<type>qtl</type>
+<color>0xFF0000</color>
+<label>QTL2</label>
+<link>OndexServlet?mode=network&amp;keyword="lignin content" OR "lignin metabolism" OR "lignin level" OR "monolignol biosynthesis" OR "phenylpropanoid biosynthesis" OR "lignocellulose" OR "lignocellulosic biomass"&amp;qtl1=IX:8000000:9000000</link>
+</feature>
+</genome>

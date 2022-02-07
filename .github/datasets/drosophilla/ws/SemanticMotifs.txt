@@ -1,0 +1,30 @@
+
+#Finite States *=start state ^=end state
+1*	Gene
+2^	Publication
+3^	MolFunc
+4^	BioProc
+5^ 	CelComp
+6	Protein
+7^	Protein
+8	Allele
+9	Gene
+10^	Gene
+11^	Trait
+
+
+#Transitions
+1-9	enhanceable	2
+1-9	suppressible	2
+8-11	associated_with
+1-9	ortho	2
+1-2	pub_in
+1-7	enc
+1-3	has_function
+1-4	participates_in
+1-5	located_in
+1-8	allele_of
+9-2	pub_in
+9-3	has_function
+9-4	participates_in
+9-5	located_in

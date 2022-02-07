@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1024px" height="1024px" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 10240 10240" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>graph_fork icon</title>
+	<desc>graph_fork icon from the IconExperience.com O-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
+	<path id="curve1" style="fill:#21a2ef;fillopacity:1;" d="M6494 7520l753 753c62,62 164,62 226,0l753 -753c62,-62 94,-138 94,-226l0 -538c0,-50 -28,-92 -74,-111 -46,-19 -98,-12 -131,26l-436 506 0 -457c0,-618 -251,-1178 -656,-1583 -129,-129 -274,-242 -431,-337 157,-95 302,-208 431,-337 405,-405 656,-965 656,-1583l0 -457 436 506c32,38 85,45 131,26 46,-19 74,-61 74,-111l0 -538c0,-88 -31,-164 -94,-226l-753 -753c-62,-62 -164,-62 -226,0l-753 753c-62,62 -94,138 -94,226l0 538c0,50 28,92 74,111 46,19 98,12 131,-26l436 -506 0 457c0,440 -180,840 -471,1130 -290,290 -690,470 -1130,470l0 1 -1312 0c21,103 32,210 32,319 0,109 -11,216 -32,319l1312 0 0 1c440,0 840,180 1130,470 291,291 471,691 471,1130l0 457 -436 -506c-32,-38 -85,-45 -131,-26 -46,19 -74,61 -74,111l0 538c0,88 31,164 94,226z"/>
+	<path id="curve0" style="fill:#21a2ef;fillopacity:1;" d="M2560 3520c707,0 1280,573 1280,1280 0,707 -573,1280 -1280,1280 -707,0 -1280,-573 -1280,-1280 0,-707 573,-1280 1280,-1280zm0 640c353,0 640,287 640,640 0,353 -287,640 -640,640 -353,0 -640,-287 -640,-640 0,-353 287,-640 640,-640z"/>
+</svg>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+ 	<chromosome index="1" length="558535432" number="chr1H">
+		<band index="1">
+			<start>0</start>
+			<end>558535432</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2" length="768075024" number="chr2H">
+		<band index="1">
+			<start>0</start>
+			<end>768075024</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3" length="699711114" number="chr3H">
+		<band index="1">
+			<start>0</start>
+			<end>699711114</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4" length="647060158" number="chr4H">
+		<band index="1">
+			<start>0</start>
+			<end>647060158</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5" length="670030160" number="chr5H">
+		<band index="1">
+			<start>0</start>
+			<end>670030160</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6" length="583380513" number="chr6H">
+		<band index="1">
+			<start>0</start>
+			<end>583380513</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7" length="657224000" number="chr7H">
+		<band index="1">
+			<start>0</start>
+			<end>657224000</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8" length="249774706" number="chrUn">
+		<band index="1">
+			<start>0</start>
+			<end>249774706</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>	
+	<chromosome index="9" length="115974" number="Pt">
+		<band index="1">
+			<start>0</start>
+			<end>115974</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>

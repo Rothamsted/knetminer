@@ -16,6 +16,18 @@ function activateResetButton(){
 }
 
 
+function resetInputs(){
+    resetBtnEle.click(function (event){
+        event.preventDefault();
+        $('form')[0].reset();
+        $('#matchesResultDiv').empty();
+        $('#suggestor_search').hide();
+        resetBtnEle.hide();
+    });
+
+}
+
+
 
 $(document).ready(function(){
     console.log("DOM content Loaded"); 
@@ -35,13 +47,7 @@ $(document).ready(function(){
 
 
      // on click event that reset all form input including the genenome icon and the suggestor text values
-     resetBtnEle.click(function (event){
-        event.preventDefault();
-        $('form')[0].reset();
-        $('#matchesResultDiv').empty();
-        $('#suggestor_search').hide();
-        resetBtnEle.hide();
-    });
+     
 
 
 

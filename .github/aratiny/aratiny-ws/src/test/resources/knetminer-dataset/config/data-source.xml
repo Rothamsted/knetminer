@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Configuration for Knetminer</comment>	
+  
+  <!-- 
+  	===> TODO: please, stick to a naming convention for new variables! Cleaning is due for the old ones:
+  	     https://github.com/Rothamsted/knetminer/issues/489
+  -->
+  
+  <entry key="DataSourceName">${knetminer.dataSourceId}</entry>
+
+  <entry key="StateMachineFilePath">file:///${knetminer.configDir}/SemanticMotifs.txt</entry>
+  
+  <entry key="DataPath">${knetminer.dataDir}</entry>
+  <entry key="DataFile">${knetminer.oxlFile}</entry>
+  
+	<entry key="SpeciesTaxId">${knetminer.specieTaxId}</entry>
+	<!-- See the main POM for a description of this option -->
+	<entry key="seedGenesFile">${knetminer.backend.seedGenesFile}</entry>
+	<!-- See the main POM with regard to the below option, too -->
+	<entry key="defaultExportedPublicationCount">${knetminer.backend.defaultExportedPublicationCount}</entry>
+	
+	<entry key="reference_genome">true</entry>
+	<entry key="export_visible_network">true</entry>
+	<entry key="version">${knetminer.version}</entry>
+	<entry key="provider">${knetminer.provider}</entry>
+	<entry key="specieName">${knetminer.specieName}</entry>	
+	<entry key="knetSpaceHost">${knetminer.knetSpaceHost}</entry>
+ 	<entry key="sourceOrganization">${knetminer.sourceOrganization}</entry>
+	
+
+
+	<!-- 
+		This is the configuration for the new Neo4j-based backend
+	-->
+	
+	<!-- The value for this comes from Maven and depends on the selected profile. -->
+	<entry key = "GraphTraverserClass">${knetminer.api.graphTraverserClass}</entry>
+	
+	<!-- This is for the new Neo4j-based graph traverser -->
+	<entry key = "knetminer.backend.configPath">${knetminer.neo4j.configFile}</entry>
+			
+	<!-- 
+		This enables the CypherDebugger service and corresponding UI interface at TODO.
+		It only applies when Neo4j mode is enabled.
+		It's normally disabled and enabled for internal test instances.
+		It can be enabled via MAVEN_ARGS, see examples in docker-run.sh.
+		
+		WARNING: THIS allows for completely BREAKING yor Knetminer instance by sending and registering
+		arbitrary Cypher queries for the traverser. DO NOT ENABLE in production!!!
+	-->
+	<entry key = "knetminer.backend.cypherDebugger.enabled">${knetminer.backend.cypherDebugger.enabled}</entry>
+	
+</properties>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Properties>
+		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
+	</Properties>
+	<!-- 
+		This is a special, top-priority level, used to report 
+	  web analytics info
+	-->
+	<CustomLevels>
+		<CustomLevel name="ANALYTICS" intLevel="50" />
+	</CustomLevels>
+	<Appenders>
+		<RollingFile name="RollingFile"
+			fileName="${log-name}.log"
+			filePattern="${log-name}-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<!--pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern -->
+				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+      			<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
+		<RollingFile name="AnalyticsRollingFile"
+					 fileName="${log-name}-analytics.json"
+					 filePattern="${log-name}-analytics-%d{yyyy-MM-dd}.json">
+			<JSONLayout compact="false" eventEol="true" objectMessageAsJsonObject="true"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
+	</Appenders>
+	<!-- 
+		This is where the analytics is sent, in JSON format.
+	-->
+	<Loggers>
+		<Logger name="analytics-log" level="ANALYTICS">
+			<AppenderRef ref="AnalyticsRollingFile" />
+		</Logger>
+		<Root level="INFO">
+			<AppenderRef ref="RollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

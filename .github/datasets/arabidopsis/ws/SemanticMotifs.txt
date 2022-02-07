@@ -1,0 +1,73 @@
+#Finite States *=start state ^=end state
+1*	Gene
+2^	Publication
+3^	MolFunc
+4^	BioProc
+5^	CelComp
+6^	Phenotype
+66	Phenotype
+7^	Protein
+8^	Gene
+9	Gene
+10	Protein
+
+12	Enzyme
+122^	Enzyme
+13	Reaction
+133^	Reaction
+14^	Path
+15	SNP
+16^	Trait
+17^	ProtDomain
+
+#Transitions
+1-2	pub_in
+1-3	has_function
+1-4	participates_in
+1-5	located_in
+1-6	has_phenotype
+1-7	enc
+1-10	enc
+1-16	cooc_wi
+1-8	genetic
+1-8	physical
+1-9	genetic
+1-9	physical
+1-15	has_variation
+15-6	associated_with
+15-66	associated_with
+66-2	pub_in
+66-16	part_of
+
+9-2	pub_in
+9-3	has_function
+9-4	participates_in
+9-5	located_in
+9-6	has_phenotype
+9-16	cooc_wi
+9-15	has_variation
+
+10-7	h_s_s	4
+10-10	h_s_s	4
+10-7	ortho	4
+10-10	ortho	4
+10-10	xref	4
+10-7	xref	4
+
+10-7	physical	6	d
+10-10	physical	6	d
+
+10-7	genetic	6	d
+10-10	genetic	6	d
+
+10-2	pub_in
+10-3	has_function
+10-4	participates_in
+10-5	located_in
+10-17	has_domain
+
+10-12	is_a
+10-122	is_a
+12-13	ca_by
+12-133	ca_by
+13-14	part_of

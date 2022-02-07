@@ -1,0 +1,82 @@
+{
+  "name": "knetmaps",
+  "version": "2.2.1",
+  "license": "MIT",
+  "description": "Interactive network visualization tool for intuitive exploratory analysis of heterogeneous knowledge graphs",
+  "main": "knetmaps.js",
+  "homepage": "http://knetminer.rothamsted.ac.uk/KnetMaps/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rothamsted/knetmaps.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Rothamsted/knetmaps.js/issues"
+  },
+  "author": {
+    "name": "Ajit Singh",
+    "email": "ajit.singh@rothamsted.ac.uk",
+    "url": "https://www.rothamsted.ac.uk/our-people/ajit-singh"
+  },
+  "contributors": [
+    {
+      "name": "Joseph Hearnshaw",
+      "email": ""
+    },
+    {
+      "name": "Dr. Keywan Hassani-Pak",
+      "email": "keywan.hassani-pak@rothamsted.ac.uk"
+    }
+  ],
+  "keywords": [
+    "network",
+    "visualisation",
+    "visualization",
+    "node",
+    "npm",
+    "nodejs",
+    "bower",
+    "gulp",
+    "cytoscapejs",
+    "biojs"
+  ],
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "bower": "^1.8.8",
+    "node": "^11.5.0"
+  },
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-batch": "^1.0.5",
+    "gulp-concat": "^2.3.1",
+    "gulp-connect": "^2.3.1",
+    "gulp-csso": "^1.0.1",
+    "gulp-if": "^2.0.0",
+    "gulp-ignore": "^2.0.2",
+    "gulp-inject": "^3.0.0",
+    "gulp-jscs": "^3.0.2",
+    "gulp-jshint": "^2.0.0",
+    "gulp-less": "^3.0.5",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-print": "^2.0.1",
+    "gulp-rename": "^1.2.3",
+    "gulp-task-listing": "^1.0.1",
+    "gulp-uglify": "^1.5.3",
+    "gulp-useref": "^3.0.7",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "jshint": "^2.9.1",
+    "jshint-stylish": "^2.1.0",
+    "run-sequence": "^1.1.5",
+    "wiredep": "^3.0.0",
+    "yargs": "^4.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

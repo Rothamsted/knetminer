@@ -1,0 +1,5700 @@
+<?xml version="1.0" standalone="yes"?>
+<genome>
+<feature id="0">
+<chromosome>1</chromosome>
+<start>81097435</start>
+<end>81121112</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000005122</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000005122</link>
+</feature>
+<feature id="1">
+<chromosome>3</chromosome>
+<start>20453150</start>
+<end>20465219</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000016730</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000016730</link>
+</feature>
+<feature id="2">
+<chromosome>26</chromosome>
+<start>35862687</start>
+<end>36163723</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000017709</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017709</link>
+</feature>
+<feature id="3">
+<chromosome>7</chromosome>
+<start>48919355</start>
+<end>48923271</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000018290</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000018290</link>
+</feature>
+<feature id="4">
+<chromosome>11</chromosome>
+<start>106387777</start>
+<end>106389024</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000047297</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000047297</link>
+</feature>
+<feature id="5">
+<chromosome>8</chromosome>
+<start>48658281</start>
+<end>48782109</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000011545</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000011545</link>
+</feature>
+<feature id="6">
+<chromosome>9</chromosome>
+<start>37022764</start>
+<end>37026932</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000002082</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000002082</link>
+</feature>
+<feature id="7">
+<chromosome>19</chromosome>
+<start>44775157</start>
+<end>44782140</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000018823</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000018823</link>
+</feature>
+<feature id="8">
+<chromosome>1</chromosome>
+<start>8955134</start>
+<end>8963815</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000000706</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000000706</link>
+</feature>
+<feature id="9">
+<chromosome>20</chromosome>
+<start>28721655</start>
+<end>28743621</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000044010</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000044010</link>
+</feature>
+<feature id="10">
+<chromosome>7</chromosome>
+<start>20683774</start>
+<end>20695698</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000018655</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000018655</link>
+</feature>
+<feature id="11">
+<chromosome>5</chromosome>
+<start>27430824</start>
+<end>27438447</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000039261</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000039261</link>
+</feature>
+<feature id="12">
+<chromosome>7</chromosome>
+<start>18989689</start>
+<end>19025591</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000017280</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017280</link>
+</feature>
+<feature id="13">
+<chromosome>7</chromosome>
+<start>61042755</start>
+<end>61049774</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000015558</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000015558</link>
+</feature>
+<feature id="14">
+<chromosome>12</chromosome>
+<start>81157177</start>
+<end>81158069</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000046552</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000046552</link>
+</feature>
+<feature id="15">
+<chromosome>29</chromosome>
+<start>43221839</start>
+<end>43228308</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000008645</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000008645</link>
+</feature>
+<feature id="16">
+<chromosome>19</chromosome>
+<start>39648073</start>
+<end>39672758</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000008535</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000008535</link>
+</feature>
+<feature id="17">
+<chromosome>24</chromosome>
+<start>7303047</start>
+<end>7304704</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000017412</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017412</link>
+</feature>
+<feature id="18">
+<chromosome>1</chromosome>
+<start>69935163</start>
+<end>69961881</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000010382</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000010382</link>
+</feature>
+<feature id="19">
+<chromosome>7</chromosome>
+<start>82970046</start>
+<end>82971584</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000007633</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007633</link>
+</feature>
+<feature id="20">
+<chromosome>3</chromosome>
+<start>9695129</start>
+<end>9702141</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000009982</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000009982</link>
+</feature>
+<feature id="21">
+<chromosome>18</chromosome>
+<start>24205242</start>
+<end>24231176</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000014923</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000014923</link>
+</feature>
+<feature id="22">
+<chromosome>14</chromosome>
+<start>27637561</start>
+<end>27719848</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000017529</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017529</link>
+</feature>
+<feature id="23">
+<chromosome>7</chromosome>
+<start>22428167</start>
+<end>22445813</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000013624</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000013624</link>
+</feature>
+<feature id="24">
+<chromosome>23</chromosome>
+<start>52099150</start>
+<end>52135349</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000027375</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000027375</link>
+</feature>
+<feature id="25">
+<chromosome>18</chromosome>
+<start>22118201</start>
+<end>22541532</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000012501</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000012501</link>
+</feature>
+<feature id="26">
+<chromosome>17</chromosome>
+<start>70821078</start>
+<end>70828226</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000013147</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000013147</link>
+</feature>
+<feature id="27">
+<chromosome>5</chromosome>
+<start>27291350</start>
+<end>27298263</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000012034</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000012034</link>
+</feature>
+<feature id="28">
+<chromosome>10</chromosome>
+<start>20695969</start>
+<end>20698806</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000010236</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000010236</link>
+</feature>
+<feature id="29">
+<chromosome>12</chromosome>
+<start>90663887</start>
+<end>90676882</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000020928</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000020928</link>
+</feature>
+<feature id="30">
+<chromosome>17</chromosome>
+<start>74224243</start>
+<end>74230708</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000013973</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000013973</link>
+</feature>
+<feature id="31">
+<chromosome>2</chromosome>
+<start>27274585</start>
+<end>27281293</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000004241</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000004241</link>
+</feature>
+<feature id="32">
+<chromosome>18</chromosome>
+<start>55834675</start>
+<end>55836133</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000011624</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000011624</link>
+</feature>
+<feature id="33">
+<chromosome>8</chromosome>
+<start>105006306</start>
+<end>105018465</end>
+<type>gene</type>
+<color>0x00FF00</color>
+<label>ENSBTAG00000015676</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000015676</link>
+</feature>
+<feature id="34">
+<chromosome>11</chromosome>
+<start>6721485</start>
+<end>6757777</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000006343</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000006343</link>
+</feature>
+<feature id="35">
+<chromosome>25</chromosome>
+<start>206853</start>
+<end>208001</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000038921</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000038921</link>
+</feature>
+<feature id="36">
+<chromosome>25</chromosome>
+<start>192905</start>
+<end>194061</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000034024</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000034024</link>
+</feature>
+<feature id="37">
+<chromosome>29</chromosome>
+<start>37751108</start>
+<end>37759830</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000014215</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000014215</link>
+</feature>
+<feature id="38">
+<chromosome>13</chromosome>
+<start>63041967</start>
+<end>63053505</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000009144</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000009144</link>
+</feature>
+<feature id="39">
+<chromosome>13</chromosome>
+<start>63136697</start>
+<end>63143555</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000031375</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000031375</link>
+</feature>
+<feature id="40">
+<chromosome>13</chromosome>
+<start>63086222</start>
+<end>63095440</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000031376</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000031376</link>
+</feature>
+<feature id="41">
+<chromosome>13</chromosome>
+<start>63165306</start>
+<end>63175675</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000019752</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000019752</link>
+</feature>
+<feature id="42">
+<chromosome>11</chromosome>
+<start>98793763</start>
+<end>98797809</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000014149</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000014149</link>
+</feature>
+<feature id="43">
+<chromosome>19</chromosome>
+<start>25337350</start>
+<end>25387068</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000021091</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000021091</link>
+</feature>
+<feature id="44">
+<chromosome>22</chromosome>
+<start>51262430</start>
+<end>51266667</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000000387</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000000387</link>
+</feature>
+<feature id="45">
+<chromosome>11</chromosome>
+<start>106391056</start>
+<end>106393576</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000017005</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017005</link>
+</feature>
+<feature id="46">
+<chromosome>2</chromosome>
+<start>36557431</start>
+<end>36648018</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000017797</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017797</link>
+</feature>
+<feature id="47">
+<chromosome>15</chromosome>
+<start>67240027</start>
+<end>67518041</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000044158</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000044158</link>
+</feature>
+<feature id="48">
+<chromosome>4</chromosome>
+<start>92629363</start>
+<end>92637487</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000009365</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000009365</link>
+</feature>
+<feature id="49">
+<chromosome>15</chromosome>
+<start>77451812</start>
+<end>77493570</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000017325</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017325</link>
+</feature>
+<feature id="50">
+<chromosome>14</chromosome>
+<start>46833665</start>
+<end>46838053</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000037526</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000037526</link>
+</feature>
+<feature id="51">
+<chromosome>14</chromosome>
+<start>9109762</start>
+<end>9165926</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000000711</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000000711</link>
+</feature>
+<feature id="52">
+<chromosome>8</chromosome>
+<start>84976255</start>
+<end>84981470</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000017077</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000017077</link>
+</feature>
+<feature id="53">
+<chromosome>13</chromosome>
+<start>61941884</start>
+<end>61950327</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000009005</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000009005</link>
+</feature>
+<feature id="54">
+<chromosome>24</chromosome>
+<start>44006264</start>
+<end>44024553</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000011038</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000011038</link>
+</feature>
+<feature id="55">
+<chromosome>1</chromosome>
+<start>2462828</start>
+<end>2476977</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000023718</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000023718</link>
+</feature>
+<feature id="56">
+<chromosome>5</chromosome>
+<start>27401522</start>
+<end>27407079</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000046089</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000046089</link>
+</feature>
+<feature id="57">
+<chromosome>3</chromosome>
+<start>57750913</start>
+<end>57792193</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000038215</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000038215</link>
+</feature>
+<feature id="58">
+<chromosome>20</chromosome>
+<start>31890736</start>
+<end>32199996</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>GHR</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=GHR</link>
+</feature>
+<feature id="59">
+<chromosome>2</chromosome>
+<start>108029961</start>
+<end>108042198</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000021514</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000021514</link>
+</feature>
+<feature id="60">
+<chromosome>14</chromosome>
+<start>4182522</start>
+<end>4185763</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000020226</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000020226</link>
+</feature>
+<feature id="61">
+<chromosome>2</chromosome>
+<start>89948475</start>
+<end>89963535</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000018282</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000018282</link>
+</feature>
+<feature id="62">
+<chromosome>7</chromosome>
+<start>16154276</start>
+<end>16158004</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000011699</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000011699</link>
+</feature>
+<feature id="63">
+<chromosome>18</chromosome>
+<start>51247602</start>
+<end>51291960</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000031001</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000031001</link>
+</feature>
+<feature id="64">
+<chromosome>1</chromosome>
+<start>81005168</start>
+<end>81018328</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ADIPOQ</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ADIPOQ</link>
+</feature>
+<feature id="65">
+<chromosome>9</chromosome>
+<start>50160697</start>
+<end>50228919</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000002294</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000002294</link>
+</feature>
+<feature id="66">
+<chromosome>26</chromosome>
+<start>22742695</start>
+<end>22745622</end>
+<type>gene</type>
+<color>0xFFA500</color>
+<label>ENSBTAG00000015700</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000015700</link>
+</feature>
+<feature id="67">
+<chromosome>19</chromosome>
+<start>28329831</start>
+<end>28341331</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000012475</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000012475</link>
+</feature>
+<feature id="68">
+<chromosome>20</chromosome>
+<start>23658802</start>
+<end>23793336</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000010526</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000010526</link>
+</feature>
+<feature id="69">
+<chromosome>23</chromosome>
+<start>32463210</start>
+<end>32520458</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000003892</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000003892</link>
+</feature>
+<feature id="70">
+<chromosome>1</chromosome>
+<start>111318106</start>
+<end>111331103</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000003851</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000003851</link>
+</feature>
+<feature id="71">
+<chromosome>5</chromosome>
+<start>77514854</start>
+<end>77575339</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000011395</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000011395</link>
+</feature>
+<feature id="72">
+<chromosome>24</chromosome>
+<start>57380076</start>
+<end>57487773</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000005738</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000005738</link>
+</feature>
+<feature id="73">
+<chromosome>17</chromosome>
+<start>73316336</start>
+<end>73319008</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000022027</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000022027</link>
+</feature>
+<feature id="74">
+<chromosome>28</chromosome>
+<start>18003736</start>
+<end>18191994</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>AT RICH INTERACTIVE DOMAIN 5B (MRF1-LIKE)</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=AT RICH INTERACTIVE DOMAIN 5B (MRF1-LIKE)</link>
+</feature>
+<feature id="75">
+<chromosome>5</chromosome>
+<start>110014543</start>
+<end>110017878</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000015089</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000015089</link>
+</feature>
+<feature id="76">
+<chromosome>15</chromosome>
+<start>74303493</start>
+<end>74321171</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000014474</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000014474</link>
+</feature>
+<feature id="77">
+<chromosome>3</chromosome>
+<start>80071689</start>
+<end>80147000</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>LEPTIN RECEPTOR</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=LEPTIN RECEPTOR</link>
+</feature>
+<feature id="78">
+<chromosome>6</chromosome>
+<start>67925293</start>
+<end>68176596</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000002199</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000002199</link>
+</feature>
+<feature id="79">
+<chromosome>18</chromosome>
+<start>35205885</start>
+<end>35206635</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000014556</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000014556</link>
+</feature>
+<feature id="80">
+<chromosome>28</chromosome>
+<start>6492389</start>
+<end>6559855</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000004515</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000004515</link>
+</feature>
+<feature id="81">
+<chromosome>13</chromosome>
+<start>68119517</start>
+<end>68129193</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000031188</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000031188</link>
+</feature>
+<feature id="82">
+<chromosome>16</chromosome>
+<start>52388692</start>
+<end>52396825</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000004873</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000004873</link>
+</feature>
+<feature id="83">
+<chromosome>24</chromosome>
+<start>2406661</start>
+<end>2418040</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000021003</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000021003</link>
+</feature>
+<feature id="84">
+<chromosome>13</chromosome>
+<start>52003104</start>
+<end>52192979</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000003848</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000003848</link>
+</feature>
+<feature id="85">
+<chromosome>5</chromosome>
+<start>89217219</start>
+<end>89222769</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000010530</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000010530</link>
+</feature>
+<feature id="86">
+<chromosome>13</chromosome>
+<start>42244268</start>
+<end>42247239</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000004207</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000004207</link>
+</feature>
+<feature id="87">
+<chromosome>7</chromosome>
+<start>51214237</start>
+<end>51222637</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000008758</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000008758</link>
+</feature>
+<feature id="88">
+<chromosome>28</chromosome>
+<start>28562368</start>
+<end>28777941</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000005807</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000005807</link>
+</feature>
+<feature id="89">
+<chromosome>13</chromosome>
+<start>18592918</start>
+<end>18664294</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000007133</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007133</link>
+</feature>
+<feature id="90">
+<chromosome>15</chromosome>
+<start>77249974</start>
+<end>77251941</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000007740</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007740</link>
+</feature>
+<feature id="91">
+<chromosome>6</chromosome>
+<start>23047057</start>
+<end>23077431</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000002526</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000002526</link>
+</feature>
+<feature id="92">
+<chromosome>18</chromosome>
+<start>24290808</start>
+<end>24334739</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000003798</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000003798</link>
+</feature>
+<feature id="93">
+<chromosome>28</chromosome>
+<start>8733209</start>
+<end>8829937</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000007244</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007244</link>
+</feature>
+<feature id="94">
+<chromosome>26</chromosome>
+<start>50550575</start>
+<end>50561259</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000018365</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000018365</link>
+</feature>
+<feature id="95">
+<chromosome>19</chromosome>
+<start>43033597</start>
+<end>43054075</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>SIGNAL TRANSDUCER AND ACTIVATOR OF TRANSCRIPTION 5A</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=SIGNAL TRANSDUCER AND ACTIVATOR OF TRANSCRIPTION 5A</link>
+</feature>
+<feature id="96">
+<chromosome>25</chromosome>
+<start>38584315</start>
+<end>38611209</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000007370</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007370</link>
+</feature>
+<feature id="97">
+<chromosome>29</chromosome>
+<start>5035802</start>
+<end>5057715</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000013615</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000013615</link>
+</feature>
+<feature id="98">
+<chromosome>2</chromosome>
+<start>5867812</start>
+<end>5903148</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000007584</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000007584</link>
+</feature>
+<feature id="99">
+<chromosome>6</chromosome>
+<start>87469516</start>
+<end>87471608</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000019849</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000019849</link>
+</feature>
+<feature id="100">
+<chromosome>23</chromosome>
+<start>27024477</start>
+<end>27027205</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000025410</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000025410</link>
+</feature>
+<feature id="101">
+<chromosome>4</chromosome>
+<start>81667665</start>
+<end>81807550</end>
+<type>gene</type>
+<color>0xFF0000</color>
+<label>ENSBTAG00000001528</label>
+<link>OndexServlet?mode=network&amp;keyword=weight&amp;list=ENSBTAG00000001528</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>39752822</start>
+<end>39893245</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>31270003</start>
+<end>39623729</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>18715122</start>
+<end>18878955</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>341857</start>
+<end>12159194</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>31270003</start>
+<end>39623729</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>31633824</start>
+<end>55258794</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>80951738</start>
+<end>81556248</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>127803326</start>
+<end>128014817</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>38332974</start>
+<end>59135155</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Percentage decrease in body weight up to day 150 after challenge</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Percentage decrease in body weight up to day 150 after challenge</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>39070184</start>
+<end>55258794</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>19941347</start>
+<end>20105180</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>62106154</start>
+<end>65406681</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>30997860</start>
+<end>59644648</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>341857</start>
+<end>12162948</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>41582354</start>
+<end>41744963</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>41284369</start>
+<end>51685135</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>61075331</start>
+<end>79513019</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>22545967</start>
+<end>22709800</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>30997860</start>
+<end>59644648</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>50743681</start>
+<end>50906290</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>111164953</start>
+<end>115951199</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>38332974</start>
+<end>59135155</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>15922254</start>
+<end>22470255</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>47586398</start>
+<end>51494773</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>96654699</start>
+<end>119458736</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>68827602</start>
+<end>68989043</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>3912870</start>
+<end>12159194</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>46250308</start>
+<end>47586398</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>10723763</start>
+<end>25449045</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>80951738</start>
+<end>81556248</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>4236719</start>
+<end>13736438</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (initial)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (initial)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>19286013</start>
+<end>19449846</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (6 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (6 months)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>20006377</start>
+<end>29749755</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>65275882</start>
+<end>65437324</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>64932748</start>
+<end>65084332</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>42711091</start>
+<end>42851514</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Hindquarter weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Hindquarter weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>1947526</start>
+<end>2100650</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Sirloin weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Sirloin weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>2021065</start>
+<end>12586644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>2021065</start>
+<end>5594601</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>15302692</start>
+<end>15454612</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>42232789</start>
+<end>53803695</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Fat weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>20006377</start>
+<end>25051656</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>0</start>
+<end>5038185</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>27701533</start>
+<end>27893326</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>834725</start>
+<end>10339807</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>910908</start>
+<end>10339807</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>27764042</start>
+<end>48860075</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>10723763</start>
+<end>25449045</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Percentage decrease in body weight up to day 150 after challenge</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Percentage decrease in body weight up to day 150 after challenge</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>27290770</start>
+<end>27494821</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>49153868</start>
+<end>61621373</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>10339807</start>
+<end>22562350</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>26886528</start>
+<end>54148509</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>49153868</start>
+<end>61621373</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>82779135</start>
+<end>82941729</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>33114004</start>
+<end>66587513</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>72306114</start>
+<end>73557532</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>10339807</start>
+<end>22562350</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>52960047</start>
+<end>61621373</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>110548651</start>
+<end>110722363</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Sirloin weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Sirloin weight</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>12159194</start>
+<end>23716582</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>53803695</start>
+<end>56557131</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>43927445</start>
+<end>47586398</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>106127215</start>
+<end>106361781</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>42232789</start>
+<end>53803695</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>29018340</start>
+<end>29171464</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>22206990</start>
+<end>35800031</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Percentage decrease in body weight up to day 150 after challenge</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Percentage decrease in body weight up to day 150 after challenge</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>50594008</start>
+<end>50701144</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>29018340</start>
+<end>29171464</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>52694431</start>
+<end>52838007</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (6 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (6 months)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>61075331</start>
+<end>79513019</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>46382929</start>
+<end>61960897</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>10233299</start>
+<end>32633208</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>30964880</start>
+<end>46382929</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>10819162</start>
+<end>26283513</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>7320190</start>
+<end>10939706</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>31460098</start>
+<end>34373457</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>18955411</start>
+<end>26070318</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>81134079</start>
+<end>96411700</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>17947726</start>
+<end>18159217</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>35800031</start>
+<end>46382929</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>77342932</start>
+<end>80500861</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>45248309</start>
+<end>55709981</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>58089400</start>
+<end>61459457</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>45248309</start>
+<end>55709981</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>30964880</start>
+<end>35800031</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>4403326</start>
+<end>34357854</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>17455040</start>
+<end>26283513</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>15888655</start>
+<end>31460098</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>37866255</start>
+<end>57538304</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>6005792</start>
+<end>6217284</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Gastrointestinal tract weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Gastrointestinal tract weight</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>38422165</start>
+<end>55709981</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>5932646</start>
+<end>10819162</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>39814434</start>
+<end>43680468</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (24 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (24 months)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (18 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (18 months)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>10819162</start>
+<end>26283513</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>5932646</start>
+<end>10819162</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>133192653</start>
+<end>133401457</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Liver weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Liver weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>2438555</start>
+<end>3314517</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>14306745</start>
+<end>25703289</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>38806258</start>
+<end>51461320</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>44757135</start>
+<end>60488154</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>42517970</start>
+<end>53850081</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>2057090</start>
+<end>8912971</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>7115641</start>
+<end>11888837</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>26070318</start>
+<end>43680468</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>18257642</start>
+<end>18433145</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>59959027</start>
+<end>73300787</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>11439999</start>
+<end>31095406</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>63026466</start>
+<end>74020018</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>32445574</start>
+<end>33137066</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>21908440</start>
+<end>41537707</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>62015771</start>
+<end>73557532</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>2248820</start>
+<end>14843256</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>9783814</start>
+<end>14242309</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>21908440</start>
+<end>41537707</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Meat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Meat weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>88443339</start>
+<end>96063748</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>16272543</start>
+<end>26774226</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>39294063</start>
+<end>43927445</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>7633315</start>
+<end>22859015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>17418577</start>
+<end>22859015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>55111865</start>
+<end>83410809</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>88443339</start>
+<end>110778079</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>31883967</start>
+<end>43011581</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>53850081</start>
+<end>63026466</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>22859015</start>
+<end>36531788</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>21908440</start>
+<end>41537707</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>57581014</start>
+<end>59324261</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>43680468</start>
+<end>54310034</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>83410809</start>
+<end>88443339</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>79617762</start>
+<end>93254589</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>43011581</start>
+<end>57538304</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>79617762</start>
+<end>93254589</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>4248677</start>
+<end>11888837</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>70369810</start>
+<end>74020018</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>19217316</start>
+<end>35942952</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>55111865</start>
+<end>69330274</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>13361960</start>
+<end>27072508</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>93254589</start>
+<end>105674570</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>12344837</start>
+<end>22374736</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>54310034</start>
+<end>62106154</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>13361960</start>
+<end>27072508</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Longissimus muscle weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Longissimus muscle weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>34408682</start>
+<end>61057392</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (initial)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (initial)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Fat weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>34408682</start>
+<end>61057392</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Percentage decrease in body weight up to day 150 after challenge</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Percentage decrease in body weight up to day 150 after challenge</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>4454412</start>
+<end>7633315</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Channel fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Channel fat weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Silverside weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Silverside weight</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>7633315</start>
+<end>17418577</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>4454412</start>
+<end>6377094</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>1210923</start>
+<end>2025255</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>46591394</start>
+<end>85588124</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>7633315</start>
+<end>22859015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>341857</start>
+<end>12159194</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>6377094</start>
+<end>17418577</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>44271646</start>
+<end>44423231</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>341857</start>
+<end>12159194</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>56039407</start>
+<end>59769417</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>7633315</start>
+<end>22859015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>56039407</start>
+<end>65343322</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>68327627</start>
+<end>71411542</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>4248677</start>
+<end>11888837</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>1210923</start>
+<end>7251540</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>19270020</start>
+<end>27619489</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>55258794</start>
+<end>62523468</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>31095406</start>
+<end>50444332</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>31095406</start>
+<end>50444332</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>50444332</start>
+<end>61780206</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>16945721</start>
+<end>25789387</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Percentage decrease in body weight up to day 150 after challenge</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Percentage decrease in body weight up to day 150 after challenge</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>61946991</start>
+<end>65406681</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>73198761</start>
+<end>73402813</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>4236719</start>
+<end>13736438</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>69171913</start>
+<end>70631045</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>20060670</start>
+<end>23716582</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>5038185</start>
+<end>23029278</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>12159194</start>
+<end>20060670</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>14236362</start>
+<end>14361507</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Fat weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>8171583</start>
+<end>8383074</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Meat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Meat weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>0</start>
+<end>2057090</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>15058311</start>
+<end>15269802</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Fat weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>35271183</start>
+<end>35424307</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>4127892</start>
+<end>10858122</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>11415753</start>
+<end>11607546</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Silverside weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Silverside weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>18180000</start>
+<end>37971718</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>109816575</start>
+<end>110969057</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>55901351</start>
+<end>56068851</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>111164953</start>
+<end>115941609</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5932827</start>
+<end>7320190</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>18890377</start>
+<end>19043502</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Bone weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Bone weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>35271183</start>
+<end>35424307</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Meat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Meat weight</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>61545248</start>
+<end>61697168</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Longissimus muscle weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Longissimus muscle weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>30932126</start>
+<end>31085250</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Silverside weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Silverside weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5932827</start>
+<end>10937591</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>11933399</start>
+<end>33930092</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>97454424</start>
+<end>100132930</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>48247687</start>
+<end>52387013</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>108237404</start>
+<end>109816575</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>116444212</start>
+<end>120434352</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>100132930</start>
+<end>114885247</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>87730672</start>
+<end>89051843</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>89588554</start>
+<end>113384836</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>11933399</start>
+<end>18347148</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>4127892</start>
+<end>10858122</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>18180000</start>
+<end>37971718</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>57619653</start>
+<end>61290329</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>25744422</start>
+<end>33930092</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>18989638</start>
+<end>19166931</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>86569875</start>
+<end>97454424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>19784516</start>
+<end>25744422</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>89056231</start>
+<end>92416452</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>55545648</start>
+<end>71670646</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>30255862</start>
+<end>63721548</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>10726299</start>
+<end>23856046</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>9877129</start>
+<end>25219037</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>55111865</start>
+<end>83410809</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>35531041</start>
+<end>46197759</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>41537707</start>
+<end>55111865</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>1470383</start>
+<end>10723763</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>1470383</start>
+<end>3700830</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>7477752</start>
+<end>7689243</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Silverside weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Silverside weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>55111865</start>
+<end>69330274</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>49398182</start>
+<end>59632835</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>49338686</start>
+<end>49502519</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>49398182</start>
+<end>59632835</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>20749216</start>
+<end>26774226</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>115768210</start>
+<end>115941609</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>16272543</start>
+<end>26774226</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>111148431</start>
+<end>120829699</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>12094190</start>
+<end>19270020</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>12094190</start>
+<end>27619489</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>12094190</start>
+<end>19270020</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>30449042</start>
+<end>30602166</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (200 day weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (200 day weaning)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>50219316</start>
+<end>50393028</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>59769417</start>
+<end>65343322</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>23716582</start>
+<end>31366660</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>26351244</start>
+<end>34851482</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>23716582</start>
+<end>31366660</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>68615255</start>
+<end>82983643</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>36398296</start>
+<end>36551420</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (600 days)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (600 days)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>23716582</start>
+<end>31366660</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>10939706</start>
+<end>22470255</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>31366660</start>
+<end>38690885</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>36531788</start>
+<end>39297185</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>3700830</start>
+<end>10723763</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>18540518</start>
+<end>27504050</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>33935357</start>
+<end>42427223</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>20060670</start>
+<end>38690885</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>26358264</start>
+<end>33930092</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>38144487</start>
+<end>49851155</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>26774226</start>
+<end>35822487</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>25229124</start>
+<end>39805453</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>39805453</start>
+<end>45464413</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>34307707</start>
+<end>39805453</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>25229124</start>
+<end>39805453</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>34307707</start>
+<end>39805453</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>8578090</start>
+<end>8750922</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Kidney, pelvic, and heart fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Kidney, pelvic, and heart fat weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>44623413</start>
+<end>54244072</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>12802983</start>
+<end>43011581</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Lung weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Lung weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>16115769</start>
+<end>16327260</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Kidney fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Kidney fat weight</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>25644446</start>
+<end>63086407</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>4</chromosome>
+<start>67862061</start>
+<end>68066112</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Spleen weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Spleen weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>44623413</start>
+<end>68615255</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>64188689</start>
+<end>80525232</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>84033015</start>
+<end>90212864</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>9920431</start>
+<end>10306418</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Internal fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Internal fat weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>90212864</start>
+<end>90535761</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>78103640</start>
+<end>84033015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>11933399</start>
+<end>95673395</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Kidney, pelvic, and heart fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Kidney, pelvic, and heart fat weight</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>8869021</start>
+<end>39167818</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Internal fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Internal fat weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>44526237</start>
+<end>48120337</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>5932646</start>
+<end>17455040</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>49097437</start>
+<end>94213516</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Liver weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Liver weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>1041549</start>
+<end>11340275</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>44623413</start>
+<end>54244072</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>11933399</start>
+<end>59633576</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Kidney fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Kidney fat weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>54244072</start>
+<end>68615255</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>76365496</start>
+<end>92488860</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>4231569</start>
+<end>28793139</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>9740292</start>
+<end>16318387</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>64727183</start>
+<end>69729325</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>44526237</start>
+<end>64727183</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>78103640</start>
+<end>84033015</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>64727183</start>
+<end>87063248</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>39209915</start>
+<end>44526237</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>84033015</start>
+<end>90212864</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>90212864</start>
+<end>90535761</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>5940682</start>
+<end>11340275</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>9831029</start>
+<end>23029278</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>28066998</start>
+<end>35304150</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>5038185</start>
+<end>9831029</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>73909970</start>
+<end>80525232</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>12140430</start>
+<end>16441775</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>22833114</start>
+<end>28066998</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>18862711</start>
+<end>28066998</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>1752927</start>
+<end>9814612</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>109121231</start>
+<end>111921876</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>111920876</start>
+<end>111921876</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5665202</start>
+<end>5876694</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Kidney, pelvic, and heart fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Kidney, pelvic, and heart fat weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>88377117</start>
+<end>96709183</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>17947726</start>
+<end>18159217</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5618674</start>
+<end>7320190</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>96709183</start>
+<end>105223051</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>88377117</start>
+<end>96709183</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>88377117</start>
+<end>96709183</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>12802983</start>
+<end>43011581</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Spleen weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Spleen weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>33423745</start>
+<end>33597457</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5932827</start>
+<end>7320190</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>88377117</start>
+<end>109121231</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>36045546</start>
+<end>36185970</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>46442723</start>
+<end>46625373</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>17947726</start>
+<end>18159217</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>28531043</start>
+<end>46591394</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>63697544</start>
+<end>76897486</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>28531043</start>
+<end>38026017</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>46591394</start>
+<end>63697544</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>31655752</start>
+<end>60496303</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>21679765</start>
+<end>28531043</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>1752927</start>
+<end>9814612</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>49338686</start>
+<end>49502519</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>0</start>
+<end>2057090</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5618674</start>
+<end>9093686</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>100132930</start>
+<end>114885247</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>80091301</start>
+<end>108237404</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>12943395</start>
+<end>13154886</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Semitendinosus muscle weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Semitendinosus muscle weight</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>31655752</start>
+<end>60496303</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>60496303</start>
+<end>80091301</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>8</chromosome>
+<start>31655752</start>
+<end>44393492</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>75163397</start>
+<end>86569875</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>86569875</start>
+<end>97454424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>27072508</start>
+<end>45248309</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>87390197</start>
+<end>96654699</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>115069577</start>
+<end>120715069</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>100373301</start>
+<end>104305016</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>35790220</start>
+<end>54676592</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>84785242</start>
+<end>92488860</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>108852142</start>
+<end>115069577</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>86569875</start>
+<end>97454424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>71581768</start>
+<end>86728700</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>98316824</start>
+<end>104305016</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>9286468</start>
+<end>14372064</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>11340275</start>
+<end>21679765</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>28531043</start>
+<end>38026017</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>14372064</start>
+<end>35790220</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>5940682</start>
+<end>11340275</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>86728700</start>
+<end>102217987</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>52746738</start>
+<end>52909347</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>28076298</start>
+<end>55189962</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>41903322</start>
+<end>43680836</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>39045609</start>
+<end>66922395</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>62580334</start>
+<end>73557532</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>73557532</start>
+<end>86577692</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>2217558</start>
+<end>2284107</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>42031547</start>
+<end>63697544</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>84124853</start>
+<end>87588243</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>76897486</start>
+<end>84124853</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>90505486</start>
+<end>100761765</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>76897486</start>
+<end>87588243</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>90505486</start>
+<end>100761765</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>80525232</start>
+<end>88377117</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>63697544</start>
+<end>90505486</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>39623729</start>
+<end>49887745</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>31270003</start>
+<end>39623729</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>49887745</start>
+<end>64188689</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>49887745</start>
+<end>64188689</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>11</chromosome>
+<start>46591394</start>
+<end>63697544</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>18408210</start>
+<end>18600003</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>18408210</start>
+<end>18600003</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>76365496</start>
+<end>92488860</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>29022869</start>
+<end>29175994</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>52177607</start>
+<end>52340216</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>9646017</start>
+<end>18862711</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>9646017</start>
+<end>13777546</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>2217558</start>
+<end>9740292</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>35304150</start>
+<end>45759633</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>45464413</start>
+<end>51681464</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>13777546</start>
+<end>22833114</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>13777546</start>
+<end>18862711</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>7171347</start>
+<end>12026602</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>17982548</start>
+<end>26993851</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>12026602</start>
+<end>26993851</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>26993851</start>
+<end>32724672</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>45464413</start>
+<end>51681464</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (6 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (6 months)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (6 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (6 months)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>34698508</start>
+<end>34805644</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>25229124</start>
+<end>34307707</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>42774844</start>
+<end>42775844</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>38002001</start>
+<end>42232789</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>25051656</start>
+<end>38002001</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>20334217</start>
+<end>25229124</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>26</chromosome>
+<start>25229124</start>
+<end>34307707</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>20791422</start>
+<end>22383422</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>18291662</start>
+<end>25219037</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>20791422</start>
+<end>22383422</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>22</chromosome>
+<start>3067816</start>
+<end>12094190</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>25</chromosome>
+<start>31366660</start>
+<end>38690885</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>52177607</start>
+<end>52340216</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>24</chromosome>
+<start>52177607</start>
+<end>52340216</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>16770494</start>
+<end>28793139</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>34472398</start>
+<end>50439935</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>16318387</start>
+<end>33367872</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>33367872</start>
+<end>34589903</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>16770494</start>
+<end>28793139</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>17982548</start>
+<end>32724672</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>17982548</start>
+<end>26993851</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>80139136</start>
+<end>81189386</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>42398519</start>
+<end>51326875</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>1641277</start>
+<end>19204282</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>36115758</start>
+<end>47655654</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>16318387</start>
+<end>33367872</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>9479131</start>
+<end>9884020</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>10808022</start>
+<end>28658498</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>29932247</start>
+<end>35278839</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mean)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mean)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>36115758</start>
+<end>47655654</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>29932247</start>
+<end>35278839</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>36115758</start>
+<end>50014760</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>32831516</start>
+<end>36335992</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>28</chromosome>
+<start>13777546</start>
+<end>22833114</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>27</chromosome>
+<start>7171347</start>
+<end>12026602</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>50620792</start>
+<end>50727928</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>10939706</start>
+<end>18592775</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5618674</start>
+<end>9091571</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>0</start>
+<end>2248820</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>2248820</start>
+<end>14843256</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>16958959</start>
+<end>34589903</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>23</chromosome>
+<start>1522506</start>
+<end>18540518</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>77511658</start>
+<end>80139136</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>137059424</start>
+<end>137060424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>55542586</start>
+<end>59431941</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>6432476</start>
+<end>12357148</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>14843256</start>
+<end>27776034</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>96411700</start>
+<end>122842039</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>82849969</start>
+<end>134920734</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>129287920</start>
+<end>134920734</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>12344837</start>
+<end>20783605</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>13793271</start>
+<end>15888655</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>43933524</start>
+<end>57120485</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>16961735</start>
+<end>17173227</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>14819373</start>
+<end>63341127</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>80139136</start>
+<end>81189386</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>132497971</start>
+<end>148920322</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>106924804</start>
+<end>119586413</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>70850890</start>
+<end>82849969</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>82849969</start>
+<end>96411700</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>29534292</start>
+<end>34408682</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>31459037</start>
+<end>52343072</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>63735518</start>
+<end>97454424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>49238121</start>
+<end>60488154</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>18</chromosome>
+<start>26075623</start>
+<end>31494551</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>61075331</start>
+<end>79017464</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>15888655</start>
+<end>31460098</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>71827292</start>
+<end>77335394</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>22562350</start>
+<end>39070184</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>25789387</start>
+<end>31633824</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>13</chromosome>
+<start>50439935</start>
+<end>77335394</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>61780206</start>
+<end>78193999</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>132497971</start>
+<end>154890208</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>46197759</start>
+<end>51326875</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>14244068</start>
+<end>16792542</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>54244072</start>
+<end>78103640</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>28658498</start>
+<end>35530275</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>56139770</start>
+<end>59431941</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>14372064</start>
+<end>35790220</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>24165122</start>
+<end>34373457</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>66951056</start>
+<end>74035850</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>15888655</start>
+<end>24165122</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>26289542</start>
+<end>54676592</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>74035850</start>
+<end>80166292</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>277899</start>
+<end>5932646</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>13793271</start>
+<end>24165122</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>66951056</start>
+<end>74035850</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>1143052</start>
+<end>1653336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>80166292</start>
+<end>85184103</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>73188190</start>
+<end>73557532</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>16318387</start>
+<end>33367872</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>36115758</start>
+<end>47655654</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>5932646</start>
+<end>10819162</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>10</chromosome>
+<start>26289542</start>
+<end>35790220</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>42517970</start>
+<end>63026466</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>14503389</start>
+<end>20700720</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Weaning weight-maternal milk</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Weaning weight-maternal milk</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>22562350</start>
+<end>25789387</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>10339807</start>
+<end>22562350</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (mature)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (mature)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>14503389</start>
+<end>20700720</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>27497868</start>
+<end>42517970</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>9393788</start>
+<end>14503389</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>76683936</start>
+<end>77462145</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>34373457</start>
+<end>49153868</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>46197343</start>
+<end>46644608</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>6119332</start>
+<end>9393788</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>17</chromosome>
+<start>9393788</start>
+<end>14503389</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>96411700</start>
+<end>122842039</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>148920322</start>
+<end>158337067</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>2248820</start>
+<end>21908440</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>99848813</start>
+<end>100031463</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>1</chromosome>
+<start>148920322</start>
+<end>158337067</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>3</chromosome>
+<start>2248820</start>
+<end>14843256</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>822322</start>
+<end>10822619</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>21</chromosome>
+<start>35946164</start>
+<end>57640855</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>29</chromosome>
+<start>8661843</start>
+<end>9740292</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>55971665</start>
+<end>56145377</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Adjusted Weaning weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Adjusted Weaning weight</link>
+</feature>
+<feature>
+<chromosome>7</chromosome>
+<start>0</start>
+<end>1143052</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>25133257</start>
+<end>25315907</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>16</chromosome>
+<start>21088180</start>
+<end>48601435</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>12</chromosome>
+<start>84033015</start>
+<end>90212864</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>9</chromosome>
+<start>25133257</start>
+<end>25315907</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (yearling)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (yearling)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>33899656</start>
+<end>34043232</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>42986614</start>
+<end>43130190</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>55971665</start>
+<end>56145377</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (weaning)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (weaning)</link>
+</feature>
+<feature>
+<chromosome>15</chromosome>
+<start>33899656</start>
+<end>34043232</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>27764042</start>
+<end>45649455</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Internal fat weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Internal fat weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>23294572</start>
+<end>53668451</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (slaughter)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (slaughter)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>5643845</start>
+<end>5855336</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>25224396</start>
+<end>30870876</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>6</chromosome>
+<start>29519070</start>
+<end>29694572</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Carcass weight</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Carcass weight</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>127630960</start>
+<end>137060424</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>19</chromosome>
+<start>55704624</start>
+<end>61476063</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>14</chromosome>
+<start>6311565</start>
+<end>71762521</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>5</chromosome>
+<start>59557792</start>
+<end>59731504</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+<feature>
+<chromosome>20</chromosome>
+<start>30014300</start>
+<end>30187133</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (6 months)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (6 months)</link>
+</feature>
+<feature>
+<chromosome>2</chromosome>
+<start>14733865</start>
+<end>21550267</end>
+<type>qtl</type>
+<color>0xFFA500</color>
+<label>Body weight (birth)</label>
+<link>http://archive.gramene.org/db/qtl/qtl_display?qtl_accession_id=Body weight (birth)</link>
+</feature>
+</genome>

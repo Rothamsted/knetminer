@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        version="3.0">
+  
+  <display-name>KnetMiner aratiny WS</display-name>
+	
+	<!-- This comes from the configurable data source and picks up the parameter below -->
+	<listener>
+		<!-- Picks the config file parameter, see the source -->
+		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
+	</listener>   
+  
+	<context-param>
+		<param-name>knetminer.dataSource.configFilePath</param-name>
+		<param-value>file:///${knetminer.configFile}</param-value>
+	</context-param>
+	  
+</web-app>

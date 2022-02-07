@@ -1,0 +1,36 @@
+name: Docker Test
+
+# Just a rough attempt to test an ARM image with GH Actions 
+# 
+
+on:
+  workflow_dispatch # Ran
+    
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v2.3.4
+    
+    # This is to test ARM, comment it and leave "run" if you don't need to specify the architecture. 
+    - uses: uraimo/run-on-arch-action@v2.0.9
+      name: Run aratiny
+      id: docker-cmd
+      with:
+        arch: aarch64
+        distro: ubuntu20.04
+        run: |
+          apt-get -yq update
+          apt-get -yq install docker.io
+          
+          cd docker
+          ./docker-run.sh --container-name aratiny --detach
+          
+          echo -e "\n\n\t**** Sleeping ****\n"
+          sleep 60
+          docker stop aratiny
+          
