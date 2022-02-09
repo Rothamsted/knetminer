@@ -945,8 +945,34 @@ a.contact-button :hover {
 }
 
 
+
+
 #genemap {
     height: 620px;/*450px;*/
 }
 
 a { cursor: pointer; }
+
+
+/* test features styles */
+
+.knetbtns{
+    display:flex;
+    align-items:center; 
+}
+
+.resetknet{
+        background:red;
+        padding:.5rem 1rem;
+        border-radius:8px;
+        margin-left:2rem;
+        color:white;
+        -webkit-border-radius:8px;
+        -moz-border-radius:8px;
+        -ms-border-radius:8px;
+        -o-border-radius:8px;
+}
+
+.reseticon{
+    margin-right:1rem;
+}
