@@ -109,7 +109,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		Hits hits = new Hits(request.getKeyword(), ondexServiceProvider, null);
+		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr(request.getKeyword(), ondexServiceProvider, null);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
 		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
@@ -194,71 +194,48 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Genome search
 		log.info ( "Processing search mode: {}", response.getClass().getName() );
 						
-		Hits qtlnetminerResults = new Hits ( request.getKeyword(), ondexServiceProvider, userGenes );
+		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr ( request.getKeyword(), ondexServiceProvider, userGenes );
 
 		Map<ONDEXConcept, Double> candidateGenesMap = Map.of();
 		Stream<ONDEXConcept> genesStream = Stream.of ();
 
+		// TODO: remove. response can't be anything else and if you need for its extensions, follow the S-of-SOLID principle,
+		// we have already enough mess here.
+//		if (response.getClass().equals( GenomeResponse.class ) || response.getClass().equals ( QtlResponse.class ) )
+//		{
+		log.info ( "Computing response to /genome or /qtl" );
+
+		candidateGenesMap = smSearchMgr.getSortedCandidates();
+		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
+		genesStream = candidateGenes.parallelStream ();
 		
-		if (response.getClass().equals( GenomeResponse.class ) || response.getClass().equals ( QtlResponse.class ) )
+		if ( !userGenes.isEmpty () )
 		{
-			log.info ( "Computing response to /genome or /qtl" );
+			log.info ( "Filtering {} user genes from {} candidate gene(s)", userGenes.size (), candidateGenes.size() );
+			genesStream = userGenes.parallelStream ();
+		
+		} // if userGenes
+		
+		
+		if ( response.getClass().equals ( QtlResponse.class ) ) 
+		{
+			log.info ( "Filtering QTL(s) for QTL response " );
 
-			candidateGenesMap = qtlnetminerResults.getSortedCandidates();
-			Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
-			genesStream = candidateGenes.parallelStream ();
+			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl() );
+			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
 			
-			if ( !userGenes.isEmpty () )
-			{
-				log.info ( "Filtering {} user genes from {} candidate gene(s)", userGenes.size (), candidateGenes.size() );
-
-				/* TODO: remove. If I get this right, it's computing this:
-				 * 
-				 *  filtered = candidate intersection user
-				 *  lowScore = user \ candidates
-				 *  final = candidate int user U ( user \ candidates ) => user
-				 *  
-				 *  Note that the version with streams is a parallel translation of the original code, which
-				 *  was using sequential iterations
-				 *  
-				 
-				// Filter by user-provided list
-				Stream<ONDEXConcept> filteredGenes = genesStream
-					.filter ( userGenes::contains );
-					
-				// And re-add missing user-genes (which possibly, didn't score well)
-				Stream<ONDEXConcept> lowScoreGenes = userGenes.parallelStream ()
-					.filter ( userGene -> !candidateGenes.contains ( userGene ) );
-						
-				genesStream = Stream.concat ( filteredGenes, lowScoreGenes );
-				*/
-				
-				genesStream = userGenes.parallelStream ();
-
-				// TODO: log.info("Using user gene list, genes: " + genes.size());
-			
-			} // if userGenes
+			genesStream = genesStream.filter ( genesQTL::contains );
 			
 			
-			if ( response.getClass().equals ( QtlResponse.class ) ) 
-			{
-				log.info ( "Filtering QTL(s) for QTL response " );
+			// TODO: log.info("Genes after QTL filter: " + genes.size());
+		}
+//		} // genome & qtl cases // TODO: remove, see above
 
-				Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl() );
-				log.info ( "Keeping {} QTL(s)", genesQTL.size () );
-				
-				genesStream = genesStream.filter ( genesQTL::contains );
-				
-				
-				// TODO: log.info("Genes after QTL filter: " + genes.size());
-			}
-		} // genome & qtl cases
-
-		final var mapProxy = new MutableObject<> ( candidateGenesMap ); // lambdas doesn't want non-finals
+		final var candidatesProxy = new MutableObject<> ( candidateGenesMap ); // lambdas doesn't want non-finals
 		Map<ONDEXConcept, Double> genesMap = genesStream.collect (
-			Collectors.toConcurrentMap ( Functions.identity (), gene -> mapProxy.getValue ().getOrDefault ( gene, 0d ) )
+			Collectors.toConcurrentMap ( Functions.identity (), gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
 		);
-		mapProxy.setValue ( candidateGenesMap = null ); // Free-up memory
+		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
 		
 	
 		// Genes are expected in order
@@ -267,62 +244,71 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			.sorted (  (g1, g2) ->  - Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
 			.collect ( Collectors.toList () );
 		
+		if ( genes.size () == 0 ) return response;
 		
-		if ( genes.size() > 0 ) 
+		
+		// We have genes, let's use them to build actual output
+		//
+		
+		// Chromosome view
+		//
+		String xmlGViewer = "";
+		if (ondexServiceProvider.getDataService ().isReferenceGenome () ) 
 		{
-			String xmlGViewer = "";
-			if (ondexServiceProvider.getDataService ().isReferenceGenome () ) 
-			{
-				// Generate Annotation file.
-				log.debug("1.) API, doing chrome annotation");
-				xmlGViewer = exportService.exportGenomapXML ( 
-					this.getApiUrl(), genes, userGenes, request.getQtl(),
-					request.getKeyword(), 1000, qtlnetminerResults, request.getListMode(), genesMap
-				);
-				log.debug("Chrome annotation done");
-			} 
-			else
-				log.debug("1.) API, no reference genome for Genomaps annotation, skipping ");
-
-			// Gene table file
-			// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
-			// adapt to it
-
-			log.debug("2.) API, doing gene table view");
-
-			var newSearchResult = new SemanticMotifsSearchResult (
-				qtlnetminerResults.getGeneId2RelatedConceptIds (), genesMap
+			// Generate Annotation file.
+			log.debug("1.) API, doing chrome annotation");
+			xmlGViewer = exportService.exportGenomapXML ( 
+				this.getApiUrl(), genes, userGenes, request.getQtl(),
+				request.getKeyword(), 1000, genesMap
 			);
-			String geneTable = exportService.exportGeneTable ( 
-				genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
-			);                        
-                                
-			log.debug("Gene table done");
+			log.debug("Chrome annotation done");
+		} 
+		else
+			log.debug("1.) API, no reference genome for Genomaps annotation, skipping ");
+
+		
+		// Gene table
+		//
+		
+		// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
+		// adapt to it
+
+		log.debug("2.) API, doing gene table view");
+
+		var newSearchResult = new SemanticMotifsSearchResult (
+			smSearchMgr.getGeneId2RelatedConceptIds (), genesMap
+		);
+		String geneTable = exportService.exportGeneTable ( 
+			genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
+		);                        
+                              
+		log.debug("Gene table done");
 
 
-			// Evidence table file
-			log.debug("3) API, doing evidence table");
-			String evidenceTable = exportService.exportEvidenceTable (
-				request.getKeyword(), qtlnetminerResults.getLuceneConcepts(), userGenes, request.getQtl()
-			);
-			log.debug("Evidence table done");
+		// Evidence table
+		//
+		
+		log.debug ( "3) API, doing evidence table" );
+		String evidenceTable = exportService.exportEvidenceTable (
+			request.getKeyword(), smSearchMgr.getLuceneConcepts(), userGenes, request.getQtl()
+		);
+		log.debug ( "Evidence table done" );
+		
+		int docSize = searchService
+			.getMapEvidences2Genes ( smSearchMgr.getLuceneConcepts() )
+			.size();
+
+		// Total documents
+		int totalDocSize = smSearchMgr.getLuceneConcepts().size();
+
+		// We have annotation and table file
+		response.setGViewer ( xmlGViewer );
+		response.setGeneTable ( geneTable );
+		response.setEvidenceTable ( evidenceTable );
+		response.setGeneCount ( genes.size () );
+		response.setDocSize ( docSize );
+		response.setTotalDocSize ( totalDocSize );
 			
-			int docSize = searchService
-				.getMapEvidences2Genes ( qtlnetminerResults.getLuceneConcepts() )
-				.size();
-
-			// Total documents
-			int totalDocSize = qtlnetminerResults.getLuceneConcepts().size();
-
-			// We have annotation and table file
-			response.setGViewer ( xmlGViewer );
-			response.setGeneTable ( geneTable );
-			response.setEvidenceTable ( evidenceTable );
-			response.setGeneCount ( genes.size () );
-			response.setDocSize ( docSize );
-			response.setTotalDocSize ( totalDocSize );
-			
-		} // if genes
 		return response;
 	}
 
