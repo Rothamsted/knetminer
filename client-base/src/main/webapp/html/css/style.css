@@ -958,25 +958,20 @@ a { cursor: pointer; }
 
 .knetbtns{
     display:flex;
-    align-items:center; 
+    flex-direction: column;
 }
 
 .resetknet{
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
+    width: fit-content;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
     border: none;
-    background:red;
-    padding:.5rem 1rem;
-    border-radius:8px;
-    margin-left:2rem;
-    color:white;
-    -webkit-border-radius:8px;
-    -moz-border-radius:8px;
-    -ms-border-radius:8px;
-    -o-border-radius:8px;
+    background: transparent;
+    color: #808080;
+    text-decoration: underline;
 }
 
 .reseticon{
-    margin-right:1rem;
+    margin-right:0.5rem;
 }
