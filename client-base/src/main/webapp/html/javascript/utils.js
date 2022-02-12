@@ -70,7 +70,7 @@ function addKeyword(keyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 function addKeywordUndo(keyword, from, target) {
@@ -83,7 +83,7 @@ function addKeywordUndo(keyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 function excludeKeyword(keyword, from, target) {
@@ -96,7 +96,7 @@ function excludeKeyword(keyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 function excludeKeywordUndo(keyword, from, target) {
@@ -108,7 +108,7 @@ function excludeKeywordUndo(keyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 function replaceKeyword(oldkeyword, newkeyword, from, target) {
@@ -120,7 +120,7 @@ function replaceKeyword(oldkeyword, newkeyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
@@ -132,7 +132,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    // refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 /*
