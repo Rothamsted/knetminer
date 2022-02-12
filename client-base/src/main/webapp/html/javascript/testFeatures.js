@@ -46,7 +46,7 @@ $(document).ready(function(){
         $("#resetknet").hide();
     });
 
-     
-    
+
+    console.log($('#suggestor_tables'));
 
 })

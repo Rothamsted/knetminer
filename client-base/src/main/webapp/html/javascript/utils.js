@@ -20,6 +20,7 @@ function showSynonymTable(option, tabBoxRelated) {
         $('.tabBox:visible').fadeOut();
         $('#' + tabBoxRelated).fadeIn();
 
+
         //Gets the table related to the active tab
         relatedTable = $('#' + tabBoxRelated + ' div.conceptTabOn').attr('rel');
         relatedTable = escapeJquerySelectors(relatedTable);
@@ -64,11 +65,12 @@ function addKeyword(keyword, from, target) {
     newquery = query + ' OR ' + keyword;
     $('#' + target).val(newquery);
     $('#' + from).toggleClass('addKeywordUndo addKeyword');
+
     //Updates the query counter
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 function addKeywordUndo(keyword, from, target) {
@@ -76,11 +78,12 @@ function addKeywordUndo(keyword, from, target) {
     newquery = query.replace(' OR ' + keyword, "");
     $('#' + target).val(newquery);
     $('#' + from).toggleClass('addKeywordUndo addKeyword');
+
     //Updates the query counter
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 function excludeKeyword(keyword, from, target) {
@@ -88,11 +91,12 @@ function excludeKeyword(keyword, from, target) {
     newquery = query + ' NOT ' + keyword;
     $('#' + target).val(newquery);
     $('#' + from).toggleClass('excludeKeywordUndo excludeKeyword');
+    
     //Updates the query counter
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 function excludeKeywordUndo(keyword, from, target) {
@@ -104,7 +108,7 @@ function excludeKeywordUndo(keyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 function replaceKeyword(oldkeyword, newkeyword, from, target) {
@@ -116,7 +120,7 @@ function replaceKeyword(oldkeyword, newkeyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
@@ -128,7 +132,7 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
     matchCounter();
 
     // Refresh the query suggester table as well by replicating its 'click' event.
-    refreshQuerySuggester();
+    // refreshQuerySuggester();
 }
 
 /*
@@ -167,6 +171,9 @@ function matchCounter() {
             var request = "/" + searchMode + "?keyword=" + keyword;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
+
+                console.log(data);
+
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
@@ -355,6 +362,8 @@ $(document).ready(
                 }
                 return false;
             });
+
+
         // Keyword search
         $('#kwd_search').click(
             function () {
@@ -378,6 +387,9 @@ $(document).ready(
 				   $('#suggestor_search_area').css('display', 'none');
 				  }
             });
+
+
+
         // Suggestor search
         $('#suggestor_search').click(
             function () {
@@ -392,7 +404,9 @@ $(document).ready(
                 if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
                     refreshQuerySuggester();
                 }
+ 
             });
+
 		/*  $("#suggestor_search").dialog({
 			  autoOpen: false,
 			  show: {
@@ -421,6 +435,8 @@ $(document).ready(
                     }, 500
                 );
             });
+
+
         // Region search
         $('#region_search').click(
             function () {
@@ -433,6 +449,8 @@ $(document).ready(
                     }, 500
                 );
             });
+
+
         //Match counter
         //$("#keywords").keyup(matchCounter());
 		
@@ -472,6 +490,8 @@ $(document).ready(
 			event.target.style.transform =
 			'translate(' + x + 'px, ' + y + 'px)';
 		}); */
+
+
 
         // Tooltip
         var sampleQueryButtons = "";//"<strong>Example queries</strong>";
@@ -690,27 +710,25 @@ $(document).ready(
         genemap.draw('#genemap', 'html/data/basemap.xml', null);
 
 
-        // on click event that reset all form input including the genenome icon and the suggestor text values
-        $('#resetKnet').click(function (event){
-            event.preventDefault();
-            $('form')[0].reset();
-            $('#matchesResultDiv').empty();
-            $('#suggestor_search').hide();
-            $("#resetKnet").hide();
-        }); 
-
     });
 
 
 function refreshQuerySuggester() {
     $('#suggestor_terms').html('');
+
     // Create the Synonym table.
     var searchMode = "synonyms";
+
     var keyword = $('#keywords').val();
+
     var request = "/" + searchMode + "?keyword=" + keyword;
+
     var url = api_url + request;
+
     $.get(url, '').done(function (data) {
+
         createSynonymTable(data.synonyms);
+
     }).fail(function () {
         var table = "No suggestions found";
         $('#suggestor_terms').html(" ");
@@ -904,8 +922,8 @@ function searchKeyword() {
                                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
                                     if(geneList_size > 0) { // msg for keyword + genelist search
                                        var count_linked= countLinkedUserGenes(data.geneTable);
-                                       var count_unlinked= results - count_linked;
-                                       var count_notfound= geneList_size - count_linked - count_unlinked;
+                                       var count_unlinked = results - count_linked;
+                                       var count_notfound = geneList_size - count_linked - count_unlinked;
                                        // for wildcard in genelist when all matches will be found
                                        if(results === (count_linked+count_unlinked)) { count_notfound=0; }
                                        if(count_notfound === 0) {
@@ -1595,13 +1613,17 @@ function createEvidenceTable(text, keyword) {
         table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Network</button>';
         table = table + '</insert><div id="loadingNetwork_Div"></div></div>';
 
+
         $('#evidenceTable').html(table);
 
         $(".evidenceTableExcludeKeyword").bind("click", {x: evidenceTable}, function (e) {
+
             e.preventDefault();
+
             var targetID = $(e.target).attr("id");
             var evidenceNum = targetID.replace("evidence_exclude_", "");
             var values = e.data.x[evidenceNum].split("\t");
+
             if ($(e.target).hasClass("excludeKeyword")) {
             	if($("#keywords").val() === '') {
             	   $("#keywords").val('ConceptID:' + values[7]);
@@ -1624,10 +1646,15 @@ function createEvidenceTable(text, keyword) {
         });
 
         $(".evidenceTableAddKeyword").bind("click", {x: evidenceTable}, function (e) {
+
             e.preventDefault();
+
             var targetID = $(e.target).attr("id");
+
             var evidenceNum = targetID.replace("evidence_add_", "");
+
             var values = e.data.x[evidenceNum].split("\t");
+
             if ($(e.target).hasClass("addKeyword")) {
             	if($("#keywords").val() === '') {
             	   $("#keywords").val('ConceptID:' + values[7]);
@@ -1704,6 +1731,8 @@ function createEvidenceTable(text, keyword) {
             $("#revertEvidenceView").removeClass('hover').addClass('unhover');
         });
 
+
+
     /*    //Shows the evidence summary box
         for (key in summaryArr) {
             var contype = key.trim();
@@ -1764,6 +1793,7 @@ function generateMultiEvidenceNetwork() {
  *
  */
 function createSynonymTable(text) {
+
     var table = "";
     var summaryArr = new Array();
     var summaryText = '';
@@ -1774,16 +1804,22 @@ function createSynonymTable(text) {
     var termName = "";
     var minRowsInTable = 20/*14*/;
     var nullTerm = false;
+
     if (evidenceTable.length > 3) {
+
         terms = '';
         table = '';
+
         for (var ev_i = 0; ev_i < (evidenceTable.length - 1); ev_i++) {
+
             if (nullTerm) {
                 nullTerm = false;
                 continue;
             }
+
             //End of Term
             if (evidenceTable[ev_i].substr(0, 2) == '</') {
+
                 //Includes the tab box
                 table = table + tabsBox + '</div>';
                 //Includes the tables
@@ -1797,12 +1833,15 @@ function createSynonymTable(text) {
 
                     table = table + aTable[i].replace(/"/g, '') + '</table>';
                 }
+
                 //New Term
             } else if (evidenceTable[ev_i][0] == '<') {
+
                 if (evidenceTable[ev_i + 1].substr(0, 2) == '</') {
                     nullTerm = true;
                     continue;
                 }
+
                 var aNewConcepts = new Array();
                 var aTable = new Array();
                 var aTableLenght = new Array();
@@ -1813,11 +1852,13 @@ function createSynonymTable(text) {
                     divstyle = "buttonSynonym_on";
                     imgstatus = 'on';
                     tabBoxvisibility = '';
+
                 } else {
                     divstyle = "buttonSynonym_off";
                     imgstatus = 'off';
                     tabBoxvisibility = 'style="display:none;"';
                 }
+
                 termName = evidenceTable[ev_i].replace("<", "");
                 var originalTermName = termName.replace(">", "");
                 termName = originalTermName.replace(/ /g, '_');
@@ -1827,10 +1868,15 @@ function createSynonymTable(text) {
                 //Foreach of Document that belongs to a Term
             } else {
                 values = evidenceTable[ev_i].split("\t");
+                
+
                 //Check for duplicated values
                 if (aSynonyms.indexOf(values[0]) == -1) {
+
                     aSynonyms.push(values[0]);
+
                     countSynonyms++;
+
                     //If is a new document type for the term a new table is created
                     if (aNewConcepts.indexOf(values[1]) == -1) {
                         aNewConcepts.push(values[1]);
@@ -1860,28 +1906,36 @@ function createSynonymTable(text) {
                             tabsBox = tabsBox + '<div class="' + conceptTabStyles + ' showConceptTab" id="tabBoxItem_' + termName + '_' + countConcepts + '" rel="tablesorterSynonym' + termName + '_' + countConcepts + '"><div class="evidence_item evidence_item_' + values[1] + '" title="' + values[1] + '"></div></div>';
 
                     }
+
                     //If is not a new document type a new row is added to the existing table
                     conceptIndex = aNewConcepts.indexOf(values[1]);
+                    
                     row = '<tr>';
                     row = row + '<td width="390">' + values[0] + '</td>'
                     row = row + '<td width="80">';
                     row = row + '<div id="synonymstable_add_' + ev_i + '_' + countConcepts + '" class="addKeyword synonymTableEvent" title="Add term"></div>';
                     row = row + '<div id="synonymstable_exclude_' + ev_i + '_' + countConcepts + '" class="excludeKeyword synonymTableEvent" title="Exclude term"></div>';
                     row = row + '<div id="synonymstable_replace_' + ev_i + '_' + countConcepts + '" class="replaceKeyword synonymTableEvent" title="Replace term"></div></td>';
-
                     row = row + '</tr>';
+
                     aTable[conceptIndex] = aTable[conceptIndex] + row;
                     aTableLenght[conceptIndex] = aTableLenght[conceptIndex] + 1;
                 }
+
             }
+
+
         }
+        
         //$('#suggestor_invite').html(countSynonyms+' synonyms found');
         $('#suggestor_terms').html(terms);
         $('#suggestor_tables').html(table);
 
         // Ensure that the sizes of all the Tables for all the tabs per keyword are adequately set.
         var suggestorTabHeight;
+
         $('#suggestor_tables').children().each(function () {
+
             var elementID = $(this).attr('id');
             var elementHeight = $(this).height();
             if (elementID.indexOf("tabBox_") > -1) {
@@ -1911,11 +1965,14 @@ function createSynonymTable(text) {
             showSynonymTab('tabBox_' + termName, buttonID, 'tablesorterSynonym' + termName + '_' + conceptNum);
         });
 
+        // function to add,exclude or totally replace keyword
         $(".addKeyword,.excludeKeyword,.replaceKeyword").click(function (e) {
             e.preventDefault();
             var currentTarget = $(e.currentTarget);
             var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").replace("evidence_", "").split("_")[1];
-            var keyword = evidenceTable[synonymNum].split("\t")[0];
+            var keyword = evidenceTable[synonymNum].split("\t")[3];
+            
+
             var originalTermName="";
             if(typeof $('.buttonSynonym_on').attr('id') !== "undefined") {
                originalTermName= $('.buttonSynonym_on').attr('id').replace("tablesorterSynonym", "").replace("tablesorterEvidence", "").replace("_1_buttonSynonym", "").replace(/_/g, " ");
@@ -1939,23 +1996,25 @@ function createSynonymTable(text) {
                 }
             }
 
+            var conceptKey = 'Concept ID: '+ keyword
+
             if (currentTarget.hasClass("addKeyword")) {
-                addKeyword(keyword, currentTarget.attr("id"), 'keywords');
+                addKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
             }
             else if (currentTarget.hasClass("addKeywordUndo")) {
-                addKeywordUndo(keyword, currentTarget.attr("id"), 'keywords');
+                addKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
             }
             else if (currentTarget.hasClass("excludeKeyword")) {
-                excludeKeyword(keyword, currentTarget.attr("id"), 'keywords');
+                excludeKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
             }
             else if (currentTarget.hasClass("excludeKeywordUndo")) {
-                excludeKeywordUndo(keyword, currentTarget.attr("id"), 'keywords');
+                excludeKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
             }
             else if (currentTarget.hasClass("replaceKeyword")) {
-                replaceKeyword(originalTermName, keyword, currentTarget.attr("id"), 'keywords');
+                replaceKeyword(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
             }
             else if (currentTarget.hasClass("replaceKeywordUndo")) {
-                replaceKeywordUndo(originalTermName, keyword, currentTarget.attr("id"), 'keywords');
+                replaceKeywordUndo(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
             }
 
         });
