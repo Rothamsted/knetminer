@@ -47,6 +47,4 @@ $(document).ready(function(){
     });
 
 
-    console.log($('#suggestor_tables'));
-
 })
