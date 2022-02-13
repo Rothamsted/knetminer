@@ -1996,7 +1996,7 @@ function createSynonymTable(text) {
                 }
             }
 
-            var conceptKey = 'Concept ID: '+ keyword
+            var conceptKey = 'ConceptID:'+ keyword; 
 
             if (currentTarget.hasClass("addKeyword")) {
                 addKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
