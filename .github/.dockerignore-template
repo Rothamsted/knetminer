@@ -1,5 +1,0 @@
-# This is joined with .gitignore to produce .dockerignore
-.git
-**/bower_components
-**/node_modules
-**/target
