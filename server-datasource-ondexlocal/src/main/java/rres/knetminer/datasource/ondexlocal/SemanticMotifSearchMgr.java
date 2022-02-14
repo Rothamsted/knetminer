@@ -3,7 +3,6 @@ package rres.knetminer.datasource.ondexlocal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,10 +18,12 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * 
  * TODO: very messy, with computed stuff made stateful fields or viceversa, needs serious review.
  * 
+ * Used to be named Hits.
+ * 
  * @author zorc, pakk, singha
  *
  */
-public class Hits
+public class SemanticMotifSearchMgr
 {
 	protected final Logger log = LogManager.getLogger ( getClass () );
 
@@ -31,12 +32,10 @@ public class Hits
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
 	private SemanticMotifsSearchResult searchResult = null;
-	private String keyword = ""; // TODO: not used
 
-	public Hits ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
+	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
 	{
 		this.ondexProvider = ondexProvider;
-		this.keyword = keyword;
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );

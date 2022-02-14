@@ -50,7 +50,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
-import rres.knetminer.datasource.ondexlocal.Hits;
+import rres.knetminer.datasource.ondexlocal.SemanticMotifSearchMgr;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
@@ -529,9 +529,10 @@ public class ExportService
    * 
    * Was named writeAnnotationXML
    */
-	public String exportGenomapXML ( String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes,
-		List<String> userQtlStr, String keyword, int maxGenes, Hits hits, String listMode,
-		Map<ONDEXConcept, Double> scoredCandidates )
+	public String exportGenomapXML ( 
+		String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
+		String keyword, int maxGenes, Map<ONDEXConcept, Double> scoredCandidates
+	)
 	{
 		log.info ( "Genomaps: generating XML..." );
 

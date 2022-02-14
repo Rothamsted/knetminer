@@ -23,12 +23,10 @@
 	<build>
 		<plugins>
 			<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
-				
 					<execution>
-					
 						<id>exec-npm-install-genemap</id>
 						<phase>compile</phase>
 						<configuration>
@@ -38,13 +36,10 @@
 							</arguments>
 							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
 						</configuration>
-						
 						<goals>
 							<goal>exec</goal>
 						</goals>
-						
 					</execution>
-					
 					<execution>
 						<id>exec-bower-install-genemap</id>
 						<phase>compile</phase>
@@ -59,7 +54,6 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					
 					<execution>
 						<id>exec-gulp-clean-genemap</id>
 						<phase>compile</phase>
@@ -73,8 +67,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-						</execution>
-					
+					</execution>
 					<execution>
 						<id>exec-gulp-optimise-genemap</id>
 						<phase>compile</phase>
@@ -88,9 +81,15 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution> 
-                                        <!-- can comment-out/disable from below (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
-				<execution>
+					</execution>
+					<!-- 
+						Next two executions can be skipped to speed-up the build. 
+					 	TODO: Define a profile for this.
+					 	
+					 	An alternative speed-up trick is to skip client-base altoghether, via 
+					 	mvn -pl '!client-base' 
+					-->
+					<execution>
 						<id>exec-npm-install-knetmaps</id>
 						<phase>compile</phase>
 						<configuration>
@@ -103,8 +102,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution> 
-					
+					</execution>
 					<execution>
 						<id>exec-gulp-clean-knetmaps</id>
 						<phase>compile</phase>
@@ -119,7 +117,8 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-                                        <!-- can comment-out/disable upto here (npm install and gulp clean tasks) when testing local aratiny to speed up client build and launch -->
+					
+					
 					<execution>
 						<id>exec-gulp-optimise-knetmaps</id>
 						<phase>compile</phase>
@@ -134,7 +133,6 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					
 				</executions>
 			</plugin>
 			<plugin>

@@ -14,7 +14,11 @@
 				<!-- knetminer.specieTaxId>3708, 109376, 3711, 90675</knetminer.specieTaxId -->
 				<knetminer.specieTaxId>90675</knetminer.specieTaxId>
 
+<<<<<<< HEAD
 				<knetminer.version>51</knetminer.version>
+=======
+				<knetminer.version>52</knetminer.version>
+>>>>>>> 5290a4fbe0500d1bb2d68a662be83b39c5ffa697
 		
 				<!-- If you define this with this placeholder, the build scripts will get the list from basemap.xml -->
 				<knetminer.chromosomeList>%%knetminer.chromosomeList%%</knetminer.chromosomeList>
