@@ -172,7 +172,6 @@ function matchCounter() {
             var url = api_url + request;
             $.get(url, '').done(function (data) {
 
-                console.log(data);
 
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
@@ -565,12 +564,17 @@ $(document).ready(
                 $('body').on('click', '.exampleQuery', function () {
                     //$('#with').trigger('click');
                     sampleNum = $(this)[0].id.replace('exampleQuery', '');
+
+                    // show reset button 
+                    $("#resetknet").show(); 
+
                     // display keyword search box
 		            if($('#kwd_search').attr('src') === 'html/image/expand.gif') {
 		               $('#kwd_search').trigger('click');
 		              }
                     $("#keywords").val(sampleQueries[sampleNum].term);
                     var numRegions = sampleQueries[sampleNum].regions.length;
+
 
 
                     if (trim(sampleQueries[sampleNum].withinRegion) == 'true') {
@@ -645,6 +649,7 @@ $(document).ready(
                     if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
                         refreshQuerySuggester();
                     }
+
                 });
             }
         });

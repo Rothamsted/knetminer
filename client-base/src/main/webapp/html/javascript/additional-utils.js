@@ -1,9 +1,11 @@
 
+
 // function gets all inputs in the search form and check if value is present
 // if value is present it activates the reset button
 function activateResetButton(){
-    var resetBtnEle = $("#resetknet") ; 
-    var knetInputs = $(':input').filter('input,select,textarea');
+    var resetBtnEle = $("#resetknet"); 
+    var knetInputs = $(':input').filter('input,select,textarea'); 
+
     knetInputs.each(function(index,element){
         $(element).keyup(function(){
             if(element.value !== ''){
@@ -14,6 +16,31 @@ function activateResetButton(){
         })
     })
 }
+
+
+// function toggle the close button so users have the choice to show the their example queries or hide it 
+function queryToggle(){
+    var queryButton = $('.close');
+    var queryStatus = true;
+
+    $(queryButton).click(function(){
+        var examplequeries = $("#eg_queries");
+        var queryImage = queryButton.children();
+
+        if(queryStatus){
+            examplequeries.hide(); 
+            queryImage.attr('src','/html/image/drop-down.png');
+            queryStatus = false; 
+        }else{
+            queryImage.attr('src','html/image/close_button.png');
+            examplequeries.show();
+            queryStatus = true; 
+        }
+
+    }); 
+
+}
+
 
 
 
@@ -36,7 +63,6 @@ $(document).ready(function(){
         activateResetButton()
     })
 
-
     // on click event that reset all form input including the genenome icon and the suggestor text values
     $("#resetknet").click(function (event){
         event.preventDefault();
@@ -47,4 +73,5 @@ $(document).ready(function(){
     });
 
 
+    queryToggle(); 
 })
