@@ -25,25 +25,31 @@
 				    <p id="explainer" title="You can just search with keyword or gene list, or combine both.">
 					Search KnetMiner with keywords, gene lists or genomic regions:</p>
 				</li>
+
 				<li style="width: 80%;"> <!-- Keyword search -->
 				    <b><img id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
+
 						 <span style="vertical-align:middle">
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:0; width:30px; height:30px; display:none;">
 						 </span>
-						<!-- </div> -->
+
 						 <div id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
+
 						 <!-- query suggestor -->
-						 <div id="suggestor_search_div" style="border-radius:4px; /*touch-action:none; cursor:move;*/">
-						    <div id="suggestor_search_area" style="width: 70%; display: none;">
-							    <div id="suggestor_terms"> </div>
-								<div id="suggestor_tables">No suggestions found</div>
-							</div>
-						 </div>
+						 
+						 	<div id="suggestor_search_div" style="border-radius:4px; /*touch-action:none; cursor:move;*/">
+								<div id="suggestor_search_area" style="width: 70%; display: none;">
+									<div id="suggestor_terms"> </div>
+									<div id="suggestor_tables">No suggestions found</div>
+								</div>
+						 	</div>
+
 					</div>
 				</li>
+
 			<!--	<li style="width: 70%;">
 				  <div id="draggable-suggestor" style="border-radius:4px; touch-action:none; cursor:move;">
 					<b><img id="suggestor_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Query Suggestor</b>
@@ -113,7 +119,7 @@
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
 				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
 					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-					<button type="submit" title="Reset KnetMiner knowledge network" class="resetknet" id="resetknet"><i class="fas fa-power-off reseticon"></i> Reset</button>
+					<button type="sumbit" title="Reset KnetMiner knowledge network" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i> Reset this Page</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>

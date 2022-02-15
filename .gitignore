@@ -2,6 +2,7 @@
 # when you change .gitignore
 #
 .elasticbeanstalk
+/.vscode
 *.iml
 .idea
 bin/
