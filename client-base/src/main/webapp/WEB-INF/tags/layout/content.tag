@@ -15,7 +15,7 @@
                         <c:if test="${embeddable}"><div class="species_header"></div></c:if>
                         <div id="info-text">
                             <div style="height: 10px;"><h3>Example queries</h3>
-                                <a class="close" href="#info" title="close"><img src="html/image/close_button.png"></a>
+                                <a style="display:flex;" class="close" id="close-example" title="close"><img src="html/image/close_button.png"></a>
                             </div>
                             <div id="eg_queries"></div>
                         </div>
