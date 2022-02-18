@@ -744,7 +744,7 @@ function refreshQuerySuggester() {
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
-function searchKeyword(event) {
+function searchKeyword() {
     //var searchMode = getRadioValue(document.gviewerForm.search_mode);
     var searchMode="genome"; // default
 
@@ -811,6 +811,8 @@ function searchKeyword(event) {
     //if(geneList_size > freegenelist_limit) {
       // check if user logged in and if yes, get user_id
 
+     //if inputs are empty client get an error saying input is empty 
+    //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
       if(keyword == '' && list.length == 0 && requestParams.qtl.length == 0 ){
         var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry all inputs are empty.</span></div>'; 
         $("#pGViewer_title").replaceWith(searchErrorTitle);
@@ -821,7 +823,7 @@ function searchKeyword(event) {
       }
 }
 
-//Function to run api calls inside Function SearchKeyword if input values are not empty,
+//Function to send form values to backend server inside the above Function SearchKeyword if input values are not empty,
 function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
 
     $.ajax({
