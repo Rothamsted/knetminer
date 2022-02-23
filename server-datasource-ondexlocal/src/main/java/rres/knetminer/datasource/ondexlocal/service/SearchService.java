@@ -318,7 +318,7 @@ public class SearchService
 		var genesCount = dataService.getGenomeGenesCount ();
 
 		// 1st step: create map of genes to concepts that contain query terms
-		// In other words: Filter the global gene2concept map for concept that contain the keyword
+		// In other words: Filter the global gene2concept map for concepts that contain the keyword
 		//
 		Map<Integer, Set<Integer>> gene2HitConcepts =
 			hit2score.keySet ()
