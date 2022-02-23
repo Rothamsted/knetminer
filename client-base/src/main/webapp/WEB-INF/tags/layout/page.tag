@@ -94,6 +94,8 @@
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         <!-- loader/spinner -->
         <script type="text/javascript" src="html/javascript/maskloader-spinner.js"></script>
+         <!-- search/submit function -->
+         <script type="text/javascript" src="html/javascript/search-keyword.js"></script>
 		<!-- interactJS; DISABLED -->
 	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
 		

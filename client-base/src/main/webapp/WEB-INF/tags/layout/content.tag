@@ -128,6 +128,7 @@
 	</div>
 
 	<div id="pGViewer_title"></div>
+
 	<div id="tabviewer" style="display: none;">
 
     	<div id="tabviewer_buttons">
@@ -136,8 +137,8 @@
 			<div class="button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
-
         </div>
+		
         <div id="tabviewer_content">
             <div id="resultsTable" class="resultViewer"></div>
             <!-- new genomaps.js -->
