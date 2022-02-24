@@ -45,7 +45,8 @@ function showSynonymTab(tabFrom, tabItemFrom, tableTo) {
     });
 }
 
-function activateButton(option) {
+function activateButton(option){
+    
     $('.resultViewer:visible').fadeOut(0, function () {
         $('.button_off').attr('class', 'button_on');
         $('#' + option).fadeIn();
@@ -173,7 +174,6 @@ function matchCounter() {
             var url = api_url + request;
             $.get(url, '').done(function (data) {
 
-
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
@@ -196,6 +196,32 @@ function matchCounter() {
             $('#matchesResultDiv').html('');
         }
     }
+}
+
+
+/*
+ * Function to get the number of genes user inputs
+ *
+ */
+
+function geneCounter(){
+    var geneListValue = $("#list_of_genes").val().split('\n');
+    var geneInput = $('#geneResultDiv');
+    var notemptygenes = []; 
+
+    if(geneListValue[0] === ''){
+        geneInput.hide()
+    }else{
+        for(var i =0; i < geneListValue.length; i++ ){
+            if(geneListValue[i] !==  ''){
+                notemptygenes.push(geneListValue[i]); 
+                geneInput.show()
+                geneInput.html('<span>  <b>'+ notemptygenes.length +'</b>  inputed genes </span>')
+            }
+        }
+       
+    }
+
 }
 
 /*
@@ -224,8 +250,6 @@ function evidencePath(id, genes) {
 */
 
 
-
-
 $(document).ready(
     function () {
 
@@ -236,6 +260,7 @@ $(document).ready(
         //shows the genome or qtl search box and chromosome viewer if there is a reference genome
         if (reference_genome == true) {
             $('#genomeorqtlsearchbox').show();
+
             if (typeof gviewer != "undefined" && gviewer == false) {
                 activateButton('resultsTable');
                 $('#genemap-tab_button').hide();
@@ -248,8 +273,11 @@ $(document).ready(
             $('#genemap-tab_button').hide(); // hide Map View option
             $('#genemap-tab').hide();
         }
+
         $("#keywords").focus();
         $('#tabviewer').hide(); // hide by default
+
+
         // Calculates the amount of documents to be displayed with the current query
         $('#keywords').keyup(function (e) {
             // this stops matchCounter being called when the enter or arrow keys are used.
@@ -265,6 +293,7 @@ $(document).ready(
                 }
             }
         });
+
         // with and without keyword search modes (old)
       /*  $('#without').click(function () {
             $('.with_keyword_search').hide();
@@ -345,6 +374,7 @@ $(document).ready(
 
                 return false;
             });
+
         // Remove QTL region
         $('#removeRow').click(
             function () {
@@ -387,7 +417,6 @@ $(document).ready(
 				   $('#suggestor_search_area').css('display', 'none');
 				  }
             });
-
 
 
         // Suggestor search
@@ -451,6 +480,12 @@ $(document).ready(
             });
 
 
+        // on keyup events it runs function genecounter line 207
+        $('#list_of_genes').keyup(function(){
+            geneCounter()
+        }); 
+
+
         //Match counter
         //$("#keywords").keyup(matchCounter());
 		
@@ -491,11 +526,74 @@ $(document).ready(
 			'translate(' + x + 'px, ' + y + 'px)';
 		}); */
 
-
-
         // Tooltip
-        var sampleQueryButtons = "";//"<strong>Example queries</strong>";
+        getQueryExamples(); 
 
+        $('body').on('mouseenter', 'span.hint', function (event) {
+            target = $(this)[0].id;
+            var message = "";
+            addClass = "";
+            if (target == 'hintSearchQtlGenome') {
+                message = 'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
+            }
+            else if (target == 'hintEnterGenes') {
+                message = 'Input a list of target genes using reference gene ID\'s.';
+            }
+            else if (target == 'hintQuerySuggestor') {
+                message = 'Add, remove or replace terms from your query using the list of suggested terms based on your search criteria';
+            }
+            else if (target == 'hintEgKeywords') {
+                message = sampleQueryButtons;
+                addClass = "tooltip-static";
+            }
+            else if (target == 'hintSortableTable') {
+                message = 'This opens KnetMaps and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
+            }
+
+            $('div.tooltip').remove();
+            $('<div class="tooltip ' + addClass + '">' + message + '</div>').appendTo('body');
+
+            tooltipY = $(this).offset()['top'] - 12;
+            tooltipX = $(this).offset()['left'] - 4;
+            winWidth = $(window).width();
+            if (tooltipX + 300 > winWidth) {
+                tooltipX = winWidth - 300;
+            }
+            $('div.tooltip.tooltip-static').css({top: tooltipY, left: tooltipX}); //for sample queries tooltip
+        });
+
+
+        $('body').on('mousemove', 'span.hint:not(#hintEgKeywords)', function (event) {
+            var tooltipX = event.pageX - 8;
+            var tooltipY = event.pageY + 8;
+
+            winWidth = $(window).width();
+            if (tooltipX + 300 > winWidth) {
+                tooltipX = winWidth - 300;
+            }
+
+            $('div.tooltip').css({top: tooltipY, left: tooltipX});
+        });
+
+
+        $('body').on('mouseleave', 'span.hint', function (event) {
+            if ($(event.relatedTarget).hasClass("tooltip-static") || $(event.relatedTarget).parent().hasClass("tooltip-static")) {
+                return;
+            }
+            $('div.tooltip').remove();
+        });
+
+        $('body').on('mouseleave', 'div.tooltip-static', function (event) {
+            $('div.tooltip').remove();
+        });
+
+        genemap.draw('#genemap', 'html/data/basemap.xml', null);
+});
+
+
+function getQueryExamples(){
+
+    var sampleQueryButtons = "";
         $.ajax({
             type: 'GET',
             url: "html/data/sampleQuery.xml",
@@ -568,7 +666,6 @@ $(document).ready(
 
                     // show reset button 
                     $("#resetknet").show(); 
-
                     // display keyword search box
 		            if($('#kwd_search').attr('src') === 'html/image/expand.gif') {
 		               $('#kwd_search').trigger('click');
@@ -645,6 +742,8 @@ $(document).ready(
                     }
 
                     matchCounter(); // updates number of matched documents and genes counter
+                     // check if query populates gene list search
+                     geneCounter(); 
 
                     // Refresh the Query Suggester, if it's already open.
                     if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
@@ -655,71 +754,9 @@ $(document).ready(
             }
         });
 
-        $('body').on('mouseenter', 'span.hint', function (event) {
-            target = $(this)[0].id;
-            var message = "";
-            addClass = "";
-            if (target == 'hintSearchQtlGenome') {
-                message = 'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
-            }
-            else if (target == 'hintEnterGenes') {
-                message = 'Input a list of target genes using reference gene ID\'s.';
-            }
-            else if (target == 'hintQuerySuggestor') {
-                message = 'Add, remove or replace terms from your query using the list of suggested terms based on your search criteria';
-            }
-            else if (target == 'hintEgKeywords') {
-                message = sampleQueryButtons;
-                addClass = "tooltip-static";
-            }
-            else if (target == 'hintSortableTable') {
-                message = 'This opens KnetMaps and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
-            }
-
-            $('div.tooltip').remove();
-            $('<div class="tooltip ' + addClass + '">' + message + '</div>').appendTo('body');
-
-            tooltipY = $(this).offset()['top'] - 12;
-            tooltipX = $(this).offset()['left'] - 4;
-            winWidth = $(window).width();
-            if (tooltipX + 300 > winWidth) {
-                tooltipX = winWidth - 300;
-            }
-            $('div.tooltip.tooltip-static').css({top: tooltipY, left: tooltipX}); //for sample queries tooltip
-        });
 
 
-        $('body').on('mousemove', 'span.hint:not(#hintEgKeywords)', function (event) {
-            var tooltipX = event.pageX - 8;
-            var tooltipY = event.pageY + 8;
-
-            winWidth = $(window).width();
-            if (tooltipX + 300 > winWidth) {
-                tooltipX = winWidth - 300;
-            }
-
-            $('div.tooltip').css({top: tooltipY, left: tooltipX});
-        });
-
-
-        $('body').on('mouseleave', 'span.hint', function (event) {
-            if ($(event.relatedTarget).hasClass("tooltip-static") || $(event.relatedTarget).parent().hasClass("tooltip-static")) {
-                return;
-            }
-            $('div.tooltip').remove();
-        });
-
-        $('body').on('mouseleave', 'div.tooltip-static', function (event) {
-            $('div.tooltip').remove();
-        });
-
-        genemap.draw('#genemap', 'html/data/basemap.xml', null);
-
-
-});
-
-
-
+}
 
 
 function refreshQuerySuggester() {
@@ -879,7 +916,6 @@ function findGenes(id, chr_name, start, end) {
         });
     }
 }
-
 
 /*
  * Function
@@ -1205,8 +1241,6 @@ function createGenesTable(text, keyword, rows) {
     });
 }; 
 
-
-
 /*
  * Function
  *
@@ -1477,7 +1511,7 @@ function createEvidenceTable(text, keyword) {
  * Generates multi evidence network in KnetMaps
  * @author: Ajit Singh.
  */
-function generateMultiEvidenceNetwork() {
+function generateMultiEvidenceNetwork(){
     var evidence_ondexids_and_genes = [];
     var evidences_ondexid_list = "";
     var geneids = [];
@@ -1519,7 +1553,7 @@ function generateMultiEvidenceNetwork() {
  * Funtion 
  *
  */
-function createSynonymTable(text) {
+function createSynonymTable(text){
 
     var table = "";
     var summaryArr = new Array();

@@ -75,6 +75,7 @@ $(document).ready(function(){
         $('#suggestor_search').hide();
         $('#tabviewer').hide(); 
         $("#resetknet").hide();
+        $('#geneResultDiv').hide();
     });
 
 

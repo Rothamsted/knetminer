@@ -130,8 +130,8 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                          var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
                          console.log(server_error.detail);
                          alert(errorMsg);
-                                         // Remove loading spinner from 'search' div
-                                         deactivateSpinner("#search");
+                        // Remove loading spinner from 'search' div
+                        deactivateSpinner("#search");
                      })
                      .success(function (data) {
                         var gviewer = data.gviewer
@@ -143,10 +143,10 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
 
                          $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
 
-                                  // Remove loading spinner from 'search' div
-                                  deactivateSpinner("#search");
-                                  //console.log("search: success; remove spinner...");
-                                  genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer)
+                        // Remove loading spinner from 'search' div
+                        deactivateSpinner("#search");
+                        //console.log("search: success; remove spinner...");
+                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer)
                      });
              }
              else {
@@ -203,6 +203,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              $('#suggestor_search_area').slideUp(500);
                                      //$('#suggestor_search').dialog('close');
          }
+
          $("#pGViewer_title").replaceWith(genomicViewTitle);
 
          activateButton('resultsTable');
