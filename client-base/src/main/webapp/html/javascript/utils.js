@@ -294,27 +294,6 @@ $(document).ready(
             }
         });
 
-        // with and without keyword search modes (old)
-      /*  $('#without').click(function () {
-            $('.with_keyword_search').hide();
-            $('.without_keyword_search').show();
-        //    if ($('#region_search').attr('src') === 'html/image/expand.gif') {
-        //        $('#region_search').trigger('click');
-        //    }
-            if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
-                $('#advanced_search').trigger('click');
-            }
-            $('.keywordsSubmit').removeAttr("disabled");
-            $("#keywords").val('');
-            $('.loadingDiv').html('');
-        });
-        $('#with').click(function () {
-            $('.with_keyword_search').show();
-            $('.without_keyword_search').hide();
-            $('.keywordsSubmit').attr("disabled");
-            $("#keywords").val('');
-            $('.loadingDiv').html('');
-        }); */
 		
         // Add QTL region
         $('#addRow').click(
@@ -417,7 +396,7 @@ $(document).ready(
 				   $('#suggestor_search_area').css('display', 'none');
 				  }
             });
-
+        
 
         // Suggestor search
         $('#suggestor_search').click(
@@ -436,23 +415,7 @@ $(document).ready(
  
             });
 
-		/*  $("#suggestor_search").dialog({
-			  autoOpen: false,
-			  show: {
-				  effect: "blind",
-				  duration: 1000
-				 },
-			  hide: {
-				  effect: "explode",
-				  duration: 1000
-				 }
-			});
-
-		  $("#qs_opener").click(function() {
-			  $("#suggestor_search").dialog( "open" );
-			});*/
-			
-        // Advanced search (gene list)
+		
         $('#advanced_search').click(
             function () {
                 var src = ($(this).attr('src') === 'html/image/expand.gif')
@@ -485,46 +448,6 @@ $(document).ready(
             geneCounter()
         }); 
 
-
-        //Match counter
-        //$("#keywords").keyup(matchCounter());
-		
-		// display keyword search box, by default
-		//if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
-	//		$('#kwd_search').trigger('click');
-         //  }
-		 // hide query suggestor icon
-		// $('#suggestor_search').css('display', 'none');
-		// display gene list search, by default
-		//if ($('#advanced_search').attr('src') === 'html/image/expand.gif') {
-		//	$('#advanced_search').trigger('click');
-         //  }
-		
-		// to make the Query suggestor draggable via interactJS; DISABLED
-	/*	var element= document.getElementById('suggestor_search_div'), 
-		x = 0, y = 0;
-		interact(element)
-		.draggable({
-			snap: {
-				targets: [ interact.createSnapGrid({ x: 30, y: 30 }) ],
-				range: Infinity,
-				relativePoints: [ { x: 0, y: 0 } ]
-			},
-			inertia: true,
-			restrict: {
-				restriction: document.getElementById('content'), //element.parentNode
-				elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
-				endOnly: true
-			}
-		})
-		.on('dragmove', function (event) {
-			x += event.dx;
-			y += event.dy;
-			
-			event.target.style.webkitTransform =
-			event.target.style.transform =
-			'translate(' + x + 'px, ' + y + 'px)';
-		}); */
 
         // Tooltip
         getQueryExamples(); 
@@ -1245,15 +1168,15 @@ function createGenesTable(text, keyword, rows) {
  * Function
  *
  */
-function containsKey(keyToTest, array) {
-    result = false;
-    for (key in array) {
-        if (key == keyToTest) {
-            result = true;
-        }
-    }
-    return result;
-}
+// function containsKey(keyToTest, array) {
+//     result = false;
+//     for (key in array) {
+//         if (key == keyToTest) {
+//             result = true;
+//         }
+//     }
+//     return result;
+// }
 
 // update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
 function updateSelectedGenesCount() {
@@ -1300,16 +1223,16 @@ function createEvidenceTable(text, keyword) {
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
-        //console.log("number of evidences found= "+ evidenceTable.length);
+
         var eviTableLimit= evidenceTable.length-1;
         if(eviTableLimit > 1000) { // limit evidence view table to top 1000 evidences
            eviTableLimit= 1001;
           }
-        //console.log("evidence view: show top "+eviTableLimit+" evidences");
+       
         for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
             table = table + '<tr>';
-            //table = table + '<td><div id="evidence_exclude_' + ev_i + '" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></div></td>';
+           
             table = table + '<td><p id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>'+
                     '<p id="evidence_add_' + ev_i + '" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>';
 
@@ -1325,13 +1248,6 @@ function createEvidenceTable(text, keyword) {
             //table = table + '<td>' + values[2] + '</td>';
             table = table + '<td>' + values[3] + '</td>';
 
-            // all genes
-            /*if(values[4] < 500) {
-                table = table + '<td><a href="javascript:;" class="generateEvidencePath" title="Display in KnetMaps" id="generateEvidencePath_' + ev_i + '">' + values[4] + '</a></td>'; // all genes
-               }
-            else {
-                table = table + '<td>' + values[4] + '</td>';
-            }*/
             table = table + '<td>' + values[4] + '</td>';
 
 
@@ -1358,19 +1274,11 @@ function createEvidenceTable(text, keyword) {
 
             var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7]+':'+values[5] + '">';
             table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
-            table = table + '</tr>';
-            //Calculates the summary box; OLD
-          /*  if (containsKey(values[0], summaryArr)) {
-                summaryArr[values[0]] = summaryArr[values[0]] + 1;
-            } else {
-                summaryArr[values[0]] = 1;
-            }*/
+         
         }
         table = table + '</tbody>';
         table = table + '</table>';
         table = table + '</div>';
-        // Insert a preloader to be used for KnetMaps
-        //table = table + '<div id="loadingNetwork_Div"></div>';
         table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Network</button>';
         table = table + '</insert><div id="loadingNetwork_Div"></div></div>';
 
@@ -1491,18 +1399,6 @@ function createEvidenceTable(text, keyword) {
         $("#revertEvidenceView").mouseout(function (e) {
             $("#revertEvidenceView").removeClass('hover').addClass('unhover');
         });
-
-
-
-    /*    //Shows the evidence summary box
-        for (key in summaryArr) {
-            var contype = key.trim();
-            summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterEvidenceTableByType("'+contype+'"); title="' + key + '"></div>' + summaryArr[key] + '</div>';
-        }
-        summaryText = summaryText + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
-
-        // display dynamic Evidence Summary legend above Evidence View.
-        $("#evidenceSummary1").html(summaryText); */
     }
 }
 

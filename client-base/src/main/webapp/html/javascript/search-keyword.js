@@ -5,10 +5,6 @@ function searchKeyword() {
     //var searchMode = getRadioValue(document.gviewerForm.search_mode);
     var searchMode="genome"; // default
 
-    /*var withoutKeywordMode = $('#without').prop('checked');
-    if (withoutKeywordMode) {
-        $('#keywords').val('');  // to make sure we don't accidentally include any
-    }*/
     var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
 
     // search keyword provided
@@ -41,7 +37,8 @@ function searchKeyword() {
     var regions = document.getElementById('regions_table').rows.length - 2;
     var counter = 1;
     requestParams['qtl'] = [];
-    for (i = 1; i <= regions; i++) {
+
+    for (i = 1; i <= regions; i++){
         var chr = $("#chr" + i + " option:selected").val();
         var start = trim($("#start" + i).val());
         var end = trim($("#end" + i).val());
@@ -52,6 +49,7 @@ function searchKeyword() {
             counter++;
         }
     }
+
     // if a region is provided, set searchMode to "qtl" (to focus only on that region)
     if(counter > 1) { searchMode="qtl"; }
     // if a gene list is provided, use "genome" searchMode
@@ -86,7 +84,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         timeout: 1000000, cache: false,
         headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" }, 
         success: function (data) {
-
             //if logged out, keep default restrictions.
             if((typeof data.id === "undefined") || (data.id === null)) {
                //$(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
@@ -135,8 +132,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                      })
                      .success(function (data) {
                         var gviewer = data.gviewer
-                         var genomicViewTitle; 
-                         var messageNode; 
                          var querytime= performance.now() - this.startTime; // query response time
                          var queryseconds= querytime/1000;
                          queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
@@ -161,12 +156,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
 function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,gviewer){
 
     if (data.geneCount === 0) { 
-
-        //  uncommmeted as client error message that handles empty 
-         // for failed search with no results.
-        //  var messageNode='Sorry,no results were found. <br> '; 
-        //  secondmessage ='<span>Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span>'; 
-        //  genomicViewTitle = createGenomicViewTitle(messageNode,secondmessage);
 
          if(keyword.length > 0) { // msg for keyword search error
             messageNode = keyword + 'did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.'; 
@@ -303,7 +292,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
            }
          if (candidateGenes > 1000) { // for over 1000 results in any searchMode
              candidateGenes = 1000;
-             //genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
          }
 
          $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -316,20 +304,17 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
          $('#suggestor_search_area').slideUp(500);
-                             //$('#suggestor_search').dialog('close');
+
 
 
          activateButton('resultsTable');
          createGenesTable(data.geneTable, keyword, candidateGenes);
          createEvidenceTable(data.evidenceTable, keyword);
-         // show linked/unlinked genes checkboxes only if a gene list was provided by the user
          if(geneList_size > 0) {
             $('#selectUser').show();
            }
            else { $('#selectUser').hide(); }
      }
-
-
 }
 
 // function creates Genomic title by using same html template for all messages
