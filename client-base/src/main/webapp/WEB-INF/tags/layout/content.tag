@@ -36,7 +36,7 @@
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Open query suggestor" style="cursor:pointer; position:relative; right:41px; top:0; width:30px; height:30px; display:none;">
 						 </span>
 
-						 <div id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
+						 <div class="counttext" id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
 
 						 <!-- query suggestor -->
 						 
@@ -69,6 +69,7 @@
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
 							<textarea id="list_of_genes" cols="50" rows="7" placeholder="Search for gene id/name (one per line)"></textarea>
+							<div class='counttext' id="geneResultDiv" style="display: block;"></div>
 							<!-- <div class="rightnav_genelist" style="display:none">
 								<input type="radio" name="list_mode" value="GLrestrict">Intersection
 								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
@@ -119,7 +120,7 @@
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
 				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
 					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-					<button type="sumbit" title="Reset KnetMiner knowledge network" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i> Reset this Page</button>
+					<button type="sumbit" title="Click to clear all search fields" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i>Clear Search Fields</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>

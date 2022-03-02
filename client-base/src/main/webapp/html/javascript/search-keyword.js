@@ -5,10 +5,6 @@ function searchKeyword() {
     //var searchMode = getRadioValue(document.gviewerForm.search_mode);
     var searchMode="genome"; // default
 
-    /*var withoutKeywordMode = $('#without').prop('checked');
-    if (withoutKeywordMode) {
-        $('#keywords').val('');  // to make sure we don't accidentally include any
-    }*/
     var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
 
     // search keyword provided
@@ -41,7 +37,8 @@ function searchKeyword() {
     var regions = document.getElementById('regions_table').rows.length - 2;
     var counter = 1;
     requestParams['qtl'] = [];
-    for (i = 1; i <= regions; i++) {
+
+    for (i = 1; i <= regions; i++){
         var chr = $("#chr" + i + " option:selected").val();
         var start = trim($("#start" + i).val());
         var end = trim($("#end" + i).val());
@@ -52,6 +49,7 @@ function searchKeyword() {
             counter++;
         }
     }
+
     // if a region is provided, set searchMode to "qtl" (to focus only on that region)
     if(counter > 1) { searchMode="qtl"; }
     // if a gene list is provided, use "genome" searchMode
@@ -86,10 +84,8 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         timeout: 1000000, cache: false,
         headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" }, 
         success: function (data) {
-
             //if logged out, keep default restrictions.
             if((typeof data.id === "undefined") || (data.id === null)) {
-               //$(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                enforce_genelist_limit= true; // back to default
                knetview_limit= 10; // back to default
               }
@@ -100,7 +96,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                     knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
                    }
                 else if(data.plan.name === "Free") {
-                    //$(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The free KnetMiner is limited to '+freegenelist_limit+' genes. Upgrade to <a href="https://knetminer.com/pricing-plans" target="_blank">Pro</a> plan</b></div>');
                     enforce_genelist_limit= true; // back to default
                     knetview_limit= 10; // back to default
                    }
@@ -130,23 +125,21 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                          var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
                          console.log(server_error.detail);
                          alert(errorMsg);
-                                         // Remove loading spinner from 'search' div
-                                         deactivateSpinner("#search");
+                        // Remove loading spinner from 'search' div
+                        deactivateSpinner("#search");
                      })
                      .success(function (data) {
                         var gviewer = data.gviewer
-                         var genomicViewTitle; 
-                         var messageNode; 
                          var querytime= performance.now() - this.startTime; // query response time
                          var queryseconds= querytime/1000;
                          queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
 
                          $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
 
-                                  // Remove loading spinner from 'search' div
-                                  deactivateSpinner("#search");
-                                  //console.log("search: success; remove spinner...");
-                                  genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer)
+                        // Remove loading spinner from 'search' div
+                        deactivateSpinner("#search");
+                        //console.log("search: success; remove spinner...");
+                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer)
                      });
              }
              else {
@@ -159,36 +152,33 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
 function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,gviewer){
+     let messageNode;
+     let genomicViewTitle; 
+     let status; 
 
     if (data.geneCount === 0) { 
-
-        //  uncommmeted as client error message that handles empty 
-         // for failed search with no results.
-        //  var messageNode='Sorry,no results were found. <br> '; 
-        //  secondmessage ='<span>Make sure that all words are spelled correctly. Otherwise try a different or more general query.</span>'; 
-        //  genomicViewTitle = createGenomicViewTitle(messageNode,secondmessage);
-
+          status = true; 
          if(keyword.length > 0) { // msg for keyword search error
             messageNode = keyword + 'did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.'; 
-            genomicViewTitle = createGenomicViewTitle(messageNode);
+            genomicViewTitle = createGenomicViewTitle(messageNode,status);
 
             if(geneList_size > 0) {
                 // msg for keyword + genelist search error
                 messageNode = 'did not match any genes. Try different or more general keywords. Make sure that only one gene per line is entered. Try gene names (eg. TPS1)'
-               genomicViewTitle = createGenomicViewTitle(messageNode);
+               genomicViewTitle = createGenomicViewTitle(messageNode,status);
               }
-        }
+          }
 
          if(keyword.length < 2 && geneList_size > 0) {
               // msg for "gene list only" search error
             messageNode = 'did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).';
-            genomicViewTitle = CreateGenomicViewTitle(messageNode); 
+            genomicViewTitle = createGenomicViewTitle(messageNode,status); 
         }
 
          if(searchMode === "qtl") { 
              // msg for QTL search error
              messageNode = 'did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1). Provide valid QTLs'; 
-            genomicViewTitle = CreateGenomicViewTitle(messageNode);
+            genomicViewTitle = createGenomicViewTitle(messageNode,status)
         }
 
         if (typeof gviewer != "undefined" && gviewer != false) {
@@ -203,14 +193,17 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              $('#suggestor_search_area').slideUp(500);
                                      //$('#suggestor_search').dialog('close');
          }
+
          $("#pGViewer_title").replaceWith(genomicViewTitle);
 
-         activateButton('resultsTable');
+        //  activateButton('resultsTable');
          document.getElementById('resultsTable').innerHTML = "";
          document.getElementById('evidenceTable').innerHTML = "";
          document.getElementById('NetworkCanvas').innerHTML = "";
 
-     }else {
+     }
+     else {
+       status = false
          // For a valid response, i.e., search output.
          var candidateGenes = data.geneCount;
          var docSize = data.docSize; // for pGViewer_title_line display msg
@@ -225,9 +218,13 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          }
 
          // default search display msg.
-         var genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>'
+         messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
+          genomicViewTitle = createGenomicViewTitle(messageNode,status);
+
          if(keyword.length > 0) { // msg for keyword search
-            genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
+            messageNode= 'In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
+            genomicViewTitle = createGenomicViewTitle(messageNode,status)
+
             if(geneList_size > 0) { // msg for keyword + genelist search
                var count_linked= countLinkedUserGenes(data.geneTable);
                var count_unlinked = results - count_linked;
@@ -235,29 +232,33 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                // for wildcard in genelist when all matches will be found
                if(results === (count_linked+count_unlinked)) { count_notfound=0; }
                if(count_notfound === 0) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                  messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
+                  genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                  }
                else if(count_notfound > 0) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
+                 messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
+                  genomicViewTitle = createGenomicViewTitle(messageNode,status);
                }
                // for rare edge cases when no genes in list are found in search, then search is keyword-centric only.
                if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
+                 messageNode = 'No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).'
+                  genomicViewTitle = createGenomicViewTitle(messageNode,status)
                  }
               }
            }
-         if(keyword.length < 2 && geneList_size > 0) { // msg for "gene list only" search
-            //genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>';
+         if(keyword.length < 2 && geneList_size > 0) { 
             var count_linked= countLinkedUserGenes(data.geneTable);
             var count_unlinked= results - count_linked;
             var count_notfound= geneList_size - count_linked - count_unlinked;
             // for wildcard in genelist when all matches will be found
             if(results === (count_linked+count_unlinked)) { count_notfound=0; }
             if(count_notfound === 0) {
-               genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+              messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
+              genomicViewTitle = createGenomicViewTitle(messageNode,status)
               }
             else if(count_notfound > 0) {
-              genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
+              messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
+              genomicViewTitle = createGenomicViewTitle(messageNode,status); 
              }
             // for rare edge cases when no genes in list are found in search, then search is empty.
             if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
@@ -265,34 +266,42 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
               }
            }
          if(searchMode === "qtl") { // msg for QTL search
-            genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found ('+queryseconds+' seconds).</span></div>'; // default
+            messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
+            genomicViewTitle = createGenomicViewTitle(messageNode,status); 
             var count_linked= countLinkedUserGenes(data.geneTable);
             var count_unlinked= results - count_linked;
             var count_notfound= geneList_size - count_linked - count_unlinked;
             // for wildcard in genelist when all matches will be found
             if(results === (count_linked+count_unlinked)) { count_notfound=0; }
             if(keyword.length < 2) {  // msg for qtl region only search
+
                if(count_notfound === 0) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                 messsageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
+                  genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                  }
                else if(count_notfound > 0) {
-                 genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
+                messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).';
+                genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                 }
               }
             if(keyword.length > 2) {  // msg for qtl region + keyword search
                if(count_notfound === 0) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                 messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
+                 genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                  }
                else if(count_notfound > 0) {
-                 genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
+                 messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
+                 genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                 }
               }
             if(geneList_size > 0) { // msg for qtl + genelist search
                if(count_notfound === 0) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).</span></div>';
+                 messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
+                  genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                  }
                else if(count_notfound > 0) {
-                 genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).</span></div>';
+                 messageNode= '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
+                 genomicViewTitle = createGenomicViewTitle(messageNode,status);
                 }
                // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
                if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
@@ -302,7 +311,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
            }
          if (candidateGenes > 1000) { // for over 1000 results in any searchMode
              candidateGenes = 1000;
-             //genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">In total <b>' + results + ' genes</b> were found. Top 1000 genes are displayed in Genomaps.js Map View ('+queryseconds+' seconds).</span></div>';
          }
 
          $("#pGViewer_title").replaceWith(genomicViewTitle);
@@ -315,25 +323,44 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
          $('#suggestor_search_area').slideUp(500);
-                             //$('#suggestor_search').dialog('close');
+
 
 
          activateButton('resultsTable');
          createGenesTable(data.geneTable, keyword, candidateGenes);
          createEvidenceTable(data.evidenceTable, keyword);
-         // show linked/unlinked genes checkboxes only if a gene list was provided by the user
          if(geneList_size > 0) {
             $('#selectUser').show();
            }
            else { $('#selectUser').hide(); }
      }
-
-
 }
 
 // function creates Genomic title by using same html template for all messages
-function createGenomicViewTitle(message){
-    var genomicTemplate = `<div id="pGViewer_title"><$ class="pGViewer_title_line">Your search ${message}</span>
+function createGenomicViewTitle(message,status){
+    var genomicTemplate = `<div id="pGViewer_title"><span class="pGViewer_title_line"> ${status ? 'Your Search': 'In total'} ${message}</span>
     </div> `; 
     return genomicTemplate; 
+}
+
+
+/*
+ * Function
+ * Generates the number of user genes with evidence links in gene view .tab results
+ * @author: Ajit Singh.
+ */
+
+function countLinkedUserGenes(gv_table) {
+  var geneview_table = gv_table.split("\n");
+  var numResults= geneview_table.length - 2;
+  var linkedcount=0;
+  for(var i = 1; i <= numResults; i++) {
+      var values = geneview_table[i].split("\t");
+      if (values[7] === "yes") {
+          if (values[9].length > 0) { // counting known targets, i.e., user=yes and evidence present
+              linkedcount= linkedcount + 1;
+             }
+          }
+      }
+return linkedcount;
 }

@@ -34,7 +34,7 @@ function queryToggle(){
 
         if(queryStatus){
             examplequeries.hide(); 
-            queryImage.attr('src','/html/image/drop-down.png');
+            queryImage.attr('src','html/image/drop-down.png');
             exampletitle.css('margin-bottom','0');
             queryStatus = false; 
         }else{
@@ -67,7 +67,7 @@ $(document).ready(function(){
     })
 
     // on click event that reset all form input including the genenome icon and the suggestor text values
-    $("#resetknet").click(function (event){
+    $("#resetknet").click(function(event){
         event.preventDefault();
         $('form')[0].reset();
         $("#pGViewer_title").empty();
@@ -75,6 +75,10 @@ $(document).ready(function(){
         $('#suggestor_search').hide();
         $('#tabviewer').hide(); 
         $("#resetknet").hide();
+        $('#geneResultDiv').hide();
+        $('#suggestor_search_div').hide();
+        $('#region_search_area').hide(); 
+        $('#region_search').attr('src','html/image/expand.gif')
     });
 
 

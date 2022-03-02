@@ -89,6 +89,11 @@
         <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
        <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
         <script type="text/javascript" src="html/javascript/exportKnetwork/download-knet.js"></script>
+          <script type="text/javascript" src="html/javascript/refresh-query.js"></script>
+          <script type="text/javascript" src="html/javascript/query-examples.js"></script>
+         <script type="text/javascript" src="html/javascript/match-counter.js"></script>
+         <script type="text/javascript" src="html/javascript/gene-table.js"></script>
+         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
          <script type="text/javascript" src="html/javascript/utils.js"></script>
          <script type="text/javascript" src="html/javascript/additional-utils.js"></script>
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
