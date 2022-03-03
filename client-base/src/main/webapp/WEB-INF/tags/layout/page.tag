@@ -89,18 +89,33 @@
         <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
        <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
         <script type="text/javascript" src="html/javascript/exportKnetwork/download-knet.js"></script>
-          <script type="text/javascript" src="html/javascript/refresh-query.js"></script>
-          <script type="text/javascript" src="html/javascript/query-examples.js"></script>
-         <script type="text/javascript" src="html/javascript/match-counter.js"></script>
-         <script type="text/javascript" src="html/javascript/gene-table.js"></script>
-         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
+        
+         <!-- utils -->
          <script type="text/javascript" src="html/javascript/utils.js"></script>
-         <script type="text/javascript" src="html/javascript/additional-utils.js"></script>
+
+        <!-- init utils -->
+         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
+         
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
-        <!-- loader/spinner -->
-        <script type="text/javascript" src="html/javascript/maskloader-spinner.js"></script>
-         <!-- search/submit function -->
-         <script type="text/javascript" src="html/javascript/search-keyword.js"></script>
+        <!-- query suggestor -->
+         <script type="text/javascript" src="html/javascript/query-suggester.js"></script>
+           <!-- gene table -->
+         <script type="text/javascript" src="html/javascript/gene-table.js"></script>
+            <!-- evidence table -->
+         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
+
+         <!-- UI utils  -->
+        <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
+
+        <!-- ajax data Utils-->
+           <script type="text/javascript" src="html/javascript/data-utils.js"></script>
+        
+        <!-- string data Utils-->
+           <script type="text/javascript" src="html/javascript/string-utils.js"></script>
+
+        <!-- google analytics-->
+        <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
+
 		<!-- interactJS; DISABLED -->
 	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
 		
