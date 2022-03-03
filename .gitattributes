@@ -24,14 +24,16 @@
 # lf = \n (Unix), crfl = \r\n (Win)
 # Nowadays there's little point with win style, since almost all Win editors can 
 # handle Unix style autoamtically.
-
+#
 *.sh text eol=lf
-.js text eol=lf
-.less text eol=lf
-.css text eol=lf
-.html text eol=lf
-.md text eol=lf
+*.js text eol=lf
 *.json  text eol=lf
+*.less text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
 *.yml   text eol=lf
+*.xml   text eol=lf
+*.properties  text eol=lf
 
 * text=auto eol=lf
