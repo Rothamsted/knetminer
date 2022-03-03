@@ -162,6 +162,8 @@ $(document).ready(
 
 
         // Calculates the amount of documents to be displayed with the current query
+				// TODO: WTH are these numbers?! Needs replacement and proper coding (https://stackoverflow.com/questions/3050984)
+				//
         $('#keywords').keyup(function (e) {
             // this stops matchCounter being called when the enter or arrow keys are used.
             if (e.which !== 13 && e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40) {
@@ -326,7 +328,7 @@ $(document).ready(
             });
 
 
-        // on keyup events it runs function genecounter line 207
+        // on keyup events it runs function genecounter
         $('#list_of_genes').keyup(function(){
             geneCounter()
         }); 
@@ -423,7 +425,7 @@ function contactWindow() {
 
 /*
  * Function
- *
+ * TODO: what does it do? Is it still in use?!
  */
 function getRadioValue(radio) {
     var radioValue;
@@ -435,7 +437,9 @@ function getRadioValue(radio) {
     return radioValue;
 }
 
-
+/*
+ * TODO: Why doesn't it use String.trim() ?! 
+ */
 function trim(text) {
     return text.replace(/^\s+|\s+$/g, "");
 }
