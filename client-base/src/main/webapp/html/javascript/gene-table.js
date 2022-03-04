@@ -301,7 +301,6 @@ function createGenesTable(text, keyword, rows) {
 }; 
 
 
-
 /*
  * Function
  * Generates the network using KnetMaps
@@ -401,17 +400,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     }
 }
 
-
-
-// function containsKey(keyToTest, array) {
-//     result = false;
-//     for (key in array) {
-//         if (key == keyToTest) {
-//             result = true;
-//         }
-//     }
-//     return result;
-// }
 
 // update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
 function updateSelectedGenesCount() {
