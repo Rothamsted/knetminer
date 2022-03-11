@@ -1,4 +1,4 @@
-#Finite	States	*=start	state	^=end	state
+#Finite States	*=start	state	^=end	state
 1*	Gene
 2^	Publication
 3^	MolFunc

@@ -4,7 +4,6 @@ var genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(800).height(550); // chan
 var knetmaps = KNETMAPS.KnetMaps();
 
 
-
 /*
 * Document ready event executes when the HTML document is loaded
 * 	- add/remove QTL regions
