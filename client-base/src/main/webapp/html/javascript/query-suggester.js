@@ -198,9 +198,11 @@ function createSynonymTable(text){
             showSynonymTab('tabBox_' + termName, buttonID, 'tablesorterSynonym' + termName + '_' + conceptNum);
         });
 
+
         // function to add,exclude or totally replace keyword
         $(".addKeyword,.excludeKeyword,.replaceKeyword").click(function (e) {
             e.preventDefault();
+
             var currentTarget = $(e.currentTarget);
             var synonymNum = currentTarget.attr("id").replace("synonymstable_", "").replace("evidence_", "").split("_")[1];
             var keyword = evidenceTable[synonymNum].split("\t")[3];
@@ -229,29 +231,17 @@ function createSynonymTable(text){
                 }
             }
 
-
-            
             var conceptKey = 'ConceptID:'+ keyword; 
 
-            if (currentTarget.hasClass("addKeyword")) {
-                addKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
+            var currentClass = currentTarget.attr('class'); 
+            var addKeywordArray = ["addKeyword","addKeywordUndo","excludeKeyword"]; 
+            var removeKeywordArray = ["excludeKeywordUndo","replaceKeyword","replaceKeywordUndo"];
+            
+            if(addKeywordArray.includes(currentClass)){
+                window[currentClass](conceptKey, currentTarget.attr("id"), 'keywords');
+            }else if (removeKeywordArray.includes(currentClass)){
+                window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords')
             }
-            else if (currentTarget.hasClass("addKeywordUndo")) {
-                addKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("excludeKeyword")) {
-                excludeKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("excludeKeywordUndo")) {
-                excludeKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("replaceKeyword")) {
-                replaceKeyword(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("replaceKeywordUndo")) {
-                replaceKeywordUndo(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-
         });
 
 

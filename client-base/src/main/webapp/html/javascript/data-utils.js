@@ -163,7 +163,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          if(keyword.length > 0) { // msg for keyword search error
             messageNode = keyword + 'did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.'; 
             genomicViewTitle = createGenomicViewTitle(messageNode,status);
-
+           
             if(geneList_size > 0) {
                 // msg for keyword + genelist search error
                 messageNode = 'did not match any genes. Try different or more general keywords. Make sure that only one gene per line is entered. Try gene names (eg. TPS1)'
@@ -197,7 +197,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          }
 
          $("#pGViewer_title").replaceWith(genomicViewTitle);
-
+         $('#tabviewer').hide(); 
         //  activateButton('resultsTable');
          document.getElementById('resultsTable').innerHTML = "";
          document.getElementById('evidenceTable').innerHTML = "";
@@ -236,6 +236,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
+                  $('#tabviewer').hide(); 
                  }
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
@@ -618,4 +619,71 @@ function matchCounter() {
             $('#matchesResultDiv').html('');
         }
     }
+}
+
+
+// function is supposed to take the currrent target accession number or gene name & return the JSON of it's concept name
+function createGeneNameSynonyms(){
+    var geneNameSynonyms; 
+    let status; 
+
+     $('.genename_info').each(function(){
+
+        $(this).click(function(e){
+            var geneTarget = e.currentTarget;
+            geneNameSynonyms = $(geneTarget).next('.gene_name_synonyms');
+
+            $(this).find('[data-fa-i2svg]')
+            .toggleClass(function(){
+                if(status && geneNameSynonyms.hasClass("synonym_created")){
+                  geneNameSynonyms.hide(); 
+                    status = false
+                    return 'fa-angle-down'; 
+                }else if(!status && geneNameSynonyms.hasClass("synonym_created")){
+                  geneNameSynonyms.show();
+                    status = true; 
+                    return 'fa-angle-up'; 
+                }
+                if(!geneNameSynonyms.hasClass("synonym_created")){
+
+
+                    // if name 
+                    var geneName = $(geneTarget).prev('span.gene_name').text();  
+                    console.log(geneName); 
+
+                    // accession iD; 
+                    var accessionParent = $(geneTarget).parent().parent(); 
+                    var accessionValue = accessionParent.find('.viewGeneNetwork').text(); 
+                    console.log(accessionValue);
+            
+
+                    // ajax call and returned value looped and synonym element is created
+                    var sampleGenes = ['GTES25353','TPSHEHGWGWTW', 'QUEEYHEGEGE', 'TYSGEHEHYEE','EHEGBEGEGEGE','HWGWGWGWTW','WBWGWGWGWG','GWGWGWTW','WBWGWTW','WHWHWYWYW','WHWHWHW']; 
+                    
+                    var synonymsTitle = document.createElement('p'); 
+                    synonymsTitle.textContent = 'Synonyms'; 
+                    $(synonymsTitle).addClass('synonyms_title');
+                    var geneNameSynBody = document.createElement('div');
+                    $(geneNameSynBody).addClass('synonyms_body')
+
+                    for (var i=0; i < sampleGenes.length; i++){
+                        var SynonymsGene = document.createElement('span'); 
+                        $(SynonymsGene).addClass('synonyms_gene'); 
+                        SynonymsGene.textContent = sampleGenes[i];
+                        geneNameSynBody.append(SynonymsGene); 
+                        status = true; 
+                    }
+
+                  geneNameSynonyms.addClass('synonym_created'); 
+                  geneNameSynonyms.append(synonymsTitle);
+                  geneNameSynonyms.append(geneNameSynBody);
+                  geneNameSynonyms.show();
+                    
+                    return 'fa-angle-up';
+
+                }
+
+            })
+        })
+    })
 }
