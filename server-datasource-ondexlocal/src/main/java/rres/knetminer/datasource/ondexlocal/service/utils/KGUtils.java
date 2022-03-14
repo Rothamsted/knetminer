@@ -308,7 +308,8 @@ public class KGUtils
 		final var zmdRe = "^ZM.+D[0-9].*"; 
 		if ( acc1.matches ( zmebRe ) && acc2.matches ( zmdRe  ) ) return -1;
 		if ( acc2.matches ( zmebRe ) && acc1.matches ( zmdRe ) ) return 1;
-		return 0;
+		// I deal only with this aspect, the rest is left to the chain where I'm used
+		return 0; 
 	}
 	
 	/**
@@ -322,6 +323,8 @@ public class KGUtils
 		if ( accSrcId.startsWith ( "ENSEMBL" ) ) return -1;
 		if ( "PHYTOZOME".equals ( accSrcId ) ) return -1;
 		if ( "TAIR".equals ( accSrcId ) && accStr.startsWith ( "AT" ) && accStr.indexOf ( "." ) == -1 ) return -1;
+
+		// I only deal with the above, the rest comes from the comparison chain where I'm inserted
 		return 0;
 	}
 
