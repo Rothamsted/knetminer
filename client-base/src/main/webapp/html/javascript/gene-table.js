@@ -26,7 +26,7 @@ function createGenesTable(text, keyword, rows) {
 
 
         table = table + '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
-        table = table + 'Select gene(s) and click "View Network" button to see the network.<span id="hintSortableTable" class="hint hint-small" ></span></p>';
+        table = table + 'Select gene(s) and click "Create Network" button below to see the network.<span id="hintSortableTable" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></p>';
         table = table + '<form name="checkbox_form">';
         table = table + '<u>Max</u> number of genes to show: ';
         table = table + '<select value="' + /*rows*/results + '" id="numGenes">';
@@ -79,8 +79,9 @@ function createGenesTable(text, keyword, rows) {
             gene_Acc = gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
             var gene_Name = values[2]; // display both accession & gene name.
             // Fetch preferred concept (gene) name and use the shorter name out of the two.
-            var gene = '<td><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
-            var geneName = '<td>' + gene_Name + '</td>'; // geneName
+            var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
+            var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
+
             if (gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
                 geneName = '<td></td>'; // don't display geneName, if identical to Accession
             }
@@ -202,7 +203,7 @@ function createGenesTable(text, keyword, rows) {
 
 
     //table = table + '<div id="networkButton"><input id="new_generateMultiGeneNetworkButton" class="knet_button button" type="button" value="View Network" title="Display the network in KnetMaps">';
-    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps">View Network</button>';
+    table = table + '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"> Create Network </button>';
     table = table + '</insert><div id="loadingNetworkDiv"></div></div>';
 
     document.getElementById('resultsTable').innerHTML = table;
@@ -298,6 +299,8 @@ function createGenesTable(text, keyword, rows) {
     $('input:checkbox[name="candidates"]').click(function (e) {
         updateSelectedGenesCount(); // update selected genes count
     });
+
+    createGeneNameSynonyms(); 
 }; 
 
 

@@ -163,7 +163,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          if(keyword.length > 0) { // msg for keyword search error
             messageNode = keyword + 'did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.'; 
             genomicViewTitle = createGenomicViewTitle(messageNode,status);
-
+           
             if(geneList_size > 0) {
                 // msg for keyword + genelist search error
                 messageNode = 'did not match any genes. Try different or more general keywords. Make sure that only one gene per line is entered. Try gene names (eg. TPS1)'
@@ -197,7 +197,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          }
 
          $("#pGViewer_title").replaceWith(genomicViewTitle);
-
+         $('#tabviewer').hide(); 
         //  activateButton('resultsTable');
          document.getElementById('resultsTable').innerHTML = "";
          document.getElementById('evidenceTable').innerHTML = "";
@@ -236,6 +236,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
+                  $('#tabviewer').hide(); 
                  }
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'

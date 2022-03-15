@@ -383,7 +383,7 @@ div#footer {
 */
 div.scrollTable {
     width:100%;       /* table width will be 99% of this*/
-    max-height:/*400*/550px;    /* must be greater than tbody*/
+    max-height:550px;    /* must be greater than tbody*/
     overflow:auto;
     margin:0 auto;
     position:sticky;
@@ -500,8 +500,8 @@ span.hint-small {
 }
 
 span.hint-small:hover {
-   /* background-position: -19px 0; */
-}
+    background-position: -19px 0; 
+ } 
 
 span.hint-big {
     background: url(../image/Hint_big.png) 0 0 no-repeat;

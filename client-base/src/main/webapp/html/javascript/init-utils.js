@@ -262,10 +262,12 @@ function bodyHandlers(){
             addClass = "tooltip-static";
         }
         else if (target == 'hintSortableTable') {
-            message = 'This opens KnetMaps and displays a subset of the knowledge network that only contains the selected genes (light blue triangles) and the relevant evidence network.';
+            message = 'On clicking the <b>Create Network</b> button: it opens KnetMaps, displays a subset of the knowledge network containing only the selected genes and the relevant evidence network.';
+            addClass = 'networkhint'
         }
 
         $('div.tooltip').remove();
+
         $('<div class="tooltip ' + addClass + '">' + message + '</div>').appendTo('body');
 
         tooltipY = $(this).offset()['top'] - 12;
@@ -276,6 +278,8 @@ function bodyHandlers(){
         }
         $('div.tooltip.tooltip-static').css({top: tooltipY, left: tooltipX}); //for sample queries tooltip
     });
+
+
 
     $('body').on('mousemove', 'span.hint:not(#hintEgKeywords)', function (event) {
         var tooltipX = event.pageX - 8;

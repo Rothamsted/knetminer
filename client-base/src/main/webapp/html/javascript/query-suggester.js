@@ -229,29 +229,17 @@ function createSynonymTable(text){
                 }
             }
 
-
-            
             var conceptKey = 'ConceptID:'+ keyword; 
 
-            if (currentTarget.hasClass("addKeyword")) {
-                addKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("addKeywordUndo")) {
-                addKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("excludeKeyword")) {
-                excludeKeyword(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("excludeKeywordUndo")) {
-                excludeKeywordUndo(conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("replaceKeyword")) {
-                replaceKeyword(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-            else if (currentTarget.hasClass("replaceKeywordUndo")) {
-                replaceKeywordUndo(originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
-            }
-
+            var currentClass = currentTarget.attr('class'); 
+            
+            if([ "addKeyword", "addKeywordUndo", "excludeKeyword" ].includes(currentClass))
+              window[currentClass](conceptKey, currentTarget.attr("id"), 'keywords');
+            else if ([ "excludeKeywordUndo", "replaceKeyword", "replaceKeywordUndo" ].includes(currentClass)){
+              window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords')
+            else
+							// Shouldn't happen, but just in case.
+							throw "Wrong attribute 'class' for createSynonymTable ('" + currentClass + "')";
         });
 
 
