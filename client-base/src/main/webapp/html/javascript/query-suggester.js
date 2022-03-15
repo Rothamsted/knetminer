@@ -234,12 +234,10 @@ function createSynonymTable(text){
             var conceptKey = 'ConceptID:'+ keyword; 
 
             var currentClass = currentTarget.attr('class'); 
-            var addKeywordArray = ["addKeyword","addKeywordUndo","excludeKeyword"]; 
-            var removeKeywordArray = ["excludeKeywordUndo","replaceKeyword","replaceKeywordUndo"];
             
-            if(addKeywordArray.includes(currentClass)){
+            if([ "addKeyword", "addKeywordUndo", "excludeKeyword" ].includes(currentClass)){
                 window[currentClass](conceptKey, currentTarget.attr("id"), 'keywords');
-            }else if (removeKeywordArray.includes(currentClass)){
+            }else if ([ "excludeKeywordUndo", "replaceKeyword", "replaceKeywordUndo" ].includes(currentClass)){
                 window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords')
             }
         });
