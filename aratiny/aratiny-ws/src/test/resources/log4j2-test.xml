@@ -16,5 +16,6 @@
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Root>
+    <!-- Logger name = "x.y.z" level = "off" additivity = "false" / -->
   </Loggers>
 </Configuration>
