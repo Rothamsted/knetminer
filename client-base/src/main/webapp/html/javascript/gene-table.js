@@ -300,7 +300,8 @@ function createGenesTable(text, keyword, rows) {
         updateSelectedGenesCount(); // update selected genes count
     });
 
-    createGeneNameSynonyms(); 
+    // TODO: implementation to be added from existig branches 
+		// createGeneNameSynonyms(); 
 }; 
 
 

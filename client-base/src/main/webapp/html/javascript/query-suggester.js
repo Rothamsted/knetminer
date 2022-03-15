@@ -235,8 +235,8 @@ function createSynonymTable(text){
             
             if([ "addKeyword", "addKeywordUndo", "excludeKeyword" ].includes(currentClass))
               window[currentClass](conceptKey, currentTarget.attr("id"), 'keywords');
-            else if ([ "excludeKeywordUndo", "replaceKeyword", "replaceKeywordUndo" ].includes(currentClass)){
-              window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords')
+            else if ([ "excludeKeywordUndo", "replaceKeyword", "replaceKeywordUndo" ].includes(currentClass))
+              window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
             else
 							// Shouldn't happen, but just in case.
 							throw "Wrong attribute 'class' for createSynonymTable ('" + currentClass + "')";
