@@ -86,11 +86,6 @@ function createGenesTable(text, keyword, rows) {
             // Fetch preferred concept (gene) name and use the shorter name out of the two.
             var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
             var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
-
-<<<<<<< HEAD
-=======
-             // TODO: implementation to be added from existig branches 
->>>>>>> cb242cb25c5c08fb03919ed3444e340da6b13bfb
 	      
 
             if (gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
