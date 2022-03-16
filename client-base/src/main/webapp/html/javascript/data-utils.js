@@ -236,7 +236,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
-                  $('#tabviewer').hide(); 
+                //   $('#tabviewer').hide(); 
                  }
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
