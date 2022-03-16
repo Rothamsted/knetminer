@@ -493,10 +493,9 @@ span.hint {
     cursor:help;
 }
 span.hint-small {
-
+    margin-left:5px;
     height: 19px;
     width: 19px;
-
 }
 
 span.hint-small:hover {
@@ -506,6 +505,7 @@ span.hint-small:hover {
 span.hint-big {
     background: url(../image/Hint_big.png) 0 0 no-repeat;
     cursor: pointer;
+    margin-right:0.5rem;
 }
 
 span.hint-big:hover {
@@ -975,3 +975,56 @@ a { cursor: pointer; }
     margin-right:0.5rem;
 }
 .counttext {font-size:12px; color:#9B9B9B; padding-bottom:10px; padding-top:10px;}
+
+
+/* reducing table height for smaller screen, this allow create network button to be above the fold */
+@media (max-width: 1440px) {
+    div.scrollTable{
+        max-height: 410px;
+    }
+}
+
+/* adding class to the view network hint */
+.networkhint{
+    width: 400px;
+}
+
+/* gene name synonym styling feature */
+
+.gene_name_synonyms{
+    display: none;
+    z-index: 1;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    font-size:10px;
+    padding: 4px;
+}
+
+
+.genename_info{
+    text-align: center;
+    background: #FFF;
+    color: gray;
+    font-size: 16px;
+    height:18px;
+    width:18px;
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+}
+
+.synonyms_body{
+    display: flex;
+    flex-wrap: wrap;
+}
+.synonyms_gene{
+    padding:2px;
+}
+.synonyms_title{
+    font-weight: bold; 
+}
