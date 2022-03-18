@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
@@ -25,6 +27,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -50,7 +53,6 @@ import uk.ac.ebi.utils.xml.XPathReader;
  */
 public class ApiIT
 {
-	private static Logger clog = LogManager.getLogger ( ApiIT.class );
 	private Logger log = LogManager.getLogger ( this.getClass () );
 	private static Logger slog = LogManager.getLogger ( ApiIT.class );
 
@@ -61,7 +63,7 @@ public class ApiIT
 	 */
 	public static void synchToServer () throws Exception
 	{
-		clog.info ( "Waiting for server init." );
+		slog.info ( "Waiting for server init." );
 		Thread.sleep ( 20 * 1000 );
 		
 		for ( int attempt = 1; attempt <= 4; attempt++ )
@@ -101,7 +103,7 @@ public class ApiIT
 	{
 		String encKeyword = URLEncoder.encode ( keyword, "UTF-8" );
 		JSONObject js = new JSONObject ( IOUtils.toString ( 
-			new URI ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits?keyword=" + encKeyword ),
+			new URI ( getApiUrl ( "/aratiny/countHits?keyword=" + encKeyword ) ),
 			"UTF-8"
 		));
 		
@@ -241,7 +243,7 @@ public class ApiIT
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
 		assertEquals ( 
 			"Bad path for the /foo call!",
-			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/foo", js.getString ( "path" )
+			getApiUrl ( "/aratiny/foo" ), js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
 		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
@@ -271,8 +273,9 @@ public class ApiIT
 			.contains ( "Cannot parse '*': '*' or '?' not allowed as first character in WildcardQuery" )
 		);
 		assertEquals ( 
-			"Bad path for the /countHits call!",
-			System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/countHits", js.getString ( "path" )
+			"Bad path for the /countHits call!", 
+			getApiUrl ( "/aratiny/countHits" ),
+			js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
 		assertEquals ( "Bad statusReasonPhrase for the /countHits call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
@@ -284,7 +287,7 @@ public class ApiIT
 		// in this mode it might return a regular answer, not an error
 		if ( "console".equals ( getMavenProfileId () ) ) return;
 		
-		String url = System.getProperty ( "knetminer.api.baseUrl" ) + "/cydebug/traverser/report";
+		String url = getApiUrl ( "/cydebug/traverser/report" );
 		JSONObject js = invokeApiFailOpt ( url, false );
 		assertEquals ( 
 			"Bad type for the /cydebug call!",
@@ -344,29 +347,56 @@ public class ApiIT
 	
 	/**
 	 * Defaults to true
-	 * 
-	 * @param callName
-	 * @param jsonFields
-	 * @return
 	 */
 	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
 	{
 		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
 	}
-	
+
 	/**
-	 * Invokes some Knetminer API via URL and returns the JSON that it spawns.
-	 * @param callName the call URL, if it doesn't start with http://, the URL is composed by prepending 
-	 * 				{@code System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/"}
-	 * @param failOnError true if the HTTP request doesn't return the 200 status.
-	 * @param jsonFields appended to the HTTP request.
+	 * @see #invokeApiCore(String, Function, boolean, Object...)
 	 * 
+	 * Invokes a KnetMiner API that is expected to return a JSON object as root in its result 
 	 */
 	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
 	{
+		return invokeApiCore ( urlOrCallName, JSONObject::new, failOnError, jsonFields);
+	}
+	
+	
+	/**
+	 * Defaults to true 
+	 */
+	public static JSONArray invokeApiArray ( String urlOrCallName, Object... jsonFields )
+	{
+		return invokeApiFailOptArray ( urlOrCallName, true, jsonFields ); 
+	}
+	
+	/**
+	 * @see #invokeApiCore(String, Function, boolean, Object...)
+	 * 
+	 * Invokes a KnetMiner API that is expected to return a JSON array as root in its result 
+	 */
+	public static JSONArray invokeApiFailOptArray ( String urlOrCallName, boolean failOnError, Object... jsonFields )
+	{
+		return invokeApiCore ( urlOrCallName, JSONArray::new, failOnError, jsonFields);
+	}
+	
+	
+	/**
+	 * Core to invoke some Knetminer API via URL and get back the JSON that it spawns.
+	 * @param callName the call URL, if it doesn't start with http://, the URL is composed via  
+	 * 				{@link #getApiUrl(String) getApiUrl( "/aratiny/" )}
+	 * @param jsonSupplier turns the HTTP JSON results to {@link JSONObject} or {@link JSONArray}
+	 * @param failOnError true if the HTTP request doesn't return the 200 status.
+	 * @param jsonFields appended to the HTTP request, as its {@link HttpPost#getEntity() body}.
+	 * 
+	 */
+	private static <J> J invokeApiCore ( String urlOrCallName, Function<String, J> jsonSupplier, boolean failOnError, Object... jsonFields )
+	{
 		String url = urlOrCallName.startsWith ( "http://" )
 			? urlOrCallName 
-			: System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" + urlOrCallName;
+			: getApiUrl ( "/aratiny/" + urlOrCallName );
 		
 		try
 		{
@@ -387,12 +417,12 @@ public class ApiIT
 				if ( failOnError ) ExceptionUtils.throwEx ( 
 					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
 				);
-				clog.warn ( "Return code for {} is {}", url, httpCode );				
+				slog.warn ( "Return code for {} is {}", url, httpCode );				
 			}
 			
 			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
-			clog.info ( "JSON got from <{}>:\n{}", url, jsStr );
-			return new JSONObject ( jsStr );
+			slog.info ( "JSON got from <{}>:\n{}", url, jsStr );
+			return jsonSupplier.apply ( jsStr );
 		}
 		catch ( JSONException | IOException | HttpException ex )
 		{
@@ -403,7 +433,25 @@ public class ApiIT
 				ex.getMessage ()
 			);
 		}
-	}	
+	}		
+	
+	
+	/**
+	 * The API base URL
+	 */
+	public static String getApiUrl ()
+	{
+		return getApiUrl ( null );
+	}
+
+	/**
+	 * Builds the URL of a KnetMiner API invocation. 
+	 * If path is null, returns the root  {@code System.getProperty ( "knetminer.api.baseUrl" )}.
+	 */
+	public static String getApiUrl ( String path )
+	{
+		return System.getProperty ( "knetminer.api.baseUrl" ) + Optional.ofNullable ( path ).orElse ( "" );
+	}
 	
 	
 	/**
@@ -418,7 +466,7 @@ public class ApiIT
 		if ( !"console".equals ( getMavenProfileId () ) ) return;
 		
 		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
-		log.info ( "The API should be available at " + System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny/" );
+		log.info ( "The API should be available at " + getApiUrl ( "/aratiny/" ) );
 		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
