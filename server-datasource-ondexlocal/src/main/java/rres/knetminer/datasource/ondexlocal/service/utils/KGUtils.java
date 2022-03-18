@@ -103,11 +103,13 @@ public class KGUtils
   /**
    * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
    *
+   * @qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
+   * 
    */
 	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, List<String> taxIds, List<String> qtlsStr )
 	{
 		log.info ( "searching QTL against: {}", qtlsStr );
-		Set<ONDEXConcept> concepts = new HashSet<> ();
+		Set<ONDEXConcept> resultGenes = new HashSet<> ();
 
 		// convert List<String> qtlStr to List<QTL> qtls
 		List<QTL> qtls = QTL.fromStringList ( qtlsStr );
@@ -153,7 +155,7 @@ public class KGUtils
 					
 					if ( !containsTaxId ( taxIds, geneHelper.getTaxID () ) ) continue;
 
-					concepts.add ( gene );
+					resultGenes.add ( gene );
 				}
 			}
 			catch ( Exception e )
@@ -162,7 +164,7 @@ public class KGUtils
 				log.error ( "Not valid qtl: " + e.getMessage (), e );
 			}
 		}
-		return concepts;
+		return resultGenes;
 	}
 
 	/**

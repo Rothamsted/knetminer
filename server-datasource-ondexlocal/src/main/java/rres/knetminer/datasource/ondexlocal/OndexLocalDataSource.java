@@ -201,6 +201,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// TODO: remove. response can't be anything else and if you need for its extensions, follow the S-of-SOLID principle,
 		// we have already enough mess here.
+		// if() removal makes the two initialisations above useless
+		//
 //		if (response.getClass().equals( GenomeResponse.class ) || response.getClass().equals ( QtlResponse.class ) )
 //		{
 		log.info ( "Computing response to /genome or /qtl" );

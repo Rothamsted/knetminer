@@ -121,6 +121,15 @@ public class QTL {
 		return qtlStr;
 	}
 
+	/**
+	 * Parse a chromosome region, as it comes from the client, qtl param, ie, 
+	 * 
+	 * "qtl1=4:9920000:10180000:Petal size" 
+	 * 
+	 * which means: random ID = chromosome no.:start:end:optional label
+	 * 
+	 * 
+	 */
 	public static QTL fromString(String qtlStr) throws IllegalArgumentException {
 		String[] r = qtlStr.split(":");
 		if (r.length == 3 || r.length == 4) {
