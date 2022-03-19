@@ -236,10 +236,10 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
+
                     //  here is the bug 
                 //   $('#tabviewer').hide(); 
-                // TODO: which bug? Comments need to be clear and useful to everyone and 
-                // over time.
+                // TODO: To prevent having an empty result table when linked genes is 0, the approach used didn't address core problem, will look to it in due time
                  }
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
