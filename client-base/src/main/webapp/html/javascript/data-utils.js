@@ -81,6 +81,7 @@ function searchKeyword() {
 
 //Function to send form values to backend server inside the above Function SearchKeyword if input values are not empty,
 function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
+
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
         timeout: 1000000, cache: false,
@@ -140,8 +141,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
 
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
-                        //console.log("search: success; remove spinner...");
-                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer)
+                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
                      });
              }
              else {
@@ -153,7 +153,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
 }
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
-function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,gviewer){
+function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,gviewer,list){
      let messageNode;
      let genomicViewTitle; 
      let status; 
@@ -233,14 +233,13 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                var count_notfound = geneList_size - count_linked - count_unlinked;
                // for wildcard in genelist when all matches will be found
                if(results === (count_linked+count_unlinked)) { count_notfound=0; }
+
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
-                    //  here is the bug 
-                //   $('#tabviewer').hide(); 
-                // TODO: which bug? Comments need to be clear and useful to everyone and 
-                // over time.
-                 }
+                  $('#tabviewer').hide(); 
+
+                }
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
                   genomicViewTitle = createGenomicViewTitle(messageNode,status);
@@ -249,6 +248,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                  messageNode = 'No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).'
                   genomicViewTitle = createGenomicViewTitle(messageNode,status)
+                  $('#tabviewer').show(); 
                  }
               }
            }
@@ -271,7 +271,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs to see results.</span></div>';
               }
            }
-         if(searchMode === "qtl") { // msg for QTL search
+         if(searchMode === "qtl") { 
+             // msg for QTL search
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
             genomicViewTitle = createGenomicViewTitle(messageNode,status); 
             var count_linked= countLinkedUserGenes(data.geneTable);
@@ -612,14 +613,95 @@ function matchCounter() {
 				  $('#suggestor_search').css('display', 'none');
 				}
             }).fail(function (xhr,status,errorlog) {
-                //$('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
-                var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
-                $('#matchesResultDiv').html('<span class="redText">'+errorMsg+'</span>');
-                console.log(server_error.detail); // detailed stacktrace
+                errorComponent('#matchesResultDiv',xhr)
             });
         } else {
             $('#matchesResultDiv').html('');
         }
     }
+}
+
+
+
+/*
+ * Function to create,get and showcase gene name synonyms with a dropdown onclick event
+ *
+ */
+function createGeneNameSynonyms(ondexIds){
+
+    var geneNameSynonyms; 
+    var status; 
+    var synonymNameRequest = `/graphinfo/concept-info?ids=${ondexIds}`;
+    var synonymNameUrl = api_base_url + synonymNameRequest
+   
+   
+     $('.genename_info').each(function(index){
+        $(this).click(function(e){
+            var geneTarget = e.currentTarget;
+            geneNameSynonyms = $(geneTarget).next('.gene_name_synonyms');
+
+            $(this).find('[data-fa-i2svg]')
+            .toggleClass(function(){
+
+                // to show already created gene name synonyms nodes 
+                if(status && geneNameSynonyms.hasClass("synonym_created")){
+                    geneNameSynonyms.hide(); 
+                    status = false
+                    return 'fa-angle-down'; 
+                }else if(!status && geneNameSynonyms.hasClass("synonym_created")){
+                    geneNameSynonyms.show();
+                    status = true; 
+                    return 'fa-angle-up'; 
+                }
+
+                // creating new gene name synonym nodes 
+                if(!geneNameSynonyms.hasClass("synonym_created")){
+
+                        // gene synonym name title element
+                        var synonymsTitle = document.createElement('p'); 
+                        synonymsTitle.textContent = 'Synonyms'; 
+                        $(synonymsTitle).addClass('synonyms_title');
+
+                        // gene synonym body element houses synonym gene names span element
+                        var geneNameSynBody = document.createElement('div');
+                        $(geneNameSynBody).addClass('synonyms_body'); 
+
+                        // api call to get ondexId synonyms  
+                        // TODO: having an issue with setting the get request header, currently using Moesif CORS chrome exetension to bypass CORS blockage
+                        $.get(synonymNameUrl,'').done( function(data){ 
+                            var currentDataSet = data[index].names; 
+
+                            for (var i=0; i < currentDataSet.length; i++){
+                                var SynonymsGene = document.createElement('span'); 
+                                $(SynonymsGene).addClass('synonyms_gene');
+                                SynonymsGene.textContent = currentDataSet[i].name;
+                                geneNameSynBody.append(SynonymsGene); 
+                                status = true; 
+                            }
+                       
+                        }).fail(function (xhr,status,errorlog) {
+                            errorComponent('.synonyms_body',xhr,status,errorlog);
+                        });
+
+                        // TODO : I'm exploring ways to limit calling the get request per user click by storing the data from the api as variable which can be reused within the function. 
+
+                        geneNameSynonyms.addClass('synonym_created'); 
+                        geneNameSynonyms.append(synonymsTitle);
+                        geneNameSynonyms.append(geneNameSynBody);
+                        geneNameSynonyms.show();
+                        return 'fa-angle-up';
+                        
+                }
+
+            })
+        })
+    })
+}
+
+// function create error message for failed get request for function matchCounter and createGeneSynonyms
+function errorComponent(elementInfo,xhr){
+    var server_error= JSON.parse(xhr.responseText); // full error json from server
+    var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
+    $(elementInfo).html('<span class="redText">'+errorMsg+'</span>');
+    console.log(server_error.detail); // detailed stacktrace
 }

@@ -969,6 +969,7 @@ a { cursor: pointer; }
     background: transparent;
     color: #808080;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .reseticon{
@@ -994,13 +995,6 @@ a { cursor: pointer; }
 .gene_name_synonyms{
     display: none;
     z-index: 1;
-    border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -ms-border-radius: 20px;
-    -o-border-radius: 20px;
-    font-size:10px;
-    padding: 4px;
 }
 
 
@@ -1016,15 +1010,20 @@ a { cursor: pointer; }
     align-items: center;
     justify-content: center;
     border-radius: 100%;
+    cursor: pointer;
 }
 
 .synonyms_body{
     display: flex;
-    flex-wrap: wrap;
+   flex-direction: column;
 }
 .synonyms_gene{
-    padding:2px;
+    padding:4px; 
+    font-size: 10px;
 }
 .synonyms_title{
-    font-weight: bold; 
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    font-size: 12px;
 }
