@@ -81,6 +81,7 @@ function searchKeyword() {
 
 //Function to send form values to backend server inside the above Function SearchKeyword if input values are not empty,
 function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
+
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
         timeout: 1000000, cache: false,
@@ -612,14 +613,93 @@ function matchCounter() {
 				  $('#suggestor_search').css('display', 'none');
 				}
             }).fail(function (xhr,status,errorlog) {
-                //$('#matchesResultDiv').html('<span class="redText">The KnetMiner server is currently offline. Please try again later.</span>');
-                var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
-                $('#matchesResultDiv').html('<span class="redText">'+errorMsg+'</span>');
-                console.log(server_error.detail); // detailed stacktrace
+                ErrorComponent('#matchesResultDiv',xhr)
             });
         } else {
             $('#matchesResultDiv').html('');
         }
     }
+}
+
+
+
+/*
+ * Function to create,get and showcase gene name synonym with a dropdown onclick event
+ *
+ */
+function createGeneNameSynonyms(ondexIds){
+
+    var geneNameSynonyms; 
+    var status; 
+    var synonymNameUrl = `http://localhost:9090/ws/graphinfo/concept-info?ids=${ondexIds}`;
+   
+     $('.genename_info').each(function(index){
+        $(this).click(function(e){
+            var geneTarget = e.currentTarget;
+            geneNameSynonyms = $(geneTarget).next('.gene_name_synonyms');
+
+            $(this).find('[data-fa-i2svg]')
+            .toggleClass(function(){
+
+                // to show already created gene name synonyms nodes 
+                if(status && geneNameSynonyms.hasClass("synonym_created")){
+                    geneNameSynonyms.hide(); 
+                    status = false
+                    return 'fa-angle-down'; 
+                }else if(!status && geneNameSynonyms.hasClass("synonym_created")){
+                    geneNameSynonyms.show();
+                    status = true; 
+                    return 'fa-angle-up'; 
+                }
+
+                // creating new gene name synonym nodes 
+                if(!geneNameSynonyms.hasClass("synonym_created")){
+
+                        // gene synonym name title element
+                        var synonymsTitle = document.createElement('p'); 
+                        synonymsTitle.textContent = 'Synonyms'; 
+                        $(synonymsTitle).addClass('synonyms_title');
+
+                        // gene synonym body element houses synonym gene names span element
+                        var geneNameSynBody = document.createElement('div');
+                        $(geneNameSynBody).addClass('synonyms_body'); 
+
+                        // api call to get synonym name data 
+                        // TODO: having an issue with setting for the get request header, current using Moesif CORS chrome exetension to bypass CORS blockage
+                        $.get(synonymNameUrl,'').done( function(data){ 
+                            var currentDataSet = data[index].names; 
+
+                            for (var i=0; i < currentDataSet.length; i++){
+                                var SynonymsGene = document.createElement('span'); 
+                                $(SynonymsGene).addClass('synonyms_gene');
+                                SynonymsGene.textContent = currentDataSet[i].name;
+                                geneNameSynBody.append(SynonymsGene); 
+                                status = true; 
+                            }
+                       
+                        }).fail(function (xhr,status,errorlog) {
+                            ErrorComponent('.synonyms_body',xhr,status,errorlog);
+                        });
+
+                        // TODO : I'm exploring ways to limit calling the get request per user click by storing the data from the api as variable which can be reused within the function. 
+
+                        geneNameSynonyms.addClass('synonym_created'); 
+                        geneNameSynonyms.append(synonymsTitle);
+                        geneNameSynonyms.append(geneNameSynBody);
+                        geneNameSynonyms.show();
+                        return 'fa-angle-up';
+                        
+                }
+
+            })
+        })
+    })
+}
+
+
+function ErrorComponent(elementInfo,xhr){
+    var server_error= JSON.parse(xhr.responseText); // full error json from server
+    var errorMsg= server_error.statusReasonPhrase +" ("+ server_error.title +")";
+    $(elementInfo).html('<span class="redText">'+errorMsg+'</span>');
+    console.log(server_error.detail); // detailed stacktrace
 }
