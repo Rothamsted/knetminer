@@ -237,17 +237,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                if(count_notfound === 0) {
                   messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
-<<<<<<< Upstream, based on branch 'master' of https://github.com/Rothamsted/knetminer.git
                   $('#tabviewer').hide(); 
-
                 }
-=======
-
-                    //  here is the bug 
-                //   $('#tabviewer').hide(); 
-                // TODO: To prevent having an empty result table when linked genes is 0, the approach used didn't address core problem, will look to it in due time
-                 }
->>>>>>> b804fc2 client-side refactor
                else if(count_notfound > 0) {
                  messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
                   genomicViewTitle = createGenomicViewTitle(messageNode,status);
