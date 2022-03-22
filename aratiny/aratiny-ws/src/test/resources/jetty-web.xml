@@ -19,10 +19,15 @@
 		<filter-name>UrlRewriteFilter</filter-name>
 	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 	</filter>
-	<!-- We need CORS for /cydebug and during tests -->
+	<!--
+	  We use CORS for everything, this file is only used during tests.
+	  We have more fine-grained and safer settings in production.
+	  DO NOT DO THIS IN PRODUCTION!
+	-->
 	<filter-mapping>
 	  <filter-name>UrlRewriteFilter</filter-name>
 	  <url-pattern>/cydebug/*</url-pattern>
+	  <url-pattern>/graphinfo/*</url-pattern>
 	  <dispatcher>REQUEST</dispatcher>
 	  <dispatcher>FORWARD</dispatcher>
 	</filter-mapping>

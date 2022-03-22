@@ -665,8 +665,8 @@ function createGeneNameSynonyms(ondexIds){
                         var geneNameSynBody = document.createElement('div');
                         $(geneNameSynBody).addClass('synonyms_body'); 
 
-                        // api call to get ondexId synonyms  
-                        // TODO: having an issue with setting the get request header, currently using Moesif CORS chrome exetension to bypass CORS blockage
+                        // api call to get ondexId synonyms
+                        //
                         $.get(synonymNameUrl,'').done( function(data){ 
                             var currentDataSet = data[index].names; 
 
