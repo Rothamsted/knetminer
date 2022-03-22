@@ -238,8 +238,8 @@ function createSynonymTable(text){
             else if ([ "excludeKeywordUndo", "replaceKeyword", "replaceKeywordUndo" ].includes(currentClass))
               window[currentClass](originalTermName,conceptKey, currentTarget.attr("id"), 'keywords');
             else
-			// Shouldn't happen, but just in case.
-			throw "Wrong attribute 'class' for createSynonymTable ('" + currentClass + "')";
+							// Shouldn't happen, but just in case.
+							throw "Wrong attribute 'class' for createSynonymTable ('" + currentClass + "')";
         });
 
 
