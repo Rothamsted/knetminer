@@ -220,7 +220,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          }
 
          // default search display msg.
-         messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
+            messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
           genomicViewTitle = createGenomicViewTitle(messageNode,status);
 
          if(keyword.length > 0) { // msg for keyword search
@@ -228,26 +228,23 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
             genomicViewTitle = createGenomicViewTitle(messageNode,status)
 
             if(geneList_size > 0) { // msg for keyword + genelist search
-               var count_linked= countLinkedUserGenes(data.geneTable);
-               var count_unlinked = results - count_linked;
-               var count_notfound = geneList_size - count_linked - count_unlinked;
-               // for wildcard in genelist when all matches will be found
-               if(results === (count_linked+count_unlinked)) { count_notfound=0; }
+                var count_linked= countLinkedUserGenes(data.geneTable);
+                var count_unlinked = results - count_linked;
+                var count_notfound = geneList_size - count_linked - count_unlinked;
+            // for wildcard in genelist when all matches will be found
+                if(results === (count_linked+count_unlinked)) { count_notfound=0; }
 
-               if(count_notfound === 0) {
-                  messageNode ='In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
-                  genomicViewTitle = createGenomicViewTitle(messageNode,status); 
-                  $('#tabviewer').hide(); 
+                if(count_notfound === 0) {
+                    messageNode ='<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).' 
+                    genomicViewTitle = createGenomicViewTitle(messageNode,status); 
+                }else if(count_notfound > 0) {
+                messageNode= '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
+                    genomicViewTitle = createGenomicViewTitle(messageNode,status);
                 }
-               else if(count_notfound > 0) {
-                 messageNode= 'In total <b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found. '+count_notfound+' user genes not found. ('+queryseconds+' seconds).'
-                  genomicViewTitle = createGenomicViewTitle(messageNode,status);
-               }
-               // for rare edge cases when no genes in list are found in search, then search is keyword-centric only.
-               if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                 messageNode = 'No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).'
-                  genomicViewTitle = createGenomicViewTitle(messageNode,status)
-                  $('#tabviewer').show(); 
+            // for rare edge cases when no genes in list are found in search, then search is keyword-centric only.
+            if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
+                messageNode = 'No user genes found. Showing keyword-centric results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).'
+                genomicViewTitle = createGenomicViewTitle(messageNode,status)
                  }
               }
            }
@@ -333,6 +330,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
 
          activateButton('resultsTable');
+         $('#tabviewer').show();
          createGenesTable(data.geneTable, keyword, candidateGenes);
          createEvidenceTable(data.evidenceTable, keyword);
          if(geneList_size > 0) {

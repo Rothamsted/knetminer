@@ -51,7 +51,7 @@ function initResetButton(){
         event.preventDefault();
         $('form')[0].reset();
         $("#pGViewer_title").empty();
-        $('#matchesResultDiv').empty();
+        $('#matchesResultDiv').html('Please, start typing your query');
         $('#suggestor_search').hide();
         $('#tabviewer').hide(); 
         $("#resetknet").hide();
