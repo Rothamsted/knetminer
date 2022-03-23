@@ -625,13 +625,9 @@ function matchCounter() {
  *
  */
 function createGeneNameSynonyms(ondexIds){
-
     var geneNameSynonyms; 
     var status; 
-    var synonymNameRequest = `/graphinfo/concept-info?ids=${ondexIds}`;
-    var synonymNameUrl = api_base_url + synonymNameRequest
-   
-   
+
      $('.genename_info').each(function(index){
         $(this).click(function(e){
             var geneTarget = e.currentTarget;
@@ -654,20 +650,16 @@ function createGeneNameSynonyms(ondexIds){
                 // creating new gene name synonym nodes 
                 if(!geneNameSynonyms.hasClass("synonym_created")){
 
-                        // gene synonym name title element
-                        var synonymsTitle = document.createElement('p'); 
-                        synonymsTitle.textContent = 'Synonyms'; 
-                        $(synonymsTitle).addClass('synonyms_title');
 
                         // gene synonym body element houses synonym gene names span element
                         var geneNameSynBody = document.createElement('div');
                         $(geneNameSynBody).addClass('synonyms_body'); 
 
-                        // api call to get ondexId synonyms
-                        //
-                        $.get(synonymNameUrl,'').done( function(data){ 
-                            var currentDataSet = data[index].names; 
-
+                        // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
+                        // 
+                        var synonymNameRequest = `/graphinfo/concept-info?ids=${ondexIds[index]}`;
+                        var synonymNameUrl = api_base_url + synonymNameRequest
+                        $.get(synonymNameUrl,'').done( function(data){ var currentDataSet = data[0].names; 
                             for (var i=0; i < currentDataSet.length; i++){
                                 var SynonymsGene = document.createElement('span'); 
                                 $(SynonymsGene).addClass('synonyms_gene');
@@ -680,10 +672,10 @@ function createGeneNameSynonyms(ondexIds){
                             errorComponent('.synonyms_body',xhr,status,errorlog);
                         });
 
-                        // TODO : I'm exploring ways to limit calling the get request per user click by storing the data from the api as variable which can be reused within the function. 
+                        // TODO : I'm exploring ways to limit calling the get request per user click by storing the 
+                        // data from the api as variable which can be reused within the function. 
 
                         geneNameSynonyms.addClass('synonym_created'); 
-                        geneNameSynonyms.append(synonymsTitle);
                         geneNameSynonyms.append(geneNameSynBody);
                         geneNameSynonyms.show();
                         return 'fa-angle-up';
