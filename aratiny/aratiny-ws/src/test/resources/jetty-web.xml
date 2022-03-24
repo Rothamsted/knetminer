@@ -20,8 +20,9 @@
 	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 	</filter>
 	<!--
-	  Uses the Tuckey rule engine to authorise CORS for these URLs.
-	  TODO: Regular KnetMiner API URLs (/ws/$dataSource/etc) don't need this, I haven't it clear why.  
+	  We use CORS for everything, this file is only used during tests.
+	  We have more fine-grained and safer settings in production.
+	  DO NOT DO THIS IN PRODUCTION!
 	-->
 	<filter-mapping>
 	  <filter-name>UrlRewriteFilter</filter-name>
