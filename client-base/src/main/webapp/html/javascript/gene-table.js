@@ -73,11 +73,12 @@ function createGenesTable(text, keyword, rows) {
             }
             table = table + '<tr>';
             var gene_Acc = values[1];
+            var gene_ID = values[0]; 
             gene_Acc = gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
             var gene_Name = values[2]; // display both accession & gene name.
             // Fetch preferred concept (gene) name and use the shorter name out of the two.
             var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
-            var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
+            var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span id="'+gene_ID+'"class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
 	      
 
             if (gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
@@ -300,7 +301,7 @@ function createGenesTable(text, keyword, rows) {
 
     
     // functions takes ondex IDs of current genenames and send a get request to back end
-    createGeneNameSynonyms(ondexIds); 
+    createGeneNameSynonyms(); 
 
 }; 
 
