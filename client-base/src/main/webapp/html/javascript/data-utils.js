@@ -663,7 +663,7 @@ function createGeneNameSynonyms(){
 
                         // api call to get ondexId synonyms
                         var synonymNameRequest = `/graphinfo/concept-info?ids=${geneId}`;
-                        var synonymNameUrl = api_base_url + synonymNameRequest
+                        var synonymNameUrl = api_url + synonymNameRequest
                         //
                         $.get(synonymNameUrl,'').done( function(data){ 
                             var currentDataSet = data[0].names; 

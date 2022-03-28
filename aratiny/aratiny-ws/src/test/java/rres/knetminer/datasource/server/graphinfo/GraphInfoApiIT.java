@@ -55,9 +55,7 @@ public class GraphInfoApiIT
 		.mapToObj ( id -> Integer.toString ( id ) )
 		.collect ( Collectors.joining ( "," ) );
 		
-		JSONArray js = ApiIT.invokeApiArray ( 
-			ApiIT.getApiUrl ( "/graphinfo/concept-info?ids=" + idStr )
-		);
+		JSONArray js = ApiIT.invokeApiArray ( "/graphinfo/concept-info?ids=" + idStr );
 		
 		log.info ( "JSON from GraphInfo API:\n{}", js.toString () );
 		assertNotNull ( "No accessions in the result", ((JSONObject)js.get(0)).get("accessions") );

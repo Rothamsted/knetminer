@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,12 +33,18 @@ import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser
  * of a config property. see {@link #checkEnabled()}. Furthermore, You must be running Knetminer in Neo4j mode, else
  * all the API methods below will raise an exception.</p>
  *
+ * <p>TODO: all these mappings that depend on the data-source should be checked for a real DS, at the moment
+ * we have services for which any DS is accepted, which doesn't make much sense. DS is needed everywhere in 
+ * our APIs, @see KnetminerDataSource#getDataSourceNames() for details.</p> 
+ *
+ *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>10 Dec 2019</dd></dl>
  *
  */
-@RequestMapping( "/cydebug" )
 @RestController ()
+@RequestMapping( "/{ds}/cydebug" )
+@CrossOrigin
 public class CypherDebuggerService
 {
 	/**

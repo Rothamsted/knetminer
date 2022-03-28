@@ -21,7 +21,7 @@
 	</filter>
 	<!--
 	  Uses the Tuckey rule engine to authorise CORS for these URLs.
-	  TODO: Regular KnetMiner API URLs (/ws/$dataSource/etc) don't need this, I haven't it clear why.  
+	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
 	-->
 	<filter-mapping>
 	  <filter-name>UrlRewriteFilter</filter-name>
