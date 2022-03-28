@@ -20,9 +20,8 @@
 	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 	</filter>
 	<!--
-	  We use CORS for everything, this file is only used during tests.
-	  We have more fine-grained and safer settings in production.
-	  DO NOT DO THIS IN PRODUCTION!
+	  Uses the Tuckey rule engine to authorise CORS for these URLs.
+	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
 	-->
 	<filter-mapping>
 	  <filter-name>UrlRewriteFilter</filter-name>

@@ -21,13 +21,24 @@ public abstract class KnetminerDataSource {
 	private String[] dataSourceNames = new String[0];
 
 	/**
-	 * Return a list - perhaps just one entry for a single species - of all data
+	 * WARNING! We're progressively moving to an architecture where each server instance manages
+	 * ONE DATA SOURCE ONLY and this method will return ONE RESULT ONLY.
+	 * 
+	 * That's because nowadays it's much easier to have one Docker container per DS.
+	 * 
+	 * We're keeping a configured DS name for two reasons: 1) backward compatibility and,
+	 * most importantly 2) being able to feed HTTP reverse proxies, by mapping something like  
+	 * /ws/$DS/* to its own internal server.
+	 * 
+	 * What follows was the old Javadoc for this method:
+	 * 
+	 * <i>Return a list - perhaps just one entry for a single species - of all data
 	 * sources supported by this particular implementation. Species will be mapped
 	 * against the URLs. For example, if this method returns ["human", "dog"] then
 	 * it will receive all requests sent to /human/... and /dog/... If more than one
 	 * data source returns the same values for this method then the last one
 	 * registered will be the one that is called. Registration may happen in a
-	 * random order so this should be avoided if possible.
+	 * random order so this should be avoided if possible.</i>
 	 * 
 	 * @return an array of supported data source names
 	 */

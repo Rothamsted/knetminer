@@ -2,7 +2,7 @@
  * See index.html
  */
 
-const cydebugBaseUrl = api_base_url + "/cydebug";
+const cydebugBaseUrl = api_url + "/cydebug";
 
 
 /**
