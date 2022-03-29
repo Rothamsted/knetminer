@@ -28,7 +28,7 @@
 9-3	has_function
 9-4	participates_in
 9-5	located_in
-9-13	has_observ_pheno
+9-13	has_phenotype
 
 10-10	ortho	4
 10-7	ortho	4
@@ -63,5 +63,5 @@
 1-13	cooc_wi
 10-13	cooc_wi
 
-1-13	has_observ_pheno
-10-13	has_observ_pheno
+1-13	has_phenotype
+10-13	has_phenotype
