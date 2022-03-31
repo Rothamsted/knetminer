@@ -671,7 +671,6 @@ function createGeneNameSynonyms(element,data){
 
 
 
-
 // function create error message for failed get request for function matchCounter and createGeneSynonyms
 function errorComponent(elementInfo,xhr){
     var server_error= JSON.parse(xhr.responseText); // full error json from server

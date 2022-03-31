@@ -70,6 +70,7 @@ function createGenesTable(text, keyword, rows) {
             table = table + '<tr>';
             var gene_Id = values[0]; 
             var gene_Acc = values[1];
+            var gene_ID = values[0]; 
             gene_Acc = gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
             var gene_Name = values[2]; // display both accession & gene name.
             // Fetch preferred concept (gene) name and use the shorter name out of the two.
