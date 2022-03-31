@@ -187,7 +187,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		
 		// Also search Regions - only if no genes provided
 		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() ) {
-			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl() ) );
+			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), request.getTaxId()) );
 		}
 
 		
