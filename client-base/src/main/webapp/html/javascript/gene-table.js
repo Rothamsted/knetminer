@@ -5,8 +5,6 @@
  */
 function createGenesTable(text, keyword, rows) {
     
-
-    var ondexIds = []; 
     var table = "";
     var candidate_genes = text.split("\n");
     var results = candidate_genes.length - 2;
@@ -65,21 +63,19 @@ function createGenesTable(text, keyword, rows) {
         for (var i = 1; i <= results; i++) {
             var values = candidate_genes[i].split("\t");
 
-            // adding Ondexid of current gene 
-            ondexIds.push(parseInt(values[0]));
 
             if (i > rows /*&& values[7]=="no"*/) {
                 continue;
             }
             table = table + '<tr>';
+            var gene_Id = values[0]; 
             var gene_Acc = values[1];
             gene_Acc = gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
             var gene_Name = values[2]; // display both accession & gene name.
             // Fetch preferred concept (gene) name and use the shorter name out of the two.
             var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
-            var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
+            var geneName = '<td> <span class="gene_name">'+gene_Name+'</span> <span onclick="createGeneNameSynonyms(this,'+gene_Id+')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>'; // geneName             //    
 	      
-
             if (gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
                 geneName = '<td></td>'; // don't display geneName, if identical to Accession
             }
@@ -297,10 +293,6 @@ function createGenesTable(text, keyword, rows) {
     $('input:checkbox[name="candidates"]').click(function (e) {
         updateSelectedGenesCount(); // update selected genes count
     });
-
-    
-    // functions takes ondex IDs of current genenames and send a get request to back end
-    createGeneNameSynonyms(ondexIds); 
 
 }; 
 
