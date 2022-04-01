@@ -622,41 +622,45 @@ function matchCounter() {
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
  *
  */
-function createGeneNameSynonyms(element,data){
+function createGeneNameSynonyms(element,data)
+{
 
-        var geneNameSynonyms = $(element).next('.gene_name_synonyms');
-        $(element).find('[data-fa-i2svg]')
-        .toggleClass(function(){
-            // creating new gene name synonym nodes 
-            if(!geneNameSynonyms.hasClass("synonym_created")){
-                    // gene synonym body element houses synonym gene names span element
-                    var geneNameSynBody = document.createElement('div');
-                    $(geneNameSynBody).addClass('synonyms_body'); 
-                    // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
-                    var synonymNameRequest = `/graphinfo/concept-info?ids=${data}`;
-                    var synonymNameUrl = api_url + synonymNameRequest
-                    $.get(synonymNameUrl,'').done( function(data){ 
-                        var currentDataSet = data[0].names; 
-                        for (var i=0; i < currentDataSet.length; i++){
-                            var SynonymsGene = document.createElement('span'); 
-                            $(SynonymsGene).addClass('synonyms_gene');
-                            SynonymsGene.textContent = currentDataSet[i].name;
-                            geneNameSynBody.append(SynonymsGene); 
-                        }
-                    }).fail(function (xhr,status,errorlog) {
-                        errorComponent('.synonyms_body',xhr,status,errorlog);
-                    });
+	var geneNameSynonyms = $(element).next('.gene_name_synonyms');
+ 
+	if(!geneNameSynonyms.hasClass("synonym_created"))
+	{
+		// First time, let's get the synonyms from the API and render them.
+		// gene synonym body element houses synonym gene names span element
+	  var geneNameSynBody = document.createElement('div');
+	  $(geneNameSynBody).addClass('synonyms_body'); 
+	  // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
+	  var synonymNameRequest = `/graphinfo/concept-info?ids=${data}`;
+	  var synonymNameUrl = api_url + synonymNameRequest
+	  $.get(synonymNameUrl,'').done( function(data)
+		{ 
+	    var currentDataSet = data[0].names; 
+	    for (var i=0; i < currentDataSet.length; i++)
+			{
+	        var SynonymsGene = document.createElement('span'); 
+	        $(SynonymsGene).addClass('synonyms_gene');
+	        SynonymsGene.textContent = currentDataSet[i].name;
+	        geneNameSynBody.append(SynonymsGene); 
+	    }
+	  }).fail(function (xhr,status,errorlog) {
+	      errorComponent('.synonyms_body',xhr,status,errorlog);
+	  });
+	
+	  geneNameSynonyms.addClass('synonym_created'); 
+	  geneNameSynonyms.append(geneNameSynBody);
+	  geneNameSynonyms.show();
+	}
+	else	
+		// If already created, just toggle visibility
+		geneNameSynonyms.toggle ();
 
-                    geneNameSynonyms.addClass('synonym_created'); 
-                    geneNameSynonyms.append(geneNameSynBody);
-                    geneNameSynonyms.show();
-                    return 'fa-angle-up';     
-            }
-             
-						// If already created, just toggle visibility and Angle
-          	geneNameSynonyms.toggle ()
-          	return geneNameSynonyms.is(":visible") ? 'fa-angle-up' : 'fa-angle-down';
-        })  
+	// Finally, show the right angle based on current visibility
+	var newAngleClass = geneNameSynonyms.is( ":visible" ) ? "fa-angle-up" : "fa-angle-down";
+	$(element).find( '[data-fa-i2svg]' ).toggleClass ( newAngleClass );
 }
 
 
