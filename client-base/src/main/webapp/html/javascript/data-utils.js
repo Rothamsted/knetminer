@@ -618,74 +618,52 @@ function matchCounter() {
     }
 }
 
-
-
 /*
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
  *
  */
-function createGeneNameSynonyms(ondexIds){
-    var geneNameSynonyms; 
-    var status; 
+function createGeneNameSynonyms(element,data)
+{
 
-     $('.genename_info').each(function(index){
-        $(this).click(function(e){
-            var geneTarget = e.currentTarget;
-            geneNameSynonyms = $(geneTarget).next('.gene_name_synonyms');
+	var geneNameSynonyms = $(element).next('.gene_name_synonyms');
+ 
+	if(!geneNameSynonyms.hasClass("synonym_created"))
+	{
+		// First time, let's get the synonyms from the API and render them.
+		// gene synonym body element houses synonym gene names span element
+	  var geneNameSynBody = document.createElement('div');
+	  $(geneNameSynBody).addClass('synonyms_body'); 
+	  // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
+	  var synonymNameRequest = `/graphinfo/concept-info?ids=${data}`;
+	  var synonymNameUrl = api_url + synonymNameRequest
+	  $.get(synonymNameUrl,'').done( function(data)
+		{ 
+	    var currentDataSet = data[0].names; 
+	    for (var i=0; i < currentDataSet.length; i++)
+			{
+	        var SynonymsGene = document.createElement('span'); 
+	        $(SynonymsGene).addClass('synonyms_gene');
+	        SynonymsGene.textContent = currentDataSet[i].name;
+	        geneNameSynBody.append(SynonymsGene); 
+	    }
+	  }).fail(function (xhr,status,errorlog) {
+	      errorComponent('.synonyms_body',xhr,status,errorlog);
+	  });
+	
+	  geneNameSynonyms.addClass('synonym_created'); 
+	  geneNameSynonyms.append(geneNameSynBody);
+	  geneNameSynonyms.show();
+	}
+	else	
+		// If already created, just toggle visibility
+		geneNameSynonyms.toggle ();
 
-            $(this).find('[data-fa-i2svg]')
-            .toggleClass(function(){
-
-                // to show already created gene name synonyms nodes 
-                if(status && geneNameSynonyms.hasClass("synonym_created")){
-                    geneNameSynonyms.hide(); 
-                    status = false
-                    return 'fa-angle-down'; 
-                }else if(!status && geneNameSynonyms.hasClass("synonym_created")){
-                    geneNameSynonyms.show();
-                    status = true; 
-                    return 'fa-angle-up'; 
-                }
-
-                // creating new gene name synonym nodes 
-                if(!geneNameSynonyms.hasClass("synonym_created")){
-
-
-                        // gene synonym body element houses synonym gene names span element
-                        var geneNameSynBody = document.createElement('div');
-                        $(geneNameSynBody).addClass('synonyms_body'); 
-
-                        // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
-                        // 
-                        var synonymNameRequest = `/graphinfo/concept-info?ids=${ondexIds[index]}`;
-                        var synonymNameUrl = api_url + synonymNameRequest
-                        $.get(synonymNameUrl,'').done( function(data){ var currentDataSet = data[0].names; 
-                            for (var i=0; i < currentDataSet.length; i++){
-                                var SynonymsGene = document.createElement('span'); 
-                                $(SynonymsGene).addClass('synonyms_gene');
-                                SynonymsGene.textContent = currentDataSet[i].name;
-                                geneNameSynBody.append(SynonymsGene); 
-                                status = true; 
-                            }
-                       
-                        }).fail(function (xhr,status,errorlog) {
-                            errorComponent('.synonyms_body',xhr,status,errorlog);
-                        });
-
-                        // TODO : I'm exploring ways to limit calling the get request per user click by storing the 
-                        // data from the api as variable which can be reused within the function. 
-
-                        geneNameSynonyms.addClass('synonym_created'); 
-                        geneNameSynonyms.append(geneNameSynBody);
-                        geneNameSynonyms.show();
-                        return 'fa-angle-up';
-                        
-                }
-
-            })
-        })
-    })
+	// Finally, show the right angle based on current visibility
+	var newAngleClass = geneNameSynonyms.is( ":visible" ) ? "fa-angle-up" : "fa-angle-down";
+	$(element).find( '[data-fa-i2svg]' ).toggleClass ( newAngleClass );
 }
+
+
 
 // function create error message for failed get request for function matchCounter and createGeneSynonyms
 function errorComponent(elementInfo,xhr){

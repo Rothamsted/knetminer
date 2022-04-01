@@ -5,16 +5,14 @@
  */
 function createGenesTable(text, keyword, rows) {
     
-
-    var ondexIds = []; 
     var table = "";
-    var candidate_genes = text.split("\n");
-    var results = candidate_genes.length - 2;
+    var candidateGenes = text.split("\n");
+    var results = candidateGenes.length - 2;
 
-    if (candidate_genes.length > 2) {
+    if (candidateGenes.length > 2) {
         table = '';
         // Gene View: interactive summary legend for evidence types.
-        var interactive_summary_Legend = getInteractiveSummaryLegend(text);
+        var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
         var utf8Bytes = "";
         utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function(match, p1) {
             return String.fromCharCode('0x' + p1);
@@ -35,13 +33,13 @@ function createGenesTable(text, keyword, rows) {
             '<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
         table = table + '<br>';
         // dynamic Evidence Summary to be displayed above Gene View table
-        table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">' + interactive_summary_Legend + '</div>';
+        table = table + '<div id="evidence_Summary_Legend" class="evidenceSummary">' + interactiveSummaryLegend + '</div>';
 
         table = table + '<div id= "geneViewTable" class = "scrollTable">';
         table = table + '<table id = "tablesorter" class="tablesorter">';
         table = table + '<thead>';
         table = table + '<tr>';
-        var values = candidate_genes[0].split("\t");
+        var values = candidateGenes[0].split("\t");
         table = table + '<th width="100">' + values[1] + '</th>';
         table = table + '<th width="100" title="Show ' + values[2] + ', if not same as ' + values[1] + '">' + values[2] + '</th>'; // added Gene Name to Gene View table
         if (multiorganisms == true) {
@@ -58,29 +56,32 @@ function createGenesTable(text, keyword, rows) {
         table = table + '<tbody class="scrollTable">';
         //console.log("GeneView: display " + rows + " (from " + results + ") results.");
 
-        //this loop iterates over the full table and prints the
-        //first n rows + the user provided genes
-        //can be slow for large number of genes, alternatively server
-        //can filter and provide smaller file for display
+        // Main loop over the resulting genes.
+        // 
         for (var i = 1; i <= results; i++) {
-            var values = candidate_genes[i].split("\t");
+            var values = candidateGenes[i].split("\t");
 
-            // adding Ondexid of current gene 
-            ondexIds.push(parseInt(values[0]));
 
             if (i > rows /*&& values[7]=="no"*/) {
                 continue;
             }
             table = table + '<tr>';
-            var gene_Acc = values[1];
-            gene_Acc = gene_Acc.toUpperCase(); // always display gene ACCESSION in uppercase
-            var gene_Name = values[2]; // display both accession & gene name.
-            // Fetch preferred concept (gene) name and use the shorter name out of the two.
-            var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + gene_Acc + '</a></td>';
-            var geneName = '<td> <span class="gene_name">' + gene_Name + '</span> <span class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div> </td>'; // geneName
-	      
 
-            if (gene_Name.toLowerCase() === gene_Acc.toLowerCase()) {
+            var geneId = values[0]; 
+
+            var geneAcc = values[1];
+            geneAcc = geneAcc.toUpperCase(); // always display gene ACCESSION in uppercase
+
+            var geneName = values[2]; // display both accession & gene name.
+
+            // Gene accession
+            var gene = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + i + '">' + geneAcc + '</a></td>';
+
+            // Gene name + synonyms handler
+            var geneName = '<td><span class="gene_name">'+geneName+'</span> <span onclick="createGeneNameSynonyms(this,'+geneId+')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>'; 
+            
+            // TODO: in this case, the gene might still have synonyms
+            if (geneName.toLowerCase() === geneAcc.toLowerCase()) {
                 geneName = '<td></td>'; // don't display geneName, if identical to Accession
             }
 
@@ -211,7 +212,7 @@ function createGenesTable(text, keyword, rows) {
     /*
      * click Handler for viewing a network.
      */
-    $(".viewGeneNetwork").bind("click", {x: candidate_genes}, function (e) {
+    $(".viewGeneNetwork").bind("click", {x: candidateGenes}, function (e) {
         e.preventDefault();
         var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
         var values = e.data.x[geneNum].split("\t");
@@ -271,8 +272,8 @@ function createGenesTable(text, keyword, rows) {
      * Select all KNOWN targets: find all targets with existing Evidence & check them.
      * Select all NOVEL targets: find all targets with no Evidence & check them.
      */
-    $('input:checkbox[name="checkbox_Targets"]').bind("click", {x: candidate_genes}, function (e) {
-        var numResults = candidate_genes.length - 2;
+    $('input:checkbox[name="checkbox_Targets"]').bind("click", {x: candidateGenes}, function (e) {
+        var numResults = candidateGenes.length - 2;
         for (var i = 1; i <= numResults; i++) {
             var values = e.data.x[i].split("\t");
             if (values[7] === "yes") {
@@ -293,14 +294,10 @@ function createGenesTable(text, keyword, rows) {
         updateSelectedGenesCount();
     });
 
-    // bind click event on all candidate_genes checkboxes in Gene View table.
+    // bind click event on all candidateGenes checkboxes in Gene View table.
     $('input:checkbox[name="candidates"]').click(function (e) {
         updateSelectedGenesCount(); // update selected genes count
     });
-
-    
-    // functions takes ondex IDs of current genenames and send a get request to back end
-    createGeneNameSynonyms(ondexIds); 
 
 }; 
 
