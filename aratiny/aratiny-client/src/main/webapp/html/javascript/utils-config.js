@@ -1,4 +1,5 @@
 // See the main POM for details.
+// TODO: switch the name format to Js conventions (uncapitalisedCamelCase)
 var api_base_url = "${knetminer.api.baseUrl}";
 var api_url = "${knetminer.api.url}";
 // boolean, tells if the data set contains reference genome info  
