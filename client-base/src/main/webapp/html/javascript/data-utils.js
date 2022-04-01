@@ -624,7 +624,6 @@ function matchCounter() {
  */
 function createGeneNameSynonyms(element,data){
 
-        var status;
         var geneNameSynonyms = $(element).next('.gene_name_synonyms');
         $(element).find('[data-fa-i2svg]')
         .toggleClass(function(){
@@ -643,7 +642,6 @@ function createGeneNameSynonyms(element,data){
                             $(SynonymsGene).addClass('synonyms_gene');
                             SynonymsGene.textContent = currentDataSet[i].name;
                             geneNameSynBody.append(SynonymsGene); 
-                            status = true; 
                         }
                     }).fail(function (xhr,status,errorlog) {
                         errorComponent('.synonyms_body',xhr,status,errorlog);
@@ -654,18 +652,10 @@ function createGeneNameSynonyms(element,data){
                     geneNameSynonyms.show();
                     return 'fa-angle-up';     
             }
-             // to show already created gene name synonyms nodes
-          
-                if(status && $(geneNameSynonyms).hasClass("synonym_created")){
-                    geneNameSynonyms.hide(); 
-                    status = false
-                    return 'fa-angle-down'; 
-                }else if(!status && $(geneNameSynonyms).hasClass("synonym_created")){
-                    geneNameSynonyms.show();
-                    status = true; 
-                    return 'fa-angle-up'; 
-                }
-            
+             
+						// If already created, just toggle visibility and Angle
+          	geneNameSynonyms.toggle ()
+          	return geneNameSynonyms.is(":visible") ? 'fa-angle-up' : 'fa-angle-down';
         })  
 }
 
