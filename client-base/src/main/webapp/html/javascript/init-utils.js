@@ -53,10 +53,10 @@ function initResetButton(){
         $("#pGViewer_title").empty();
         $('#matchesResultDiv').html('Please, start typing your query');
         $('#suggestor_search').hide();
-        $('#tabviewer').hide(); 
+        $('#suggestor_search_div').hide();
+        $('#tabviewer').hide(''); 
         $("#resetknet").hide();
         $('#geneResultDiv').hide();
-        $('#suggestor_search_div').hide();
         $('#region_search_area').hide(); 
         $('#region_search').attr('src','html/image/expand.gif')
     });
@@ -190,6 +190,12 @@ function searchHandlers(){
     // 
     $('#suggestor_search').click(
             function () {
+
+                var suggestorSearchDiv = $('#suggestor_search_div');
+                if(suggestorSearchDiv.css('display') === 'none'){
+                    suggestorSearchDiv.show()
+                }
+
                 var src = ($(this).attr('src') === 'html/image/qs_expand.png')
                     ? 'html/image/qs_collapse.png'
                     : 'html/image/qs_expand.png';
