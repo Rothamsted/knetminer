@@ -28,7 +28,8 @@ function createGenesTable(text, keyword, rows) {
         table = table + '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
         table = table + '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
         table = table + '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
-        table = table + '<select>';
+        table = table + '</select>';
+
         table = table + '<div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
             '<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
         table = table + '<br>';
@@ -39,22 +40,29 @@ function createGenesTable(text, keyword, rows) {
         table = table + '<table id = "tablesorter" class="tablesorter">';
         table = table + '<thead>';
         table = table + '<tr>';
-        var values = candidateGenes[0].split("\t");
-        table = table + '<th width="100">' + values[1] + '</th>';
-        table = table + '<th width="100" title="Show ' + values[2] + ', if not same as ' + values[1] + '">' + values[2] + '</th>'; // added Gene Name to Gene View table
+
+        var headers = candidateGenes[0].split("\t"); // The headers
+				var hAcc = headers [ 1 ];
+				var hName = headers [ 2 ];
+				var hChromosome = headers [ 3 ];
+				var hChrStart = headers [ 4 ];
+				var hTaxId = headers [ 5 ];
+				var hEvidence = headers [ 9 ];
+				
+        table = table + '<th width="100">' + hAcc + '</th>';
+        table = table + '<th width="100" title="Show ' + hName + ', if not same as ' + hAcc + '">' + hName + '</th>'; // added Gene Name to Gene View table
         if (multiorganisms == true) {
-            table = table + '<th width="60">' + values[5] + '</th>';
+            table = table + '<th width="60">' + hTaxId + '</th>';
         }
         if (reference_genome == true) {
-            table = table + '<th width="60">' + values[3] + '</th>';
-            table = table + '<th width="70">' + values[4] + '</th>';
+            table = table + '<th width="60">' + hChromosome + '</th>';
+            table = table + '<th width="70">' + hChrStart + '</th>';
         }
-        table = table + '<th width="220">' + values[9] + '</th>';
+        table = table + '<th width="220">' + hEvidence + '</th>';
         table = table + '<th width="70">Select</th>';
         table = table + '</tr>';
         table = table + '</thead>';
         table = table + '<tbody class="scrollTable">';
-        //console.log("GeneView: display " + rows + " (from " + results + ") results.");
 
         // Main loop over the resulting genes.
         // 
@@ -115,34 +123,34 @@ function createGenesTable(text, keyword, rows) {
                     var uniqueTraits = new Object();
 
                     for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
-                        var withinQTL_elements = withinQTLs[count_i].split("//");
-                        if (withinQTL_elements[1].length > 0) {
-                            if (uniqueTraits[withinQTL_elements[1]] == null)
-                                uniqueTraits[withinQTL_elements[1]] = 1;
+                        var withinQTLElems = withinQTLs[count_i].split("//");
+                        if (withinQTLElems[1].length > 0) {
+                            if (uniqueTraits[withinQTLElems[1]] == null)
+                                uniqueTraits[withinQTLElems[1]] = 1;
                             else
-                                uniqueTraits[withinQTL_elements[1]] = uniqueTraits[withinQTL_elements[1]] + 1;
+                                uniqueTraits[withinQTLElems[1]] = uniqueTraits[withinQTLElems[1]] + 1;
                         }
                         else {
-                            if (uniqueQTLs[withinQTL_elements[0]] == null)
-                                uniqueQTLs[withinQTL_elements[0]] = 1;
+                            if (uniqueQTLs[withinQTLElems[0]] == null)
+                                uniqueQTLs[withinQTLElems[0]] = 1;
                             else
-                                uniqueQTLs[withinQTL_elements[0]] = uniqueQTLs[withinQTL_elements[0]] + 1;
+                                uniqueQTLs[withinQTLElems[0]] = uniqueQTLs[withinQTLElems[0]] + 1;
                         }
                     }
 
                     var unique = "";
                     for (var count_i = 0; count_i < withinQTLs.length; count_i++) {
-                        var withinQTL_elements = withinQTLs[count_i].split("//");
-                        if (withinQTL_elements[1].length > 0) {
-                            if (unique.indexOf(withinQTL_elements[1] + ";") == -1) {
-                                unique = unique + withinQTL_elements[1] + ";";
-                                withinQTL = withinQTL + '<p>' + uniqueTraits[withinQTL_elements[1]] + ' ' + withinQTL_elements[1] + '</p>';
+                        var withinQTLElems = withinQTLs[count_i].split("//");
+                        if (withinQTLElems[1].length > 0) {
+                            if (unique.indexOf(withinQTLElems[1] + ";") == -1) {
+                                unique = unique + withinQTLElems[1] + ";";
+                                withinQTL = withinQTL + '<p>' + uniqueTraits[withinQTLElems[1]] + ' ' + withinQTLElems[1] + '</p>';
                             }
                         }
                         else {
-                            if (unique.indexOf(withinQTL_elements[0] + ";") == -1) {
-                                unique = unique + withinQTL_elements[0] + ";";
-                                withinQTL = withinQTL + '<p>' + uniqueQTLs[withinQTL_elements[0]] + ' ' + withinQTL_elements[0] + '</p>';
+                            if (unique.indexOf(withinQTLElems[0] + ";") == -1) {
+                                unique = unique + withinQTLElems[0] + ";";
+                                withinQTL = withinQTL + '<p>' + uniqueQTLs[withinQTLElems[0]] + ' ' + withinQTLElems[0] + '</p>';
                             }
                         }
                     }
@@ -160,7 +168,7 @@ function createGenesTable(text, keyword, rows) {
             var evidence = '<td>';
             var values_evidence = values[9];
             if (values_evidence.length > 0) {
-				var evidences = values_evidence.split("||");
+            var evidences = values_evidence.split("||");
                 for (var count_i = 0; count_i < evidences.length; count_i++) {
                     //Shows the icons
                     //var evidence_elements = evidences[count_i].split("//");
