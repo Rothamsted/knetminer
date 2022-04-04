@@ -100,6 +100,11 @@ function createGenesTable(text, keyword, rows)
 			if (multiorganisms == true)
 				var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
 
+			// Currently not shown
+			var score = values[6];
+			var scoreTd = '<td>' + score + '</td>';
+
+
 			var chrTd = '';
 			var chrStartTd = '';
 
@@ -109,10 +114,6 @@ function createGenesTable(text, keyword, rows)
 				var chrStart = values[4];
 				var chrTd = '<td>' + chr + '</td>';
 				var chrStartTd = '<td>' + chrStart + '</td>';
-
-				// TODO: Why is this conditional?
-				var score = values[6];
-				var scoreTd = '<td>' + score + '</td>';
 
 				// QTL column with information box
 				var qtlTd = '<td>';
