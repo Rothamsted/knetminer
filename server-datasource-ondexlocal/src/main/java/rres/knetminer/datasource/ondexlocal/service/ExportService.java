@@ -12,7 +12,6 @@ import java.io.Writer;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -390,8 +389,8 @@ public class ExportService
 			var geneHelper = new GeneHelper ( graph, gene );
 			Double score = scoredCandidates.getOrDefault ( gene, 0d );
 	
-			// TODO: this considers the name only, getBestConceptLabel() instead?
-			String geneName = KGUtils.getBestName ( gene.getConceptNames () );
+			// Exclude accessions when possible
+			String geneName = KGUtils.getBestName ( gene, true );
 	
 			boolean isInList = userGeneIds.contains ( gene.getId () );
 	

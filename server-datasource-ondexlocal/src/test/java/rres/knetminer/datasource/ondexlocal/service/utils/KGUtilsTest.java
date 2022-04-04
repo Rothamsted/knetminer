@@ -28,6 +28,7 @@ public class KGUtilsTest
 	private ConceptClass ccA = ONDEXGraphUtils.getOrCreateConceptClass ( graph, "A" );
 	private DataSource srcA = ONDEXGraphUtils.getOrCreateDataSource ( graph, "srcA" );
 	private EvidenceType evA = ONDEXGraphUtils.getOrCreateEvidenceType ( graph, "evA" );
+	private DataSource srcENSEMBL = ONDEXGraphUtils.getOrCreateDataSource ( graph, "ENSEMBL" );	
 	
 	private ONDEXConcept c = graph.createConcept ( "foo", "", "", srcA, ccA, Set.of ( evA ) );
 	
@@ -63,9 +64,6 @@ public class KGUtilsTest
 	@Test
 	public void testBestGeneAccessionPrioritySources ()
 	{
-		DataSource srcENSEMBL = ONDEXGraphUtils.getOrCreateDataSource ( graph, "ENSEMBL" );
-		
-		
 		c.createConceptAccession ( "ABC Gene", srcENSEMBL, false ); // unique
 		c.createConceptAccession ( "ABC", srcA, false ); // shorter but ENSEMBL should have priority.
 		
@@ -78,8 +76,6 @@ public class KGUtilsTest
 	@Test
 	public void testZMSynonyms ()
 	{
-		DataSource srcENSEMBL = ONDEXGraphUtils.getOrCreateDataSource ( graph, "ENSEMBL" );
-		
 		c.createConceptAccession ( "ZM00001EB425260", srcENSEMBL, false ); // unique
 		c.createConceptAccession ( "ZM00001D025723", srcENSEMBL, false ); // shorter but EB should have priority.
 		
@@ -116,6 +112,36 @@ public class KGUtilsTest
 	public void testBestLabelPIDFallBack ()
 	{
 		assertEquals ( "Wrong label picked!", c.getPID (), KGUtils.getBestConceptLabel ( c ) );
-	}	
-
+	}
+	
+	/**
+	 * Tests that accessions can be filtered from best name selection, see
+	 * <a href = "https://github.com/Rothamsted/knetminer/issues/602#issuecomment-1086962980">here</a>
+	 * 
+	 */
+	@Test
+	public void testBestNameAccessionFiltering ()
+	{
+		var acc = "TRAESCS3D02G468400";
+		var name = "MYB1";
+		
+		c.createConceptName ( acc, true );
+		c.createConceptName ( name, false );
+		
+		c.createConceptAccession ( acc, srcENSEMBL, false );
+		
+		assertEquals ( "Accession filtering didn't work!", name, KGUtils.getBestName ( c, true ) );
+		assertEquals ( "Accession filtering in place when disabled too!", acc, KGUtils.getBestName ( c ) );
+	}
+	
+	@Test
+	public void testBestNameAccessionFilteringFallback ()
+	{
+		var acc = "TRAESCS3D02G468400";
+		
+		c.createConceptName ( acc, true );
+		c.createConceptAccession ( acc, srcENSEMBL, false );
+		
+		assertEquals ( "Accession filtering didn't work (fallback case)!", acc, KGUtils.getBestName ( c, true ) );
+	}
 }
