@@ -40,8 +40,10 @@ docker system prune --all --force
 docker volume prune --force
 docker pull knetminer/knetminer
 
-echo -e "--- Cleaning Knetminer dataset directory\n"
-./cleanup-volume.sh --all "$dataset_dir"
+# This used to be the default. Now, it's normally disabled and manually ran when needed
+# TODO: flag to be passed from the CI framework 
+#echo -e "--- Cleaning Knetminer dataset directory\n"
+#./cleanup-volume.sh --all "$dataset_dir"
 
 
 # Options to setup JMX and use jvisualvm. this makes jvisualvm accessible on 9010 (RMI on 9011), you can start jvisualvm from the
