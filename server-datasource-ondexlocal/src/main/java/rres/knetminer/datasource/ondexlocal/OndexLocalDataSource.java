@@ -207,7 +207,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 //		{
 		log.info ( "Computing response to /genome or /qtl" );
 
-		candidateGenesMap = smSearchMgr.getSortedCandidates();
+		candidateGenesMap = smSearchMgr.getSortedGeneCandidates();
 		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
 		genesStream = candidateGenes.parallelStream ();
 		
@@ -221,8 +221,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		
 		if ( response.getClass().equals ( QtlResponse.class ) ) 
 		{
+			// 
 			log.info ( "Filtering QTL(s) for QTL response " );
 
+			// TODO: this is very inefficient, the right way to do it would be passing it the genes and  
+			// search if they match the QTL regions 
+			//
 			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl() );
 			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
 			
@@ -233,6 +237,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 //		} // genome & qtl cases // TODO: remove, see above
 
+		// TODO: messed up, genesStream is a selection of keys in candidateGenesMap, so we just need to remove
+		// the filtered keys
+		// 
 		final var candidatesProxy = new MutableObject<> ( candidateGenesMap ); // lambdas doesn't want non-finals
 		Map<ONDEXConcept, Double> genesMap = genesStream.collect (
 			Collectors.toConcurrentMap ( Functions.identity (), gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
@@ -272,9 +279,6 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Gene table
 		//
 		
-		// TODO: no idea why geneMap is recalculated here instead of a more proper place, anyway, let's 
-		// adapt to it
-
 		log.debug("2.) API, doing gene table view");
 
 		var newSearchResult = new SemanticMotifsSearchResult (
@@ -322,6 +326,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 
+		// TODO: this is the same gene filtering we have in _keyword(), should be factorised
+		//
+		
 		// Search Genes
 		if (!request.getList().isEmpty()) {
 			genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));

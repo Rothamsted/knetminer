@@ -90,9 +90,9 @@ public class SemanticMotifSearchMgr
 		return this.luceneConcepts;
 	}
 
-	public Map<ONDEXConcept, Double> getSortedCandidates ()
+	public Map<ONDEXConcept, Double> getSortedGeneCandidates ()
 	{
-		return getSearchResult ().getRelatedConcept2Score ();
+		return getSearchResult ().getGene2Score ();
 	}
 
 	public Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()

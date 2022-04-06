@@ -376,7 +376,7 @@ public class ExportService
 		var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
 		
 		// TODO: but could it be null?!
-		var scoredCandidates = Optional.ofNullable ( searchResult.getRelatedConcept2Score () )
+		var scoredCandidates = Optional.ofNullable ( searchResult.getGene2Score () )
 			.orElse ( Collections.emptyMap () );			
 		
 		

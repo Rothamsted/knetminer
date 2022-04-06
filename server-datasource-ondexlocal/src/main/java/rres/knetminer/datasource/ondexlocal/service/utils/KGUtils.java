@@ -114,6 +114,9 @@ public class KGUtils
 		// convert List<String> qtlStr to List<QTL> qtls
 		List<QTL> qtls = QTL.fromStringList ( qtlsStr );
 
+		// TODO: this is very inefficient and it should be done by indexing chromosome windows as integers  
+		// and then using Lucene range queries
+		//
 		for ( QTL qtl : qtls )
 		{
 			try

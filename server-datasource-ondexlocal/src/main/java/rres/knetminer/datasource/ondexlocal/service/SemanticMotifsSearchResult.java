@@ -25,19 +25,19 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 public class SemanticMotifsSearchResult
 {
 	private Map<Integer, Set<Integer>> geneId2RelatedConceptIds;
-	private Map<ONDEXConcept, Double> relatedConcept2Score;
+	private Map<ONDEXConcept, Double> gene2Score;
 
 	/**
 	 * This object is usually created by {@link SearchService#getScoredGenes(Map)}
 	 * Note that this constructor sets these map components as-is, without changing anything
 	 */
 	public SemanticMotifsSearchResult ( 
-		Map<Integer, Set<Integer>> geneId2RelatedConceptIds, Map<ONDEXConcept, Double> relatedConcept2Score
+		Map<Integer, Set<Integer>> geneId2RelatedConceptIds, Map<ONDEXConcept, Double> gene2Score
 	)
 	{
 		super ();
 		this.geneId2RelatedConceptIds = geneId2RelatedConceptIds;
-		this.relatedConcept2Score = relatedConcept2Score; 
+		this.gene2Score = gene2Score; 
 	}
 
 	/**
@@ -51,12 +51,12 @@ public class SemanticMotifsSearchResult
 	}
 
 	/**
-	 * Returns an immutable list of concepts related to genes in {@link #getGeneId2RelatedConceptIds()}, usually sorted by
-	 * best scores.
+	 * Associate genes to their KnetMiner score, usually sorted by best scores.
+	 * @see SearchService#getScoredGenes(Map)
 	 * 
 	 */
-	public Map<ONDEXConcept, Double> getRelatedConcept2Score ()
+	public Map<ONDEXConcept, Double> getGene2Score ()
 	{
-		return relatedConcept2Score;
+		return gene2Score;
 	}
 }

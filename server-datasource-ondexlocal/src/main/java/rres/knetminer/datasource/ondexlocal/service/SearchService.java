@@ -132,7 +132,7 @@ public class SearchService
    * Was searchLucene()
    */
 	public Map<ONDEXConcept, Float> searchGeneRelatedConcepts ( 
-		String keywords, Collection<ONDEXConcept> geneList, boolean includePublications 
+		String searchString, Collection<ONDEXConcept> geneList, boolean includePublications 
 	) throws ParseException
 	{
 		var graph = dataService.getGraph ();
@@ -140,23 +140,22 @@ public class SearchService
 		Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
 		
 		// TODO: We should search across all accession datasources or make this configurable in settings
-		String[] datasources = { "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
-				"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" };
+		Set<String> dsAcc = Set.of( "PFAM", "IPRO", "UNIPROTKB", "EMBL", "KEGG", "EC", "GO", "TO", "NLM", "TAIR",
+				"ENSEMBLGENE", "PHYTOZOME", "IWGSC", "IBSC", "PGSC", "ENSEMBL" );
 		
 		// sources identified in KNETviewer
 		/*
-		 * String[] new_datasources= { "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", "CHEMBLTARGET", "EC", "EMBL",
+		 * String[] newDatasources= Set.of ( "AC", "DOI", "CHEBI", "CHEMBL", "CHEMBLASSAY", "CHEMBLTARGET", "EC", "EMBL",
 		 * "ENSEMBL", "GENB", "GENOSCOPE", "GO", "INTACT", "IPRO", "KEGG", "MC", "NC_GE", "NC_NM", "NC_NP", "NLM",
 		 * "OMIM", "PDB", "PFAM", "PlnTFDB", "Poplar-JGI", "PoplarCyc", "PRINTS", "PRODOM", "PROSITE", "PUBCHEM",
-		 * "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV", "ENSEMBL-HUMAN"};
+		 * "PubMed", "REAC", "SCOP", "SOYCYC", "TAIR", "TX", "UNIPROTKB", "UNIPROTKB-COV", "ENSEMBL-HUMAN" );
 		 */
-		Set<String> dsAcc = new HashSet<> ( Arrays.asList ( datasources ) );
 
-		HashMap<ONDEXConcept, Float> hit2score = new HashMap<> ();
+		Map<ONDEXConcept, Float> hit2score = new HashMap<> ();
 
-		keywords = StringUtils.trimToEmpty ( keywords );
+		searchString = StringUtils.trimToEmpty ( searchString );
 		
-		if ( keywords.isEmpty () )
+		if ( searchString.isEmpty () )
 		{
 			if ( geneList == null || geneList.isEmpty () )
 			{
@@ -186,11 +185,11 @@ public class SearchService
 
 		// added to overcome double quotes issue
 		// if changing this, need to change genepage.jsp and evidencepage.jsp
-		keywords = keywords.replace ( "###", "\"" );
-		log.debug ( "Search string is: \"{}\"", keywords );
+		searchString = searchString.replace ( "###", "\"" );
+		log.debug ( "Search string is: \"{}\"", searchString );
 
 		// creates the NOT list (list of all the forbidden documents)
-		String notQuery = getExcludingSearchExp ( keywords );
+		String notQuery = getExcludingSearchExp ( searchString );
 		String crossTypesNotQuery = "";
 		ScoredHits<ONDEXConcept> notList = null;
 
@@ -210,23 +209,23 @@ public class SearchService
 		// search concept attributes
 		for ( AttributeName att : atts )
 			searchConceptByIdxField ( 
-				keywords, ONDEXLuceneFields.CONATTRIBUTE_FIELD, att.getId (), maxConcepts, hit2score, notList
+				searchString, ONDEXLuceneFields.CONATTRIBUTE_FIELD, att.getId (), maxConcepts, hit2score, notList
 			);				
 
 		// Search concept accessions
 		for ( String dsAc : dsAcc )
-			searchConceptByIdxField ( keywords, ONDEXLuceneFields.CONACC_FIELD, dsAc, maxConcepts, hit2score, notList );				
+			searchConceptByIdxField ( searchString, ONDEXLuceneFields.CONACC_FIELD, dsAc, maxConcepts, hit2score, notList );				
 
 		// Search concept names
-		searchConceptByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, maxConcepts, hit2score, notList );				
+		searchConceptByIdxField ( searchString, ONDEXLuceneFields.CONNAME_FIELD, maxConcepts, hit2score, notList );				
 		
 		// search concept description
-		searchConceptByIdxField ( keywords, ONDEXLuceneFields.DESC_FIELD, maxConcepts, hit2score, notList );
+		searchConceptByIdxField ( searchString, ONDEXLuceneFields.DESC_FIELD, maxConcepts, hit2score, notList );
 		
 		// search concept annotation
-		searchConceptByIdxField ( keywords, ONDEXLuceneFields.ANNO_FIELD, maxConcepts, hit2score, notList );
+		searchConceptByIdxField ( searchString, ONDEXLuceneFields.ANNO_FIELD, maxConcepts, hit2score, notList );
 		
-		log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", keywords, hit2score.size () );
+		log.info ( "searchLucene(), keywords: \"{}\", returning {} total hits", searchString, hit2score.size () );
 		return hit2score;
 		
 	} // searchGeneRelatedConcepts()
@@ -321,10 +320,10 @@ public class SearchService
 		// In other words: Filter the global gene2concept map for concepts that contain the keyword
 		//
 		Map<Integer, Set<Integer>> gene2HitConcepts =
-			hit2score.keySet ()
+			hit2score.keySet () // concepts found via Lucene
 			.parallelStream ()
 			.map ( ONDEXConcept::getId ) // conceptId
-			.filter ( concepts2Genes::containsKey ) // Has related concepts
+			.filter ( concepts2Genes::containsKey ) // Has related genes (via sem motifs)?
 			.flatMap ( conceptId -> 
 				concepts2Genes.get ( conceptId )
 				// flat into a stream of Pair(geneId, conceptId)
@@ -340,7 +339,7 @@ public class SearchService
 
 		// 2nd step: calculate a score for each candidate gene
 		//
-		ConcurrentMap<ONDEXConcept, Double> scoredCandidates =  new ConcurrentHashMap<> ();
+		ConcurrentMap<ONDEXConcept, Double> scoredGeneCandidates =  new ConcurrentHashMap<> ();
 
 		gene2HitConcepts.keySet ().
 		parallelStream ()
@@ -364,7 +363,7 @@ public class SearchService
 				// inverse distance from gene to evidence
 				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, conceptId ) );
 				if ( pathLen == null ) 
-					log.info ( "WARNING: Path length is null for: " + geneId + "//" + conceptId );
+					log.info ( "WARNING: Path length is null for: gene ID: {} / concept ID: {}", geneId, conceptId );
 				
 				double distance = pathLen == null ? 0 : ( 1d / pathLen );
 
@@ -384,17 +383,24 @@ public class SearchService
 			// This means better studied genes will appear top of the list
 			double knetScore = /* normFactor * */ weightedEvidenceSum.get ();
 
-			scoredCandidates.put ( graph.getConcept ( geneId ), knetScore );
+			scoredGeneCandidates.put ( graph.getConcept ( geneId ), knetScore );
 			
 		}); // for geneId
 		
-		// Sort by best scores
-		Map<ONDEXConcept, Double> sortedCandidates = scoredCandidates.entrySet ()
+		// Sort by best scores. 
+		//
+		Map<ONDEXConcept, Double> sortedGeneCandidates = scoredGeneCandidates.entrySet ()
 		.stream ()
 		.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
-		.collect ( toMap ( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2 ) -> e2, LinkedHashMap::new ) );
+		// Duplicated genes don't happen (keys are always different, but we need something here
+		.collect ( toMap ( 
+			Map.Entry::getKey, // key mapper
+			Map.Entry::getValue, // value mapper
+			( e1, e2 ) -> e2, // merger, duplicated genes don't happen, but we need to give it something
+			LinkedHashMap::new // map factory
+		));
 		
-		return new SemanticMotifsSearchResult ( gene2HitConcepts, sortedCandidates );
+		return new SemanticMotifsSearchResult ( gene2HitConcepts, sortedGeneCandidates );
 	}
 	
 	
