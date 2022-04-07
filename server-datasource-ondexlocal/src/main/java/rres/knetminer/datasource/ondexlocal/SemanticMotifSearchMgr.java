@@ -44,7 +44,7 @@ public class SemanticMotifSearchMgr
 		catch ( Exception ex )
 		{
 			ExceptionUtils.throwEx ( 
-				IllegalArgumentException.class, ex, "Serch for: \"%s\" failed: ", keyword, ex.getMessage ()
+				IllegalArgumentException.class, ex, "Serch for: \"%s\" failed: %s", keyword, ex.getMessage ()
 			);
 		}
 	}
