@@ -111,8 +111,8 @@ public class ExportService
 		int geneEvidenceConcepts = concepts2Genes.size ();
 
 		int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
-				maxValues = new int [] { 0 }, 
-				allValuesCount = new int [] { 0 }; 
+			maxValues = new int [] { 0 }, 
+			allValuesCount = new int [] { 0 }; 
 
 		// Min/Max/avg per each gene-related concept group
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,27 +119,22 @@ public class SemanticMotifService
    * and size attributes. Annotation is based on either paths to keyword concepts (if provided) or a set of rules based 
    * on paths to Trait/Phenotype concepts.
    *
-   * @param seed List of selected genes
-   * @param keyword
+   * @param seedGenes List of selected genes
+   * @param searchString
    * @return subGraph
    */
 	@SuppressWarnings ( { "rawtypes", "unchecked" } )
-	public ONDEXGraph findSemanticMotifs ( Set<ONDEXConcept> seed, String keyword )
+	public ONDEXGraph findSemanticMotifs ( Set<ONDEXConcept> seedGenes, String searchString )
 	{
-		log.info ( "findSemanticMotifs(), keyword: {}", keyword );
-				
-		Map<ONDEXConcept, Float> luceneResults = null;
-		try
-		{
-			luceneResults = searchService.searchGeneRelatedConcepts ( keyword, seed, false );
-		}
-		catch ( Exception e )
-		{
-			// TODO: does it make sense to continue?!
-			// KHP: Does it go here when the keyword is null?
-			log.error ( "Lucene search failed", e );
-			luceneResults = Collections.emptyMap ();
-		}
+		log.info ( "findSemanticMotifs(), keyword: {}", searchString );
+		
+		searchString = StringUtils.trimToEmpty ( searchString );
+
+		// TODO: maybe we have to intercept LuceneParseException
+		// This is empty when both the search string and the seedGenes are empty, 
+		// if the seedGenes only are provided, it searches over them using the gene/concept associations from the 
+		// whole semantic motifs
+		Map<ONDEXConcept, Float> luceneResults = searchService.searchGeneRelatedConcepts ( searchString, seedGenes, false );
 
 		var graph = dataService.getGraph ();
 		var options = dataService.getOptions ();
@@ -146,18 +142,18 @@ public class SemanticMotifService
 		// the results give us a map of every starting concept to every valid path
 		Map<ONDEXConcept, List<EvidencePathNode>> results = semanticMotifDataService
 			.getGraphTraverser ()
-			.traverseGraph ( graph, seed, null );
+			.traverseGraph ( graph, seedGenes, null );
 
 		Set<ONDEXConcept> keywordConcepts = new HashSet<> ();
 		Set<EvidencePathNode> pathSet = new HashSet<> ();
 
 		// added to overcome double quotes issue
 		// if changing this, need to change genepage.jsp and evidencepage.jsp
-		keyword = keyword.replace ( "###", "\"" );
+		searchString = searchString.replace ( "###", "\"" );
 
-		Set<String> keywords = "".equals ( keyword ) 
+		Set<String> keywords = searchString.isEmpty () 
 			? Collections.emptySet ()
-			: SearchUtils.getSearchWords ( keyword );
+			: SearchUtils.getSearchWords ( searchString );
 				
 		Map<String, String> keywordColourMap = UIUtils.createHilightColorMap ( keywords );
 				
@@ -185,7 +181,7 @@ public class SemanticMotifService
 				ONDEXConcept endNode = (ONDEXConcept) path.getConceptsInPositionOrder ().get ( indexLastCon );
 
 				// no-keyword, set path to visible if end-node is Trait or Phenotype
-				if ( keyword == null || keyword.isEmpty() )
+				if ( searchString.isEmpty() )
 				{
 					highlightPath ( path, graphCloner, true );
 					continue;
@@ -218,7 +214,7 @@ public class SemanticMotifService
 
 		// special case when none of nodes contains keyword (no-keyword-match)
 		// set path to visible if end-node is Trait or Phenotype
-		if ( keywordConcepts.isEmpty () && ! ( keyword == null || keyword.isEmpty () ) )
+		if ( keywordConcepts.isEmpty () && ! searchString.isEmpty () )
 			for ( EvidencePathNode path : pathSet )
 				highlightPath ( path, graphCloner, true );
 
@@ -254,15 +250,15 @@ public class SemanticMotifService
 
 		ONDEXGraphRegistry.graphs.remove ( subGraph.getSID () );
 
-		log.debug ( "Number of seed genes: " + seed.size () );
+		log.debug ( "Number of seed genes: " + seedGenes.size () );
 		log.debug ( "Number of removed publications " + allPubIds.size () );
 
 		return subGraph;
 	}	
 
   /**
-   * Annotate first and last concept and relations of a given path Do
-   * annotations on a new graph and not on the original graph
+   * Annotate first and last concept and relations of a given path 
+   * Adds annotations on a new graph, and not on the original graph
    *
    * @param path Contains concepts and relations of a semantic motif
    * @param graphCloner cloner for the new graph

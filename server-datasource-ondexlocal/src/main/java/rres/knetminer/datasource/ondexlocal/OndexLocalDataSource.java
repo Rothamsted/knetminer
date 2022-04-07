@@ -1,6 +1,8 @@
 package rres.knetminer.datasource.ondexlocal;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,7 +20,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -141,6 +142,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+		// TODO: needs to use QTL and the same format as the qtl param
 		String[] loci = request.getKeyword().split("-");
 		String chr = loci[0];
 		int start = 0, end = 0;
@@ -320,148 +322,153 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
-		Set<ONDEXConcept> genes = new HashSet<>();
-		log.info( "network(), searching {} gene(s)",  request.getList().size() );
+		Set<ONDEXConcept> genes = new HashSet<> ();
+		log.info ( "network(), searching {} gene(s)", request.getList ().size () );
 
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 
 		// TODO: this is the same gene filtering we have in _keyword(), should be factorised
 		//
-		
+
 		// Search Genes
-		if (!request.getList().isEmpty()) {
-			genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
+		if ( !request.getList ().isEmpty () )
+		{
+			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
 		}
 
 		// Search Regions
-		if (!request.getQtl().isEmpty()) {
-			genes.addAll(searchService.fetchQTLs(request.getQtl()));
-		}
+		if ( !request.getQtl ().isEmpty () )
+			genes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
 
 		// Find Semantic Motifs
-		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
+		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ()
+			.findSemanticMotifs ( genes, request.getKeyword () );
 
 		// Export graph
-		var response = new NetworkResponse();
-		response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft());
+		var response = new NetworkResponse ();
+		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
 
 		return response;
 	}
 
+	// TODO: probably it's no longer used
+	// 
 	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
-		int evidenceOndexID = Integer.parseInt(request.getKeyword());
+		int evidenceOndexID = Integer.parseInt( request.getKeyword() );
+		
 		Set<ONDEXConcept> genes = new HashSet<>();
+		
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 		var semanticMotifService = ondexServiceProvider.getSemanticMotifService (); 
 		
 		// Search Genes
 		if (!request.getList().isEmpty()) {
-			genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
+			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList() ) );
 		}
 
-		ONDEXGraph subGraph = semanticMotifService.findEvidencePaths(evidenceOndexID, genes);
+		ONDEXGraph subGraph = semanticMotifService.findEvidencePaths ( evidenceOndexID, genes );
 
 		// Export graph
-		var response = new EvidencePathResponse();
-		response.setGraph(ExportUtils.exportGraph2Json(subGraph).getLeft ());
+		var response = new EvidencePathResponse ();
+		response.setGraph( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
 		
 		return response;
 	}
 	
-	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-		LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
-		try {
+	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
+		try 
+		{
+			LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
 			var opts = OndexServiceProvider.getInstance ().getDataService ().getOptions ();
 			byte[] encoded = Files.readAllBytes(Paths.get(opts.getString("DataPath"), "latestNetwork_Stats.tab"));
 			response.stats = new String(encoded, Charset.defaultCharset());
-		} catch (IOException ex) {
-	    	log.error(ex);
-	    	throw new Error(ex); 
-	    }
-		return response;
+			return response;
+		} 
+		catch (IOException ex) {
+	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
+	  }
 	}
         
-    public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
-    {
-        GraphSummaryResponse response = new GraphSummaryResponse();
-        
-        try {
-        		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-        		var odxData = ondexServiceProvider.getDataService ();
-        		
-            // Parse the data into a JSON format & set the graphSummary as is.
-        		// This data is obtained from the maven-settings.xml
-            JSONObject summaryJSON = new JSONObject();
-            summaryJSON.put("dbVersion", odxData.getDatasetVersion () );
-            summaryJSON.put("sourceOrganization", odxData.getDatasetOrganization ());
-            odxData.getTaxIds ().forEach((taxID) -> {
-               summaryJSON.put("speciesTaxid", taxID);
-            });
-            summaryJSON.put("speciesName", odxData.getSpecies());
-
-            // TODO: initially, this was set with ondexServiceProvider.getCreationDate()
-            // which corresponded to the server's starting time.
-            // TODO: after discussion, we require this to come from the OXL's last-modified date
-            // (and later, from inside the OXL, together with graph metadata
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
-            var timestampStr = formatter.format ( new Date() );
-            summaryJSON.put("dbDateCreated", timestampStr);
-
-            summaryJSON.put("provider", odxData.getDatasetProvider () );
-            String jsonString = summaryJSON.toString();
-            // Removing the pesky double quotes
-            jsonString = jsonString.substring(1, jsonString.length() - 1);
-            log.info("response.dataSource= " + jsonString); // test
-            response.dataSource = jsonString;
-            
-        } catch (JSONException ex) {
-            log.error(ex);
-            throw new Error(ex);
-        }
-        
-        return response;
-        
-    }
+  public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+  {
+    GraphSummaryResponse response = new GraphSummaryResponse();
+    
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		var dataService = ondexServiceProvider.getDataService ();
+		var oxlFile = new File ( dataService.getOxlPath () );
 		
-		public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException 
-		{
-				log.info("geneCount() Search genes " + request.getList().size());
-        Set<ONDEXConcept> genes = new HashSet<>();
+    // Parse the data into a JSON format & set the graphSummary as is.
+		// This data is obtained from the maven-settings.xml
+    JSONObject summaryJSON = new JSONObject();
+    summaryJSON.put("dbVersion", dataService.getDatasetVersion () );
+    summaryJSON.put("sourceOrganization", dataService.getDatasetOrganization ());
+    dataService.getTaxIds ().forEach((taxID) -> {
+       summaryJSON.put("speciesTaxid", taxID);
+    });
+    summaryJSON.put("speciesName", dataService.getSpecies());
 
-    		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-    		var searchService = ondexServiceProvider.getSearchService ();
+    // TODO: initially, this was set with ondexServiceProvider.getCreationDate()
+    // which corresponded to the server's starting time.
+    // TODO: after discussion, we require this to come from the OXL's last-modified date
+    // (and later, from inside the OXL, together with graph metadata
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+    var timestampStr = formatter.format ( oxlFile.lastModified () );
+    summaryJSON.put("dbDateCreated", timestampStr);
 
-        // Search Genes
-        if (!request.getList().isEmpty()) {
-            genes.addAll(searchService.filterGenesByAccessionKeywords(request.getList()));
-        }
+    summaryJSON.put("provider", dataService.getDatasetProvider () );
+    String jsonString = summaryJSON.toString();
+    // Removing the pesky double quotes
+    jsonString = jsonString.substring(1, jsonString.length() - 1);
+    log.info("response.dataSource= " + jsonString);
+    response.dataSource = jsonString;
+    
+    return response;
+      
+  }
+		
+	public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	{
+		// TODO: WTH!?!?! This is the same as network() + minor additions !!!
+		// 
+				
+		log.info( "geneCount() Search {} gene(s)", request.getList().size() );
+    Set<ONDEXConcept> genes = new HashSet<>();
 
-        // Search Regions
-        if (!request.getQtl().isEmpty()) {
-            genes.addAll(searchService.fetchQTLs(request.getQtl()));
-        }
+		var ondexServiceProvider = OndexServiceProvider.getInstance ();
+		var searchService = ondexServiceProvider.getSearchService ();
 
-        // Find Semantic Motifs
-        ONDEXGraph subGraph = 
-        	ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
-        
-        var response = new CountGraphEntities();
-        // Set the graph
-        var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
-        log.info("Set graph, now getting the number of nodes...");
-        
-        response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
-        response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
+    // Search Genes
+    if (!request.getList().isEmpty())
+       genes.addAll ( searchService.filterGenesByAccessionKeywords( request.getList() ) );
+   
 
-        return response;
+    // Search Regions
+    if (!request.getQtl().isEmpty()) {
+        genes.addAll(searchService.fetchQTLs(request.getQtl()));
     }
-	
-    public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-        KnetSpaceHost response = new KnetSpaceHost();
-        response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
-      return response;
-    }
+
+    // Find Semantic Motifs
+    ONDEXGraph subGraph = 
+    	ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
+    
+    var response = new CountGraphEntities();
+    // Set the graph
+    var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
+    log.info("Set graph, now getting the number of nodes...");
+    
+    response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
+    response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
+
+    return response;
+  }
+
+  public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+      KnetSpaceHost response = new KnetSpaceHost();
+      response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
+    return response;
+  }
 }

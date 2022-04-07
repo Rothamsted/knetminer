@@ -41,7 +41,7 @@ public class SemanticMotifSearchMgr
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
 			this.countLinkedGenes ();
 		}
-		catch ( ParseException ex )
+		catch ( Exception ex )
 		{
 			ExceptionUtils.throwEx ( 
 				IllegalArgumentException.class, ex, "Serch for: \"%s\" failed: ", keyword, ex.getMessage ()

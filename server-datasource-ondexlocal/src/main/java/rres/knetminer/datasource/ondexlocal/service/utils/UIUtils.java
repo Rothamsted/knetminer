@@ -230,10 +230,10 @@ public class UIUtils
 		// Order the keywords by length to prevent interference by shorter matches that are substrings of longer ones.
 		String[] orderedKeywords = keywordColourMap.keySet ().toArray ( new String[ 0 ] );
 		
-		Comparator<String> strLenComp = (a, b) -> a.length () == b.length () 
-			? a.compareTo ( b ) 
-			: Integer.compare ( a.length(), b.length() );
-
+		// By len, or, if they're the same len, by string
+		Comparator<String> strLenComp = Comparator.comparingInt ( String::length )
+			.thenComparing ( Comparator.naturalOrder () );
+		
 		Arrays.sort ( orderedKeywords, strLenComp );
 		boolean found = false;
 

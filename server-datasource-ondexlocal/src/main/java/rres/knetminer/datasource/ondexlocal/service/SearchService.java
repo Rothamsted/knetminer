@@ -10,7 +10,6 @@ import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mer
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -133,7 +132,7 @@ public class SearchService
    */
 	public Map<ONDEXConcept, Float> searchGeneRelatedConcepts ( 
 		String searchString, Collection<ONDEXConcept> geneList, boolean includePublications 
-	) throws ParseException
+	)
 	{
 		var graph = dataService.getGraph ();
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
@@ -233,7 +232,7 @@ public class SearchService
 
   private void searchConceptByIdxField ( 
   	String keywords, String idxFieldName, int resultLimit, 
-  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
+  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits )
   {
   	searchConceptByIdxField ( keywords, idxFieldName, null, resultLimit, allResults, notHits );
   }
@@ -243,7 +242,7 @@ public class SearchService
    */
   private void searchConceptByIdxField ( 
   	String keywords, String idxFieldName, String idxFieldSubName, int resultLimit, 
-  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits ) throws ParseException
+  	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits )
   {
 		ScoredHits<ONDEXConcept> thisHits = this.luceneMgr.searchTopConceptsByIdxField ( 
 			keywords, idxFieldName, idxFieldSubName, resultLimit 
