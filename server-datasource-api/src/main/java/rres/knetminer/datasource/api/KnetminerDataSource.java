@@ -79,14 +79,10 @@ public abstract class KnetminerDataSource {
 	public abstract QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
 	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-
-	public abstract EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 	
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
         
 	public abstract GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-	
-	public abstract CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-	
+		
 	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }

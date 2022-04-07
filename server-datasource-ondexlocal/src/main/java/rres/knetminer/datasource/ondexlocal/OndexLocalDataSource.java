@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,8 @@ import com.google.common.base.Functions;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import rres.knetminer.datasource.api.CountGraphEntities;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
-import rres.knetminer.datasource.api.EvidencePathResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
@@ -107,6 +104,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		log.info ( "Asynchronous Ondex initialisation started" );
 	}
 		
+	@Override
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
@@ -118,6 +116,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		return response;
 	}
 
+	@Override
 	public SynonymsResponse synonyms(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		try 
@@ -141,6 +140,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 	}
 
+	@Override
 	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		// TODO: needs to use QTL and the same format as the qtl param
 		String[] loci = request.getKeyword().split("-");
@@ -162,12 +162,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		return response;
 	}
 
+	@Override	
 	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		GenomeResponse response = new GenomeResponse();
 		this._keyword(response, request);
 		return response;
 	}
 
+	@Override
 	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException {
 		QtlResponse response = new QtlResponse();
 		this._keyword(response, request);
@@ -320,6 +322,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		return response;
 	}
 
+	@Override
 	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		Set<ONDEXConcept> genes = new HashSet<> ();
@@ -352,32 +355,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		return response;
 	}
 
-	// TODO: probably it's no longer used
-	// 
-	public EvidencePathResponse evidencePath(String dsName, KnetminerRequest request) throws IllegalArgumentException
-	{
-		int evidenceOndexID = Integer.parseInt( request.getKeyword() );
-		
-		Set<ONDEXConcept> genes = new HashSet<>();
-		
-		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		var searchService = ondexServiceProvider.getSearchService ();
-		var semanticMotifService = ondexServiceProvider.getSemanticMotifService (); 
-		
-		// Search Genes
-		if (!request.getList().isEmpty()) {
-			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList() ) );
-		}
-
-		ONDEXGraph subGraph = semanticMotifService.findEvidencePaths ( evidenceOndexID, genes );
-
-		// Export graph
-		var response = new EvidencePathResponse ();
-		response.setGraph( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
-		
-		return response;
-	}
 	
+	@Override
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		try 
@@ -392,7 +371,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
 	  }
 	}
-        
+    
+	@Override
   public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
   {
     GraphSummaryResponse response = new GraphSummaryResponse();
@@ -430,42 +410,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
       
   }
 		
-	public CountGraphEntities geneCount(String dsName, KnetminerRequest request) throws IllegalArgumentException 
-	{
-		// TODO: WTH!?!?! This is the same as network() + minor additions !!!
-		// 
-				
-		log.info( "geneCount() Search {} gene(s)", request.getList().size() );
-    Set<ONDEXConcept> genes = new HashSet<>();
 
-		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		var searchService = ondexServiceProvider.getSearchService ();
-
-    // Search Genes
-    if (!request.getList().isEmpty())
-       genes.addAll ( searchService.filterGenesByAccessionKeywords( request.getList() ) );
-   
-
-    // Search Regions
-    if (!request.getQtl().isEmpty()) {
-        genes.addAll(searchService.fetchQTLs(request.getQtl()));
-    }
-
-    // Find Semantic Motifs
-    ONDEXGraph subGraph = 
-    	ondexServiceProvider.getSemanticMotifService ().findSemanticMotifs(genes, request.getKeyword());
-    
-    var response = new CountGraphEntities();
-    // Set the graph
-    var jsonGraph = ExportUtils.exportGraph2Json(subGraph).getRight ();
-    log.info("Set graph, now getting the number of nodes...");
-    
-    response.setNodeCount( Integer.toString ( jsonGraph.getConcepts ().size () ) );
-    response.setRelationshipCount( Integer.toString ( jsonGraph.getRelations ().size () ) );
-
-    return response;
-  }
-
+	@Override
   public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
       KnetSpaceHost response = new KnetSpaceHost();
       response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
