@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,10 +48,9 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
-import rres.knetminer.datasource.ondexlocal.SemanticMotifSearchMgr;
+import net.sourceforge.ondex.core.util.GraphLabelsUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
-import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
@@ -390,7 +388,7 @@ public class ExportService
 			Double score = scoredCandidates.getOrDefault ( gene, 0d );
 	
 			// Exclude accessions when possible
-			String geneName = KGUtils.getBestName ( gene, true );
+			String geneName = GraphLabelsUtils.getBestName ( gene, true );
 	
 			boolean isInList = userGeneIds.contains ( gene.getId () );
 	
@@ -449,7 +447,7 @@ public class ExportService
 				// group by CC
 				relatedConcept -> relatedConcept.getOfType ().getId (),
 				// for each CC, make a list of labels
-				Collectors.mapping ( KGUtils::getBestConceptLabel, Collectors.toList () )
+				Collectors.mapping ( GraphLabelsUtils::getBestConceptLabel, Collectors.toList () )
 			)); 
 				
 			
@@ -474,7 +472,7 @@ public class ExportService
 			{
 				List<String> pubLabels = newPubs.stream ()
 				.map ( graph::getConcept )
-			  .map ( KGUtils::getBestConceptLabel )
+			  .map ( GraphLabelsUtils::getBestConceptLabel )
 			  // TODO: is this right?! What if the name IS NOT a PMID?!
 			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
 			  .collect ( Collectors.toList () );
@@ -504,7 +502,7 @@ public class ExportService
 			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
 			
 			out.append (
-				geneId + "\t" + KGUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
+				geneId + "\t" + GraphLabelsUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
 				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
@@ -593,7 +591,7 @@ public class ExportService
 			for ( ConceptAccession acc : gene.getConceptAccessions () )
 				queryAcc = acc.getAccession ();
 
-			String label = KGUtils.getBestConceptLabel ( gene );
+			String label = GraphLabelsUtils.getBestConceptLabel ( gene );
 			String query = null;
 			try
 			{
@@ -818,7 +816,7 @@ public class ExportService
 			if ( Stream.of ( "Publication", "Protein", "Enzyme" ).anyMatch ( t -> t.equals ( foundType ) ) ) 
 				return;
 
-			String foundName = KGUtils.getBestConceptLabel ( foundConcept );
+			String foundName = GraphLabelsUtils.getBestConceptLabel ( foundConcept );
 
 			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
 			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
@@ -841,7 +839,7 @@ public class ExportService
 				var geneHelper = new GeneHelper ( graph, startGene );
 				
 				if ( startGene != null && userGenesRo.contains ( startGene ) )
-					userGeneLabels.add ( KGUtils.getBestGeneAccession ( startGene ) );
+					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( startGene ) );
 
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 

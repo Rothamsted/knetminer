@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.toMap;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
-import static rres.knetminer.datasource.ondexlocal.service.utils.KGUtils.getBestConceptLabel;
+import static net.sourceforge.ondex.core.util.GraphLabelsUtils.getBestConceptLabel;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
