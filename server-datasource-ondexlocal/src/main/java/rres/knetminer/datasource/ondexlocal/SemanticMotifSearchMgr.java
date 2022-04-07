@@ -43,8 +43,11 @@ public class SemanticMotifSearchMgr
 		}
 		catch ( Exception ex )
 		{
+			Class<? extends RuntimeException> wrapperType = ex instanceof IllegalArgumentException 
+				?  IllegalArgumentException.class : RuntimeException.class;
+			
 			ExceptionUtils.throwEx ( 
-				IllegalArgumentException.class, ex, "Serch for: \"%s\" failed: %s", keyword, ex.getMessage ()
+				wrapperType, ex, "Serch for: \"%s\" failed: %s", keyword, ex.getMessage ()
 			);
 		}
 	}
