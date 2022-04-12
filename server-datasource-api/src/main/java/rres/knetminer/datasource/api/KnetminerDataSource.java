@@ -51,14 +51,14 @@ public abstract class KnetminerDataSource {
 		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
 	
-	private String api_url = "";
+	private String apiUrl = "";
 	
-	public void setApiUrl(String api_url) {
-		this.api_url = api_url;
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
 	}
 	
 	public String getApiUrl() {
-		return this.api_url;
+		return this.apiUrl;
 	}
 	
 	/*
