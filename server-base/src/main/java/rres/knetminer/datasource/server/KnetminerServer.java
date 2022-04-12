@@ -87,7 +87,7 @@ public class KnetminerServer
 	 * matching '/hello/**'.
 	 */
 	@PostConstruct
-	public void buildDataSourceCache() {		
+	private void buildDataSourceCache() {		
 		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
 		for (KnetminerDataSource dataSource : this.dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
@@ -103,7 +103,7 @@ public class KnetminerServer
 	 * GOOGLE_ANALYTICS_TRACKING_ID with a valid Google Analytics tracking ID.
 	 */
 	@PostConstruct
-	public void loadGoogleAnalyticsTrackingId() 
+	private void loadGoogleAnalyticsTrackingId() 
 	{
 		ClassLoader classLoader = Thread.currentThread ().getContextClassLoader ();
 		InputStream input = classLoader.getResourceAsStream ( "ga.properties" );
