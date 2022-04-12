@@ -17,6 +17,7 @@ import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
@@ -55,13 +55,15 @@ import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
  * via autowiring. See the sister server-example project for how this is done. 
  * 
  * @author holland
- * @author Marco Brandizi (2021, removed custom exception management and linked it to {@link KnetminerExceptionHandler}) 
+ * @author Marco Brandizi (
+ * 	2021, removed custom exception management and linked it to {@link KnetminerExceptionHandler}
+ *  2022, various code factorisation and renaming
+ * ) 
  */
 @Controller
 @RequestMapping("/")
-public class KnetminerServer {
-	protected final Logger log = LogManager.getLogger(getClass());
-	
+public class KnetminerServer
+{	
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
 
@@ -69,8 +71,11 @@ public class KnetminerServer {
 
 	private String gaTrackingId;
 
+	
+	private final Logger log = LogManager.getLogger ( getClass() );
+	
 	// Special logging to achieve web analytics info.
-	private static final Logger logAnalytics = LogManager.getLogger("analytics-log");
+	private static final Logger logAnalytics = LogManager.getLogger ( "analytics-log" );
 
 
 	/**
@@ -82,7 +87,7 @@ public class KnetminerServer {
 	 * matching '/hello/**'.
 	 */
 	@PostConstruct
-	public void _buildDataSourceCache() {		
+	public void buildDataSourceCache() {		
 		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
 		for (KnetminerDataSource dataSource : this.dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
@@ -98,99 +103,69 @@ public class KnetminerServer {
 	 * GOOGLE_ANALYTICS_TRACKING_ID with a valid Google Analytics tracking ID.
 	 */
 	@PostConstruct
-	public void _loadGATrackingId() {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream("ga.properties");
-		Properties props = new Properties();
-		try {
-			props.load(input);
-                        log.info("GA enabled= "+ props.getProperty("GOOGLE_ANALYTICS_ENABLED")); // test passing val
-                        log.info("ga_id to use= "+ props.getProperty("GOOGLE_ANALYTICS_TRACKING_ID")); // test passed val
-		} catch (IOException ex) {
-			log.warn("Failed to load Google Analytics properties file", ex);
+	public void loadGoogleAnalyticsTrackingId() 
+	{
+		ClassLoader classLoader = Thread.currentThread ().getContextClassLoader ();
+		InputStream input = classLoader.getResourceAsStream ( "ga.properties" );
+		Properties props = new Properties ();
+		try
+		{
+			props.load ( input );
+			log.info ( "GA enabled= " + props.getProperty ( "GOOGLE_ANALYTICS_ENABLED" ) ); // test passing val
+			log.info ( "ga_id to use= " + props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID" ) ); // test passed val
+		}
+		catch ( IOException ex )
+		{
+			log.warn ( "Failed to load Google Analytics properties file", ex );
 			return;
 		}
-		if (Boolean.parseBoolean(props.getProperty("GOOGLE_ANALYTICS_ENABLED", "false"))) {
-			this.gaTrackingId = props.getProperty("GOOGLE_ANALYTICS_TRACKING_ID", null);
-			if (this.gaTrackingId == null)
-				log.warn("Google Analytics properties file enabled analytics but did not provide tracking ID");
+		if ( Boolean.parseBoolean ( props.getProperty ( "GOOGLE_ANALYTICS_ENABLED", "false" ) ) )
+		{
+			this.gaTrackingId = props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID", null );
+			if ( this.gaTrackingId == null )
+				log.warn ( "Google Analytics properties file enabled analytics but did not provide tracking ID" );
 			else
-				log.info("Google Analytics enabled");
-		} else
-			log.info("Google Analytics disabled");
+				log.info ( "Google Analytics enabled" );
+		} 
+		else
+			log.info ( "Google Analytics disabled" );
 	}
 
-	private void _googlePageView(String ds, String mode, HttpServletRequest rawRequest)
+
+	/**
+	 * Forward a request to a JSP page, using Spring MVC.
+	 * 
+	 * See below for details.
+	 */
+	private String mvcPageForward ( 
+		String ds, String keyword, List<String> list, HttpServletRequest rawRequest, Model model, String pageId )
 	{
-		String ipAddress = rawRequest.getHeader("X-FORWARDED-FOR");
-		log.debug("IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress);
-		if (ipAddress == null) {
-			ipAddress = rawRequest.getRemoteAddr();
-			log.debug("IP TRACING 2, getRemoteAddr(): {}", ipAddress);
-		}else{
-			log.debug("IP TRACING 3, IP to be split: {}", ipAddress);
-			if(ipAddress.indexOf(',')!= -1){
-				ipAddress = ipAddress.split(",")[0];
-			}
-			log.debug("IP TRACING 4, splitted IP: {}", ipAddress);
-		}
-		log.debug("IP TRACING 5 post-processed IP: {}", ipAddress);
+		this.getConfiguredDatasource(ds, rawRequest); // just validates ds
+		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
+		
+		if ( list != null && !list.isEmpty () )
+			model.addAttribute("list", new JSONArray(list).toString());
+		
+		if (keyword != null && !"".equals ( keyword ) )
+			model.addAttribute("keyword", keyword);
 
-		String[] IP_HEADER_CANDIDATES = {
-				"X-Forwarded-For",
-				"Proxy-Client-IP",
-				"WL-Proxy-Client-IP",
-				"HTTP_X_FORWARDED_FOR",
-				"HTTP_X_FORWARDED",
-				"HTTP_X_CLUSTER_CLIENT_IP",
-				"HTTP_CLIENT_IP",
-				"HTTP_FORWARDED_FOR",
-				"HTTP_FORWARDED",
-				"HTTP_VIA",
-				"REMOTE_ADDR" };
-
-		for (String header : IP_HEADER_CANDIDATES) {
-			String ip = rawRequest.getHeader(header);
-			if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-				log.debug("IP TRACING, req headers, {}:{}", header, ip);
-			}
-		}
-
-		if (this.gaTrackingId!=null) {
-			String pageName = ds+"/"+mode;
-			GoogleAnalytics ga = new GoogleAnalyticsBuilder().withTrackingId(this.gaTrackingId).build();
-			ga.pageView().documentTitle(pageName).documentPath("/" + pageName)
-					.userIp(ipAddress).send();
-		}
+		return pageId;
 	}
-
+	
+	
 	/**
 	 * A /genepage shortcut which generates a redirect to a prepopulated KnetMaps
 	 * template with the /network query built for the user already. See WEB-INF/views
 	 * to find the HTML template that this query will return.
-	 * @param ds
-	 * @param keyword
-	 * @param list
-	 * @param rawRequest
-	 * @param model
-	 * @return
+	 * 
 	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/genepage")
-	public String genepage(@PathVariable String ds, @RequestParam(required = false) String keyword,
-			@RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model) {
-
-		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
-		if (dataSource == null) {
-			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Data source '" + ds + "' doesn't exist" );
-		}
-		this._googlePageView(ds, "genepage", rawRequest);
-		model.addAttribute("list", new JSONArray(list).toString());
-		if (keyword != null && !"".equals(keyword)) {
-			model.addAttribute("keyword", keyword);
-		}
-
-		return "genepage";
+	public String genepage (
+		@PathVariable String ds, @RequestParam(required = false) String keyword,
+		@RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model )
+	{
+		return this.mvcPageForward ( ds, keyword, list, rawRequest, model, "genepage" );
 	}
 
 	/**
@@ -206,19 +181,11 @@ public class KnetminerServer {
 	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/evidencepage")
-	public String evidencepage(@PathVariable String ds, @RequestParam(required = true) String keyword,
-						       @RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model) {
-		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
-		if (dataSource == null) {
-			throw new HttpClientErrorException ( HttpStatus.BAD_REQUEST, "Data source '" + ds + "' doesn't exist" );
-		}
-		this._googlePageView(ds, "evidencepage", rawRequest);
-
-		if (!list.isEmpty()) {
-			model.addAttribute("list", new JSONArray(list).toString());
-		}
-		model.addAttribute("keyword", keyword);
-		return "evidencepage";
+	public String evidencepage (
+		@PathVariable String ds, @RequestParam(required = true) String keyword,
+		@RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model )
+	{
+		return this.mvcPageForward ( ds, keyword, list, rawRequest, model, "evidencepage" );
 	}
 
 	/**
@@ -244,45 +211,19 @@ public class KnetminerServer {
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
-			@RequestParam(required = false, defaultValue = "") String listMode, HttpServletRequest rawRequest) {
-		if (qtl == null) {
-			qtl = Collections.emptyList();
-		}
-		if (list == null) {
-			list = Collections.emptyList();
-		}
+			@RequestParam(required = false, defaultValue = "") String listMode, HttpServletRequest rawRequest)
+	{
+		// TODO: isn't this done downstream?
+		if (qtl == null) qtl = Collections.emptyList();
+		if (list == null) list = Collections.emptyList();
 
-		// TODO: We need VERY MUCH to stop polluting code this way! 
-		// This MUST go to some utilty and there there MUST BE only some invocation that clearly recalls the semantics 
-		// of these operations, eg, KnetminerServerUtils.logAnalytics ( logger, rawRequest, mode, list )
-		// This is filed under #462
-		//
-		Map<String, String> map = new TreeMap<>();
-
-		map.put("host",rawRequest.getServerName());
-		map.put("port",Integer.toString(rawRequest.getServerPort()));
-
-		map.put("mode", mode);
-		if(keyword != null) {
-			map.put("keywords", keyword);
-		}
-		if(!list.isEmpty()) {
-			map.put("list", new JSONArray(list).toString());
-		}
-
-		map.put("qtl", new JSONArray(qtl).toString());
-
-		map.put("datasource", ds);
-		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
-			ObjectMessage msg = new ObjectMessage(map);
-			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
-		}
 		KnetminerRequest request = new KnetminerRequest();
 		request.setKeyword(keyword);
 		request.setListMode(listMode);
 		request.setList(list);
 		request.setQtl(qtl);
-		return this._handle(ds, mode, request, rawRequest);
+		
+		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
 
 	/**
@@ -302,49 +243,16 @@ public class KnetminerServer {
 	@CrossOrigin
 	@PostMapping("/{ds}/{mode}")
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
-			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest) {
-		// TODO WRONG! Duplicating code like this is way too poor and 
-		// it needs to be factorised in a separated utility anyway!
-		//
-		Map<String, String> map = new TreeMap<>();
-
-		map.put("host",rawRequest.getServerName());
-		map.put("port",Integer.toString(rawRequest.getServerPort()));
-
-		map.put("mode", mode);
-		String keyword = request.getKeyword();
-		List<String> list = request.getList();
-		List<String> qtl = request.getQtl();
-		if(keyword != null) {
-			map.put("keywords", keyword);
-		}
-		if(!list.isEmpty()) {
-			map.put("list", new JSONArray(list).toString());
-		}
-
-		map.put("qtl", new JSONArray(qtl).toString());
-
-		map.put("datasource", ds);
-		if (mode.equals("genome") || mode.equals("genepage") || mode.equals("network")) {
-			ObjectMessage msg = new ObjectMessage(map);
-			logAnalytics.log(Level.getLevel("ANALYTICS"),msg);
-		}
-		
-		return this._handle(ds, mode, request, rawRequest);
+			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
+	{
+		this.googleTrackPageView ( ds, mode, request, rawRequest );
+		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
 
-	private KnetminerDataSource getConfiguredDatasource(String ds, HttpServletRequest rawRequest) {
-		KnetminerDataSource dataSource = this.dataSourceCache.get(ds);
-		if (dataSource == null) {
-			log.info("Invalid data source requested: /" + ds);
-			return null;
-		}
-		String incomingUrlPath = rawRequest.getRequestURL().toString().split("\\?")[0];
-		dataSource.setApiUrl(incomingUrlPath.substring(0, incomingUrlPath.lastIndexOf('/')));
-		return dataSource;
-	}
 
 	/**
+	 * Low-level request handler.
+	 * 
 	 * We use reflection to take the 'mode' (the Y part of the /X/Y request path)
 	 * and look up an equivalent method on the requested data source, then we call
 	 * it with the request parameters passed in.
@@ -355,72 +263,185 @@ public class KnetminerServer {
 	 * @param rawRequest
 	 * @return
 	 */
-	private ResponseEntity<KnetminerResponse> _handle(
-		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest) 
+	private ResponseEntity<KnetminerResponse> handleRaw (
+		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest ) 
 	{
 		if ( mode == null || mode.isEmpty () || mode.isBlank () )
 			throw new IllegalArgumentException ( "Knetminer API invoked with null/empty method name" );
-			
-		KnetminerDataSource dataSource = this.getConfiguredDatasource(ds, rawRequest);
-		if (dataSource == null) {
-			throw new HttpServerErrorException ( 
-				HttpStatus.BAD_REQUEST,  
-				"data source name isn't set, probably a Knetminer configuration error" 
-			);
-		}
 
-		if (log.isDebugEnabled()) {
-			String paramsStr = "Keyword:" + request.getKeyword() + " , List:"
-					+ Arrays.toString ( request.getList().toArray() ) + " , ListMode:" + request.getListMode()
-					+ " , QTL:" + Arrays.toString(request.getQtl().toArray());
+		KnetminerDataSource dataSource = this.getConfiguredDatasource ( ds, rawRequest );
+
+		if ( log.isDebugEnabled () )
+		{
+			String paramsStr = "Keyword:" + request.getKeyword () + " , List:"
+				+ Arrays.toString ( request.getList ().toArray () ) + " , ListMode:" + request.getListMode () + " , QTL:"
+				+ Arrays.toString ( request.getQtl ().toArray () );
 			log.debug ( "Calling " + mode + " with " + paramsStr );
 		}
-		this._googlePageView(ds, mode, rawRequest);
-		
-		try 
+		this.googleTrackPageView ( ds, mode, request, rawRequest );
+
+		try
 		{
-			Method method = dataSource.getClass().getMethod(mode, String.class, KnetminerRequest.class);
-			try {
-				KnetminerResponse response = (KnetminerResponse) method.invoke(dataSource, ds, request);
-				return new ResponseEntity<>(response, HttpStatus.OK);
+			Method method = dataSource.getClass ().getMethod ( mode, String.class, KnetminerRequest.class );
+			try
+			{
+				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
+				return new ResponseEntity<> ( response, HttpStatus.OK );
 			}
-			catch ( InvocationTargetException ex ) {
+			catch ( InvocationTargetException ex )
+			{
 				// This was caused by a underlying more significant exception, best is to try to catch and re-throw it.
 				throw ( (Exception) ExceptionUtils.getSignificantException ( ex ) );
 			}
-		} 
-		catch (NoSuchMethodException|IllegalAccessException|SecurityException ex) {
-			throw new ResponseStatusException2 (
-				HttpStatus.BAD_REQUEST, "Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex 
-			);
-		} 
-		catch (IllegalArgumentException ex) {
-			throw new ResponseStatusException2 (
-				HttpStatus.BAD_REQUEST, 
-				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ),
-				ex 
-			);
+		}
+		catch ( NoSuchMethodException | IllegalAccessException | SecurityException ex )
+		{
+			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
+					"Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+		}
+		catch ( IllegalArgumentException ex )
+		{
+			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
+					"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		}
 		catch ( RuntimeException ex )
 		{
 			// Let's re-throw the same exception, with a wrapping message
-			throw ExceptionUtils.buildEx (
-				ex.getClass(), ex, "Application error while running the API call '%s': %s", mode, getSignificantMessage ( ex ) 
-			);
+			throw ExceptionUtils.buildEx ( ex.getClass (), ex, "Application error while running the API call '%s': %s", mode,
+					getSignificantMessage ( ex ) );
 		}
-		catch (Exception ex) {
+		catch ( Exception ex )
+		{
 			throw new RuntimeException (
-				"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
-				ex
-			);
+					"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		}
-		catch (Error ex) {
+		catch ( Error ex )
+		{
 			// TODO: should we really catch this?!
-			throw new Error ( 
-				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ),
-				ex
-			);
+			throw new Error ( "System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		} 
+	}
+	
+	
+	/**
+	 * Gets the data source coming from the request, enriches it with data taken from the raw request and 
+	 * return the result. 
+	 * 
+	 * @throws HttpClientErrorException with {@link HttpStatus#BAD_REQUEST} if the ds isn't found in 
+	 * 	{@link #dataSources}. A explained above, the current KnetMiner has one value only in this list.
+	 * 
+	 */
+	private KnetminerDataSource getConfiguredDatasource ( String ds, HttpServletRequest rawRequest )
+	{
+		KnetminerDataSource dataSource = this.dataSourceCache.get ( ds );
+		if (dataSource == null) throw new HttpClientErrorException ( 
+			HttpStatus.BAD_REQUEST,  
+			"data source name isn't set, probably a Knetminer configuration error" 
+		);
+
+		String incomingUrlPath = rawRequest.getRequestURL ().toString ().split ( "\\?" )[ 0 ];
+		dataSource.setApiUrl ( incomingUrlPath.substring ( 0, incomingUrlPath.lastIndexOf ( '/' ) ) );
+		return dataSource;
+	}	
+	
+	/**
+	 * TODO: do we need listMode?
+	 * 
+	 */
+	private void googleTrackPageView (
+		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
+	)
+	{
+		this.googleTrackPageView ( ds, mode, request.getKeyword (), request.getList (), request.getQtl (), rawRequest );
+	}
+
+	
+	private void googleTrackPageView (
+		String ds, String mode, String keyword, List<String> list, List<String> qtl, HttpServletRequest rawRequest
+	)
+	{
+		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
+		log.debug ( "IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress );
+		
+		if ( ipAddress == null )
+		{
+			ipAddress = rawRequest.getRemoteAddr ();
+			log.debug ( "IP TRACING 2, getRemoteAddr(): {}", ipAddress );
+		} 
+		else
+		{
+			log.debug ( "IP TRACING 3, IP to be split: {}", ipAddress );
+			if ( ipAddress.indexOf ( ',' ) != -1 ) ipAddress = ipAddress.split ( "," )[ 0 ];
+			
+			log.debug ( "IP TRACING 4, splitted IP: {}", ipAddress );
+		}
+		log.debug ( "IP TRACING 5 post-processed IP: {}", ipAddress );
+
+		String[] IP_HEADER_CANDIDATES = { 
+			"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+			"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
+			"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
+			"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
+		};
+
+		for ( String header : IP_HEADER_CANDIDATES )
+		{
+			String ip = rawRequest.getHeader ( header );
+			if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
+				log.debug ( "IP TRACING, req headers, {}:{}", header, ip );
+		}
+
+		if ( this.gaTrackingId == null ) return;
+		
+		String pageName = ds + "/" + mode;
+		
+		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
+			.withTrackingId ( this.gaTrackingId )
+			.build ();
+		
+		ga.pageView ()
+			.documentTitle ( pageName )
+			.documentPath ( "/" + pageName )
+			.userIp ( ipAddress )
+			.send ();
+		
+		this.googleLogApiRequest ( ds, mode, keyword, list, qtl, rawRequest );			
+	}
+	
+	
+	/**
+	 * Sends Google Analytics traces to the dedicated logger {@link #logAnalytics}.
+	 * 
+	 * See above for details.
+	 */
+	private void googleLogApiRequest ( 
+		String ds, String mode, String keyword, List<String> list, List<String> qtl, HttpServletRequest rawRequest 
+	)
+	{
+		// These are the API calls that come from the outside, others are internal functions used by client together
+		// with these
+		//
+		if ( !ArrayUtils.contains ( new String[] { "genome", "genepage", "network" }, mode ) ) return;
+
+		Map<String, String> map = new TreeMap<> ();
+
+		map.put ( "host", rawRequest.getServerName () );
+		map.put ( "port", Integer.toString ( rawRequest.getServerPort () ) );
+
+		map.put ( "mode", mode );
+		
+		if ( keyword != null && !keyword.isEmpty () ) map.put ( "keywords", keyword );
+
+		if ( list != null && !list.isEmpty () )
+			map.put ( "list", new JSONArray ( list ).toString () );
+
+		if ( qtl != null && !qtl.isEmpty () )
+			map.put ( "qtl", new JSONArray ( qtl ).toString () );
+
+		map.put ( "datasource", ds );
+		
+		ObjectMessage msg = new ObjectMessage ( map );
+		logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
 	}
 	
 }
