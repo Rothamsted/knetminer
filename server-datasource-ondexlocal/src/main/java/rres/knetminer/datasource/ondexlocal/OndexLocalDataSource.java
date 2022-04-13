@@ -141,7 +141,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override
-	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
 		// TODO: needs to use QTL and the same format as the qtl param
 		String[] loci = request.getKeyword().split("-");
 		String chr = loci[0];
@@ -163,153 +164,148 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override	
-	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
 		GenomeResponse response = new GenomeResponse();
-		this._keyword(response, request);
+		this.handleMainSearch(response, request);
 		return response;
 	}
 
 	@Override
-	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException {
+	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
 		QtlResponse response = new QtlResponse();
-		this._keyword(response, request);
+		this.handleMainSearch(response, request);
 		return response;
 	}
 
-	private <T extends KeywordResponse> T _keyword(T response, KnetminerRequest request) throws IllegalArgumentException 
+	/**
+	 * Used to be named _keyword()
+	 * 
+	 * As you can see above, it handles the /genome and /qtl API calls. 
+	 */
+	private <T extends KeywordResponse> T handleMainSearch ( T response, KnetminerRequest request )
+		throws IllegalArgumentException 
 	{
 		// Find genes from the user's gene list
-		Set<ONDEXConcept> userGenes = new HashSet<>();
+		Set<ONDEXConcept> userGenes = new HashSet<> ();
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 		var exportService = ondexServiceProvider.getExportService ();
-		
-		if (request.getList() != null && request.getList().size() > 0) {
-			userGenes.addAll ( searchService.filterGenesByAccessionKeywords( request.getList() ) );
-			log.info("Number of user provided genes: " + userGenes.size());
+
+		if ( request.getList () != null && request.getList ().size () > 0 )
+		{
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
+			log.info ( "Number of user provided genes: " + userGenes.size () );
 		}
-		
+
 		// Also search Regions - only if no genes provided
-		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() ) {
-			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl() ) );
-		}
+		if ( userGenes.isEmpty () && !request.getQtl ().isEmpty () )
+			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
 
-		
 		// Genome search
-		log.info ( "Processing search mode: {}", response.getClass().getName() );
-						
-		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr ( request.getKeyword(), ondexServiceProvider, userGenes );
+		log.info ( "Processing search mode: {}", response.getClass ().getName () );
 
-		Map<ONDEXConcept, Double> candidateGenesMap = Map.of();
+		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr (
+			request.getKeyword (), ondexServiceProvider, userGenes
+		);
+
+		Map<ONDEXConcept, Double> candidateGenesMap = Map.of ();
 		Stream<ONDEXConcept> genesStream = Stream.of ();
 
-		// TODO: remove. response can't be anything else and if you need for its extensions, follow the S-of-SOLID principle,
-		// we have already enough mess here.
-		// if() removal makes the two initialisations above useless
-		//
-//		if (response.getClass().equals( GenomeResponse.class ) || response.getClass().equals ( QtlResponse.class ) )
-//		{
+		// Please note, this deal with the cases of /genome (response == GenomeResponse) and /qtl
+		// If you add additional calls, try to apply the S-of-SOLID and deal with them separately.
+
 		log.info ( "Computing response to /genome or /qtl" );
 
-		candidateGenesMap = smSearchMgr.getSortedGeneCandidates();
+		candidateGenesMap = smSearchMgr.getSortedGeneCandidates ();
 		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
 		genesStream = candidateGenes.parallelStream ();
-		
+
 		if ( !userGenes.isEmpty () )
 		{
-			log.info ( "Filtering {} user genes from {} candidate gene(s)", userGenes.size (), candidateGenes.size() );
+			log.info ( "Filtering {} user genes from {} candidate gene(s)", userGenes.size (), candidateGenes.size () );
 			genesStream = userGenes.parallelStream ();
-		
-		} // if userGenes
-		
-		
-		if ( response.getClass().equals ( QtlResponse.class ) ) 
+
+		}
+
+		if ( response instanceof QtlResponse )
 		{
-			// 
 			log.info ( "Filtering QTL(s) for QTL response " );
 
-			// TODO: this is very inefficient, the right way to do it would be passing it the genes and  
-			// search if they match the QTL regions 
+			// TODO: this is very inefficient, the right way to do it would be passing it the genes and
+			// search if they match the QTL regions
 			//
-			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl() );
+			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl () );
 			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
-			
+
 			genesStream = genesStream.filter ( genesQTL::contains );
-			
-			
-			// TODO: log.info("Genes after QTL filter: " + genes.size());
 		}
-//		} // genome & qtl cases // TODO: remove, see above
 
 		// TODO: messed up, genesStream is a selection of keys in candidateGenesMap, so we just need to remove
 		// the filtered keys
-		// 
+		//
 		final var candidatesProxy = new MutableObject<> ( candidateGenesMap ); // lambdas doesn't want non-finals
 		Map<ONDEXConcept, Double> genesMap = genesStream.collect (
-			Collectors.toConcurrentMap ( Functions.identity (), gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
-		);
+				Collectors.toConcurrentMap ( Functions.identity (),
+				gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
+			);
 		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
-		
-	
+
 		// Genes are expected in order
-		List<ONDEXConcept> genes = genesMap.keySet ()
-			.parallelStream ()
-			.sorted (  (g1, g2) ->  - Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
+		List<ONDEXConcept> genes = genesMap.keySet ().parallelStream ()
+			.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
 			.collect ( Collectors.toList () );
-		
-		if ( genes.size () == 0 ) return response;
-		
-		
+
+		if ( response instanceof QtlResponse )
+			log.info ( "{} gene(s) after QTL filter", genes.size () );
+
+		if ( genes.size () == 0 )
+			return response;
+
 		// We have genes, let's use them to build actual output
 		//
-		
+
 		// Chromosome view
 		//
 		String xmlGViewer = "";
-		if (ondexServiceProvider.getDataService ().isReferenceGenome () ) 
+		if ( ondexServiceProvider.getDataService ().isReferenceGenome () )
 		{
 			// Generate Annotation file.
-			log.debug("1.) API, doing chrome annotation");
-			xmlGViewer = exportService.exportGenomapXML ( 
-				this.getApiUrl(), genes, userGenes, request.getQtl(),
-				request.getKeyword(), 1000, genesMap
+			log.debug ( "1.) API, doing chrome annotation" );
+			xmlGViewer = exportService.exportGenomapXML (
+				this.getApiUrl (), genes, userGenes, request.getQtl (), request.getKeyword (), 1000, genesMap
 			);
-			log.debug("Chrome annotation done");
-		} 
+			log.debug ( "Chrome annotation done" );
+		}
 		else
-			log.debug("1.) API, no reference genome for Genomaps annotation, skipping ");
+			log.debug ( "1.) API, no reference genome for Genomaps annotation, skipping " );
 
-		
 		// Gene table
 		//
-		
-		log.debug("2.) API, doing gene table view");
 
-		var newSearchResult = new SemanticMotifsSearchResult (
-			smSearchMgr.getGeneId2RelatedConceptIds (), genesMap
-		);
+		log.debug ( "2.) API, doing gene table view" );
+
+		var newSearchResult = new SemanticMotifsSearchResult ( smSearchMgr.getGeneId2RelatedConceptIds (), genesMap );
 		String geneTable = exportService.exportGeneTable ( 
-			genes, userGenes, request.getQtl(), request.getListMode(), newSearchResult
-		);                        
-                              
-		log.debug("Gene table done");
+			genes, userGenes, request.getQtl (), request.getListMode (), newSearchResult 
+		);
 
+		log.debug ( "Gene table done" );
 
 		// Evidence table
 		//
-		
+
 		log.debug ( "3) API, doing evidence table" );
 		String evidenceTable = exportService.exportEvidenceTable (
-			request.getKeyword(), smSearchMgr.getLuceneConcepts(), userGenes, request.getQtl()
+			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl ()
 		);
 		log.debug ( "Evidence table done" );
-		
-		int docSize = searchService
-			.getMapEvidences2Genes ( smSearchMgr.getLuceneConcepts() )
-			.size();
+
+		int docSize = searchService.getMapEvidences2Genes ( smSearchMgr.getLuceneConcepts () ).size ();
 
 		// Total documents
-		int totalDocSize = smSearchMgr.getLuceneConcepts().size();
+		int totalDocSize = smSearchMgr.getLuceneConcepts ().size ();
 
 		// We have annotation and table file
 		response.setGViewer ( xmlGViewer );
@@ -318,7 +314,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		response.setGeneCount ( genes.size () );
 		response.setDocSize ( docSize );
 		response.setTotalDocSize ( totalDocSize );
-			
+
 		return response;
 	}
 
@@ -391,10 +387,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
     });
     summaryJSON.put("speciesName", dataService.getSpecies());
 
-    // TODO: initially, this was set with ondexServiceProvider.getCreationDate()
-    // which corresponded to the server's starting time.
-    // TODO: after discussion, we require this to come from the OXL's last-modified date
-    // (and later, from inside the OXL, together with graph metadata
+    // TODO: in future, this might come from OXL metadata (the graph descriptor)
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
     var timestampStr = formatter.format ( oxlFile.lastModified () );
     summaryJSON.put("dbDateCreated", timestampStr);
@@ -412,9 +405,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		
 
 	@Override
-  public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException {
-      KnetSpaceHost response = new KnetSpaceHost();
-      response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
-    return response;
+  public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	{
+		KnetSpaceHost response = new KnetSpaceHost();
+		response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
+		    
+		return response;
   }
 }
