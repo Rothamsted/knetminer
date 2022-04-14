@@ -1,9 +1,21 @@
 # Revision History
 
-*This file was last reviewed on 30/10/2021*
+*This file was last reviewed on 14/4/2022*
 
 # 5.0.1-SNAPSHOT
-* Current snapshot.
+
+## UI Improvements
+* Search reset button.
+* List of gene synonyms added to gene view (#602).
+
+## New configurations
+* Brassica Camelina configuration added.
+
+## Internal improvements and bugfixes
+* Methods to harmonise the gene and concept label displaying (#604).
+* Compatibility with Neo4j 4.4.
+* Heavy code refactoring, cleaning, etc for `KnetMinerServer`, `KnetMinerDataSource` and `OndexLocalDataSource`.
+* UI's Javascript refactoring (#621).
 
 
 # 5.0
