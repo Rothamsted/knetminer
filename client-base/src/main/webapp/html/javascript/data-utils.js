@@ -634,7 +634,7 @@ function createGeneNameSynonyms(element,data)
 	  var geneNameSynBody = document.createElement('div');
 	  $(geneNameSynBody).addClass('synonyms_body'); 
 	  // synonym are fetched one at a time, and kept in memory until the next search, reload or alike
-	  var synonymNameRequest = `/graphinfo/concept-info?ids=${data}`;
+	  var synonymNameRequest = `/graphinfo/concept-info?filterAccessionsFromNames=true&ids=${data}`;
 	  var synonymNameUrl = api_url + synonymNameRequest
 	  $.get(synonymNameUrl,'').done( function(data)
 		{ 

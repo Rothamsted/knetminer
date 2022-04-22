@@ -2,20 +2,33 @@ package rres.knetminer.datasource.server.graphinfo;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
+import net.sourceforge.ondex.core.util.GraphLabelsUtils;
 
 public class ConceptInfo 
 {
-	public ConceptInfo ( ONDEXConcept concept ) {
+	public ConceptInfo ( ONDEXConcept concept )
+	{
+		this ( concept, false );
+	}
+	
+	public ConceptInfo ( ONDEXConcept concept, boolean filterAccessionsFromNames ) 
+	{
 		this.id = concept.getId();
 		this.accessions = concept.getConceptAccessions ().stream ()
 														 .map ( AccessionInfo::new )
 														 .collect ( Collectors.toSet() );
 		this.conceptType = concept.getOfType().getId();
-		this.names = concept.getConceptNames ().stream ()
-											   .map( NameInfo::new )
-											   .collect( Collectors.toSet() );
+
+		Stream<ConceptName> namesStream = GraphLabelsUtils.filterAccessionsFromNamesAsStream ( concept );
+		this.names = namesStream == null 
+			? Set.of() 
+			: namesStream.map( NameInfo::new )
+									 .collect( Collectors.toSet() );
+		
 		this.description = concept.getDescription();
 		this.dataSource = concept.getElementOf().getId();
 	}

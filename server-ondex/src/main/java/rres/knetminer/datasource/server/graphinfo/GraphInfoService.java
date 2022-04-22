@@ -32,7 +32,10 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 public class GraphInfoService
 {
 	@RequestMapping ( path = "/concept-info", method = { RequestMethod.GET, RequestMethod.POST } )
-	public Set<ConceptInfo> concetpsInfo ( @RequestParam( required = true ) Set<Integer> ids )
+	public Set<ConceptInfo> concetpsInfo ( 
+		@RequestParam( required = true ) Set<Integer> ids,
+		@RequestParam( required = false ) boolean filterAccessionsFromNames
+	)
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var dataService = ondexServiceProvider.getDataService ();
