@@ -21,7 +21,7 @@
     "es6-promise": "^3.2.1",
     "d3.promise": "^1.1.0",
     "labella": "^1.1.1",
-    "file-saver.js": "^1.20150507.2",
+    "file-saver": "^2.0.4",
     "simple-statistics": "v1.0.1",
     "loglevel": "~1.4.1",
     "saveSvgAsPng": "https://github.com/exupero/saveSvgAsPng.git#~1.0.1",
