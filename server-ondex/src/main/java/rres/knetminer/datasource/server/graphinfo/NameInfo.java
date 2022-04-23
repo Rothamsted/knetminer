@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.server.graphinfo;
 
+import java.util.Objects;
+
 import net.sourceforge.ondex.core.ConceptName;
 
 public class NameInfo

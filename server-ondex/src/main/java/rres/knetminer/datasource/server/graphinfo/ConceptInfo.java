@@ -1,8 +1,11 @@
 package rres.knetminer.datasource.server.graphinfo;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.collect.Comparators;
 
 import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
@@ -18,16 +21,30 @@ public class ConceptInfo
 	public ConceptInfo ( ONDEXConcept concept, boolean filterAccessionsFromNames ) 
 	{
 		this.id = concept.getId();
-		this.accessions = concept.getConceptAccessions ().stream ()
-														 .map ( AccessionInfo::new )
-														 .collect ( Collectors.toSet() );
+		
+		this.accessions = concept.getConceptAccessions ()
+			.stream ()
+			.map ( AccessionInfo::new )
+			// Avoid to return them in random order
+			.sorted ( 
+				Comparator.comparing ( AccessionInfo::getAccession )
+				.thenComparing ( Comparator.comparing ( AccessionInfo::getDataSource ) )
+			)
+			.collect ( Collectors.toSet() );
+		
 		this.conceptType = concept.getOfType().getId();
 
 		Stream<ConceptName> namesStream = GraphLabelsUtils.filterAccessionsFromNamesAsStream ( concept );
 		this.names = namesStream == null 
 			? Set.of() 
 			: namesStream.map( NameInfo::new )
-									 .collect( Collectors.toSet() );
+					// Same as above
+					.sorted ( 
+						Comparator.comparing ( NameInfo::isPreferred )
+						.reversed ()
+						.thenComparing ( Comparator.comparing ( NameInfo::getName ) )
+					)
+					.collect( Collectors.toSet() );
 		
 		this.description = concept.getDescription();
 		this.dataSource = concept.getElementOf().getId();
