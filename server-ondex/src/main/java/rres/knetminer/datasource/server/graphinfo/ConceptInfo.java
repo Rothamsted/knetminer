@@ -2,6 +2,7 @@ package rres.knetminer.datasource.server.graphinfo;
 
 import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,11 +27,10 @@ public class ConceptInfo
 			.stream ()
 			.map ( AccessionInfo::new )
 			// Avoid to return them in random order
-			.sorted ( 
+			.collect ( Collectors.toCollection( () -> new TreeSet<> (
 				Comparator.comparing ( AccessionInfo::getAccession )
 				.thenComparing ( Comparator.comparing ( AccessionInfo::getDataSource ) )
-			)
-			.collect ( Collectors.toSet() );
+			)));
 		
 		this.conceptType = concept.getOfType().getId();
 
@@ -39,12 +39,11 @@ public class ConceptInfo
 			? Set.of() 
 			: namesStream.map( NameInfo::new )
 					// Same as above
-					.sorted ( 
+					.collect ( Collectors.toCollection( () -> new TreeSet<> (
 						Comparator.comparing ( NameInfo::isPreferred )
 						.reversed ()
 						.thenComparing ( Comparator.comparing ( NameInfo::getName ) )
-					)
-					.collect( Collectors.toSet() );
+					)));
 		
 		this.description = concept.getDescription();
 		this.dataSource = concept.getElementOf().getId();
