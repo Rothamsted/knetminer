@@ -4,9 +4,8 @@ import net.sourceforge.ondex.core.ConceptAccession;
 
 public class AccessionInfo {
 	
-	String accession;
-	
-	String dataSource;
+	private String accession;
+	private String dataSource;
 	
 	public AccessionInfo ( ConceptAccession acc ) {
 		accession = acc.getAccession();
@@ -19,6 +18,7 @@ public class AccessionInfo {
 	public void setAccession ( String accession ) {
 		this.accession = accession;
 	}
+	
 	public String getDataSource () {
 		return dataSource;
 	}

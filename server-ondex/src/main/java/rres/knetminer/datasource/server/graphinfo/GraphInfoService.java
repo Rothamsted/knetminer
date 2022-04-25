@@ -33,8 +33,8 @@ public class GraphInfoService
 {
 	@RequestMapping ( path = "/concept-info", method = { RequestMethod.GET, RequestMethod.POST } )
 	public Set<ConceptInfo> concetpsInfo ( 
-		@RequestParam( required = true ) Set<Integer> ids,
-		@RequestParam( required = false ) boolean filterAccessionsFromNames
+		@RequestParam Set<Integer> ids,
+		@RequestParam( required = false, defaultValue = "false" ) boolean filterAccessionsFromNames
 	)
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
@@ -42,8 +42,8 @@ public class GraphInfoService
 		var graph = dataService.getGraph ();
 
 		Set<ConceptInfo> result = ids.stream ().map( graph::getConcept )
-											   .filter ( Objects::nonNull ).map( ConceptInfo::new )
-											   .collect ( Collectors.toSet () );
+			.filter ( Objects::nonNull ).map( ConceptInfo::new )
+			.collect ( Collectors.toSet () );
 
 		return result;
 	}

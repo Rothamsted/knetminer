@@ -1,20 +1,17 @@
 package rres.knetminer.datasource.server.graphinfo;
 
-import java.util.Objects;
-
 import net.sourceforge.ondex.core.ConceptName;
 
 public class NameInfo
 {
+	private String name;
+	private boolean preferred;
+
 	public NameInfo ( ConceptName name )
 	{
 		this.name = name.getName();
 		this.preferred = name.isPreferred();
 	}
-	
-	String name;
-	
-	boolean preferred;
 	
 	public String getName () {
 		return name;
