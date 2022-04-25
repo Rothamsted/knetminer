@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
@@ -31,6 +30,9 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 @CrossOrigin
 public class GraphInfoService
 {
+	/**
+	 * @param filterAccessionsFromNames filter accessions from names, see {@link ConceptInfo}
+	 */
 	@RequestMapping ( path = "/concept-info", method = { RequestMethod.GET, RequestMethod.POST } )
 	public Set<ConceptInfo> concetpsInfo ( 
 		@RequestParam Set<Integer> ids,
@@ -41,8 +43,10 @@ public class GraphInfoService
 		var dataService = ondexServiceProvider.getDataService ();
 		var graph = dataService.getGraph ();
 
-		Set<ConceptInfo> result = ids.stream ().map( graph::getConcept )
-			.filter ( Objects::nonNull ).map( ConceptInfo::new )
+		Set<ConceptInfo> result = ids.stream ()
+			.map( graph::getConcept )
+			.filter ( Objects::nonNull )
+			.map( c -> new ConceptInfo ( c, filterAccessionsFromNames ) )
 			.collect ( Collectors.toSet () );
 
 		return result;

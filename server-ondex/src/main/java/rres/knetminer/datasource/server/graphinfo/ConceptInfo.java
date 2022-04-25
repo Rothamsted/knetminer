@@ -38,6 +38,7 @@ public class ConceptInfo
 	public ConceptInfo ( ONDEXConcept concept, boolean filterAccessionsFromNames ) 
 	{
 		this.id = concept.getId();
+		this.conceptType = concept.getOfType().getId();
 		
 		this.accessions = concept.getConceptAccessions ()
 			.stream ()
@@ -48,8 +49,6 @@ public class ConceptInfo
 				.thenComparing ( Comparator.comparing ( AccessionInfo::getDataSource ) )
 			)));
 		
-		this.conceptType = concept.getOfType().getId();
-
 		Stream<ConceptName> namesStream = filterAccessionsFromNames
 			? GraphLabelsUtils.filterAccessionsFromNamesAsStream ( concept )
 			: concept.getConceptNames ().stream ();
