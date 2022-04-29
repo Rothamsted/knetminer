@@ -93,6 +93,39 @@ public class KGUtils
 		return result;
 	}
 	
+	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
+			DataService dataService, SearchService searchService, List<String> accessions,String taxId 
+		)
+		{
+			if ( accessions.size () == 0 ) return new HashSet<>();
+					
+			// TODO: probably it's not needed anymore
+			Set<String> normAccs = accessions.stream ()
+			.map ( acc -> 
+				acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
+				.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
+				.toUpperCase () 
+			).collect ( Collectors.toSet () );			
+					
+			Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
+			.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
+
+			Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
+			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
+			
+			
+			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
+			.flatMap ( Set::parallelStream )
+			.filter ( gene -> {
+	      return dataService.containsTaxId ( taxId );
+			})
+			// Components like the semantic motif traverser need the original internal IDs.
+			.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
+			.collect ( Collectors.toSet () );
+			
+			return result;
+		}
+	
 	
   /**
    * Searches for genes within genomic regions (QTLs), using the special format in the parameter.

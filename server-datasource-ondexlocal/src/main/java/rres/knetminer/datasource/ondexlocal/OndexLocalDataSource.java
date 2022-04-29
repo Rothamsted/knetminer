@@ -108,7 +108,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr(request.getKeyword(), ondexServiceProvider, null);
+		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr(request.getKeyword(), ondexServiceProvider, null, request.getTaxId());
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
 		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
@@ -158,7 +158,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		response.setGeneCount (
 			OndexServiceProvider.getInstance ()
 				.getDataService() 
-				.getLociGeneCount(chr, start, end)
+				.getLociGeneCount(chr, start, end, request.getTaxId () )
 		);
 		return response;
 	}
@@ -195,19 +195,20 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		if ( request.getList () != null && request.getList ().size () > 0 )
 		{
-			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList (), request.getTaxId () ) );
 			log.info ( "Number of user provided genes: " + userGenes.size () );
 		}
 
 		// Also search Regions - only if no genes provided
-		if ( userGenes.isEmpty () && !request.getQtl ().isEmpty () )
-			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
+		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() ) {
+			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), request.getTaxId () ) );
+		}
 
 		// Genome search
 		log.info ( "Processing search mode: {}", response.getClass ().getName () );
 
 		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr (
-			request.getKeyword (), ondexServiceProvider, userGenes
+			request.getKeyword (), ondexServiceProvider, userGenes,request.getTaxId()
 		);
 
 		Map<ONDEXConcept, Double> candidateGenesMap = Map.of ();
@@ -236,7 +237,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			// TODO: this is very inefficient, the right way to do it would be passing it the genes and
 			// search if they match the QTL regions
 			//
-			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl () );
+			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl (), request.getTaxId() );
 			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
 
 			genesStream = genesStream.filter ( genesQTL::contains );
@@ -333,12 +334,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Search Genes
 		if ( !request.getList ().isEmpty () )
 		{
-			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
+			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () , request.getTaxId () ) );
 		}
 
 		// Search Regions
 		if ( !request.getQtl ().isEmpty () )
-			genes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
+			genes.addAll ( searchService.fetchQTLs ( request.getQtl (), request.getTaxId () ) );
 
 		// Find Semantic Motifs
 		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ()

@@ -212,7 +212,7 @@ public class DataService
    * @param end end position
    * @return 0 if no genes found, otherwise number of genes at specified loci
    */
-	public int getLociGeneCount ( String chr, int start, int end )
+	public int getLociGeneCount ( String chr, int start, int end,String taxId )
 	{
 		// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
 		if ( chr == null ) return 0; 

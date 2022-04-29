@@ -1,13 +1,13 @@
 package rres.knetminer.datasource.ondexlocal;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-// import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryparser.classic.ParseException;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
@@ -32,14 +32,16 @@ public class SemanticMotifSearchMgr
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
 	private SemanticMotifsSearchResult searchResult = null;
+	private String taxId;
 
-	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
+	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList,String taxId )
 	{
 		this.ondexProvider = ondexProvider;
+		this.taxId = taxId;
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
-			this.countLinkedGenes ();
+			this.countLinkedGenes ( taxId );
 		}
 		catch ( Exception ex )
 		{
@@ -52,7 +54,7 @@ public class SemanticMotifSearchMgr
 		}
 	}
 
-	public void countLinkedGenes ()
+	public void countLinkedGenes ( String taxId )
 	{
 		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
 		log.info ( 
@@ -107,6 +109,6 @@ public class SemanticMotifSearchMgr
 	{
 		// TODO: I hope I got the semantics found in the original code right
 		if ( searchResult != null ) return searchResult;
-		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts,taxId );
 	}
 }

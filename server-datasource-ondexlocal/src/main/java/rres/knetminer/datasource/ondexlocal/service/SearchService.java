@@ -1,15 +1,16 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.util.stream.Collectors.toMap;
+import static net.sourceforge.ondex.core.util.GraphLabelsUtils.getBestConceptLabel;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
-import static net.sourceforge.ondex.core.util.GraphLabelsUtils.getBestConceptLabel;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -305,7 +306,7 @@ public class SearchService
 	 * 
 	 * Was getScoredGenesMap.
 	 */
-	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score ) 
+	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score,String taxId ) 
 	{
 		var graph = dataService.getGraph ();
 	
@@ -557,6 +558,14 @@ public class SearchService
 	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
 	{
 		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions );
+	}
+	
+  /**
+   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
+   */
+	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions, String taxId )
+	{
+		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions, taxId );
 	}
 
 	
