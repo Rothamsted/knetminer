@@ -283,42 +283,43 @@ public class KnetminerServer
 		try
 		{
 			Method method = dataSource.getClass ().getMethod ( mode, String.class, KnetminerRequest.class );
-			try
-			{
+			try {
 				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
 				return new ResponseEntity<> ( response, HttpStatus.OK );
 			}
 			catch ( InvocationTargetException ex )
 			{
 				// This was caused by a underlying more significant exception, best is to try to catch and re-throw it.
-				throw ( (Exception) ExceptionUtils.getSignificantException ( ex ) );
+				throw ExceptionUtils.getSignificantException ( ex );
 			}
 		}
 		catch ( NoSuchMethodException | IllegalAccessException | SecurityException ex )
 		{
 			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
-					"Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+				"Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		}
 		catch ( IllegalArgumentException ex )
 		{
 			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
-					"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		}
 		catch ( RuntimeException ex )
 		{
 			// Let's re-throw the same exception, with a wrapping message
-			throw ExceptionUtils.buildEx ( ex.getClass (), ex, "Application error while running the API call '%s': %s", mode,
-					getSignificantMessage ( ex ) );
+			throw ExceptionUtils.buildEx ( ex.getClass (), ex,
+				"Application error while running the API call '%s': %s", mode,
+				getSignificantMessage ( ex )
+			);
 		}
 		catch ( Exception ex )
 		{
 			throw new RuntimeException (
-					"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+				"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		}
-		catch ( Error ex )
+		catch ( Throwable ex )
 		{
-			// TODO: should we really catch this?!
-			throw new Error ( "System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+			throw new Error (
+				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
 		} 
 	}
 	
