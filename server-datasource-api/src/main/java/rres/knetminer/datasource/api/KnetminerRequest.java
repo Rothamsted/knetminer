@@ -15,6 +15,9 @@ public class KnetminerRequest {
 	private String keyword = "";
 	private List<String> list = new ArrayList<String>();
 	private String listMode = "";
+	private String taxId = "";
+	
+	
 
 	public KnetminerRequest() {
 
@@ -50,6 +53,14 @@ public class KnetminerRequest {
 
 	public void setListMode(String listMode) {
 		this.listMode = listMode;
+	}
+
+	public String getTaxId() {
+		return taxId;
+	}
+
+	public void setTaxId(String taxId) {
+		this.taxId = taxId;
 	}
 
 }
