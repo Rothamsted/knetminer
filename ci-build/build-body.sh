@@ -15,5 +15,5 @@ docker run --rm \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
   knetminer/knetminer-bare:$docker_tag \
-  /bin/bash -c "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+  mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS
 
