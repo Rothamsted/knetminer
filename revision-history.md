@@ -5,8 +5,13 @@
 # 5.0.1-SNAPSHOT
 
 ## UI Improvements
-* Search reset button.
 * List of gene synonyms added to gene view (#602).
+* Query suggester has become a “Concept selector” which can map keywords to concepts from the knowledge graph.
+* Search reset button.
+* Display number of genes in gene list box.
+
+## API improvements
+* New /graphinfo/concept-info endpoint to retrieve node properties
 
 ## New configurations
 * Brassica Camelina configuration added.
