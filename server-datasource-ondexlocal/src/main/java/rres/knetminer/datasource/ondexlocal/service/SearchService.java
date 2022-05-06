@@ -557,7 +557,7 @@ public class SearchService
    */
 	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
 	{
-		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions );
+		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions , "" );
 	}
 	
   /**
@@ -585,6 +585,16 @@ public class SearchService
 	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
 	{
 		return KGUtils.fetchQTLs ( dataService.getGraph (), dataService.getTaxIds (), qtlsStr );
+	}
+	
+	/**
+	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}
+	 * @param qtlsStr
+	 * @return
+	 */
+	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr,String taxId )
+	{
+		return KGUtils.fetchQTLs ( dataService.getGraph (), Arrays.asList(taxId), qtlsStr );
 	}
 	
   /**

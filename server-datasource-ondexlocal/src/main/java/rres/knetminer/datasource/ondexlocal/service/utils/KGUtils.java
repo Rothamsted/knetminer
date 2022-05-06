@@ -56,48 +56,12 @@ public class KGUtils
    * Was named searchGenesByAccessionKeywords
    */
 	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
-		DataService dataService, SearchService searchService, List<String> accessions
-	)
-	{
-		if ( accessions.size () == 0 ) return new HashSet<>();
-				
-		var graph = dataService.getGraph ();
-		
-		// TODO: probably it's not needed anymore
-		Set<String> normAccs = accessions.stream ()
-		.map ( acc -> 
-			acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
-			.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
-			.toUpperCase () 
-		).collect ( Collectors.toSet () );			
-				
-		AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
-		
-		Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
-		.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
-
-		Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
-		.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
-		
-		
-		Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
-		.flatMap ( Set::parallelStream )
-		.filter ( gene -> {
-      String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-      return dataService.containsTaxId ( thisTaxId );
-		})
-		// Components like the semantic motif traverser need the original internal IDs.
-		.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
-		.collect ( Collectors.toSet () );
-		
-		return result;
-	}
-	
-	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
 			DataService dataService, SearchService searchService, List<String> accessions,String taxId 
 		)
 		{
 			if ( accessions.size () == 0 ) return new HashSet<>();
+			
+			var graph = dataService.getGraph ();
 					
 			// TODO: probably it's not needed anymore
 			Set<String> normAccs = accessions.stream ()
@@ -105,7 +69,9 @@ public class KGUtils
 				acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
 				.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
 				.toUpperCase () 
-			).collect ( Collectors.toSet () );			
+			).collect ( Collectors.toSet () );
+			
+			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
 					
 			Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
 			.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
@@ -113,11 +79,14 @@ public class KGUtils
 			Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
 			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
 			
-			
 			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
 			.flatMap ( Set::parallelStream )
 			.filter ( gene -> {
-	      return dataService.containsTaxId ( taxId );
+				var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
+				if( !taxId.isBlank () ) {
+					thisTaxId = taxId;
+				}
+				return dataService.containsTaxId ( thisTaxId );
 			})
 			// Components like the semantic motif traverser need the original internal IDs.
 			.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )

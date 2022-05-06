@@ -211,7 +211,8 @@ public class KnetminerServer
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
-			@RequestParam(required = false, defaultValue = "") String listMode, HttpServletRequest rawRequest)
+			@RequestParam(required = false, defaultValue = "") String listMode,
+			@RequestParam(required = false, defaultValue = "") String taxId, HttpServletRequest rawRequest)
 	{
 		// TODO: isn't this done downstream?
 		if (qtl == null) qtl = Collections.emptyList();
@@ -222,6 +223,7 @@ public class KnetminerServer
 		request.setListMode(listMode);
 		request.setList(list);
 		request.setQtl(qtl);
+		request.setTaxId(taxId);
 		
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}

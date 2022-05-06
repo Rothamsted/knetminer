@@ -41,6 +41,7 @@ import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -192,6 +193,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 		var exportService = ondexServiceProvider.getExportService ();
+		var graph = ondexServiceProvider.getDataService ().getGraph ();
 
 		if ( request.getList () != null && request.getList ().size () > 0 )
 		{
@@ -252,11 +254,20 @@ public class OndexLocalDataSource extends KnetminerDataSource
 				gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
 			);
 		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
-
+		
 		// Genes are expected in order
-		List<ONDEXConcept> genes = genesMap.keySet ().parallelStream ()
-			.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
-			.collect ( Collectors.toList () );
+		List<ONDEXConcept> genes;
+		if ( request.getTaxId ().isEmpty () ) {
+			genes = genesMap.keySet ().parallelStream ()
+					.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
+					.collect ( Collectors.toList () );
+		} else {
+			genes = genesMap.keySet ().parallelStream ()
+					.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
+					.filter( gene -> new GeneHelper ( graph, gene ).getTaxID().equalsIgnoreCase( request.getTaxId() ) )
+					.collect ( Collectors.toList () );
+		}
+		
 
 		if ( response instanceof QtlResponse )
 			log.info ( "{} gene(s) after QTL filter", genes.size () );
