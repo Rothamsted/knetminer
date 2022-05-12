@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONObject;
@@ -194,23 +196,23 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var searchService = ondexServiceProvider.getSearchService ();
 		var exportService = ondexServiceProvider.getExportService ();
 		var graph = ondexServiceProvider.getDataService ().getGraph ();
-
+		var taxId = StringUtils.trimToEmpty ( request.getTaxId () );
+		
 		if ( request.getList () != null && request.getList ().size () > 0 )
 		{
-			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList (), request.getTaxId () ) );
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList (), taxId ) );
 			log.info ( "Number of user provided genes: " + userGenes.size () );
 		}
 
 		// Also search Regions - only if no genes provided
-		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() ) {
-			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), request.getTaxId () ) );
-		}
+		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() )
+			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), taxId ) );
 
 		// Genome search
 		log.info ( "Processing search mode: {}", response.getClass ().getName () );
 
 		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr (
-			request.getKeyword (), ondexServiceProvider, userGenes,request.getTaxId()
+			request.getKeyword (), ondexServiceProvider, userGenes, taxId
 		);
 
 		Map<ONDEXConcept, Double> candidateGenesMap = Map.of ();
@@ -239,7 +241,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			// TODO: this is very inefficient, the right way to do it would be passing it the genes and
 			// search if they match the QTL regions
 			//
-			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl (), request.getTaxId() );
+			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl (), taxId );
 			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
 
 			genesStream = genesStream.filter ( genesQTL::contains );
@@ -255,20 +257,17 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			);
 		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
 		
-		// Genes are expected in order
 		List<ONDEXConcept> genes;
-		if ( request.getTaxId ().isEmpty () ) {
-			genes = genesMap.keySet ().parallelStream ()
-					.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
-					.collect ( Collectors.toList () );
-		} else {
-			genes = genesMap.keySet ().parallelStream ()
-					.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
-					.filter( gene -> new GeneHelper ( graph, gene ).getTaxID().equalsIgnoreCase( request.getTaxId() ) )
-					.collect ( Collectors.toList () );
-		}
+		var genesStrm = genesMap.keySet ().parallelStream ();
+		if ( !taxId.isEmpty () )
+			genesStrm = genesStrm.filter ( gene -> taxId.equals ( new GeneHelper ( graph, gene ).getTaxID() ) );
 		
-
+				
+		// Genes are expected in order
+		genes = genesStrm
+			.sorted ( Comparator.comparingDouble ( genesMap::get ).reversed () )
+			.collect ( Collectors.toList () );
+				
 		if ( response instanceof QtlResponse )
 			log.info ( "{} gene(s) after QTL filter", genes.size () );
 
@@ -344,9 +343,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// Search Genes
 		if ( !request.getList ().isEmpty () )
-		{
 			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () , request.getTaxId () ) );
-		}
 
 		// Search Regions
 		if ( !request.getQtl ().isEmpty () )
