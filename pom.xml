@@ -103,7 +103,11 @@
 		<knetminer.gaIdUi>UA-88753233-1</knetminer.gaIdUi>
 		<knetminer.gaIdApi>UA-88753233-2</knetminer.gaIdApi>
 
-		<!-- In Maven, this is XPath-computed from basemap.xml and injected via mvn command line -->
+		<!-- 
+			When building for Docker, this is XPath-computed from basemap.xml and injected via mvn command line.
+			That kind of behaviour is enabled by  
+		  See the docker profile in datasets/*/
+		-->
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
 		
 		<!--  true if you are providing a reference genome -->
@@ -129,7 +133,7 @@
 			the corresponding features enabled.  			 
 		-->
 		<knetminer.ui.embeddableLayout>false</knetminer.ui.embeddableLayout>
-		
+				
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
 		<!-- Here, it is http://localhost:9090 -->
@@ -188,6 +192,12 @@
 		<!-- This is required to override the parent's POM -->
 		<jutils.version>10.0</jutils.version>
 		<knetminer.backend.version>2.0.1-SNAPSHOT</knetminer.backend.version>
+		
+		<!-- We define these using the Jetty properties, so that they can be overridden from the 
+		     command line -->
+		<jetty.http.port>8080</jetty.http.port>
+		<jetty.http.stopPort>8081</jetty.http.stopPort>
+		
 	</properties>
 
 
@@ -321,7 +331,6 @@
 				<plugin>
 				  <groupId>org.eclipse.jetty</groupId>
 				  <artifactId>jetty-maven-plugin</artifactId>
-			    <!-- version>9.4.34.v20201102</version -->
 			    <version>10.0.1</version>
 				  <executions>
 				  	<execution>
@@ -337,15 +346,16 @@
 				  </executions>
 				  <configuration>
 				    <scanIntervalSeconds>10</scanIntervalSeconds>
-		        <httpConnector>
-		        	<!-- We might want a less common port, since this might be already used in our CI servers  -->
+		        <!-- This is defined in the properties section -->
+		        <!-- httpConnector>
 		          <port>8080</port>
-		        </httpConnector>			    
+		        </httpConnector -->			    
 				    <webApp>
 				      <contextPath>/</contextPath>
 							<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 				    </webApp>
-				    <stopPort>8081</stopPort>
+				    <!-- Again, this is in the properties above -->
+				    <!--stopPort>8081</stopPort -->
 				    <stopKey>araTinyJetty</stopKey>
 				    <stopWait>10</stopWait>
 				  </configuration>

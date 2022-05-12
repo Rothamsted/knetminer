@@ -7,7 +7,7 @@
 
 echo -e "\n\n\tGoal '$MAVEN_GOAL' via Docker bare image\n"
 
-docker run -i --rm \
+docker run --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \
   --workdir /root/knetminer-build/knetminer \
@@ -15,5 +15,5 @@ docker run -i --rm \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
   knetminer/knetminer-bare:$docker_tag \
-  /bin/bash -c "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+  "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
 
