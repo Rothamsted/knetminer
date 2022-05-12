@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +24,7 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * 
@@ -56,10 +58,11 @@ public class KGUtils
    * Was named searchGenesByAccessionKeywords
    */
 	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
-			DataService dataService, SearchService searchService, List<String> accessions,String taxId 
+			DataService dataService, SearchService searchService, List<String> accessions, String clientTaxId 
 		)
 		{
 			if ( accessions.size () == 0 ) return new HashSet<>();
+			var clientTaxIdNrm = StringUtils.trimToNull ( clientTaxId );
 			
 			var graph = dataService.getGraph ();
 					
@@ -81,11 +84,10 @@ public class KGUtils
 			
 			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
 			.flatMap ( Set::parallelStream )
-			.filter ( gene -> {
+			.filter ( gene -> 
+			{
 				var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-				if( !taxId.isBlank () ) {
-					thisTaxId = taxId;
-				}
+				if ( clientTaxIdNrm != null ) return clientTaxIdNrm.equals ( thisTaxId );
 				return dataService.containsTaxId ( thisTaxId );
 			})
 			// Components like the semantic motif traverser need the original internal IDs.
@@ -99,8 +101,8 @@ public class KGUtils
   /**
    * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
    *
-   * @qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
-   * 
+   * @param qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
+   * @param taxIds 
    */
 	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, List<String> taxIds, List<String> qtlsStr )
 	{
@@ -157,12 +159,13 @@ public class KGUtils
 					resultGenes.add ( gene );
 				}
 			}
-			catch ( Exception e )
+			catch ( Exception ex )
 			{
-				// TODO: the user doesn't get any of this!
-				log.error ( "Not valid qtl: " + e.getMessage (), e );
+				ExceptionUtils.throwEx ( RuntimeException.class, ex, 
+					"Error while parsing the QTL region %s: %s", qtl, ex.getMessage ()
+				);
 			}
-		}
+		} // for qtl
 		return resultGenes;
 	}
 

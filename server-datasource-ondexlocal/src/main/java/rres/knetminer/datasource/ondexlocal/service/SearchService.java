@@ -300,13 +300,14 @@ public class SearchService
 	
 	
 	/**
-	 * KnetMiner Gene Rank algorithm
+	 * KnetMiner Gene Rank algorithm.
+	 * 
 	 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
 	 * Described in detail in Hassani-Pak et al. (2020)
 	 * 
 	 * Was getScoredGenesMap.
 	 */
-	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score,String taxId ) 
+	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score ) 
 	{
 		var graph = dataService.getGraph ();
 	
@@ -387,7 +388,8 @@ public class SearchService
 			
 		}); // for geneId
 		
-		// Sort by best scores. 
+		
+		// Finally, sort by best scores. 
 		//
 		Map<ONDEXConcept, Double> sortedGeneCandidates = scoredGeneCandidates.entrySet ()
 		.stream ()
@@ -552,16 +554,9 @@ public class SearchService
     
   } // searchQTLsForTrait()
 
+  
   /**
-   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
-   */
-	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
-	{
-		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions , "" );
-	}
-	
-  /**
-   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
+   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords(DataService, SearchService, List, String)} 
    */
 	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions, String taxId )
 	{
@@ -576,25 +571,19 @@ public class SearchService
 	{
 		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifDataService, luceneConcepts );
 	}
-	
+		
 	/**
-	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}
-	 * @param qtlsStr
-	 * @return
+	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}, which uses  
+	 * the user-provided taxId, if this isn't null or empty, else it uses the 
+	 * {@link DataService#getTaxIds() configured tax IDs}.
+	 *  
 	 */
-	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
+	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr, String taxId )
 	{
-		return KGUtils.fetchQTLs ( dataService.getGraph (), dataService.getTaxIds (), qtlsStr );
-	}
-	
-	/**
-	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}
-	 * @param qtlsStr
-	 * @return
-	 */
-	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr,String taxId )
-	{
-		return KGUtils.fetchQTLs ( dataService.getGraph (), Arrays.asList(taxId), qtlsStr );
+		taxId = StringUtils.trimToNull ( taxId );
+		var taxIds = taxId == null ? dataService.getTaxIds () : List.of ( taxId );
+		
+		return KGUtils.fetchQTLs ( dataService.getGraph (), taxIds, qtlsStr );
 	}
 	
   /**
