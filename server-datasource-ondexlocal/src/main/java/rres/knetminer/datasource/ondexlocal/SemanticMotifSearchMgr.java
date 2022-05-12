@@ -34,14 +34,14 @@ public class SemanticMotifSearchMgr
 	private SemanticMotifsSearchResult searchResult = null;
 	private String taxId;
 
-	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList,String taxId )
+	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList, String taxId )
 	{
 		this.ondexProvider = ondexProvider;
 		this.taxId = taxId;
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
-			this.countLinkedGenes ( taxId );
+			this.countLinkedGenes ();
 		}
 		catch ( Exception ex )
 		{
@@ -54,7 +54,7 @@ public class SemanticMotifSearchMgr
 		}
 	}
 
-	public void countLinkedGenes ( String taxId )
+	private void countLinkedGenes ()
 	{
 		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
 		log.info ( 
@@ -107,8 +107,7 @@ public class SemanticMotifSearchMgr
 
 	public SemanticMotifsSearchResult getSearchResult ()
 	{
-		// TODO: I hope I got the semantics found in the original code right
 		if ( searchResult != null ) return searchResult;
-		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts,taxId );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
 	}
 }
