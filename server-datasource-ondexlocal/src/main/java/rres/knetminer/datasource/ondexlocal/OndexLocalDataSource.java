@@ -111,7 +111,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr(request.getKeyword(), ondexServiceProvider, null, request.getTaxId());
+		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr ( 
+			request.getKeyword(), ondexServiceProvider, null, request.getTaxId()
+		);
 		CountHitsResponse response = new CountHitsResponse();
 		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
 		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
@@ -170,7 +172,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		GenomeResponse response = new GenomeResponse();
-		this.handleMainSearch(response, request);
+		this.handleMainSearch (response, request );
 		return response;
 	}
 
@@ -338,7 +340,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 
-		// TODO: this is the same gene filtering we have in _keyword(), should be factorised
+		// TODO: this is the same gene filtering we have in handleMain(), should be factorised
 		//
 
 		// Search Genes
@@ -391,7 +393,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
     JSONObject summaryJSON = new JSONObject();
     summaryJSON.put("dbVersion", dataService.getDatasetVersion () );
     summaryJSON.put("sourceOrganization", dataService.getDatasetOrganization ());
-    dataService.getTaxIds ().forEach((taxID) -> {
+    dataService.getTaxIds ().forEach( taxID -> {
        summaryJSON.put("speciesTaxid", taxID);
     });
     summaryJSON.put("speciesName", dataService.getSpecies());
