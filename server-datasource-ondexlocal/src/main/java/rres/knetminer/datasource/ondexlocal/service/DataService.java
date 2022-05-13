@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -223,13 +224,15 @@ public class DataService
 		
 		var taxIdNrm = StringUtils.trimToNull ( taxId );
 				
+		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
+		  ? geneHelper -> this.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
+		  : geneHelper -> taxIdNrm.equals ( geneHelper.getTaxID () ); // client-specified taxId
+		
 		return (int) genes.stream()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
+		// Let's consider this first, they're likely to be more
+		.filter ( taxIdGeneFilter )
 		.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-		.filter ( geneHelper ->  taxIdNrm == null
-		  ? this.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
-		  : taxIdNrm.equals ( geneHelper.getTaxID () ) // client-specified taxId
-		)
 		.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 		.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 		.count ();
