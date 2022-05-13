@@ -200,8 +200,8 @@ public class KnetminerServer
 	 * @param mode
 	 * @param qtl
 	 * @param keyword
-	 * @param list TODO: what is this?!
-	 * @param listMode
+	 * @param list The user-provided gene list
+	 * @param listMode TODO: this is not used anywhere
 	 * @param rawRequest
 	 * @return
 	 */
