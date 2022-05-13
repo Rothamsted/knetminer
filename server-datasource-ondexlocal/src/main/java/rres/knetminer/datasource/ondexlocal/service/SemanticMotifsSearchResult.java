@@ -12,8 +12,8 @@ import net.sourceforge.ondex.core.ONDEXConcept;
  * a map of concept -> significance score (for the search that associated it to one or more of
  * the gene set ).
  * 
- * This has been introduced to cope with methods like {@link SearchService#getScoredGenes(Map)} and
- * other methods that used these two structures separately.
+ * This has been introduced to cope with methods like {@link SearchService#getScoredGenes(Map, String)} 
+ * and other methods that used these two structures separately.
  * 
  * TODO: the returned maps aren't immutable, we need to review things around and then protect them.
  * 
@@ -28,7 +28,7 @@ public class SemanticMotifsSearchResult
 	private Map<ONDEXConcept, Double> gene2Score;
 
 	/**
-	 * This object is usually created by {@link SearchService#getScoredGenes(Map)}
+	 * This object is usually created by {@link SearchService#getScoredGenes(Map, String)}
 	 * Note that this constructor sets these map components as-is, without changing anything
 	 */
 	public SemanticMotifsSearchResult ( 
@@ -52,7 +52,7 @@ public class SemanticMotifsSearchResult
 
 	/**
 	 * Associate genes to their KnetMiner score, usually sorted by best scores.
-	 * @see SearchService#getScoredGenes(Map)
+	 * @see SearchService#getScoredGenes(Map, String)
 	 * 
 	 */
 	public Map<ONDEXConcept, Double> getGene2Score ()

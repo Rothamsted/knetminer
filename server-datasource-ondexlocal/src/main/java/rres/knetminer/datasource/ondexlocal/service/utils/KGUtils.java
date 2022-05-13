@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -82,13 +83,16 @@ public class KGUtils
 			Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
 			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
 			
+			Predicate<String> taxIdGeneFilter = clientTaxIdNrm == null 
+				? _taxId -> dataService.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
+				: _taxId -> clientTaxIdNrm.equals ( _taxId ); // client-provided taxId
+			
 			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
 			.flatMap ( Set::parallelStream )
 			.filter ( gene -> 
 			{
 				var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-				if ( clientTaxIdNrm != null ) return clientTaxIdNrm.equals ( thisTaxId );
-				return dataService.containsTaxId ( thisTaxId );
+				return taxIdGeneFilter.test ( thisTaxId );
 			})
 			// Components like the semantic motif traverser need the original internal IDs.
 			.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
@@ -102,7 +106,8 @@ public class KGUtils
    * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
    *
    * @param qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
-   * @param taxIds 
+   * @param taxIds this is set either with a user-provided value or with the configured taxIDs.
+   *   The latter is only used by {@link SearchService#fetchQTLs(List, String)}.
    */
 	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, List<String> taxIds, List<String> qtlsStr )
 	{

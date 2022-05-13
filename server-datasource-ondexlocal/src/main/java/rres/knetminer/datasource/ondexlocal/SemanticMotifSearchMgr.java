@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -37,7 +40,7 @@ public class SemanticMotifSearchMgr
 	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList, String taxId )
 	{
 		this.ondexProvider = ondexProvider;
-		this.taxId = taxId;
+		this.taxId = StringUtils.trimToNull ( taxId );
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
@@ -57,16 +60,31 @@ public class SemanticMotifSearchMgr
 	private void countLinkedGenes ()
 	{
 		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
+		
 		log.info ( 
 			"Counting unique genes for {} matching Lucene concept(s)", luceneConceptsSet.size () 
 		);
 
-		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getSemanticMotifDataService ().getConcepts2Genes ();
+		var graph = this.ondexProvider.getDataService ().getGraph ();
+		
+		Map<Integer, Set<Integer>> concept2Genes = this.ondexProvider
+			.getSemanticMotifDataService ()
+			.getConcepts2Genes ();
 		
 		long linkedConceptsSize = luceneConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
 			.filter ( concept2Genes::containsKey )
 			.count ();
+		
+		Stream<Integer> genesStrm = luceneConceptsSet.parallelStream ()
+			.map ( ONDEXConcept::getId )
+			.filter ( concept2Genes::containsKey )
+			.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
+			.distinct ();
+		
+		if ( this.taxId != null )
+			genesStrm = genesStrm.filter ( geneId -> taxId.equals ( new GeneHelper ( graph, geneId ).getTaxID () ) );
+		
 		
 		long uniqGenesSize = luceneConceptsSet.parallelStream ()
 		.map ( ONDEXConcept::getId )
@@ -108,6 +126,6 @@ public class SemanticMotifSearchMgr
 	public SemanticMotifsSearchResult getSearchResult ()
 	{
 		if ( searchResult != null ) return searchResult;
-		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts, this.taxId );
 	}
 }
