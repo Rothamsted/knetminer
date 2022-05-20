@@ -4,16 +4,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
@@ -70,7 +67,7 @@ public class MultiSpecieApiIT
 	}
 	
 	/**
-	 * Testing Keyword, genes & regions.
+	 * Testing region only.
 	 */
 	@Test
 	public void testRegion () throws JSONException, IOException, URISyntaxException {
@@ -78,7 +75,7 @@ public class MultiSpecieApiIT
 	}
 	
 	/**
-	 * Testing Keyword, genes & regions.
+	 * Testing region & taxId.
 	 */
 	@Test
 	public void testRegionTaxId () throws JSONException, IOException, URISyntaxException {
@@ -98,8 +95,7 @@ public class MultiSpecieApiIT
 	 */
 	@Test
 	public void testKeywordRegionTaxId () throws JSONException, IOException, URISyntaxException {
-		testGenome( "keyword->seed", "list->AT1G21970,AT1G80840,AT4G14110,TRAESCS5B02G381900,ZM00001EB307230",
-				"qtl->qtl1=5A:580000000:590000000", "taxId->4577" );
+		testGenome( "keyword->seed", "qtl->qtl1=5A:580000000:590000000", "taxId->4577" );
 	}
 	
 	/**
@@ -140,7 +136,7 @@ public class MultiSpecieApiIT
 				.flatMap ( list -> Stream.of ( list[0], arrayPattern.matcher(list[1]).find() ? list[1].split ( "," ) : list[1] ) )
 				.collect ( Collectors.toList () );
 		
-		JSONObject js = ApiIT.invokeApi ( "genome" , objects.toArray () );
+		JSONObject js = ApiIT.invokeApi ( "genome",objects.toArray() );
 		
 		log.info ( "JSON from GraphInfo API:\n{}", js.toString () );
 		assertTrue ( "geneCount from /genome + " + params[0] + " is wrong!", js.getInt ( "geneCount" ) > 0 );
