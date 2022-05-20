@@ -4,13 +4,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
@@ -145,5 +148,63 @@ public class MultiSpecieApiIT
 		assertTrue ( "geneTable from /genome is not exists !", js.getString ( "geneTable" ).length () > 0  );
 		assertTrue ( "gviewer from /genome is not exists !", js.getString ( "gviewer" ).length () > 0  );
 		assertTrue ( "totalDocSize from /genome + " + params[0] + " is wrong!", js.getInt ( "totalDocSize" ) > 0 );
-	}	 
+	}
+	
+	@Test
+	public void testCountHits () throws JSONException, IOException, URISyntaxException {
+		testCountHits (  "keyword->seed"  );
+	}
+	
+	@Test
+	public void testCountHitsWithTaxId () throws JSONException, IOException, URISyntaxException {
+		testCountHits (  "keyword->seed", "taxId->3702"  );
+	}
+	
+	/**
+	 * Invokes /countHits with the given keyword & taxId and verifies that the result is >0.
+	 * 
+	 */
+	private void testCountHits ( String... params ) throws JSONException, IOException, URISyntaxException
+	{
+		List<Serializable> objects = Arrays.stream ( params ).map ( a -> a.split ( "->" ) )
+				.flatMap ( list -> Stream.of ( list[0], list[1] ) )
+				.collect ( Collectors.toList () );
+		
+		JSONObject js = ApiIT.invokeApi ( "countHits" , objects.toArray () );
+
+		Stream.of ( "luceneCount", "luceneLinkedCount", "geneCount" )
+		.forEach ( key -> 
+		  assertTrue ( 
+		  	"countHits for '" +  params[0] + "' returned a wrong result (" + key + ")!", 
+		  	js.getInt ( key ) > 0 )
+		);
+	}
+	
+	@Test
+	public void testCountLoci () throws JSONException, IOException, URISyntaxException {
+		testCountLoci (  "keyword->4-9920000-10180000"  );
+	}
+	
+	@Test
+	public void testCountLociWithTaxId () throws JSONException, IOException, URISyntaxException {
+		testCountLoci (  "keyword->4-9920000-10180000", "taxId->3702"  );
+	}
+	
+	/**
+	 * Invokes /countLoci with the given keyword & taxId and verifies that the result is >0.
+	 * 
+	 */
+	private void testCountLoci ( String... params ) throws JSONException, IOException, URISyntaxException
+	{
+		List<Serializable> objects = Arrays.stream ( params ).map ( a -> a.split ( "->" ) )
+				.flatMap ( list -> Stream.of ( list[0], list[1] ) )
+				.collect ( Collectors.toList () );
+		
+		JSONObject js = ApiIT.invokeApi ( "countLoci" , objects.toArray () );
+
+		assertTrue ( 
+		  	"geneCount for '" +  params[0] + "' returned a wrong result (" + params[0] + ")!", 
+		  	js.getInt ( "geneCount" ) > 0 );
+		
+	}	
 }
