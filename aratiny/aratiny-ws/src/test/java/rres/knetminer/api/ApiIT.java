@@ -1,41 +1,30 @@
 package rres.knetminer.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import rres.knetminer.api.client.CountHitsApiResult;
+import rres.knetminer.api.client.GenomeApiResult;
+import rres.knetminer.api.client.KnetminerApiClient;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
-import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 import uk.ac.ebi.utils.xml.XPathReader;
 
@@ -57,6 +46,8 @@ public class ApiIT
 	private Logger log = LogManager.getLogger ( this.getClass () );
 	private static Logger slog = LogManager.getLogger ( ApiIT.class );
 
+	public static KnetminerApiClient apiCli = new KnetminerApiClient ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny" );
+	
 	@BeforeClass
 	/**
 	 * Keeps probing the API server until it seems initialised. 
@@ -67,12 +58,12 @@ public class ApiIT
 		if ( synchCalled ) return;
 		
 		slog.info ( "Waiting for server init." );
-		Thread.sleep ( 20 * 1000 );
+		Thread.sleep ( 10 * 1000 );
 		
-		for ( int attempt = 1; attempt <= 4; attempt++ )
+		for ( int attempt = 1; attempt <= 6; attempt++ )
 		{
 			slog.info ( "Waiting for the API server, attempt {}", attempt );
-			JSONObject js = invokeApiFailOpt ( "countHits?keyword=foo", false );
+			JSONObject js = apiCli.invokeApi ( "countHits?keyword=foo", false, null );
 
 			if ( js.has ( "luceneCount" ) ) {
 				synchCalled = true;
@@ -109,18 +100,11 @@ public class ApiIT
 	 */
 	private void testCountHits ( String keyword ) throws JSONException, IOException, URISyntaxException
 	{
-		String encKeyword = URLEncoder.encode ( keyword, "UTF-8" );
-		JSONObject js = new JSONObject ( IOUtils.toString ( 
-			new URI ( getApiUrl ( "/aratiny/countHits?keyword=" + encKeyword ) ),
-			"UTF-8"
-		));
+		CountHitsApiResult hits = apiCli.countHits ( keyword, null );
 		
-		Stream.of ( "luceneCount", "luceneLinkedCount", "geneCount" )
-		.forEach ( key -> 
-		  assertTrue ( 
-		  	"countHits for '" + keyword + "' returned a wrong result (" + key + ")!", 
-		  	js.getInt ( key ) > 0 )
-		);
+	  assertTrue ( "countHits for '" + keyword + "' returned a wrong result ( genes )!", hits.getGeneCount () > 0 );
+	  assertTrue ( "countHits for '" + keyword + "' returned a wrong result ( luceneCount )!", hits.getLuceneCount () > 0 );
+	  assertTrue ( "countHits for '" + keyword + "' returned a wrong result ( luceneLinkedCount )!", hits.getLuceneLinkedCount () > 0 );
 	}	
 
 	
@@ -160,18 +144,16 @@ public class ApiIT
 
 	
 	@Test
-	public void testEvidence ()
+	public void testEvidenceTable ()
 	{
-		JSONObject js = invokeApi ( "genome", "keyword", "response" );
-		assertNotNull ( "No JSON returned!", js );
-		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
-		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
-		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
+		GenomeApiResult apiOut = apiCli.genome ( "response", null, null, null );
+		assertNotNull ( "No JSON returned!", apiOut );
 		
-		var rows = List.of ( evidenceTable.split ( "\n" ) );
-		var rowFound = rows.stream ().anyMatch ( row -> 
+		List<String[]> evidenceTable = apiOut.getEvidenceTable ();
+		assertFalse ( "No evidenceTable in the result", evidenceTable.isEmpty () );
+
+		var rowFound = evidenceTable.stream ().anyMatch ( cols -> 
 		{
-			var cols = row.split ( "\t" );
 			if ( !"Trait".equals ( cols [ 0 ]) ) return false;
 			if ( !"disease resistance".equals ( cols [ 1 ]) ) return false;
 			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
@@ -182,25 +164,22 @@ public class ApiIT
 	}
 	
 	@Test
-	public void testEvidenceFilters ()
+	public void testEvidenceTableWithGeneFilters ()
 	{
-		JSONObject js = invokeApi ( 
-			"genome", 
-			"keyword", "growth OR \"process\" OR \"seed growth\"",
-			"list", new String [] { "vps*", "tpr2", "AT4G35020" }
+		GenomeApiResult apiOut = apiCli.genome ( 
+			"growth OR \"process\" OR \"seed growth\"",
+			List.of ( "vps*", "tpr2", "AT4G35020" ),
+			null,
+			null
 		);
-		assertNotNull ( "No JSON returned!", js );
-		assertTrue ( "No evidenceTable in the result", js.has ( "evidenceTable" ) );
-		String evidenceTable = StringUtils.trimToNull ( js.getString ( "evidenceTable" ) );
-				
-		assertNotNull ( "evidenceTable is null/empty!", evidenceTable );
+		assertNotNull ( "No result returned!",  apiOut );
+
+		List<String[]> evidenceTable = apiOut.getEvidenceTable ();
+		assertFalse ( "evidenceTable is null/empty!", evidenceTable.isEmpty () );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 4, evidenceTable.size () );
 		
-		var rows = List.of ( evidenceTable.split ( "\n" ) );
-		assertEquals ( "Wrong no. of rows for filtered genes!", 4, rows.size () );
-		
-		var rowFound = rows.stream ().anyMatch ( row ->
+		var rowFound = evidenceTable.stream ().anyMatch ( cols ->
 		{
-			var cols = row.split ( "\t" );
 			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
 			if ( !"Regulation Of Transcription, DNA-templated".equals ( cols [ 1 ]) ) return false;
 			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
@@ -210,9 +189,8 @@ public class ApiIT
 		});
 		assertTrue ( "Expected evidence table row not found (single gene)!", rowFound );
 		
-		rowFound = rows.stream ().anyMatch ( row ->
+		rowFound = evidenceTable.stream ().anyMatch ( cols ->
 		{
-			var cols = row.split ( "\t" );
 			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
 			if ( !"Vesicle-mediated Transport".equals ( cols [ 1 ]) ) return false;
 			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
@@ -222,7 +200,6 @@ public class ApiIT
 			if ( genes == null ) return false;
 						
 			String currentProfile = getMavenProfileId ();
-
 			
 			if ( "default".equals ( currentProfile ) )
 			{
@@ -264,7 +241,7 @@ public class ApiIT
 	@Test
 	public void testBadCallError ()
 	{
-		JSONObject js = invokeApiFailOpt ( "foo", false );
+		JSONObject js = apiCli.invokeApi ( "foo", false, null );
 		assertEquals ( 
 			"Bad type for the /foo call!", 
 			ResponseStatusException2.class.getName (),
@@ -274,7 +251,7 @@ public class ApiIT
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
 		assertEquals ( 
 			"Bad path for the /foo call!",
-			getApiUrl ( "/aratiny/foo" ), js.getString ( "path" )
+			apiCli.getApiUrl ( "foo" ), js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
 		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
@@ -297,7 +274,7 @@ public class ApiIT
    			"detail" : "<the whole stack trace>"
 			}
 		 */
-		JSONObject js = invokeApiFailOpt ( "countHits", false, "keyword", "*" );
+		JSONObject js = apiCli.invokeApi ( "countHits", false, KnetminerApiClient.params ( "keyword", "*" ) );
 		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
 		assertEquals ( "Bad type for the /countHits call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
@@ -308,7 +285,7 @@ public class ApiIT
 		);
 		assertEquals ( 
 			"Bad path for the /countHits call!", 
-			getApiUrl ( "/aratiny/countHits" ),
+			apiCli.getApiUrl ( "countHits" ),
 			js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
@@ -324,8 +301,8 @@ public class ApiIT
 		// in this mode it might return a regular answer, not an error
 		if ( "console".equals ( getMavenProfileId () ) ) return;
 		
-		String url = getApiUrl ( "/aratiny/cydebug/traverser/report" );
-		JSONObject js = invokeApiFailOpt ( url, false );
+		String url = apiCli.getApiUrl ( "cydebug/traverser/report" );
+		JSONObject js = apiCli.invokeApi ( url, false, null );
 		assertEquals ( 
 			"Bad type for the /cydebug call!",
 			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
@@ -360,19 +337,19 @@ public class ApiIT
 	 * the same as the "Gene List Search" box, it's case-insensitive and can contains Lucene 
 	 * wildcards ('*', '?', '-').
 	 * 
+	 * TODO: we need tests with chromosome regions too
+	 * 
 	 */
 	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
 	{
-		if ( geneAccFilters == null ) geneAccFilters = new String [ 0 ];
-		JSONObject js = invokeApi ( "genome", "keyword", keyword, "qtl", new String[0], "list", geneAccFilters );
-		
-		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", js.getInt ( "geneCount" ) > 0 );
-
+		GenomeApiResult apiOut = apiCli.genome ( keyword, Arrays.asList ( geneAccFilters ), null, null );
+				
+		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", apiOut.getGeneCount () > 0 );
 		
 		// TODO: this is the chromosome view, we need to test 'geneTable' first
 		
-		String xmlView = js.getString ( "gviewer" );
-		assertNotNull ( "gviewer from /genome + " + keyword + " is null!", xmlView );
+		String xmlView = apiOut.getGviewer ();
+		assertFalse ( "gviewer from /genome + " + keyword + " is null!", "".equals ( xmlView ) );
 		
 		XPathReader xpath = new XPathReader ( xmlView );
 		
@@ -381,114 +358,7 @@ public class ApiIT
 			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
 	}	
-	
-	/**
-	 * Defaults to true
-	 */
-	public static JSONObject invokeApi ( String urlOrCallName, Object... jsonFields )
-	{
-		return invokeApiFailOpt ( urlOrCallName, true, jsonFields );
-	}
 
-	/**
-	 * @see #invokeApiCore(String, Function, boolean, Object...)
-	 * 
-	 * Invokes a KnetMiner API that is expected to return a JSON object as root in its result 
-	 */
-	public static JSONObject invokeApiFailOpt ( String urlOrCallName, boolean failOnError, Object... jsonFields )
-	{
-		return invokeApiCore ( urlOrCallName, JSONObject::new, failOnError, jsonFields);
-	}
-	
-	
-	/**
-	 * Defaults to true 
-	 */
-	public static JSONArray invokeApiArray ( String urlOrCallName, Object... jsonFields )
-	{
-		return invokeApiFailOptArray ( urlOrCallName, true, jsonFields ); 
-	}
-	
-	/**
-	 * @see #invokeApiCore(String, Function, boolean, Object...)
-	 * 
-	 * Invokes a KnetMiner API that is expected to return a JSON array as root in its result 
-	 */
-	public static JSONArray invokeApiFailOptArray ( String urlOrCallName, boolean failOnError, Object... jsonFields )
-	{
-		return invokeApiCore ( urlOrCallName, JSONArray::new, failOnError, jsonFields);
-	}
-	
-	
-	/**
-	 * Core to invoke some Knetminer API via URL and get back the JSON that it spawns.
-	 * @param callName the call URL, if it doesn't start with http://, the URL is composed via  
-	 * 				{@link #getApiUrl(String) getApiUrl( "/aratiny/" )}
-	 * @param jsonSupplier turns the HTTP JSON results to {@link JSONObject} or {@link JSONArray}
-	 * @param failOnError true if the HTTP request doesn't return the 200 status.
-	 * @param jsonFields appended to the HTTP request, as its {@link HttpPost#getEntity() body}.
-	 * 
-	 */
-	private static <J> J invokeApiCore ( String urlOrCallName, Function<String, J> jsonSupplier, boolean failOnError, Object... jsonFields )
-	{
-		String url = urlOrCallName.startsWith ( "http://" )
-			? urlOrCallName 
-			: getApiUrl ( "/aratiny/" + urlOrCallName );
-		
-		try
-		{
-			JSONObject js = new JSONObject ();
-			for ( int i = 0; i < jsonFields.length; i++ )
-				js.put ( (String) jsonFields [ i ], jsonFields [ ++i ] );
-			 
-			HttpPost post = new HttpPost ( url );
-			StringEntity jsEntity = new StringEntity( js.toString (), ContentType.APPLICATION_JSON );
-			post.setEntity ( jsEntity );
-
-			HttpClient client = HttpClientBuilder.create ().build ();
-
-			HttpResponse response = client.execute ( post );
-			int httpCode = response.getStatusLine ().getStatusCode ();
-			if ( httpCode != 200 ) 
-			{
-				if ( failOnError ) ExceptionUtils.throwEx ( 
-					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
-				);
-				slog.warn ( "Return code for {} is {}", url, httpCode );				
-			}
-			
-			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
-			slog.info ( "JSON got from <{}>:\n{}", url, jsStr );
-			return jsonSupplier.apply ( jsStr );
-		}
-		catch ( JSONException | IOException | HttpException ex )
-		{
-			throw buildEx (
-				UnexpectedEventException.class,
-				"Error while invoking <%s>: %s",
-				url,
-				ex.getMessage ()
-			);
-		}
-	}		
-	
-	
-	/**
-	 * The API base URL
-	 */
-	public static String getApiUrl ()
-	{
-		return getApiUrl ( null );
-	}
-
-	/**
-	 * Builds the URL of a KnetMiner API invocation. 
-	 * If path is null, returns the root  {@code System.getProperty ( "knetminer.api.baseUrl" )}.
-	 */
-	public static String getApiUrl ( String path )
-	{
-		return System.getProperty ( "knetminer.api.baseUrl" ) + Optional.ofNullable ( path ).orElse ( "" );
-	}
 	
 	
 	/**
@@ -503,7 +373,7 @@ public class ApiIT
 		if ( !"console".equals ( getMavenProfileId () ) ) return;
 		
 		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
-		log.info ( "The API should be available at " + getApiUrl ( "/aratiny/" ) );
+		log.info ( "The API should be available at " + apiCli.getApiUrl ( "/aratiny/" ) );
 		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
