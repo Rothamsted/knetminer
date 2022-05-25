@@ -73,20 +73,38 @@ public class KnetminerApiClient
 	 */
 	public GenomeApiResult genome ( String keyword, List<String> geneList, List<String> genomeRegions, String taxId )
 	{
-		if ( genomeRegions != null )
-		{
-			for ( int i = 0; i < genomeRegions.size (); i++ )
-			{
-				var reg = genomeRegions.get ( i );
-				if ( reg.startsWith ( "&" ) ) continue;
-				genomeRegions.set ( i, "&qtl=" + i + reg );
-			}
-		}
+		// TODO: I removed the need for this from the server, but needs testing
+		
+//		if ( genomeRegions != null )
+//		{
+//			for ( int i = 0; i < genomeRegions.size (); i++ )
+//			{
+//				var reg = genomeRegions.get ( i );
+//				if ( reg.startsWith ( "&" ) ) continue;
+//				genomeRegions.set ( i, "&qtl=" + i + reg );
+//			}
+//		}
 			
-		return new GenomeApiResult ( 
-			invokeApi ( "genome", params ( "keyword", keyword, "list", geneList, "qtl", genomeRegions ) )
+		return new GenomeApiResult ( invokeApi (
+			"genome",
+			params ( "keyword", keyword, "list", geneList, "qtl", genomeRegions, "taxId", taxId ) )
 		);		
 	}
+	
+	/**
+	 * Invokes the /countLoci API, which is used to count the no. of genes falling within a region.
+	 * @param chromosome
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public int countLoci ( String chromosome, int start, int end, String taxId )
+	{
+		String lociStr = chromosome + '-' + start + '-' + end;
+		JSONObject jsResult = invokeApi ( "countLoci", params ( "keyword", lociStr, "taxId", taxId ) );
+		return jsResult.getInt ( "geneCount" );
+	}
+	
 	
 	
 	/**
@@ -196,7 +214,12 @@ public class KnetminerApiClient
 	{
 		JSONObject js = new JSONObject ();
 		for ( int i = 0; i < jsonFields.length; i++ )
-			js.put ( (String) jsonFields [ i ], jsonFields [ ++i ] );
+		{
+			String key = (String) jsonFields [ i ];
+			Object value = jsonFields [ ++ i ];
+			if ( value == null ) continue;
+			js.put ( key, value );
+		}
 		
 		return js;
 	}

@@ -1,7 +1,7 @@
 package rres.knetminer.datasource.server.graphinfo;
 
 import static org.junit.Assert.assertNotNull;
-import static rres.knetminer.api.ApiIT.apiCli;
+import static rres.knetminer.api.ApiIT.CLI;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,7 +56,7 @@ public class GraphInfoApiIT
 		.mapToObj ( id -> Integer.toString ( id ) )
 		.collect ( Collectors.joining ( "," ) );
 		
-		JSONArray js = apiCli.invokeApiArray ( "/graphinfo/concept-info?ids=" + idStr, null );
+		JSONArray js = CLI.invokeApiArray ( "/graphinfo/concept-info?ids=" + idStr, null );
 		
 		log.info ( "JSON from GraphInfo API:\n{}", js.toString () );
 		assertNotNull ( "No accessions in the result", ((JSONObject)js.get(0)).get("accessions") );

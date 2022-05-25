@@ -46,7 +46,10 @@ public class ApiIT
 	private Logger log = LogManager.getLogger ( this.getClass () );
 	private static Logger slog = LogManager.getLogger ( ApiIT.class );
 
-	public static KnetminerApiClient apiCli = new KnetminerApiClient ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny" );
+	/**
+	 * Auto-initialised client instance to be used for the tests, here and in similar testing classes
+	 */
+	public static KnetminerApiClient CLI = new KnetminerApiClient ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny" );
 	
 	@BeforeClass
 	/**
@@ -63,7 +66,7 @@ public class ApiIT
 		for ( int attempt = 1; attempt <= 6; attempt++ )
 		{
 			slog.info ( "Waiting for the API server, attempt {}", attempt );
-			JSONObject js = apiCli.invokeApi ( "countHits?keyword=foo", false, null );
+			JSONObject js = CLI.invokeApi ( "countHits?keyword=foo", false, null );
 
 			if ( js.has ( "luceneCount" ) ) {
 				synchCalled = true;
@@ -100,7 +103,7 @@ public class ApiIT
 	 */
 	private void testCountHits ( String keyword ) throws JSONException, IOException, URISyntaxException
 	{
-		CountHitsApiResult hits = apiCli.countHits ( keyword, null );
+		CountHitsApiResult hits = CLI.countHits ( keyword, null );
 		
 	  assertTrue ( "countHits for '" + keyword + "' returned a wrong result ( genes )!", hits.getGeneCount () > 0 );
 	  assertTrue ( "countHits for '" + keyword + "' returned a wrong result ( luceneCount )!", hits.getLuceneCount () > 0 );
@@ -146,7 +149,7 @@ public class ApiIT
 	@Test
 	public void testEvidenceTable ()
 	{
-		GenomeApiResult apiOut = apiCli.genome ( "response", null, null, null );
+		GenomeApiResult apiOut = CLI.genome ( "response", null, null, null );
 		assertNotNull ( "No JSON returned!", apiOut );
 		
 		List<String[]> evidenceTable = apiOut.getEvidenceTable ();
@@ -166,7 +169,7 @@ public class ApiIT
 	@Test
 	public void testEvidenceTableWithGeneFilters ()
 	{
-		GenomeApiResult apiOut = apiCli.genome ( 
+		GenomeApiResult apiOut = CLI.genome ( 
 			"growth OR \"process\" OR \"seed growth\"",
 			List.of ( "vps*", "tpr2", "AT4G35020" ),
 			null,
@@ -241,7 +244,7 @@ public class ApiIT
 	@Test
 	public void testBadCallError ()
 	{
-		JSONObject js = apiCli.invokeApi ( "foo", false, null );
+		JSONObject js = CLI.invokeApi ( "foo", false, null );
 		assertEquals ( 
 			"Bad type for the /foo call!", 
 			ResponseStatusException2.class.getName (),
@@ -251,7 +254,7 @@ public class ApiIT
 		assertTrue ( "Bad title for the /foo call!", js.getString ( "title" ).contains ( "Bad API call 'foo'" ) );
 		assertEquals ( 
 			"Bad path for the /foo call!",
-			apiCli.getApiUrl ( "foo" ), js.getString ( "path" )
+			CLI.getApiUrl ( "foo" ), js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /foo call!", js.getString ( "detail" ).contains ( "KnetminerServer.handle(KnetminerServer" ) );
 		assertEquals ( "Bad statusReasonPhrase for the /foo call!", "Bad Request", js.getString ( "statusReasonPhrase" ) );
@@ -274,7 +277,7 @@ public class ApiIT
    			"detail" : "<the whole stack trace>"
 			}
 		 */
-		JSONObject js = apiCli.invokeApi ( "countHits", false, KnetminerApiClient.params ( "keyword", "*" ) );
+		JSONObject js = CLI.invokeApi ( "countHits", false, KnetminerApiClient.params ( "keyword", "*" ) );
 		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
 		assertEquals ( "Bad type for the /countHits call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
@@ -285,7 +288,7 @@ public class ApiIT
 		);
 		assertEquals ( 
 			"Bad path for the /countHits call!", 
-			apiCli.getApiUrl ( "countHits" ),
+			CLI.getApiUrl ( "countHits" ),
 			js.getString ( "path" )
 		);
 		assertTrue ( "Bad detail for the /countHits call!", js.getString ( "detail" ).contains ( "classic.QueryParserBase.parse" ) );
@@ -301,8 +304,8 @@ public class ApiIT
 		// in this mode it might return a regular answer, not an error
 		if ( "console".equals ( getMavenProfileId () ) ) return;
 		
-		String url = apiCli.getApiUrl ( "cydebug/traverser/report" );
-		JSONObject js = apiCli.invokeApi ( url, false, null );
+		String url = CLI.getApiUrl ( "cydebug/traverser/report" );
+		JSONObject js = CLI.invokeApi ( url, false, null );
 		assertEquals ( 
 			"Bad type for the /cydebug call!",
 			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
@@ -342,7 +345,7 @@ public class ApiIT
 	 */
 	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
 	{
-		GenomeApiResult apiOut = apiCli.genome ( keyword, Arrays.asList ( geneAccFilters ), null, null );
+		GenomeApiResult apiOut = CLI.genome ( keyword, Arrays.asList ( geneAccFilters ), null, null );
 				
 		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", apiOut.getGeneCount () > 0 );
 		
@@ -373,7 +376,7 @@ public class ApiIT
 		if ( !"console".equals ( getMavenProfileId () ) ) return;
 		
 		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
-		log.info ( "The API should be available at " + apiCli.getApiUrl ( "/aratiny/" ) );
+		log.info ( "The API should be available at " + CLI.getApiUrl ( "/aratiny/" ) );
 		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
