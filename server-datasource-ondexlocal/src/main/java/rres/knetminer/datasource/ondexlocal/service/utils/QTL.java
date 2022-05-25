@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.ondexlocal.service.utils;
 
+import static org.hamcrest.CoreMatchers.containsString;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
  * fromString methods.
  * 
  * @author holland
+ * @author Marco Brandizi
  *
  */
 public class QTL {
@@ -128,22 +131,53 @@ public class QTL {
 	 * 
 	 * which means: random ID = chromosome no.:start:end:optional label
 	 * 
+	 * The "qtl1=" part is optional so this is equivalent: "4:9920000:10180000:Petal size"
+	 * TODO: to be removed? It was here in the past, now it doesn't seem to be in use anymore.
 	 * 
 	 */
-	public static QTL fromString(String qtlStr) throws IllegalArgumentException {
-		String[] r = qtlStr.split(":");
-		if (r.length == 3 || r.length == 4) {
-			String chrName = r[0].split("=")[1], label = "";
-			Integer start = Integer.parseInt(r[1]), end = Integer.parseInt(r[2]);
-			if (r.length == 4) {
-				label = r[3];
-			}
-			if (start < end) {
-				return new QTL(chrName, null, start, end, label, "significant", 0, label, null);
-				// set "trait" equal to "label"
-			}
-		}
-		throw new IllegalArgumentException(qtlStr + " not valid qtl region");
+	public static QTL fromString(String qtlStr) throws IllegalArgumentException
+	{
+		String[] frags = qtlStr.split ( ":" );
+
+		if ( ! ( frags.length == 3 || frags.length == 4 ) )
+			throw new IllegalArgumentException ( qtlStr + " not valid qtl region" );
+
+		
+		String chrName = frags [ 0 ];
+		// 2022-05-25: I'm making 'qtl1=' optional, as said above
+		if ( frags [ 0 ].contains ( "=" ) ) 
+			chrName = chrName.split ( "=" ) [ 1 ];
+				
+		int start = Integer.parseInt ( frags[ 1 ] );
+		int end = Integer.parseInt ( frags[ 2 ] );
+		String label = frags.length == 4 ? frags[ 3 ] : ""; 
+		
+		// set "trait" equal to "label"
+		if (start < end) 
+			return new QTL ( chrName, null, start, end, label, "significant", 0, label, null );
+		
+		throw new IllegalArgumentException ( qtlStr + " not valid qtl region (start >= end)" );
+	}
+	
+	/**
+	 * Converts the format required by the countLoci() API into the one supported by 
+	 * {@link #fromString(String)}. 
+	 * 
+	 * TODO: we should harmonise the two at some point, we use this workaround for the moment.
+	 * 
+	 */
+	public static String countLoci2regionStr ( String countLociStr )
+	{
+		String[] frags = countLociStr.split ( "-" );
+		
+		if ( frags.length < 1  )
+			throw new IllegalArgumentException ( countLociStr + " not valid qtl region" );
+
+		String chr = frags [ 0 ];
+		int start = frags.length > 1 ? Integer.parseInt ( frags [ 1 ] ) : 0;
+		int end = frags.length > 2 ? Integer.parseInt ( frags [ 2 ] ) : 0;
+		
+		return chr + ":" + start + ":" + end;
 	}
 	
 	public static List<QTL> fromStringList ( List<String> qtlStrings )

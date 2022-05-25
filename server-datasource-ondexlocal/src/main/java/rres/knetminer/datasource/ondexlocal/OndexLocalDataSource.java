@@ -44,6 +44,7 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -145,25 +146,25 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 	}
 
+	/**
+	 * We now support both the {@link region search box format QTL#fromString(String)} and the original
+	 * {@link countLoci() format QTL#countLoci2regionStr(String)}. (TODO: this needs testing).
+	 * 
+	 */
 	@Override
 	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
-		// TODO: needs to use QTL and the same format as the qtl param
-		String[] loci = request.getKeyword().split("-");
-		String chr = loci[0];
-		int start = 0, end = 0;
-		if (loci.length > 1) {
-			start = Integer.parseInt(loci[1]);
-		}
-		if (loci.length > 2) {
-			end = Integer.parseInt(loci[2]);
-		}
-		log.info("Counting loci "+chr+":"+start+":"+end);
+		String lociStr = request.getKeyword();
+		if ( !lociStr.contains ( ":" ) ) lociStr = QTL.countLoci2regionStr ( lociStr );
+		
+		QTL chrRegion = QTL.fromString ( lociStr );
+			
+		log.info("Counting loci on region: {}", chrRegion );
 		CountLociResponse response = new CountLociResponse();
 		response.setGeneCount (
 			OndexServiceProvider.getInstance ()
 				.getDataService() 
-				.getLociGeneCount(chr, start, end, request.getTaxId () )
+				.getLociGeneCount ( chrRegion.getChromosome (), chrRegion.getStart (), chrRegion.getEnd (), request.getTaxId () )
 		);
 		return response;
 	}
