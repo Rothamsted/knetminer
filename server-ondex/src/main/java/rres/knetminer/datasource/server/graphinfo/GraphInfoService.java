@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
- * A small API to get details about a set of ONDEXConcept(s) in the ONDEXGraph managed 
- * by the KnetMiner application, given concept's numerical IDs.
+ * API to query graph and graph elements details.
  * 
  * 
  * TODO: all these mappings that depend on the data-source should be checked for a real DS, at the moment
