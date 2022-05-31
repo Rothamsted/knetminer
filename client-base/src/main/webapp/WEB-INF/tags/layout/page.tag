@@ -104,6 +104,9 @@
             <!-- evidence table -->
          <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
 
+          <!-- multi species file -->
+         <script type="text/javascript" src="html/javascript/multispecies.js"></script>
+
          <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 

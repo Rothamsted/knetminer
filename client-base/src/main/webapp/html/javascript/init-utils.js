@@ -22,8 +22,8 @@ function showReferenceGenome(){
 // function runs on page jquery document ready
 function loadOnReady(){
 
-     // add species name to header
-     $('#species_header').text(species_name); //update species name from utils_config.js
+  // add species name to header
+  //  $('#species_header').text(species_name); //update species name from utils_config.js
 
     activateResetButton(); 
 
@@ -41,6 +41,14 @@ function loadOnReady(){
     generalPageAnalytics(); 
 
     genemap.draw('#genemap', 'html/data/basemap.xml', null);
+
+   
+
+}
+
+// function to get text id name
+function createMultiSpecieSelect(){
+
 
 }
 
@@ -311,6 +319,10 @@ function bodyHandlers(){
         $('div.tooltip').remove();
     });
 }
+
+
+
+
 
 
 

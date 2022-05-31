@@ -1,4 +1,6 @@
 
+// current taxonomy Id global variable;
+var currentTaxId; 
 
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
@@ -29,6 +31,8 @@ function searchKeyword() {
 
     // requestParams
     var requestParams = {};
+    // setting the current Taxonomy ID
+    requestParams['taxId'] = currentTaxId;
     requestParams['keyword'] = keyword;
     if (list.length > 0) {
         requestParams['list'] = list;
@@ -107,7 +111,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         complete: function () {
 
             if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-
+                console.log(requestParams); 
                 $('#tabviewer').show(); // show Tab buttons and viewer
                 // Show loading spinner on 'search' div
                 activateSpinner("#search");
@@ -394,7 +398,6 @@ function geneCounter(){
 
 }
 
-
 /*
  * Function
  *
@@ -403,8 +406,9 @@ function findGenes(id, chr_name, start, end) {
     if (chr_name != "" && start != "" && end != "") {
         var searchMode = "countLoci";
         var keyword = chr_name + "-" + start + "-" + end;
-        var request = "/" + searchMode + "?keyword=" + keyword;
+        var request = "/" + searchMode + "?keyword=" + keyword+"&"+currentTaxId;
         var url = api_url + request;
+        console.log(url); 
         $.get(url, '').done(function (data) {
             $("#" + id).val(data.geneCount);
         });
@@ -418,7 +422,7 @@ function getQueryExamples(){
     var sampleQueryButtons = "";
         $.ajax({
             type: 'GET',
-            url: "html/data/sampleQuery.xml",
+            url: "html/data/sampleQuery.xml", // multi-specie example query can be implemented as common name from specie api can be used to get xml data from storage
             dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
@@ -594,8 +598,9 @@ function matchCounter() {
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
-            var request = "/" + searchMode + "?keyword=" + keyword;
+            var request = "/" + searchMode + "?keyword=" + keyword+"&"+currentTaxId;
             var url = api_url + request;
+            console.log(url); 
             $.get(url, '').done(function (data) {
 
                 if (data.luceneLinkedCount != 0) {
@@ -622,8 +627,7 @@ function matchCounter() {
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
  *
  */
-function createGeneNameSynonyms(element,data)
-{
+function createGeneNameSynonyms(element,data){
 
 	var geneNameSynonyms = $(element).next('.gene_name_synonyms');
  
@@ -664,7 +668,6 @@ function createGeneNameSynonyms(element,data)
 }
 
 
-
 // function create error message for failed get request for function matchCounter and createGeneSynonyms
 function errorComponent(elementInfo,xhr){
     var server_error= JSON.parse(xhr.responseText); // full error json from server
@@ -672,3 +675,27 @@ function errorComponent(elementInfo,xhr){
     $(elementInfo).html('<span class="redText">'+errorMsg+'</span>');
     console.log(server_error.detail); // detailed stacktrace
 }
+
+/*
+ * Function runs on changing the species select option
+ */
+function changeSpecie(){
+
+    $('.navbar-select').on('change', function(){
+        // value of the selected option 
+        currentTaxId = $(this).children("option:selected").val();
+
+        // TODO: approach to store data to be considered 
+        // this approach can be considered temporary
+        $.get(taxnomyUrl+newTaxId+'?content-type=application/json','').done( function(data){
+           $('#specie_title').text(data.id)
+           $('#specie_name').text(data.scientific_name)
+           $('#specie_commonname').text(data.tags.common_name.toString().replaceAll(',',', '))
+        }).fail(function (xhr,status,errorlog){
+            errorComponent('.nav',xhr,status,errorlog);
+        });
+    })
+
+}
+
+

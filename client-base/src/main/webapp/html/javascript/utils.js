@@ -12,6 +12,7 @@ var knetmaps = KNETMAPS.KnetMaps();
 */
 $(document).ready(
     function () {
+        getEnsemblList();
         loadOnReady();
         showReferenceGenome();
         initResetButton();
@@ -19,4 +20,7 @@ $(document).ready(
         QtlRegionHandlers();
         searchHandlers();
         bodyHandlers();
-    });
+        changeSpecie(); 
+        
+    }
+);
