@@ -9,7 +9,16 @@
 	<div id="search">
 		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()" accept-charset="UTF-8">
 			<ul id="main_list">
-				<li>
+				<li style="position: relative;">
+
+					<div id="species_container" class="details">
+							<div class="detail_info">
+							<div>
+							<h4 style="margin:10px 0;">Specie description</h4></div>
+							<div id="speciename_container"></div>
+							</div>
+					</div>
+
                     <!-- Sample Queries -->
                     <div id="info" class="details">
                         <c:if test="${embeddable}"><div class="species_header"></div></c:if>
