@@ -26,10 +26,12 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.base.Functions;
 
+import net.sourceforge.ondex.core.DataSource;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
+import rres.knetminer.datasource.api.DatasetInfo;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
@@ -379,7 +381,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
 	  }
 	}
-    
+   
+	/**
+	 * @deprecated see {@link KnetminerDataSource#dataSource(String, KnetminerRequest)}.
+	 */
+	@Deprecated
 	@Override
   public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
   {
@@ -414,8 +420,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
     return response;
       
   }
-		
 
+	
 	@Override
   public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{

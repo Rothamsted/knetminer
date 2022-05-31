@@ -81,8 +81,13 @@ public abstract class KnetminerDataSource {
 	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 	
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-        
+   
+	/**
+	 * TODO: this is still in use, but we need to migrate to /datasetInfo, which
+	 * is a more complete and correct version of the same function. 
+	 */
+	@Deprecated
 	public abstract GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-		
+	
 	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 }
