@@ -116,9 +116,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			request.getKeyword(), ondexServiceProvider, null, request.getTaxId()
 		);
 		CountHitsResponse response = new CountHitsResponse();
-		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
-		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
-		response.setGeneCount(hits.getNumConnectedGenes()); // count unique genes linked to Lucene documents
+		response.setLuceneCount ( hits.getLuceneConcepts().size() ); // number of Lucene documents
+		response.setLuceneLinkedCount ( hits.getLuceneDocumentsLinked() ); // number of Lucene documents related to genes
+		response.setGeneCount ( hits.getNumConnectedGenes() ); // count unique genes linked to Lucene documents
 		return response;
 	}
 

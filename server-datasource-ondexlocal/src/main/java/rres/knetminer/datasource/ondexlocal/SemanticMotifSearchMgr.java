@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +23,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * Used to be named Hits.
  * 
  * @author zorc, pakk, singha
+ * @author Marco Brandizi
  *
  */
 public class SemanticMotifSearchMgr
@@ -41,6 +41,13 @@ public class SemanticMotifSearchMgr
 	{
 		this.ondexProvider = ondexProvider;
 		this.taxId = StringUtils.trimToNull ( taxId );
+		if ( geneList == null ) geneList = List.of ();
+
+		log.info ( 
+			"Initalising search for \"{}\", {} gene(s) and taxId: {}",
+			keyword, geneList.size (), this.taxId 
+		);
+		
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
@@ -62,7 +69,7 @@ public class SemanticMotifSearchMgr
 		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
 		
 		log.info ( 
-			"Counting unique genes for {} matching Lucene concept(s)", luceneConceptsSet.size () 
+			"Counting unique genes for {} Lucene concept(s) matching the keyword input", luceneConceptsSet.size () 
 		);
 
 		var graph = this.ondexProvider.getDataService ().getGraph ();
@@ -71,10 +78,11 @@ public class SemanticMotifSearchMgr
 			.getSemanticMotifDataService ()
 			.getConcepts2Genes ();
 		
-		long linkedConceptsSize = luceneConceptsSet.parallelStream ()
+		this.luceneDocumentsLinked = (int) luceneConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
 			.filter ( concept2Genes::containsKey )
 			.count ();
+		log.info ( "Matching {} unique concept(s)", luceneDocumentsLinked );
 		
 		Stream<Integer> genesStrm = luceneConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
@@ -85,17 +93,8 @@ public class SemanticMotifSearchMgr
 		if ( this.taxId != null )
 			genesStrm = genesStrm.filter ( geneId -> taxId.equals ( new GeneHelper ( graph, geneId ).getTaxID () ) );
 		
-		
-		long uniqGenesSize = luceneConceptsSet.parallelStream ()
-		.map ( ONDEXConcept::getId )
-		.filter ( concept2Genes::containsKey )
-		.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
-		.distinct ()
-		.count ();
-
-		log.info ( "Matching {} unique gene(s): ", uniqGenesSize );
-		this.numConnectedGenes = (int) uniqGenesSize;
-		this.luceneDocumentsLinked = (int) linkedConceptsSize;
+		this.numConnectedGenes = (int) genesStrm.count ();
+		log.info ( "Matching {} unique gene(s)", numConnectedGenes );
 	}
 
 	public int getLuceneDocumentsLinked ()
