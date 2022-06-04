@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import rres.knetminer.api.ApiIT;
@@ -129,7 +128,7 @@ public class MultiSpecieApiIT
 	/**
 	 * Testing Keyword, regions & taxId.
 	 */
-	@Test @Ignore ( "TODO: not working" )
+	@Test
 	public void testKeywordRegionTaxId ()
 	{
 		GenomeApiResult outMaize = CLI.genome ( "seed", null, List.of ( "2:1000000:900000000" ), "4577" );
