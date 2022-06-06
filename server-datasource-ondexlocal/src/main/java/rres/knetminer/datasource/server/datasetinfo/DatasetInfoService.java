@@ -47,8 +47,9 @@ public class DatasetInfoService
 	@RequestMapping ( path = "/chromosome-ids" )
 	public List<String> chromosomeIds ( @RequestParam String taxId )
 	{
-		// TODO: Use XPath and parse them from (initially here, later on some utility function)
+		// TODO: Use XPath and parse them from basemap.xml (initially here, later on some utility function)
 		// TODO: check the right output is returned (a JSON array)
+		// uk.ac.ebi.utils.xml.XPathReader might be useful
 		return null;
 	}
 	
@@ -67,7 +68,7 @@ public class DatasetInfoService
 			String mime = Files.probeContentType ( bkgPath );
 			byte[] content = Files.readAllBytes ( bkgPath );
 			bkgPath.toFile ();
-			
+
 			return ResponseEntity
 				.ok ()
 				.header ( "Content-Type", mime )

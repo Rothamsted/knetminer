@@ -20,6 +20,11 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import rres.knetminer.datasource.server.datasetinfo.DatasetInfo;
+import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
 
@@ -103,6 +108,17 @@ public class KnetminerApiClient
 		String lociStr = chromosome + '-' + start + '-' + end;
 		JSONObject jsResult = invokeApi ( "countLoci", params ( "keyword", lociStr, "taxId", taxId ) );
 		return jsResult.getInt ( "geneCount" );
+	}
+	
+	/**
+	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info}.
+	 * 
+	 * TODO: not tested yet (tests for {@link DatasetInfoService} will involve this and will be enough.
+	 * TODO: similar client methods for the {@link DatasetInfoService} calls. 
+	 */
+	public DatasetInfo datasetInfo ()
+	{
+		return invokeMappedApi ( "dataset-info", DatasetInfo.class, true, null );
 	}
 	
 	
@@ -208,6 +224,30 @@ public class KnetminerApiClient
 	}			
 	
 	/**
+	 * Like the other invokeApi methods, but this one uses {@link ObjectMapper} to map the resulting JSON 
+	 * to the resultClass.
+	 * 
+	 * TODO: not tested yet (tests for {@link DatasetInfoService} will involve this and will be enough
+	 */
+	public <T> T invokeMappedApi ( String urlOrCallName, Class<? extends T> resultClass, boolean failOnError, JSONObject jsonFields )
+	{
+		try
+		{
+			String jsResultStr = invokeApiCoreStr ( urlOrCallName, failOnError, jsonFields );
+			var jsmap = new ObjectMapper ();
+			return jsmap.readValue ( jsResultStr, resultClass );
+		}
+		catch ( JsonProcessingException|RuntimeException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UnexpectedEventException.class, ex, 
+				"Error while mapping API call '%s' to %s: %s",
+				urlOrCallName, resultClass.getSimpleName (), ex.getMessage ()
+			);
+		}
+	}
+	
+	/**
 	 * Prepares API params starting from an array that alternate key/value pairs in its values.
 	 */
 	public static JSONObject params ( Object ...jsonFields )
@@ -244,4 +284,5 @@ public class KnetminerApiClient
 	{
 		return getBaseUrl () + Optional.ofNullable ( path ).orElse ( "" );
 	}
+	
 }
