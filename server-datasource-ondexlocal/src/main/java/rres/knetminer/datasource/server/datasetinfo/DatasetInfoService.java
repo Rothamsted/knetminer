@@ -36,8 +36,8 @@ public class DatasetInfoService
 				this.setOrganization ( "Rothamsted Research" );
 				this.setSpecies ( List.of (
 					new SpecieInfo ( "3702", "Thale cress", "Arabidopsis Thaliana" ),
-					new SpecieInfo ( "4565", "Triticum aestivum", "Bread Wheat" ),
-					new SpecieInfo ( "4577", "Zea mays", "Maize" ) 
+					new SpecieInfo ( "4565", "Bread Wheat", "Triticum aestivum" ),
+					new SpecieInfo ( "4577", "Maize", "Zea mays" ) 
 				));
 			}
 		};
