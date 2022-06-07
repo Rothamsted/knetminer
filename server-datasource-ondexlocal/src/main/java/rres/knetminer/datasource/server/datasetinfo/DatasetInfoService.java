@@ -29,7 +29,18 @@ public class DatasetInfoService
 	@RequestMapping ( path = "" )
 	public DatasetInfo datasetInfo ()
 	{
-		return null;
+		// TODO: mockup data that need to be replaced with a real fetch from config
+		return new DatasetInfo () {
+			{
+				this.setTitle ( "AraTiny Dataset" );
+				this.setOrganization ( "Rothamsted Research" );
+				this.setSpecies ( List.of (
+					new SpecieInfo ( "3702", "Thale cress", "Arabidopsis Thaliana" ),
+					new SpecieInfo ( "4565", "Triticum aestivum", "Bread Wheat" ),
+					new SpecieInfo ( "4577", "Zea mays", "Maize" ) 
+				));
+			}
+		};
 	}
 
 	@RequestMapping ( path = "/basemap.xml", produces = MediaType.APPLICATION_XML_VALUE )
