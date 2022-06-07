@@ -376,7 +376,7 @@ public class ApiIT
 		if ( !"console".equals ( getMavenProfileId () ) ) return;
 		
 		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
-		log.info ( "The API should be available at " + CLI.getApiUrl ( "/aratiny/" ) );
+		log.info ( "The API should be available at " + CLI.getBaseUrl () );
 		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
 		System.in.read ();
 	}
