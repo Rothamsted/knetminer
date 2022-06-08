@@ -5,7 +5,9 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.xml.XPathReader;
 
 /**
@@ -35,7 +41,8 @@ import uk.ac.ebi.utils.xml.XPathReader;
 @CrossOrigin
 public class DatasetInfoService
 {
-	private String location = "src/test/resources/tmp-mockup";
+	/** TODO: remove once we use real data. */
+	private String mockupDirPath = "src/test/resources/tmp-mockup";
 	
 	@RequestMapping ( path = "" )
 	public DatasetInfo datasetInfo ()
@@ -59,35 +66,48 @@ public class DatasetInfoService
 	}
 
 	@RequestMapping ( path = "/basemap.xml", produces = MediaType.APPLICATION_XML_VALUE )
-	public String basemapXml (@RequestParam String taxId ) throws IOException
+	public String basemapXml (@RequestParam String taxId )
 	{
-		return readBaseMapXML ( taxId );
+		return readMockupBaseMap ( taxId );
 	}
 
 	@RequestMapping ( path = "/sample-query.xml", produces = MediaType.APPLICATION_XML_VALUE )
-	public String sampleQueryXml () throws IOException // TODO: do we need taxId?
+	public String sampleQueryXml () // TODO: do we need taxId?
 	{
-		return readResourceFile("sampleQuery.xml");
+		return readMockupFile("sampleQuery.xml");
 	}
 	
 	@RequestMapping ( path = "/chromosome-ids" )
-	public List<String> chromosomeIds ( @RequestParam String taxId ) throws IOException, XPathExpressionException
+	public List<String> chromosomeIds ( @RequestParam String taxId )
 	{
-		String basemapString = readBaseMapXML(taxId);
+		String basemapString = readMockupBaseMap ( taxId );
 		XPathReader xpr = new XPathReader ( basemapString );
-		NodeList list = xpr.readNodeList ( "/genome/chromosome[@index]" );
-		
-		List<String> indexes  = IntStream.range ( 0, list.getLength () )
-                .mapToObj ( list::item ).map ( Node::getAttributes )
-                .map ( a->a.getNamedItem("index") ).map ( Node::getNodeValue ).collect ( Collectors.toList () );
-		
-		return indexes;
+		NodeList chrNodes = xpr.readNodeList ( "/genome/chromosome[@index and @number]" );
+		List<String> chrIds = new ArrayList<> ();
+		for ( int i = 0; i < chrNodes.getLength (); i++ )
+		{
+			try
+			{
+				NamedNodeMap attrs = chrNodes.item ( i ).getAttributes ();
+				int idx = Integer.valueOf ( attrs.getNamedItem ( "index" ).getNodeValue () );
+				String chromosomeId = attrs.getNamedItem ( "number" ).getNodeValue ();
+				chrIds.set ( idx, chromosomeId );
+			}
+			catch ( NumberFormatException | DOMException | NullPointerException ex )
+			{
+				ExceptionUtils.throwEx ( UnexpectedValueException.class, ex,
+				  "Error while parsing the chromosome map file for taxId: %s: %s",
+				  taxId, ex.getMessage ()
+				);
+			}
+		}
+		return chrIds;
 	}
 	
 	@RequestMapping ( path = "/release-notes.html", produces = MediaType.TEXT_HTML_VALUE )
-	public String releaseNotesHtml () throws IOException
+	public String releaseNotesHtml ()
 	{
-		return readResourceFile("release_notes.html");
+		return readMockupFile("release_notes.html");
 	}
 	
 	@RequestMapping ( path = "/background-image" ) 
@@ -114,12 +134,32 @@ public class DatasetInfoService
 		}
 	}
 	
-	private String readBaseMapXML ( String taxId ) throws IOException {
-		return Files.readString ( Path.of ( location + "/basemap-" + taxId + ".xml" ) );
+	private String readMockupBaseMap ( String taxId )
+	{
+		try {
+			return Files.readString ( Path.of ( mockupDirPath + "/basemap-" + taxId + ".xml" ) );
+		}
+		catch ( IOException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UncheckedIOException.class, ex, 
+				"Error while reading basemap file for taxId %s", taxId
+			);
+		}
 	}
 	
-	private String readResourceFile ( String file ) throws IOException {
-		return Files.readString ( Path.of ( location + "/" + file ) );
+	private String readMockupFile ( String fileName )
+	{
+		try {
+			return Files.readString ( Path.of ( mockupDirPath + "/" + fileName ) );
+		}
+		catch ( IOException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UncheckedIOException.class, ex, 
+				"Error while reading mock-up file \"%s\"", fileName
+			);
+		}
 	}
 	
 }
