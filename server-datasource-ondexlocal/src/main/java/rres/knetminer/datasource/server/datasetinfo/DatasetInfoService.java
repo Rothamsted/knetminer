@@ -115,7 +115,7 @@ public class DatasetInfoService
 	{
 		try
 		{
-			Path bkgPath = Path.of ( "TODO: fetch this from config" );
+			Path bkgPath = Path.of ( mockupDirPath + "/background.jpg" );
 			String mime = Files.probeContentType ( bkgPath );
 			byte[] content = Files.readAllBytes ( bkgPath );
 			bkgPath.toFile ();
