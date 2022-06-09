@@ -19,6 +19,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import uk.ac.ebi.utils.collections.ListUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.xml.XPathReader;
@@ -84,9 +85,9 @@ public class DatasetInfoService
 			try
 			{
 				NamedNodeMap attrs = chrNodes.item ( i ).getAttributes ();
-				int idx = Integer.valueOf ( attrs.getNamedItem ( "index" ).getNodeValue () );
+				int idx = Integer.valueOf ( attrs.getNamedItem ( "index" ).getNodeValue () ) - 1;
 				String chromosomeId = attrs.getNamedItem ( "number" ).getNodeValue ();
-				chrIds.set ( idx, chromosomeId );
+				ListUtils.set ( chrIds, idx, chromosomeId );
 			}
 			catch ( NumberFormatException | DOMException | NullPointerException ex )
 			{
@@ -138,7 +139,7 @@ public class DatasetInfoService
 		{
 			throw ExceptionUtils.buildEx ( 
 				UncheckedIOException.class, ex, 
-				"Error while reading basemap file for taxId %s", taxId
+				"Error while reading basemap file for taxId %s: %s", taxId, ex.getMessage ()
 			);
 		}
 	}
@@ -152,7 +153,7 @@ public class DatasetInfoService
 		{
 			throw ExceptionUtils.buildEx ( 
 				UncheckedIOException.class, ex, 
-				"Error while reading mock-up file \"%s\"", fileName
+				"Error while reading mock-up file \"%s\": %s", fileName, ex.getMessage ()
 			);
 		}
 	}
