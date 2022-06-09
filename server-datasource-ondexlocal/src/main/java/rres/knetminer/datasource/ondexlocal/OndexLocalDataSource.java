@@ -45,6 +45,7 @@ import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
+import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -363,7 +364,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		return response;
 	}
 
-	
+	/**
+	 * TODO: to be moved under {@link DatasetInfoService}.
+	 */
 	@Override
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{

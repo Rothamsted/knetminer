@@ -7,11 +7,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.xml.xpath.XPathExpressionException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -83,6 +77,7 @@ public class DatasetInfoService
 		String basemapString = readMockupBaseMap ( taxId );
 		XPathReader xpr = new XPathReader ( basemapString );
 		NodeList chrNodes = xpr.readNodeList ( "/genome/chromosome[@index and @number]" );
+		
 		List<String> chrIds = new ArrayList<> ();
 		for ( int i = 0; i < chrNodes.getLength (); i++ )
 		{
