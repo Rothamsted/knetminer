@@ -121,7 +121,24 @@ public class KnetminerApiClient
 		return invokeMappedApi ( "dataset-info", DatasetInfo.class, true, null );
 	}
 	
+	/**
+	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/chromosome-ids}.
+	 * 
+	 */
+	public String[] datasetInfo ( String config )
+	{
+		return invokeMappedApi ( "dataset-info/" + config, String[].class, true, null );
+	}
 	
+	/**
+	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/basemap.xml,
+	 * /dataset-info/sample-query.xml , /dataset-info/release-notes.html }.
+	 * 
+	 */
+	public String datasetInfoStr ( String config )
+	{
+		return invokeMappedApiStr ( "dataset-info/" + config, true, null );
+	}
 	
 	/**
 	 * Defaults to true
@@ -243,6 +260,26 @@ public class KnetminerApiClient
 				UnexpectedEventException.class, ex, 
 				"Error while mapping API call '%s' to %s: %s",
 				urlOrCallName, resultClass.getSimpleName (), ex.getMessage ()
+			);
+		}
+	}
+	
+	/**
+	 * Like the other invokeApi methods, but this one uses to invoke dataset info services for xml and html config files 
+	 * 
+	 */
+	public String invokeMappedApiStr ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	{
+		try
+		{
+			return invokeApiCoreStr ( urlOrCallName, failOnError, jsonFields );
+		}
+		catch ( RuntimeException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UnexpectedEventException.class, ex, 
+				"Error while mapping API call '%s' : %s",
+				urlOrCallName,  ex.getMessage ()
 			);
 		}
 	}
