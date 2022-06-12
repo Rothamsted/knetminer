@@ -107,7 +107,7 @@ public class DatasetInfoService
 	}
 	
 	@RequestMapping ( path = "/background-image" ) 
-	public ResponseEntity<byte[]> getBackgroundImage () // TODO: do we need taxId?
+	public ResponseEntity<byte[]> backgroundImage () // TODO: do we need taxId?
 	{
 		try
 		{

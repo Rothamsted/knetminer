@@ -3,6 +3,8 @@ package rres.knetminer.api.client;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -27,6 +29,9 @@ import rres.knetminer.datasource.server.datasetinfo.DatasetInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
+
+import com.machinezoo.noexception.Exceptions;
+
 
 /**
  * A simple client for the KnetMiner APIs.
@@ -123,21 +128,52 @@ public class KnetminerApiClient
 	
 	/**
 	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/chromosome-ids}.
-	 * 
 	 */
-	public String[] datasetInfo ( String config )
+	public String[] chromosomeIds ( String taxId )
 	{
-		return invokeMappedApi ( "dataset-info/" + config, String[].class, true, null );
+		return invokeMappedApi ( 
+			"dataset-info/chromosome-ids", 
+			String[].class, 
+			true, 
+			params ( "taxId", taxId )
+		);
 	}
 	
 	/**
-	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/basemap.xml,
-	 * /dataset-info/sample-query.xml , /dataset-info/release-notes.html }.
-	 * 
+	 * Counterpart of {@link DatasetInfoService#basemapXml()}.
 	 */
-	public String datasetInfoStr ( String config )
+	public String basemapXml ( String taxId )
 	{
-		return invokeMappedApiStr ( "dataset-info/" + config, true, null );
+		return invokeApiCoreStr ( "dataset-info/basemap.xml" , true, params ( "taxId", taxId ) );
+	}
+
+	/**
+	 * Counterpart of {@link DatasetInfoService#sampleQueryXml()}.
+	 */
+	public String sampleQueryXml ( String taxId )
+	{
+		return invokeApiCoreStr ( "dataset-info/sample-query.xml" , true, null );
+	}
+
+	/**
+	 * Counterpart of {@link DatasetInfoService#releaseNotesHtml()}.
+	 */
+	public String releaseNotesHtml ()
+	{
+		return invokeApiCoreStr ( "dataset-info/release-notes.html" , true, null );
+	}
+	
+	/**
+	 * Counterpart of {@link DatasetInfoService#backgroundImage()}.
+	 */
+	public byte[] backgroundImage ()
+	{
+		return invokeApiCoreRaw (
+			"dataset-info/background-image",
+			Exceptions.sneak ().<InputStream, byte[]> function ( IOUtils::toByteArray ), 
+			true,
+			null
+		);
 	}
 	
 	/**
@@ -186,6 +222,18 @@ public class KnetminerApiClient
 		);
 	}
 	
+	
+	public String invokeApiCoreStr ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	{
+		String outStr = invokeApiCoreRaw ( 
+			urlOrCallName, 
+			Exceptions.sneak ().function ( in -> IOUtils.toString ( in, "UTF-8" ) ), failOnError, jsonFields
+		);
+		log.debug ( "Result from <{}>:\n{}", urlOrCallName, outStr );
+		return outStr;
+	}
+	
+	
 	/**
 	 * Core invocation of Knetminer API call.
 	 * 
@@ -195,9 +243,11 @@ public class KnetminerApiClient
 	 * @param urlOrCallName the call name or a straight URL.
 	 * @param failOnError if true, yields an exception upon error HTTP codes. 
 	 * @param jsonFields the parameters to be sent to the API, using the request body.
-	 * @return the API output, which usually is a JSON object or array.
+	 * @return the API output, in the form of its input stream, which can be read and converted as appropriate.
 	 */
-	public String invokeApiCoreStr ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	private <T> T invokeApiCoreRaw ( 
+		String urlOrCallName, Function<InputStream, T> outConverter, boolean failOnError, JSONObject jsonFields 
+	)
 	{
 		String url = urlOrCallName.startsWith ( "http://" )
 			? urlOrCallName 
@@ -224,10 +274,9 @@ public class KnetminerApiClient
 				);
 				log.warn ( "Return code for {} is {}", url, httpCode );				
 			}
-			
-			String jsStr = IOUtils.toString ( response.getEntity ().getContent (), "UTF-8" );
-			log.debug ( "JSON got from <{}>:\n{}", url, jsStr );
-			return jsStr;
+						
+			InputStream in = response.getEntity ().getContent ();
+			return outConverter.apply ( in );
 		}
 		catch ( IOException | HttpException ex )
 		{
@@ -264,25 +313,6 @@ public class KnetminerApiClient
 		}
 	}
 	
-	/**
-	 * Like the other invokeApi methods, but this one uses to invoke dataset info services for xml and html config files 
-	 * 
-	 */
-	public String invokeMappedApiStr ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
-	{
-		try
-		{
-			return invokeApiCoreStr ( urlOrCallName, failOnError, jsonFields );
-		}
-		catch ( RuntimeException ex )
-		{
-			throw ExceptionUtils.buildEx ( 
-				UnexpectedEventException.class, ex, 
-				"Error while mapping API call '%s' : %s",
-				urlOrCallName,  ex.getMessage ()
-			);
-		}
-	}
 	
 	/**
 	 * Prepares API params starting from an array that alternate key/value pairs in its values.

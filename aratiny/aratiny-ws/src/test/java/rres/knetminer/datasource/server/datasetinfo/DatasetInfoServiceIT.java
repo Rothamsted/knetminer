@@ -1,8 +1,12 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -46,7 +50,7 @@ public class DatasetInfoServiceIT
 	 */
 	public void testBasemapXml (String taxId)
 	{
-		String dataset = CLI.datasetInfoStr ( "basemap.xml?taxId=" + taxId );
+		String dataset = CLI.basemapXml ( taxId );
 		assertTrue  ( "Proper basemap.xml not exists for taxId " + taxId , dataset.contains ( "chromosome index" ) );
 		
 	}
@@ -57,6 +61,7 @@ public class DatasetInfoServiceIT
 	@Test
 	public void testChromosomeIds ()
 	{
+		// TODO: find out the expectedLen and probeChr values in the mockup files
 		testChromosomeIds( "4577" );
 		testChromosomeIds( "4565" );
 		testChromosomeIds( "3702" );
@@ -65,11 +70,15 @@ public class DatasetInfoServiceIT
 	/**
 	 * Testing ChromosomeIds.
 	 */
-	public void testChromosomeIds ( String taxId )
+	private void testChromosomeIds ( String taxId, int expectedLen, String probeChr )
 	{
-		String[] dataset = CLI.datasetInfo ( "chromosome-ids?taxId=" + taxId );
-		assertTrue  ( "Chromosome ids not exists", dataset.length > 0 );
-		
+		String[] chrIds = CLI.datasetInfo ( "chromosome-ids?taxId=" + taxId );
+		assertEquals ( 
+			String.format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, chrIds.length );
+		assertTrue (
+			String.format ( "/chromosomeIds/%s, %s not found in the result!", taxId, probeChr ), 
+			ArrayUtils.contains ( chrIds, probeChr )
+		);		
 	}
 	
 	/**
@@ -79,7 +88,7 @@ public class DatasetInfoServiceIT
 	public void testSampleQueryXml ()
 	{
 		String dataset = CLI.datasetInfoStr ( "sample-query.xml" );
-		assertTrue  ( "SampleQuery Xml not exists", dataset.contains ( "<sampleQueries>" ) );
+		assertTrue  ( "SampleQuery XML is wrong", dataset.contains ( "<sampleQueries>" ) );
 		
 	}
 	
@@ -89,7 +98,7 @@ public class DatasetInfoServiceIT
 	@Test
 	public void testReleaseNotes ()
 	{
-		String dataset = CLI.datasetInfoStr( "release-notes.html" );
+		String dataset = CLI.datasetInfoStr ( "release-notes.html" );
 		assertTrue  ( "ReleaseNotes html not exists", dataset.contains ( "<strong>ENSEMBL PLANTS (Arabidopsis thaliana)</strong>") );
 		
 	}
