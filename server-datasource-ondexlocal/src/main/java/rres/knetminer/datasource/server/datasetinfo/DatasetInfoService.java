@@ -37,7 +37,7 @@ import uk.ac.ebi.utils.xml.XPathReader;
 public class DatasetInfoService
 {
 	/** TODO: remove once we use real data. */
-	private String mockupDirPath = "src/test/resources/tmp-mockup";
+	private String mockupDirPath = "target/test-classes/tmp-mockup";
 	
 	@RequestMapping ( path = "" )
 	public DatasetInfo datasetInfo ()

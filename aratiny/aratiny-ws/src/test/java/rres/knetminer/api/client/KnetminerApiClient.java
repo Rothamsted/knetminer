@@ -4,33 +4,40 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.machinezoo.noexception.Exceptions;
 
+import rres.knetminer.api.ApiIT;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
-
-import com.machinezoo.noexception.Exceptions;
 
 
 /**
@@ -48,7 +55,59 @@ public class KnetminerApiClient
 
 	private Logger log = LogManager.getLogger ( this.getClass () );
 	
+	/**
+	 * Options for API invocations, which affects several aspects of how the HTTP request is made 
+	 * and how the results are processed.
+	 */
+	public static class RequestOptions
+	{
+		private boolean failOnError = true;
+		private boolean useJsonParams = true;
+		
+		public RequestOptions () {
+			super ();
+		}
+		
+		public static RequestOptions of () {
+			return new RequestOptions ();
+		}
+		
+		/**
+		 * If true, an HTTP returning other than 20x will throw an exception, else the status code will be
+		 * ignored. This is useful for tests and when you want to check the error details.
+		 *   
+		 * @see ApiIT#testBadCallError() and similar methods about failure cases.
+		 */
+		public RequestOptions setFailOnError ( boolean failOnError )
+		{
+			this.failOnError = failOnError;
+			return this;
+		}
+
+		/**
+		 * Many of the Knetminer API calls accepts parameters in the form of JSON objects put in the
+		 * request body. This is how the parameters are passed to the server if this flag is true (which 
+		 * is the default). When it is false, then parameters are sent in the  
+		 * {@link ContentType#APPLICATION_FORM_URLENCODED application/x-www-form-urlencoded} form.
+		 */
+		public RequestOptions setUseJsonParams ( boolean useJsonParams )
+		{
+			this.useJsonParams = useJsonParams;
+			return this;
+		}
+
+		public boolean isFailOnError ()
+		{
+			return failOnError;
+		}
+
+		public boolean isUseJsonParams ()
+		{
+			return useJsonParams;
+		}		
+	}
 	
+		
 	public KnetminerApiClient ( String baseUrl )
 	{
 		super ();
@@ -64,7 +123,7 @@ public class KnetminerApiClient
 	 */
 	public CountHitsApiResult countHits ( String keyword, String taxId )
 	{
-		return new CountHitsApiResult ( invokeApi ( "countHits", params ( "keyword", keyword, "taxId", taxId ) ));
+		return new CountHitsApiResult ( invokeApiJs ( "countHits", params ( "keyword", keyword, "taxId", taxId ) ));
 	}
 	
 	
@@ -95,7 +154,7 @@ public class KnetminerApiClient
 //			}
 //		}
 			
-		return new GenomeApiResult ( invokeApi (
+		return new GenomeApiResult ( invokeApiJs (
 			"genome",
 			params ( "keyword", keyword, "list", geneList, "qtl", genomeRegions, "taxId", taxId ) )
 		);		
@@ -103,27 +162,20 @@ public class KnetminerApiClient
 	
 	/**
 	 * Invokes the /countLoci API, which is used to count the no. of genes falling within a region.
-	 * @param chromosome
-	 * @param start
-	 * @param end
-	 * @return
 	 */
 	public int countLoci ( String chromosome, int start, int end, String taxId )
 	{
 		String lociStr = chromosome + '-' + start + '-' + end;
-		JSONObject jsResult = invokeApi ( "countLoci", params ( "keyword", lociStr, "taxId", taxId ) );
+		JSONObject jsResult = invokeApiJs ( "countLoci", params ( "keyword", lociStr, "taxId", taxId ) );
 		return jsResult.getInt ( "geneCount" );
 	}
 	
 	/**
 	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info}.
-	 * 
-	 * TODO: not tested yet (tests for {@link DatasetInfoService} will involve this and will be enough.
-	 * TODO: similar client methods for the {@link DatasetInfoService} calls. 
 	 */
 	public DatasetInfo datasetInfo ()
 	{
-		return invokeMappedApi ( "dataset-info", DatasetInfo.class, true, null );
+		return invokeApiJsMap ( "dataset-info", DatasetInfo.class, null );
 	}
 	
 	/**
@@ -131,10 +183,10 @@ public class KnetminerApiClient
 	 */
 	public String[] chromosomeIds ( String taxId )
 	{
-		return invokeMappedApi ( 
+		return invokeApiJsMap ( 
 			"dataset-info/chromosome-ids", 
 			String[].class, 
-			true, 
+			RequestOptions.of ().setUseJsonParams ( false ), 
 			params ( "taxId", taxId )
 		);
 	}
@@ -144,15 +196,17 @@ public class KnetminerApiClient
 	 */
 	public String basemapXml ( String taxId )
 	{
-		return invokeApiCoreStr ( "dataset-info/basemap.xml" , true, params ( "taxId", taxId ) );
+		return invokeApiStr ( 
+			"dataset-info/basemap.xml", RequestOptions.of ().setUseJsonParams ( false ), params ( "taxId", taxId )
+		);
 	}
 
 	/**
 	 * Counterpart of {@link DatasetInfoService#sampleQueryXml()}.
 	 */
-	public String sampleQueryXml ( String taxId )
+	public String sampleQueryXml ()
 	{
-		return invokeApiCoreStr ( "dataset-info/sample-query.xml" , true, null );
+		return invokeApiStr ( "dataset-info/sample-query.xml", null );
 	}
 
 	/**
@@ -160,7 +214,7 @@ public class KnetminerApiClient
 	 */
 	public String releaseNotesHtml ()
 	{
-		return invokeApiCoreStr ( "dataset-info/release-notes.html" , true, null );
+		return invokeApiStr ( "dataset-info/release-notes.html", null );
 	}
 	
 	/**
@@ -168,85 +222,123 @@ public class KnetminerApiClient
 	 */
 	public byte[] backgroundImage ()
 	{
-		return invokeApiCoreRaw (
+		return invokeApi (
 			"dataset-info/background-image",
 			Exceptions.sneak ().<InputStream, byte[]> function ( IOUtils::toByteArray ), 
-			true,
+			RequestOptions.of ().setUseJsonParams ( false ),
 			null
 		);
 	}
 	
+	
 	/**
-	 * Defaults to true
+	 * Default options
 	 */
-	public JSONObject invokeApi ( String urlOrCallName, JSONObject jsonFields )
+	public <T> T invokeApiJsMap ( String urlOrCallName, Class<? extends T> resultClass, Map<String, Object> params  )
 	{
-		return invokeApi ( urlOrCallName, true, jsonFields );
+		return invokeApiJsMap ( urlOrCallName, resultClass, RequestOptions.of (), params );
+	}
+	
+	
+	/**
+	 * Assumes the request returns a JSON string and maps it to a {@code T} object, using {@link ObjectMapper} but this one uses {@link ObjectMapper} 
+	 * 
+	 */
+	public <T> T invokeApiJsMap ( String urlOrCallName, Class<? extends T> resultClass, RequestOptions reqOpts, Map<String, Object> params  )
+	{
+		var jsmap = new ObjectMapper ();
+		Function<InputStream, T> jsMapFunc = Exceptions.sneak ().function ( in -> jsmap.readValue ( in, resultClass ) );
+		return invokeApi  ( urlOrCallName, jsMapFunc, reqOpts, params );
+	}
+	
+	
+	/**
+	 * Default options.
+	 */
+	public JSONObject invokeApiJs ( String urlOrCallName, Map<String, Object> params )
+	{
+		return invokeApiJs ( urlOrCallName, RequestOptions.of (), params );
 	}
 
-	/**
+	/** 
 	 * Invokes a KnetMiner API that is expected to return a JSON object as root in its result.
 	 * 
-	 * @see #invokeApiCoreStr(String, boolean, JSONObject)
+	 * @see #invokeApiJs(String, Function, RequestOptions, Map)
+   *
 	 */
-	public JSONObject invokeApi ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	public JSONObject invokeApiJs ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
 	{
-		return invokeApiCore ( urlOrCallName, JSONObject::new, failOnError, jsonFields);
+		return invokeApiJs ( urlOrCallName, JSONObject::new, reqOpts, params );
 	}
 	
 	
 	/**
-	 * Defaults to true.
+	 * Default options.
 	 */
-	public JSONArray invokeApiArray ( String urlOrCallName, JSONObject jsonFields )
+	public JSONArray invokeApiJsArray ( String urlOrCallName, Map<String, Object> params )
 	{
-		return invokeApiArray ( urlOrCallName, true, jsonFields ); 
+		return invokeApiJsArray ( urlOrCallName, RequestOptions.of (), params ); 
 	}
 	
 	/** 
 	 * Invokes a KnetMiner API that is expected to return a JSON array as root in its result.
 	 * 
-	 * @see #invokeApiCoreStr(String, boolean, JSONObject)
+	 * @see #invokeApiJs(String, Function, RequestOptions, Map)
    *
 	 */
-	public JSONArray invokeApiArray ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	public JSONArray invokeApiJsArray ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
 	{
-		return invokeApiCore ( urlOrCallName, JSONArray::new, failOnError, jsonFields);
+		return invokeApiJs ( urlOrCallName, JSONArray::new, reqOpts, params );
 	}
 		
-	
-	public <J> J invokeApiCore ( String urlOrCallName, Function<String, J> jsonSupplier, boolean failOnError, JSONObject jsonFields )
+	/**
+	 * Base method for other invokeApiJsXXX methods.
+	 * 
+	 * Calls {@link #invokeApiStr(String, RequestOptions, Map)} assuming that the request at issue returns JSON output (object
+	 * or array) and uses {@code jsonSupplier} to convert it into a {@link JSONObject} or {@link JSONArray}.
+	 *  
+	 */
+	private <J> J invokeApiJs ( String urlOrCallName, Function<String, J> jsonSupplier, RequestOptions reqOpts, Map<String, Object> params )
 	{
 		return jsonSupplier.apply ( 
-			invokeApiCoreStr ( urlOrCallName, failOnError, jsonFields )
+			invokeApiStr ( urlOrCallName, reqOpts, params )
 		);
 	}
 	
-	
-	public String invokeApiCoreStr ( String urlOrCallName, boolean failOnError, JSONObject jsonFields )
+	/**
+	 * Default options.
+	 */
+	public String invokeApiStr ( String urlOrCallName, Map<String, Object> params )
 	{
-		String outStr = invokeApiCoreRaw ( 
+		return invokeApiStr ( urlOrCallName, RequestOptions.of (), params );
+	}
+	
+	/**
+	 * A wrapper of {@link #invokeApi(String, Function, RequestOptions, Map)} and collects all its output into 
+	 * a string. 
+	 */
+	public String invokeApiStr ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
+	{
+		String outStr = invokeApi ( 
 			urlOrCallName, 
-			Exceptions.sneak ().function ( in -> IOUtils.toString ( in, "UTF-8" ) ), failOnError, jsonFields
+			Exceptions.sneak ().function ( in -> IOUtils.toString ( in, "UTF-8" ) ), reqOpts, params
 		);
-		log.debug ( "Result from <{}>:\n{}", urlOrCallName, outStr );
+		if ( log.isDebugEnabled () ) log.debug ( "Result from <{}>:\n{}", urlOrCallName, outStr );
 		return outStr;
 	}
 	
-	
+		
 	/**
-	 * Core invocation of Knetminer API call.
-	 * 
-	 * This is where the things actually happen, the other methods in this class are simple wrappers
-	 * to this one.
-	 * 
-	 * @param urlOrCallName the call name or a straight URL.
-	 * @param failOnError if true, yields an exception upon error HTTP codes. 
-	 * @param jsonFields the parameters to be sent to the API, using the request body.
-	 * @return the API output, in the form of its input stream, which can be read and converted as appropriate.
+	 * Low-level invocation of a KnetMiner API.
+	 *  
+	 * @param urlOrCallName the call name or a straight URL (if it's not a URL, it automatically prefixes {@link #getBaseUrl()}).
+	 * @param reqOpts the request options.
+	 * @param params the request parameters.
+	 * @param outConverter a converter that turns the {@link InputStream} coming from the request output into an instance of T.
+	 * @return the API output, in the form of an object of type T
 	 */
-	private <T> T invokeApiCoreRaw ( 
-		String urlOrCallName, Function<InputStream, T> outConverter, boolean failOnError, JSONObject jsonFields 
+	private <T> T invokeApi ( 
+		String urlOrCallName, Function<InputStream, T> outConverter, RequestOptions reqOpts, Map<String, Object> params 
 	)
 	{
 		String url = urlOrCallName.startsWith ( "http://" )
@@ -257,10 +349,30 @@ public class KnetminerApiClient
 		{
 			HttpPost post = new HttpPost ( url );
 
-			// some request body must be set, we get an error otherwise 
-			if ( jsonFields == null ) jsonFields = new JSONObject ();
-			StringEntity jsEntity = new StringEntity ( jsonFields.toString (), ContentType.APPLICATION_JSON );
-			post.setEntity ( jsEntity );
+			if ( params == null ) params = new HashMap<> ();
+			
+			HttpEntity payload = null;
+			
+			if ( reqOpts.isUseJsonParams () )
+			{
+				var js = new JSONObject ( params );
+				// This ContentType is UTF-8
+				payload = new StringEntity ( js.toString (), ContentType.APPLICATION_JSON );
+			}
+			else
+			{
+				// Else, let's use x-www-form-urlencoded
+				//
+				List<NameValuePair> nvps = params.entrySet ()
+				.stream ()
+				.filter ( e -> e.getValue () != null )
+				.map ( e -> new BasicNameValuePair ( e.getKey (), e.getValue ().toString () ) )
+				.collect ( Collectors.toUnmodifiableList () );
+				
+				payload = new UrlEncodedFormEntity ( nvps, StandardCharsets.UTF_8 );
+			}
+
+			post.setEntity ( payload );
 
 			HttpClient client = HttpClientBuilder.create ().build ();
 
@@ -269,7 +381,7 @@ public class KnetminerApiClient
 			if ( httpCode != 200 ) 
 			{				
 				// TODO: yield an exception that carries the exception response
-				if ( failOnError ) ExceptionUtils.throwEx ( 
+				if ( reqOpts.isFailOnError () ) ExceptionUtils.throwEx ( 
 					HttpException.class, "Http response code %s is not 200", Integer.valueOf ( httpCode ) 
 				);
 				log.warn ( "Return code for {} is {}", url, httpCode );				
@@ -289,46 +401,22 @@ public class KnetminerApiClient
 		}
 	}			
 	
-	/**
-	 * Like the other invokeApi methods, but this one uses {@link ObjectMapper} to map the resulting JSON 
-	 * to the resultClass.
-	 * 
-	 * TODO: not tested yet (tests for {@link DatasetInfoService} will involve this and will be enough
-	 */
-	public <T> T invokeMappedApi ( String urlOrCallName, Class<? extends T> resultClass, boolean failOnError, JSONObject jsonFields )
-	{
-		try
-		{
-			String jsResultStr = invokeApiCoreStr ( urlOrCallName, failOnError, jsonFields );
-			var jsmap = new ObjectMapper ();
-			return jsmap.readValue ( jsResultStr, resultClass );
-		}
-		catch ( JsonProcessingException|RuntimeException ex )
-		{
-			throw ExceptionUtils.buildEx ( 
-				UnexpectedEventException.class, ex, 
-				"Error while mapping API call '%s' to %s: %s",
-				urlOrCallName, resultClass.getSimpleName (), ex.getMessage ()
-			);
-		}
-	}
-	
 	
 	/**
 	 * Prepares API params starting from an array that alternate key/value pairs in its values.
 	 */
-	public static JSONObject params ( Object ...jsonFields )
+	public static Map<String, Object> params ( Object ...paramPairs )
 	{
-		JSONObject js = new JSONObject ();
-		for ( int i = 0; i < jsonFields.length; i++ )
+		Map<String, Object> result = new HashMap<> ();
+		for ( int i = 0; i < paramPairs.length; i++ )
 		{
-			String key = (String) jsonFields [ i ];
-			Object value = jsonFields [ ++ i ];
+			String key = (String) paramPairs [ i ];
+			Object value = paramPairs [ ++ i ];
 			if ( value == null ) continue;
-			js.put ( key, value );
+			result.put ( key, value );
 		}
 		
-		return js;
+		return result;
 	}
 	
 	

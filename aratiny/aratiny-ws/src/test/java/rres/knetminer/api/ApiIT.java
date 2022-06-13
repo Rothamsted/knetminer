@@ -24,6 +24,7 @@ import org.junit.Test;
 import rres.knetminer.api.client.CountHitsApiResult;
 import rres.knetminer.api.client.GenomeApiResult;
 import rres.knetminer.api.client.KnetminerApiClient;
+import rres.knetminer.api.client.KnetminerApiClient.RequestOptions;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 import uk.ac.ebi.utils.xml.XPathReader;
@@ -66,7 +67,7 @@ public class ApiIT
 		for ( int attempt = 1; attempt <= 6; attempt++ )
 		{
 			slog.info ( "Waiting for the API server, attempt {}", attempt );
-			JSONObject js = CLI.invokeApi ( "countHits?keyword=foo", false, null );
+			JSONObject js = CLI.invokeApiJs ( "countHits?keyword=foo", RequestOptions.of ().setFailOnError ( false ), null );
 
 			if ( js.has ( "luceneCount" ) ) {
 				synchCalled = true;
@@ -244,7 +245,7 @@ public class ApiIT
 	@Test
 	public void testBadCallError ()
 	{
-		JSONObject js = CLI.invokeApi ( "foo", false, null );
+		JSONObject js = CLI.invokeApiJs ( "foo", RequestOptions.of ().setFailOnError ( false ), null );
 		assertEquals ( 
 			"Bad type for the /foo call!", 
 			ResponseStatusException2.class.getName (),
@@ -277,7 +278,7 @@ public class ApiIT
    			"detail" : "<the whole stack trace>"
 			}
 		 */
-		JSONObject js = CLI.invokeApi ( "countHits", false, KnetminerApiClient.params ( "keyword", "*" ) );
+		JSONObject js = CLI.invokeApiJs ( "countHits", RequestOptions.of().setFailOnError ( false ), KnetminerApiClient.params ( "keyword", "*" ) );
 		log.info ( "JSON from bad parameter API:\n{}", js.toString () );
 		assertEquals ( "Bad type for the /countHits call!", "uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2", js.getString ( "type" ) );
 		assertEquals ( "Bad status for the /countHits call!", 400, js.getInt ( "status" ) );
@@ -305,7 +306,7 @@ public class ApiIT
 		if ( "console".equals ( getMavenProfileId () ) ) return;
 		
 		String url = CLI.getApiUrl ( "cydebug/traverser/report" );
-		JSONObject js = CLI.invokeApi ( url, false, null );
+		JSONObject js = CLI.invokeApiJs ( url, RequestOptions.of().setFailOnError ( false ), null );
 		assertEquals ( 
 			"Bad type for the /cydebug call!",
 			"rres.knetminer.datasource.server.CypherDebuggerService$ForbiddenException",
