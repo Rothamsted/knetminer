@@ -57,13 +57,13 @@ public class DatasetInfoServiceIT
 	/**
 	 * Testing ChromosomeIds for different taxIds.
 	 */
-	@Test @Ignore ( "TODO:find proper test values from the mockup files" )
+	@Test 
 	public void testChromosomeIds ()
 	{
 		// TODO: find out the expectedLen and probeChr values in the mockup files
-		testChromosomeIds( "4577", -1, "" );
-		testChromosomeIds( "4565", -1, "" );
-		testChromosomeIds( "3702", -1, "" );
+		testChromosomeIds( "4577", 10, "6" );
+		testChromosomeIds( "4565", 22, "1D" );
+		testChromosomeIds( "3702", 5, "4" );
 	}
 	
 	/**
