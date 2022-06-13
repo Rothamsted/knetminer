@@ -17,5 +17,7 @@
       <AppenderRef ref="File"/>
     </Root>
     <!-- Logger name = "x.y.z" level = "off" additivity = "false" / -->
+    <Logger name = "org.apache" level = "WARN" additivity = "false" />
+    <Logger name = "httpclient" level = "WARN" additivity = "false" />
   </Loggers>
 </Configuration>
