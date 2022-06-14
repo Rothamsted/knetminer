@@ -130,30 +130,20 @@ public class DatasetInfoService
 		}
 	}
 	
-	private String readMockupBaseMap ( String taxId )
-	{
-		try {
-			return Files.readString ( Path.of ( mockupDirPath + "/basemap-" + taxId + ".xml" ) );
-		}
-		catch ( IOException ex )
-		{
-			throw ExceptionUtils.buildEx ( 
-				UncheckedIOException.class, ex, 
-				"Error while reading basemap file for taxId %s: %s", taxId, ex.getMessage ()
-			);
-		}
+	private String readMockupBaseMap ( String taxId ) {
+		return readMockupFile ( "basemap-" + taxId + ".xml" );
 	}
 	
-	private String readMockupFile ( String fileName )
+	private String readMockupFile ( String relativeFilePath )
 	{
 		try {
-			return Files.readString ( Path.of ( mockupDirPath + "/" + fileName ) );
+			return Files.readString ( Path.of ( mockupDirPath + "/" + relativeFilePath ) );
 		}
 		catch ( IOException ex )
 		{
 			throw ExceptionUtils.buildEx ( 
 				UncheckedIOException.class, ex, 
-				"Error while reading mock-up file \"%s\": %s", fileName, ex.getMessage ()
+				"Error while reading mock-up file \"%s\": %s", relativeFilePath, ex.getMessage ()
 			);
 		}
 	}

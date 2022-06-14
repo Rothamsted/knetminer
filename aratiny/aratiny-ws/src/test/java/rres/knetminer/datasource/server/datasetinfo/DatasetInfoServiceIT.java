@@ -1,8 +1,13 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.BeforeClass;
@@ -30,7 +35,13 @@ public class DatasetInfoServiceIT
 	public void testDatasetInfo ()
 	{
 		DatasetInfo dataset = CLI.datasetInfo ();
-		assertTrue  ( "Dataset species size is zero", dataset.getSpecies().size() > 0 );
+		assertNotNull ( "/data-set-info returns null!", dataset );
+		assertTrue  (
+			"no specie from /data-set-info!", 
+			Optional.ofNullable ( dataset.getSpecies() )
+			.map ( List::size )
+			.orElse ( null ) > 0
+		);
 	}
 
 	/**
@@ -60,7 +71,6 @@ public class DatasetInfoServiceIT
 	@Test 
 	public void testChromosomeIds ()
 	{
-		// TODO: find out the expectedLen and probeChr values in the mockup files
 		testChromosomeIds( "4577", 10, "6" );
 		testChromosomeIds( "4565", 22, "1D" );
 		testChromosomeIds( "3702", 5, "4" );
@@ -73,9 +83,10 @@ public class DatasetInfoServiceIT
 	{
 		String[] chrIds = CLI.chromosomeIds ( taxId );
 		assertEquals ( 
-			String.format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, chrIds.length );
+			format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, chrIds.length
+		);
 		assertTrue (
-			String.format ( "/chromosomeIds/%s, %s not found in the result!", taxId, expectedChr ), 
+			format ( "/chromosomeIds/%s, %s not found in the result!", taxId, expectedChr ), 
 			ArrayUtils.contains ( chrIds, expectedChr )
 		);		
 	}
@@ -97,7 +108,7 @@ public class DatasetInfoServiceIT
 	public void testReleaseNotes ()
 	{
 		String notes = CLI.releaseNotesHtml ();
-		assertTrue  ( "ReleaseNotes html not exists", notes.contains ( "<strong>ENSEMBL PLANTS (Arabidopsis thaliana)</strong>") );
+		assertTrue  ( "Wrong result from /release-notes.html", notes.contains ( "<strong>ENSEMBL PLANTS (Arabidopsis thaliana)</strong>") );
 		
 	}
 	
@@ -108,7 +119,7 @@ public class DatasetInfoServiceIT
 	public void testBackgroundImage ()
 	{
 		byte[] img = CLI.backgroundImage ();
-		assertTrue  ( "Background image not exists", img.length > 0 );
+		assertTrue  ( "Empty result from /background-image!", img.length > 0 );
 		
 	}
 }
