@@ -92,8 +92,7 @@ public class DatasetInfoService
 			catch ( NumberFormatException | DOMException | NullPointerException ex )
 			{
 				ExceptionUtils.throwEx ( UnexpectedValueException.class, ex,
-				  "Error while parsing the chromosome map file for taxId: %s: %s",
-				  taxId, ex.getMessage ()
+				  "Error while parsing the chromosome map file for taxId: %s: $cause", taxId
 				);
 			}
 		}
@@ -143,7 +142,7 @@ public class DatasetInfoService
 		{
 			throw ExceptionUtils.buildEx ( 
 				UncheckedIOException.class, ex, 
-				"Error while reading mock-up file \"%s\": %s", relativeFilePath, ex.getMessage ()
+				"Error while reading mock-up file \"%s\": $cause", relativeFilePath
 			);
 		}
 	}
