@@ -11,6 +11,7 @@ var knetmaps = KNETMAPS.KnetMaps();
 * 	- tooltips
 */
 $(document).ready(
+
     function () {
         getEnsemblList();
         loadOnReady();
@@ -20,7 +21,7 @@ $(document).ready(
         QtlRegionHandlers();
         searchHandlers();
         bodyHandlers();
-        changeSpecie(); 
+        changeSpecies(); 
         
     }
 );

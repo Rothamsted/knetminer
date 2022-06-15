@@ -14,7 +14,7 @@
 					<div id="species_container" class="details">
 							<div class="detail_info">
 							<div>
-							<h4 style="margin:10px 0;">Specie description</h4></div>
+							<h4 style="margin:10px 0;">Species description</h4></div>
 							<div id="speciename_container"></div>
 							</div>
 					</div>
@@ -90,7 +90,7 @@
     				<br>
 				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
                     <hr width="60%" align="left">
-                    <div id="region_search_area" style="display: none;">
+                    <div id="region_search_area">
                         <table id="regions_table">
                             <tbody><tr>
                                 <td><label>Chromosome</label></td>

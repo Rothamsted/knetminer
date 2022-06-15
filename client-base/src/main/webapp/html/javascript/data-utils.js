@@ -1,6 +1,13 @@
 
 // current taxonomy Id global variable;
-var currentTaxId; 
+var currentTaxId;
+
+var  taxIdString; 
+
+
+
+
+ 
 
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
@@ -83,7 +90,7 @@ function searchKeyword() {
       }
 }
 
-//Function to send form values to backend server inside the above Function SearchKeyword if input values are not empty,
+//Function send form values to backend
 function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
 
     $.ajax({
@@ -344,7 +351,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
      }
 }
 
-// function creates Genomic title by using same html template for all messages
+// function creates Genomic title
 function createGenomicViewTitle(message,status){
     var genomicTemplate = `<div id="pGViewer_title"><span class="pGViewer_title_line"> ${status ? 'Your Search': 'In total'} ${message}</span>
     </div> `; 
@@ -418,12 +425,11 @@ function findGenes(id, chr_name, start, end) {
 
 // function returns query examples of the current dataset
 function getQueryExamples(){
-
-    var sampleQueryButtons = "";
+        var sampleQueryButtons = "";
         $.ajax({
-            type: 'GET',
-            url: "html/data/sampleQuery.xml", // multi-specie example query can be implemented as common name from specie api can be used to get xml data from storage
-            dataType: "xml",
+            type: 'POST',
+            url: multi_specie_url+ '/sample-query.xml'+ taxIdString, 
+             dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
                 // Parse the values from the recieved sampleQueries.xml file into an object.
@@ -580,7 +586,15 @@ function getQueryExamples(){
         });
 
 
-
+function getChromosomeList(){
+    $.get(multi_specie_url +'/chromosome-ids'+taxIdString ,'').done( function(chromosomes){
+        for(let i=0; i < chromosomes.length; i++){
+            var chr1Options = '<option value='+chromosomes[i]+'>'+ chromosomes[i]+'</option>';
+            $('#chr1').append(chr1Options);
+        }  
+    }).fail(function (xhr,status,errorlog){
+        errorComponent('.nav',xhr,status,errorlog);
+    });
 }
 
 /*
@@ -600,9 +614,8 @@ function matchCounter() {
             var searchMode = "countHits";
             var request = "/" + searchMode + "?keyword=" + keyword+"&"+currentTaxId;
             var url = api_url + request;
-            console.log(url); 
-            $.get(url, '').done(function (data) {
 
+            $.get(url, '').done(function (data) {
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
@@ -679,23 +692,62 @@ function errorComponent(elementInfo,xhr){
 /*
  * Function runs on changing the species select option
  */
-function changeSpecie(){
-
+function changeSpecies(){
     $('.navbar-select').on('change', function(){
-        // value of the selected option 
-        currentTaxId = $(this).children("option:selected").val();
-
-        // TODO: approach to store data to be considered 
-        // this approach can be considered temporary
-        $.get(taxnomyUrl+newTaxId+'?content-type=application/json','').done( function(data){
-           $('#specie_title').text(data.id)
-           $('#specie_name').text(data.scientific_name)
-           $('#specie_commonname').text(data.tags.common_name.toString().replaceAll(',',', '))
-        }).fail(function (xhr,status,errorlog){
-            errorComponent('.nav',xhr,status,errorlog);
-        });
+        var selectedSpecie = $(this).children("option:selected");
+        var setTaxId = setApiUrl(selectedSpecie.val());
+        if(setTaxId){
+            changeBg(); 
+            getQueryExamples();
+            drawGeneMaps(null);
+            $.get(taxnomyUrl+currentTaxId+'?content-type=application/json','').done( function(data){
+                $('#specie_title').text(data.id)
+                $('#specie_name').text(data.scientific_name)
+                $('#specie_commonname').text(data.tags.common_name.toString().replaceAll(',',', '));
+     
+             }).fail(function (xhr,status,errorlog){
+                 errorComponent('.nav',xhr,status,errorlog);
+             });
+        }
+        
     })
 
 }
 
 
+// function to change application background matching it with ID of the selected specie
+function changeBg(){
+    $.ajax({
+        type: 'POST',
+        url: multi_specie_url+'/background-image'+taxIdString, 
+        dataType: "",
+        cache: false, 
+        success: function (data) {
+            document.body.style.backgroundImage = data;
+        }
+
+    });
+
+}
+
+
+function drawGeneMaps(){
+    $.ajax({
+        type: 'POST',
+        url: multi_specie_url+'/basemap.xml'+taxIdString, 
+        dataType: "xml",
+        cache: false, //force cache off
+        success: function (basemap) {
+            genemap.draw('#genemap',basemap, data)
+        }
+    });
+    ;
+}
+
+
+function setApiUrl(id){
+    currentTaxId = id; 
+    if(currentTaxId !== undefined){ 
+        taxIdString = '?taxId='+currentTaxId;
+    }
+}

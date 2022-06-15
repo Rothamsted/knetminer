@@ -142,7 +142,7 @@
                     </c:if>
                 </c:otherwise>
             </c:choose>
- 			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
+ 			<layout:content  assembly="${assembly}" embeddable="${embeddable}"/>
          <!--   <c:if test="${!embeddable}">
                 <layout:footer />
             </c:if> -->
