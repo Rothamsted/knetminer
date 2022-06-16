@@ -1,14 +1,4 @@
 
-// current taxonomy Id global variable;
-var currentTaxId;
-
-var  taxIdString; 
-
-
-
-
- 
-
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
@@ -332,7 +322,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          var annotationsMap = data.gviewer;
 
          // create new basemap with bands for genes and pass it as well to the Map Viewer.
-         genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml', annotationsMap);
+         drawGeneMaps('drawRaw',data)
 
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
@@ -428,7 +418,7 @@ function getQueryExamples(){
         var sampleQueryButtons = "";
         $.ajax({
             type: 'POST',
-            url: multi_specie_url+ '/sample-query.xml'+ taxIdString, 
+            url: multiSpecieUrl+ '/sample-query.xml'+ taxIdString, 
              dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
@@ -584,10 +574,11 @@ function getQueryExamples(){
                 });
             }
         });
+}
 
 
 function getChromosomeList(){
-    $.get(multi_specie_url +'/chromosome-ids'+taxIdString ,'').done( function(chromosomes){
+    $.get(multiSpecieUrl +'/chromosome-ids'+taxIdString ,'').done( function(chromosomes){
         for(let i=0; i < chromosomes.length; i++){
             var chr1Options = '<option value='+chromosomes[i]+'>'+ chromosomes[i]+'</option>';
             $('#chr1').append(chr1Options);
@@ -679,7 +670,7 @@ function createGeneNameSynonyms(element,data){
 	var newAngleClass = geneNameSynonyms.is( ":visible" ) ? "fa-angle-up" : "fa-angle-down";
 	$(element).find( '[data-fa-i2svg]' ).toggleClass ( newAngleClass );
 }
-
+ 
 
 // function create error message for failed get request for function matchCounter and createGeneSynonyms
 function errorComponent(elementInfo,xhr){
@@ -692,24 +683,25 @@ function errorComponent(elementInfo,xhr){
 /*
  * Function runs on changing the species select option
  */
+// to run function on HTML element
 function changeSpecies(){
     $('.navbar-select').on('change', function(){
         var selectedSpecie = $(this).children("option:selected");
         var setTaxId = setApiUrl(selectedSpecie.val());
+        $('#speciename_container').empty();
+        $('#chr1').empty();
         if(setTaxId){
-            changeBg(); 
-            getQueryExamples();
-            drawGeneMaps(null);
-            $.get(taxnomyUrl+currentTaxId+'?content-type=application/json','').done( function(data){
-                $('#specie_title').text(data.id)
-                $('#specie_name').text(data.scientific_name)
-                $('#specie_commonname').text(data.tags.common_name.toString().replaceAll(',',', '));
-     
-             }).fail(function (xhr,status,errorlog){
-                 errorComponent('.nav',xhr,status,errorlog);
-             });
+            $.get(multiSpecieUrl,'').done( function(data){
+                var calcGenoome = multiSpeciesEvents(data.species)
+                if(calcGenoome){
+                    // TODO what if user has two or more genome region present
+                    setTimeout(function(){
+                        findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
+                    },100)
+                    
+                }
+             }); 
         }
-        
     })
 
 }
@@ -719,10 +711,11 @@ function changeSpecies(){
 function changeBg(){
     $.ajax({
         type: 'POST',
-        url: multi_specie_url+'/background-image'+taxIdString, 
+        url: multiSpecieUrl+'/background-image'+taxIdString, 
         dataType: "",
         cache: false, 
         success: function (data) {
+            console.log(typeof data)
             document.body.style.backgroundImage = data;
         }
 
@@ -731,23 +724,33 @@ function changeBg(){
 }
 
 
-function drawGeneMaps(){
+function drawGeneMaps(string,data){
     $.ajax({
         type: 'POST',
-        url: multi_specie_url+'/basemap.xml'+taxIdString, 
+        url: multiSpecieUrl+'/basemap.xml'+taxIdString, 
         dataType: "xml",
         cache: false, //force cache off
         success: function (basemap) {
-            genemap.draw('#genemap',basemap, data)
+            console.log(basemap); 
+            if(string === 'draw'){
+                genemap.draw('#genemap','html/data/basemap.xml', data)
+            }else{
+                genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml',data);
+            }
         }
     });
     ;
 }
 
-
-function setApiUrl(id){
-    currentTaxId = id; 
-    if(currentTaxId !== undefined){ 
-        taxIdString = '?taxId='+currentTaxId;
+function multiSpeciesEvents(data){
+    changeBg(); 
+    getQueryExamples();
+    drawGeneMaps('draw',null);
+    getChromosomeList(); 
+    var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
+    for(var info in currentSpecies){
+        $('<div > <span class="specie_title">'+ info.replace(/[A-Z]/g, ' $&').trim() +': </span><span>'+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
     }
+    return true;
 }
+

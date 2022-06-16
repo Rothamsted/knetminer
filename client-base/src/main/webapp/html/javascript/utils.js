@@ -13,7 +13,7 @@ var knetmaps = KNETMAPS.KnetMaps();
 $(document).ready(
 
     function () {
-        getEnsemblList();
+        getSpecieList(); 
         loadOnReady();
         showReferenceGenome();
         initResetButton();

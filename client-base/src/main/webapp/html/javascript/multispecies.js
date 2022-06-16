@@ -3,7 +3,7 @@
 //this is a mock data section that will be replaced by the species API
 // data will be generated as a variable through a function that calls the species api 
 function getSpecieList(){
-    $.get(multi_specie_url,'').done( function(data){
+    $.get(multiSpecieUrl,'').done( function(data){
         var speciesInfos = data.species
         var createdDropDown = createDropdown(speciesInfos); 
         if(createdDropDown){
