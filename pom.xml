@@ -356,6 +356,15 @@
 				    <!--stopPort>8081</stopPort -->
 				    <stopKey>araTinyJetty</stopKey>
 				    <stopWait>10</stopWait>
+
+						<systemProperties>
+							<!-- 
+								This is the absolute value of the current projet's 'target/'.
+								It's used by provisional code taking mockup data from this dir.							
+							-->
+							<maven.target>${project.build.directory}</maven.target>
+						</systemProperties>			      
+				    
 				  </configuration>
 				</plugin>
 
