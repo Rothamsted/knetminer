@@ -66,7 +66,9 @@
 		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
-		
+		<knetminer.dataContext>dataset-info</knetminer.dataContext>
+
+
 		<!-- 3702=Ara,4565=Wheat,4577=Maize -->
 		<knetminer.specieTaxId>3702,4565,4577</knetminer.specieTaxId>
 		
@@ -136,12 +138,16 @@
 				
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 		<knetminer.api.webContext>ws</knetminer.api.webContext>
+		
+
 		<!-- Here, it is http://localhost:9090 -->
 		<knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl>
 		<!-- Here, it is http://localhost:9090/ws -->
 		<knetminer.api.baseUrl>${knetminer.api.rootUrl}/${knetminer.api.webContext}</knetminer.api.baseUrl>
 		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
+		<!-- Here, it is http://localhost:9090/ws/aratiny/species -->
+		<knetminer.api.versionUrl>${knetminer.api.baseUrl}/${knetminer.dataSourceId}/${knetminer.dataContext}</knetminer.api.versionUrl>
 		
 		<!-- 
 			This is injected into config.xml for the ws/ war. 
