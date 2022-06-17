@@ -33,6 +33,7 @@ function bracketsAreBalanced(str) {
     return true;
 }
 
+// TODO: setting Taxonomy Id variable correctly
 function setApiUrl(id){
     currentTaxId = id; 
     if(currentTaxId !== undefined){ 

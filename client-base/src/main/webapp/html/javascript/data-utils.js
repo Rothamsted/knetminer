@@ -322,7 +322,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          var annotationsMap = data.gviewer;
 
          // create new basemap with bands for genes and pass it as well to the Map Viewer.
-         drawGeneMaps('drawRaw',data)
+         drawGeneMaps('drawRaw',annotationsMap);
 
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
@@ -709,37 +709,20 @@ function changeSpecies(){
 
 // function to change application background matching it with ID of the selected specie
 function changeBg(){
-    $.ajax({
-        type: 'POST',
-        url: multiSpecieUrl+'/background-image'+taxIdString, 
-        dataType: "",
-        cache: false, 
-        success: function (data) {
-            console.log(typeof data)
-            document.body.style.backgroundImage = data;
-        }
-
-    });
-
+    document.body.style.backgroundImage =  multiSpecieUrl+'/background-image'+taxIdString;
 }
 
 
-function drawGeneMaps(string,data){
-    $.ajax({
-        type: 'POST',
-        url: multiSpecieUrl+'/basemap.xml'+taxIdString, 
-        dataType: "xml",
-        cache: false, //force cache off
-        success: function (basemap) {
-            console.log(basemap); 
-            if(string === 'draw'){
-                genemap.draw('#genemap','html/data/basemap.xml', data)
-            }else{
-                genemap.drawFromRawAnnotationXML('#genemap', 'html/data/basemap.xml',data);
-            }
+function drawGeneMaps(basemapString,data){
+    
+    var taxIdBaseXmlUrl = multiSpecieUrl+'/basemap.xml'+taxIdString
+
+        if(basemapString === 'draw'){
+            genemap.draw('#genemap',taxIdBaseXmlUrl, data)
+        }else{
+            genemap.drawFromRawAnnotationXML('#genemap',taxIdBaseXmlUrl,data);
         }
-    });
-    ;
+
 }
 
 function multiSpeciesEvents(data){
