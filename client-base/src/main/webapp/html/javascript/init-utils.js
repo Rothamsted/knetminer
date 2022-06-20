@@ -34,23 +34,13 @@ function loadOnReady(){
     $("#keywords").focus();
     $('#tabviewer').hide(); // hide by default
     // Tooltip
-    getQueryExamples();
     showReferenceGenome();  
-
     createAnalyticsTag(); 
     generalPageAnalytics(); 
 
-    genemap.draw('#genemap', 'html/data/basemap.xml', null);
-
-   
-
 }
 
-// function to get text id name
-function createMultiSpecieSelect(){
 
-
-}
 
  // function reset all form input including the genenome icon and the suggestor text values
 function initResetButton(){

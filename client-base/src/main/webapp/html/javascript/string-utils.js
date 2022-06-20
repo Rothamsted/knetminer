@@ -1,5 +1,5 @@
 // current taxonomy Id global variable;
-var currentTaxId,taxIdString; 
+
 
 /*
  * Function to escape special characters from a string for use in jquery selector
@@ -33,12 +33,6 @@ function bracketsAreBalanced(str) {
     return true;
 }
 
-// TODO: setting Taxonomy Id variable correctly
-function setApiUrl(id){
-    currentTaxId = id; 
-    if(currentTaxId !== undefined){ 
-        taxIdString = '?taxId='+currentTaxId;
-        return true; 
-    }
-}
+
+
 
