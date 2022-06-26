@@ -15,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import rres.knetminer.api.ApiIT;
+import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
 
 public class DatasetInfoServiceIT
 {

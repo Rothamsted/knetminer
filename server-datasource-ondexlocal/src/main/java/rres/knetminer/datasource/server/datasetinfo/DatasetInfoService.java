@@ -19,6 +19,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.SpecieInfo;
 import uk.ac.ebi.utils.collections.ListUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
@@ -48,7 +50,6 @@ public class DatasetInfoService
 				this.setTitle ( "Aratiny dataset" );
 				this.setOrganization ( "Rothamsted Research" );
 				this.setProvider ( "Rothamsted Research" );
-				this.setReferenceGenomeProvided ( true );
 				this.setSpecies ( List.of (
 					new SpecieInfo ( "3702", "Thale cress", "Arabidopsis Thaliana" ),
 					new SpecieInfo ( "4565", "Bread Wheat", "Triticum aestivum" ),
@@ -113,7 +114,6 @@ public class DatasetInfoService
 			Path bkgPath = Path.of ( mockupDirPath + "/background.jpg" );
 			String mime = Files.probeContentType ( bkgPath );
 			byte[] content = Files.readAllBytes ( bkgPath );
-			bkgPath.toFile ();
 			
 			return ResponseEntity
 				.ok ()
