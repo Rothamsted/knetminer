@@ -7,8 +7,10 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 import uk.ac.ebi.utils.collections.ListUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -20,6 +22,7 @@ import uk.ac.ebi.utils.xml.XPathReader;
  * TODO: comment me!
  * @author  brandizi <dl><dt>Date:</dt><dd>29 May 2022</dd></dl>
  */
+@JsonAutoDetect ( getterVisibility = Visibility.NONE )
 public class SpecieInfo
 {
 	private String taxId;

@@ -6,9 +6,13 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
+import uk.ac.ebi.utils.collections.OptionsMap;
+import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.opt.config.YAMLUtils;
@@ -20,6 +24,7 @@ import uk.ac.ebi.utils.opt.config.YAMLUtils;
  * <dl><dt>Date:</dt><dd>9 Jun 2022</dd></dl>
  *
  */
+@JsonAutoDetect ( getterVisibility = Visibility.NONE )
 public class KnetminerConfiguration
 {	
 	@JsonProperty ( "datasetDir" )
@@ -31,7 +36,16 @@ public class KnetminerConfiguration
 	@JsonProperty ( "oxl" )
 	private String oxlFilePath;
 
-	/** TODO: move this class here */
+	@JsonProperty ( "seedGenesFile" )
+	private String seedGenesFilePath;
+	
+	private int defaultExportedPublicationCount = -1;
+	
+	private String knetSpaceURL;
+	
+	@JsonProperty ( "graphTraverser" )
+	private OptionsMap graphTraverserOptions = new OptionsMapWrapper ();
+	
 	@JsonProperty ( "dataset" )
 	private DatasetInfo datasetInfo;
 
@@ -49,6 +63,8 @@ public class KnetminerConfiguration
 		var cfg = YAMLUtils.loadYAMLFromFile ( configFilePath, KnetminerConfiguration.class );
 		cfg.configFilePath = configFilePath;
 		cfg.postConstruct ();
+		
+		// TODO: toString() methods and debug message to report the loaded config
 		
 		return cfg;
 	}
@@ -94,8 +110,26 @@ public class KnetminerConfiguration
 		return oxlFilePath;
 	}
 	
-
+	public String getSeedGenesFilePath ()
+	{
+		return seedGenesFilePath;
+	}
 	
+	public OptionsMap getGraphTraverserOptions ()
+	{
+		return graphTraverserOptions;
+	}
+
+	public int getDefaultExportedPublicationCount ()
+	{
+		return defaultExportedPublicationCount;
+	}
+
+	public String getKnetSpaceURL ()
+	{
+		return knetSpaceURL;
+	}
+
 	public static String getDir ( String filePath )
 	{
 		return Optional.ofNullable ( Path.of ( filePath ).getParent () )
@@ -109,6 +143,7 @@ public class KnetminerConfiguration
 	public static String buildPath ( String basePath, String filePath )
 	{
 		if ( filePath == null ) return filePath;
+		// Is it absolute? Ie, Does it begin with /, \, or something like c: ?
 		if ( filePath.toLowerCase ().matches ( "^(/|\\|[a-z]:)" ) ) return filePath;
 		return basePath + "/" + filePath;
 	}

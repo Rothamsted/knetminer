@@ -35,7 +35,9 @@ public class ConfigFileHarvester implements ServletContextListener
 	}
 
 	@Override
-	public void contextDestroyed ( ServletContextEvent sce ) {}
+	public void contextDestroyed ( ServletContextEvent sce ) {
+		// We don't have anything to do here
+	}
 
 	public static synchronized String getConfigFilePath ()
 	{

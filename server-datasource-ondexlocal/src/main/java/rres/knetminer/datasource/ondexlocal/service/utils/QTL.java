@@ -1,7 +1,5 @@
 package rres.knetminer.datasource.ondexlocal.service.utils;
 
-import static org.hamcrest.CoreMatchers.containsString;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

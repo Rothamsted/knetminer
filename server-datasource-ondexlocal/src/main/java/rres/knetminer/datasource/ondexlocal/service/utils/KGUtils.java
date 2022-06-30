@@ -3,6 +3,7 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,6 +68,8 @@ public class KGUtils
 			var clientTaxIdNrm = StringUtils.trimToNull ( clientTaxId );
 			
 			var graph = dataService.getGraph ();
+			var config = dataService.getConfiguration ();
+			var dsetInfo = config.getDatasetInfo ();
 					
 			// TODO: probably it's not needed anymore
 			Set<String> normAccs = accessions.stream ()
@@ -84,7 +88,7 @@ public class KGUtils
 			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
 			
 			Predicate<String> taxIdGeneFilter = clientTaxIdNrm == null 
-				? _taxId -> dataService.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
+				? _taxId -> dsetInfo.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
 				: _taxId -> clientTaxIdNrm.equals ( _taxId ); // client-provided taxId
 			
 			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
@@ -109,7 +113,7 @@ public class KGUtils
    * @param taxIds this is set either with a user-provided value or with the configured taxIDs.
    *   The latter is only used by {@link SearchService#fetchQTLs(List, String)}.
    */
-	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, List<String> taxIds, List<String> qtlsStr )
+	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, Set<String> taxIds, List<String> qtlsStr )
 	{
 		log.info ( "searching QTL against: {}", qtlsStr );
 		Set<ONDEXConcept> resultGenes = new HashSet<> ();
@@ -158,7 +162,6 @@ public class KGUtils
 					if ( geneEnd == 0 ) continue;
 
 					if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
-					
 					if ( !containsTaxId ( taxIds, geneHelper.getTaxID () ) ) continue;
 
 					resultGenes.add ( gene );
@@ -218,7 +221,7 @@ public class KGUtils
 	 * method returns a collection that doesn't access nulls. So, this method here is a facility
 	 * to work with that.
 	 */
-  public static boolean containsTaxId ( List<String> reftaxIds, String taxId )
+  public static boolean containsTaxId ( Set<String> reftaxIds, String taxId )
   {
   	if ( taxId == null ) return false;
   	return reftaxIds.contains ( taxId );

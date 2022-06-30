@@ -1,12 +1,23 @@
 package rres.knetminer.datasource.ondexlocal.config;
 
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,14 +33,15 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * <dl><dt>Date:</dt><dd>29 May 2022</dd></dl>
  *
  */
+@JsonAutoDetect ( getterVisibility = Visibility.NONE )
 public class DatasetInfo 
 {
+	private String id;
 	private String title;
 	private String version;
 	private String creationDate;
 	private String organization;
 	private String provider;
-	private List<SpecieInfo> species = new ArrayList<> ();
 	
 	@JsonProperty ( "sampleQueries" )
 	private String sampleQueriesFilePath;
@@ -43,6 +55,9 @@ public class DatasetInfo
 	@JsonIgnore
 	private KnetminerConfiguration root;
 	
+	/** This is initialised using {@link #setSpecies(List)} */
+	@JsonIgnore
+	private Map<String, SpecieInfo> speciesMap = Map.of ();
 	
 	void postConstruct ( KnetminerConfiguration root )
 	{
@@ -65,8 +80,10 @@ public class DatasetInfo
 			defaultCfgPath, backgroundImageFilePath 
 		);
 
-		if ( this.species == null ) return;
-		species.forEach ( sp -> sp.postConstruct ( root ) );
+		// TODO: forbid null
+		this.getSpecies ()
+		.values ()
+		.forEach ( sp -> sp.postConstruct ( root ) );
 	}
 	
 	
@@ -75,13 +92,14 @@ public class DatasetInfo
 		super ();
 	}
 
-	public DatasetInfo ( String title )
+	/**
+	 * This is the old data source name
+	 */
+	public String getId ()
 	{
-		this ();
-		this.title = title;
+		return id;
 	}
 
-	
 	public String getTitle ()
 	{
 		return title;
@@ -107,54 +125,69 @@ public class DatasetInfo
 		return creationDate;
 	}
 
-	public void setCreationDate ( String creationDate )
-	{
-		this.creationDate = creationDate;
-	}
 
 	public String getOrganization ()
 	{
 		return organization;
 	}
 
-	public void setOrganization ( String organization )
-	{
-		this.organization = organization;
-	}
 
 	public String getProvider ()
 	{
 		return provider;
 	}
 
-	public void setProvider ( String provider )
+
+	/**
+	 * This is an initialiser for Jackson, which creates the {@link #speciesMap internal species map}.
+	 */
+	@JsonProperty
+	protected void setSpecies ( List<SpecieInfo> species )
 	{
-		this.provider = provider;
+		speciesMap = species.stream ()
+		.collect ( Collectors.toMap ( 
+			SpecieInfo::getTaxId,
+			Function.identity (),
+			(e1, e2) -> { throw buildEx ( 
+				IllegalArgumentException.class,
+				"Configuration with the specie %s specified multiple times",
+				e1.getTaxId () ); },
+			LinkedHashMap::new
+		));
+		speciesMap = Collections.unmodifiableMap ( speciesMap );
+	}
+	
+	public Set<String> getTaxIds ()
+	{
+		return speciesMap.keySet ();
+	}
+	
+	public Map<String, SpecieInfo> getSpecies ()
+	{
+		return speciesMap;
+	}
+	
+	public SpecieInfo getSpecie ( String taxId )
+	{
+		return speciesMap.get ( taxId );
+	}
+	
+	public boolean containsTaxId ( String taxId )
+	{
+		return speciesMap.containsKey ( taxId );
 	}
 
-	public List<SpecieInfo> getSpecies ()
-	{
-		return species;
-	}
-
-	public void setSpecies ( List<SpecieInfo> species )
-	{
-		this.species = species;
-	}
-
-	@JsonIgnore
+	
 	public String getSampleQueriesXML ()
 	{
 		return IOUtils.readFile ( this.sampleQueriesFilePath );
 	}
 
-	@JsonIgnore
 	public String getReleaseNotesHTML ()
 	{
 		return IOUtils.readFile ( this.releaseNotesFilePath );
 	}
 	
-	@JsonIgnore
 	public byte[] getBackgroundImage ()
 	{
 		try {
@@ -167,7 +200,6 @@ public class DatasetInfo
 		}		
 	}
 
-	@JsonIgnore
 	public String getBackgroundImageMIME ()
 	{
 		try {
@@ -185,8 +217,8 @@ public class DatasetInfo
 	public String toString ()
 	{
 		return String.format (
-			"DatasetInfo {title: %s, version: %s, creationDate: %s}", 
-			title, version, creationDate
+			"DatasetInfo {id: %s, title: %s, version: %s, creationDate: %s}", 
+			id, title, version, creationDate
 		);
 	}
 

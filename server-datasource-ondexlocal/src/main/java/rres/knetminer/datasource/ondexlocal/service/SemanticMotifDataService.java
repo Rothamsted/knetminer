@@ -110,7 +110,9 @@ public class SemanticMotifDataService
 
 		// The traverser will get all of our config opts, its initial configuration
 		// is possibly overridden/extended
-		graphTraverser = AbstractGraphTraverser.getInstance ( dataService.getOptions () );
+		graphTraverser = AbstractGraphTraverser.getInstance (
+			dataService.getConfiguration ().getGraphTraverserOptions ()
+		);
 
 		graphTraverser.setOption ( "ONDEXGraph", dataService.getGraph () );
 	}
@@ -143,8 +145,9 @@ public class SemanticMotifDataService
 		
 		initGraphTraverser ();		
 		
-		var graphFileName = dataService.getOxlPath ();
-		var dataPath = dataService.getDataPath ();
+		var config = dataService.getConfiguration ();
+		var graphFileName = config.getOxlFilePath ();
+		var dataPath = config.getDataDirPath ();
 		var graph = dataService.getGraph ();
 		
 		File graphFile = new File ( graphFileName );
@@ -318,7 +321,7 @@ public class SemanticMotifDataService
 	 */
 	private Set<ONDEXConcept> loadSeedGenes ()
 	{
-		String seedGenesPath = StringUtils.trimToNull ( dataService.getOptions ().getString ( SemanticMotifDataService.OPT_SEED_GENES_FILE ) );
+		String seedGenesPath = StringUtils.trimToNull ( dataService.getConfiguration ().getSeedGenesFilePath () );
 		if ( seedGenesPath == null ) {
 			log.info ( "Initialising seed genes from TAXID list" );
 			return fetchSeedGenesFromTaxIds ();
@@ -330,7 +333,7 @@ public class SemanticMotifDataService
 
 	private Set<ONDEXConcept> fetchSeedGenesFromTaxIds ()
 	{
-		Set<String> myTaxIds = new HashSet<> ( dataService.getTaxIds () );
+		Set<String> myTaxIds = dataService.getConfiguration ().getDatasetInfo ().getTaxIds ();
 		var graph = dataService.getGraph ();
 		ONDEXGraphMetaData meta = graph.getMetaData ();
 		ConceptClass ccGene = meta.getConceptClass ( "Gene" );

@@ -10,7 +10,6 @@ import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mer
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -96,8 +95,9 @@ public class SearchService
   	log.info ( "Indexing the Ondex graph" );
   	
   	var graph = dataService.getGraph ();
-  	var oxlGraphPath = dataService.getOxlPath ();
-  	var dataPath = dataService.getDataPath (); 
+  	var config = dataService.getConfiguration ();
+  	var oxlGraphPath = config.getOxlFilePath ();
+  	var dataPath = config.getDataDirPath (); 
   	
     try 
     {
@@ -602,7 +602,9 @@ public class SearchService
 	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr, String taxId )
 	{
 		taxId = StringUtils.trimToNull ( taxId );
-		var taxIds = taxId == null ? dataService.getTaxIds () : List.of ( taxId );
+		var taxIds = taxId == null 
+			? dataService.getConfiguration ().getDatasetInfo ().getTaxIds ()
+			: Set.of ( taxId );
 		
 		return KGUtils.fetchQTLs ( dataService.getGraph (), taxIds, qtlsStr );
 	}
