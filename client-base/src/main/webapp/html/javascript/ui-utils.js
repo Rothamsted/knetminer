@@ -109,34 +109,12 @@ function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
     refreshQuerySuggester();
 }
 
-// function toggle the close button so users have the choice to show the their example queries or hide it 
-function queryToggle(){
-    var queryButton = $('.close');
-    var queryStatus = true;
-
-    $(queryButton).click(function(){
-
-        // example queries block
-        var examplequeries = $("#eg_queries");
-        var exampletitle = $(".details> h3")
-
-        // example queries block close button image
-        var queryImage = queryButton.children();
-
-        if(queryStatus){
-            examplequeries.hide(); 
-            queryImage.attr('src','html/image/drop-down.png');
-            exampletitle.css('margin-bottom','0');
-            queryStatus = false; 
-        }else{
-            queryImage.attr('src','html/image/close_button.png');
-            examplequeries.show();
-            exampletitle.css('margin-bottom','1rem');
-            queryStatus = true; 
-        }
-
-    }); 
-
+// function toggle the close button so users have the choice to show the their example queries and species or hide it 
+function queryToggle(example,title,element){
+            example.toggle('slow',function(){
+                title.css('margin-bottom','1rem');
+                $(element).find('img').toggle();
+            });    
 }
 
 /*

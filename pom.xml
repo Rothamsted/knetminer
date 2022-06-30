@@ -113,7 +113,7 @@
 		<knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList>
 		
 		<!--  true if you are providing a reference genome -->
-		<knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided>
+		<knetminer.isReferenceGenomeProvided>false</knetminer.isReferenceGenomeProvided>
 
 		<!-- 
 			If your dataset config directory contains client/release_notes.html, its contents will be used as a value for

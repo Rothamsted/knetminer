@@ -83,7 +83,6 @@ function searchKeyword() {
 
 //Function send form values to backend
 function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
-
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
         timeout: 1000000, cache: false,
@@ -151,7 +150,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
              }
         }
     });
- 
 }
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
@@ -416,9 +414,6 @@ function findGenes(id, chr_name, start, end) {
 }
 
 
-// function returns query examples of the current dataset
-
-
 /*
  * Function to get the number of matches
  *
@@ -519,6 +514,7 @@ function changeSpecies(selectElement){
     var currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
     $('#speciename_container').empty();
     $('#chr1').empty();
+    $('#tabviewer').hide(); 
     if(currentTaxData){
         $.get(multiSpecieUrl,'').done( function(data){
             var calcGenoome = multiSpeciesFeature.speciesEvents(data.species)
@@ -526,10 +522,11 @@ function changeSpecies(selectElement){
                 // TODO what if user has two or more genome region present
                 setTimeout(function(){
                     findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
+                    $('#genes1').focus(); 
+
                 },100)
-                
             }
-         }); 
+        }); 
     }
 }
 

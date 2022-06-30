@@ -1,9 +1,11 @@
 
-
+// multi-species object literal house functions that can be used outside independently outside
 multiSpeciesFeature = function (){
 
+    // current Taxonomy ID and the taxIdString;
     var currentTaxId,taxIdString;
 
+    // function get lists of registered species from api_url+/species
     function getSpeciesList(){
         $.get(multiSpecieUrl,'').done( function(data){
             var speciesInfos = data.species
@@ -14,6 +16,7 @@ multiSpeciesFeature = function (){
         })
     }
 
+    // function creates the species dropdown
     function createDropdown(speciesNames){
         var expectedOptions = speciesNames.length;
         for(var speciesName in speciesNames){
@@ -28,18 +31,17 @@ multiSpeciesFeature = function (){
         }
     }
 
+    // function house all events that are triggered select a new species
     function multiSpeciesEvents(data){
         getQueryExamples();
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-
         var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
         for(var info in currentSpecies){
-            $('<div > <span class="specie_title">'+ info.replace(/[A-Z]/g, ' $&').trim() +': </span><span>'+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
+            const speciesCapital = capitaliseFirstLetter(info); 
+            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
         }
-        // setting background page 
-        document.body.style.backgroundImage = `url(${multiSpecieUrl+'/background-image'+taxIdString})`; 
 
         // setting Species Release Note 
         $('#release_icon').attr("href",`${multiSpecieUrl+'/release-notes.html'+taxIdString}`);
@@ -238,7 +240,7 @@ multiSpeciesFeature = function (){
             }
     
     }
-
+    //returned values that are called outside the module 
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
@@ -246,7 +248,6 @@ multiSpeciesFeature = function (){
         maps:drawGeneMaps
     }
 }(); 
-
 
 
 

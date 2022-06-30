@@ -2,7 +2,7 @@
 //functions shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome(){
 
-    if (reference_genome == true) {
+    if (reference_genome == false) {
        $('#genomeorqtlsearchbox').show();
        if (typeof gviewer != "undefined" && gviewer == false) {
            activateButton('resultsTable');
@@ -22,12 +22,10 @@ function showReferenceGenome(){
 // function runs on page jquery document ready
 function loadOnReady(){
 
-  // add species name to header
-  //  $('#species_header').text(species_name); //update species name from utils_config.js
+  // particle js background config 
+  particlesJS.load('particles-js','html/javascript/assets/particles.json');
 
-    activateResetButton(); 
-
-    queryToggle();
+    activateResetButton();
 
     // hide reset btn on page load
     $("#resetknet").hide(); 
@@ -39,7 +37,6 @@ function loadOnReady(){
     generalPageAnalytics(); 
 
 }
-
 
 
  // function reset all form input including the genenome icon and the suggestor text values

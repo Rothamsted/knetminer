@@ -13,8 +13,9 @@
 
 					<div id="species_container" class="details">
 							<div class="detail_info">
-							<div>
-							<h4 style="margin:10px 0;">Species description</h4></div>
+							<div><h3 id="species_title" style="margin:10px 0;">Species description</h3>
+							<span style="display:flex;" class="close" onclick="queryToggle($('#speciename_container'),$('#species_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"/><img class="close"  style="display:none;" src="html/image/drop-down.png"/>
+							</span></div>
 							<div id="speciename_container"></div>
 							</div>
 					</div>
@@ -23,9 +24,8 @@
                     <div id="info" class="details">
                         <c:if test="${embeddable}"><div class="species_header"></div></c:if>
                         <div id="info-text">
-                            <div style="height: 10px;"><h3>Example queries</h3>
-                                <a style="display:flex;" class="close" id="close-example" title="close"><img src="html/image/close_button.png"></a>
-                            </div>
+                            <div><h3  style="margin:10px 0; class="query_title">Example queries</h3>
+                                <span style="display:flex;" class="close" onclick="queryToggle($('#eg_queries'),$('.query_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"><img class="close" style="display:none;" src="html/image/drop-down.png"/></span></div>
                             <div id="eg_queries"></div>
                         </div>
                     </div>
