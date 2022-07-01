@@ -160,6 +160,7 @@
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
                 <div id="knetSaveButton" style="width:100%; margin-top:7px;"></div>
                 <div id="knetExportButton" style="width:100%; margin-top:7px;"></div>
+				<div id="jsonExportButton" style="width:100%; margin-top:7px;"></div>
                 <!-- KnetMaps.js -->
                 <div id="knet-maps" style="display: none;"></div>
             </div>

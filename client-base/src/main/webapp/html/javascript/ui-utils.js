@@ -165,3 +165,19 @@ function getRadioValue(radio) {
 function deactivateSpinner(target) {
   $(target).maskLoader().destroy();
  }
+
+//  function creates an hidden element and takes a file type to be donwloaded to user system 
+function downloadFunction(filename,filetype){
+
+    var utf8Bytes = "";
+    utf8Bytes = encodeURIComponent(filetype).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+       });
+    //<a download="knetmaps_genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a>
+    var hiddenElement= document.createElement('a');
+    hiddenElement.href= 'data:application/octet-stream;base64,' + btoa(utf8Bytes);
+    hiddenElement.target= '_blank';
+    hiddenElement.download= filename;
+    hiddenElement.click();
+
+  }

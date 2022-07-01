@@ -417,6 +417,18 @@ function updateSelectedGenesCount() {
     var count = $('input:checkbox[name="candidates"]:checked').length;
     $('#selectedGenesCount span').text(count + ' gene(s) selected'); // update
 }
+// function downloads cytoscape compactible json file
+function downloadNetwork(){
 
+    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+    var exportJson = cy.json(); // full graphJSON
+    var plainJson = filterJsonToExport(cy, exportJson);
+    // getting the GraphJSOn
+    var graph = JSON.parse(plainJson);
+
+    // download file 
+    downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON))
+
+}
 
 
