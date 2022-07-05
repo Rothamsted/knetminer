@@ -1,5 +1,6 @@
 package rres.knetminer.datasource.ondexlocal.service.utils;
 
+import static net.sourceforge.ondex.args.BooleanArgumentDefinition.EXPORT_PLAIN_JSON;
 import static net.sourceforge.ondex.args.FileArgumentDefinition.EXPORT_FILE;
 import static net.sourceforge.ondex.filter.ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG;
 import static net.sourceforge.ondex.filter.unconnected.ArgumentNames.REMOVE_TAG_ARG;
@@ -15,7 +16,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.sourceforge.ondex.ONDEXPlugin;
 import net.sourceforge.ondex.UncheckedPluginException;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
@@ -85,7 +85,8 @@ public class ExportUtils
 			exportFile.deleteOnExit ();
 			String exportPath = exportFile.getAbsolutePath ();
 			
-			OndexPluginUtils.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ) );
+			OndexPluginUtils.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ,
+					EXPORT_PLAIN_JSON,true ) );
       
       log.debug ( "Network JSON file created:" + exportPath );
 			log.debug ( "JSON Export done to file: '{}'", exportPath );
