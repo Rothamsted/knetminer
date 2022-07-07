@@ -359,7 +359,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// Export graph
 		var response = new NetworkResponse ();
-		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
+		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () ).getLeft () );
 
 		return response;
 	}
