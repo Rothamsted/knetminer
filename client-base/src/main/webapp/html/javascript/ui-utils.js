@@ -179,5 +179,27 @@ function downloadFunction(filename,filetype){
     hiddenElement.target= '_blank';
     hiddenElement.download= filename;
     hiddenElement.click();
+    return true; 
 
   }
+
+// function to handle network export show and hide events
+$(function(){
+
+    // show on hover download button 
+    $('#exportBtns').hover(function(e){
+        $('#export-menu').css('display','flex'); 
+    });
+
+    // hide popup on mouse leave 
+    $('#export-menu').mouseleave(function(){
+       $('#export-menu').css('display','');
+    }); 
+
+    // close when clicked outside 
+    $(document).click(function(e){
+        if($(e.target).closest('#export-menu').length !== 0)return false;
+        $('#export-menu').css('display','');
+    }); 
+})
+

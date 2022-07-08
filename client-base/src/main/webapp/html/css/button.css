@@ -1,6 +1,7 @@
 /* Sourced from https://github.com/IanLunn/Hover under MIT license */
 
 /* Border Fade */
+
 .knet_button {
     width:100px; 
     height:35px; 
@@ -26,3 +27,25 @@
     background-color:#38c768;
     box-shadow: inset 0 0 0 2.5px #38c768, 0 0 0px rgba(0, 0, 0, 0);
 }
+
+
+
+/* Network Button */
+.network_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; 
+    height:32px; 
+    padding: .5rem;
+    color:white; 
+    margin-left:0px; 
+    background-color:transparent;
+	/*font-family:'Play', sans-serif;*/ 
+    font-size:15px; 
+    cursor:pointer;
+    border: 1px solid silver;
+    border-radius: 8px;
+    
+}
+

@@ -334,37 +334,39 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams)//,
-        //beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
-		// deactivateSpinner("#tabviewer");
                 console.log(server_error.detail);
                 alert(errorMsg);
-        }).success(function (data) {
-			console.log(data);
-			// Remove loading spinner from 'tabviewer' div
-		   //	deactivateSpinner("#tabviewer");
+        }).success(function (graphData) {
+			var cb = JSON.stringify(graphData)
+			var data = cb.replace(/\\/g,''); 
+
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
-                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:auto;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'>Save Network</button>");
-                                        // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
-                                        $('#knetExportButton').html("<button id='downloadKnet' class='btn knet_button' style='float:right;margin-right:10px;' onclick='exportKnetworkTable("+networkId+");' title='Download visible genes from knetwork as a table'>Export TSV</button>");
 
-										$('#jsonExportButton').html("<button id='downloadJson' class='btn knet_button' style='float:right;margin-right:10px; margin-left:10px' onclick='downloadNetwork()' title='Download visible genes from knetwork as a table'>Export JSON</button>");
+                                        $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
+
+
+                                        // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
+                                        $('#knetExportButton').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");' title='Download visible genes from knetwork as a table'>TSV</button>");
+
+										$('#jsonExportButton').html("<button class='export_button' onclick='downloadNetwork()' title='Download visible genes from knetwork as a table'>JSON</button>");
                                         
-                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           var knetwork_blob= data.graph;
+                                        if(data.includes("graphJSON")) { // for old/current json that contains 2 JS vars
+                                           var knetwork_blob= data;
                                            knetwork_blob= filterKnetworkJson(knetwork_blob); // filter large knetwork jsons
                                            knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
-                                          var eles_jsons= data.graph.graphJSON.elements;
-                                          var eles_styles= data.graph.graphJSON.style;
-                                          var metadata_json= data.graph.allGraphData;
+                                          var eles_jsons= data.graphJSON.elements;
+                                          var eles_styles= data.graphJSON.style;
+                                          var metadata_json= data.allGraphData;
                                           knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
@@ -423,12 +425,22 @@ function downloadNetwork(){
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
     var exportJson = cy.json(); // full graphJSON
     var plainJson = filterJsonToExport(cy, exportJson);
+
     // getting the GraphJSOn
     var graph = JSON.parse(plainJson);
 
     // download file 
-    downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON))
+    var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON)); 
+
+	if(isDownloaded){
+		 $('body').append("<div id='guide_pop'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span>  <span id='close-pop'><img width='20' src='html/image/close_button.png'/></span></div>"); 
+
+		 $('#guide_pop').addClass('slide-in');
+		 setTimeout(function() { $('#guide_pop').removeClass('slide-in'); }, 15000);
+	}
 
 }
+
+
 
 

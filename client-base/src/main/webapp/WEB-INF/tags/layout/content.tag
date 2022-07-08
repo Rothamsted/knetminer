@@ -158,11 +158,23 @@
             <div id="evidenceTable" class="resultViewer" style="display:none;"></div>
             <!-- Network View tab -->
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
-                <div id="knetSaveButton" style="width:100%; margin-top:7px;"></div>
-                <div id="knetExportButton" style="width:100%; margin-top:7px;"></div>
-				<div id="jsonExportButton" style="width:100%; margin-top:7px;"></div>
+
+				<div id="export-menu">
+				   	<div id="knetExportButton" class="export_border" style="border-bottom: .3px solid silver"></div>
+					<div id="jsonExportButton" class="export_border"></div>
+				</div>
+
+                <div id="knetSaveButton" style="margin-top:7px;float:right;"></div>
+
+                <div style="margin-top:7px;float:right;margin-right:10px;">
+					<button class="network_button" id="exportBtns">
+					<img src="html/image/Knetdownload.png" alt="export menu" width="20"/>
+					</button>
+				</div>
+
                 <!-- KnetMaps.js -->
-                <div id="knet-maps" style="display: none;"></div>
+                <div id="knet-maps" style="display:none;"></div>
+
             </div>
         </div>
     </div>  <!-- tabviewer -->
