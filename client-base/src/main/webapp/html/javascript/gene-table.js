@@ -227,7 +227,7 @@ function createGenesTable(text, keyword, rows)
 		var values = e.data.x[geneNum].split("\t");
 
 		// Generate Network in KnetMaps.
-		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword });
+		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword,  exportPlainJSON:false});
 	});
 
 	/*
@@ -339,9 +339,8 @@ function generateCyJSNetwork(url, requestParams) {
                 var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
                 console.log(server_error.detail);
                 alert(errorMsg);
-        }).success(function (graphData) {
-			var cb = JSON.stringify(graphData)
-			var data = cb.replace(/\\/g,''); 
+        }).success(function (data) {
+
 
 				// Network graph: JSON file.
 				try {
@@ -358,15 +357,15 @@ function generateCyJSNetwork(url, requestParams) {
 
 										$('#jsonExportButton').html("<button class='export_button' onclick='downloadNetwork()' title='Download visible genes from knetwork as a table'>JSON</button>");
                                         
-                                        if(data.includes("graphJSON")) { // for old/current json that contains 2 JS vars
-                                           var knetwork_blob= data;
+                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+                                           var knetwork_blob= data.graph;
                                            knetwork_blob= filterKnetworkJson(knetwork_blob); // filter large knetwork jsons
                                            knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
                                           }
                                         else { // response contents (pure JSON).
-                                          var eles_jsons= data.graphJSON.elements;
-                                          var eles_styles= data.graphJSON.style;
-                                          var metadata_json= data.allGraphData;
+                                          var eles_jsons= data.graph.graphJSON.elements;
+                                          var eles_styles= data.graph.graphJSON.style;
+                                          var metadata_json= data.graph.allGraphData;
                                           knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
 					// Remove the preloader message in Gene View, for the Network Viewer
@@ -409,7 +408,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
           }
     }
     else {
-        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
+        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist,exportPlainJSON:false});
     }
 }
 
@@ -433,10 +432,17 @@ function downloadNetwork(){
     var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON)); 
 
 	if(isDownloaded){
-		 $('body').append("<div id='guide_pop'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span>  <span id='close-pop'><img width='20' src='html/image/close_button.png'/></span></div>"); 
 
-		 $('#guide_pop').addClass('slide-in');
-		 setTimeout(function() { $('#guide_pop').removeClass('slide-in'); }, 15000);
+		 $('body').append("<div class='guide_pop'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span>  <span id='close-pop' style='position: absolute;top: 0.5pc; left: 0.8pc;'><img width='16' src='html/image/close_button.png'/></span>");
+
+		 setTimeout(function() {$('.guide_pop')
+		 .css('right','-32pc') 
+		 .clear(); 
+		}, 15000);
+		
+		 $('#close-pop').click(function(){
+			$('.guide_pop').css('right','-32pc')
+		})
 	}
 
 }

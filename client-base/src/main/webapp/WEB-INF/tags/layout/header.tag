@@ -8,14 +8,34 @@
 			</a>
 
 			<div id="species_header">
-				<a id="release_icon" target="_blank" href="" title="Release Notes"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+				<a id="release_icon" target="_blank" href="" title="Release Notes">
+					<lord-icon
+					src="https://cdn.lordicon.com/nocovwne.json"
+					trigger="loop"
+					delay="2000"
+					colors="primary:#6f7f8f,secondary:#51ce7b"
+					stroke="25"
+					style="width:42px;height:42px">
+				</lord-icon>
+				</a>
+
 				<select onchange="changeSpecies(this)" class="navbar-select"></select>
 			</div>
 		</ul>
     	
 		<ul class="navbar-items">
-				<a id="login_icon" title="Sign In" style="text-decoration: none;color: #6F7F8F;"></a>
+
+				<div class="product_links">
+					<a  href='https://knetminer.com/tutorial' target="_blank" title="Access tutorials" class="nav-links">Tutorial</a>	
+					<a href='https://knetminer.com/knetminer-citation' target="_blank" title="include our work" class="nav-links">Cite Us</a>	
+				</div>
+
+				<div class="auth_container">
+					<a id="login_icon" title="Sign In" class="nav-links"></a>
 				<a href='https://knetminer.com/beta/knetspace/sign-up/' id="signup" title="Sign Up">Sign Up</a>
+				</div>
+				
+				
 		</ul>
 	</nav>
 </div>

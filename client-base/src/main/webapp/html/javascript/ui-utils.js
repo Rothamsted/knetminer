@@ -179,7 +179,7 @@ function downloadFunction(filename,filetype){
     hiddenElement.target= '_blank';
     hiddenElement.download= filename;
     hiddenElement.click();
-    return true; 
+    return true;
 
   }
 
@@ -201,5 +201,7 @@ $(function(){
         if($(e.target).closest('#export-menu').length !== 0)return false;
         $('#export-menu').css('display','');
     }); 
+
+    // 
 })
 
