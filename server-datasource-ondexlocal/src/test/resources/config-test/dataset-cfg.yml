@@ -34,7 +34,7 @@ dataset:
   - taxId: 3702
     scientificName: Arabidopsis Thaliana
     commonName: Thale cress
-    chromosomeBaseMap: config/specie-3702/base-map.xml
+    chromosomeBaseMap: config/species/base-map-3702.xml
   - taxId: 4565
     scientificName: Triticum aestivum
     commonName: Bread Wheat

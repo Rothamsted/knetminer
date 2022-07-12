@@ -63,27 +63,29 @@ public class DatasetInfo
 	{
 		this.root = root;
 		
-		String defaultCfgPath = root.getDatasetDirPath ();
+		// Relative paths refer to this
+		var dsetPath = root.getDatasetDirPath ();
+		// null values have this as base path
+		String defaultCfgPath = dsetPath + "/config";
 		
-		if ( this.sampleQueriesFilePath == null ) sampleQueriesFilePath = "config/sample-queries.xml";
+		if ( this.sampleQueriesFilePath == null ) sampleQueriesFilePath = defaultCfgPath + "/sample-queries.xml";
 		sampleQueriesFilePath = KnetminerConfiguration.buildPath ( 
-			defaultCfgPath, sampleQueriesFilePath 
+			dsetPath, sampleQueriesFilePath 
 		);
 		
-		if ( this.releaseNotesFilePath == null ) releaseNotesFilePath = "config/release-notes.html";
+		if ( this.releaseNotesFilePath == null ) releaseNotesFilePath = defaultCfgPath + "/release-notes.html";
 		releaseNotesFilePath = KnetminerConfiguration.buildPath ( 
-			defaultCfgPath, releaseNotesFilePath 
+			dsetPath, releaseNotesFilePath 
 		);
 
-		if ( this.backgroundImageFilePath == null ) backgroundImageFilePath = "config/background.jpg";
+		if ( this.backgroundImageFilePath == null ) backgroundImageFilePath = defaultCfgPath + "/background.jpg";
 		backgroundImageFilePath = KnetminerConfiguration.buildPath ( 
-			defaultCfgPath, backgroundImageFilePath 
+			dsetPath, backgroundImageFilePath 
 		);
 
 		// TODO: forbid null
-		this.getSpecies ()
-		.values ()
-		.forEach ( sp -> sp.postConstruct ( root ) );
+		for ( var sp: this.getSpeciesMap ().values () )
+			sp.postConstruct ( root );
 	}
 	
 	
@@ -157,12 +159,18 @@ public class DatasetInfo
 		speciesMap = Collections.unmodifiableMap ( speciesMap );
 	}
 	
+	@JsonProperty
+	public List<SpecieInfo> getSpecies ()
+	{
+		return Collections.unmodifiableList ( new ArrayList<> ( speciesMap.values () ) );
+	}
+	
 	public Set<String> getTaxIds ()
 	{
 		return speciesMap.keySet ();
 	}
 	
-	public Map<String, SpecieInfo> getSpecies ()
+	public Map<String, SpecieInfo> getSpeciesMap ()
 	{
 		return speciesMap;
 	}

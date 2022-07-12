@@ -47,13 +47,15 @@
 		  Here, we give values suitable for maven tests (eg, in aratiny).
 		  
 		  See https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker
+		  
+		  TODO: Update docs
 		 -->
 		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
 		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
-		<knetminer.configFile>${knetminer.configDir}/data-source.xml</knetminer.configFile>		
+		<knetminer.configFile>${knetminer.configDir}/test-cfg.yml</knetminer.configFile>		
 
 		<!--
 			In most cases, probably you'll be fine with the overriding provided below, in the 'docker' profile.
@@ -66,8 +68,10 @@
 		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
+		
+		<!-- TODO: REMOVE!!! See utils-config.js for details 
 		<knetminer.dataContext>dataset-info</knetminer.dataContext>
-
+		-->
 
 		<!-- 3702=Ara,4565=Wheat,4577=Maize -->
 		<knetminer.specieTaxId>3702,4565,4577</knetminer.specieTaxId>
@@ -146,8 +150,11 @@
 		<knetminer.api.baseUrl>${knetminer.api.rootUrl}/${knetminer.api.webContext}</knetminer.api.baseUrl>
 		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>${knetminer.api.baseUrl}/${knetminer.dataSourceId}</knetminer.api.url>
-		<!-- Here, it is http://localhost:9090/ws/aratiny/species -->
+		
+		<!-- Here, it is http://localhost:9090/ws/aratiny/dataset-info -->
+		<!-- TODO: REMOVE!!! See utils-config.js for details 
 		<knetminer.api.versionUrl>${knetminer.api.baseUrl}/${knetminer.dataSourceId}/${knetminer.dataContext}</knetminer.api.versionUrl>
+		-->
 		
 		<!-- 
 			This is injected into config.xml for the ws/ war. 

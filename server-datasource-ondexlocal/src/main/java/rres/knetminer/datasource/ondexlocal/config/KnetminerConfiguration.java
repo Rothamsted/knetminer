@@ -50,7 +50,10 @@ public class KnetminerConfiguration
 	
 	@JsonProperty ( "dataset" )
 	private DatasetInfo datasetInfo;
-
+	
+	@JsonProperty
+	private boolean cypherDebuggerEnabled = false;
+	
 	
 	@JsonIgnore
 	private String configFilePath;
@@ -76,13 +79,17 @@ public class KnetminerConfiguration
 		if ( this.datasetDirPath == null )
 		{
 			datasetDirPath = getDir ( configFilePath );
+			
 			// If the config is in /config, the dataset dir is the upper directory
 			// else, it is the same as the config file
-			if ( datasetDirPath.endsWith ( "/config" ) ) 
-				datasetDirPath = datasetDirPath.replace ( "/config$", "" );
+			if ( datasetDirPath.endsWith ( "/config" ) ) {
+				datasetDirPath = datasetDirPath.replaceAll ( "/config$", "" );
+			}
 		}
 		if ( this.dataDirPath == null ) dataDirPath = datasetDirPath + "/" + "data";
 		if ( this.oxlFilePath == null ) oxlFilePath = dataDirPath + "/knowledge-network.oxl";
+		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
+		
 		this.datasetInfo.postConstruct ( this );
 	}
 	
@@ -137,6 +144,14 @@ public class KnetminerConfiguration
 		return knetSpaceURL;
 	}
 
+	
+	
+	public boolean isCypherDebuggerEnabled ()
+	{
+		return cypherDebuggerEnabled;
+	}
+
+	
 	public static String getDir ( String filePath )
 	{
 		return Optional.ofNullable ( Path.of ( filePath ).getParent () )
@@ -151,7 +166,7 @@ public class KnetminerConfiguration
 	{
 		if ( filePath == null ) return filePath;
 		// Is it absolute? Ie, Does it begin with /, \, or something like c: ?
-		if ( filePath.toLowerCase ().matches ( "^(/|\\|[a-z]:)" ) ) return filePath;
+		if ( filePath.toLowerCase ().matches ( "^(/|\\|[a-z]:).*" ) ) return filePath;
 		return basePath + "/" + filePath;
 	}
 		

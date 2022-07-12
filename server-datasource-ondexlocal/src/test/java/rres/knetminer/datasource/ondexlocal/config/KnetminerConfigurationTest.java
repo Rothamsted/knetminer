@@ -30,7 +30,7 @@ public class KnetminerConfigurationTest
 		DatasetInfo dsi = cfg.getDatasetInfo ();
 		assertEquals ( "Dataset title wrong!", "Aratiny dataset", dsi.getTitle () );
 		
-		List<SpecieInfo> species = new ArrayList<> ( dsi.getSpecies ().values () );
+		List<SpecieInfo> species = new ArrayList<> ( dsi.getSpeciesMap ().values () );
 		assertEquals ( "Species is wrong!", 2, species.size () );
 	}
 	

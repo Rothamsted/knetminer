@@ -38,9 +38,16 @@ public class SpecieInfo
 		
 	void postConstruct ( KnetminerConfiguration root )
 	{
-		if ( this.baseMapPath == null ) baseMapPath = "config/specie-" + this.taxId + "/base-map.xml";
+		// Relative paths refer to this
+		var dsetPath = root.getDatasetDirPath ();
+		// null values have this as base path
+		String defaultCfgPath = dsetPath + "/config";
+		
+		// TODO: do we need a per-specie directory?
+		// if ( this.baseMapPath == null ) baseMapPath = "config/specie-" + this.taxId + "/base-map.xml";
+		if ( this.baseMapPath == null ) baseMapPath = defaultCfgPath + "/species/base-map-" + this.taxId + ".xml";
 		baseMapPath = KnetminerConfiguration.buildPath ( 
-				root.getDatasetDirPath (), baseMapPath 
+			dsetPath, baseMapPath 
 		);
 		
 		this.initChromosomeIds ();

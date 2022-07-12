@@ -39,7 +39,7 @@ public class DatasetInfoServiceIT
 		assertNotNull ( "/data-set-info returns null!", dataset );
 		assertTrue  (
 			"no specie from /data-set-info!", 
-			Optional.ofNullable ( dataset.getSpecies() )
+			Optional.ofNullable ( dataset.getSpeciesMap() )
 			.map ( Map::size )
 			.orElse ( null ) > 0
 		);

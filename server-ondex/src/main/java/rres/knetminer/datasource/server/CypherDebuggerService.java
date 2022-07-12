@@ -242,8 +242,8 @@ public class CypherDebuggerService
 	{
 		boolean isServiceEnabled = OndexServiceProvider.getInstance ()
 			.getDataService ()
-			.getOptions ()
-			.getBoolean ( ENABLED_PROPERTY, false );
+			.getConfiguration ()
+			.isCypherDebuggerEnabled ();
 		
 		if ( !isServiceEnabled ) throw new ForbiddenException ();
 	}

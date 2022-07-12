@@ -333,14 +333,18 @@ public class SemanticMotifDataService
 
 	private Set<ONDEXConcept> fetchSeedGenesFromTaxIds ()
 	{
-		Set<String> myTaxIds = dataService.getConfiguration ().getDatasetInfo ().getTaxIds ();
+		Set<String> myTaxIds = dataService.getConfiguration ()
+			.getDatasetInfo ()
+			.getTaxIds ();
+		
 		var graph = dataService.getGraph ();
 		ONDEXGraphMetaData meta = graph.getMetaData ();
 		ConceptClass ccGene = meta.getConceptClass ( "Gene" );
 		AttributeName attTaxId = meta.getAttributeName ( "TAXID" );
-
 		Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
-		return genes.parallelStream ().filter ( gene -> gene.getAttribute ( attTaxId ) != null )
+		
+		return genes.parallelStream ()
+			.filter ( gene -> gene.getAttribute ( attTaxId ) != null )
 			.filter ( gene -> myTaxIds.contains ( gene.getAttribute ( attTaxId ).getValue ().toString () ) )
 			.collect ( Collectors.toSet () );
 	}		

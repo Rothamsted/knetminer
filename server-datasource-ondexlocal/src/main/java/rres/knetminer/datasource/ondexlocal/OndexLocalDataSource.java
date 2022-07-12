@@ -79,8 +79,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	private void init ()
 	{
-		var configXmlPath = ConfigFileHarvester.getConfigFilePath ();
-		if ( configXmlPath == null ) throw new IllegalStateException ( 
+		var configYmlPath = ConfigFileHarvester.getConfigFilePath ();
+		if ( configYmlPath == null ) throw new IllegalStateException ( 
 			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
 			+ ", either as a Java property, a <context-param> in web.xml, or" 
 			+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
@@ -92,7 +92,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// this pre-loads some properties in advance, so that we have what we need (ie, data source name) to be able 
 		// to start answering the API URLs
 		// This is also quick enough to be done synchronously.
-		dataService.loadConfiguration ( configXmlPath );
+		dataService.loadConfiguration ( configYmlPath );
 		var config = dataService.getConfiguration ();
 		var dsetInfo = config.getDatasetInfo ();
 		var dsName = dsetInfo.getId ();
