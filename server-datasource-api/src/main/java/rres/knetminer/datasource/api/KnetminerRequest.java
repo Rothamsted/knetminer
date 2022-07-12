@@ -16,9 +16,7 @@ public class KnetminerRequest {
 	private List<String> list = new ArrayList<String>();
 	private String listMode = "";
 	private String taxId = "";
-	private boolean exportPlainJSON; 
 	
-
 	public KnetminerRequest() {
 
 	}
@@ -61,14 +59,6 @@ public class KnetminerRequest {
 
 	public void setTaxId(String taxId) {
 		this.taxId = taxId;
-	}
-
-	public boolean isExportPlainJSON() {
-		return exportPlainJSON;
-	}
-
-	public void setExportPlainJSON(boolean exportPlainJSON) {
-		this.exportPlainJSON = exportPlainJSON;
 	}
 
 }
