@@ -193,7 +193,8 @@ public class KnetminerServer
 	 * name of the data source to look up by its getName() function (see above for
 	 * the mapping function buildDataSourceCache(). Y is the 'mode' of the request.
 	 * Spring magic automatically converts the response into JSON. We convert the
-	 * GET parameters into a KnetminerRequest object for handling by the _handle()
+	 * GET parameters into a KnetminerRequest object for handling by the 
+	 * {@link #handleRaw(String, String, KnetminerRequest, HttpServletRequest)}() 
 	 * method.
 	 * 
 	 * @param ds
