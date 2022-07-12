@@ -1,5 +1,6 @@
-dataDir: path/to/data-dir
-oxl: another/path/foo.oxl
+# These are auto-assigned from the .yml path
+# dataDir: path/to/data-dir
+# oxl: another/path/foo.oxl
 seedGenesFile: seed-genes.txt
 defaultExportedPublicationCount: 100
 knetSpaceURL: https://knetminer.com/beta/knetspace
@@ -27,7 +28,8 @@ graphTraverser:
 dataset:
   title: Aratiny dataset
   organization: Rothamsted Research
-  sampleQueries: config/sample-queries.xml
+  # sampleQueries: config/sample-queries.xml Another case of auto-config
+  releaseNotes: config/my-release-notes.html # to test that defaults can be overridden
   backgroundImage: config/background.jpg 
   
   species:
@@ -35,9 +37,9 @@ dataset:
     scientificName: Arabidopsis Thaliana
     commonName: Thale cress
     chromosomeBaseMap: config/specie-3702/base-map.xml
-  - taxId: 4565
-    scientificName: Triticum aestivum
-    commonName: Bread Wheat
+#  - taxId: 4565
+#    scientificName: Triticum aestivum
+#    commonName: Bread Wheat
 #  - taxId: 4577
 #    scientificName: Zea mays
 #    commonName: Maize

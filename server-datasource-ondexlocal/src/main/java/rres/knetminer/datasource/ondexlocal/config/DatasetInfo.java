@@ -33,7 +33,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * <dl><dt>Date:</dt><dd>29 May 2022</dd></dl>
  *
  */
-@JsonAutoDetect ( getterVisibility = Visibility.NONE )
+@JsonAutoDetect ( getterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY )
 public class DatasetInfo 
 {
 	private String id;
@@ -177,15 +177,31 @@ public class DatasetInfo
 		return speciesMap.containsKey ( taxId );
 	}
 
+	public String getSampleQueriesFilePath ()
+	{
+		return sampleQueriesFilePath;
+	}
 	
 	public String getSampleQueriesXML ()
 	{
 		return IOUtils.readFile ( this.sampleQueriesFilePath );
 	}
+	
+
+	public String getReleaseNotesFilePath ()
+	{
+		return releaseNotesFilePath;
+	}
 
 	public String getReleaseNotesHTML ()
 	{
 		return IOUtils.readFile ( this.releaseNotesFilePath );
+	}
+	
+	
+	public String getBackgroundImageFilePath ()
+	{
+		return backgroundImageFilePath;
 	}
 	
 	public byte[] getBackgroundImage ()

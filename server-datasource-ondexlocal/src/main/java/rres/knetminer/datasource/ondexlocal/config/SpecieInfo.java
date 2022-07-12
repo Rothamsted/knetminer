@@ -22,7 +22,7 @@ import uk.ac.ebi.utils.xml.XPathReader;
  * TODO: comment me!
  * @author  brandizi <dl><dt>Date:</dt><dd>29 May 2022</dd></dl>
  */
-@JsonAutoDetect ( getterVisibility = Visibility.NONE )
+@JsonAutoDetect ( getterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY )
 public class SpecieInfo
 {
 	private String taxId;

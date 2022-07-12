@@ -1,21 +1,20 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
-import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import rres.knetminer.api.ApiIT;
 import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.KnetminerConfigTestUtils;
+import rres.knetminer.datasource.ondexlocal.config.SpecieInfo;
 
 public class DatasetInfoServiceIT
 {
@@ -30,7 +29,8 @@ public class DatasetInfoServiceIT
 
 
 	/**
-	 * Testing DatasetInfo.
+	 * Testing {@link DatasetInfo}.
+	 * TODO: we need a test for {@link SpecieInfo} too.
 	 */
 	@Test
 	public void testDatasetInfo ()
@@ -40,7 +40,7 @@ public class DatasetInfoServiceIT
 		assertTrue  (
 			"no specie from /data-set-info!", 
 			Optional.ofNullable ( dataset.getSpecies() )
-			.map ( List::size )
+			.map ( Map::size )
 			.orElse ( null ) > 0
 		);
 	}
@@ -82,14 +82,8 @@ public class DatasetInfoServiceIT
 	 */
 	private void testChromosomeIds ( String taxId, int expectedLen, String expectedChr )
 	{
-		String[] chrIds = CLI.chromosomeIds ( taxId );
-		assertEquals ( 
-			format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, chrIds.length
-		);
-		assertTrue (
-			format ( "/chromosomeIds/%s, %s not found in the result!", taxId, expectedChr ), 
-			ArrayUtils.contains ( chrIds, expectedChr )
-		);		
+		List<String> chrIds = CLI.chromosomeIds ( taxId );
+		KnetminerConfigTestUtils.testChromosomeIds ( taxId, expectedLen, expectedChr, chrIds );
 	}
 	
 	/**

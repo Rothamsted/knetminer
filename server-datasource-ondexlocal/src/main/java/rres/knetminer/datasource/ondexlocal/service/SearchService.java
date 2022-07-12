@@ -50,6 +50,7 @@ import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.logging.ONDEXLogger;
+import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
@@ -73,9 +74,11 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 public class SearchService
 {
 	/**
-	 * Used to set the max no. of publications that a search should return by default. 
+	 * Used to set the max no. of publications that a search should return by default.
+	 * 
+	 * TODO: remove, we now use {@link KnetminerConfiguration#getDefaultExportedPublicationCount()}.
 	 */
-  public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
+  // public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
   
   private LuceneEnv luceneMgr;
   

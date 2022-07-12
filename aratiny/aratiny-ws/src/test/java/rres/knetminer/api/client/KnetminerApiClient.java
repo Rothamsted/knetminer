@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,14 +183,16 @@ public class KnetminerApiClient
 	/**
 	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/chromosome-ids}.
 	 */
-	public String[] chromosomeIds ( String taxId )
+	public List<String> chromosomeIds ( String taxId )
 	{
-		return invokeApiJsMap ( 
+		String[] taxIds = invokeApiJsMap ( 
 			"dataset-info/chromosome-ids", 
 			String[].class, 
 			RequestOptions.of ().setUseJsonParams ( false ), 
 			params ( "taxId", taxId )
 		);
+		
+		return Arrays.asList ( taxIds );
 	}
 	
 	/**

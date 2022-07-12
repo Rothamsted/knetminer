@@ -1,6 +1,7 @@
 package rres.knetminer.datasource.ondexlocal.config;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,7 @@ import uk.ac.ebi.utils.opt.config.YAMLUtils;
  * <dl><dt>Date:</dt><dd>9 Jun 2022</dd></dl>
  *
  */
-@JsonAutoDetect ( getterVisibility = Visibility.NONE )
+@JsonAutoDetect ( getterVisibility = Visibility.NONE, fieldVisibility = Visibility.NONE )
 public class KnetminerConfiguration
 {	
 	@JsonProperty ( "datasetDir" )
@@ -39,11 +40,12 @@ public class KnetminerConfiguration
 	@JsonProperty ( "seedGenesFile" )
 	private String seedGenesFilePath;
 	
+	@JsonProperty
 	private int defaultExportedPublicationCount = -1;
 	
+	@JsonProperty
 	private String knetSpaceURL;
 	
-	@JsonProperty ( "graphTraverser" )
 	private OptionsMap graphTraverserOptions = new OptionsMapWrapper ();
 	
 	@JsonProperty ( "dataset" )
@@ -53,7 +55,6 @@ public class KnetminerConfiguration
 	@JsonIgnore
 	private String configFilePath;
 	
-		
 	private static final Logger slog = LogManager.getLogger ( KnetminerConfiguration.class );
 	
 	
@@ -80,8 +81,8 @@ public class KnetminerConfiguration
 			if ( datasetDirPath.endsWith ( "/config" ) ) 
 				datasetDirPath = datasetDirPath.replace ( "/config$", "" );
 		}
-		if ( this.dataDirPath == null ) this.dataDirPath = this.datasetDirPath + "/" + "data";
-		if ( this.oxlFilePath == null ) this.oxlFilePath = this.dataDirPath + "/knowledge-graph.oxl";
+		if ( this.dataDirPath == null ) dataDirPath = datasetDirPath + "/" + "data";
+		if ( this.oxlFilePath == null ) oxlFilePath = dataDirPath + "/knowledge-network.oxl";
 		this.datasetInfo.postConstruct ( this );
 	}
 	
@@ -118,6 +119,12 @@ public class KnetminerConfiguration
 	public OptionsMap getGraphTraverserOptions ()
 	{
 		return graphTraverserOptions;
+	}
+
+	@JsonProperty ( "graphTraverser" )
+	protected void setGraphTraverserOptions ( Map<String, Object>graphTraverserOptions )
+	{
+		this.graphTraverserOptions = OptionsMap.from ( graphTraverserOptions );
 	}
 
 	public int getDefaultExportedPublicationCount ()
