@@ -160,8 +160,9 @@
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
 
 				<div id="export-menu">
-				   	<div id="knetExportButton" class="export_border" style="border-bottom: .3px solid silver"></div>
-					<div id="jsonExportButton" class="export_border"></div>
+				   	<div id="knetGeneExport" class="export_border" style="border-bottom: .3px solid silver"></div>
+					<div id="visibleGraphExport" class="export_border" style="border-bottom: .3px solid silver"></div>
+					<div id="fullGraphExport" class="export_border"></div>
 				</div>
 
                 <div id="knetSaveButton" style="margin-top:7px;float:right;"></div>

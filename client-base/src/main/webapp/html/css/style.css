@@ -1187,7 +1187,7 @@ padding-top:10px;}
     font-size: 10px;
     z-index: 100;
     width: 100px;
-    height: 80px;
+    height: 120px;
     border-radius: 5px;
 }
 
@@ -1214,7 +1214,7 @@ padding-top:10px;}
 
 
 /* styles for network download popup  */
-.guide_pop{
+.guide-popup{
     position: absolute;
     width: 349px;
     padding: 1rem;
@@ -1238,6 +1238,13 @@ padding-top:10px;}
     border-radius: 5px;
     text-decoration: none;
 }
+/* graph download graph button */
+.popup-btns {
+    border: none;
+    padding: 0.3rem 0.9rem;
+    border-radius: 5px;
+}
+
 
 
 

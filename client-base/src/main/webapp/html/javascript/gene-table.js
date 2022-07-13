@@ -353,9 +353,15 @@ function generateCyJSNetwork(url, requestParams) {
 
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
-                                        $('#knetExportButton').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");' title='Download visible genes from knetwork as a table'>TSV</button>");
+										// exporting genes in export TSV
+                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV</button>");
+										var visible = true; 
+										// exporting visible graphs
+										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cy JSON</button>");
 
-										$('#jsonExportButton').html("<button class='export_button' onclick='downloadNetwork()' title='Download visible genes from knetwork as a table'>JSON</button>");
+										// exporting all graph data
+										var notVisible = false
+										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Full JSON</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            var knetwork_blob= data.graph;
@@ -418,33 +424,47 @@ function updateSelectedGenesCount() {
     var count = $('input:checkbox[name="candidates"]:checked').length;
     $('#selectedGenesCount span').text(count + ' gene(s) selected'); // update
 }
-// function downloads cytoscape compactible json file
-function downloadNetwork(){
+// function downloads cytoscape compactible json files
+function downloadNetwork(isExportTrue){
 
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
     var exportJson = cy.json(); // full graphJSON
     var plainJson = filterJsonToExport(cy, exportJson);
+	var graph = JSON.parse(plainJson);
 
-    // getting the GraphJSOn
-    var graph = JSON.parse(plainJson);
+    // if export is true, visible graph will be downloaded
+	if(isExportTrue){
+		var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON)); 
+		// ispopup stopped is set when the user clicks don't show again button
+		var isPopupstopped = JSON.parse(localStorage.getItem('popup')); 
 
-    // download file 
-    var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON)); 
+		// if file is downloaded and popup is still needed by the user
+		if(isDownloaded && !isPopupstopped){
+			// popup element 
+			$('body').append("<div class='guide-popup'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span> <div  style='margin-top: 1rem;'> <button class='popup-btns' id='close-popup' style='background: black;color: white;margin-right: 0.5rem;' >Close</button> <button class='popup-btns' style='background:white;color:black;' id='hide-popup'>Don't show again</button> </div></div>");
+			
+			// remove element from DOM after 15 secs 
+			setTimeout(function() {$('.guide-popup')
+			.css('right','-32pc') 
+			.remove(); 
+			}, 15000);
+			
+			// close button to hide 
+			$('#close-popup').click(function(){
+				$('.guide-popup').css('right','-32pc')
+			})
 
-	if(isDownloaded){
-
-		 $('body').append("<div class='guide_pop'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span>  <span id='close-pop' style='position: absolute;top: 0.5pc; left: 0.8pc;'><img width='16' src='html/image/close_button.png'/></span>");
-
-		 setTimeout(function() {$('.guide_pop')
-		 .css('right','-32pc') 
-		 .clear(); 
-		}, 15000);
-		
-		 $('#close-pop').click(function(){
-			$('.guide_pop').css('right','-32pc')
-		})
+			// not showing popup anymore
+			$('#hide-popup').click(function(){
+				$('.guide-popup').css('right','-32pc'); 
+				localStorage.setItem('popup', true); 
+			})
+		}
+	}else{
+		 downloadFunction('allgraphData.json',JSON.stringify(graph.allGraphData)); 
 	}
-
+   
+   
 }
 
 
