@@ -1,11 +1,14 @@
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 
+<!-- TODO:newConfig 
+  embeddable, enableGA, ga_id still to be migrated
+-->
 <layout:page 
-	title="${knetminer.specieName}"
-	description="${knetminer.appDescription}"
-	keywords="${knetminer.appKeywords}"
-	chromosomes="${knetminer.chromosomeList}"
-	embeddable="${knetminer.ui.embeddableLayout}"
+	title="TODO:newConfig"
+	description="TODO:newConfig"
+	keywords="TODO:newConfig"
+	chromosomes="TODO:newConfig, no longer used, probably to be removed"
+	embeddable="false"
         enableGA = "${knetminer.enableAnalytics}"
         ga_id = "${knetminer.gaIdUi}"
 >

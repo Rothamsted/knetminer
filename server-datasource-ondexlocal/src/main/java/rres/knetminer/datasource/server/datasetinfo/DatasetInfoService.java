@@ -38,6 +38,7 @@ public class DatasetInfoService
 			.getDatasetInfo ();
 	}
 
+	// TODO: rename and match config
 	@RequestMapping ( path = "/basemap.xml", produces = MediaType.APPLICATION_XML_VALUE )
 	public String basemapXml (@RequestParam String taxId )
 	{
@@ -92,5 +93,15 @@ public class DatasetInfoService
 			.ok ()
 			.header ( "Content-Type", dsetInfo.getBackgroundImageMIME () )
 			.body ( dsetInfo.getBackgroundImage () );
-	}		
+	}
+	
+	// TODO: some of these calls are more for a /configuration service
+	@RequestMapping ( path = "/knetspace-url" ) 
+	public String knetSpaceURL ()
+	{
+		return OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getKnetSpaceURL ();
+	}
 }

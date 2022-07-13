@@ -49,6 +49,23 @@
 		  See https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker
 		  
 		  TODO: Update docs
+		  
+		  
+		  ***** WARNING ****
+		   
+		  NEVER EVER USE Maven properties for production configurations (eg, Docker)!
+		  
+		  While we used to do it in the past, now these values are used for Maven interpolation during
+		  Maven builds ONLY (and to make different builds, eg, for testing or for Docker. 
+		  
+		  Once a distro file has been built via Maven using these values (eg, a .war, the Docker 
+		  image using that .war), then that file has NO REFERENCE to these POM properties.
+		  Therefore, you CAN'T change them from here (without rebuilding everything, which is 
+		  STRONGLY discouraged practice).
+		
+		  Configuration values for knetminer is done via YAML files (see TODO). Some sub-component
+		  still needs Java system properties (eg, the Neo4j traverser). In such cases, you can use
+		  "systemProperties" in the YAML configuration (see documentation and existing examples).
 		 -->
 		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
 		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
@@ -63,7 +80,8 @@
 		-->
 		<knetminer.oxlFile>${project.build.directory}/dependency/poaceae-sample.oxl</knetminer.oxlFile>
 		 
-		<!--  Change these variables as appropriate or use maven args to provide them ! -->
+		<!-- TODO: For removal, it requires first that we give the client the ability to introspect the
+		     API URL -->
 		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
 		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
 		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
@@ -100,11 +118,17 @@
 		<knetminer.provider>Rothamsted Research</knetminer.provider>
 		<!-- TODO: What's the difference between this and provider?! -->
 		<knetminer.sourceOrganization>${knetminer.provider}</knetminer.sourceOrganization>
+		
+		<!-- TODO:newConfig, to be removed -->
 		<knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost>
 
-    <!-- google analytics (enabled by default with knetminer's own 2 ga_id's for api and ui). Setting this 
-    to false will disable google analytics entirely. Alternatively, users can set true AND change the 2 
-    ga_id's to redirect to their own google analytics tracking if they wish -->
+
+    <!-- TODO:newConfig -->
+    <!-- 
+	    google analytics (enabled by default with knetminer's own 2 ga_id's for api and ui). Setting this 
+	    to false will disable google analytics entirely. Alternatively, users can set true AND change the 2 
+	    ga_id's to redirect to their own google analytics tracking if they wish
+	   -->
 		<knetminer.enableAnalytics>true</knetminer.enableAnalytics>
 		<knetminer.gaIdUi>UA-88753233-1</knetminer.gaIdUi>
 		<knetminer.gaIdApi>UA-88753233-2</knetminer.gaIdApi>

@@ -3,6 +3,7 @@ package rres.knetminer.datasource.ondexlocal.config;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,8 +54,7 @@ public class KnetminerConfiguration
 	
 	@JsonProperty
 	private boolean cypherDebuggerEnabled = false;
-	
-	
+		
 	@JsonIgnore
 	private String configFilePath;
 	
@@ -129,7 +129,7 @@ public class KnetminerConfiguration
 	}
 
 	@JsonProperty ( "graphTraverser" )
-	protected void setGraphTraverserOptions ( Map<String, Object>graphTraverserOptions )
+	private void setGraphTraverserOptions ( Map<String, Object>graphTraverserOptions )
 	{
 		this.graphTraverserOptions = OptionsMap.from ( graphTraverserOptions );
 	}
@@ -152,6 +152,13 @@ public class KnetminerConfiguration
 	}
 
 	
+	@JsonProperty
+	private void setSystemProperties ( Map<String, Object> systemProperties )
+	{
+		var sysProps = System.getProperties ();
+		systemProperties.forEach ( sysProps::putIfAbsent );
+	}
+
 	public static String getDir ( String filePath )
 	{
 		return Optional.ofNullable ( Path.of ( filePath ).getParent () )

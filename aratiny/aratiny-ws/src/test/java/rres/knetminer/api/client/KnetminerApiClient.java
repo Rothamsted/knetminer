@@ -33,7 +33,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.machinezoo.noexception.Exceptions;
 
 import rres.knetminer.api.ApiIT;
@@ -178,7 +177,6 @@ public class KnetminerApiClient
 	 */
 	public DatasetInfo datasetInfo ()
 	{
-		log.info ( "***** /dataset-info:\n{}", invokeApiStr ( "dataset-info", null ) );
 		return invokeApiJsMap ( "dataset-info", DatasetInfo.class, null );
 	}
 	

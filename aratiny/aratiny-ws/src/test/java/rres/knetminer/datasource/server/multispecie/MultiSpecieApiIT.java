@@ -251,11 +251,11 @@ public class MultiSpecieApiIT
 	/**
 	 * Checking the given accession present in the gene table
 	 * @param result
-	 * @param gene
+	 * @param geneAcc
 	 * @return
 	 */
-	boolean findAccession(GenomeApiResult result, String gene) {
-		return result.getGeneTable().stream().anyMatch ( a -> a[1].toString().equalsIgnoreCase ( gene ) );
+	boolean findAccession(GenomeApiResult result, String geneAcc) {
+		return result.getGeneTable().stream().anyMatch ( a -> a[1].toString().equals ( geneAcc ) );
 	}
 
 }

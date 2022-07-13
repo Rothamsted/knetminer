@@ -77,3 +77,10 @@ graphTraverser:
   # arbitrary Cypher queries for the traverser. DO NOT ENABLE in production!!!
   "knetminer.backend.cypherDebugger.enabled": true
 
+# These are injected into System.getProperties() and made available to other Java components around
+# As you can see below, this is used to inject values inside components that use Spring beans
+# files (neo4j/config.xml is an example of that).
+# 
+# They can be overridden from the command line (eg, passing -D to Java, via JAVA_TOOL_OPTIONS)
+systemProperties:
+  "knetminer.configDir": "${mydir}"

@@ -10,9 +10,9 @@ var knetmaps = KNETMAPS.KnetMaps();
 * 	- advanced search
 * 	- tooltips
 */
-$(document).ready(
-
+$(document).ready (
     function () {
+				setupKnetSpaceUrl ();
         getSpecieList(); 
         loadOnReady();
         showReferenceGenome();

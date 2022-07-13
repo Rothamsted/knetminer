@@ -14,7 +14,7 @@
   
   
   <bean name = "configDirPath" class = "java.lang.String">
-  	<constructor-arg value = "${knetminer.configDir}/neo4j" />
+  	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
   </bean> 
    
    		
@@ -65,7 +65,7 @@
 	  
 	<bean name = "semanticMotifsQueries" 
 				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
-		<constructor-arg value = "${knetminer.configDir}/neo4j/new-queries.txt" />
+		<constructor-arg value = "#{configDirPath}/neo4j/new-queries.txt" />
 	</bean>
 	-->
 	

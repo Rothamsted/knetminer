@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +20,17 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
 /**
- * TODO: comment me!
+ * Various information about the dataset that Knetminer is serving.
  * 
- * TODO: remove the setters
+ * This is used in all of {@link DatasetInfoService}, {@link KnetminerConfiguration} and KnetminerApiCli.
+ * 
+ * TODO: we need to split it into a top-level generic class, which is useful to ser API service, and
+ * a server-specific extension, which can be used to deal with the configuration.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>29 May 2022</dd></dl>
