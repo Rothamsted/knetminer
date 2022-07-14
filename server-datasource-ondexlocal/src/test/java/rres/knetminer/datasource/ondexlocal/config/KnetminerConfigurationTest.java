@@ -27,7 +27,7 @@ public class KnetminerConfigurationTest
 		var cfg = KnetminerConfiguration.load ( "target/test-classes/config-test/dataset-cfg.yml" );
 		assertEquals ( "dataDirPath is wrong!", "path/to/data-dir", cfg.getDataDirPath () );
 		
-		DatasetInfo dsi = cfg.getDatasetInfo ();
+		ServerDatasetInfo dsi = cfg.getServerDatasetInfo ();
 		assertEquals ( "Dataset title wrong!", "Aratiny dataset", dsi.getTitle () );
 		
 		List<SpecieInfo> species = new ArrayList<> ( dsi.getSpeciesMap ().values () );
@@ -38,7 +38,7 @@ public class KnetminerConfigurationTest
 	public void testFetchedFiles ()
 	{
 		var cfg = KnetminerConfiguration.load ( "target/test-classes/config-test/dataset-cfg.yml" );
-		DatasetInfo dsi = cfg.getDatasetInfo ();
+		ServerDatasetInfo dsi = cfg.getServerDatasetInfo ();
 		String qxml = dsi.getSampleQueriesXML ();
 
 		assertTrue  ( "SampleQuery XML is wrong!", qxml.contains ( "<sampleQueries>" ) );
@@ -64,7 +64,7 @@ public class KnetminerConfigurationTest
 		);
 		assertEquals ( "releaseNotesFilePath is wrong!", 
 			cfgDir + "/config/my-release-notes.html", 
-			cfg.getDatasetInfo ().getReleaseNotesFilePath ()
+			cfg.getServerDatasetInfo ().getReleaseNotesFilePath ()
 		);
 	}
 	
@@ -72,17 +72,17 @@ public class KnetminerConfigurationTest
 	public void testSpecieData ()
 	{
 		var cfg = KnetminerConfiguration.load ( "target/test-classes/config-test/dataset-cfg.yml" );
-		DatasetInfo dsi = cfg.getDatasetInfo ();
+		ServerDatasetInfo dsi = cfg.getServerDatasetInfo ();
 		
 		Set<String> taxIds = dsi.getTaxIds ();
 		assertEquals ( "Wrong no. of taxIds!", 2, taxIds.size () );
 		assertTrue ( "No Arabidopsis tax-ID!", taxIds.contains ( "3702" ) );
 		assertTrue ( "No wheat tax-ID!", taxIds.contains ( "4565" ) );
 		
-		SpecieInfo araInfo = dsi.getSpecie ( "3702" );
+		ServerSpecieInfo araInfo = dsi.getSpecie ( "3702" );
 		testSpecieInfo ( araInfo, "3702", "Arabidopsis Thaliana", "Thale cress" );
 
-		SpecieInfo wheatInfo = dsi.getSpecie ( "4565" );
+		ServerSpecieInfo wheatInfo = dsi.getSpecie ( "4565" );
 		testSpecieInfo ( wheatInfo, "4565", "Triticum aestivum", "Bread Wheat" );
 	}
 
@@ -90,9 +90,9 @@ public class KnetminerConfigurationTest
 	public void testChromosomeData ()
 	{
 		var cfg = KnetminerConfiguration.load ( "target/test-classes/config-test/dataset-cfg.yml" );
-		DatasetInfo dsi = cfg.getDatasetInfo ();
+		ServerDatasetInfo dsi = cfg.getServerDatasetInfo ();
 				
-		SpecieInfo araInfo = dsi.getSpecie ( "3702" );
+		ServerSpecieInfo araInfo = (ServerSpecieInfo) dsi.getSpecie ( "3702" );
 		testChromosomeIds( "3702", 5, "4", araInfo.getChromosomeIds () );
 	}
 		

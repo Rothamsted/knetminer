@@ -69,7 +69,7 @@ public class KGUtils
 			
 			var graph = dataService.getGraph ();
 			var config = dataService.getConfiguration ();
-			var dsetInfo = config.getDatasetInfo ();
+			var dsetInfo = config.getServerDatasetInfo ();
 					
 			// TODO: probably it's not needed anymore
 			Set<String> normAccs = accessions.stream ()

@@ -37,6 +37,8 @@ import com.machinezoo.noexception.Exceptions;
 
 import rres.knetminer.api.ApiIT;
 import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.ServerDatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.ServerSpecieInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
@@ -177,7 +179,12 @@ public class KnetminerApiClient
 	 */
 	public DatasetInfo datasetInfo ()
 	{
-		return invokeApiJsMap ( "dataset-info", DatasetInfo.class, null );
+		// Yes, it's the server class used to serve the client output. It's because
+		// ServerDatasetInfo contains the fields in DatasetInfo plus more fields that
+		// are used on the server only. asDatasetInfo() yields a view on what's 
+		// needed here.
+		return invokeApiJsMap ( "dataset-info", ServerDatasetInfo.class, null )
+			.asDatasetInfo ();
 	}
 	
 	/**

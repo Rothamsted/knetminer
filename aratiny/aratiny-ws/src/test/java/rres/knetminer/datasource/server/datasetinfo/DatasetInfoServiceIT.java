@@ -4,8 +4,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.BeforeClass;
@@ -39,9 +39,9 @@ public class DatasetInfoServiceIT
 		assertNotNull ( "/data-set-info returns null!", dataset );
 		assertTrue  (
 			"no specie from /data-set-info!", 
-			Optional.ofNullable ( dataset.getSpeciesMap() )
-			.map ( Map::size )
-			.orElse ( null ) > 0
+			Optional.ofNullable ( dataset.getSpecies () )
+			.map ( Collection::size )
+			.orElse ( 0 ) > 0
 		);
 	}
 

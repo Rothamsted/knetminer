@@ -695,7 +695,7 @@ public class ExportService
 
 		final var taxIds = this.dataService
 			.getConfiguration ()
-			.getDatasetInfo ()
+			.getServerDatasetInfo ()
 			.getTaxIds ();
 		
 		log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );

@@ -334,7 +334,7 @@ public class SemanticMotifDataService
 	private Set<ONDEXConcept> fetchSeedGenesFromTaxIds ()
 	{
 		Set<String> myTaxIds = dataService.getConfiguration ()
-			.getDatasetInfo ()
+			.getServerDatasetInfo ()
 			.getTaxIds ();
 		
 		var graph = dataService.getGraph ();

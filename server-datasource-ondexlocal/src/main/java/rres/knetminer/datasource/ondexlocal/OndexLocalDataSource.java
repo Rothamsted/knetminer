@@ -94,7 +94,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// This is also quick enough to be done synchronously.
 		dataService.loadConfiguration ( configYmlPath );
 		var config = dataService.getConfiguration ();
-		var dsetInfo = config.getDatasetInfo ();
+		var dsetInfo = config.getServerDatasetInfo ();
 		var dsName = dsetInfo.getId ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
 			this.getClass ().getSimpleName () + " requires a data set ID in the configuration file" 
@@ -406,7 +406,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var dataService = ondexServiceProvider.getDataService ();
 		var config = dataService.getConfiguration ();
-		var dsetInfo = config.getDatasetInfo ();
+		var dsetInfo = config.getServerDatasetInfo ();
 		
 		var oxlFile = new File ( config.getOxlFilePath () );
 		

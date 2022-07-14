@@ -50,7 +50,7 @@ public class KnetminerConfiguration
 	private OptionsMap graphTraverserOptions = new OptionsMapWrapper ();
 	
 	@JsonProperty ( "dataset" )
-	private DatasetInfo datasetInfo;
+	private ServerDatasetInfo datasetInfo;
 	
 	@JsonProperty
 	private boolean cypherDebuggerEnabled = false;
@@ -93,7 +93,7 @@ public class KnetminerConfiguration
 		this.datasetInfo.postConstruct ( this );
 	}
 	
-	public DatasetInfo getDatasetInfo ()
+	public ServerDatasetInfo getServerDatasetInfo ()
 	{
 		return datasetInfo;
 	}

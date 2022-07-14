@@ -606,7 +606,7 @@ public class SearchService
 	{
 		taxId = StringUtils.trimToNull ( taxId );
 		var taxIds = taxId == null 
-			? dataService.getConfiguration ().getDatasetInfo ().getTaxIds ()
+			? dataService.getConfiguration ().getServerDatasetInfo ().getTaxIds ()
 			: Set.of ( taxId );
 		
 		return KGUtils.fetchQTLs ( dataService.getGraph (), taxIds, qtlsStr );

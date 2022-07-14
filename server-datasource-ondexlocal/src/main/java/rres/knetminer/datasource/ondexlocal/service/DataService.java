@@ -167,7 +167,7 @@ public class DataService
 		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-		var dsetInfo = this.configuration.getDatasetInfo ();
+		var dsetInfo = this.configuration.getServerDatasetInfo ();
 		
 		this.genomeGenesCount = (int) seed.parallelStream ()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
@@ -246,7 +246,7 @@ public class DataService
 		Set<ONDEXConcept> genes = this.graph.getConceptsOfConceptClass ( ccGene );
 		
 		var taxIdNrm = StringUtils.trimToNull ( taxId );
-		var dsetInfo = this.configuration.getDatasetInfo ();		
+		var dsetInfo = this.configuration.getServerDatasetInfo ();		
 		
 		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
 		  ? geneHelper -> dsetInfo.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds

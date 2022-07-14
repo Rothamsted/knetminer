@@ -28,24 +28,25 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 @RequestMapping ( path = "/{ds}/dataset-info", method = { RequestMethod.GET, RequestMethod.POST }  )
 @CrossOrigin
 public class DatasetInfoService
-{
+{	
 	@RequestMapping ( path = "" )
 	public DatasetInfo datasetInfo ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getDatasetInfo ();
+			.getServerDatasetInfo ()
+			.asDatasetInfo ();
 	}
 
 	// TODO: rename and match config
 	@RequestMapping ( path = "/basemap.xml", produces = MediaType.APPLICATION_XML_VALUE )
 	public String basemapXml (@RequestParam String taxId )
-	{
+	{		
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getDatasetInfo ()
+			.getServerDatasetInfo ()
 			.getSpecie ( taxId )
 			.getBaseMapXML ();
 	}
@@ -56,7 +57,7 @@ public class DatasetInfoService
 		return OndexServiceProvider.getInstance ()
 		.getDataService ()
 		.getConfiguration ()
-		.getDatasetInfo ()
+		.getServerDatasetInfo ()
 		.getSampleQueriesXML ();
 	}
 	
@@ -66,7 +67,7 @@ public class DatasetInfoService
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getDatasetInfo ()
+			.getServerDatasetInfo ()
 			.getSpecie ( taxId )
 			.getChromosomeIds ();
 	}
@@ -77,7 +78,7 @@ public class DatasetInfoService
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getDatasetInfo ()
+			.getServerDatasetInfo ()
 			.getReleaseNotesHTML ();
 	}
 	
@@ -87,7 +88,7 @@ public class DatasetInfoService
 		var dsetInfo = OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getDatasetInfo ();
+			.getServerDatasetInfo ();
 				
 		return ResponseEntity
 			.ok ()
