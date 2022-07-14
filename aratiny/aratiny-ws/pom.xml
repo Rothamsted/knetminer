@@ -118,7 +118,7 @@
 		      		
 		      		TODO: is interpolation possible with the Jetty plug-in?!
 		      	-->
-			      <contextPath>/${knetminer.api.webContext}</contextPath>
+			      <contextPath>/ws</contextPath>
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 	          <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
@@ -185,7 +185,9 @@
 			<id>neo4j</id>
 			<properties>
 				<maven.profileId>neo4j</maven.profileId>
+				<!-- TODO:newConfig, needs to be managed with an alternative profile
 				<knetminer.api.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.api.graphTraverserClass>
+				-->
 			</properties>
 			<build>
 				<plugins>

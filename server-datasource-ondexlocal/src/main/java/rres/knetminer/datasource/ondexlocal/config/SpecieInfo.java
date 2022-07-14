@@ -26,8 +26,8 @@ import uk.ac.ebi.utils.xml.XPathReader;
 public class SpecieInfo
 {
 	private String taxId;
-	private String commonName;
-	private String scientificName;
+	private String commonName = "";
+	private String scientificName = "";
 	
 	@JsonProperty ( "chromosomeBaseMap" )
 	private String baseMapPath;

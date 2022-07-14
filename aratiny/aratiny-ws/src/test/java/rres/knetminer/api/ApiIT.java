@@ -316,14 +316,14 @@ public class ApiIT
 		assertTrue (
 			"Bad title for the /cydebug call!",
 			js.getString ( "title" ).contains (
-				"Unauthorized. Knetminer must be built with knetminer.backend.cypherDebugger.enabled for this to work"
+				"Unauthorized. Use the cypherDebuggerEnabled configuration flag"
 			)
 		);
 		assertEquals ( "Bad path for the /cydebug call!", url, js.getString ( "path" ) );
 		assertTrue (
 			"Bad detail for the /cydebug call!",
 			js.getString ( "detail" ).contains (
-				"ForbiddenException: Unauthorized. Knetminer must be built with knetminer.backend"
+				"ForbiddenException: Unauthorized. Use the cypherDebuggerEnabled configuration flag"
 			)
 		);
 		assertEquals ( "Bad statusReasonPhrase for the /cydebug call!", "Forbidden", js.getString ( "statusReasonPhrase" ) );

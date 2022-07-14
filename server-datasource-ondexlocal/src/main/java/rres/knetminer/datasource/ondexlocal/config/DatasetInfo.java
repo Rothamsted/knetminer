@@ -40,11 +40,13 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 public class DatasetInfo 
 {
 	private String id;
-	private String title;
-	private String version;
-	private String creationDate;
-	private String organization;
-	private String provider;
+	private String title = "";
+	private String description = "";
+	private String keywords = "";
+	private String version = "";
+	private String creationDate = "";
+	private String organization = "";
+	private String provider = "";
 	
 	@JsonProperty ( "sampleQueries" )
 	private String sampleQueriesFilePath;
@@ -109,10 +111,15 @@ public class DatasetInfo
 	{
 		return title;
 	}
-
-	public void setTitle ( String title )
+	
+	public String getDescription ()
 	{
-		this.title = title;
+		return description;
+	}
+
+	public String getKeywords ()
+	{
+		return keywords;
 	}
 
 	public String getVersion ()
@@ -120,22 +127,15 @@ public class DatasetInfo
 		return version;
 	}
 
-	public void setVersion ( String version )
-	{
-		this.version = version;
-	}
-
 	public String getCreationDate ()
 	{
 		return creationDate;
 	}
 
-
 	public String getOrganization ()
 	{
 		return organization;
 	}
-
 
 	public String getProvider ()
 	{
@@ -147,7 +147,7 @@ public class DatasetInfo
 	 * This is an initialiser for Jackson, which creates the {@link #speciesMap internal species map}.
 	 */
 	@JsonProperty
-	protected void setSpecies ( List<SpecieInfo> species )
+	private void setSpecies ( List<SpecieInfo> species )
 	{
 		speciesMap = species.stream ()
 		.collect ( Collectors.toMap ( 
