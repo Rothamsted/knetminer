@@ -2,7 +2,7 @@
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
-function searchKeyword() {
+function searchKeyword(){
     //var searchMode = getRadioValue(document.gviewerForm.search_mode);
     var searchMode="genome"; // default
 

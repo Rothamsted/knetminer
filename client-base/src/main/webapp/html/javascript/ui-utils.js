@@ -160,8 +160,6 @@ function getRadioValue(radio) {
     return radioValue;
 }
 
-
-
 function deactivateSpinner(target) {
   $(target).maskLoader().destroy();
  }
@@ -183,7 +181,10 @@ function downloadFunction(filename,filetype){
 
   }
 
-// function to handle network export show and hide events
+
+
+
+// function to handle network export: show and hide events
 $(function(){
 
     // show on hover download button 

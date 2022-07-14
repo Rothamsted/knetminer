@@ -345,21 +345,23 @@ function generateCyJSNetwork(url, requestParams) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+					$("NetworkCanvas_button").removeClass('.network-default'); 
 
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
+
 
                                         $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
 
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
-										// exporting genes in export TSV
+										//genes export button
                                         $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV</button>");
 										var visible = true; 
-										// exporting visible graphs
+										//visible graph button 
 										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cy JSON</button>");
 
-										// exporting all graph data
+										// allgraphdata button
 										var notVisible = false
 										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Full JSON</button>");
                                         
@@ -374,6 +376,8 @@ function generateCyJSNetwork(url, requestParams) {
                                           var metadata_json= data.graph.allGraphData;
                                           knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
+										
+
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
@@ -385,6 +389,9 @@ function generateCyJSNetwork(url, requestParams) {
 				   }
         }).always(function() { deactivateSpinner("#tabviewer"); });
 }
+
+
+
 
 /*
  * Function
@@ -423,7 +430,12 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 function updateSelectedGenesCount() {
     var count = $('input:checkbox[name="candidates"]:checked').length;
     $('#selectedGenesCount span').text(count + ' gene(s) selected'); // update
+	if(count < 1){
+		$("#NetworkCanvas_button").addClass('network-default'); 
+	}
 }
+
+
 // function downloads cytoscape compactible json files
 function downloadNetwork(isExportTrue){
 
