@@ -12,7 +12,7 @@ var knetmaps = KNETMAPS.KnetMaps();
 */
 $(document).ready (
     function () {
-				setupKnetSpaceUrl ();
+        setupKnetSpaceUrl ();
         getSpecieList(); 
         loadOnReady();
         showReferenceGenome();

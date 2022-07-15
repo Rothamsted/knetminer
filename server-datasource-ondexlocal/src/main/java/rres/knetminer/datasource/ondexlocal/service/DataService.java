@@ -70,81 +70,17 @@ public class DataService
 	
 	private DataService () {}
 
+	/**
+	 * Entry point to load the {@link #getConfiguration() Knetminer configuration} from a root
+	 * YAML file.
+	 * 
+	 * This is usually {@code TODO} and the web API gets its path from
+	 * {@link ConfigFileHarvester}. However, options can be loaded separately, see {@link OndexServiceProvider#initData()}.
+	 */
 	public void loadConfiguration ( String configFilePath )
 	{
 		this.configuration = KnetminerConfiguration.load ( configFilePath );
 	}
-	
-	
-		
-	/**
-	 * 
-	 * Loads config properties from a Knetminer config file.
-	 * 
-	 * This is usually {@code <dataset>/config/data-source.xml} and the web API gets its path from
-	 * {@link ConfigFileHarvester}. However, options can be loaded separately, see {@link OndexServiceProvider#initData()}.
-	 * 
-	 * 
-	 * @param configXmlPath it's a path to a local file system URL, if it starts with "file://".
-	 * If it hasn't such a prefix, the string is passed to 
-	 * {@code Thread.currentThread().getContextClassLoader().getResource()}, ie, the config file is 
-	 * looked up in the classpath.
-	 * 
-	 * 
-	 *  TODO: remove, we have replaced it with {@link OndexServiceProvider#loadConfiguration(String)}
-	 */
-	public void _loadOptions ( String configXmlPath )
-	{
-		try 
-		{
-			URL configUrl = configXmlPath.startsWith ( "file://" )
-				? new URL ( configXmlPath )
-				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
-			
-			log.info ( "Loading Ondex/Knetminer configuration from '{}'", configUrl );
-			Properties props = new Properties ();
-			props.loadFromXML ( configUrl.openStream() );
-			this.options = OptionsMap.from ( props );
-			this.updateFromOptions ();
-			log.info ( "Ondex/Knetminer configuration loaded" );
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
-		}		
-	}
-		
-	/**
-	 * Update some of the class fields from {@link #getOptions()}.
-	 */
-	private void updateFromOptions ()
-	{
-		log.info ( 
-			"Ondex Configuration loaded, values are:\n{}", 
-			options.entrySet ()
-			.stream ()
-			.map ( e -> 
-				"  " + e.getKey () + ": " 
-				+ Optional.ofNullable ( e.getValue () )
-					.map ( v -> "\"" + v.toString () + "\"" )
-					.orElse ( "<null>" ) 
-			)
-			.collect ( Collectors.joining ( "\n" ) )
-		);
-		
-		this.taxIds = this.options.getOpt ( "SpeciesTaxId", List.of (), s -> List.of ( s.split ( "," ) ) );
-	}
-	
-	/**
-	 * An helper that is used internally to get an expected option and throw an {@link IllegalArgumentException}
-	 * if that option doesn't exist. The selector should use methods from {@link #options} to fetch the option
-	 * value.
-	 */
-	private <T> T getRequiredOption ( String key, Function<String, T> optionSelector )
-	{
-		return Optional.ofNullable ( optionSelector.apply ( key ) )
-			.orElseThrow ( () -> new IllegalArgumentException ( format ( "Missing '%s' config option", key )) );
-	}
-
 
 	
   /**
@@ -216,7 +152,7 @@ public class DataService
 	}
 	
   /**
-   * TODO: comment me!
+   * The Knetminer configuration, as loaded from {@link #loadConfiguration(String)}.
    */
 	public KnetminerConfiguration getConfiguration ()
 	{
@@ -271,10 +207,12 @@ public class DataService
 		return genomeGenesCount;
 	}
 
+	// TODO: remove, old config
 	/**
    * Should this become DatasetName?
    */
-	/*
+	/* 
+	 * 
   public String getDataSourceName ()
   {
   	return options.getString ( "DataSourceName" );
@@ -310,6 +248,8 @@ public class DataService
   }
   */
 
+	// TODO: remove, old config
+	
   /**
    * USE THIS to test if a possibly null taxId is contained by the configured taxonomy IDs
    * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException

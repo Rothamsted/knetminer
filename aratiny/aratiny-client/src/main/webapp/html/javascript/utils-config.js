@@ -7,8 +7,9 @@ var api_url = "${knetminer.api.url}";
 // WHAT THE HELL IS THIS?!?
 // var multiSpecieUrl = "${knetminer.api.versionUrl}"
 //
-// TODO: no! This IS NOT the URL to multi-specie, it's the URL to get dataset information, and 
-// very likely, there is NO NEED to define a constant to just append a tail to api_url. 
+// TODO: no! This IS NOT the URL to multi-specie (what does it even mean?!), it's the URL to 
+// get dataset information, and very likely, there is NO NEED to define a constant to just 
+// append a tail to api_url. 
 // 
 var multiSpecieUrl = api_url + "/dataset-info"
 

@@ -7,7 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 /**
- * TODO: comment me!
+ * Some utilities for testing configuration components. These are are in the main part of the modules, to make it 
+ * available to other modules using this for their tests (ie, *IT tests against the API calls) 
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>11 Jul 2022</dd></dl>
@@ -23,15 +24,17 @@ public class KnetminerConfigTestUtils
 		assertEquals ( prefix + "bad common name!", expectedCommonName, specieInfo.getCommonName () );
 	}
 	
-	
-	public static void testChromosomeIds ( String taxId, int expectedLen, String expectedChr, List<String> probeChrIds )
+	/**
+	 * Tests that probedChrIds has the right length and contains the given chromosome ID.
+	 */
+	public static void testChromosomeIds ( String taxId, int expectedLen, String expectedChr, List<String> probedChrIds )
 	{
 		assertEquals ( 
-			format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, probeChrIds.size ()
+			format ( "/chromosomeIds/%s, wrong result size!", taxId ), expectedLen, probedChrIds.size ()
 		);
 		assertTrue (
 			format ( "/chromosomeIds/%s, %s not found in the result!", taxId, expectedChr ), 
-			probeChrIds.contains ( expectedChr )
+			probedChrIds.contains ( expectedChr )
 		);		
 	}
 }

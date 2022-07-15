@@ -40,7 +40,7 @@ public class DatasetInfoServiceIT
 		assertTrue  (
 			"no specie from /data-set-info!", 
 			Optional.ofNullable ( dataset.getSpecies () )
-			.map ( Collection::size )
+			.map ( List::size )
 			.orElse ( 0 ) > 0
 		);
 	}

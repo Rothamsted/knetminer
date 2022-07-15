@@ -249,10 +249,8 @@ public class MultiSpecieApiIT
 	}
 
 	/**
-	 * Checking the given accession present in the gene table
-	 * @param result
-	 * @param geneAcc
-	 * @return
+	 * Checking the given accession present in the gene table coming
+	 * from the API.
 	 */
 	boolean findAccession(GenomeApiResult result, String geneAcc) {
 		return result.getGeneTable().stream().anyMatch ( a -> a[1].toString().equals ( geneAcc ) );

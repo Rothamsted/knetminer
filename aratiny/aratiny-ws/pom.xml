@@ -113,7 +113,7 @@
 			    <webApp>
 		      	<!-- 
 		      		Some of the resources come from ${project.build.testOutputDirectory} (ie, target/test-classes), since
-		      		I need the , I take the version that is created by <testResources>, since I need the version that
+		      		I take the version that is created by <testResources>, since I need the version that
 		      		is interpolated by Maven (which is created by <testResorces> below).
 		      		
 		      		TODO: is interpolation possible with the Jetty plug-in?!

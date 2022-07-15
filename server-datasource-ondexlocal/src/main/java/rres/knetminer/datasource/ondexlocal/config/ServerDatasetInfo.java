@@ -28,6 +28,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * An extension to {@link DatasetInfo} with more information and methods that are used on the 
  * server side only.
  * 
+ * @see DatasetInfo
  * @see DatasetInfoService
  * 
  * @author brandizi
@@ -37,6 +38,9 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 @JsonAutoDetect ( getterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY )
 public class ServerDatasetInfo implements DatasetInfo 
 {
+	/**
+	 * Used internally, to provide a vie for {@link ServerDatasetInfo#asDatasetInfo()}.
+	 */
 	private class DatasetInfoDelegate implements DatasetInfo
 	{		
 		public String getId ()
@@ -81,16 +85,12 @@ public class ServerDatasetInfo implements DatasetInfo
 
 		public List<SpecieInfo> getSpecies ()
 		{
+			// We need a similar shorter view
 			return ServerDatasetInfo.this.speciesMap
 				.values ()
 				.stream ()
 				.map ( ServerSpecieInfo::asSpecieInfo )
 				.collect ( Collectors.toUnmodifiableList () );
-		}
-
-		public String toString ()
-		{
-			return ServerDatasetInfo.this.toString ();
 		}
 
 	} // DatasetInfoDelegate
@@ -117,10 +117,15 @@ public class ServerDatasetInfo implements DatasetInfo
 	@JsonProperty ( "backgroundImage" )
 	private String backgroundImageFilePath;
 	
+	/**
+	 * Serves {@link #asDatasetInfo()}
+	 */
 	@JsonIgnore
 	private DatasetInfo delegate = new DatasetInfoDelegate ();	
 	
-
+	/**
+	 * Some initialisation about paths and the like. This is invoked by {@link KnetminerConfiguration}.
+	 */
 	void postConstruct ( KnetminerConfiguration root )
 	{
 		// Relative paths refer to this
@@ -205,7 +210,7 @@ public class ServerDatasetInfo implements DatasetInfo
 	 * This is an initialiser for Jackson, which creates the {@link #speciesMap internal species map}.
 	 */
 	@JsonProperty
-	protected void setSpecies ( List<ServerSpecieInfo> species )
+	private void setSpecies ( List<ServerSpecieInfo> species )
 	{
 		speciesMap = species.stream ()
 		.collect ( Collectors.toMap ( 
@@ -227,52 +232,91 @@ public class ServerDatasetInfo implements DatasetInfo
 		return Collections.unmodifiableList ( new ArrayList<> ( speciesMap.values () ) );
 	}
 	
+	/**
+	 * All the {@link SpecieInfo#getTaxId() NCBI TAX IDs} available from {@link #getSpecies()}.
+	 */
 	public Set<String> getTaxIds ()
 	{
 		return speciesMap.keySet ();
 	}
 	
+	/**
+	 * A read only view of {@link SpecieInfo#getTaxId() NCBI TAX ID} => {@link SpecieInfo} about the 
+	 * species configured for this dataset.
+	 */
 	public Map<String, ServerSpecieInfo> getSpeciesMap ()
 	{
 		return speciesMap;
 	}
 	
+	/**
+	 * The {@link SpecieInfo specie descriptor} corresponding to {@link SpecieInfo#getTaxId() NCBI TAX ID}.  
+	 */
 	public ServerSpecieInfo getSpecie ( String taxId )
 	{
 		return speciesMap.get ( taxId );
 	}
 	
+	/**
+	 * Helper to check a given TAX ID is supported by the dataset. This is useful in many Knetminer filtering
+	 * operations.
+	 */
 	public boolean containsTaxId ( String taxId )
 	{
 		return speciesMap.containsKey ( taxId );
 	}
 	
+	/**
+	 * An XML file to describe example queries for this dataset. See existing examples.
+	 */
 	public String getSampleQueriesFilePath ()
 	{
 		return sampleQueriesFilePath;
 	}
 	
+	/**
+	 * Reads {@link #getSampleQueriesFilePath()} and returns it as a string.
+	 * 
+	 * Used in {@link DatasetInfoService#sampleQueriesXml()}. Note this isn't a YAML field, only the path is.
+	 */
 	public String getSampleQueriesXML ()
 	{
 		return IOUtils.readFile ( this.sampleQueriesFilePath );
 	}
 	
-
+	/**
+	 * A release notes file. TODO: We still have to review what exists, the client version of this
+	 * file and how to do the injection of stats.
+	 */
 	public String getReleaseNotesFilePath ()
 	{
 		return releaseNotesFilePath;
 	}
 
+	/**
+	 * Reads {@link #getReleaseNotesFilePath()} and returns its contents as a string.
+	 * 
+	 * Used in {@link DatasetInfoService#releaseNotesHTML()}. Note this isn't a YAML field, only the path is.
+	 */
 	public String getReleaseNotesHTML ()
 	{
 		return IOUtils.readFile ( this.releaseNotesFilePath );
 	}
 	
+	/**
+	 * The path to the UI background. TODO: Still in use? 
+	 * 
+	 */
 	public String getBackgroundImageFilePath ()
 	{
 		return backgroundImageFilePath;
 	}
 	
+	/**
+	 * Read {@link #getBackgroundImageFilePath()} and returns its contents as binary bytes.
+	 * 
+	 * Used in {@link DatasetInfoService#backgroundImage()}. Note this isn't a YAML field, only the path is.
+	 */
 	public byte[] getBackgroundImage ()
 	{
 		try {
@@ -285,6 +329,11 @@ public class ServerDatasetInfo implements DatasetInfo
 		}		
 	}
 
+	/**
+	 * Uses {@link #getBackgroundImageFilePath()} to guess the image's MIME type from its file extension.
+	 * 
+	 * Used in {@link DatasetInfoService#backgroundImage()}. Note this isn't a YAML field, only the path is.
+	 */
 	public String getBackgroundImageMIME ()
 	{
 		try {
@@ -297,19 +346,20 @@ public class ServerDatasetInfo implements DatasetInfo
 		}		
 	}
 	
-	
-	@Override
-	public String toString ()
-	{
-		return String.format (
-			"%s {id: %s, title: %s, version: %s, creationDate: %s}", 
-			this.getClass ().getSimpleName (), id, title, version, creationDate
-		);
-	}
-	
+	/**
+	 * Offers a simplified view, stripped of server details, to be used by eg, API clients.  
+	 * @see DatasetInfo.
+	 */
 	public DatasetInfo asDatasetInfo ()
 	{
 		return delegate;
 	}
 	
+	public String toString ()
+	{
+		return String.format (
+			"%s {id: %s, title: %s, version: %s, creationDate: %s}", 
+			this.getClass ().getSimpleName (), getId (), getTitle (), getVersion (), getCreationDate ()
+		);
+	}
 }

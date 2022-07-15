@@ -162,7 +162,7 @@ public class KGUtils
 					if ( geneEnd == 0 ) continue;
 
 					if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
-					if ( !containsTaxId ( taxIds, geneHelper.getTaxID () ) ) continue;
+					if ( !taxIds.contains ( geneHelper.getTaxID () ) ) continue;
 
 					resultGenes.add ( gene );
 				}
@@ -221,10 +221,11 @@ public class KGUtils
 	 * method returns a collection that doesn't access nulls. So, this method here is a facility
 	 * to work with that.
 	 */
+  /* TODO: remove, no longer needed
   public static boolean containsTaxId ( Set<String> reftaxIds, String taxId )
   {
   	if ( taxId == null ) return false;
   	return reftaxIds.contains ( taxId );
-  }
+  } */
 
 }
