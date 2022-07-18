@@ -356,14 +356,14 @@ function generateCyJSNetwork(url, requestParams) {
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
 										//genes export button
-                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV</button>");
+                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV (Tabular structure)</button>");
 										var visible = true; 
 										//visible graph button 
-										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cy JSON</button>");
+										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cytoscape JSON (On screen)</button>");
 
 										// allgraphdata button
 										var notVisible = false
-										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Full JSON</button>");
+										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Cytoscape JSON (All data)</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            var knetwork_blob= data.graph;
@@ -446,7 +446,7 @@ function downloadNetwork(isExportTrue){
 
     // if export is true, visible graph will be downloaded
 	if(isExportTrue){
-		var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON)); 
+		var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON, null,"\t")); 
 		// ispopup stopped is set when the user clicks don't show again button
 		var isPopupstopped = JSON.parse(localStorage.getItem('popup')); 
 
@@ -473,7 +473,7 @@ function downloadNetwork(isExportTrue){
 			})
 		}
 	}else{
-		 downloadFunction('allgraphData.json',JSON.stringify(graph.allGraphData)); 
+		 downloadFunction('allgraphData.json',JSON.stringify(graph.allGraphData,null,"\t")); 
 	}
    
    

@@ -68,8 +68,8 @@ a img {
 #release_icon {
     float: right;
     font-size: 22px;
-    margin-left: 1.3rem;
-    margin-right: 0.5rem;
+    margin-right: 1.3rem;
+    margin-left: 0.5rem;
 }
 
 
@@ -187,6 +187,7 @@ div#leftnav {
     padding-left: 10px;
     outline: none;
     z-index: 10;
+    margin-left: 1rem;
 }
 
 .navbar-items{
@@ -229,7 +230,8 @@ div#leftnav {
     justify-content: space-around;
 }
 
-  /* navbar responsive*/
+  /* navbar responsive styles*/
+
 @media (max-width: 1024px) {
     .logo-items{width:50%};
     .navbar-items{width:50%}
@@ -237,6 +239,12 @@ div#leftnav {
     #species_header{width:58%}
 }
 
+@media(min-width: 2560px){
+    .product_links{width: 18%;}
+    .navbar-items{padding:0.5rem 10rem}
+    .logo-items{padding:0.5rem 10rem};
+    #species_header{width: 24%;}
+}
 
 
 
@@ -255,6 +263,7 @@ div#content {
     height: auto;
     padding-bottom: /*140*/40px;
     position: relative;
+    overflow:hidden;
 }
 
 .embeddable div#content {
@@ -787,11 +796,25 @@ a.contact-button :hover {
 }
 /* Tab Window */
 #tabviewer_buttons {margin:auto; width:70%;padding-bottom:45px;padding-top:15px;}
-.button_off {position:relative;float:left;padding-top:7px;height:22px;width:121px;text-align:center;font-size:14px;background-color:#51CE7B/*#2A2A2A*/;margin-left: 10px; border-radius:18px;
-             -moz-border-radius:18px; 
-             -webkit-border-radius:18px; 
-             -o-border-radius:18px;}
-.button_off a {color:#FFF;/*color:darkorange;*/ text-decoration:none;}
+.button_off {
+    position:relative;
+    float:left; display:flex;
+    align-items: center;
+    justify-content: center
+    ;padding: 0.3rem 0.9rem;
+    text-align:center;
+    font-size:14px;
+    background-color:#51CE7B/*#2A2A2A*/;
+    margin-left: 10px; 
+    border-radius:18px;
+    -moz-border-radius:18px; 
+-webkit-border-radius:18px; 
+-o-border-radius:18px;
+color: white;
+}
+
+.button_off a{color:#FFF;text-decoration:none;}
+
 .button_on {
     position: relative;
     float: left;
@@ -805,7 +828,6 @@ a.contact-button :hover {
     margin-left: 10px;
     border-radius: 8px;
 }
-
 .button_on a {color:#121212;text-decoration:none;}
 .button_on:hover {background-color:#38c768;/*dimgray*/}
 #pGViewer {float:left;}
@@ -824,12 +846,7 @@ a.contact-button :hover {
         -webkit-border-radius:18px; 
         -o-border-radius:18px;}
 
-/* responsiveness value for desktop screen */
-@media (min-width: 2560px) {
-    #search{
-        width: 44%;
-    }
-}
+
 
 /* .knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ /* font-size:15px; cursor:pointer;} */
 /* .knet_button:hover {color:white; background-color:darkgray;} */
@@ -1147,8 +1164,8 @@ padding-top:10px;}
     content:'▾';
     color: black;
     font-size: 1rem;
-    top: 18px;
-    right: 8px;
+    top: 18.5px;
+    right: 4.8pc;
     position: absolute;
     z-index: 0;
   }
@@ -1195,8 +1212,8 @@ padding-top:10px;}
     background: black;
     font-size: 10px;
     z-index: 100;
-    width: 100px;
-    height: 120px;
+    width: 160px;
+    height: 180px;
     border-radius: 5px;
 }
 
@@ -1263,7 +1280,22 @@ padding-top:10px;}
 
 
 
+/* responsiveness value for desktop screen */
+@media (min-width: 2560px) {
+    #search{
+        width: 44%;
+    }
+    #pGViewer_title{
+        width: 44%; 
+    }
+    #tabviewer_buttons{
+        width:44%;
+    }
+    #tabviewer_content{
+        width:44%; 
+    }
 
+}
 
 
 

@@ -8,6 +8,7 @@
 			</a>
 
 			<div id="species_header">
+				<select onchange="changeSpecies(this)" class="navbar-select"></select>
 				<a id="release_icon" target="_blank" href="" title="Release Notes">
 					<lord-icon
 					src="https://cdn.lordicon.com/nocovwne.json"
@@ -18,8 +19,6 @@
 					style="width:42px;height:42px">
 				</lord-icon>
 				</a>
-
-				<select onchange="changeSpecies(this)" class="navbar-select"></select>
 			</div>
 		</ul>
     	
