@@ -44,6 +44,8 @@ import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
+import rres.knetminer.datasource.api.NetworkRequest;
+import rres.knetminer.datasource.api.NetworkResponse;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
@@ -200,8 +202,8 @@ public class KnetminerServer
 	 * @param mode
 	 * @param qtl
 	 * @param keyword
-	 * @param list TODO: what is this?!
-	 * @param listMode
+	 * @param list The user-provided gene list
+	 * @param listMode TODO: this is not used anywhere
 	 * @param rawRequest
 	 * @return
 	 */
@@ -211,7 +213,9 @@ public class KnetminerServer
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
-			@RequestParam(required = false, defaultValue = "") String listMode, HttpServletRequest rawRequest)
+			@RequestParam(required = false, defaultValue = "") String listMode,
+			@RequestParam(required = false, defaultValue = "") String taxId,
+			HttpServletRequest rawRequest)
 	{
 		// TODO: isn't this done downstream?
 		if (qtl == null) qtl = Collections.emptyList();
@@ -222,6 +226,7 @@ public class KnetminerServer
 		request.setListMode(listMode);
 		request.setList(list);
 		request.setQtl(qtl);
+		request.setTaxId(taxId);
 		
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
@@ -247,6 +252,87 @@ public class KnetminerServer
 	{
 		this.googleTrackPageView ( ds, mode, request, rawRequest );
 		return this.handleRaw ( ds, mode, request, rawRequest );
+	}
+	
+	@CrossOrigin
+	@PostMapping ( "/{ds}/network" ) 
+	public @ResponseBody ResponseEntity<NetworkResponse> network ( @PathVariable String ds,
+		@RequestBody NetworkRequest request, HttpServletRequest rawRequest ) {
+		return this.handle ( ds,"network", request, rawRequest );
+	}
+	
+	/**
+	 * Low-level request handler.
+	 * 
+	 * We use reflection to take the 'mode' (the Y part of the /X/Y request path)
+	 * and look up an equivalent method on the requested data source, then we call
+	 * it with the request parameters passed in.
+	 * 
+	 * @param ds
+	 * @param mode
+	 * @param request
+	 * @param rawRequest
+	 * @return
+	 */
+	private ResponseEntity<NetworkResponse> handle (
+		String ds,String mode, NetworkRequest request, HttpServletRequest rawRequest ) 
+	{
+		
+		if ( mode == null || mode.isEmpty () || mode.isBlank () )
+			throw new IllegalArgumentException ( "Knetminer API invoked with null/empty method name" );
+
+		KnetminerDataSource dataSource = this.getConfiguredDatasource ( ds, rawRequest );
+
+		if ( log.isDebugEnabled () )
+		{
+			String paramsStr = "Keyword:" + request.getKeyword () + " , List:"
+				+ Arrays.toString ( request.getList ().toArray () ) + " , ListMode:" + request.getListMode () + " , QTL:"
+				+ Arrays.toString ( request.getQtl ().toArray () );
+			log.debug ( "Calling " + mode + " with " + paramsStr );
+		}
+		this.googleTrackPageView ( ds, mode, request, rawRequest );
+
+		try
+		{
+			Method method = dataSource.getClass ().getMethod ( mode, String.class,  request.getClass () );
+			try {
+				NetworkResponse response = ( NetworkResponse ) method.invoke ( dataSource, ds, request );
+				return new ResponseEntity<> ( response, HttpStatus.OK );
+			}
+			catch ( InvocationTargetException ex )
+			{
+				// This was caused by a underlying more significant exception, best is to try to catch and re-throw it.
+				throw ExceptionUtils.getSignificantException ( ex );
+			}
+		}
+		catch ( NoSuchMethodException | IllegalAccessException | SecurityException ex )
+		{
+			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
+				"Bad API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+		}
+		catch ( IllegalArgumentException ex )
+		{
+			throw new ResponseStatusException2 ( HttpStatus.BAD_REQUEST,
+				"Bad parameters passed to the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+		}
+		catch ( RuntimeException ex )
+		{
+			// Let's re-throw the same exception, with a wrapping message
+			throw ExceptionUtils.buildEx ( ex.getClass (), ex,
+				"Application error while running the API call '%s': %s", mode,
+				getSignificantMessage ( ex )
+			);
+		}
+		catch ( Exception ex )
+		{
+			throw new RuntimeException (
+				"Application error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+		}
+		catch ( Throwable ex )
+		{
+			throw new Error (
+				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
+		} 
 	}
 
 

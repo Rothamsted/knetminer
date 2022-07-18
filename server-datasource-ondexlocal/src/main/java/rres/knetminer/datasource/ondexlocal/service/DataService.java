@@ -11,8 +11,10 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -149,7 +151,7 @@ public class DataService
 		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-		this.genomeGenesCount = (int) seed.stream ()
+		this.genomeGenesCount = (int) seed.parallelStream ()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
 		.map ( GeneHelper::getTaxID )
 		.filter ( this::containsTaxId )
@@ -212,7 +214,7 @@ public class DataService
    * @param end end position
    * @return 0 if no genes found, otherwise number of genes at specified loci
    */
-	public int getLociGeneCount ( String chr, int start, int end )
+	public int getLociGeneCount ( String chr, int start, int end, String taxId )
 	{
 		// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
 		if ( chr == null ) return 0; 
@@ -220,10 +222,17 @@ public class DataService
 		ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> genes = this.graph.getConceptsOfConceptClass ( ccGene );
 		
+		var taxIdNrm = StringUtils.trimToNull ( taxId );
+				
+		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
+		  ? geneHelper -> this.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
+		  : geneHelper -> taxIdNrm.equals ( geneHelper.getTaxID () ); // client-specified taxId
+		
 		return (int) genes.stream()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
+		// Let's consider this first, they're likely to be more
+		.filter ( taxIdGeneFilter )
 		.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-		.filter ( geneHelper -> this.containsTaxId ( geneHelper.getTaxID () ) )
 		.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 		.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 		.count ();

@@ -39,6 +39,13 @@ public class GeneHelper
 	private Integer endBP;
 	private String taxID;
 	
+	/**
+	 * Calls {@link #GeneHelper(ONDEXGraph, ONDEXConcept)} via {@link ONDEXGraph#getConcept(int)}. 
+	 */
+	public GeneHelper ( ONDEXGraph graph, Integer geneId )
+	{
+		this ( graph, graph.getConcept ( geneId ) );
+	}
 	
 	public GeneHelper ( ONDEXGraph graph, ONDEXConcept gene )
 	{

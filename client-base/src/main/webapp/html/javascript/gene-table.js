@@ -56,7 +56,7 @@ function createGenesTable(text, keyword, rows)
 		if (multiorganisms == true)
 			table += '<th width="60">' + hTaxId + '</th>';
 		
-		if (reference_genome == true)
+		if (reference_genome == false)
 		{
 			table += '<th width="60">' + hChromosome + '</th>';
 			table += '<th width="70">' + hChrStart + '</th>';
@@ -107,8 +107,9 @@ function createGenesTable(text, keyword, rows)
 
 			var chrTd = '';
 			var chrStartTd = '';
-
-			if (reference_genome == true)
+			
+			// exprimenting 
+			if (reference_genome == false)
 			{
 				var chr = values[3];
 				var chrStart = values[4];
@@ -226,7 +227,7 @@ function createGenesTable(text, keyword, rows)
 		var values = e.data.x[geneNum].split("\t");
 
 		// Generate Network in KnetMaps.
-		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword });
+		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword,  exportPlainJSON:false});
 	});
 
 	/*
@@ -307,7 +308,7 @@ function createGenesTable(text, keyword, rows)
 		updateSelectedGenesCount(); // update selected genes count
 	});
 
-} // createGenesTable()
+}
 
 
 /*
@@ -333,24 +334,36 @@ function generateCyJSNetwork(url, requestParams) {
         },
         datatype: "json",
         data: JSON.stringify(requestParams)//,
-        //beforeSend: deactivateSpinner("#tabviewer")
     }).fail(function (xhr,status,errorlog) {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
-		// deactivateSpinner("#tabviewer");
                 console.log(server_error.detail);
                 alert(errorMsg);
         }).success(function (data) {
-			// Remove loading spinner from 'tabviewer' div
-		//	deactivateSpinner("#tabviewer");
+
+
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
+					$("NetworkCanvas_button").removeClass('.network-default'); 
+
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
-                                        $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:60px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'>Save</button>");
+
+
+                                        $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
+
+
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
-                                        $('#knetExportButton').html("<button id='downloadKnet' class='btn knet_button' style='float:right;width:60px;margin-right:10px;' onclick='exportKnetworkTable("+networkId+");' title='Download visible genes from knetwork as a table'>Export</button>");
+										//genes export button
+                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV (Tabular structure)</button>");
+										var visible = true; 
+										//visible graph button 
+										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cytoscape JSON (On screen)</button>");
+
+										// allgraphdata button
+										var notVisible = false
+										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Cytoscape JSON (All data)</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            var knetwork_blob= data.graph;
@@ -363,6 +376,8 @@ function generateCyJSNetwork(url, requestParams) {
                                           var metadata_json= data.graph.allGraphData;
                                           knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                                         }
+										
+
 					// Remove the preloader message in Gene View, for the Network Viewer
 					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
@@ -374,6 +389,7 @@ function generateCyJSNetwork(url, requestParams) {
 				   }
         }).always(function() { deactivateSpinner("#tabviewer"); });
 }
+
 
 
 
@@ -405,7 +421,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
           }
     }
     else {
-        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist});
+        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist,exportPlainJSON:false});
     }
 }
 
@@ -414,7 +430,55 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 function updateSelectedGenesCount() {
     var count = $('input:checkbox[name="candidates"]:checked').length;
     $('#selectedGenesCount span').text(count + ' gene(s) selected'); // update
+	if(count < 1){
+		$("#NetworkCanvas_button").addClass('network-default'); 
+	}
 }
+
+
+// function downloads cytoscape compactible json files
+function downloadNetwork(isExportTrue){
+
+    var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
+    var exportJson = cy.json(); // full graphJSON
+    var plainJson = filterJsonToExport(cy, exportJson);
+	var graph = JSON.parse(plainJson);
+
+    // if export is true, visible graph will be downloaded
+	if(isExportTrue){
+		var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON, null,"\t")); 
+		// ispopup stopped is set when the user clicks don't show again button
+		var isPopupstopped = JSON.parse(localStorage.getItem('popup')); 
+
+		// if file is downloaded and popup is still needed by the user
+		if(isDownloaded && !isPopupstopped){
+			// popup element 
+			$('body').append("<div class='guide-popup'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span> <div  style='margin-top: 1rem;'> <button class='popup-btns' id='close-popup' style='background: black;color: white;margin-right: 0.5rem;' >Close</button> <button class='popup-btns' style='background:white;color:black;' id='hide-popup'>Don't show again</button> </div></div>");
+			
+			// remove element from DOM after 15 secs 
+			setTimeout(function() {$('.guide-popup')
+			.css('right','-32pc') 
+			.remove(); 
+			}, 15000);
+			
+			// close button to hide 
+			$('#close-popup').click(function(){
+				$('.guide-popup').css('right','-32pc')
+			})
+
+			// not showing popup anymore
+			$('#hide-popup').click(function(){
+				$('.guide-popup').css('right','-32pc'); 
+				localStorage.setItem('popup', true); 
+			})
+		}
+	}else{
+		 downloadFunction('allgraphData.json',JSON.stringify(graph.allGraphData,null,"\t")); 
+	}
+   
+   
+}
+
 
 
 

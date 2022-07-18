@@ -111,13 +111,20 @@
 		      	<port>${knetminer.api.httpPort}</port>
 		      </httpConnector>		    
 			    <webApp>
+		      	<!-- 
+		      		Some of the resources come from ${project.build.testOutputDirectory} (ie, target/test-classes), since
+		      		I need the , I take the version that is created by <testResources>, since I need the version that
+		      		is interpolated by Maven (which is created by <testResorces> below).
+		      		
+		      		TODO: is interpolation possible with the Jetty plug-in?!
+		      	-->
 			      <contextPath>/${knetminer.api.webContext}</contextPath>
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 	          <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
-			      	<!-- These test dir contains things like logger config for test server -->
-			      	<resourceBase>${project.basedir}/src/test/webapp</resourceBase>
+			      	<!-- Contains things like logger config for the test server -->
 			      	<resourceBase>${project.basedir}/src/main/webapp</resourceBase>
+			      	<resourceBase>${project.build.testOutputDirectory}/webapp</resourceBase>
 			      </resourceBases>
 			    </webApp>
 			    <stopPort>9091</stopPort>
@@ -167,8 +174,8 @@
 			<testResource>
 			  <directory>src/test/resources</directory>
 			  <filtering>false</filtering>
-			</testResource>	
-	   	</testResources>		
+			</testResource>
+		</testResources>		
 	
 	</build>
 	

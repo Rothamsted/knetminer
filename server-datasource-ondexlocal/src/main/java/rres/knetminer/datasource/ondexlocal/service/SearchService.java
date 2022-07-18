@@ -1,15 +1,16 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.util.stream.Collectors.toMap;
+import static net.sourceforge.ondex.core.util.GraphLabelsUtils.getBestConceptLabel;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
-import static net.sourceforge.ondex.core.util.GraphLabelsUtils.getBestConceptLabel;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +22,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,6 +51,7 @@ import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.logging.ONDEXLogger;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
@@ -299,14 +303,22 @@ public class SearchService
 	
 	
 	/**
-	 * KnetMiner Gene Rank algorithm
+	 * KnetMiner Gene Rank algorithm.
+	 * 
 	 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
 	 * Described in detail in Hassani-Pak et al. (2020)
 	 * 
+	 * @param hit2score a map of found concept -> lucene score.
+	 * 
+	 * @param taxId: used to filter concpet-associated genes that belong to the given ID. This is 
+	 * only considered for that and not for the knetminer score (see #626 for details). 
+	 * 
+	 * 
 	 * Was getScoredGenesMap.
 	 */
-	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score ) 
+	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score, String taxId ) 
 	{
+		var taxIdNrm = StringUtils.trimToNull ( taxId );
 		var graph = dataService.getGraph ();
 	
 		log.info ( "Getting genes from {} Lucene hits ", hit2score.keySet ().size () );
@@ -315,6 +327,11 @@ public class SearchService
 		var genes2PathLengths = semanticMotifDataService.getGenes2PathLengths ();
 		var genesCount = dataService.getGenomeGenesCount ();
 
+		// Possibly used below
+		Predicate<Integer> taxIdGeneFilter = taxIdNrm == null
+			? null
+			: geneId -> taxIdNrm.equals ( new GeneHelper ( graph, graph.getConcept ( geneId ) ).getTaxID () );
+		
 		// 1st step: create map of genes to concepts that contain query terms
 		// In other words: Filter the global gene2concept map for concepts that contain the keyword
 		//
@@ -323,11 +340,16 @@ public class SearchService
 			.parallelStream ()
 			.map ( ONDEXConcept::getId ) // conceptId
 			.filter ( concepts2Genes::containsKey ) // Has related genes (via sem motifs)?
-			.flatMap ( conceptId -> 
-				concepts2Genes.get ( conceptId )
-				// flat into a stream of Pair(geneId, conceptId)
-				.parallelStream ().map ( geneId -> Pair.of ( geneId, conceptId ) ) 
-			)
+			// flat into a stream of Pair(geneId, conceptId), cause we'll need both
+			.flatMap ( conceptId ->
+			{
+				Stream<Integer> genesStrm = concepts2Genes
+					.get ( conceptId ) // the genes associated to this concept
+					.parallelStream ();
+				if ( taxIdGeneFilter != null ) genesStrm = genesStrm.filter ( taxIdGeneFilter );
+						
+				return genesStrm.map ( geneId -> Pair.of ( geneId, conceptId ) ); 
+			})
 			.collect ( Collectors.groupingByConcurrent ( 
 				Pair::getLeft, // group the pairs by geneId
 				Collectors.mapping ( 
@@ -339,9 +361,10 @@ public class SearchService
 		// 2nd step: calculate a score for each candidate gene
 		//
 		ConcurrentMap<ONDEXConcept, Double> scoredGeneCandidates =  new ConcurrentHashMap<> ();
-
-		gene2HitConcepts.keySet ().
-		parallelStream ()
+		
+		// take the semantic motif-related concepts  
+		gene2HitConcepts.keySet ()
+		.parallelStream ()
 		.forEach ( geneId ->
 		{
 			// weighted sum of all evidence concepts
@@ -386,7 +409,8 @@ public class SearchService
 			
 		}); // for geneId
 		
-		// Sort by best scores. 
+		
+		// Finally, sort by best scores. 
 		//
 		Map<ONDEXConcept, Double> sortedGeneCandidates = scoredGeneCandidates.entrySet ()
 		.stream ()
@@ -551,12 +575,13 @@ public class SearchService
     
   } // searchQTLsForTrait()
 
+  
   /**
-   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords} 
+   * A convenient wrapper of {@link KGUtils#filterGenesByAccessionKeywords(DataService, SearchService, List, String)} 
    */
-	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions )
+	public Set<ONDEXConcept> filterGenesByAccessionKeywords ( List<String> accessions, String taxId )
 	{
-		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions );
+		return KGUtils.filterGenesByAccessionKeywords ( this.dataService, this, accessions, taxId );
 	}
 
 	
@@ -567,15 +592,19 @@ public class SearchService
 	{
 		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifDataService, luceneConcepts );
 	}
-	
+		
 	/**
-	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}
-	 * @param qtlsStr
-	 * @return
+	 * A convenient wrapper of {@link KGUtils#fetchQTLs(ONDEXGraph, List, List)}, which uses  
+	 * the user-provided taxId, if this isn't null or empty, else it uses the 
+	 * {@link DataService#getTaxIds() configured tax IDs}.
+	 *  
 	 */
-	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr )
+	public Set<ONDEXConcept> fetchQTLs ( List<String> qtlsStr, String taxId )
 	{
-		return KGUtils.fetchQTLs ( dataService.getGraph (), dataService.getTaxIds (), qtlsStr );
+		taxId = StringUtils.trimToNull ( taxId );
+		var taxIds = taxId == null ? dataService.getTaxIds () : List.of ( taxId );
+		
+		return KGUtils.fetchQTLs ( dataService.getGraph (), taxIds, qtlsStr );
 	}
 	
   /**

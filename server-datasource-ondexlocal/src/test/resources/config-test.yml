@@ -1,0 +1,17 @@
+dataDirPath: path/to/data-dir
+oxlPath: another/path/foo.oxl
+
+datasetInfo:
+  title: Aratiny dataset
+  organization: Rothamsted Research
+  referenceGenomeProvided: true
+  species:
+  - taxId: 3702
+    scientificName: Arabidopsis Thaliana
+    commonName: Thale cress
+  - taxId: 4565
+    scientificName: Triticum aestivum
+    commonName: Bread Wheat
+  - taxId: 4577
+    scientificName: Zea mays
+    commonName: Maize

@@ -7,7 +7,7 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
-    <File name="File" fileName="target/ws-test.log">
+    <File name="File" fileName="${project.build.directory}/ws-test.log">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
   </Appenders>
@@ -17,5 +17,7 @@
       <AppenderRef ref="File"/>
     </Root>
     <!-- Logger name = "x.y.z" level = "off" additivity = "false" / -->
+    <Logger name = "org.apache" level = "WARN" additivity = "false" />
+    <Logger name = "httpclient" level = "WARN" additivity = "false" />
   </Loggers>
 </Configuration>

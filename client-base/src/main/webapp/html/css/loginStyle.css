@@ -3,23 +3,15 @@
 * Author: hearnshawj, singha
 */
 
-#login_icon {
-    float: right; 
-    padding-right: 15px; 
-    padding-top: 18px; 
-    font-size: 20px;
-    color: white;
-}
+
 
 .jBox-title { background: #121212; }
  
 #profile_icon {
     float: right; 
-    padding-right: 10px; 
-    padding-top: 18px; 
     font-size: 20px;
     color:#51CE7B;
-    /*color: orange;*/
+    margin-right: 6px;
 }
 
 #KnetSubmit, #KnetSpacelogin {
@@ -32,7 +24,7 @@
     font-weight: bold;
     cursor: pointer;
     color: white;
-    text-shadow: 0px 1px 0px #dimgrey;
+    text-shadow: 0px 1px 0px grey;
     -webkit-transform: perspective(0.5px) translateZ(0);
     transform: perspective(0.5px) translateZ(0);
     box-shadow: 0 0 0.5px rgba(0, 0, 0, 0);
@@ -210,4 +202,9 @@ a {
     text-decoration:none;
     color:#51CE7B;
     /*color:darkorange;*/
+}
+
+
+.login_container{
+  margin-right:24px;
 }
