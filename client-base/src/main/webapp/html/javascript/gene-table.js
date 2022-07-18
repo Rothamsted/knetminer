@@ -366,7 +366,7 @@ function generateCyJSNetwork(url, requestParams) {
 
 										// allgraphdata button
 										var notVisible = false
-										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Cytoscape JSON (All data)</button>");
+										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Clean JSON (Multiline)</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            var knetwork_blob= data.graph;
@@ -392,8 +392,6 @@ function generateCyJSNetwork(url, requestParams) {
 				   }
         }).always(function() { deactivateSpinner("#tabviewer"); });
 }
-
-
 
 
 /*
@@ -428,7 +426,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     }
 }
 
-
 // update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
 function updateSelectedGenesCount() {
     var count = $('input:checkbox[name="candidates"]:checked').length;
@@ -437,7 +434,6 @@ function updateSelectedGenesCount() {
 		$("#NetworkCanvas_button").addClass('network-default'); 
 	}
 }
-
 
 // function downloads cytoscape compactible json files
 function downloadNetwork(isExportTrue){
@@ -476,10 +472,14 @@ function downloadNetwork(isExportTrue){
 			})
 		}
 	}else{
-		 downloadFunction('allgraphData.json',JSON.stringify(graph.allGraphData,null,"\t")); 
-	}
-   
-   
+		// removing all keys exempting the elements key 
+			for(var keys in graph.graphJSON){
+				if(graph.graphJSON.hasOwnProperty(keys) && keys !== 'elements'){
+					delete graph.graphJSON[keys]
+				}
+			}
+			downloadFunction('allgraphData.json',JSON.stringify(graph,null,"\t")); 
+		}
 }
 
 
