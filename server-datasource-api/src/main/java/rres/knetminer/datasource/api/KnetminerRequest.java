@@ -17,8 +17,6 @@ public class KnetminerRequest {
 	private String listMode = "";
 	private String taxId = "";
 	
-	
-
 	public KnetminerRequest() {
 
 	}

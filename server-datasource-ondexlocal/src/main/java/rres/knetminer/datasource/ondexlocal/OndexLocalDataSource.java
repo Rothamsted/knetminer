@@ -37,6 +37,7 @@ import rres.knetminer.datasource.api.KnetSpaceHost;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
+import rres.knetminer.datasource.api.NetworkRequest;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
@@ -334,7 +335,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override
-	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	public NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException 
 	{
 		Set<ONDEXConcept> genes = new HashSet<> ();
 		log.info ( "network(), searching {} gene(s)", request.getList ().size () );
@@ -359,7 +360,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// Export graph
 		var response = new NetworkResponse ();
-		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
+		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () ).getLeft () );
 
 		return response;
 	}

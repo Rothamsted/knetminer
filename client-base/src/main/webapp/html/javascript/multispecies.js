@@ -38,6 +38,7 @@ multiSpeciesFeature = function (){
         getChromosomeList();
         matchCounter();
         var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
+        document.title = currentSpecies.scientificName;
         for(var info in currentSpecies){
             const speciesCapital = capitaliseFirstLetter(info); 
             $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
@@ -119,7 +120,7 @@ multiSpeciesFeature = function (){
                         if (sampleQueries[i].desciption) {
                             desc = " - " + sampleQueries[i].desciption;
                         }
-                        sampleQueryButtons += "</br><a href:'javascript;' class='exampleQuery' id='exampleQuery" + i + "'>" + sampleQueries[i].name + "</button></a>" + desc;
+                        sampleQueryButtons += "<a href:'javascript;' class='exampleQuery' id='exampleQuery" + i + "'>" + sampleQueries[i].name + "</button></a>" + desc + '<br>';
                     }
                     // add example queries to page
                     $('#eg_queries').html(sampleQueryButtons);
