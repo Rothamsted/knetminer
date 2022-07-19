@@ -150,7 +150,7 @@
         <!--	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div> -->
 			<div class="button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
-        	<div class="button_on network-default" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
+        	<div class="button_on network-default" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Knetwork View</a> </div>
         </div>
 		
         <div id="tabviewer_content">

@@ -242,9 +242,7 @@ div#leftnav {
 }
 
 @media(min-width: 2560px){
-    .product_links{width: 18%;}
-    .navbar-items{padding:0.5rem 10rem}
-    .logo-items{padding:0.5rem 10rem};
+    .product_links{width: 15%;}
     #species_header{width: 24%;}
 }
 
@@ -1296,6 +1294,10 @@ padding-top:10px;}
     }
     #tabviewer_content{
         width:44%; 
+    }
+
+    #species_header{
+        width: 30%;
     }
 
 }

@@ -452,7 +452,7 @@ function downloadNetwork(isExportTrue){
 		// if file is downloaded and popup is still needed by the user
 		if(isDownloaded && !isPopupstopped){
 			// popup element 
-			$('body').append("<div class='guide-popup'> <h4 style='margin: 0.5rem 0rem;'>First time downloading our Network Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span> <div  style='margin-top: 1rem;'> <button class='popup-btns' id='close-popup' style='background: black;color: white;margin-right: 0.5rem;' >Close</button> <button class='popup-btns' style='background:white;color:black;' id='hide-popup'>Don't show again</button> </div></div>");
+			$('body').append("<div class='guide-popup'> <h4 style='margin: 0.5rem 0rem;'>First time downloading Knetwork Graphs?</h4><span>Kindly follow our <a style='color: white;' href='https://knetminer.com/tutorial/cytoscape' target='_blank'>guide</a> to setup KnetMiner Cytoscape styles correctly</span> <div  style='margin-top: 1rem;'> <button class='popup-btns' id='close-popup' style='background: black;color: white;margin-right: 0.5rem;' >Close</button> <button class='popup-btns' style='background:white;color:black;' id='hide-popup'>Don't show again</button> </div></div>");
 			
 			// remove element from DOM after 15 secs 
 			setTimeout(function() {$('.guide-popup')
