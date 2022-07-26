@@ -1,3 +1,8 @@
+/**
+ * TODO: There is an identical file in server-base. WTH?! We need to review and factorise.
+ * DO NOT change/diverge any of these files before that!
+ */
+ 
 /* 
  * Utils to obtain cookies, get them, and erase them. Used in utils.js when adding clickevent to the profile button.
  * Author: hearnshawj

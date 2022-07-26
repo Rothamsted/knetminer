@@ -10,7 +10,7 @@
 	<context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
 	
 	<bean name = "configDirPath" class = "java.lang.String">
-		<constructor-arg value = "${knetminer.configDir}/neo4j" />
+  	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
 	</bean> 
    
   <!-- TODO: remove?
@@ -30,7 +30,7 @@
 	
 	<bean name = "semanticMotifsQueries" 
 				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
-		<constructor-arg value = "${knetminer.configDir}/neo4j/cypher-queries.txt" />
+		<constructor-arg value = "#{configDirPath}/neo4j/cypher-queries.txt" />
 	</bean>
 	
 		

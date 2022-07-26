@@ -1,8 +1,9 @@
 package rres.knetminer.datasource.api;
 
 /**
- * All possible inputs to a network API request, with appropriate defaults set for all. This is the 
- * set of all possible inputs for all possible 'mode's.
+ * Manages the specific /network API call.
+ * 
+ * @see KnetminerDataSource#network(String, KnetminerRequest)
  * 
  * @author jojicunnunni
  *

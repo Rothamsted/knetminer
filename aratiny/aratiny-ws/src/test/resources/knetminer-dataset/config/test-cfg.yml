@@ -1,0 +1,9 @@
+"@includes":
+- defaults-cfg.yml
+
+# Beware that some of ${} placeholders are interpolated (ie, resolved) by Maven, others are
+# resolved by the Knetminer configuration component
+# 
+# For the tests, we have to use this OXL, which overrides the defaults loaded above
+# 
+oxl: ${project.build.directory}/dependency/poaceae-sample.oxl

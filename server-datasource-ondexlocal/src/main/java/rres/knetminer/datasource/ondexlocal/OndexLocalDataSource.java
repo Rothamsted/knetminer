@@ -80,8 +80,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	private void init ()
 	{
-		var configXmlPath = ConfigFileHarvester.getConfigFilePath ();
-		if ( configXmlPath == null ) throw new IllegalStateException ( 
+		var configYmlPath = ConfigFileHarvester.getConfigFilePath ();
+		if ( configYmlPath == null ) throw new IllegalStateException ( 
 			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
 			+ ", either as a Java property, a <context-param> in web.xml, or" 
 			+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
@@ -93,11 +93,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// this pre-loads some properties in advance, so that we have what we need (ie, data source name) to be able 
 		// to start answering the API URLs
 		// This is also quick enough to be done synchronously.
-		dataService.loadOptions ( configXmlPath );
-		var dsName = dataService.getDataSourceName ();
+		dataService.loadConfiguration ( configYmlPath );
+		var config = dataService.getConfiguration ();
+		var dsetInfo = config.getServerDatasetInfo ();
+		var dsName = dsetInfo.getId ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
-			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
+			this.getClass ().getSimpleName () + " requires a data set ID in the configuration file" 
 		);
+		// As said elsewhere, nowadays we have only one dataset per server.
 		this.setDataSourceNames ( new String[] { dsName } );
 		log.info ( "Setting data source '{}'", dsName );
 		
@@ -285,7 +288,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Chromosome view
 		//
 		String xmlGViewer = "";
-		if ( ondexServiceProvider.getDataService ().isReferenceGenome () )
+		// TODO: remove, we are now supporting multiple species and we assume there is always at least one
+		// specie
+		
+		// if ( ondexServiceProvider.getDataService ().isReferenceGenome () )
 		{
 			// Generate Annotation file.
 			log.debug ( "1.) API, doing chrome annotation" );
@@ -294,8 +300,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			);
 			log.debug ( "Chrome annotation done" );
 		}
+		/* TODO: remove, as per comment above
 		else
 			log.debug ( "1.) API, no reference genome for Genomaps annotation, skipping " );
+		*/
 
 		// Gene table
 		//
@@ -360,7 +368,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		// Export graph
 		var response = new NetworkResponse ();
-		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () ).getLeft () );
+		response.setGraph ( 
+			ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () )
+			.getLeft ()
+		);
 
 		return response;
 	}
@@ -374,8 +385,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		try 
 		{
 			LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
-			var opts = OndexServiceProvider.getInstance ().getDataService ().getOptions ();
-			byte[] encoded = Files.readAllBytes(Paths.get(opts.getString("DataPath"), "latestNetwork_Stats.tab"));
+			
+			var config = OndexServiceProvider.getInstance ().getDataService ().getConfiguration ();
+			var dataPath = config.getDataDirPath ();
+			
+			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
 			response.stats = new String(encoded, Charset.defaultCharset());
 			return response;
 		} 
@@ -395,28 +409,46 @@ public class OndexLocalDataSource extends KnetminerDataSource
     
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var dataService = ondexServiceProvider.getDataService ();
-		var oxlFile = new File ( dataService.getOxlPath () );
+		var config = dataService.getConfiguration ();
+		var dsetInfo = config.getServerDatasetInfo ();
+		
+		var oxlFile = new File ( config.getOxlFilePath () );
 		
     // Parse the data into a JSON format & set the graphSummary as is.
 		// This data is obtained from the maven-settings.xml
     JSONObject summaryJSON = new JSONObject();
-    summaryJSON.put("dbVersion", dataService.getDatasetVersion () );
-    summaryJSON.put("sourceOrganization", dataService.getDatasetOrganization ());
-    dataService.getTaxIds ().forEach( taxID -> {
-       summaryJSON.put("speciesTaxid", taxID);
-    });
-    summaryJSON.put("speciesName", dataService.getSpecies());
+    summaryJSON.put ( "dbVersion", dsetInfo.getVersion () );
+    summaryJSON.put ( "sourceOrganization", dsetInfo.getOrganization () );
+    
+    // TODO, this was the rubbish it was previously producing, which is grossily wrong and 
+    // I don't know how to replace it, see #653
+
+    // For the moment, I'm taking the first specie (the undelining map is an HashLinkedMap)
+    String taxId = dsetInfo.getTaxIds ().iterator ().next ();
+    summaryJSON.put ( "speciesTaxid", taxId );
+    // Similarly to what said above, it isn't clear what the client expects, 
+    // the scientific (latin) name or the common name?
+    summaryJSON.put ( "speciesName", dsetInfo.getSpecie ( taxId ).getScientificName () );
 
     // TODO: in future, this might come from OXL metadata (the graph descriptor)
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
-    var timestampStr = formatter.format ( oxlFile.lastModified () );
-    summaryJSON.put("dbDateCreated", timestampStr);
+    var creationDateStr = dsetInfo.getCreationDate ();
+    if ( creationDateStr == null )
+    {
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+    	creationDateStr = formatter.format ( oxlFile.lastModified () );
+    }
+    summaryJSON.put ( "dbDateCreated", creationDateStr );
 
-    summaryJSON.put("provider", dataService.getDatasetProvider () );
+    summaryJSON.put ("provider", dsetInfo.getProvider () );
+    
     String jsonString = summaryJSON.toString();
+    
     // Removing the pesky double quotes
-    jsonString = jsonString.substring(1, jsonString.length() - 1);
-    log.info("response.dataSource= " + jsonString);
+    // TODO: WHAT?! We need to clarify the above original comment, this actually eliminates
+    // the outer-most curly brackets '{}', presumably, because Spring adds its own ones.
+    //
+    jsonString = jsonString.substring ( 1, jsonString.length() - 1 );
+    log.info ( "response.dataSource= " + jsonString );
     response.dataSource = jsonString;
     
     return response;
@@ -428,7 +460,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
   public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		KnetSpaceHost response = new KnetSpaceHost();
-		response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
+		var knetSpaceURL = OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getKnetSpaceURL ();
+		
+		response.setKsHostUrl ( knetSpaceURL );
 		    
 		return response;
   }

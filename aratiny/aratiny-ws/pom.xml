@@ -113,12 +113,12 @@
 			    <webApp>
 		      	<!-- 
 		      		Some of the resources come from ${project.build.testOutputDirectory} (ie, target/test-classes), since
-		      		I need the , I take the version that is created by <testResources>, since I need the version that
+		      		I take the version that is created by <testResources>, since I need the version that
 		      		is interpolated by Maven (which is created by <testResorces> below).
 		      		
 		      		TODO: is interpolation possible with the Jetty plug-in?!
 		      	-->
-			      <contextPath>/${knetminer.api.webContext}</contextPath>
+			      <contextPath>/ws</contextPath>
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 	          <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
 			      <resourceBases>
@@ -185,7 +185,9 @@
 			<id>neo4j</id>
 			<properties>
 				<maven.profileId>neo4j</maven.profileId>
+				<!-- TODO:newConfig, needs to be managed with an alternative profile
 				<knetminer.api.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.api.graphTraverserClass>
+				-->
 			</properties>
 			<build>
 				<plugins>

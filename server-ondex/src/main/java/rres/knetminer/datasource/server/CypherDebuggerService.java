@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
@@ -56,18 +57,13 @@ public class CypherDebuggerService
 	public static class ForbiddenException extends IllegalStateException
 	{
 		public static final String REASON = 
-			"Unauthorized. Knetminer must be built with " + ENABLED_PROPERTY + " for this to work";
+			"Unauthorized. Use the cypherDebuggerEnabled configuration flag to enable this service";
 		
 		public ForbiddenException () {
 			super ( REASON );
 		}
 	}
 	
-	/**
-	 * @see #checkEnabled
-	 */
-	public static final String ENABLED_PROPERTY = "knetminer.backend.cypherDebugger.enabled";
-
 	/**
 	 * Used to launch the new traversal ops in parallel.
 	 */
@@ -234,16 +230,15 @@ public class CypherDebuggerService
 	}
 	
 	/**
-	 * Every HTTP request is wrapped by this check that {@link #ENABLED_PROPERTY} is enabled in
-	 * {@code data_source.xml}.
+	 * Every HTTP request is wrapped by this check on {@link KnetminerConfiguration#isCypherDebuggerEnabled()}.
 	 *   
 	 */
 	private void checkEnabled ()
 	{
 		boolean isServiceEnabled = OndexServiceProvider.getInstance ()
 			.getDataService ()
-			.getOptions ()
-			.getBoolean ( ENABLED_PROPERTY, false );
+			.getConfiguration ()
+			.isCypherDebuggerEnabled ();
 		
 		if ( !isServiceEnabled ) throw new ForbiddenException ();
 	}

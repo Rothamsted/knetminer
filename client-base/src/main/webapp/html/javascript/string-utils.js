@@ -1,5 +1,3 @@
-// current taxonomy Id global variable;
-
 
 /*
  * Function to escape special characters from a string for use in jquery selector

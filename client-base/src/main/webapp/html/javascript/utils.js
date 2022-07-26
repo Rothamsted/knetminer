@@ -10,9 +10,9 @@ var knetmaps = KNETMAPS.KnetMaps();
 * 	- advanced search
 * 	- tooltips
 */
-$(document).ready(
-
+$(document).ready (
     function () {
+        setupKnetSpaceUrl ();
         multiSpeciesFeature.init()
         loadOnReady();
         showReferenceGenome();
@@ -20,7 +20,6 @@ $(document).ready(
         inputHandlers();
         QtlRegionHandlers();
         searchHandlers();
-        bodyHandlers();
-        
+        bodyHandlers();        
     }
 );

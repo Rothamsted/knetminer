@@ -1,6 +1,7 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.lang.String.format;
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -26,6 +27,7 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
+import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
@@ -47,6 +49,11 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 @Component
 public class DataService
 {  
+	/**
+	 * TODO: comment me
+	 */
+	private KnetminerConfiguration configuration;
+	
   private OptionsMap options = null;
   private List<String> taxIds = null;
 
@@ -64,71 +71,16 @@ public class DataService
 	private DataService () {}
 
 	/**
+	 * Entry point to load the {@link #getConfiguration() Knetminer configuration} from a root
+	 * YAML file.
 	 * 
-	 * Loads config properties from a Knetminer config file.
-	 * 
-	 * This is usually {@code <dataset>/config/data-source.xml} and the web API gets its path from
+	 * This is usually {@code TODO} and the web API gets its path from
 	 * {@link ConfigFileHarvester}. However, options can be loaded separately, see {@link OndexServiceProvider#initData()}.
-	 * 
-	 * 
-	 * @param configXmlPath it's a path to a local file system URL, if it starts with "file://".
-	 * If it hasn't such a prefix, the string is passed to 
-	 * {@code Thread.currentThread().getContextClassLoader().getResource()}, ie, the config file is 
-	 * looked up in the classpath.
-	 * 
 	 */
-	public void loadOptions ( String configXmlPath )
+	public void loadConfiguration ( String configFilePath )
 	{
-		try 
-		{
-			URL configUrl = configXmlPath.startsWith ( "file://" )
-				? new URL ( configXmlPath )
-				: Thread.currentThread().getContextClassLoader().getResource ( configXmlPath );
-			
-			log.info ( "Loading Ondex/Knetminer configuration from '{}'", configUrl );
-			Properties props = new Properties ();
-			props.loadFromXML ( configUrl.openStream() );
-			this.options = OptionsMap.from ( props );
-			this.updateFromOptions ();
-			log.info ( "Ondex/Knetminer configuration loaded" );
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException ( "Error while loading config file <" + configXmlPath + ">", e);
-		}		
+		this.configuration = KnetminerConfiguration.load ( configFilePath );
 	}
-		
-	/**
-	 * Update some of the class fields from {@link #getOptions()}.
-	 */
-	private void updateFromOptions ()
-	{
-		log.info ( 
-			"Ondex Configuration loaded, values are:\n{}", 
-			options.entrySet ()
-			.stream ()
-			.map ( e -> 
-				"  " + e.getKey () + ": " 
-				+ Optional.ofNullable ( e.getValue () )
-					.map ( v -> "\"" + v.toString () + "\"" )
-					.orElse ( "<null>" ) 
-			)
-			.collect ( Collectors.joining ( "\n" ) )
-		);
-		
-		this.taxIds = this.options.getOpt ( "SpeciesTaxId", List.of (), s -> List.of ( s.split ( "," ) ) );
-	}
-	
-	/**
-	 * An helper that is used internally to get an expected option and throw an {@link IllegalArgumentException}
-	 * if that option doesn't exist. The selector should use methods from {@link #options} to fetch the option
-	 * value.
-	 */
-	private <T> T getRequiredOption ( String key, Function<String, T> optionSelector )
-	{
-		return Optional.ofNullable ( optionSelector.apply ( key ) )
-			.orElseThrow ( () -> new IllegalArgumentException ( format ( "Missing '%s' config option", key )) );
-	}
-
 
 	
   /**
@@ -138,7 +90,7 @@ public class DataService
    */
   void initGraph ()
 	{
-  	String oxlPath = getOxlPath ();
+  	String oxlPath = this.configuration.getOxlFilePath ();
   			
 		log.info ( "Loading graph from " + oxlPath );
 
@@ -151,10 +103,12 @@ public class DataService
 		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
 		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
+		var dsetInfo = this.configuration.getServerDatasetInfo ();
+		
 		this.genomeGenesCount = (int) seed.parallelStream ()
 		.map ( gene -> new GeneHelper ( graph, gene ) )
 		.map ( GeneHelper::getTaxID )
-		.filter ( this::containsTaxId )
+		.filter ( dsetInfo::containsTaxId )
 		.count ();
 
 		log.info ( "OXL Graph loaded from '" + oxlPath + "'" );
@@ -167,16 +121,12 @@ public class DataService
   {
     try 
     {
-      log.debug ( "Start Loading OndexKB Graph..." + oxlFilePath );
-      Parser.loadOXL(oxlFilePath, graph);
-      log.debug("OndexKB Graph Loaded Into Memory");
+      log.info ( "Loading OXL from {}", oxlFilePath );
+      Parser.loadOXL ( oxlFilePath, graph );
+      log.info ( "OXL Loaded" );
     } 
-    catch (Exception e) 
-    {
-      log.error("Failed to load graph", e);
-      ExceptionUtils.throwEx (
-      	RuntimeException.class, e, "Error while loading Knetminer graph: %s", e.getMessage ()
-      ); 
+    catch (Exception e) {
+      throwEx ( RuntimeException.class, e, "Error while loading Knetminer graph: $cause" ); 
     }
   }  
   
@@ -192,12 +142,21 @@ public class DataService
 	 * This returns a read-only map (never null). Options here can only be loaded and then changed via class
 	 * setters. 
 	 * 
+	 * TODO: remove
 	 */
-	public OptionsMap getOptions ()
+	public OptionsMap _getOptions ()
 	{
 		return this.options != null 
 			? OptionsMap.unmodifiableOptionsMap ( this.options )
 			: OptionsMap.from ( Collections.emptyMap () );
+	}
+	
+  /**
+   * The Knetminer configuration, as loaded from {@link #loadConfiguration(String)}.
+   */
+	public KnetminerConfiguration getConfiguration ()
+	{
+		return configuration;
 	}
 	
 	
@@ -223,9 +182,10 @@ public class DataService
 		Set<ONDEXConcept> genes = this.graph.getConceptsOfConceptClass ( ccGene );
 		
 		var taxIdNrm = StringUtils.trimToNull ( taxId );
-				
+		var dsetInfo = this.configuration.getServerDatasetInfo ();		
+		
 		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
-		  ? geneHelper -> this.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
+		  ? geneHelper -> dsetInfo.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
 		  : geneHelper -> taxIdNrm.equals ( geneHelper.getTaxID () ); // client-specified taxId
 		
 		return (int) genes.stream()
@@ -247,9 +207,12 @@ public class DataService
 		return genomeGenesCount;
 	}
 
+	// TODO: remove, old config
 	/**
    * Should this become DatasetName?
    */
+	/* 
+	 * 
   public String getDataSourceName ()
   {
   	return options.getString ( "DataSourceName" );
@@ -283,13 +246,17 @@ public class DataService
   {
   	return this.taxIds;
   }
+  */
 
+	// TODO: remove, old config
+	
   /**
    * USE THIS to test if a possibly null taxId is contained by the configured taxonomy IDs
    * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException
    * 
    * This is a wrapper of {@link KGUtils#containsTaxId(String, String)}.
    */
+  /*
   public boolean containsTaxId ( String taxId )
   {
   	return KGUtils.containsTaxId ( this.taxIds, taxId );
@@ -314,4 +281,5 @@ public class DataService
   {
   	return this.options.getString ( "DataPath" );
   }
+  */
 }

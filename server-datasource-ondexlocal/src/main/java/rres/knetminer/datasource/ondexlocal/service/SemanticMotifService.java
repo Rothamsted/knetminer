@@ -137,7 +137,7 @@ public class SemanticMotifService
 		Map<ONDEXConcept, Float> luceneResults = searchService.searchGeneRelatedConcepts ( searchString, seedGenes, false );
 
 		var graph = dataService.getGraph ();
-		var options = dataService.getOptions ();
+		var config = dataService.getConfiguration ();
 		
 		// the results give us a map of every starting concept to every valid path
 		Map<ONDEXConcept, List<EvidencePathNode>> results = semanticMotifDataService
@@ -238,7 +238,7 @@ public class SemanticMotifService
 			Set<ONDEXConcept> selectedPubs = pubKeywordSet.isEmpty () ? allPubs : pubKeywordSet;
 			List<Integer> newPubIds = PublicationUtils.newPubsByNumber ( 
 				selectedPubs, attYear,
-				options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 )
+				config.getDefaultExportedPublicationCount ()
 			);
 
 			// publications that we want to remove

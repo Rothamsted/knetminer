@@ -52,11 +52,13 @@ function createGenesTable(text, keyword, rows)
 		table += '<th width="100">' + hAcc + '</th>';
 		table += '<th width="100" title="Show ' + hName + ', if not same as ' + hAcc + '">' + hName + '</th>'; // added Gene Name to Gene View table
 		
-		// TODO: is there a reason for these amateur tests against true? 
+		// TODO: is there a reason for these amateur tests against true?
+		// TODO: what does this flag mean?! 
 		if (multiorganisms == true)
 			table += '<th width="60">' + hTaxId + '</th>';
 		
-		if (reference_genome == false)
+		// TODO: this flag has to disappear (ref genome always on true)
+		if (true || reference_genome)
 		{
 			table += '<th width="60">' + hChromosome + '</th>';
 			table += '<th width="70">' + hChrStart + '</th>';
@@ -108,8 +110,9 @@ function createGenesTable(text, keyword, rows)
 			var chrTd = '';
 			var chrStartTd = '';
 			
+			// TODO: this flag has to disappear (ref genome always on true)
 			// exprimenting 
-			if (reference_genome == false)
+			if (true || reference_genome)
 			{
 				var chr = values[3];
 				var chrStart = values[4];

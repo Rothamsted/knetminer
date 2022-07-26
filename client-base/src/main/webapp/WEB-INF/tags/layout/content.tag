@@ -102,9 +102,13 @@
                             <tr>
 								<td>
 									<select id="chr1" onChange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" >
+										<!-- 
+											TODO: variable doesn't exist anymore (comes from the API) try replacing this with a foo constant.
+											It should work, since the actual values are updated dynamically from the API, upon specie selection.
+										 -->
 										<c:forTokens items="${chromosomes}" delims="," var="item" varStatus="status">
        									<option value="${item}">${item}</option>
-    									</c:forTokens>
+    								</c:forTokens>
 									</select>
 								</td>
 								<td><input id="start1" name="start" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>

@@ -191,11 +191,24 @@ public class KnetminerServer
 	}
 
 	/**
+	 * Overwrite the normal request routing in order to manage the {@link NetworkRequest specific request}
+	 * for this call.
+	 */
+	@CrossOrigin
+	@PostMapping ( "/{ds}/network" ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network ( @PathVariable String ds,
+		@RequestBody NetworkRequest request, HttpServletRequest rawRequest ) {
+		return this.handle ( ds, "network", request, rawRequest );
+	}
+	
+
+	/**
 	 * Pick up all GET requests sent to any URL matching /X/Y. X is taken to be the
 	 * name of the data source to look up by its getName() function (see above for
 	 * the mapping function buildDataSourceCache(). Y is the 'mode' of the request.
 	 * Spring magic automatically converts the response into JSON. We convert the
-	 * GET parameters into a KnetminerRequest object for handling by the _handle()
+	 * GET parameters into a KnetminerRequest object for handling by the 
+	 * {@link #handleRaw(String, String, KnetminerRequest, HttpServletRequest)}() 
 	 * method.
 	 * 
 	 * @param ds
@@ -368,7 +381,11 @@ public class KnetminerServer
 
 		try
 		{
-			Method method = dataSource.getClass ().getMethod ( mode, String.class, KnetminerRequest.class );
+			// WARNING: this relies on the fact that a signature exists that takes a parameter of EXACTLY the same class as
+			// request.getClass (), if you have an API method that accepts a super-class instead, this kind of reflection
+			// won't be enough to pick it.
+			//
+			Method method = dataSource.getClass ().getMethod ( mode, String.class, request.getClass () );
 			try {
 				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
 				return new ResponseEntity<> ( response, HttpStatus.OK );

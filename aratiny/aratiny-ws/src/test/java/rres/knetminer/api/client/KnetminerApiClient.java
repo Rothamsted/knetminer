@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machinezoo.noexception.Exceptions;
 
 import rres.knetminer.api.ApiIT;
-import rres.knetminer.datasource.server.datasetinfo.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.ServerDatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.ServerSpecieInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
@@ -175,20 +179,27 @@ public class KnetminerApiClient
 	 */
 	public DatasetInfo datasetInfo ()
 	{
-		return invokeApiJsMap ( "dataset-info", DatasetInfo.class, null );
+		// Yes, it's the server class used to serve the client output. It's because
+		// ServerDatasetInfo contains the fields in DatasetInfo plus more fields that
+		// are used on the server only. asDatasetInfo() yields a view on what's 
+		// needed here.
+		return invokeApiJsMap ( "dataset-info", ServerDatasetInfo.class, null )
+			.asDatasetInfo ();
 	}
 	
 	/**
 	 * Counterpart of {@link DatasetInfoService#datasetInfo() /dataset-info/chromosome-ids}.
 	 */
-	public String[] chromosomeIds ( String taxId )
+	public List<String> chromosomeIds ( String taxId )
 	{
-		return invokeApiJsMap ( 
+		String[] taxIds = invokeApiJsMap ( 
 			"dataset-info/chromosome-ids", 
 			String[].class, 
 			RequestOptions.of ().setUseJsonParams ( false ), 
 			params ( "taxId", taxId )
 		);
+		
+		return Arrays.asList ( taxIds );
 	}
 	
 	/**
