@@ -300,7 +300,11 @@ public class KnetminerServer
 
 		try
 		{
-			Method method = dataSource.getClass ().getMethod ( mode, String.class, KnetminerRequest.class );
+			// WARNING: this relies on the fact that a signature exists that takes a parameter of EXACTLY the same class as
+			// request.getClass (), if you have an API method that accepts a super-class instead, this kind of reflection
+			// won't be enough to pick it.
+			//
+			Method method = dataSource.getClass ().getMethod ( mode, String.class, request.getClass () );
 			try {
 				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
 				return new ResponseEntity<> ( response, HttpStatus.OK );

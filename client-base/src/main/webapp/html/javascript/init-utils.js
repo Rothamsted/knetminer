@@ -2,8 +2,8 @@
 //functions shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome(){
 
-    // TODO: this flag is going to disappear (condition is always true now)
-    if (reference_genome == false) {
+    // TODO: this flag is going to disappear (ref genome is always on now)
+    if (true || reference_genome) {
        $('#genomeorqtlsearchbox').show();
        if (typeof gviewer != "undefined" && gviewer == false) {
            activateButton('resultsTable');

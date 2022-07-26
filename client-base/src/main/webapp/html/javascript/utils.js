@@ -13,7 +13,6 @@ var knetmaps = KNETMAPS.KnetMaps();
 $(document).ready (
     function () {
         setupKnetSpaceUrl ();
-        getSpecieList(); 
         multiSpeciesFeature.init()
         loadOnReady();
         showReferenceGenome();
