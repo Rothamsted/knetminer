@@ -1,17 +1,40 @@
 <%@ tag description="Header" %>
 
 <div id="header">
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">	
-    	<a href="/" title="KnetMiner Home"><img class="logo-top" src="html/image/KnetMiner_green_white.svg" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>
- 	<ul class="navbar-items">
-		<a id="release_icon" target="_blank" href="html/release.html" title="Release Notes"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
-		<div id="species_header">
-			<select class="navbar-select"></select>
-		</div>
-		<div class="login_container">
-			<a id="login_icon" title="Sign in"></a>
-        	<a id="profile_icon" title="Profile"><i class="fa fa-user" aria-hidden="true"></i></a>
-		</div>
-	 </ul>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+		<ul class="logo-items">
+			<a href="/" title="KnetMiner Home"><img class="logo-top" src="html/image/logo.svg" alt="Logo" style="height:32px;margin-right:0.5rem">
+			</a>
+
+			<div id="species_header">
+				<select onchange="changeSpecies(this)" class="navbar-select"></select>
+				<a id="release_icon" target="_blank" href="" title="Release Notes">
+					<lord-icon
+					src="https://cdn.lordicon.com/nocovwne.json"
+					trigger="loop"
+					delay="2000"
+					colors="primary:#6f7f8f,secondary:#51ce7b"
+					stroke="25"
+					style="width:42px;height:42px">
+				</lord-icon>
+				</a>
+			</div>
+		</ul>
+    	
+		<ul class="navbar-items">
+
+				<div class="product_links">
+					<a  href='https://knetminer.com/tutorial' target="_blank" title="Access tutorials" class="nav-links">Tutorial</a>	
+					<a href='https://knetminer.com/knetminer-citation' target="_blank" title="include our work" class="nav-links">Cite Us</a>	
+				</div>
+
+				<div class="auth_container">
+					<a id="login_icon" title="Sign In" class="nav-links"></a>
+				<a href='https://knetminer.com/beta/knetspace/sign-up/' id="signup" title="Sign Up">Sign Up</a>
+				</div>
+				
+				
+		</ul>
 	</nav>
 </div>

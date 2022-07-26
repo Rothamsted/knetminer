@@ -13,8 +13,9 @@
 
 					<div id="species_container" class="details">
 							<div class="detail_info">
-							<div>
-							<h4 style="margin:10px 0;">Species description</h4></div>
+							<div><h3 id="species_title" style="margin:10px 0;">Species description</h3>
+							<span style="display:flex;" class="close" onclick="queryToggle($('#speciename_container'),$('#species_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"/><img class="close"  style="display:none;" src="html/image/drop-down.png"/>
+							</span></div>
 							<div id="speciename_container"></div>
 							</div>
 					</div>
@@ -23,9 +24,8 @@
                     <div id="info" class="details">
                         <c:if test="${embeddable}"><div class="species_header"></div></c:if>
                         <div id="info-text">
-                            <div style="height: 10px;"><h3>Example queries</h3>
-                                <a style="display:flex;" class="close" id="close-example" title="close"><img src="html/image/close_button.png"></a>
-                            </div>
+                            <div><h3  style="margin:10px 0; class="query_title">Example queries</h3>
+                                <span style="display:flex;" class="close" onclick="queryToggle($('#eg_queries'),$('.query_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"><img class="close" style="display:none;" src="html/image/drop-down.png"/></span></div>
                             <div id="eg_queries"></div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
         <!--	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div> -->
 			<div class="button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
         	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
-        	<div class="button_on" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
+        	<div class="button_on network-default" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
         </div>
 		
         <div id="tabviewer_content">
@@ -158,10 +158,24 @@
             <div id="evidenceTable" class="resultViewer" style="display:none;"></div>
             <!-- Network View tab -->
             <div id="NetworkCanvas" class="resultViewer" style="display: none;">
-                <div id="knetSaveButton" style="width:100%; margin-top:7px;"></div>
-                <div id="knetExportButton" style="width:100%; margin-top:7px;"></div>
+
+				<div id="export-menu">
+				   	<div id="knetGeneExport" class="export_border" style="border-bottom: .3px solid silver"></div>
+					<div id="visibleGraphExport" class="export_border" style="border-bottom: .3px solid silver"></div>
+					<div id="fullGraphExport" class="export_border"></div>
+				</div>
+
+                <div id="knetSaveButton" style="margin-top:7px;float:right;"></div>
+
+                <div style="margin-top:7px;float:right;margin-right:10px;">
+					<button class="network_button" id="exportBtns">
+					<img src="html/image/Knetdownload.png" alt="export menu" width="20"/>
+					</button>
+				</div>
+
                 <!-- KnetMaps.js -->
-                <div id="knet-maps" style="display: none;"></div>
+                <div id="knet-maps" style="display:none;"></div>
+
             </div>
         </div>
     </div>  <!-- tabviewer -->

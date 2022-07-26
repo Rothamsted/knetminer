@@ -41,6 +41,7 @@
         </script>
         <!-- end Google Analytics -->
     </c:if>
+
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
         <!-- jBox modal popup css -->
@@ -69,8 +70,11 @@
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
-        <!-- jBox modal popup js -->
+        <!--JBox-->
       	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+
+         <!--Particle-->
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
@@ -121,15 +125,20 @@
 
 		<!-- interactJS; DISABLED -->
 	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
-		
+
         <!-- bootstrap js -->
 	<!-- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
 		<!-- font-awesome js -->
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+        <!-- release note animation-->
+       <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+
+
 
         <jsp:invoke fragment="extraHeader"/>
     </head>
-    <body class="${embeddable ? "embeddable" : ""}">
+    <body  class="${embeddable ? "embeddable" : ""}">
+        <div class="background" id="particles-js"></div>
         <!-- Main -->
         <div id="wrapper">
             <c:choose>
@@ -148,5 +157,7 @@
             </c:if> -->
         </div>
         <jsp:invoke fragment="extraBottom"/>
+
+     
     </body>
 </html>

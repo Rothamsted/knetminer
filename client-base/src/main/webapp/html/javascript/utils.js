@@ -14,14 +14,13 @@ $(document).ready (
     function () {
         setupKnetSpaceUrl ();
         getSpecieList(); 
+        multiSpeciesFeature.init()
         loadOnReady();
         showReferenceGenome();
         initResetButton();
         inputHandlers();
         QtlRegionHandlers();
         searchHandlers();
-        bodyHandlers();
-        changeSpecies(); 
-        
+        bodyHandlers();        
     }
 );

@@ -44,6 +44,8 @@ import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
+import rres.knetminer.datasource.api.NetworkRequest;
+import rres.knetminer.datasource.api.NetworkResponse;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
@@ -187,6 +189,18 @@ public class KnetminerServer
 	{
 		return this.mvcPageForward ( ds, keyword, list, rawRequest, model, "evidencepage" );
 	}
+
+	/**
+	 * Overwrite the normal request routing in order to manage the {@link NetworkRequest specific request}
+	 * for this call.
+	 */
+	@CrossOrigin
+	@PostMapping ( "/{ds}/network" ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network ( @PathVariable String ds,
+		@RequestBody NetworkRequest request, HttpServletRequest rawRequest ) {
+		return this.handle ( ds, "network", request, rawRequest );
+	}
+	
 
 	/**
 	 * Pick up all GET requests sent to any URL matching /X/Y. X is taken to be the

@@ -56,14 +56,5 @@
     });
 
    // allow dlTable download to PC using a hiddenElement, download and click event.
-   var utf8Bytes = "";
-   utf8Bytes = encodeURIComponent(dlTable).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-       return String.fromCharCode('0x' + p1);
-      });
-   //<a download="knetmaps_genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a>
-   var hiddenElement= document.createElement('a');
-   hiddenElement.href= 'data:application/octet-stream;base64,' + btoa(utf8Bytes);
-   hiddenElement.target= '_blank';
-   hiddenElement.download= 'knetmaps_genes.tsv';
-   hiddenElement.click();
+   downloadFunction('knetmaps_genes.tsv',dlTable); 
   }

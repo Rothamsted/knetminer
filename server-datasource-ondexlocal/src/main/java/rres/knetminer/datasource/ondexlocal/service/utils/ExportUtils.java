@@ -1,5 +1,6 @@
 package rres.knetminer.datasource.ondexlocal.service.utils;
 
+import static net.sourceforge.ondex.args.BooleanArgumentDefinition.EXPORT_PLAIN_JSON;
 import static net.sourceforge.ondex.args.FileArgumentDefinition.EXPORT_FILE;
 import static net.sourceforge.ondex.filter.ArgumentNames.CONCEPTCLASS_RESTRICTION_ARG;
 import static net.sourceforge.ondex.filter.unconnected.ArgumentNames.REMOVE_TAG_ARG;
@@ -48,7 +49,7 @@ public class ExportUtils
    * 
    * 
    */
-  public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph )
+  public static Pair<String, ONDEXGraph> exportGraph2Json ( ONDEXGraph graph, boolean exportPlainJSON )
   {
   	// DEBUG exportOXL ( graph );
   	
@@ -84,7 +85,9 @@ public class ExportUtils
 			exportFile.deleteOnExit ();
 			String exportPath = exportFile.getAbsolutePath ();
 			
-			OndexPluginUtils.runPlugin ( Export.class, graph2, Map.of ( EXPORT_FILE, exportPath ) );
+			OndexPluginUtils.runPlugin (
+				Export.class, graph2, Map.of ( EXPORT_FILE, exportPath , EXPORT_PLAIN_JSON, exportPlainJSON )
+			);
       
       log.debug ( "Network JSON file created:" + exportPath );
 			log.debug ( "JSON Export done to file: '{}'", exportPath );
