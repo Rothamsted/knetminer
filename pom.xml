@@ -578,7 +578,7 @@
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
-				<version>3.1.0</version>
+				<version>4.0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet.jsp</groupId>
@@ -720,18 +720,20 @@
 					</exclusion>			
 				</exclusions>
 			</dependency>
-			<!-- 
+			<!--
+			  TODO: to be removed, no longer needed
+			 
 				This is used to setup CORS in the response. See:
 				- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 				- http://tuckey.org/urlrewrite/
 				
 				We use this web filter in src/main/webapp/WEB-INF 
-			 -->
 			<dependency>
 				<groupId>org.tuckey</groupId>
 				<artifactId>urlrewritefilter</artifactId>
 				<version>4.0.4</version>
 			</dependency>	
+			 -->
 			
 			<!-- Needed in Java >= 11 -->	  
 			<dependency>

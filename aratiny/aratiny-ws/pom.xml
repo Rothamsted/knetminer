@@ -31,13 +31,14 @@
 			<artifactId>server-ondex</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- 
+		<!--
+		  TODO: to be removed, no longer needed. 
 			This is used to setup CORS in the response. See main POM
-		 -->
 		<dependency>
 			<groupId>org.tuckey</groupId>
 			<artifactId>urlrewritefilter</artifactId>
 		</dependency>	
+		 -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>

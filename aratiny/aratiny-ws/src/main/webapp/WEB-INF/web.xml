@@ -14,7 +14,7 @@
 	</listener>   
   
 	<context-param>
-		<param-name>knetminer.dataSource.configFilePath</param-name>
+		<param-name>knetminer.api.configFilePath</param-name>
 		<param-value>${knetminer.configFile}</param-value>
 	</context-param>
 	  

@@ -11,18 +11,18 @@
   <display-name>KnetMiner Ara-Tiny WS</display-name>
   
 	<context-param>
-		<param-name>knetminer.dataSource.configFilePath</param-name>
+		<param-name>knetminer.api.configFilePath</param-name>
 		<param-value>${knetminer.configFile}</param-value>
 	</context-param>
 	
+	<!--
+	  Uses the Tuckey rule engine to authorise CORS for these URLs.
+	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
 	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
 	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 	</filter>
-	<!--
-	  Uses the Tuckey rule engine to authorise CORS for these URLs.
-	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
-	-->
+
 	<filter-mapping>
 	  <filter-name>UrlRewriteFilter</filter-name>
 	  <url-pattern>/cydebug/*</url-pattern>
@@ -30,5 +30,6 @@
 	  <dispatcher>REQUEST</dispatcher>
 	  <dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
+	-->
 		
 </web-app>

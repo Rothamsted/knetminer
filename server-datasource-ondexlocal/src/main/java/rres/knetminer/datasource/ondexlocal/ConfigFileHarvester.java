@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ConfigFileHarvester implements ServletContextListener
 {
-	public static final String CONFIG_FILE_PATH_PROP = "knetminer.dataSource.configFilePath"; 
+	public static final String CONFIG_FILE_PATH_PROP = "knetminer.api.configFilePath"; 
 	private static String configFilePath = null;
 	
 	private static Logger clog = LogManager.getLogger ( ConfigFileHarvester.class );
