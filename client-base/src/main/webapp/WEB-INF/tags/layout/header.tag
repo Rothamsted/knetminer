@@ -26,7 +26,7 @@
 
 				<div class="product_links">
 					<a  href='https://knetminer.com/tutorial' target="_blank" title="Access tutorials" class="nav-links">Tutorial</a>	
-					<a href='https://knetminer.com/knetminer-citation' target="_blank" title="include our work" class="nav-links">Cite Us</a>	
+					<a href='https://knetminer.com/knetminer-citation/how-to-cite.html' target="_blank" title="include our work" class="nav-links">Cite Us</a>	
 				</div>
 
 				<div class="auth_container">
