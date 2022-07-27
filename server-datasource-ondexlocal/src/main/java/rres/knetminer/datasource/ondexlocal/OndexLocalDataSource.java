@@ -48,6 +48,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -69,6 +70,8 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 @Component
 public class OndexLocalDataSource extends KnetminerDataSource 
 {		
+	public static final String CONFIG_FILE_PATH_PROP = "knetminer.api.configFilePath"; 
+	
 	/**
 	 * it's initialised without parameters, then it gets everything from the XML config file. This is fetched by 
 	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).
@@ -80,9 +83,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	private void init ()
 	{
-		var configYmlPath = ConfigFileHarvester.getConfigFilePath ();
+		var configYmlPath = ConfigBootstrapWebListener.getBootstrapParameters ().getString ( CONFIG_FILE_PATH_PROP );
 		if ( configYmlPath == null ) throw new IllegalStateException ( 
-			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
+			"OndexLocalDataSource() can only be called if you set " + CONFIG_FILE_PATH_PROP 
 			+ ", either as a Java property, a <context-param> in web.xml, or" 
 			+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
 		);

@@ -10,6 +10,12 @@
         version="3.0">
   <display-name>KnetMiner Ara-Tiny WS</display-name>
   
+	<!-- This picks up the parameter below, either from here or from Java properties (allows for overriding) -->
+	<listener>
+		<!-- Picks the config file parameter, see the source -->
+		<listener-class>uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener</listener-class>
+	</listener>   
+  
 	<context-param>
 		<param-name>knetminer.api.configFilePath</param-name>
 		<param-value>${knetminer.configFile}</param-value>
