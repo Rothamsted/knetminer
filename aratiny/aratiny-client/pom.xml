@@ -55,7 +55,7 @@
 			    <webApp>
 			      <contextPath>/</contextPath>
 			      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-			      <overrideDescriptor>target/test-classes/WEB-INF/web.xml</overrideDescriptor>    
+			      <overrideDescriptor>${project.build.testOutputDirectory}/webapp/WEB-INF/web.xml</overrideDescriptor>    
 			    </webApp>
 			  </configuration>
 			  <!-- No need to start/stop in the build cycle, just make it visible for manual run. -->

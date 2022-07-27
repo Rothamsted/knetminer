@@ -19,7 +19,6 @@
 		(see aratiny and aratiny-client).
 	</description>
 
-
 	<build>
 		<plugins>
 			<plugin>
@@ -186,5 +185,10 @@
 			<groupId>org.apache.taglibs</groupId>
 			<artifactId>taglibs-standard-spec</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>uk.ac.ebi</groupId>
+			<artifactId>jutils</artifactId>
+		</dependency>		
 	</dependencies>
 </project>

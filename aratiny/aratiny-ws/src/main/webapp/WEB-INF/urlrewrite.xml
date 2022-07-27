@@ -1,3 +1,4 @@
+<!-- TODO: remove, no longer used -->
 <urlrewrite>
 	<!--
 		This is passed to /ws/cydebug and we allow all origins cause this service is only 

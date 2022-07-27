@@ -121,7 +121,7 @@
 		      	-->
 			      <contextPath>/ws</contextPath>
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-	          <overrideDescriptor>${project.build.testOutputDirectory}/jetty-web.xml</overrideDescriptor>
+	          <overrideDescriptor>${project.build.testOutputDirectory}/webapp/WEB-INF/web.xml</overrideDescriptor>
 			      <resourceBases>
 			      	<!-- Contains things like logger config for the test server -->
 			      	<resourceBase>${project.basedir}/src/main/webapp</resourceBase>

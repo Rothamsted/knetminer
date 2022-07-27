@@ -15,7 +15,7 @@
   
 	<context-param>
 		<param-name>knetminer.api.configFilePath</param-name>
-		<param-value>${knetminer.configFile}</param-value>
+		<param-value>${knetminer.configDir}/config.yml</param-value>
 	</context-param>
 	  
 </web-app>

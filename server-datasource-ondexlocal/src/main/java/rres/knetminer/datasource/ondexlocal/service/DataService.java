@@ -1,19 +1,11 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
-import static java.lang.String.format;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -26,13 +18,11 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
-import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
-import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 
 /**
  * The data sub-service for {@link OndexServiceProvider}.
@@ -75,7 +65,8 @@ public class DataService
 	 * YAML file.
 	 * 
 	 * This is usually {@code TODO} and the web API gets its path from
-	 * {@link ConfigFileHarvester}. However, options can be loaded separately, see {@link OndexServiceProvider#initData()}.
+	 * {@link ConfigBootstrapWebListener}. However, options can be loaded separately, 
+	 * see {@link OndexServiceProvider#initData()}.
 	 */
 	public void loadConfiguration ( String configFilePath )
 	{

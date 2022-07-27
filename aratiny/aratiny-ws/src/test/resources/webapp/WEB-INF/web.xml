@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	This is identical to the main web.xml, it's duplicated here cause jetty doesn't filter
-	web resources.
+	This is almost identical to the main web.xml, apart from few test-specific config values.
 -->
 <web-app
         xmlns="http://java.sun.com/xml/ns/javaee"
@@ -18,7 +17,7 @@
   
 	<context-param>
 		<param-name>knetminer.api.configFilePath</param-name>
-		<param-value>${knetminer.configFile}</param-value>
+		<param-value>${knetminer.configDir}/test-cfg.yml</param-value>
 	</context-param>
 	
 	<!--

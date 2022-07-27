@@ -10,9 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
-import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 
 
