@@ -20,6 +20,56 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
+
+            
+		<dependency>
+			<!-- Re-routes slf4j to log4j V2 -->
+		 	<groupId>org.apache.logging.log4j</groupId>
+		 	<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Re-routes the old log4j to log4j V2 -->
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Re-routes commons logging -->
+		  <groupId>org.apache.logging.log4j</groupId>
+		  <artifactId>log4j-jcl</artifactId>
+		</dependency>		
+
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>javax.servlet-api</artifactId>
+		  <scope>provided</scope>
+		</dependency>
+
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+
+    <dependency>
+  		<groupId>commons-io</groupId>
+  		<artifactId>commons-io</artifactId>
+    </dependency>
+    
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		
+    <!-- 
+    	The Log4j implementation is enforced on test instances only, production relies on the 
+      web container
+     -->    
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>	
+		
+    
 	</dependencies>
 
 	<build>
@@ -54,10 +104,20 @@
 			  <configuration>
 			    <webApp>
 			      <contextPath>/</contextPath>
-			      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-			      <overrideDescriptor>${project.build.testOutputDirectory}/webapp/WEB-INF/web.xml</overrideDescriptor>    
+			      <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>			      
+						<overrideDescriptor>${project.build.directory}/webapp/WEB-INF/web.xml</overrideDescriptor>
+			      <resourceBases>
+			      	<!-- We need to take this from interpolated files -->
+			      	<resourceBase>${project.build.directory}/webapp</resourceBase>
+			      </resourceBases>
 			    </webApp>
+			    <!-- Includes test files and test scope dependencies (eg, the logger) -->
+			    <useTestScope>true</useTestScope>
 			  </configuration>
+			  
+			  <dependencies>
+				</dependencies>		  
+			  
 			  <!-- No need to start/stop in the build cycle, just make it visible for manual run. -->
 			  <executions>
 			  	<execution>
@@ -71,7 +131,48 @@
 			  </executions>
 			</plugin>
 
+
+			<plugin>
+			  <groupId>org.codehaus.mojo</groupId>
+			  <artifactId>properties-maven-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <goals>
+			        <goal>set-system-properties</goal>
+			      </goals>
+			      <configuration>
+			        <properties>
+			          <property>
+			          	<!-- 
+			          		This is how the client can get the API URL, if this isn't in a standard place
+			          		See api-url.jsp
+			          	-->
+			            <name>knetminer.api.url</name>
+			            <value>${knetminer.api.url}</value>
+			          </property>
+			        </properties>
+			      </configuration>
+			    </execution>
+			  </executions>
+			</plugin>
+
 		</plugins>
+		
+		<testResources>
+			<testResource>
+			  <directory>src/test/resources</directory>
+			  <filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<resources>
+			<resource>
+			  <directory>src/main/webapp</directory>
+			  <filtering>true</filtering>
+			  <targetPath>${project.build.directory}/webapp</targetPath>
+			</resource>
+		</resources>
+						
 	</build>
 	
 </project>

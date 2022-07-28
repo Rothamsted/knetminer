@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Properties>
+		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
+	</Properties>
+	<Appenders>
+		<RollingFile name="RollingFile"
+			fileName="${log-name}.log"
+			filePattern="${log-name}-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<!--pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern -->
+				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+      			<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="INFO">
+			<AppenderRef ref="RollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

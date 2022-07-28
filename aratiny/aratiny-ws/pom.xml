@@ -49,15 +49,19 @@
 			<artifactId>httpclient</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-jcl</artifactId>
-		</dependency>
+
+		<!-- Logging -->
+		
+    <!-- 
+    	The Log4j implementation is enforced on test instances only, production relies on the 
+      web container. Re-routings are managed upwards.
+     -->    
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

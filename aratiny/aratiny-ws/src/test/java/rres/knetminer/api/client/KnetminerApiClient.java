@@ -4,9 +4,7 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +36,6 @@ import com.machinezoo.noexception.Exceptions;
 import rres.knetminer.api.ApiIT;
 import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
 import rres.knetminer.datasource.ondexlocal.config.ServerDatasetInfo;
-import rres.knetminer.datasource.ondexlocal.config.ServerSpecieInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
