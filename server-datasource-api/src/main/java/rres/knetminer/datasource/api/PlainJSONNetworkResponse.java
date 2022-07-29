@@ -23,12 +23,18 @@ public class PlainJSONNetworkResponse extends NetworkResponse
 		super ();
 	}
 
+	/**
+	 * Parses the pay load as JSON, using {@link #setGraph(String)}.
+	 */
 	public PlainJSONNetworkResponse ( String jsGraph )
 	{
 		this ();
 		setGraph ( jsGraph );
 	}
 
+	/**
+	 * This is obtained from re-parsing the JSON output coming from the Ondex exporter.
+	 */
 	public Map<String, Object> getGraph ()
 	{
 		return graph;
@@ -39,6 +45,9 @@ public class PlainJSONNetworkResponse extends NetworkResponse
 		this.graph = jsGraph;
 	}
 	
+	/**
+	 * This parses the String as JSON and then {@link #setGraph(Map) sets the JSON pay load}.
+	 */
 	@SuppressWarnings ( "unchecked" )
 	public void setGraph ( String strJsGraph )
 	{
