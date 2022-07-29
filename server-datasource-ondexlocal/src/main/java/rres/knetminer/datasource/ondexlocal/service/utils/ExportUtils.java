@@ -89,9 +89,8 @@ public class ExportUtils
 				Export.class, graph2, Map.of ( EXPORT_FILE, exportPath , EXPORT_PLAIN_JSON, exportPlainJSON )
 			);
       
-      log.debug ( "Network JSON file created:" + exportPath );
 			log.debug ( "JSON Export done to file: '{}'", exportPath );
-      log.debug ( 
+      log.info ( 
       	"Exported JSON data: Total concepts = {} , Relations= {}", 
       	graph2.getConcepts().size(), 
       	graph2.getRelations().size()

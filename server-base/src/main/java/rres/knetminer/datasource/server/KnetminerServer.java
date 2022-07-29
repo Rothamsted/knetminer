@@ -25,6 +25,7 @@ import org.apache.logging.log4j.message.ObjectMessage;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +46,6 @@ import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
-import rres.knetminer.datasource.api.NetworkResponse;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
@@ -191,13 +191,50 @@ public class KnetminerServer
 	}
 
 	/**
+	 * @see #network(String, NetworkRequest, HttpServletRequest)
+	 */
+	@CrossOrigin
+	@GetMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE  ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network (
+		@PathVariable String ds,
+		@RequestParam(required = false, defaultValue = "") String keyword,
+		@RequestParam(required = false) List<String> list,
+		@RequestParam(required = false, defaultValue = "") String listMode,
+		@RequestParam(required = false) List<String> qtl,
+		@RequestParam(required = false, defaultValue = "") String taxId,
+		@RequestParam(required = false, defaultValue = "false" ) boolean exportPlainJSON,
+		HttpServletRequest rawRequest
+	)
+	{
+		// TODO: isn't this done downstream?
+		if (qtl == null) qtl = Collections.emptyList();
+		if (list == null) list = Collections.emptyList();
+
+		// TODO: we need better management of this ugly stuff. Like plain parameters only, a request object isn't
+		// actually needed
+		//
+		var request = new NetworkRequest ();
+		request.setKeyword(keyword);
+		request.setListMode(listMode);
+		request.setList(list);
+		request.setQtl(qtl);
+		request.setTaxId(taxId);
+		request.setExportPlainJSON ( exportPlainJSON );
+		
+		return this.network ( ds, request, rawRequest );
+	}
+	
+	
+	/**
 	 * Overwrite the normal request routing in order to manage the {@link NetworkRequest specific request}
 	 * for this call.
 	 */
 	@CrossOrigin
-	@PostMapping ( "/{ds}/network" ) 
-	public @ResponseBody ResponseEntity<KnetminerResponse> network ( @PathVariable String ds,
-		@RequestBody NetworkRequest request, HttpServletRequest rawRequest ) {
+	@PostMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network ( 
+		@PathVariable String ds, @RequestBody NetworkRequest request, HttpServletRequest rawRequest 
+	) 
+	{
 		return this.handle ( ds, "network", request, rawRequest );
 	}
 	
@@ -222,13 +259,16 @@ public class KnetminerServer
 	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/{mode}")
-	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
+	public @ResponseBody ResponseEntity<KnetminerResponse> handle (
+			@PathVariable String ds,
+			@PathVariable String mode,
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
 			@RequestParam(required = false, defaultValue = "") String listMode,
 			@RequestParam(required = false, defaultValue = "") String taxId,
-			HttpServletRequest rawRequest)
+			HttpServletRequest rawRequest
+	)
 	{
 		// TODO: isn't this done downstream?
 		if (qtl == null) qtl = Collections.emptyList();
@@ -263,6 +303,7 @@ public class KnetminerServer
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
 	{
+		// TODO: why is it here only? Probably to capture POST /network only, to clarify.
 		this.googleTrackPageView ( ds, mode, request, rawRequest );
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}

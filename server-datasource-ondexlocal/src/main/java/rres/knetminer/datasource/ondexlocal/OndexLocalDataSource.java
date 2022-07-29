@@ -32,6 +32,7 @@ import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
+import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetSpaceHost;
 import rres.knetminer.datasource.api.KnetminerDataSource;
@@ -39,6 +40,7 @@ import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
 import rres.knetminer.datasource.api.NetworkResponse;
+import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
@@ -370,11 +372,20 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			.findSemanticMotifs ( genes, request.getKeyword () );
 
 		// Export graph
-		var response = new NetworkResponse ();
-		response.setGraph ( 
-			ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () )
-			.getLeft ()
-		);
+		String jsExport = ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () ).getLeft ();
+		
+		NetworkResponse response = request.isExportPlainJSON ()
+			// This is pure JSON, The response constructor builds a payload of Map<String, Object>, by
+			// parsing the pure-JSON string coming from the exporter, Spring auto-converts such map back 
+			// to JSON. I don't know any other clean way to prevents Spring from quoting this JSON string
+			// and I cannot easily change the NetworkResponse structure, which forces us to have the
+			// top-level "graph" field 
+			//	
+			? new PlainJSONNetworkResponse ( jsExport )
+			// This is the original format, which contains Javascript declarations in the top-level "graph"
+			// field, and then those declarations are in turn about JSON objects
+			//
+		  : new JsonLikeNetworkResponse ( jsExport );
 
 		return response;
 	}
