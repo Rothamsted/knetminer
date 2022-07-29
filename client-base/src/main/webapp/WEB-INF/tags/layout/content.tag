@@ -128,8 +128,9 @@
 				<li class='knetbtns'>
 				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
 				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
-					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-					<button type="sumbit" title="Click to clear all search fields" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i>Clear Search Fields</button>
+					<button id="searchBtn" class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+					<button styles="display:none;" type="sumbit" title="Click to clear all search fields" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i>Clear Search Fields</button>
+					<button id="reloadbtn" style="display:none; margin-top:8px;" type="submit" title="reload page" class="btn keywordsSubmit knet_button" onclick="ReloadButton(event)"> Reload Page</button>
 					<br>
 				    <div class="loadingDiv"></div>
 				</li>
@@ -161,8 +162,8 @@
 
 				<div id="export-menu">
 				   	<div id="knetGeneExport" class="export_border" style="border-bottom: .3px solid silver"></div>
-					<div id="visibleGraphExport" class="export_border" style="border-bottom: .3px solid silver"></div>
-					<div id="fullGraphExport" class="export_border"></div>
+					<div id="visibleGraphExport" class="export_border"></div>
+				<!--	<div id="fullGraphExport" class="export_border"></div> -->
 				</div>
 
                 <div id="knetSaveButton" style="margin-top:7px;float:right;"></div>

@@ -1150,7 +1150,7 @@ padding-top:10px;}
 #species_header {
     position: relative;
     height: 100%;
-    width: 38%;
+    width: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1158,11 +1158,10 @@ padding-top:10px;}
     border-left: 0.5px solid #EEF0F3;
 }
 
-#species_header::after {
-    content:'▾';
+#species-dropimg {
     color: black;
     font-size: 1rem;
-    top: 18.5px;
+    top: 20px;
     right: 4.8pc;
     position: absolute;
     z-index: 0;
@@ -1200,7 +1199,6 @@ padding-top:10px;}
 #export-menu{
     display: none;
     align-items: center;
-    padding: 1rem 0 0 0;
     margin-top: 1r;
     justify-content: top;
     flex-direction: column;
@@ -1211,7 +1209,7 @@ padding-top:10px;}
     font-size: 10px;
     z-index: 100;
     width: 160px;
-    height: 180px;
+    height: 120px;
     border-radius: 5px;
 }
 
@@ -1219,7 +1217,6 @@ padding-top:10px;}
 .export_border{
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
 }
 
 .export_button{
@@ -1228,9 +1225,9 @@ padding-top:10px;}
     color: white;
     border: none;
     width: 100%;
-    padding: 0 0.5rem;
-    margin-bottom: 10px;
+    padding: 1rem 0.5rem;
 }
+
 
 .export_button:hover{
     color: #51CE7B;
@@ -1300,6 +1297,25 @@ padding-top:10px;}
 }
 
 
+/* hover effect  */
 
+#tsvbtn:hover span{
+    display: none;
+}
+
+#tsvbtn:hover:before {
+    content:'Tabular Format';
+    color: #51CE7B
+}
+
+#cyjson:hover span{
+    display: none;
+
+}
+
+#cyjson:hover:before{
+    content:'Multi-line Cytoscapce JSON';
+    color: #51CE7B; 
+}
 
     

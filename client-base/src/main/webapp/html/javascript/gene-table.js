@@ -356,14 +356,15 @@ function generateCyJSNetwork(url, requestParams) {
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
 										//genes export button
-                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>TSV (Tabular structure)</button>");
+                                        $('#knetGeneExport').html("<button id='tsvbtn' class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'> <span> TSV </span> </button>");
 										var visible = true; 
-										//visible graph button 
-										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'>Cytoscape JSON (On screen)</button>");
 
-										// allgraphdata button
-										var notVisible = false
-										$('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Clean JSON (Multiline)</button>");
+										//visible graph button 
+										$('#visibleGraphExport').html("<button id='cyjson' class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'> <span>Cytoscape JSON</span></button>");
+
+										// // allgraphdata button
+										// var notVisible = false
+										// $('#fullGraphExport').html("<button class='export_button' onclick='downloadNetwork("+notVisible+")' title='Download visible full network graph'>Clean JSON (Multiline)</button>");
                                         
                                         if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
                                            var knetwork_blob= data.graph;
@@ -434,15 +435,23 @@ function updateSelectedGenesCount() {
 
 // function downloads cytoscape compactible json files
 function downloadNetwork(isExportTrue){
-
     var cy= $('#cy').cytoscape('get'); // now we have a global reference to `cy`
     var exportJson = cy.json(); // full graphJSON
     var plainJson = filterJsonToExport(cy, exportJson);
 	var graph = JSON.parse(plainJson);
 
+	// stripping out styles and other unwanted keys 
+	for(var keys in graph.graphJSON){
+		if(graph.graphJSON.hasOwnProperty(keys) && keys !== 'elements'){
+			delete graph.graphJSON[keys]
+		}
+	}
+
     // if export is true, visible graph will be downloaded
 	if(isExportTrue){
+
 		var isDownloaded = downloadFunction('knetminer_network.json',JSON.stringify(graph.graphJSON, null,"\t")); 
+
 		// ispopup stopped is set when the user clicks don't show again button
 		var isPopupstopped = JSON.parse(localStorage.getItem('popup')); 
 
@@ -470,11 +479,6 @@ function downloadNetwork(isExportTrue){
 		}
 	}else{
 		// removing all keys exempting the elements key 
-			for(var keys in graph.graphJSON){
-				if(graph.graphJSON.hasOwnProperty(keys) && keys !== 'elements'){
-					delete graph.graphJSON[keys]
-				}
-			}
 			downloadFunction('allgraphData.json',JSON.stringify(graph,null,"\t")); 
 		}
 }

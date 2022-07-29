@@ -9,6 +9,7 @@
 
 			<div id="species_header">
 				<select onchange="changeSpecies(this)" class="navbar-select"></select>
+				<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image" >
 				<a id="release_icon" target="_blank" href="" title="Release Notes">
 					<lord-icon
 					src="https://cdn.lordicon.com/nocovwne.json"

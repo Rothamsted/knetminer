@@ -11,9 +11,7 @@ var knetmaps = KNETMAPS.KnetMaps();
 * 	- tooltips
 */
 $(document).ready(
-
-    function () {
-        multiSpeciesFeature.init()
+    function(){
         loadOnReady();
         showReferenceGenome();
         initResetButton();
@@ -21,6 +19,6 @@ $(document).ready(
         QtlRegionHandlers();
         searchHandlers();
         bodyHandlers();
-        
     }
 );
+
