@@ -9,6 +9,7 @@ var knetmaps;
 * 	- advanced search
 * 	- tooltips
 */
+<<<<<<< HEAD
 $(document).ready (
     function () {
        setupApiUrls ().then ( function () {
@@ -26,5 +27,17 @@ $(document).ready (
 	        searchHandlers();
 	        bodyHandlers();
 	     });        
+=======
+$(document).ready(
+    function(){
+        loadOnReady();
+        showReferenceGenome();
+        initResetButton();
+        inputHandlers();
+        QtlRegionHandlers();
+        searchHandlers();
+        bodyHandlers();
+>>>>>>> commit fix issue #662 and #660
     }
 );
+

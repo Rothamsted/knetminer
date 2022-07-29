@@ -7,13 +7,29 @@ multiSpeciesFeature = function (){
 
     // function get lists of registered species from api_url+/species
     function getSpeciesList(){
+        activateSpinner('#wrapper'); 
+        console.log('getting species list')
+
         $.get(multiSpecieUrl,'').done( function(data){
-            var speciesInfos = data.species
+            var speciesInfos = data.species; 
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
+                console.log('specie dropdown created')
+                deactivateSpinner("#wrapper");
                 multiSpeciesEvents(speciesInfos)
-            }
+            }; 
+
+        }).fail(function(xhr,status,errolog){
+            errorComponent('#pGViewer_title',xhr);
+            // when user internet connection is down
+            deactivateSpinner("#wrapper");
+            $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
+            $('#resetknet').hide(); 
+            $('#searchBtn').hide(); 
+            $('reloadbtn').show(); 
         })
+        
+       
     }
 
     // function creates the species dropdown
@@ -228,7 +244,7 @@ multiSpeciesFeature = function (){
                 $('#chr1').append(chr1Options);
             }  
         }).fail(function (xhr,status,errorlog){
-            errorComponent('.nav',xhr,status,errorlog);
+            errorComponent('#pGViewer_title',xhr,status,errorlog);
         });
     }
     // draws the genomap view 

@@ -24,18 +24,18 @@ function showReferenceGenome(){
 function loadOnReady(){
 
   // particle js background config 
-  particlesJS.load('particles-js','html/javascript/assets/particles.json');
-
+    particlesJS.load('particles-js','html/javascript/assets/particles.json');
+    multiSpeciesFeature.init();
     activateResetButton();
 
     // hide reset btn on page load
-    $("#resetknet").hide(); 
-    $("#keywords").focus();
-    $('#tabviewer').hide(); // hide by default
+  
+    // $('#tabviewer').hide(); // hide by default
     // Tooltip
     showReferenceGenome();  
     createAnalyticsTag(); 
     generalPageAnalytics(); 
+    $("#keywords").focus();
 
 }
 
@@ -306,6 +306,13 @@ function bodyHandlers(){
     $('body').on('mouseleave', 'div.tooltip-static', function (event) {
         $('div.tooltip').remove();
     });
+}
+
+
+function ReloadButton(e){
+    e.preventDefault(); 
+    loadOnReady(); 
+
 }
 
 
