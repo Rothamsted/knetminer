@@ -470,6 +470,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
   }
 
 	
+	/**
+	 * @deprecated We now use /dataset-info and this should be migrated (in the clients)
+	 */
+	@Deprecated
 	@Override
   public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{

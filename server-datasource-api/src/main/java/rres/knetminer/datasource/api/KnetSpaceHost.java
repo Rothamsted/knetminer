@@ -10,7 +10,10 @@ package rres.knetminer.datasource.api;
  * for a gene list
  *
  * @author hearnshawj
+ * 
+ * @deprecated We now use /dataset-info and this should be migrated (in the clients)
  */
+@Deprecated
 public class KnetSpaceHost extends KnetminerResponse {
 
     public String ksHostUrl;

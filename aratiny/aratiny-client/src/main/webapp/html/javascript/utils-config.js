@@ -1,8 +1,9 @@
 // See the main POM for details.
 
-// TODO: get it from the API
-var api_base_url = "${knetminer.api.baseUrl}";
-var api_url = "${knetminer.api.url}";
+// TODO:newConfig, remove
+// var api_base_url = "${knetminer.api.baseUrl}";
+var api_url = "";
+
 
 // WHAT THE HELL IS THIS?!?
 // var multiSpecieUrl = "${knetminer.api.versionUrl}"
@@ -11,7 +12,7 @@ var api_url = "${knetminer.api.url}";
 // get dataset information, and very likely, there is NO NEED to define a constant to just 
 // append a tail to api_url. 
 // 
-var multiSpecieUrl = api_url + "/dataset-info"
+var multiSpecieUrl;
 
 // TODO: to be removed, we shouldn't use it anymore with multi-specie code
 // boolean, tells if the data set contains reference genome info  
@@ -26,14 +27,25 @@ var multiorganisms = false; // Code support the multi-organism case, but now it'
 var knetspace_api_host= "";
 
 // TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
-function setupKnetSpaceUrl ()
+async function setupApiUrls ()
 {
-	$.get ( 
-		api_url + "/dataset-info/knetspace-url", 
-	  (url) => {
-	    knetspace_api_host = url;
-	  }
+	var bootstrapUrl = window.location.href;
+	bootstrapUrl = bootstrapUrl.replace ( /\/$/g, "" ); // URLs with // don't always work
+	bootstrapUrl += "/html/api-url.jsp"
+
+	// getting these \n from the API, who knows why
+	api_url = await $.get ( bootstrapUrl, aurl => aurl.replace ( /\n/g, "" ) );
+
+	// Set anything else that depends on it
+	multiSpecieUrl = api_url + "/dataset-info";
+
+	// Same trick with this other API (including \n esaping)
+	knetspace_api_host = await $.get ( 
+		api_url + "/dataset-info/knetspace-url",
+		ksUrl => ksUrl.replace ( /\n/g, "" ) 
 	);
+	
+	return api_url; // just in case the invoker wants it
 }
 
 var enforce_genelist_limit= true; // enforce free user search limits (true/false).

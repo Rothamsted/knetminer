@@ -125,14 +125,23 @@ function returnJson() {
  * add new document.ready event to initalise login (to decouple login from utils.js completely)
  * author: singha
  */
-$(document).ready(
-    function () {
-        $('#login_icon').text("Sign in");
-        $('#login_icon').css('textDecoration','none');
-        fetchCredentials(null);
-        // Initalize login Modal
-        loginModalToggle();        
-    });
+
+/** 
+ * Brandizi: handler added in 2022/08, affects #634
+*/
+
+function loginUtilsInit ()
+{
+	$('#login_icon').text("Sign in");
+	$('#login_icon').css('textDecoration','none');
+	fetchCredentials(null);
+	// Initalize login Modal
+	loginModalToggle();        
+}
+
+// TODO: it's already invoked by the general handler in utils. I'm not sure it's needed here too
+// eg, by external page
+$(document).ready( loginUtilsInit );
 
 /* 
  * initialize  loginModal
