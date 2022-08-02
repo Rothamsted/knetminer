@@ -50,7 +50,7 @@ public class ApiIT
 	/**
 	 * Auto-initialised client instance to be used for the tests, here and in similar testing classes
 	 */
-	public static KnetminerApiClient CLI = new KnetminerApiClient ( System.getProperty ( "knetminer.api.baseUrl" ) + "/aratiny" );
+	public static KnetminerApiClient CLI = new KnetminerApiClient ( System.getProperty ( "knetminer.api.url" ) );
 	
 	@BeforeClass
 	/**

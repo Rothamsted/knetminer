@@ -172,17 +172,16 @@
 		-->
 		<knetminer.ui.embeddableLayout>false</knetminer.ui.embeddableLayout>
 				
-				
-				
+						
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
 
 		<!-- TODO:newConfig, probably we don't need all of them and they are for the build only -->
 		<!-- Here, it is http://localhost:9090 -->
-		<knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl>
+		<!-- <knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl> -->
 		<!-- Here, it is http://localhost:9090/ws -->
-		<knetminer.api.baseUrl>${knetminer.api.rootUrl}/ws</knetminer.api.baseUrl>
+		<!-- <knetminer.api.baseUrl>>${knetminer.api.rootUrl}/ws</knetminer.api.baseUrl> -->
 		<!-- Here, it is http://localhost:9090/ws/aratiny -->
-		<knetminer.api.url>${knetminer.api.baseUrl}/aratiny</knetminer.api.url>
+		<knetminer.api.url>http://localhost:${knetminer.api.httpPort}/ws/aratiny</knetminer.api.url>
 		
 		<!-- Here, it is http://localhost:9090/ws/aratiny/dataset-info -->
 		<!-- TODO: REMOVE!!! See utils-config.js for details 
@@ -200,7 +199,7 @@
 
 		<!-- TODO:newConfig, to be managed with alternate config files -->
 		<!-- There is a production version, which searches into state machine-generated files -->
-		<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config-test.xml</knetminer.neo4j.configFile>
+		<!-- <knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config-test.xml</knetminer.neo4j.configFile> -->
 				
 		<!--
 		  TODO:newConfig, part of these are for Maven, another part in config files is to be managed 
@@ -471,6 +470,8 @@
 			<activation><activeByDefault>false</activeByDefault></activation>
 			<properties>
 				
+				<!-- TODO:newConfig, most to be removed -->
+				
 				<!--
 					These are common values for a Docker-dedicated build.
 					Remember, these DISAPPEAR from production files (see notes above).
@@ -478,11 +479,16 @@
 				<knetminer.datasetDir>/root/knetminer-dataset</knetminer.datasetDir>
 				<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
 				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
-				<knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile>
+				<!-- <knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile> -->
 								
 				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
+
+				<!-- TODO:newConfig, remove -->
 				<!-- It's just /ws, so that our Tomcat can append the right prefix automatically -->
-  			<knetminer.api.baseUrl>/ws</knetminer.api.baseUrl>
+  			<!-- <knetminer.api.baseUrl>/ws</knetminer.api.baseUrl> -->
+				
+				<!-- It's just this, so that our Tomcat can append the right prefix automatically -->
+				<knetminer.api.url>/ws/aratiny</knetminer.api.url>
 								
 				<!--
 				  TODO:newConfig, part of these are for Maven, another part in config files is to be managed 
@@ -496,7 +502,7 @@
 				<neo4j.server.httpPort>7474</neo4j.server.httpPort>
 
 				<!-- TODO:newConfig, to be managed with alternate config files -->
-				<knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile>
+				<!-- <knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile> -->
 
 			</properties>
 				

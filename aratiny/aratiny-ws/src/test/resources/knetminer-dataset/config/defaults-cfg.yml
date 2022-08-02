@@ -63,8 +63,9 @@ graphTraverser:
   GraphTraverserClass: ""
   # ${me} is the absolute path of this hereby file
   # ${mydir} is the absolute path of its directory
-  # Many paths are auto-resolved (eg, sampleQueries, below), but some need an explicit
-  # specification, because the code isn't aware they aren't paths
+  # Many paths are auto-resolved (eg, sampleQueries, above), but some need an explicit
+  # specification, since the configuration component isn't aware they are properties about paths
+  # (since it passes the values downstream)
   StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
   "knetminer.neo4j.configFile": "${mydir}/neo4j/config.xml"
 
