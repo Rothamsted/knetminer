@@ -1,3 +1,5 @@
+# TODO:newConfig probabably to be removed, currently not needed.
+
 # This is joined with .gitignore to produce .dockerignore
 .git
 **/bower_components
@@ -14,7 +16,7 @@ bin/
 dist/
 node_modules/
 bower_components/
-target/
+#target/
 .classpath
 .project
 .settings
@@ -23,6 +25,6 @@ stdout.log
 *.swp
 .vagrant/
 nb-configuration.xml
-*.oxl
+#*.oxl
 package-lock.json
 .DS_Store

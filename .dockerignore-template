@@ -1,3 +1,4 @@
+# TODO: is it still in use?
 # This is joined with .gitignore to produce .dockerignore
 .git
 **/bower_components

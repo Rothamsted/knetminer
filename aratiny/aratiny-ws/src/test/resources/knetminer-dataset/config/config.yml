@@ -1,0 +1,15 @@
+# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# used when no other option is given to Docker.
+# 
+# Your dataset will need its own version of this file. 
+# 
+ 
+"@includes":
+- defaults-cfg.yml
+- test-cfg.yml
+
+oxl: /root/knetminer-dataset/data/knowledge-network.oxl
+  
+"graphTraverser @merge":
+  # WARNING: this is a suicide in production, see defaults for details
+  "knetminer.backend.cypherDebugger.enabled": false

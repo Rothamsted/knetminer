@@ -61,15 +61,15 @@
 		
     <!-- 
     	The Log4j implementation is enforced on test instances only, production relies on the 
-      web container
+      web container.
+      
+      TODO: for reasons I don't know, it doesn't result already available in Tomcat
      -->    
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
 		</dependency>	
 		
-    
 	</dependencies>
 
 	<build>
