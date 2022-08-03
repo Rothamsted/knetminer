@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -80,12 +81,12 @@ public class KnetminerClientUtils
 			var wsBaseUrl = clientBaseUrl;
 			
 			// As explained, /client is a special case in the Docker container
-			wsBaseUrl.replaceAll ( "/client$", "" );
+			wsBaseUrl = wsBaseUrl.replaceAll ( "/client$", "" );
 				
 			// OK, now get the dataset ID
 			// TODO: one day we will migrate towards paths where the DS ID isn't needed in any URL
 			//
-			wsBaseUrl = clientBaseUrl + "/ws";
+			wsBaseUrl = wsBaseUrl + "/ws";
 			
 			HttpGet req = new HttpGet ( wsBaseUrl + "/default/dataset-info" );
 			HttpClient client = HttpClientBuilder.create ().build ();
@@ -97,7 +98,8 @@ public class KnetminerClientUtils
 			if ( httpCode >= 400 ) {
 				// TODO: it's not getting it, probably needs setStatus() only
 				jspOut.write ( IOUtils.toString ( in, "UTF-8" ) );
-				response.sendError ( httpCode, "Knetminer API not available" );
+				// Sending 500, cause it's the only code that makes Tomcat to display something
+				response.sendError ( HttpStatus.SC_INTERNAL_SERVER_ERROR, "Knetminer API not available" );
 				return;
 			}
 			
