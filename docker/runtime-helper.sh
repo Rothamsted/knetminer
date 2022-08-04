@@ -66,7 +66,7 @@ env
 if `$is_container_mode`; then
 	if [[ -f "$mydir/.aws/credentials" ]]; then 
 		echo -e "\n  Running crond in Docker container\n"
-		crontab "$mydir/analytics-cron" 
+		crontab "$mydir/aws/analytics-cron" 
 		crond
 		echo -e "\n  crond started\n"
 	else
