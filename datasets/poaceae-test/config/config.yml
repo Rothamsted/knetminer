@@ -1,0 +1,35 @@
+# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# used when no other option is given to Docker.
+# 
+# Your dataset will need its own version of this file. 
+# 
+ 
+"@includes":
+- defaults-cfg.yml
+
+# oxl: data/knowledge-network.oxl this is the default
+
+# Details about the datset and supported species
+# 
+"dataset @merge":
+  id: wheatknet
+  title: Triticum aestivum
+  # organization: is in the defaults
+  # sampleQueries: config/sample-queries.xml # this is a default
+  # backgroundImage: config/background.jpg # this is the default 
+  
+  species:
+  - taxId: 3702
+    scientificName: Arabidopsis Thaliana
+    commonName: Thale cress
+    # chromosomeBaseMap: config/species/base-map-3702.xml # this is the default
+  - taxId: 4565
+    scientificName: Triticum aestivum
+    commonName: Bread Wheat
+  - taxId: 4577
+    scientificName: Zea mays
+    commonName: Maize
+  
+"graphTraverser @merge":
+  # WARNING: this is a suicide in production, see defaults for details
+  "knetminer.backend.cypherDebugger.enabled": true
