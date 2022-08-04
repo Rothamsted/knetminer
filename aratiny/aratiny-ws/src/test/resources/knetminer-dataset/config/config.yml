@@ -8,7 +8,7 @@
 - defaults-cfg.yml
 - test-cfg.yml
 
-oxl: /root/knetminer-dataset/data/knowledge-network.oxl
+oxl: data/knowledge-network.oxl
   
 "graphTraverser @merge":
   # WARNING: this is a suicide in production, see defaults for details
