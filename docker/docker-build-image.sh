@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
 
 # An helper to build the Knetminer docker image(s).
 #
@@ -7,11 +8,11 @@ set -e
 
 do_bare='false'
 
-if [ "$1" == '--help' ]; then
+if [[[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
 	cat <<EOT
 	
 	
-	Syntax: $(basename $0) [--bare] [<docker tag>]
+	Syntax: $(basename $0) [--help|-h] [--bare] [<docker tag>]
 
   Builds the Knetminer Docker image, including rebuilding the .war applications and default dataset
   files with the right settings. 
@@ -23,7 +24,9 @@ if [ "$1" == '--help' ]; then
 
 EOT
 	exit 1
-elif [ "$1" == '--bare' ]; then
+fi
+
+if [[ "$1" == '--bare' ]]; then
 	do_bare='true'
 	shift
 fi

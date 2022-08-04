@@ -1,9 +1,12 @@
+#!/usr/bin/env bash
+#
+
 # Helper for the host, to run a specie/dataset instance of the Knetminer Docker container.
 #
 # See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
 #
 
-set -x
+set -e
 
 ## Some defaults
 #
@@ -39,6 +42,9 @@ do
   	#--: (it's useful to use it with --container-name)
   	--detach)
   		is_container_detach=true; shift;;
+  	#--: the config file, relative to --dataset-dir (default is config.yml)
+  	--config-file)
+  		config_file="$2"; shift;;
   	#--: Enable Neo4j mode (see the documentation for details).
   	--with-neo4j)
   		is_neo4j=true; shift;;

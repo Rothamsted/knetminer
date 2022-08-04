@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+#
+
 myname=$(basename $0)
 
 [[ "$1" =~ ^(--all|-a)$ ]] && { all_opt='true'; shift; }

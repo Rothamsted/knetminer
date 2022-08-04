@@ -32,7 +32,8 @@ COPY /aratiny/aratiny-ws/target/dependency/poaceae-sample.oxl ./knetminer-datase
 
 
 # AWS stuff
-COPY /docker/.aws ./.aws
+COPY /docker/.aws .
+COPY /docker/analytics-cron .
 
 # Run some other setup operations
 COPY /docker/build-helper.sh .
