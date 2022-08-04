@@ -2,8 +2,8 @@ echo -e "\n\n\t Cleaning local Maven for Docker\n"
 sudo mvn $MAVEN_ARGS clean # The build inside docker created files we don't own
 
 echo -e "\n\n\tBuilding Docker image\n"
-docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
-
+cd docker
+./docker-build-image.sh "$docker_tag"
 
 if [[ "$GIT_BRANCH" != 'master' ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
