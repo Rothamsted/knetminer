@@ -3,15 +3,17 @@
 # See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
 #
 
-## Parse the CLI options
-# 
+set -x
 
-# after some defaults
+## Some defaults
+#
 dataset_id=''
 dataset_dir=''
 host_port=8080
 image_version='latest'
 
+# Parse the CLI options
+# 
 while [[ $# -gt 0 ]]
 do
 	opt_name="$1"
@@ -66,13 +68,6 @@ do
 	
 	=== Variables that affects this script ===
 
-	MAVEN_ARGS: custom options to invoke Maven builds (used to build the front-end (client) WAR and instantiated a 
-	configuration from Maven settings). WARNING: if you set your own -P profile option with this, very likely
-	you'll need -Pdocker. You might need -Pneo4j too.  
-	
-	Example of how to set custom embeddable layout (GeneStack option)
-	export MAVEN_ARGS="-Dknetminer.ui.embeddableLayout=true"
-
 	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above).
 	If you don't set this, the default is '-it'.
 	
@@ -106,25 +101,7 @@ if [ "$dataset_dir" == '' ]; then
 else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
-	
-# Default MAVEN_ARGS is -Pdocker --offline. If no '-P' is used, this profile is added automatically.
-# Typically you DO WANT both these options.
-#
-MAVEN_ARGS="$MAVEN_ARGS --no-transfer-progress --batch-mode --no-snapshot-updates" # TODO: document this addition
-[[ "$MAVEN_ARGS" =~ '-P' ]] || MAVEN_ARGS="$MAVEN_ARGS -Pdocker"	
-	
-# Neo4j mode
-if [[ ! -z "$is_neo4j" ]]; then
-	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
-	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
-	# the maven command line. So, this is a way to customise things like local installations, and doing so while
-	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
-	# 
-	[ "$neo4j_url" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.boltUrl=$neo4j_url"
-	[ "$neo4j_user" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.user=$neo4j_user"
-	[ "$neo4j_pwd" == "" ] || MAVEN_ARGS="$MAVEN_ARGS -Dneo4j.server.password=$neo4j_pwd"
-fi
-
+		
 # Default JAVA_TOOL_OPTIONS is:
 #
 #   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:+UseContainerSupport -XX:-UseCompressedOops
@@ -133,13 +110,26 @@ fi
 # UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
 #
 echo -e "\n"
-for env_var in MAVEN_ARGS JAVA_TOOL_OPTIONS
-do
-	[[ "${!env_var}" == '' ]] && continue;
-	export $env_var
-	DOCKER_OPTS="$DOCKER_OPTS --env $env_var"
-	echo "export $env_var=\"${!env_var}\"" 
-done
 
-set -ex
-docker run $DOCKER_OPTS knetminer/knetminer:$image_version "$dataset_id"
+# Neo4j mode
+# TODO: review, having the options in the command line doesn't make much sense anymore
+# 
+if [[ ! -z "$is_neo4j" ]]; then
+	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
+	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
+	# the maven command line. So, this is a way to customise things like local installations, and doing so while
+	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
+	# 
+	[ "$neo4j_url" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.boltUrl=$neo4j_url"
+	[ "$neo4j_user" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.user=$neo4j_user"
+	[ "$neo4j_pwd" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.password=$neo4j_pwd"
+fi
+
+
+[[ -z "JAVA_TOOL_OPTIONS" ]] || { 
+	echo -e "exporting JAVA_TOOL_OPTIONS: $JAVA_TOOL_OPTIONS"
+	DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
+}
+
+set -x
+docker run $DOCKER_OPTS knetminer/knetminer:$image_version

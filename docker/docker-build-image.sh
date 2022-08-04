@@ -42,7 +42,7 @@ cd ..
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'} 
 
 echo -e "\n\  Re-building with the right Maven settings\n" 
-mvn clean install $MAVEN_ARGS -DskipTests -DskipITs
+#mvn clean install $MAVEN_ARGS -DskipTests -DskipITs
 
 # Partial and quicker builds, which we use during development, when we know what we're doing
 mvn install -pl "!client-base" $MAVEN_ARGS -DskipTests -DskipITs
