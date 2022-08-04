@@ -1160,6 +1160,7 @@ padding-top:10px;}
     border-left: 0.5px solid #EEF0F3;
 }
 
+/* TODO: content still has char encoding issues */
 #species_header::after {
     content:'▾';
     color: black;
