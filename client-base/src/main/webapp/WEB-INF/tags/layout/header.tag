@@ -11,13 +11,13 @@
 				<select onchange="changeSpecies(this)" class="navbar-select"></select>
 				<a id="release_icon" target="_blank" href="" title="Release Notes">
 					<lord-icon
-					src="https://cdn.lordicon.com/nocovwne.json"
-					trigger="loop"
-					delay="2000"
-					colors="primary:#6f7f8f,secondary:#51ce7b"
-					stroke="25"
-					style="width:42px;height:42px">
-				</lord-icon>
+						src="https://cdn.lordicon.com/nocovwne.json"
+						trigger="loop"
+						delay="2000"
+						colors="primary:#6f7f8f,secondary:#51ce7b"
+						stroke="25"
+						style="width:42px;height:42px">
+					</lord-icon>
 				</a>
 			</div>
 		</ul>
