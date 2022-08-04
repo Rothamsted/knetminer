@@ -15,6 +15,12 @@ dataset_dir=''
 host_port=8080
 image_version='latest'
 
+# Our defaults tell the JVM to use a quota of the RAM passed to the container. 
+# UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
+#
+JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS:-'-XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:-UseCompressedOops'}
+
+
 # Parse the CLI options
 # 
 while [[ $# -gt 0 ]]
@@ -26,7 +32,7 @@ do
   	#--: The dataset directory in the host (see the documentation for details).
   	--dataset-dir)
   		dataset_dir="$2"; shift 2;;
-  	#--: The host port to which the container HTTP port is mapped.
+  	#--: The host port to which the container HTTP port is mapped (default is 8080).
   	--host-port)
   		host_port="$2"; shift 2;;
   	#--: Passed to Docker, as --name, useful to manage running containers. 
@@ -63,7 +69,7 @@ do
   	--image-version)
   		image_version="$2"; shift 2;;
   	#--: yields this help output and then exits with 1
-  	--help)
+  	--help|-h)
   		echo -e "\n"
   		# Report the options
   		egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
@@ -108,13 +114,10 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 		
-# Default JAVA_TOOL_OPTIONS is:
-#
-#   -XX:MaxRAMPercentage=90.0 -XX:+UseContainerSupport -XX:+UseContainerSupport -XX:-UseCompressedOops
-#   
-# which tells the JVM to use a quota of the RAM passed to the container. 
-# UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
-#
+# TODO: test it
+[[ -z "$config_file" ]] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dknetminer.api.configFilePath=\"$config_file\"" 
+
+
 echo -e "\n"
 
 # Neo4j mode
