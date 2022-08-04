@@ -25,7 +25,7 @@ public class KnetminerConfigurationTest
 	public void testBasics ()
 	{
 		var cfg = KnetminerConfiguration.load ( "target/test-classes/config-test/dataset-cfg.yml" );
-		assertEquals ( "dataDirPath is wrong!", "path/to/data-dir", cfg.getDataDirPath () );
+		assertEquals ( "dataDirPath is wrong!", "/path/to/data-dir", cfg.getDataDirPath () );
 		
 		ServerDatasetInfo dsi = cfg.getServerDatasetInfo ();
 		assertEquals ( "Dataset title wrong!", "Aratiny dataset", dsi.getTitle () );

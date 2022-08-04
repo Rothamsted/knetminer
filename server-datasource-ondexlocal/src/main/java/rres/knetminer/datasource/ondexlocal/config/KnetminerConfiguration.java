@@ -98,12 +98,15 @@ public class KnetminerConfiguration
 			
 			// If the config is in /config, the dataset dir is the upper directory
 			// else, it is the same as the config file
-			if ( datasetDirPath.endsWith ( "/config" ) ) {
-				datasetDirPath = datasetDirPath.replaceAll ( "/config$", "" );
-			}
+			datasetDirPath = datasetDirPath.replaceAll ( "/config$", "" );
 		}
+		
 		if ( this.dataDirPath == null ) dataDirPath = datasetDirPath + "/" + "data";
+		dataDirPath = buildPath ( datasetDirPath, dataDirPath );
+		
 		if ( this.oxlFilePath == null ) oxlFilePath = dataDirPath + "/knowledge-network.oxl";
+		oxlFilePath = buildPath ( datasetDirPath, oxlFilePath );
+		
 		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
 		
 		this.datasetInfo.postConstruct ( this );

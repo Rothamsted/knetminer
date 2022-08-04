@@ -1,5 +1,5 @@
-dataDir: path/to/data-dir
-oxl: another/path/foo.oxl
+dataDir: /path/to/data-dir
+oxl: /another/path/foo.oxl
 seedGenesFile: seed-genes.txt
 defaultExportedPublicationCount: 100
 knetSpaceURL: https://knetminer.com/beta/knetspace
