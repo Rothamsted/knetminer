@@ -42,11 +42,11 @@ public class KnetminerClientUtils
 	 * the out writer in the JSP page using this method.</p>
 	 * 
 	 * <p>The URL is taken first from the {@link #API_URL_PROP_NAME} property (eg, passed via -D). If this  
-	 * isn't defined, then the method tries to make a reasonable guess, this way: it takes the client's 
-	 * URL from request (ie, URL the browser used to reach the invoking JSP), and it takes whatever
+	 * isn't defined, then the method tries to make a reasonable guess, this way: it takes the client's base
+	 * URL from the request parameter 'myUrl', and it takes whatever
 	 * comes from jspCallerPath. Then, it appends a well-known path to such URL base.</p>
 	 * 
-	 * <p>For instance, suppose the client called api-url.jsp with http://knetminer.org/myknet/html/api-url.jsp.
+	 * <p>For instance, suppose the client called api-url.jsp with baseUrl=http://knetminer.org/myknet/html/api-url.jsp.
 	 * And that jspCallerPath is: /html/api-url.jsp. Then, the method takes http://knetminer.org/myknet and 
 	 * adds /ws/wheat, so the final API URL is assumed to be http://knetminer.org/myknet/ws/wheat.
 	 * The 'wheat' part is the ID of the configured dataset, and it's obtained by initially calling 
@@ -55,7 +55,7 @@ public class KnetminerClientUtils
 	 * <p>Also note that, if the initial URL that the method sees ends with /client, something like 
 	 * http://knetminer.org/myknet/client/html/api-url.jsp, then the final API URL will also be
 	 * http://knetminer.org/myknet/ws/wheat. In other words, the /client/ bit is removed. That's because
-	 * /client and /ws are the two paths that The docker container uses for the two Knetminer web 
+	 * /client and /ws are the two paths that the docker container uses for the two Knetminer web 
 	 * applications.  
 	 */
 	public static void outputApiUrl ( 
@@ -74,10 +74,13 @@ public class KnetminerClientUtils
 			
 			// Else, try some heuristics, as explained above.
 			//
-			var myUrl = request.getRequestURL ().toString ();
+			var myUrl = request.getParameter ( "clientUrl" );
+			if ( myUrl == null ) throw new IllegalArgumentException (
+				"api-url.jsp requires the clientUrl parameter"
+			);
 			var idx = myUrl.indexOf ( jspCallerPath );
 			var clientBaseUrl = myUrl.substring ( 0, idx );
-			
+						
 			var wsBaseUrl = clientBaseUrl;
 			
 			// As explained, /client is a special case in the Docker container

@@ -31,7 +31,8 @@ async function setupApiUrls ()
 {
 	var bootstrapUrl = window.location.href;
 	bootstrapUrl = bootstrapUrl.replace ( /\/$/g, "" ); // URLs with // don't always work
-	bootstrapUrl += "/html/api-url.jsp"
+	bootstrapUrl += "/html/api-url.jsp";
+	bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
 
 	// getting these \n from the API, who knows why
 	api_url = await $.get ( bootstrapUrl, aurl => aurl.replace ( /\n/g, "" ) );
