@@ -35,46 +35,48 @@ if [[ "$1" == "--force" ]]; then
 	shift
 fi
 
-target_dir="$1"
+dataset_dir="$1"
 dataset_id="$2"
 
+wdir=`pwd`
 cd "`dirname "$0"`"
 mydir=`pwd`
-
 cd ..
+knetdir=`pwd`
+cd "$wdir"
 
 echo -e "\n\n\tWorking on \"$dataset_dir\", with dataset ID:'$dataset_id'\n"
 
-if [[ -e "$target_dir" ]]; then
+if [[ -e "$dataset_dir" ]]; then
 	if ! `$force_flag`; then
-		echo -e "\n  Refusing to override existing target \"$target_dir\", use --force to override it\n"
+		echo -e "\n  Refusing to override existing target \"$dataset_dir\", use --force to override it\n"
 		exit 1
 	fi
 	echo -e "\n  Updating exisint targed dir\n"
 else
-	echo -e "\n  Creating target dir \"$target_dir\"\n"
-	mkdir "$target_dir"
+	echo -e "\n  Creating target dir \"$dataset_dir\"\n"
+	mkdir "$dataset_dir"
 fi
 
 
 echo -e "\n  Copying config defaults\n"
-cp -Rf aratiny/aratiny-ws/src/test/resources/knetminer-dataset/config "$target_dir"
+cp -Rf "$knetdir/aratiny/aratiny-ws/src/test/resources/knetminer-dataset/config" "$dataset_dir"
 
 # Remove files that are used for tests only
 for f in data-source.xml.old
 do 
-	rm -Rf "$target_dir/$f"
+	rm -Rf "$dataset_dir/$f"
 done
 
 if [[ ! -z "$dataset_id" ]]; then
 	echo -e "\n  Adding specific config files from $dataset_id\n"
-	cp -Rf "datasets/$dataset_id/config" "$target_dir"
+	cp -Rf "$knetdir/datasets/$dataset_id/config" "$dataset_dir"
 fi
 
 echo -e "\n  Creating default directories\n"
-mkdir -p "$target_dir/data"
+mkdir -p "$dataset_dir/data"
 
-[[ -e "$target_dir/data/knowledge-network.oxl" ]] || \
-  echo -e "\n  File \"$target_dir/data/knowledge-network.oxl\", you need to have a knowledge graph file\n"
+[[ -e "$dataset_dir/data/knowledge-network.oxl" ]] || \
+  echo -e "\n  Remember you need the data file \"$dataset_dir/data/knowledge-network.oxl\"\n"
 
 echo -e "\n  All done!\n"
