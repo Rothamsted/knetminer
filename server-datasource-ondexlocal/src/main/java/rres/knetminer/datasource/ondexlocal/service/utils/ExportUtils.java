@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,4 +145,12 @@ public class ExportUtils
 			);
 		}
   } 
+  
+  
+	public static Map<String,Object> createJsonTable ( List<String> headers, List<Object> rows ) {
+		Map<String,Object> out = new HashMap<String,Object> ();
+		out.put ( "headers", headers );
+		out.put ( "rows",  rows );
+		return out;
+	}
 }

@@ -1,6 +1,5 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
 import java.io.BufferedWriter;
@@ -9,14 +8,17 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,12 +27,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,12 +43,13 @@ import org.springframework.stereotype.Component;
 import net.sourceforge.ondex.core.AttributeName;
 import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
-import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
+import rres.knetminer.datasource.ondexlocal.pojo.Concept;
+import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
@@ -351,7 +352,7 @@ public class ExportService
 	 *
 	 * Was named writeGeneTable
 	 */
-	public String exportGeneTable ( 
+	public Map<String,Object> exportGeneTable ( 
 		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
 		String listMode,  SemanticMotifsSearchResult searchResult 
 	)
@@ -360,7 +361,6 @@ public class ExportService
 		
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 	  var graph = dataService.getGraph ();
-		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 		var options = dataService.getOptions ();
 
 		if ( userGenes == null ) userGenes = Set.of ();
@@ -378,8 +378,9 @@ public class ExportService
 			.orElse ( Collections.emptyMap () );			
 		
 		
-		StringBuffer out = new StringBuffer ();
-		out.append ( "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
+		List<Object> values = new ArrayList<Object> ();
+		
+		
 		for ( ONDEXConcept gene : candidateGenes )
 		{
 			int geneId = gene.getId ();
@@ -392,46 +393,6 @@ public class ExportService
 	
 			boolean isInList = userGeneIds.contains ( gene.getId () );
 	
-			List<String> infoQTL = new LinkedList<> ();
-			for ( Integer qtlConceptId : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
-			{
-				ONDEXConcept qtl = graph.getConcept ( qtlConceptId );
-	
-				/*
-				 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
-				 * and hence we MUST move this code to some utility.
-				 */
-				if ( qtl == null )
-				{
-					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
-					continue;
-				}
-				
-				String acc = Optional.ofNullable ( qtl.getConceptName () )
-					.map ( ConceptName::getName )
-					.map ( StringEscapeUtils::escapeCsv )
-					.orElseGet ( () -> {
-						log.error ( "exportGeneTable(): gene name not found for id: {}", qtlConceptId );
-						return "";
-					});
-	
-				String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
-					.orElse ( acc );
-	
-				// TODO: traitDesc twice?! Looks wrong.
-				infoQTL.add ( traitDesc + "//" + traitDesc ); 
-			} // for genes2QTLs
-	
-	
-			qtls.stream ()
-			.filter ( loci -> !loci.getChromosome ().isEmpty () )
-			.filter ( loci -> geneHelper.getBeginBP ( true ) >= loci.getStart () )
-			.filter ( loci -> geneHelper.getEndBP ( true ) <= loci.getEnd () )
-			.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
-			.forEach ( infoQTL::add );
-	
-			String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
-			
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 
@@ -468,49 +429,43 @@ public class ExportService
 			);
 			
 			// Get best labels for publications and add to the rest
-			if ( !newPubs.isEmpty () )
-			{
-				List<String> pubLabels = newPubs.stream ()
-				.map ( graph::getConcept )
-			  .map ( GraphLabelsUtils::getBestConceptLabel )
-			  // TODO: is this right?! What if the name IS NOT a PMID?!
-			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-			  .collect ( Collectors.toList () );
-				
+			if ( !newPubs.isEmpty () ) {
+				List<String> pubLabels = newPubs.stream ().map ( graph::getConcept )
+						.map ( GraphLabelsUtils::getBestConceptLabel )
+						// TODO: is this right?! What if the name IS NOT a PMID?!
+						.map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
+						.collect ( Collectors.toList () );
 				byCCRelatedLabels.put ( "Publication", pubLabels );
 			}
 
-	
-			// And eventually, create output string for evidences column in GeneView table
-			// 
-			String evidenceStr = byCCRelatedLabels.entrySet ()
-			.stream ()
-			.map ( cc2Labels -> {
-				// Values in the results are like: "Protein__23__label1//label2//...||Publication__12__..."
-				// Here we spawn each string in a ||-delimited block
-				String ccId = cc2Labels.getKey ();
-				List<String> labels = cc2Labels.getValue ();
-				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : labels.size (); 
-				return ccId + "__" + reportedSize + "__" + String.join ( "//", labels );
-			})
-			// And then we join all the per-CC strings 
-			.collect ( Collectors.joining ( "||" ) );
-							
+			// create output string for evidences column in GeneView table
+			Optional<Map<String,Object>> evidenceObj = byCCRelatedLabels.entrySet ()
+				.stream ()
+				.map ( cc2Labels -> 
+				{
+					List<Concept> concepts = cc2Labels.getValue ()
+							.stream ().map(label -> new Concept (label, "","","" ) )
+							.collect ( Collectors.toList () );
+					Map<String,Object> publication = new HashMap<String,Object>();
+					publication.put ( "type", cc2Labels.getKey ());
+					publication.put ( "totalSize", "Publication".equals ( cc2Labels.getKey () ) ? allPubSize : cc2Labels.getValue ().size ());
+					publication.put ( "concepts", concepts);
+					return publication;
+				} ).findAny ();
+			
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 			
-			// TODO: is this right?!
-			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
-			
-			out.append (
-				geneId + "\t" + GraphLabelsUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
-				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
-				+ evidenceStr + "\n" 
-			);
-	
+			values = List.of ( geneId,GraphLabelsUtils.getBestGeneAccession ( gene ),
+					geneName, geneHelper.getChromosome (),geneHelper.getBeginBP ( true ),
+					Integer.parseInt ( geneHelper.getTaxID () ), new BigDecimal ( score ).setScale ( 2,RoundingMode.HALF_UP ) ,
+					( isInList ? true : false ), evidenceObj.isPresent () ? evidenceObj.get ():""  ) ;
 		} // for candidates
 		log.info ( "Gene table generated" );
-		return out.toString ();
+		
+		List<String> headers = List.of ( "ONDEX-ID", "ACCESSION", "GENE_NAME", "CHRO", "START", "TAXID", 
+				"SCORE", "USER", "EVIDENCE" );
+		
+		return ExportUtils.createJsonTable ( headers, values );
 	
 	} // exportGeneTable()
 	
@@ -755,7 +710,7 @@ public class ExportService
    * Export the evidence Table for the KnetMiner 'Evidence View' tab (the third one).
    *
    */
-	public String exportEvidenceTable ( 
+	public Map<String,Object> exportEvidenceTable ( 
 		String keywords, Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr 
 	)
 	{
@@ -791,9 +746,6 @@ public class ExportService
 
 		log.info ( "Generating Evidence table" );
 		
-		List<QTL> qtls = QTL.fromStringList ( qtlsStr ); // it's never null					
-
-		DecimalFormat sfmt = new DecimalFormat ( "0.00" );
 		DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
 
 		// final proxies needed within lambdas
@@ -819,7 +771,6 @@ public class ExportService
 			String foundName = GraphLabelsUtils.getBestConceptLabel ( foundConcept );
 
 			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
 			
 			Integer ondexId = foundConcept.getId ();
 			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
@@ -828,38 +779,16 @@ public class ExportService
 			Integer startGenesSize = startGeneIds.size ();
 			
 			Set<String> userGeneLabels = ConcurrentHashMap.newKeySet ();
-			var qtlsSize = new AtomicInteger ( 0 );
-
+			
 			// Consider the genes to which this concept is related
 			//
 			startGeneIds.parallelStream ()
 			.forEach ( (Integer startGeneId) ->
 			{
 				ONDEXConcept startGene = graph.getConcept ( startGeneId );
-				var geneHelper = new GeneHelper ( graph, startGene );
-				
 				if ( startGene != null && userGenesRo.contains ( startGene ) )
 					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( startGene ) );
-
-				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
-
-				String chr = geneHelper.getChromosome ();
-				int beg = geneHelper.getBeginBP ( true );
-					
-				
-				// Count the matching QTLs
-				//
-				int matchingQtls = (int) qtls.parallelStream ()
-				.filter ( (QTL loci) -> {
-					String qtlChrom = loci.getChromosome ();
-					Integer qtlStart = loci.getStart ();
-					Integer qtlEnd = loci.getEnd ();
-					return qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd;
-				})
-				.count ();
-				
-				if ( matchingQtls > 0 ) qtlsSize.addAndGet ( matchingQtls );
-				
+	
 			}); // for searchedGeneId
 
 			
@@ -885,7 +814,6 @@ public class ExportService
 				"pvalue", pvalue,
 				"genesSize", startGenesSize,
 				"userGeneLabels", userGeneLabels,
-				"qtlsSize", qtlsSize.get (),
 				"ondexId", ondexId
 			));			
 			results.add ( result );
@@ -895,45 +823,45 @@ public class ExportService
 				hasMatchingUserGenes.setTrue ();
 			
 		}); // for foundConcepts()
-		
-		// Final filtering of 0-size user gene rows, translation to string and counting
-		//
-		var tableSize = new MutableInt ( 0 );	
-		String tableStr = 
-		results.stream ()
-		.filter ( result -> {
-			// As explained above, let's keep user genes with > 0 count, if any
-			if ( hasMatchingUserGenes.isFalse () ) return true;
 			
-			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
-			return userGeneLabels.size () > 0;
-		})
-		// Yields a row
-		.map ( result -> 
-		{
-			tableSize.increment ();
-			
-			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
-			var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
+			// Final filtering of 0-size user gene rows, translation to string and counting
+			//
+			var tableSize = new MutableInt ( 0 );	
+			List<Object> tableRow = 
+			results.stream ()
+			.filter ( result -> {
+				// As explained above, let's keep user genes with > 0 count, if any
+				if ( hasMatchingUserGenes.isFalse () ) return true;
+				
+				Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
+				return userGeneLabels.size () > 0;
+			})
+			// Yields a row
+			.map ( result -> 
+			{
+				tableSize.increment ();
+				
+				Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
+				var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
+				BigDecimal bdScore = new BigDecimal ( result.getDouble ( "score") ).setScale ( 2,
+						RoundingMode.HALF_UP );
 						
-			return 
-				result.getString ( "type" ) + "\t" + 
-				result.getString ( "name" ) + "\t" +
-				sfmt.format ( result.getDouble ( "score" ) ) + "\t" + 
-				pfmt.format ( result.getDouble ( "pvalue" ) ) + "\t" + 
-				result.getInt ( "genesSize" ) + "\t" + 
-				userGenesStr + "\t" + 
-				result.getInt ( "qtlsSize" ) + "\t" +
-				result.getInt ( "ondexId" );
-		})
-		.collect ( Collectors.joining ( "\n" ) );
-		
-		// Required by the client TSV reader
-		if ( !tableStr.isEmpty () ) tableStr += "\n";
-		
-		log.info ( "Returning {} row(s) for the evidence table", tableSize.getValue () );
-		
-		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\n" + tableStr;
-		
-	} // exportEvidenceTable()	
+				return List.of(
+					result.getString ( "type" ), 
+					result.getString ( "name" ) ,
+					bdScore , 
+					pfmt.format ( result.getDouble ( "pvalue" ) ),
+					result.getInt ( "genesSize" ) , 
+					userGenesStr , 
+					result.getInt ( "ondexId" ));
+			})
+			.collect ( Collectors.toList() );
+			
+			List<String> headers = List.of ( "TYPE", "NAME", "SCORE", "P-VALUE", "GENES", "USER_GENES",
+					"ONDEXID" );
+			
+			log.info ( "Returning {} row(s) for the evidence table", tableSize.getValue () );
+			
+			return ExportUtils.createJsonTable ( headers, tableRow );
+	} 
 }

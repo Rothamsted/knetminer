@@ -303,7 +303,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		log.debug ( "2.) API, doing gene table view" );
 
 		var newSearchResult = new SemanticMotifsSearchResult ( smSearchMgr.getGeneId2RelatedConceptIds (), genesMap );
-		String geneTable = exportService.exportGeneTable ( 
+		Map<String,Object> geneTable = exportService.exportGeneTable ( 
 			genes, userGenes, request.getQtl (), request.getListMode (), newSearchResult 
 		);
 
@@ -313,7 +313,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		//
 
 		log.debug ( "3) API, doing evidence table" );
-		String evidenceTable = exportService.exportEvidenceTable (
+		Map<String,Object> evidenceTable = exportService.exportEvidenceTable (
 			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl ()
 		);
 		log.debug ( "Evidence table done" );

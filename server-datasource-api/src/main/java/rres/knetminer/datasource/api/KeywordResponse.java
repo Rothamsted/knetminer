@@ -1,5 +1,7 @@
 package rres.knetminer.datasource.api;
 
+import java.util.Map;
+
 /**
  * Contains elements that are common to both NetworkResponse and GenomeResponse, hence it is abstract.
  * 
@@ -8,8 +10,8 @@ package rres.knetminer.datasource.api;
  */
 public abstract class KeywordResponse extends KnetminerResponse {
 	private String GViewer;
-	private String geneTable;
-	private String evidenceTable;
+	private Map<String,Object> geneTable;
+	private Map<String,Object> evidenceTable;
 	private int geneCount;
 	private int docSize;
 	private int totalDocSize;
@@ -19,16 +21,16 @@ public abstract class KeywordResponse extends KnetminerResponse {
 	public void setGViewer(String gViewer) {
 		GViewer = gViewer;
 	}
-	public String getGeneTable() {
+	public Map<String,Object> getGeneTable () {
 		return geneTable;
 	}
-	public void setGeneTable(String geneTable) {
+	public void setGeneTable ( Map<String,Object> geneTable ) {
 		this.geneTable = geneTable;
 	}
-	public String getEvidenceTable() {
+	public Map<String,Object> getEvidenceTable () {
 		return evidenceTable;
 	}
-	public void setEvidenceTable(String evidenceTable) {
+	public void setEvidenceTable ( Map<String,Object> evidenceTable ) {
 		this.evidenceTable = evidenceTable;
 	}
 	public int getGeneCount() {

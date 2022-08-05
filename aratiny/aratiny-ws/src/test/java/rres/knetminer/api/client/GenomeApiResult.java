@@ -20,8 +20,8 @@ public class GenomeApiResult
 	private int docSize = -1;
 	private int totalDocSize = -1;
 	
-	private List<String[]> geneTable = List.of();
-	private List<String[]> evidenceTable = List.of ();
+	private JSONObject geneTable;
+	private JSONObject evidenceTable;
 	private String gviewer = "";
 	
 
@@ -49,8 +49,8 @@ public class GenomeApiResult
 		docSize = jsResult.getInt ( "docSize" );
 		totalDocSize = jsResult.getInt ( "totalDocSize" );
 		
-		this.geneTable = str2Table ( jsResult.getString ( "geneTable" ) );
-		this.evidenceTable = str2Table ( jsResult.getString ( "evidenceTable" ) );
+		this.geneTable = ( JSONObject ) jsResult.get ( "geneTable" ) ;
+		this.evidenceTable = ( JSONObject ) jsResult.get ( "evidenceTable" ) ;
 		this.gviewer = jsResult.getString ( "gviewer" );
 	}
 	
@@ -86,7 +86,7 @@ public class GenomeApiResult
 	 * This corresponds to the gene table view in the KnetMiner application.
 	 * First element contains the headers.
 	 */
-	public List<String[]> getGeneTable ()
+	public JSONObject getGeneTable ()
 	{
 		return geneTable;
 	}
@@ -96,7 +96,7 @@ public class GenomeApiResult
 	 * First element contains the headers.
 	 *  
 	 */
-	public List<String[]> getEvidenceTable ()
+	public JSONObject getEvidenceTable ()
 	{
 		return evidenceTable;
 	}
