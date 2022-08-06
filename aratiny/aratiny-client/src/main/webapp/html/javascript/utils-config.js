@@ -29,24 +29,38 @@ var knetspace_api_host= "";
 // TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
 async function setupApiUrls ()
 {
-	var bootstrapUrl = window.location.href;
-	bootstrapUrl = bootstrapUrl.replace ( /\/$/g, "" ); // URLs with // don't always work
-	bootstrapUrl += "/html/api-url.jsp";
-	bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
+  var clientBaseUrl = window.location.href.replace ( /\/$/g, "" ); // URLs with // don't always work;
+  bootstrapUrl = clientBaseUrl;
+  bootstrapUrl += "/html/api-url.jsp";
+  bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
 
-	// getting these \n from the API, who knows why
-	api_url = await $.get ( bootstrapUrl, aurl => aurl.replace ( /\n/g, "" ) );
+  // getting these \n from the API, who knows why
+  try {
+    api_url = await $.get ( bootstrapUrl, aurl => aurl.replace ( /\n/g, "" ) );
+  }
+  catch ( e ) {
+    // If it fails again, try to guess this too, might help when the client URL is wrong for the
+    // server side
+    guessApiUrl = clientBaseUrl.replace ( /client$/g, "" );
+    guessApiUrl += "/ws/default/dataset-info";
+    await $.getJSON ( guessApiUrl, js => {
+			// Initially, I've tried: api_url = await $.getJSON(...), but
+			// no idea why in this case api_url is set to js, instead of this returnvalue 
+      api_url = clientBaseUrl + "/ws/" + js [ "id" ]
+    });
+  }
+  // TODO manage complete failure
 
-	// Set anything else that depends on it
-	multiSpecieUrl = api_url + "/dataset-info";
+  // Set anything else that depends on it
+  multiSpecieUrl = api_url + "/dataset-info";
 
-	// Same trick with this other API (including \n esaping)
-	knetspace_api_host = await $.get ( 
-		api_url + "/dataset-info/knetspace-url",
-		ksUrl => ksUrl.replace ( /\n/g, "" ) 
-	);
-	
-	return api_url; // just in case the invoker wants it
+  // Same trick with this other API (including \n esaping)
+  knetspace_api_host = await $.get (
+    api_url + "/dataset-info/knetspace-url",
+    ksUrl => ksUrl.replace ( /\n/g, "" )
+  );
+
+  return api_url; // just in case the invoker wants it
 }
 
 var enforce_genelist_limit= true; // enforce free user search limits (true/false).
