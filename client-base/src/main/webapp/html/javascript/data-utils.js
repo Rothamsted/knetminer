@@ -404,7 +404,7 @@ function findGenes(id, chr_name, start, end) {
         var searchMode = "countLoci";
         var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
         var keyword = chr_name + "-" + start + "-" + end;
-        var request = "/" + searchMode + "?keyword=" + keyword+"&"+taxonomyID;
+        var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
         var url = api_url + request;
         console.log(url); 
         $.get(url, '').done(function (data) {
@@ -430,7 +430,7 @@ function matchCounter() {
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
-            var request = "/" + searchMode + "?keyword=" + keyword+"&"+taxonomyID;
+            var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
             var url = api_url + request;
 
             $.get(url, '').done(function (data) {
