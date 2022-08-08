@@ -45,7 +45,7 @@ cd ..
 knetdir=`pwd`
 cd "$wdir"
 
-echo -e "\n\n\tWorking on \"$dataset_dir\", with dataset ID:'$dataset_id'\n"
+echo -e "\n\n\tDataset initialiser, working on \"$dataset_dir\", with dataset ID:'$dataset_id'\n"
 
 if [[ -e "$dataset_dir" ]]; then
 	if ! `$force_flag`; then

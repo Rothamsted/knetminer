@@ -44,7 +44,7 @@ cd "$dataset_dir"
 
 if check_readable_dir "$dataset_dir/data"; then
 	cd data
-	echo -e "Cleaning data"
+	echo -e "Cleaning data on \"$dataset_dir/data\""
 	rm -Rf *.tab index map*
 	rm -f concepts2Genes genes2Concepts genes2PathLengths
 fi
