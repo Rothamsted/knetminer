@@ -3,7 +3,8 @@
 #
 set -e # Stop upon the first problem
 
-dataset_dir=/opt/data/knetminer-datasets/wheat-ci
+dataset_dir=/opt/data/knetminer-datasets/poaceae-ci
+dataset_id=poaceae-test
 host_port=9100
 jmx_port=9010
 rmi_port=9011
@@ -34,16 +35,19 @@ echo -e "\n\n\tPreparing the environment\n"
 #EOT
 
 echo -e "--- Stopping, cleaning and updating Docker\n"
-docker stop wheat-ci || true
-docker rm wheat-ci || true
+docker stop poaceae-ci || true
+docker rm poaceae-ci || true
 docker system prune --all --force
 docker volume prune --force
-docker pull knetminer/knetminer
+docker pull knetminer/knetminer:multi-species # TODO: switch back to default when possible
 
 # This used to be the default. Now, it's normally disabled and manually ran when needed
 # TODO: flag to be passed from the CI framework 
 #echo -e "--- Cleaning Knetminer dataset directory\n"
-#./cleanup-volume.sh --all "$dataset_dir"
+#./dataset-cleanup.sh "$dataset_dir"
+
+# We always update the DS configuration, since this often changes on the dev branch
+./dataset-init.sh --force "$dataset_dir" "$dataset_id"
 
 
 # Options to setup JMX and use jvisualvm. this makes jvisualvm accessible on 9010 (RMI on 9011), you can start jvisualvm from the
@@ -82,7 +86,6 @@ mem_swap='90G'
 if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	echo -e "\n\n\t(Re)launching Docker, Cypher-based traverser\n"
 
-	dataset_id="wheat-directed"
 	docker_run_opts="--with-neo4j --neo4j-url bolt://babvs65.rothamsted.ac.uk:7688 
 		--neo4j-user rouser --neo4j-pwd rouser"
 	# Enables the Cypher Debugger, to profile Cypher queries
@@ -94,11 +97,12 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
-		dataset_id="wheat-beta"
 fi
 
+# TODO: remove --image-version
+#
 ./docker-run.sh \
-  --dataset-id "$dataset_id" --container-name wheat-ci \
+  --container-name poaceae-ci --image-version multi-species \
   --dataset-dir "$dataset_dir" --host-port $host_port \
   --container-memory $memory --container-memory-swap $mem_swap \
   $docker_run_opts \
