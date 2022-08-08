@@ -38,16 +38,17 @@ async function setupApiUrls ()
   try {
     api_url = await $.get ( bootstrapUrl, aurl => aurl.replace ( /\n/g, "" ) );
   }
-  catch ( e ) {
-    // If it fails again, try to guess this too, might help when the client URL is wrong for the
-    // server side
-    guessApiUrl = clientBaseUrl.replace ( /client$/g, "" );
-    guessApiUrl += "/ws/default/dataset-info";
-    await $.getJSON ( guessApiUrl, js => {
-			// Initially, I've tried: api_url = await $.getJSON(...), but
-			// no idea why in this case api_url is set to js, instead of this returnvalue 
-      api_url = clientBaseUrl + "/ws/" + js [ "id" ]
-    });
+  catch ( e )
+  {
+		// If it fails again, try to guess this too, might help when the client URL is wrong for the
+		// server side
+		instanceBaseUrl = clientBaseUrl.replace ( /client$/g, "" );
+		guessApiUrl = instanceBaseUrl + "/ws/default/dataset-info";
+		await $.getJSON ( guessApiUrl, js => {
+		// Initially, I've tried: api_url = await $.getJSON(...), but
+		// no idea why in this case api_url is set to js, instead of this returnvalue
+			api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
+		});
   }
   // TODO manage complete failure
 
