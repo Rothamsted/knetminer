@@ -94,6 +94,10 @@ if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	
 else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
+		
+		echo -e "\n  ***** TODO: actually this is DISABLED, cause I'm testing it manually, remove this when possible *****\n"
+		exit
+		
 		dataset_id="wheat-beta"
 fi
 
