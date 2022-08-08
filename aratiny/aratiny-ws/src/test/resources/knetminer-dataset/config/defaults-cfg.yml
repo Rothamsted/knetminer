@@ -42,6 +42,9 @@ dataset:
 #  # sampleQueries: config/sample-queries.xml # this is a default
 #  # backgroundImage: config/background.jpg # this is the default 
 #  
+# TODO: we had this in the old config, but not used anywhere:
+#   appKeywords, appDescription
+
 #  species:
 #  - taxId: 3702
 #    scientificName: Arabidopsis Thaliana

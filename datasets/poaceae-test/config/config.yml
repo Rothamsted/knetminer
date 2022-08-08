@@ -26,9 +26,12 @@
   - taxId: 4565
     scientificName: Triticum aestivum
     commonName: Bread Wheat
-  - taxId: 4577
-    scientificName: Zea mays
-    commonName: Maize
+#  - taxId: 39947
+#    scientificName: Oryza sativa Japonica Group
+#    commonName: Japonica rice    
+#  - taxId: 4577
+#    scientificName: Zea mays
+#    commonName: Maize
   
 "graphTraverser @merge":
   # WARNING: this is a suicide in production, see defaults for details
