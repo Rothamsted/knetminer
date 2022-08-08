@@ -12,7 +12,7 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: wheatknet # TODO: must become poaceae, after fixing the proxy
+  id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
   title: Poaceae Test Instance
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
