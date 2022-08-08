@@ -51,14 +51,14 @@
 1-20	has_variation		d
 1-13	has_phenotype		d
 
-10-10	h_s_s	4
-10-7	h_s_s	4
-10-10	ortho	4
-10-7	ortho	4
-10-10	equivalent	4
-10-7	equivalent	4
-10-10	xref	8
-10-7	xref	8
+10-10	h_s_s	2
+10-7	h_s_s	2
+10-10	ortho	2
+10-7	ortho	2
+10-10	equivalent	2
+10-7	equivalent	2
+10-10	xref	4
+10-7	xref	4
 10-2	pub_in		d
 10-3	has_function		d
 10-4	participates_in		d
@@ -75,10 +75,10 @@
 9-3	has_function		d
 9-4	participates_in		d
 9-5	located_in		d
-9-8	genetic	8
-9-8	physical	8
-9-9	genetic	8
-9-9	physical	8
+9-8	genetic	4
+9-8	physical	4
+9-9	genetic	4
+9-9	physical	4
 9-13	has_phenotype		d
 9-20	has_variation		d
 9-22	differentially_expressed		d
