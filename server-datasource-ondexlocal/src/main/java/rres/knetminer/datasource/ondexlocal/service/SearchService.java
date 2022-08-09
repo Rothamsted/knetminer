@@ -121,7 +121,6 @@ public class SearchService
     } 
     catch (Exception e)
     {
-      log.error ( "Error while loading/creating graph index: " + e.getMessage (), e );
       ExceptionUtils.throwEx (
       	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
       ); 
