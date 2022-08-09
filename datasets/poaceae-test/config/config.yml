@@ -21,6 +21,8 @@
   # ======> WARNING!
   # SemanticMotif.txt won't work if you include Arabidopsis (endless paths met).
   # For that to work, you need to use SemanticMotifs-no-ara.txt
+  # I've also experienced problems with adding rice to the first two.
+  #
   species:
   #- taxId: 3702
   #  scientificName: Arabidopsis Thaliana
