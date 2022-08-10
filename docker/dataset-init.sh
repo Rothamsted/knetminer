@@ -73,7 +73,7 @@ if [[ ! -z "$dataset_id" ]]; then
 	cp -Rf "$knetdir/datasets/$dataset_id/config" "$dataset_dir"
 fi
 
-echo -e "\n  Creating default directories\n"
+echo -e "\n  Creating default directories (if not already there)\n"
 mkdir -p "$dataset_dir/data"
 
 [[ -e "$dataset_dir/data/knowledge-network.oxl" ]] || \
