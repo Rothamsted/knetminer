@@ -19,12 +19,12 @@ import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
-import uk.ac.ebi.utils.opt.config.YAMLUtils;
+import uk.ac.ebi.utils.opt.config.YAMLLoader;
 
 /**
  * A class to map and manage YAML configuration files for Knetminer.
  * 
- * These files are loaded via {@link YAMLUtils}, so have a look at that class (and tests in the 
+ * These files are loaded via {@link YAMLLoader}, so have a look at that class (and tests in the 
  * jutils project) to have an idea of all the options it offers. Also, have a look to 
  * existing Knetminer files. 
  *
@@ -77,7 +77,7 @@ public class KnetminerConfiguration
 	public static KnetminerConfiguration load ( String configFilePath )
 	{
 		slog.info ( "Loading Ondex/Knetminer configuration from '{}'", configFilePath );
-		var cfg = YAMLUtils.loadYAMLFromFile ( configFilePath, KnetminerConfiguration.class );
+		var cfg = YAMLLoader.loadYAMLFromFile ( configFilePath, KnetminerConfiguration.class );
 		cfg.configFilePath = configFilePath;
 		cfg.postConstruct ();
 		
