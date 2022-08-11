@@ -16,7 +16,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +47,6 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
-import rres.knetminer.datasource.ondexlocal.pojo.Concept;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
@@ -378,7 +376,7 @@ public class ExportService
 			.orElse ( Collections.emptyMap () );			
 		
 		
-		List<Object> values = new ArrayList<Object> ();
+		List<List<Object>> values = new ArrayList<List<Object>> ();
 		
 		
 		for ( ONDEXConcept gene : candidateGenes )
@@ -439,26 +437,33 @@ public class ExportService
 			}
 
 			// create output string for evidences column in GeneView table
-			Optional<Map<String,Object>> evidenceObj = byCCRelatedLabels.entrySet ()
+			List<Map<String, Object>> evidenceObj = byCCRelatedLabels.entrySet ()
 				.stream ()
 				.map ( cc2Labels -> 
 				{
-					List<Concept> concepts = cc2Labels.getValue ()
-							.stream ().map(label -> new Concept (label, "","","" ) )
+					List<Map<String, String>> concepts = cc2Labels.getValue ()
+							.stream ().map(label -> Map.of("label",label,
+									                        "score","",
+									                        "distance","",
+									                        "p-value","" ) )
 							.collect ( Collectors.toList () );
-					Map<String,Object> publication = new HashMap<String,Object>();
-					publication.put ( "type", cc2Labels.getKey ());
-					publication.put ( "totalSize", "Publication".equals ( cc2Labels.getKey () ) ? allPubSize : cc2Labels.getValue ().size ());
-					publication.put ( "concepts", concepts);
-					return publication;
-				} ).findAny ();
+					
+					return Map.of ( "type", cc2Labels.getKey (),
+							        "totalSize", "Publication".equals ( 
+									      cc2Labels.getKey () ) ? allPubSize : cc2Labels.getValue ().size (),
+							        "concepts", concepts );
+					
+					
+				} ).collect(Collectors.toList());
+			
+			
 			
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 			
-			values = List.of ( geneId,GraphLabelsUtils.getBestGeneAccession ( gene ),
+			values.add ( List.of ( geneId,GraphLabelsUtils.getBestGeneAccession ( gene ),
 					geneName, geneHelper.getChromosome (),geneHelper.getBeginBP ( true ),
 					Integer.parseInt ( geneHelper.getTaxID () ), new BigDecimal ( score ).setScale ( 2,RoundingMode.HALF_UP ) ,
-					( isInList ? true : false ), evidenceObj.isPresent () ? evidenceObj.get ():""  ) ;
+					( isInList ? true : false ), evidenceObj) ) ;
 		} // for candidates
 		log.info ( "Gene table generated" );
 		
@@ -717,22 +722,22 @@ public class ExportService
 		if ( userGenes == null ) userGenes = Set.of ();
 		if ( foundConcepts == null ) foundConcepts = Map.of ();
 		
-    var graph = dataService.getGraph ();
+		var graph = dataService.getGraph ();
 		
-    /*
-   	 * Edge cases:
-   	 * keywords          user genes                   result
-   	 * no match          !null, no match							empty
- 		 * some match        !null, no match              total genes, 0 for user genes
- 		 * some match        some match                   filter user genes = 0
- 		 * null              sem motif matches            total genes, user genes
- 		 *  
- 		 * So, this should do:
- 		 *   for a result list, if there is at least one user gene that isn't 0, filter 0s
- 		 *   else, user genes are all at 0, don't filter
-     */
-		
-    // We're going to update it in parallel, need to support it 
+	    /*
+	   	 * Edge cases:
+	   	 * keywords          user genes                   result
+	   	 * no match          !null, no match							empty
+	 		 * some match        !null, no match              total genes, 0 for user genes
+	 		 * some match        some match                   filter user genes = 0
+	 		 * null              sem motif matches            total genes, user genes
+	 		 *  
+	 		 * So, this should do:
+	 		 *   for a result list, if there is at least one user gene that isn't 0, filter 0s
+	 		 *   else, user genes are all at 0, don't filter
+	     */
+			
+	    // We're going to update it in parallel, need to support it 
 		Queue<OptionsMap> results = new ConcurrentLinkedQueue<> ();
 
 		// This doesn't need concurrency management, cause it can only be toggled to true 
@@ -827,7 +832,7 @@ public class ExportService
 			// Final filtering of 0-size user gene rows, translation to string and counting
 			//
 			var tableSize = new MutableInt ( 0 );	
-			List<Object> tableRow = 
+			List tableRow = 
 			results.stream ()
 			.filter ( result -> {
 				// As explained above, let's keep user genes with > 0 count, if any
@@ -843,16 +848,14 @@ public class ExportService
 				
 				Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
 				var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
-				BigDecimal bdScore = new BigDecimal ( result.getDouble ( "score") ).setScale ( 2,
-						RoundingMode.HALF_UP );
 						
 				return List.of(
 					result.getString ( "type" ), 
-					result.getString ( "name" ) ,
-					bdScore , 
-					pfmt.format ( result.getDouble ( "pvalue" ) ),
-					result.getInt ( "genesSize" ) , 
-					userGenesStr , 
+					result.getString ( "name" ),
+					result.getDouble ( "score"), 
+					result.getDouble ( "pvalue" ),
+					result.getInt ( "genesSize" ), 
+					userGenesStr, 
 					result.getInt ( "ondexId" ));
 			})
 			.collect ( Collectors.toList() );

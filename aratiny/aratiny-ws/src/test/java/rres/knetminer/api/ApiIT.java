@@ -16,7 +16,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
@@ -154,18 +153,15 @@ public class ApiIT
 		GenomeApiResult apiOut = CLI.genome ( "response", null, null, null );
 		assertNotNull ( "No JSON returned!", apiOut );
 		
-		JSONObject evidenceTable = apiOut.getEvidenceTable ();
+		List<List<Object>> evidenceTable = apiOut.getEvidenceTable ();
 		assertFalse ( "No evidenceTable in the result", evidenceTable.isEmpty () );
-		
-		JSONArray rows = ( JSONArray ) evidenceTable.get ( "rows" );
-	
-		var rowFound = rows.toList ().stream ().anyMatch ( cols -> 
+
+		var rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols -> 
 		{
-			List<Object> col =   (List<Object>) cols;
-			if ( !"Trait".equals ( col.get ( 0 ) ) ) return false;
-			if ( !"disease resistance".equals ( col.get ( 1 ) ) ) return false;
-			if ( NumberUtils.toDouble ( col.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( col.get ( 6 ).toString () ) < 0 ) return false; // ondexId
+			if ( !"Trait".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
+			if ( !"disease resistance".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
+			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) < 0 ) return false; // ondexId
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found!", rowFound );
@@ -182,32 +178,28 @@ public class ApiIT
 		);
 		assertNotNull ( "No result returned!",  apiOut );
 
-		JSONObject evidenceTable = apiOut.getEvidenceTable ();
+		List<List<Object>> evidenceTable = apiOut.getEvidenceTable ();
 		assertFalse ( "evidenceTable is null/empty!", evidenceTable.isEmpty () );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 3, evidenceTable.get ( 1 ).size () );
 		
-		
-		assertEquals ( "Wrong no. of rows for filtered genes!", 3, ( ( JSONArray ) evidenceTable.get ("rows") ).length () );
-		
-		var rowFound = ( ( JSONArray ) evidenceTable.get ( "rows" ) ).toList ().stream ().anyMatch ( cols ->
+		var rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols ->
 		{
-			List<Object> col =   (List<Object>) cols;
-			if ( !"BioProc".equals ( col.get ( 0 ) ) ) return false;
-			if ( !"Regulation Of Transcription, DNA-templated".equals ( col.get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( col.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( col.get ( 4 ).toString () ) <= 0 ) return false; // genes count
-			if ( !"AT3G16830".equals ( col.get ( 5 ).toString () ) ) return false; // genes
+			if ( !"BioProc".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
+			if ( !"Regulation Of Transcription, DNA-templated".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
+			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			if ( !"AT3G16830".equals ( ( ( List ) cols ).get ( 5 ) ) ) return false; // genes
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found (single gene)!", rowFound );
 		
-		rowFound = ( ( JSONArray ) evidenceTable.get ( "rows" ) ).toList ().stream ().anyMatch ( cols ->
+		rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols ->
 		{
-			List<Object> col =   (List<Object>) cols;
-			if ( !"BioProc".equals ( col.get ( 0 )) ) return false;
-			if ( !"Vesicle-mediated Transport".equals ( col.get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( col.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( col.get ( 4 ).toString () ) <= 0 ) return false; // genes count
-			var genes = col.get ( 5 ).toString ().split ( "," ); // user genes
+			if ( !"BioProc".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
+			if ( !"Vesicle-mediated Transport".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
+			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			var genes =  ( ( List ) cols ).get ( 5 ).toString ().split ( "," ); // user genes
 			
 			if ( genes == null ) return false;
 						

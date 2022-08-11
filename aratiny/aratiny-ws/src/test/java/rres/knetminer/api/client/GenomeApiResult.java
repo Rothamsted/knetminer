@@ -2,6 +2,7 @@ package rres.knetminer.api.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -20,8 +21,8 @@ public class GenomeApiResult
 	private int docSize = -1;
 	private int totalDocSize = -1;
 	
-	private JSONObject geneTable;
-	private JSONObject evidenceTable;
+	private List<List<Object>> geneTable = List.of();
+	private List<List<Object>> evidenceTable = List.of ();
 	private String gviewer = "";
 	
 
@@ -49,9 +50,19 @@ public class GenomeApiResult
 		docSize = jsResult.getInt ( "docSize" );
 		totalDocSize = jsResult.getInt ( "totalDocSize" );
 		
-		this.geneTable = ( JSONObject ) jsResult.get ( "geneTable" ) ;
-		this.evidenceTable = ( JSONObject ) jsResult.get ( "evidenceTable" ) ;
+		this.geneTable =   json2Table ( jsResult.get ( "geneTable" ) ) ;
+		this.evidenceTable = json2Table ( jsResult.get ( "evidenceTable" ) );
 		this.gviewer = jsResult.getString ( "gviewer" );
+	}
+	
+	private static List<List<Object>> json2Table ( Object object )
+	{
+		Map<String, Object> jsonMap = ( (JSONObject ) object ).toMap ();
+		
+		List<List<Object>> table = new ArrayList<> ();
+		for ( Object line: jsonMap.values () )
+			table.add ( ( List<Object> ) line );
+		return table;
 	}
 	
 	private static List<String[]> str2Table ( String tableString )
@@ -86,7 +97,7 @@ public class GenomeApiResult
 	 * This corresponds to the gene table view in the KnetMiner application.
 	 * First element contains the headers.
 	 */
-	public JSONObject getGeneTable ()
+	public List<List<Object>> getGeneTable ()
 	{
 		return geneTable;
 	}
@@ -96,7 +107,7 @@ public class GenomeApiResult
 	 * First element contains the headers.
 	 *  
 	 */
-	public JSONObject getEvidenceTable ()
+	public List<List<Object>> getEvidenceTable ()
 	{
 		return evidenceTable;
 	}

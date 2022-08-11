@@ -147,7 +147,7 @@ public class ExportUtils
   } 
   
   
-	public static Map<String,Object> createJsonTable ( List<String> headers, List<Object> rows ) {
+	public static Map<String,Object> createJsonTable ( List<String> headers, List<List<Object>> rows ) {
 		Map<String,Object> out = new HashMap<String,Object> ();
 		out.put ( "headers", headers );
 		out.put ( "rows",  rows );
