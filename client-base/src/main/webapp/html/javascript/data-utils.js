@@ -72,7 +72,7 @@ function searchKeyword(){
      //if inputs are empty client get an error saying input is empty 
     //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
       if(keyword == '' && list.length == 0 && requestParams.qtl.length == 0 ){
-        var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry all inputs are empty.</span></div>'; 
+        var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Please input at least one search parameter.</span></div>'; 
         $("#pGViewer_title").replaceWith(searchErrorTitle);
         $('.pGViewer_title_line').css("color","red");
         $('#tabviewer').hide();
@@ -146,7 +146,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                      });
              }
              else {
-                 $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to search with unlimited genes</b></div>');
+                 $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
              }
         }
     });
@@ -161,7 +161,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
     if (data.geneCount === 0) { 
           status = true; 
          if(keyword.length > 0) { // msg for keyword search error
-            messageNode = keyword + 'did not match any genes or documents. Make sure that all words are spelled correctly. Try different or more general keywords.'; 
+            messageNode = keyword + 'did not match any genes or documents. Check for typos and try different or more general keywords.'; 
             genomicViewTitle = createGenomicViewTitle(messageNode,status);
            
             if(geneList_size > 0) {
@@ -264,7 +264,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              }
             // for rare edge cases when no genes in list are found in search, then search is empty.
             if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-               genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs to see results.</span></div>';
+               genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs.</span></div>';
               }
            }
          if(searchMode === "qtl") { 
@@ -308,7 +308,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                 }
                // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
                if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Shwoing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
+                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Showing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
                  }
               }
            }

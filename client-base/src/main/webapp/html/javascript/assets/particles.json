@@ -1,20 +1,20 @@
 {
   "particles": {
     "number": {
-      "value": 28,
+      "value": 19,
       "density": {
         "enable": true,
         "value_area": 800
       }
     },
     "color": {
-      "value": "#51ce7b"
+      "value": "#38571A"
     },
     "shape": {
       "type": "circle",
       "stroke": {
         "width": 0,
-        "color": "#000000"
+        "color": "#38571A"
       },
       "polygon": {
         "nb_sides": 5
@@ -26,35 +26,35 @@
       }
     },
     "opacity": {
-      "value": 0.8996709098513951,
+      "value": 0.5,
       "random": false,
       "anim": {
         "enable": false,
         "speed": 1,
-        "opacity_min": 0.1,
+        "opacity_min": 0.5,
         "sync": false
       }
     },
     "size": {
-      "value": 5.0,
+      "value": 7.891850086415746,
       "random": true,
       "anim": {
         "enable": false,
-        "speed": 40,
+        "speed": 20,
         "size_min": 0.1,
         "sync": false
       }
     },
     "line_linked": {
       "enable": true,
-      "distance": 173.62070190114642,
-      "color": "#51ce7b",
-      "opacity": 0.7655094583823274,
-      "width": 0.8
+      "distance": 299.89030328379835,
+      "color": "#38571A",
+      "opacity": 0.5783700172831494,
+      "width": 4.103762044936189
     },
     "move": {
       "enable": true,
-      "speed": 0.3,
+      "speed": 0.2,
       "direction": "none",
       "random": false,
       "straight": false,
@@ -72,7 +72,7 @@
     "events": {
       "onhover": {
         "enable": true,
-        "mode": "bubble"
+        "mode": "repulse"
       },
       "onclick": {
         "enable": true,
@@ -88,14 +88,14 @@
         }
       },
       "bubble": {
-        "distance": 121.72854534388323,
-        "size": 12.172854534388323,
+        "distance": 400,
+        "size": 40,
         "duration": 2,
         "opacity": 8,
         "speed": 3
       },
       "repulse": {
-        "distance": 97.38283627510658,
+        "distance": 71.92807192807193,
         "duration": 0.4
       },
       "push": {
