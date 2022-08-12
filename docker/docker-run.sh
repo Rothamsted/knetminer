@@ -51,18 +51,6 @@ do
   	#--: the config file, relative to --dataset-dir (default is config.yml)
   	--config-file)
   		config_file="$2"; shift;;
-  	#--: Enable Neo4j mode (see the documentation for details).
-  	--with-neo4j)
-  		is_neo4j=true; shift;;
-  	#--: Neo4j URL (eg, bolt://someserver:7687).
-  	--neo4j-url)
-  		neo4j_url="$2"; shift 2;;
-  	#--: Neo4j user.
-  	--neo4j-user)
-  		neo4j_user="$2"; shift 2;;
-  	#--: Neo4j password.
-  	--neo4j-pwd)
-  		neo4j_pwd="$2"; shift 2;;
   	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
   	#--: will pick knetminer/knetminer:test). Default is 'latest' for the latest version in github, or a given 
   	#--: version, depending on the release distribution you are using.
@@ -120,19 +108,19 @@ fi
 
 echo -e "\n"
 
+# TODO: remove, now you can switch to the neo4j mode by simply using a different config file, via --config-file
 # Neo4j mode
-# TODO: review, having the options in the command line doesn't make much sense anymore
 # 
-if [[ ! -z "$is_neo4j" ]]; then
-	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
-	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
-	# the maven command line. So, this is a way to customise things like local installations, and doing so while
-	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
-	# 
-	[ "$neo4j_url" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.boltUrl=$neo4j_url"
-	[ "$neo4j_user" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.user=$neo4j_user"
-	[ "$neo4j_pwd" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.password=$neo4j_pwd"
-fi
+#if [[ ! -z "$is_neo4j" ]]; then
+#	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
+#	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
+#	# the maven command line. So, this is a way to customise things like local installations, and doing so while
+#	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
+#	 
+#	[ "$neo4j_url" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.boltUrl=$neo4j_url"
+#	[ "$neo4j_user" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.user=$neo4j_user"
+#	[ "$neo4j_pwd" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.password=$neo4j_pwd"
+#fi
 
 
 [[ -z "JAVA_TOOL_OPTIONS" ]] || { 

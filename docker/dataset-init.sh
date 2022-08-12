@@ -63,9 +63,14 @@ echo -e "\n  Copying config defaults\n"
 cp -Rf "$knetdir/aratiny/aratiny-ws/src/test/resources/knetminer-dataset/config" "$dataset_dir"
 
 # Remove files that are used for tests only
-for f in data-source.xml.old
+for f in \
+  data-source.xml.old \
+  test-cfg.yml \
+  test-cfg-neo4j.yml \
+  neo4j/config-test.xml \
+  neo4j/semantic-motif-queries \  
 do 
-	rm -Rf "$dataset_dir/$f"
+	rm -Rf "$dataset_dir/config/$f"
 done
 
 if [[ ! -z "$dataset_id" ]]; then
@@ -73,7 +78,7 @@ if [[ ! -z "$dataset_id" ]]; then
 	cp -Rf "$knetdir/datasets/$dataset_id/config" "$dataset_dir"
 fi
 
-echo -e "\n  Creating default directories\n"
+echo -e "\n  Creating default directories (if not already there)\n"
 mkdir -p "$dataset_dir/data"
 
 [[ -e "$dataset_dir/data/knowledge-network.oxl" ]] || \
