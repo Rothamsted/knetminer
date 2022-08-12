@@ -252,7 +252,7 @@
 					  <executions>
 					    <execution>
 					    	<id>Setup Neo4j test DB</id>
-					      <phase>_pre-integration-test</phase>
+					      <phase>pre-integration-test</phase>
 					      <goals>
 					        <goal>exec</goal>
 					      </goals>
@@ -291,7 +291,7 @@
 							<!-- Start/stop just to download it before the restore command above -->
 							<execution>
 							<id>neo4j-server-download</id>
-							<phase>_process-test-resources</phase>
+							<phase>process-test-resources</phase>
 							<goals>
 								<goal>start</goal>
 								<goal>stop</goal>
@@ -309,12 +309,12 @@
 							-->
 							<execution>
 								<id>start-neo4j-server</id>
-								<phase>_pre-integration-test</phase>
+								<phase>pre-integration-test</phase>
 								<goals><goal>start</goal></goals>
 							</execution>
 							<execution>
 								<id>stop-neo4j-server</id>
-								<phase>_post-integration-test</phase>
+								<phase>post-integration-test</phase>
 								<goals><goal>stop</goal></goals>
 							</execution>			
 						</executions>	        
@@ -365,6 +365,7 @@
 					  	<execution><id>stop</id><phase>_none_</phase></execution>
 					  </executions>
 					</plugin>
+					<!-- TODO:newConfig, remove, you're not supposed to use the neo4j profile together with this
 					<plugin>
 				    <groupId>com.github.harti2006</groupId>
 					  <artifactId>neo4j-server-maven-plugin</artifactId>
@@ -374,31 +375,10 @@
 					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
 					  </executions>
 					</plugin>
+					-->
 				</plugins>
 			</build>			
 		</profile>	
-
-		<profile>
-			<!--
-				Sometimes used with neo4j profile, to obtain manual management of the Neo4j server.
-				Can be useful to debug (failsafe ignores debug options and sending them via JAVA_TOOL_OPTIONS
-				crashed Neo4j).
-			-->
-			<id>neo4j-server-off</id>
-			<build>
-				<plugins>
-					<plugin>
-				    <groupId>com.github.harti2006</groupId>
-					  <artifactId>neo4j-server-maven-plugin</artifactId>
-					  <executions>
-					  	<execution><id>neo4j-server-download</id><phase>_none_</phase></execution>
-					  	<execution><id>start-neo4j-server</id><phase>_none_</phase></execution>
-					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
-					  </executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>		
 		
 	</profiles>
 

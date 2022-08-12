@@ -8,7 +8,7 @@ set -e
 
 do_bare='false'
 
-if [[[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
+if [[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
 	cat <<EOT
 	
 	

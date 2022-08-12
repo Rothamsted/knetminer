@@ -48,7 +48,7 @@ do
   	#--: (it's useful to use it with --container-name)
   	--detach)
   		is_container_detach=true; shift;;
-  	#--: the config file, relative to --dataset-dir (default is config.yml)
+  	#--: the config file, relative to --dataset-dir (default is config/config.yml)
   	--config-file)
   		config_file="$2"; shift;;
   	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
@@ -102,8 +102,8 @@ else
 	DOCKER_OPTS="$DOCKER_OPTS --volume $dataset_dir:/root/knetminer-dataset"
 fi
 		
-# TODO: test it
-[[ -z "$config_file" ]] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dknetminer.api.configFilePath=\"$config_file\"" 
+[[ -z "$config_file" ]] || \
+  JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dknetminer.api.configFilePath=\"/root/knetminer-dataset/$config_file\"" 
 
 
 echo -e "\n"
@@ -125,6 +125,7 @@ echo -e "\n"
 
 [[ -z "JAVA_TOOL_OPTIONS" ]] || { 
 	echo -e "exporting JAVA_TOOL_OPTIONS: $JAVA_TOOL_OPTIONS"
+	export JAVA_TOOL_OPTIONS
 	DOCKER_OPTS="$DOCKER_OPTS --env JAVA_TOOL_OPTIONS"
 }
 

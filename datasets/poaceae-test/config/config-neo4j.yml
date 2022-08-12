@@ -1,0 +1,11 @@
+# Enables the Neo4j traverser
+# 
+# This can be enabled with the --config-file option from docker-run.sh (which hands the JVM the right
+# properties to pick this file, rather than the default) 
+#
+"@includes":
+- config.yml
+  
+"graphTraverser @merge":
+  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
+  "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
