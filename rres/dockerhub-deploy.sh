@@ -86,10 +86,7 @@ mem_swap='90G'
 if [[ "$(hostname)" =~ 'babvs72' ]]; then
 	echo -e "\n\n\t(Re)launching Docker, Cypher-based traverser\n"
 
-	docker_run_opts=""
-	# Enables the Cypher Debugger, to profile Cypher queries
-	# WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
-	export MAVEN_ARGS="-Dknetminer.backend.cypherDebugger.enabled=true"
+	docker_run_opts="--config-file config/config-neo4j.yml"
 	
   memory='80G'
 	mem_swap='100G'

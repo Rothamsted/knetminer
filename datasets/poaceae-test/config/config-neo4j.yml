@@ -9,3 +9,7 @@
 "graphTraverser @merge":
   GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
   "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
+
+# Enables the Cypher Debugger, to profile Cypher queries.
+# WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
+cypherDebuggerEnabled: true
