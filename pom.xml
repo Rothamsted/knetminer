@@ -43,6 +43,19 @@
 	<properties>
 		
 		<!-- 
+			This is the default dir where Knetminer looks for its configuration (ie, config.xml, as defined
+		  in web.xml). 
+		  
+		  This default works under the Docker instance. It's not hard-wired for the case you want to build
+		  the WS WAR for another environment. As you can see in web.xml, this default can also be 
+		  overridden by the Java property (-D) knetminer.api.configFilePath, to be passed at runtime
+		  (eg, to your Tomcat's JVM).
+		-->
+		<knetminer.defaultConfigDir>/root/knetminer-dataset/config</knetminer.defaultConfigDir>
+		<!-- A different one is used for the neo4j profile -->
+		<knetminer.testConfigFileName>test-cfg.yml</knetminer.testConfigFileName>		
+		
+		<!-- 
 		  Several of these properties can be overriden by instance-specific Maven profiles.
 		  Here, we give values suitable for maven tests (eg, in aratiny).
 		  
@@ -67,12 +80,12 @@
 		  still needs Java system properties (eg, the Neo4j traverser). In such cases, you can use
 		  "systemProperties" in the YAML configuration (see documentation and existing examples).
 		 -->
-		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
-		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
-		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 
 		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
 		<!-- TODO:newConfig, remove
+		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
+		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
+		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
 		<knetminer.configFile>${knetminer.configDir}/test-cfg.yml</knetminer.configFile>		
 		-->
 		
@@ -205,15 +218,16 @@
 		  TODO:newConfig, part of these are for Maven, another part in config files is to be managed 
 		  via JVM properties
 		-->   
-		<neo4j.server.host>localhost</neo4j.server.host>
-		<neo4j.server.boltPort>17690</neo4j.server.boltPort>
-		<neo4j.server.httpPort>17490</neo4j.server.httpPort>
+		<!-- neo4j.server.boltPort>17690</neo4j.server.boltPort -->
+		<!-- neo4j.server.httpPort>17490</neo4j.server.httpPort -->
+		<!-- neo4j.server.user>neo4j</neo4j.server.user -->
+		<!-- neo4j.server.password>test</neo4j.server.password -->
 		
-		<neo4j.server.boltUrl>bolt://${neo4j.server.host}:${neo4j.server.boltPort}</neo4j.server.boltUrl>
-		<neo4j.server.user>neo4j</neo4j.server.user>
-		<neo4j.server.password>test</neo4j.server.password>
+		<!-- TODO:newConfig, remove 
+		<neo4j.server.host>localhost</neo4j.server.host>
+		<neo4j.server.boltUrl>bolt://localhost:${neo4j.server.boltPort}</neo4j.server.boltUrl>
+		-->
 
-		<!--  neo4j.server.version is in the knetminer-common POM -->
 
 		<!-- TODO:newConfig, remove -->
 		<!-- See the description in aratiny-ws/src/test/resources/knetminer-dataset/config/data-source.xml -->
@@ -476,9 +490,10 @@
 					These are common values for a Docker-dedicated build.
 					Remember, these DISAPPEAR from production files (see notes above).
 				-->
+				<!-- TODO:newConfig, remove 
 				<knetminer.datasetDir>/root/knetminer-dataset</knetminer.datasetDir>
 				<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
-				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
+				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir> -->
 				<!-- <knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile> -->
 								
 				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
@@ -495,11 +510,11 @@
 				  via JVM properties
 				-->   
 				<!-- This needs to be mapped to the right Neo4j server, via \-\-link or 'docker network' commands -->									
-				<neo4j.server.host>neo4j</neo4j.server.host>
+				<!-- neo4j.server.host>neo4j</neo4j.server.host -->
 				<!-- Moreover, default Neo4j ports require proper mappings -->
-				<neo4j.server.boltPort>7687</neo4j.server.boltPort>
+				<!-- neo4j.server.boltPort>7687</neo4j.server.boltPort -->
 				<!-- Not actually used, but just in case -->
-				<neo4j.server.httpPort>7474</neo4j.server.httpPort>
+				<!-- neo4j.server.httpPort>7474</neo4j.server.httpPort -->
 
 				<!-- TODO:newConfig, to be managed with alternate config files -->
 				<!-- <knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile> -->

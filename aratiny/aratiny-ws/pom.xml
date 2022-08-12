@@ -193,6 +193,7 @@
 				<!-- TODO:newConfig, needs to be managed with an alternative profile
 				<knetminer.api.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.api.graphTraverserClass>
 				-->
+				<knetminer.testConfigFileName>test-cfg-neo4j.yml</knetminer.testConfigFileName>		
 			</properties>
 			<build>
 				<plugins>
@@ -251,7 +252,7 @@
 					  <executions>
 					    <execution>
 					    	<id>Setup Neo4j test DB</id>
-					      <phase>pre-integration-test</phase>
+					      <phase>_pre-integration-test</phase>
 					      <goals>
 					        <goal>exec</goal>
 					      </goals>
@@ -271,14 +272,16 @@
 					A small plug-in that starts Neo4j. 
 					
 					We are now maintaining it at
-					at https://github.com/Rothamsted/neo4j-server-maven-plugin 
+					at https://github.com/Rothamsted/neo4j-server-maven-plugin
+					
+					Most of the properties below are defined in the root knetminer-common POM 
 				  -->	  
 				  <plugin>
 				  	<groupId>com.github.harti2006</groupId>
 					  <artifactId>neo4j-server-maven-plugin</artifactId>
 						<configuration>
 							<version>${neo4j.server.version}</version>
-							<port>${neo4j.server.httpPort}</port>
+							<port>17490</port><!-- The HTTP port -->
 							<boltPort>${neo4j.server.boltPort}</boltPort>
 							<serverReadyAttempts>120</serverReadyAttempts>
 							<!-- We have our own DB, see above -->
@@ -288,7 +291,7 @@
 							<!-- Start/stop just to download it before the restore command above -->
 							<execution>
 							<id>neo4j-server-download</id>
-							<phase>process-test-resources</phase>
+							<phase>_process-test-resources</phase>
 							<goals>
 								<goal>start</goal>
 								<goal>stop</goal>
@@ -306,12 +309,12 @@
 							-->
 							<execution>
 								<id>start-neo4j-server</id>
-								<phase>pre-integration-test</phase>
+								<phase>_pre-integration-test</phase>
 								<goals><goal>start</goal></goals>
 							</execution>
 							<execution>
 								<id>stop-neo4j-server</id>
-								<phase>post-integration-test</phase>
+								<phase>_post-integration-test</phase>
 								<goals><goal>stop</goal></goals>
 							</execution>			
 						</executions>	        
@@ -374,7 +377,28 @@
 				</plugins>
 			</build>			
 		</profile>	
-		
+
+		<profile>
+			<!--
+				Sometimes used with neo4j profile, to obtain manual management of the Neo4j server.
+				Can be useful to debug (failsafe ignores debug options and sending them via JAVA_TOOL_OPTIONS
+				crashed Neo4j).
+			-->
+			<id>neo4j-server-off</id>
+			<build>
+				<plugins>
+					<plugin>
+				    <groupId>com.github.harti2006</groupId>
+					  <artifactId>neo4j-server-maven-plugin</artifactId>
+					  <executions>
+					  	<execution><id>neo4j-server-download</id><phase>_none_</phase></execution>
+					  	<execution><id>start-neo4j-server</id><phase>_none_</phase></execution>
+					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
+					  </executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>		
 		
 	</profiles>
 

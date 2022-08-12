@@ -7,18 +7,27 @@
 
 	<!-- This is used for tests, config.xml is used in production -->
 
-	<context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
+  <!-- For all the rest, the defaults should be fine -->
+	<import resource = "defaults-cfg.xml" />
+	
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "bolt://localhost:${neo4j.server.boltPort}" />
+  </bean> 
 	
 	<bean name = "configDirPath" class = "java.lang.String">
   	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
 	</bean> 
    
-  <!-- The basics, eg, the neo4j driver -->
-	<import resource = "file:///#{configDirPath}/defaults-cfg.xml" />
-      	
+
 	<bean name = "semanticMotifsQueries" 
-				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
-		<constructor-arg value = "#{configDirPath}/neo4j/cypher-queries.txt" />
+				class = "uk.ac.ebi.utils.collections.ListUtils" factory-method = "union" >
+		<constructor-arg>
+			<array>
+				<!--  <ref bean = "semanticMotifsQueriesCustom" />
+				<ref bean = "semanticMotifsQueriesStateMachine" />  -->
+				<ref bean = "semanticMotifsQueriesFromFile" />
+			</array>
+		</constructor-arg>				
 	</bean>
-	
+      		
 </beans>

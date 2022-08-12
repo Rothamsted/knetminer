@@ -1,13 +1,8 @@
 # This is used in tests, by the neo4j profile.
 #
-
 "@includes":
 - test-cfg.yml
   
 "graphTraverser @merge":
-  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"
-  
-  # WARNING: this is a suicide in production, see defaults for details
-  "knetminer.backend.cypherDebugger.enabled": true
-
-# TODO: in neo4j/config-test.xml, redefine the driver with Maven params. 
+  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
+  "knetminer.backend.configPath": "${mydir}/neo4j/config-test.xml"

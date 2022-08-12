@@ -70,16 +70,16 @@ graphTraverser:
   # specification, since the configuration component isn't aware they are properties about paths
   # (since it passes the values downstream)
   StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
-  "knetminer.neo4j.configFile": "${mydir}/neo4j/config.xml"
+  "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
 
-  # This enables the CypherDebugger service and corresponding UI interface at TODO.
-  # It only applies when Neo4j mode is enabled.
-  # It's normally disabled and enabled for internal test instances.
-  # It can be enabled via MAVEN_ARGS, see examples in docker-run.sh.
-  #
-  # WARNING: THIS allows for completely BREAKING yor Knetminer instance by sending and registering
-  # arbitrary Cypher queries for the traverser. DO NOT ENABLE in production!!!
-  # "knetminer.backend.cypherDebugger.enabled": true
+# This enables the CypherDebugger service and corresponding UI interface at TODO.
+# It only applies when Neo4j mode is enabled.
+# It's normally disabled and enabled for internal test instances.
+# It can be enabled via MAVEN_ARGS, see examples in docker-run.sh.
+#
+# WARNING: THIS allows for completely BREAKING yor Knetminer instance by sending and registering
+# arbitrary Cypher queries for the traverser. DO NOT ENABLE in production!!!
+# cypherDebuggerEnabled: true
 
 # These are injected into System.getProperties() and made available to other Java components around
 # As you can see below, this is used to inject values inside components that use Spring beans

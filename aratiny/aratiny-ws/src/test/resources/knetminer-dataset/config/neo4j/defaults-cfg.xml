@@ -9,21 +9,19 @@
 		Have a look at this test file for details on how to define Neo4j-related params:
 		https://github.com/Rothamsted/knetminer-backend/blob/master/cypher-client/src/test/resources/test-config/config.xml
 	-->
-
   <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
 
-
+	
   <bean name = "configDirPath" class = "java.lang.String">
   	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
   </bean> 
-
 
 	<!-- 
 		Custom-made queries are read from the root of the $config/semantic-motif-queries
 	 -->
 	<bean name = "semanticMotifsQueriesCustom" class = "java.util.Arrays" factory-method = "asList" >
 		<constructor-arg>
-			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
+			<bean class = "uk.ac.ebi.utils.opt.io.IOUtils" factory-method = "readFiles">
 				<constructor-arg value = "#{configDirPath}/semantic-motif-queries" />
 				<constructor-arg>
 					<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
@@ -40,7 +38,7 @@
 	-->
 	<bean name = "semanticMotifsQueriesStateMachine" class = "java.util.Arrays" factory-method = "asList" >
 		<constructor-arg>
-			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
+			<bean class = "uk.ac.ebi.utils.opt.io.IOUtils" factory-method = "readFiles">
 				<constructor-arg value = "#{configDirPath}/state-machine-queries" />
 				<constructor-arg>
 					<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
@@ -59,7 +57,7 @@
   -->	  
 	<bean name = "semanticMotifsQueriesFromFile" 
 				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
-		<constructor-arg value = "#{configDirPath}/neo4j/semantic-motif-queries.txt" />
+		<constructor-arg value = "#{configDirPath}/semantic-motif-queries.txt" />
 		<constructor-arg type = "boolean" value = "true" /><!-- ignore missing file -->
 	</bean>
 	
@@ -82,13 +80,26 @@
 		Defining things with system properties allows to change the default neo4j config, via 
 		export OPTS='-Dneo4j.xxx=... -D...'  	
  	-->
+ 	
+ 	<!-- For convenience, we have these values defined separately -->
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "#{systemProperties[ 'neo4j.boltUrl'] ?: 'bolt://127.0.0.1:7687'}" />
+  </bean> 
+  <bean name = "neo4j.user" class = "java.lang.String">
+  	<constructor-arg value = "#{systemProperties[ 'neo4j.user'] ?: 'neo4j' }" />
+  </bean> 
+  <bean name = "neo4j.password" class = "java.lang.String">
+  	<constructor-arg value = "#{systemProperties[ 'neo4j.password'] ?: 'test' }" />
+  </bean> 
+ 	
+ 	
 	<bean id = "neoDriver" class = "org.neo4j.driver.GraphDatabase" 
 			factory-method="driver">
-		<constructor-arg value = "#{systemProperties[ 'neo4j.boltUrl'] ?: 'bolt://127.0.0.1:7687'}" />
+		<constructor-arg ref = "neo4j.BoltUrl" />
 		<constructor-arg>
 			<bean class = "org.neo4j.driver.AuthTokens" factory-method = "basic">
-				<constructor-arg value = "#{systemProperties[ 'neo4j.user'] ?: 'neo4j' }" />
-				<constructor-arg value = "#{systemProperties[ 'neo4j.password'] ?: 'test' }" />
+				<constructor-arg ref = "neo4j.user" />
+				<constructor-arg ref = "neo4j.password" />
 			</bean>
 		</constructor-arg>
 			

@@ -4,22 +4,9 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
-
-	<!-- 
-		Have a look at this test file for details on how to define Neo4j-related params:
-		https://github.com/Rothamsted/knetminer-backend/blob/master/cypher-client/src/test/resources/test-config/config.xml
-	-->
-
-  <context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
-  
-  
-  <bean name = "configDirPath" class = "java.lang.String">
-  	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
-  </bean> 
-   
+     
   <!-- The basics, eg, the neo4j driver -->
-	<import resource = "file:///#{configDirPath}/defaults-cfg.xml" />
+	<import resource = "defaults-cfg.xml" />
    		
   <!-- Do your own overrides and extensions here, see config-test.xml as an example -->
-   		
 </beans>
