@@ -37,7 +37,3 @@
   #- taxId: 39947
   #  scientificName: Oryza sativa Japonica Group
   #  commonName: Japonica rice    
-  
-"graphTraverser @merge":
-  # WARNING: this is a suicide in production, see defaults for details
-  "knetminer.backend.cypherDebugger.enabled": true
