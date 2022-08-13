@@ -47,6 +47,7 @@ docker pull knetminer/knetminer:multi-species # TODO: switch back to default whe
 #./dataset-cleanup.sh "$dataset_dir"
 
 # We always update the DS configuration, since this often changes on the dev branch
+# TODO: Should we delete $dataset_dir/config instead of --force? 
 ./dataset-init.sh --force "$dataset_dir" "$dataset_id"
 
 
