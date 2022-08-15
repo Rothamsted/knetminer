@@ -56,7 +56,8 @@ if `$do_bare`; then
 	docker build -t knetminer/knetminer-bare:$docker_tag -f docker/Dockerfile-bare .
 fi
 
+
 echo -e "\n\  Creating image\n" 
-docker build -t knetminer/knetminer:$docker_tag -f docker/Dockerfile .
+docker build -t knetminer/knetminer:$docker_tag  --build-arg DOCKER_TAG="$docker_tag" -f docker/Dockerfile .
 
 echo -e "\n\  The End\n" 
