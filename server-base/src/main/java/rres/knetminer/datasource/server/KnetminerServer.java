@@ -2,8 +2,6 @@ package rres.knetminer.datasource.server;
 
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -11,14 +9,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ObjectMessage;
@@ -71,13 +67,10 @@ public class KnetminerServer
 
 	private Map<String, KnetminerDataSource> dataSourceCache;
 
-	private String gaTrackingId;
-
-	
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
 	// Special logging to achieve web analytics info.
-	private static final Logger logAnalytics = LogManager.getLogger ( "analytics-log" );
+	private final Logger logAnalytics = LogManager.getLogger ( "analytics-log" );
 
 
 	/**
@@ -89,9 +82,18 @@ public class KnetminerServer
 	 * matching '/hello/**'.
 	 */
 	@PostConstruct
-	private void buildDataSourceCache() {		
-		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
-		for (KnetminerDataSource dataSource : this.dataSources) {
+	private void buildDataSourceCache() 
+	{
+		if ( this.dataSources == null || this.dataSources.size () == 0 ) throw new IllegalArgumentException (
+			"No KnetminerDataSource defined, probably a packaging error"	
+		);
+
+		if ( dataSources.size () > 1 ) throw new UnsupportedOperationException (
+			"More than one KnetminerDataSource defined, this is no longer supported"	
+		);
+		
+		this.dataSourceCache = new HashMap<>();
+		for (KnetminerDataSource dataSource : dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
 				this.dataSourceCache.put(ds, dataSource);
 				log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
@@ -100,37 +102,11 @@ public class KnetminerServer
 	}
 
 	/**
-	 * Loads Google Analytics properties from src/main/resources/ga.properties . It expects
-	 * to find GOOGLE_ANALYTICS_ENABLED = True or False. If True, it also expects to find
-	 * GOOGLE_ANALYTICS_TRACKING_ID with a valid Google Analytics tracking ID.
+	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleApiId()}
 	 */
-	@PostConstruct
-	private void loadGoogleAnalyticsTrackingId() 
+	private String getGoogleAnalyticsTrackingId () 
 	{
-		ClassLoader classLoader = Thread.currentThread ().getContextClassLoader ();
-		InputStream input = classLoader.getResourceAsStream ( "ga.properties" );
-		Properties props = new Properties ();
-		try
-		{
-			props.load ( input );
-			log.info ( "GA enabled= " + props.getProperty ( "GOOGLE_ANALYTICS_ENABLED" ) ); // test passing val
-			log.info ( "ga_id to use= " + props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID" ) ); // test passed val
-		}
-		catch ( IOException ex )
-		{
-			log.warn ( "Failed to load Google Analytics properties file", ex );
-			return;
-		}
-		if ( Boolean.parseBoolean ( props.getProperty ( "GOOGLE_ANALYTICS_ENABLED", "false" ) ) )
-		{
-			this.gaTrackingId = props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID", null );
-			if ( this.gaTrackingId == null )
-				log.warn ( "Google Analytics properties file enabled analytics but did not provide tracking ID" );
-			else
-				log.info ( "Google Analytics enabled" );
-		} 
-		else
-			log.info ( "Google Analytics disabled" );
+		return this.dataSources.get ( 0 ).getGoogleApiId ();
 	}
 
 
@@ -303,8 +279,6 @@ public class KnetminerServer
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
 	{
-		// TODO: why is it here only? Probably to capture POST /network only, to clarify.
-		this.googleTrackPageView ( ds, mode, request, rawRequest );
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
 
@@ -421,25 +395,29 @@ public class KnetminerServer
 
 	
 	private void googleTrackPageView (
-		String ds, String mode, String keyword, List<String> list, List<String> qtl, HttpServletRequest rawRequest
+		String ds, String mode, String keyword, List<String> userGenes, List<String> userChrRegions, HttpServletRequest rawRequest
 	)
 	{
+		// TODO: googleLogApiRequest() considers certain API calls only, while this tracks all
+		
+		String gaId = getGoogleAnalyticsTrackingId ();
+		
+		if ( gaId == null ) return;
+
 		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
-		log.debug ( "IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress );
 		
 		if ( ipAddress == null )
 		{
 			ipAddress = rawRequest.getRemoteAddr ();
-			log.debug ( "IP TRACING 2, getRemoteAddr(): {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", ipAddress );
 		} 
 		else
 		{
-			log.debug ( "IP TRACING 3, IP to be split: {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", ipAddress );
 			if ( ipAddress.indexOf ( ',' ) != -1 ) ipAddress = ipAddress.split ( "," )[ 0 ];
 			
-			log.debug ( "IP TRACING 4, splitted IP: {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, using splitted IP: {}", ipAddress );
 		}
-		log.debug ( "IP TRACING 5 post-processed IP: {}", ipAddress );
 
 		String[] IP_HEADER_CANDIDATES = { 
 			"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
@@ -452,15 +430,13 @@ public class KnetminerServer
 		{
 			String ip = rawRequest.getHeader ( header );
 			if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
-				log.debug ( "IP TRACING, req headers, {}:{}", header, ip );
+				log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
 		}
-
-		if ( this.gaTrackingId == null ) return;
 		
 		String pageName = ds + "/" + mode;
 		
 		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
-			.withTrackingId ( this.gaTrackingId )
+			.withTrackingId ( gaId )
 			.build ();
 		
 		ga.pageView ()
@@ -469,7 +445,7 @@ public class KnetminerServer
 			.userIp ( ipAddress )
 			.send ();
 		
-		this.googleLogApiRequest ( ds, mode, keyword, list, qtl, rawRequest );			
+		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
 	}
 	
 	
@@ -505,7 +481,10 @@ public class KnetminerServer
 		map.put ( "datasource", ds );
 		
 		ObjectMessage msg = new ObjectMessage ( map );
-		logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
+		
+		// TODO: I don't see any need for a new level, nor for a separated log file 
+		// logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
+		logAnalytics.info ( msg );
 	}
 	
 }

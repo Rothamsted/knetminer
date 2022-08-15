@@ -20,6 +20,8 @@ public abstract class KnetminerDataSource {
 	
 	private String[] dataSourceNames = new String[0];
 
+	private String apiUrl = "";
+
 	/**
 	 * WARNING! We're progressively moving to an architecture where each server instance manages
 	 * ONE DATA SOURCE ONLY and this method will return ONE RESULT ONLY.
@@ -51,12 +53,19 @@ public abstract class KnetminerDataSource {
 		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
 	
-	private String apiUrl = "";
-	
+
+	/**
+	 * TODO: review, this should actually come from the configuration.
+	 */
+	@Deprecated
 	public void setApiUrl(String apiUrl) {
 		this.apiUrl = apiUrl;
 	}
 	
+	/**
+	 * TODO: review, this should actually come from the configuration.
+	 */
+	@Deprecated
 	public String getApiUrl() {
 		return this.apiUrl;
 	}
@@ -94,4 +103,19 @@ public abstract class KnetminerDataSource {
 	 */
 	@Deprecated
 	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+
+	/**
+	 * Gets the Google API ID from the configuration.
+	 * 
+	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into
+	 * one.
+	 */
+	public abstract String getGoogleApiId ();
+	
+	/**
+	 * @see #getGoogleApiId().
+	 * 
+	 * TODO: as said elsewhere, we need to clarify why there are two IDs.
+	 */
+	public abstract String getGoogleApiClientId ();
 }

@@ -60,7 +60,14 @@ public class KnetminerConfiguration
 	
 	@JsonProperty
 	private boolean cypherDebuggerEnabled = false;
-		
+	
+	@JsonProperty
+	private String googleAnalyticsId = null;
+
+	@JsonProperty
+	private String googleAnalyticsClientId = null;
+	
+	
 	@JsonIgnore
 	private String configFilePath;
 	
@@ -217,6 +224,24 @@ public class KnetminerConfiguration
 		return cypherDebuggerEnabled;
 	}
 
+	/**
+	 * Used for tracking requests via Google Analytics.
+	 * When this is null, no tracking happens.
+	 */
+	public String getGoogleAnalyticsId ()
+	{
+		return googleAnalyticsId;
+	}
+
+	/**
+	 * A Google Analytics ID, which is used for the client. TODO: why aren't we using a single ID?! 
+	 */
+	public String getGoogleAnalyticsClientId ()
+	{
+		return googleAnalyticsClientId;
+	}
+
+	
 	/**
    * These are injected into System.getProperties() and made available to other Java components around
    * It can be used to inject values inside components that use Spring beans files (neo4j/config.xml 
