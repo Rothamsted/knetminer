@@ -72,6 +72,15 @@ graphTraverser:
   StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
   "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
 
+# The ID for enabling Google Analytics, to track the requests to a Knetminer instance via Google Analytics
+# The default for this is the ID that the Knetminer team uses, but you can use your own ID and get your  
+# instance tracked. If this isn't defined (ie, set to null), then GA is disabled.
+googleAnalyticsId: UA-88753233-2
+
+# TODO: as said elsewhere, we need to clarify why we have separated IDs
+googleAnalyticsClientId: UA-88753233-1
+
+
 # This enables the CypherDebugger service and corresponding UI interface at TODO.
 # It only applies when Neo4j mode is enabled.
 # It's normally disabled and enabled for internal test instances.
