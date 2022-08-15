@@ -93,7 +93,7 @@ function createEvidenceTable(text, keyword) {
         table = table + '</tbody>';
         table = table + '</table>';
         table = table + '</div>';
-        table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Knetwork</button>';
+        table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">View Network</button>';
         table = table + '</insert><div id="loadingNetwork_Div"></div></div>';
 
 

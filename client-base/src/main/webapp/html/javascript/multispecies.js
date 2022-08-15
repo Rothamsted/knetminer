@@ -7,29 +7,13 @@ multiSpeciesFeature = function (){
 
     // function get lists of registered species from api_url+/species
     function getSpeciesList(){
-        activateSpinner('#wrapper'); 
-        console.log('getting species list')
-
         $.get(multiSpecieUrl,'').done( function(data){
-            var speciesInfos = data.species; 
+            var speciesInfos = data.species
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
-                console.log('specie dropdown created')
-                deactivateSpinner("#wrapper");
                 multiSpeciesEvents(speciesInfos)
-            }; 
-
-        }).fail(function(xhr,status,errolog){
-            errorComponent('#pGViewer_title',xhr);
-            // when user internet connection is down
-            deactivateSpinner("#wrapper");
-            $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
-            $('#resetknet').hide(); 
-            $('#searchBtn').hide(); 
-            $('reloadbtn').show(); 
+            }
         })
-        
-       
     }
 
     // function creates the species dropdown
@@ -53,6 +37,13 @@ multiSpeciesFeature = function (){
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
+        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
+        document.title = currentSpecies.scientificName;
+        for(var info in currentSpecies){
+            const speciesCapital = capitaliseFirstLetter(info); 
+            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
+        }
+
         // setting Species Release Note 
         $('#release_icon').attr("href",`${multiSpecieUrl+'/release-notes.html'+taxIdString}`);
         return true;
@@ -237,7 +228,7 @@ multiSpeciesFeature = function (){
                 $('#chr1').append(chr1Options);
             }  
         }).fail(function (xhr,status,errorlog){
-            errorComponent('#pGViewer_title',xhr,status,errorlog);
+            errorComponent('.nav',xhr,status,errorlog);
         });
     }
     // draws the genomap view 
