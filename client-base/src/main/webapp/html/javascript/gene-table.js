@@ -359,11 +359,11 @@ function generateCyJSNetwork(url, requestParams) {
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
 										//genes export button
-                                        $('#knetGeneExport').html("<button id='tsvbtn' class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'> <span> TSV </span> </button>");
+                                        $('#knetGeneExport').html("<button  class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'> Tabular Format </button>");
 										var visible = true; 
 
 										//visible graph button 
-										$('#visibleGraphExport').html("<button id='cyjson' class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'> <span>Cytoscape JSON</span></button>");
+										$('#visibleGraphExport').html("<button  class='export_button' onclick='downloadNetwork("+visible+")' title='Download visible graph'> Cytoscape JSON</button>");
 
 										// // allgraphdata button
 										// var notVisible = false

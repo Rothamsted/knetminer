@@ -71,13 +71,8 @@ function searchKeyword() {
 
     //if inputs are empty client get an error saying input is empty 
     //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
-<<<<<<< HEAD
-      if(keyword == '' && list.length == 0 && requestParams.qtl.length == 0 ){
-        var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Please input at least one search parameter.</span></div>'; 
-=======
     if (keyword == '' && list.length == 0 && requestParams.qtl.length == 0) {
         var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Sorry all inputs are empty.</span></div>';
->>>>>>> commit fix issue #662 and #660
         $("#pGViewer_title").replaceWith(searchErrorTitle);
         $('.pGViewer_title_line').css("color", "red");
         $('#tabviewer').hide();
@@ -147,40 +142,17 @@ function fetchData(requestParams, list, keyword, login_check_url, request, searc
 
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
-<<<<<<< HEAD
-                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-                     });
-             }
-             else {
-                 $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
-             }
-=======
                         genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list)
                     });
             }
             else {
                 $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to ' + freegenelist_limit + ' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to search with unlimited genes</b></div>');
             }
->>>>>>> commit fix issue #662 and #660
         }
     });
 }
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
-<<<<<<< HEAD
-function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,gviewer,list){
-     let messageNode;
-     let genomicViewTitle; 
-     let status; 
-
-    if (data.geneCount === 0) { 
-          status = true; 
-         if(keyword.length > 0) { // msg for keyword search error
-            messageNode = keyword + 'did not match any genes or documents. Check for typos and try different or more general keywords.'; 
-            genomicViewTitle = createGenomicViewTitle(messageNode,status);
-           
-            if(geneList_size > 0) {
-=======
 function genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list) {
     let messageNode;
     let genomicViewTitle;
@@ -193,7 +165,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
             genomicViewTitle = createGenomicViewTitle(messageNode, status);
 
             if (geneList_size > 0) {
->>>>>>> commit fix issue #662 and #660
                 // msg for keyword + genelist search error
                 messageNode = 'did not match any genes. Try different or more general keywords. Make sure that only one gene per line is entered. Try gene names (eg. TPS1)'
                 genomicViewTitle = createGenomicViewTitle(messageNode, status);
@@ -292,19 +263,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
                 genomicViewTitle = createGenomicViewTitle(messageNode, status);
             }
             // for rare edge cases when no genes in list are found in search, then search is empty.
-<<<<<<< HEAD
-            if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-               genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs.</span></div>';
-              }
-           }
-         if(searchMode === "qtl") { 
-             // msg for QTL search
-            messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
-            genomicViewTitle = createGenomicViewTitle(messageNode,status); 
-            var count_linked= countLinkedUserGenes(data.geneTable);
-            var count_unlinked= results - count_linked;
-            var count_notfound= geneList_size - count_linked - count_unlinked;
-=======
             if ((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                 genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs to see results.</span></div>';
             }
@@ -316,7 +274,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
             var count_linked = countLinkedUserGenes(data.geneTable);
             var count_unlinked = results - count_linked;
             var count_notfound = geneList_size - count_linked - count_unlinked;
->>>>>>> commit fix issue #662 and #660
             // for wildcard in genelist when all matches will be found
             if (results === (count_linked + count_unlinked)) { count_notfound = 0; }
             if (keyword.length < 2) {  // msg for qtl region only search
@@ -349,36 +306,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
                     messageNode = '<b>' + count_linked + ' linked genes</b> and ' + count_unlinked + ' unlinked genes were found. ' + count_notfound + ' user genes not found. (' + queryseconds + ' seconds).'
                     genomicViewTitle = createGenomicViewTitle(messageNode, status);
                 }
-<<<<<<< HEAD
-               // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
-               if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Showing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
-                 }
-              }
-           }
-         if (candidateGenes > 1000) { // for over 1000 results in any searchMode
-             candidateGenes = 1000;
-         }
-
-         $("#pGViewer_title").replaceWith(genomicViewTitle);
-         // Setup the mapview component
-         var annotationsMap = data.gviewer;
-
-         // create new basemap with bands for genes and pass it as well to the Map Viewer.
-         multiSpeciesFeature.maps('drawRaw',annotationsMap);
-
-         //Collapse Suggestor view
-         $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
-         $('#suggestor_search_area').slideUp(500);
-
-
-
-         activateButton('resultsTable');
-         $('#tabviewer').show();
-         createGenesTable(data.geneTable, keyword, candidateGenes);
-         createEvidenceTable(data.evidenceTable, keyword);
-         if(geneList_size > 0) {
-=======
                 // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
                 if ((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
                     genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Shwoing keyword/QTL related results. In total <b>' + results + ' were found. (' + queryseconds + ' seconds).</span></div>';
@@ -407,7 +334,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
         createGenesTable(data.geneTable, keyword, candidateGenes);
         createEvidenceTable(data.evidenceTable, keyword);
         if (geneList_size > 0) {
->>>>>>> commit fix issue #662 and #660
             $('#selectUser').show();
         }
         else { $('#selectUser').hide(); }
@@ -478,11 +404,7 @@ function findGenes(id, chr_name, start, end) {
         var searchMode = "countLoci";
         var taxonomyID = $('.navbar-select').children("option:selected").val();
         var keyword = chr_name + "-" + start + "-" + end;
-<<<<<<< HEAD
-        var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
-=======
         var request = "/" + searchMode + "?keyword=" + keyword + "&" + taxonomyID;
->>>>>>> commit fix issue #662 and #660
         var url = api_url + request;
         console.log(url);
         $.get(url, '').done(function (data) {
@@ -508,11 +430,7 @@ function matchCounter() {
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
-<<<<<<< HEAD
-            var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
-=======
             var request = "/" + searchMode + "?keyword=" + keyword + "&" + taxonomyID;
->>>>>>> commit fix issue #662 and #660
             var url = api_url + request;
 
             $.get(url, '').done(function (data) {
@@ -590,8 +508,9 @@ function errorComponent(elementInfo, xhr) {
 // function to run on changing the species dropdown option
 function changeSpecies(selectElement) {
     var selectedSpecie = $(selectElement).children("option:selected");
+    
     var currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
-    $('#speciename_container').empty();
+
     $('#chr1').empty();
     $('#tabviewer').hide();
     if (currentTaxData) {

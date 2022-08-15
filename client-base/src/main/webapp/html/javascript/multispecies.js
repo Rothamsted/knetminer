@@ -53,13 +53,6 @@ multiSpeciesFeature = function (){
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
-        document.title = currentSpecies.scientificName;
-        for(var info in currentSpecies){
-            const speciesCapital = capitaliseFirstLetter(info); 
-            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
-        }
-
         // setting Species Release Note 
         $('#release_icon').attr("href",`${multiSpecieUrl+'/release-notes.html'+taxIdString}`);
         return true;
