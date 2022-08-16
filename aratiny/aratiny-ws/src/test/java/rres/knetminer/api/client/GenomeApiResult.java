@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 
@@ -55,29 +54,19 @@ public class GenomeApiResult
 		this.gviewer = jsResult.getString ( "gviewer" );
 	}
 	
-	private static List<List<Object>> json2Table ( Object object )
+	@SuppressWarnings ( "unchecked" )
+	private static List<List<Object>> json2Table ( Object tableObject )
 	{
-		Map<String, Object> jsonMap = ( (JSONObject ) object ).toMap ();
+		Map<String, Object> jsonMap = ( (JSONObject ) tableObject ).toMap ();
 		
 		List<List<Object>> table = new ArrayList<> ();
-		for ( Object line: jsonMap.values () )
-			table.add ( ( List<Object> ) line );
+		
+		table.add ( (List<Object>) jsonMap.get ( "headers" ) );
+		table.addAll ( (List<List<Object>>)jsonMap.get ( "rows" ) );
+		
 		return table;
 	}
 	
-	private static List<String[]> str2Table ( String tableString )
-	{
-		StringUtils.trimToNull ( tableString );
-		if ( tableString == null ) return List.of ();
-
-		String[] lines = tableString.split ( "\n" );
-		List<String[]> table = new ArrayList<> ();
-		for ( String line: lines )
-			table.add ( line.split ( "\t" ) );
-		
-		return table;
-	}
-
 	public int getGeneCount ()
 	{
 		return geneCount;
@@ -94,8 +83,11 @@ public class GenomeApiResult
 	}
 
 	/**
-	 * This corresponds to the gene table view in the KnetMiner application.
+	 * This corresponds gene table view in the KnetMiner application.
 	 * First element contains the headers.
+	 * 
+	 * This is a (hopefully) convenient simplification of the JSON that the API 
+	 * returns (which is a map with "headers" and "rows").
 	 */
 	public List<List<Object>> getGeneTable ()
 	{
@@ -105,7 +97,8 @@ public class GenomeApiResult
 	/**
 	 * This corresponds to the evidence table view in the KnetMiner application.
 	 * First element contains the headers.
-	 *  
+	 *
+	 * @see #getGeneTable().
 	 */
 	public List<List<Object>> getEvidenceTable ()
 	{

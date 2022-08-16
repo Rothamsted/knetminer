@@ -255,8 +255,8 @@ public class MultiSpecieApiIT
 	 * @return
 	 */
 	boolean findAccession(GenomeApiResult result, String gene) {
-		return result.getGeneTable().get(1).stream().
-				anyMatch ( a -> ((List) a).get ( 1 ).toString ().equalsIgnoreCase ( gene ) );
+		return result.getGeneTable().stream().
+				anyMatch ( a -> ((List<Object>) a).get ( 1 ).toString ().equalsIgnoreCase ( gene ) );
 	}
 
 }

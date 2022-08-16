@@ -156,12 +156,15 @@ public class ApiIT
 		List<List<Object>> evidenceTable = apiOut.getEvidenceTable ();
 		assertFalse ( "No evidenceTable in the result", evidenceTable.isEmpty () );
 
-		var rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols -> 
+		var rowFound = evidenceTable
+		.stream ()
+		.skip ( 1 ) // headers
+		.anyMatch ( row -> 
 		{
-			if ( !"Trait".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
-			if ( !"disease resistance".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) < 0 ) return false; // ondexId
+			if ( !"Trait".equals ( row.get ( 0 ) ) ) return false;
+			if ( !"disease resistance".equals ( row.get ( 1 )) ) return false;
+			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) < 0 ) return false; // ondexId
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found!", rowFound );
@@ -180,26 +183,30 @@ public class ApiIT
 
 		List<List<Object>> evidenceTable = apiOut.getEvidenceTable ();
 		assertFalse ( "evidenceTable is null/empty!", evidenceTable.isEmpty () );
-		assertEquals ( "Wrong no. of rows for filtered genes!", 3, evidenceTable.get ( 1 ).size () );
+		assertEquals ( "Wrong no. of rows for filtered genes!", 4, evidenceTable.size () );
 		
-		var rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols ->
+		var rowFound = evidenceTable.stream ()
+		.skip ( 1 ) // the headers
+		.anyMatch ( row ->
 		{
-			if ( !"BioProc".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
-			if ( !"Regulation Of Transcription, DNA-templated".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) <= 0 ) return false; // genes count
-			if ( !"AT3G16830".equals ( ( ( List ) cols ).get ( 5 ) ) ) return false; // genes
+			if ( !"BioProc".equals ( row.get ( 0 ) ) ) return false;
+			if ( !"Regulation Of Transcription, DNA-templated".equals ( row.get ( 1 )) ) return false;
+			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			if ( !"AT3G16830".equals ( row.get ( 5 ) ) ) return false; // genes
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found (single gene)!", rowFound );
 		
-		rowFound = evidenceTable.get ( 1 ).stream ().anyMatch ( cols ->
+		rowFound = evidenceTable.stream ()
+		.skip ( 1 ) // the headers
+		.anyMatch ( row ->
 		{
-			if ( !"BioProc".equals ( ( ( List ) cols ).get ( 0 ) ) ) return false;
-			if ( !"Vesicle-mediated Transport".equals ( ( ( List ) cols ).get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( ( ( List ) cols ).get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( ( ( List ) cols ).get ( 4 ).toString () ) <= 0 ) return false; // genes count
-			var genes =  ( ( List ) cols ).get ( 5 ).toString ().split ( "," ); // user genes
+			if ( !"BioProc".equals ( row.get ( 0 ) ) ) return false;
+			if ( !"Vesicle-mediated Transport".equals ( row.get ( 1 ) ) ) return false;
+			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
+			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			var genes =  row.get ( 5 ).toString ().split ( "," ); // user genes
 			
 			if ( genes == null ) return false;
 						
