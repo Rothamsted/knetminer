@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -163,8 +162,8 @@ public class ApiIT
 		{
 			if ( !"Trait".equals ( row.get ( 0 ) ) ) return false;
 			if ( !"disease resistance".equals ( row.get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) < 0 ) return false; // ondexId
+			if ( (double) row.get ( 2 ) <= 0d ) return false; // score
+			if ( (int) row.get ( 4 ) < 0 ) return false; // ondexId
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found!", rowFound );
@@ -191,8 +190,8 @@ public class ApiIT
 		{
 			if ( !"BioProc".equals ( row.get ( 0 ) ) ) return false;
 			if ( !"Regulation Of Transcription, DNA-templated".equals ( row.get ( 1 )) ) return false;
-			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			if ( (double) row.get ( 2 ) <= 0d ) return false; // score
+			if ( (int) row.get ( 4 ) <= 0 ) return false; // genes count
 			if ( !"AT3G16830".equals ( row.get ( 5 ) ) ) return false; // genes
 			return true;
 		});
@@ -204,8 +203,8 @@ public class ApiIT
 		{
 			if ( !"BioProc".equals ( row.get ( 0 ) ) ) return false;
 			if ( !"Vesicle-mediated Transport".equals ( row.get ( 1 ) ) ) return false;
-			if ( NumberUtils.toDouble ( row.get ( 2 ).toString () ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( row.get ( 4 ).toString () ) <= 0 ) return false; // genes count
+			if ( (double) row.get ( 2 ) <= 0d ) return false; // score
+			if ( (int) row.get ( 4 ) <= 0 ) return false; // genes count
 			var genes =  row.get ( 5 ).toString ().split ( "," ); // user genes
 			
 			if ( genes == null ) return false;
