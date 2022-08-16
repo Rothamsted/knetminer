@@ -1,3 +1,4 @@
+// TODO: What's for? The current Google instructions don't mention any of these
 
 /*
  * general page analytics, not the tracking ga_id one
