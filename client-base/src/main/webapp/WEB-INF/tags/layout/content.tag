@@ -11,15 +11,6 @@
 			<ul id="main_list">
 				<li style="position: relative;">
 
-					<div id="species_container" class="details">
-							<div class="detail_info">
-							<div><h3 id="species_title" style="margin:10px 0;">Species description</h3>
-							<span style="display:flex;" class="close" onclick="queryToggle($('#speciename_container'),$('#species_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"/><img class="close"  style="display:none;" src="html/image/drop-down.png"/>
-							</span></div>
-							<div id="speciename_container"></div>
-							</div>
-					</div>
-
                     <!-- Sample Queries -->
                     <div id="info" class="details">
                         <c:if test="${embeddable}"><div class="species_header"></div></c:if>
@@ -130,18 +121,20 @@
                     </div>
 				</li>
 				<li class='knetbtns'>
-				<!--    <input class="keywordsSubmit knet_button button" type="button" value="Search Network" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"/> -->
-				<!--	<button class="btn keywordsSubmit knet_button" onclick="searchKeyword();" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button> -->
-					<button class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-					<button type="sumbit" title="Click to clear all search fields" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i>Clear Search Fields</button>
-					<br>
-				    <div class="loadingDiv"></div>
+					
+				<div class="msg-placement">
+						<span id="pGViewer_title"></span>
+						<button id="searchBtn" class="btn keywordsSubmit knet_button" type="submit" title="Search the KnetMiner knowledge network"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+				</div>
+
+				<button type="sumbit" title="Click to clear all search fields" class="resetknet" id="resetknet"> <i class="fa fa-times reseticon" aria-hidden="true"></i>Clear Search Fields</button>
+				<br>
+				<div class="loadingDiv"></div>
+
 				</li>
 			</ul>
 		</form>
 	</div>
-
-	<div id="pGViewer_title"></div>
 
 	<div id="tabviewer" style="display: none;">
 
@@ -165,8 +158,7 @@
 
 				<div id="export-menu">
 				   	<div id="knetGeneExport" class="export_border" style="border-bottom: .3px solid silver"></div>
-					<div id="visibleGraphExport" class="export_border" style="border-bottom: .3px solid silver"></div>
-					<div id="fullGraphExport" class="export_border"></div>
+					<div id="visibleGraphExport" class="export_border"></div>
 				</div>
 
                 <div id="knetSaveButton" style="margin-top:7px;float:right;"></div>

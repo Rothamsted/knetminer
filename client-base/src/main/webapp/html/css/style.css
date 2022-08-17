@@ -25,6 +25,7 @@ html{
     position: relative;
     min-width: 960px;
     min-height: 100%;
+    overflow-x: hidden;
     }
 
 .background{
@@ -185,11 +186,13 @@ div#leftnav {
     background: transparent;
     border: 0.8px solid black;
     border-radius: 6px;
-    color: black;
+    color: #38c768;
+    font-weight:700;
     padding-left: 10px;
     outline: none;
     z-index: 10;
     margin-left: 1rem;
+    font-size: 1rem;
 }
 
 .navbar-items{
@@ -808,10 +811,10 @@ a.contact-button :hover {
     font-size:14px;
     background-color:#51CE7B/*#2A2A2A*/;
     margin-left: 10px; 
-    border-radius:18px;
-    -moz-border-radius:18px; 
--webkit-border-radius:18px; 
--o-border-radius:18px;
+    border-radius:8px;
+    -moz-border-radius:8px; 
+-webkit-border-radius:8px; 
+-o-border-radius:8px;
 color: white;
 }
 
@@ -852,7 +855,7 @@ color: white;
 
 /* .knet_button {width:100px; height:35px; color:white; margin-left:0px; background-color:dimgrey; /*font-family:'Play', sans-serif;*/ /* font-size:15px; cursor:pointer;} */
 /* .knet_button:hover {color:white; background-color:darkgray;} */
-#pGViewer_title {padding:10px;font-size:14px;margin:auto; width:70%;}
+#pGViewer_title {padding:10px;font-size:14px;}
 .pGViewer_title_line {background-color:#F4F5F7; color:#121212; padding:6px;}
 .preloader_bar {left:250px;position:relative;}
 #genemap-tab {position: relative;width: 95%;height: 95%;margin: auto;background-color: #F4F5F7;padding-bottom: 20px;margin-top: 30px;}
@@ -1154,7 +1157,7 @@ padding-top:10px;}
 #species_header {
     position: relative;
     height: 100%;
-    width: 38%;
+    width: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1162,12 +1165,9 @@ padding-top:10px;}
     border-left: 0.5px solid #EEF0F3;
 }
 
-/* TODO: content still has char encoding issues */
-#species_header::after {
-    content:'▾';
-    color: black;
-    font-size: 1rem;
-    top: 18.5px;
+
+#species-dropimg {
+    top: 20px;
     right: 4.8pc;
     position: absolute;
     z-index: 0;
@@ -1205,7 +1205,6 @@ padding-top:10px;}
 #export-menu{
     display: none;
     align-items: center;
-    padding: 1rem 0 0 0;
     margin-top: 1r;
     justify-content: top;
     flex-direction: column;
@@ -1216,7 +1215,7 @@ padding-top:10px;}
     font-size: 10px;
     z-index: 100;
     width: 160px;
-    height: 180px;
+    height: 100px;
     border-radius: 5px;
 }
 
@@ -1224,7 +1223,6 @@ padding-top:10px;}
 .export_border{
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
 }
 
 .export_button{
@@ -1233,8 +1231,7 @@ padding-top:10px;}
     color: white;
     border: none;
     width: 100%;
-    padding: 0 0.5rem;
-    margin-bottom: 10px;
+    padding: 1rem 0.5rem; 
 }
 
 .export_button:hover{
@@ -1249,7 +1246,7 @@ padding-top:10px;}
     padding: 1rem;
     color: rgb(93, 48, 48);
     font-size: 1rem;
-    top: 60pc;
+    top: 48pc;
     right: 0.5pc;
     z-index: 100;
     background: #51CE7B;
@@ -1300,6 +1297,14 @@ padding-top:10px;}
 
 }
 
+
+/* style for error message position beside search btn */
+.msg-placement{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+}
 
 
 
