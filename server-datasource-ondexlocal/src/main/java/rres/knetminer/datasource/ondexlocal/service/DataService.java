@@ -2,8 +2,6 @@ package rres.knetminer.datasource.ondexlocal.service;
 
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -18,10 +16,10 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
+import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 
 /**
@@ -40,12 +38,14 @@ import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 public class DataService
 {  
 	/**
-	 * TODO: comment me
+	 * The Knetminer configuration coming from the instance YAML file and its included files.
+	 * This is 
 	 */
 	private KnetminerConfiguration configuration;
 	
-  private OptionsMap options = null;
-  private List<String> taxIds = null;
+// TODO:newConfig, remove
+//  private OptionsMap options = null;
+//  private List<String> taxIds = null;
 
   private ONDEXGraph graph;
   
@@ -64,9 +64,13 @@ public class DataService
 	 * Entry point to load the {@link #getConfiguration() Knetminer configuration} from a root
 	 * YAML file.
 	 * 
-	 * This is usually {@code TODO} and the web API gets its path from
-	 * {@link ConfigBootstrapWebListener}. However, options can be loaded separately, 
+	 * This is usually invoked by {@link OndexLocalDataSource}.init(), which, in turn is invoked
+	 * picked up by Spring. That init() method gets configFilePath from the 
+	 * property {@link OndexLocalDataSource#CONFIG_FILE_PATH_PROP}, via {@link ConfigBootstrapWebListener}.
+	 * 
+	 * The configuration can also be loaded separately, 
 	 * see {@link OndexServiceProvider#initData()}.
+	 * 
 	 */
 	public void loadConfiguration ( String configFilePath )
 	{
@@ -135,12 +139,12 @@ public class DataService
 	 * 
 	 * TODO:newConfig remove
 	 */
-	public OptionsMap _getOptions ()
-	{
-		return this.options != null 
-			? OptionsMap.unmodifiableOptionsMap ( this.options )
-			: OptionsMap.from ( Collections.emptyMap () );
-	}
+//	public OptionsMap _getOptions ()
+//	{
+//		return this.options != null 
+//			? OptionsMap.unmodifiableOptionsMap ( this.options )
+//			: OptionsMap.from ( Collections.emptyMap () );
+//	}
 	
   /**
    * The Knetminer configuration, as loaded from {@link #loadConfiguration(String)}.

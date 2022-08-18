@@ -75,7 +75,7 @@ public class KnetminerConfiguration
 	}
 	
 	/**
-	 * This is the entry point to obtain a configration, and Knetminer uses it in 
+	 * This is the entry point to obtain a configuration, and Knetminer uses it in 
 	 * {@link DataService#loadConfiguration(String)}.
 	 * 
 	 */
