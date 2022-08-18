@@ -50,6 +50,7 @@ do
 	echo 
 done
 
+cd .. # back to the codebase's root
 
 # The script that goes into this $NEW_RELEASE_VER distribution should use the corresponding version as
 # a default, not 'latest'. TODO: document it in the wiki.
@@ -58,12 +59,12 @@ if $IS_RELEASE; then
 	echo -e "\n\n\tSetting '$NEW_RELEASE_VER' as default --image-version in docker-run.sh\n"
 	sed -E --in-place "s/^image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
 else
-	# Else, we might need to restore latest
+	# Else, we might need to restore the pointers to the latest
 	if ! egrep -q "^image_version='latest'" docker/docker-run.sh; then
 		echo -e "\n\n\tRestoring 'latest' version for --image-version in docker-run.sh\n"
 		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
-		git commit -m "Restoring 'latest' version for --image-version in docker-run.sh (ci script). [ci skip]" \
-			docker/docker-run.sh
+		git commit docker/docker-run.sh \
+		    -m "Restoring 'latest' version for --image-version in docker-run.sh (ci script). [ci skip]"
 		export NEEDS_PUSH=true
 	fi
 fi

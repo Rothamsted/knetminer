@@ -18,6 +18,6 @@ docker run --rm \
   "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
 
 # For some reason, we get files that the GHA runner can't access anymore
-echo -e "\n  Maven build finished, fixing new files permissions"
+echo -e "\n  Maven build finished, fixing new files permissions\n"
 sudo chown -R "$USER" `pwd` ~/.m2
 sudo chmod -R ug=rwX,o-rwxs `pwd` ~/.m2
