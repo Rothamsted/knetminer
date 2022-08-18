@@ -8,13 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import rres.knetminer.datasource.ondexlocal.service.DataService;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;

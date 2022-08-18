@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
