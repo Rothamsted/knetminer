@@ -35,18 +35,22 @@ async function setupApiUrls ()
 		// server side
 		instanceBaseUrl = clientBaseUrl.replace ( /client$/g, "" );
 		guessApiUrl = instanceBaseUrl + "/ws/default/dataset-info";
+
+		// TODO: possibly manage an ultimate non-recoverable failure happening here.
+		// Possibly use a nested try/catch
 		await $.getJSON ( guessApiUrl, js => {
 		// Initially, I've tried: api_url = await $.getJSON(...), but
 		// no idea why in this case api_url is set to js, instead of this returnvalue
 			api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
 		});
   }
-  // TODO manage complete failure
 
   // Set anything else that depends on it
   //
 
-  // Same trick with this other API (including \n esaping)
+	// TODO: again, possibly manage this possible failure, with another try/catch
+	
+  // Same trick with this other API (including \n escaping)
   knetspace_api_host = await $.get (
     api_url + "/dataset-info/knetspace-url",
     ksUrl => ksUrl.replace ( /\n/g, "" )
