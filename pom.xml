@@ -102,10 +102,6 @@
 		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
 		-->
 		
-		<!-- TODO: REMOVE!!! See utils-config.js for details 
-		<knetminer.dataContext>dataset-info</knetminer.dataContext>
-		-->
-
 		<!-- TODO:newConfig, remove -->
 		<!-- 3702=Ara,4565=Wheat,4577=Maize -->
 		<!-- <knetminer.specieTaxId>3702,4565,4577</knetminer.specieTaxId> -->

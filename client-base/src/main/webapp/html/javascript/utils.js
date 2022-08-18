@@ -8,10 +8,13 @@ var knetmaps;
 * 	- add/remove QTL regions
 * 	- advanced search
 * 	- tooltips
+*   - more (see the implementation)
 */
 $(document).ready (
     function () {
-       setupApiUrls ().then ( function () {
+       setupApiUrls ()
+       .then ( function () 
+       {
 					genemap = GENEMAP.GeneMap({apiUrl: api_url})
 						.width(800).height(550); // changed from 750x400
 					knetmaps = KNETMAPS.KnetMaps();

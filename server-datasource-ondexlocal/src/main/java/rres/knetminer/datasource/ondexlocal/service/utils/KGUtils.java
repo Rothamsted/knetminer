@@ -221,7 +221,7 @@ public class KGUtils
 	 * method returns a collection that doesn't access nulls. So, this method here is a facility
 	 * to work with that.
 	 */
-  /* TODO: remove, no longer needed
+  /* TODO:newConfig remove, no longer needed
   public static boolean containsTaxId ( Set<String> reftaxIds, String taxId )
   {
   	if ( taxId == null ) return false;

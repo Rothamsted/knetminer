@@ -133,7 +133,7 @@ public class DataService
 	 * This returns a read-only map (never null). Options here can only be loaded and then changed via class
 	 * setters. 
 	 * 
-	 * TODO: remove
+	 * TODO:newConfig remove
 	 */
 	public OptionsMap _getOptions ()
 	{
@@ -198,7 +198,7 @@ public class DataService
 		return genomeGenesCount;
 	}
 
-	// TODO: remove, old config
+	// TODO:newConfig remove stuff from old config
 	/**
    * Should this become DatasetName?
    */
