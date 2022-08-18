@@ -4,6 +4,8 @@
 
 # 5.0.1-SNAPSHOT
 
+* TODO: multi-species, new configuration, API URL auto-discovery, /network with plainJSON
+
 ## UI Improvements
 * List of gene synonyms added to gene view (#602).
 * Query suggester has become a “Concept selector” which can map keywords to concepts from the knowledge graph.
