@@ -516,7 +516,7 @@ function changeSpecies(selectElement){
     $('#chr1').empty();
     $('#tabviewer').hide(); 
     if(currentTaxData){
-        $.get(multiSpecieUrl,'').done( function(data){
+        $.get(api_url + '/dataset-info','').done( function(data){
             var calcGenoome = multiSpeciesFeature.speciesEvents(data.species)
             if(calcGenoome){
                 // TODO what if user has two or more genome region present

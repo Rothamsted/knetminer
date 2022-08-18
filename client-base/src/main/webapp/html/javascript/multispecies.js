@@ -1,13 +1,12 @@
 
 // multi-species object literal house functions that can be used outside independently outside
-multiSpeciesFeature = function (){
-
-    // current Taxonomy ID and the taxIdString;
-    var currentTaxId,taxIdString;
+multiSpeciesFeature = function ()
+{
+    var currentTaxId = "";
 
     // function get lists of registered species from api_url+/species
     function getSpeciesList(){
-        $.get(multiSpecieUrl,'').done( function(data){
+        $.get(api_url + '/dataset-info','').done( function(data){
             var speciesInfos = data.species
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
@@ -25,7 +24,7 @@ multiSpeciesFeature = function (){
             $('.navbar-select').append(optionElement);
             if($('.navbar-select option').length === expectedOptions){
                 var firstSpecies = $('.navbar-select').first();
-                setApiUrl(firstSpecies.val()); 
+                setTaxId(firstSpecies.val()); 
                 return true
             }
         }
@@ -45,25 +44,36 @@ multiSpeciesFeature = function (){
         }
 
         // setting Species Release Note 
-        $('#release_icon').attr("href",`${multiSpecieUrl+'/release-notes.html'+taxIdString}`);
+        $('#release_icon').attr("href",`${api_url + '/dataset-info/release-notes.html'}`);
         return true;
     }
 
-    // function set Taxonomy ID and string for other functions to use
-    function setApiUrl(id){
-        currentTaxId = id; 
-        if(currentTaxId !== undefined){ 
-            taxIdString = '?taxId='+currentTaxId; 
-            return true; 
-        }
+    /** 
+     * Set the current taxonomy ID, usually based on the user selection.
+     */
+    // function setApiUrl(id)
+    function setTaxId (id) {
+      currentTaxId = id;
+      return currentTaxId ? true : false
     }
 
+		/**
+		 * Helper to get the URL fragment to request the right taxonomy ID, based on the currently selected
+		 * ones (see setTaxId () )
+		 * 
+		 */
+		function getTaxIdUrlFrag ()
+		{
+			return currentTaxId ? '?taxId=' + currentTaxId : "";
+		}
+		
+		
     // get species query examples 
     function getQueryExamples(){
             var sampleQueryButtons = "";
             $.ajax({
                 type: 'POST',
-                url: multiSpecieUrl+ '/sample-query.xml'+ taxIdString, 
+                url: api_url + '/dataset-info/sample-query.xml', 
                 dataType: "xml",
                 cache: false, //force cache off
                 success: function (sampleQuery) {
@@ -222,7 +232,7 @@ multiSpeciesFeature = function (){
     }
     // get the gene chromosome list 
     function getChromosomeList(){
-        $.get(multiSpecieUrl +'/chromosome-ids'+taxIdString ,'').done( function(chromosomes){
+        $.get(api_url + '/dataset-info/chromosome-ids' + getTaxIdUrlFrag () ,'').done( function(chromosomes){
             for(let i=0; i < chromosomes.length; i++){
                 var chr1Options = '<option value='+chromosomes[i]+'>'+ chromosomes[i]+'</option>';
                 $('#chr1').append(chr1Options);
@@ -233,7 +243,7 @@ multiSpeciesFeature = function (){
     }
     // draws the genomap view 
     function drawGeneMaps(basemapString,data){  
-        var taxIdBaseXmlUrl = multiSpecieUrl+'/basemap.xml'+taxIdString
+        var taxIdBaseXmlUrl = api_url + '/dataset-info/basemap.xml'+ getTaxIdUrlFrag ()
             if(basemapString === 'draw'){
                 genemap.draw('#genemap',taxIdBaseXmlUrl, data)
             }else{
@@ -245,7 +255,7 @@ multiSpeciesFeature = function (){
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
-        taxId: setApiUrl,
+        taxId: setTaxId,
         maps:drawGeneMaps
     }
 }(); 

@@ -5,15 +5,6 @@
 var api_url = "";
 
 
-// WHAT THE HELL IS THIS?!?
-// var multiSpecieUrl = "${knetminer.api.versionUrl}"
-//
-// TODO: no! This IS NOT the URL to multi-specie (what does it even mean?!), it's the URL to 
-// get dataset information, and very likely, there is NO NEED to define a constant to just 
-// append a tail to api_url. 
-// 
-var multiSpecieUrl;
-
 // TODO: to be removed, we shouldn't use it anymore with multi-specie code
 // boolean, tells if the data set contains reference genome info  
 var reference_genome = true; // TODO:newConfig remove the conditional code using this, now it's always true 
@@ -53,7 +44,7 @@ async function setupApiUrls ()
   // TODO manage complete failure
 
   // Set anything else that depends on it
-  multiSpecieUrl = api_url + "/dataset-info";
+  //
 
   // Same trick with this other API (including \n esaping)
   knetspace_api_host = await $.get (
