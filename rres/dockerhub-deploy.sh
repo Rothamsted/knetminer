@@ -97,10 +97,8 @@ else
 		echo -e "\n\n\t(Re)launching Docker, state machine-based traverser\n"
 fi
 
-# TODO: remove --image-version
-#
 ./docker-run.sh \
-  --container-name "$container_name" --image-version multi-species \
+  --container-name "$container_name" \
   --dataset-dir "$dataset_dir" --host-port $host_port \
   --container-memory $memory --container-memory-swap $mem_swap \
   $docker_run_opts \
