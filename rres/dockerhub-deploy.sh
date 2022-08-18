@@ -5,6 +5,7 @@ set -e # Stop upon the first problem
 
 dataset_dir=/opt/data/knetminer-datasets/poaceae-ci
 dataset_id=poaceae-test
+container_name=poaceae-ci
 host_port=9100
 jmx_port=9010
 rmi_port=9011
@@ -35,8 +36,8 @@ echo -e "\n\n\tPreparing the environment\n"
 #EOT
 
 echo -e "--- Stopping, cleaning and updating Docker\n"
-docker stop poaceae-ci || true
-docker rm poaceae-ci || true
+docker stop "$container_name" || true
+docker rm "$container_name" || true
 docker system prune --all --force
 docker volume prune --force
 docker pull knetminer/knetminer:multi-species # TODO: switch back to default when possible
@@ -99,7 +100,7 @@ fi
 # TODO: remove --image-version
 #
 ./docker-run.sh \
-  --container-name poaceae-ci --image-version multi-species \
+  --container-name "$container_name" --image-version multi-species \
   --dataset-dir "$dataset_dir" --host-port $host_port \
   --container-memory $memory --container-memory-swap $mem_swap \
   $docker_run_opts \
