@@ -1,30 +1,33 @@
 
 window.onload = function () {
     // Display knowledge network Stats.
+    setPageInfo();
     fetchStats();
 };
+
+
+
+/*
+ * Function to take extract and set species scientific name from url. 
+ */
+function setPageInfo(){
+    var currentUrl = window.location.search
+    var urlParams = new URLSearchParams(currentUrl);
+    var speciesName = urlParams.get('Id').replace('/%20/g', '');
+    var releaseNoteText = `${speciesName} Release Notes`; 
+    document.title = releaseNoteText; 
+    $('#release-title').html(releaseNoteText); 
+    $('#network_stats').html(`The ${speciesName} knowledge network contains:`); 
+    $('#species_header').html(speciesName)
+}
 
 /*
  * Function to read .tab file containing stats about the knowledge network & its mappings & to update 
  * them in the release.html webpage.
  */
 function fetchStats() {
-    var fileUrl = api_url + "/latestNetworkStats";
-
-    var dbUrl = api_url + "/dataSource";
-    var db_version='';
-
-    $.get(dbUrl).done(function (dbData) { 
-        console.log(dbData); 
-        var resp= dbData.dataSource.replace(/\"/g,"").trim().split(",");
-        resp.forEach(function(val) {
-            var values= val.split(":");
-            if(values[0].trim() === "dbVersion") { db_version= values[1].trim(); }
-           });
-       }).fail(function () { console.log("Error fetching dbVersion"); 
-    });
-
-
+    var fileUrl = ws_url + "/latestNetworkStats";
+   
     $.get(fileUrl).done(function (data) {
         console.log(data); 
         var resp = data.stats.split("\n");
@@ -40,7 +43,7 @@ function fetchStats() {
         conceptPercentage = conceptPercentage.toFixed(2);
         
         // Display stats data.
-        var statsText = "<br/><ul><li>KnetMiner KG version: " + db_version + "</li>" +
+        var statsText = "<br/><ul><li>KnetMiner KG version: " + 0 + "</li>" +
                 "<li>Number of genes: " + totalGenes + "</li>" +
                 "<li>Total concepts: <strong>" + totalConcepts + "</strong></li>" +
                 "<li>Total relations: <strong>" + totalRelations + "</strong></li>" +
@@ -103,7 +106,6 @@ function fetchStats() {
         console.log("Error occurred while retrieving Network details");
     });
 }
-
 
 
 function fetchValue(valText) {

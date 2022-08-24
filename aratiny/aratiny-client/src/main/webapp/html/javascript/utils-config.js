@@ -4,6 +4,8 @@
 // var api_base_url = "${knetminer.api.baseUrl}";
 var api_url = "";
 
+var ws_url = "${knetminer.api.url}"
+
 
 // TODO: to be removed, we shouldn't use it anymore with multi-specie code
 // boolean, tells if the data set contains reference genome info  
