@@ -161,7 +161,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
     if (data.geneCount === 0) { 
           status = true; 
          if(keyword.length > 0) { // msg for keyword search error
-            messageNode = keyword + 'did not match any genes or documents. Check for typos and try different or more general keywords.'; 
+            messageNode = keyword + ' did not match any genes or documents. Check for typos and try different or more general keywords.'; 
             genomicViewTitle = createGenomicViewTitle(messageNode,status);
            
             if(geneList_size > 0) {

@@ -106,8 +106,32 @@ color: white;*/
     line-height:normal;
     cursor:pointer;
 }
-/*
-div#wrapper {
+
+/* Arne's changes 24/08/22 - This section controls the scroll bar/scroller/side bar/sidebar. */
+/* It's been updated to a more modern design. Removing it will restore it. */
+
+/* Scroller width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track/Runner/area not on page */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Colour */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Colour on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* End of Scroller mod */
+
+/* div#wrapper {
         width:960px;
         /*background-color:#484747;*/
 /*margin-top:10px;
