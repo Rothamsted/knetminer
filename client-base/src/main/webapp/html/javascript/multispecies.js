@@ -44,7 +44,7 @@ multiSpeciesFeature = function ()
         }
     }
 
-    // function house all events that are triggered select a new species
+    // function house all events that are triggered when a user select a specific species
     function multiSpeciesEvents(data){
         getQueryExamples();
         drawGeneMaps('draw',null);
@@ -244,7 +244,7 @@ multiSpeciesFeature = function ()
                 }
             });
     }
-    // get the gene chromosome list 
+    // function get chromosome list
     function getChromosomeList(){
         $.get(api_url + '/dataset-info/chromosome-ids' + getTaxIdUrlFrag () ,'').done( function(chromosomes){
             for(let i=0; i < chromosomes.length; i++){
@@ -265,7 +265,7 @@ multiSpeciesFeature = function ()
             }
     
     }
-    //returned values that are called outside the module 
+    //returned values can be triggered outside the 
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,

@@ -13,7 +13,7 @@
  * @returns {unresolved promise}
  */
 async function getKsAPI() {
-    const response = await fetch(api_url + '/ksHost')
+    const response = await fetch(ws_url + '/ksHost')
             .then((r) => r.json())
             .then((rData) => {
                 return rData.ksHostUrl; 

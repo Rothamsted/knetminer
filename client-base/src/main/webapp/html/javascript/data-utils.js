@@ -508,7 +508,7 @@ function errorComponent(elementInfo,xhr){
 }
 
 
-// function to run on changing the species dropdown option
+// function to run on toggling multi-species select button 
 function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected");
     var currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
@@ -519,7 +519,7 @@ function changeSpecies(selectElement){
         $.get(api_url + '/dataset-info','').done( function(data){
             var calcGenoome = multiSpeciesFeature.speciesEvents(data.species)
             if(calcGenoome){
-                // TODO what if user has two or more genome region present
+                // TODO: what if user has two or more genome region present
                 setTimeout(function(){
                     findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
                     $('#genes1').focus(); 

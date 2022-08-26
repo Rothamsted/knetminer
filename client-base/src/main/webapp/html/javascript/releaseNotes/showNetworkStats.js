@@ -8,7 +8,7 @@ window.onload = function () {
 
 
 /*
- * Function to take extract and set species scientific name from url. 
+ * Function to extract and set species scientific name from relese page url. 
  */
 function setPageInfo(){
     var currentUrl = window.location.search

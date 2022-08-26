@@ -237,19 +237,7 @@ div#leftnav {
 
   /* navbar responsive styles*/
 
-@media (max-width: 1024px) {
-    .logo-items{width:50%};
-    .navbar-items{width:50%}
-    .product_links{width:40%}
-    #species_header{width:58%}
-}
 
-@media(min-width: 2560px){
-    .product_links{width: 18%;}
-    .navbar-items{padding:0.5rem 10rem}
-    .logo-items{padding:0.5rem 10rem};
-    #species_header{width: 24%;}
-}
 
 
 
@@ -1157,7 +1145,7 @@ padding-top:10px;}
 #species_header {
     position: relative;
     height: 100%;
-    width: 40%;
+    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1293,9 +1281,27 @@ padding-top:10px;}
     }
     #tabviewer_content{
         width:44%; 
+    }; 
+    .product_links{ width: 18%;
+    }
+    .navbar-items{ padding:0.5rem 10rem
+    }
+    .logo-items{ padding:0.5rem 10rem
+    };
+    #species_header{ width: 24%;
     }
 
 }
+
+@media (max-width: 1024px) {
+    .logo-items{width:50%};
+    .navbar-items{width:50%}
+    .product_links{width:40%}
+    #species_header{width:62%}
+}
+
+
+
 
 
 /* style for error message position beside search btn */

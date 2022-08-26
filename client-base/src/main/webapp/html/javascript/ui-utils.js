@@ -164,7 +164,7 @@ function deactivateSpinner(target) {
   $(target).maskLoader().destroy();
  }
 
-//  function creates an hidden element and takes a file type to be donwloaded to user system 
+//  function creates an hidden element, accepts a string of the file name and raw data to be downloaded to users machine 
 function downloadFunction(filename,filetype){
 
     var utf8Bytes = "";
@@ -184,7 +184,7 @@ function downloadFunction(filename,filetype){
 
 
 
-// function to handle network export: show and hide events
+// function to handle network hover effect and hiding of export functionality popup 
 $(function(){
 
     // show on hover download button 
@@ -197,7 +197,7 @@ $(function(){
        $('#export-menu').css('display','');
     }); 
 
-    // close when clicked outside 
+    // close when there is a click event outside the targeted element
     $(document).click(function(e){
         if($(e.target).closest('#export-menu').length !== 0)return false;
         $('#export-menu').css('display','');
