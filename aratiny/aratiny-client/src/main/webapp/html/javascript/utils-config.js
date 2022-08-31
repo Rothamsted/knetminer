@@ -20,7 +20,9 @@ var knetspace_api_host= "";
 // TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
 async function setupApiUrls ()
 {
-  var clientBaseUrl = window.location.href.replace ( /\/$/g, "" ); // URLs with // don't always work;
+  var clientBaseUrl = window.location.href
+    .replace ( /\?.*/g, "" ) // Don't mess-up with the params
+    .replace ( /\/$/g, "" ); // URLs with // don't always work;
   bootstrapUrl = clientBaseUrl;
   bootstrapUrl += "/html/api-url.jsp";
   bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
