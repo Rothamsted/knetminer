@@ -453,7 +453,7 @@ public class KnetminerServer
 		}
 		
 		// GA wants the actual client URL?
-		String realHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
+		String clientHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
 			.orElse ( rawRequest.getRemoteHost () );
 				
 		String pageName = ds + "/" + mode;
@@ -463,7 +463,7 @@ public class KnetminerServer
       	new DefaultRequest ()
       		.trackingId ( gaId )	
       		.userIp( ipAddress )
-      		.documentHostName ( realHost )
+      		.documentHostName ( clientHost )
       		.documentTitle ( pageName )
       		.documentPath ( "/" + pageName )
       		.protocolVersion ( "2" )
@@ -474,12 +474,14 @@ public class KnetminerServer
 		
 		int gaRespCode = gaResponse.getStatusCode ();
 		if ( gaRespCode >= 400 )
-			log.warn ( 
-				"Google Analytics, request for ID {} failed, HTTP status: {}",
-				gaId, gaRespCode 
+			log.error ( 
+				"Google Analytics, request for ID {} failed, HTTP status: {}, ip: {}, client: {}",
+				gaId, gaRespCode, ipAddress, clientHost 
 			);
 		else
-			log.info ( "Google Analytics invoked successfully with ID {}", gaId );
+			log.info ( 
+				"Google Analytics invoked successfully with ID {}, ip: {}, client: {}", gaId, ipAddress, clientHost
+		);
 		
 		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
