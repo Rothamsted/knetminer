@@ -489,7 +489,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
   }
 
 	@Override
-	public String getGoogleApiId ()
+	public String getGoogleAnalyticsId ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
@@ -498,7 +498,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override
-	public String getGoogleApiClientId ()
+	public String getGoogleAnalyticsClientId ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()

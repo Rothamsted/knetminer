@@ -108,14 +108,14 @@ public abstract class KnetminerDataSource {
 	 * Gets the Google API ID from the configuration.
 	 * 
 	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into
-	 * one.
+	 * one. WARNING: because of that, do not invoke this as an API call, use DatasetInfoService instead.
 	 */
-	public abstract String getGoogleApiId ();
+	public abstract String getGoogleAnalyticsId ();
 	
 	/**
-	 * @see #getGoogleApiId().
+	 * @see #getGoogleAnalyticsId().
 	 * 
 	 * TODO: as said elsewhere, we need to clarify why there are two IDs.
 	 */
-	public abstract String getGoogleApiClientId ();
+	public abstract String getGoogleAnalyticsClientId ();
 }

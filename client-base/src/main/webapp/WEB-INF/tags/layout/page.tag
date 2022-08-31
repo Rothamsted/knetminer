@@ -11,8 +11,10 @@
 <%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
 <%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
+<%-- TODO:newConfig, to be removed (see below)
 <%@ attribute name="enableGA" description="Is google analytics enabled" %>
 <%@ attribute name="ga_id" description="If analytics enabled then use this UI ga_id" %>
+--%>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -27,6 +29,9 @@
         <!-- favicon added -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
 
+				<%-- 
+				  TODO:newConfig, remove (together with the tag param), this is now managed 
+					via API and doGoogleAnalytics()
         <!-- Google Analytics -->
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -40,6 +45,8 @@
          }
         </script>
         <!-- end Google Analytics -->
+				--%>
+        
     </c:if>
 
         <!-- KnetMiner common style.css -->
@@ -60,11 +67,11 @@
 
         <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
 		
-		<!-- bootstrap css -->
-	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-		<!-- font-awesome css -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-	<!--	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+				<!-- bootstrap css -->
+				<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+				<!-- font-awesome css -->
+				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+				<!--	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
         <!-- Genomaps.js -->
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>

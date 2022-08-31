@@ -102,11 +102,11 @@ public class KnetminerServer
 	}
 
 	/**
-	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleApiId()}
+	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsId()}
 	 */
 	private String getGoogleAnalyticsTrackingId () 
 	{
-		return this.dataSources.get ( 0 ).getGoogleApiId ();
+		return this.dataSources.get ( 0 ).getGoogleAnalyticsId ();
 	}
 
 
@@ -315,11 +315,20 @@ public class KnetminerServer
 
 		try
 		{
+			// TODO: as eplained in their Javadoc, these are bridge methods, they should go away at some point
+			if ( ArrayUtils.contains ( new String [] { "getGoogleAnalyticsId", "getGoogleAnalyticsClientId" }, mode ) )
+				ExceptionUtils.throwEx ( 
+					IllegalArgumentException.class, 
+					"The method %s isn't a valid data source API call, use the equivalent /dataset-info/* instead",
+					mode
+			);
+			
 			// WARNING: this relies on the fact that a signature exists that takes a parameter of EXACTLY the same class as
 			// request.getClass (), if you have an API method that accepts a super-class instead, this kind of reflection
 			// won't be enough to pick it.
 			//
 			Method method = dataSource.getClass ().getMethod ( mode, String.class, request.getClass () );
+			
 			try {
 				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
 				return new ResponseEntity<> ( response, HttpStatus.OK );

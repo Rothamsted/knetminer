@@ -105,4 +105,15 @@ public class DatasetInfoService
 			.getConfiguration ()
 			.getKnetSpaceURL ();
 	}
+	
+	// TODO: as said elsewhere, do we need the client ID?
+	@RequestMapping ( path = "/google-analytics-id" ) 
+	public String getGoogleAnalyticsId ()
+	{
+		return OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getGoogleAnalyticsId ();
+	}
+	
 }

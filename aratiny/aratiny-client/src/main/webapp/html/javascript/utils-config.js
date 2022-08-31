@@ -65,6 +65,7 @@ var enforce_genelist_limit= true; // enforce free user search limits (true/false
 var freegenelist_limit= 20; // default gene list search limit for free user (Pro: unlimited).
 var knetview_limit= 10; // default Gene View knetwork selction limit for KnetMaps for Free user (Pro: 200).
 
-// TODO: get it from the API
-var enableGA = "${knetminer.enableAnalytics}"; // from base knetminer POM for client-side JS to use
+// TODO:newConfig remove, now we're getting this from doGoogleAnalytics()
+/*var enableGA = "${knetminer.enableAnalytics}"; // from base knetminer POM for client-side JS to use
 var ga_id = "${knetminer.gaIdUi}"; // ga_id from base knetminer POM for UI JS to use
+*/

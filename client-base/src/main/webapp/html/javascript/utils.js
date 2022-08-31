@@ -28,6 +28,7 @@ $(document).ready (
 	        QtlRegionHandlers();
 	        searchHandlers();
 	        bodyHandlers();
+	        doGoogleAnalytics ();
 	     });        
     }
 );
