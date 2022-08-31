@@ -24,7 +24,8 @@ function showReferenceGenome(){
 function loadOnReady(){
 
   // particle js background config 
-  particlesJS.load('particles-js','html/javascript/assets/particles.json');
+  //particlesJS.load('particles-js','html/javascript/assets/particles.json'); This is getting commented out now. If we choose to readd this later, we can uncomment it again. Search Tags: Background, particles.js, particle, wallpaper
+
 
     activateResetButton();
 
