@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
@@ -37,6 +38,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
@@ -432,31 +434,43 @@ public class KnetminerServer
 			log.debug ( "Preparing Google Analytics, using splitted IP: {}", ipAddress );
 		}
 
-		String[] IP_HEADER_CANDIDATES = { 
-			"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
-			"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
-			"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
-			"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
-		};
-
-		for ( String header : IP_HEADER_CANDIDATES )
+		// TODO: what's the point?! Just logging?! MB: I've put it under log.isDebug
+		if ( log.isDebugEnabled () )
 		{
-			String ip = rawRequest.getHeader ( header );
-			if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
-				log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
+			String[] IP_HEADER_CANDIDATES = { 
+				"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+				"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
+				"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
+				"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
+			};
+
+			for ( String header : IP_HEADER_CANDIDATES )
+			{
+				String ip = rawRequest.getHeader ( header );
+				if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
+					log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
+			}
 		}
 		
+		// GA wants the actual client URL?
+		String realHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
+			.orElse ( rawRequest.getRemoteHost () );
+				
 		String pageName = ds + "/" + mode;
 		
 		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
-			.withTrackingId ( gaId )
+      .withDefaultRequest ( 
+      	new DefaultRequest ()
+      		.trackingId ( gaId )	
+      		.userIp( ipAddress )
+      		.documentHostName ( realHost )
+      		.documentTitle ( pageName )
+      		.documentPath ( "/" + pageName )
+      		.protocolVersion ( "2" )
+      )
 			.build ();
-		
-		GoogleAnalyticsResponse gaResponse = ga.pageView ()
-			.documentTitle ( pageName )
-			.documentPath ( "/" + pageName )
-			.userIp ( ipAddress )
-			.send ();
+				
+		GoogleAnalyticsResponse gaResponse = ga.pageView ().send ();
 		
 		int gaRespCode = gaResponse.getStatusCode ();
 		if ( gaRespCode >= 400 )
