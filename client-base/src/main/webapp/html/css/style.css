@@ -14,7 +14,7 @@
 
 html{
     height: 100%;
-    /*background-color: #F4F5F7;*/
+    background-color: #ebf2ed;
 }
 
   body {
@@ -29,19 +29,20 @@ html{
     }
 
 .background{
-    background: #fff;
+    background: #ebf2ed;
     background-size: cover;
     background-position: 50% 50%;
     background-repeat: no-repeat;
 }
 
-#particles-js{
+/*This is getting commented out now. If we choose to readd this later, we can uncomment it again. Search Tags: Background, particles.js, particle, wallpaper*/
+/* #particles-js{
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: absolute; */
     /* Particles.json background color adjustment by Arne (E5F8EB is good too. Else FFFF for white)*/
-    background-color: #ebf2ed;  
-}
+    /* background-color: #ebf2ed;  
+} */
 
 body.embeddable {
     background: none;
