@@ -35,7 +35,8 @@ async function doGoogleAnalytics ()
   );	
 	
 	if ( !googleAnalyticsId ) {
-		console.log ( "Google Analytics, no ID set, not tracking" );
+		console.info ( "Google Analytics, no ID set, not tracking" );
+		return;
 	}
 	
 	try
@@ -44,6 +45,7 @@ async function doGoogleAnalytics ()
   	window.dataLayer = window.dataLayer || [];
   	_gtag ( 'js', new Date() );
   	_gtag ( 'config', googleAnalyticsId );
+  	console.info ( "Google Analytics tracker invoked with", googleAnalyticsId );
   }
   catch ( ex )
   {

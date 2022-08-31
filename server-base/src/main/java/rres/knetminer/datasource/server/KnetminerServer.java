@@ -37,6 +37,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
@@ -411,7 +412,10 @@ public class KnetminerServer
 		
 		String gaId = getGoogleAnalyticsTrackingId ();
 		
-		if ( gaId == null ) return;
+		if ( gaId == null ) {
+			log.info ( "Google Analytics, no ID set, not tracking" );
+			return;
+		}
 
 		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
 		
@@ -448,12 +452,22 @@ public class KnetminerServer
 			.withTrackingId ( gaId )
 			.build ();
 		
-		ga.pageView ()
+		GoogleAnalyticsResponse gaResponse = ga.pageView ()
 			.documentTitle ( pageName )
 			.documentPath ( "/" + pageName )
 			.userIp ( ipAddress )
 			.send ();
 		
+		int gaRespCode = gaResponse.getStatusCode ();
+		if ( gaRespCode >= 400 )
+			log.warn ( 
+				"Google Analytics, request for ID {} failed, HTTP status: {}",
+				gaId, gaRespCode 
+			);
+		else
+			log.info ( "Google Analytics invoked successfully with ID {}", gaId );
+		
+		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
 	}
 	
