@@ -75,9 +75,9 @@
 			<artifactId>log4j-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.brsanthu</groupId>
-			<artifactId>google-analytics-java</artifactId>
-		</dependency>
+		  <groupId>net.mikehardy</groupId>
+		  <artifactId>google-analytics-java</artifactId>
+		</dependency>			
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-datasource-api</artifactId>
