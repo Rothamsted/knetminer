@@ -72,13 +72,21 @@ graphTraverser:
   StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
   "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
 
+
 # The ID for enabling Google Analytics, to track the requests to a Knetminer instance via Google Analytics
 # The default for this is the ID that the Knetminer team uses, but you can use your own ID and get your  
 # instance tracked. If this isn't defined (ie, set to null), then GA is disabled.
-googleAnalyticsId: UA-88753233-2
+googleAnalyticsIdApi: UA-88753233-2
 
-# TODO: as said elsewhere, we need to clarify why we have separated IDs
-googleAnalyticsClientId: UA-88753233-1
+# We used to have two different trackers, but this isn't very much needed and these two values could be
+# the same. As above, if this is null, no tracking happens (and no Google code is downloaded). 
+googleAnalyticsIdClient: UA-88753233-1
+
+# UA- are the old (universal) API, which is set to be turned off by July 2023 (TODO: migrate)
+# G- are for the new GA4, but they don't work with the Java library we're using (both work with the
+# Google-provided Js, which appear to be calling the universal API, very confusing).
+# Bottom line, we stick to the old API for the time being.
+#
 
 
 # This enables the CypherDebugger service and corresponding UI interface at TODO.

@@ -110,12 +110,5 @@ public abstract class KnetminerDataSource {
 	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into
 	 * one. WARNING: because of that, do not invoke this as an API call, use DatasetInfoService instead.
 	 */
-	public abstract String getGoogleAnalyticsId ();
-	
-	/**
-	 * @see #getGoogleAnalyticsId().
-	 * 
-	 * TODO: as said elsewhere, we need to clarify why there are two IDs.
-	 */
-	public abstract String getGoogleAnalyticsClientId ();
+	public abstract String getGoogleAnalyticsIdApi ();
 }

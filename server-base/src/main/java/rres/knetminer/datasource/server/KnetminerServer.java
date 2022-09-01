@@ -105,11 +105,11 @@ public class KnetminerServer
 	}
 
 	/**
-	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsId()}
+	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsIdApi()}
 	 */
 	private String getGoogleAnalyticsTrackingId () 
 	{
-		return this.dataSources.get ( 0 ).getGoogleAnalyticsId ();
+		return this.dataSources.get ( 0 ).getGoogleAnalyticsIdApi ();
 	}
 
 
@@ -318,11 +318,11 @@ public class KnetminerServer
 
 		try
 		{
-			// TODO: as eplained in their Javadoc, these are bridge methods, they should go away at some point
-			if ( ArrayUtils.contains ( new String [] { "getGoogleAnalyticsId", "getGoogleAnalyticsClientId" }, mode ) )
+			// TODO: as explained in their Javadoc, these are bridge methods, they should go away at some point
+			if ( "getGoogleAnalyticsIdApi".equals ( mode ) )
 				ExceptionUtils.throwEx ( 
 					IllegalArgumentException.class, 
-					"The method %s isn't a valid data source API call, use the equivalent /dataset-info/* instead",
+					"The method %s isn't a valid data source API call, use the equivalent /dataset-info//google-analytics-id instead",
 					mode
 			);
 			

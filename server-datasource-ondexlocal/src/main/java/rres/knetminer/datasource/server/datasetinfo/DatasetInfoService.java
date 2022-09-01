@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
+import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
@@ -96,7 +97,6 @@ public class DatasetInfoService
 			.body ( dsetInfo.getBackgroundImage () );
 	}
 	
-	// TODO: some of these calls are more for a /configuration service
 	@RequestMapping ( path = "/knetspace-url" ) 
 	public String knetSpaceURL ()
 	{
@@ -106,14 +106,19 @@ public class DatasetInfoService
 			.getKnetSpaceURL ();
 	}
 	
-	// TODO: as said elsewhere, do we need the client ID?
+	/**
+	 * We serve the ID reserved for the UI/client only.
+	 * 
+	 * The {@link KnetminerConfiguration#getGoogleAnalyticsIdApi() server-dedicated ID} isn't needed outside the 
+	 * API app and hence we don't expose it.
+	 */
 	@RequestMapping ( path = "/google-analytics-id" ) 
-	public String getGoogleAnalyticsId ()
+	public String getGoogleAnalyticsIdClient ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getGoogleAnalyticsId ();
+			.getGoogleAnalyticsIdClient ();
 	}
 	
 }

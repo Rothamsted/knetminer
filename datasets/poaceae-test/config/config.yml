@@ -38,14 +38,13 @@
   #  scientificName: Oryza sativa Japonica Group
   #  commonName: Japonica rice    
 
-# See the defaults for details. TODO: these are my (M. Brandizi) personal IDs
+# See the defaults for details. TODO: these are my (M. Brandizi) personal IDs. See details in the default
+# file.
 #
-# WARNING: UA- are the old (universal) API, which is set to be turned off by July 2023 (TODO: migrate)
-# G- are for the new GA4, but they don't work with the Java library we're using (both work with the
-# Google-provided Js, which appear to be calling the universal API, very confusing).
-# Bottom line, we stick to the old API for the time being.
+googleAnalyticsIdApi: UA-237399750-1
+googleAnalyticsIdClient: UA-237399750-1
+
+# The new GA4 API
 #
-googleAnalyticsId: UA-237399750-1
-googleAnalyticsClientId: UA-237399750-1
-#googleAnalyticsId: G-DPWNWT8BSF
-#googleAnalyticsClientId: G-DPWNWT8BSF
+#googleAnalyticsIdApi: G-DPWNWT8BSF
+#googleAnalyticsIdClient: G-DPWNWT8BSF

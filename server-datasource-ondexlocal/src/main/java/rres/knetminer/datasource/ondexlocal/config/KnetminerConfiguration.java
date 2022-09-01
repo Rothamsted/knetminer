@@ -60,10 +60,10 @@ public class KnetminerConfiguration
 	private boolean cypherDebuggerEnabled = false;
 	
 	@JsonProperty
-	private String googleAnalyticsId = null;
+	private String googleAnalyticsIdApi = null;
 
 	@JsonProperty
-	private String googleAnalyticsClientId = null;
+	private String googleAnalyticsIdClient = null;
 	
 	
 	@JsonIgnore
@@ -226,17 +226,20 @@ public class KnetminerConfiguration
 	 * Used for tracking requests via Google Analytics.
 	 * When this is null, no tracking happens.
 	 */
-	public String getGoogleAnalyticsId ()
+	public String getGoogleAnalyticsIdApi ()
 	{
-		return googleAnalyticsId;
+		return googleAnalyticsIdApi;
 	}
 
 	/**
-	 * A Google Analytics ID, which is used for the client. TODO: why aren't we using a single ID?! 
+	 * A Google Analytics ID, which is used for the client/UI.
+	 *  
+	 * API and client might use two different IDs, when they are on two different server and/or domains.
+	 * By default, we use the same ID for both. 
 	 */
-	public String getGoogleAnalyticsClientId ()
+	public String getGoogleAnalyticsIdClient ()
 	{
-		return googleAnalyticsClientId;
+		return googleAnalyticsIdClient;
 	}
 
 	
