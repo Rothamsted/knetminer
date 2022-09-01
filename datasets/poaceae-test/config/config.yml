@@ -40,10 +40,12 @@
 
 # See the defaults for details. TODO: these are my (M. Brandizi) personal IDs
 #
-# This is the new GA4 API, not sure existing Java client supports it, maybe Google allows for
-# v2 calls with v4 IDs
-googleAnalyticsId: G-DPWNWT8BSF
-googleAnalyticsClientId: G-DPWNWT8BSF
-# Trying with Universal Analytics instead.
-#googleAnalyticsId: UA-237399750-1
-#googleAnalyticsClientId: UA-237399750-1
+# WARNING: UA- are the old (universal) API, which is set to be turned off by July 2023 (TODO: migrate)
+# G- are for the new GA4, but they don't work with the Java library we're using (both work with the
+# Google-provided Js, which appear to be calling the universal API, very confusing).
+# Bottom line, we stick to the old API for the time being.
+#
+googleAnalyticsId: UA-237399750-1
+googleAnalyticsClientId: UA-237399750-1
+#googleAnalyticsId: G-DPWNWT8BSF
+#googleAnalyticsClientId: G-DPWNWT8BSF

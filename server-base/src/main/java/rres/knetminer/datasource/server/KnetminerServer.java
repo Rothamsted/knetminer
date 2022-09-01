@@ -458,6 +458,10 @@ public class KnetminerServer
 				
 		String pageName = ds + "/" + mode;
 		
+		// This is like USER_AGENT in jdk.internal.net.http.HttpRequestImpl, which isn't accessible
+		var userAgent = "Java-http-client/" + System.getProperty ( "java.version" );
+		// DEBUG userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
+		
 		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
       .withDefaultRequest ( 
       	new DefaultRequest ()
@@ -467,7 +471,7 @@ public class KnetminerServer
       		.documentTitle ( pageName )
       		.documentPath ( "/" + pageName )
       		.protocolVersion ( "2" )
-      		.userAgent ( "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36" )
+      		.userAgent ( userAgent )
       )
 			.build ();
 				
