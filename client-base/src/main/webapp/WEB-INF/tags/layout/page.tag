@@ -5,11 +5,20 @@
 <%@ attribute name="title"       required="true" description="Page title" %>
 <%@ attribute name="keywords"    required="true" description="Page keywords to improve SEO" %>
 <%@ attribute name="description" required="true" description="Page description" %>
+
+<%-- TODO: do we still need these? We can't build custom index.jsp anymore, see #638 --%>
 <%@ attribute name="extraHeader" fragment="true" description="Extra code to put before head" %>
 <%@ attribute name="extraBottom" fragment="true" description="Extra code to put before body" %>
-<%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
-<%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
+
+<%-- TODO: no longer used, to be removed?
+<%@ attribute name="bgcolor" fragment="false" description="Background color" %>
+ --%>
+
+<%-- TODO:newConfig, to be removed
+<%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
+--%>
+<%-- TODO:newConfig, always false, to be removed or migrated to new config --%>
 <%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
 <%-- TODO:newConfig, to be removed (see below)
 <%@ attribute name="enableGA" description="Is google analytics enabled" %>
