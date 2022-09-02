@@ -7,10 +7,47 @@
 		<gene>TPS*</gene>
 		<gene>TPP?</gene>
 	</query>	
-	
+
+	<!-- 
+		For the test instance, I've ran the example 2 as premium user and kept the 20 top-ranked
+		ones. This is just for convenience during tests, since it avoids to be blocked when 
+		not signed in as premium user. I've kept the original example 2, in case you want to 
+		test it with premium accounts.
+		
+		The selected genes are listed below in random order, just to give the feeling that
+		Knetminer ranks results (eg, during demos).    
+	-->	
 	<query>
 		<name>Example 2</name>
-		<description>Maize genes</description>
+		<description>Maize genes (premium access only)</description>
+		<term>drought</term>
+
+		<gene>ZM00001EB073420</gene>
+		<gene>ZM00001EB158420</gene>
+		<gene>ZM00001EB324540</gene>
+		<gene>ZM00001EB149160</gene>
+		<gene>ZM00001EB160470</gene>
+		<gene>ZM00001EB176680</gene>
+		<gene>ZM00001EB393150</gene>
+		<gene>ZM00001EB038010</gene>
+		<gene>ZM00001EB270240</gene>
+		<gene>ZM00001EB166990</gene>
+		<gene>ZM00001EB119320</gene>
+		<gene>ZM00001EB144000</gene>
+		<gene>ZM00001EB214530</gene>
+		<gene>ZM00001EB219160</gene>
+		<gene>ZM00001EB387090</gene>
+		<gene>ZM00001EB058980</gene>
+		<gene>ZM00001EB386560</gene>
+		<gene>ZM00001EB086800</gene>
+		<gene>ZM00001EB274190</gene>
+		<gene>ZM00001EB300010</gene>
+	</query>
+	
+	
+	<query>
+		<name>Example 2b</name>
+		<description>Maize genes (premium access only)</description>
 		<term>drought</term>
 		<gene>ZM00001EB038010</gene>
 		<gene>ZM00001EB176680</gene>
@@ -78,4 +115,26 @@
 		<description>Genome search</description>
 		<term>"seed germination" AND flavon*</term>
 	</query>	
+
+	<!-- Crafter by MB to see something significant about regions -->
+	<query>
+		<name>Example 5</name>
+		<description>Region search</description>
+		
+		<term>drought AND ABA</term>
+
+		<gene>SIZ1</gene>
+		<gene>HAB1</gene>
+		<gene>AT1G50370</gene>
+		<gene>ZM00001EB355410</gene>
+		
+		<region>
+			<chromosome>8</chromosome>
+			<start>122482486</start>
+			<end>168395052</end>
+			<label>Drought</label>
+		</region>
+		
+	</query>	
+
 </sampleQueries>
