@@ -39,7 +39,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
-import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
@@ -122,7 +121,6 @@ public class KnetminerServer
 		String ds, String keyword, List<String> list, HttpServletRequest rawRequest, Model model, String pageId )
 	{
 		this.getConfiguredDatasource(ds, rawRequest); // just validates ds
-		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
 		
 		if ( list != null && !list.isEmpty () )
 			model.addAttribute("list", new JSONArray(list).toString());
@@ -130,6 +128,7 @@ public class KnetminerServer
 		if (keyword != null && !"".equals ( keyword ) )
 			model.addAttribute("keyword", keyword);
 
+		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
 		return pageId;
 	}
 	
@@ -314,7 +313,6 @@ public class KnetminerServer
 				+ Arrays.toString ( request.getQtl ().toArray () );
 			log.debug ( "Calling " + mode + " with " + paramsStr );
 		}
-		this.googleTrackPageView ( ds, mode, request, rawRequest );
 
 		try
 		{
@@ -369,7 +367,11 @@ public class KnetminerServer
 		{
 			throw new Error (
 				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
-		} 
+		}
+		finally {
+			// TODO: should we track when failed?
+			this.googleTrackPageView ( ds, mode, request, rawRequest );
+		}
 	}
 	
 	
@@ -396,7 +398,6 @@ public class KnetminerServer
 	
 	/**
 	 * TODO: do we need listMode?
-	 * 
 	 */
 	private void googleTrackPageView (
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
@@ -474,19 +475,29 @@ public class KnetminerServer
       		.userAgent ( userAgent )
       )
 			.build ();
-				
-		GoogleAnalyticsResponse gaResponse = ga.pageView ().send ();
+			
 		
-		int gaRespCode = gaResponse.getStatusCode ();
-		if ( gaRespCode >= 400 )
-			log.error ( 
-				"Google Analytics, request for ID {} failed, HTTP status: {}, ip: {}, client: {}",
-				gaId, gaRespCode, ipAddress, clientHost 
-			);
-		else
-			log.info ( 
-				"Google Analytics invoked successfully with ID {}, ip: {}, client: {}", gaId, ipAddress, clientHost
-		);
+			final var ipAddressRO = ipAddress; // lambdas requires immutables
+			
+			// Invoke GA asynchronously, don't waste my time with waiting
+			ga.
+			pageView ()
+			.sendAsync ()
+			.thenAcceptAsync ( gaResponse -> 
+			{
+				int gaRespCode = gaResponse.getStatusCode ();
+				if ( gaRespCode >= 400 )
+					log.error ( 
+						"Google Analytics, request to track '{}' with ID {} failed, HTTP status: {}, ip: {}, client: {}",
+						pageName, gaId, gaRespCode, ipAddressRO, clientHost 
+					);
+				else
+					log.info ( 
+						"Google Analytics invoked successfully for '{}', with ID {}, ip: {}, client: {}", 
+						pageName, gaId, ipAddressRO, clientHost
+				);
+			});
+		
 		
 		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
