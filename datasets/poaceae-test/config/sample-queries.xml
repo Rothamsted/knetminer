@@ -19,7 +19,7 @@
 	-->	
 	<query>
 		<name>Example 2</name>
-		<description>Maize genes (premium access only)</description>
+		<description>Maize genes</description>
 		<term>drought</term>
 
 		<gene>ZM00001EB073420</gene>
