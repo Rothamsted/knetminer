@@ -119,7 +119,7 @@
 	<!-- Crafter by MB to see something significant about regions -->
 	<query>
 		<name>Example 5</name>
-		<description>Region search</description>
+		<description>Maize region search</description>
 		
 		<term>drought AND ABA</term>
 

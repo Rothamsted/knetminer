@@ -173,7 +173,7 @@ public class UIUtils
 		// so we fix them this way. But using Lucene for highlighting should be simpler.
 		keywordRe = keywordRe.replaceAll ( "\\*", "\\S*" )
 			.replaceAll ( "\\?", "\\S?" );
-		
+				
 		Pattern kwpattern = Pattern.compile ( keywordRe, Pattern.CASE_INSENSITIVE );
 
 		found |= highlightSearchStringFragment ( kwpattern, concept.getAnnotation (), highlighter, concept::setAnnotation );
