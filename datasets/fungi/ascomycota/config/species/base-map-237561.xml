@@ -1,47 +1,47 @@
 <genome>
-	<chromosome index="1"  length="3188341" number="1A">
+	<chromosome index="1"  length="3188341" number="Ca22chr1A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>3188341</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2"  length="2231883" number="2A">
+	<chromosome index="2"  length="2231883" number="Ca22chr2A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>2231883</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3"  length="1799298" number="3A">
+	<chromosome index="3"  length="1799298" number="Ca22chr3A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>1799298</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4"  length="1603259" number="4A">
+	<chromosome index="4"  length="1603259" number="Ca22chr4A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>1603259</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5"  length="1190869" number="5A">
+	<chromosome index="5"  length="1190869" number="Ca22chr5A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>1190869</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="6"  length="1033292" number="6A">
+	<chromosome index="6"  length="1033292" number="Ca22chr6A_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>1033292</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="7"  length="2286237" number="RA">
+	<chromosome index="7"  length="2286237" number="Ca22chrRA_C_albicans_SC5314">
 		<band index="1">
 			<start>0</start>
 			<end>2286237</end>
@@ -49,4 +49,3 @@
 		</band>
 	</chromosome>
 </genome>
-
