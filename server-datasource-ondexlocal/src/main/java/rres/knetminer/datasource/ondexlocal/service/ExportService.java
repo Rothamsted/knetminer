@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -56,7 +56,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.ebi.utils.io.IOUtils;
+import uk.ac.ebi.utils.opt.io.IOUtils;
 
 /**
  * The export sub-service for {@link ExportService}.
@@ -97,7 +97,7 @@ public class ExportService
 	void exportGraphStats ()
 	{
 		ONDEXGraph graph = this.dataService.getGraph ();
-		var exportDirPath = dataService.getDataPath ();
+		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
 		
 		log.info ( "Saving graph stats to '{}'", exportDirPath );
 
@@ -263,7 +263,7 @@ public class ExportService
    */
 	private void generateGeneEvidenceStats ()
 	{
-		var exportDirPath = dataService.getDataPath ();
+		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
 
 		try
 		{
@@ -361,7 +361,7 @@ public class ExportService
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 	  var graph = dataService.getGraph ();
 		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
-		var options = dataService.getOptions ();
+		var config = dataService.getConfiguration ();
 
 		if ( userGenes == null ) userGenes = Set.of ();
 		var userGeneIds = userGenes.stream ()
@@ -464,7 +464,7 @@ public class ExportService
 			List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 				allPubs, 
 				attYear, 
-				options.getInt ( SearchService.OPT_DEFAULT_NUMBER_PUBS, -1 ) 
+				config.getDefaultExportedPublicationCount () 
 			);
 			
 			// Get best labels for publications and add to the rest
@@ -693,7 +693,11 @@ public class ExportService
 		
 		Map<String, String> trait2color = UIUtils.createHilightColorMap ( traits, colorHex );
 
-		final var taxIds = this.dataService.getTaxIds ();
+		final var taxIds = this.dataService
+			.getConfiguration ()
+			.getServerDatasetInfo ()
+			.getTaxIds ();
+		
 		log.info ( "Display QTLs and SNPs... QTLs found: " + qtlDB.size () );
 		log.info ( "TaxID(s): {}", taxIds );
 		
@@ -727,7 +731,7 @@ public class ExportService
 			else if ( type.equals ( "SNP" ) )
 			{
 				/* add check if species TaxID (list from client/utils-config.js) contains this SNP's TaxID. */
-				if ( this.dataService.containsTaxId ( loci.getTaxID () ) )
+				if ( taxIds.contains ( loci.getTaxID () ) )
 				{
 					sb.append ( "<feature>\n" );
 					sb.append ( "<chromosome>" + chrQTL + "</chromosome>\n" );

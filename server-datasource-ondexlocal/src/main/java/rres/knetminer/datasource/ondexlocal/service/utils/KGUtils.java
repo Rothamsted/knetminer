@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +25,7 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * 
@@ -56,51 +59,59 @@ public class KGUtils
    * Was named searchGenesByAccessionKeywords
    */
 	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
-		DataService dataService, SearchService searchService, List<String> accessions
-	)
-	{
-		if ( accessions.size () == 0 ) return new HashSet<>();
-				
-		var graph = dataService.getGraph ();
-		
-		// TODO: probably it's not needed anymore
-		Set<String> normAccs = accessions.stream ()
-		.map ( acc -> 
-			acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
-			.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
-			.toUpperCase () 
-		).collect ( Collectors.toSet () );			
-				
-		AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
-		
-		Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
-		.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
+			DataService dataService, SearchService searchService, List<String> accessions, String clientTaxId 
+		)
+		{
+			if ( accessions.size () == 0 ) return new HashSet<>();
+			var clientTaxIdNrm = StringUtils.trimToNull ( clientTaxId );
+			
+			var graph = dataService.getGraph ();
+			var config = dataService.getConfiguration ();
+			var dsetInfo = config.getServerDatasetInfo ();
+					
+			// TODO: probably it's not needed anymore
+			Set<String> normAccs = accessions.stream ()
+			.map ( acc -> 
+				acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
+				.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
+				.toUpperCase () 
+			).collect ( Collectors.toSet () );
+			
+			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
+					
+			Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
+			.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
 
-		Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
-		.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
-		
-		
-		Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
-		.flatMap ( Set::parallelStream )
-		.filter ( gene -> {
-      String thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-      return dataService.containsTaxId ( thisTaxId );
-		})
-		// Components like the semantic motif traverser need the original internal IDs.
-		.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
-		.collect ( Collectors.toSet () );
-		
-		return result;
-	}
+			Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
+			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
+			
+			Predicate<String> taxIdGeneFilter = clientTaxIdNrm == null 
+				? _taxId -> dsetInfo.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
+				: _taxId -> clientTaxIdNrm.equals ( _taxId ); // client-provided taxId
+			
+			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
+			.flatMap ( Set::parallelStream )
+			.filter ( gene -> 
+			{
+				var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
+				return taxIdGeneFilter.test ( thisTaxId );
+			})
+			// Components like the semantic motif traverser need the original internal IDs.
+			.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
+			.collect ( Collectors.toSet () );
+			
+			return result;
+		}
 	
 	
   /**
    * Searches for genes within genomic regions (QTLs), using the special format in the parameter.
    *
-   * @qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
-   * 
+   * @param qtlsStr a list of genome regions, as it comes from the UI, see {@link QTL#fromString(String)}
+   * @param taxIds this is set either with a user-provided value or with the configured taxIDs.
+   *   The latter is only used by {@link SearchService#fetchQTLs(List, String)}.
    */
-	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, List<String> taxIds, List<String> qtlsStr )
+	public static Set<ONDEXConcept> fetchQTLs ( ONDEXGraph graph, Set<String> taxIds, List<String> qtlsStr )
 	{
 		log.info ( "searching QTL against: {}", qtlsStr );
 		Set<ONDEXConcept> resultGenes = new HashSet<> ();
@@ -149,18 +160,18 @@ public class KGUtils
 					if ( geneEnd == 0 ) continue;
 
 					if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
-					
-					if ( !containsTaxId ( taxIds, geneHelper.getTaxID () ) ) continue;
+					if ( !taxIds.contains ( geneHelper.getTaxID () ) ) continue;
 
 					resultGenes.add ( gene );
 				}
 			}
-			catch ( Exception e )
+			catch ( Exception ex )
 			{
-				// TODO: the user doesn't get any of this!
-				log.error ( "Not valid qtl: " + e.getMessage (), e );
+				ExceptionUtils.throwEx ( RuntimeException.class, ex, 
+					"Error while parsing the QTL region %s: %s", qtl, ex.getMessage ()
+				);
 			}
-		}
+		} // for qtl
 		return resultGenes;
 	}
 
@@ -208,10 +219,11 @@ public class KGUtils
 	 * method returns a collection that doesn't access nulls. So, this method here is a facility
 	 * to work with that.
 	 */
-  public static boolean containsTaxId ( List<String> reftaxIds, String taxId )
+  /* TODO:newConfig remove, no longer needed
+  public static boolean containsTaxId ( Set<String> reftaxIds, String taxId )
   {
   	if ( taxId == null ) return false;
   	return reftaxIds.contains ( taxId );
-  }
+  } */
 
 }

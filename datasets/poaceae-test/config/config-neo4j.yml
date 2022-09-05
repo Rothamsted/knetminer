@@ -1,0 +1,18 @@
+# Enables the Neo4j traverser
+# 
+# This can be enabled with the --config-file option from docker-run.sh (which hands the JVM the right
+# properties to pick this file, rather than the default) 
+#
+"@includes":
+- config.yml
+
+"dataset @merge":
+  id: wheatknet # TODO: must become poaceae, after fixing the proxy
+  
+"graphTraverser @merge":
+  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
+  "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
+
+# Enables the Cypher Debugger, to profile Cypher queries.
+# WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
+cypherDebuggerEnabled: true

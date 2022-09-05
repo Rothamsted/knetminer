@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
- * A small API to get details about a set of ONDEXConcept(s) in the ONDEXGraph managed 
- * by the KnetMiner application, given concept's numerical IDs.
- * 
+ * API to query graph and graph elements details.
  * 
  * TODO: all these mappings that depend on the data-source should be checked for a real DS, at the moment
  * we have services for which any DS is accepted, which doesn't make much sense. DS is needed everywhere in 
@@ -25,7 +23,7 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
  * <dl><dt>Date:</dt><dd>14 Mar 2022</dd></dl>
  *
  */
-@RestController ()
+@RestController
 @RequestMapping ( "/{ds}/graphinfo" )
 @CrossOrigin
 public class GraphInfoService

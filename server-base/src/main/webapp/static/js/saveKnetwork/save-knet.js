@@ -1,3 +1,8 @@
+/**
+ * TODO: There is an identical file in client-base. WTH?! We need to review and factorise.
+ * DO NOT change/diverge any of these files before that!
+ */
+
 /* 
  * Utils to extract the rendered kNetwork in KnetMaps (Network View), fetch back-end API summary/metadata and upload/save to knetspace via API.
  * Authors: singha, hearnshawj

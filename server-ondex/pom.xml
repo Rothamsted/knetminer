@@ -10,6 +10,14 @@
 
 	<artifactId>server-ondex</artifactId>
   <name>server-ondex - Ondex-based server implementation</name>
+  
+  <!-- 
+  	TODO: 
+  		- this, server-datasource-ondexlocal, server-datasource-api and server-base should be merged 
+  		into a single (jar) module, named like knetminer-webapi 
+  		- aratiny-ws should become a (war) module knetminer-webapi-war
+  		- client-base and aratiny-client should become a (war) module named knetminer-web-ui 
+  -->
 
 	<description>Contains a few specific compoments that are used with the Ondex-based data source only.</description>
 

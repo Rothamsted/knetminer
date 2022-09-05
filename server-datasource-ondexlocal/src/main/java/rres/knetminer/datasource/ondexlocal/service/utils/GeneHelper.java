@@ -3,18 +3,11 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 
-import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
-
-import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
-import uk.ac.ebi.utils.regex.RegEx;
 
 /**
  * The Gene helper for an Ondex graph.
@@ -39,6 +32,13 @@ public class GeneHelper
 	private Integer endBP;
 	private String taxID;
 	
+	/**
+	 * Calls {@link #GeneHelper(ONDEXGraph, ONDEXConcept)} via {@link ONDEXGraph#getConcept(int)}. 
+	 */
+	public GeneHelper ( ONDEXGraph graph, Integer geneId )
+	{
+		this ( graph, graph.getConcept ( geneId ) );
+	}
 	
 	public GeneHelper ( ONDEXGraph graph, ONDEXConcept gene )
 	{

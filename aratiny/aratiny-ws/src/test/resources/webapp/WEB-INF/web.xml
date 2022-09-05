@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This is almost identical to the main web.xml, apart from few test-specific config values.
+-->
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        version="3.0">
+  <display-name>KnetMiner Ara-Tiny WS</display-name>
+  
+	<!-- This picks up the parameter below, either from here or from Java properties (allows for overriding) -->
+	<listener>
+		<!-- Picks the config file parameter, see the source -->
+		<listener-class>uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener</listener-class>
+	</listener>   
+  
+	<context-param>
+		<param-name>knetminer.api.configFilePath</param-name>
+		<param-value>${project.build.testOutputDirectory}/knetminer-dataset/config/${knetminer.testConfigFileName}</param-value>
+	</context-param>
+	
+	<!--
+	  Uses the Tuckey rule engine to authorise CORS for these URLs.
+	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+	  <filter-name>UrlRewriteFilter</filter-name>
+	  <url-pattern>/cydebug/*</url-pattern>
+	  <url-pattern>/graphinfo/*</url-pattern>
+	  <dispatcher>REQUEST</dispatcher>
+	  <dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	-->
+		
+</web-app>

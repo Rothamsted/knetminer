@@ -14,5 +14,5 @@
 #--------------------------------------------------
 
 # run the drupal cron process every hour of every day
-0 * * * * /root/knetminer-build/knetminer/docker/analytics-s3-sync.sh
+0 * * * * /root/aws/analytics-s3-sync.sh
 

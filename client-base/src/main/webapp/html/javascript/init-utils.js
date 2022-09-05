@@ -2,7 +2,8 @@
 //functions shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome(){
 
-    if (reference_genome == true) {
+    // TODO: this flag is going to disappear (ref genome is always on now)
+    if (true || reference_genome) {
        $('#genomeorqtlsearchbox').show();
        if (typeof gviewer != "undefined" && gviewer == false) {
            activateButton('resultsTable');
@@ -22,27 +23,26 @@ function showReferenceGenome(){
 // function runs on page jquery document ready
 function loadOnReady(){
 
-     // add species name to header
-     $('#species_header').text(species_name); //update species name from utils_config.js
+  // particle js background config 
+  //particlesJS.load('particles-js','html/javascript/assets/particles.json'); This is getting commented out now. If we choose to readd this later, we can uncomment it again. Search Tags: Background, particles.js, particle, wallpaper
 
-    activateResetButton(); 
 
-    queryToggle();
+    activateResetButton();
 
     // hide reset btn on page load
     $("#resetknet").hide(); 
     $("#keywords").focus();
     $('#tabviewer').hide(); // hide by default
     // Tooltip
-    getQueryExamples();
     showReferenceGenome();  
-
+    
+    /* TODO: What's for? The current Google instructions don't mention any of these
     createAnalyticsTag(); 
-    generalPageAnalytics(); 
-
-    genemap.draw('#genemap', 'html/data/basemap.xml', null);
+    generalPageAnalytics();
+    */ 
 
 }
+
 
  // function reset all form input including the genenome icon and the suggestor text values
 function initResetButton(){
@@ -311,6 +311,10 @@ function bodyHandlers(){
         $('div.tooltip').remove();
     });
 }
+
+
+
+
 
 
 

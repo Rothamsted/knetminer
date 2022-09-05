@@ -7,15 +7,15 @@
   
   <display-name>KnetMiner aratiny WS</display-name>
 	
-	<!-- This comes from the configurable data source and picks up the parameter below -->
+	<!-- This picks up the parameter below, either from here or from Java properties (allows for overriding) -->
 	<listener>
 		<!-- Picks the config file parameter, see the source -->
-		<listener-class>rres.knetminer.datasource.ondexlocal.ConfigFileHarvester</listener-class>
+		<listener-class>uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener</listener-class>
 	</listener>   
   
 	<context-param>
-		<param-name>knetminer.dataSource.configFilePath</param-name>
-		<param-value>file:///${knetminer.configFile}</param-value>
+		<param-name>knetminer.api.configFilePath</param-name>
+		<param-value>${knetminer.defaultConfigDir}/config.yml</param-value>
 	</context-param>
 	  
 </web-app>

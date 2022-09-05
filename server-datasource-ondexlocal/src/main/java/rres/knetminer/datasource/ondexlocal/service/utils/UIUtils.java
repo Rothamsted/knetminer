@@ -60,7 +60,7 @@ public class UIUtils
   	catch (Exception ex)
   	{
       log.warn("Failed to remove pre-existing attributes from graph: {}", ex.getMessage());
-      log.trace("Failed to remove pre-existing attributes from graph, details: ", ex );
+      log.debug ("Failed to remove pre-existing attributes from graph, details: ", ex );
     }
   }
   
@@ -173,7 +173,7 @@ public class UIUtils
 		// so we fix them this way. But using Lucene for highlighting should be simpler.
 		keywordRe = keywordRe.replaceAll ( "\\*", "\\S*" )
 			.replaceAll ( "\\?", "\\S?" );
-		
+				
 		Pattern kwpattern = Pattern.compile ( keywordRe, Pattern.CASE_INSENSITIVE );
 
 		found |= highlightSearchStringFragment ( kwpattern, concept.getAnnotation (), highlighter, concept::setAnnotation );

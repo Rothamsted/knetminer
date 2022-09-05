@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+#
+
 # Helper for the AWS specific host, to run a datasets/dataset instance of the Knetminer Docker container with AWS logging.
 #
 # See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details. 
@@ -5,9 +8,9 @@
 # for additional help.
 
 # Set the default directory
-cd "$(dirname "$0")"
+cd "`dirname "$0"`"
 # Get the initial arguments & make sure it's the aws flag - More flags can be added here
-aws_flag="$1"; 
+aws_flag="$1"; shift;
 aws_dir="$2"; shift;
 
 if [ "$aws_flag" != "--aws" ]; then 
@@ -36,5 +39,4 @@ fi
 
 export DOCKER_OPTS
 
-# Change the array index when adding additional arguments in future
-./docker-run.sh  "${@:2}"
+./docker-run.sh ${1+"$@"}

@@ -8,7 +8,9 @@
 	  web analytics info
 	-->
 	<CustomLevels>
+		<!-- TODO: remove, it's actually not needed
 		<CustomLevel name="ANALYTICS" intLevel="50" />
+		-->
 	</CustomLevels>
 	<Appenders>
 		<RollingFile name="RollingFile"
@@ -37,7 +39,8 @@
 		This is where the analytics is sent, in JSON format.
 	-->
 	<Loggers>
-		<Logger name="analytics-log" level="ANALYTICS">
+		<!--  TODO: remove, see above <Logger name="analytics-log" level="ANALYTICS"> -->
+		<Logger name="analytics-log" level="INFO" additivity = "false">
 			<AppenderRef ref="AnalyticsRollingFile" />
 		</Logger>
 		<Root level="INFO">

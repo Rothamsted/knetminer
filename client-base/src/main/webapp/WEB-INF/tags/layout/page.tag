@@ -5,14 +5,25 @@
 <%@ attribute name="title"       required="true" description="Page title" %>
 <%@ attribute name="keywords"    required="true" description="Page keywords to improve SEO" %>
 <%@ attribute name="description" required="true" description="Page description" %>
+
+<%-- TODO: do we still need these? We can't build custom index.jsp anymore, see #638 --%>
 <%@ attribute name="extraHeader" fragment="true" description="Extra code to put before head" %>
 <%@ attribute name="extraBottom" fragment="true" description="Extra code to put before body" %>
-<%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
-<%@ attribute name="bgcolor" fragment="false" description="Background color" %>
 <%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
+
+<%-- TODO: no longer used, to be removed?
+<%@ attribute name="bgcolor" fragment="false" description="Background color" %>
+ --%>
+
+<%-- TODO:newConfig, to be removed
+<%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
+--%>
+<%-- TODO:newConfig, always false, to be removed or migrated to new config --%>
 <%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
+<%-- TODO:newConfig, to be removed (see below)
 <%@ attribute name="enableGA" description="Is google analytics enabled" %>
 <%@ attribute name="ga_id" description="If analytics enabled then use this UI ga_id" %>
+--%>
 
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -27,6 +38,9 @@
         <!-- favicon added -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
 
+				<%-- 
+				  TODO:newConfig, remove (together with the tag param), this is now managed 
+					via API and doGoogleAnalytics()
         <!-- Google Analytics -->
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -40,7 +54,10 @@
          }
         </script>
         <!-- end Google Analytics -->
+				--%>
+        
     </c:if>
+
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
         <!-- jBox modal popup css -->
@@ -59,18 +76,21 @@
 
         <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
 		
-		<!-- bootstrap css -->
-	<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-		<!-- font-awesome css -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-	<!--	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+				<!-- bootstrap css -->
+				<!--	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+				<!-- font-awesome css -->
+				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+				<!--	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
         <!-- Genomaps.js -->
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
         <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
 
-        <!-- jBox modal popup js -->
+        <!--JBox-->
       	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+
+         <!--Particle-->
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
@@ -104,6 +124,9 @@
             <!-- evidence table -->
          <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
 
+          <!-- multi species file -->
+         <script type="text/javascript" src="html/javascript/multispecies.js"></script>
+
          <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
@@ -118,15 +141,20 @@
 
 		<!-- interactJS; DISABLED -->
 	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
-		
+
         <!-- bootstrap js -->
 	<!-- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
 		<!-- font-awesome js -->
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+        <!-- release note animation-->
+       <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+
+
 
         <jsp:invoke fragment="extraHeader"/>
     </head>
-    <body class="${embeddable ? "embeddable" : ""}">
+    <body  class="${embeddable ? "embeddable" : ""}">
+        <div class="background" id="particles-js"></div>
         <!-- Main -->
         <div id="wrapper">
             <c:choose>
@@ -139,11 +167,13 @@
                     </c:if>
                 </c:otherwise>
             </c:choose>
- 			<layout:content chromosomes="${chromosomes}"  assembly="${assembly}" embeddable="${embeddable}"/>
+ 			<layout:content  assembly="${assembly}" embeddable="${embeddable}"/>
          <!--   <c:if test="${!embeddable}">
                 <layout:footer />
             </c:if> -->
         </div>
         <jsp:invoke fragment="extraBottom"/>
+
+     
     </body>
 </html>

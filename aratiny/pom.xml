@@ -55,7 +55,7 @@
 		        <systemPropertyVariables>
 		        	<!-- Forwarded to Java -->
 		          <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
-							<knetminer.api.baseUrl>${knetminer.api.baseUrl}</knetminer.api.baseUrl>
+							<knetminer.api.url>${knetminer.api.url}</knetminer.api.url>
 		        </systemPropertyVariables>
 			      <properties>
 			        <property>

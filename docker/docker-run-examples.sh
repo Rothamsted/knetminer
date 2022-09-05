@@ -1,6 +1,8 @@
 echo -e "\n\n\tDON'T RUN this file, it contains examples that you can copy-paste\n"
 exit 1
 
+# TODO:newConfig review
+
 # Runs the predefined settings in <codebase>/specie/arabidopsis, takes knwoledge-network.oxl from the 
 # host location /root/knetminer-test/knetminer-datasets/arabidopsis/data, saves generated config and 
 # actual settings into /root/knetminer-test/knetminer-datasets.

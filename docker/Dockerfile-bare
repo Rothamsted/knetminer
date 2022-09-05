@@ -1,7 +1,6 @@
 # A bare image, that prepares all the environment (OS, 3rd-party tools) to build/run Knetminer
 #
-# TODO: migrate to an official JDK8 image and stop using our own 
-# (which was a re-tagged copy from somewhere in github). 
+# TODO: migrate to a more recent Tomcat version
 # 
 FROM tomcat:9-jdk11-adoptopenjdk-hotspot
 
@@ -10,10 +9,13 @@ FROM tomcat:9-jdk11-adoptopenjdk-hotspot
 # 
 # TODO: the 'n' commands below downgrade Node.js, due to a lib clash problem
 # (https://github.com/Rothamsted/knetminer/issues/432). This should be removed when
-# that's fixed (in Travis too).
+# that's fixed.
 # 
 # The /bin/sh link is rebuilt because its default points to dash (come on!) and we have
 # scripts assuming bash instead.
+#
+# Note that Maven isn't used at runtime anymore, but we keep it nonetheless, because this image
+# is also used by the CI scripts.
 #
 RUN set -x \
   && apt-get update \

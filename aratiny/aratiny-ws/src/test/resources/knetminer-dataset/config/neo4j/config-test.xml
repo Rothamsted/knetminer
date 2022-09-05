@@ -5,54 +5,29 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
-	<!-- This is used for tests, config.xml is used in production (look at it for details) -->
+	<!-- This is used for tests, config.xml is used in production -->
 
-	<context:component-scan base-package = "uk.ac.rothamsted.knetminer.backend" />
+  <!-- For all the rest, the defaults should be fine -->
+	<import resource = "defaults-cfg.xml" />
+	
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "bolt://localhost:${neo4j.server.boltPort}" />
+  </bean> 
 	
 	<bean name = "configDirPath" class = "java.lang.String">
-		<constructor-arg value = "${knetminer.configDir}/neo4j" />
+  	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
 	</bean> 
    
-  <!-- TODO: remove?
-       The path queries for the Cypher-based traverser 
-	<bean name = "semanticMotifsQueries" class = "java.util.Arrays" factory-method = "asList" >
-		<constructor-arg>
-			<bean class = "uk.ac.ebi.utils.io.IOUtils" factory-method = "readFiles">
-				<constructor-arg ref = "configDirPath" />
-				<constructor-arg>
-					<bean class = "org.apache.commons.io.filefilter.WildcardFileFilter">
-						<constructor-arg value = "*.cypher" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-	</bean> -->
-	
+
 	<bean name = "semanticMotifsQueries" 
-				class = "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader" factory-method = "readQueries" >
-		<constructor-arg value = "${knetminer.configDir}/neo4j/cypher-queries.txt" />
-	</bean>
-	
-		
-        
- 	<!-- The Neo4j driver -->
-	<bean id = "neoDriver" class = "org.neo4j.driver.GraphDatabase" 
-			factory-method="driver">
-		<constructor-arg value = "${neo4j.server.boltUrl}" />
+				class = "uk.ac.ebi.utils.collections.ListUtils" factory-method = "union" >
 		<constructor-arg>
-			<bean class = "org.neo4j.driver.AuthTokens" factory-method = "basic">
-				<constructor-arg value = "neo4j" />
-				<constructor-arg value = "test" />
-			</bean>
-		</constructor-arg>
-		<!-- This does some tuning on the kind of needs we have with Knetminer -->
-		<constructor-arg type="org.neo4j.driver.Config" 
-			value = "#{T(org.neo4j.driver.Config).builder ()
-				.withConnectionAcquisitionTimeout ( 10, T(java.util.concurrent.TimeUnit).SECONDS )
-				.withConnectionTimeout ( 10, T(java.util.concurrent.TimeUnit).SECONDS )
-				.build ()
-			}"
-		/>
+			<array>
+				<!--  <ref bean = "semanticMotifsQueriesCustom" />
+				<ref bean = "semanticMotifsQueriesStateMachine" />  -->
+				<ref bean = "semanticMotifsQueriesFromFile" />
+			</array>
+		</constructor-arg>				
 	</bean>
-	
+      		
 </beans>

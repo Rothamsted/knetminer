@@ -1,17 +1,19 @@
 package rres.knetminer.datasource.ondexlocal;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-// import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryparser.classic.ParseException;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
@@ -21,6 +23,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  * Used to be named Hits.
  * 
  * @author zorc, pakk, singha
+ * @author Marco Brandizi
  *
  */
 public class SemanticMotifSearchMgr
@@ -32,10 +35,19 @@ public class SemanticMotifSearchMgr
 	private int luceneDocumentsLinked;
 	private int numConnectedGenes;
 	private SemanticMotifsSearchResult searchResult = null;
+	private String taxId;
 
-	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList )
+	public SemanticMotifSearchMgr ( String keyword, OndexServiceProvider ondexProvider, Collection<ONDEXConcept> geneList, String taxId )
 	{
 		this.ondexProvider = ondexProvider;
+		this.taxId = StringUtils.trimToNull ( taxId );
+		if ( geneList == null ) geneList = List.of ();
+
+		log.info ( 
+			"Initalising search for \"{}\", {} gene(s) and taxId: {}",
+			keyword, geneList.size (), this.taxId 
+		);
+		
 		try
 		{
 			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
@@ -52,30 +64,37 @@ public class SemanticMotifSearchMgr
 		}
 	}
 
-	public void countLinkedGenes ()
+	private void countLinkedGenes ()
 	{
 		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
+		
 		log.info ( 
-			"Counting unique genes for {} matching Lucene concept(s)", luceneConceptsSet.size () 
+			"Counting unique genes for {} Lucene concept(s) matching the keyword input", luceneConceptsSet.size () 
 		);
 
-		Map<Integer, Set<Integer>> concept2Genes = ondexProvider.getSemanticMotifDataService ().getConcepts2Genes ();
+		var graph = this.ondexProvider.getDataService ().getGraph ();
 		
-		long linkedConceptsSize = luceneConceptsSet.parallelStream ()
+		Map<Integer, Set<Integer>> concept2Genes = this.ondexProvider
+			.getSemanticMotifDataService ()
+			.getConcepts2Genes ();
+		
+		this.luceneDocumentsLinked = (int) luceneConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
 			.filter ( concept2Genes::containsKey )
 			.count ();
+		log.info ( "Matching {} unique concept(s)", luceneDocumentsLinked );
 		
-		long uniqGenesSize = luceneConceptsSet.parallelStream ()
-		.map ( ONDEXConcept::getId )
-		.filter ( concept2Genes::containsKey )
-		.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
-		.distinct ()
-		.count ();
-
-		log.info ( "Matching {} unique gene(s): ", uniqGenesSize );
-		this.numConnectedGenes = (int) uniqGenesSize;
-		this.luceneDocumentsLinked = (int) linkedConceptsSize;
+		Stream<Integer> genesStrm = luceneConceptsSet.parallelStream ()
+			.map ( ONDEXConcept::getId )
+			.filter ( concept2Genes::containsKey )
+			.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
+			.distinct ();
+		
+		if ( this.taxId != null )
+			genesStrm = genesStrm.filter ( geneId -> taxId.equals ( new GeneHelper ( graph, geneId ).getTaxID () ) );
+		
+		this.numConnectedGenes = (int) genesStrm.count ();
+		log.info ( "Matching {} unique gene(s)", numConnectedGenes );
 	}
 
 	public int getLuceneDocumentsLinked ()
@@ -105,8 +124,7 @@ public class SemanticMotifSearchMgr
 
 	public SemanticMotifsSearchResult getSearchResult ()
 	{
-		// TODO: I hope I got the semantics found in the original code right
 		if ( searchResult != null ) return searchResult;
-		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts, this.taxId );
 	}
 }

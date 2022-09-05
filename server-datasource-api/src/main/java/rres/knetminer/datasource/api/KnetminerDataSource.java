@@ -20,6 +20,8 @@ public abstract class KnetminerDataSource {
 	
 	private String[] dataSourceNames = new String[0];
 
+	private String apiUrl = "";
+
 	/**
 	 * WARNING! We're progressively moving to an architecture where each server instance manages
 	 * ONE DATA SOURCE ONLY and this method will return ONE RESULT ONLY.
@@ -51,12 +53,19 @@ public abstract class KnetminerDataSource {
 		log.debug("Set data source name to "+Arrays.toString(this.dataSourceNames));
 	}
 	
-	private String apiUrl = "";
-	
+
+	/**
+	 * TODO: review, this should actually come from the configuration.
+	 */
+	@Deprecated
 	public void setApiUrl(String apiUrl) {
 		this.apiUrl = apiUrl;
 	}
 	
+	/**
+	 * TODO: review, this should actually come from the configuration.
+	 */
+	@Deprecated
 	public String getApiUrl() {
 		return this.apiUrl;
 	}
@@ -78,11 +87,28 @@ public abstract class KnetminerDataSource {
 
 	public abstract QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	public abstract NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException;
 	
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-        
+   
+	/**
+	 * @deprecated this is still in use, but we need to migrate to /dataset-info, which
+	 * is a more complete and correct version of the same function. 
+	 */
+	@Deprecated
 	public abstract GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-		
+	
+	/**
+	 * @deprecated this is still in use, but we need to migrate to /dataset-info
+	 */
+	@Deprecated
 	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+
+	/**
+	 * Gets the Google API ID from the configuration.
+	 * 
+	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into
+	 * one. WARNING: because of that, do not invoke this as an API call, use DatasetInfoService instead.
+	 */
+	public abstract String getGoogleAnalyticsIdApi ();
 }

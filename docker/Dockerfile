@@ -1,5 +1,8 @@
 # The image for the Knetminer application (WS/API + Client/Front-end).
 #
+# If this is run in dev mode, we need 'docker build -f .' from the codebase root directory, since
+# climbing up the host paths is forbidden
+#
 
 # Sometimes, it can be usefult to change it, when developing and/or playing with different versions
 # of the bare image beneat us.
@@ -14,28 +17,31 @@ ARG TOMCAT_PASSWORD=''
 
 EXPOSE 8080
 
-# See the documentation for details on what the dataset dir is
-ENV knet_build_dir=/root/knetminer-build
+WORKDIR /root
 
-
-# ---- Here we go
-# 
-
-# If this is run in dev mode, we need 'docker build -f .' from the codebase root directory, since
-# climbing up the host paths is forbidden
+# Copy the .war(s)
 #
-WORKDIR $knet_build_dir
-COPY . knetminer
-WORKDIR knetminer/docker
+COPY /aratiny/aratiny-ws/target/aratiny-ws.war $CATALINA_HOME/webapps/ws.war
+COPY /aratiny/aratiny-client/target/knetminer-aratiny.war $CATALINA_HOME/webapps/client.war
 
-# Note that this issues 'mvn install' from your local copy of the knetminer codebase, WITHOUT clean.
-# The idea is that it leverages Docker-bare and adds up updates from your host copy. 
-# If you need to rebuild from clean code, just clean your host copy before building the Docker image.
-# (TODO: document this)
-# 
-RUN touch /etc/crontab /etc/cron*/* \
-  && cp -r .aws ~/ \
-  && ./build-helper.sh '' "$TOMCAT_PASSWORD"
+# Copy the default/demo dataset
+# build-helper.sh removes some clutter coming with it
+#
+COPY /aratiny/aratiny-ws/target/test-classes/knetminer-dataset knetminer-dataset
+COPY /aratiny/aratiny-ws/target/dependency/poaceae-sample.oxl ./knetminer-dataset/data/knowledge-network.oxl
+
+
+# AWS stuff
+COPY /docker/.aws .
+COPY /docker/analytics-cron ./aws
+COPY /docker/analytics-s3-sync.sh ./aws
+
+# Run some other setup operations
+COPY /docker/build-helper.sh .
+COPY /docker/runtime-helper.sh .
+
+# Does minimal finishing touches
+# 
+RUN ./build-helper.sh '' "$TOMCAT_PASSWORD"
 
 ENTRYPOINT [ "./runtime-helper.sh" ] 
-CMD [ "aratiny" ] # The id of the default dataset

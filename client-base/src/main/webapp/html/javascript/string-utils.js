@@ -31,3 +31,14 @@ function bracketsAreBalanced(str) {
     return true;
 }
 
+// function to take word and capitalise first letter in a word
+function capitaliseFirstLetter(word){
+    let spacedWord = word.replace(/[A-Z]/g, ' $&').trim() 
+    let speciesKey = spacedWord[0].toUpperCase() + spacedWord.substring(1); 
+    return speciesKey; 
+}
+
+
+
+
+

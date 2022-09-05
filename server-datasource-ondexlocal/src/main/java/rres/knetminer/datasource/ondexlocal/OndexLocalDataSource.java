@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.json.JSONObject;
@@ -30,18 +32,25 @@ import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
+import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetSpaceHost;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
+import rres.knetminer.datasource.api.NetworkRequest;
 import rres.knetminer.datasource.api.NetworkResponse;
+import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
+import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
+import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
+import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -63,6 +72,8 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 @Component
 public class OndexLocalDataSource extends KnetminerDataSource 
 {		
+	public static final String CONFIG_FILE_PATH_PROP = "knetminer.api.configFilePath"; 
+	
 	/**
 	 * it's initialised without parameters, then it gets everything from the XML config file. This is fetched by 
 	 * {@link ConfigFileHarvester}, which seeks it in {@code WEB-INF/web.xml} (see the aratiny WAR module).
@@ -74,9 +85,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	private void init ()
 	{
-		var configXmlPath = ConfigFileHarvester.getConfigFilePath ();
-		if ( configXmlPath == null ) throw new IllegalStateException ( 
-			"OndexLocalDataSource() can only be called if you set " + ConfigFileHarvester.CONFIG_FILE_PATH_PROP 
+		var configYmlPath = ConfigBootstrapWebListener.getBootstrapParameters ().getString ( CONFIG_FILE_PATH_PROP );
+		if ( configYmlPath == null ) throw new IllegalStateException ( 
+			"OndexLocalDataSource() can only be called if you set " + CONFIG_FILE_PATH_PROP 
 			+ ", either as a Java property, a <context-param> in web.xml, or" 
 			+ " a Param in a Tomcat context file (https://serverfault.com/a/126430)" 
 		);
@@ -87,11 +98,14 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// this pre-loads some properties in advance, so that we have what we need (ie, data source name) to be able 
 		// to start answering the API URLs
 		// This is also quick enough to be done synchronously.
-		dataService.loadOptions ( configXmlPath );
-		var dsName = dataService.getDataSourceName ();
+		dataService.loadConfiguration ( configYmlPath );
+		var config = dataService.getConfiguration ();
+		var dsetInfo = config.getServerDatasetInfo ();
+		var dsName = dsetInfo.getId ();
 		if ( dsName == null ) throw new IllegalArgumentException ( 
-			this.getClass ().getSimpleName () + " requires a DataSourceName, either from its extensions or the config file" 
+			this.getClass ().getSimpleName () + " requires a data set ID in the configuration file" 
 		);
+		// As said elsewhere, nowadays we have only one dataset per server.
 		this.setDataSourceNames ( new String[] { dsName } );
 		log.info ( "Setting data source '{}'", dsName );
 		
@@ -108,11 +122,13 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException 
 	{
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr(request.getKeyword(), ondexServiceProvider, null);
+		SemanticMotifSearchMgr hits = new SemanticMotifSearchMgr ( 
+			request.getKeyword(), ondexServiceProvider, null, request.getTaxId()
+		);
 		CountHitsResponse response = new CountHitsResponse();
-		response.setLuceneCount(hits.getLuceneConcepts().size()); // number of Lucene documents
-		response.setLuceneLinkedCount(hits.getLuceneDocumentsLinked()); // number of Lucene documents related to genes
-		response.setGeneCount(hits.getNumConnectedGenes()); // count unique genes linked to Lucene documents
+		response.setLuceneCount ( hits.getLuceneConcepts().size() ); // number of Lucene documents
+		response.setLuceneLinkedCount ( hits.getLuceneDocumentsLinked() ); // number of Lucene documents related to genes
+		response.setGeneCount ( hits.getNumConnectedGenes() ); // count unique genes linked to Lucene documents
 		return response;
 	}
 
@@ -140,25 +156,25 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		}
 	}
 
+	/**
+	 * We now support both the {@link region search box format QTL#fromString(String)} and the original
+	 * {@link countLoci() format QTL#countLoci2regionStr(String)}. (TODO: this needs testing).
+	 * 
+	 */
 	@Override
 	public CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
-		// TODO: needs to use QTL and the same format as the qtl param
-		String[] loci = request.getKeyword().split("-");
-		String chr = loci[0];
-		int start = 0, end = 0;
-		if (loci.length > 1) {
-			start = Integer.parseInt(loci[1]);
-		}
-		if (loci.length > 2) {
-			end = Integer.parseInt(loci[2]);
-		}
-		log.info("Counting loci "+chr+":"+start+":"+end);
+		String lociStr = request.getKeyword();
+		if ( !lociStr.contains ( ":" ) ) lociStr = QTL.countLoci2regionStr ( lociStr );
+		
+		QTL chrRegion = QTL.fromString ( lociStr );
+			
+		log.info("Counting loci on region: {}", chrRegion );
 		CountLociResponse response = new CountLociResponse();
 		response.setGeneCount (
 			OndexServiceProvider.getInstance ()
 				.getDataService() 
-				.getLociGeneCount(chr, start, end)
+				.getLociGeneCount ( chrRegion.getChromosome (), chrRegion.getStart (), chrRegion.getEnd (), request.getTaxId () )
 		);
 		return response;
 	}
@@ -167,7 +183,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		GenomeResponse response = new GenomeResponse();
-		this.handleMainSearch(response, request);
+		this.handleMainSearch (response, request );
 		return response;
 	}
 
@@ -192,22 +208,24 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 		var exportService = ondexServiceProvider.getExportService ();
-
+		var graph = ondexServiceProvider.getDataService ().getGraph ();
+		var taxId = StringUtils.trimToEmpty ( request.getTaxId () );
+		
 		if ( request.getList () != null && request.getList ().size () > 0 )
 		{
-			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList (), taxId ) );
 			log.info ( "Number of user provided genes: " + userGenes.size () );
 		}
 
 		// Also search Regions - only if no genes provided
-		if ( userGenes.isEmpty () && !request.getQtl ().isEmpty () )
-			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
+		if ( userGenes.isEmpty() && !request.getQtl().isEmpty() )
+			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), taxId ) );
 
 		// Genome search
 		log.info ( "Processing search mode: {}", response.getClass ().getName () );
 
 		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr (
-			request.getKeyword (), ondexServiceProvider, userGenes
+			request.getKeyword (), ondexServiceProvider, userGenes, taxId
 		);
 
 		Map<ONDEXConcept, Double> candidateGenesMap = Map.of ();
@@ -236,7 +254,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			// TODO: this is very inefficient, the right way to do it would be passing it the genes and
 			// search if they match the QTL regions
 			//
-			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl () );
+			Set<ONDEXConcept> genesQTL = searchService.fetchQTLs ( request.getQtl (), taxId );
 			log.info ( "Keeping {} QTL(s)", genesQTL.size () );
 
 			genesStream = genesStream.filter ( genesQTL::contains );
@@ -251,12 +269,18 @@ public class OndexLocalDataSource extends KnetminerDataSource
 				gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
 			);
 		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
-
+		
+		List<ONDEXConcept> genes;
+		var genesStrm = genesMap.keySet ().parallelStream ();
+		if ( !taxId.isEmpty () )
+			genesStrm = genesStrm.filter ( gene -> taxId.equals ( new GeneHelper ( graph, gene ).getTaxID() ) );
+		
+				
 		// Genes are expected in order
-		List<ONDEXConcept> genes = genesMap.keySet ().parallelStream ()
-			.sorted ( ( g1, g2 ) -> -Double.compare ( genesMap.get ( g1 ), genesMap.get ( g2 ) ) )
+		genes = genesStrm
+			.sorted ( Comparator.comparingDouble ( genesMap::get ).reversed () )
 			.collect ( Collectors.toList () );
-
+				
 		if ( response instanceof QtlResponse )
 			log.info ( "{} gene(s) after QTL filter", genes.size () );
 
@@ -269,7 +293,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Chromosome view
 		//
 		String xmlGViewer = "";
-		if ( ondexServiceProvider.getDataService ().isReferenceGenome () )
+		// TODO: remove, we are now supporting multiple species and we assume there is always at least one
+		// specie
+		
+		// if ( ondexServiceProvider.getDataService ().isReferenceGenome () )
 		{
 			// Generate Annotation file.
 			log.debug ( "1.) API, doing chrome annotation" );
@@ -278,8 +305,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			);
 			log.debug ( "Chrome annotation done" );
 		}
+		/* TODO: remove, as per comment above
 		else
 			log.debug ( "1.) API, no reference genome for Genomaps annotation, skipping " );
+		*/
 
 		// Gene table
 		//
@@ -319,7 +348,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override
-	public NetworkResponse network(String dsName, KnetminerRequest request) throws IllegalArgumentException 
+	public NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException 
 	{
 		Set<ONDEXConcept> genes = new HashSet<> ();
 		log.info ( "network(), searching {} gene(s)", request.getList ().size () );
@@ -327,39 +356,54 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var searchService = ondexServiceProvider.getSearchService ();
 
-		// TODO: this is the same gene filtering we have in _keyword(), should be factorised
+		// TODO: this is the same gene filtering we have in handleMain(), should be factorised
 		//
 
 		// Search Genes
 		if ( !request.getList ().isEmpty () )
-		{
-			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () ) );
-		}
+			genes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList () , request.getTaxId () ) );
 
 		// Search Regions
 		if ( !request.getQtl ().isEmpty () )
-			genes.addAll ( searchService.fetchQTLs ( request.getQtl () ) );
+			genes.addAll ( searchService.fetchQTLs ( request.getQtl (), request.getTaxId () ) );
 
 		// Find Semantic Motifs
 		ONDEXGraph subGraph = ondexServiceProvider.getSemanticMotifService ()
 			.findSemanticMotifs ( genes, request.getKeyword () );
 
 		// Export graph
-		var response = new NetworkResponse ();
-		response.setGraph ( ExportUtils.exportGraph2Json ( subGraph ).getLeft () );
+		String jsExport = ExportUtils.exportGraph2Json ( subGraph, request.isExportPlainJSON () ).getLeft ();
+		
+		NetworkResponse response = request.isExportPlainJSON ()
+			// This is pure JSON, The response constructor builds a payload of Map<String, Object>, by
+			// parsing the pure-JSON string coming from the exporter, Spring auto-converts such map back 
+			// to JSON. I don't know any other clean way to prevents Spring from quoting this JSON string
+			// and I cannot easily change the NetworkResponse structure, which forces us to have the
+			// top-level "graph" field 
+			//	
+			? new PlainJSONNetworkResponse ( jsExport )
+			// This is the original format, which contains Javascript declarations in the top-level "graph"
+			// field, and then those declarations are in turn about JSON objects
+			//
+		  : new JsonLikeNetworkResponse ( jsExport );
 
 		return response;
 	}
 
-	
+	/**
+	 * TODO: to be moved under {@link DatasetInfoService}.
+	 */
 	@Override
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		try 
 		{
 			LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
-			var opts = OndexServiceProvider.getInstance ().getDataService ().getOptions ();
-			byte[] encoded = Files.readAllBytes(Paths.get(opts.getString("DataPath"), "latestNetwork_Stats.tab"));
+			
+			var config = OndexServiceProvider.getInstance ().getDataService ().getConfiguration ();
+			var dataPath = config.getDataDirPath ();
+			
+			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
 			response.stats = new String(encoded, Charset.defaultCharset());
 			return response;
 		} 
@@ -367,7 +411,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
 	  }
 	}
-    
+   
+	/**
+	 * @deprecated see {@link KnetminerDataSource#dataSource(String, KnetminerRequest)}.
+	 */
+	@Deprecated
 	@Override
   public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
   {
@@ -375,41 +423,78 @@ public class OndexLocalDataSource extends KnetminerDataSource
     
 		var ondexServiceProvider = OndexServiceProvider.getInstance ();
 		var dataService = ondexServiceProvider.getDataService ();
-		var oxlFile = new File ( dataService.getOxlPath () );
+		var config = dataService.getConfiguration ();
+		var dsetInfo = config.getServerDatasetInfo ();
+		
+		var oxlFile = new File ( config.getOxlFilePath () );
 		
     // Parse the data into a JSON format & set the graphSummary as is.
 		// This data is obtained from the maven-settings.xml
     JSONObject summaryJSON = new JSONObject();
-    summaryJSON.put("dbVersion", dataService.getDatasetVersion () );
-    summaryJSON.put("sourceOrganization", dataService.getDatasetOrganization ());
-    dataService.getTaxIds ().forEach((taxID) -> {
-       summaryJSON.put("speciesTaxid", taxID);
-    });
-    summaryJSON.put("speciesName", dataService.getSpecies());
+    summaryJSON.put ( "dbVersion", dsetInfo.getVersion () );
+    summaryJSON.put ( "sourceOrganization", dsetInfo.getOrganization () );
+    
+    // TODO, this was the rubbish it was previously producing, which is grossily wrong and 
+    // I don't know how to replace it, see #653
+
+    // For the moment, I'm taking the first specie (the undelining map is an HashLinkedMap)
+    String taxId = dsetInfo.getTaxIds ().iterator ().next ();
+    summaryJSON.put ( "speciesTaxid", taxId );
+    // Similarly to what said above, it isn't clear what the client expects, 
+    // the scientific (latin) name or the common name?
+    summaryJSON.put ( "speciesName", dsetInfo.getSpecie ( taxId ).getScientificName () );
 
     // TODO: in future, this might come from OXL metadata (the graph descriptor)
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
-    var timestampStr = formatter.format ( oxlFile.lastModified () );
-    summaryJSON.put("dbDateCreated", timestampStr);
+    var creationDateStr = dsetInfo.getCreationDate ();
+    if ( creationDateStr == null )
+    {
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+    	creationDateStr = formatter.format ( oxlFile.lastModified () );
+    }
+    summaryJSON.put ( "dbDateCreated", creationDateStr );
 
-    summaryJSON.put("provider", dataService.getDatasetProvider () );
+    summaryJSON.put ("provider", dsetInfo.getProvider () );
+    
     String jsonString = summaryJSON.toString();
+    
     // Removing the pesky double quotes
-    jsonString = jsonString.substring(1, jsonString.length() - 1);
-    log.info("response.dataSource= " + jsonString);
+    // TODO: WHAT?! We need to clarify the above original comment, this actually eliminates
+    // the outer-most curly brackets '{}', presumably, because Spring adds its own ones.
+    //
+    jsonString = jsonString.substring ( 1, jsonString.length() - 1 );
+    log.info ( "response.dataSource= " + jsonString );
     response.dataSource = jsonString;
     
     return response;
       
   }
-		
 
+	
+	/**
+	 * @deprecated We now use /dataset-info and this should be migrated (in the clients)
+	 */
+	@Deprecated
 	@Override
   public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		KnetSpaceHost response = new KnetSpaceHost();
-		response.setKsHostUrl(OndexServiceProvider.getInstance ().getDataService ().getKnetSpaceHost ());
+		var knetSpaceURL = OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getKnetSpaceURL ();
+		
+		response.setKsHostUrl ( knetSpaceURL );
 		    
 		return response;
   }
+
+	@Override
+	public String getGoogleAnalyticsIdApi ()
+	{
+		return OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getGoogleAnalyticsIdApi ();
+	}
+		
 }

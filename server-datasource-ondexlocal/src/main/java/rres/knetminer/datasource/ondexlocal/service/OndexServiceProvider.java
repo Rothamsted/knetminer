@@ -10,7 +10,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
-import rres.knetminer.datasource.ondexlocal.ConfigFileHarvester;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 
@@ -34,7 +33,7 @@ import uk.ac.ebi.utils.exceptions.NotReadyException;
  */
 @Component
 public class OndexServiceProvider 
-{
+{	
 	@Autowired
 	private DataService dataService;
 
@@ -67,7 +66,6 @@ public class OndexServiceProvider
 	 */
   private OndexServiceProvider () {}
   
-	
 	public DataService getDataService () {
 		return dataService;
 	}
@@ -147,11 +145,11 @@ public class OndexServiceProvider
 	 * This is designed mainly to allow that long-running Knetminer initialisations don't block the whole JVM and
 	 * hence the whole web container.
 	 * 
-	 * @param configXmlPath the path of the configuration file. This can be null if 
-	 * {@link #loadOptions options were already loaded}, see {@link #initData()}. 
+	 * @param configPath the path of the configuration file. This can be null if the 
+	 * {@link DataService#loadConfiguration(String) configuration was already loaded}, see {@link #initData()}. 
 	 * 
 	 */
-	public void initData ( String configXmlPath )
+	public void initData ( String configPath )
 	{
 		this.isInitializingData.getAndSet ( true );
 		try
@@ -160,11 +158,11 @@ public class OndexServiceProvider
 			
 			this.initException = null;
 			
-			if ( configXmlPath != null )
-				this.dataService.loadOptions ( configXmlPath );
+			if ( configPath != null )
+				this.dataService.loadConfiguration ( configPath );
 			else
 			{
-				if ( this.dataService.getOptions ().isEmpty () ) throw new IllegalStateException ( 
+				if ( this.dataService.getConfiguration () == null ) throw new IllegalStateException ( 
 					"OndexServiceProvider.initData() requires a config file path or that you first load options from it" 
 				);
 				log.warn ( "Knetminer config path is null, relying on existing/previous config options" );
@@ -209,5 +207,4 @@ public class OndexServiceProvider
 	{
 		return isInitializingData.get ();
 	}
-	
 }

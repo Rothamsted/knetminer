@@ -2,8 +2,6 @@ package rres.knetminer.datasource.server;
 
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -11,20 +9,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ObjectMessage;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,10 +38,12 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
 
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
+import rres.knetminer.datasource.api.NetworkRequest;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
@@ -69,13 +69,10 @@ public class KnetminerServer
 
 	private Map<String, KnetminerDataSource> dataSourceCache;
 
-	private String gaTrackingId;
-
-	
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
 	// Special logging to achieve web analytics info.
-	private static final Logger logAnalytics = LogManager.getLogger ( "analytics-log" );
+	private final Logger logAnalytics = LogManager.getLogger ( "analytics-log" );
 
 
 	/**
@@ -87,9 +84,18 @@ public class KnetminerServer
 	 * matching '/hello/**'.
 	 */
 	@PostConstruct
-	private void buildDataSourceCache() {		
-		this.dataSourceCache = new HashMap<String, KnetminerDataSource>();
-		for (KnetminerDataSource dataSource : this.dataSources) {
+	private void buildDataSourceCache() 
+	{
+		if ( this.dataSources == null || this.dataSources.size () == 0 ) throw new IllegalArgumentException (
+			"No KnetminerDataSource defined, probably a packaging error"	
+		);
+
+		if ( dataSources.size () > 1 ) throw new UnsupportedOperationException (
+			"More than one KnetminerDataSource defined, this is no longer supported"	
+		);
+		
+		this.dataSourceCache = new HashMap<>();
+		for (KnetminerDataSource dataSource : dataSources) {
 			for (String ds : dataSource.getDataSourceNames()) {
 				this.dataSourceCache.put(ds, dataSource);
 				log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
@@ -98,37 +104,11 @@ public class KnetminerServer
 	}
 
 	/**
-	 * Loads Google Analytics properties from src/main/resources/ga.properties . It expects
-	 * to find GOOGLE_ANALYTICS_ENABLED = True or False. If True, it also expects to find
-	 * GOOGLE_ANALYTICS_TRACKING_ID with a valid Google Analytics tracking ID.
+	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsIdApi()}
 	 */
-	@PostConstruct
-	private void loadGoogleAnalyticsTrackingId() 
+	private String getGoogleAnalyticsTrackingId () 
 	{
-		ClassLoader classLoader = Thread.currentThread ().getContextClassLoader ();
-		InputStream input = classLoader.getResourceAsStream ( "ga.properties" );
-		Properties props = new Properties ();
-		try
-		{
-			props.load ( input );
-			log.info ( "GA enabled= " + props.getProperty ( "GOOGLE_ANALYTICS_ENABLED" ) ); // test passing val
-			log.info ( "ga_id to use= " + props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID" ) ); // test passed val
-		}
-		catch ( IOException ex )
-		{
-			log.warn ( "Failed to load Google Analytics properties file", ex );
-			return;
-		}
-		if ( Boolean.parseBoolean ( props.getProperty ( "GOOGLE_ANALYTICS_ENABLED", "false" ) ) )
-		{
-			this.gaTrackingId = props.getProperty ( "GOOGLE_ANALYTICS_TRACKING_ID", null );
-			if ( this.gaTrackingId == null )
-				log.warn ( "Google Analytics properties file enabled analytics but did not provide tracking ID" );
-			else
-				log.info ( "Google Analytics enabled" );
-		} 
-		else
-			log.info ( "Google Analytics disabled" );
+		return this.dataSources.get ( 0 ).getGoogleAnalyticsIdApi ();
 	}
 
 
@@ -141,7 +121,6 @@ public class KnetminerServer
 		String ds, String keyword, List<String> list, HttpServletRequest rawRequest, Model model, String pageId )
 	{
 		this.getConfiguredDatasource(ds, rawRequest); // just validates ds
-		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
 		
 		if ( list != null && !list.isEmpty () )
 			model.addAttribute("list", new JSONArray(list).toString());
@@ -149,6 +128,7 @@ public class KnetminerServer
 		if (keyword != null && !"".equals ( keyword ) )
 			model.addAttribute("keyword", keyword);
 
+		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
 		return pageId;
 	}
 	
@@ -189,29 +169,84 @@ public class KnetminerServer
 	}
 
 	/**
+	 * @see #network(String, NetworkRequest, HttpServletRequest)
+	 */
+	@CrossOrigin
+	@GetMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE  ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network (
+		@PathVariable String ds,
+		@RequestParam(required = false, defaultValue = "") String keyword,
+		@RequestParam(required = false) List<String> list,
+		@RequestParam(required = false, defaultValue = "") String listMode,
+		@RequestParam(required = false) List<String> qtl,
+		@RequestParam(required = false, defaultValue = "") String taxId,
+		@RequestParam(required = false, defaultValue = "false" ) boolean exportPlainJSON,
+		HttpServletRequest rawRequest
+	)
+	{
+		// TODO: isn't this done downstream?
+		if (qtl == null) qtl = Collections.emptyList();
+		if (list == null) list = Collections.emptyList();
+
+		// TODO: we need better management of this ugly stuff. Like plain parameters only, a request object isn't
+		// actually needed
+		//
+		var request = new NetworkRequest ();
+		request.setKeyword(keyword);
+		request.setListMode(listMode);
+		request.setList(list);
+		request.setQtl(qtl);
+		request.setTaxId(taxId);
+		request.setExportPlainJSON ( exportPlainJSON );
+		
+		return this.network ( ds, request, rawRequest );
+	}
+	
+	
+	/**
+	 * Overwrite the normal request routing in order to manage the {@link NetworkRequest specific request}
+	 * for this call.
+	 */
+	@CrossOrigin
+	@PostMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> network ( 
+		@PathVariable String ds, @RequestBody NetworkRequest request, HttpServletRequest rawRequest 
+	) 
+	{
+		return this.handle ( ds, "network", request, rawRequest );
+	}
+	
+
+	/**
 	 * Pick up all GET requests sent to any URL matching /X/Y. X is taken to be the
 	 * name of the data source to look up by its getName() function (see above for
 	 * the mapping function buildDataSourceCache(). Y is the 'mode' of the request.
 	 * Spring magic automatically converts the response into JSON. We convert the
-	 * GET parameters into a KnetminerRequest object for handling by the _handle()
+	 * GET parameters into a KnetminerRequest object for handling by the 
+	 * {@link #handleRaw(String, String, KnetminerRequest, HttpServletRequest)}() 
 	 * method.
 	 * 
 	 * @param ds
 	 * @param mode
 	 * @param qtl
 	 * @param keyword
-	 * @param list TODO: what is this?!
-	 * @param listMode
+	 * @param list The user-provided gene list
+	 * @param listMode TODO: this is not used anywhere
 	 * @param rawRequest
 	 * @return
 	 */
 	@CrossOrigin
 	@GetMapping("/{ds}/{mode}")
-	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
+	public @ResponseBody ResponseEntity<KnetminerResponse> handle (
+			@PathVariable String ds,
+			@PathVariable String mode,
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
 			@RequestParam(required = false) List<String> list,
-			@RequestParam(required = false, defaultValue = "") String listMode, HttpServletRequest rawRequest)
+			@RequestParam(required = false, defaultValue = "") String listMode,
+			@RequestParam(required = false, defaultValue = "") String taxId,
+			HttpServletRequest rawRequest
+	)
 	{
 		// TODO: isn't this done downstream?
 		if (qtl == null) qtl = Collections.emptyList();
@@ -222,6 +257,7 @@ public class KnetminerServer
 		request.setListMode(listMode);
 		request.setList(list);
 		request.setQtl(qtl);
+		request.setTaxId(taxId);
 		
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
@@ -245,7 +281,6 @@ public class KnetminerServer
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
 			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
 	{
-		this.googleTrackPageView ( ds, mode, request, rawRequest );
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
 
@@ -278,11 +313,23 @@ public class KnetminerServer
 				+ Arrays.toString ( request.getQtl ().toArray () );
 			log.debug ( "Calling " + mode + " with " + paramsStr );
 		}
-		this.googleTrackPageView ( ds, mode, request, rawRequest );
 
 		try
 		{
-			Method method = dataSource.getClass ().getMethod ( mode, String.class, KnetminerRequest.class );
+			// TODO: as explained in their Javadoc, these are bridge methods, they should go away at some point
+			if ( "getGoogleAnalyticsIdApi".equals ( mode ) )
+				ExceptionUtils.throwEx ( 
+					IllegalArgumentException.class, 
+					"The method %s isn't a valid data source API call, use the equivalent /dataset-info//google-analytics-id instead",
+					mode
+			);
+			
+			// WARNING: this relies on the fact that a signature exists that takes a parameter of EXACTLY the same class as
+			// request.getClass (), if you have an API method that accepts a super-class instead, this kind of reflection
+			// won't be enough to pick it.
+			//
+			Method method = dataSource.getClass ().getMethod ( mode, String.class, request.getClass () );
+			
 			try {
 				KnetminerResponse response = (KnetminerResponse) method.invoke ( dataSource, ds, request );
 				return new ResponseEntity<> ( response, HttpStatus.OK );
@@ -320,7 +367,11 @@ public class KnetminerServer
 		{
 			throw new Error (
 				"System error while running the API call '" + mode + "': " + getSignificantMessage ( ex ), ex );
-		} 
+		}
+		finally {
+			// TODO: should we track when failed?
+			this.googleTrackPageView ( ds, mode, request, rawRequest );
+		}
 	}
 	
 	
@@ -347,7 +398,6 @@ public class KnetminerServer
 	
 	/**
 	 * TODO: do we need listMode?
-	 * 
 	 */
 	private void googleTrackPageView (
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
@@ -358,55 +408,99 @@ public class KnetminerServer
 
 	
 	private void googleTrackPageView (
-		String ds, String mode, String keyword, List<String> list, List<String> qtl, HttpServletRequest rawRequest
+		String ds, String mode, String keyword, List<String> userGenes, List<String> userChrRegions, HttpServletRequest rawRequest
 	)
 	{
+		// TODO: googleLogApiRequest() considers certain API calls only, while this tracks all
+		
+		String gaId = getGoogleAnalyticsTrackingId ();
+		
+		if ( gaId == null ) {
+			log.info ( "Google Analytics, no ID set, not tracking" );
+			return;
+		}
+
 		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
-		log.debug ( "IP TRACING 1, IP for X-FORWARDED-FOR: {}", ipAddress );
 		
 		if ( ipAddress == null )
 		{
 			ipAddress = rawRequest.getRemoteAddr ();
-			log.debug ( "IP TRACING 2, getRemoteAddr(): {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", ipAddress );
 		} 
 		else
 		{
-			log.debug ( "IP TRACING 3, IP to be split: {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", ipAddress );
 			if ( ipAddress.indexOf ( ',' ) != -1 ) ipAddress = ipAddress.split ( "," )[ 0 ];
 			
-			log.debug ( "IP TRACING 4, splitted IP: {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, using splitted IP: {}", ipAddress );
 		}
-		log.debug ( "IP TRACING 5 post-processed IP: {}", ipAddress );
 
-		String[] IP_HEADER_CANDIDATES = { 
-			"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
-			"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
-			"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
-			"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
-		};
-
-		for ( String header : IP_HEADER_CANDIDATES )
+		// TODO: what's the point?! Just logging?! MB: I've put it under log.isDebug
+		if ( log.isDebugEnabled () )
 		{
-			String ip = rawRequest.getHeader ( header );
-			if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
-				log.debug ( "IP TRACING, req headers, {}:{}", header, ip );
-		}
+			String[] IP_HEADER_CANDIDATES = { 
+				"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+				"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
+				"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
+				"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
+			};
 
-		if ( this.gaTrackingId == null ) return;
+			for ( String header : IP_HEADER_CANDIDATES )
+			{
+				String ip = rawRequest.getHeader ( header );
+				if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
+					log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
+			}
+		}
 		
+		// GA wants the actual client URL?
+		String clientHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
+			.orElse ( rawRequest.getRemoteHost () );
+				
 		String pageName = ds + "/" + mode;
 		
+		// This is like USER_AGENT in jdk.internal.net.http.HttpRequestImpl, which isn't accessible
+		var userAgent = "Java-http-client/" + System.getProperty ( "java.version" );
+		// DEBUG userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
+		
 		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
-			.withTrackingId ( this.gaTrackingId )
+      .withDefaultRequest ( 
+      	new DefaultRequest ()
+      		.trackingId ( gaId )	
+      		.userIp( ipAddress )
+      		.documentHostName ( clientHost )
+      		.documentTitle ( pageName )
+      		.documentPath ( "/" + pageName )
+      		.protocolVersion ( "2" )
+      		.userAgent ( userAgent )
+      )
 			.build ();
+			
 		
-		ga.pageView ()
-			.documentTitle ( pageName )
-			.documentPath ( "/" + pageName )
-			.userIp ( ipAddress )
-			.send ();
+			final var ipAddressRO = ipAddress; // lambdas requires immutables
+			
+			// Invoke GA asynchronously, don't waste my time with waiting
+			ga.
+			pageView ()
+			.sendAsync ()
+			.thenAcceptAsync ( gaResponse -> 
+			{
+				int gaRespCode = gaResponse.getStatusCode ();
+				if ( gaRespCode >= 400 )
+					log.error ( 
+						"Google Analytics, request to track '{}' with ID {} failed, HTTP status: {}, ip: {}, client: {}",
+						pageName, gaId, gaRespCode, ipAddressRO, clientHost 
+					);
+				else
+					log.info ( 
+						"Google Analytics invoked successfully for '{}', with ID {}, ip: {}, client: {}", 
+						pageName, gaId, ipAddressRO, clientHost
+				);
+			});
 		
-		this.googleLogApiRequest ( ds, mode, keyword, list, qtl, rawRequest );			
+		
+		// TODO: should we track it when GA fails?
+		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
 	}
 	
 	
@@ -442,7 +536,10 @@ public class KnetminerServer
 		map.put ( "datasource", ds );
 		
 		ObjectMessage msg = new ObjectMessage ( map );
-		logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
+		
+		// TODO: I don't see any need for a new level, nor for a separated log file 
+		// logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
+		logAnalytics.info ( msg );
 	}
 	
 }

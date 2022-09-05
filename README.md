@@ -7,7 +7,7 @@ refinement, gene ranking, gene set enrichment analysis and interactive visualisa
 knowledge networks and genomic information.  
 
 The web app [can be deployed on site or in the AWS cloud using Docker][10]. Examples of free 
-and public KnetMiners are available at https://knetminer.org.  
+and public KnetMiners are available at https://knetminer.com.  
 
 KnetMiner also offers a set of high-level web API endpoints to access and visualise the 
 knowledge networks from other applications (see details on our [wiki][20]).

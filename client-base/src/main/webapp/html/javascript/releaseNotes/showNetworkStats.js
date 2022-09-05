@@ -10,19 +10,23 @@ window.onload = function () {
  */
 function fetchStats() {
     var fileUrl = api_url + "/latestNetworkStats";
-//console.log("Fetching Network stats from: "+ fileUrl);
-    // get database version from dataSource API endpoint.
+
     var dbUrl = api_url + "/dataSource";
     var db_version='';
+
     $.get(dbUrl).done(function (dbData) { 
+        console.log(dbData); 
         var resp= dbData.dataSource.replace(/\"/g,"").trim().split(",");
         resp.forEach(function(val) {
             var values= val.split(":");
             if(values[0].trim() === "dbVersion") { db_version= values[1].trim(); }
            });
-       }).fail(function () { console.log("Error fetching dbVersion"); });
+       }).fail(function () { console.log("Error fetching dbVersion"); 
+    });
+
 
     $.get(fileUrl).done(function (data) {
+        console.log(data); 
         var resp = data.stats.split("\n");
         var totalGenes = fetchValue(resp[1]);
         var totalConcepts = fetchValue(resp[2]);
@@ -99,6 +103,8 @@ function fetchStats() {
         console.log("Error occurred while retrieving Network details");
     });
 }
+
+
 
 function fetchValue(valText) {
     var start = valText.indexOf(">");
