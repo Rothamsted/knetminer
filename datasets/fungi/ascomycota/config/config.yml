@@ -30,16 +30,12 @@
   #  scientificName: Arabidopsis Thaliana
   #  commonName: Thale cress
   #  # chromosomeBaseMap: config/species/base-map-3702.xml # this is the default
-  
-  - taxId: 5516
-    scientificName: Fusarium culmorum
-    commonName: Fusarium culmorum
-  
+    
   - taxId: 5518
     scientificName: Fusarium graminearum PH-1
     commonName: Fusarium graminearum
   
-  - taxId: 336772
+  - taxId: 336722
     scientificName: Zymoseptoria tritici
     commonName: Zymoseptoria tritici
   
