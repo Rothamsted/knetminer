@@ -16,7 +16,7 @@
   title: ascomycota Knetminer Instance
   description: Knetminer instance about ascomycota
   keywords: fusarium, f.graminearum, knetminer 
-  version: 20220905
+  version: 54
   creationDate: 20220905
   # These are in the defaults
   #organization: in the defaults 
@@ -71,4 +71,4 @@
     scientificName: Schizosaccharomyces pombe
     commonName: Schizosaccharomyces pombe
   
-seedGenesFile: config/seed-genes-example.tsv
+#seedGenesFile: config/seed-genes-example.tsv
