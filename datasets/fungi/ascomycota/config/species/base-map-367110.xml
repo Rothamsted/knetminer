@@ -1,0 +1,52 @@
+<genome>
+	<chromosome index="I"  length="9798893" number="I">
+		<band index="1">
+			<start>0</start>
+			<end>9798893</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="II"  length="4478683" number="II">
+		<band index="1">
+			<start>0</start>
+			<end>4478683</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="III"  length="5274802" number="III">
+		<band index="1">
+			<start>0</start>
+			<end>5274802</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="IV"  length="6000761" number="IV">
+		<band index="1">
+			<start>0</start>
+			<end>6000761</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="V"  length="6436246" number="V">
+		<band index="1">
+			<start>0</start>
+			<end>6436246</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="VI"  length="4218384" number="VI">
+		<band index="1">
+			<start>0</start>
+			<end>4218384</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="VII"  length="4255303" number="VII">
+		<band index="1">
+			<start>0</start>
+			<end>4255303</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
