@@ -10,7 +10,7 @@ function prepare_docker
   docker rm "$container_id" || true
 
   if [[ "$clean_flag" == "--clean" ]]; then
-    ./cleanup-volume.sh --all "$dataset_dir"
+    ./dataset-cleanup.sh "$dataset_dir"
     docker system prune --all --force
   fi
 }
