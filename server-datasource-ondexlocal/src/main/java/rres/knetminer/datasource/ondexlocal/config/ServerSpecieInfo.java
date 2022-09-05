@@ -166,7 +166,9 @@ public class ServerSpecieInfo implements SpecieInfo
 			catch ( NumberFormatException | DOMException | NullPointerException ex )
 			{
 				ExceptionUtils.throwEx ( UnexpectedValueException.class, ex,
-				  "Error while parsing the chromosome map file for taxId: %s: $cause", this.getTaxId ()
+				  "Error while parsing the chromosome map file '%s' for taxId: %s: $cause",
+				  this.getBaseMapPath (),
+				  this.getTaxId ()
 				);
 			}
 		}

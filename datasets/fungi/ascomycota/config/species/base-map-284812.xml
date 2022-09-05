@@ -1,19 +1,19 @@
 <genome>
-	<chromosome index="I"  length="5579133" number="I">
+	<chromosome index="1"  length="5579133" number="I">
 		<band index="1">
 			<start>0</start>
 			<end>5579133</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="II"  length="4539804" number="II">
+	<chromosome index="2"  length="4539804" number="II">
 		<band index="1">
 			<start>0</start>
 			<end>4539804</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="III"  length="2452883" number="III">
+	<chromosome index="3"  length="2452883" number="III">
 		<band index="1">
 			<start>0</start>
 			<end>2452883</end>
