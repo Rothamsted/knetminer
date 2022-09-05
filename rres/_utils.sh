@@ -6,6 +6,8 @@ function prepare_docker
   dataset_dir="$2"
   clean_flag="$3"
 
+  echo -e "\n  Stopping and deleting existing container"
+  echo -e "  Please ignore errors about non-existing container (expected eg, at the first time)\n"
   docker stop "$container_id" || true
   docker rm "$container_id" || true
 
