@@ -1,6 +1,21 @@
+set -e
+mydir=`dirname "$0"`
+mydir=`realpath "$mydir"`
+
+echo -e "\n\n\tRestarting https://knetminer.com/TODO/\n"
+
+. "$mydir/../_utils.sh"
+
+cd "$HOME/software/knetminer/docker"
+
+container_id=ascomycota 
+dataset_dir="$HOME/data/ascomycota"
+clean_flag="$1"
+
+prepare_docker "$container_id" "$dataset_dir" "$clean_flag"
+
 export DOCKER_OPTS="-it --restart unless-stopped"
-RELDIR=${HOME}/data/ascomycota
-SWDIR=${HOME}/software/knetminer
-pushd ${RELDIR}
-$HOME/software/knetminer/docker/docker-run.sh --dataset-dir ${RELDIR}  --image-version latest --host-port 8086 --container-name 'ascomycota-40G' --container-memory 40G --detach
+# TODO: latest is unstable
+./docker-run.sh --dataset-dir "$dataset_dir" --image-version latest \
+  --container-name "$container_id" --host-port 8086 --container-memory 40G --detach
 
