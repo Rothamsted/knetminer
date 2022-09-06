@@ -134,14 +134,17 @@ function loginUtilsInit ()
 {
 	$('#login_icon').text("Sign in");
 	$('#login_icon').css('textDecoration','none');
+	
+	if ( !api_url ) return;
+	
 	fetchCredentials(null);
 	// Initalize login Modal
 	loginModalToggle();        
 }
 
-// TODO: it's already invoked by the general handler in utils. I'm not sure it's needed here too
-// eg, by external page
-$(document).ready( loginUtilsInit );
+// If the API URL isn't defined yet, we're on the client app, not the server app, this is already 
+// invoked by the general handler in utils, so ignore it here.
+if ( api_url ) $(document).ready( loginUtilsInit );
 
 /* 
  * initialize  loginModal
