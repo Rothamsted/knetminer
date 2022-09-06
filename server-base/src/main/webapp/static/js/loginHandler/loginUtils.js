@@ -96,7 +96,7 @@ function userPlan() {
     return value;
 }
 
-function returnJson() {
+function knetSpaceProfile() {
     var jsonVal = getKsAPI().then(function (ksAddress) {
         const knetspace_address = ksAddress;
         const jsonVal = fetch(knetspace_address + '/api/v1/me', {
@@ -270,7 +270,7 @@ function fetchCredentials(loginModal) {
 //                    console.log(loginModal);
 //                    loginModal.destroy();
 //                }
-                returnJson().then(function (myJson) {
+                knetSpaceProfile().then(function (myJson) {
                     let content = "Welcome, " + myJson.username; // Welcome the user
                     jboxNotice(content, 'blue', 60, 1000);
                     // Update the login icon & name
