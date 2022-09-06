@@ -16,7 +16,7 @@ package rres.knetminer.datasource.api;
 @Deprecated
 public class KnetSpaceHost extends KnetminerResponse {
 
-    public String ksHostUrl;
+    private String ksHostUrl;
 
     public String getKsHostUrl() {
         return ksHostUrl;
