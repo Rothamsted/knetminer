@@ -68,7 +68,7 @@ cp -Rf "$knetdir/aratiny/aratiny-ws/src/test/resources/knetminer-dataset/config"
 to_del_files="data-source.xml.old test-cfg.yml test-cfg-neo4j.yml 
   neo4j/config-test.xml neo4j/semantic-motif-queries"
 
-for f in $to_del_files do
+for f in $to_del_files; do
 	rm -Rf "$dataset_dir/config/$f"
 done
 
