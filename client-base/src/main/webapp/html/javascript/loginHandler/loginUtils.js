@@ -13,6 +13,9 @@
  * @returns {unresolved promise}
  */
 async function getKsAPI() {
+		if ( !api_url ) {
+			throw ( "api_url isn't set, probably you're calling me prematurely" );
+		}
     const response = await fetch(api_url + '/ksHost')
             .then((r) => r.json())
             .then((rData) => {
@@ -21,9 +24,9 @@ async function getKsAPI() {
     return response;
 }
 
-//knetspace_address= 'http://babvs72.rothamsted.ac.uk:8000' // Update accordingly - hardcoded if necessary
-
 /* 
+ * TODO: What is it?!
+ * 
  * Awaits for a promise to be completed first, useful for cross-server communication where delays may exist.
  * @param {type} time
  * @returns {Promise}
@@ -134,9 +137,7 @@ function loginUtilsInit ()
 {
 	$('#login_icon').text("Sign in");
 	$('#login_icon').css('textDecoration','none');
-	
-	if ( !api_url ) return;
-	
+		
 	fetchCredentials(null);
 	// Initalize login Modal
 	loginModalToggle();        
