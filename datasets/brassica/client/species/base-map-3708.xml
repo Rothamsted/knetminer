@@ -1,0 +1,1334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="2086450" number="LK031823">
+		<band index="1">
+			<start>0</start>
+			<end>2086450</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="1155529" number="LK031934">
+		<band index="1">
+			<start>0</start>
+			<end>1155529</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="2362688" number="LK031806">
+		<band index="1">
+			<start>0</start>
+			<end>2362688</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="2713116" number="LK031800">
+		<band index="1">
+			<start>0</start>
+			<end>2713116</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="1205683" number="LK031922">
+		<band index="1">
+			<start>0</start>
+			<end>1205683</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="2640183" number="LK031801">
+		<band index="1">
+			<start>0</start>
+			<end>2640183</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="1707031" number="LK031851">
+		<band index="1">
+			<start>0</start>
+			<end>1707031</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="1004270" number="LK031973">
+		<band index="1">
+			<start>0</start>
+			<end>1004270</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="1053825" number="LK031964">
+		<band index="1">
+			<start>0</start>
+			<end>1053825</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="1316909" number="LK031900">
+		<band index="1">
+			<start>0</start>
+			<end>1316909</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="1063179" number="LK031963">
+		<band index="1">
+			<start>0</start>
+			<end>1063179</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="1250662" number="LK031913">
+		<band index="1">
+			<start>0</start>
+			<end>1250662</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="1615220" number="LK031858">
+		<band index="1">
+			<start>0</start>
+			<end>1615220</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="14"  length="2092255" number="LK031822">
+		<band index="1">
+			<start>0</start>
+			<end>2092255</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="15"  length="1221362" number="LK031919">
+		<band index="1">
+			<start>0</start>
+			<end>1221362</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="16"  length="4483563" number="LK031789">
+		<band index="1">
+			<start>0</start>
+			<end>4483563</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="17"  length="3156754" number="LK031794">
+		<band index="1">
+			<start>0</start>
+			<end>3156754</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="18"  length="1352401" number="LK031890">
+		<band index="1">
+			<start>0</start>
+			<end>1352401</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="19"  length="1198051" number="LK031925">
+		<band index="1">
+			<start>0</start>
+			<end>1198051</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="20"  length="2170876" number="LK031815">
+		<band index="1">
+			<start>0</start>
+			<end>2170876</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="21"  length="1071853" number="LK031958">
+		<band index="1">
+			<start>0</start>
+			<end>1071853</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="22"  length="1121923" number="LK031947">
+		<band index="1">
+			<start>0</start>
+			<end>1121923</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="23"  length="1034962" number="LK031968">
+		<band index="1">
+			<start>0</start>
+			<end>1034962</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="24"  length="1265211" number="LK031910">
+		<band index="1">
+			<start>0</start>
+			<end>1265211</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="25"  length="4225551" number="LK031790">
+		<band index="1">
+			<start>0</start>
+			<end>4225551</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="26"  length="1248449" number="LK031914">
+		<band index="1">
+			<start>0</start>
+			<end>1248449</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="27"  length="2161217" number="LK031817">
+		<band index="1">
+			<start>0</start>
+			<end>2161217</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="28"  length="1486400" number="LK031876">
+		<band index="1">
+			<start>0</start>
+			<end>1486400</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="29"  length="1549896" number="LK031866">
+		<band index="1">
+			<start>0</start>
+			<end>1549896</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="30"  length="1114733" number="LK031950">
+		<band index="1">
+			<start>0</start>
+			<end>1114733</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="31"  length="1610984" number="LK031859">
+		<band index="1">
+			<start>0</start>
+			<end>1610984</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="32"  length="1084675" number="LK031955">
+		<band index="1">
+			<start>0</start>
+			<end>1084675</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="33"  length="1035066" number="LK031967">
+		<band index="1">
+			<start>0</start>
+			<end>1035066</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="34"  length="1167803" number="LK031930">
+		<band index="1">
+			<start>0</start>
+			<end>1167803</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="35"  length="1744247" number="LK031845">
+		<band index="1">
+			<start>0</start>
+			<end>1744247</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="36"  length="2154705" number="LK031819">
+		<band index="1">
+			<start>0</start>
+			<end>2154705</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="37"  length="2345291" number="LK031807">
+		<band index="1">
+			<start>0</start>
+			<end>2345291</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="38"  length="1508214" number="LK031873">
+		<band index="1">
+			<start>0</start>
+			<end>1508214</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="39"  length="1147544" number="LK031935">
+		<band index="1">
+			<start>0</start>
+			<end>1147544</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="40"  length="2022761" number="LK031827">
+		<band index="1">
+			<start>0</start>
+			<end>2022761</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="41"  length="1701001" number="LK031853">
+		<band index="1">
+			<start>0</start>
+			<end>1701001</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="42"  length="2415957" number="LK031803">
+		<band index="1">
+			<start>0</start>
+			<end>2415957</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="43"  length="1441302" number="LK031879">
+		<band index="1">
+			<start>0</start>
+			<end>1441302</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="44"  length="1276610" number="LK031907">
+		<band index="1">
+			<start>0</start>
+			<end>1276610</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="45"  length="2170454" number="LK031816">
+		<band index="1">
+			<start>0</start>
+			<end>2170454</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="46"  length="1599641" number="LK031861">
+		<band index="1">
+			<start>0</start>
+			<end>1599641</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="47"  length="1306064" number="LK031903">
+		<band index="1">
+			<start>0</start>
+			<end>1306064</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="48"  length="1161089" number="LK031933">
+		<band index="1">
+			<start>0</start>
+			<end>1161089</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="49"  length="1774525" number="LK031843">
+		<band index="1">
+			<start>0</start>
+			<end>1774525</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="50"  length="1166098" number="LK031931">
+		<band index="1">
+			<start>0</start>
+			<end>1166098</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="51"  length="2155711" number="LK031818">
+		<band index="1">
+			<start>0</start>
+			<end>2155711</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="52"  length="1574489" number="LK031863">
+		<band index="1">
+			<start>0</start>
+			<end>1574489</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="53"  length="2939478" number="LK031796">
+		<band index="1">
+			<start>0</start>
+			<end>2939478</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="54"  length="2887755" number="LK031798">
+		<band index="1">
+			<start>0</start>
+			<end>2887755</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="55"  length="1036152" number="LK031966">
+		<band index="1">
+			<start>0</start>
+			<end>1036152</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="56"  length="1115775" number="LK031949">
+		<band index="1">
+			<start>0</start>
+			<end>1115775</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="57"  length="1682221" number="LK031856">
+		<band index="1">
+			<start>0</start>
+			<end>1682221</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="58"  length="1351925" number="LK031891">
+		<band index="1">
+			<start>0</start>
+			<end>1351925</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="59"  length="1810272" number="LK031838">
+		<band index="1">
+			<start>0</start>
+			<end>1810272</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="60"  length="2119145" number="LK031820">
+		<band index="1">
+			<start>0</start>
+			<end>2119145</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="61"  length="1520815" number="LK031872">
+		<band index="1">
+			<start>0</start>
+			<end>1520815</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="62"  length="2330596" number="LK031808">
+		<band index="1">
+			<start>0</start>
+			<end>2330596</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="63"  length="2018887" number="LK031828">
+		<band index="1">
+			<start>0</start>
+			<end>2018887</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="64"  length="1215988" number="LK031920">
+		<band index="1">
+			<start>0</start>
+			<end>1215988</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="65"  length="1410317" number="LK031884">
+		<band index="1">
+			<start>0</start>
+			<end>1410317</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="66"  length="1306168" number="LK031902">
+		<band index="1">
+			<start>0</start>
+			<end>1306168</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="67"  length="1370110" number="LK031888">
+		<band index="1">
+			<start>0</start>
+			<end>1370110</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="68"  length="1081926" number="LK031956">
+		<band index="1">
+			<start>0</start>
+			<end>1081926</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="69"  length="2452745" number="LK031802">
+		<band index="1">
+			<start>0</start>
+			<end>2452745</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="70"  length="2408164" number="LK031805">
+		<band index="1">
+			<start>0</start>
+			<end>2408164</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="71"  length="1491016" number="LK031875">
+		<band index="1">
+			<start>0</start>
+			<end>1491016</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="72"  length="1232712" number="LK031917">
+		<band index="1">
+			<start>0</start>
+			<end>1232712</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="73"  length="1338897" number="LK031895">
+		<band index="1">
+			<start>0</start>
+			<end>1338897</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="74"  length="1276082" number="LK031908">
+		<band index="1">
+			<start>0</start>
+			<end>1276082</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="75"  length="2032165" number="LK031825">
+		<band index="1">
+			<start>0</start>
+			<end>2032165</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="76"  length="1326953" number="LK031897">
+		<band index="1">
+			<start>0</start>
+			<end>1326953</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="77"  length="1143918" number="LK031937">
+		<band index="1">
+			<start>0</start>
+			<end>1143918</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="78"  length="1298027" number="LK031905">
+		<band index="1">
+			<start>0</start>
+			<end>1298027</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="79"  length="1569625" number="LK031864">
+		<band index="1">
+			<start>0</start>
+			<end>1569625</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="80"  length="2180076" number="LK031814">
+		<band index="1">
+			<start>0</start>
+			<end>2180076</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="81"  length="1711696" number="LK031850">
+		<band index="1">
+			<start>0</start>
+			<end>1711696</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="82"  length="1043224" number="LK031965">
+		<band index="1">
+			<start>0</start>
+			<end>1043224</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="83"  length="1448247" number="LK031878">
+		<band index="1">
+			<start>0</start>
+			<end>1448247</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="84"  length="1130895" number="LK031944">
+		<band index="1">
+			<start>0</start>
+			<end>1130895</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="85"  length="1172851" number="LK031928">
+		<band index="1">
+			<start>0</start>
+			<end>1172851</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="86"  length="1538391" number="LK031870">
+		<band index="1">
+			<start>0</start>
+			<end>1538391</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="87"  length="1063568" number="LK031962">
+		<band index="1">
+			<start>0</start>
+			<end>1063568</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="88"  length="2086265" number="LK031824">
+		<band index="1">
+			<start>0</start>
+			<end>2086265</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="89"  length="1340449" number="LK031894">
+		<band index="1">
+			<start>0</start>
+			<end>1340449</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="90"  length="1787473" number="LK031841">
+		<band index="1">
+			<start>0</start>
+			<end>1787473</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="91"  length="2328691" number="LK031809">
+		<band index="1">
+			<start>0</start>
+			<end>2328691</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="92"  length="1205680" number="LK031923">
+		<band index="1">
+			<start>0</start>
+			<end>1205680</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="93"  length="4600301" number="LK031788">
+		<band index="1">
+			<start>0</start>
+			<end>4600301</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="94"  length="1360366" number="LK031889">
+		<band index="1">
+			<start>0</start>
+			<end>1360366</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="95"  length="1431993" number="LK031881">
+		<band index="1">
+			<start>0</start>
+			<end>1431993</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="96"  length="1922707" number="LK031831">
+		<band index="1">
+			<start>0</start>
+			<end>1922707</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="97"  length="1089143" number="LK031953">
+		<band index="1">
+			<start>0</start>
+			<end>1089143</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="98"  length="1346957" number="LK031893">
+		<band index="1">
+			<start>0</start>
+			<end>1346957</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="99"  length="1879420" number="LK031836">
+		<band index="1">
+			<start>0</start>
+			<end>1879420</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="100"  length="1486296" number="LK031877">
+		<band index="1">
+			<start>0</start>
+			<end>1486296</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="101"  length="1271386" number="LK031909">
+		<band index="1">
+			<start>0</start>
+			<end>1271386</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="102"  length="1131410" number="LK031943">
+		<band index="1">
+			<start>0</start>
+			<end>1131410</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="103"  length="1699195" number="LK031854">
+		<band index="1">
+			<start>0</start>
+			<end>1699195</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="104"  length="2027499" number="LK031826">
+		<band index="1">
+			<start>0</start>
+			<end>2027499</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="105"  length="1243225" number="LK031915">
+		<band index="1">
+			<start>0</start>
+			<end>1243225</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="106"  length="1170559" number="LK031929">
+		<band index="1">
+			<start>0</start>
+			<end>1170559</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="107"  length="1373875" number="LK031886">
+		<band index="1">
+			<start>0</start>
+			<end>1373875</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="108"  length="1907107" number="LK031833">
+		<band index="1">
+			<start>0</start>
+			<end>1907107</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="109"  length="1549698" number="LK031867">
+		<band index="1">
+			<start>0</start>
+			<end>1549698</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="110"  length="1085436" number="LK031954">
+		<band index="1">
+			<start>0</start>
+			<end>1085436</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="111"  length="1110515" number="LK031951">
+		<band index="1">
+			<start>0</start>
+			<end>1110515</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="112"  length="1439762" number="LK031880">
+		<band index="1">
+			<start>0</start>
+			<end>1439762</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="113"  length="2280124" number="LK031810">
+		<band index="1">
+			<start>0</start>
+			<end>2280124</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="114"  length="1292539" number="LK031906">
+		<band index="1">
+			<start>0</start>
+			<end>1292539</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="115"  length="1704724" number="LK031852">
+		<band index="1">
+			<start>0</start>
+			<end>1704724</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="116"  length="1918366" number="LK031832">
+		<band index="1">
+			<start>0</start>
+			<end>1918366</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="117"  length="1165367" number="LK031932">
+		<band index="1">
+			<start>0</start>
+			<end>1165367</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="118"  length="1138691" number="LK031939">
+		<band index="1">
+			<start>0</start>
+			<end>1138691</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="119"  length="1893982" number="LK031835">
+		<band index="1">
+			<start>0</start>
+			<end>1893982</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="120"  length="1610110" number="LK031860">
+		<band index="1">
+			<start>0</start>
+			<end>1610110</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="121"  length="1797279" number="LK031840">
+		<band index="1">
+			<start>0</start>
+			<end>1797279</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="122"  length="1093418" number="LK031952">
+		<band index="1">
+			<start>0</start>
+			<end>1093418</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="123"  length="1734363" number="LK031847">
+		<band index="1">
+			<start>0</start>
+			<end>1734363</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="124"  length="1212460" number="LK031921">
+		<band index="1">
+			<start>0</start>
+			<end>1212460</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="125"  length="1410775" number="LK031883">
+		<band index="1">
+			<start>0</start>
+			<end>1410775</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="126"  length="1598355" number="LK031862">
+		<band index="1">
+			<start>0</start>
+			<end>1598355</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="127"  length="1318698" number="LK031899">
+		<band index="1">
+			<start>0</start>
+			<end>1318698</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="128"  length="1022625" number="LK031972">
+		<band index="1">
+			<start>0</start>
+			<end>1022625</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="129"  length="1731693" number="LK031848">
+		<band index="1">
+			<start>0</start>
+			<end>1731693</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="130"  length="1067184" number="LK031960">
+		<band index="1">
+			<start>0</start>
+			<end>1067184</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="131"  length="1809566" number="LK031839">
+		<band index="1">
+			<start>0</start>
+			<end>1809566</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="132"  length="2885013" number="LK031799">
+		<band index="1">
+			<start>0</start>
+			<end>2885013</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="133"  length="1136247" number="LK031940">
+		<band index="1">
+			<start>0</start>
+			<end>1136247</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="134"  length="1224966" number="LK031918">
+		<band index="1">
+			<start>0</start>
+			<end>1224966</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="135"  length="3915916" number="LK031791">
+		<band index="1">
+			<start>0</start>
+			<end>3915916</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="136"  length="1558212" number="LK031865">
+		<band index="1">
+			<start>0</start>
+			<end>1558212</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="137"  length="1372406" number="LK031887">
+		<band index="1">
+			<start>0</start>
+			<end>1372406</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="138"  length="2003729" number="LK031829">
+		<band index="1">
+			<start>0</start>
+			<end>2003729</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="139"  length="1122989" number="LK031946">
+		<band index="1">
+			<start>0</start>
+			<end>1122989</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="140"  length="1068994" number="LK031959">
+		<band index="1">
+			<start>0</start>
+			<end>1068994</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="141"  length="1025451" number="LK031971">
+		<band index="1">
+			<start>0</start>
+			<end>1025451</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="142"  length="3268982" number="LK031793">
+		<band index="1">
+			<start>0</start>
+			<end>3268982</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="143"  length="2236087" number="LK031811">
+		<band index="1">
+			<start>0</start>
+			<end>2236087</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="144"  length="1195065" number="LK031926">
+		<band index="1">
+			<start>0</start>
+			<end>1195065</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="145"  length="1336538" number="LK031896">
+		<band index="1">
+			<start>0</start>
+			<end>1336538</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="146"  length="2221115" number="LK031813">
+		<band index="1">
+			<start>0</start>
+			<end>2221115</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="147"  length="1265070" number="LK031911">
+		<band index="1">
+			<start>0</start>
+			<end>1265070</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="148"  length="1546543" number="LK031869">
+		<band index="1">
+			<start>0</start>
+			<end>1546543</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="149"  length="1205211" number="LK031924">
+		<band index="1">
+			<start>0</start>
+			<end>1205211</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="150"  length="1718733" number="LK031849">
+		<band index="1">
+			<start>0</start>
+			<end>1718733</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="151"  length="1144562" number="LK031936">
+		<band index="1">
+			<start>0</start>
+			<end>1144562</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="152"  length="1321994" number="LK031898">
+		<band index="1">
+			<start>0</start>
+			<end>1321994</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="153"  length="1066437" number="LK031961">
+		<band index="1">
+			<start>0</start>
+			<end>1066437</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="154"  length="1304906" number="LK031904">
+		<band index="1">
+			<start>0</start>
+			<end>1304906</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="155"  length="1128510" number="LK031945">
+		<band index="1">
+			<start>0</start>
+			<end>1128510</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="156"  length="1174052" number="LK031927">
+		<band index="1">
+			<start>0</start>
+			<end>1174052</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="157"  length="1135087" number="LK031941">
+		<band index="1">
+			<start>0</start>
+			<end>1135087</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="158"  length="1028230" number="LK031970">
+		<band index="1">
+			<start>0</start>
+			<end>1028230</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="159"  length="1952018" number="LK031830">
+		<band index="1">
+			<start>0</start>
+			<end>1952018</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="160"  length="1536430" number="LK031871">
+		<band index="1">
+			<start>0</start>
+			<end>1536430</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="161"  length="1424253" number="LK031882">
+		<band index="1">
+			<start>0</start>
+			<end>1424253</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="162"  length="2234271" number="LK031812">
+		<band index="1">
+			<start>0</start>
+			<end>2234271</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="163"  length="1774769" number="LK031842">
+		<band index="1">
+			<start>0</start>
+			<end>1774769</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="164"  length="1683002" number="LK031855">
+		<band index="1">
+			<start>0</start>
+			<end>1683002</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="165"  length="1000163" number="LK031976">
+		<band index="1">
+			<start>0</start>
+			<end>1000163</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="166"  length="5197798" number="LK031787">
+		<band index="1">
+			<start>0</start>
+			<end>5197798</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="167"  length="2890336" number="LK031797">
+		<band index="1">
+			<start>0</start>
+			<end>2890336</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="168"  length="1029013" number="LK031969">
+		<band index="1">
+			<start>0</start>
+			<end>1029013</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="169"  length="1640419" number="LK031857">
+		<band index="1">
+			<start>0</start>
+			<end>1640419</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="170"  length="1115999" number="LK031948">
+		<band index="1">
+			<start>0</start>
+			<end>1115999</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="171"  length="1347100" number="LK031892">
+		<band index="1">
+			<start>0</start>
+			<end>1347100</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="172"  length="1812526" number="LK031837">
+		<band index="1">
+			<start>0</start>
+			<end>1812526</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="173"  length="1003168" number="LK031974">
+		<band index="1">
+			<start>0</start>
+			<end>1003168</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="174"  length="3040603" number="LK031795">
+		<band index="1">
+			<start>0</start>
+			<end>3040603</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="175"  length="1133209" number="LK031942">
+		<band index="1">
+			<start>0</start>
+			<end>1133209</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="176"  length="1397585" number="LK031885">
+		<band index="1">
+			<start>0</start>
+			<end>1397585</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="177"  length="1262343" number="LK031912">
+		<band index="1">
+			<start>0</start>
+			<end>1262343</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="178"  length="1001103" number="LK031975">
+		<band index="1">
+			<start>0</start>
+			<end>1001103</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="179"  length="1079694" number="LK031957">
+		<band index="1">
+			<start>0</start>
+			<end>1079694</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="180"  length="1768856" number="LK031844">
+		<band index="1">
+			<start>0</start>
+			<end>1768856</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="181"  length="1313811" number="LK031901">
+		<band index="1">
+			<start>0</start>
+			<end>1313811</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="182"  length="2101096" number="LK031821">
+		<band index="1">
+			<start>0</start>
+			<end>2101096</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="183"  length="2415748" number="LK031804">
+		<band index="1">
+			<start>0</start>
+			<end>2415748</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="184"  length="1741244" number="LK031846">
+		<band index="1">
+			<start>0</start>
+			<end>1741244</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="185"  length="1143673" number="LK031938">
+		<band index="1">
+			<start>0</start>
+			<end>1143673</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="186"  length="1905211" number="LK031834">
+		<band index="1">
+			<start>0</start>
+			<end>1905211</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="187"  length="1496510" number="LK031874">
+		<band index="1">
+			<start>0</start>
+			<end>1496510</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="188"  length="3618082" number="LK031792">
+		<band index="1">
+			<start>0</start>
+			<end>3618082</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="189"  length="1242327" number="LK031916">
+		<band index="1">
+			<start>0</start>
+			<end>1242327</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="190"  length="1547397" number="LK031868">
+		<band index="1">
+			<start>0</start>
+			<end>1547397</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+

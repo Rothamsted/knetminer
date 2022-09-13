@@ -1,0 +1,47 @@
+# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# used when no other option is given to Docker.
+# 
+# Your dataset will need its own version of this file. 
+# 
+ 
+"@includes":
+- defaults-cfg.yml
+
+oxl: data/knowledge-network.oxl 
+
+# Details about the datset and supported species
+# 
+"dataset @merge":
+  id: brassica
+  title: Brassica Test Knetminer Instance
+  description: Knetminer instance about brassica
+  keywords: broccoli, mustard, cabbage, rapeseed, canola, turnip
+
+  version: 54
+  creationDate: 20220912
+  # These are in the defaults
+  #organization: in the defaults 
+  #provider:
+  # sampleQueries: config/sample-queries.xml # this is a default
+  # backgroundImage: config/background.jpg # this is the default 
+  
+  species:
+     
+  - taxId: 3708
+    scientificName: Brassica napus
+    commonName: Rapeseed
+    
+  - taxId: 109376
+    scientificName: Brassica oleracea
+    commonName: Broccoli
+  
+  - taxId: 3711
+    scientificName: Brassica rapa
+    commonName: Turnip
+  
+  - taxId: 90675
+    scientificName: Camelina sativa
+    commonName: Camelina
+
+  
+seedGenesFile: config/seed-genes-example.tsv
