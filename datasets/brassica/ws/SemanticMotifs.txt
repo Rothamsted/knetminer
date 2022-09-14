@@ -1,6 +1,7 @@
 #Finite States *=start state ^=end state
 1*	Gene
 2^	Publication
+222	Publication
 3^	MolFunc
 4^	BioProc
 5^	CelComp
@@ -35,9 +36,11 @@
 1-7	enc
 1-188	inv_in
 1-19	part_of
+1-2	pub_in
 1-2	occ_in
 1-22	differentially_expressed
 1-21	cooc_wi
+1-4	cooc_wi
 1-23	part_of
 1-9	regulates	2
 1-8	regulates	2
@@ -70,8 +73,10 @@
 10-14	has_domain
 10-15	cat_c
 10-21	cooc_wi
+10-4	cooc_wi
 
 9-2	pub_in
+9-2	occ_in
 9-3	has_function
 9-4	participates_in
 9-5	located_in
@@ -83,6 +88,7 @@
 9-20	has_variation
 9-22	differentially_expressed
 9-21	cooc_wi
+9-4	cooc_wi
 
 20-13	associated_with
 20-26	leads_to
@@ -104,3 +110,6 @@
 23-24	enriched_for
 23-25	part_of
 23-4	enriched_for
+
+222-4	occ_in
+222-21	occ_in
