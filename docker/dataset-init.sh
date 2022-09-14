@@ -52,7 +52,7 @@ if [[ -e "$dataset_dir" ]]; then
 		echo -e "\n  Refusing to override existing target \"$dataset_dir\", use --force to override it\n"
 		exit 1
 	fi
-	echo -e "\n  Updating existing targed dir\n"
+	echo -e "\n  Updating existing target dir\n"
 else
 	echo -e "\n  Creating target dir \"$dataset_dir\"\n"
 	mkdir "$dataset_dir"

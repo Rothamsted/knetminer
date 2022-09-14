@@ -1,8 +1,6 @@
-# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
-# used when no other option is given to Docker.
 # 
-# Your dataset will need its own version of this file. 
-# 
+# Entry point for the brassica instance configuration
+#
  
 "@includes":
 - defaults-cfg.yml
