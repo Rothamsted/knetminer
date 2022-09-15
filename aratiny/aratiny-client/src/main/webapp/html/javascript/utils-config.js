@@ -3,7 +3,8 @@
 // TODO:newConfig, remove
 // var api_base_url = "${knetminer.api.baseUrl}";
 var api_url = "";
-
+// temporary solution, tried ways to working with setupApiUrls but not working for the release page
+var ws_url = "${knetminer.api.url}"
 
 // TODO: to be removed, we shouldn't use it anymore with multi-specie code
 // boolean, tells if the data set contains reference genome info  
@@ -40,11 +41,18 @@ async function setupApiUrls ()
 
 		// TODO: possibly manage an ultimate non-recoverable failure happening here.
 		// Possibly use a nested try/catch
-		await $.getJSON ( guessApiUrl, js => {
-		// Initially, I've tried: api_url = await $.getJSON(...), but
-		// no idea why in this case api_url is set to js, instead of this returnvalue
-			api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
-		});
+    try{
+      await $.getJSON ( guessApiUrl, js => {
+        // Initially, I've tried: api_url = await $.getJSON(...), but
+        // no idea why in this case api_url is set to js, instead of this returnvalue
+          api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
+        });
+
+    }catch(e){
+
+      console.log(e)
+    }
+
   }
 
   // Set anything else that depends on it
@@ -53,12 +61,17 @@ async function setupApiUrls ()
 	// TODO: again, possibly manage this possible failure, with another try/catch
 	
   // Same trick with this other API (including \n escaping)
-  knetspace_api_host = await $.get (
-    api_url + "/dataset-info/knetspace-url",
-    ksUrl => ksUrl.replace ( /\n/g, "" )
-  );
+  try{
+    knetspace_api_host = await $.get (
+      api_url + "/dataset-info/knetspace-url",
+      ksUrl => ksUrl.replace ( /\n/g, "" )
+    );
+  
+    return api_url; // just in case the invoker wants it
+  }catch(e){
+    console.log(e)
+  }
 
-  return api_url; // just in case the invoker wants it
 }
 
 var enforce_genelist_limit= true; // enforce free user search limits (true/false).

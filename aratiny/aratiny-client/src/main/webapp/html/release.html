@@ -4,13 +4,8 @@
 <meta name="description" content="KnetMiner - Mining and prioritizing candidate genes in integrated knowledge networks for plant and animal genomes.">
 <meta name="Keywords" content="KnetMiner, tool, Gene, Genome, QTL, Ondex, Plant, Animal, Data Mining, Candidate Gene, Ranking, Prioritization, Bioinformatics" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- 
 
-  ====> TODO:newConfig, to be reviewed completely, placeholders should come from the API and managed
-        via Js or JSP.
-        
--->
-<title>${knetminer.specieName} Release Notes</title>
+<title></title>
 
 <link href="css/releaseNotes_style.css" rel="stylesheet" type="text/css">
 <!-- favicon added -->
@@ -19,11 +14,14 @@
 <!-- DISABLED: <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
 <!-- font-awesome css -->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
 <script type="text/javascript" src="javascript/releaseNotes/jquery-1.11.2.min.js"></script>
-<!-- <script type="text/javascript" src="javascript/dtjava.js"></script> -->
+<script type="text/javascript" src="javascript/releaseNotes/showNetworkStats.js"></script>
 <script type="text/javascript" src="javascript/utils-config.js"></script>  
-<script type="text/javascript" src="javascript/releaseNotes/showNetworkStats.js"></script>  
+
+
+<!-- <script type="text/javascript" src="javascript/dtjava.js"></script> -->
+
+
 
 <!-- font-awesome js -->
 <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
@@ -34,16 +32,17 @@
 <div id="header">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">	  
     	<a href="https://knetminer.com/" title="KnetMiner Home"><img class="logo-top" src="../html/image/KnetMiner_green_white.svg" alt="Logo" height="45" style="padding-top:3px; padding-bottom:2px; padding-left:12px;"></a>
- 	<div id="species_header">${knetminer.specieName}</div>
+ 	<div id="species_header"></div>
 
  </nav>  <!-- end navbar -->
 </div>	<!-- end header -->
   
 <div id="release-content">
-<h1 class="release-title">${knetminer.specieName} Release Notes</h1>
-<p id="network_stats" class="release-title">The ${knetminer.specieName} knowledge network contains:</p>
+<h1 id="release-title" class="release-title"></h1>
+<p id="network_stats" class="release-title"></p>
 <br/>
-${knetminer.releaseNotesHtml}
 </div>
+
+
 </body>
 </html>
