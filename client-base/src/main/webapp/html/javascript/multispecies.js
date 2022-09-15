@@ -1,4 +1,3 @@
-
 // multi-species object literal house functions that can be used outside independently outside
 multiSpeciesFeature = function ()
 {
@@ -58,7 +57,7 @@ multiSpeciesFeature = function ()
         }
 
         // setting Species Release Note 
-        $('#release_icon').attr("href",`${api_url + '/dataset-info/release-notes.html'}`);
+        $('#release_icon').attr("href",`html/release.html?Id=${currentSpecies.scientificName}`);
         return true;
     }
 
@@ -273,9 +272,3 @@ multiSpeciesFeature = function ()
         maps:drawGeneMaps
     }
 }(); 
-
-
-
-
-
-

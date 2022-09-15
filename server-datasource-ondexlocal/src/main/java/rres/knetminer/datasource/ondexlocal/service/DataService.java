@@ -68,9 +68,6 @@ public class DataService
 	 * picked up by Spring. That init() method gets configFilePath from the 
 	 * property {@link OndexLocalDataSource#CONFIG_FILE_PATH_PROP}, via {@link ConfigBootstrapWebListener}.
 	 * 
-	 * The configuration can also be loaded separately, 
-	 * see {@link OndexServiceProvider#initData()}.
-	 * 
 	 */
 	public void loadConfiguration ( String configFilePath )
 	{

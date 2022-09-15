@@ -60,7 +60,9 @@ public class OndexServiceProvider
 	private static volatile AbstractApplicationContext springContext;
 	
 	private final Logger log = LogManager.getLogger ( getClass() );
-	
+
+	private final static Logger slog = LogManager.getLogger ( OndexServiceProvider.class );
+
 	/**
 	 * It's a singleton, use {@link #getInstance()}.
 	 */
@@ -96,18 +98,23 @@ public class OndexServiceProvider
 	}
 
 	/**
-	 * @throws NotReadyException as explained in {@link #initData(String, Supplier)}, if the current instance is 
+	 * @throws NotReadyException as explained in {@link #initData()}, if the current instance is 
 	 * initialising its data, this is exception is thrown and the invoker should try again later.
+	 * This is what it might happen in calls to this method in the {@link OndexLocalDataSource} 
+	 * API-related methods.
 	 * 
-	 * @throws RuntimeException if {@link #initData()} failed with an exception (which is wrapped by the one returned
-	 * here). 
+	 * @throws RuntimeException if {@link #initData()} failed with an exception (which is wrapped 
+	 * by the one returned here). 
 	 */
 	public static OndexServiceProvider getInstance () 
 	{
 		initSpring ();
+		
 		var instance = springContext.getBean ( OndexServiceProvider.class );
+		
 		if ( instance.isInitializingData.get () ) 
 			throw new NotReadyException ( "Ondex/Knetminer is initialising its data, please try again later" );
+		
 		if ( instance.initException != null ) throw new RuntimeException ( 
 			"Ondex/Knetminer failed to initialise due to: " + instance.initException.getMessage (),
 			instance.initException
@@ -128,28 +135,28 @@ public class OndexServiceProvider
 			springContext = new AnnotationConfigApplicationContext ( "rres.knetminer.datasource.ondexlocal.service" );
 			springContext.registerShutdownHook ();
 			
-			getInstance ().log.info ( "Spring context for {} initialised", OndexServiceProvider.class.getSimpleName () );
+			slog.info ( "Spring context for {} initialised", OndexServiceProvider.class.getSimpleName () );
 		}		
 	}	
 
   /**
-   * Coordinates the initialisation of several sub-services.
+   * Coordinates the initialisation of this and several sub-services.
    * 
-   * This is called before anything can be used. The config file comes from 
-   * initialisation mechanisms like {@link ConfigFileHarvester}, see {@link OndexLocalDataSource#init()}.
+   * This requires that you first call {@link DataService#loadConfiguration(String)} on {@link #getDataService()}.
+   * Then, this should be the next method to call before you can use anything about the Ondex service provider.
    * 
-	 * This method wraps the whole initialisation into a critical block, when {@link #getInstance()} is
-	 * invoked asynchronously (ie, by another thread), it will throws an exception if the initialisation
-	 * isn't finished.
+	 * This method wraps the whole initialisation into a critical block marked by {@link #isInitializingData()}.
+	 * When {@link #getInstance()} is invoked asynchronously and the initialisation is still happening for the
+	 * instance, then a {@link NotReadyException} is thrown.  
 	 * 
 	 * This is designed mainly to allow that long-running Knetminer initialisations don't block the whole JVM and
-	 * hence the whole web container.
-	 * 
-	 * @param configPath the path of the configuration file. This can be null if the 
-	 * {@link DataService#loadConfiguration(String) configuration was already loaded}, see {@link #initData()}. 
+	 * hence the whole web container. The mechanism is used in the Knetminer API implementation 
+	 * {@link OndexLocalDataSource}, which indeed invokes this method asynchronously and later, when API methods
+	 * tries to {@link #getInstance() get an instance} of myself, a {@link NotReadyException} is raised if the 
+	 * initialisation isn't finished yet.
 	 * 
 	 */
-	public void initData ( String configPath )
+	public void initData ()
 	{
 		this.isInitializingData.getAndSet ( true );
 		try
@@ -158,15 +165,10 @@ public class OndexServiceProvider
 			
 			this.initException = null;
 			
-			if ( configPath != null )
-				this.dataService.loadConfiguration ( configPath );
-			else
-			{
-				if ( this.dataService.getConfiguration () == null ) throw new IllegalStateException ( 
-					"OndexServiceProvider.initData() requires a config file path or that you first load options from it" 
-				);
-				log.warn ( "Knetminer config path is null, relying on existing/previous config options" );
-			}
+			if ( this.dataService.getConfiguration () == null ) throw new IllegalStateException ( 
+					"OndexServiceProvider.initData() requires that you first load a configuration"
+				+ " via getDataService().loadConfiguration()" 
+			);
 			
 			dataService.initGraph ();
 			
@@ -186,22 +188,9 @@ public class OndexServiceProvider
 		}
 	}
 	
+	
 	/**
-	 * Calls {@link #initData(String)} with null. This is to be used when 
-	 * {@link DataService#loadOptions(String) you loaded the configuration} in advance and you don't need to repeat it. 
-	 * 
-	 * In turn, this is used in {@link OndexLocalDataSource} to get some basic information before starting the long-running
-	 * data load and setup.
-	 * 
-	 */
-	public void initData ()
-	{
-		initData ( null );
-	}
-
-
-	/**
-	 * @see #initData(String, Supplier).
+	 * @see #initData().
 	 */
 	public boolean isInitializingData ()
 	{

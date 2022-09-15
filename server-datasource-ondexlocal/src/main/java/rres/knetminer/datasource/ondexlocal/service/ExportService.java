@@ -797,9 +797,6 @@ public class ExportService
 		
 		List<QTL> qtls = QTL.fromStringList ( qtlsStr ); // it's never null					
 
-		DecimalFormat sfmt = new DecimalFormat ( "0.00" );
-		DecimalFormat pfmt = new DecimalFormat ( "0.00000" );
-
 		// final proxies needed within lambdas
 		final var foundConceptsRo = foundConcepts;
 		final var userGenesRo = userGenes;
@@ -923,8 +920,8 @@ public class ExportService
 			return 
 				result.getString ( "type" ) + "\t" + 
 				result.getString ( "name" ) + "\t" +
-				sfmt.format ( result.getDouble ( "score" ) ) + "\t" + 
-				pfmt.format ( result.getDouble ( "pvalue" ) ) + "\t" + 
+				result.getDouble ( "score" ) + "\t" + 
+				result.getDouble ( "pvalue" ) + "\t" + 
 				result.getInt ( "genesSize" ) + "\t" + 
 				userGenesStr + "\t" + 
 				result.getInt ( "qtlsSize" ) + "\t" +

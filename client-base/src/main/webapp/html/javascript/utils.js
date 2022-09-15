@@ -12,7 +12,7 @@ var knetmaps;
 */
 $(document).ready (
     function () {
-       setupApiUrls ()
+       setupApiUrls()
        .then ( function () 
        {
 					genemap = GENEMAP.GeneMap({apiUrl: api_url})
