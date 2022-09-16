@@ -7,31 +7,31 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2"  length="72208621" number="4">
+	<chromosome index="2"  length="48614681" number="2">
+		<band index="1">
+			<start>0</start>
+			<end>48614681</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="62190286" number="3">
+		<band index="1">
+			<start>0</start>
+			<end>62190286</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="72208621" number="4">
 		<band index="1">
 			<start>0</start>
 			<end>72208621</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3"  length="85736662" number="00">
-		<band index="1">
-			<start>0</start>
-			<end>85736662</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="4"  length="52070158" number="5">
+	<chromosome index="5"  length="52070158" number="5">
 		<band index="1">
 			<start>0</start>
 			<end>52070158</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="5"  length="48614681" number="2">
-		<band index="1">
-			<start>0</start>
-			<end>48614681</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
@@ -42,17 +42,17 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="7"  length="59756223" number="10">
+	<chromosome index="7"  length="56760843" number="7">
 		<band index="1">
 			<start>0</start>
-			<end>59756223</end>
+			<end>56760843</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="8"  length="45475667" number="11">
+	<chromosome index="8"  length="56938457" number="8">
 		<band index="1">
 			<start>0</start>
-			<end>45475667</end>
+			<end>56938457</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
@@ -63,31 +63,31 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="10"  length="61165649" number="12">
+	<chromosome index="10"  length="59756223" number="10">
+		<band index="1">
+			<start>0</start>
+			<end>59756223</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="45475667" number="11">
+		<band index="1">
+			<start>0</start>
+			<end>45475667</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="61165649" number="12">
 		<band index="1">
 			<start>0</start>
 			<end>61165649</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="11"  length="56760843" number="7">
+	<chromosome index="3"  length="85736662" number="00">
 		<band index="1">
 			<start>0</start>
-			<end>56760843</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="12"  length="62190286" number="3">
-		<band index="1">
-			<start>0</start>
-			<end>62190286</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="13"  length="56938457" number="8">
-		<band index="1">
-			<start>0</start>
-			<end>56938457</end>
+			<end>85736662</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
