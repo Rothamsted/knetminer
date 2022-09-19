@@ -17,6 +17,14 @@ oxl: ${project.build.directory}/dependency/poaceae-sample.oxl
 "dataset @merge":
   id: aratiny
   title: Aratiny dataset
+  version: ${project.version}
+  keywords: "Aratiny, Arabidopsis, Knetminer Test"
+  description: >-
+    A very small test dataset, based on subsampling the Poaceae dataset, and 
+    used to build a test/reference Knetminer instance.
+
+  # creationDate: default is the OXL'a last modified time  
+  
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
   # backgroundImage: config/background.jpg # this is the default 

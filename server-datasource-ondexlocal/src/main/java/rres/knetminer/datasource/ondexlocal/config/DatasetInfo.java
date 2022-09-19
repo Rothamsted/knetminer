@@ -45,8 +45,6 @@ public interface DatasetInfo
 
 	String getOrganization ();
 
-	String getProvider ();
-
 	List<SpecieInfo> getSpecies ();
 		
 }

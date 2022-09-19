@@ -453,7 +453,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
     }
     summaryJSON.put ( "dbDateCreated", creationDateStr );
 
-    summaryJSON.put ("provider", dsetInfo.getProvider () );
+    summaryJSON.put ("provider", dsetInfo.getOrganization () );
     
     String jsonString = summaryJSON.toString();
     
