@@ -177,21 +177,19 @@
   }
   
   .navbar-select{
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      margin: 0;
-      height: 70%;
-      background: transparent;
-      border: 0.8px solid black;
-      border-radius: 6px;
-      color: #38c768;
-      font-weight:700;
-      padding-left: 10px;
-      outline: none;
-      z-index: 10;
-      margin-left: 1rem;
-      font-size: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    width: fit-content;
+    margin: 0;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #38c768;
+    font-weight: 700;
+    margin:0 10px;
+    outline: none;
+    z-index: 10;
+    font-size: 1rem;
   }
   
   .navbar-items{
@@ -1154,10 +1152,7 @@
   
   
   #species-dropimg {
-      top: 20px;
-      right: 4.8pc;
-      position: absolute;
-      z-index: 0;
+      margin-right: 8px;
     }
   
   
@@ -1279,8 +1274,8 @@
 }
 
 @media (min-width:1440px){
-        #species_header{width:40%}
-        #search{width:62%;} 
+        #species_header{width:42%}
+        #search{width:70%;} 
 }
    
   
@@ -1302,7 +1297,7 @@
       }
       .navbar-items{ padding:0.5rem 10rem
       }
-      .logo-items{ padding:0.5rem 10rem
+      .logo-items{ padding:0.5rem 10rem; width:60%;
       };
       #species_header{ width:28%;}
   
@@ -1315,3 +1310,20 @@
       align-items: center;
       justify-content: flex-end;
   }
+
+
+  #pGSearch_title{
+    margin: 1.5rem auto;
+    width: 70%;
+  }
+
+  .navbarselect-container{
+    margin: 0 0.5rem;
+    height: 70%;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 6px;
+  }
+

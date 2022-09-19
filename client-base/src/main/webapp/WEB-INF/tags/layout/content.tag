@@ -79,7 +79,7 @@
 				</li>
 				<li id="genomeorqtlsearchbox" style="width: 70%;padding-bottom: 20px;">
     				<br>
-				    <b><img id="region_search" src="html/image/expand.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
+				    <b><img id="region_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
                     <hr width="60%" align="left">
                     <div id="region_search_area">
                         <table id="regions_table">
@@ -135,14 +135,15 @@
 			</ul>
 		</form>
 	</div>
+	<div id="pGSearch_title"></div>
 
 	<div id="tabviewer" style="display: none;">
 
     	<div id="tabviewer_buttons">
         	<div class="button_off" id="resultsTable_button"><a href="javascript:;" onclick="activateButton('resultsTable');">Gene View</a> </div>
         <!--	<div class="menu_button button_off" id="pGViewer_button"><a href="javascript:;" onclick="activateButton('pGViewer');">Map View</a></div> -->
+		<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
 			<div class="button_on" id="genemap-tab_button"><a href="javascript:;" onclick="activateButton('genemap-tab');">Map View</a></div>
-        	<div class="menu_button button_on" id="evidenceTable_button"><a href="javascript:;" onclick="activateButton('evidenceTable');">Evidence View</a> </div>
         	<div class="button_on network-default" id="NetworkCanvas_button"><a href="javascript:;" onclick="activateButton('NetworkCanvas');">Network View</a> </div>
         </div>
 		

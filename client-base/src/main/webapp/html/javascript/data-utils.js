@@ -316,7 +316,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              candidateGenes = 1000;
          }
 
-         $("#pGViewer_title").replaceWith(genomicViewTitle);
+         $("#pGSearch_title").replaceWith(genomicViewTitle);
          // Setup the mapview component
          var annotationsMap = data.gviewer;
 
@@ -342,7 +342,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
 // function creates Genomic title
 function createGenomicViewTitle(message,status){
-    var genomicTemplate = `<div id="pGViewer_title"><span class="pGViewer_title_line"> ${status ? 'Your Search': 'In total'} ${message}</span>
+    var genomicTemplate = `<div id="pGSearch_title"><span class="pGViewer_title_line"> ${status ? 'Your Search': 'In total'} ${message}</span>
     </div> `; 
     return genomicTemplate; 
 }
@@ -522,7 +522,6 @@ function changeSpecies(selectElement){
                 // TODO what if user has two or more genome region present
                 setTimeout(function(){
                     findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
-                    $('#genes1').focus(); 
 
                 },100)
             }

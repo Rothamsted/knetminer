@@ -8,9 +8,12 @@
 			</a>
 
 			<div id="species_header">
-				<select onchange="changeSpecies(this)" class="navbar-select"></select>
-					<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image" >
-				<a id="release_icon" target="_blank" href="" title="Release Notes">
+				<div class="navbarselect-container">
+					<select onchange="changeSpecies(this)" class="navbar-select"></select>
+					<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image">
+				</div>
+				
+				<div id="release_icon" onclick="fetchStats()">
 					<lord-icon
 						src="https://cdn.lordicon.com/nocovwne.json"
 						trigger="loop"
@@ -19,7 +22,7 @@
 						stroke="25"
 						style="width:42px;height:42px">
 					</lord-icon>
-				</a>
+				</div>
 			</div>
 		</ul>
     	

@@ -1,38 +1,31 @@
 
-$(document).ready(
 
- function(){
-        setPageInfo()
-        fetchStats();
- }
 
-)
-      
 
+
+var dbVersion = '', dbTitle='';
 
 /*
- * Function to take extract and set species scientific name from url. 
+ * Function gets release note data title and version number from /dataset-info api call. 
  */
-function setPageInfo(){
-    var currentUrl = window.location.search
-    var urlParams = new URLSearchParams(currentUrl);
-    var speciesName = urlParams.get('Id').replace('/%20/g', '');
-    var releaseNoteText = `${speciesName} Release Notes`; 
-    document.title = releaseNoteText; 
-    $('#release-title').html(releaseNoteText); 
-    $('#network_stats').html(`The ${speciesName} knowledge network contains:`); 
-    $('#species_header').html(speciesName)
+function getDbDetails(){
+    var dbUrl = api_url + "/dataset-info";
+    $.get(dbUrl).done(function (dbData) { 
+        dbTitle = dbData.id,
+        dbVersion =  dbData.version 
+    }).fail(function () { console.log("Error fetching dbVersion"); });
 }
 
 /*
  * Function to read .tab file containing stats about the knowledge network & its mappings & to update 
  * them in the release.html webpage.
  */
-function fetchStats(){
 
-    var fileUrl = ws_url + "/latestNetworkStats";
+ async function fetchStats(){
+    await getDbDetails(); 
+    var fileUrl =api_url + "/latestNetworkStats";
 
-    $.get(fileUrl).done(function (data) {
+        $.get(fileUrl).done(function (data) {
             console.log(data); 
             var resp = data.stats.split("\n");
             var totalGenes = fetchValue(resp[1]);
@@ -45,9 +38,11 @@ function fetchStats(){
             // calculate concept occurrence percentage.
             var conceptPercentage = (geneEvidenceConcepts / (totalConcepts - totalGenes)) * 100;
             conceptPercentage = conceptPercentage.toFixed(2);
+    
+    
             
             // Display stats data.
-            var statsText = "<br/><ul><li>KnetMiner KG version: " + 0 + "</li>" +
+            var statsText = "<br/><ul><li>KnetMiner KG version: " + dbVersion + "</li>" +
                     "<li>Number of genes: " + totalGenes + "</li>" +
                     "<li>Total concepts: <strong>" + totalConcepts + "</strong></li>" +
                     "<li>Total relations: <strong>" + totalRelations + "</strong></li>" +
@@ -103,16 +98,39 @@ function fetchStats(){
     
             cc_table += "</table></table></table>";
     
-            $("#network_stats").append(statsText + cc_table);
-            $("#network_stats th:contains('Avg.degree')").attr('title', "The Avg.degree calculates the average degree of inwards and outwards connections to a node, given as (for each concept) the total number of unique relationships divided by the total number of concepts present in the graph");
+    
+            var content = `<div id="release-content">
+            <p id="network_stats" > 
+            <span>The ${dbTitle} knowledge network contains:</span>
+            ${statsText} ${cc_table}
+            </p>
+            <br/>
+            </div>`
+    
+            var releaseModal = new jBox('Modal', {
+                id: 'releaseBox',
+                animation: 'pulse',
+                title: `<font size="5"><font color="white">${dbTitle} </font><font color="#51CE7B">Release </font><font size="5"><font color="white"> Notes</font>`,
+                content: content ,
+                cancelButton: 'Exit',
+                draggable: 'title',
+                attributes: {
+                    x: 'center',
+                    y: 'top'
+                },
+                delayOpen: 50
+            });
+    
+            releaseModal.open(); 
+        
         }
         ).fail(function () {
             console.log("Error occurred while retrieving Network details");
         });
+
+
    
 }
-
-
 
 function fetchValue(valText) {
     var start = valText.indexOf(">");

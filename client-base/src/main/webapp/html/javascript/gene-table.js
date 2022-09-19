@@ -54,15 +54,14 @@ function createGenesTable(text, keyword, rows)
 		
 		// TODO: is there a reason for these amateur tests against true?
 		// TODO: what does this flag mean?! 
-		if (multiorganisms == true)
+	
 			table += '<th width="60">' + hTaxId + '</th>';
+	
 		
-		// TODO: this flag has to disappear (ref genome always on true)
-		if (true || reference_genome)
-		{
+		
 			table += '<th width="60">' + hChromosome + '</th>';
 			table += '<th width="70">' + hChrStart + '</th>';
-		}
+		
 		table += '<th width="220">' + hEvidence + '</th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
@@ -99,7 +98,7 @@ function createGenesTable(text, keyword, rows)
 
 			var taxId = values[5];
 			var taxIdTd = ''
-			if (multiorganisms == true)
+		
 				var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
 
 			// Currently not shown
@@ -110,10 +109,7 @@ function createGenesTable(text, keyword, rows)
 			var chrTd = '';
 			var chrStartTd = '';
 			
-			// TODO: this flag has to disappear (ref genome always on true)
-			// exprimenting 
-			if (true || reference_genome)
-			{
+			
 				var chr = values[3];
 				var chrStart = values[4];
 				var chrTd = '<td>' + chr + '</td>';
@@ -168,7 +164,7 @@ function createGenesTable(text, keyword, rows)
 					}
 				} // if ( withinQTLs.length )
 				qtlTd += '</td>';
-			} // if ref_genome
+		
 
 			// For each evidence show the images - start
 			var evidenceTd = '<td>';

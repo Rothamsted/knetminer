@@ -181,7 +181,9 @@ function loginModalInit() {
             },
             delayOpen: 50
         });
+
         loginModal.open(); // New instance of modal (Not ideal)
+
         // Checking for blank fields on clicking login
         $('#KnetSpacelogin').on('click', function () {
             fetchCredentials(loginModal);
@@ -207,7 +209,6 @@ function loginModalToggle() {
             // If the user isn't logged in then we return undiefined so we can initalize the login button.
             $('#login_icon').click(function (e) {
                 loginModalInit();
-
             });
             return false;
         }

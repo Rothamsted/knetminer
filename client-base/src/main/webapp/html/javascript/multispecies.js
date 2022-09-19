@@ -6,7 +6,6 @@ multiSpeciesFeature = function ()
     // function get lists of registered species from api_url+/species
     function getSpeciesList()
     {
-        activateSpinner('#wrapper'); 
         console.log('getting species list')
     
         $.get(api_url + '/dataset-info','').done( function(data){
@@ -14,13 +13,13 @@ multiSpeciesFeature = function ()
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
                 console.log('specie dropdown created')
+                multiSpeciesEvents(speciesInfos); 
                 deactivateSpinner("#wrapper");
-                multiSpeciesEvents(speciesInfos)
             }
         }).fail(function(xhr,status,errolog){
             errorComponent('#pGViewer_title',xhr);
             // when user internet connection is down
-            deactivateSpinner("#wrapper");
+         
             $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
             $('#resetknet').hide(); 
             $('#searchBtn').hide(); 
@@ -56,8 +55,6 @@ multiSpeciesFeature = function ()
             $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
         }
 
-        // setting Species Release Note 
-        $('#release_icon').attr("href",`html/release.html?Id=${currentSpecies.scientificName}`);
         return true;
     }
 
