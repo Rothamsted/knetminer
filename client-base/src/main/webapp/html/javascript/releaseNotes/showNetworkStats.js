@@ -13,7 +13,10 @@ function getDbDetails(){
     $.get(dbUrl).done(function (dbData) { 
         dbTitle = dbData.id,
         dbVersion =  dbData.version 
-    }).fail(function () { console.log("Error fetching dbVersion"); });
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+			logError ( "Error while invoking /dataset-info:", jqXHR, textStatus, errorThrown );
+    });
 }
 
 /*
@@ -21,7 +24,7 @@ function getDbDetails(){
  * them in the release.html webpage.
  */
 
- async function fetchStats(){
+async function fetchStats(){
     await getDbDetails(); 
     var fileUrl =api_url + "/latestNetworkStats";
 
@@ -124,12 +127,9 @@ function getDbDetails(){
             releaseModal.open(); 
         
         }
-        ).fail(function () {
-            console.log("Error occurred while retrieving Network details");
-        });
-
-
-   
+        ).fail(function (jqXHR, textStatus, errorThrown) {
+					logError ( "Error while invoking /latestNetworkStats:", jqXHR, textStatus, errorThrown );
+	      });
 }
 
 function fetchValue(valText) {

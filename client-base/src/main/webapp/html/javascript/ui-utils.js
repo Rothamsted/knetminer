@@ -206,3 +206,11 @@ $(function(){
     // 
 })
 
+/** 
+ * Small helper to log an error within the jQuery functions like $.get().fail( jqXHR, status, errorlog )
+*/
+function logError ( msgPrefix, jqXHR, textStatus, errorThrown )
+{	
+	var details = jqXHR.responseJSON ? jqXHR.responseJSON : jqXHR.responseText
+	console.log( msgPrefix, details );
+}
