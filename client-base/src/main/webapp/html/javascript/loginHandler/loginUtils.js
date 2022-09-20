@@ -145,7 +145,7 @@ function loginUtilsInit ()
 
 // If the API URL isn't defined yet, we're on the client app, not the server app, this is already 
 // invoked by the general handler in utils, so ignore it here.
-if ( api_url ) $(document).ready( loginUtilsInit );
+// if ( api_url ) $(document).ready( loginUtilsInit );
 
 /* 
  * initialize  loginModal
@@ -271,8 +271,8 @@ function logOut(knetspace_address) {
     eraseCookie(cookie);
     $('#login_icon').attr("title", "Sign in"); // insert new link
     $('#login_icon').text("Sign in");
-    //$('#login_icon').on('click');
-    //$('#login_icon').css("color", "white");
+    $('#signup').text('Sign Up')
+    $('#signup').attr('href','https://knetminer.com/beta/knetspace/sign-up/');
 }
 
 /** Fetches user credentials 
@@ -285,10 +285,7 @@ function fetchCredentials(loginModal) {
         const knetspace_address = ksAddress;
         isLoggedIn().then(function (bool) {
             if (bool) {
-//                if (!Boolean(loginModal) || loginModal === 'undefined') {
-//                    console.log(loginModal);
-//                    loginModal.destroy();
-//                }
+
                 knetSpaceProfile().then(function (myJson) {
                     let content = "Welcome, " + myJson.username; // Welcome the user
                     jboxNotice(content, 'blue', 60, 1000);
@@ -298,6 +295,8 @@ function fetchCredentials(loginModal) {
                     $('#login_icon').attr("title", "");
                     $('#profile_icon').attr("title", "");
                     $('#login_icon').text(" " + myJson.username);
+                    $('#signup').text("My KnetSpace")
+                    $('#signup').attr('href', 'https://knetminer.com/beta/knetspace/network/');
                     $('#login_icon').off('click');
                     $('#text').text("");
 
@@ -339,7 +338,7 @@ function fetchCredentials(loginModal) {
                         // Profile modal box
                         var profileModal = new jBox('Modal', {
                             animation: 'pulse', title: profileTitle, content: profile_menu_html, cancelButton: 'Exit', draggable: 'title',
-                            target: $('#release_icon'), width: 350, offset: {x: 100, y: 200}, delayOpen: 100
+                            target: $('#citeus'), width: 350, offset: {x: 100, y: 200}, delayOpen: 100
                         });
                         profileModal.open();
                         // Sign out button logic, perform api request for logging out

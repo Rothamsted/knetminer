@@ -48,11 +48,11 @@ multiSpeciesFeature = function ()
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
-        document.title = currentSpecies.scientificName;
-        for(var info in currentSpecies){
+        var species = currentSpecies(data)
+        document.title = species.scientificName;
+        for(var info in species){
             const speciesCapital = capitaliseFirstLetter(info); 
-            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
+            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ species[info] +'</span> </div>').appendTo('#speciename_container');
         }
 
         return true;
@@ -261,11 +261,16 @@ multiSpeciesFeature = function ()
             }
     
     }
+    function currentSpecies(data){
+        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
+        return currentSpecies
+    }
     //returned values that are called outside the module 
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
         taxId: setTaxId,
-        maps:drawGeneMaps
+        maps:drawGeneMaps,
+        speciesData: currentSpecies
     }
 }(); 

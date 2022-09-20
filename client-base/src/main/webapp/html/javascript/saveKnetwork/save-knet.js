@@ -34,12 +34,13 @@
    // add api_graphSummary to the above as well, if exists.
    var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
    if(apiGraphSummary !== null && apiGraphSummary.size > 0) {
-      speciesTaxid= apiGraphSummary.get("speciesTaxid");
-      speciesName= apiGraphSummary.get("speciesName");
-      dbVersion= apiGraphSummary.get("dbVersion");
-      dbDateCreated= apiGraphSummary.get("dbDateCreated");
-      sourceOrganization= apiGraphSummary.get("sourceOrganization");
-      provider= apiGraphSummary.get("provider");
+        var currentSpecies =  multiSpeciesFeature.speciesData(apiGraphSummary.species)
+      speciesTaxid= currentSpecies.taxId;
+      speciesName= currentSpecies.scientificName;
+      dbVersion= apiGraphSummary.version;
+      dbDateCreated= apiGraphSummary.creationDate;
+      sourceOrganization= apiGraphSummary.organization;
+      provider= apiGraphSummary.organization;
       //console.log(speciesTaxid +","+ speciesName +","+ dbVersion +","+ dbDateCreated +","+ sourceOrganization +","+ provider); // test
      }
 
@@ -215,12 +216,10 @@
                             uploadModal.toggle();
                             var netContentSuccess = "Network " + knetName + " submitted!<br><br>" + "<a href='" + knetspace_api_host + "/network' target='_blank' style='color:white;' class='profileClass'><b>View it in KnetSpace</b></a>";
                             jboxNotice(netContentSuccess, 'blue', 60, 15000);
-                            //console.log("PATCH response: " + data);
                         });
             }
 
         } else {
-            //jboxNotice("You're not logged in! Please log in!", 'red', 60, 1000)
             $('#loginBox').remove();
             loginModalInit();
         }
@@ -254,21 +253,14 @@
   
  // fetch graphSummary from KnetMiner server API.
  function getGraphDBSummary() {
-   var graphSummary= new Map();
+   var graphSummary= '';
    if(typeof api_url !== "undefined") {
         $.ajax({
             async: false,
             type: 'GET',
-            url: api_url + '/dataSource',
+            url: api_url + '/dataset-info',
             success: function (data) {
-                var api_response= data.dataSource.replace(/\"/g,"").trim().split(",");
-                api_response.forEach(function(val) {
-                    var values= val.split(":");
-                    var k= values[0].trim();
-                    var v= values[1].trim();
-                    if(k === "dbDateCreated") { v= values[1] +":"+ values[2]; }
-                    graphSummary.set(k, v);
-                });
+                graphSummary = data 
            }
        });
      }
