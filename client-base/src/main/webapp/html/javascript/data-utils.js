@@ -112,7 +112,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                 $('#tabviewer').show(); // show Tab buttons and viewer
                 // Show loading spinner on 'search' div
                 activateSpinner("#search");
-                 $.post({
+                $.post({
                      url: api_url + request,
                      timeout: 1000000,
                      startTime: performance.now(),
@@ -121,9 +121,8 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                          "Content-Type": "application/json; charset=utf-8"
                      },
                      datatype: "json",
-                     data: JSON.stringify(requestParams)
-                     })
-                     .fail(function (xhr,status,errorlog) {
+                     data: JSON.stringify(requestParams),
+                     fail: function (xhr,status,errorlog) {
                          $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
                          var server_error= JSON.parse(xhr.responseText); // full error json from server
                          var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
@@ -131,8 +130,8 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                          alert(errorMsg);
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
-                     })
-                     .success(function (data) {
+                     },
+                     success: function (data) {
                         var gviewer = data.gviewer
                          var querytime= performance.now() - this.startTime; // query response time
                          var queryseconds= querytime/1000;
@@ -143,7 +142,9 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
                         genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-                     });
+                     }
+                });
+                 
              }
              else {
                  $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');

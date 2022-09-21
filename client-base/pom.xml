@@ -25,8 +25,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<!-- Beware that none of this is filtered -->
 				<configuration>
-					<packagingIncludes>
+					<!-- packagingIncludes>
 						html/css/**,
 						html/GeneMap/dist/**,
 						html/GeneView/**,
@@ -35,22 +36,14 @@
 						html/javascript/**,
 						html/KnetMaps/dist/**,
 						WEB-INF/**
-					</packagingIncludes>
+					</packagingIncludes -->
+					<webResources>
+	          <resource>
+	              <directory>src/main/generated/webapp</directory>
+	          </resource>
+					</webResources>
 				</configuration>
 			</plugin>
-		  <plugin>
-		    <artifactId>maven-clean-plugin</artifactId>
-		    <configuration>
-		      <filesets>
-		        <fileset>
-		          <directory>client-base/src/main/webapp/html/KnetMaps/node_modules</directory>
-		        </fileset>
-		        <fileset>
-		          <directory>client-base/src/main/webapp/html/GeneMap/bower_components</directory>
-		        </fileset>
-		      </filesets>
-		    </configuration>
-		  </plugin>		
 		</plugins>
 	</build>
 

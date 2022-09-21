@@ -1,0 +1,290 @@
+/* 
+    Last Modified on : 27-Mar-2017
+    Author     : Ajit Singh
+    Description: CSS for KnetMaps
+*/
+
+#knet-maps {
+    /*width: 90%;*/
+    height: 90%;
+    margin-left: 20px;
+    /*border: 1px dashed grey;*/
+}
+
+/*
+ * maximise Overlay/ full screen
+ */
+ /*#knet-maps*/
+ .full_screen {
+  position: fixed; 
+  width: 90%; /*90vw;*/ /*900px;*/
+  height: 90%; /*550px;*/
+  top: 5%; 
+  left: 5vw; 
+  margin-left: 0px; /*20px;*/
+  margin-top: 0px;
+  border-style : solid;
+  border-color : gray;
+  border-width : 5px;
+  border-radius : /*15*/5px;
+  /*padding : 30px;*/
+  background-color: #FFF;
+  box-sizing : border-box;
+  z-index: 2;
+ }
+
+ #knetmaps-menu {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#knetmaps-menu input#maximizeOverlay.max.unhover { border: none; width:36px; height:36px; background:url("../img/maximizeOverlay.png") no-repeat; }
+#knetmaps-menu input#maximizeOverlay.min.unhover { border: none; width:36px; height:36px; background:url("../img/minimizeOverlay.png") no-repeat; }
+#knetmaps-menu input#showAll.unhover { border: none; width:36px; height:36px; background:url("../img/showAll.png") no-repeat; }
+#knetmaps-menu input#relayoutNetwork.unhover { border: none; width:36px; height:36px; background:url("../img/relayoutNetwork.png") no-repeat; }
+#knetmaps-menu input#openItemInfoBtn.unhover { border: none; width:36px; height:36px; background:url("../img/openItemInfoBtn.png") no-repeat; }
+#knetmaps-menu input#resetNetwork.unhover { border: none; width:36px; height:36px; background:url("../img/resetNetwork.png") no-repeat; }
+/* #knetmaps-menu input#savePNG.unhover { border: none; width:36px; height:36px; background:url("../img/savePNG.png") no-repeat; }
+#knetmaps-menu input#saveJSON.unhover { border: none; width:36px; height:36px; background:url("../img/saveJSON.png") no-repeat; } */
+#knetmaps-menu input#helpURL.unhover { border: none; width:36px; height:36px; background:url("../img/help.png") no-repeat; }
+/* #knetmaps-menu input#openJSON.unhover { border: none; width:36px; height:36px; background:url("../img/openJSON.png") no-repeat; } */
+input#btnCloseItemInfoPane { border: none; width:22px; height:22px; background:url("../img/close-icon.png") no-repeat; }
+
+#knetmaps-menu input#maximizeOverlay.max.hover { border: none; width:36px; height:36px; background:url("../img/maximizeOverlay_hover.png") no-repeat; }
+#knetmaps-menu input#maximizeOverlay.min.hover { border: none; width:36px; height:36px; background:url("../img/minimizeOverlay_hover.png") no-repeat; }
+#knetmaps-menu input#showAll.hover { border: none; width:36px; height:36px; background:url("../img/showAll_hover.png") no-repeat; }
+#knetmaps-menu input#relayoutNetwork.hover { border: none; width:36px; height:36px; background:url("../img/relayoutNetwork_hover.png") no-repeat; }
+#knetmaps-menu input#openItemInfoBtn.hover { border: none; width:36px; height:36px; background:url("../img/openItemInfoBtn_hover.png") no-repeat; }
+#knetmaps-menu input#resetNetwork.hover { border: none; width:36px; height:36px; background:url("../img/resetNetwork_hover.png") no-repeat; }
+/* #knetmaps-menu input#savePNG.hover { border: none; width:36px; height:36px; background:url("../img/savePNG_hover.png") no-repeat; }
+#knetmaps-menu input#saveJSON.hover { border: none; width:36px; height:36px; background:url("../img/saveJSON_hover.png") no-repeat; } */
+#knetmaps-menu input#helpURL.hover { border: none; width:36px; height:36px; background:url("../img/help_hover.png") no-repeat; }
+/* #knetmaps-menu input#openJSON.hover { border: none; width:36px; height:36px; background:url("../img/openJSON_hover.png") no-repeat; } */
+input.knetSynonym { border: none; width:22px; height:22px; background:url("../img/labelEye.png") }
+
+input.knetCon_Biological_Process { border: none; width:22px; height:22px; background:url("../img/Biological_Process.png") }
+input.knetCon_Cellular_Component { border: none; width:22px; height:22px; background:url("../img/Cellular_Component.png") }
+input.knetCon_CoExpCluster { border: none; width:22px; height:22px; background:url("../img/CoExpCluster.png") }
+input.knetCon_CoExpStudy { border: none; width:22px; height:22px; background:url("../img/CoExpStudy.png") }
+input.knetCon_Compound { border: none; width:22px; height:22px; background:url("../img/Compound.png") }
+input.knetCon_Comp { border: none; width:22px; height:22px; background:url("../img/Compound.png") }
+input.knetCon_DGES { border: none; width:22px; height:22px; background:url("../img/DGES.png") }
+input.knetCon_Disease { border: none; width:22px; height:22px; background:url("../img/Disease.png") }
+input.knetCon_Drug { border: none; width:22px; height:22px; background:url("../img/Drug.png") }
+input.knetCon_Enzyme { border: none; width:22px; height:22px; background:url("../img/Enzyme.png") }
+input.knetCon_Enzyme_Classification { border: none; width:22px; height:22px; background:url("../img/Enzyme_Classification.png") }
+input.knetCon_Gene { border: none; width:22px; height:22px; background:url("../img/Gene.png") }
+input.knetCon_Molecular_Function { border: none; width:22px; height:22px; background:url("../img/Molecular_Function.png") }
+input.knetCon_Pathway { border: none; width:22px; height:22px; background:url("../img/Pathway.png") }
+input.knetCon_Phenotype { border: none; width:22px; height:22px; background:url("../img/Phenotype.png") }
+input.knetCon_PlantOntologyTerm { border: none; width:22px; height:22px; background:url("../img/PlantOntologyTerm.png") }
+input.knetCon_Protein { border: none; width:22px; height:22px; background:url("../img/Protein.png") }
+input.knetCon_Protein_Domain { border: none; width:22px; height:22px; background:url("../img/Protein_Domain.png") }
+input.knetCon_Publication { border: none; width:22px; height:22px; background:url("../img/Publication.png") }
+input.knetCon_QTL { border: none; width:22px; height:22px; background:url("../img/QTL.png") }
+input.knetCon_Quantitative_Trait_Locus { border: none; width:22px; height:22px; background:url("../img/Quantitative_Trait_Locus.png") }
+input.knetCon_Reaction { border: none; width:22px; height:22px; background:url("../img/Reaction.png") }
+input.knetCon_Scaffold { border: none; width:22px; height:22px; background:url("../img/Scaffold.png") }
+input.knetCon_Allele { border: none; width:22px; height:22px; background:url("../img/Allele.png") }
+input.knetCon_SNP { border: none; width:22px; height:22px; background:url("../img/SNP.png") }
+input.knetCon_SNPEffect { border: none; width:22px; height:22px; background:url("../img/SNPEffect.png") }
+input.knetCon_Trait { border: none; width:22px; height:22px; background:url("../img/Trait.png") }
+input.knetCon_Trait_Ontology { border: none; width:22px; height:22px; background:url("../img/Trait_Ontology.png") }
+
+/*.full_screen #knetmaps-menu {
+  margin-top: 0px;
+}*/
+
+ /* KnetMaps dropdowns */
+ .knet-dropdowns {
+  /*display: inline;*/
+  margin-top:5px;
+  height: 30px; /*25px;*/
+  font-size: 15px;
+  vertical-align:top; width: 140px;
+ }
+ 
+      /* CytoscapeJS "core" container */
+      #cy {
+        height: 80%/*85%*/; /*750px;*/
+        width: 95%/*98*/; /*450px;*/
+        position: relative;
+        background: white;
+        border: 1px solid black;
+        /*overflow: hidden;
+        margin: auto;*/
+        /*margin-top: 10px;*/
+        margin-bottom: 5px;
+        margin-left: 5px;
+       }
+
+   #statsLegend {
+     height: 20px;
+     /*overflow-y: auto;*/
+     font-size: 16px;
+     font-weight: bold;
+     color: #2A2A2A;
+     /*margin-bottom: 25px;
+	 position: absolute;*/
+   }
+
+      #itemInfo {
+       /*display:none;*/
+/*       position: fixed; background-color: white; top:100px; right:0; z-index:1; width: 350px; height:550px;*/
+       position: absolute; right: 0; z-index: 5; width: 30%; height:/*85*/80%; background-color: white; 
+       border: 2px solid #444444;
+       /*margin-top: 2px;
+       margin-bottom: 2px;*/
+       resize: horizontal; max-width: 60%;
+      }
+
+      #itemInfo_Table {
+       font-family: arial;
+       background-color: white; /*#C0C0C0;*/
+       /*margin: 10px 0pt 15px;*/
+       font-size: 10pt;
+       width: 100%;
+       text-align: left;
+       overflow:auto;
+       max-height:280px;
+       overflow-x:hidden;
+      }
+      
+      div.infoDiv {
+	    width:/*100;%*/ 40%;       /* table width will be 99% of this*/
+	    max-height: 100%; /*95%;*/ /*600px;*/ /*400px;*/    /* must be greater than tbody*/
+	    overflow:auto;
+	    margin:0 auto;
+            border: 1px;
+       }
+
+      div.infoDiv table {
+        width:99%;  /*100% of container produces horiz. scroll in Mozilla*/
+	    border:none;
+	    border-spacing: 0px;
+	    background-color: transparent;
+	    border: 1px solid #C2C2C2;
+	    border-collapse: collapse;
+        /* Table not visible, by default. */
+        display: none;
+      }
+
+      div.infoDiv th {
+        padding: 4px;
+        border: none;
+      }
+
+      div.infoDiv td {
+        padding: 4px;
+        border: 1px solid #C2C2C2;
+      }
+
+      table.infoTable thead th {
+	background-color: white; /*#C0C0C0;*/
+	color: black;
+	font-size: 10pt;
+	padding: 4px;
+      }
+
+      div.infoDiv tbody {
+	overflow: auto;
+	max-height: 280px;
+	overflow-x: hidden;
+      }
+
+     div.infoDiv table>tbody {
+       overflow: auto;
+       max-height: 280px;
+       overflow-x: hidden;
+     }
+
+     div.infoDiv table>tbody tr {
+       height: auto;
+     }
+
+     div.infoDiv table>thead tr {
+       position: relative;
+       top: 0px; /*expression(offsetParent.scrollTop); IE5+ only*/
+     }
+
+      /* Button to close the Item Info pane */
+      #btnCloseItemInfoPane {
+       position: relative;
+       float: right;
+       margin-right: 1%;
+       margin-top: 1%;
+       margin-bottom: 1%;
+      }
+
+      /* Item Info. dialog box */
+       .ui-widget-header,.ui-state-default, ui-button {
+          background: #277da7; /*#b9cd6d;*/
+          border: 1px solid black;
+          color: #FFFFFF;
+		  font-weight: bold;
+         }
+
+       .ui-widget-content {
+          background: white;
+          border: 1px solid #277da7; /*#b9cd6d;*/
+          color: black;
+         }
+
+      /* Layouts */
+      #animationCheckbox {
+       float: right
+      }
+   
+      /* cytoscapeJS radial context menu */
+      .cxtmenu-content {
+       font-size: 12px;
+      }
+
+     /* Interactive Legend */
+     #knetLegend {
+      border: 1px dotted gray;
+      width: 95%; /*margin: auto;*/
+    /*  padding-top: 5px;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      margin-left: 5px;*/
+      margin-left: 5px;
+      background: white;
+      font-size: 14px;
+      color: #2A2A2A;
+      cursor:pointer;
+	  display: table/*table-row*/;
+     }
+
+     .knetLegend_row {
+      display: table-row;
+     }
+
+     .knetLegend_cell {
+      display: table-cell;
+      width: 50px;
+      height: 30px;
+      text-align: center;
+    /*  border: 1px solid blue;*/
+      padding: 5px;
+     }
+
+     .icon_caption {
+      display: block;/*float:below;*/
+	  font-size: 11.5px;
+     }
+     
+     /* Alter opacity of images */
+     .opacity_class {
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */
+    }
+    
+
+/* qTip2 v2.2.0 basic css3 | qtip2.com | Licensed MIT, GPL | Thu Nov 21 2013 20:35:00 */
+.qtip{position:absolute;left:-28000px;top:-28000px;display:none;max-width:280px;min-width:50px;font-size:10.5px;line-height:12px;direction:ltr;box-shadow:none;padding:0}.qtip-content{position:relative;padding:5px 9px;overflow:hidden;text-align:left;word-wrap:break-word}.qtip-titlebar{position:relative;padding:5px 35px 5px 10px;overflow:hidden;border-width:0 0 1px;font-weight:700}.qtip-titlebar+.qtip-content{border-top-width:0!important}.qtip-close{position:absolute;right:-9px;top:-9px;cursor:pointer;outline:medium none;border-width:1px;border-style:solid;border-color:transparent}.qtip-titlebar .qtip-close{right:4px;top:50%;margin-top:-9px}* html .qtip-titlebar .qtip-close{top:16px}.qtip-titlebar .ui-icon,.qtip-icon .ui-icon{display:block;text-indent:-1000em;direction:ltr}.qtip-icon,.qtip-icon .ui-icon{-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;text-decoration:none}.qtip-icon .ui-icon{width:18px;height:14px;line-height:14px;text-align:center;text-indent:0;font:400 bold 10px/13px Tahoma,sans-serif;color:inherit;background:transparent none no-repeat -100em -100em}.qtip-focus{}.qtip-hover{}.qtip-default{border-width:1px;border-style:solid;border-color:#F1D031;background-color:#FFFFA3;color:#555}.qtip-default .qtip-titlebar{background-color:#FFEF93}.qtip-default .qtip-icon{border-color:#CCC;background:#F1F1F1;color:#777}.qtip-default .qtip-titlebar .qtip-close{border-color:#AAA;color:#111} .qtip-light{background-color:#fff;border-color:#E2E2E2;color:#454545}.qtip-light .qtip-titlebar{background-color:#f1f1f1} .qtip-dark{background-color:#505050;border-color:#303030;color:#f3f3f3}.qtip-dark .qtip-titlebar{background-color:#404040}.qtip-dark .qtip-icon{border-color:#444}.qtip-dark .qtip-titlebar .ui-state-hover{border-color:#303030} .qtip-cream{background-color:#FBF7AA;border-color:#F9E98E;color:#A27D35}.qtip-cream .qtip-titlebar{background-color:#F0DE7D}.qtip-cream .qtip-close .qtip-icon{background-position:-82px 0} .qtip-red{background-color:#F78B83;border-color:#D95252;color:#912323}.qtip-red .qtip-titlebar{background-color:#F06D65}.qtip-red .qtip-close .qtip-icon{background-position:-102px 0}.qtip-red .qtip-icon{border-color:#D95252}.qtip-red .qtip-titlebar .ui-state-hover{border-color:#D95252} .qtip-green{background-color:#CAED9E;border-color:#90D93F;color:#3F6219}.qtip-green .qtip-titlebar{background-color:#B0DE78}.qtip-green .qtip-close .qtip-icon{background-position:-42px 0} .qtip-blue{background-color:#E5F6FE;border-color:#ADD9ED;color:#5E99BD}.qtip-blue .qtip-titlebar{background-color:#D0E9F5}.qtip-blue .qtip-close .qtip-icon{background-position:-2px 0}.qtip-shadow{-webkit-box-shadow:1px 1px 3px 1px rgba(0,0,0,.15);-moz-box-shadow:1px 1px 3px 1px rgba(0,0,0,.15);box-shadow:1px 1px 3px 1px rgba(0,0,0,.15)}.qtip-rounded,.qtip-tipsy,.qtip-bootstrap{-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px}.qtip-rounded .qtip-titlebar{-moz-border-radius:4px 4px 0 0;-webkit-border-radius:4px 4px 0 0;border-radius:4px 4px 0 0}.qtip-youtube{-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 0 3px #333;-moz-box-shadow:0 0 3px #333;box-shadow:0 0 3px #333;color:#fff;border-width:0;background:#4A4A4A;background-image:-webkit-gradient(linear,left top,left bottom,color-stop(0,#4A4A4A),color-stop(100%,#000));background-image:-webkit-linear-gradient(top,#4A4A4A 0,#000 100%);background-image:-moz-linear-gradient(top,#4A4A4A 0,#000 100%);background-image:-ms-linear-gradient(top,#4A4A4A 0,#000 100%);background-image:-o-linear-gradient(top,#4A4A4A 0,#000 100%)}.qtip-youtube .qtip-titlebar{background-color:#4A4A4A;background-color:rgba(0,0,0,0)}.qtip-youtube .qtip-content{padding:.75em;font:12px arial,sans-serif;filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#4a4a4a, EndColorStr=#000000);-ms-filter:"progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#4a4a4a, EndColorStr=#000000);"}.qtip-youtube .qtip-icon{border-color:#222}.qtip-youtube .qtip-titlebar .ui-state-hover{border-color:#303030}.qtip-jtools{background:#232323;background:rgba(0,0,0,.7);background-image:-webkit-gradient(linear,left top,left bottom,from(#717171),to(#232323));background-image:-moz-linear-gradient(top,#717171,#232323);background-image:-webkit-linear-gradient(top,#717171,#232323);background-image:-ms-linear-gradient(top,#717171,#232323);background-image:-o-linear-gradient(top,#717171,#232323);border:2px solid #ddd;border:2px solid rgba(241,241,241,1);-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 0 12px #333;-moz-box-shadow:0 0 12px #333;box-shadow:0 0 12px #333}.qtip-jtools .qtip-titlebar{background-color:transparent;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171, endColorstr=#4A4A4A);-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171, endColorstr=#4A4A4A)"}.qtip-jtools .qtip-content{filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A, endColorstr=#232323);-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A, endColorstr=#232323)"}.qtip-jtools .qtip-titlebar,.qtip-jtools .qtip-content{background:transparent;color:#fff;border:0 dashed transparent}.qtip-jtools .qtip-icon{border-color:#555}.qtip-jtools .qtip-titlebar .ui-state-hover{border-color:#333}.qtip-cluetip{-webkit-box-shadow:4px 4px 5px rgba(0,0,0,.4);-moz-box-shadow:4px 4px 5px rgba(0,0,0,.4);box-shadow:4px 4px 5px rgba(0,0,0,.4);background-color:#D9D9C2;color:#111;border:0 dashed transparent}.qtip-cluetip .qtip-titlebar{background-color:#87876A;color:#fff;border:0 dashed transparent}.qtip-cluetip .qtip-icon{border-color:#808064}.qtip-cluetip .qtip-titlebar .ui-state-hover{border-color:#696952;color:#696952}.qtip-tipsy{background:#000;background:rgba(0,0,0,.87);color:#fff;border:0 solid transparent;font-size:11px;font-family:'Lucida Grande',sans-serif;font-weight:700;line-height:16px;text-shadow:0 1px #000}.qtip-tipsy .qtip-titlebar{padding:6px 35px 0 10px;background-color:transparent}.qtip-tipsy .qtip-content{padding:6px 10px}.qtip-tipsy .qtip-icon{border-color:#222;text-shadow:none}.qtip-tipsy .qtip-titlebar .ui-state-hover{border-color:#303030}.qtip-tipped{border:3px solid #959FA9;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;background-color:#F9F9F9;color:#454545;font-weight:400;font-family:serif}.qtip-tipped .qtip-titlebar{border-bottom-width:0;color:#fff;background:#3A79B8;background-image:-webkit-gradient(linear,left top,left bottom,from(#3A79B8),to(#2E629D));background-image:-webkit-linear-gradient(top,#3A79B8,#2E629D);background-image:-moz-linear-gradient(top,#3A79B8,#2E629D);background-image:-ms-linear-gradient(top,#3A79B8,#2E629D);background-image:-o-linear-gradient(top,#3A79B8,#2E629D);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8, endColorstr=#2E629D);-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8, endColorstr=#2E629D)"}.qtip-tipped .qtip-icon{border:2px solid #285589;background:#285589}.qtip-tipped .qtip-icon .ui-icon{background-color:#FBFBFB;color:#555}.qtip-bootstrap{font-size:14px;line-height:20px;color:#333;padding:1px;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,.2);-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,.2);box-shadow:0 5px 10px rgba(0,0,0,.2);-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box}.qtip-bootstrap .qtip-titlebar{padding:8px 14px;margin:0;font-size:14px;font-weight:400;line-height:18px;background-color:#f7f7f7;border-bottom:1px solid #ebebeb;-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0}.qtip-bootstrap .qtip-titlebar .qtip-close{right:11px;top:45%;border-style:none}.qtip-bootstrap .qtip-content{padding:9px 14px}.qtip-bootstrap .qtip-icon{background:transparent}.qtip-bootstrap .qtip-icon .ui-icon{width:auto;height:auto;float:right;font-size:20px;font-weight:700;line-height:18px;color:#000;text-shadow:0 1px 0 #fff;opacity:.2;filter:alpha(opacity=20)}.qtip-bootstrap .qtip-icon .ui-icon:hover{color:#000;text-decoration:none;cursor:pointer;opacity:.4;filter:alpha(opacity=40)}.qtip:not(.ie9haxors) div.qtip-content,.qtip:not(.ie9haxors) div.qtip-titlebar{filter:none;-ms-filter:none}.qtip .qtip-tip{margin:0 auto;overflow:hidden;z-index:10}x:-o-prefocus,.qtip .qtip-tip{visibility:hidden}.qtip .qtip-tip,.qtip .qtip-tip .qtip-vml,.qtip .qtip-tip canvas{position:absolute;color:#123456;background:transparent;border:0 dashed transparent}.qtip .qtip-tip canvas{top:0;left:0}.qtip .qtip-tip .qtip-vml{behavior:url(#default#VML);display:inline-block;visibility:visible}#qtip-overlay{position:fixed;left:0;top:0;width:100%;height:100%}#qtip-overlay.blurs{cursor:pointer}#qtip-overlay div{position:absolute;left:0;top:0;width:100%;height:100%;background-color:#000;opacity:.7;filter:alpha(opacity=70);-ms-filter:"alpha(Opacity=70)"}.qtipmodal-ie6fix{position:absolute!important}
+.mask-loader.hide-loader{display:none}
+.mask-loader.show-loader{display:block}
+.mask-loader.img{background:url(../img/spinner-DNA-2.5s-200px.svg) center center no-repeat}
+.mask-loader.text-alert{text-align: center; }
+.mask-loader.text-alert .textalert{position: relative;top: 50%;transform: translateY(-50%);}

@@ -328,62 +328,60 @@ function generateCyJSNetwork(url, requestParams) {
         url: url,
         timeout: 1000000,
         headers: {
-            "Accept": "application/json; charset=utf-8",
-            "Content-Type": "application/json; charset=utf-8"
+          "Accept": "application/json; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8"
         },
         datatype: "json",
-        data: JSON.stringify(requestParams)//,
-    }).fail(function (xhr,status,errorlog) {
-                var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
-                console.log(server_error.detail);
-                alert(errorMsg);
-        }).success(function (data) {
+        data: JSON.stringify(requestParams),
+        fail: function (xhr,status,errorlog) {
+          var server_error= JSON.parse(xhr.responseText); // full error json from server
+          var errorMsg= "Failed to render knetwork...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title;
+          console.log(server_error.detail);
+          alert(errorMsg);
+        },
+				success: function (data) {
+					// Network graph: JSON file.
+					try {
+						activateButton('NetworkCanvas');
+						$("NetworkCanvas_button").removeClass('.network-default'); 
 
+            // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
+            var networkId= null;
 
-				// Network graph: JSON file.
-				try {
-					activateButton('NetworkCanvas');
-					$("NetworkCanvas_button").removeClass('.network-default'); 
+            $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
 
-                                        // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
-                                        var networkId= null;
-
-
-                                        $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
-
-
-                                        // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
-										//genes export button
-                                        $('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>Tabular Format</button>");
+            // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)
+						//genes export button
+						$('#knetGeneExport').html("<button class='export_button' onclick='exportKnetworkTable("+networkId+");'title='Download visible genes from knetwork as a table'>Tabular Format</button>");
 								
-										//visible graph button 
-										$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork()' title='Download visible graph'>Cytoscape JSON </button>");
-
+						//visible graph button 
+						$('#visibleGraphExport').html("<button class='export_button' onclick='downloadNetwork()' title='Download visible graph'>Cytoscape JSON </button>");
                                         
-                                        if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-                                           var knetwork_blob= data.graph;
-                                           knetwork_blob= filterKnetworkJson(knetwork_blob); // filter large knetwork jsons
-                                           knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
-                                          }
-                                        else { // response contents (pure JSON).
-                                          var eles_jsons= data.graph.graphJSON.elements;
-                                          var eles_styles= data.graph.graphJSON.style;
-                                          var metadata_json= data.graph.allGraphData;
-                                          knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
-                                        }
-										
+            if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
+               var knetwork_blob= data.graph;
+               knetwork_blob= filterKnetworkJson(knetwork_blob); // filter large knetwork jsons
+               knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
+              }
+            else { // response contents (pure JSON).
+              var eles_jsons= data.graph.graphJSON.elements;
+              var eles_styles= data.graph.graphJSON.style;
+              var metadata_json= data.graph.allGraphData;
+              knetmaps.draw('#knet-maps', eles_jsons, metadata_json, eles_styles/*, networkId*/);
+            }
 
-					// Remove the preloader message in Gene View, for the Network Viewer
-					$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
-					$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
-				   }
-				catch (err) {
-					var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-					console.log(errorMsg);
-					//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
-				   }
-        }).always(function() { deactivateSpinner("#tabviewer"); });
+						// Remove the preloader message in Gene View, for the Network Viewer
+						$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
+						$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+				  }
+					catch (err) {
+						var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
+						console.log(errorMsg);
+						//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
+				  }
+        }, // success:
+        always:
+          function() { deactivateSpinner("#tabviewer"); } 
+    }); // post()
 }
 
 /*
