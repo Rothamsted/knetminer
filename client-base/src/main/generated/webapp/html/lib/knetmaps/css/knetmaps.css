@@ -1,5 +1,5 @@
 /* 
-    Last Modified on : 27-Mar-2017
+    Last Modified on : 25/11/21
     Author     : Ajit Singh
     Description: CSS for KnetMaps
 */
@@ -28,9 +28,9 @@
   border-width : 5px;
   border-radius : /*15*/5px;
   /*padding : 30px;*/
-  background-color: #FFF;
+  background-color: white;
   box-sizing : border-box;
-  z-index: 2;
+  z-index: 2; 
  }
 
  #knetmaps-menu {
