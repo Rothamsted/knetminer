@@ -883,7 +883,7 @@ public class ExportService
 				"type", foundType,
 				"name", foundName,
 				"score", score,
-				"pvalue", pvalue,
+				"pvalue", pvalue == 0 ? -1 : pvalue,
 				"genesSize", startGenesSize,
 				"userGeneLabels", userGeneLabels,
 				"qtlsSize", qtlsSize.get (),
@@ -923,7 +923,7 @@ public class ExportService
 				result.getDouble ( "score" ) + "\t" + 
 				result.getDouble ( "pvalue" ) + "\t" + 
 				result.getInt ( "genesSize" ) + "\t" + 
-				userGenesStr + "\t" + 
+				( userGenesStr.equalsIgnoreCase ( "" ) ? "N/A" : userGenesStr ) + "\t" + 
 				result.getInt ( "qtlsSize" ) + "\t" +
 				result.getInt ( "ondexId" );
 		})
