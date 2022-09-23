@@ -255,6 +255,7 @@ function bodyHandlers(){
         target = $(this)[0].id;
         var message = "";
         addClass = "";
+
         if (target == 'hintSearchQtlGenome') {
             message = 'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
         }
@@ -271,6 +272,9 @@ function bodyHandlers(){
         else if (target == 'hintSortableTable') {
             message = 'On clicking the <b>Create Network</b> button: it opens KnetMaps, displays a subset of the knowledge network containing only the selected genes and the relevant evidence network.';
             addClass = 'networkhint'
+        }else if(target == 'knetScore'){
+            message = "<b>KnetScore</b> is our sorting algorithm. Please be aware that these numbers are non-standardised and should not be compared with numbers from other search queries. It is only applicable to this search."; 
+            addClass = 'knetscorehint'; 
         }
 
         $('div.tooltip').remove();
@@ -283,12 +287,15 @@ function bodyHandlers(){
         if (tooltipX + 300 > winWidth) {
             tooltipX = winWidth - 300;
         }
+
         $('div.tooltip.tooltip-static').css({top: tooltipY, left: tooltipX}); //for sample queries tooltip
     });
 
 
 
     $('body').on('mousemove', 'span.hint:not(#hintEgKeywords)', function (event) {
+        target = $(this)[0].id;
+
         var tooltipX = event.pageX - 8;
         var tooltipY = event.pageY + 8;
 
@@ -297,7 +304,10 @@ function bodyHandlers(){
             tooltipX = winWidth - 300;
         }
 
-        $('div.tooltip').css({top: tooltipY, left: tooltipX});
+     
+            $('div.tooltip').css({top: tooltipY, left: tooltipX});
+        
+    
     });
 
 

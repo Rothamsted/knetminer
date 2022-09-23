@@ -1096,6 +1096,13 @@
   .networkhint{
       width: 400px;
   }
+
+  .knetscorehint{
+    top: 972px;
+    left: 846px;
+    font-size: 0.95rem;
+    width: 200px;
+  }
   
   /* gene name synonym styling feature */
   
@@ -1269,8 +1276,9 @@
     #species_header{width:70%;justify-content: center;}
     .product_links{width:40%}
     #search{width: 94%;}
+    #tabviewer_content{width:94%}
     #pGSearch_title{width: 94%;}
-    #tabviewer_buttons{width: 96%;}
+    #tabviewer_buttons{width: 94%;}
     #species-dropimg{
         position: absolute;
         right: 4.5pc;
@@ -1289,17 +1297,19 @@
     
     }
 
-    @media (min-width:1440px){
+    @media (min-width:1366px){
             #species_header{width:42%}
             #search{width:70%;} 
             #pGSearch_title{width: 70%;}
             #tabviewer_buttons{width: 70%;}
             #tabviewer_content{width:70%}
+            #species-dropimg{
+                right: 5.5pc;
+            }
             
     }
 
     @media(min-width:1920px){
-
         #species-dropimg{
             right: 10.5pc;
          }

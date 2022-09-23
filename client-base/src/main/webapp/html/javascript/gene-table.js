@@ -3,8 +3,7 @@
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
-function createGenesTable(text, keyword, rows) 
-{
+function createGenesTable(text, keyword, rows){
 	var table = "";
 	var candidateGenes = text.split("\n");
 	var results = candidateGenes.length - 2;
@@ -54,15 +53,18 @@ function createGenesTable(text, keyword, rows)
 		
 		// TODO: is there a reason for these amateur tests against true?
 		// TODO: what does this flag mean?! 
+		
 	
-			table += '<th width="60">' + hTaxId + '</th>';
+
+		
 	
 		
-		
+
 			table += '<th width="60">' + hChromosome + '</th>';
 			table += '<th width="70">' + hChrStart + '</th>';
 		
 		table += '<th width="220">' + hEvidence + '</th>';
+		table += '<th width="80"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
 		table += '</thead>';
@@ -202,7 +204,7 @@ function createGenesTable(text, keyword, rows)
 			// Foreach evidence show the images - end
 
 			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAcc + '"></td>';
-			table += geneTd + geneNameTd + taxIdTd + chrTd + chrStartTd + /*scoreTd + /*usersList +*/ /*qtlTd +*/ evidenceTd + selectTd;
+			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
 			table += '</tr>';
 		} // for row
 		table += '</tbody>';
