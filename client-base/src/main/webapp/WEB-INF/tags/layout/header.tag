@@ -4,7 +4,7 @@
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
 		<ul class="logo-items">
-			<a href="/" title="KnetMiner Home"><img class="logo-top" src="html/image/logo.svg" alt="Logo" style="height:32px;margin-right:0.5rem">
+			<a  target="_blank" href="https://knetminer.com/products" title="KnetMiner Home"><img class="logo-top" src="html/image/logo.svg" alt="Logo" style="height:32px;margin-right:1rem">
 			</a>
 
 			<div id="species_header">

@@ -12,6 +12,7 @@ multiSpeciesFeature = function ()
             var speciesInfos = data.species;
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
+                $('.navbarselect-container').css('display','flex')
                 console.log('specie dropdown created')
                 multiSpeciesEvents(speciesInfos); 
                 deactivateSpinner("#wrapper");
@@ -19,7 +20,7 @@ multiSpeciesFeature = function ()
         }).fail(function(xhr,status,errolog){
             errorComponent('#pGViewer_title',xhr);
             // when user internet connection is down
-         
+            console.log(status); 
             $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
             $('#resetknet').hide(); 
             $('#searchBtn').hide(); 

@@ -11,7 +11,7 @@ var dbVersion = '', dbTitle='';
 function getDbDetails(){
     var dbUrl = api_url + "/dataset-info";
     $.get(dbUrl).done(function (dbData) { 
-        dbTitle = dbData.id,
+        dbTitle = dbData.title,
         dbVersion =  dbData.version 
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -113,7 +113,7 @@ async function fetchStats(){
             var releaseModal = new jBox('Modal', {
                 id: 'releaseBox',
                 animation: 'pulse',
-                title: `<font size="5"><font color="white">${dbTitle} </font><font color="#51CE7B">Release </font><font size="5"><font color="white"> Notes</font>`,
+                title: `<font size="5"><font color="white"></font><font color="#51CE7B">Release </font><font size="5"><font color="white"> Notes</font>`,
                 content: content ,
                 cancelButton: 'Exit',
                 draggable: 'title',

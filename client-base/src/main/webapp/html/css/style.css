@@ -73,6 +73,7 @@
       font-size: 22px;
       margin-right: 1.3rem;
       margin-left: 0.5rem;
+      cursor: pointer;
   }
   
   
@@ -186,10 +187,11 @@
     border: none;
     color: #38c768;
     font-weight: 700;
-    margin:0 10px;
     outline: none;
     z-index: 10;
     font-size: 1rem;
+    padding-right: 2rem;
+    padding-left:0.5rem;
   }
   
   .navbar-items{
@@ -1147,7 +1149,6 @@
       align-items: center;
       justify-content: center;
       color: black;
-      border-left: 0.5px solid #EEF0F3;
   }
   
   
@@ -1259,49 +1260,84 @@
       background-color: #6F7F8F;
   }
 
-  @media (min-width:768px){
-    #species_header{width:67%}
-    .product_links{width:40%}
-    #search{width: 94%;}    
+  #pGSearch_title{
+    margin: 1.5rem auto;
+    width: 70%;
   }
+
+  @media (min-width:768px){
+    #species_header{width:70%;justify-content: center;}
+    .product_links{width:40%}
+    #search{width: 94%;}
+    #pGSearch_title{width: 94%;}
+    #tabviewer_buttons{width: 96%;}
+    #species-dropimg{
+        position: absolute;
+        right: 4.5pc;
+        top: 1.3pc;
+    }
+  }
+
   
-  @media (min-width:1024px) {
+  @media (min-width:1024px){
     .logo-items{width:50%};
     #search{width: 81%;} 
     .navbar-items{width:50%}
     .product_links{width:40%}
     #species_header{width:62%}
-}
+    #tabviewer_content{width:81%}
+    
+    }
 
-@media (min-width:1440px){
-        #species_header{width:42%}
-        #search{width:70%;} 
-}
-   
-  
+    @media (min-width:1440px){
+            #species_header{width:42%}
+            #search{width:70%;} 
+            #pGSearch_title{width: 70%;}
+            #tabviewer_buttons{width: 70%;}
+            #tabviewer_content{width:70%}
+            
+    }
+
+    @media(min-width:1920px){
+
+        #species-dropimg{
+            right: 10.5pc;
+         }
+         #species_header{
+            justify-content: unset;
+         }
+    }
+
   /* responsiveness value for desktop screen */
-  @media (min-width:2560px) {
-      #search{
-          width: 44%;
-      }
-      #pGViewer_title{
-          width: 44%; 
-      }
-      #tabviewer_buttons{
-          width:44%;
-      }
-      #tabviewer_content{
-          width:44%; 
-      }; 
-      .product_links{ width: 18%;
-      }
-      .navbar-items{ padding:0.5rem 10rem
-      }
-      .logo-items{ padding:0.5rem 10rem; width:60%;
-      };
-      #species_header{ width:28%;}
-  
-  }
+    @media (min-width:2560px) {
+        #search{
+            width: 44%;
+        }
+        #pGViewer_title{
+            width: 44%; 
+        }
+        #tabviewer_buttons{
+            width:44%;
+        }
+        #tabviewer_content{
+            width:44%; 
+        }; 
+        .product_links{ width: 18%;
+        }
+        .navbar-items{ padding:0.5rem 10rem
+        }
+        .logo-items{ padding:0.5rem 10rem; width:60%;
+        };
+        #species_header{ width:28%;}
+
+        #pGSearch_title{
+            width: 45%;
+        }
+        #species-dropimg{
+           right: 14.2pc;
+        }
+    
+    }
   
   /* style for error message position beside search btn */
   .msg-placement{
@@ -1312,16 +1348,13 @@
   }
 
 
-  #pGSearch_title{
-    margin: 1.5rem auto;
-    width: 70%;
-  }
+
 
   .navbarselect-container{
+    display:none;
     margin: 0 0.5rem;
     height: 70%;
     border: 1px solid black;
-    display: flex;
     align-items: center;
     justify-content: space-around;
     border-radius: 6px;

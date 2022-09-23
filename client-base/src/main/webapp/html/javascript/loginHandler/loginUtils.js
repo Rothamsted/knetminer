@@ -272,6 +272,7 @@ function logOut(knetspace_address) {
     $('#login_icon').attr("title", "Sign in"); // insert new link
     $('#login_icon').text("Sign in");
     $('#signup').text('Sign Up')
+    $('#signup').attr('title', 'Sign Up')
     $('#signup').attr('href','https://knetminer.com/beta/knetspace/sign-up/');
 }
 
@@ -296,6 +297,8 @@ function fetchCredentials(loginModal) {
                     $('#profile_icon').attr("title", "");
                     $('#login_icon').text(" " + myJson.username);
                     $('#signup').text("My KnetSpace")
+                    $('#signup').attr('title', 'My KnetSpace')
+                    $('#signup').attr('target', '_blank')
                     $('#signup').attr('href', 'https://knetminer.com/beta/knetspace/network/');
                     $('#login_icon').off('click');
                     $('#text').text("");
@@ -338,7 +341,7 @@ function fetchCredentials(loginModal) {
                         // Profile modal box
                         var profileModal = new jBox('Modal', {
                             animation: 'pulse', title: profileTitle, content: profile_menu_html, cancelButton: 'Exit', draggable: 'title',
-                            target: $('#citeus'), width: 350, offset: {x: 100, y: 200}, delayOpen: 100
+                            target: $('#citeus'), width: 350, offset: {x: 150, y: 210}, delayOpen: 100
                         });
                         profileModal.open();
                         // Sign out button logic, perform api request for logging out
