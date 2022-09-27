@@ -36,8 +36,8 @@ oxl: data/knowledge-network.oxl
     commonName: Capsicum
   
   - taxId: 4081
-    scientificName: Solanum_lycopersicum
+    scientificName: Solanum lycopersicum
     commonName: Tomato
 
-  
+# No spaces or lower case letters allowed in seed genes tsv
 seedGenesFile: config/seed-genes-solanaceae.tsv
