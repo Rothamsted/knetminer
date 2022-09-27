@@ -4,13 +4,16 @@
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
 		<ul class="logo-items">
-			<a href="/" title="KnetMiner Home"><img class="logo-top" src="html/image/logo.svg" alt="Logo" style="height:32px;margin-right:0.5rem">
+			<a  target="_blank" href="https://knetminer.com/products" title="KnetMiner Home"><img class="logo-top" src="html/image/logo.svg" alt="Logo" style="height:32px;margin-right:1rem">
 			</a>
 
 			<div id="species_header">
-				<select onchange="changeSpecies(this)" class="navbar-select"></select>
-					<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image" >
-				<a id="release_icon" target="_blank" href="" title="Release Notes">
+				<div class="navbarselect-container">
+					<select onchange="changeSpecies(this)" class="navbar-select"></select>
+					<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image">
+				</div>
+				
+				<div id="release_icon" onclick="fetchStats()">
 					<lord-icon
 						src="https://cdn.lordicon.com/nocovwne.json"
 						trigger="loop"
@@ -19,7 +22,7 @@
 						stroke="25"
 						style="width:42px;height:42px">
 					</lord-icon>
-				</a>
+				</div>
 			</div>
 		</ul>
     	
@@ -27,7 +30,7 @@
 
 				<div class="product_links">
 					<a  href='https://knetminer.com/tutorial' target="_blank" title="Access tutorials" class="nav-links">Tutorial</a>	
-					<a href='https://knetminer.com/knetminer-citation/how-to-cite.html' target="_blank" title="include our work" class="nav-links">Cite Us</a>	
+					<a href='https://knetminer.com/knetminer-citation/how-to-cite.html' target="_blank" title="include our work" class="nav-links" id="citeus">Cite Us</a>	
 				</div>
 
 				<div class="auth_container">

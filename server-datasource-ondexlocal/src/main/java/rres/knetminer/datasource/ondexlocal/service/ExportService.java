@@ -870,7 +870,10 @@ public class ExportService
 			int matchedNotInGeneList = startGenesSize - matchedInGeneList;
 			int notMatchedNotInGeneList = allGenesSize - matchedNotInGeneList - matchedInGeneList - notMatchedInGeneList;
 
-			double pvalue = 0d;
+			// -1 stands for not applicable/not computed. If it's computed, 0 is a possible value, so it
+			// cannot be used to convey the same meaning.
+			//
+			double pvalue = -1d;
 			if ( matchedInGeneList > 0 )
 			{
 				FisherExact fisherExact = new FisherExact ( allGenesSize );
@@ -915,7 +918,9 @@ public class ExportService
 			tableSize.increment ();
 			
 			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
-			var userGenesStr = userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
+			var userGenesStr = userGeneLabels.size () == 0
+				? "N/A"
+				: userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
 						
 			return 
 				result.getString ( "type" ) + "\t" + 

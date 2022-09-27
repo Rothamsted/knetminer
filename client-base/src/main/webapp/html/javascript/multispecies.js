@@ -6,21 +6,21 @@ multiSpeciesFeature = function ()
     // function get lists of registered species from api_url+/species
     function getSpeciesList()
     {
-        activateSpinner('#wrapper'); 
         console.log('getting species list')
     
         $.get(api_url + '/dataset-info','').done( function(data){
             var speciesInfos = data.species;
             var createdDropDown = createDropdown(speciesInfos); 
             if(createdDropDown){
+                $('.navbarselect-container').css('display','flex')
                 console.log('specie dropdown created')
+                multiSpeciesEvents(speciesInfos); 
                 deactivateSpinner("#wrapper");
-                multiSpeciesEvents(speciesInfos)
             }
         }).fail(function(xhr,status,errolog){
             errorComponent('#pGViewer_title',xhr);
             // when user internet connection is down
-            deactivateSpinner("#wrapper");
+            console.log(status); 
             $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
             $('#resetknet').hide(); 
             $('#searchBtn').hide(); 
@@ -49,15 +49,13 @@ multiSpeciesFeature = function ()
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
-        document.title = currentSpecies.scientificName;
-        for(var info in currentSpecies){
+        var species = currentSpecies(data)
+        document.title = species.scientificName;
+        for(var info in species){
             const speciesCapital = capitaliseFirstLetter(info); 
-            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ currentSpecies[info] +'</span> </div>').appendTo('#speciename_container');
+            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ species[info] +'</span> </div>').appendTo('#speciename_container');
         }
 
-        // setting Species Release Note 
-        $('#release_icon').attr("href",`html/release.html?Id=${currentSpecies.scientificName}`);
         return true;
     }
 
@@ -264,11 +262,16 @@ multiSpeciesFeature = function ()
             }
     
     }
+    function currentSpecies(data){
+        var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
+        return currentSpecies
+    }
     //returned values that are called outside the module 
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
         taxId: setTaxId,
-        maps:drawGeneMaps
+        maps:drawGeneMaps,
+        speciesData: currentSpecies
     }
 }(); 

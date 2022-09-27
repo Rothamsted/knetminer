@@ -139,6 +139,8 @@
         <!-- google analytics-->
         <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
 
+        <script type="text/javascript" src="html/javascript/releaseNotes/showNetworkStats.js"></script>
+
 		<!-- interactJS; DISABLED -->
 	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
 

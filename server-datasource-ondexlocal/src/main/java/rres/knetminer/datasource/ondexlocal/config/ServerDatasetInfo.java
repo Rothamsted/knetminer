@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -78,11 +79,6 @@ public class ServerDatasetInfo implements DatasetInfo
 			return ServerDatasetInfo.this.getOrganization ();
 		}
 
-		public String getProvider ()
-		{
-			return ServerDatasetInfo.this.getProvider ();
-		}
-
 		public List<SpecieInfo> getSpecies ()
 		{
 			// We need a similar shorter view
@@ -102,7 +98,6 @@ public class ServerDatasetInfo implements DatasetInfo
 	private String version = "";
 	private String creationDate = "";
 	private String organization = "";
-	private String provider = "";
 	
 	/** This is initialised using {@link #setSpecies(List)} */
 	@JsonIgnore
@@ -149,6 +144,29 @@ public class ServerDatasetInfo implements DatasetInfo
 			dsetPath, backgroundImageFilePath 
 		);
 
+		// Default for this is taken from the OXL
+		if ( this.creationDate == null )
+		{
+			String oxlPath = root.getOxlFilePath ();
+			if ( oxlPath != null && !oxlPath.isEmpty () )
+			{
+				try
+				{
+					BasicFileAttributes oxlAttrs = Files.readAttributes ( 
+						Path.of ( root.getOxlFilePath () ), BasicFileAttributes.class 
+					);
+					
+					// This is usually the most significant time
+					this.creationDate = oxlAttrs.lastModifiedTime ().toString ();
+				}
+				catch ( IOException ex ) {
+					ExceptionUtils.throwEx ( UncheckedIOException.class, 
+						"Error while checking OXL file \"%s\": $cause", root.getOxlFilePath ()
+					);
+				}
+			}
+		}
+		
 		// TODO: forbid null
 		for ( ServerSpecieInfo sp: this.speciesMap.values () )
 			sp.postConstruct ( root );
@@ -187,6 +205,10 @@ public class ServerDatasetInfo implements DatasetInfo
 		return version;
 	}
 
+	/**
+	 * Default is taken from the {@link KnetminerConfiguration#getOxlFilePath() OXL file path}.
+	 * Set this to "" or non-null value to avoid this behaviour.
+	 */
 	@Override
 	public String getCreationDate ()
 	{
@@ -199,13 +221,7 @@ public class ServerDatasetInfo implements DatasetInfo
 		return organization;
 	}
 
-	@Override
-	public String getProvider ()
-	{
-		return provider;
-	}
-
-
+	
 	/**
 	 * This is an initialiser for Jackson, which creates the {@link #speciesMap internal species map}.
 	 */

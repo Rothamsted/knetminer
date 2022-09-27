@@ -73,6 +73,7 @@
       font-size: 22px;
       margin-right: 1.3rem;
       margin-left: 0.5rem;
+      cursor: pointer;
   }
   
   
@@ -177,21 +178,20 @@
   }
   
   .navbar-select{
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      margin: 0;
-      height: 70%;
-      background: transparent;
-      border: 0.8px solid black;
-      border-radius: 6px;
-      color: #38c768;
-      font-weight:700;
-      padding-left: 10px;
-      outline: none;
-      z-index: 10;
-      margin-left: 1rem;
-      font-size: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    width: fit-content;
+    margin: 0;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #38c768;
+    font-weight: 700;
+    outline: none;
+    z-index: 10;
+    font-size: 1rem;
+    padding-right: 2rem;
+    padding-left:0.5rem;
   }
   
   .navbar-items{
@@ -1096,6 +1096,13 @@
   .networkhint{
       width: 400px;
   }
+
+  .knetscorehint{
+    top: 972px;
+    left: 846px;
+    font-size: 0.95rem;
+    width: 200px;
+  }
   
   /* gene name synonym styling feature */
   
@@ -1149,15 +1156,11 @@
       align-items: center;
       justify-content: center;
       color: black;
-      border-left: 0.5px solid #EEF0F3;
   }
   
   
   #species-dropimg {
-      top: 20px;
-      right: 4.8pc;
-      position: absolute;
-      z-index: 0;
+      margin-right: 8px;
     }
   
   
@@ -1264,49 +1267,87 @@
       background-color: #6F7F8F;
   }
 
-  @media (min-width:768px){
-    #species_header{width:67%}
-    .product_links{width:40%}
-    #search{width: 94%;}    
+  #pGSearch_title{
+    margin: 1.5rem auto;
+    width: 70%;
   }
+
+  @media (min-width:768px){
+    #species_header{width:70%;justify-content: center;}
+    .product_links{width:40%}
+    #search{width: 94%;}
+    #tabviewer_content{width:94%}
+    #pGSearch_title{width: 94%;}
+    #tabviewer_buttons{width: 94%;}
+    #species-dropimg{
+        position: absolute;
+        right: 5.5pc;
+        top: 1.3pc;
+    }
+  }
+
   
-  @media (min-width:1024px) {
+  @media (min-width:1024px){
     .logo-items{width:50%};
     #search{width: 81%;} 
     .navbar-items{width:50%}
     .product_links{width:40%}
     #species_header{width:62%}
-}
+    #tabviewer_content{width:81%}
+    
+    }
 
-@media (min-width:1440px){
-        #species_header{width:40%}
-        #search{width:62%;} 
-}
-   
-  
+    @media (min-width:1366px){
+            #species_header{width:42%}
+            #search{width:70%;} 
+            #pGSearch_title{width: 70%;}
+            #tabviewer_buttons{width: 70%;}
+            #tabviewer_content{width:70%}
+            #species-dropimg{
+                right: 5.5pc;
+            }
+            
+    }
+
+    @media(min-width:1920px){
+        #species-dropimg{
+            right: 10.5pc;
+         }
+         #species_header{
+            justify-content: unset;
+         }
+    }
+
   /* responsiveness value for desktop screen */
-  @media (min-width:2560px) {
-      #search{
-          width: 44%;
-      }
-      #pGViewer_title{
-          width: 44%; 
-      }
-      #tabviewer_buttons{
-          width:44%;
-      }
-      #tabviewer_content{
-          width:44%; 
-      }; 
-      .product_links{ width: 18%;
-      }
-      .navbar-items{ padding:0.5rem 10rem
-      }
-      .logo-items{ padding:0.5rem 10rem
-      };
-      #species_header{ width:28%;}
-  
-  }
+    @media (min-width:2560px) {
+        #search{
+            width: 44%;
+        }
+        #pGViewer_title{
+            width: 44%; 
+        }
+        #tabviewer_buttons{
+            width:44%;
+        }
+        #tabviewer_content{
+            width:44%; 
+        }; 
+        .product_links{ width: 18%;
+        }
+        .navbar-items{ padding:0.5rem 10rem
+        }
+        .logo-items{ padding:0.5rem 10rem; width:60%;
+        };
+        #species_header{ width:28%;}
+
+        #pGSearch_title{
+            width: 45%;
+        }
+        #species-dropimg{
+           right: 14.2pc;
+        }
+    
+    }
   
   /* style for error message position beside search btn */
   .msg-placement{
@@ -1315,3 +1356,17 @@
       align-items: center;
       justify-content: flex-end;
   }
+
+
+
+
+  .navbarselect-container{
+    display:none;
+    margin: 0 0.5rem;
+    height: 70%;
+    border: 1px solid black;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 6px;
+  }
+

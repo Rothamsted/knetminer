@@ -14,6 +14,14 @@
 "dataset @merge":
   id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
   title: Poaceae Test Instance
+  # version: 53 # TODO: not sure if this is 53 or 54, default is POM version
+
+  # Have a look here about YAML multi-line strings: http://yaml-multiline.info
+  description: >-
+    The Poaceae dataset, used to power the CI Knetminer instance, which
+    is auto-updated upon Knetminer rebuild (from GitHub Actions).  
+  keywords: Knetminer Test, Knetminer CI, Poaceae
+     
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
   # backgroundImage: config/background.jpg # this is the default 
