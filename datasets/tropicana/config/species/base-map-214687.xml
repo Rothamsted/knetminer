@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1" length="29070452" number="CAJGYN010000001.1">
+		<band index="1">
+			<start>0</start>
+			<end>29070452</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2" length="29511734" number="CAJGYN010000002.1">
+		<band index="1">
+			<start>0</start>
+			<end>29511734</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3" length="35020413" number="CAJGYN010000003.1">
+		<band index="1">
+			<start>0</start>
+			<end>35020413</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4" length="37105743" number="CAJGYN010000004.1">
+		<band index="1">
+			<start>0</start>
+			<end>37105743</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5" length="41853232" number="CAJGYN010000005.1">
+		<band index="1">
+			<start>0</start>
+			<end>41853232</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6" length="37593364" number="CAJGYN010000006.1">
+		<band index="1">
+			<start>0</start>
+			<end>37593364</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7" length="35028021" number="CAJGYN010000007.1">
+		<band index="1">
+			<start>0</start>
+			<end>35028021</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8" length="44889171" number="CAJGYN010000008.1">
+		<band index="1">
+			<start>0</start>
+			<end>44889171</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9" length="41306725" number="CAJGYN010000009.1">
+		<band index="1">
+			<start>0</start>
+			<end>41306725</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10" length="37674811" number="CAJGYN010000010.1">
+		<band index="1">
+			<start>0</start>
+			<end>37674811</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11" length="27954350" number="CAJGYN010000011.1">
+		<band index="1">
+			<start>0</start>
+			<end>27954350</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12" length="1980050" number="CAJGYN010000014.1">
+		<band index="1">
+			<start>0</start>
+			<end>1980050</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13" length="46622217" number="CAJGYN010000024.1">
+		<band index="1">
+			<start>0</start>
+			<end>46622217</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
