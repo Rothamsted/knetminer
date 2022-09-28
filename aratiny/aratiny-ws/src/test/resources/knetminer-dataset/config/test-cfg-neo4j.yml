@@ -6,3 +6,5 @@
 "graphTraverser @merge":
   GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
   "knetminer.backend.configPath": "${mydir}/neo4j/config-test.xml"
+
+cypherDebuggerEnabled: true

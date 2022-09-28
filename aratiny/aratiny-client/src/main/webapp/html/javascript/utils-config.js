@@ -4,11 +4,35 @@ var api_url = "";
 var knetspace_api_host= "";
 
 // TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
-async function setupApiUrls ()
+/**
+ * Sets up the API-related URL variables (eg, api_url).
+ *
+ * This is based on multiple attempts, until one that succeds:
+ *
+ *  - First the /html/api-url.jsp is probed, mainly to see if the API URL base is configured via JVM or can 
+ *    be computed by that JSP combining the client's URL and well-known API paths 
+ *  - If that doesn't work (eg, behind a reverse proxy), then the same well-known URL approach is attempted
+ *    from the client side.
+ * 
+ *  If all of the above fails, an exception is raised. Upon success, variables like api_url are set and the value
+ *  set for the latter is also returned.
+ * 
+ *  callerUrlPath tells the function the URL path where the invoker is. This is needed to figure out what the 
+ *  application URL prefix might be, eg, if we're calling http://foo.com:8080/test/test-page.html and
+ *  test-page invokes this with /test-page.html, then the function will assume the application is 
+ *  located at http://foo.com:8080/test.
+ *
+ *  WARNING: this requires jQuery.
+ */
+async function setupApiUrls ( callerUrlPath = "" )
 {
   var clientBaseUrl = window.location.href
     .replace ( /\?.*/g, "" ) // Don't mess-up with the params
     .replace ( /\/$/g, "" ); // URLs with // don't always work;
+
+	if ( callerUrlPath != "" )
+		clientBaseUrl = clientBaseUrl.replace ( callerUrlPath, "" );
+  
   bootstrapUrl = clientBaseUrl;
   bootstrapUrl += "/html/api-url.jsp";
   bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );

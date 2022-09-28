@@ -2,7 +2,9 @@
  * See index.html
  */
 
-const cydebugBaseUrl = api_url + "/cydebug";
+var cydebugBaseUrl = "";
+
+$(document).ready ( function() { pageInitHandler (); } );	
 
 
 /**
@@ -16,57 +18,68 @@ function updateStatus ()
 	const pollingTime = 1000 * 10;
 	
 	fetch ( cydebugBaseUrl + "/traverser/report" )
-		.then ( resp => 
+	.then ( resp => 
+	{
+		if ( !resp.ok ) throw Error ( resp.statusText );		
+		return resp.text ();
+	})
+	.then ( text =>
+	{
+		if ( text.startsWith ( "Pending." ) ) 
 		{
-			if ( !resp.ok ) throw Error ( resp.statusText );		
-			return resp.text ();
-		})
-		.then ( text =>
-		{
-			if ( text.startsWith ( "Pending." ) ) 
-			{
-				let percent = text.replace ( /Pending. ([0-9]+)\%.*/, "$1" );
-				displayPending ( percent );
-				console.log ( "updateStatus(): pending" );
-				updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
-				return;
-			}
-			
-			if ( text.startsWith ( "Was cancelled. Abort operation still pending" ) ) {
-				displayAbortPending ( "Traversal was cancelled. Waiting for the abort operations to complete..." );
-				console.log ( "updateStatus(): cancellation pending" );
-				updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
-				return;
-			}
-			
-			if ( text.startsWith ( "Was cancelled" ) ) {
-				displayAborted ( "Traversal was cancelled." );
-				console.log ( "updateStatus(): cancelled" );
-			}
-			else if ( text.startsWith ( "Wasn't invoked" ) ) {
-				displayEdit ();
-				console.log ( "updateStatus(): wasn't invoked" );
-			}
-			// we got a result, show it.
-			else {
-				displayFinished ( text || "Empty Report!" );
-				console.log ( "updateStatus(): finished with " + (text || "").substring (0, 15) );
-			}
-			if ( updateStatus.timeoutHandler ) clearTimeout ( updateStatus.timeoutHandler );
-		})
-		.catch ( err => {
-			alert ( "Error with API call /traverser/report: " + err.message );
-			console.log ( "Error with API call /traverser/report", err );
-		});
+			let percent = text.replace ( /Pending. ([0-9]+)\%.*/, "$1" );
+			displayPending ( percent );
+			console.log ( "updateStatus(): pending" );
+			updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
+			return;
+		}
+		
+		if ( text.startsWith ( "Was cancelled. Abort operation still pending" ) ) {
+			displayAbortPending ( "Traversal was cancelled. Waiting for the abort operations to complete..." );
+			console.log ( "updateStatus(): cancellation pending" );
+			updateStatus.timeoutHandler = setTimeout( updateStatus, pollingTime );
+			return;
+		}
+		
+		if ( text.startsWith ( "Was cancelled" ) ) {
+			displayAborted ( "Traversal was cancelled." );
+			console.log ( "updateStatus(): cancelled" );
+		}
+		else if ( text.startsWith ( "Wasn't invoked" ) ) {
+			displayEdit ();
+			console.log ( "updateStatus(): wasn't invoked" );
+		}
+		// we got a result, show it.
+		else {
+			displayFinished ( text || "Empty Report!" );
+			console.log ( "updateStatus(): finished with " + (text || "").substring (0, 15) );
+		}
+		if ( updateStatus.timeoutHandler ) clearTimeout ( updateStatus.timeoutHandler );
+	})
+	.catch ( err => {
+		alert ( "Error with API call /traverser/report: " + err.message );
+		console.log ( "Error with API call /traverser/report", err );
+	});
 	// fetch()
 }
 
 
-function pageInitHandler ()
+async function pageInitHandler ()
 {
-	displayEdit (); // Redundant, updateStatus() calls it, but just in case
-	updateStatus ();
-	getServerQueries ();
+	try
+	{ 
+		await setupApiUrls ( "/cydebug" );
+		cydebugBaseUrl = api_url + "/cydebug";
+	
+		displayEdit (); // Redundant, updateStatus() calls it, but just in case
+		updateStatus ();
+		getServerQueries ();
+	}
+	catch ( err )
+	{
+		alert ( "Error while trying to get the API URL: " + err.message );
+		console.log ( "Error while trying to get the API URL", err );
+	}
 }
 
 

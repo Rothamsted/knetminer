@@ -7,10 +7,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Knetminer - Cypher Debugger</title>
-	<script type = "text/javascript" src="../html/javascript/utils-config.js"></script>	
-	<script type = "text/javascript" src="cydebug.js"></script>	
+	
+	<!-- TODO: this seems to be the only place where jquery is taken by Knetminer (!!!) -->
+ 	<script type = "text/javascript" src = "../html/GeneMap/dist/js/genemap-lib.js"></script>
+	<script type = "text/javascript" src = "../html/javascript/utils-config.js"></script> 
+	<script type = "text/javascript" src = "cydebug.js"></script>
 </head>
-<body onLoad = "pageInitHandler ();">
+
+<body>
 
   <h1>Debugger for Knetminer Cypher Queries</h1>
 
