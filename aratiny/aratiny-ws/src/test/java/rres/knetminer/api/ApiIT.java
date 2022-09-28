@@ -302,8 +302,12 @@ public class ApiIT
 	@Test
 	public void testForbiddenEx ()
 	{
-		// in this mode it might return a regular answer, not an error
-		if ( "console".equals ( getMavenProfileId () ) ) return;
+		// in this modes it might return a regular answer, not an error
+		var mvnProfile = getMavenProfileId ();
+		if ( Stream.of ( "console", "neo4j" ).anyMatch ( s -> s.equals ( mvnProfile ) ) ) {
+			log.warn ( "Skipping testForbiddenEx(), not applicable under the Maven profile {}", mvnProfile );
+			return;
+		}
 		
 		String url = CLI.getApiUrl ( "cydebug/traverser/report" );
 		JSONObject js = CLI.invokeApiJs ( url, RequestOptions.of().setFailOnError ( false ), null );

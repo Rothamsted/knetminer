@@ -308,6 +308,11 @@ public class KnetminerApiClient
 	 */
 	private <J> J invokeApiJs ( String urlOrCallName, Function<String, J> jsonSupplier, RequestOptions reqOpts, Map<String, Object> params )
 	{
+		/* DEBUG
+		var s = invokeApiStr ( urlOrCallName, reqOpts, params );
+		log.info ( "RETURNED JSON:\n{}", s );
+		*/
+		
 		return jsonSupplier.apply ( 
 			invokeApiStr ( urlOrCallName, reqOpts, params )
 		);
