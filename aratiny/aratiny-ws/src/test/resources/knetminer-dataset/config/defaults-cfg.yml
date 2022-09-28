@@ -24,6 +24,9 @@
 # By default (ie, when this parameter is undefined), all genes from dataset/species (see below) are used as
 # seed genes.
 #
+# WARNING: usually gene accessions are stored in upper case in a Knetminer, hence here you must use upper case
+# identifiers in order to match the data.
+# 
 #seedGenesFile: config/seed-genes-example.tsv
 
 # Used to add the number of publications one wants visibly exported in the KnetMiner instance.

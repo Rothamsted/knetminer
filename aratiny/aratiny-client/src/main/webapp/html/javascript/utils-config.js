@@ -49,8 +49,8 @@ async function setupApiUrls ( callerUrlPath = "" )
 		guessApiUrl = instanceBaseUrl + "/ws/default/dataset-info";
 
 		await $.getJSON ( guessApiUrl, js => {
-		// Initially, I've tried: api_url = await $.getJSON(...), but
-		// no idea why in this case api_url is set to js, instead of this returnvalue
+			// Initially, I've tried: api_url = await $.getJSON(...), but
+			// no idea why in this case api_url is set to js, instead of this return value
 			api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
 		});
   }
@@ -65,5 +65,7 @@ async function setupApiUrls ( callerUrlPath = "" )
 }
 
 var enforce_genelist_limit= true; // enforce free user search limits (true/false).
+
+// TODO: these should come from API and from config
 var freegenelist_limit= 20; // default gene list search limit for free user (Pro: unlimited).
 var knetview_limit= 10; 

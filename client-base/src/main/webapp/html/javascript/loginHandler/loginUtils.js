@@ -145,6 +145,7 @@ function loginUtilsInit ()
 
 // If the API URL isn't defined yet, we're on the client app, not the server app, this is already 
 // invoked by the general handler in utils, so ignore it here.
+// TODO: remove?
 // if ( api_url ) $(document).ready( loginUtilsInit );
 
 /* 
