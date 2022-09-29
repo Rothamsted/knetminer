@@ -273,7 +273,7 @@ function bodyHandlers(){
             message = 'On clicking the <b>Create Network</b> button: it opens KnetMaps, displays a subset of the knowledge network containing only the selected genes and the relevant evidence network.';
             addClass = 'networkhint'
         }else if(target == 'knetScore'){
-            message = "<b>KnetScore</b> is our sorting algorithm. Please be aware that these numbers are non-standardised and should not be compared with numbers from other search queries. It is only applicable to this search."; 
+            message = "The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised."; 
             addClass = 'knetscorehint'; 
         }
 
