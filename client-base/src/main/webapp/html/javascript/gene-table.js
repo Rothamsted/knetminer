@@ -64,7 +64,7 @@ function createGenesTable(text, keyword, rows){
 			table += '<th width="70">' + hChrStart + '</th>';
 		
 		table += '<th width="220">' + hEvidence + '</th>';
-		table += '<th width="80"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
 		table += '</thead>';
@@ -251,11 +251,15 @@ function createGenesTable(text, keyword, rows){
 	});
 
 	$("#tablesorter").tablesorter({
+		// sorting column 5 in descending order
+		// you can add sort columns in the array below [column number, sorting direction]
+		// sorting direction 1: descending and 0:ascending. 
+		sortList:[[5,1]],
 		headers: {
 			// do not sort "select" column
-			/*  5: {sorter:"digit"},*/
-			4: { sorter: "digit" }, /* sort by SCORE column by default */
-			8: { sorter: false }
+			6: { sorter: false },
+			
+
 		}
 	});
 

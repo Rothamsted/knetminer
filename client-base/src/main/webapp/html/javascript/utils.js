@@ -11,10 +11,12 @@ var knetmaps;
 *   - more (see the implementation)
 */
 $(document).ready (
-    function () {
-       setupApiUrls()
-       .then ( function () 
-       {				
+    function(){
+		// check for if API service is down
+		// it could be further improved
+		checkService()
+		setupApiUrls()
+       .then ( function(){				
 					genemap = GENEMAP.GeneMap({apiUrl: api_url})
 						.width(800).height(550); // changed from 750x400
 					knetmaps = KNETMAPS.KnetMaps();

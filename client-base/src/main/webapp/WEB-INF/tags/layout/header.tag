@@ -10,7 +10,6 @@
 			<div id="species_header">
 				<div class="navbarselect-container">
 					<select onchange="changeSpecies(this)" class="navbar-select"></select>
-					<img id="species-dropimg" src="html/image/drop-down.png" alt="drop-down image">
 				</div>
 				
 				<div id="release_icon" onclick="fetchStats()">
@@ -35,7 +34,7 @@
 
 				<div class="auth_container">
 					<a id="login_icon" title="Sign In" class="nav-links"></a>
-				<a href='https://knetminer.com/beta/knetspace/sign-up/' id="signup" title="Sign Up">Sign Up</a>
+				<a href='https://knetminer.com/beta/knetspace/sign-up/' class="ctaButton" id="signup" title="Sign Up">Sign Up</a>
 				</div>
 				
 				

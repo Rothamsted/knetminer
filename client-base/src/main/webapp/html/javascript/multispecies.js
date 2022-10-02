@@ -4,19 +4,21 @@ multiSpeciesFeature = function ()
     var currentTaxId = "";
 
     // function get lists of registered species from api_url+/species
-    function getSpeciesList()
+   function getSpeciesList()
     {
         console.log('getting species list')
+
     
-        $.get(api_url + '/dataset-info','').done( function(data){
-            var speciesInfos = data.species;
-            var createdDropDown = createDropdown(speciesInfos); 
-            if(createdDropDown){
-                $('.navbarselect-container').css('display','flex')
-                console.log('specie dropdown created')
-                multiSpeciesEvents(speciesInfos); 
-                deactivateSpinner("#wrapper");
-            }
+            $.get(api_url + '/dataset-info','').done( function(data){
+                var speciesInfos = data.species;
+                console.log(speciesInfos)
+                var createdDropDown = createDropdown(speciesInfos); 
+                if(createdDropDown){
+                    $('.navbarselect-container').css('display','flex')
+                    console.log('specie dropdown created')
+                    multiSpeciesEvents(speciesInfos); 
+                    deactivateSpinner("#wrapper");
+                }
         }).fail(function(xhr,status,errolog){
             errorComponent('#pGViewer_title',xhr);
             // when user internet connection is down
@@ -33,6 +35,7 @@ multiSpeciesFeature = function ()
         var expectedOptions = speciesNames.length;
         for(var speciesName in speciesNames){
             var singleSpecie = speciesNames[speciesName]; 
+            console.log(singleSpecie);
             var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
             $('.navbar-select').append(optionElement);
             if($('.navbar-select option').length === expectedOptions){

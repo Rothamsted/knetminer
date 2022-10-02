@@ -60,7 +60,15 @@ function createEvidenceTable(text, keyword) {
             table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
             //table = table + '<td>' + values[2] + '</td>';
-            table = table + '<td>' + values[3] + '</td>';
+            // converting pvalues from string to number 
+            var pValue = Number(values[3]); 
+
+            // checking if value is less than one, if yes N/A to be showed
+            if(pValue < 1){
+               table = table + '<td> N/A </td>'; 
+            }else{
+                table = table + '<td>' + pValue.toFixed(2) + '</td>';
+            }
 
             table = table + '<td>' + values[4] + '</td>';
 

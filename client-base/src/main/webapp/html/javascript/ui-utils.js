@@ -160,6 +160,20 @@ function getRadioValue(radio) {
     return radioValue;
 }
 
+// this functions checks if the dataset-info service API is invoked and dropdown menu is created 
+function checkService(){
+    setTimeout(()=> {
+        if($('.navbarselect-container').css("display") == 'none'){
+            console.log('network is down');
+            $("#search").hide();
+            $('#errorPage').css('display', 'flex'); 
+        }else{
+            $("#search").show();
+            console.log("you're connected");
+        }; 
+      }, 3000)
+}
+
 function deactivateSpinner(target) {
   $(target).maskLoader().destroy();
  }

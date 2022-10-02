@@ -60,6 +60,9 @@ async function setupApiUrls ( callerUrlPath = "" )
     api_url + "/dataset-info/knetspace-url",
     ksUrl => ksUrl.replace ( /\n/g, "" )
   );
+    
+
+ 
 
   return api_url; // just in case the invoker wants it
 }
