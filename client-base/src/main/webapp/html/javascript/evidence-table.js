@@ -1,8 +1,24 @@
-/*
- * Function
- *
+/**
+ * Used in the evidence table, to render p-values nicely.
  */
-function createEvidenceTable(text, keyword) {
+function renderEvidencePvalue ( pvalueStr )
+{
+	const na = "N/A";
+	
+	if ( !pvalueStr ) return na;
+	
+	var pvalue = Number ( pvalueStr ); 
+
+	// -1 is usually to mark that there is no p-value
+	if ( pvalue < 0 ) return na;
+	// for smaller values, use the scientific notation with a suitbale no. of digit, eg, 1.1234E-8
+	if ( pvalue < 1E-4 ) return pvalue.toExponential ( 4 ).toString ().toUpperCase();
+	// for bigger values, just round to a good digit, eg, 0.0123
+	return pvalue.toFixed ( 4 )	
+}
+
+function createEvidenceTable(text, keyword)
+{
     var table = "";
     var summaryArr = new Array();
     var summaryText = '';
@@ -59,16 +75,10 @@ function createEvidenceTable(text, keyword) {
 
             table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
-            //table = table + '<td>' + values[2] + '</td>';
-            // converting pvalues from string to number 
-            var pValue = Number(values[3]); 
-
-            // checking if value is less than one, if yes N/A to be showed
-            if(pValue < 1){
-               table = table + '<td> N/A </td>'; 
-            }else{
-                table = table + '<td>' + pValue.toFixed(2) + '</td>';
-            }
+            //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
+            
+            var pvalue = values[3]; 
+						table += '<td>' + renderEvidencePvalue ( pvalue ) + '</td>';
 
             table = table + '<td>' + values[4] + '</td>';
 
