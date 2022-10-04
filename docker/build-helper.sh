@@ -50,16 +50,26 @@ if ! `$is_container_mode`; then
 	# Move from the location of this script to the root of the Knetminer codebase 
 	cd ..
 
+	echo -e "\n  Copying web service WAR to Tomcat\n"
+
 	if [[ ! -e aratiny/aratiny-ws/target/aratiny-ws.war ]]; then
 		echo "\n\n\tERROR: aratiny-ws.war not found, you need to build Knetminer before running this build\n"
 		exit 1
 	fi
-
-	echo -e "\n  Copying web service WAR to Tomcat\n"
+	
  	cp -f aratiny/aratiny-ws/target/aratiny-ws.war "$knet_tomcat_home/webapps/ws.war"
 
+
 	echo -e "\n  Copying the client WAR to Tomcat\n"
+
+	if [[ ! -e ./aratiny/aratiny-client/target/knetminer-aratiny.war ]]; then
+		echo "\n\n\tERROR: knetminer-aratiny.war not found, you need to build Knetminer before running this build\n"
+		exit 1
+	fi
+
  	cp -f ./aratiny/aratiny-client/target/knetminer-aratiny.war "$knet_tomcat_home/webapps/client.war"
+
+else
 
 	echo -e "\n  Removing cache files from default dataset dir on the container\n"
 	dataset_dir=./aratiny/aratiny-ws/target/test-classes/knetminer-dataset
