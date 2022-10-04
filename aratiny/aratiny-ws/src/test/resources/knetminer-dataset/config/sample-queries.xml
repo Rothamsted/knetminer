@@ -7,16 +7,19 @@
 	</query>
 	<query>
 		<name>Example 2</name>
-		<description>Petal size QTL</description>
-		<term>"cell size" OR "cell division" OR "cell cycle"</term>
+		<description>Yield-related QTLs</description>
+		<term>spikelet OR seed OR "seed size" OR "yield" OR "inflorescence"</term>
 		<withinRegion>true</withinRegion>
 		<region>
-			<chromosome>4</chromosome>
-			<start>9920000</start>
-			<end>10180000</end>
-			<label>Petal size</label>
+			<chromosome>1</chromosome>
+			<start>22603100</start>
+			<end>25921500</end>
+			<label>yield</label>
 		</region>
-                <gene>At4g18330</gene>
+		<gene>ONE1</gene>
+		<gene>U12</gene>
+		<gene>CAK*</gene>
+		<gene>AT1G*</gene>		
 	</query>	
 	<query>
 		<name>Example 3</name>
