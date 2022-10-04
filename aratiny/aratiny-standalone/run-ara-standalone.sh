@@ -3,7 +3,8 @@
 # you run this script from). This is to give an idea of the fact Knetminer is designed independent on the
 # environment it runs (though Docker is the default/preferred/recommended). 
 #
-# WARNING: you should run me with 'source make.sh', in order to keep env vars I define. 
+# The script builds the aratiny dataset on /tmp (change for Windows), it then deploys the Knetminer .war files
+# into a Tomcat of choice, and finally runs Tomcat.  
 #
 
 set -e
