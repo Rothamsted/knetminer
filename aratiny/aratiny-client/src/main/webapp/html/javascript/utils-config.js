@@ -26,6 +26,8 @@ var knetspace_api_host= "";
  */
 async function setupApiUrls ( callerUrlPath = "" )
 {
+	$.ajaxSetup( { timeout:3000 } ); // Applies globally, from now on
+	
   var clientBaseUrl = window.location.href
     .replace ( /\?.*/g, "" ) // Don't mess-up with the params
     .replace ( /\/$/g, "" ); // URLs with // don't always work;
@@ -60,9 +62,6 @@ async function setupApiUrls ( callerUrlPath = "" )
     api_url + "/dataset-info/knetspace-url",
     ksUrl => ksUrl.replace ( /\n/g, "" )
   );
-    
-
- 
 
   return api_url; // just in case the invoker wants it
 }

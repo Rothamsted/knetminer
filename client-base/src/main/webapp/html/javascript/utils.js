@@ -4,33 +4,34 @@ var genemap;
 var knetmaps; 
 
 /*
-* Document ready event executes when the HTML document is loaded
-* 	- add/remove QTL regions
-* 	- advanced search
-* 	- tooltips
-*   - more (see the implementation)
+* Initialised the API URls, setup UI elements, renders possible errors. 
 */
-$(document).ready (
-    function(){
-		// check for if API service is down
-		// it could be further improved
-		checkService()
+$(document).ready ( 
+	function()
+	{
 		setupApiUrls()
-       .then ( function(){				
-					genemap = GENEMAP.GeneMap({apiUrl: api_url})
-						.width(800).height(550); // changed from 750x400
-					knetmaps = KNETMAPS.KnetMaps();
-	        multiSpeciesFeature.init();					
-					loginUtilsInit();	 // See notes in loginUtils.js
-	        loadOnReady();
-	        showReferenceGenome();
-	        initResetButton();
-	        inputHandlers();
-	        QtlRegionHandlers();
-	        searchHandlers();
-	        bodyHandlers();
-	        doGoogleAnalytics ();
+		.then ( function ()
+		{		
+			showApiInitResult ();
 			
-	     });        
-    }
-);
+			genemap = GENEMAP.GeneMap({apiUrl: api_url})
+				.width(800).height(550); // changed from 750x400
+	
+			knetmaps = KNETMAPS.KnetMaps();
+	
+	    multiSpeciesFeature.init();					
+			loginUtilsInit();	 // See notes in loginUtils.js
+	    loadOnReady();
+	    showReferenceGenome();
+	    initResetButton();
+	    inputHandlers();
+	    QtlRegionHandlers();
+	    searchHandlers();
+	    bodyHandlers();
+	    doGoogleAnalytics ();		
+		})
+		.catch ( 
+			err => showApiInitResult ( err )
+		);
+	});
+// ready()

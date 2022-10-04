@@ -160,23 +160,33 @@ function getRadioValue(radio) {
     return radioValue;
 }
 
-// this functions checks if the dataset-info service API is invoked and dropdown menu is created 
-function checkService(){
-    setTimeout(()=> {
-        if($('.navbarselect-container').css("display") == 'none'){
-            console.log('network is down');
-            $("#search").hide();
-            $('#errorPage').css('display', 'flex'); 
-        }else{
-            $("#search").show();
-            console.log("you're connected");
-        }; 
-      }, 3000)
+
+/** 
+ * Used after API initialisation (typically in the $(document).ready() handler), to setup the UI in case
+ * of successful initialisation, or to show an error page and logs in case of API failure.
+ * 
+ */
+function showApiInitResult ( error = null )
+{
+	if ( error )
+	{
+		var details = "HTTP code/message: " + error.status + "/" + error.statusText;
+		if ( error.responseText ) details += ". Response: " + error.responseText;
+			
+	  logError ( "Error while doing API initialisation.", details );
+	  
+	  $("#search").hide();
+	  $('#errorPage').css('display', 'flex');
+	  return; 
+	}
+	
+  $("#search").show();
 }
+
 
 function deactivateSpinner(target) {
   $(target).maskLoader().destroy();
- }
+}
 
 //  function creates an hidden element and takes a file type to be donwloaded to user system 
 function downloadFunction(filename,filetype){
@@ -221,10 +231,18 @@ $(function(){
 })
 
 /** 
- * Small helper to log an error within the jQuery functions like $.get().fail( jqXHR, status, errorlog )
+ * Small helper to log an error within the jQuery functions like $.get().fail( jqXHR, textStatus, errorThrown )
 */
-function logError ( msgPrefix, jqXHR, textStatus, errorThrown )
+function logErrorFromRemoteCall ( msgPrefix, jqXHR, textStatus, errorThrown )
 {	
-	var details = jqXHR.responseJSON ? jqXHR.responseJSON : jqXHR.responseText
-	console.log( msgPrefix, details );
+	var details = jqXHR.responseJSON ? jqXHR.responseJSON : jqXHR.responseText;
+	logError ( msgPrefix, details );
+}
+
+function logError ( msgPrefix, details = null )
+{
+	if ( details !== null )
+		console.error ( msgPrefix, details );
+	else
+		console.error ( msgPrefix )
 }
