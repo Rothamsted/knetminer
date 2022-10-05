@@ -14,7 +14,7 @@ function renderEvidencePvalue ( pvalueStr )
 	// for smaller values, use the scientific notation with a suitable no. of digit, eg, 1.1234E-8
 	if ( pvalue < 1E-4 ) return pvalue.toExponential ( 4 ).toString ().toUpperCase();
 	// for bigger values, just round to a good digit, eg, 0.0123
-	return pvalue.toFixed ( 4 )	
+	return pvalue.toFixed ( 2 )	
 }
 
 function createEvidenceTable(text, keyword)
@@ -77,10 +77,16 @@ function createEvidenceTable(text, keyword)
             table = table + '<td>' + evidenceValue + '</td>';
             //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
             
+            // p-values
             var pvalue = values[3];
+            pvalue = renderEvidencePvalue ( pvalue );
             // to tell table-sorter that it's a number
             var sortedPval = pvalue == isNaN ( pvalue ) ? 1 : pvalue
-						table += "<td actual-pvalue = '" + sortedPval + "'>" + renderEvidencePvalue ( pvalue ) + "</td>";
+            
+						table += `<td actual-pvalue = '${sortedPval}'>${pvalue}</td>`;
+						// /end:p-values
+	
+
 
             table = table + '<td>' + values[4] + '</td>';
 
