@@ -77,8 +77,10 @@ function createEvidenceTable(text, keyword)
             table = table + '<td>' + evidenceValue + '</td>';
             //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
             
-            var pvalue = values[3]; 
-						table += '<td>' + renderEvidencePvalue ( pvalue ) + '</td>';
+            var pvalue = values[3];
+            // to tell table-sorter that it's a number
+            var sortedPval = pvalue == isNaN ( pvalue ) ? 1 : pvalue
+						table += "<td actual-pvalue = '" + sortedPval + "'>" + renderEvidencePvalue ( pvalue ) + "</td>";
 
             table = table + '<td>' + values[4] + '</td>';
 
@@ -213,6 +215,8 @@ function createEvidenceTable(text, keyword)
                 if (typeof attr !== 'undefined' && attr !== false) {
                     return attr;
                 }
+                var actualPvalue = $(node).attr ( 'actual-pvalue' );
+                if ( actualPvalue ) return Number ( actualPvalue );
                 return $(node).text();
             }
         });
