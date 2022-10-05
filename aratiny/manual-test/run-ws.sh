@@ -3,6 +3,8 @@ mydir="$(pwd)"
 
 profiles="$1"
 export MAVEN_OPTS="$MAVEN_OPTS -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n"
+# Suppresses pesky warnnings from Jetty. BE CAREFUL. They might be significant
+export MAVEN_OPTS="$MAVEN_OPTS -Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.annotations.AnnotationParser=ERROR"
 
 echo -e "\n\n\t------ Launching the Knetminer Test Server via Maven -------\n"
 cd ../aratiny-ws

@@ -1,7 +1,9 @@
 export JAVA_TOOL_OPTIONS="-Xms1G -Xmx4G" 
+
 # Let's make it less verbose
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.slf4j.simpleLogger.defaultLogLevel=INFO"
-export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=ERROR"
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.annotations.AnnotationParser=ERROR"
+
 # Copes with timeouts from our Nexus
 export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dsun.net.client.defaultConnectTimeout=300000 -Dsun.net.client.defaultReadTimeout=300000"
 
