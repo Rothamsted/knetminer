@@ -46,14 +46,16 @@ if `$is_container_mode`; then
 	touch /etc/crontab /etc/cron*/*
 fi
 
+
 if ! `$is_container_mode`; then
+	
 	# Move from the location of this script to the root of the Knetminer codebase 
 	cd ..
 
 	echo -e "\n  Copying web service WAR to Tomcat\n"
 
 	if [[ ! -e aratiny/aratiny-ws/target/aratiny-ws.war ]]; then
-		echo "\n\n\tERROR: aratiny-ws.war not found, you need to build Knetminer before running this build\n"
+		echo -e "\n\n\tERROR: aratiny-ws.war not found, you need to build Knetminer before running this build\n"
 		exit 1
 	fi
 	
@@ -63,7 +65,7 @@ if ! `$is_container_mode`; then
 	echo -e "\n  Copying the client WAR to Tomcat\n"
 
 	if [[ ! -e ./aratiny/aratiny-client/target/knetminer-aratiny.war ]]; then
-		echo "\n\n\tERROR: knetminer-aratiny.war not found, you need to build Knetminer before running this build\n"
+		echo -e "\n\n\tERROR: knetminer-aratiny.war not found, you need to build Knetminer before running this build\n"
 		exit 1
 	fi
 
@@ -72,8 +74,9 @@ if ! `$is_container_mode`; then
 else
 
 	echo -e "\n  Removing cache files from default dataset dir on the container\n"
-	dataset_dir=./aratiny/aratiny-ws/target/test-classes/knetminer-dataset
-	find "$dataset_dir/data" \( -depth 1 -and -not -name 'knowledge-network.oxl' \) -exec rm -Rf \{\} \; 
+	./dataset-cleanup.sh /root/knetminer-dataset
+	
+	#find "$dataset_dir/data" \( -depth 1 -and -not -name 'knowledge-network.oxl' \) -exec rm -Rf \{\} \; 
 
 fi
 

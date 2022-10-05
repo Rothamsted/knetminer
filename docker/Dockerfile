@@ -39,6 +39,8 @@ COPY /docker/analytics-s3-sync.sh ./aws
 # Run some other setup operations
 COPY /docker/build-helper.sh .
 COPY /docker/runtime-helper.sh .
+COPY /docker/dataset-cleanup.sh .
+
 
 # Does minimal finishing touches
 # 
