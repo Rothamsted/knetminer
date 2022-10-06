@@ -223,7 +223,7 @@ function createEvidenceTable(text, keyword)
                     return attr;
                 }
                 var actualPvalue = $(node).attr ( 'actual-pvalue' );
-                if ( actualPvalue ) return Number ( actualPvalue );
+                if ( actualPvalue ) return actualPvalue;
                 return $(node).text();
             }
         });
