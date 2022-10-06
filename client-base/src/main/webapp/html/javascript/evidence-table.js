@@ -214,8 +214,9 @@ function createEvidenceTable(text, keyword)
         });
 
         $("#tablesorterEvidence").tablesorter({
-            // sort by p-value (displayed in JS table as col3) in ascending order (0) in all cases
-            sortList: [[3,0]],
+            // Initial sorting is by p-value, user genes, total genes
+            // This ensures something significant if both pvalues and user genes are N/A and 0
+            sortList: [ [3, 0], [5, 1], [4, 1]],
             textExtraction: function (node) { // Sort TYPE column
                 var attr = $(node).attr('type-sort-value');
                 if (typeof attr !== 'undefined' && attr !== false) {
