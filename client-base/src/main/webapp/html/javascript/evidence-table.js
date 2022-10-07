@@ -12,9 +12,9 @@ function renderEvidencePvalue ( pvalueStr )
 	// -1 is usually to mark that there is no p-value
 	if ( pvalue < 0 ) return na;
 	// for smaller values, use the scientific notation with a suitable no. of digit, eg, 1.1234E-8
-	if ( pvalue < 1E-4 ) return pvalue.toExponential ( 4 ).toString ().toUpperCase();
+	if ( pvalue < 1E-4 ) return pvalue.toExponential ( 2 ).toString ().toUpperCase();
 	// for bigger values, just round to a good digit, eg, 0.0123
-	return pvalue.toFixed ( 2 )	
+	return pvalue.toFixed ( 4 )	
 }
 
 function createEvidenceTable(text, keyword)
