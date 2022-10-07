@@ -7,6 +7,8 @@
 
 echo -e "\n\n\tGoal '$MAVEN_GOAL' via Docker bare image\n"
 
+docker pull "knetminer/knetminer-bare:$docker_tag_bare"
+
 docker run --rm \
   --volume `pwd`:/root/knetminer-build/knetminer \
   --volume ~/.m2:/root/.m2 \
@@ -14,7 +16,7 @@ docker run --rm \
   --env JAVA_TOOL_OPTIONS \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
-  knetminer/knetminer-bare:$docker_tag \
+  "knetminer/knetminer-bare:$docker_tag_bare" \
   "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
 
 # For some reason, we get files that the GHA runner can't access anymore

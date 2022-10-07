@@ -6,33 +6,60 @@
 
 set -e
 
-do_bare='false'
+do_bare=false
+docker_tag=latest
+docker_tag_bare=latest
+do_mvn_clean=true
 
-if [[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
-	cat <<EOT
-	
-	
-	Syntax: $(basename $0) [--help|-h] [--bare] [<docker tag>]
+while [[ $# -gt 0 ]]
+do
+	opt_name="$1"
+  case "$opt_name" in
+  	# WARNING: these '--:' special markers are used by --help to generate explanations about the available
+  	# options.
+  	
+  	#--: Builds the bare image too
+  	--bare)
+  		do_bare='true'; shift;;
 
-  Builds the Knetminer Docker image, including rebuilding the .war applications and default dataset
-  files with the right settings. 
-  
-  --bare if given, rebuilds the bare image too
-  <docker tag> the tag to attach to the image, default is 'latest' 
-  
-	See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+  	#--: The tag to use to mark the main image
+  	--tag)
+  		docker_tag="$2"; shift 2;;
+
+  	#--: The tag to mark/use the bare image
+  	--tag-bare)
+  		docker_tag_bare="$2"; shift 2;;
+  	
+  	#--: Rebuilds on the existing Maven build, doesn't issue 'mvn clean'
+  	--no-mvn-clean)
+  	 	do_mvn_clean='false'; shift;;
+  	
+  	#--: yields this help output and then exits with 1
+  	--help|-h)
+  		cat <<EOT
+
+
+  Syntax: $(basename $0) <options>
+
+Builds the Knetminer Docker image(s), including rebuilding the .war applications and default dataset
+files with the right settings. 
+    
+See https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+	
+  Options:
 
 EOT
-	exit 1
-fi
+  		# Report the options
+			egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'\s*#\-\-:/#/g' | sed -E s/'^\s+(\-\-.+)\)'/'\1\n'/g
 
-if [[ "$1" == '--bare' ]]; then
-	do_bare='true'
-	shift
-fi
-
-
-docker_tag=${1-latest} 
+  		exit 1;;
+  	--*)
+			echo -e "\n\n\tERROR: Invalid option '$1', try --help\n"
+  		exit 1;;
+  	*)
+  		shift;;
+	esac
+done
 
 
 echo -e "\n\n\tBuilding the Knetminer Docker Image with tag '$docker_tag'\n" 
@@ -44,20 +71,20 @@ cd ..
 # This is usually useful for custom Docker-independent builds, see local-env-ex     
 export MAVEN_ARGS=${MAVEN_ARGS:-'-Pdocker --no-transfer-progress --batch-mode'} 
 
-echo -e "\n  Re-building with the right Maven settings\n" 
-#mvn clean install $MAVEN_ARGS -DskipTests -DskipITs
+echo -e "\n  Re-building with the right Maven settings\n"
+`$do_mvn_clean` && clean_goal=clean || clean_goal=''
+mvn $clean_goal install $MAVEN_ARGS -DskipTests -DskipITs
 
 # Partial and quicker builds, which we use during development, when we know what we're doing
-mvn install -pl "!client-base" $MAVEN_ARGS -DskipTests -DskipITs
-#mvn install $MAVEN_ARGS -DskipTests -DskipITs
+#mvn install -pl "!client-base" $MAVEN_ARGS -DskipTests -DskipITs
 
 if `$do_bare`; then
 	echo -e "\n\  Creating Bare image\n" 
-	docker build -t knetminer/knetminer-bare:$docker_tag -f docker/Dockerfile-bare .
+	docker build -t "knetminer/knetminer-bare:$docker_tag_bare" -f docker/Dockerfile-bare .
 fi
 
 
-echo -e "\n\  Creating image\n" 
-docker build -t knetminer/knetminer:$docker_tag  --build-arg DOCKER_TAG="$docker_tag" -f docker/Dockerfile .
+echo -e "\n\  Creating image\n"
+docker build -t "knetminer/knetminer:$docker_tag"  --build-arg DOCKER_TAG="$docker_tag_bare" -f docker/Dockerfile .
 
 echo -e "\n\  The End\n" 

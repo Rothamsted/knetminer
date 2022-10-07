@@ -3,7 +3,7 @@ sudo mvn $MAVEN_ARGS clean # The build inside docker created files we don't own
 
 echo -e "\n\n\tBuilding Docker image\n"
 cd docker
-./docker-build-image.sh "$docker_tag"
+./docker-build-image.sh --tag "$docker_tag" --tag-bare "$docker_tag_bare" --no-mvn-clean
 
 if [[ "$GIT_BRANCH" != 'master' ]]; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
@@ -13,42 +13,39 @@ fi
 
 # The bare image is usually rebuilt manually, here we've only to tag it when releasing
 #
-if $IS_RELEASE; then
+if `$IS_RELEASE`; then
 	echo -e "\n\n\tTagging and pushing new Docker images with ${NEW_RELEASE_VER}\n"
-	# We need it for the tag
-	docker pull knetminer/knetminer-bare
-	docker_release_tag="$NEW_RELEASE_VER"	
+	# We don't need this here, since it was already got to do the build
+	# docker pull "knetminer/knetminer-bare:$docker_tag_bare"
 else
-	echo -e "\n\n\tPushing new Docker images\n"
+	echo -e "\n\n\tPushing new Docker image(s)\n"
 fi
 
 
 docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
 
-for postfix in bare ''
-do
-	[[ -z "$postfix" ]] || postfix="-$postfix"
+echo -e "\nPushing main image with tag '$docker_tag'\n"
+docker push "knetminer/knetminer:$docker_tag"
 
-  # See above
-  if [[ "$postfix" != '-bare' ]]; then
-  	echo -e "\nPushing Docker$postfix:$docker_tag"
-		docker push knetminer/knetminer$postfix:$docker_tag
-	fi
+# When we're releasing, we further tag the same images with the release tag and
+# push them too. This should only happen for the master branch
 
-  `$IS_RELEASE` || continue 
+if `$IS_RELEASE`; then
 
-  # When we're releasing, we further tag the same images with the release tag and
-  # push them too. This should only happen for the master branch
+	echo -e "\nTagging Docker main with $NEW_RELEASE_VER\n"
+	docker tag "knetminer/knetminer:$docker_tag" "knetminer/knetminer:$NEW_RELEASE_VER"
 
-	echo -e "\nTagging Docker$postfix with $docker_release_tag"
-	tag_str=":$docker_release_tag"
-	docker tag knetminer/knetminer$postfix knetminer/knetminer$postfix$tag_str
-	 
-	echo -e "\nPushing Docker$postfix$tag_str"
-	docker push knetminer/knetminer$postfix$tag_str
-	
-	echo 
-done
+	echo -e "\nTagging Docker bare with $NEW_RELEASE_VER\n"
+	docker tag "knetminer/knetminer-bare:$docker_tag_bare" "knetminer/knetminer-bare:$NEW_RELEASE_VER"
+
+	echo -e "\nPushing main:$NEW_RELEASE_VER\n"
+	docker push "knetminer/knetminer:$NEW_RELEASE_VER"
+
+	echo -e "\nPushing bare:$NEW_RELEASE_VER\n"
+	docker push "knetminer-bare/knetminer-bare:$NEW_RELEASE_VER"
+
+fi
+
 
 cd .. # back to the codebase's root
 
@@ -59,12 +56,15 @@ if $IS_RELEASE; then
 	echo -e "\n\n\tSetting '$NEW_RELEASE_VER' as default --image-version in docker-run.sh\n"
 	sed -E --in-place "s/^image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
 else
-	# Else, we might need to restore the pointers to the latest
+	# Else, we might need to restore the pointers to the the one we have built
 	if ! egrep -q "^image_version='latest'" docker/docker-run.sh; then
-		echo -e "\n\n\tRestoring 'latest' version for --image-version in docker-run.sh\n"
+	  msg = "Restoring 'latest' version for --image-version in docker-run.sh"
+		echo -e "\n\n\t$msg\n"
+		
 		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
+		
 		git commit docker/docker-run.sh \
-		    -m "Restoring 'latest' version for --image-version in docker-run.sh (ci script). [ci skip]"
+		    -m "$msg (ci script). [ci skip]"
 		export NEEDS_PUSH=true
 	fi
 fi

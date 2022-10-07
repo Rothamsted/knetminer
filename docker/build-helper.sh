@@ -17,8 +17,8 @@ if [[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
 	
 	Syntax: $(basename $0) [--help|-h] [tomcat-home-dir] [new-tomcat-manager-password]
 
-	Builds the Knetminer .war applications against Docker or an host-based Tomcat instance.
-	See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+Builds the Knetminer .war applications against Docker or an host-based Tomcat instance.
+See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
 
 EOT
 	exit 1
