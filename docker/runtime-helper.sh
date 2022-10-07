@@ -22,8 +22,8 @@ if [[ "$1" == '--help' ]] || [[ "$1" == '-h' ]]; then
 	
 	Syntax: $(basename $0) [--help|-h] [--deploy-only] [tomcat-home-dir]
 
-	Runs a Knetminer instance against a dataset, either from the Knetminer Docker container or from your own location.
-	See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
+Runs a Knetminer instance against a dataset, either from the Knetminer Docker container or from your own location.
+See my source and https://github.com/Rothamsted/knetminer/wiki/8.-Docker for details.
 
 EOT
 	exit 1

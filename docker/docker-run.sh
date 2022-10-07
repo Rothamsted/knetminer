@@ -60,21 +60,30 @@ do
   	--help|-h)
   		echo -e "\n"
   		# Report the options
-  		egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'#\-\-:/#/g' | sed -E s/'(^\s+\-\-.+)\)'/'\1'/g
   		cat <<EOT
+================ The Knetminer Launcher ================ 
 
+Runs a Knteminer instance based on Docker. 
+For details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker	
 
-	For details see https://github.com/Rothamsted/knetminer/wiki/8.-Docker
-	
-	=== Variables that affects this script ===
-
-	DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above).
-	If you don't set this, the default is '-it'.
-	
-	JAVA_TOOL_OPTIONS: custom JVM options. The default for this tells the JVM in the container to use all the available
-	RAM (see my source for details).
+=== Options:
 	
 EOT
+
+			egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'^\s*#\-\-:/#/g' | sed -E s/'^\s+(\-\-.+)\)'/'\1\n'/g
+
+			cat <<EOT
+
+=== Variables that affects this script:
+
+DOCKER_OPTS: custom options to be passed to 'docker run' (in addition to the ones implied by other variables above).
+If you don't set this, the default is '-it'.
+	
+JAVA_TOOL_OPTIONS: custom JVM options. The default for this tells the JVM in the container to use all the available
+RAM (see my source for details).
+			
+EOT
+
   		exit 1;;
   	--*)
 			echo -e "\n\n\tERROR: Invalid option '$1', try --help\n"
