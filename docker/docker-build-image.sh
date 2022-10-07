@@ -75,9 +75,6 @@ echo -e "\n  Re-building with the right Maven settings\n"
 `$do_mvn_clean` && clean_goal=clean || clean_goal=''
 mvn $clean_goal install $MAVEN_ARGS -DskipTests -DskipITs
 
-# Partial and quicker builds, which we use during development, when we know what we're doing
-#mvn install -pl "!client-base" $MAVEN_ARGS -DskipTests -DskipITs
-
 if `$do_bare`; then
 	echo -e "\n\  Creating Bare image\n" 
 	docker build -t "knetminer/knetminer-bare:$docker_tag_bare" -f docker/Dockerfile-bare .
