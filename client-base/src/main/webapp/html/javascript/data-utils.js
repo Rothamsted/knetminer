@@ -515,6 +515,8 @@ function changeSpecies(selectElement){
     $('#speciename_container').empty();
     $('#chr1').empty();
     $('#tabviewer').hide(); 
+    $('#pGSearch_title').hide(); 
+    
     if(currentTaxData){
         $.get(api_url + '/dataset-info','').done( function(data){
             var calcGenoome = multiSpeciesFeature.speciesEvents(data.species)

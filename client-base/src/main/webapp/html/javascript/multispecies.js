@@ -6,15 +6,13 @@ multiSpeciesFeature = function ()
     // function get lists of registered species from api_url+/species
    function getSpeciesList()
     {
-        console.log('getting species list')
-
-    
+            console.log('getting species list')
             $.get(api_url + '/dataset-info','').done( function(data){
                 var speciesInfos = data.species;
                 console.log(speciesInfos)
                 var createdDropDown = createDropdown(speciesInfos); 
                 if(createdDropDown){
-                    $('.navbarselect-container').css('display','flex')
+                    $('#species_header').css('display','flex');
                     console.log('specie dropdown created')
                     multiSpeciesEvents(speciesInfos); 
                     deactivateSpinner("#wrapper");

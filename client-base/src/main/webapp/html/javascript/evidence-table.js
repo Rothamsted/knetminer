@@ -33,9 +33,8 @@ function createEvidenceTable(text, keyword)
           });
         
         table = '';
-        table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
-        //table = table + '<div id="evidenceSummary1" class="evidenceSummary" title="Click to filter by type"></div>';
-        // display dynamic Evidence Summary legend above Evidence View.
+   
+
         table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
         table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
         table = table + '<table id="tablesorterEvidence" class="tablesorter">';
@@ -43,12 +42,12 @@ function createEvidenceTable(text, keyword)
         table = table + '<tr>';
         var header = evidenceTable[0].split("\t");
         table = table + '<th width="75">Omit/Add</th>';
-        table = table + '<th width="50">' + header[0] + '</th>';
-        table = table + '<th width="212">DESCRIPTION</th>';
+        table = table + '<th width="50">Type</th>';
+        table = table + '<th width="212">Description</th>';
         //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
-        table = table + '<th width="78">' + header[3] + '</th>';
-        table = table + '<th width="70">TOTAL ' + header[4] + '</th>';
-        table = table + '<th width="103">' + header[5] + '</th>';
+        table = table + '<th width="78"> P-Value</th>';
+        table = table + '<th width="70">Genes</th>';
+        table = table + '<th width="103">Gene List</th>';
         table = table + '<th width="70">Select</th>';
         table = table + '</tr>';
         table = table + '</thead>';
@@ -94,7 +93,7 @@ function createEvidenceTable(text, keyword)
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
             var userGenes = 0;
             if (values[5].length > 0) {
-                userGenes = 1; // i.e., min. 1 user gene found
+                userGenes = values[5]; 
                 values[5] = values[5].trim();
                 if (values[5].includes(",")) { // for multiple user genes
                     userGenes = values[5].split(",").length; // total user genes found
@@ -119,8 +118,9 @@ function createEvidenceTable(text, keyword)
         table = table + '</tbody>';
         table = table + '</table>';
         table = table + '</div>';
-        table = table + '<div id="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button>';
-        table = table + '</insert><div id="loadingNetwork_Div"></div></div>';
+        table = table + '<div class="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button>';
+        table = table + '</insert><div id="loadingNetwork_Div"></div>';
+        table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br/></div>';
 
 
         $('#evidenceTable').html(table);
@@ -292,10 +292,12 @@ function generateMultiEvidenceNetwork(){
                }
            }
        }
-    //console.log("evidence terms elected: "+ evidences_ondexid_list);
-    //console.log("Selected evidence(s) are linked to these user_genes: "+ geneids);
+
+       var evidenceNotice; 
+    
     if (evidences_ondexid_list === "") {
-        $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Please select evidence terms.</b></div>');
+        evidenceNotice = '<span><b>Please select evidence terms.</b></span>'
+        jboxNotice(evidenceNotice, 'red', 300, 2000);
     }
     else {
         var params = {keyword: evidences_ondexid_list};
@@ -305,7 +307,10 @@ function generateMultiEvidenceNetwork(){
           generateCyJSNetwork(api_url + '/network', params);
 	}
        else {
-       	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Search with a genelist to view network.</b></div>');
+        evidenceNotice = '<span><b>Search with a genelist to view network.</b></span>'
+        jboxNotice(evidenceNotice, 'red', 300, 2000);
        }
     }
+
+   
 }

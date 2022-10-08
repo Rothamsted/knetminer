@@ -16,10 +16,10 @@ function createGenesTable(text, keyword, rows){
 		utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function (match, p1) {
 			return String.fromCharCode('0x' + p1);
 		});
-		table += '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br />';
-		table += 'Select gene(s) and click "Create Network" button below to see the network.<span id="hintSortableTable" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></p>';
-		table += '<form name="checkbox_form">';
-		table += '<u>Max</u> number of genes to show: ';
+
+		table += '<form name="checkbox_form"><div class="gene_header_container">';
+		table += '<div><div id="evidence_Summary_Legend" class="evidenceSummary">' + interactiveSummaryLegend + '</div>';
+		table += '<span><u>Max</u> number of genes to show: ';
 		table += '<select value="' + /*rows*/results + '" id="numGenes">';
 		table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000</option>';
 		table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
@@ -27,13 +27,12 @@ function createGenesTable(text, keyword, rows){
 		table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
 		table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
 		table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
-		table += '</select>';
+		table += '</select> </span></div>';
 
-		table += '<div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
-			'<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div>';
+		table += '<div style="display: flex;flex-direction: column;"> <span class="ctaButton" id="hint_sortable_table" onclick="geneViewHelper()">Help <i class="fas fa-info-circle"></i></span> <div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
+			'<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div></div></div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
-		table += '<div id="evidence_Summary_Legend" class="evidenceSummary">' + interactiveSummaryLegend + '</div>';
 
 		table += '<div id= "geneViewTable" class = "scrollTable">';
 		table += '<table id = "tablesorter" class="tablesorter">';
@@ -43,27 +42,16 @@ function createGenesTable(text, keyword, rows){
 		var headers = candidateGenes[0].split("\t");
 		var hAcc = headers[1];
 		var hName = headers[2];
-		var hChromosome = headers[3];
-		var hChrStart = headers[4];
-		var hTaxId = headers[5];
-		var hEvidence = headers[9];
 
-		table += '<th width="100">' + hAcc + '</th>';
-		table += '<th width="100" title="Show ' + hName + ', if not same as ' + hAcc + '">' + hName + '</th>'; // added Gene Name to Gene View table
+		table += '<th width="100"> Accession </th>';
+		table += '<th width="100" title="Show ' + hName + ', if not same as ' + hAcc + '"> Gene</th>'; // added Gene Name to Gene View table
 		
-		// TODO: is there a reason for these amateur tests against true?
-		// TODO: what does this flag mean?! 
 		
 	
-
+		table += '<th width="60">Chr</th>';
+		table += '<th width="70">Nt start</th>';
 		
-	
-		
-
-			table += '<th width="60">' + hChromosome + '</th>';
-			table += '<th width="70">' + hChrStart + '</th>';
-		
-		table += '<th width="220">' + hEvidence + '</th>';
+		table += '<th width="220">Evidence</th>';
 		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
@@ -71,7 +59,6 @@ function createGenesTable(text, keyword, rows){
 		table += '<tbody class="scrollTable">';
 
 		// Main loop over the resulting genes.
-		// 
 		for (var row = 1; row <= results; row++)
 		{
 			var values = candidateGenes[row].split("\t");
@@ -212,8 +199,9 @@ function createGenesTable(text, keyword, rows){
 		table += '</form>';
 	} // if ( candidateGenes.length > 2 )
 
-	table += '<div id="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"> Create Network </button>';
-	table += '</insert><div id="loadingNetworkDiv"></div></div>';
+	table += '<div class="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"> Create Network </button>';
+	table += '</insert><div id="loadingNetworkDiv"></div>'
+	table += '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br /></div>';
 
 	document.getElementById('resultsTable').innerHTML = table;
 	// scroll down to geneTable, but show tabviewer_buttons above
@@ -253,14 +241,12 @@ function createGenesTable(text, keyword, rows){
 	$("#tablesorter").tablesorter({
 		// sorting column 5 in descending order
 		// you can add sort columns in the array below [column number, sorting direction]
-		// sorting direction 1: descending and 0:ascending. 
+		// sorting direction 1 is descending and 0 is ascending. 
 		sortList:[[5,1]],
-		headers: {
-			// do not sort "select" column
-			6: { sorter: false },
-			
-
-		}
+		// headers: {
+		// 	// do not sort "select" column
+		// 	// 6: { sorter: false },
+		// }
 	});
 
 	$("#numGenes").change(function (e) {
@@ -399,7 +385,8 @@ function generateCyJSNetwork(url, requestParams) {
  */
 function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     var candidatelist = [];
-    //var cb_list = document.checkbox_form.candidates;
+	var knetNotice; 
+	
     var cb_list = $("input[name=candidates");
     var cb_list_len = cb_list.length;
     for (var i = 0; i < cb_list_len; i++) {
@@ -409,19 +396,29 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
     }
     //console.log(candidatelist.length +" gene(s) selected.");
     if (candidatelist == "") {
-        $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Please select candidate genes.</b></div>');
+		knetNotice = "Please select candidate genes."
+		jboxNotice(knetNotice, 'red', 300, 2000);
+		
     }
     else if (candidatelist.length > knetview_limit/*20*/) {
         if(enforce_genelist_limit === false) { // Pro plan user
-           $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Gene networks can only be created for up to max. '+knetview_limit+' genes.</b></div>');
+            knetNotice = '<span></span><b>Gene networks can only be created for up to max. '+knetview_limit+' genes.</b></span>'
+			
           }
           else { // Free plan user
-            $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>The KnetMiner Free Plan is limited to a network of '+knetview_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks for 200 genes</b></div>');
+            knetNotice = '<span></span><b>Gene networks can only be created for up to max. '+knetview_limit+' genes.</b></span>'
+            '<span id="loadingNetworkDiv"><b>The KnetMiner Free Plan is limited to a network of '+knetview_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks for 200 genes</b></span>'; 
+		
           }
+
+		  jboxNotice(knetNotice, 'red', 300, 2000);
     }
     else {
         generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist,exportPlainJSON:false});
     }
+
+	
+
 }
 
 

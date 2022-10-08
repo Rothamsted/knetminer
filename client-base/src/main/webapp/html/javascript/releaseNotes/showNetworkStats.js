@@ -3,7 +3,7 @@
 
 
 
-var dbVersion = '', dbTitle='';
+var dbVersion = '', dbTitle='', dbMetaData = ''; 
 
 /*
  * Function gets release note data title and version number from /dataset-info api call. 
@@ -13,6 +13,7 @@ function getDbDetails(){
     $.get(dbUrl).done(function (dbData) { 
         dbTitle = dbData.title,
         dbVersion =  dbData.version 
+        dbMetaData = dbData.description.toLowerCase(); 
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
 			logErrorFromRemoteCall ( "Error while invoking /dataset-info:", jqXHR, textStatus, errorThrown );
@@ -101,10 +102,20 @@ async function fetchStats(){
 
       cc_table += "</table></table></table>";
 
+      var dbMetaDataStr = dbMetaData.split(/[, ]+/);
 
-      var content = `<div id="release-content">
+    // spiliting paragraphs into chunks 
+      var paragraphs = [...seperateParagraph(dbMetaDataStr,9)]
+
+
+      var content = `<div style="width:fit-content" id="release-content">
+      <p>
+      ${dbTitle} is ${paragraphs[0].join(' ')} <br>
+      ${paragraphs[1].join(' ')} 
+      ${paragraphs[2].join(' ')}
+      </p>
       <p id="network_stats" > 
-      <span>The ${dbTitle} knowledge network contains:</span>
+      <span>This knowledge network contains:</span>
       ${statsText} ${cc_table}
       </p>
       <br/>
@@ -138,3 +149,10 @@ function fetchValue(valText) {
     var val = valText.substring(start + 1, end);
     return val;
 }
+
+// function spilts long string paragraph into chunks when provided with the array of strings and number of text that should be in a sub array. 
+function* seperateParagraph(array,num){
+    for(var i=0;i < array.length; i+= num ){
+        yield array.slice(i,i+8)
+    }
+  }

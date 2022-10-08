@@ -1,5 +1,5 @@
 
-//functions shows the genome or qtl search box and chromosome viewer if there is a reference genome
+//function shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome(){
 
     // TODO: this flag is going to disappear (ref genome is always on now)
@@ -10,8 +10,7 @@ function showReferenceGenome(){
            $('#genemap-tab_button').hide();
            $('#genemap-tab').hide();
        }
-   }
-   else {
+   }else {
        activateButton('resultsTable');
        $('#genomeorqtlsearchbox').hide(); // hide QTL search
        $('#genemap-tab_button').hide(); // hide Map View option
@@ -20,7 +19,7 @@ function showReferenceGenome(){
 
 }
 
-// function runs on page jquery document ready
+// function runs when jquery document ready event triggers 
 function loadOnReady(){
 
   // particle js background config 
@@ -136,6 +135,7 @@ function QtlRegionHandlers(){
                 .find('td:eq(4)')
                 .find('input:text:eq(0)')
                 .attr({
+                    'class': 'gene_count',
                     'id': 'genes' + (curMaxInput),
                     'name': 'label' + (curMaxInput),
                     'onFocus': 'findGenes(this.id, $(\'#chr' + (curMaxInput) + ' option:selected\').val(), $(\'#start' + (curMaxInput) + '\').val(), $(\'#end' + (curMaxInput) + '\').val())',
@@ -269,10 +269,7 @@ function bodyHandlers(){
             message = sampleQueryButtons;
             addClass = "tooltip-static";
         }
-        else if (target == 'hintSortableTable') {
-            message = 'On clicking the <b>Create Network</b> button: it opens KnetMaps, displays a subset of the knowledge network containing only the selected genes and the relevant evidence network.';
-            addClass = 'networkhint'
-        }else if(target == 'knetScore'){
+        else if(target == 'knetScore'){
             message = "The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised."; 
             addClass = 'knetscorehint'; 
         }
@@ -321,7 +318,33 @@ function bodyHandlers(){
     $('body').on('mouseleave', 'div.tooltip-static', function (event) {
         $('div.tooltip').remove();
     });
+
+    
 }
+
+// function creates, shows and destroys gene and evidence view helper modal element
+function geneViewHelper(){
+    var modalElement = document.getElementById('geneviewHelper')
+    var isModalCreated = $.contains(document.body,modalElement); 
+
+    if(isModalCreated){
+        modalElement.remove(); 
+        $('#geneviewHelper-overlay').remove(); 
+    }
+
+    var header= '<h2 style="color:white;margin:0">KnetMiner View Helper</h2>'; 
+    var content = "<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>";
+
+    var geneHelperModal = new jBox('Modal', {
+        id:'geneviewHelper',animation: 'pulse', title: header, content:content, cancelButton: 'Exit', draggable: 'title',
+        target: $('#hint_sortable_table'), width: 350, offset: {x: -130, y: -480}, delayOpen: 100
+    });
+    geneHelperModal.open(); 
+
+ 
+}
+
+
 
 
 

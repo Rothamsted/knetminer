@@ -19,7 +19,7 @@ function activateResetButton(){
 
 function activateButton(option){
     
-    $('.resultViewer:visible').fadeOut(0, function () {
+    $('.result_viewer:visible').fadeOut(0, function () {
         $('.button_off').attr('class', 'button_on');
         $('#' + option).fadeIn();
         $('#' + option + '_button').attr('class', 'button_off');
@@ -176,7 +176,7 @@ function showApiInitResult ( error = null )
 	  logError ( "Error while doing API initialisation.", details );
 	  
 	  $("#search").hide();
-	  $('#errorPage').css('display', 'flex');
+	  $('#error_page').css('display', 'flex');
 	  return; 
 	}
 	
@@ -204,9 +204,6 @@ function downloadFunction(filename,filetype){
     return true;
 
   }
-
-
-
 
 // function to handle network export: show and hide events
 $(function(){
