@@ -92,25 +92,17 @@
                             </tr>
                             <tr>
 								<td>
-									<select id="chr1" onChange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" >
-										<!-- 
-											TODO: variable doesn't exist anymore (comes from the API) try replacing this with a foo constant.
-											It should work, since the actual values are updated dynamically from the API, upon specie selection.
-										 -->
-										<c:forTokens items="${chromosomes}" delims="," var="item" varStatus="status">
-       									<option value="${item}">${item}</option>
-    								</c:forTokens>
-									</select>
+									<select id="chr1" onChange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" ></select>
 								</td>
 								<td><input id="start1" name="start" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
 								<td><input id="end1" name="end" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
 								<td><input id="label1" name="label" type="text" /></td>
-								<td><input class='gene_count' id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><span onclick="removeRegionRow(event)" id="removeRow"><i class="fa fa-times" aria-hidden="true"></i></span></td>
 							</tr>
                             <tr>
                                 <td colspan="5">
-                                    <input id="addRow" value="Add" type="button" class="button_link"> or
-                                    <input id="removeRow" value="remove" type="button" class="button_link"> region.
+									<span id="addRow"><i class="fa fa-plus" aria-hidden="true"></i> Add region</span>
                                 </td>
                             </tr>
                         </tbody></table>

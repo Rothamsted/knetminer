@@ -91,9 +91,10 @@ function createEvidenceTable(text, keyword)
 
 
             // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
-            var userGenes = 0;
-            if (values[5].length > 0) {
-                userGenes = values[5]; 
+            var userGenes; 
+
+            if (values[5].length > 3){
+                //if value[5]/length it might be N/A is three in length          
                 values[5] = values[5].trim();
                 if (values[5].includes(",")) { // for multiple user genes
                     userGenes = values[5].split(",").length; // total user genes found
@@ -107,7 +108,7 @@ function createEvidenceTable(text, keyword)
                 }
             }
             else {
-                userGenes = 0;
+                userGenes = values[5];
                 table = table + '<td>' + userGenes + '</td>'; // zero user genes
             }
 
@@ -251,7 +252,7 @@ function createEvidenceTable(text, keyword)
  * Function to get the network of all "genes" related to a given evidence
  * 
  */
-function evidencePath(id, genes) {
+function evidencePath(id, genes){
 	
     var params = {keyword: 'ConceptID:'+id};
     if (genes.length > 0) {

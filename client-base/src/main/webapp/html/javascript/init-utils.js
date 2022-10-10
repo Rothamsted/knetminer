@@ -1,22 +1,12 @@
 
 //function shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome(){
-
-    // TODO: this flag is going to disappear (ref genome is always on now)
-    if (true || reference_genome) {
        $('#genomeorqtlsearchbox').show();
        if (typeof gviewer != "undefined" && gviewer == false) {
            activateButton('resultsTable');
            $('#genemap-tab_button').hide();
            $('#genemap-tab').hide();
        }
-   }else {
-       activateButton('resultsTable');
-       $('#genomeorqtlsearchbox').hide(); // hide QTL search
-       $('#genemap-tab_button').hide(); // hide Map View option
-       $('#genemap-tab').hide();
-   }
-
 }
 
 // function runs when jquery document ready event triggers 
@@ -90,7 +80,6 @@ function inputHandlers(){
 
 // function add and remove QTL region
 function QtlRegionHandlers(){
-    
      $('#addRow').click(
         function () {
             var curMaxInput = $('#region_search_area table tr').length - 1;
@@ -103,7 +92,6 @@ function QtlRegionHandlers(){
                     'id': 'chr' + (curMaxInput),
                     'name': 'chr' + (curMaxInput),
                     'onChange': 'findGenes(\'genes' + (curMaxInput) + '\', $(\'#chr' + (curMaxInput) + ' option:selected\').val(), $(\'#start' + (curMaxInput) + '\').val(), $(\'#end' + (curMaxInput) + '\').val())',
-                    'value': ''
                 })
                 .parent().parent()
                 .find('td:eq(1)')
@@ -112,7 +100,6 @@ function QtlRegionHandlers(){
                     'id': 'start' + (curMaxInput),
                     'name': 'start' + (curMaxInput),
                     'onKeyup': 'findGenes(\'genes' + (curMaxInput) + '\', $(\'#chr' + (curMaxInput) + ' option:selected\').val(), $(\'#start' + (curMaxInput) + '\').val(), $(\'#end' + (curMaxInput) + '\').val())',
-                    'value': ''
                 })
                 .parent().parent()
                 .find('td:eq(2)')
@@ -121,7 +108,6 @@ function QtlRegionHandlers(){
                     'id': 'end' + (curMaxInput),
                     'name': 'end' + (curMaxInput),
                     'onKeyup': 'findGenes(\'genes' + (curMaxInput) + '\', $(\'#chr' + (curMaxInput) + ' option:selected\').val(), $(\'#start' + (curMaxInput) + '\').val(), $(\'#end' + (curMaxInput) + '\').val())',
-                    'value': ''
                 })
                 .parent().parent()
                 .find('td:eq(3)')
@@ -129,7 +115,6 @@ function QtlRegionHandlers(){
                 .attr({
                     'id': 'label' + (curMaxInput),
                     'name': 'label' + (curMaxInput),
-                    'value': ''
                 })
                 .parent().parent()
                 .find('td:eq(4)')
@@ -139,39 +124,43 @@ function QtlRegionHandlers(){
                     'id': 'genes' + (curMaxInput),
                     'name': 'label' + (curMaxInput),
                     'onFocus': 'findGenes(this.id, $(\'#chr' + (curMaxInput) + ' option:selected\').val(), $(\'#start' + (curMaxInput) + '\').val(), $(\'#end' + (curMaxInput) + '\').val())',
-                    'value': ''
                 });
-
+                emptyRegionInputs(curMaxInput)
                 activateResetButton(); 
-
-            $('#removeRow').removeAttr('disabled');
             if ($('#region_search_area tr').length >= 7) {
                 $('#addRow').attr('disabled', true);
             }
-
-            return false;
     });
-    
-    $('#removeRow').click(
-            function () {
-                activateResetButton(); 
-                if ($('#region_search_area tr').length > 3) {
-                    $('#region_search_area tr:last').prev().remove();
-                }
-                if ($('#region_search_area tr').length <= 3) {
-                    $("#chr1").attr('selectedIndex', 0);
-                    $("#start1").val('');
-                    $("#end1").val('');
-                    $("#label1" ).val('');
-                }
-                else if ($('#rows tr').length < 7) {
-                    $('#addRow').removeAttr('disabled');
-                }
-                return false;
-                
-     });
 }
 
+// function removes and empty gene regions
+function removeRegionRow(event){
+    activateResetButton(); 
+  
+    if ($('#region_search_area tr').length > 3) {
+        // find current row and remove from DOM
+         var currentElement = event.currentTarget; 
+         var regionRow = $(currentElement).parents('tr'); 
+         regionRow.remove();
+    }else{
+        emptyRegionInputs(1)
+    }
+
+     if ($('#rows tr').length < 7) {
+        $('#addRow').removeAttr('disabled');
+    }
+    return false; 
+}
+
+// util function take rowNumber of gene regions and reset all input fields
+function emptyRegionInputs(rowNumber){
+    $("#chr"+rowNumber).attr('selectedIndex', 0);
+        $("#start"+rowNumber).val('');
+        $("#end"+rowNumber).val('');
+        $("#label"+rowNumber ).val('');
+        $("#genes"+rowNumber).val('');
+
+}
 
  // functions handle click events for click events on knetminer search form
 function searchHandlers(){
@@ -326,12 +315,10 @@ function bodyHandlers(){
 function geneViewHelper(){
     var modalElement = document.getElementById('geneviewHelper')
     var isModalCreated = $.contains(document.body,modalElement); 
-
     if(isModalCreated){
         modalElement.remove(); 
         $('#geneviewHelper-overlay').remove(); 
     }
-
     var header= '<h2 style="color:white;margin:0">KnetMiner View Helper</h2>'; 
     var content = "<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>";
 
