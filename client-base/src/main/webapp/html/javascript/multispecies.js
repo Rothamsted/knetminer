@@ -9,7 +9,6 @@ multiSpeciesFeature = function ()
             console.log('getting species list')
             $.get(api_url + '/dataset-info','').done( function(data){
                 var speciesInfos = data.species;
-                console.log(speciesInfos)
                 var createdDropDown = createDropdown(speciesInfos); 
                 if(createdDropDown){
                     $('#species_header').css('display','flex');
@@ -20,7 +19,6 @@ multiSpeciesFeature = function ()
         }).fail(function(xhr,status,errolog){
             errorComponent('#pGViewer_title',xhr);
             // when user internet connection is down
-            console.log(status); 
             $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
             $('#resetknet').hide(); 
             $('#searchBtn').hide(); 
@@ -33,7 +31,6 @@ multiSpeciesFeature = function ()
         var expectedOptions = speciesNames.length;
         for(var speciesName in speciesNames){
             var singleSpecie = speciesNames[speciesName]; 
-            console.log(singleSpecie);
             var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
             $('.navbar-select').append(optionElement);
             if($('.navbar-select option').length === expectedOptions){
@@ -170,12 +167,16 @@ multiSpeciesFeature = function ()
                         }
 
                         if (numRegions > 0) {
-                            while (!$("#chr" + numRegions).length) { //while if the last row for which we have data, doesn't exist add one
+                            
+                            while (!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
                                 $("#addRow").click();
                             }
-                            while ($("#chr" + (numRegions + 1)).length) {	//while the row after the last one for which we have data exists remove one.
-                                $("#removeRow").click();
-                            }
+
+
+                            removeGeneRow()
+
+                          
+                
 
                             if ($("#region_search_area").is(":hidden")) {
                                 $("#region_search").click();
@@ -190,21 +191,17 @@ multiSpeciesFeature = function ()
                                 $("#label" + num).val(sampleQueries[sampleNum].regions[i].label);
                                 $("#genes" + num).focus();	//forces Genes counter column to update
                             }
+
                         } else {
-                            while ($("#chr2").length) {	//while there is more than 1 row remove one.
-                                $("#removeRow").click();
-                            }
 
-                            $("#chr1").attr('selectedIndex', 0);
-                            $("#start1").val("");
-                            $("#end1").val("");
-                            $("#label1").val("");
-                            $("#genes1").focus();
-
+                            removeGeneRow()
+                            emptyRegionInputs(1); 
                             if ($("#region_search_area").is(":visible")) {
                                 $("#region_search").click();
                             }
                         }
+
+
 
                         if (trim(sampleQueries[sampleNum].mapGLWithoutRestriction) == 'true') {
                             $("input:radio[name=list_mode]").val(['GL']);

@@ -331,6 +331,14 @@ function geneViewHelper(){
  
 }
 
+// util function removes genome region input row from the DOM
+function removeGeneRow(){
+    var geneRegions = $('#regions_table').find('tr');
+    var removeableRegions = geneRegions.splice(2,geneRegions.length - 3);
+    for(var i = 0; i < removeableRegions.length; i++){
+        removeableRegions[i].remove(); 
+    }
+}
 
 
 
