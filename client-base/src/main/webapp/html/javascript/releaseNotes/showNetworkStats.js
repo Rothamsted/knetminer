@@ -2,7 +2,7 @@
 
 
 
-
+// TODO: why the dbMetadata name, when it's the dataset description? 
 var dbVersion = '', dbTitle='', dbMetaData = ''; 
 
 /*
@@ -102,9 +102,10 @@ async function fetchStats(){
 
       cc_table += "</table></table></table>";
 
+			// TODO: this is poort, why not relying in the origin for formatting, or having the browser
+			// reflowing?
+	    // splitting paragraphs into chunks 
       var dbMetaDataStr = dbMetaData.split(/[, ]+/);
-
-    // spiliting paragraphs into chunks 
       var paragraphs = [...seperateParagraph(dbMetaDataStr,9)]
 
 
