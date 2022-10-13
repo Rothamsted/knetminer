@@ -22,11 +22,11 @@ do
   	--bare)
   		do_bare='true'; shift;;
 
-  	#--: The tag to use to mark the main image
+  	#--: The tag to use to mark the main image (default: latest)
   	--tag)
   		docker_tag="$2"; shift 2;;
 
-  	#--: The tag to mark/use the bare image
+  	#--: The tag to mark/use the bare image (default: same as main image)
   	--tag-bare)
   		docker_tag_bare="$2"; shift 2;;
   	
@@ -52,6 +52,17 @@ EOT
   		# Report the options
 			egrep -i '(#\-\-:|\-\-[a-z].+\))' "$0" | sed s/'\s*#\-\-:/#/g' | sed -E s/'^\s+(\-\-.+)\)'/'\1\n'/g
 
+			cat <<EOT
+			
+Environment Options:
+
+DOCKER_OPTS:
+  additional arguments that can be passed to 'docker build'
+
+MAVEN_ARGS:
+  additional argument that can be passed to 'Maven commands'
+
+EOT
   		exit 1;;
   	--*)
 			echo -e "\n\n\tERROR: Invalid option '$1', try --help\n"
@@ -77,11 +88,12 @@ mvn $clean_goal install $MAVEN_ARGS -DskipTests -DskipITs
 
 if `$do_bare`; then
 	echo -e "\n\  Creating Bare image\n" 
-	docker build -t "knetminer/knetminer-bare:$docker_tag_bare" -f docker/Dockerfile-bare .
+	docker build -t "knetminer/knetminer-bare:$docker_tag_bare" $DOCKER_OPTS -f docker/Dockerfile-bare .
 fi
 
 
 echo -e "\n\  Creating image\n"
-docker build -t "knetminer/knetminer:$docker_tag"  --build-arg DOCKER_TAG="$docker_tag_bare" -f docker/Dockerfile .
+docker build -t "knetminer/knetminer:$docker_tag" --build-arg DOCKER_TAG="$docker_tag_bare" \
+  $DOCKER_OPTS -f docker/Dockerfile .
 
 echo -e "\n\  The End\n" 
