@@ -108,7 +108,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         complete: function () {
 
             if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-                console.log(requestParams); 
                 $('#tabviewer').show(); // show Tab buttons and viewer
                 // Show loading spinner on 'search' div
                 activateSpinner("#search");

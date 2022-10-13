@@ -29,7 +29,7 @@ function createGenesTable(text, keyword, rows){
 		table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
 		table += '</select> </span></div>';
 
-		table += '<div style="display: flex;flex-direction: column;"> <span class="ctaButton" id="hint_sortable_table" onclick="geneViewHelper()">Help <i class="fas fa-info-circle"></i></span> <div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
+		table += '<div style="display: flex;flex-direction: column;"> <span class="ctaButton" id="hint_sortable_table" onclick="geneViewHelper()">Help  <i class="fas fa-info-circle"></i></span> <div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
 			'<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div></div></div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -201,7 +201,7 @@ function createGenesTable(text, keyword, rows){
 
 	table += '<div class="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"> Create Network </button>';
 	table += '</insert><div id="loadingNetworkDiv"></div>'
-	table += '<p class="margin_left"><a download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br /></div>';
+	table += '<div class="margin_left"><a class="delimited-cta" download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file <img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a></div>';
 
 	document.getElementById('resultsTable').innerHTML = table;
 	// scroll down to geneTable, but show tabviewer_buttons above

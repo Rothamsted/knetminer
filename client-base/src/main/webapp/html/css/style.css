@@ -1521,3 +1521,22 @@
     cursor: pointer;
 }
 
+.remove-icon{
+    position: absolute;
+    top: 0.5pc;
+}
+
+.delimited-cta{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align:center;
+        -ms-flex-align:center;
+            align-items:center;
+}
+
+.delimited-cta-icon{
+    height:30px;
+    width:30px;
+    margin-left:0.5rem;
+}

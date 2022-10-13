@@ -98,7 +98,7 @@
 								<td><input id="end1" name="end" type="text" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
 								<td><input id="label1" name="label" type="text" /></td>
 								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
-								<td><span onclick="removeRegionRow(event)" id="removeRow"><i class="fa fa-times" aria-hidden="true"></i></span></td>
+								<td style="position:relative"><span onclick="removeRegionRow(event)" class="remove-icon"><i class="fa fa-times" aria-hidden="true"></i></span></td>
 							</tr>
                             <tr>
                                 <td colspan="5">
