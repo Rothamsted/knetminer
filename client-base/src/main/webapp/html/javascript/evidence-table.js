@@ -55,66 +55,28 @@ function createEvidenceTable(text, keyword)
 
         var eviTableLimit= evidenceTable.length-1;
 
-        // limit evidence view table to top 1000 evidences
-        if(eviTableLimit > 1000) eviTableLimit= 1001;
-       
-        for (var ev_i = 1; ev_i < eviTableLimit; ev_i++)
-        {
-          values = evidenceTable[ev_i].split("\t");
-          table = table + '<tr>';
-        
-          table = table + '<td><p id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>' +
-            '<p id="evidence_add_' + ev_i + '" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>';
-        
-          //link publications with pubmed
-          pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-          if (values[0] == 'Publication')
-            evidenceValue = '<a href="' + pubmedurl + values[1].substring(5) + '" target="_blank">' + values[1] + '</a>';
-          else
-            evidenceValue = values[1];
-        
-          table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
-          table = table + '<td>' + evidenceValue + '</td>';
-          //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
-        
-          // p-values
-          var pvalue = values[3];
-          pvalue = renderEvidencePvalue(pvalue);
-          // to tell table-sorter that it's a number
-          var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
-        
-          table += `<td actual-pvalue = '${sortedPval}'>${pvalue}</td>`;
-          // /end:p-values
-        
-          // Count of all matching genes
-          table = table + '<td>' + values[4] + '</td>';
-        
-          // Matching User Genes 
-          var userGenes = values[5]; // The array of user genes, if any, else []
-        
-          if (userGenes)
-          {
-            userGenes = userGenes.trim();
-            // The old code that returned "N/A" was fixed, now the API yields always an empty string if
-            // it has no genes. So, this split works fine for 1-gene case too
-            userGenes = userGenes.split(",");
-          }
-          else
-            userGenes = [];
-        
-          if (userGenes.length == 0 || userGenes.length >= 500)
-            // If they're too many, just yield the count
-            table += '<td>' + userGenes.length + '</td>'; // user genes
-          else
-            // launch evidence network with them, if they're not too many.
-            table += '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes.length + '</a></td>';
-        
-          // /end:user genes
-        
-          var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7] + ':' + values[5] + '">';
-          table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
-        
-        } // for ev_i in evidenceTable
+            // For user genes, add option to visualize their Networks in KnetMaps via web services (api_url)
+            var userGenes; 
+
+            if (values[5].length > 3){        
+                values[5] = values[5].trim();
+                if (values[5].includes(",")) { // for multiple user genes
+                    userGenes = values[5].split(",").length; // total user genes found
+                }else{
+                    userGenes = 1
+                }
+                // launch evidence network using 'userGenes'.
+                if(userGenes < 500) {
+                    table = table + '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes + '</a></td>';
+                  }
+                else {
+                    table = table + '<td>' + userGenes + '</td>'; // user genes
+                }
+            }
+            else {
+                userGenes = values[5];
+                table = table + '<td>' + userGenes + '</td>'; // zero user genes
+            }
 
         
         table = table + '</tbody>';
@@ -122,7 +84,7 @@ function createEvidenceTable(text, keyword)
         table = table + '</div>';
         table = table + '<div class="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button>';
         table = table + '</insert><div id="loadingNetwork_Div"></div>';
-        table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br/></div>';
+        table = table + '<p class="margin_left"><a class="delimited-cta" download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank"  >Download as TAB delimited file <img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/></a><br/></div>';
 
 
         $('#evidenceTable').html(table);
