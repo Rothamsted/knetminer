@@ -919,7 +919,7 @@ public class ExportService
 			
 			Set<String> userGeneLabels = result.getOpt ( "userGeneLabels" );
 			var userGenesStr = userGeneLabels.size () == 0
-				? "N/A"
+				? ""
 				: userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
 						
 			return 
