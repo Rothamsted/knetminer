@@ -14,7 +14,7 @@
 "dataset @merge":
   id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
   title: Poaceae Test Instance
-  # version: 53 # TODO: not sure if this is 53 or 54, default is POM version
+  version: 53 # TODO: not sure if this is 53 or 54
 
   # Have a look here about YAML multi-line strings: http://yaml-multiline.info
   description: >-
