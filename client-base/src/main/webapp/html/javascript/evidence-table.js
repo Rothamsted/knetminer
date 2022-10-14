@@ -124,7 +124,7 @@
          table = table + '</div>';
          table = table + '<div class="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button>';
          table = table + '</insert><div id="loadingNetwork_Div"></div>';
-         table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a><br/></div>';
+         table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank" class="delimited-cta" >Download as TAB delimited file <img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a><br/></div>';
  
  
          $('#evidenceTable').html(table);

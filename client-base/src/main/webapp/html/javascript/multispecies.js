@@ -7,23 +7,28 @@ multiSpeciesFeature = function ()
    function getSpeciesList()
     {
             console.log('getting species list')
+           
+            // check if url has params
+            var url = document.location.search;
+            if (url.indexOf('?') !== -1)
+            {    
+                var url = new URLSearchParams(url); 
+                setTaxId(url.get('taxId'));
+            }
+
             $.get(api_url + '/dataset-info','').done( function(data){
                 var speciesInfos = data.species;
                 var createdDropDown = createDropdown(speciesInfos); 
                 if(createdDropDown){
+                    selectDropdown();
                     $('#species_header').css('display','flex');
                     console.log('specie dropdown created')
                     multiSpeciesEvents(speciesInfos); 
                     deactivateSpinner("#wrapper");
                 }
-        }).fail(function(xhr,status,errolog){
-            errorComponent('#pGViewer_title',xhr);
-            // when user internet connection is down
-            $('#pGViewer_title').html('<span> sorry!,Kindly check your internet and reload page </span>'); 
-            $('#resetknet').hide(); 
-            $('#searchBtn').hide(); 
-            $('reloadbtn').show(); 
-        });
+            }).fail(function(xhr,status,errolog){
+                errorComponent('#pGViewer_title',xhr);
+            });
     }
 
     // function creates the species dropdown
@@ -33,13 +38,16 @@ multiSpeciesFeature = function ()
             var singleSpecie = speciesNames[speciesName]; 
             var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
             $('.navbar-select').append(optionElement);
-            if($('.navbar-select option').length === expectedOptions){
-                var firstSpecies = $('.navbar-select').first();
-                setTaxId(firstSpecies.val()); 
+            var speciesOptions = $('.navbar-select option')
+            if(speciesOptions.length === expectedOptions){
                 return true
             }
         }
+        
+        
     }
+    
+   
 
     // function house all events that are triggered select a new species
     function multiSpeciesEvents(data){
@@ -49,11 +57,7 @@ multiSpeciesFeature = function ()
         matchCounter();
         var species = currentSpecies(data)
         document.title = species.scientificName;
-        for(var info in species){
-            const speciesCapital = capitaliseFirstLetter(info); 
-            $('<div > <span class="specie_title">'+ speciesCapital +'</span> <span> -'+'  '+ species[info] +'</span> </div>').appendTo('#speciename_container');
-        }
-
+        setTaxIdParams(species.scientificName)
         return true;
     }
 
@@ -75,6 +79,45 @@ multiSpeciesFeature = function ()
 		{
 			return currentTaxId ? '?taxId=' + currentTaxId : "";
 		}
+
+        /**
+         * Helper function to set to set and replace taxonomy ID to the url
+         * 
+         */
+        function setTaxIdParams(title){
+            var url = window.location.href,
+             taxIdFrag = getTaxIdUrlFrag();
+        
+            if(url.indexOf('?') == -1){
+                history.pushState({},title,taxIdFrag)
+            }else{
+                history.replaceState({},title,taxIdFrag)
+            }
+                    
+        }
+        
+        // 
+        /**
+         * Function checks if current taxId value equals to the value of one of the species select options
+         * if taxId value equals to one of the species select options, then it becomes selected
+         * If taxId is not set, a new value is set and the first select option will be selected
+         * 
+         */
+        function selectDropdown(){
+            if(currentTaxId !== ""){
+                var speciesOptions = $('.navbar-select option')
+                speciesOptions.each(function(){
+                    if(currentTaxId === this.value){
+                        $(this).attr('selected', true)
+                        console.log('here')
+                    }
+                })
+            }else{
+                var firstSpecies = $('.navbar-select').first();
+                setTaxId(firstSpecies.val());  
+            }
+
+        }
 		
 		
     // get species query examples 

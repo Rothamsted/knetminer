@@ -509,8 +509,8 @@ function errorComponent(elementInfo,xhr){
 
 // function to run on changing the species dropdown option
 function changeSpecies(selectElement){
-    var selectedSpecie = $(selectElement).children("option:selected");
-    var currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
+    var selectedSpecie = $(selectElement).children("option:selected"),
+    currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
     $('#speciename_container').empty();
     $('#chr1').empty();
     $('#tabviewer').hide(); 
@@ -518,12 +518,10 @@ function changeSpecies(selectElement){
     
     if(currentTaxData){
         $.get(api_url + '/dataset-info','').done( function(data){
-            var calcGenoome = multiSpeciesFeature.speciesEvents(data.species)
-            if(calcGenoome){
-                // TODO what if user has two or more genome region present
+            var isEventsDone = multiSpeciesFeature.speciesEvents(data.species)
+            if(isEventsDone){
                 setTimeout(function(){
                     findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
-
                 },100)
             }
         }); 
