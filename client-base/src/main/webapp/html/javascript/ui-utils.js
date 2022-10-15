@@ -6,7 +6,6 @@ function activateResetButton(){
     var knetInputs = $(':input').filter('input,select,textarea'); 
 
     knetInputs.each(function(index,element){
-
         $(element).keyup(function(){
             if(element.value !== ''){
                 resetBtnEle.show();

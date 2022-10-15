@@ -6,24 +6,23 @@ multiSpeciesFeature = function ()
     // function get lists of registered species from api_url+/species
    function getSpeciesList()
     {
-            console.log('getting species list')
-           
-            // check if url has params
             var url = document.location.search;
+
+            // check if url has a param value
             if (url.indexOf('?') !== -1)
             {    
                 var url = new URLSearchParams(url); 
                 setTaxId(url.get('taxId'));
             }
-
             $.get(api_url + '/dataset-info','').done( function(data){
+                renderHtmlHeaders(data);
                 var speciesInfos = data.species;
                 var createdDropDown = createDropdown(speciesInfos); 
+
                 if(createdDropDown){
                     selectDropdown();
                     $('#species_header').css('display','flex');
-                    console.log('specie dropdown created')
-                    multiSpeciesEvents(speciesInfos); 
+                    multiSpeciesEvents(); 
                     deactivateSpinner("#wrapper");
                 }
             }).fail(function(xhr,status,errolog){
@@ -46,18 +45,14 @@ multiSpeciesFeature = function ()
         
         
     }
-    
-   
 
-    // function house all events that are triggered select a new species
-    function multiSpeciesEvents(data){
+    // function house events that needs to be called when currentTaxId changes
+    function multiSpeciesEvents(){
         getQueryExamples();
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        var species = currentSpecies(data)
-        document.title = species.scientificName;
-        setTaxIdParams(species.scientificName)
+        setTaxIdParams()
         return true;
     }
 
@@ -81,17 +76,16 @@ multiSpeciesFeature = function ()
 		}
 
         /**
-         * Helper function to set to set and replace taxonomy ID to the url
+         * Helper function adds and replace taxonomy ID to current url when triggered
          * 
          */
-        function setTaxIdParams(title){
+        function setTaxIdParams(){
             var url = window.location.href,
              taxIdFrag = getTaxIdUrlFrag();
-        
             if(url.indexOf('?') == -1){
-                history.pushState({},title,taxIdFrag)
+                history.pushState({},'',taxIdFrag)
             }else{
-                history.replaceState({},title,taxIdFrag)
+                history.replaceState({},'',taxIdFrag)
             }
                     
         }
@@ -99,8 +93,8 @@ multiSpeciesFeature = function ()
         // 
         /**
          * Function checks if current taxId value equals to the value of one of the species select options
-         * if taxId value equals to one of the species select options, then it becomes selected
-         * If taxId is not set, a new value is set and the first select option will be selected
+         * if taxId value equals that of a species it becomes selected
+         * If taxId is not set, the first select option is selected
          * 
          */
         function selectDropdown(){
@@ -118,7 +112,6 @@ multiSpeciesFeature = function ()
             }
 
         }
-		
 		
     // get species query examples 
     function getQueryExamples(){
@@ -293,6 +286,14 @@ multiSpeciesFeature = function ()
             errorComponent('.nav',xhr,status,errorlog);
         });
     }
+
+    // function sets instance title and meta data contents for keywords and description. currently called in line 29
+    function renderHtmlHeaders(species){
+        document.title = species.title; 
+        document.querySelector('meta[name="description"]').content = species.description;
+        document.querySelector('meta[name="keywords"]').content = species.keywords;
+    }
+
     // draws the genomap view 
     function drawGeneMaps(basemapString,data){  
         var taxIdBaseXmlUrl = api_url + '/dataset-info/basemap.xml'+ getTaxIdUrlFrag ()
@@ -303,11 +304,12 @@ multiSpeciesFeature = function ()
             }
     
     }
+    // function filters out species Information using currentTaxId value
     function currentSpecies(data){
         var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
         return currentSpecies
     }
-    //returned values that are called outside the module 
+
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,

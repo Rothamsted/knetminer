@@ -1,62 +1,17 @@
 <!DOCTYPE html>
 
 <%@ tag description="Page layout" %>
-
-<%@ attribute name="title"       required="true" description="Page title" %>
-<%@ attribute name="keywords"    required="true" description="Page keywords to improve SEO" %>
-<%@ attribute name="description" required="true" description="Page description" %>
-
-<%-- TODO: do we still need these? We can't build custom index.jsp anymore, see #638 --%>
-<%@ attribute name="extraHeader" fragment="true" description="Extra code to put before head" %>
-<%@ attribute name="extraBottom" fragment="true" description="Extra code to put before body" %>
-<%@ attribute name="assembly" fragment="false" description="Genome assembly" %>
-
-<%-- TODO: no longer used, to be removed?
-<%@ attribute name="bgcolor" fragment="false" description="Background color" %>
- --%>
-
-<%-- TODO:newConfig, to be removed
-<%@ attribute name="chromosomes" fragment="false" description="Chromosomes" %>
---%>
-<%-- TODO:newConfig, always false, to be removed or migrated to new config --%>
-<%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
-<%-- TODO:newConfig, to be removed (see below)
-<%@ attribute name="enableGA" description="Is google analytics enabled" %>
-<%@ attribute name="ga_id" description="If analytics enabled then use this UI ga_id" %>
---%>
-
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <c:if test="${!embeddable}">
-        <meta name="keywords" content="${keywords}" />
-        <meta name="description" content="${description}" />
-        <title>${title}</title>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <title>Welcome to Knetminer</title>
         <!-- favicon added -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
-
-				<%-- 
-				  TODO:newConfig, remove (together with the tag param), this is now managed 
-					via API and doGoogleAnalytics()
-        <!-- Google Analytics -->
-        <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        
-        if("${enableGA}" === "true") {
-          ga('create', '${ga_id}', 'auto');
-          ga('send', 'pageview');
-         }
-        </script>
-        <!-- end Google Analytics -->
-				--%>
-        
-    </c:if>
 
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
@@ -151,12 +106,8 @@
         <!-- release note animation-->
        <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
 
-
-
-        <jsp:invoke fragment="extraHeader"/>
     </head>
-    <body  class="${embeddable ? "embeddable" : ""}">
-        <div class="background" id="particles-js"></div>
+    <body>
         <!-- Main -->
         <div id="wrapper">
             <c:choose>
@@ -169,13 +120,7 @@
                     </c:if>
                 </c:otherwise>
             </c:choose>
- 			<layout:content  assembly="${assembly}" embeddable="${embeddable}"/>
-         <!--   <c:if test="${!embeddable}">
-                <layout:footer />
-            </c:if> -->
+ 			      <layout:content  assembly="${assembly}" embeddable="${embeddable}"/>
         </div>
-        <jsp:invoke fragment="extraBottom"/>
-
-     
     </body>
 </html>

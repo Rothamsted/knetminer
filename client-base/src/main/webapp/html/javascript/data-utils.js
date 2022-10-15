@@ -507,7 +507,7 @@ function errorComponent(elementInfo,xhr){
 }
 
 
-// function to run on changing the species dropdown option
+// function to be triggered on changing the species dropdown option
 function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected"),
     currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
@@ -517,14 +517,12 @@ function changeSpecies(selectElement){
     $('#pGSearch_title').hide(); 
     
     if(currentTaxData){
-        $.get(api_url + '/dataset-info','').done( function(data){
-            var isEventsDone = multiSpeciesFeature.speciesEvents(data.species)
-            if(isEventsDone){
+            var isChangeSuccessful  = multiSpeciesFeature.speciesEvents()
+            if(isChangeSuccessful){
                 setTimeout(function(){
                     findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
                 },100)
             }
-        }); 
     }
 }
 
