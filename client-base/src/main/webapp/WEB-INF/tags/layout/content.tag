@@ -1,10 +1,6 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ attribute name="chromosomes" required="false" description="list of chromosomes" %>
-<%@ attribute name="assembly" required="false" description="genome assembly" %>
-<%@ attribute name="embeddable" type="java.lang.Boolean" description="Is embedded view enabled" %>
-
 <div id="content">
 	<div id="search">
 		<form id="gviewerForm" name="gviewerForm" action="javascript:searchKeyword()" accept-charset="UTF-8">
@@ -13,7 +9,6 @@
 
                     <!-- Sample Queries -->
                     <div id="info" class="details">
-                        <c:if test="${embeddable}"><div class="species_header"></div></c:if>
                         <div id="info-text">
                             <div><h3  style="margin:10px 0; class="query_title">Example queries</h3>
                                 <span style="display:flex;" class="close" onclick="queryToggle($('#eg_queries'),$('.query_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"><img class="close" style="display:none;" src="html/image/drop-down.png"/></span></div>

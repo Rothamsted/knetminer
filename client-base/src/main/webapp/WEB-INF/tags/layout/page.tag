@@ -7,11 +7,18 @@
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-        <meta name="keywords" content="" />
-        <meta name="description" content="" />
-        <title>Welcome to Knetminer</title>
-        <!-- favicon added -->
+        
+        <!-- 
+          TODO: schema.org, annotations from the the graph metadata descriptor
+          For the moment, these values are taken from the blog.
+         -->
+        <title>KnetMiner - Knowledge Graph based tools and resources for Life Sciences</title>
+        <meta name="keywords" content="knetminer, plant biology, plant genetics, gene discovery, agronomy, life science knowledge graphs" />
+        <meta name="description" content="KnetMiner is a unique discovery platform that helps scientists search large volumes of scientific literature and Life Science data to unveil links between the genetic and biological properties of complex, polygenic traits and diseases." />
+        
+        <!-- favicon -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
+
 
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
@@ -44,7 +51,7 @@
         <!--JBox-->
       	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
 
-         <!--Particle-->
+        <!--Particle-->
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
@@ -62,65 +69,63 @@
         <script type="text/javascript" src="html/javascript/filter-knetwork.js"></script>
         <!-- KnetMaps - js utils to save knet to knetspace -->
         <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
-       <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
+        
+        <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
         <script type="text/javascript" src="html/javascript/exportKnetwork/download-knet.js"></script>
         
-         <!-- utils -->
-         <script type="text/javascript" src="html/javascript/utils.js"></script>
+        <!-- utils -->
+        <script type="text/javascript" src="html/javascript/utils.js"></script>
 
         <!-- init utils -->
-         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
+        <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
+        
         <!-- query suggestor -->
-         <script type="text/javascript" src="html/javascript/query-suggester.js"></script>
-           <!-- gene table -->
-         <script type="text/javascript" src="html/javascript/gene-table.js"></script>
-            <!-- evidence table -->
-         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
+        <script type="text/javascript" src="html/javascript/query-suggester.js"></script>
+        
+        <!-- gene table -->
+        <script type="text/javascript" src="html/javascript/gene-table.js"></script>
+        
+        <!-- evidence table -->
+        <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
 
-          <!-- multi species file -->
-         <script type="text/javascript" src="html/javascript/multispecies.js"></script>
+        <!-- multi species file -->
+        <script type="text/javascript" src="html/javascript/multispecies.js"></script>
 
-         <!-- UI utils  -->
+        <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
         <!-- ajax data Utils-->
-           <script type="text/javascript" src="html/javascript/data-utils.js"></script>
+        <script type="text/javascript" src="html/javascript/data-utils.js"></script>
         
         <!-- string data Utils-->
-           <script type="text/javascript" src="html/javascript/string-utils.js"></script>
+        <script type="text/javascript" src="html/javascript/string-utils.js"></script>
 
         <!-- google analytics-->
         <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
 
         <script type="text/javascript" src="html/javascript/releaseNotes/showNetworkStats.js"></script>
-
-		<!-- interactJS; DISABLED -->
-	<!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
+        
+        <!-- interactJS; DISABLED -->
+        <!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
 
         <!-- bootstrap js -->
-	<!-- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-		<!-- font-awesome js -->
+        <!-- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+        
+        <!-- font-awesome js -->
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
-        <!-- release note animation-->
-       <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
 
+        <!-- release note animation-->
+        <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
     </head>
     <body>
-        <!-- Main -->
-        <div id="wrapper">
-            <c:choose>
-                <c:when test="${!embeddable}">
-                    <layout:header />
-                </c:when>
-                <c:otherwise>
-                    <c:if test="${embeddable}">
-                        <div class="logo_embedded"><img src="html/image/KnetMiner_green_white.svg" alt="Logo" height="45" /></div>
-                    </c:if>
-                </c:otherwise>
-            </c:choose>
- 			      <layout:content  assembly="${assembly}" embeddable="${embeddable}"/>
-        </div>
+      <div id="wrapper">
+        <layout:header />
+        <layout:content />
+        <!-- We used to have a footer
+        <layout:footer />
+        -->
+      </div>
     </body>
 </html>
