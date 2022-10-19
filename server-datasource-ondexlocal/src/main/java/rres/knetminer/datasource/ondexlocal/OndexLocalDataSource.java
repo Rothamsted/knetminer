@@ -49,6 +49,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
+import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 
@@ -71,7 +72,10 @@ import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
  */
 @Component
 public class OndexLocalDataSource extends KnetminerDataSource 
-{		
+{
+	
+	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
+	
 	public static final String CONFIG_FILE_PATH_PROP = "knetminer.api.configFilePath"; 
 	
 	/**
@@ -151,7 +155,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 				Optional.ofNullable ( request ).map ( KnetminerRequest::getKeyword ).orElse ( "<null response>" ),
 				e.getMessage ()
 			);
-			log.error ( wex );
+			exlog.logEx ( wex.getMessage (), wex );
 			throw wex;
 		}
 	}

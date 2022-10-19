@@ -22,6 +22,7 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.utils.OndexPluginUtils;
+import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
@@ -37,6 +38,8 @@ public class ExportUtils
 	private static final Logger log = LogManager.getLogger ( ExportUtils.class );
 	
 	private ExportUtils () {}
+	
+	private final static ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
 
 	
   /**
@@ -101,19 +104,19 @@ public class ExportUtils
     }
   	catch ( UncheckedPluginException ex ) {
     	String msg = "Failed to export graph due to a KnetBuilder plug-in problem: " + ex.getMessage ();
-      log.error ( msg, ex );
-      throw new UncheckedPluginException ( msg, ex );
+      exlog.logEx ( msg , ex );
+	  throw new UncheckedPluginException ( msg, ex );
   	}
     catch ( IOException ex )
     {
     	String msg = "Failed to export graph due to an I/O problem: " + ex.getMessage ();
-      log.error ( msg, ex );
+      exlog.logEx ( msg , ex );
       throw new UncheckedIOException ( msg, ex );
     }
     catch ( RuntimeException ex )
     {
     	String msg = "Failed to export graph due to: " + ex.getMessage ();
-      log.error ( msg, ex );
+      exlog.logEx ( msg , ex );
       throw new RuntimeException ( msg, ex );
     }
     finally {

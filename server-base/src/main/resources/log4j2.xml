@@ -34,6 +34,15 @@
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
+		<RollingFile name="ErrorLoggingRollingFile"
+					 fileName="${log-name}-error-logging.json"
+					 filePattern="${log-name}-error-logging-%d{yyyy-MM-dd}.json">
+			<JSONLayout compact="false" eventEol="true" objectMessageAsJsonObject="true"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
 	</Appenders>
 	<!-- 
 		This is where the analytics is sent, in JSON format.
@@ -42,6 +51,9 @@
 		<!--  TODO: remove, see above <Logger name="analytics-log" level="ANALYTICS"> -->
 		<Logger name="analytics-log" level="INFO" additivity = "false">
 			<AppenderRef ref="AnalyticsRollingFile" />
+		</Logger>
+		<Logger name="error-log" level="INFO" additivity = "false">
+			<AppenderRef ref="ErrorLoggingRollingFile" />
 		</Logger>
 		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />

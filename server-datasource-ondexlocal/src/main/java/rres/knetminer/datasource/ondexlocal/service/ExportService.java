@@ -55,6 +55,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
+import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
@@ -81,9 +82,10 @@ public class ExportService
 	@Autowired
 	private SemanticMotifDataService semanticMotifDataService;
 	
-
 	private static final Logger log = LogManager.getLogger ( ExportService.class );
-
+	
+	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
+	
 	private ExportService () {}
 	
   /*
@@ -246,7 +248,7 @@ public class ExportService
 		}
 		catch ( IOException ex )
 		{
-			log.error ( "Error while writing stats for the Knetminer graph: " + ex.getMessage (), ex );
+			exlog.logEx ( "Error while writing stats for the Knetminer graph: " + ex.getMessage () , ex );
 		}
 		
 		log.info ( "End of graph stats export" );
@@ -337,7 +339,7 @@ public class ExportService
 		}
 		catch ( Exception ex )
 		{
-			log.error ( "Error while writing stats: " + ex.getMessage (), ex );
+			exlog.logEx ( "Error while writing stats: " + ex.getMessage () , ex );
 		}
 	}
 
@@ -559,7 +561,7 @@ public class ExportService
 			catch ( ParseException e )
 			{
 				// TODO: is it fine to continue without any exception!?
-				log.error ( "Failed to find QTLs", e );
+				exlog.logEx ( "Failed to find QTLs" , e );
 			}
 		}
 
@@ -600,7 +602,7 @@ public class ExportService
 			}
 			catch ( UnsupportedEncodingException e )
 			{
-				log.error ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+				exlog.logEx ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" , e );
 				throw ExceptionUtils.buildEx ( RuntimeException.class, e,
 						"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" );
 			}
@@ -654,7 +656,7 @@ public class ExportService
 			}
 			catch ( UnsupportedEncodingException e )
 			{
-				log.error ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)", e );
+				exlog.logEx ( "Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" , e );
 				throw ExceptionUtils.buildEx ( RuntimeException.class, e,
 						"Internal error while exporting geno-maps, encoding UTF-8 unsupported(?!)" );
 			}

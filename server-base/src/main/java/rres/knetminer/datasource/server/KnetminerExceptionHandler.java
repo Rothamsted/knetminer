@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import rres.knetminer.datasource.api.KnetminerExceptionResponse;
+import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 
 /**
@@ -42,6 +43,8 @@ import uk.ac.ebi.utils.exceptions.NotReadyException;
 public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 {
 	private final Logger log = LogManager.getLogger ( this.getClass () );
+	
+	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
 	
 	/**
 	 * Maps known exceptions to HTTP statuses. This is scanned in the order you define the classes
@@ -84,7 +87,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 			request instanceof ServletWebRequest ? (ServletWebRequest) request : request,
 			status
 		);
-		log.error ( "Returning exception from web request processing, HTTP status: '" + status.toString () + "'", ex );
+		exlog.logEx ( "Returning exception from web request processing, HTTP status: '" + status.toString () + "'", ex );
 		return super.handleExceptionInternal ( ex, response, headers, status, request );
 	}
 	

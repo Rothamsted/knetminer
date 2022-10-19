@@ -1,7 +1,6 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +10,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
+import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 
 
@@ -62,6 +62,8 @@ public class OndexServiceProvider
 	private final Logger log = LogManager.getLogger ( getClass() );
 
 	private final static Logger slog = LogManager.getLogger ( OndexServiceProvider.class );
+	
+	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
 
 	/**
 	 * It's a singleton, use {@link #getInstance()}.
@@ -180,7 +182,7 @@ public class OndexServiceProvider
 			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
 		catch ( Exception ex ) {
-			log.error ( "Ondex Data initialisation failed: " + ex.getMessage (), ex );
+			exlog.logEx ( "Ondex Data initialisation failed: " + ex.getMessage () , ex );
 			this.initException = ex;
 		}
 		finally {
