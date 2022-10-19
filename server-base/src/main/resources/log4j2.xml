@@ -3,15 +3,7 @@
 	<Properties>
 		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
-	<!-- 
-		This is a special, top-priority level, used to report 
-	  web analytics info
-	-->
-	<CustomLevels>
-		<!-- TODO: remove, it's actually not needed
-		<CustomLevel name="ANALYTICS" intLevel="50" />
-		-->
-	</CustomLevels>
+	
 	<Appenders>
 		<RollingFile name="RollingFile"
 			fileName="${log-name}.log"
@@ -21,10 +13,14 @@
 				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
 			</PatternLayout>
 			<Policies>
-      			<TimeBasedTriggeringPolicy />
+      	<TimeBasedTriggeringPolicy />
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
+
+		<!-- 
+			This is where the analytics trackers are sent, in JSON format.
+		-->
 		<RollingFile name="AnalyticsRollingFile"
 					 fileName="${log-name}-analytics.json"
 					 filePattern="${log-name}-analytics-%d{yyyy-MM-dd}.json">
@@ -34,29 +30,35 @@
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
-		<RollingFile name="ErrorLoggingRollingFile"
-					 fileName="${log-name}-error-logging.json"
-					 filePattern="${log-name}-error-logging-%d{yyyy-MM-dd}.json">
-			<JSONLayout compact="false" eventEol="true" objectMessageAsJsonObject="true"/>
+		
+		<RollingFile name="VerboseRollingFile"
+			fileName="${log-name}-details.log"
+			filePattern="${log-name}-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
+			</PatternLayout>
 			<Policies>
-				<TimeBasedTriggeringPolicy />
+      	<TimeBasedTriggeringPolicy />
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
 	</Appenders>
-	<!-- 
-		This is where the analytics is sent, in JSON format.
-	-->
+	
+	
 	<Loggers>
-		<!--  TODO: remove, see above <Logger name="analytics-log" level="ANALYTICS"> -->
-		<Logger name="analytics-log" level="INFO" additivity = "false">
-			<AppenderRef ref="AnalyticsRollingFile" />
-		</Logger>
-		<Logger name="error-log" level="INFO" additivity = "false">
-			<AppenderRef ref="ErrorLoggingRollingFile" />
-		</Logger>
+
 		<Root level="INFO">
 			<AppenderRef ref="RollingFile" />
 		</Root>
+
+		<Logger name="analytics-log" level="INFO" additivity = "false">
+			<AppenderRef ref="AnalyticsRollingFile" />
+		</Logger>
+
+		<!-- TODO: requires DEBUG level AND to activate DEBUG ONLY on Knetminer components -->
+		<!-- TODO: also check if it's better to have ONE logger which has multiple AppenderRef -->
+		<Logger name="verbose-log" level="INFO" additivity = "false">
+			<AppenderRef ref="VerboseRollingFile" />
+		</Logger>
 	</Loggers>
 </Configuration>
