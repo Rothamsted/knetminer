@@ -22,7 +22,6 @@ import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
 import net.sourceforge.ondex.export.cyjsJson.Export;
 import net.sourceforge.ondex.filter.unconnected.Filter;
 import net.sourceforge.ondex.utils.OndexPluginUtils;
-import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
@@ -39,8 +38,6 @@ public class ExportUtils
 	
 	private ExportUtils () {}
 	
-	private final static ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
-
 	
   /**
    * Builds the KnetMiner 'Network View' (4th tab).
@@ -103,21 +100,21 @@ public class ExportUtils
       return Pair.of ( IOUtils.readFile ( exportPath, Charset.defaultCharset() ), graph2 );
     }
   	catch ( UncheckedPluginException ex ) {
-    	String msg = "Failed to export graph due to a KnetBuilder plug-in problem: " + ex.getMessage ();
-      exlog.logEx ( msg , ex );
-	  throw new UncheckedPluginException ( msg, ex );
+  		throw ExceptionUtils.buildEx ( UncheckedPluginException.class, ex, 
+  			"Knetbuilder failed to export the graph, due to: $cause" 
+  		);
   	}
     catch ( IOException ex )
     {
-    	String msg = "Failed to export graph due to an I/O problem: " + ex.getMessage ();
-      exlog.logEx ( msg , ex );
-      throw new UncheckedIOException ( msg, ex );
+    	throw ExceptionUtils.buildEx ( UncheckedIOException.class, ex, 
+  			"Knetbuilder failed to export the graph, due to I/O problem: $cause" 
+  		);
     }
     catch ( RuntimeException ex )
     {
-    	String msg = "Failed to export graph due to: " + ex.getMessage ();
-      exlog.logEx ( msg , ex );
-      throw new RuntimeException ( msg, ex );
+    	throw ExceptionUtils.buildEx ( RuntimeException.class, ex, 
+  			"Knetbuilder failed to export the graph, due to: $cause" 
+  		);
     }
     finally {
     	if ( exportFile != null ) exportFile.delete ();

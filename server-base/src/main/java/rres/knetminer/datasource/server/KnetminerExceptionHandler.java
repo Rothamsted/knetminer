@@ -44,7 +44,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 {
 	private final Logger log = LogManager.getLogger ( this.getClass () );
 	
-	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
+	private final ExceptionLogger exLog = ExceptionLogger.getLogger ( this.getClass () );
 	
 	/**
 	 * Maps known exceptions to HTTP statuses. This is scanned in the order you define the classes
@@ -87,7 +87,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 			request instanceof ServletWebRequest ? (ServletWebRequest) request : request,
 			status
 		);
-		exlog.logEx ( "Returning exception from web request processing, HTTP status: '" + status.toString () + "'", ex );
+		exLog.logEx ( "Returning exception from web request processing, HTTP status: {}", ex, status );
 		return super.handleExceptionInternal ( ex, response, headers, status, request );
 	}
 	

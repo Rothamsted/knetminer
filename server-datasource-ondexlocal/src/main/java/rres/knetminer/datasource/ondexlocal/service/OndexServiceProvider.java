@@ -63,7 +63,7 @@ public class OndexServiceProvider
 
 	private final static Logger slog = LogManager.getLogger ( OndexServiceProvider.class );
 	
-	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
+	private final ExceptionLogger exLog = ExceptionLogger.getLogger ( this.getClass () );
 
 	/**
 	 * It's a singleton, use {@link #getInstance()}.
@@ -182,7 +182,7 @@ public class OndexServiceProvider
 			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
 		catch ( Exception ex ) {
-			exlog.logEx ( "Ondex Data initialisation failed: " + ex.getMessage () , ex );
+			exLog.logEx ( "Ondex Data initialisation failed", ex );
 			this.initException = ex;
 		}
 		finally {

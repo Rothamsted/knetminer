@@ -25,7 +25,6 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
-import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
@@ -55,9 +54,7 @@ public class SemanticMotifDataService
 
 	
 	private final Logger log = LogManager.getLogger ( getClass() );
-	
-	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
-	
+		
 	@Autowired
 	private DataService dataService;
 	
@@ -231,9 +228,8 @@ public class SemanticMotifDataService
 			}
 			catch ( Exception ex )
 			{
-				exlog.logEx ( "Failed while creating internal map files: " + ex.getMessage (), ex );
 				ExceptionUtils.throwEx ( 
-					RuntimeException.class, ex, "Failed while creating internal map files: %s", ex.getMessage () 
+					RuntimeException.class, ex, "Failed while creating internal map files: $cause" 
 				);
 			}
 		} 
@@ -251,9 +247,8 @@ public class SemanticMotifDataService
 			}
 			catch ( Exception e )
 			{
-				exlog.logEx ( "Failed while reading internal map files: " + e.getMessage (), e );
 				ExceptionUtils.throwEx ( 
-					RuntimeException.class, e, "Failed while reading internal map files: %s", e.getMessage ()
+					RuntimeException.class, e, "Failed while reading internal map files: $cause"
 				);
 			}
 		}

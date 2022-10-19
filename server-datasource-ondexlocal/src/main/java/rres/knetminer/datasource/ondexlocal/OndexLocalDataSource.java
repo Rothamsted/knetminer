@@ -73,9 +73,7 @@ import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 @Component
 public class OndexLocalDataSource extends KnetminerDataSource 
 {
-	
-	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( "error-log" );
-	
+		
 	public static final String CONFIG_FILE_PATH_PROP = "knetminer.api.configFilePath"; 
 	
 	/**
@@ -148,15 +146,13 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		} 
 		catch (ParseException e) 
 		{
-			IllegalArgumentException wex = ExceptionUtils.buildEx ( 
+			throw ExceptionUtils.buildEx ( 
 				IllegalArgumentException.class, 
 				e,
 				"Error while counting synonyms for \"%s\": %s", 
 				Optional.ofNullable ( request ).map ( KnetminerRequest::getKeyword ).orElse ( "<null response>" ),
 				e.getMessage ()
 			);
-			exlog.logEx ( wex.getMessage (), wex );
-			throw wex;
 		}
 	}
 
