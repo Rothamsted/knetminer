@@ -537,9 +537,6 @@ public class KnetminerServer
 		
 		ObjectMessage msg = new ObjectMessage ( map );
 		
-		// TODO: I don't see any need for a new level, nor for a separated log file 
-		// logAnalytics.log ( Level.getLevel ( "ANALYTICS" ), msg );
 		logAnalytics.info ( msg );
-	}
-	
+	}	
 }
