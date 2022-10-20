@@ -449,7 +449,7 @@ public class ExportService
 				// group by CC
 				relatedConcept -> relatedConcept.getOfType ().getId (),
 				// for each CC, make a list of labels
-				Collectors.mapping ( GraphLabelsUtils::getBestConceptLabelWithGeneSpeciePrefix, Collectors.toList () )
+				Collectors.mapping ( GraphLabelsUtils::getBestConceptLabel, Collectors.toList () )
 			)); 
 				
 			
