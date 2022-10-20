@@ -2,12 +2,12 @@
 <Configuration status="INFO">
 
 	<Properties>
-		<Property name="log-name">${sys:catalina.home}/logs/${web:contextPath}</Property>
+		<Property name="logName">${sys:catalina.home}/logs/${web:contextPath}</Property>
 	</Properties>
 	
 	<Appenders>
 	
-		<RollingFile name = "RollingFile" fileName = "${log-name}.log" filePattern = "${log-name}-%d{yyyy-MM-dd}.log">
+		<RollingFile name = "RollingFile" fileName = "${logName}.log" filePattern = "${logName}-%d{yyyy-MM-dd}.log">
 			
 			<ThresholdFilter level = "INFO" />
 			
@@ -29,7 +29,7 @@
 			This is where the analytics trackers are sent, in JSON format.
 		-->
 		<RollingFile name = "AnalyticsRollingFile" 
-			fileName = "${log-name}-analytics.json" filePattern = "${log-name}-analytics-%d{yyyy-MM-dd}.json">
+			fileName = "${logName}-analytics.json" filePattern = "${logName}-analytics-%d{yyyy-MM-dd}.json">
 					 
 			<JSONLayout compact = "false" eventEol = "true" objectMessageAsJsonObject = "true" />
 
@@ -43,7 +43,8 @@
 		
 		
 		<!--  A more detailed log. Essentially, it has the exception details -->
-		<RollingFile name="VerboseRollingFile" fileName = "${log-name}-details.log" filePattern = "${log-name}-%d{yyyy-MM-dd}.log">
+		<RollingFile name="VerboseRollingFile" fileName = "${logName}-details.log" 
+		    filePattern = "${logName}-details-%d{yyyy-MM-dd}.log">
 			
 			<PatternLayout>
 				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
