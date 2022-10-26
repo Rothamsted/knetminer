@@ -41,7 +41,7 @@ function initResetButton(){
         $('form')[0].reset();
         $("#pGViewer_title").empty();
         $("#pGSearch_title").empty();
-        $('#matchesResultDiv').html('Please, start typing your query');
+        $('#matchesResultDiv').html('Type a query to begin');
         $('#suggestor_search').hide();
         $('#suggestor_search_div').hide();
         $('#tabviewer').hide(''); 

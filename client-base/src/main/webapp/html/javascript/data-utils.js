@@ -423,7 +423,7 @@ function matchCounter() {
 
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
     if (keyword.length == 0) {
-        $('#matchesResultDiv').html('Please, start typing your query');
+        $('#matchesResultDiv').html('Type a query to begin');
 		// hide query suggestor icon
 		$('#suggestor_search').css('display', 'none');
     } else {

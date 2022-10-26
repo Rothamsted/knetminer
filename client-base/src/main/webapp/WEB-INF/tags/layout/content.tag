@@ -31,7 +31,7 @@
 						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
 						 </span>
 
-						 <div class="counttext" id="matchesResultDiv" style="display: block;">Please, start typing your query</div>
+						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>
 
 						 <!-- query suggestor -->
 						 
