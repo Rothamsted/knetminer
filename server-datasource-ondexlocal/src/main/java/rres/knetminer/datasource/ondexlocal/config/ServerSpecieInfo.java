@@ -97,10 +97,14 @@ public class ServerSpecieInfo implements SpecieInfo
 		
 		// TODO: do we need a per-specie directory?
 		// if ( this.baseMapPath == null ) baseMapPath = "config/specie-" + this.taxId + "/base-map.xml";
-		if ( this.baseMapPath == null ) baseMapPath = defaultCfgPath + "/species/base-map-" + this.taxId + ".xml";
-		baseMapPath = KnetminerConfiguration.buildPath ( 
-			dsetPath, baseMapPath 
-		);
+		if ( this.baseMapPath == null ) {
+			baseMapPath = defaultCfgPath + "/species/base-map-" + this.taxId + ".xml";
+		}else {
+			baseMapPath = KnetminerConfiguration.buildPath ( 
+				dsetPath, baseMapPath 
+			);
+		}
+		
 		
 		this.initChromosomeIds ();
 	}	

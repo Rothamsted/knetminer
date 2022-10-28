@@ -106,11 +106,18 @@ public class KnetminerConfiguration
 			datasetDirPath = datasetDirPath.replaceAll ( "/config$", "" );
 		}
 		
-		if ( this.dataDirPath == null ) dataDirPath = datasetDirPath + "/" + "data";
-		dataDirPath = buildPath ( datasetDirPath, dataDirPath );
+		if ( this.dataDirPath == null ) {
+			dataDirPath = datasetDirPath + "/" + "data";
+		}else {
+			dataDirPath = buildPath ( datasetDirPath, dataDirPath );
+		}
 		
-		if ( this.oxlFilePath == null ) oxlFilePath = dataDirPath + "/knowledge-network.oxl";
-		oxlFilePath = buildPath ( datasetDirPath, oxlFilePath );
+		
+		if ( this.oxlFilePath == null ) {
+			oxlFilePath = dataDirPath + "/knowledge-network.oxl";
+		}else {
+			oxlFilePath = buildPath ( datasetDirPath, oxlFilePath );
+		}
 		
 		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
 		
@@ -189,7 +196,7 @@ public class KnetminerConfiguration
 	}
 
 	@JsonProperty ( "graphTraverser" )
-	private void setGraphTraverserOptions ( Map<String, Object>graphTraverserOptions )
+	private void setGraphTraverserOptions ( Map<String, Object> graphTraverserOptions )
 	{
 		this.graphTraverserOptions = OptionsMap.from ( graphTraverserOptions );
 	}
@@ -281,7 +288,9 @@ public class KnetminerConfiguration
 	{
 		if ( filePath == null ) return filePath;
 		// Is it absolute? Ie, Does it begin with /, \, or something like c: ?
-		if ( filePath.toLowerCase ().matches ( "^(/|\\|[a-z]:).*" ) ) return filePath;
+		if ( filePath.toLowerCase ().matches ( "/*[a-z]*/path/[a-z].*" ) ) {
+			return basePath;
+		}
 		return basePath + "/" + filePath;
 	}
 		
