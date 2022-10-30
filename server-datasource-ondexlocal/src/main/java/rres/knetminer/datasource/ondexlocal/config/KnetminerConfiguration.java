@@ -290,6 +290,8 @@ public class KnetminerConfiguration
 		// Is it absolute? Ie, Does it begin with /, \, or something like c: ?
 		if ( filePath.toLowerCase ().matches ( "/*[a-z]*/path/[a-z].*" ) ) {
 			return basePath;
+		}else if ( filePath.contains ( ".oxl" ) ) {
+			return filePath;
 		}
 		return basePath + "/" + filePath;
 	}
