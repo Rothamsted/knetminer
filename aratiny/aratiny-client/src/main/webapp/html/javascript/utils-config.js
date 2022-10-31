@@ -32,12 +32,22 @@ async function setupApiUrls ( callerUrlPath = "" )
     .replace ( /\?.*/g, "" ) // Don't mess-up with the params
     .replace ( /\/$/g, "" ); // URLs with // don't always work;
 
+    var pathName = new URL(clientBaseUrl).pathname; 
+
+  // checking whether the url has a path
+  // if path is present, it will be removed so API can be detected accurately
+  if(pathName !== '/'){
+    clientBaseUrl =  clientBaseUrl.slice(0,clientBaseUrl.lastIndexOf('/')); 
+  }
+
 	if ( callerUrlPath != "" )
 		clientBaseUrl = clientBaseUrl.replace ( callerUrlPath, "" );
   
   bootstrapUrl = clientBaseUrl;
   bootstrapUrl += "/html/api-url.jsp";
   bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
+
+  
 
   // getting these \n from the API, who knows why
   try {

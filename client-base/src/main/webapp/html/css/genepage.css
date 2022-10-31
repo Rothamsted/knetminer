@@ -1,0 +1,61 @@
+#genomaps-container{
+    padding: 0 6rem;
+}
+
+.navbarselect-container{
+    display: none;
+}
+
+#network_description{
+    width:60%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.search-key{
+    margin-bottom:.5rem;
+}
+
+#instructions{
+    margin-top:2rem;
+}
+
+#network_content{
+    padding:0;
+    margin:0;
+    margin-top:5.5rem;
+}
+
+#instruction-title{
+    margin-bottom:0rem;
+}
+
+#tabviewer_content{border:none;margin:0;-webkit-box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;}
+
+@media (min-width: 1366px){
+    #tabviewer_content{width: 67%;}
+}
+
+.logo-items{
+    padding:0.5rem 4rem;
+    width:20%;
+}
+
+.navbar-items{
+    padding:0.5rem 4rem;
+}
+
+#tabviewer_content{
+    margin-top:2rem;
+}
+
+.guide-popup{
+    top:3pc;
+    right:3pc;
+}
