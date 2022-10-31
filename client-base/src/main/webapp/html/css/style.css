@@ -1357,17 +1357,6 @@
     width: 70%;
   }
 
-   /* genepage.html styles */
-
-#network_content{
-    margin: 0 auto;
-    margin-top: 7.5rem;
-    width: fit-content;
-    padding: 0 4rem;
-}
-
-
-
   @media (min-width:768px){
     #species_header{width:70%;-webkit-box-pack: center;-ms-flex-pack: center;justify-content: center;}
     .product_links{width:40%}
@@ -1380,10 +1369,6 @@
         right: 5.5pc;
         top: 1.3pc;
     }
-
-    #network_content{
-        padding: 0 1.5rem;
-    }
   }
 
   
@@ -1393,9 +1378,6 @@
     .navbar-items{width:50%}
     .product_links{width:40%}
     #species_header{width:62%}
-    #network_content{
-        padding: 0 3rem;
-    }
     
     }
 
@@ -1407,9 +1389,6 @@
             #tabviewer_content{width:70%}
             #species-dropimg{
                 right: 5.5pc;
-            }
-            #network_content{
-                padding: 0 4rem;
             }
             
     }
@@ -1561,9 +1540,3 @@
     width:30px;
     margin-left:0.5rem;
 }
-
-
-
-
-
-

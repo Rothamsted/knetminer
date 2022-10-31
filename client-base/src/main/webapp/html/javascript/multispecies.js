@@ -1,19 +1,35 @@
 // multi-species object literal house functions that can be used outside independently outside
 multiSpeciesFeature = function ()
 {
-
     var currentTaxId = "";
 
     // function get lists of registered species from API
-   function setSpeciesSelector()
+   function getSpeciesList()
     {
 	          // TODO: two tasks into the same function, too complicated, setting the ID
 	          // based on URL should be dealt with else where, this looks more for 
 	          // fetching the species. 
+	          
+	          // TODO: also the function name doesn't look very good: does it get the species and
+	          // set up the user interface? => Name it something like setSpeciesSelector ()  
+	          //
 	            	
-              var taxIdFromUrl = (new URL(window.location.href)).searchParams
-             .get("taxId")
-             if(taxIdFromUrl)  setTaxId(taxIdFromUrl) 
+            var taxIdFromURL = new URLSearchParams ( document.location.search )
+              .get ( "taxId" );
+            if ( taxIdFromURL ) setTaxId ( taxIdFromURL );
+
+						/**
+						 * TODO: remove and keep the version above. This is not robust, in principle, nothing tells you 
+						 * that, if the paramers are available, then taxId is one of them. Try to not rely on accidental 
+						 * application circumstances like this. 
+						 *              
+            if (url.indexOf('?') !== -1)
+            {    
+                var url = new URLSearchParams(url); 
+                setTaxId(url.get('taxId'));
+            }
+            */          
+            
             
             $.get(api_url + '/dataset-info','').done( function(data){
                 renderHtmlHeaders(data);
@@ -21,6 +37,7 @@ multiSpeciesFeature = function ()
                 var createdDropDown = createDropdown(speciesInfos); 
 
                 if(createdDropDown){
+                    selectDropdown();
                     $('#species_header').css('display','flex');
                     multiSpeciesEvents(); 
                     deactivateSpinner("#wrapper");
@@ -48,11 +65,11 @@ multiSpeciesFeature = function ()
 
     // function house events that needs to be called when currentTaxId changes
     function multiSpeciesEvents(){
-        selectDropdown();
         getQueryExamples();
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
+        setTaxIdParams()
         return true;
     }
 
@@ -79,6 +96,35 @@ multiSpeciesFeature = function ()
      * Helper function adds and replace taxonomy ID to current url when triggered
      * 
      */
+    function setTaxIdParams()
+    {
+      taxIdFrag = getTaxIdUrlFrag();
+      
+      var taxIdFromURL = new URLSearchParams ( document.location.search )
+        .get ( "taxId" );
+        
+      // TODO: why do we need to manage this in this convoluted way?
+      // It should be like:
+      //
+      // - on UI load: 
+      //   - init speciesList (or object, or whaterver)
+      //   - selectSpecie ( taxId from URL )
+      // - on new specie selected from the UI selector: selectSpecie ( new taxID )
+      // - PERIOD.
+      //
+      // - selectSpecie ( taxId ): 
+      //   works with speciesList to change the UI with the new specie (if != current one)
+      //   - It DOES NOT care how taxId is chosen (from URL or UI element)
+      //   - Possibly, it DOES NOT care about fetching the speies data (does not invoke the API, or calls
+      //     a separated function/method/object/etc for that)
+      // 
+      //
+      
+      if ( taxIdFromURL ) 
+        history.pushState ( {}, '', taxIdFrag )
+			else
+			  history.replaceState ( {}, '', taxIdFrag )
+    }
     
     // 
     /**
@@ -93,6 +139,7 @@ multiSpeciesFeature = function ()
             speciesOptions.each(function(){
                 if(currentTaxId === this.value){
                     $(this).attr('selected', true)
+                    console.log('here')
                 }
             })
         }else{
@@ -300,7 +347,7 @@ multiSpeciesFeature = function ()
     }
 
     return {
-        init:setSpeciesSelector,
+        init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
         taxId: setTaxId,
         maps:drawGeneMaps,

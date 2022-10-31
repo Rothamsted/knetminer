@@ -10,16 +10,5 @@
     <welcome-file>index.html</welcome-file>
     <welcome-file>html/index.jsp</welcome-file>
   </welcome-file-list>
-
-  <!-- TODO: probably to be removed (GenePageUtils servlet too). We don't need any of this. genepage.jsp can 
-  	   be called directly and possibly, there are easier ways to redirect URL paths -->
-  <servlet>
-    <servlet-name>GenePageUtils</servlet-name>
-    <servlet-class>rres.knetminer.client.GenePageUtils</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>GenePageUtils</servlet-name>
-    <url-pattern>/genepage</url-pattern>
-  </servlet-mapping>
 	  
 </web-app>

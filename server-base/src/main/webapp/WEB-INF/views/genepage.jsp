@@ -113,14 +113,12 @@ datasetDescription= datasetDescription + "<i><u>Tip:</u> Right-click-hold on nod
             $('#knetSaveButton').html("<button id='saveJSON' class='btn knet_button' style='float:right;width:115px;' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save the knetwork to knetspace'>Save Knetwork</button>");
                                         
             if(data.graph.includes("var graphJSON=")) { // for old/current json that contains 2 JS vars
-              
                KNETMAPS.KnetMaps().drawRaw('#knetmap', data.graph/*, networkId*/);
               }
             else { // response contents (pure JSON).
                 var eles_jsons= data.graph.graphJSON.elements;
                 var eles_styles= data.graph.graphJSON.style;
                 var metadata_json= data.graph.allGraphData;
-
                 KNETMAPS.KnetMaps().draw('#knetmap', eles_jsons, metadata_json, eles_styles/*, networkId*/);
                }
         });
