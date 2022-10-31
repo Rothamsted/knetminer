@@ -7,7 +7,7 @@
 "@includes":
 - defaults-cfg.yml
 
-oxl: data/knowledge-network.oxl 
+# oxl: data/knowledge-network.oxl # this is the default 
 
 # Details about the datset and supported species
 # 

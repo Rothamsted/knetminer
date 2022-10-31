@@ -12,8 +12,8 @@ graphTraverser:
   # ${mydir} is the absolute path of its directory
   # Many paths are auto-resolved (eg, sampleQueries, below), but some need an explicit
   # specification, because the code isn't aware they aren't paths
-  StateMachineFilePath: file:///${mydir}/config/SemanticMotifs.txt
-  knetminer.neo4j.configFile: ${mydir}/config/neo4j/config.xml
+  StateMachineFilePath: "file:///${mydir}/config/SemanticMotifs.txt"
+  knetminer.neo4j.configFile: "${mydir}/config/neo4j/config.xml"
 
   # This enables the CypherDebugger service and corresponding UI interface at TODO.
   # It only applies when Neo4j mode is enabled.
