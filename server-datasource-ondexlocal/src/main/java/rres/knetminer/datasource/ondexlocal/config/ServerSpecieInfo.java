@@ -95,16 +95,18 @@ public class ServerSpecieInfo implements SpecieInfo
 		// null values have this as base path
 		String defaultCfgPath = dsetPath + "/config";
 		
-		// TODO: do we need a per-specie directory?
-		// if ( this.baseMapPath == null ) baseMapPath = "config/specie-" + this.taxId + "/base-map.xml";
-		if ( this.baseMapPath == null ) {
-			baseMapPath = defaultCfgPath + "/species/base-map-" + this.taxId + ".xml";
-		}else {
-			baseMapPath = KnetminerConfiguration.buildPath ( 
-				dsetPath, baseMapPath 
-			);
-		}
+	
+		// As in KnetminerConfiguration.postConstruct(), there's a default
+		// fall-back and then an independent relative/absolute conversion
+		// 
 		
+		if ( this.baseMapPath == null ) baseMapPath = defaultCfgPath + "/species/base-map-" + this.taxId + ".xml";
+		// TODO: do we need a per-specie directory, instead?
+		// if ( this.baseMapPath == null ) baseMapPath = "config/specie-" + this.taxId + "/base-map.xml";
+		
+		baseMapPath = KnetminerConfiguration.buildPath ( 
+			dsetPath, baseMapPath 
+		);
 		
 		this.initChromosomeIds ();
 	}	

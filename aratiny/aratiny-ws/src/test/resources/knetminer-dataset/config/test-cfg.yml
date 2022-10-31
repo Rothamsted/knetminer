@@ -10,7 +10,7 @@
 
 # For the tests, we have to use this OXL, which overrides the defaults loaded above
 # 
-oxl: ${project.build.directory}/dependency/poaceae-sample.oxl
+oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
 
 # Details about the datset and supported species
 # 

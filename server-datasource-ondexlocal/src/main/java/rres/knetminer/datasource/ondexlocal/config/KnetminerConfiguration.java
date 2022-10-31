@@ -106,18 +106,17 @@ public class KnetminerConfiguration
 			datasetDirPath = datasetDirPath.replaceAll ( "/config$", "" );
 		}
 		
-		if ( this.dataDirPath == null ) {
-			dataDirPath = datasetDirPath + "/" + "data";
-		}else {
-			dataDirPath = buildPath ( datasetDirPath, dataDirPath );
-		}
+		// The default
+		if ( this.dataDirPath == null ) dataDirPath = datasetDirPath + "/" + "data";
 		
+		// Compute the absolute path if it's relative, no matter how
+		// we got it 
+		dataDirPath = buildPath ( datasetDirPath, dataDirPath );
 		
-		if ( this.oxlFilePath == null ) {
-			oxlFilePath = dataDirPath + "/knowledge-network.oxl";
-		}else {
-			oxlFilePath = buildPath ( datasetDirPath, oxlFilePath );
-		}
+		// Same as above
+		if ( this.oxlFilePath == null ) oxlFilePath = dataDirPath + "/knowledge-network.oxl";
+		
+		oxlFilePath = buildPath ( datasetDirPath, oxlFilePath );
 		
 		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
 		
@@ -287,12 +286,10 @@ public class KnetminerConfiguration
 	public static String buildPath ( String basePath, String filePath )
 	{
 		if ( filePath == null ) return filePath;
+		
 		// Is it absolute? Ie, Does it begin with /, \, or something like c: ?
-		if ( filePath.toLowerCase ().matches ( "/*[a-z]*/path/[a-z].*" ) ) {
-			return basePath;
-		}else if ( filePath.contains ( ".oxl" ) ) {
-			return filePath;
-		}
+		if ( filePath.toLowerCase ().matches ( "^(/|\\|[a-z]:).*" ) ) return filePath;
+		
 		return basePath + "/" + filePath;
 	}
 		

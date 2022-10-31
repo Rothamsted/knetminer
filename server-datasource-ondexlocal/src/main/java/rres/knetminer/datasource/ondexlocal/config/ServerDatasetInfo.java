@@ -129,32 +129,27 @@ public class ServerDatasetInfo implements DatasetInfo
 		// null values have this as base path
 		String defaultCfgPath = dsetPath + "/config";
 		
-		if ( this.sampleQueriesFilePath == null ) {
-			sampleQueriesFilePath = defaultCfgPath + "/sample-queries.xml";
-		}else {
-			sampleQueriesFilePath = KnetminerConfiguration.buildPath ( 
-				dsetPath, sampleQueriesFilePath 
-			);
-		}
+		// As in KnetminerConfiguration.postConstruct(), there's a default
+		// fall-back and then an independent relative/absolute conversion
+		if ( this.sampleQueriesFilePath == null ) sampleQueriesFilePath = defaultCfgPath + "/sample-queries.xml";
+		
+		sampleQueriesFilePath = KnetminerConfiguration.buildPath ( 
+			dsetPath, sampleQueriesFilePath 
+		);
 		
 		
-		if ( this.releaseNotesFilePath == null ) {
-			releaseNotesFilePath = defaultCfgPath + "/release-notes.html";
-		}else {
-			releaseNotesFilePath = KnetminerConfiguration.buildPath ( 
-				dsetPath, releaseNotesFilePath 
-			);
-		}
+		if ( this.releaseNotesFilePath == null ) releaseNotesFilePath = defaultCfgPath + "/release-notes.html";
 		
+		releaseNotesFilePath = KnetminerConfiguration.buildPath ( 
+			dsetPath, releaseNotesFilePath 
+		);
 
-		if ( this.backgroundImageFilePath == null ) {
-			backgroundImageFilePath = defaultCfgPath + "/background.jpg";
-		}else {
-			backgroundImageFilePath = KnetminerConfiguration.buildPath ( 
-				dsetPath, backgroundImageFilePath 
-			);
-		}
 		
+		if ( this.backgroundImageFilePath == null ) backgroundImageFilePath = defaultCfgPath + "/background.jpg";
+
+		backgroundImageFilePath = KnetminerConfiguration.buildPath ( 
+			dsetPath, backgroundImageFilePath 
+		);
 
 		// Default for this is taken from the OXL
 		if ( this.creationDate == null )
