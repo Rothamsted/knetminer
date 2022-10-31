@@ -24,11 +24,6 @@ function loadOnReady(){
     $('#tabviewer').hide(); // hide by default
     // Tooltip
     showReferenceGenome();  
-    
-    /* TODO: What's for? The current Google instructions don't mention any of these
-    createAnalyticsTag(); 
-    generalPageAnalytics();
-    */ 
 
 }
 

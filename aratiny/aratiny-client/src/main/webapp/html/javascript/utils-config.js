@@ -1,6 +1,6 @@
 
-var api_url = "";
 
+var api_url;
 var knetspace_api_host= "";
 
 // TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
@@ -26,11 +26,20 @@ var knetspace_api_host= "";
  */
 async function setupApiUrls ( callerUrlPath = "" )
 {
-	$.ajaxSetup( { timeout:3000 } ); // Applies globally, from now on
+	// $.ajaxSetup( { timeout:3000 } ); // Applies globally, from now on
 	
   var clientBaseUrl = window.location.href
-    .replace ( /\?.*/g, "" ) // Don't mess-up with the params
-    .replace ( /\/$/g, "" ); // URLs with // don't always work;
+    .replace ( /\?.*/g, "" )
+    .replace ( /\/$/g, "" );
+  
+
+  var pathName = new URL(clientBaseUrl).pathname; 
+
+  // checking whether the url has a path
+  // if path is present, it will be removed so API can be detected accurately
+  if(pathName !== '/'){
+    clientBaseUrl =  clientBaseUrl.slice(0,clientBaseUrl.lastIndexOf('/')); 
+  }
 
     var pathName = new URL(clientBaseUrl).pathname; 
 
@@ -41,8 +50,7 @@ async function setupApiUrls ( callerUrlPath = "" )
   }
 
 	if ( callerUrlPath != "" )
-		clientBaseUrl = clientBaseUrl.replace ( callerUrlPath, "" );
-  
+	clientBaseUrl = clientBaseUrl.replace ( callerUrlPath, "" );
   bootstrapUrl = clientBaseUrl;
   bootstrapUrl += "/html/api-url.jsp";
   bootstrapUrl += "?clientUrl=" + encodeURIComponent ( bootstrapUrl );
@@ -59,14 +67,12 @@ async function setupApiUrls ( callerUrlPath = "" )
 		// server side
 		instanceBaseUrl = clientBaseUrl.replace ( /client$/g, "" );
 		guessApiUrl = instanceBaseUrl + "/ws/default/dataset-info";
-
 		await $.getJSON ( guessApiUrl, js => {
 			// Initially, I've tried: api_url = await $.getJSON(...), but
 			// no idea why in this case api_url is set to js, instead of this return value
 			api_url = instanceBaseUrl + "/ws/" + js [ "id" ]
 		});
   }
-	
   // Same trick with this other API (including \n escaping)
   knetspace_api_host = await $.get (
     api_url + "/dataset-info/knetspace-url",

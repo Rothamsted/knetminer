@@ -33,6 +33,7 @@
         <!-- Genomaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+        
         <!-- KnetMaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
 
@@ -75,6 +76,8 @@
         
         <!-- utils -->
         <script type="text/javascript" src="html/javascript/utils.js"></script>
+
+       
 
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
@@ -123,9 +126,8 @@
       <div id="wrapper">
         <layout:header />
         <layout:content />
-        <!-- We used to have a footer
-        <layout:footer />
-        -->
+        
       </div>
     </body>
+       
 </html>

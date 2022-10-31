@@ -11,7 +11,7 @@ $(document).ready(function(){
     $('#search-gene').html(list)
     $('#search-keyword').html(keywords)
 
-    generateCyJSNetwork(api_url + '/network',{keyword:keywords, list:[list],exportPlainJSON:false});
+    generateCyJSNetwork(api_url + '/network',{keyword:keywords, list:[list],exportPlainJSON:false}, false);
     loginUtilsInit();	
     multiSpeciesFeature.init();	
     knetmaps = KNETMAPS.KnetMaps();
@@ -21,3 +21,4 @@ $(document).ready(function(){
 	);
    
 })
+

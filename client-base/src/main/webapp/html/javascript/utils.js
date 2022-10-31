@@ -10,14 +10,16 @@ $(document).ready (
 	function()
 	{
 		setupApiUrls()
+
 		.then ( function ()
-		{		
+		{
 			showApiInitResult ();
 			
 			genemap = GENEMAP.GeneMap({apiUrl: api_url})
 				.width(800).height(550); // changed from 750x400
 	
 			knetmaps = KNETMAPS.KnetMaps();
+
 	
 	    multiSpeciesFeature.init();					
 			loginUtilsInit();	 // See notes in loginUtils.js
@@ -34,4 +36,3 @@ $(document).ready (
 			err => showApiInitResult ( err )
 		);
 	});
-// ready()

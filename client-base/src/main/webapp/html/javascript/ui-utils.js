@@ -173,13 +173,12 @@ function showApiInitResult ( error = null )
 		if ( error.responseText ) details += ". Response: " + error.responseText;
 			
 	  logError ( "Error while doing API initialisation.", details );
-	  
-	  $("#search").hide();
-	  $('#error_page').css('display', 'flex');
+      $('#error_page').css('display', 'flex');
+      $('#index').hide()
 	  return; 
 	}
-	
-  $("#search").show();
+
+    $('#index').show();
 }
 
 
