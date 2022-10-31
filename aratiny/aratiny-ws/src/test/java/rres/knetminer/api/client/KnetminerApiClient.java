@@ -354,7 +354,8 @@ public class KnetminerApiClient
 		String urlOrCallName, Function<InputStream, T> outConverter, RequestOptions reqOpts, Map<String, Object> params 
 	)
 	{
-		String url = urlOrCallName.startsWith ( "http://" )
+		var nrmUrlOrCallName = urlOrCallName.toLowerCase ();
+		String url = nrmUrlOrCallName.startsWith ( "http://" ) || nrmUrlOrCallName.startsWith ( "https://" )
 			? urlOrCallName 
 			: getApiUrl ( urlOrCallName );
 		
