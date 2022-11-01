@@ -123,9 +123,6 @@
       <div id="wrapper">
         <layout:header />
         <layout:content />
-        <!-- We used to have a footer
-        <layout:footer />
-        -->
       </div>
     </body>
 </html>
