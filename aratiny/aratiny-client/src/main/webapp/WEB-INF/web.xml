@@ -10,5 +10,14 @@
     <welcome-file>index.html</welcome-file>
     <welcome-file>html/index.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>GenePageUtils</servlet-name>
+    <servlet-class>rres.knetminer.client.GenePageUtils</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GenePageUtils</servlet-name>
+    <url-pattern>/genepage</url-pattern>
+  </servlet-mapping>
 	  
 </web-app>
