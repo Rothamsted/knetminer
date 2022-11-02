@@ -123,9 +123,10 @@
       <div id="wrapper">
         <layout:header />
         <layout:content />
-        <!-- We used to have a footer
+        <%-- We used to have a footer
+          TODO: to be removed? If yes, remove footer.tag too
         <layout:footer />
-        -->
+        --%>
       </div>
     </body>
 </html>
