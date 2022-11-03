@@ -1,0 +1,8 @@
+<urlrewrite>
+
+    <rule>
+    <from>^/genepage</from>
+    <to last="true">html/genepage.jsp</to>
+    </rule>
+
+</urlrewrite>

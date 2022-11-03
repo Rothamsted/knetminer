@@ -32,6 +32,17 @@ async function setupApiUrls ( callerUrlPath = "" )
     .replace ( /\?.*/g, "" ) // Don't mess-up with the params
     .replace ( /\/$/g, "" ); // URLs with // don't always work;
 
+
+
+  // TODO: currently researching a better approach 
+    var pathName = new URL(clientBaseUrl).pathname; 
+
+     // checking whether the url has a path
+  // if path is present, it will be removed so API can be detected accurately
+  if(pathName !== '/'){
+    clientBaseUrl =  clientBaseUrl.slice(0,clientBaseUrl.lastIndexOf('/')); 
+  }
+
 	if ( callerUrlPath != "" )
 		clientBaseUrl = clientBaseUrl.replace ( callerUrlPath, "" );
   

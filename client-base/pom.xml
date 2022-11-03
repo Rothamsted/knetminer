@@ -189,6 +189,13 @@
 		<dependency>
 			<groupId>uk.ac.ebi</groupId>
 			<artifactId>jutils</artifactId>
-		</dependency>		
+		</dependency>
+
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
 	</dependencies>
 </project>

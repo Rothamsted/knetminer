@@ -1,0 +1,115 @@
+
+
+.navbarselect-container{
+    display: none;
+}
+
+
+#genomaps-container{
+    width: 70%;
+    margin: 0 auto;
+}
+
+
+#network_description{
+    width:85%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.search-key{
+    margin:.5rem 0;
+}
+
+#instructions{
+    margin-top:.5rem;
+}
+
+#network_content{
+    padding:0;
+    margin:0;
+}
+
+#instruction-title{
+    margin:0rem;
+}
+
+#tabviewer{
+    margin: 0 auto;
+}
+
+#tabviewer_content{ width:100%;border:none;-webkit-box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset; margin-top:1.5rem;}
+
+@media (min-width: 1366px){
+}
+
+.logo-items{
+    padding:0.5rem 4rem;
+    width:20%;
+}
+
+.navbar-items{
+    padding:0.5rem 4rem;
+}
+
+
+
+.guide-popup{
+    top:3pc;
+    right:1.5pc;
+}
+
+
+#dataset-description{
+    padding: 1rem;
+    border-radius: 14px;
+    margin: 0 auto;
+    background: #F4F5F7;
+    box-shadow:rgb(6 24 44 / 40%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;
+    ;
+}
+
+/* responsive screen stylings */
+
+/* tablet screen */
+@media (min-width: 768px){
+    #network_description{
+        width: 90%;
+    }
+
+}
+
+/* small laptop screen */
+/* @media (min-width: 1200px){
+} */
+
+/* large laptop screen */
+@media (min-width: 1400px){
+    
+}
+
+/* desktop  screen */ 
+ @media (min-width: 1920px){
+    #genomaps-container{
+        width: 50%;
+    }
+    
+}
+
+#release_icon{
+    display:none;
+}
+
+#species_header{
+    display:none;
+}
+
+#header{
+    margin-bottom: 4.5rem;
+}

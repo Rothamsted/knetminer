@@ -18,17 +18,7 @@ multiSpeciesFeature = function ()
               .get ( "taxId" );
             if ( taxIdFromURL ) setTaxId ( taxIdFromURL );
 
-						/**
-						 * TODO: remove and keep the version above. This is not robust, in principle, nothing tells you 
-						 * that, if the paramers are available, then taxId is one of them. Try to not rely on accidental 
-						 * application circumstances like this. 
-						 *              
-            if (url.indexOf('?') !== -1)
-            {    
-                var url = new URLSearchParams(url); 
-                setTaxId(url.get('taxId'));
-            }
-            */          
+				        
             
             
             $.get(api_url + '/dataset-info','').done( function(data){
