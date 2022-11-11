@@ -36,13 +36,17 @@
   //var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
   var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
   var summaryText = '';
+
   con_legend.forEach(function(value, key, map) {
       var contype= key.trim();
+
       if (key !== "Trait") {
-          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="'+key+'"></div>'+value+'</div>';
+          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="'+key+'"></div>'+value+'</div>';
 	 }
       else { // For Trait, display tooltip text as GWAS instead.
-          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'"); title="GWAS"></div>'+value+'</div>';
+          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="GWAS"></div>'+value+'</div>';
+
+          
 	 }
   });
 
@@ -50,31 +54,40 @@
   return legend;
  }
 
+
   /*
   * Function
-  * Filter visible table by selected Concept Type
-  */
- function filterTableByType(key) {
-  //console.log("filterGeneTableByType: "+ key);
-  // Check which Tab user is on: Gene View or Evidence View
-  if ($('#resultsTable').css('display') === 'block') {
-//      $("#loadingDiv_GeneView").css("display","block"); // notify
-      // get tbody
-    //  $('#tablesorter').children('tbody');
-	  var gvTable= /*$('#tablesorter');*/ document.getElementById("tablesorter");
-	  var rowLength= gvTable.rows.length;
-	  for(var i=1; i < rowLength; i++) { // i=1 to skip title row
-	      var currentRow= gvTable.rows.item(i);
-	      // get cells of current row
-		  var gv_cells = currentRow.cells;
-	//	  var gene_acc= gv_cells.item(0).innerHTML; // Accession
-		  var gene_evidences= gv_cells.item(gv_cells.length-2).innerHTML; // Evidences
-  	      // if this Accession doesn't have key in evidences, hide the row.
-		  if(!gene_evidences.includes(key)) {
-		     // hide row
-			 currentRow.style.display= 'none';
-		    }
-	     }
-//      $("#loadingDiv_GeneView").css("display","none"); // // clear
-     }
- }
+  * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
+  *0*/
+ function filterTableByType(key,location,sortingPosition,table) {
+
+    try{
+
+        console.log(location); 
+        console.log(sortingPosition)
+        if ($(location).css('display') === 'block') {
+            var gvTable=  document.getElementById(table);
+            var rowLength= gvTable.rows.length;
+            for(var i=1; i < rowLength; i++) { // i=1 to skip title row
+                var currentRow= gvTable.rows.item(i);
+    
+                // get cells of current row
+                var gv_cells = currentRow.cells;
+                var gene_evidences= gv_cells.item(sortingPosition).innerHTML;
+                console.log(gene_evidences);
+              
+                  // if this Accession doesn't have key in evidences, hide the row.
+                if(!gene_evidences.includes(key)) {
+                   currentRow.style.display = 'none';
+                  }else if(currentRow.style.display == 'none'){
+                      currentRow.style.display= 'table-row';
+                  }
+               }
+           }
+           
+    }catch (err) {
+        var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
+        console.log(errorMsg);
+       }
+   
+}

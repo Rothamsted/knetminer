@@ -30,53 +30,10 @@
   var summaryText = '';
   evi_legend.forEach(function(value, key, map) {
       var contype= key.trim();
-      summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterEvidenceTableByType("'+contype+'"); title="' + key + '"></div>' + value + '</div>';
+      summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterTableByType("'+contype+'","#evidenceTable",'+1+',"tablesorterEvidence"); title="' + key + '"></div>' + value + '</div>';
     //  summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_' + key + '" onclick=filterEvidenceTableByType("'+contype+'"); id="evi_' + key + '" title="' + key + '"></div>' + value + '</div>';
   });
 
   legend= legend + summaryText + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
   return legend;
- }
-
-  /*
-  * Function
-  * Filter visible Evidence View table by selected Concept Type (from legend)
-  */
- function filterEvidenceTableByType(key) {
-  //console.log("Evidence View legend: filterEvidenceTableByType= "+ key);
-  // Check which Tab user is on: Gene View or Evidence View
-  try {
-      // disable clicked button
-    //  $('#evi_'+key).prop('disabled',true).css('opacity',0.5);
-    //  if($('#evi_'+key).is(':disabled')) { console.log("already disabled..."); }
-    //  else {
-      if ($('#evidenceTable').css('display') === 'block') {
-        // get tbody
-        //  $('#tablesorterEvidence').children('tbody');
-          var evTable= /*$('#tablesorterEvidence');*/ document.getElementById("tablesorterEvidence");
-	  var rowLength= evTable.rows.length;
-	  for(var i=1; i < rowLength; i++) { // i=1 to skip title row
-	      var currentRow= evTable.rows.item(i);
-	      // get cells of current row
-		  var ev_cells = currentRow.cells;
-		  var evType= ev_cells.item(1).innerHTML; // Evidences
-		  if(!evType.includes(key)) {
-                      // if evidences of this type are shown, hide those table rows.
-                      //console.log("\t HIDE: evType: "+ evType);
-                      currentRow.style.display= 'none';
-		    }
-                  else { // Else, show them to allow users to visualize multiple evidence types together
-                      if (currentRow.style.display === 'none') {
-                          //console.log("\t SHOW: evType: "+ evType);
-			  currentRow.style.display= 'table-row';
-                         }
-                    }
-	      }
-           }
-       //}
-     }
-     catch (err) {
-         var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-         console.log(errorMsg);
-        }
  }
