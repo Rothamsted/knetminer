@@ -92,7 +92,10 @@ multiSpeciesFeature = function ()
             speciesOptions.each(function(){
                 if(currentTaxId === this.value){
                     $(this).attr('selected', true)
-                    history.pushState ( {}, '', '/')
+                    var url = window.location.href; 
+                    url = url.split('?')[0]
+                    console.log(url);
+                    history.pushState ( {}, '',url);
                 }
             })
         }else{
