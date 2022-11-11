@@ -1,4 +1,4 @@
-// multi-species object literal house functions that can be used outside independently outside
+// multi-species object literal house functions for the multi-species feature
 multiSpeciesFeature = function ()
 {
     var currentTaxId = "";
@@ -17,18 +17,7 @@ multiSpeciesFeature = function ()
             var taxIdFromURL = new URLSearchParams ( document.location.search )
               .get ( "taxId" );
             if ( taxIdFromURL ) setTaxId ( taxIdFromURL );
-
-						/**
-						 * TODO: remove and keep the version above. This is not robust, in principle, nothing tells you 
-						 * that, if the paramers are available, then taxId is one of them. Try to not rely on accidental 
-						 * application circumstances like this. 
-						 *              
-            if (url.indexOf('?') !== -1)
-            {    
-                var url = new URLSearchParams(url); 
-                setTaxId(url.get('taxId'));
-            }
-            */          
+       
             
             
             $.get(api_url + '/dataset-info','').done( function(data){
@@ -69,7 +58,6 @@ multiSpeciesFeature = function ()
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        setTaxIdParams()
         return true;
     }
 
@@ -91,42 +79,7 @@ multiSpeciesFeature = function ()
 		{
 			return currentTaxId ? '?taxId=' + currentTaxId : "";
 		}
-
-    /**
-     * Helper function adds and replace taxonomy ID to current url when triggered
-     * 
-     */
-    function setTaxIdParams()
-    {
-      taxIdFrag = getTaxIdUrlFrag();
-      
-      var taxIdFromURL = new URLSearchParams ( document.location.search )
-        .get ( "taxId" );
-        
-      // TODO: why do we need to manage this in this convoluted way?
-      // It should be like:
-      //
-      // - on UI load: 
-      //   - init speciesList (or object, or whaterver)
-      //   - selectSpecie ( taxId from URL )
-      // - on new specie selected from the UI selector: selectSpecie ( new taxID )
-      // - PERIOD.
-      //
-      // - selectSpecie ( taxId ): 
-      //   works with speciesList to change the UI with the new specie (if != current one)
-      //   - It DOES NOT care how taxId is chosen (from URL or UI element)
-      //   - Possibly, it DOES NOT care about fetching the speies data (does not invoke the API, or calls
-      //     a separated function/method/object/etc for that)
-      // 
-      //
-      
-      if ( taxIdFromURL ) 
-        history.pushState ( {}, '', taxIdFrag )
-			else
-			  history.replaceState ( {}, '', taxIdFrag )
-    }
     
-    // 
     /**
      * Function checks if current taxId value equals to the value of one of the species select options
      * if taxId value equals that of a species it becomes selected
@@ -139,7 +92,7 @@ multiSpeciesFeature = function ()
             speciesOptions.each(function(){
                 if(currentTaxId === this.value){
                     $(this).attr('selected', true)
-                    console.log('here')
+                    history.pushState ( {}, '', '/')
                 }
             })
         }else{
@@ -261,7 +214,9 @@ multiSpeciesFeature = function ()
                                 $("#start" + num).val(sampleQueries[sampleNum].regions[i].start);
                                 $("#end" + num).val(sampleQueries[sampleNum].regions[i].end);
                                 $("#label" + num).val(sampleQueries[sampleNum].regions[i].label);
-                                $("#genes" + num).focus();	//forces Genes counter column to update
+                                $("#genes" + num).focus();
+                                console.log(num)	//forces Genes counter column to update
+                                toggleRegionDelete(num)
                             }
 
                         } else {

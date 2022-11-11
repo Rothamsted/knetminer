@@ -1402,6 +1402,10 @@
                 -ms-flex-pack: unset;
                     justify-content: unset;
          }
+         #search{width:64%;} 
+         #pGSearch_title{width: 64%;}
+         #tabviewer_buttons{width: 64%;}
+         #tabviewer_content{width:64%}
     }
 
   /* responsiveness value for desktop screen */

@@ -405,7 +405,6 @@ function findGenes(id, chr_name, start, end) {
         var keyword = chr_name + "-" + start + "-" + end;
         var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
         var url = api_url + request;
-        console.log(url); 
         $.get(url, '').done(function (data) {
             $("#" + id).val(data.geneCount);
         });
