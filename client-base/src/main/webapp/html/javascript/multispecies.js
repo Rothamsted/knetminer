@@ -218,8 +218,8 @@ multiSpeciesFeature = function ()
                                 $("#end" + num).val(sampleQueries[sampleNum].regions[i].end);
                                 $("#label" + num).val(sampleQueries[sampleNum].regions[i].label);
                                 $("#genes" + num).focus();
-                                console.log(num)	//forces Genes counter column to update
-                                toggleRegionDelete(num)
+                    
+                                toggleRegionDeleteIcon(num)
                             }
 
                         } else {

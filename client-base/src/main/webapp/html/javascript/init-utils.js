@@ -120,7 +120,7 @@ function QtlRegionHandlers() {
           "').val(), $('#end" +
           curMaxInput +
           "').val())",
-        oninput: "toggleRegionDelete(" + curMaxInput + ")",
+        oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
       .parent()
@@ -139,7 +139,7 @@ function QtlRegionHandlers() {
           "').val(), $('#end" +
           curMaxInput +
           "').val())",
-        oninput: "toggleRegionDelete(" + curMaxInput + ")",
+        oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
       .parent()
@@ -148,7 +148,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "label" + curMaxInput,
         name: "label" + curMaxInput,
-        oninput: "toggleRegionDelete(" + curMaxInput + ")",
+        oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
       .parent()
@@ -402,13 +402,17 @@ function removeGeneRow() {
   }
 }
 
-function toggleRegionDelete(regionID) {
+// function toggles region delete icon triggered by oninput events and accepts region position value
+function toggleRegionDeleteIcon(regionID) {
   var startInput = $("#start" + regionID).val(),
     endInput = $("#end" + regionID).val(),
     labelInput = $("#label" + regionID).val();
   if (startInput || endInput || labelInput !== "") {
     $("#delete" + regionID).show();
-  } else if (startInput == '' && endInput == '' && labelInput == "" && regionID == 1) {
-    $("#delete" + regionID).hide();
+  } else if (startInput == '' && endInput == '' && labelInput == "") {
+    $("#genes" + regionID).val('');
+    if (regionID == 1) {
+      $("#delete" + regionID).hide();
+    }
   }
 }
