@@ -60,9 +60,9 @@
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->
-        <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
+        <script type="text/javascript" src="html/GeneView/summary-legend.js"></script>
         <!-- interactive Legend for Evidence View -->
-        <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>
+        <script type="text/javascript" src="html/javascript/evidence-legend.js"></script>
         
         <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
         <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>

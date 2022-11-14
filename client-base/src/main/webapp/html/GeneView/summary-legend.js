@@ -37,17 +37,16 @@
   var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
   var summaryText = '';
 
-  con_legend.forEach(function(value, key, map) {
+  con_legend.forEach(function(value, key, map)
+  {
       var contype= key.trim();
 
-      if (key !== "Trait") {
-          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="'+key+'"></div>'+value+'</div>';
-	 }
-      else { // For Trait, display tooltip text as GWAS instead.
-          summaryText = summaryText+'<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="GWAS"></div>'+value+'</div>';
+			// Special tooltip for the Trait case.
+			var summaryTextTitle = key == 'Trait'
+				? "GWAS"
+				: key; // For Trait, display tooltip text as GWAS instead.
 
-          
-	 }
+			summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="' + summaryTextTitle + '"></div>'+value+'</div>';
   });
 
   legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
