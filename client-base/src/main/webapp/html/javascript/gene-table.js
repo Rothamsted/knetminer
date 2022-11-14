@@ -361,6 +361,8 @@ function generateCyJSNetwork(url, requestParams) {
                var knetwork_blob= data.graph;
                knetwork_blob= filterKnetworkJson(knetwork_blob); // filter large knetwork jsons
                knetmaps.drawRaw('#knet-maps', /*data.graph*/knetwork_blob/*, networkId*/);
+			   //removing extra loader from knetmaps
+			  	$(".mask-loader").remove();
               }
             else { // response contents (pure JSON).
               var eles_jsons= data.graph.graphJSON.elements;
