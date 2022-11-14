@@ -216,7 +216,7 @@ function createGenesTable(text, keyword, rows){
 		var values = e.data.x[geneNum].split("\t");
 
 		// Generate Network in KnetMaps.
-		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword,  exportPlainJSON:false});
+		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword,  exportPlainJSON:false},false);
 	});
 
 	/*
@@ -307,7 +307,7 @@ function createGenesTable(text, keyword, rows){
  * Generates the network using KnetMaps
  * @author: Ajit Singh.
  */
-function generateCyJSNetwork(url, requestParams) {
+function generateCyJSNetwork(url, requestParams,externalCall) {
     // Preloader for KnetMaps
     $("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"><b>Loading Network, please wait...</b></div>');
     $("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
@@ -341,8 +341,10 @@ function generateCyJSNetwork(url, requestParams) {
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
 
+										var saveBtn = externalCall ? 'image/networksave.png':'html/image/networksave.png'
 
-                                        $('#knetSaveButton').html("<button class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src='html/image/networksave.png' alt='save networks' width='20'/></button>");
+
+                                        $('#knetSaveButton').html("<button  class='network_button' onclick='exportAsJson("+networkId+","+JSON.stringify(requestParams)+");' title='Save to your workspace on KnetSpace.com'><img src="+saveBtn+" alt='save networks' width='20'/></button>");
 
 
                                         // new export/download button in Network View - intialise a button to export gene info from knetwork and save locally, using networkId (null when inside knetminer)

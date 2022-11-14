@@ -17,26 +17,26 @@
         <meta name="description" content="KnetMiner is a unique discovery platform that helps scientists search large volumes of scientific literature and Life Science data to unveil links between the genetic and biological properties of complex, polygenic traits and diseases." />
         
         <!-- favicon -->
-        <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
+        <link rel="shortcut icon" href="image/KnetMiner200.png" />
 
 
         <!-- KnetMiner common style.css -->
-        <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
-        <link rel="stylesheet" type="text/css" href="html/css/genepage.css"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="css/genepage.css"/>
         <!-- jBox modal popup css -->
-        <link rel="stylesheet" type="text/css" href="html/css/jBox.all.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jBox.all.min.css"/>
         <!-- KnetMiner button css -->
-        <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
+        <link rel="stylesheet" type="text/css" href="css/button.css"/>
         <!-- Login css -->
-        <link rel="stylesheet" type="text/css" href="html/css/loginStyle.css"/>
+        <link rel="stylesheet" type="text/css" href="css/loginStyle.css"/>
         <!-- loader/spinner css -->
-        <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
+        <link rel="stylesheet" type="text/css" href="css/maskloader-spinner.css"/>
         <!-- Genomaps.js css -->
-        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
-        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+        <link rel="stylesheet" type="text/css" href="GeneMap/dist/styles/genemap-lib.css"/>
+        <link rel="stylesheet" type="text/css" href="GeneMap/dist/styles/genemap.css"/>
         
         <!-- KnetMaps.js css -->
-        <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
+        <link rel="stylesheet" type="text/css" href="KnetMaps/dist/css/knetmaps.css"/>
 
 		
 				<!-- bootstrap css -->
@@ -46,57 +46,57 @@
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!-- Genomaps.js -->
-        <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
-        <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
+        <script type="text/javascript" src="GeneMap/dist/js/genemap-lib.js"></script>
+        <script type="text/javascript" src="GeneMap/dist/js/genemap.js"></script>
 
         <!--JBox-->
-      	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+      	<script type="text/javascript" src="javascript/jBox.all.min.js"></script>
 
         <!--Particle-->
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
-        <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
-        <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
+        <script type="text/javascript" src="KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
+        <script type="text/javascript" src="KnetMaps/dist/js/knetmaps.js"></script>
 
-        <script type="text/javascript" src="html/javascript/utils-config.js"></script>
+        <script type="text/javascript" src="javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->
-        <script type="text/javascript" src="html/GeneView/summariseLegend.js"></script>
+        <script type="text/javascript" src="GeneView/summariseLegend.js"></script>
         <!-- interactive Legend for Evidence View -->
-        <script type="text/javascript" src="html/javascript/evidence_legend.js"></script>
+        <script type="text/javascript" src="javascript/evidence_legend.js"></script>
         
-        <script type="text/javascript" src="html/javascript/loginHandler/cookieUtils.js"></script>
-        <script type="text/javascript" src="html/javascript/loginHandler/loginUtils.js"></script>
-        <script type="text/javascript" src="html/javascript/filter-knetwork.js"></script>
+        <script type="text/javascript" src="javascript/loginHandler/cookieUtils.js"></script>
+        <script type="text/javascript" src="javascript/loginHandler/loginUtils.js"></script>
+        <script type="text/javascript" src="javascript/filter-knetwork.js"></script>
         <!-- KnetMaps - js utils to save knet to knetspace -->
-        <script type="text/javascript" src="html/javascript/saveKnetwork/save-knet.js"></script>
+        <script type="text/javascript" src="javascript/saveKnetwork/save-knet.js"></script>
         
         <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
-        <script type="text/javascript" src="html/javascript/exportKnetwork/download-knet.js"></script>
+        <script type="text/javascript" src="javascript/exportKnetwork/download-knet.js"></script>
           <!-- genepage utils -->
-         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
+         <script type="text/javascript" src="javascript/ui-utils.js"></script>
 
        
         
         <!-- genepage utils -->
-        <script type="text/javascript" src="html/javascript/genepage.js"></script>
+        <script type="text/javascript" src="javascript/genepage.js"></script>
 
         <!-- init utils -->
-        <script type="text/javascript" src="html/javascript/init-utils.js"></script>
+        <script type="text/javascript" src="javascript/init-utils.js"></script>
         
         <!-- gene table -->
-        <script type="text/javascript" src="html/javascript/gene-table.js"></script>
+        <script type="text/javascript" src="javascript/gene-table.js"></script>
         
 
       
 
         <!-- string data Utils-->
-        <script type="text/javascript" src="html/javascript/string-utils.js"></script>
+        <script type="text/javascript" src="javascript/string-utils.js"></script>
 
         <!-- google analytics-->
-        <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
+        <script type="text/javascript" src="javascript/google-analytics.js"></script>
 
-        <script type="text/javascript" src="html/javascript/releaseNotes/showNetworkStats.js"></script>
+        <script type="text/javascript" src="javascript/releaseNotes/showNetworkStats.js"></script>
         
         <!-- interactJS; DISABLED -->
         <!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->
