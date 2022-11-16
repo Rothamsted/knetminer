@@ -117,7 +117,7 @@ public class SearchService
       luceneMgr.setONDEXGraph ( graph );
       luceneMgr.setReadOnlyMode ( true );
 
-      log.info ( "Ondex graph indexed");
+      log.info ( "Ondex graph indexed" );
     } 
     catch (Exception e)
     {
