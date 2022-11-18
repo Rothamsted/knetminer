@@ -90,8 +90,9 @@ public class KnetminerClientUtils
 			// TODO: one day we will migrate towards paths where the DS ID isn't needed in any URL
 			//
 			wsBaseUrl = wsBaseUrl + "/ws";
+			var dsetInfoUrl = wsBaseUrl + "/default/dataset-info";
 			
-			HttpGet req = new HttpGet ( wsBaseUrl + "/default/dataset-info" );
+			HttpGet req = new HttpGet ( dsetInfoUrl );
 			HttpClient client = HttpClientBuilder.create ().build ();
 
 			HttpResponse resp = client.execute ( req );
@@ -102,7 +103,9 @@ public class KnetminerClientUtils
 				// TODO: it's not getting it, probably needs setStatus() only
 				jspOut.write ( IOUtils.toString ( in, "UTF-8" ) );
 				// Sending 500, cause it's the only code that makes Tomcat to display something
-				response.sendError ( HttpStatus.SC_INTERNAL_SERVER_ERROR, "Knetminer API not available" );
+				response.sendError ( 
+					HttpStatus.SC_INTERNAL_SERVER_ERROR,
+					"Knetminer API not available (at '" + dsetInfoUrl + "')" );
 				return;
 			}
 			
