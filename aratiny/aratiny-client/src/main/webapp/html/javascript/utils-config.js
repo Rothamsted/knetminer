@@ -45,7 +45,7 @@ async function setupApiUrls ( callerUrlPath = "" )
   }
   catch ( e )
   {
-		// If it fails again, try to guess this too, might help when the client URL is wrong for the
+		// If it fails, try this too, might help when the client URL is wrong for the
 		// server side
 		instanceBaseUrl = clientBaseUrl.replace ( /client$/g, "" );
 		guessApiUrl = instanceBaseUrl + "/ws/default/dataset-info";
