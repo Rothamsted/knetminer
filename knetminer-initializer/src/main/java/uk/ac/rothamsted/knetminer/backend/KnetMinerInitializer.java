@@ -25,7 +25,7 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.logging.ONDEXLogger;
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
+import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;

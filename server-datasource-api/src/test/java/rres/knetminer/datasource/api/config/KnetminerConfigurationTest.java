@@ -1,9 +1,9 @@
-package rres.knetminer.datasource.ondexlocal.config;
+package rres.knetminer.datasource.api.config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static rres.knetminer.datasource.ondexlocal.config.KnetminerConfigTestUtils.testChromosomeIds;
-import static rres.knetminer.datasource.ondexlocal.config.KnetminerConfigTestUtils.testSpecieInfo;
+import static rres.knetminer.datasource.api.config.KnetminerConfigTestUtils.testChromosomeIds;
+import static rres.knetminer.datasource.api.config.KnetminerConfigTestUtils.testSpecieInfo;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

@@ -11,9 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import rres.knetminer.api.ApiIT;
-import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfigTestUtils;
-import rres.knetminer.datasource.ondexlocal.config.SpecieInfo;
+import rres.knetminer.datasource.api.config.DatasetInfo;
+import rres.knetminer.datasource.api.config.KnetminerConfigTestUtils;
+import rres.knetminer.datasource.api.config.SpecieInfo;
 
 public class DatasetInfoServiceIT
 {

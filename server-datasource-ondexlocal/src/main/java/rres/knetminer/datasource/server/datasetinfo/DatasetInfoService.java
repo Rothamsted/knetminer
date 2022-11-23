@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
+import rres.knetminer.datasource.api.config.DatasetInfo;
+import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**

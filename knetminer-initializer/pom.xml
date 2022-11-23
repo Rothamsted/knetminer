@@ -26,17 +26,62 @@
 
 
 	<dependencies>
-		
-		<dependency>
-			<groupId>uk.ac.ebi</groupId>
-			<artifactId>jutils</artifactId>
-		</dependency>
-      			  
+		      			  
 	  <dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
-			<artifactId>server-datasource-ondexlocal</artifactId>
+			<artifactId>server-datasource-api</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-	   							
+		
+		<!-- 
+			The new backend, based on Neo4j. We choose to include this dependency anyway. It can be used or not, using
+			the configuration, it doesn't hurt anything if not used. 
+		-->
+		<dependency>
+	    <groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+	    <artifactId>cypher-client</artifactId>
+		</dependency>			
+
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>workflow-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>memory</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.ondex.core</groupId>
+			<artifactId>lucene</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>generic</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>oxl</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sourceforge.ondex.modules</groupId>
+			<artifactId>cyjs_json</artifactId>
+		</dependency>		
+	  	   							
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>

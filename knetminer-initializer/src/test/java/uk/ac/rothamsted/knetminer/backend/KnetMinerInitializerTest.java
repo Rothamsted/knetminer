@@ -18,7 +18,6 @@ import org.apache.logging.log4j.LogManager;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.parser.oxl.Parser;

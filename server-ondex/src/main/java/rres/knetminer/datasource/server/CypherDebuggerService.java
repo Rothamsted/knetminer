@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
+import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CyQueriesReader;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;

@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal.config;
+package rres.knetminer.datasource.api.config;
 
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 
@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 

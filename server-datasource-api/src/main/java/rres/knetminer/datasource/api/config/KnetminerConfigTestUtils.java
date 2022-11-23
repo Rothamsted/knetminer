@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal.config;
+package rres.knetminer.datasource.api.config;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;

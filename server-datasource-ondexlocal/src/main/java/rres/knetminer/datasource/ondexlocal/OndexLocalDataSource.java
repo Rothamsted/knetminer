@@ -49,7 +49,6 @@ import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
-import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 

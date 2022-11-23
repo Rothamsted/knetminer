@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal.config;
+package rres.knetminer.datasource.api.config;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import rres.knetminer.datasource.ondexlocal.service.DataService;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;

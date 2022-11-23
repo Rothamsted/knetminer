@@ -34,8 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machinezoo.noexception.Exceptions;
 
 import rres.knetminer.api.ApiIT;
-import rres.knetminer.datasource.ondexlocal.config.DatasetInfo;
-import rres.knetminer.datasource.ondexlocal.config.ServerDatasetInfo;
+import rres.knetminer.datasource.api.config.DatasetInfo;
+import rres.knetminer.datasource.api.config.ServerDatasetInfo;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;

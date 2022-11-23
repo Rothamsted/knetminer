@@ -27,6 +27,7 @@
 		  <groupId>org.json</groupId>
 		  <artifactId>json</artifactId>
 		</dependency>		
+
 		<!-- 
 			The new backend, based on Neo4j. We choose to include this dependency anyway. It can be used or not, using
 			the configuration, it doesn't hurt anything if not used. 

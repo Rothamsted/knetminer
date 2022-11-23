@@ -50,7 +50,7 @@ import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.logging.ONDEXLogger;
-import rres.knetminer.datasource.ondexlocal.config.KnetminerConfiguration;
+import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
