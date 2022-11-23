@@ -332,6 +332,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          $('#tabviewer').show();
          createGenesTable(data.geneTable, keyword, candidateGenes);
          createEvidenceTable(data.evidenceTable, keyword);
+         handleDelimintedCta.getData(data); 
          if(geneList_size > 0) {
             $('#selectUser').show();
            }
@@ -525,7 +526,38 @@ function changeSpecies(selectElement){
     }
 }
 
-
+// function dynamically encodes Gene and evidence views delimited files to downloadable TSV files
+handleDelimintedCta = function(){
+    var evidenceData, resultViewData,currentData;  
+    var utf8Bytes=''
+    // gets gene  and evidence view from genomicViewContent function (ln 155)
+    function getData(data){
+        resultViewData = data.geneTable; 
+        evidenceData = data.evidenceTable
+        setDemlimiterAttributes('resultsTable'); 
+    }   
+    function getencodedFile (){
+        utf8Bytes = encodeURIComponent(currentData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    })
+    } 
+    function setDemlimiterAttributes(position){
+        currentData = position == 'resultsTable' ? resultViewData : evidenceData;
+    $('.tabviewer-actions').toggle(position ==='resultsTable' || position === 'evidenceTable')
+     getencodedFile(); 
+    var TsvFileName = position == 'resultsTable' ? 'genes' : 'evidencetable'; 
+    var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes)+''; 
+    $('.delimited-cta').attr({
+        'download': ''+TsvFileName+'.tsv',
+        'href':delimiterAttr
+    });
+    }
+    
+    return {
+        getData:getData,
+        setData: setDemlimiterAttributes,
+    }
+}()
 
 
 

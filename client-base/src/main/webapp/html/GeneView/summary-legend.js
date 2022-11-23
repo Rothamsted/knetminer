@@ -38,18 +38,18 @@
   var summaryText = '';
 
   con_legend.forEach(function(value, key, map)
-  {
-      var contype= key.trim();
+  {     
+    var contype= key.trim();
 
 			// Special tooltip for the Trait case.
 			var summaryTextTitle = key == 'Trait'
 				? "GWAS"
 				: key; // For Trait, display tooltip text as GWAS instead.
 
-			summaryText = summaryText + '<div class="evidenceSummaryItem"><div class="evidence_item evidence_item_'+key+'" onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter"); title="' + summaryTextTitle + '"></div>'+value+'</div>';
+			summaryText = summaryText + '<div  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event);  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + summaryTextTitle + '"></div> <span style="font-weight:600;">'+ summaryTextTitle+'</span> <span style="margin-left:.25rem">('+value+')</span> </div>';
   });
 
-  legend= legend + summaryText + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes">'+'</div>';
+  legend= legend + summaryText +'</div>';
   return legend;
  }
 
@@ -58,12 +58,10 @@
   * Function
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
   *0*/
- function filterTableByType(key,location,sortingPosition,table) {
+ function filterTableByType(key,location,sortingPosition,table,event) {
 
     try{
 
-        console.log(location); 
-        console.log(sortingPosition)
         if ($(location).css('display') === 'block') {
             var gvTable=  document.getElementById(table);
             var rowLength= gvTable.rows.length;
@@ -73,7 +71,6 @@
                 // get cells of current row
                 var gv_cells = currentRow.cells;
                 var gene_evidences= gv_cells.item(sortingPosition).innerHTML;
-                console.log(gene_evidences);
               
                   // if this Accession doesn't have key in evidences, hide the row.
                 if(!gene_evidences.includes(key)) {
@@ -82,7 +79,12 @@
                       currentRow.style.display= 'table-row';
                   }
                }
-           }
+             // check for already active legends
+            var IslegendActive = $(location).find('.evidenceSummaryItem').hasClass('active-legend')
+            if(IslegendActive){$('.active-legend').removeClass('active-legend');}
+            // set current legend as active
+            $(event.currentTarget).addClass('active-legend');
+        }
            
     }catch (err) {
         var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;

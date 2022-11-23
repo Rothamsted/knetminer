@@ -18,18 +18,19 @@
         
         <!-- favicon -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
-
-
-        <!-- KnetMiner common style.css -->
-        <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
         <!-- jBox modal popup css -->
         <link rel="stylesheet" type="text/css" href="html/css/jBox.all.min.css"/>
         <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
+
+         <!-- KnetMiner common style.css -->
+        <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+
         <!-- Login css -->
         <link rel="stylesheet" type="text/css" href="html/css/loginStyle.css"/>
         <!-- loader/spinner css -->
         <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
+
         <!-- Genomaps.js css -->
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
         <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>

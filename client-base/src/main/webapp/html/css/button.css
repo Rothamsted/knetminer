@@ -2,8 +2,8 @@
 
 /* Border Fade */
 .knet_button {
-    width:100px; 
-    height:35px; 
+    border-radius: 8px;
+   padding: .6rem 1.8rem;
     color:white; 
     margin-left:0px; 
     margin-right:1rem;

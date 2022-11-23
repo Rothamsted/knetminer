@@ -12,25 +12,10 @@ function createGenesTable(text, keyword, rows){
 	{
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
-		var utf8Bytes = "";
-		utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-			return String.fromCharCode('0x' + p1);
-		});
 
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '<div><div id="evidence_Summary_Legend" class="evidenceSummary">' + interactiveSummaryLegend + '</div>';
-		table += '<span><u>Max</u> number of genes to show: ';
-		table += '<select value="' + /*rows*/results + '" id="numGenes">';
-		table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000</option>';
-		table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
-		table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
-		table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
-		table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
-		table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All (' + results + ')</option>';
-		table += '</select> </span></div>';
-
-		table += '<div style="display: flex;flex-direction: column;"> <span class="ctaButton" id="hint_sortable_table" onclick="geneViewHelper()">Help<i style="margin-left:1.2rem;" class="fas fa-info-circle"></i></span> <div id="selectUser">Linked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Known" title="Click to select genes with existing evidence." /> Unlinked genes:<input type="checkbox" name="checkbox_Targets" value="checkbox_Novel" title="Click to select genes without existing evidence." />' +
-			'<div id="selectedGenesCount"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>' + '</div></div></div>';
+		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
 
@@ -199,10 +184,22 @@ function createGenesTable(text, keyword, rows){
 		table += '</form>';
 	} // if ( candidateGenes.length > 2 )
 
-	table += '<div class="networkButton"><button id="new_generateMultiGeneNetworkButton" class="btn knet_button" title="Display the network in KnetMaps"> Create Network </button>';
-	table += '</insert><div id="loadingNetworkDiv"></div>'
-	table += '<div class="margin_left"><a class="delimited-cta" download="genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file <img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a></div>';
+	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
+	table += '<div class="num-genes-container"><select value="' + /*rows*/results + '" id="num-genes">';
+	table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000</option>';
+	table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
+	table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
+	table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
+	table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
+	table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All Genes (' + results + ')</option> </select></div>';
+	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
+	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
+	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>'; 
+	table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>'; 
 
+	
+	
+	
 	document.getElementById('resultsTable').innerHTML = table;
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGViewer_title').scrollIntoView();
@@ -249,15 +246,15 @@ function createGenesTable(text, keyword, rows){
 		// }
 	});
 
-	$("#numGenes").change(function (e) {
-		createGenesTable(text, keyword, $("#numGenes").val());	//if number of genes to show changes, redraw table.
+	$("#num-genes").change(function (e) {
+		createGenesTable(text, keyword, $("#num-genes").val());	//if number of genes to show changes, redraw table.
 	});
 
 	/*
 	 * Revert Evidence Filtering changes on Gene View table
 	 */
 	$("#revertGeneView").click(function (e) {
-		createGenesTable(text, keyword, $("#numGenes").val()); // redraw table
+		createGenesTable(text, keyword, $("#num-genes").val()); // redraw table
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -272,31 +269,43 @@ function createGenesTable(text, keyword, rows){
 	 * Select all KNOWN targets: find all targets with existing Evidence & check them.
 	 * Select all NOVEL targets: find all targets with no Evidence & check them.
 	 */
-	$('input:checkbox[name="checkbox_Targets"]').bind("click", { x: candidateGenes }, function (e) {
+	$('input:button[name="checkbox_Targets"]').bind("click", { x: candidateGenes }, function (e) {
+		e.preventDefault();
 		var numResults = candidateGenes.length - 2;
+		var targetClass = $(this).hasClass('checked')
+
 		for (var i = 1; i <= numResults; i++) {
 			var values = e.data.x[i].split("\t");
 			if (values[7] === "yes") {
-				// Check which checkbox button option was selected.
-				if ($(this).val() === "checkbox_Known") { // Select Known Targets.
+				// Check which input buttons are selected.
+				if ( $(this).val() === "Linked Genes" ) { // Select Known Targets.
 					if (values[9].length > 0) {
-						$("#checkboxGene_" + i).prop('checked', $(this).prop('checked'));
+						$("#checkboxGene_" + i).prop('checked');
 					}
 				}
-				else if ($(this).val() === "checkbox_Novel") { // Select Novel Targets.
+				else if (($(this).val() === "Unlinked Genes")) { // Select Novel Targets.
 					if (values[9].length === 0) {
-						$("#checkboxGene_" + i).prop('checked', $(this).prop('checked'));
+						$("#checkboxGene_" + i).prop('checked');
 					}
 				}
+
 			}
 		}
+
+		// update button style for linked and unlinked genes
+		if(!targetClass) {
+			$(this).addClass('checked')
+		}else{
+			$(this).removeClass('checked')
+		}
+
 		// update selected genes count
-		updateSelectedGenesCount();
+		updateSelectedGenesCount("candidates","#candidate-count");
 	});
 
 	// bind click event on all candidateGenes checkboxes in Gene View table.
 	$('input:checkbox[name="candidates"]').click(function (e) {
-		updateSelectedGenesCount(); // update selected genes count
+		updateSelectedGenesCount("candidates","#candidate-count") ; // update selected genes count
 	});
 
 }
@@ -424,14 +433,26 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 }
 
 
-// update selected genes count whenever a Gene View table entry is clicked or Known/ Novel targets options are selected.
-function updateSelectedGenesCount() {
-    var count = $('input:checkbox[name="candidates"]:checked').length;
-    $('#selectedGenesCount span').text(count + ' gene(s) selected'); // update
-	if(count < 1){
-		$("#NetworkCanvas_button").addClass('network-default'); 
-	}
+// update selected genes count whenever a Gene View or evidence table entry is clicked or Known/ Novel targets options in gene view are selected.
+function updateSelectedGenesCount(inputname,countContainer) {
+    var count = returnCheckInputCount(inputname);
+    $(''+countContainer+' span').text(count + ' gene(s) selected'); // update
+
+		$(countContainer).next().toggleClass('non-active', count < 1); 
+		$("#NetworkCanvas_button").toggleClass('non-active', count < 1);
+		
+		
+		var geneCount = returnCheckInputCount('candidates');
+		var evidenceCount = returnCheckInputCount('evidences'); 
+
+		if (geneCount > 1 || evidenceCount > 1 ){
+			$("#NetworkCanvas_button").removeClass('non-active')
+		}
 }
+
+// takes gene or evidence view checkbox input names and returns the number of checked inputs 
+function returnCheckInputCount(inputname){ return $('input:checkbox[name='+inputname+']:checked').length}
+
 
 
 // function downloads cytoscape compactible json files

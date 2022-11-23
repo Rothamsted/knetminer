@@ -22,12 +22,12 @@ function activateButton(option){
         $('.button_off').attr('class', 'button_on');
         $('#' + option).fadeIn();
         $('#' + option + '_button').attr('class', 'button_off');
-
+    
         //Collapse Suggestor view
         $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
         $('#suggestor_search_area').slideUp(500);
-		//$('#suggestor_search').dialog('close');
     });
+    handleDelimintedCta.setData(option);
 }
 
 /*

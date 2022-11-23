@@ -29,15 +29,8 @@
      if (evidenceTable.length > 2) {
          // Evidence View: interactive legend for evidences.
          var evi_legend= getEvidencesLegend(text);
-         var utf8Bytes = "";
-         utf8Bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-             return String.fromCharCode('0x' + p1);
-           });
-         
          table = '';
-    
- 
-         table = table + '<div id="evidences_Legend" class="evidenceSummary">' + evi_legend + '</div>';
+         table = table + '<div class="gene_header_container">' + evi_legend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
          table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
          table = table + '<table id="tablesorterEvidence" class="tablesorter">';
          table = table + '<thead>';
@@ -122,10 +115,10 @@
          table = table + '</tbody>';
          table = table + '</table>';
          table = table + '</div>';
-         table = table + '<div class="networkButton"><button id="new_generateMultiEvidenceNetworkButton" class="btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button>';
-         table = table + '</insert><div id="loadingNetwork_Div"></div>';
-         table = table + '<p class="margin_left"><a download="evidencetable.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank" class="delimited-cta" >Download as TAB delimited file <img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a><br/></div>';
- 
+         table = table + '<div class="gene-footer-container" style="justify-content:flex-end"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>'; 
+         table = table + '<button id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
+        //  table = table + '</insert><div id="loadingNetwork_Div"></div>';
+
  
          $('#evidenceTable').html(table);
  
@@ -248,6 +241,11 @@
              $("#revertEvidenceView").removeClass('hover').addClass('unhover');
          });
      }
+     // bind click event on all candidateGenes checkboxes in evidence view table.
+	$('input:checkbox[name="evidences"]').click(function (e) {
+		updateSelectedGenesCount("evidences","#evidence-count"); // update selected genes count
+	});
+
  }
  
  
