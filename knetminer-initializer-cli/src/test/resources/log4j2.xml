@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+	<Properties>
+		<Property name = "msgPattern">%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Property>
+	</Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${msgPattern}" />
+    </Console>
+    <File name="File" fileName="target/test.log">
+      <PatternLayout pattern="${msgPattern}" />
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="DEBUG">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Root>
+    <!-- Logger name = "x.y.z" level = "off" additivity = "false" / -->
+  </Loggers>
+</Configuration>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	This is the same descriptor found in the Maven module workflow-component-descriptor, except we pick up the 
+	locally-generated workflow-component-description.xml file. It seems we need to do this after that the version of 
+	that file that comes from dependencies has been excluded (in the POM). 
+-->
+<assembly>
+	<id>jar-with-dependencies</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<unpack>true</unpack>
+			<scope>runtime</scope>
+			<unpackOptions>
+				<filtered>false</filtered>
+				<excludes>
+					<exclude>META-INF</exclude>
+					<exclude>**/MANIFEST.MF</exclude>
+					<!-- As said above, we have our own, so keep this out of the way... -->
+					<exclude>workflow-component-description.xml</exclude>
+				</excludes>
+			</unpackOptions>
+			<excludes>
+				<exclude>META-INF</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/wf-descriptor</directory>
+			<includes>
+				<include>*.xml</include>
+				<include>*.xsl</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+      <fileMode>0644</fileMode>
+			<directoryMode>0755</directoryMode>			
+		</fileSet>
+		<!-- ...and take this instead -->
+		<fileSet>
+			<directory>${project.build.directory}/classes</directory>
+			<includes>
+				<include>workflow-component-description.xml</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+      <fileMode>0644</fileMode>
+			<directoryMode>0755</directoryMode>			
+		</fileSet>
+	</fileSets>
+</assembly>

@@ -1,0 +1,78 @@
+<!-- 
+  File for the Maven Assembly plug-in.
+  
+  This produces the .zip file for the CLI distribution, which includes all the needed dependencies in the
+  lib/ dir, plus distro files, either in src/main/assembly/resources/, or downloaded via 
+  maven-dependency-plugin.
+   	
+ -->
+<assembly>
+  <id>pkg</id>
+ 
+  <formats>
+    <format>zip</format>
+  </formats>
+  
+	<dependencySets>
+		<dependencySet>
+		  <!-- Enable only if non-empty <outputFileNameMapping></outputFileNameMapping> -->
+		  <outputDirectory>/lib</outputDirectory>
+		  <unpack>false</unpack>
+		  <excludes>
+		    <!--  This comes in due some indirect dependency. We want to use log4j and hence the exclusion  -->
+				<exclude>commons-logging:commons-logging</exclude> 
+		  </excludes>
+		</dependencySet>
+		
+		<dependencySet>
+			<includes>
+				<include>${project.groupId}:knetminer-initializer:jar:tests:${project.version}</include>
+			</includes>
+		  <unpack>true</unpack>
+		  <unpackOptions>
+		  	<excludes>
+		  		<exclude>META-INF/**</exclude>
+		  	</excludes>
+		  </unpackOptions>
+		</dependencySet>
+	</dependencySets> 
+  
+
+  <fileSets>
+
+		<fileSet>
+			<directory>src/main/assembly/resources</directory>
+      <excludes>
+        <!-- Defined below, with x permissions, non-executables only here -->
+        <exclude>**/*.sh</exclude>
+      </excludes>  
+      <fileMode>0644</fileMode>
+			<directoryMode>0755</directoryMode>      
+			<outputDirectory></outputDirectory>
+			<filtered>true</filtered>
+		</fileSet>
+
+		<fileSet>
+			<directory>src/main/assembly/resources</directory>
+      <includes>
+        <include>**/*.sh</include>
+      </includes>  
+      <fileMode>0755</fileMode>
+			<directoryMode>0755</directoryMode>      
+			<outputDirectory></outputDirectory>
+			<filtered>true</filtered>
+		</fileSet>
+		
+		<fileSet>
+			<directory>target/dependency</directory>
+			<outputDirectory>test-dataset/data</outputDirectory>
+			<includes>
+				<include>poaceae-sample.oxl</include>
+			</includes>
+      <fileMode>0644</fileMode>
+		</fileSet>
+		
+		
+  </fileSets>
+
+</assembly>

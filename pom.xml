@@ -38,6 +38,8 @@
     <module>server-datasource-ondexlocal</module>
     <module>server-ondex</module>
     <module>aratiny</module>
+    <module>knetminer-initializer</module>
+    <module>knetminer-initializer-cli</module>
 	</modules>
 
 	<properties>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>5.0.1-SNAPSHOT</version>
+		<artifactId>app-common</artifactId>
+	</parent>
+
+	<artifactId>knetminer-initializer</artifactId>
+
+	<name>KnetMiner Initialiser</name>
+	<description>Tool to initialise KnetMiner-related data, possibly outside of the web application.</description>
+
+	<developers>
+		<developer>
+			<name>Marco Brandizi</name>
+			<url>https://github.com/marco-brandizi</url>
+		</developer>
+		<!-- TODO: add more here -->
+	</developers>
+
+
+	<dependencies>
+		
+		<dependency>
+			<groupId>uk.ac.ebi</groupId>
+			<artifactId>jutils</artifactId>
+		</dependency>
+      			  
+	  <dependency>
+			<groupId>uk.ac.rothamsted.knetminer</groupId>
+			<artifactId>server-datasource-ondexlocal</artifactId>
+		</dependency>
+	   							
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+	
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+	
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			
+			
+	  	<plugin>
+	  		<artifactId>maven-dependency-plugin</artifactId>	  		
+	  		<executions>
+		  		<execution>
+		  			<phase>generate-test-resources</phase>
+		  			<goals><goal>unpack</goal></goals>
+						<configuration>
+				    	<artifactItems>
+				       	<!--  Download some reference test data, see https://github.com/Rothamsted/knetminer-backend/tree/master/test-data-server -->
+				      	<artifactItem>
+									<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+									<artifactId>test-data-server</artifactId>
+									<version>${knetminer.backend.version}</version>
+									<includes>poaceae-sample.oxl</includes>
+				        </artifactItem>
+				      </artifactItems>  			
+						</configuration>
+		  		</execution>
+	  		</executions>
+	  	</plugin>
+			
+			
+			
+			<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <executions>
+		    		<execution>
+		        <goals>
+		        	<!-- Used by the CLI -->
+		          <goal>test-jar</goal>
+		        </goals>
+				    <configuration>
+				    	<!-- Take it from the sources, cause the generated files are filtered/interpolated -->
+				    	<testClassesDirectory>${project.basedir}/src/test/resources</testClassesDirectory>
+				    	<includes>
+				    		<include>test-dataset/**</include>
+				    	</includes>
+				    </configuration>
+		      </execution>
+		    </executions>
+		  </plugin>				
+
+		</plugins>
+
+	</build>
+
+</project>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>uk.ac.rothamsted.knetminer</groupId>
+		<version>5.0.1-SNAPSHOT</version>
+		<artifactId>app-common</artifactId>
+	</parent>
+
+	<artifactId>knetminer-initializer-cli</artifactId>
+
+	<name>knetminer-initializer-cli, KnetMiner Initialiser Client</name>
+	<description>A command-line wrapper for the knet-miner-initializer module.</description>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>knetminer-initializer</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+				
+		<dependency>
+		  <groupId>info.picocli</groupId>
+		  <artifactId>picocli</artifactId>
+		</dependency>
+
+		<!-- Needed with the compile scope, so we can include it in the assembly -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>knetminer-initializer</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+		</dependency>		
+
+		<!-- 
+			Use log4j as concrete logger. 
+			All log bridges are in the core module.
+		-->
+		<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<finalName>${project.artifactId}-${project.version}</finalName>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+		
+		  <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-surefire-plugin</artifactId>
+		  </plugin>
+						
+  		<plugin>
+  			<artifactId>maven-dependency-plugin</artifactId>
+  			<executions>
+  				<!-- We use the same test resources that the core module uses -->
+  				<execution>
+  					<id>get-test-resources</id>
+  					<phase>generate-test-resources</phase>
+  					<goals>
+  						<goal>unpack</goal>
+  					</goals>
+  					<configuration>
+	          	<artifactItems>
+
+				       	<!--  Downloads some reference test data, see https://github.com/Rothamsted/knetminer-backend/tree/master/test-data-server -->
+				      	<artifactItem>
+									<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
+									<artifactId>test-data-server</artifactId>
+									<version>${knetminer.backend.version}</version>
+									<includes>poaceae-sample.oxl</includes>
+				        </artifactItem>
+	          	
+	          		<!-- 
+	          			Reuses test config from the core module.
+	          			This is also used to ship the distro zip, see pkg.xml
+	          		-->
+	            	<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>knetminer-initializer</artifactId>
+									<version>${project.version}</version>
+									<classifier>tests</classifier>
+									<type>test-jar</type>
+      	          <!-- excludes>**/*.class</excludes -->
+									<outputDirectory>${project.build.directory}/test-classes</outputDirectory>	               	
+	             	</artifactItem>
+	             	
+	          	</artifactItems>
+  					</configuration>
+  				</execution>  					    
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archiverConfig>
+						<fileMode>0755</fileMode>
+						<directoryMode>0755</directoryMode>
+						<defaultDirectoryMode>0755</defaultDirectoryMode>
+					</archiverConfig>
+				</configuration>
+				<executions>
+					<!-- Builds the CLI distribution zip -->
+					<execution>
+						<id>make-cli-distro</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<attach>true</attach>
+							<descriptors>
+								<descriptor>src/main/assembly/pkg.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+	</build>
+	
+</project>
