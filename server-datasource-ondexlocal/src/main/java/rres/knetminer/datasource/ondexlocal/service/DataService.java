@@ -43,10 +43,6 @@ public class DataService
 	 */
 	private KnetminerConfiguration configuration;
 	
-// TODO:newConfig, remove
-//  private OptionsMap options = null;
-//  private List<String> taxIds = null;
-
   private ONDEXGraph graph;
   
   /**
@@ -121,27 +117,7 @@ public class DataService
       throwEx ( RuntimeException.class, e, "Error while loading Knetminer graph: $cause" ); 
     }
   }  
-  
-  
-	/**
-	 * BEWARE!!! This is AN OPTIONS MAP. It means that YOU DON'T NEED to do things like type casting 
-	 * or integer conversions from strings, since the {@link OptionsMap} is already designed for that, 
-	 * eg, you can use {@link OptionsMap#getDouble(String, Double)}. See its Javadoc or sources for details.
-	 * 
-	 * If you feel that your special method to access an option is general enough, please, contribute to
-	 * OptionsMap! 
-	 * 
-	 * This returns a read-only map (never null). Options here can only be loaded and then changed via class
-	 * setters. 
-	 * 
-	 * TODO:newConfig remove
-	 */
-//	public OptionsMap _getOptions ()
-//	{
-//		return this.options != null 
-//			? OptionsMap.unmodifiableOptionsMap ( this.options )
-//			: OptionsMap.from ( Collections.emptyMap () );
-//	}
+
 	
   /**
    * The Knetminer configuration, as loaded from {@link #loadConfiguration(String)}.
@@ -198,80 +174,4 @@ public class DataService
 	{
 		return genomeGenesCount;
 	}
-
-	// TODO:newConfig remove stuff from old config
-	/**
-   * Should this become DatasetName?
-   */
-	/* 
-	 * 
-  public String getDataSourceName ()
-  {
-  	return options.getString ( "DataSourceName" );
-  }
-  
-  public String getDatasetOrganization ()
-  {
-  	return options.getString ( "sourceOrganization" );
-  }
-
-  public String getDatasetProvider ()
-  {
-  	return options.getString ( "provider" );
-  }
-  
-  public String getSpecies ()
-  {
-  	return options.getString ( "specieName" );
-  }
-  
-  public String getKnetSpaceHost ()
-  {
-  	return options.getString ( "knetSpaceHost" );
-  }
-  
-  public boolean isReferenceGenome() {
-    return this.options.getBoolean ( "reference_genome", false );
-  }
-
-  public List<String> getTaxIds ()
-  {
-  	return this.taxIds;
-  }
-  */
-
-	// TODO: remove, old config
-	
-  /**
-   * USE THIS to test if a possibly null taxId is contained by the configured taxonomy IDs
-   * If you use {@link #getTaxIds()} directly and taxId is null, YOU'LL GET A NullPointerException
-   * 
-   * This is a wrapper of {@link KGUtils#containsTaxId(String, String)}.
-   */
-  /*
-  public boolean containsTaxId ( String taxId )
-  {
-  	return KGUtils.containsTaxId ( this.taxIds, taxId );
-  }
-  
-  public boolean isExportVisibleNetwork ()
-  {
-    return this.options.getBoolean ( "export_visible_network", false );
-  }
-  
-  public int getDatasetVersion ()
-  {
-  	return getRequiredOption ( "version", options::getInt );
-  }
-  
-  public String getOxlPath ()
-  {
-  	return this.options.getString ( "DataFile" );
-  }
-  
-  public String getDataPath ()
-  {
-  	return this.options.getString ( "DataPath" );
-  }
-  */
 }

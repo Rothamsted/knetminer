@@ -58,6 +58,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
+ * 
  * The search service subcomponent of {@link OndexServiceProvider}.
  * 
  * Roughly, this realises the more complex search functions, those requiring not only the 
