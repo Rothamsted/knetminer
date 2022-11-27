@@ -1200,6 +1200,7 @@ a.contact-button :hover {
 .button_on#NetworkCanvas_button {
     background-color: #51CE7B15;
     border: 1px solid #51CE7B;
+    pointer-events: none;
 
 }
 
@@ -1216,6 +1217,18 @@ a.contact-button :hover {
 .button_off#NetworkCanvas_button span,.button_off#NetworkCanvas_button svg>g {
     color: #FFFFFF;
 }
+
+#NetworkCanvas_button.network-created{
+    background: #51CE7B;
+    color: #FFFFFF;
+    pointer-events:auto;
+
+}
+
+#NetworkCanvas_button.network-created svg>g, #NetworkCanvas_button.network-created span {
+    color: #FFFFFF;
+}
+
 
 #pGViewer {
     float: left;
@@ -2177,6 +2190,7 @@ a {
     margin-bottom: 0;
     cursor: pointer;
     text-decoration: none;
+    padding:0.4rem 0.8rem; 
 }
 
 #addRow {
@@ -2250,3 +2264,5 @@ a {
     box-shadow: none;
     border:none; 
 }
+
+

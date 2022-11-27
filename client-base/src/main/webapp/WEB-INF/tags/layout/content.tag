@@ -150,58 +150,23 @@
 				<div class="tabviwer-views-btns">
 					<!-- genetable button -->
 					<div class="button_off" id="resultsTable_button" onclick="activateButton('resultsTable');">
-						<svg width="20" height="20" viewBox="0 0 20 20"  xmlns="http://www.w3.org/2000/svg">
-							<g color='white'>
-								<path d="M10.5693 9.74203C7.82934 8.22641 5.24121 6.79594 5.24121 2.30859C5.24121 2.10139 5.1589 1.90268 5.01239 1.75617C4.86588 1.60965 4.66716 1.52734 4.45996 1.52734C4.25276 1.52734 4.05405 1.60965 3.90753 1.75617C3.76102 1.90268 3.67871 2.10139 3.67871 2.30859C3.67871 7.71734 6.93793 9.51938 9.81324 11.1094C12.4668 12.5767 14.7584 13.8438 14.7584 17.692C14.7584 17.8992 14.8407 18.0979 14.9872 18.2445C15.1337 18.391 15.3325 18.4733 15.5397 18.4733C15.7469 18.4733 15.9456 18.391 16.0921 18.2445C16.2386 18.0979 16.3209 17.8992 16.3209 17.692C16.3209 12.9222 13.2654 11.2328 10.5693 9.74203Z" fill="currentcolor"/>
-								<path d="M15.5397 1.52734C15.3325 1.52734 15.1337 1.60965 14.9872 1.75617C14.8407 1.90268 14.7584 2.10139 14.7584 2.30859C14.7584 6.79594 12.1703 8.22703 9.43027 9.74203C6.73418 11.2328 3.67871 12.9222 3.67871 17.692C3.67871 17.8992 3.76102 18.0979 3.90753 18.2445C4.05405 18.391 4.25276 18.4733 4.45996 18.4733C4.66716 18.4733 4.86588 18.391 5.01239 18.2445C5.1589 18.0979 5.24121 17.8992 5.24121 17.692C5.24121 13.8439 7.53277 12.5767 10.1864 11.1094C13.0614 9.51938 16.3209 7.71734 16.3209 2.30859C16.3209 2.10139 16.2386 1.90268 16.0921 1.75617C15.9456 1.60965 15.7469 1.52734 15.5397 1.52734V1.52734Z" fill="currentcolor"/>
-								<rect x="7.8042" y="1.6709" width="4.39183" height="1.41667" rx="0.708334" fill="currentcolor"/>
-								<rect x="12.1958" y="18.4736" width="4.39183" height="1.41667" rx="0.708334" transform="rotate(-180 12.1958 18.4736)" fill="currentcolor"/>
-								<rect x="8.79102" y="4.95801" width="2.41825" height="1.41667" rx="0.708334" fill="currentcolor"/>
-								<rect x="11.209" y="15.1865" width="2.41825" height="1.41667" rx="0.708333" transform="rotate(-180 11.209 15.1865)" fill="currentcolor"/>
-							</g>
-						</svg>
+						<object  class="button-svg"  data="html/image/DNA.svg" type="image/svg+xml"></object>
 						<span> Gene View</span>
 					</div>
-
 					<!-- evidencetable button -->
 					<div onclick="activateButton('evidenceTable');" class="menu_button button_on" id="evidenceTable_button">
-						<svg width="20" height="20" viewBox="0 0 20 20" fill="none"  xmlns="http://www.w3.org/2000/svg">
-							<g color='#6F7F8F'>
-								<path d="M18.3332 13.9501V3.89174C18.3332 2.89174 17.5165 2.15008 16.5248 2.23341H16.4748C14.7248 2.38341 12.0665 3.27508 10.5832 4.20841L10.4415 4.30008C10.1998 4.45008 9.79984 4.45008 9.55817 4.30008L9.34984 4.17508C7.8665 3.25008 5.2165 2.36674 3.4665 2.22508C2.47484 2.14174 1.6665 2.89174 1.6665 3.88341V13.9501C1.6665 14.7501 2.3165 15.5001 3.1165 15.6001L3.35817 15.6334C5.1665 15.8751 7.95817 16.7917 9.55817 17.6667L9.5915 17.6834C9.8165 17.8084 10.1748 17.8084 10.3915 17.6834C11.9915 16.8001 14.7915 15.8751 16.6082 15.6334L16.8832 15.6001C17.6832 15.5001 18.3332 14.7501 18.3332 13.9501Z" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M10 4.5752V17.0752" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M6.4585 7.0752H4.5835" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M7.0835 9.5752H4.5835" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-							</g>
-						</svg>
+						<object class="button-svg"  data="html/image/book.svg" type="image/svg+xml"></object>
 						<span> Evidence View</span> 
 					</div>
-				
 					<!-- genemap button -->
 					<div class="button_on" id="genemap-tab_button" onclick="activateButton('genemap-tab');">
-						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<g color="#6F7F8F">
-								<path d="M1.9082 6.48299V14.5913C1.9082 16.1747 3.0332 16.8247 4.39987 16.0413L6.3582 14.9247C6.7832 14.683 7.49154 14.658 7.9332 14.883L12.3082 17.0747C12.7499 17.2913 13.4582 17.2747 13.8832 17.033L17.4915 14.9663C17.9499 14.6997 18.3332 14.0497 18.3332 13.5163V5.40799C18.3332 3.82465 17.2082 3.17465 15.8415 3.95799L13.8832 5.07465C13.4582 5.31632 12.7499 5.34132 12.3082 5.11632L7.9332 2.93299C7.49154 2.71632 6.7832 2.73299 6.3582 2.97465L2.74987 5.04132C2.2832 5.30799 1.9082 5.95799 1.9082 6.48299Z" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M7.1333 3.33301V14.1663" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M13.1084 5.5166V16.6666" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-							</g>
-						</svg>
+						<object class="button-svg"  data="html/image/map.svg" type="image/svg+xml"></object>
 						<span> Map View</span>
 					</div>
 				</div>
 				<!-- networkview button -->
 				<div class="button_on non-active" id="NetworkCanvas_button" onclick="activateButton('NetworkCanvas');">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<g color="#FFFFFF">
-							<path d="M15.2245 11.9748L14.3774 8.2207" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M11.39 5.34515L6.6665 4.43359" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M4.1665 6.5752C5.54722 6.5752 6.6665 5.45591 6.6665 4.0752C6.6665 2.69448 5.54722 1.5752 4.1665 1.5752C2.78579 1.5752 1.6665 2.69448 1.6665 4.0752C1.6665 5.45591 2.78579 6.5752 4.1665 6.5752Z" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M13.8901 8.2207C15.2708 8.2207 16.3901 7.10142 16.3901 5.7207C16.3901 4.33999 15.2708 3.2207 13.8901 3.2207C12.5094 3.2207 11.3901 4.33999 11.3901 5.7207C11.3901 7.10142 12.5094 8.2207 13.8901 8.2207Z" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M13.2131 14.7969L8.50928 15.8623" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M12.2821 7.75269L7.51172 13.6377" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M6.00928 18.3623C7.38999 18.3623 8.50928 17.243 8.50928 15.8623C8.50928 14.4816 7.38999 13.3623 6.00928 13.3623C4.62857 13.3623 3.50928 14.4816 3.50928 15.8623C3.50928 17.243 4.62857 18.3623 6.00928 18.3623Z" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M15.7129 16.9746C17.0936 16.9746 18.2129 15.8553 18.2129 14.4746C18.2129 13.0939 17.0936 11.9746 15.7129 11.9746C14.3322 11.9746 13.2129 13.0939 13.2129 14.4746C13.2129 15.8553 14.3322 16.9746 15.7129 16.9746Z" stroke="currentcolor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-							</g>
-					</svg>
+					<object class="button-svg" data="html/image/Network.svg" type="image/svg+xml"></object>
 					<span> Network View</span> 
 				</div>
 			</div>

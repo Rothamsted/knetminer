@@ -3,7 +3,7 @@
 // if value is present it activates the reset button
 function activateResetButton(){
     var resetBtnEle = $("#resetknet"); 
-    var knetInputs = $(':input').filter('input,select,textarea'); 
+    var knetInputs = $(':input').filter('input,select,textarea');  
 
     knetInputs.each(function(index,element){
         $(element).keyup(function(){
@@ -19,15 +19,17 @@ function activateResetButton(){
 function activateButton(option){
     
     $('.result_viewer:visible').fadeOut(0, function () {
-        $('.button_off').attr('class', 'button_on');
+        $('.button_off').addClass('button_on').removeClass('button_off');
+        // change svg color 
         $('#' + option).fadeIn();
-        $('#' + option + '_button').attr('class', 'button_off');
-    
+        $('#' + option + '_button').addClass('button_off')
         //Collapse Suggestor view
         $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
         $('#suggestor_search_area').slideUp(500);
     });
     handleDelimintedCta.setData(option);
+    changeButtonOnSvg()
+    changeButtonOffSvg(option + '_button')
 }
 
 /*
@@ -235,10 +237,58 @@ function logErrorFromRemoteCall ( msgPrefix, jqXHR, textStatus, errorThrown )
 	logError ( msgPrefix, details );
 }
 
-function logError ( msgPrefix, details = null )
-{
+function logError ( msgPrefix, details = null ){
 	if ( details !== null )
 		console.error ( msgPrefix, details );
 	else
 		console.error ( msgPrefix )
 }
+
+// function change active button and network view svg color
+function changeButtonOffSvg(elementId){
+    var svgParent = document.getElementById(elementId)
+    changeSvgColor(svgParent)
+}
+// function change non-active tabview buttons svg color
+function changeButtonOnSvg(){
+    var buttonOnElements = document.getElementsByClassName("button_on");
+    for (var i = 0; i < buttonOnElements.length; i++){
+        changeSvgColor(buttonOnElements[i])
+    }
+}
+// util functions get button text span color and apply to svg element 
+function changeSvgColor(svgParent){
+    var svg = svgParent.firstElementChild.contentDocument;
+    var elements = svg.getElementsByClassName("currentColor");
+    var spanElement = svgParent.lastElementChild; 
+    var getSpanColor = getComputedStyle(spanElement).color
+    var spanHexColor = rgbToHex(getSpanColor)
+    for (var i = 0; i < elements.length; i++) {
+        if(elements[i].hasAttribute('stroke')){
+            elements[i].style.stroke = spanHexColor;
+        }else{
+            elements[i].style.fill = spanHexColor;
+        }
+       
+    }
+}
+// function converts rgb to hex color code 
+function rgbToHex(rgb) {
+    // Choose correct separator
+    var sep = rgb.indexOf(",") > -1 ? "," : " ";
+    // Turn "rgb(r,g,b)" into [r,g,b]
+    rgb = rgb.substr(4).split(")")[0].split(sep);
+  
+    var r = (+rgb[0]).toString(16),
+        g = (+rgb[1]).toString(16),
+        b = (+rgb[2]).toString(16);
+  
+    if (r.length == 1)
+      r = "0" + r;
+    if (g.length == 1)
+      g = "0" + g;
+    if (b.length == 1)
+      b = "0" + b;
+  
+    return "#" + r + g + b;
+  }

@@ -186,11 +186,11 @@ function createGenesTable(text, keyword, rows){
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
 	table += '<div class="num-genes-container"><select value="' + /*rows*/results + '" id="num-genes">';
-	table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000</option>';
-	table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
-	table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
-	table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
-	table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
+	table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000 Genes</option>';
+	table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500 Genes</option>';
+	table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200 Genes</option>';
+	table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100 Genes</option>';
+	table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50 Genes</option>';
 	table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All Genes (' + results + ')</option> </select></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
@@ -272,7 +272,7 @@ function createGenesTable(text, keyword, rows){
 	$('input:button[name="checkbox_Targets"]').bind("click", { x: candidateGenes }, function (e) {
 		e.preventDefault();
 		var numResults = candidateGenes.length - 2;
-		var targetClass = $(this).hasClass('checked')
+		var targetClass = $(this).hasClass('checked') 
 
 		for (var i = 1; i <= numResults; i++) {
 			var values = e.data.x[i].split("\t");
@@ -280,12 +280,12 @@ function createGenesTable(text, keyword, rows){
 				// Check which input buttons are selected.
 				if ( $(this).val() === "Linked Genes" ) { // Select Known Targets.
 					if (values[9].length > 0) {
-						$("#checkboxGene_" + i).prop('checked');
+						$("#checkboxGene_" + i).prop('checked',!targetClass);
 					}
 				}
 				else if (($(this).val() === "Unlinked Genes")) { // Select Novel Targets.
 					if (values[9].length === 0) {
-						$("#checkboxGene_" + i).prop('checked');
+						$("#checkboxGene_" + i).prop('checked',!targetClass);
 					}
 				}
 
@@ -345,7 +345,8 @@ function generateCyJSNetwork(url, requestParams,externalCall) {
 				// Network graph: JSON file.
 				try {
 					activateButton('NetworkCanvas');
-					$("NetworkCanvas_button").removeClass('.network-default'); 
+					$("#NetworkCanvas_button").addClass('network-created'); 
+					changeButtonOffSvg('NetworkCanvas_button')
 
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
@@ -434,20 +435,22 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 
 
 // update selected genes count whenever a Gene View or evidence table entry is clicked or Known/ Novel targets options in gene view are selected.
-function updateSelectedGenesCount(inputname,countContainer) {
-    var count = returnCheckInputCount(inputname);
-    $(''+countContainer+' span').text(count + ' gene(s) selected'); // update
-
+function updateSelectedGenesCount(inputName,countContainer) {
+    var count = returnCheckInputCount(inputName);
+	var countWord = count > 1 ? 'Genes' : 'Gene'
+    $(''+countContainer+' span').text(count + ' '+ countWord + ' selected'); // update
 		$(countContainer).next().toggleClass('non-active', count < 1); 
 		$("#NetworkCanvas_button").toggleClass('non-active', count < 1);
-		
 		
 		var geneCount = returnCheckInputCount('candidates');
 		var evidenceCount = returnCheckInputCount('evidences'); 
 
-		if (geneCount > 1 || evidenceCount > 1 ){
+		if (geneCount > 0 || evidenceCount > 0 ){
 			$("#NetworkCanvas_button").removeClass('non-active')
+		}else{
+			$("#NetworkCanvas_button").removeClass('network-created')
 		}
+		changeButtonOffSvg('NetworkCanvas_button')
 }
 
 // takes gene or evidence view checkbox input names and returns the number of checked inputs 
