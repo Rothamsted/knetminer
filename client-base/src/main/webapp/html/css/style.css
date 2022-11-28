@@ -1340,6 +1340,7 @@ a.contact-button :hover {
     padding: 0.2rem 0.8rem;
     border-radius: 8px;
     margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
     background-color: #FFFFFF;
 }
 
@@ -2263,6 +2264,14 @@ a {
     pointer-events: none;
     box-shadow: none;
     border:none; 
+}
+
+.non-filter{
+    display: none;
+}
+
+.current-filter{
+    display: table-row;
 }
 
 

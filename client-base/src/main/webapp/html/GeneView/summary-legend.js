@@ -46,7 +46,7 @@
 				? "GWAS"
 				: key; // For Trait, display tooltip text as GWAS instead.
 
-			summaryText = summaryText + '<div  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event);  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + summaryTextTitle + '"></div> <span style="font-weight:600;">'+ summaryTextTitle+'</span> <span style="margin-left:.25rem">('+value+')</span> </div>';
+			summaryText = summaryText + '<div  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + summaryTextTitle + '"></div> <span style="font-weight:600;">'+ summaryTextTitle+'</span> <span style="margin-left:.25rem">('+value+')</span> </div>';
   });
 
   legend= legend + summaryText +'</div>';
@@ -58,37 +58,71 @@
   * Function
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
   *0*/
- function filterTableByType(key,location,sortingPosition,table,event) {
+  function filterTableByType(key,location,sortingPosition,table,event,revertButton) {
+            var RemoveLegend = updateLegendsKeys(key,location,event)
+     try{
+         if ($(location).css('display') === 'block') {
+             var gvTable=  document.getElementById(table);
+             var rowLength= gvTable.rows.length;
+             var currentData = $(location).data('keys'); 
+             if(currentData.length === 0 ){
+                // reset table if all legends are unselected
+                document.getElementById(revertButton).click();
+             }else{
+                for(var i=1; i < rowLength; i++) { // i=1 to skip title row
+                    var currentRow= gvTable.rows.item(i);
+                    var gv_cells = currentRow.cells;
+                    var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
+                    if(RemoveLegend){
+                        if(gene_evidences.includes(key)){
+                            $(currentRow).addClass('non-filter').removeClass('current-filter')
+                        }
+                    }else{  for(var j = 0; j < currentData.length; j++ ){
 
-    try{
+                        if(!gene_evidences.includes(currentData[j]) && !$(currentRow).hasClass('current-filter')){
+                            $(currentRow).addClass('non-filter')
+                        }else{
+                            $(currentRow).addClass('current-filter').removeClass('non-filter');
+                        }
 
-        if ($(location).css('display') === 'block') {
-            var gvTable=  document.getElementById(table);
-            var rowLength= gvTable.rows.length;
-            for(var i=1; i < rowLength; i++) { // i=1 to skip title row
-                var currentRow= gvTable.rows.item(i);
+                    }
+                    } 
+                }
+             }
+               
+         }
+     }catch (err) {
+         var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
+         console.log(errorMsg);
+     }
     
-                // get cells of current row
-                var gv_cells = currentRow.cells;
-                var gene_evidences= gv_cells.item(sortingPosition).innerHTML;
-              
-                  // if this Accession doesn't have key in evidences, hide the row.
-                if(!gene_evidences.includes(key)) {
-                   currentRow.style.display = 'none';
-                  }else if(currentRow.style.display == 'none'){
-                      currentRow.style.display= 'table-row';
-                  }
-               }
-             // check for already active legends
-            var IslegendActive = $(location).find('.evidenceSummaryItem').hasClass('active-legend')
-            if(IslegendActive){$('.active-legend').removeClass('active-legend');}
-            // set current legend as active
-            $(event.currentTarget).addClass('active-legend');
-        }
-           
-    }catch (err) {
-        var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-        console.log(errorMsg);
-       }
-   
-}
+ }
+ 
+//  function updates, store and checks for non-active legend keys
+ function updateLegendsKeys(key,location,event){
+
+     $(event.currentTarget).toggleClass('active-legend');
+
+    // current keys stored using jquery.data() method
+     var getKeys = $(location).data('keys'); 
+    
+    //  if getKeys is empty
+     if(getKeys == undefined){
+         $(location).data({keys: [key]}); 
+     }else{
+         isKeyElementActive = $(event.currentTarget).hasClass('active-legend')
+        //  if legends is not active function returns true to remove legend associated rows from table
+         if(isKeyElementActive){
+             // pushing new keys to getKeys Array 
+             getKeys.push(key);
+         }else{
+             var getCurrentIndex = getKeys.indexOf(key);
+             if(getCurrentIndex > -1 ){getKeys.splice(getCurrentIndex, 1);}
+             return true
+         }
+         
+         $(location).data({keys: getKeys}); 
+         
+     }
+        return false;
+ }

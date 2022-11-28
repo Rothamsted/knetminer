@@ -30,7 +30,7 @@ function getEvidencesLegend(ev_fullText) {
     var summaryText = '';
     evi_legend.forEach(function (value, key, map) {
         var contype = key.trim();
-        summaryText = summaryText + '<div  onclick=filterTableByType("' + contype + '","#evidenceTable",' + 1 + ',"tablesorterEvidence",event);  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_' + key + '"  title="' + key+ '"></div> <span style="font-weight:600;">' + key+ '</span> <span style="margin-left:.25rem">(' + value + ')</span> </div>';
+        summaryText = summaryText + '<div  onclick=filterTableByType("' + contype + '","#evidenceTable",' + 1 + ',"tablesorterEvidence",event,"revertEvidenceView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_' + key + '"  title="' + key+ '"></div> <span style="font-weight:600;">' + key+ '</span> <span style="margin-left:.25rem">(' + value + ')</span> </div>';
     });
 
     legend = legend + summaryText + '</div>';
