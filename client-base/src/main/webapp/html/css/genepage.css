@@ -12,16 +12,21 @@
 
 
 #network_description{
-    width:85%;
+    padding: 1rem;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    flex-wrap:wrap;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
-            justify-content: space-between;
+    justify-content: space-between;
+    border-radius: 14px;
+    margin: 0 auto;
+    background: #F4F5F7;
+    box-shadow: rgb(6 24 44 / 40%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;
 }
 .search-key{
     margin:.5rem 0;
@@ -34,6 +39,7 @@
 #network_content{
     padding:0;
     margin:0;
+    width: 100%;
 }
 
 #instruction-title{
@@ -45,9 +51,6 @@
 }
 
 #tabviewer_content{ width:100%;border:none;-webkit-box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset; margin-top:1.5rem;}
-
-@media (min-width: 1366px){
-}
 
 .logo-items{
     padding:0.5rem 4rem;
@@ -78,12 +81,12 @@
 /* responsive screen stylings */
 
 /* tablet screen */
-@media (min-width: 768px){
+/* @media (min-width: 768px){
     #network_description{
         width: 90%;
     }
 
-}
+} */
 
 /* small laptop screen */
 /* @media (min-width: 1200px){

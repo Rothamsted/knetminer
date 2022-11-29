@@ -344,10 +344,12 @@ function generateCyJSNetwork(url, requestParams,externalCall) {
 
 				// Network graph: JSON file.
 				try {
-					activateButton('NetworkCanvas');
-					$("#NetworkCanvas_button").addClass('network-created'); 
-					changeButtonOffSvg('NetworkCanvas_button')
-
+					if(!externalCall){
+						activateButton('NetworkCanvas');
+						$("#NetworkCanvas_button").addClass('network-created'); 
+						changeButtonOffSvg('NetworkCanvas_button')
+					}
+					
                                         // new Save button in Network View - intialise a click-to-save button with networkId (null when inside knetminer)
                                         var networkId= null;
 
@@ -426,7 +428,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		  jboxNotice(knetNotice, 'red', 300, 2000);
     }
     else {
-        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist,exportPlainJSON:false});
+        generateCyJSNetwork(api_url + '/network', {keyword: keyword, list: candidatelist,exportPlainJSON:false},false);
     }
 
 	

@@ -65,7 +65,7 @@
              var gvTable=  document.getElementById(table);
              var rowLength= gvTable.rows.length;
              var currentData = $(location).data('keys'); 
-             console.log(currentData);
+
              if(currentData.length === 0 ){
                 // reset table if all legends are unselected
                 document.getElementById(revertButton).click();

@@ -38,6 +38,20 @@ function capitaliseFirstLetter(word){
     return speciesKey; 
 }
 
+function removeSpaceFromList(geneList){
+    var list = geneList
+    for (var i = 0; i < list.length; i++) { // remove empty lines
+        if (!list[i].trim()) {
+            list.splice(i, 1);
+            i--;
+        }
+    }
+    
+    // remove spaces in each geneList entry
+    list= list.map(s => s.trim());
+    return list; 
+}
+
 
 
 

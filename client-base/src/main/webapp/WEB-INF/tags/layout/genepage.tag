@@ -116,26 +116,19 @@
   <div id="genomaps-container">
 
     <div id="network_content">
-    <div id="dataset-description">
-
       <div id="network_description">
-              <div>
+              <div style="width:25%">
                 <h4 class="search-key">Selected Species:</h4>
                 <span id="search-taxid"></span>
               </div>
-              <div>
+              <div style="width:70%">
                 <h4 class="search-key">Selected gene(s):</h4>
-                <span  id="search-gene"></span>
+                <span style="display:flex; flex-wrap-wrap"  id="search-gene"></span>
               </div>
-              <div id="keyword-section">
+              <div style="margin-top:1rem;" id="keyword-section">
                 <h4 class="search-key">Keywords:</h4>
-                <span id="search-keyword"></span>
+                <span style="display:flex; flex-wrap:wrap;" id="search-keyword"></span>
               </div>
-      </div>
-          <div id="instructions">
-              <h4 id="instruction-title">How to use</h4>
-              <p style="margin:0;">You can use the Interactive Legend to add (single-click) or hide (double-click) information types from the network.</p>
-          </div>
       </div>
     </div>
 

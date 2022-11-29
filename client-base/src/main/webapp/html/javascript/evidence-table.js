@@ -265,7 +265,7 @@
      // Generate the Network in KnetMaps.
      //generateCyJSNetwork(api_url + '/evidencePath', params);
      // harmonized now to use 'network' api only
-     generateCyJSNetwork(api_url + '/network', params);
+     generateCyJSNetwork(api_url + '/network', params,false);
  }
  
  
@@ -307,7 +307,7 @@
      params.list = geneids;
          if(geneids.length>0 && geneids[0].length>1) { 
            // Generate the evidence knetwork in KnetMaps.
-           generateCyJSNetwork(api_url + '/network', params);
+           generateCyJSNetwork(api_url + '/network', params,false);
      }
         else {
          evidenceNotice = '<span><b>Search with a genelist to view network.</b></span>'
