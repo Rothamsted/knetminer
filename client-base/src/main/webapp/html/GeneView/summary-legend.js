@@ -59,12 +59,13 @@
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
   *0*/
   function filterTableByType(key,location,sortingPosition,table,event,revertButton) {
-            var RemoveLegend = updateLegendsKeys(key,location,event)
+           updateLegendsKeys(key,location,event)
      try{
          if ($(location).css('display') === 'block') {
              var gvTable=  document.getElementById(table);
              var rowLength= gvTable.rows.length;
              var currentData = $(location).data('keys'); 
+             console.log(currentData);
              if(currentData.length === 0 ){
                 // reset table if all legends are unselected
                 document.getElementById(revertButton).click();
@@ -73,22 +74,13 @@
                     var currentRow= gvTable.rows.item(i);
                     var gv_cells = currentRow.cells;
                     var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
-                    if(RemoveLegend){
-                        if(gene_evidences.includes(key)){
+                        if(!currentData.every(keys => gene_evidences.includes(keys))){
                             $(currentRow).addClass('non-filter').removeClass('current-filter')
-                        }
-                    }else{  for(var j = 0; j < currentData.length; j++ ){
-
-                        if(!gene_evidences.includes(currentData[j]) && !$(currentRow).hasClass('current-filter')){
-                            $(currentRow).addClass('non-filter')
                         }else{
                             $(currentRow).addClass('current-filter').removeClass('non-filter');
                         }
-
-                    }
-                    } 
+                } 
                 }
-             }
                
          }
      }catch (err) {
@@ -118,11 +110,9 @@
          }else{
              var getCurrentIndex = getKeys.indexOf(key);
              if(getCurrentIndex > -1 ){getKeys.splice(getCurrentIndex, 1);}
-             return true
          }
          
          $(location).data({keys: getKeys}); 
          
      }
-        return false;
  }
