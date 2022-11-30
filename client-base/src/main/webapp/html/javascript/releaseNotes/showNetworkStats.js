@@ -2,22 +2,20 @@
 
 
 
-// TODO: why the dbMetadata name, when it's the dataset description? 
-var dbVersion = '', dbTitle='', dbMetaData = ''; 
+
+
 
 /*
  * Function gets release note data title and version number from /dataset-info api call. 
  */
-function getDbDetails(){
+async function getDatasetDetails(){
     var dbUrl = api_url + "/dataset-info";
-    $.get(dbUrl).done(function (dbData) { 
-        dbTitle = dbData.title,
-        dbVersion =  dbData.version 
-        dbMetaData = dbData.description.toLowerCase(); 
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-			logErrorFromRemoteCall ( "Error while invoking /dataset-info:", jqXHR, textStatus, errorThrown );
-    });
+     var datasetApiCall =  await fetch(dbUrl)
+     if(!datasetApiCall.ok){
+        throw new Error(datasetApiCall.status)
+     }
+      var dataset = await datasetApiCall.json(); 
+      return dataset;
 }
 
 /*
@@ -26,11 +24,14 @@ function getDbDetails(){
  */
 
 async function fetchStats(){
-  await getDbDetails(); 
+    var dataset = await getDatasetDetails().catch(error => {console.log(error.message) }),
+    datasetVersion = dataset['version'],
+    datasetTitle= dataset['title'],
+    datasetDescription = dataset['description'];
+  
 
   $.get( api_url + "/latestNetworkStats")
   .done(function (data) {
-      console.log(data); 
       var resp = data.stats.split("\n");
       var totalGenes = fetchValue(resp[1]);
       var totalConcepts = fetchValue(resp[2]);
@@ -39,14 +40,12 @@ async function fetchStats(){
       var minValues = fetchValue(resp[6]);
       var maxValues = fetchValue(resp[7]);
       var avgValues = fetchValue(resp[8]);
-      // calculate concept occurrence percentage.
+    // calculate concept occurrence percentage.
       var conceptPercentage = (geneEvidenceConcepts / (totalConcepts - totalGenes)) * 100;
       conceptPercentage = conceptPercentage.toFixed(2);
 
-
-      
       // Display stats data.
-      var statsText = "<br/><ul><li>KnetMiner KG version: " + dbVersion + "</li>" +
+      var statsText = "<br/><ul><li>KnetMiner KG version: " + datasetVersion + "</li>" +
               "<li>Number of genes: " + totalGenes + "</li>" +
               "<li>Total concepts: <strong>" + totalConcepts + "</strong></li>" +
               "<li>Total relations: <strong>" + totalRelations + "</strong></li>" +
@@ -99,21 +98,12 @@ async function fetchStats(){
               cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>" + rel[1] + "</td></tr>";
           }
       }
-
+     
       cc_table += "</table></table></table>";
 
-			// TODO: this is poort, why not relying in the origin for formatting, or having the browser
-			// reflowing?
-	    // splitting paragraphs into chunks 
-      var dbMetaDataStr = dbMetaData.split(/[, ]+/);
-      var paragraphs = [...seperateParagraph(dbMetaDataStr,9)]
-
-
-      var content = `<div style="width:fit-content" id="release-content">
+      var content = `<div style="width:420px" id="release-content">
       <p>
-      ${dbTitle} is ${paragraphs[0].join(' ')} <br>
-      ${paragraphs[1].join(' ')} 
-      ${paragraphs[2].join(' ')}
+      ${datasetTitle} is ${datasetDescription}
       </p>
       <p id="network_stats" > 
       <span>This knowledge network contains:</span>
@@ -151,9 +141,3 @@ function fetchValue(valText) {
     return val;
 }
 
-// function spilts long string paragraph into chunks when provided with the array of strings and number of text that should be in a sub array. 
-function* seperateParagraph(array,num){
-    for(var i=0;i < array.length; i+= num ){
-        yield array.slice(i,i+8)
-    }
-  }
