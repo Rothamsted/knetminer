@@ -231,6 +231,7 @@
           */
          $("#revertEvidenceView").click(function (e) {
              createEvidenceTable(text, keyword); // redraw table
+             $('#evidenceTable').data({keys:[]}); 
          });
          
          $("#revertEvidenceView").mouseenter(function (e) {

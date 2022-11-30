@@ -70,16 +70,16 @@
                 // reset table if all legends are unselected
                 document.getElementById(revertButton).click();
              }else{
-                for(var i=1; i < rowLength; i++) { // i=1 to skip title row
-                    var currentRow= gvTable.rows.item(i);
-                    var gv_cells = currentRow.cells;
-                    var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
-                        if(!currentData.every(keys => gene_evidences.includes(keys))){
-                            $(currentRow).addClass('non-filter').removeClass('current-filter')
-                        }else{
-                            $(currentRow).addClass('current-filter').removeClass('non-filter');
-                        }
-                } 
+                    for(var i=1; i < rowLength; i++) { // i=1 to skip title row
+                        var currentRow= gvTable.rows.item(i);
+                        var gv_cells = currentRow.cells;
+                        var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
+                            if(!currentData.every(keys => gene_evidences.includes(keys))){
+                                $(currentRow).addClass('non-filter').removeClass('current-filter')
+                            }else{
+                                $(currentRow).addClass('current-filter').removeClass('non-filter');
+                            }
+                    } 
                 }
                
          }

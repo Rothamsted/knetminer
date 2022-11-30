@@ -69,6 +69,9 @@ function searchKeyword(){
         $('.pGViewer_title_line').css("color","red");
         $('#tabviewer').hide();
       }else if(keyword !== '' || list.length !== 0 || requestParams.qtl.length !== 0 ){
+        $('#evidenceTable').data({keys:[]}); 
+        $('#resultsTable').data({keys:[]}); 
+        $("#NetworkCanvas_button").removeClass('network-created');
         fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size);
       }
 }

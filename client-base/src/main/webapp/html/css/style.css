@@ -1140,6 +1140,18 @@ a.contact-button :hover {
     text-decoration: none;
 }
 
+#new_generateMultiGeneNetworkButton.non-active , #new_generateMultiEvidenceNetworkButton.non-active,#NetworkCanvas_button.button_on{
+    background-color: #6F7F8F;
+    pointer-events: none;
+    box-shadow: none;
+    border:none; 
+}
+
+.button_on#NetworkCanvas_button span {
+    color: #FFFFFF;
+    
+}
+
 /* Tab Window */
 .button_off {
     background-color: #000000;
@@ -1179,43 +1191,8 @@ a.contact-button :hover {
     color: #FFFFFF;
 }
 
- 
-.button_on svg>g {
-    color: #6F7F8F;
-}
-
-.button_off svg>g {
-    color: white;
-}
-
 #NetworkCanvas_button {
-
     margin-left: .75rem;
-}
-
-.button_off#NetworkCanvas_button {
-    background-color: #51CE7B;
-}
-
-.button_on#NetworkCanvas_button {
-    background-color: #51CE7B15;
-    border: 1px solid #51CE7B;
-    pointer-events: none;
-
-}
-
-.button_on#NetworkCanvas_button span,.button_on#NetworkCanvas_button svg>g  {
-    color: #51CE7B;
-    
-}
-
-.non-active.button_on#NetworkCanvas_button span,.non-active.button_on#NetworkCanvas_button svg>g  {
-    color: #FFFFFF;
-    
-}
-
-.button_off#NetworkCanvas_button span,.button_off#NetworkCanvas_button svg>g {
-    color: #FFFFFF;
 }
 
 #NetworkCanvas_button.network-created{
@@ -1225,8 +1202,18 @@ a.contact-button :hover {
 
 }
 
-#NetworkCanvas_button.network-created svg>g, #NetworkCanvas_button.network-created span {
+#NetworkCanvas_button.network-created span {
     color: #FFFFFF;
+}
+
+.button_off#NetworkCanvas_button {
+    background-color: #51CE7B15;
+    border: 1px solid #51CE7B;
+    pointer-events: none;
+}
+
+.button_off#NetworkCanvas_button span{
+    color:  #51CE7B;;
 }
 
 
@@ -2259,12 +2246,7 @@ a {
     margin-right: 0;
 }
 
-#new_generateMultiGeneNetworkButton.non-active , #new_generateMultiEvidenceNetworkButton.non-active,#NetworkCanvas_button.non-active{
-    background-color: #6F7F8F;
-    pointer-events: none;
-    box-shadow: none;
-    border:none; 
-}
+
 
 .non-filter{
     display: none;

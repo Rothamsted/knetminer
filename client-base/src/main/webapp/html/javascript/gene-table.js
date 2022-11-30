@@ -255,6 +255,7 @@ function createGenesTable(text, keyword, rows){
 	 */
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(text, keyword, $("#num-genes").val()); // redraw table
+		$('#resultsTable').data({keys:[]}); 
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -279,25 +280,20 @@ function createGenesTable(text, keyword, rows){
 			if (values[7] === "yes") {
 				// Check which input buttons are selected.
 				if ( $(this).val() === "Linked Genes" ) { // Select Known Targets.
-					if (values[9].length > 0) {
-						$("#checkboxGene_" + i).prop('checked',!targetClass);
+					if (values[9].length > 0 ) {
+						$("#checkboxGene_" + i+":visible").prop('checked',!targetClass);
 					}
 				}
-				else if (($(this).val() === "Unlinked Genes")) { // Select Novel Targets.
+				else if ($(this).val() === "Unlinked Genes") { // Select Novel Targets.
 					if (values[9].length === 0) {
-						$("#checkboxGene_" + i).prop('checked',!targetClass);
+						$("#checkboxGene_" + i+":visible").prop('checked', !targetClass);
 					}
 				}
-
 			}
 		}
 
 		// update button style for linked and unlinked genes
-		if(!targetClass) {
-			$(this).addClass('checked')
-		}else{
-			$(this).removeClass('checked')
-		}
+		$(this).toggleClass('checked')
 
 		// update selected genes count
 		updateSelectedGenesCount("candidates","#candidate-count");
@@ -442,16 +438,6 @@ function updateSelectedGenesCount(inputName,countContainer) {
 	var countWord = count > 1 ? 'Genes' : 'Gene'
     $(''+countContainer+' span').text(count + ' '+ countWord + ' selected'); // update
 		$(countContainer).next().toggleClass('non-active', count < 1); 
-		$("#NetworkCanvas_button").toggleClass('non-active', count < 1);
-		
-		var geneCount = returnCheckInputCount('candidates');
-		var evidenceCount = returnCheckInputCount('evidences'); 
-
-		if (geneCount > 0 || evidenceCount > 0 ){
-			$("#NetworkCanvas_button").removeClass('non-active')
-		}else{
-			$("#NetworkCanvas_button").removeClass('network-created')
-		}
 		changeButtonOffSvg('NetworkCanvas_button')
 }
 

@@ -165,7 +165,7 @@
 					</div>
 				</div>
 				<!-- networkview button -->
-				<div class="button_on non-active" id="NetworkCanvas_button" onclick="activateButton('NetworkCanvas');">
+				<div class="button_on" id="NetworkCanvas_button" onclick="activateButton('NetworkCanvas');">
 					<object class="button-svg" data="html/image/Network.svg" type="image/svg+xml"></object>
 					<span> Network View</span> 
 				</div>
