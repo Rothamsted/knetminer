@@ -134,7 +134,7 @@
 		</div>
 		<div style="width:45%;" class="content">
 			<div class="text">
-				<h1>Whoops. We're either down, or still booting...</h1>
+				<h1>Whoops. You've caught us updating KnetMiner...</h1>
 				<h3>Come back in a few minutes or <a href="https://knetminer.com/contact">Contact Us</a>.</h3>
 			</div>
 			<div style="margin-top:2rem;" class="ctaActions">
