@@ -13,7 +13,7 @@ function searchKeyword(){
 
     // gene list provided
     var list = $("#list_of_genes").val().split('\n');
-    list = removeSpaceFromList(list)
+    list = cleanGeneList ( list )
     
     var geneList_size= list.length;
     //console.log("geneList_size= "+ geneList_size);

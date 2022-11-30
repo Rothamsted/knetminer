@@ -38,18 +38,15 @@ function capitaliseFirstLetter(word){
     return speciesKey; 
 }
 
-function removeSpaceFromList(geneList){
-    var list = geneList
-    for (var i = 0; i < list.length; i++) { // remove empty lines
-        if (!list[i].trim()) {
-            list.splice(i, 1);
-            i--;
-        }
-    }
-    
-    // remove spaces in each geneList entry
-    list= list.map(s => s.trim());
-    return list; 
+/** 
+ * Do some cleaning on the user-provided gene list, by
+ * doing common tasks like removing empty lined and space trimming.
+ */
+function cleanGeneList ( geneList )
+{
+	return geneList
+		.filter ( s => s.trim () )
+		.map ( s => s.trim () );
 }
 
 

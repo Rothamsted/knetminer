@@ -13,7 +13,7 @@ $(document).ready(function () {
             keywords = keywords.replace("\"", "###");
 
             var list = urlParams.get('list').split(',');
-            list = removeSpaceFromList(list)
+            list = cleanGeneList ( list );
         
     
             $('.logo-top').attr('src', 'image/logo.svg');
