@@ -19,7 +19,7 @@ mkdir -p target/tmp
 function deploy_npm ()
 {
 	if [[ "$#" -lt 2 ]]; then
-		echo -e "\n deploy_npm needs the target and the package name at least\n"
+		echo -e "\n deploy_npm() needs the target and the package name at least\n"
 		exit 1
 	fi
   npm_url="$1"
@@ -46,7 +46,7 @@ function deploy_npm ()
 
 # TODO: move to the master branch when possible
 deploy_npm "https://github.com/Rothamsted/knetmaps.js#202204_upgrades" knetmaps
-deploy_npm "https://github.com/Rothamsted/genomaps.js.git#202204_upgrades" genomaps
+deploy_npm "https://github.com/Rothamsted/genomaps.js.git#202210_refactor" genomaps
 
 cd "$wdir"
 echo -e "\n\n All done\n"

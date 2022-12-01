@@ -9,12 +9,11 @@
 	<link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet">
 	<title>GenoMaps.js demo</title>
 
+    <!-- Jquery and boostrap css styles, should be placed at the top as ordering is important-->
+    <link rel="stylesheet" href="css/jquery-bstrap.css">
+    <!-- Custom css files  -->
+    <link rel="stylesheet" href="css/genomaps.css">
     
-
-    <!-- inject:libfiles:css -->
-    <!-- endinject -->
-
-    <link rel="stylesheet" href="styles/genemap.css">
 
     <style>
       svg {
@@ -178,11 +177,19 @@
        </div> 
     
     
+    <!-- jQuery and Boostrap modules, they need to be placed over other files-->
+    <script src="js/jquery-bstrap.min.js"></script>
 
-        <!-- inject:libfiles:js -->
-        <!-- endinject -->
+    <!-- Non-jquery files files, when used the script above should be commented out -->
+    <!-- <script src="./dist/js/nonjquery-bstrap.min.js"></script> -->
 
-    <script src="js/genemap.js"></script>
+    <!-- Other javascript modules used by Genomaps -->
+    <script src="js/genomaps-libs.min.js"></script>
+
+    <!-- custom written javascript scripts -->
+    <script src="js/genomaps.min.js"></script>
+
+    
 
     <script>
   log.setDefaultLevel( "info");
@@ -259,6 +266,6 @@
   });
 
     </script>
-
+    
   </body>
 </html>
