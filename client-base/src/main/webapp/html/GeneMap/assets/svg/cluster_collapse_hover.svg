@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="1024px" height="1024px" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 10240 10240" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<title>graph_to icon</title>
-	<desc>graph_to icon from the IconExperience.com O-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
-	<path id="curve1" style="fill:#21a2ef;fill-opacity:1;" d="M8800 4480l-3496 0 504 -435c38,-32 45,-85 26,-131 -19,-46 -61,-74 -111,-74l-538 0c-88,0 -164,31 -226,94l-753 753c-62,62 -62,164 0,226l753 753c62,62 138,94 226,94l538 0c50,0 92,-28 111,-74 19,-46 12,-98 -26,-131l-504 -435 3496 0c88,0 160,-72 160,-160l0 -320c0,-88 -72,-160 -160,-160z"/>
-	<path id="curve0" style="fill:#21a2ef;fill-opacity:1;" d="M2560 3520c707,0 1280,573 1280,1280 0,707 -573,1280 -1280,1280 -707,0 -1280,-573 -1280,-1280 0,-707 573,-1280 1280,-1280zm0 640c353,0 640,287 640,640 0,353 -287,640 -640,640 -353,0 -640,-287 -640,-640 0,-353 287,-640 640,-640z"/>
-</svg>

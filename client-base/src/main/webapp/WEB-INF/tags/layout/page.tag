@@ -31,11 +31,16 @@
         <!-- loader/spinner css -->
         <link rel="stylesheet" type="text/css" href="html/css/maskloader-spinner.css"/>
 
-        <!-- Genomaps.js css -->
-        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap-lib.css"/>
-        <link rel="stylesheet" type="text/css" href="html/GeneMap/dist/styles/genemap.css"/>
+        <!-- 
+        	Genomaps.js CSS
+        	 
+        	TODO: We're taking jquery from this distro, maybe it's not what we want.
+        -->
+        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/jquery-bstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/genomaps.css"/>
+        
         <!-- KnetMaps.js css -->
-        <link rel="stylesheet" type="text/css" href="html/KnetMaps/dist/css/knetmaps.css"/>
+        <link rel="stylesheet" type="text/css" href="html/lib/knetmaps/css/knetmaps.css"/>
 
         <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
 		
@@ -45,9 +50,14 @@
 				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <!-- Genomaps.js -->
-        <script type="text/javascript" src="html/GeneMap/dist/js/genemap-lib.js"></script>
-        <script type="text/javascript" src="html/GeneMap/dist/js/genemap.js"></script>
+        <!-- 
+        	Genomaps.js
+        	
+        	TODO: We're taking jquery from this distro, maybe it's not what we want.
+        -->
+        <script type="text/javascript" src="html/lib/genomaps/js/jquery-bstrap.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genomaps.js"></script>
 
         <!--JBox-->
       	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
@@ -56,8 +66,8 @@
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
-        <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps-lib-nojquery.js"></script>
-        <script type="text/javascript" src="html/KnetMaps/dist/js/knetmaps.js"></script>
+        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps-lib-nojquery.js"></script>
+        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->

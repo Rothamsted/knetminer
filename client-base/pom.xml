@@ -22,147 +22,17 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>exec-npm-install-genemap</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>npm</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>exec-bower-install-genemap</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>bower</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>exec-gulp-clean-genemap</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>gulp</executable>
-							<arguments>
-								<argument>clean-dist</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>exec-gulp-optimise-genemap</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>gulp</executable>
-							<arguments>
-								<argument>optimise</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/GeneMap</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<!-- 
-						Next two executions can be skipped to speed-up the build. 
-					 	TODO: Define a profile for this.
-					 	
-					 	An alternative speed-up trick is to skip client-base altoghether, via 
-					 	mvn -pl '!client-base' 
-					-->
-					<execution>
-						<id>exec-npm-install-knetmaps</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>npm</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>exec-gulp-clean-knetmaps</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>gulp</executable>
-							<arguments>
-								<argument>clean-dist</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					
-					
-					<execution>
-						<id>exec-gulp-optimise-knetmaps</id>
-						<phase>compile</phase>
-						<configuration>
-							<executable>gulp</executable>
-							<arguments>
-								<argument>optimise</argument>
-							</arguments>
-							<workingDirectory>${basedir}/src/main/webapp/html/KnetMaps</workingDirectory>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<!-- Beware that none of this is filtered -->				
 				<configuration>
-					<packagingIncludes>
-						html/css/**,
-						html/GeneMap/dist/**,
-						html/GeneView/**,
-						html/image/**,
-						html/fonts/**,
-						html/javascript/**,
-						html/KnetMaps/dist/**,
-						WEB-INF/**
-					</packagingIncludes>
+					<webResources>
+						<resource>
+							<directory>src/main/generated/webapp</directory>
+						</resource>
+					</webResources>				
 				</configuration>
 			</plugin>
-		  <plugin>
-		    <artifactId>maven-clean-plugin</artifactId>
-		    <configuration>
-		      <filesets>
-		        <fileset>
-		          <directory>client-base/src/main/webapp/html/KnetMaps/node_modules</directory>
-		        </fileset>
-		        <fileset>
-		          <directory>client-base/src/main/webapp/html/GeneMap/bower_components</directory>
-		        </fileset>
-		      </filesets>
-		    </configuration>
-		  </plugin>		
 		</plugins>
 	</build>
 
