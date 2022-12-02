@@ -39,7 +39,7 @@
         <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/jquery-bstrap.css"/>
         <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/genomaps.css"/>
         
-        <!-- KnetMaps.js css -->
+        <!-- KnetMaps.js CSS -->
         <link rel="stylesheet" type="text/css" href="html/lib/knetmaps/css/knetmaps.css"/>
 
         <!-- DISABLED (140520): <link href="https://fonts.googleapis.com/css?family=Kanit|Play" rel="stylesheet"> -->
@@ -56,13 +56,30 @@
         	TODO: We're taking jquery from this distro, maybe it's not what we want.
         -->
         <script type="text/javascript" src="html/lib/genomaps/js/jquery-bstrap.js"></script>
+        
+        <!-- 
+        	TODO: this should be part of knetmaps.js, see update-js.sh.
+        	TODO: Do we need html/lib/jquery-ui/jquery-ui.css too? 
+        -->
+        <script type="text/javascript" src="html/lib/jquery-ui/jquery-ui.min.js"></script>
+        
         <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.js"></script>
         <script type="text/javascript" src="html/lib/genomaps/js/genomaps.js"></script>
 
         <!--JBox-->
+        <!-- 
+        	TODO: was downloaded as static file, DAMN IT! Use update-js.sh to download it into 
+        	the generated/ folder and manage it PROPERLY.
+        	Given the date when this lib has been added to git, it should be
+        	the version v1.0.6
+        -->
       	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
 
         <!--Particle-->
+        <!--  
+        	TODO: Should we use update-js.sh and download all the 3rd-party dependency, rather 
+        	than linking them? Certainly, the links should mention a version.
+       	-->
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
@@ -90,6 +107,7 @@
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
+        <!-- TODO: this is a 3rd-party dependency, which we need to download and manage properly -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         
         <!-- query suggestor -->
