@@ -16,7 +16,9 @@ FROM tomcat:9-jdk11-adoptopenjdk-hotspot
 #
 # Note that Maven isn't used at runtime anymore, but we keep it nonetheless, because this image
 # is also used by the CI scripts.
-#
+# 
+# TODO: remove: old n version is 11.15.0
+# TODO: remove steps: bowerrc, bower, gulp, n
 RUN set -x \
   && apt-get update \
   && apt-get -y install maven git libxml2-utils npm \
@@ -24,7 +26,7 @@ RUN set -x \
 	&& npm config set unsafe-perm true \
 	&& npm install -g bower gulp \
   && npm install -g n \
-  && n 11.15.0 \
+  && n 16.17.1 \
 	&& echo '{"allow_root":true}' > /root/.bowerrc \
 	&& pip3 install awscli \
 	&& ln -fs /bin/bash /bin/sh
