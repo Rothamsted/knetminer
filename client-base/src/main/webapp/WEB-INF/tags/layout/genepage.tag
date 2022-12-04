@@ -57,10 +57,10 @@
         	TODO: Do we need genomaps here!?
         	TODO: see notes on page.tag
         -->
-        <script type="text/javascript" src="lib/genomaps/js/jquery-bstrap.js"></script>
+        <script type="text/javascript" src="lib/genomaps/js/jquery-bstrap.min.js"></script>
         <script type="text/javascript" src="lib/jquery-ui/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps-libs.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps.js"></script>
+        <script type="text/javascript" src="lib/genomaps/js/genomaps-libs.min.js"></script>
+        <script type="text/javascript" src="lib/genomaps/js/genomaps.min.js"></script>
 
         <!--JBox-->
       	<script type="text/javascript" src="javascript/jBox.all.min.js"></script>
@@ -69,8 +69,8 @@
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
-        <script type="text/javascript" src="lib/knetmaps/js/knetmaps-lib-nojquery.js"></script>
-        <script type="text/javascript" src="lib/knetmaps/js/knetmaps.js"></script>
+        <script type="text/javascript" src="lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
+        <script type="text/javascript" src="lib/knetmaps/js/knetmaps.min.js"></script>
 
         <script type="text/javascript" src="javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->

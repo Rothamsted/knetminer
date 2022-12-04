@@ -56,7 +56,7 @@
         	
         	TODO: We're taking jquery from this distro, maybe it's not what we want.
         -->
-        <script type="text/javascript" src="html/lib/genomaps/js/jquery-bstrap.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/jquery-bstrap.min.js"></script>
         
         <!-- 
         	TODO: this should be part of knetmaps.js, see update-js.sh.
@@ -64,8 +64,8 @@
         -->
         <script type="text/javascript" src="html/lib/jquery-ui/jquery-ui.min.js"></script>
         
-        <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.js"></script>
-        <script type="text/javascript" src="html/lib/genomaps/js/genomaps.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.min.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genomaps.min.js"></script>
 
         <!--JBox-->
         <!-- 
@@ -84,8 +84,8 @@
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
-        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps-lib-nojquery.js"></script>
-        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps.js"></script>
+        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
+        <script type="text/javascript" src="html/lib/knetmaps/js/knetmaps.min.js"></script>
 
         <script type="text/javascript" src="html/javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->
@@ -108,7 +108,7 @@
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
-        <!-- TODO: this is a 3rd-party dependency, which we need to download and manage properly -->
+        <!-- TODO: this is a 3rd-party dependency, which we need to download and managed properly -->
       	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
         
         <!-- query suggestor -->
