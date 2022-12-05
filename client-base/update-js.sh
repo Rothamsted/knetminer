@@ -62,7 +62,7 @@ function deploy_npm ()
   echo -e "\n\n $npm_name deployed\n" 	
 }
 
-if [[ $# > 1 ]]; then
+if [[ "$#" > 1 ]]; then
   # If the CLI has parameters, run it for a single package, as specified by the user.
   # The parameters are the same as deploy_npm()
   #
