@@ -41,12 +41,7 @@
   {     
     var contype= key.trim();
 
-			// Special tooltip for the Trait case.
-			var summaryTextTitle = key == 'Trait'
-				? "GWAS"
-				: key; // For Trait, display tooltip text as GWAS instead.
-
-			summaryText = summaryText + '<div  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + summaryTextTitle + '"></div> <span style="font-weight:600;">'+ summaryTextTitle+'</span> <span style="margin-left:.25rem">('+value+')</span> </div>';
+			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
   });
 
   legend= legend + summaryText +'</div>';
@@ -74,11 +69,20 @@
                         var currentRow= gvTable.rows.item(i);
                         var gv_cells = currentRow.cells;
                         var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
-                            if(!currentData.every(keys => gene_evidences.includes(keys))){
-                                $(currentRow).addClass('non-filter').removeClass('current-filter')
+                            if(location.includes('resultsTable')){
+                                if(!currentData.every(keys => gene_evidences.includes(keys))){
+                                    $(currentRow).addClass('non-filter').removeClass('current-filter')
+                                }else{
+                                    $(currentRow).addClass('current-filter').removeClass('non-filter');
+                                }
                             }else{
-                                $(currentRow).addClass('current-filter').removeClass('non-filter');
+                                if(!gene_evidences.includes(key) && !$(currentRow).hasClass('current-filter')){
+                                    $(currentRow).addClass('non-filter')
+                                }else{
+                                    $(currentRow).addClass('current-filter').removeClass('non-filter');
+                                }
                             }
+                           
                     } 
                 }
                
