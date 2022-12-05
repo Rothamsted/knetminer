@@ -25,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -112,61 +111,6 @@ public class KnetminerServer
 	}
 
 
-	/**
-	 * Forward a request to a JSP page, using Spring MVC.
-	 * 
-	 * See below for details.
-	 */
-	private String mvcPageForward ( 
-		String ds, String keyword, List<String> list, HttpServletRequest rawRequest, Model model, String pageId )
-	{
-		this.getConfiguredDatasource(ds, rawRequest); // just validates ds
-		
-		if ( list != null && !list.isEmpty () )
-			model.addAttribute("list", new JSONArray(list).toString());
-		
-		if (keyword != null && !"".equals ( keyword ) )
-			model.addAttribute("keyword", keyword);
-
-		this.googleTrackPageView ( ds, pageId , keyword, list, null, rawRequest );
-		return pageId;
-	}
-	
-	
-	/**
-	 * A /genepage shortcut which generates a redirect to a prepopulated KnetMaps
-	 * template with the /network query built for the user already. See WEB-INF/views
-	 * to find the HTML template that this query will return.
-	 * 
-	 */
-	@CrossOrigin
-	@GetMapping("/{ds}/genepage")
-	public String genepage (
-		@PathVariable String ds, @RequestParam(required = false) String keyword,
-		@RequestParam(required = true) List<String> list, HttpServletRequest rawRequest, Model model )
-	{
-		return this.mvcPageForward ( ds, keyword, list, rawRequest, model, "genepage" );
-	}
-
-	/**
-	 * A /evidencepage shortcut which generates a redirect to a prepopulated KnetMaps
-	 * template with the /evidencePath query built for the user already. See WEB-INF/views
-	 * to find the HTML template that this query will return.
-	 * @param ds
-	 * @param keyword
-	 * @param list
-	 * @param rawRequest
-	 * @param model
-	 * @return
-	 */
-	@CrossOrigin
-	@GetMapping("/{ds}/evidencepage")
-	public String evidencepage (
-		@PathVariable String ds, @RequestParam(required = true) String keyword,
-		@RequestParam(required = false) List<String> list, HttpServletRequest rawRequest, Model model )
-	{
-		return this.mvcPageForward ( ds, keyword, list, rawRequest, model, "evidencepage" );
-	}
 
 	/**
 	 * @see #network(String, NetworkRequest, HttpServletRequest)
