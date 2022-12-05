@@ -19,8 +19,10 @@
         
         <!-- favicon -->
         <link rel="shortcut icon" href="html/image/KnetMiner200.png" />
-        <!-- jBox modal popup css -->
-        <link rel="stylesheet" type="text/css" href="html/css/jBox.all.min.css"/>
+
+        <!--JBox (managed by update-js.sh) -->
+        <link rel="stylesheet" type="text/css" href="html/lib/jbox/jBox.all.min.css"/>
+
         <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
 
@@ -67,14 +69,8 @@
         <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.min.js"></script>
         <script type="text/javascript" src="html/lib/genomaps/js/genomaps.min.js"></script>
 
-        <!--JBox-->
-        <!-- 
-        	TODO: was downloaded as static file, DAMN IT! Use update-js.sh to download it into 
-        	the generated/ folder and manage it PROPERLY.
-        	Given the date when this lib has been added to git, it should be
-        	the version v1.0.6
-        -->
-      	<script type="text/javascript" src="html/javascript/jBox.all.min.js"></script>
+        <!--JBox (managed by update-js.sh) -->
+      	<script type="text/javascript" src="html/lib/jbox/jBox.all.min.js"></script>
 
         <!--Particle-->
         <!--  
@@ -108,8 +104,7 @@
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
-        <!-- TODO: this is a 3rd-party dependency, which we need to download and managed properly -->
-      	<script type="text/javascript" src="html/javascript/jquery.tablesorter.js"></script>
+      	<script type="text/javascript" src="html/lib/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
         
         <!-- query suggestor -->
         <script type="text/javascript" src="html/javascript/query-suggester.js"></script>

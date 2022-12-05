@@ -24,8 +24,11 @@
         <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="css/style.css"/>
         <link rel="stylesheet" type="text/css" href="css/genepage.css"/>
-        <!-- jBox modal popup css -->
-        <link rel="stylesheet" type="text/css" href="css/jBox.all.min.css"/>
+
+        <!--JBox (managed by update-js.sh) -->
+        <link rel="stylesheet" type="text/css" href="lib/jbox/jBox.all.min.css"/>
+
+
         <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="css/button.css"/>
         <!-- Login css -->
@@ -62,8 +65,8 @@
         <script type="text/javascript" src="lib/genomaps/js/genomaps-libs.min.js"></script>
         <script type="text/javascript" src="lib/genomaps/js/genomaps.min.js"></script>
 
-        <!--JBox-->
-      	<script type="text/javascript" src="javascript/jBox.all.min.js"></script>
+        <!--JBox (managed by update-js.sh) -->
+      	<script type="text/javascript" src="lib/jbox/jBox.all.min.js"></script>
 
         <!--Particle-->
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
