@@ -1,11 +1,6 @@
 echo -e "\n\n\tBuilding Docker image\n"
 sudo chown -R "$USER" . # The build inside Docker creates files we don't own yet
 
-# We don't have bower on the host, so client-base can't be rebuilt. Rather, it's taken from the 
-# just-installed artifacts. TODO: remove when the .js refactoring is finished.
-#
-export MAVEN_ARGS="$MAVEN_ARGS -pl \"!client-base\""
-
 cd docker
 ./docker-build-image.sh --tag "$docker_tag" --tag-bare "$docker_tag_bare" --no-mvn-clean
 
