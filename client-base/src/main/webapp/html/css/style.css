@@ -179,22 +179,17 @@ div#leftnav {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    flex-direction: column;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    height: 60px;
-    -webkit-box-shadow: rgba(99, 97, 97, 0.45) 0px 25px 20px -20px;
-    box-shadow: rgba(99, 97, 97, 0.45) 0px 25px 20px -20px;
+    -webkit-box-shadow: rgb(99 97 97 / 45%) 0px 25px 20px -20px;
+    box-shadow: rgb(99 97 97 / 45%) 0px 25px 20px -20px;
     background-color: #FFF;
-    position: fixed;
-    overflow: hidden;
-    z-index: 10;
     width: 100%;
-    top: 0pc;
-    left: 0pc;
 }
 
 .navbar-select {
@@ -268,14 +263,6 @@ div#leftnav {
 }
 
 /* navbar responsive styles*/
-
-
-
-
-
-
-
-
 
 @media (min-width: 768px) {
     .navbar-nav>li>a {
@@ -2256,4 +2243,104 @@ a {
     display: table-row;
 }
 
+/* Feedback modal styles */
+
+.feedback-modal{
+    height: 50px;
+}
+
+.top-nav{
+    height: 30px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    background: #0F3325;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+
+}
+.bottom-nav{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-padding{
+    padding:0.5rem 1.5rem; 
+}
+.feedback-button{
+    margin-left: 2rem;
+    padding: .5rem 1.2rem;
+    border-radius: 6px;
+    background: white;
+    border: none;
+    color: #0F3325;
+}
+
+.feedback-modal-header{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.feedback-modal-header h3{
+    margin: .5rem 0;
+}
+.feedback-modal-header p{
+    font-size: .8rem;
+    width: 80%;
+    margin:0 auto;
+}
+
+#feedbackFormContainer h4{
+    margin: 1rem 0;
+}
+
+.feedback-inputs{
+    margin:1rem 0;
+    display: grid;
+
+}
+
+.feedback-inputs input,.feedback-inputs textarea{
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 0.5px solid #BDC5CE;
+}
+
+.label{
+    margin-bottom: 0.4rem;
+    font-size: .8rem;
+}
+
+
+
+.label:after{
+    content:"*";
+    color: red;
+}
+
+.not-required{
+    font-size: .8rem;
+}
+
+.not-required:after{
+    content:"";
+    margin-bottom: 0.4rem;
+}
+
+#feedbackData button{
+    padding: 0.6rem 1.2rem;
+    background: #51CE7B;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+#feedbackCloseBtn .fa-times{
+    color: white;
+
+}
 

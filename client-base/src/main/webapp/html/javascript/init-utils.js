@@ -22,6 +22,11 @@ function loadOnReady() {
   // Tooltip
   showReferenceGenome();
 
+  $("#feedbackCloseBtn").on('click',function(){
+    $("#feedbackNav").remove();
+    
+  })	
+
   /* TODO: What's for? The current Google instructions don't mention any of these
     createAnalyticsTag(); 
     generalPageAnalytics();
