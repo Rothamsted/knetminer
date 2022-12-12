@@ -69,20 +69,8 @@
                         var currentRow= gvTable.rows.item(i);
                         var gv_cells = currentRow.cells;
                         var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
-                            if(location.includes('resultsTable')){
-                                if(!currentData.every(keys => gene_evidences.includes(keys))){
-                                    $(currentRow).addClass('non-filter').removeClass('current-filter')
-                                }else{
-                                    $(currentRow).addClass('current-filter').removeClass('non-filter');
-                                }
-                            }else{
-                                if(!gene_evidences.includes(key) && !$(currentRow).hasClass('current-filter')){
-                                    $(currentRow).addClass('non-filter')
-                                }else{
-                                    $(currentRow).addClass('current-filter').removeClass('non-filter');
-                                }
-                            }
-                           
+                        var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
+                        setLegendsState(tableLocation,gene_evidences,currentRow,currentData);
                     } 
                 }
                
@@ -119,4 +107,27 @@
          $(location).data({keys: getKeys}); 
          
      }
+ }
+
+  /*
+  * Function sets the visibility state of Gene and Evidence legends
+  *0*/
+ function setLegendsState(tableLocation,gene_evidences,currentRow,currentData){
+    switch(tableLocation){
+        case "resultsTable":
+            if(!currentData.every(keys => gene_evidences.includes(keys))){
+                $(currentRow).addClass('non-filter').removeClass('current-filter')
+            }else{
+                $(currentRow).addClass('current-filter').removeClass('non-filter');
+            }
+            break;
+        case "evidenceTable":
+            if(!currentData.some(keys => gene_evidences.includes(keys))){
+                $(currentRow).addClass('non-filter').removeClass('current-filter');
+            }else{
+                $(currentRow).addClass('current-filter').removeClass('non-filter');
+            }
+            break;
+
+    }
  }
