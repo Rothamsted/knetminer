@@ -5,7 +5,7 @@
 
 
 
-.jBox-title { background: #121212; }
+.jBox-title { background: #121212 !important; }
  
 #profile_icon {
     float: right; 

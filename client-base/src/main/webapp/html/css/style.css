@@ -273,7 +273,6 @@ div#leftnav {
 /*end navbar*/
 
 div#content {
-    padding-top:70px;
     height: auto;
     padding-bottom:40px;
     position: relative;
@@ -2255,7 +2254,7 @@ a {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    background: #0F3325;
+    background: #6F7F8F;
     color: white;
     padding: 0.5rem 1.5rem;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
@@ -2275,9 +2274,9 @@ a {
     margin-left: 2rem;
     padding: .5rem 1.2rem;
     border-radius: 6px;
-    background: white;
+    background: #51CE7B;
     border: none;
-    color: #0F3325;
+    color: #ffffff;
 }
 
 .feedback-modal-header{

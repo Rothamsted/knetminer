@@ -3,9 +3,9 @@
 <div id="header">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div id="feedbackNav" class="top-nav">
-			<div class="nav-padding" style="display:flex;align-items:center">
-				<span style="color:#FFFFFF;">We would appreciate your feedback on how you find our new release exciting </span> 
-				<a href="https://knetminer.com/beta-feedback-form" class="feedback-button" title="Submit Feedback">Reach out here</a> 
+			<div class="nav-padding" style="display:flex;align-items:center;margin:0 auto;">
+				<span style="color:#FFFFFF;">You're on of very few on Knetminber Beta. Providing feedback heps us improve</span> 
+				<a href="https://knetminer.com/beta-feedback-form" target="_blank" class="feedback-button" title="Submit Feedback">Reach out here</a> 
 			</div>
 			<span id="feedbackCloseBtn" class="nav-padding"><i class="fa fa-times" aria-hidden="true"></i></span>
 		</div>
