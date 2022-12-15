@@ -127,9 +127,6 @@
         <!-- string data Utils-->
         <script type="text/javascript" src="html/javascript/string-utils.js"></script>
 
-        <!-- feedbacks -->
-        <script type="text/javascript" src="html/javascript/feedbacks.js"></script>
-
         <!-- google analytics-->
         <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
 

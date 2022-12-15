@@ -27,10 +27,6 @@ function loadOnReady() {
     
   })	
 
-  /* TODO: What's for? The current Google instructions don't mention any of these
-    createAnalyticsTag(); 
-    generalPageAnalytics();
-    */
 }
 
 // function reset all form input including the genenome icon and the suggestor text values
