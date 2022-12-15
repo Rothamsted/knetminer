@@ -144,7 +144,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 	      <artifactId>maven-failsafe-plugin</artifactId>
-	      <configuration combine.self = "merge">
+	      <configuration>
 	      	<systemProperties>
 	      		<maven.profileId>${maven.profileId}</maven.profileId>
 	      	</systemProperties>
