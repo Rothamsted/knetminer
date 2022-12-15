@@ -43,7 +43,13 @@ oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
     commonName: Maize
 
 # These are custom options, which aren't explicitly defined by the Knetminer configuration. 
-# See KnetminerConfiguration.getCustomOptions() for details.
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
 #
 customOptions:
+  # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+  # Likely, you don't want it enabled.
   ui.betaFeedbackBanner: true
+  fooObject:
+    name: Hello
+    surname: World
+

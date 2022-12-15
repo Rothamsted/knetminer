@@ -265,7 +265,12 @@ public class KnetminerConfiguration
 	 * <p><b>WARNING</b>: <b>DO NOT ABUSE this feature!</b> It is intended as an hack to help in situations where you don't want the 
 	 * explicit list of configuration parameters to be filled up with too many values that don't concern the core Knetminer functionality.
 	 * <b>Explicit</b> options are strongly preferred for important/stable features, so <b>avoid</b> to put them here, or to keep them here
-	 * <b>as much as possible</b>.</p>  
+	 * <b>as much as possible</b>.</p>
+	 * 
+	 * <p><b>Note on file paths</b>: because these custom options are not processed by Knetminer components, nothing is known about file paths
+	 * and hence relative paths are not resolved. Use {@code ${mydir}} to get the configuration dir, as explained on 
+	 * <a href = "https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#rules-for-the-configuration-files">the documentation</p>.
+	 * 
 	 */
 	public OptionsMap getCustomOptions ()
 	{

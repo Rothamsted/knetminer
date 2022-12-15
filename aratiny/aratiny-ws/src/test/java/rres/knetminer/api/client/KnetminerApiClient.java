@@ -230,12 +230,20 @@ public class KnetminerApiClient
 	 */
 	public byte[] backgroundImage ()
 	{
-		return invokeApi (
+		return invokeApiRaw (
 			"dataset-info/background-image",
 			Exceptions.sneak ().<InputStream, byte[]> function ( IOUtils::toByteArray ), 
 			RequestOptions.of ().setUseJsonParams ( false ),
 			null
 		);
+	}
+	
+	/**
+	 * Counterpart of {@link DatasetInfoService#getCustomOptions()}.
+	 */
+	public Map<String, Object> customOptions ()
+	{
+		return invokeApiJs ( "dataset-info/custom-options", null ).toMap ();
 	}
 	
 	
@@ -249,14 +257,14 @@ public class KnetminerApiClient
 	
 	
 	/**
-	 * Assumes the request returns a JSON string and maps it to a {@code T} object, using {@link ObjectMapper} but this one uses {@link ObjectMapper} 
+	 * Assumes the request returns a JSON string and maps it to a {@code T} object, using {@link ObjectMapper}. 
 	 * 
 	 */
 	public <T> T invokeApiJsMap ( String urlOrCallName, Class<? extends T> resultClass, RequestOptions reqOpts, Map<String, Object> params  )
 	{
 		var jsmap = new ObjectMapper ();
 		Function<InputStream, T> jsMapFunc = Exceptions.sneak ().function ( in -> jsmap.readValue ( in, resultClass ) );
-		return invokeApi  ( urlOrCallName, jsMapFunc, reqOpts, params );
+		return invokeApiRaw  ( urlOrCallName, jsMapFunc, reqOpts, params );
 	}
 	
 	
@@ -271,12 +279,12 @@ public class KnetminerApiClient
 	/** 
 	 * Invokes a KnetMiner API that is expected to return a JSON object as root in its result.
 	 * 
-	 * @see #invokeApiJs(String, Function, RequestOptions, Map)
+	 * @see #invokeApiJsRaw(String, Function, RequestOptions, Map)
    *
 	 */
 	public JSONObject invokeApiJs ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
 	{
-		return invokeApiJs ( urlOrCallName, JSONObject::new, reqOpts, params );
+		return invokeApiJsRaw ( urlOrCallName, JSONObject::new, reqOpts, params );
 	}
 	
 	
@@ -291,12 +299,12 @@ public class KnetminerApiClient
 	/** 
 	 * Invokes a KnetMiner API that is expected to return a JSON array as root in its result.
 	 * 
-	 * @see #invokeApiJs(String, Function, RequestOptions, Map)
+	 * @see #invokeApiJsRaw(String, Function, RequestOptions, Map)
    *
 	 */
 	public JSONArray invokeApiJsArray ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
 	{
-		return invokeApiJs ( urlOrCallName, JSONArray::new, reqOpts, params );
+		return invokeApiJsRaw ( urlOrCallName, JSONArray::new, reqOpts, params );
 	}
 		
 	/**
@@ -306,7 +314,7 @@ public class KnetminerApiClient
 	 * or array) and uses {@code jsonSupplier} to convert it into a {@link JSONObject} or {@link JSONArray}.
 	 *  
 	 */
-	private <J> J invokeApiJs ( String urlOrCallName, Function<String, J> jsonSupplier, RequestOptions reqOpts, Map<String, Object> params )
+	private <J> J invokeApiJsRaw ( String urlOrCallName, Function<String, J> jsonSupplier, RequestOptions reqOpts, Map<String, Object> params )
 	{
 		/* DEBUG
 		var s = invokeApiStr ( urlOrCallName, reqOpts, params );
@@ -327,12 +335,12 @@ public class KnetminerApiClient
 	}
 	
 	/**
-	 * A wrapper of {@link #invokeApi(String, Function, RequestOptions, Map)} and collects all its output into 
+	 * A wrapper of {@link #invokeApiRaw(String, Function, RequestOptions, Map)} and collects all its output into 
 	 * a string. 
 	 */
 	public String invokeApiStr ( String urlOrCallName, RequestOptions reqOpts, Map<String, Object> params )
 	{
-		String outStr = invokeApi ( 
+		String outStr = invokeApiRaw ( 
 			urlOrCallName, 
 			Exceptions.sneak ().function ( in -> IOUtils.toString ( in, "UTF-8" ) ), reqOpts, params
 		);
@@ -350,7 +358,7 @@ public class KnetminerApiClient
 	 * @param outConverter a converter that turns the {@link InputStream} coming from the request output into an instance of T.
 	 * @return the API output, in the form of an object of type T
 	 */
-	private <T> T invokeApi ( 
+	private <T> T invokeApiRaw ( 
 		String urlOrCallName, Function<InputStream, T> outConverter, RequestOptions reqOpts, Map<String, Object> params 
 	)
 	{

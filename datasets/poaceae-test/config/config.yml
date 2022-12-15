@@ -56,3 +56,15 @@ googleAnalyticsIdClient: UA-237399750-1
 #
 #googleAnalyticsIdApi: G-DPWNWT8BSF
 #googleAnalyticsIdClient: G-DPWNWT8BSF
+
+# These are custom options, which aren't explicitly defined by the Knetminer configuration. 
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
+# 
+# WARNING: DO NOT ABUSE this feature! As explained in the link above, this is an hack to help with provisional
+# or uncommon configuration parameters. Using this section SHOULD BE AN EXCEPTION to defining configuration
+# variables explicitly (out of this section), so that they can be validated. 
+#
+customOptions:
+  # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+  # Likely, you don't want it enabled.
+  ui.betaFeedbackBanner: true

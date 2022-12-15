@@ -1,10 +1,12 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static rres.knetminer.api.ApiIT.CLI;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.BeforeClass;
@@ -97,13 +99,13 @@ public class DatasetInfoServiceIT
 	
 	/**
 	 * Testing release-notes.html.
+	 * TODO: to be removed?
 	 */
 	@Test
 	public void testReleaseNotes ()
 	{
 		String notes = CLI.releaseNotesHtml ();
 		assertTrue  ( "Wrong result from /release-notes.html", notes.contains ( "<strong>ENSEMBL PLANTS (Arabidopsis thaliana)</strong>") );
-		
 	}
 	
 	/**
@@ -114,6 +116,19 @@ public class DatasetInfoServiceIT
 	{
 		byte[] img = CLI.backgroundImage ();
 		assertTrue  ( "Empty result from /background-image!", img.length > 0 );
+	}
+	
+	
+	@Test
+	public void testCustomOptions ()
+	{
+		Map<String, Object> customOpts = CLI.customOptions ();
+		assertEquals ( "Wrong value for betaFeedbackBanner", true, customOpts.get ( "ui.betaFeedbackBanner" ) );
 		
+		@SuppressWarnings ( "unchecked" )
+		Map<String, Object> customObj = (Map<String, Object>) customOpts.get ( "fooObject" );
+		assertNotNull ( "fooObject is null!", customObj );
+		assertEquals ( "Wrong value for fooObject.name", "Hello", customObj.get ( "name" ) );
+		assertEquals ( "Wrong value for fooObject.surname", "World", customObj.get ( "surname" ) );
 	}
 }
