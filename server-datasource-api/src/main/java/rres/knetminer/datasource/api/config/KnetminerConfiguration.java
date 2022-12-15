@@ -51,6 +51,9 @@ public class KnetminerConfiguration
 	private String knetSpaceURL;
 	
 	private OptionsMap graphTraverserOptions = new OptionsMapWrapper ();
+
+	private OptionsMap customOptions = new OptionsMapWrapper ();
+	
 	
 	@JsonProperty ( "dataset" )
 	private ServerDatasetInfo datasetInfo;
@@ -246,8 +249,35 @@ public class KnetminerConfiguration
 	{
 		return googleAnalyticsIdClient;
 	}
-
 	
+	/**
+	 * Custom free-key options, which are not explicitly listed in other properties of this configuration class.
+	 *  
+	 * <p>These are intended as quick-to-set options that can be used for tests, new UI components, to inject parameters
+	 * into sub-components and API, for temporary features that might be removed in future.</p>
+	 * 
+	 * <p>A new custom option can simply be set as an additional field in the {@code customOptions} section of a YAML configuration file.
+	 * Since this section is nothing but a JSON object, the values of new fields in it can any valid JSON, eg, strings, numbers, arrays,
+	 * objects.</p>
+	 * 
+	 * <p>The custom options are available from the API, via the call to /dataset-info/custom-options</p>
+	 * 
+	 * <p><b>WARNING</b>: <b>DO NOT ABUSE this feature!</b> It is intended as an hack to help in situations where you don't want the 
+	 * explicit list of configuration parameters to be filled up with too many values that don't concern the core Knetminer functionality.
+	 * <b>Explicit</b> options are strongly preferred for important/stable features, so <b>avoid</b> to put them here, or to keep them here
+	 * <b>as much as possible</b>.</p>  
+	 */
+	public OptionsMap getCustomOptions ()
+	{
+		return customOptions;
+	}
+
+	@JsonProperty
+	private void setCustomOptions ( Map<String, Object> customOptions )
+	{
+		this.customOptions = OptionsMap.from ( customOptions );
+	}
+
 	/**
    * These are injected into System.getProperties() and made available to other Java components around
    * It can be used to inject values inside components that use Spring beans files (neo4j/config.xml 

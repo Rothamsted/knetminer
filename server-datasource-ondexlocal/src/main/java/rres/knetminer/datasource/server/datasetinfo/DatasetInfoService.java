@@ -1,6 +1,7 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -121,4 +122,15 @@ public class DatasetInfoService
 			.getGoogleAnalyticsIdClient ();
 	}
 	
+	/**
+	 * A wrapper of {@link KnetminerConfiguration#getCustomOptions()}.
+	 */
+	@RequestMapping ( path = "/custom-options" )
+	public Map<String, Object> getCustomOptions ()
+	{
+		return OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getCustomOptions ();
+	}
 }
