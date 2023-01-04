@@ -1,8 +1,13 @@
 package rres.knetminer.datasource.server.datasetinfo;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 
+import org.json.XML;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -123,14 +128,24 @@ public class DatasetInfoService
 	}
 	
 	/**
-	 * A wrapper of {@link KnetminerConfiguration#getCustomOptions()}.
+	 * This will return the latest network statistics in JSON format.
 	 */
-	@RequestMapping ( path = "/custom-options" )
-	public Map<String, Object> getCustomOptions ()
+	@RequestMapping ( path = "/latestNetworkStats" ) 
+	public String getLatestNetworkStats() throws IllegalArgumentException
 	{
-		return OndexServiceProvider.getInstance ()
-			.getDataService ()
-			.getConfiguration ()
-			.getCustomOptions ();
+		try 
+		{
+			var dataPath = OndexServiceProvider.getInstance ()
+					.getDataService ()
+					.getConfiguration ()
+					.getDataDirPath ();
+			
+			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
+			return XML.toJSONObject ( new String ( encoded, Charset.defaultCharset () ) ).toString ();
+		} 
+		catch ( IOException ex) {
+			throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex ); 
+		}
 	}
+	
 }

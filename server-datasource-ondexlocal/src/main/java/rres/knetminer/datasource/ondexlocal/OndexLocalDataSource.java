@@ -390,9 +390,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	/**
-	 * TODO: to be moved under {@link DatasetInfoService}.
+	 * Moved under {@link DatasetInfoService}.
 	 */
 	@Override
+	@Deprecated
 	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
 	{
 		try 
