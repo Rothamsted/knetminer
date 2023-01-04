@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import org.json.XML;
 import org.springframework.http.MediaType;
@@ -125,6 +126,18 @@ public class DatasetInfoService
 			.getDataService ()
 			.getConfiguration ()
 			.getGoogleAnalyticsIdClient ();
+	}
+	
+	/**
+	 * A wrapper of {@link KnetminerConfiguration#getCustomOptions()}.
+	 */
+	@RequestMapping ( path = "/custom-options" )
+	public Map<String, Object> getCustomOptions ()
+	{
+		return OndexServiceProvider.getInstance ()
+			.getDataService ()
+			.getConfiguration ()
+			.getCustomOptions ();
 	}
 	
 	/**
