@@ -507,6 +507,7 @@ function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected"),
     currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
     $('#speciename_container').empty();
+    isFeedbackCta();
     $('#chr1').empty();
     $('#tabviewer').hide(); 
     $('#pGSearch_title').hide(); 
@@ -553,6 +554,17 @@ handleDelimintedCta = function(){
         setData: setDemlimiterAttributes,
     }
 }()
+
+// TODO: working on implementing feedback CTA configuration 
+var isFeedbackCta = function(){
+    $.get(api_url + '/dataset-info/custom-options','').done( function(data){
+        console.log(data)
+    }).fail(function(xhr,status,errolog){
+        errorComponent('#pGViewer_title',xhr);
+        console.log(errolog);
+    });
+
+}
 
 
 
