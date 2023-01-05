@@ -1220,7 +1220,7 @@ a.contact-button :hover {
 }
 
 #tabviewer_content {
-    min-height: 650px;
+    height: 650px;
     width: 100%;
     border: 2px solid #2d2c2c;
     background-color: #F4F5F7;
@@ -2018,8 +2018,6 @@ a {
         width: 62%
     }
 
-    
-
 }
 
 @media (min-width: 1440px) {
@@ -2040,6 +2038,10 @@ a {
 @media(min-width:1920px) {
     #species-dropimg {
         right: 10.5pc;
+    }
+
+    #tabviewer_content {
+        height: 750px;
     }
 
     #species_header {
