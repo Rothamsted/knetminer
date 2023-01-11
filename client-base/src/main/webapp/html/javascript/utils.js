@@ -14,6 +14,7 @@ $(document).ready (
 		{		
 			showApiInitResult ();
 			
+			
 			genemap = GENEMAP.GeneMap({apiUrl: api_url})
 				.width(800).height(550); // changed from 750x400
 	
@@ -28,7 +29,8 @@ $(document).ready (
 	    QtlRegionHandlers();
 	    searchHandlers();
 	    bodyHandlers();
-	    doGoogleAnalytics ();		
+	    doGoogleAnalytics ();
+		intialiseFeedbackCtaConfig();		
 		})
 		.catch ( 
 			err => showApiInitResult ( err )

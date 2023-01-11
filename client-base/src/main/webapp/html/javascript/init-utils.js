@@ -22,10 +22,6 @@ function loadOnReady() {
   // Tooltip
   showReferenceGenome();
 
-  $("#feedbackCloseBtn").on('click',function(){
-    $("#feedbackNav").remove();
-    
-  })	
 
 }
 
@@ -416,4 +412,9 @@ function toggleRegionDeleteIcon(regionID) {
       $("#delete" + regionID).hide();
     }
   }
+}
+
+// function removes feedback CTA from dom
+function feedbackCloseBtn(){
+  $("#feedbackNav").remove();
 }
