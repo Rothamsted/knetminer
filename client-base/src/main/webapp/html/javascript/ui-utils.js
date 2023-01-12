@@ -318,7 +318,7 @@ function intialiseFeedbackCtaConfig(){
     if(isFeedbackEnabled){
         $('#navbar').prepend(FeedbackContent);
     }else{
-        console.log('feedback not enabled')
+        console.log('Feedback banner not enabled')
     }
 
     }).fail(function(xhr,status,errolog){
