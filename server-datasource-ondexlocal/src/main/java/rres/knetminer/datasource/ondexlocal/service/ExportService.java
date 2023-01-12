@@ -172,7 +172,7 @@ public class ExportService
 		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
 		.stream ()
 		.collect ( Collectors.groupingBy ( 
-			v -> graph.getConcept ( v.getKey () ).getOfType ().getId (), 
+			_concepts2Genes -> graph.getConcept ( _concepts2Genes.getKey () ).getOfType ().getId (), // CC
 			Collectors.counting ()  
 		));
 
@@ -211,7 +211,7 @@ public class ExportService
 		out.append ( "</ccgeneEviCount>\n" );
 		out.append ( "<connectivity>\n" ); // Relationships per concept
 		
-		// Print connectivity for each CC
+		// Print connectivity, ie, the average number of relations per concept, for each concept class
 		for ( ConceptClass conceptClass : conceptClasses )
 		{
 			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
