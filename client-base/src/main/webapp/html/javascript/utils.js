@@ -29,8 +29,11 @@ $(document).ready (
 	    QtlRegionHandlers();
 	    searchHandlers();
 	    bodyHandlers();
+		intialiseFeedbackCtaConfig();
+		
+		// Do this as last step, so that it doesn't track in 
+		// case of failure		
 	    doGoogleAnalytics ();
-		intialiseFeedbackCtaConfig();		
 		})
 		.catch ( 
 			err => showApiInitResult ( err )

@@ -48,7 +48,8 @@ oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
 customOptions:
   # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
   # Likely, you don't want it enabled.
-  ui.betaFeedbackBanner: true
+  ui:
+    betaFeedbackBannerEnabled: true
   fooObject:
     name: Hello
     surname: World

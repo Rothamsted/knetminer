@@ -123,7 +123,13 @@ public class DatasetInfoServiceIT
 	public void testCustomOptions ()
 	{
 		Map<String, Object> customOpts = CLI.customOptions ();
-		assertEquals ( "Wrong value for betaFeedbackBanner", true, customOpts.get ( "ui.betaFeedbackBanner" ) );
+		assertNotNull ( "customOptions() is null!", customOpts );
+		
+		@SuppressWarnings ( "unchecked" )
+		Map<String, Object> ui = (Map<String, Object>) customOpts.get ( "ui" );
+		assertNotNull ( "customOptions.ui is null!", ui );
+		
+		assertEquals ( "Wrong value for betaFeedbackBannerEnabled", true, ui.get ( "betaFeedbackBannerEnabled" ) );
 		
 		@SuppressWarnings ( "unchecked" )
 		Map<String, Object> customObj = (Map<String, Object>) customOpts.get ( "fooObject" );

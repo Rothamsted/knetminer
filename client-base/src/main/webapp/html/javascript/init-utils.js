@@ -414,7 +414,3 @@ function toggleRegionDeleteIcon(regionID) {
   }
 }
 
-// function removes feedback CTA from dom
-function feedbackCloseBtn(){
-  $("#feedbackNav").remove();
-}

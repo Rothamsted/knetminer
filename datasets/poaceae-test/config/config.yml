@@ -65,6 +65,7 @@ googleAnalyticsIdClient: UA-237399750-1
 # variables explicitly (out of this section), so that they can be validated. 
 #
 customOptions:
-  # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
-  # Likely, you don't want it enabled.
-  ui.betaFeedbackBanner: true
+  ui:
+    # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+    # Likely, you don't want it enabled.
+    betaFeedbackBannerEnabled: true

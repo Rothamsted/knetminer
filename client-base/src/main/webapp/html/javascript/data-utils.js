@@ -554,36 +554,4 @@ handleDelimintedCta = function(){
     }
 }()
 
-// functional prepends Feedback Cta banner to navigation bar if the ui.betafeedback banner value from /dataset-info/custom-options endpoint is true
- function intialiseFeedbackCtaConfig(){
-    $.get(api_url + '/dataset-info/custom-options','').done( function(data){
-        var isFeedbackEnabled = data.ui.betaFeedbackBanner
-
-        var FeedbackContent = `<div id="feedbackNav" class="top-nav">
-        <div class="nav-padding" style="display:flex;align-items:center;margin:0 auto;">
-            <span style="color:#FFFFFF;">You're one of very few using KnetMiner Beta. Providing feedback helps us improve.</span> 
-            <a href="https://knetminer.com/beta-feedback-form" target="_blank" class="feedback-button" title="Submit Feedback">Share your Feedback</a> 
-        </div>
-        <span onClick="feedbackCloseBtn()" class="nav-padding"><i class="fa fa-times" aria-hidden="true"></i></span>
-    </div> `;
-
-    if(isFeedbackEnabled){
-        $('#navbar').prepend(FeedbackContent);
-    }else{
-        console.log('feedback not enabled')
-    }
-
-    }).fail(function(xhr,status,errolog){
-        errorComponent('#pGViewer_title',xhr);
-        console.log(errolog);
-    });
-
-}
-
-
-
-
-
-
-
 

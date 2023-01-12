@@ -169,19 +169,18 @@ function getRadioValue(radio) {
  */
 function showApiInitResult ( error = null )
 {
-	if ( error )
-	{
-		var details = "HTTP code/message: " + error.status + "/" + error.statusText;
-		if ( error.responseText ) details += ". Response: " + error.responseText;
-			
-	  logError ( "Error while doing API initialisation.", details );
-	  
-	  $("#search").hide();
-	  $('#error_page').css('display', 'flex');
-	  return; 
+	if ( !error ) {
+		$("#search").show();
+		return;		
 	}
 	
-  $("#search").show();
+	var details = "HTTP code/message: " + error.status + "/" + error.statusText;
+	if ( error.responseText ) details += ". Response: " + error.responseText;
+		
+  logError ( "Error while doing API initialisation.", details );
+  
+  $("#search").hide();
+  $('#error_page').css('display', 'flex');
 }
 
 
@@ -291,4 +290,44 @@ function rgbToHex(rgb) {
       b = "0" + b;
   
     return "#" + r + g + b;
-  }
+}
+  
+
+// functional prepends Feedback Cta banner to navigation bar if the ui.betafeedback banner value from /dataset-info/custom-options endpoint is true
+function intialiseFeedbackCtaConfig(){
+	
+		// TODO: /dataset-info/custom-options in general, might return an object with several elements, which
+		// might cover different custom options. Hence, it would be better that at some point, we load this
+		// into a global Js variable (ie, customOptions) and that we do it in a function like initCustomOptions(),
+		// to be invoked in utils.js:$(document).ready(), in the setupApiUrl().then()
+		
+    $.get(api_url + '/dataset-info/custom-options','').done( function(data){
+				// By default, this isn't defined at all, so we use the optional chaining
+				// (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+				//
+        var isFeedbackEnabled = data.ui?.betaFeedbackBannerEnabled;
+
+        var FeedbackContent = `<div id="feedbackNav" class="top-nav">
+        <div class="nav-padding" style="display:flex;align-items:center;margin:0 auto;">
+            <span style="color:#FFFFFF;">You're one of very few using KnetMiner Beta. Providing feedback helps us improve.</span> 
+            <a href="https://knetminer.com/beta-feedback-form" target="_blank" class="feedback-button" title="Submit Feedback">Share your Feedback</a> 
+        </div>
+        <span onClick="feedbackCloseBtn()" class="nav-padding"><i class="fa fa-times" aria-hidden="true"></i></span>
+    </div> `;
+
+    if(isFeedbackEnabled){
+        $('#navbar').prepend(FeedbackContent);
+    }else{
+        console.log('feedback not enabled')
+    }
+
+    }).fail(function(xhr,status,errolog){
+        errorComponent('#pGViewer_title',xhr);
+        console.log(errolog);
+    });
+}
+
+// function removes feedback CTA from dom
+function feedbackCloseBtn(){
+  $("#feedbackNav").remove();
+}
