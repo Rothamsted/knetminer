@@ -7,10 +7,11 @@ $(document).ready(function () {
     setupApiUrls('/html/genepage.jsp')
         .then(function () {
 
+            showApiInitResult ();
+
             var urlParams = (new URL(window.location.href)).searchParams;
 
             var keywords = urlParams.get("keyword")
-            keywords = keywords.replace("\"", "###");
 
             var list = urlParams.get('list').split(',');
             list = cleanGeneList ( list );
@@ -26,7 +27,6 @@ $(document).ready(function () {
             } else {
                 $('#keyword-section').hide();
             }
-            getSpeciesInformation();
             generateCyJSNetwork(api_url + '/network', { keyword: keywords, list: list, exportPlainJSON: false }, true);
             loginUtilsInit();
             knetmaps = KNETMAPS.KnetMaps();
@@ -37,11 +37,3 @@ $(document).ready(function () {
 
 })
 
-// function calls {api-url + /dataset-info} to get instance id
-function getSpeciesInformation() {
-    $.get(api_url + '/dataset-info', '').done(function (data) {
-        console.log(data);
-        var speciesInfo = data.id
-        $('#search-taxid').html(speciesInfo);
-    })
-}

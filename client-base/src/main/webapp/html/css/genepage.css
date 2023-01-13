@@ -13,16 +13,6 @@
 
 #network_description{
     padding: 1rem;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap:wrap;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-    justify-content: space-between;
     border-radius: 14px;
     margin: 0 auto;
     background: #F4F5F7;
@@ -105,14 +95,17 @@
     
 }
 
-#release_icon{
-    display:none;
+
+.navbarselect-container{
+    display: none;
 }
 
 #species_header{
-    display:none;
+    display: flex;
 }
+
 
 #header{
     margin-bottom: 4.5rem;
 }
+

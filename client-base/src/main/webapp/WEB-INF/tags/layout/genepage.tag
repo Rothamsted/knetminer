@@ -133,17 +133,13 @@
 
     <div id="network_content">
       <div id="network_description">
-              <div style="width:25%">
-                <h4 class="search-key">Selected Species:</h4>
-                <span id="search-taxid"></span>
-              </div>
-              <div style="width:70%">
+              <div>
                 <h4 class="search-key">Selected gene(s):</h4>
-                <span style="display:flex; flex-wrap-wrap"  id="search-gene"></span>
+                <span style="display:flex; flex-wrap:wrap; margin-bottom:8px;"  id="search-gene"></span>
               </div>
               <div style="margin-top:1rem;" id="keyword-section">
                 <h4 class="search-key">Keywords:</h4>
-                <span style="display:flex; flex-wrap:wrap;" id="search-keyword"></span>
+                <div style="display:flex; flex-wrap:wrap;" id="search-keyword"></div>
               </div>
       </div>
     </div>
