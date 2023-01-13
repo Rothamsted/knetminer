@@ -39,8 +39,8 @@
         	 
         	TODO: We're taking jquery from this distro, maybe it's not what we want.
         -->
-        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/jquery-bstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/genomaps.css"/>
+        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/jquery-bstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="html/lib/genomaps/css/genemap.min.css"/>
         
         <!-- KnetMaps.js CSS -->
         <link rel="stylesheet" type="text/css" href="html/lib/knetmaps/css/knetmaps.css"/>
@@ -66,8 +66,8 @@
         -->
         <script type="text/javascript" src="html/lib/jquery-ui/jquery-ui.min.js"></script>
         
-        <script type="text/javascript" src="html/lib/genomaps/js/genomaps-libs.min.js"></script>
-        <script type="text/javascript" src="html/lib/genomaps/js/genomaps.min.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genemap-lib.min.js"></script>
+        <script type="text/javascript" src="html/lib/genomaps/js/genemap.min.js"></script>
 
         <!--JBox (managed by update-js.sh) -->
       	<script type="text/javascript" src="html/lib/jbox/jBox.all.min.js"></script>
