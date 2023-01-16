@@ -2345,3 +2345,15 @@ a {
 
 }
 
+
+.evidence-container{
+    display: flex;
+    align-items: center;
+    background-color: #F4F5F7;
+    margin: .5rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    width: fit-content;
+    height: fit-content;
+}
+
