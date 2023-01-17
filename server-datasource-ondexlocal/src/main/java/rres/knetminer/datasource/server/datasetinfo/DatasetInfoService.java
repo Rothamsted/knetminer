@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import org.json.XML;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -154,7 +153,7 @@ public class DatasetInfoService
 					.getDataDirPath ();
 			
 			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
-			return XML.toJSONObject ( new String ( encoded, Charset.defaultCharset () ) ).toString ();
+			return new String ( encoded, Charset.defaultCharset () );
 		} 
 		catch ( IOException ex) {
 			throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex ); 

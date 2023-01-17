@@ -37,6 +37,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,7 +89,8 @@ public class ExportService
 	
 	private ExportService () {}
 	
-  /*
+  @SuppressWarnings("unchecked")
+/*
    * Generate stats about the created Ondex graph and its mappings:
    * mapConcept2Genes & mapGene2Concepts. Author Singhatt
    * Updating to also give Concept2Gene per concept
@@ -135,23 +137,23 @@ public class ExportService
 		int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
 
 		// Write the Stats to a .tab file.
-		StringBuffer out = new StringBuffer ();
-		// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-		out.append ( "<stats>\n" );
-		out.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
-		out.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
-		out.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
-		out.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
-		out.append ( "<evidenceNetworkSizes>\n" );
-		out.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
-		out.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
-		out.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
-		out.append ( "</evidenceNetworkSizes>\n" );
-
+		
+		JSONObject graphSummaries = new JSONObject ();
+		graphSummaries.put ( "totalGenes", totalGenes ); 
+		graphSummaries.put ( "totalConcepts", totalConcepts ); 
+		graphSummaries.put ( "totalRelations", totalRelations ); 
+		
+		JSONObject semanticMotifStats = new JSONObject ();
+		semanticMotifStats.put ( "minConceptsPerGene", minValues [ 0 ] ); 
+		semanticMotifStats.put ( "maxConceptsPerGene", maxValues [ 0 ] ); 
+		semanticMotifStats.put ( "avgConceptsPerGene", avgValues ); 
+		
 		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
 		
+		JSONObject graphStats = new JSONObject ();
+		
+		JSONObject conceptClassTotals = new JSONObject ();
 		// Display table breakdown of all conceptClasses in network
-		out.append ( "<conceptClasses>\n" );
 		for ( ConceptClass conClass : conceptClasses )
 		{
 			String conID = conClass.getId ();
@@ -163,11 +165,11 @@ public class ExportService
 			
 			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-			
-			out.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
+			conceptClassTotals.put ( conID, conCount );
 		}
-		out.append ( "</conceptClasses>\n" );
-		out.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
+		graphStats.put ( "conceptClassTotals", conceptClassTotals );
+		
+		JSONObject conceptsPerGene = new JSONObject ();
 
 		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
 		.stream ()
@@ -203,13 +205,12 @@ public class ExportService
 
 				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				out.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
-					.append ( "</ccEvi>\n" );
+				conceptsPerGene.put ( conID, Math.toIntExact ( pair.getValue () ) );
 			}
 		});
-
-		out.append ( "</ccgeneEviCount>\n" );
-		out.append ( "<connectivity>\n" ); // Relationships per concept
+		graphStats.put ( "conceptsPerGene", conceptsPerGene );
+			
+		JSONObject avgRelationsPerConcept = new JSONObject ();
 		
 		// Print connectivity, ie, the average number of relations per concept, for each concept class
 		for ( ConceptClass conceptClass : conceptClasses )
@@ -226,22 +227,25 @@ public class ExportService
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
 
 			float connectivity = ( (float) relationCount / (float) conCount );
-			out.append ( "<hubiness>" ).append ( conID ).append ( "->" )
-				.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
+			avgRelationsPerConcept.put ( conID,  String.format ( "%2.02f", connectivity ) );
 		}
-		out.append ( "</connectivity>\n" );
-		out.append ( "</stats>" );
+		graphStats.put ( "avgRelationsPerConcept", avgRelationsPerConcept );
+		
+		JSONObject outJson = new JSONObject ();
+		outJson.put ( "graphSummaries", graphSummaries );
+		outJson.put ( "graphStats", graphStats );
+		outJson.put ( "semanticMotifStats", semanticMotifStats );
 		
 		try
 		{
 			// The latest stats
 			String statsPath = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
-			IOUtils.writeFile ( statsPath, out.toString () );
+			IOUtils.writeFile ( statsPath, outJson.toString() );
 			
 			// Also, create a copy to keep an historic track of it.
 			long timestamp = System.currentTimeMillis ();
 			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
-			IOUtils.writeFile ( newStatsPath, out.toString () );
+			IOUtils.writeFile ( newStatsPath, outJson.toString() );
 
 			// TODO: remove?
 			// generateGeneEvidenceStats(exportPathDirUrl);
