@@ -3,12 +3,13 @@
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
-function createGenesTable(text, keyword, rows) {
+function createGenesTable(text, keyword, rows){
 	var table = "";
 	var candidateGenes = text.split("\n");
 	var results = candidateGenes.length - 2;
 
-	if (candidateGenes.length > 2) {
+	if (candidateGenes.length > 2)
+	{
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
 
@@ -35,7 +36,7 @@ function createGenesTable(text, keyword, rows) {
 		table += '<th width="60">Chr</th>';
 		table += '<th width="70">Nt start</th>';
 
-		table += '<th width="220">Evidence</th>';
+		table += '<th width="330">Evidence</th>';
 		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
@@ -43,7 +44,8 @@ function createGenesTable(text, keyword, rows) {
 		table += '<tbody class="scrollTable">';
 
 		// Main loop over the resulting genes.
-		for (var row = 1; row <= results; row++) {
+		for (var row = 1; row <= results; row++) 
+		{
 			var values = candidateGenes[row].split("\t");
 
 			if (row > rows /*&& values[7]=="no"*/) continue;
@@ -139,7 +141,7 @@ function createGenesTable(text, keyword, rows) {
 
 
 			// For each evidence show the images - start
-			var evidenceTd = '<td>';
+			var evidenceTd = '<td><div class="evidence-column-container">';
 			var evidence = values[9];
 			if (evidence.length > 0) {
 				var evidences = evidence.split("||");
@@ -167,7 +169,7 @@ function createGenesTable(text, keyword, rows) {
 					evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
 				} // for iev
 			} // if evidence.length
-			evidenceTd += '</td>';
+			evidenceTd += '<div></td>';
 			// Foreach evidence show the images - end
 
 			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAcc + '"></td>';

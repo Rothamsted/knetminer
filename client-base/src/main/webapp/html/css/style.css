@@ -579,6 +579,10 @@ div.scrollTable td {
     border: 1px solid #C2C2C2;
 }
 
+div.scrollTable th{
+    text-align: center;
+}
+
 div.scrollTable tbody {
     overflow: auto;
     max-height: 280px;
@@ -635,7 +639,9 @@ table.tablesorter tbody td {
     color: #3D3D3D;
     padding: 4px;
     background-color: #FFF;
-    vertical-align: top;
+    vertical-align:middle;
+    text-align: center;
+
 }
 
 table.tablesorter tbody tr.odd td {
@@ -677,10 +683,7 @@ table.suggestorTable .qtl_item {
     margin-left: 50px;
 }
 
-table.tablesorter tbody td {
-    color: #3D3D3D;
-    background-color: #FFF;
-}
+
 
 /* tooltip */
 span.hint {
@@ -726,21 +729,9 @@ span.hint-big:hover {
 
 /* Evidence pictures */
 
-.evidence_item {
-    margin: 0px 3px 3px 0px;
-    float: left;
-    position: relative;
-    height: 18px;
-    padding-top: 4px;
-    width: 22px;
-    text-align: center;
-    font-size: 14px;
-}
 
 .evidence_item_Gene {
-    background: url(../image/Gene.png) no-repeat;
-    padding-top: 6px;
-    height: 16px;
+    background: url(../image/Gene.png) no-repeat ;
 }
 
 .evidence_item_Allele {
@@ -850,6 +841,18 @@ span.hint-big:hover {
 .evidence_item_Transport {
     background: url(../image/Transport.png) no-repeat;
 }
+
+
+.evidence_item {
+    margin: 0px 3px 3px 0px;
+    float: left;
+    position: relative;
+    height: 16px;
+    width: 16px;
+    background-position: center center;
+    background-size: contain;
+}
+
 
 .evidence-icons {
     background-position: center center;
@@ -1208,7 +1211,8 @@ a.contact-button :hover {
 }
 
 #tablesorterEvidence div {
-    margin-left: 19px;
+    /* margin-left: 19px; */
+    text-align: center;
 }
 
 #tablesorterEvidence div.evidence_item {
@@ -2068,7 +2072,8 @@ a {
     }
 
     .navbar-items {
-        padding: 0.5rem 10rem
+        padding: 0.5rem 10rem;
+        width:100%
     }
 
     .logo-items {
@@ -2144,7 +2149,7 @@ a {
     position: relative;
     padding-bottom: 80px;
     margin: auto;
-    width: 90%;
+    width: 95%;
     margin-top: 1em;
 }
 
@@ -2350,10 +2355,17 @@ a {
     display: flex;
     align-items: center;
     background-color: #F4F5F7;
-    margin: .5rem;
-    padding: 0.2rem 0.6rem;
+    margin: 2px;
+    padding: 0.1rem 0.2rem;
     border-radius: 8px;
     width: fit-content;
     height: fit-content;
+}
+
+.evidence-column-container {
+    display: flex;
+    flex-wrap:wrap; 
+    height: 100%;
+    width:100%;
 }
 
