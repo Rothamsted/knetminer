@@ -103,7 +103,10 @@ async function fetchStats(){
 
       var content = `<div style="width:480px" id="release-content">
       <p>
-      ${datasetTitle} is ${datasetDescription}
+      <h2>${datasetTitle}</h2>
+      </p>
+      <p>
+      ${datasetDescription}
       </p>
       <p id="network_stats" > 
       <span>This knowledge network contains:</span>
