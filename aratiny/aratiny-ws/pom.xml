@@ -20,17 +20,20 @@
 	</properties>
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-base</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
+		
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-ondex</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
 		<!--
 		  TODO: to be removed, no longer needed. 
 			This is used to setup CORS in the response. See main POM
@@ -44,12 +47,19 @@
 			<artifactId>json</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
+    <dependency>
+	    <groupId>com.jayway.jsonpath</groupId>
+	    <artifactId>json-path</artifactId>
+	    <scope>test</scope>
+		</dependency>
+		
 		<!-- Logging -->
 		
     <!-- 

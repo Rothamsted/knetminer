@@ -8,9 +8,14 @@ import static rres.knetminer.api.ApiIT.CLI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import rres.knetminer.api.ApiIT;
 import rres.knetminer.datasource.api.config.DatasetInfo;
@@ -136,5 +141,32 @@ public class DatasetInfoServiceIT
 		assertNotNull ( "fooObject is null!", customObj );
 		assertEquals ( "Wrong value for fooObject.name", "Hello", customObj.get ( "name" ) );
 		assertEquals ( "Wrong value for fooObject.surname", "World", customObj.get ( "surname" ) );
+	}
+	
+	
+	@Test
+	public void testNetworkStats ()
+	{
+		Map<String, Object> netStats = CLI.networkStats ();
+		assertNotNull ( "networkStats() is null!", netStats );
+		
+		System.out.println ( "STATS:\n" + netStats );
+
+		DocumentContext jsCtx = JsonPath.parse ( netStats );
+		Consumer<String> tester = path -> {
+			Number value = jsCtx.read ( "$." + path  );
+			assertNotNull ( "'" + path + " not found!", value );
+			assertTrue ( 
+				String.format ( "Invalid value for '%s' (%s)", path, value ), 
+				value.doubleValue () > 0
+			);
+		};
+		
+		tester.accept ( "graphSummaries.totalGenes" );
+		tester.accept ( "semanticMotifStats.maxConceptsPerGene" );
+		tester.accept ( "semanticMotifStats.totalEvidenceConcepts" );
+		for ( var statType: new String[] { "avgRelationsPerConcept", "conceptClassTotals", "conceptsPerGene" } )
+			for ( var cc: new String[] { "Gene", "BioProc", "Publication" } )
+				tester.accept ( "graphStats." + statType + '.' + cc );
 	}
 }

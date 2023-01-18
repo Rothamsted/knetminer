@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rres.knetminer.datasource.api.config.DatasetInfo;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
+import rres.knetminer.datasource.ondexlocal.service.ExportService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
@@ -131,7 +132,7 @@ public class DatasetInfoService
 	 * A wrapper of {@link KnetminerConfiguration#getCustomOptions()}.
 	 */
 	@RequestMapping ( path = "/custom-options" )
-	public Map<String, Object> getCustomOptions ()
+	public Map<String, Object> customOptions ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
@@ -142,8 +143,8 @@ public class DatasetInfoService
 	/**
 	 * This will return the latest network statistics in JSON format.
 	 */
-	@RequestMapping ( path = "/latestNetworkStats" ) 
-	public String getLatestNetworkStats() throws IllegalArgumentException
+	@RequestMapping ( path = "/network-stats" ) 
+	public String networkStats () throws IllegalArgumentException
 	{
 		try 
 		{
@@ -152,7 +153,7 @@ public class DatasetInfoService
 					.getConfiguration ()
 					.getDataDirPath ();
 			
-			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
+			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, ExportService.GRAPH_STATS_FILE_NAME ) );
 			return new String ( encoded, Charset.defaultCharset () );
 		} 
 		catch ( IOException ex) {

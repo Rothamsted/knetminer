@@ -239,12 +239,21 @@ public class KnetminerApiClient
 	}
 	
 	/**
-	 * Counterpart of {@link DatasetInfoService#getCustomOptions()}.
+	 * Counterpart of {@link DatasetInfoService#customOptions()}.
 	 */
 	public Map<String, Object> customOptions ()
 	{
 		return invokeApiJs ( "dataset-info/custom-options", null ).toMap ();
 	}
+	
+	/**
+	 * Counterpart of {@link DatasetInfoService#networkStats()}.
+	 */
+	public Map<String, Object> networkStats ()
+	{
+		return invokeApiJs ( "dataset-info/network-stats", null ).toMap ();
+	}
+	
 	
 	
 	/**
