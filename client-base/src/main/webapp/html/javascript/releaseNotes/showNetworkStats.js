@@ -101,7 +101,7 @@ async function fetchStats(){
      
       cc_table += "</table></table></table>";
 
-      var content = `<div style="width:450px" id="release-content">
+      var content = `<div style="width:480px" id="release-content">
       <p>
       ${datasetTitle} is ${datasetDescription}
       </p>
