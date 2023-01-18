@@ -37,6 +37,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,7 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
+import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
@@ -73,6 +75,12 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 @Component
 public class ExportService
 {
+	/**
+	 * Where {@link #exportGraphStats()} saves its output (in {@link KnetminerConfiguration#getDataDirPath()}).
+	 */
+	public static final String GRAPH_STATS_FILE_NAME = "knowledge-network-stats.json"; 
+	
+	
 	@Autowired
 	private DataService dataService;
 
@@ -88,31 +96,31 @@ public class ExportService
 	
 	private ExportService () {}
 	
-  /*
-   * Generate stats about the created Ondex graph and its mappings:
-   * mapConcept2Genes & mapGene2Concepts. Author Singhatt
-   * Updating to also give Concept2Gene per concept
+  /**
+   * Computes and saves (into {@link #GRAPH_STATS_FILE_NAME}) various statistics about the current 
+   * dataset (the OXL) and the semantic motifs computed from it. 
    *
-   * TODO - KHP: Change this to return JSON, break it down into smaller components 
-   * and add API endpoint for this. To be aligned with KnetSpace resource pages.
    */
+	@SuppressWarnings ( "unchecked" )
 	void exportGraphStats ()
 	{
 		ONDEXGraph graph = this.dataService.getGraph ();
-		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
+		var dataPath = dataService.getConfiguration ().getDataDirPath ();
+		var exportFilePath = dataPath + '/' + GRAPH_STATS_FILE_NAME;
 		
-		log.info ( "Saving graph stats to '{}'", exportDirPath );
+		log.info ( "Saving graph stats to '{}'", exportFilePath );
 
 		int totalGenes = dataService.getGenomeGenesCount ();
 		int totalConcepts = graph.getConcepts ().size ();
 		int totalRelations = graph.getRelations ().size ();
 		
 		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-		int geneEvidenceConcepts = concepts2Genes.size ();
+		int totalEvidenceConcepts = concepts2Genes.size ();
 
-		int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
-			maxValues = new int [] { 0 }, 
-			allValuesCount = new int [] { 0 }; 
+		int [] minConceptsPerGene = new int[] { totalEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
+			maxConceptsPerGene = new int [] { 0 },
+			// Don't confuse this with total no. of concepts (same concepts can be linked multiple times)
+			totalLinkedConcepts = new int [] { 0 }; 
 
 		// Min/Max/avg per each gene-related concept group
 		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
@@ -124,34 +132,33 @@ public class ExportService
 		.map ( Collection::size )
 		.forEach ( thisSetSize ->
 		{
-			if ( thisSetSize < minValues [ 0 ] ) minValues [ 0 ] = thisSetSize;
-			if ( thisSetSize > maxValues [ 0 ] ) maxValues [ 0 ] = thisSetSize;
-			allValuesCount [ 0 ] += thisSetSize;					
+			if ( thisSetSize < minConceptsPerGene [ 0 ] ) minConceptsPerGene [ 0 ] = thisSetSize;
+			if ( thisSetSize > maxConceptsPerGene [ 0 ] ) maxConceptsPerGene [ 0 ] = thisSetSize;
+			totalLinkedConcepts [ 0 ] += thisSetSize;					
 		});
 
-		// Total no. of keys in the HashMap.
 		int genesCount = genes2Concepts.keySet ().size ();
-		// Calculate average size of gene-evidence networks in the HashMap.
-		int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
-
-		// Write the Stats to a .tab file.
-		StringBuffer out = new StringBuffer ();
-		// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-		out.append ( "<stats>\n" );
-		out.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
-		out.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
-		out.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
-		out.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
-		out.append ( "<evidenceNetworkSizes>\n" );
-		out.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
-		out.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
-		out.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
-		out.append ( "</evidenceNetworkSizes>\n" );
-
+		int avgConceptsPerGene = genesCount > 0 ? totalLinkedConcepts [ 0 ] / genesCount : 0;
+		
+		JSONObject graphSummaries = new JSONObject ();
+		graphSummaries.put ( "totalGenes", totalGenes ); 
+		graphSummaries.put ( "totalConcepts", totalConcepts ); 
+		graphSummaries.put ( "totalRelations", totalRelations ); 
+		
+		JSONObject semanticMotifStats = new JSONObject ();
+		semanticMotifStats.put ( "minConceptsPerGene", minConceptsPerGene [ 0 ] ); 
+		semanticMotifStats.put ( "maxConceptsPerGene", maxConceptsPerGene [ 0 ] ); 
+		semanticMotifStats.put ( "avgConceptsPerGene", avgConceptsPerGene );
+		semanticMotifStats.put ( "totalEvidenceConcepts", totalEvidenceConcepts );
+		
+		// TODO: we're listing them in CC order, but very likely, this will be lost when turned
+		// to JSON dictionary. Possibly, just use an HashSet.
 		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
 		
+		JSONObject graphStats = new JSONObject ();
+		
+		JSONObject conceptClassTotals = new JSONObject ();
 		// Display table breakdown of all conceptClasses in network
-		out.append ( "<conceptClasses>\n" );
 		for ( ConceptClass conClass : conceptClasses )
 		{
 			String conID = conClass.getId ();
@@ -163,12 +170,12 @@ public class ExportService
 			
 			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-			
-			out.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
+			conceptClassTotals.put ( conID, conCount );
 		}
-		out.append ( "</conceptClasses>\n" );
-		out.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
-
+		graphStats.put ( "conceptClassTotals", conceptClassTotals );
+		
+		// Evidence concepts per each gene
+		//
 		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
 		.stream ()
 		.collect ( Collectors.groupingBy ( 
@@ -188,7 +195,9 @@ public class ExportService
 			concept2GenesCounts.put ( conceptID, Long.valueOf ( 0 ) );
 		});
 		
-		// Prints concept -> gene counts
+		// Output concept -> gene counts
+		JSONObject conceptsPerGene = new JSONObject ();
+
 		concept2GenesCounts.entrySet ()
 		.stream ()
 		.sorted ( Map.Entry.comparingByKey () )
@@ -203,13 +212,17 @@ public class ExportService
 
 				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				out.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
-					.append ( "</ccEvi>\n" );
+				
+				conceptsPerGene.put ( conID, Math.toIntExact ( pair.getValue () ) );
 			}
 		});
-
-		out.append ( "</ccgeneEviCount>\n" );
-		out.append ( "<connectivity>\n" ); // Relationships per concept
+		graphStats.put ( "conceptsPerGene", conceptsPerGene );
+			
+		
+		// Relations per concept
+		//
+		
+		JSONObject avgRelationsPerConcept = new JSONObject ();
 		
 		// Print connectivity, ie, the average number of relations per concept, for each concept class
 		for ( ConceptClass conceptClass : conceptClasses )
@@ -219,29 +232,35 @@ public class ExportService
 			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
 			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
 			
-			int relationCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
-			int conCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
+			int relationsCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
+			int conceptsCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
 			
 			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
 			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
 
-			float connectivity = ( (float) relationCount / (float) conCount );
-			out.append ( "<hubiness>" ).append ( conID ).append ( "->" )
-				.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
+			double connectivity = 1d * relationsCount / conceptsCount;
+			avgRelationsPerConcept.put ( conID,  connectivity );
 		}
-		out.append ( "</connectivity>\n" );
-		out.append ( "</stats>" );
+		graphStats.put ( "avgRelationsPerConcept", avgRelationsPerConcept );
+		
+		// Eventually...
+		//
+		JSONObject outJson = new JSONObject ();
+		outJson.put ( "graphSummaries", graphSummaries );
+		outJson.put ( "graphStats", graphStats );
+		outJson.put ( "semanticMotifStats", semanticMotifStats );
 		
 		try
 		{
-			// The latest stats
-			String statsPath = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
-			IOUtils.writeFile ( statsPath, out.toString () );
+			IOUtils.writeFile ( exportFilePath, outJson.toString() );
 			
+			// TODO: remove, it's only invoked upon data initialisation, doesn't make much sense to
+			// deal with this here, if you need archiving, use the command line tool
+			//
 			// Also, create a copy to keep an historic track of it.
-			long timestamp = System.currentTimeMillis ();
-			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
-			IOUtils.writeFile ( newStatsPath, out.toString () );
+//			long timestamp = System.currentTimeMillis ();
+//			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
+//			IOUtils.writeFile ( newStatsPath, outJson.toString() );
 
 			// TODO: remove?
 			// generateGeneEvidenceStats(exportPathDirUrl);
