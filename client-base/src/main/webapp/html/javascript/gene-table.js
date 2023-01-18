@@ -191,7 +191,7 @@ function createGenesTable(text, keyword, rows){
 	table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All Genes (' + results + ')</option> </select></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
-	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>';
+	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
 	table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
 
 
@@ -298,7 +298,8 @@ function createGenesTable(text, keyword, rows){
 
 	// bind click event on all candidateGenes checkboxes in Gene View table.
 	$('input:checkbox[name="candidates"]').click(function (e) {
-		updateSelectedGenesCount("candidates", "#candidate-count"); // update selected genes count
+		var viewName = "Gene";
+		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
 	});
 
 }
@@ -430,10 +431,11 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 
 
 // update selected genes count whenever a Gene View or evidence table entry is clicked or Known/ Novel targets options in gene view are selected.
-function updateSelectedGenesCount(inputName, countContainer) {
+// Arne 18/01/23 added viewName which requests a name (probably either Term or Gene).
+function updateSelectedGenesCount(inputName, countContainer, viewName) {
 	var count = returnCheckInputCount(inputName);
-	var countWord = count > 1 ? 'Genes' : 'Gene'
-	$('' + countContainer + ' span').text(count + ' ' + countWord + ' selected'); // update
+	var viewName = count > 1 ? viewName + 's' : viewName // >1 testing
+	$('' + countContainer + ' span').text(count + ' ' + viewName + ' selected'); // update
 	$(countContainer).next().toggleClass('non-active', count < 1);
 	changeButtonOffSvg('NetworkCanvas_button')
 }
@@ -443,7 +445,7 @@ function returnCheckInputCount(inputname) { return $('input:checkbox[name=' + in
 
 
 
-// function downloads cytoscape compactible json files
+// function downloads cytoscape compatible json files
 function downloadNetwork() {
 
 	var cy = $('#cy').cytoscape('get'); // now we have a global reference to `cy`

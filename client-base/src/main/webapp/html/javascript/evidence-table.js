@@ -115,7 +115,7 @@
          table = table + '</tbody>';
          table = table + '</table>';
          table = table + '</div>';
-         table = table + '<div class="gene-footer-container" style="justify-content:flex-end"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No gene(s) selected</span></div>'; 
+         table = table + '<div class="gene-footer-container" style="justify-content:flex-end"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>'; 
          table = table + '<button id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
         //  table = table + '</insert><div id="loadingNetwork_Div"></div>';
 
@@ -242,10 +242,11 @@
              $("#revertEvidenceView").removeClass('hover').addClass('unhover');
          });
      }
-     // bind click event on all candidateGenes checkboxes in evidence view table.
-	$('input:checkbox[name="evidences"]').click(function (e) {
-		updateSelectedGenesCount("evidences","#evidence-count"); // update selected genes count
-	});
+    // bind click event on all candidateGenes checkboxes in evidence view table.
+    $('input:checkbox[name="evidences"]').click(function (e) {
+        var viewName = "Term";
+        updateSelectedGenesCount("evidences","#evidence-count", viewName); // update selected genes count
+    });
 
  }
  
