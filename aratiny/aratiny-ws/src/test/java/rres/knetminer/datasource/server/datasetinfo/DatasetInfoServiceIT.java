@@ -150,8 +150,6 @@ public class DatasetInfoServiceIT
 		Map<String, Object> netStats = CLI.networkStats ();
 		assertNotNull ( "networkStats() is null!", netStats );
 		
-		System.out.println ( "STATS:\n" + netStats );
-
 		DocumentContext jsCtx = JsonPath.parse ( netStats );
 		Consumer<String> tester = path -> {
 			Number value = jsCtx.read ( "$." + path  );
