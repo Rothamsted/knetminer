@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
