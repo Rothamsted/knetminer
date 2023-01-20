@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.ondex.core.ConceptClass;
@@ -21,6 +22,7 @@ import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 
 /**
  * The data sub-service for {@link OndexServiceProvider}.
@@ -45,11 +47,9 @@ public class DataService
 	
   private ONDEXGraph graph;
   
-  /**
-   * TODO: was numGenesInGenome 
-   */
-  private int genomeGenesCount = -1;
-
+  @Autowired
+  private KnetMinerInitializer initializer;
+  
     
 	private final Logger log = LogManager.getLogger ( getClass() );
 
@@ -79,45 +79,17 @@ public class DataService
   void initGraph ()
 	{
   	String oxlPath = this.configuration.getOxlFilePath ();
-  			
 		log.info ( "Loading graph from " + oxlPath );
 
 		this.graph = new MemoryONDEXGraph ( "OndexKB" );
-
-		loadGraph ( oxlPath );
+		Parser.loadOXL ( oxlPath, graph );
     UIUtils.removeOldGraphAttributes ( graph );
-		
-		// determine number of genes in given species (taxid)
-		ConceptClass ccGene = ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
-		Set<ONDEXConcept> seed = graph.getConceptsOfConceptClass ( ccGene );
 
-		var dsetInfo = this.configuration.getServerDatasetInfo ();
-		
-		this.genomeGenesCount = (int) seed.parallelStream ()
-		.map ( gene -> new GeneHelper ( graph, gene ) )
-		.map ( GeneHelper::getTaxID )
-		.filter ( dsetInfo::containsTaxId )
-		.count ();
-
-		log.info ( "OXL Graph loaded from '" + oxlPath + "'" );
+    this.initializer.setGraph ( graph );
+    
+		log.info ( "OXL Graph initialisation done" );
 	}	
 	
-  /**
-   *  Just a small helper to load an OXL and do proper error reporting
-   */
-  private void loadGraph ( String oxlFilePath )
-  {
-    try 
-    {
-      log.info ( "Loading OXL from {}", oxlFilePath );
-      Parser.loadOXL ( oxlFilePath, graph );
-      log.info ( "OXL Loaded" );
-    } 
-    catch (Exception e) {
-      throwEx ( RuntimeException.class, e, "Error while loading Knetminer graph: $cause" ); 
-    }
-  }  
-
 	
   /**
    * The Knetminer configuration, as loaded from {@link #loadConfiguration(String)}.
@@ -164,14 +136,19 @@ public class DataService
 		.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
 		.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
 		.count ();
-	}    
-  
-  
-  /**
-   * Was numGenesInGenome
-   */
-	int getGenomeGenesCount ()
-	{
-		return genomeGenesCount;
 	}
-}
+
+	/**
+	 * Wrapper of {@link KnetMinerInitializer#getGenomeGenesCount()}.
+	 */
+	public int getGenomeGenesCount ()
+	{
+		return initializer.getGenomeGenesCount ();
+	}
+
+	KnetMinerInitializer getInitializer ()
+	{
+		return initializer;
+	}
+	
+ }

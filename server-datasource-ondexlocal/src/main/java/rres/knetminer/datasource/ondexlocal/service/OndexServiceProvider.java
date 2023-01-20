@@ -173,11 +173,7 @@ public class OndexServiceProvider
 			);
 			
 			dataService.initGraph ();
-			
-			this.searchService.indexOndexGraph ();
-			this.semanticMotifDataService.initSemanticMotifData ();
-			
-			this.exportService.exportGraphStats ();
+			dataService.getInitializer ().initKnetMinerData ();
 
 			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
