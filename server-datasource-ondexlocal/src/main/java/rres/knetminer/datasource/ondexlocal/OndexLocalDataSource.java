@@ -43,6 +43,7 @@ import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.ondexlocal.service.ExportService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
@@ -390,7 +391,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	/**
-	 * Moved under {@link DatasetInfoService}.
+	 * {@link ExportService#exportGraphStatsOld()}
+	 * Moved to {@link DatasetInfoService} and with a new JSON-based format. @see ExportSe
 	 */
 	@Override
 	@Deprecated

@@ -177,6 +177,8 @@ public class OndexServiceProvider
 			this.searchService.indexOndexGraph ();
 			this.semanticMotifDataService.initSemanticMotifData ();
 			
+			// TODO: remove, see the comments on the method.
+			this.exportService.exportGraphStatsOld ();
 			this.exportService.exportGraphStats ();
 
 			log.info ( "Ondex/Knetminer data initialization ended" );
