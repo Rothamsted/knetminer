@@ -49,13 +49,15 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
+import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.logging.ONDEXLogger;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * 
@@ -73,60 +75,20 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
  */
 @Component
 public class SearchService
-{
-	/**
-	 * Used to set the max no. of publications that a search should return by default.
-	 * 
-	 * TODO: remove, we now use {@link KnetminerConfiguration#getDefaultExportedPublicationCount()}.
-	 */
-  // public static final String OPT_DEFAULT_NUMBER_PUBS = "defaultExportedPublicationCount";
-  
-  private LuceneEnv luceneMgr;
-  
+{  
 	@Autowired
 	private DataService dataService;
 	
 	@Autowired
 	private SemanticMotifDataService semanticMotifDataService;
   
+  @Autowired
+  private KnetMinerInitializer knetInitializer;
+	
   private final Logger log = LogManager.getLogger(getClass());
 
 	
 	private SearchService () {}
-
-  void indexOndexGraph ()
-  {
-  	log.info ( "Indexing the Ondex graph" );
-  	
-  	var graph = dataService.getGraph ();
-  	var config = dataService.getConfiguration ();
-  	var oxlGraphPath = config.getOxlFilePath ();
-  	var dataPath = config.getDataDirPath (); 
-  	
-    try 
-    {
-      // index the Ondex graph
-      File graphFile = new File ( oxlGraphPath );
-      File indexFile = Paths.get ( dataPath, "index" ).toFile();
-      if (indexFile.exists() && (indexFile.lastModified() < graphFile.lastModified())) {
-          log.info("Graph file updated since index last built, deleting old index");
-          FileUtils.deleteDirectory(indexFile);
-      }
-      log.info("Building Lucene Index: " + indexFile.getAbsolutePath());
-      luceneMgr = new LuceneEnv(indexFile.getAbsolutePath(), !indexFile.exists());
-      luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
-      luceneMgr.setONDEXGraph ( graph );
-      luceneMgr.setReadOnlyMode ( true );
-
-      log.info ( "Ondex graph indexed" );
-    } 
-    catch (Exception e)
-    {
-      ExceptionUtils.throwEx (
-      	RuntimeException.class, e, "Error while loading/creating graph index: %s", e.getMessage ()
-      ); 
-    }
-  }
 
       
   /**
@@ -142,7 +104,7 @@ public class SearchService
 	)
 	{
 		var graph = dataService.getGraph ();
-		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
+		var genes2Concepts = knetInitializer.getGenes2Concepts ();
 		Set<AttributeName> atts = graph.getMetaData ().getAttributeNames ();
 		
 		// TODO: We should search across all accession datasources or make this configurable in settings
@@ -641,5 +603,36 @@ public class SearchService
 
     // Else, lookup for trait/QTL relations
     return this.searchQTLsForTrait ( keyword );
-  }		
+  }
+  
+  /**
+   * Returns the number of genes at a given loci (chromosome region).
+   */
+	public int getLociGeneCount ( String chr, int start, int end, String taxId )
+	{
+		// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
+		if ( chr == null ) return 0; 
+		
+		var graph = this.knetInitializer.getGraph ();
+		
+		ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
+		Set<ONDEXConcept> genes = graph.getConceptsOfConceptClass ( ccGene );
+		
+		var taxIdNrm = StringUtils.trimToNull ( taxId );
+		var dsetInfo = knetInitializer.getKnetminerConfiguration ().getServerDatasetInfo ();		
+		
+		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
+		  ? geneHelper -> dsetInfo.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
+		  : geneHelper -> taxIdNrm.equals ( geneHelper.getTaxID () ); // client-specified taxId
+		
+		return (int) genes.stream()
+		.map ( gene -> new GeneHelper ( graph, gene ) )
+		// Let's consider this first, they're likely to be more
+		.filter ( taxIdGeneFilter )
+		.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
+		.filter ( geneHelper -> geneHelper.getBeginBP () >= start )
+		.filter ( geneHelper -> geneHelper.getEndBP () <= end )
+		.count ();
+	}  
+
 }

@@ -216,7 +216,7 @@ public class KnetMinerInitializer
 			log.info ( 
 				"Initialising seed genes from TAXID list: {}", this.config.getServerDatasetInfo ().getTaxIds ()
 			);
-			return this.seedGenes = fetchSeedGenesFromTaxIds ();
+			return this.seedGenes = this.fetchSeedGenesFromTaxIds ();
 		}
 		
 		log.info ( "Initialising seed genes from file: '{}' ", seedGenesPath );

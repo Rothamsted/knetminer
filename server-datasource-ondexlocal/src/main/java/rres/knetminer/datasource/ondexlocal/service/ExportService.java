@@ -52,7 +52,6 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
@@ -60,6 +59,7 @@ import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * The export sub-service for {@link ExportService}.
@@ -179,8 +179,8 @@ public class ExportService
 	
 			qtls.stream ()
 			.filter ( loci -> !loci.getChromosome ().isEmpty () )
-			.filter ( loci -> geneHelper.getBeginBP ( true ) >= loci.getStart () )
-			.filter ( loci -> geneHelper.getEndBP ( true ) <= loci.getEnd () )
+			.filter ( loci -> geneHelper.getBeginBP () >= loci.getStart () )
+			.filter ( loci -> geneHelper.getEndBP () <= loci.getEnd () )
 			.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
 			.forEach ( infoQTL::add );
 	
@@ -257,7 +257,7 @@ public class ExportService
 			
 			out.append (
 				geneId + "\t" + GraphLabelsUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
+				+ geneHelper.getBeginBP () + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
 			);
@@ -336,8 +336,8 @@ public class ExportService
 			if ( chr == null || "U".equals ( chr ) )
 				continue;
 			
-			int beg = geneHelper.getBeginBP ( true );
-			int end = geneHelper.getEndBP ( true );
+			int beg = geneHelper.getBeginBP ();
+			int end = geneHelper.getEndBP ();
 
 			// TODO: shortest acc methods? This is just a bit faster and picks the first one because
 			// any is fine for querying.

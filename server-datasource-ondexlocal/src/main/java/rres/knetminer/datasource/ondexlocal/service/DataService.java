@@ -1,25 +1,15 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
-import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
-
-import java.util.Set;
-import java.util.function.Predicate;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.sourceforge.ondex.core.ConceptClass;
-import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.memory.MemoryONDEXGraph;
-import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.parser.oxl.Parser;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
@@ -28,9 +18,10 @@ import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
  * The data sub-service for {@link OndexServiceProvider}.
  * 
  * A component served by OndexServiceProvider that provides the data structures
- * needed by the Knetminer application. This includes the {@link #getOptions() configuration options},
+ * needed by the Knetminer application. This includes the {@link #getConfiguration() configuration options},
+ * and the Ondex graph.  
  * 
- * the Ondex graph and the gene/semantic motif associations.
+ * In 2023 several functions were moved from here to {@link KnetMinerInitializer}.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>16 Sep 2020</dd></dl>
@@ -38,17 +29,9 @@ import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
  */
 @Component
 public class DataService
-{  
-	/**
-	 * The Knetminer configuration coming from the instance YAML file and its included files.
-	 * This is 
-	 */
-	private KnetminerConfiguration configuration;
-	
-  private ONDEXGraph graph;
-  
+{  	
   @Autowired
-  private KnetMinerInitializer initializer;
+  private KnetMinerInitializer knetInitializer;
   
     
 	private final Logger log = LogManager.getLogger ( getClass() );
@@ -60,14 +43,16 @@ public class DataService
 	 * Entry point to load the {@link #getConfiguration() Knetminer configuration} from a root
 	 * YAML file.
 	 * 
-	 * This is usually invoked by {@link OndexLocalDataSource}.init(), which, in turn is invoked
+	 * This is usually invoked by {@link OndexLocalDataSource}.init(), which, in turn is
 	 * picked up by Spring. That init() method gets configFilePath from the 
 	 * property {@link OndexLocalDataSource#CONFIG_FILE_PATH_PROP}, via {@link ConfigBootstrapWebListener}.
 	 * 
+	 * The method is a wrapper of {@link KnetMinerInitializer#setKnetminerConfiguration(String)}, which, in turn
+	 * uses {@link KnetminerConfiguration#load(String)}.
 	 */
-	public void loadConfiguration ( String configFilePath )
+	public void loadConfiguration ( String configYmlPath )
 	{
-		this.configuration = KnetminerConfiguration.load ( configFilePath );
+		knetInitializer.setKnetminerConfiguration ( configYmlPath );
 	}
 
 	
@@ -78,14 +63,14 @@ public class DataService
    */
   void initGraph ()
 	{
-  	String oxlPath = this.configuration.getOxlFilePath ();
+  	String oxlPath = this.knetInitializer.getOxlFilePath ();
 		log.info ( "Loading graph from " + oxlPath );
 
-		this.graph = new MemoryONDEXGraph ( "OndexKB" );
+		ONDEXGraph graph = new MemoryONDEXGraph ( "OndexKB" );
 		Parser.loadOXL ( oxlPath, graph );
     UIUtils.removeOldGraphAttributes ( graph );
 
-    this.initializer.setGraph ( graph );
+    this.knetInitializer.setGraph ( graph );
     
 		log.info ( "OXL Graph initialisation done" );
 	}	
@@ -96,46 +81,11 @@ public class DataService
    */
 	public KnetminerConfiguration getConfiguration ()
 	{
-		return configuration;
+		return knetInitializer.getKnetminerConfiguration ();
 	}
-	
 	
   public ONDEXGraph getGraph () {
-		return graph;
-	}
-
-
-  /**
-   * Returns number of organism (taxID) genes at a given loci
-   *
-   * @param chr chromosome name as used in GViewer
-   * @param start start position
-   * @param end end position
-   * @return 0 if no genes found, otherwise number of genes at specified loci
-   */
-	public int getLociGeneCount ( String chr, int start, int end, String taxId )
-	{
-		// TODO: should we fail with chr == "" too? Right now "" is considered == "" 
-		if ( chr == null ) return 0; 
-		
-		ConceptClass ccGene =	ONDEXGraphUtils.getConceptClass ( graph, "Gene" );
-		Set<ONDEXConcept> genes = this.graph.getConceptsOfConceptClass ( ccGene );
-		
-		var taxIdNrm = StringUtils.trimToNull ( taxId );
-		var dsetInfo = this.configuration.getServerDatasetInfo ();		
-		
-		Predicate<GeneHelper> taxIdGeneFilter = taxIdNrm == null  
-		  ? geneHelper -> dsetInfo.containsTaxId ( geneHelper.getTaxID () ) // regular search over configured taxIds
-		  : geneHelper -> taxIdNrm.equals ( geneHelper.getTaxID () ); // client-specified taxId
-		
-		return (int) genes.stream()
-		.map ( gene -> new GeneHelper ( graph, gene ) )
-		// Let's consider this first, they're likely to be more
-		.filter ( taxIdGeneFilter )
-		.filter ( geneHelper -> chr.equals ( geneHelper.getChromosome () ) )
-		.filter ( geneHelper -> geneHelper.getBeginBP ( true ) >= start )
-		.filter ( geneHelper -> geneHelper.getEndBP ( true ) <= end )
-		.count ();
+		return knetInitializer.getGraph ();
 	}
 
 	/**
@@ -143,12 +93,7 @@ public class DataService
 	 */
 	public int getGenomeGenesCount ()
 	{
-		return initializer.getGenomeGenesCount ();
-	}
-
-	KnetMinerInitializer getInitializer ()
-	{
-		return initializer;
+		return knetInitializer.getGenomeGenesCount ();
 	}
 	
  }

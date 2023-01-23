@@ -24,10 +24,10 @@ import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.io.SerializationUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * The semantic motif data sub-service for {@link OndexServiceProvider}.
@@ -42,8 +42,6 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 @Component
 public class SemanticMotifDataService
 {
-
-	public static final String OPT_SEED_GENES_FILE = "seedGenesFile";
 
 	private AbstractGraphTraverser graphTraverser;
 
@@ -289,14 +287,14 @@ public class SemanticMotifDataService
 			String geneChromosome = geneHelper.getChromosome ();
 			if ( geneChromosome == null ) continue;
 			
-			int gbegin = geneHelper.getBeginBP ( true );
-			int gend = geneHelper.getEndBP ( true );
+			int gbegin = geneHelper.getBeginBP ();
+			int gend = geneHelper.getEndBP ();
 
 			for ( ONDEXConcept qtl: qtls )
 			{
 				GeneHelper qtlHelper = new GeneHelper ( graph, qtl );
-				if ( ! ( gbegin >= qtlHelper.getBeginBP ( true ) ) ) continue;
-				if ( ! ( gend <= qtlHelper.getEndBP ( true ) ) ) continue;
+				if ( ! ( gbegin >= qtlHelper.getBeginBP () ) ) continue;
+				if ( ! ( gend <= qtlHelper.getEndBP () ) ) continue;
 				
 				genes2QTLs.computeIfAbsent ( gene.getId (), thisQtlId -> new HashSet<> () )
 				.add ( qtl.getId () );

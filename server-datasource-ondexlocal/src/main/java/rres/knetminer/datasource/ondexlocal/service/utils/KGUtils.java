@@ -26,6 +26,7 @@ import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * 
@@ -153,10 +154,10 @@ public class KGUtils
 					if ( geneChr == null ) continue;
 					if ( !chrQTL.equals ( geneChr )) continue;
 
-					int geneStart = geneHelper.getBeginBP ( true );
+					int geneStart = geneHelper.getBeginBP ();
 					if ( geneStart == 0 ) continue;
 
-					int geneEnd = geneHelper.getEndBP ( true );
+					int geneEnd = geneHelper.getEndBP ();
 					if ( geneEnd == 0 ) continue;
 
 					if ( ! ( geneStart >= startQTL && geneEnd <= endQTL ) ) continue;
