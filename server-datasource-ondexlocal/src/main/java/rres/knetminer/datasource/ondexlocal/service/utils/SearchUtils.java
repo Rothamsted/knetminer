@@ -16,7 +16,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
-import rres.knetminer.datasource.ondexlocal.service.SemanticMotifDataService;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 
 /**
  * Search utilities
@@ -164,10 +164,10 @@ public class SearchUtils
 	 * 
 	 */
 	public static Map<Integer, Set<Integer>> getMapEvidences2Genes ( 
-		SemanticMotifDataService semanticMotifDataService, Map<ONDEXConcept, Float> luceneConcepts
+		KnetMinerInitializer knetInitializer, Map<ONDEXConcept, Float> luceneConcepts
 	)
 	{
-		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
+		var concepts2Genes = knetInitializer.getConcepts2Genes ();
 
 		return luceneConcepts.keySet ()
 		.stream ()

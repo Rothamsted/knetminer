@@ -75,7 +75,7 @@ public class SemanticMotifSearchMgr
 		var graph = this.ondexProvider.getDataService ().getGraph ();
 		
 		Map<Integer, Set<Integer>> concept2Genes = this.ondexProvider
-			.getSemanticMotifDataService ()
+			.getKnetInitializer ()
 			.getConcepts2Genes ();
 		
 		this.luceneDocumentsLinked = (int) luceneConceptsSet.parallelStream ()

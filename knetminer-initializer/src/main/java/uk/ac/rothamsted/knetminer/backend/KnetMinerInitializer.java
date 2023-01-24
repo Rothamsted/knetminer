@@ -1,7 +1,5 @@
 package uk.ac.rothamsted.knetminer.backend;
 
-import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +38,6 @@ import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import net.sourceforge.ondex.logging.ONDEXLogger;
-import rres.knetminer.datasource.api.config.DatasetInfo;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.api.config.ServerDatasetInfo;
 import uk.ac.ebi.utils.collections.OptionsMap;
@@ -49,6 +46,7 @@ import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.io.SerializationUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * 
@@ -92,6 +90,7 @@ public class KnetMinerInitializer
 	private Map<Integer, Set<Integer>> genes2Concepts;
 	private Map<Integer, Set<Integer>> concepts2Genes;
 	private Map<Pair<Integer, Integer>, Integer> genes2PathLengths;
+	private Map<Integer, Set<Integer>> genes2QTLs;
 	
 	private int genomeGenesCount = -1;
 
@@ -112,7 +111,6 @@ public class KnetMinerInitializer
 		this.initGenesCount ();
 		this.initLuceneData ( doReset );
 		this.initSemanticMotifData ( doReset );
-		this.exportGraphStats ();
 	}
 	
 	public void initKnetMinerData ()
@@ -152,7 +150,7 @@ public class KnetMinerInitializer
 	 * Indexes the {@link #getGraph() graph} using {@link LuceneEnv}.
 	 * Requires {@link #loadOptions()} to be invoked before this.
 	 * 
-	 * @param doReset, when true, forces the recreation of the index files, even if they exist. Else, re-index
+	 * @param doReset when true, forces the recreation of the index files, even if they exist. Else, re-index
 	 * only if the index directory doesn't exist yet. 
 	 * 
 	 */
@@ -261,7 +259,7 @@ public class KnetMinerInitializer
    * files. This is used by components like CypherDebugger.
    * 
    * This can be called independently of {@link #initKnetMinerData()}, to trigger a new traversal, however,
-   * that requires proper initialisation already in place, ie, {@link #loadOptions()}.
+   * that requires proper initialisation already in place, ie, {@link #setKnetminerConfiguration(String)}.
    * 
    */
 	@SuppressWarnings ( "rawtypes" )
@@ -274,6 +272,7 @@ public class KnetMinerInitializer
 		File fileConcept2Genes = Paths.get ( dataPath, "concepts2Genes.ser" ).toFile ();
 		File fileGene2Concepts = Paths.get ( dataPath, "genes2Concepts.ser" ).toFile ();
 		File fileGene2PathLength = Paths.get ( dataPath, "genes2PathLengths.ser" ).toFile ();
+		File fileGene2QTLs = Paths.get ( dataPath, "genes2QTLs.ser" ).toFile ();
 
 		File graphFile = new File ( this.getOxlFilePath () );
 		
@@ -286,6 +285,7 @@ public class KnetMinerInitializer
 			fileConcept2Genes.delete ();
 			fileGene2Concepts.delete ();
 			fileGene2PathLength.delete ();
+			fileGene2QTLs.delete ();
 		}
 
 		if ( !fileConcept2Genes.exists () )
@@ -344,6 +344,8 @@ public class KnetMinerInitializer
 				}); // paths.removeIf ()
 				progressLogger.updateWithIncrement ();
 			} // for traverserPaths.values()
+			
+			this.initGene2QTLs ( seedGenes );
 
 			log.info ( "Dumping semantic motif summary tables on files, at \"{}\"", dataPath );
 			try
@@ -351,6 +353,7 @@ public class KnetMinerInitializer
 				 SerializationUtils.serialize ( fileConcept2Genes, concepts2Genes );
 				 SerializationUtils.serialize ( fileGene2Concepts, genes2Concepts );
 				 SerializationUtils.serialize ( fileGene2PathLength, genes2PathLengths );
+				 SerializationUtils.serialize ( fileGene2QTLs, genes2QTLs );
 			}
 			catch ( Exception ex )
 			{
@@ -359,6 +362,10 @@ public class KnetMinerInitializer
 					RuntimeException.class, ex, "Failed while creating internal map files: %s", ex.getMessage () 
 				);
 			}
+			
+			// Let's do this too
+			this.exportGraphStats ();
+			this.exportGraphStatsOld(); // TODO: remove, see the method description
 		} 
 		else
 		{
@@ -371,6 +378,7 @@ public class KnetMinerInitializer
 				 concepts2Genes = SerializationUtils.deserialize ( fileConcept2Genes );
 				 genes2Concepts = SerializationUtils.deserialize ( fileGene2Concepts );
 				 genes2PathLengths = SerializationUtils.deserialize ( fileGene2PathLength );
+				 genes2QTLs = SerializationUtils.deserialize ( fileGene2QTLs );
 			}
 			catch ( Exception e )
 			{
@@ -389,15 +397,59 @@ public class KnetMinerInitializer
 		nullChecker.accept ( "genes2Concepts", genes2Concepts );
 		nullChecker.accept ( "concepts2Genes", concepts2Genes );
 		nullChecker.accept ( "genes2PathLengths", genes2PathLengths );
+		nullChecker.accept ( "genes2QTLs", genes2QTLs );
 		
 		log.info ( "Semantic motif data initialization ended." );
 		
-		// this remains in KnetMiner for the moment. Pushing it down to this component will require:
-		// 1) That GeneHelper is also moved to some utility class (which Knetminer module? To be decided)
-		// 2) that this is also saved on disk: Map<Integer, Set<Integer>> genes2QTLs
-		// postInit ( seedGenes );
-	}
+	} // initSemanticMotifData ()
+	
+	
 	 
+	/**
+	 * Initialises {@link #genes2QTLs}. 
+	 * 
+	 * This is invoked by {@link #initSemanticMotifData(boolean)}. Saving the results is left to the latter.
+	 * 
+	 * Used to be named postInit() in SemanticMotifDataService.
+	 * 
+	 */
+	private void initGene2QTLs ( Set<ONDEXConcept> seedGenes )
+	{
+		var graph = getGraph ();
+		
+		ConceptClass ccQTL = graph.getMetaData ().getConceptClass ( "QTL" );
+		Set<ONDEXConcept> qtls = ccQTL == null ? new HashSet<> () : graph.getConceptsOfConceptClass ( ccQTL );
+		
+		log.info ( "Creating genes2QTLs map" );
+
+		this.genes2QTLs = new HashMap<> ();
+		PercentProgressLogger progressLogger = new PercentProgressLogger ( "{}% of genes processed", seedGenes.size () );
+		
+		for ( ONDEXConcept gene : seedGenes )
+		{
+			GeneHelper geneHelper = new GeneHelper ( graph, gene );
+			String geneChromosome = geneHelper.getChromosome ();
+			if ( geneChromosome == null ) continue;
+			
+			int gbegin = geneHelper.getBeginBP ();
+			int gend = geneHelper.getEndBP ();
+
+			for ( ONDEXConcept qtl: qtls )
+			{
+				GeneHelper qtlHelper = new GeneHelper ( graph, qtl );
+				if ( ! ( gbegin >= qtlHelper.getBeginBP () ) ) continue;
+				if ( ! ( gend <= qtlHelper.getEndBP () ) ) continue;
+				
+				genes2QTLs.computeIfAbsent ( gene.getId (), thisQtlId -> new HashSet<> () )
+					.add ( qtl.getId () );
+			}
+			progressLogger.updateWithIncrement ();
+		}
+
+		log.info ( "Populated gene2QTL with {} mapping(s)", genes2QTLs.size () );		
+	
+	} // initGene2QTLs ()		
+	
 	
   /**
    * Computes and saves (into {@link #GRAPH_STATS_FILE_NAME}) various statistics about the current 
@@ -405,7 +457,7 @@ public class KnetMinerInitializer
    *
    */
 	@SuppressWarnings ( "unchecked" )
-	public void exportGraphStats ()
+	private void exportGraphStats ()
 	{
 		ONDEXGraph graph = this.getGraph ();
 		var dataPath = this.getKnetminerConfiguration ().getDataDirPath ();
@@ -576,10 +628,179 @@ public class KnetMinerInitializer
 		}
 		
 		log.info ( "End of graph stats export" );
-	}
+	
+	} // exportGraphStats ()
 	
 	
-  /*
+	/**
+	 * @deprecated: this is the old version of {@link #exportGraphStats()}, which is the one still in use
+	 * and invoked from TODO. TODO: to be removed after the client side of #695 is completed.
+	 * 
+	 */
+	@Deprecated
+	private void exportGraphStatsOld ()
+	{
+		var graph = this.getGraph ();
+		var exportDirPath = this.getKnetminerConfiguration ().getDataDirPath ();
+		
+		log.info ( "Saving graph stats to '{}'", exportDirPath );
+
+		int totalGenes = this.getGenomeGenesCount ();
+		int totalConcepts = graph.getConcepts ().size ();
+		int totalRelations = graph.getRelations ().size ();
+		
+		var concepts2Genes = this.getConcepts2Genes ();
+		int geneEvidenceConcepts = concepts2Genes.size ();
+
+		int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
+			maxValues = new int [] { 0 }, 
+			allValuesCount = new int [] { 0 }; 
+
+		// Min/Max/avg per each gene-related concept group
+		var genes2Concepts = this.getGenes2Concepts ();
+		
+		genes2Concepts
+		.entrySet ()
+		.stream ()
+		.map ( Map.Entry::getValue )
+		.map ( Collection::size )
+		.forEach ( thisSetSize ->
+		{
+			if ( thisSetSize < minValues [ 0 ] ) minValues [ 0 ] = thisSetSize;
+			if ( thisSetSize > maxValues [ 0 ] ) maxValues [ 0 ] = thisSetSize;
+			allValuesCount [ 0 ] += thisSetSize;					
+		});
+
+		// Total no. of keys in the HashMap.
+		int genesCount = genes2Concepts.keySet ().size ();
+		// Calculate average size of gene-evidence networks in the HashMap.
+		int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
+
+		// Write the Stats to a .tab file.
+		StringBuffer out = new StringBuffer ();
+		// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+		out.append ( "<stats>\n" );
+		out.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
+		out.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
+		out.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
+		out.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
+		out.append ( "<evidenceNetworkSizes>\n" );
+		out.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
+		out.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
+		out.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
+		out.append ( "</evidenceNetworkSizes>\n" );
+
+		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
+		
+		// Display table breakdown of all conceptClasses in network
+		out.append ( "<conceptClasses>\n" );
+		for ( ConceptClass conClass : conceptClasses )
+		{
+			String conID = conClass.getId ();
+			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue; 
+			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
+
+			int conCount = graph.getConceptsOfConceptClass ( conClass ).size ();
+			if ( conCount == 0 ) continue;
+			
+			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
+			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
+			
+			out.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
+		}
+		out.append ( "</conceptClasses>\n" );
+		out.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
+
+		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
+		.stream ()
+		.collect ( Collectors.groupingBy ( 
+			_concepts2Genes -> graph.getConcept ( _concepts2Genes.getKey () ).getOfType ().getId (), // CC
+			Collectors.counting ()  
+		));
+
+		// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
+		conceptClasses.stream ()
+		.forEach ( conceptClass -> 
+		{
+			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
+			String conceptID = conceptClass.getId ();
+			if ( concept2GenesCounts.containsKey ( conceptID ) ) return;
+			if ( conceptID.equalsIgnoreCase ( "Thing" ) ) return;
+			if ( conceptID.equalsIgnoreCase ( "TestCC" ) ) return;
+			concept2GenesCounts.put ( conceptID, Long.valueOf ( 0 ) );
+		});
+		
+		// Prints concept -> gene counts
+		concept2GenesCounts.entrySet ()
+		.stream ()
+		.sorted ( Map.Entry.comparingByKey () )
+		.forEach ( pair ->
+		{
+			for ( ConceptClass conceptClass : conceptClasses )
+			{
+				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
+				
+				String conID = conceptClass.getId ();
+				if ( !pair.getKey ().equals ( conID ) ) continue;
+
+				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
+				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
+				out.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
+					.append ( "</ccEvi>\n" );
+			}
+		});
+
+		out.append ( "</ccgeneEviCount>\n" );
+		out.append ( "<connectivity>\n" ); // Relationships per concept
+		
+		// Print connectivity, ie, the average number of relations per concept, for each concept class
+		for ( ConceptClass conceptClass : conceptClasses )
+		{
+			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
+			String conID = conceptClass.getId ();
+			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
+			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
+			
+			int relationCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
+			int conCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
+			
+			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
+			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
+
+			float connectivity = ( (float) relationCount / (float) conCount );
+			out.append ( "<hubiness>" ).append ( conID ).append ( "->" )
+				.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
+		}
+		out.append ( "</connectivity>\n" );
+		out.append ( "</stats>" );
+		
+		try
+		{
+			// The latest stats
+			String statsPath = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
+			IOUtils.writeFile ( statsPath, out.toString () );
+			
+			// Also, create a copy to keep an historic track of it.
+			long timestamp = System.currentTimeMillis ();
+			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
+			IOUtils.writeFile ( newStatsPath, out.toString () );
+
+			// TODO: remove?
+			// generateGeneEvidenceStats(exportPathDirUrl);
+		}
+		catch ( IOException ex )
+		{
+			ExceptionUtils.throwEx ( 
+				UncheckedIOException.class, ex, "Error while writing stats for the Knetminer graph: $cause" 
+			);
+		}
+		
+		log.info ( "End of graph stats export" );
+	
+	} // exportGraphStatsOld ()
+		
+	
+  /**
    * Not in use right now. Might still be useful in future, so, keeping it. Needs
    * cleaning/rewriting. 
    *  
@@ -589,7 +810,7 @@ public class KnetMinerInitializer
    */
 	private void generateGeneEvidenceStats ()
 	{
-		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
+		var exportDirPath = this.getKnetminerConfiguration ().getDataDirPath ();
 
 		try
 		{
@@ -605,7 +826,7 @@ public class KnetMinerInitializer
 			)
 			{
 				out.write ( "Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n" );
-				for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifDataService.getGenes2Concepts ().entrySet () )
+				for ( Map.Entry<Integer, Set<Integer>> mEntry : this.getGenes2Concepts ().entrySet () )
 				{ // for each <K,V> entry
 					int geneID = mEntry.getKey ();
 					Set<Integer> conIDs = mEntry.getValue (); // Set<Integer> value
@@ -628,7 +849,7 @@ public class KnetMinerInitializer
 			)
 			{
 				out.write ( "Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n" );
-				for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifDataService.getConcepts2Genes ().entrySet () )
+				for ( Map.Entry<Integer, Set<Integer>> mapEntry : this.getConcepts2Genes ().entrySet () )
 				{ // for each <K,V> entry
 					int eviID = (Integer) mapEntry.getKey ();
 					Set<Integer> geneIDs = mapEntry.getValue (); // Set<Integer> value
@@ -650,7 +871,7 @@ public class KnetMinerInitializer
 			)
 			{
 				out.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
-				for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifDataService.getGenes2PathLengths ().entrySet () )
+				for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : this.getGenes2PathLengths ().entrySet () )
 				{
 					var idPair = plEntry.getKey ();
 					String key = idPair.getLeft () + "//" + idPair.getRight ();
@@ -661,11 +882,16 @@ public class KnetMinerInitializer
 				}
 			}
 		}
-		catch ( Exception ex )
+		catch ( IOException ex )
 		{
-			exLog.logEx ( "Error while writing stats", ex );
+			ExceptionUtils.throwEx ( 
+				UncheckedIOException.class, ex, "Error while running generateGeneEvidenceStats(): $cause" 
+			);
 		}
-	}
+		
+		log.info ( "End of generateGeneEvidenceStats()" );
+	
+	} // generateGeneEvidenceStats ()
 	
 	
 	
@@ -772,6 +998,11 @@ public class KnetMinerInitializer
 		return genes2PathLengths;
 	}
 	
+	public Map<Integer, Set<Integer>> getGenes2QTLs ()
+	{
+		return genes2QTLs;
+	}
+
 	/**
 	 * The number of genes in the graph that belong to the 
 	 * {@link ServerDatasetInfo#containsTaxId(String) configured TAX IDs}.

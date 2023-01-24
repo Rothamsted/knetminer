@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 
 
 /**
@@ -36,13 +37,12 @@ public class OndexServiceProvider
 {	
 	@Autowired
 	private DataService dataService;
+	
+  @Autowired
+  private KnetMinerInitializer knetInitializer;
 
 	@Autowired
 	private SearchService searchService;
-	
-	@Autowired
-	private SemanticMotifDataService semanticMotifDataService;
-
 	
 	@Autowired
 	private SemanticMotifService semanticMotifService;
@@ -70,6 +70,12 @@ public class OndexServiceProvider
 	 */
   private OndexServiceProvider () {}
   
+
+  public KnetMinerInitializer getKnetInitializer ()
+	{
+		return knetInitializer;
+	}
+
 	public DataService getDataService () {
 		return dataService;
 	}
@@ -84,11 +90,6 @@ public class OndexServiceProvider
 		return semanticMotifService;
 	}
 	
-	public SemanticMotifDataService getSemanticMotifDataService ()
-	{
-		return semanticMotifDataService;
-	}
-
 	public UIService getUIService ()
 	{
 		return uiService;
@@ -134,7 +135,10 @@ public class OndexServiceProvider
 		{
 			if ( springContext != null ) return;
 			
-			springContext = new AnnotationConfigApplicationContext ( "rres.knetminer.datasource.ondexlocal.service" );
+			springContext = new AnnotationConfigApplicationContext (
+				"rres.knetminer.datasource.ondexlocal.service",
+				"uk.ac.rothamsted.knetminer.backend"
+			);
 			springContext.registerShutdownHook ();
 			
 			slog.info ( "Spring context for {} initialised", OndexServiceProvider.class.getSimpleName () );
@@ -173,7 +177,7 @@ public class OndexServiceProvider
 			);
 			
 			dataService.initGraph ();
-			dataService.getInitializer ().initKnetMinerData ();
+			this.knetInitializer.initKnetMinerData ();
 
 			log.info ( "Ondex/Knetminer data initialization ended" );
 		}
@@ -188,7 +192,7 @@ public class OndexServiceProvider
 	
 	
 	/**
-	 * @see #initData().
+	 * @see #initData()
 	 */
 	public boolean isInitializingData ()
 	{

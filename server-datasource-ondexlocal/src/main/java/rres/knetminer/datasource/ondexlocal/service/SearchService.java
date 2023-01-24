@@ -8,8 +8,6 @@ import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getConceptName;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.getExcludingSearchExp;
 import static rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils.mergeHits;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +23,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -50,12 +47,9 @@ import net.sourceforge.ondex.core.searchable.LuceneEnv;
 import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
-import net.sourceforge.ondex.logging.ONDEXLogger;
-import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
@@ -76,14 +70,12 @@ import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 @Component
 public class SearchService
 {  
-	@Autowired
-	private DataService dataService;
-	
-	@Autowired
-	private SemanticMotifDataService semanticMotifDataService;
-  
   @Autowired
   private KnetMinerInitializer knetInitializer;
+
+  @Autowired
+	private DataService dataService;
+	  
 	
   private final Logger log = LogManager.getLogger(getClass());
 
@@ -213,9 +205,9 @@ public class SearchService
   	String keywords, String idxFieldName, String idxFieldSubName, int resultLimit, 
   	Map<ONDEXConcept, Float> allResults, ScoredHits<ONDEXConcept> notHits )
   {
-		ScoredHits<ONDEXConcept> thisHits = this.luceneMgr.searchTopConceptsByIdxField ( 
-			keywords, idxFieldName, idxFieldSubName, resultLimit 
-		);
+		ScoredHits<ONDEXConcept> thisHits = this.knetInitializer
+			.getLuceneMgr ()
+			.searchTopConceptsByIdxField ( keywords, idxFieldName, idxFieldSubName, resultLimit );
 		mergeHits ( allResults, thisHits, notHits );
   }
 	
@@ -224,7 +216,9 @@ public class SearchService
    */
 	public ScoredHits<ONDEXConcept> searchTopConceptsByName ( String keywords, int sizeLimit )
 	{
-		return this.luceneMgr.searchTopConceptsByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, sizeLimit );
+		return this.knetInitializer
+			.getLuceneMgr ()
+			.searchTopConceptsByIdxField ( keywords, ONDEXLuceneFields.CONNAME_FIELD, sizeLimit );
 	}
 
 	/** 
@@ -234,7 +228,9 @@ public class SearchService
 		String conceptClassId, String accessionTerm, boolean isCaseSensitive 
 	)
 	{
-		return luceneMgr.searchByTypeAndAccession ( conceptClassId, accessionTerm, isCaseSensitive );
+		return knetInitializer
+			.getLuceneMgr ()
+			.searchByTypeAndAccession ( conceptClassId, accessionTerm, isCaseSensitive );
 	}
 
 	/**
@@ -253,7 +249,9 @@ public class SearchService
 		String conceptClassId, String nameTerm, boolean isCaseSensitive 
 	)
 	{
-		return luceneMgr.searchByTypeAndName ( conceptClassId, nameTerm, isCaseSensitive );
+		return this.knetInitializer
+			.getLuceneMgr ()
+			.searchByTypeAndName ( conceptClassId, nameTerm, isCaseSensitive );
 	}
 
 	/**
@@ -275,7 +273,7 @@ public class SearchService
 	 * 
 	 * @param hit2score a map of found concept -> lucene score.
 	 * 
-	 * @param taxId: used to filter concpet-associated genes that belong to the given ID. This is 
+	 * @param taxId used to filter concpet-associated genes that belong to the given ID. This is 
 	 * only considered for that and not for the knetminer score (see #626 for details). 
 	 * 
 	 * 
@@ -288,8 +286,8 @@ public class SearchService
 	
 		log.info ( "Getting genes from {} Lucene hits ", hit2score.keySet ().size () );
 	
-		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-		var genes2PathLengths = semanticMotifDataService.getGenes2PathLengths ();
+		var concepts2Genes = knetInitializer.getConcepts2Genes ();
+		var genes2PathLengths = knetInitializer.getGenes2PathLengths ();
 		var genesCount = dataService.getGenomeGenesCount ();
 
 		// Possibly used below
@@ -403,6 +401,8 @@ public class SearchService
    */
 	public Set<QTL> searchQTLsForTraitOld ( String keyword ) throws ParseException
   {
+		LuceneEnv luceneMgr = this.knetInitializer.getLuceneMgr ();
+		
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
 		//
@@ -416,7 +416,7 @@ public class SearchService
     
     log.info( "QTL search query: {}", finalQuery.toString() );
 
-    ScoredHits<ONDEXConcept> hits = this.luceneMgr.searchTopConcepts ( finalQuery, 100 );
+    ScoredHits<ONDEXConcept> hits = luceneMgr.searchTopConcepts ( finalQuery, 100 );
     
     var graph = dataService.getGraph ();
 		var gmeta = graph.getMetaData();
@@ -476,6 +476,8 @@ public class SearchService
 	 */
   public Set<QTL> searchQTLsForTrait ( String keyword ) throws ParseException
   {
+		LuceneEnv luceneMgr = this.knetInitializer.getLuceneMgr ();
+
     // be careful with the choice of analyzer: ConceptClasses are not
     // indexed in lowercase letters which let the StandardAnalyzer crash
 		//
@@ -489,7 +491,7 @@ public class SearchService
     
     log.info( "Phenotype/SNP/QTL search query: {}", finalQuery.toString() );
 
-    ScoredHits<ONDEXConcept> phenos = this.luceneMgr.searchTopConcepts ( finalQuery, 100 );
+    ScoredHits<ONDEXConcept> phenos = luceneMgr.searchTopConcepts ( finalQuery, 100 );
     var graph = dataService.getGraph ();
     Set<QTL> results = ConcurrentHashMap.newKeySet ();
 
@@ -555,7 +557,7 @@ public class SearchService
 	 */
 	public Map<Integer, Set<Integer>> getMapEvidences2Genes ( Map<ONDEXConcept, Float> luceneConcepts )
 	{
-		return SearchUtils.getMapEvidences2Genes ( this.semanticMotifDataService, luceneConcepts );
+		return SearchUtils.getMapEvidences2Genes ( this.knetInitializer, luceneConcepts );
 	}
 		
 	/**

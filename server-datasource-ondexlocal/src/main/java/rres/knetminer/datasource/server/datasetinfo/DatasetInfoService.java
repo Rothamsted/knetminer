@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rres.knetminer.datasource.api.config.DatasetInfo;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
-import rres.knetminer.datasource.ondexlocal.service.ExportService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 
 /**
  * The API service to get information about the running data set.
@@ -153,7 +153,7 @@ public class DatasetInfoService
 					.getConfiguration ()
 					.getDataDirPath ();
 			
-			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, ExportService.GRAPH_STATS_FILE_NAME ) );
+			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, KnetMinerInitializer.GRAPH_STATS_FILE_NAME ) );
 			return new String ( encoded, Charset.defaultCharset () );
 		} 
 		catch ( IOException ex) {

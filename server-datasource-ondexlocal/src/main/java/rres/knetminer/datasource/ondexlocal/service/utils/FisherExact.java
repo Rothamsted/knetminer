@@ -1,3 +1,5 @@
+// Original header: 
+//
 // ContigencyTable.java
 //
 // (c) 1999-2001 PAL Development Core Team
@@ -10,8 +12,6 @@ package rres.knetminer.datasource.ondexlocal.service.utils;
 /**
  * This does a one tail fisher exact test. It uses an array of factorials initialized at the beginning to provide
  * speed. There could be better ways to do this.
- *
- * @version $Id: FisherExact.java,v 1
  *
  * @author Ed Buckler
  */

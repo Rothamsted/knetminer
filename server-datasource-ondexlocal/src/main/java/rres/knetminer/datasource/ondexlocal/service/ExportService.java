@@ -3,41 +3,29 @@ package rres.knetminer.datasource.ondexlocal.service;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,11 +34,9 @@ import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
-import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
-import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
@@ -58,7 +44,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.ebi.utils.opt.io.IOUtils;
+import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
@@ -75,11 +61,8 @@ import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 @Component
 public class ExportService
 {
-	/**
-	 * Where {@link #exportGraphStats()} saves its output (in {@link KnetminerConfiguration#getDataDirPath()}).
-	 */
-	public static final String GRAPH_STATS_FILE_NAME = "knowledge-network-stats.json"; 
-	
+  @Autowired
+  private KnetMinerInitializer knetInitializer;
 	
 	@Autowired
 	private DataService dataService;
@@ -87,8 +70,6 @@ public class ExportService
 	@Autowired
 	private SearchService searchService;
 	
-	@Autowired
-	private SemanticMotifDataService semanticMotifDataService;
 	
 	private static final Logger log = LogManager.getLogger ( ExportService.class );
 	
@@ -114,7 +95,7 @@ public class ExportService
 		
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 	  var graph = dataService.getGraph ();
-		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
+		var genes2QTLs = knetInitializer.getGenes2QTLs ();
 		var config = dataService.getConfiguration ();
 
 		if ( userGenes == null ) userGenes = Set.of ();
@@ -541,7 +522,7 @@ public class ExportService
 		
 		// The rest is r-o or not used in parallel
 		//
-		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
+		var genes2Concepts = knetInitializer.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
 
@@ -571,8 +552,8 @@ public class ExportService
 
 			String foundName = GraphLabelsUtils.getBestConceptLabel ( foundConcept );
 
-			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
+			var concepts2Genes = knetInitializer.getConcepts2Genes ();
+			var genes2QTLs = knetInitializer.getGenes2QTLs ();
 			
 			Integer ondexId = foundConcept.getId ();
 			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
@@ -597,7 +578,7 @@ public class ExportService
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 
 				String chr = geneHelper.getChromosome ();
-				int beg = geneHelper.getBeginBP ( true );
+				int beg = geneHelper.getBeginBP ();
 					
 				
 				// Count the matching QTLs
