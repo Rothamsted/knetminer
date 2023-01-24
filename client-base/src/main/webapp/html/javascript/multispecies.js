@@ -54,10 +54,10 @@ multiSpeciesFeature = function ()
 
     // function house events that needs to be called when currentTaxId changes
     function multiSpeciesEvents(){
-        getQueryExamples();
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
+        getQueryExamples(); //order changed (used to be first) to preserve release notes functionality when adding species specific queries
         return true;
     }
 
@@ -118,10 +118,11 @@ multiSpeciesFeature = function ()
                     var sampleQueries = new Array();	//object to hold parsed xml data
                     $("query", sampleQuery).each(function () {	//for each different Query
                         var tempXML = new Array();
-                        tempXML["name"] = $("name", this).text();
-                        tempXML["desciption"] = $("description", this).text();
+                       // tempXML["name"] = $("name", this).text(); //disabled for now - using bulletpointed lists instead
+                        tempXML["description"] = $("description", this).text();
                         tempXML["term"] = $("term", this).text();
                         tempXML["withinRegion"] = $("withinRegion", this).text();
+                        tempXML["taxId"] = $("taxId", this).text();
                         var regions = Array();
                         $("region", this).each(function () {
                             regions.push({
@@ -147,7 +148,7 @@ multiSpeciesFeature = function ()
                     * Object structure for parsed XML data
                     *
                     * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
-                    * 		> name				= STRING - Name of the example query
+                    * 		> name				= STRING - Name of the example query - this is now removed
                     * 		> description		= STRING - short description of the example query
                     * 		> term 				= STRING - Query Search Terms -
                     * 		> withinRegion 		= BOOLEAN - TRUE = Search within QTL region / FALSE = search whole genome -
@@ -158,16 +159,18 @@ multiSpeciesFeature = function ()
                     * 			> label		 	= STRING - region label
                     * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
                     * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
+                    *       > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
                     *
                     */
 
                     // Create a string of html with a button for each of the example queries.
                     for (i = 0; i < sampleQueries.length; i++) {
+                        if (sampleQueries[i].taxId && sampleQueries[i].taxId != currentTaxId) continue; // Only show relevant sample queries
                         desc = "";
-                        if (sampleQueries[i].desciption) {
-                            desc = " - " + sampleQueries[i].desciption;
+                        if (sampleQueries[i].description) {
+                            desc = sampleQueries[i].description;
                         }
-                        sampleQueryButtons += "<a href:'javascript;' class='exampleQuery' id='exampleQuery" + i + "'>" + sampleQueries[i].name + "</button></a>" + desc + '<br>';
+                        sampleQueryButtons += "• " + "<a href:'javascript;' class='exampleQuery' id='exampleQuery" + i + "'>" + desc + "</button></a>" + '<br>';
                     }
                     // add example queries to page
                     $('#eg_queries').html(sampleQueryButtons);
@@ -200,11 +203,7 @@ multiSpeciesFeature = function ()
                                 $("#addRow").click();
                             }
 
-
                             removeGeneRow()
-
-                          
-                
 
                             if ($("#region_search_area").is(":hidden")) {
                                 $("#region_search").click();
@@ -230,7 +229,6 @@ multiSpeciesFeature = function ()
                                 $("#region_search").click();
                             }
                         }
-
 
 
                         if (trim(sampleQueries[sampleNum].mapGLWithoutRestriction) == 'true') {

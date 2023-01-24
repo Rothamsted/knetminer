@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sampleQueries>
 	<query>
-		<name>Example 1</name>
 		<description>All species genes</description>
 		<term></term>
 		<gene>TPS*</gene>
@@ -18,10 +17,8 @@
 		Knetminer ranks results (eg, during demos).    
 	-->	
 	<query>
-		<name>Example 2</name>
 		<description>Maize genes</description>
 		<term>drought</term>
-
 		<gene>ZM00001EB073420</gene>
 		<gene>ZM00001EB158420</gene>
 		<gene>ZM00001EB324540</gene>
@@ -42,11 +39,11 @@
 		<gene>ZM00001EB086800</gene>
 		<gene>ZM00001EB274190</gene>
 		<gene>ZM00001EB300010</gene>
+		<taxId>4577</taxId>
 	</query>
 	
 	
 	<query>
-		<name>Example 2b</name>
 		<description>Maize genes (premium access only)</description>
 		<term>drought</term>
 		<gene>ZM00001EB038010</gene>
@@ -82,10 +79,10 @@
 		<gene>ZM00001EB219160</gene>
 		<gene>ZM00001EB064480</gene>
 		<gene>ZM00001EB240630</gene>
+		<taxId>4577</taxId>
 	</query>
 	
 	<query>
-		<name>Example 3</name>
 		<description>Wheat genes</description>
 		<term>"seed germination" OR "seed dormancy"</term>
 		<gene>TRAESCS3D02G468400</gene>
@@ -108,17 +105,16 @@
 		<gene>TRAESCS4A02G206800</gene>
 		<gene>TRAESCS3B02G006100</gene>
 		<gene>TRAESCS3A02G464900</gene>
+		<taxId>4565</taxId>
 	</query>
 	
 	<query>
-		<name>Example 4</name>
 		<description>Genome search</description>
 		<term>"seed germination" AND flavon*</term>
 	</query>	
 
 	<!-- Crafter by MB to see something significant about regions -->
 	<query>
-		<name>Example 5</name>
 		<description>Maize region search</description>
 		
 		<term>drought AND ABA</term>
@@ -127,14 +123,14 @@
 		<gene>HAB1</gene>
 		<gene>AT1G50370</gene>
 		<gene>ZM00001EB355410</gene>
-		
+		<taxId>4577</taxId>
+
 		<region>
 			<chromosome>8</chromosome>
 			<start>122482486</start>
 			<end>168395052</end>
 			<label>Drought</label>
 		</region>
-		
 	</query>	
 
 </sampleQueries>
