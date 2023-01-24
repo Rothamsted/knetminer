@@ -297,27 +297,34 @@ function searchHandlers() {
 // function handles body events
 function bodyHandlers() {
   $("body").on("mouseenter", "span.hint", function (event) {
-    target = $(this)[0].id;
+  var target = $(this)[0].id;
     var message = "";
     addClass = "";
 
-    if (target == "hintSearchQtlGenome") {
-      message =
-        'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
-    } else if (target == "hintEnterGenes") {
-      message = "Input a list of target genes using reference gene ID's.";
-    } else if (target == "hintQuerySuggestor") {
-      message =
-        "Add, remove or replace terms from your query using the list of suggested terms based on your search criteria";
-    } else if (target == "hintEgKeywords") {
-      message = sampleQueryButtons;
-      addClass = "tooltip-static";
-    } else if (target == "knetScore") {
-      message =
-        "The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised.";
-      addClass = "knetscorehint";
-    }
-
+    switch(target){
+      case	"hintSearchQtlGenome":
+									message	= 'Select the "whole-genome" option to search the whole genome for potential candidate genes or select the "within QTL" option to search for candidate genes within the QTL coordinates.';
+								break;
+						case "hintEnterGenes":
+									message = "Input a list of target genes using reference gene ID's.";
+							break;
+						case "hintQuerySuggestor":
+									message ="Add, remove or replace terms from your query using the list of suggested terms based on your search criteria";
+									break;
+						case "hintEgKeywords":
+									message = sampleQueryButtons;
+									addClass = "tooltip-static";
+								break;
+						case "knetScore":
+									message ="The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised.";
+									addClass = "knetscorehint";
+							break;
+							case "accession-info":
+									message ="<p>Genes in the current Knowledge Graph related to your Evidence of interest.</p><p style='font-size:.75rem'>Use the copy button to download accession codes for use in a KnetMiner search, or download the entire table.</p>";
+										addClass = "knetscorehint";
+								break
+						}
+						
     $("div.tooltip").remove();
 
     $('<div class="tooltip ' + addClass + '">' + message + "</div>").appendTo(

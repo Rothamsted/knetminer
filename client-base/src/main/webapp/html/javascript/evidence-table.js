@@ -36,6 +36,7 @@
          table = table + '<thead>';
          table = table + '<tr>';
          var header = evidenceTable[0].split("\t");
+
          table = table + '<th width="75">Omit/Add</th>';
          table = table + '<th width="50">Type</th>';
          table = table + '<th width="212">Description</th>';
@@ -82,7 +83,7 @@
            // /end:p-values
          
            // Count of all matching genes
-           table = table + '<td>' + values[4] + '</td>';
+           table = table + `<td ><span style="margin-right:.5rem;">${values[4]}</span> <span data-type="${values[0]}" data-description="${values[1]}" class="accession-download" onclick="openGeneListPopup(${values[7]},this)"><i class="fas fa-file-download"></i></span> <div id="concept${values[7]}"></div> </td>`;
          
            // Matching User Genes 
            var userGenes = values[5]; // The array of user genes, if any, else []
@@ -312,10 +313,163 @@
            generateCyJSNetwork(api_url + '/network', params,false);
      }
         else {
-         evidenceNotice = '<span><b>Search with a genelist to view network.</b></span>'
-         jboxNotice(evidenceNotice, 'red', 300, 2000);
+            evidenceNotice = '<span><b>Search with a genelist to view network.</b></span>'
+            new jBox('Notice', {
+                content: evidenceNotice,
+                color: 'red',
+                autoClose: 2000,
+                position: {
+                    x: 45,
+                    y: 252.9
+                },
+                target:'#revertEvidenceView',
+                reposition:true
+            });
+        
         }
      }
  
     
  }
+ 
+
+
+//  Function creates popup with a table of accessions of a given evidence gene list
+ function openGeneListPopup(conceptId, element){
+
+    var modalElement = $(`#Modal_${conceptId}`); 
+
+		// Checking if modal element is already created for the current conceptId
+    if(modalElement.length){
+
+				// display already existed modal
+        modalElement.css({
+            "display":'block',
+            "opacity": 1
+        });
+
+        var ModalOverlay 	=  $(`#Modal_${conceptId}-overlay`)	
+
+				ModalOverlay.css({
+						"display":'block',
+						"opacity": 1
+				})
+
+				// close modals with Overlay
+				ModalOverlay.bind("click", function(e){
+					e.preventDefault();
+					modalElement.hide();
+					ModalOverlay.hide();
+				})
+
+				// close Modals with cancel button
+				$('.jBox-closeButton').bind("click", function(e){
+					e.preventDefault();
+					modalElement.hide();
+					ModalOverlay.hide();
+				})
+
+
+    }else{
+       
+        var description = $(element).attr("data-description");
+        var type = $(element).attr("data-type");
+        var getTaxIdFrag = multiSpeciesFeature.getTaxId();
+        var associateArr = [];
+    
+        $.get(api_url + `/genome${getTaxIdFrag}&keyword=ConceptID:${conceptId}`,'').done( function(data){
+            if(data.geneTable !== null )
+                    {
+
+            var geneTable = data.geneTable.split("\n");
+            var headers = geneTable[0].split("\t").slice(1,4); 
+
+            associateArr.push(headers.join("\t"));
+            var accessionTable = "";
+            accessionTable += '<div class="accession-popup-container">';
+            accessionTable += '<table class="tablesorter">';
+            accessionTable += '<thead>';
+            accessionTable += '<tr>'
+            accessionTable += '<th> ACCESSION </th>';
+            accessionTable += '<th> GENE NAME</th>';
+            accessionTable += '<th> CHROMOSOME </th></tr></thead><tbody>';
+
+            for (var geneValue = 1; geneValue < (geneTable.length - 1) ; geneValue++){
+                var value = geneTable[geneValue].split("\t").slice(1,4);
+                associateArr.push(value.join("\t"));
+                accessionTable += '<tr><td>'+ value[0] +'</td>';
+                accessionTable += '<td>'+ value[1] +'</td>';
+                accessionTable += '<td>'+ value[2] +'</td></tr>';
+            };
+
+            accessionTable += '</tbody></table>';
+        
+            if(associateArr.length > 0)
+            {
+            var result = associateArr.join("\n");
+
+            var utf8Bytes = encodeURIComponent(result).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            })
+            
+            var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes)+''; 
+
+            accessionTable += '<div class="accession-popup-header"><div><p style="margin-bottom: 0.5rem;">TaxID: '+ getTaxIdFrag.replace('?taxId=', "")+ '</p>';
+            accessionTable +=  '<p style="margin-top: 0;"> '+ type +': '+ description +'</p></div>'; 
+            accessionTable +=  '<div class="accession-popup-icons">'; 
+            accessionTable +=  '<p class="accession-clipboard" href="javascript:;"><img src="html/image/copy.svg" alt="copy-accession"/></p>'; 
+            accessionTable += '<a class="accession-downloadicon" download="Accession.tsv" href="'+delimiterAttr+'"><img src="html/image/Knetdownload.png" alt="download-accession"/></a></div></div>';
+            accessionTable += '</div>';
+    
+
+            var  accessionModal = new jBox('Modal', {
+                id: `Modal_${conceptId}`,
+                class:'accessionModal',
+                animation: 'pulse',
+                title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accession-info" class="hint hint-small accession-info"><i  class="far fa-question-circle"></i> </span>',
+                content: accessionTable,
+                cancelButton: 'Exit',
+                draggable: 'title',
+                attributes: {
+                    x: 'center',
+                    y: 'center'
+                },
+                delayOpen: 50,
+            });
+
+            accessionModal.open()
+        
+            }
+
+            }else{
+                evidenceNotice = '<span><b>Sorry, Genes Accession are absent.</b></span>'
+                jboxNotice(evidenceNotice, 'red', 300, 2000);
+            }
+
+
+            // copy clipboard event that allows users to copy accessions as comma seperated string.
+            $(".accession-clipboard").bind("click", {x:data.geneTable}, function(e){
+                e.preventDefault();
+                var currentData = e.data.x.split("\n");
+                accessionList = []
+
+                for(var accessionColumn = 1; accessionColumn < (currentData.length -1); accessionColumn++){
+                        var accessionItem = currentData[accessionColumn].split("\t").slice(1,2);
+                        accessionList.push(accessionItem.join("\t"));
+                }
+
+                if(accessionList.length > 0 ){
+                    navigator.clipboard.writeText(accessionList.toString()); 
+                }
+
+                evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
+                jboxNotice(evidenceNotice, 'green', 300, 2000);
+            })
+            
+        }).fail(function(xhr,status,errolog){
+            jboxNotice(xhr, 'red', 300, 2000);
+        }) 
+
+    }
+}
+

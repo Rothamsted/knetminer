@@ -1257,12 +1257,16 @@ a.contact-button :hover {
 #pGViewer_title {
     padding: 10px;
     font-size: 14px;
+    width: 55%;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .pGViewer_title_line {
     background-color: #F4F5F7;
     color: #121212;
     padding: 6px;
+    line-height: 1.2rem;
 }
 
 .preloader_bar {
@@ -2368,4 +2372,54 @@ a {
     height: 100%;
     width:100%;
 }
+
+
+/* Accession Popup Styling */
+.accession-download{
+    cursor: pointer;
+    font-size: 14px;
+    color: #51CE7B;
+}
+
+.accession-popup-container {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 400px;
+}
+
+.accession-popup-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.accession-popup-icons{
+    display: flex;
+    align-items: center;
+    width: 16%;
+    justify-content: space-between;
+}
+
+.accession-clipboard{
+    height: 24px;
+    width: 24px;
+}
+
+.accession-downloadicon{
+    height: 24px;
+    width: 24px;
+    padding: 0.1rem;
+    border: 1px solid silver;
+    border-radius: 8px;
+}
+
+.accession-clipboard img{
+    height: 100%;
+    width: 100%;
+}
+
+.accession-info {
+    color: white;
+}
+
 

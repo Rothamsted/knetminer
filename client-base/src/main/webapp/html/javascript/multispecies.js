@@ -307,7 +307,8 @@ multiSpeciesFeature = function ()
     return {
         init:getSpeciesList,
         speciesEvents: multiSpeciesEvents,
-        taxId: setTaxId,
+        setTaxId: setTaxId,
+        getTaxId: getTaxIdUrlFrag,
         maps:drawGeneMaps,
         speciesData: currentSpecies
     }
