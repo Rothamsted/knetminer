@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 
 /**
@@ -137,7 +137,7 @@ public class OndexServiceProvider
 			
 			springContext = new AnnotationConfigApplicationContext (
 				"rres.knetminer.datasource.ondexlocal.service",
-				"uk.ac.rothamsted.knetminer.backend"
+				"uk.ac.rothamsted.knetminer.service"
 			);
 			springContext.registerShutdownHook ();
 			

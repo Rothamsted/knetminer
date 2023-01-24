@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -103,9 +104,9 @@ public class DatasetInfoServiceIT
 	
 	/**
 	 * Testing release-notes.html.
-	 * TODO: to be removed?
+	 * TODO: to be removed.
 	 */
-	@Test
+	@Test @Ignore ( "/release-notes.html is to be removed" )
 	public void testReleaseNotes ()
 	{
 		String notes = CLI.releaseNotesHtml ();

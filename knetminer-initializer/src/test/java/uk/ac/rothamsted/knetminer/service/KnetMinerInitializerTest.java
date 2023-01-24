@@ -1,4 +1,4 @@
-package uk.ac.rothamsted.knetminer.backend;
+package uk.ac.rothamsted.knetminer.service;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +23,9 @@ import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.parser.oxl.Parser;
 
 /**
- * The usual Junit tests for {@link KnetMinerInitializer}
+ * The usual Junit tests for {@link KnetMinerInitializer}.
+ * 
+ * TODO: review and consider the recent migrations from the web app. 
  * 
  * @author brandizi
  * @author jojicunnunni

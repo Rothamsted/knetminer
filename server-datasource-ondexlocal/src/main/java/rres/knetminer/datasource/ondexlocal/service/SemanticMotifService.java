@@ -32,7 +32,7 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The semantic motif sub-service for {@link OndexServiceProvider}.

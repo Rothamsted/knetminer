@@ -1,4 +1,4 @@
-package uk.ac.rothamsted.knetminer.backend;
+package uk.ac.rothamsted.knetminer.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -58,6 +58,9 @@ import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
  * As described in the POM, these are off-line data initialisations that benefit KnetMiner. 
  *
  * TODO: probably some methods require thread safety (get {@link #getGraph()}.
+ * 
+ * TODO: we actually need a significant re-arrangement of the Maven structure for Knetminer, see
+ * comments on {@link GeneHelper}.
  * 
  * @author brandizi
  * @author jojicunnunni

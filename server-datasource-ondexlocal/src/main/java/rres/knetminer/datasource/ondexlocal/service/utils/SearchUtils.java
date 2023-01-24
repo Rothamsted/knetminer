@@ -16,7 +16,7 @@ import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.SearchService;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * Search utilities

@@ -12,7 +12,7 @@ import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.OndexLocalDataSource;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The data sub-service for {@link OndexServiceProvider}.

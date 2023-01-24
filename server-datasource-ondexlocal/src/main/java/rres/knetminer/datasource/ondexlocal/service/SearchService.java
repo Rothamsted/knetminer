@@ -50,8 +50,8 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * 

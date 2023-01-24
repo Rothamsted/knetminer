@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rres.knetminer.datasource.api.config.DatasetInfo;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The API service to get information about the running data set.

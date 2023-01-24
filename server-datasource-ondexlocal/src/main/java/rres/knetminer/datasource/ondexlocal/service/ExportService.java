@@ -44,8 +44,8 @@ import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.rothamsted.knetminer.backend.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The export sub-service for {@link ExportService}.
