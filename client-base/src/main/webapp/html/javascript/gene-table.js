@@ -199,7 +199,7 @@ function createGenesTable(text, keyword, rows){
 
 	document.getElementById('resultsTable').innerHTML = table;
 	// scroll down to geneTable, but show tabviewer_buttons above
-	document.getElementById('pGViewer_title').scrollIntoView();
+	document.getElementById('pGSearch_title').scrollIntoView();
 
 	/*
 	 * click Handler for viewing a network.

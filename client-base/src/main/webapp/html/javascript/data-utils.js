@@ -64,8 +64,8 @@ function searchKeyword(){
      //if inputs are empty client get an error saying input is empty 
     //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
       if(keyword == '' && list.length == 0 && requestParams.qtl.length == 0 ){
-        var searchErrorTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">Please input at least one search parameter.</span></div>'; 
-        $("#pGViewer_title").replaceWith(searchErrorTitle);
+        var searchErrorTitle = '<span class="pGViewer_title_line">Please input at least one search parameter.</span>'; 
+        $("#pGViewer_title").html(searchErrorTitle);
         $('.pGViewer_title_line').css("color","red");
         $('#tabviewer').hide();
       }else if(keyword !== '' || list.length !== 0 || requestParams.qtl.length !== 0 ){
@@ -118,7 +118,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                      data: JSON.stringify(requestParams)
                      })
                      .fail(function (xhr,status,errorlog) {
-                         $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
+                         $("#pGViewer_title").html(''); // clear display msg
                          var server_error= JSON.parse(xhr.responseText); // full error json from server
                          var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
                          console.log(server_error.detail);
@@ -155,7 +155,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
     if (data.geneCount === 0) { 
           status = true; 
          if(keyword.length > 0) { // msg for keyword search error
-            messageNode = keyword + ' did not match any genes or documents. Check for typos and try different or more general keywords.'; 
+            messageNode =`<b>${keyword}</b> did not match any genes or documents. Check for typos and try different or more general keywords.`; 
             genomicViewTitle = createGenomicViewTitle(messageNode,status);
            
             if(geneList_size > 0) {
@@ -190,7 +190,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                                      //$('#suggestor_search').dialog('close');
          }
 
-         $("#pGViewer_title").replaceWith(genomicViewTitle);
+         $("#pGViewer_title").html(genomicViewTitle);
+         $("#pGSearch_title").html('');
          $('#tabviewer').hide(); 
         //  activateButton('resultsTable');
          document.getElementById('resultsTable').innerHTML = "";
@@ -258,7 +259,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              }
             // for rare edge cases when no genes in list are found in search, then search is empty.
             if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-               genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Please provide valid gene IDs.</span></div>';
+               var noGenesFound = '<span class="pGViewer_title_line">No user genes found. Please provide valid gene ID</span>';
+                $('#pGViewer_title').html(noGenesFound);
               }
            }
          if(searchMode === "qtl") { 
@@ -302,7 +304,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                 }
                // for rare edge cases when no genes in list are found in search, then search is QTL-centric only.
                if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                  genomicViewTitle = '<div id="pGViewer_title"><span class="pGViewer_title_line">No user genes found. Showing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span></div>';
+                  genomicViewTitle = '<span class="pGViewer_title_line">No user genes found. Showing keyword/QTL related results. In total <b>' + results + ' were found. ('+queryseconds+' seconds).</span>';
                  }
               }
            }
@@ -310,7 +312,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              candidateGenes = 1000;
          }
 
-         $("#pGSearch_title").replaceWith(genomicViewTitle);
+         $("#pGSearch_title").html(genomicViewTitle);
          // Setup the mapview component
          var annotationsMap = data.gviewer;
 
@@ -337,8 +339,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
 // function creates Genomic title
 function createGenomicViewTitle(message,status){
-    var genomicTemplate = `<div id="pGSearch_title"><span class="pGViewer_title_line"> ${status ? 'Your Search': 'In total'} ${message}</span>
-    </div> `; 
+    var genomicTemplate = `<span class="pGViewer_title_line"> ${status ? 'Your search': 'In total'} ${message}</span>`; 
     return genomicTemplate; 
 }
 
@@ -505,7 +506,7 @@ function errorComponent(elementInfo,xhr){
 // function to be triggered on changing the species dropdown option
 function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected"),
-    currentTaxData = multiSpeciesFeature.taxId(selectedSpecie.val());
+    currentTaxData = multiSpeciesFeature.setTaxId(selectedSpecie.val());
     $('#speciename_container').empty();
     $('#chr1').empty();
     $('#tabviewer').hide(); 
@@ -523,22 +524,26 @@ function changeSpecies(selectElement){
 
 // function dynamically encodes Gene and evidence views delimited files to downloadable TSV files
 handleDelimintedCta = function(){
+
     var evidenceData, resultViewData,currentData;  
     var utf8Bytes=''
-    // gets gene  and evidence view from genomicViewContent function (ln 155)
+    // gets gene  and evidence view data from genomicViewContent function (ln 155)
     function getData(data){
         resultViewData = data.geneTable; 
         evidenceData = data.evidenceTable
         setDemlimiterAttributes('resultsTable'); 
-    }   
+    }
+
     function getencodedFile (){
+        
         utf8Bytes = encodeURIComponent(currentData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
         return String.fromCharCode('0x' + p1);
     })
-    } 
+    }
+
     function setDemlimiterAttributes(position){
         currentData = position == 'resultsTable' ? resultViewData : evidenceData;
-    $('.tabviewer-actions').toggle(position ==='resultsTable' || position === 'evidenceTable')
+    $('.tabviewer-actions').toggle(position ==='resultsTable' || position === 'evidenceTable');
      getencodedFile(); 
     var TsvFileName = position == 'resultsTable' ? 'genes' : 'evidencetable'; 
     var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes)+''; 
