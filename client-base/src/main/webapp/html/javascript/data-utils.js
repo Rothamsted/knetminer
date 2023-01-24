@@ -198,8 +198,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          document.getElementById('evidenceTable').innerHTML = "";
          document.getElementById('NetworkCanvas').innerHTML = "";
 
-     }
-     else {
+    }
+    else {
        status = false
          // For a valid response, i.e., search output.
          var candidateGenes = data.geneCount;
@@ -242,7 +242,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                 genomicViewTitle = createGenomicViewTitle(messageNode,status)
                  }
               }
-           }
+            }
+
          if(keyword.length < 2 && geneList_size > 0) { 
             var count_linked= countLinkedUserGenes(data.geneTable);
             var count_unlinked= results - count_linked;
@@ -262,7 +263,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                var noGenesFound = '<span class="pGViewer_title_line">No user genes found. Please provide valid gene ID</span>';
                 $('#pGViewer_title').html(noGenesFound);
               }
-           }
+        }
+
          if(searchMode === "qtl") { 
              // msg for QTL search
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
@@ -312,7 +314,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              candidateGenes = 1000;
          }
 
-         $("#pGSearch_title").html(genomicViewTitle);
+         $("#pGSearch_title").show().html(genomicViewTitle);
          // Setup the mapview component
          var annotationsMap = data.gviewer;
 
@@ -334,7 +336,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
             $('#selectUser').show();
            }
            else { $('#selectUser').hide(); }
-     }
+    }
 }
 
 // function creates Genomic title
