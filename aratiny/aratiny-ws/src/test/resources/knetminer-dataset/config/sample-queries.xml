@@ -3,10 +3,9 @@
 	<query>
 		<description>FLC gene expression</description>
 		<term>flowering FLC FT</term>
-		<taxId>4565</taxId>
 	</query>
 	<query>
-		<description>Yield-related QTLs</description>
+		<description>Yield-related Ara. QTLs</description>
 		<term>spikelet OR seed OR "seed size" OR "yield" OR "inflorescence"</term>
 		<withinRegion>true</withinRegion>
 		<region>
@@ -19,6 +18,7 @@
 		<gene>U12</gene>
 		<gene>CAK*</gene>
 		<gene>AT1G*</gene>		
+		<taxId>3702</taxId>
 	</query>	
 	<query>
 		<description>Dormancy</description>
