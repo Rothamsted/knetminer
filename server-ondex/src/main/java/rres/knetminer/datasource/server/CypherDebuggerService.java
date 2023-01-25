@@ -173,7 +173,7 @@ public class CypherDebuggerService
 		traverser.setOption( "performanceReportFrequency", 0);
 		traverser.setSemanticMotifsQueries ( semanticMotifsQueries );
     
-		odxService.getSemanticMotifDataService ().initSemanticMotifData ( true );
+		odxService.getKnetInitializer ().initSemanticMotifData ( true );
 
 		// The previous method disabled it again, we need it on in order to make the reporting method
 		// behave
@@ -220,7 +220,7 @@ public class CypherDebuggerService
 	private CypherGraphTraverser getTraverser ()
 	{
 		OndexServiceProvider odxService = OndexServiceProvider.getInstance ();
-		var traverser = odxService.getSemanticMotifDataService ().getGraphTraverser ();
+		var traverser = odxService.getKnetInitializer ().getGraphTraverser ();
 		
 		if ( ! (traverser instanceof CypherGraphTraverser ) ) throw new ClassCastException ( 
 			"You need the Neo4j mode to use the CypherDebugger"

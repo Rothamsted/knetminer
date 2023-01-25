@@ -43,15 +43,14 @@ import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
-import rres.knetminer.datasource.ondexlocal.service.ExportService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -173,7 +172,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		CountLociResponse response = new CountLociResponse();
 		response.setGeneCount (
 			OndexServiceProvider.getInstance ()
-				.getDataService() 
+				.getSearchService () 
 				.getLociGeneCount ( chrRegion.getChromosome (), chrRegion.getStart (), chrRegion.getEnd (), request.getTaxId () )
 		);
 		return response;
@@ -391,8 +390,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	/**
-	 * {@link ExportService#exportGraphStatsOld()}
-	 * Moved to {@link DatasetInfoService} and with a new JSON-based format. @see ExportSe
+	 * Moved under {@link DatasetInfoService}.
 	 */
 	@Override
 	@Deprecated

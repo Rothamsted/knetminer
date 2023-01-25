@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal.service.utils;
+package uk.ac.rothamsted.knetminer.backend.graph.utils;
 
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValue;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
-import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 
 /**
  * The Gene helper for an Ondex graph.
@@ -17,6 +16,11 @@ import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
  *  
  * This code has been inferred from the many copy-pasted variants found in 
  * {@link OndexServiceProvider}, see https://github.com/Rothamsted/knetminer/issues/518.
+ * 
+ * TODO: in 2023 I moved this to the knetminer-initializer module, since I need it there.
+ * We need to re-arrange the whole Maven structure for Knetminer, with a sharp separation between,
+ * on the one hand, the data functionality that is web-independent (eg, OndexServiceProvider and sub-services) 
+ * and, on the other hand, the web/API components.
  * 
  * @author brandizi
  * <dl><dt>Date:</dt><dd>20 Aug 2020</dd></dl>
@@ -28,8 +32,8 @@ public class GeneHelper
 	private ONDEXConcept gene;
 	
 	private String chromosome;
-	private Integer beginBP;
-	private Integer endBP;
+	private int beginBP;
+	private int endBP;
 	private String taxID;
 	
 	/**
@@ -60,37 +64,22 @@ public class GeneHelper
 
 	
 	/**
-	 * no default value
+	 * The gene's attribute 'BEGIN'. 0 if it's 0 or doesn't exist. 
 	 */
 	public Integer getBeginBP ()
 	{
-		return getBeginBP ( false );
-	}
-	
-	/**
-	 * The gene's attribute 'BEGIN'. if the flag is false, possibly returns null, else returns 0 as default for nulls.
-	 */
-	public Integer getBeginBP ( boolean withDefault )
-	{
-		return defaultedGetter ( beginBP, 0, withDefault );
+		return beginBP;
 	}
 	
 
 	/**
-	 * No default value
+	 * The gene's attribute 'END'. 0 if it's 0 or doesn't exist. 
 	 */
 	public Integer getEndBP ()
 	{
 		return endBP;
 	}
 
-	/**
-	 * The gene's attribute 'END'. if the flag is false, possibly returns null, else returns 0 as default for nulls.
-	 */
-	public Integer getEndBP ( boolean withDefault )
-	{
-		return defaultedGetter ( endBP, 0, withDefault );
-	}
 	
 	public String getTaxID ()
 	{
@@ -100,12 +89,5 @@ public class GeneHelper
 	public String getChromosome ()
 	{
 		return chromosome;
-	}
-	
-	
-	private <T> T defaultedGetter ( T value, T defaultValue, boolean withDefault )
-	{
-		if ( !withDefault ) return value;
-		return value == null ? defaultValue : value;
 	}
 }

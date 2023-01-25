@@ -103,9 +103,9 @@ public class DatasetInfoServiceIT
 	
 	/**
 	 * Testing release-notes.html.
-	 * TODO: to be removed?
+	 * TODO: to be removed.
 	 */
-	@Test
+	@Test @Ignore ( "/release-notes.html is to be removed" )
 	public void testReleaseNotes ()
 	{
 		String notes = CLI.releaseNotesHtml ();

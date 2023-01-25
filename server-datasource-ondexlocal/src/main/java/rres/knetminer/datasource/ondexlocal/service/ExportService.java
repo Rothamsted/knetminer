@@ -3,41 +3,29 @@ package rres.knetminer.datasource.ondexlocal.service;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttrValueAsString;
 import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,20 +34,18 @@ import net.sourceforge.ondex.core.ConceptAccession;
 import net.sourceforge.ondex.core.ConceptClass;
 import net.sourceforge.ondex.core.ConceptName;
 import net.sourceforge.ondex.core.ONDEXConcept;
-import net.sourceforge.ondex.core.ONDEXGraph;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
-import rres.knetminer.datasource.api.config.KnetminerConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.ebi.utils.opt.io.IOUtils;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The export sub-service for {@link ExportService}.
@@ -75,11 +61,8 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 @Component
 public class ExportService
 {
-	/**
-	 * Where {@link #exportGraphStats()} saves its output (in {@link KnetminerConfiguration#getDataDirPath()}).
-	 */
-	public static final String GRAPH_STATS_FILE_NAME = "knowledge-network-stats.json"; 
-	
+  @Autowired
+  private KnetMinerInitializer knetInitializer;
 	
 	@Autowired
 	private DataService dataService;
@@ -87,445 +70,12 @@ public class ExportService
 	@Autowired
 	private SearchService searchService;
 	
-	@Autowired
-	private SemanticMotifDataService semanticMotifDataService;
 	
 	private static final Logger log = LogManager.getLogger ( ExportService.class );
 	
 	private final ExceptionLogger exLog = ExceptionLogger.getLogger ( this.getClass () );
 	
 	private ExportService () {}
-	
-  /**
-   * Computes and saves (into {@link #GRAPH_STATS_FILE_NAME}) various statistics about the current 
-   * dataset (the OXL) and the semantic motifs computed from it. 
-   *
-   */
-	@SuppressWarnings ( "unchecked" )
-	void exportGraphStats ()
-	{
-		ONDEXGraph graph = this.dataService.getGraph ();
-		var dataPath = dataService.getConfiguration ().getDataDirPath ();
-		var exportFilePath = dataPath + '/' + GRAPH_STATS_FILE_NAME;
-		
-		log.info ( "Saving graph stats to '{}'", exportFilePath );
-
-		int totalGenes = dataService.getGenomeGenesCount ();
-		int totalConcepts = graph.getConcepts ().size ();
-		int totalRelations = graph.getRelations ().size ();
-		
-		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-		int totalEvidenceConcepts = concepts2Genes.size ();
-
-		int [] minConceptsPerGene = new int[] { totalEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
-			maxConceptsPerGene = new int [] { 0 },
-			// Don't confuse this with total no. of concepts (same concepts can be linked multiple times)
-			totalLinkedConcepts = new int [] { 0 }; 
-
-		// Min/Max/avg per each gene-related concept group
-		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
-		
-		genes2Concepts
-		.entrySet ()
-		.stream ()
-		.map ( Map.Entry::getValue )
-		.map ( Collection::size )
-		.forEach ( thisSetSize ->
-		{
-			if ( thisSetSize < minConceptsPerGene [ 0 ] ) minConceptsPerGene [ 0 ] = thisSetSize;
-			if ( thisSetSize > maxConceptsPerGene [ 0 ] ) maxConceptsPerGene [ 0 ] = thisSetSize;
-			totalLinkedConcepts [ 0 ] += thisSetSize;					
-		});
-
-		int genesCount = genes2Concepts.keySet ().size ();
-		int avgConceptsPerGene = genesCount > 0 ? totalLinkedConcepts [ 0 ] / genesCount : 0;
-		
-		JSONObject graphSummaries = new JSONObject ();
-		graphSummaries.put ( "totalGenes", totalGenes ); 
-		graphSummaries.put ( "totalConcepts", totalConcepts ); 
-		graphSummaries.put ( "totalRelations", totalRelations ); 
-		
-		JSONObject semanticMotifStats = new JSONObject ();
-		semanticMotifStats.put ( "minConceptsPerGene", minConceptsPerGene [ 0 ] ); 
-		semanticMotifStats.put ( "maxConceptsPerGene", maxConceptsPerGene [ 0 ] ); 
-		semanticMotifStats.put ( "avgConceptsPerGene", avgConceptsPerGene );
-		semanticMotifStats.put ( "totalEvidenceConcepts", totalEvidenceConcepts );
-		
-		// TODO: we're listing them in CC order, but very likely, this will be lost when turned
-		// to JSON dictionary. Possibly, just use an HashSet.
-		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
-		
-		JSONObject graphStats = new JSONObject ();
-		
-		JSONObject conceptClassTotals = new JSONObject ();
-		// Display table breakdown of all conceptClasses in network
-		for ( ConceptClass conClass : conceptClasses )
-		{
-			String conID = conClass.getId ();
-			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue; 
-			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-
-			int conCount = graph.getConceptsOfConceptClass ( conClass ).size ();
-			if ( conCount == 0 ) continue;
-			
-			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-			conceptClassTotals.put ( conID, conCount );
-		}
-		graphStats.put ( "conceptClassTotals", conceptClassTotals );
-		
-		// Evidence concepts per each gene
-		//
-		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
-		.stream ()
-		.collect ( Collectors.groupingBy ( 
-			_concepts2Genes -> graph.getConcept ( _concepts2Genes.getKey () ).getOfType ().getId (), // CC
-			Collectors.counting ()  
-		));
-
-		// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-		conceptClasses.stream ()
-		.forEach ( conceptClass -> 
-		{
-			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
-			String conceptID = conceptClass.getId ();
-			if ( concept2GenesCounts.containsKey ( conceptID ) ) return;
-			if ( conceptID.equalsIgnoreCase ( "Thing" ) ) return;
-			if ( conceptID.equalsIgnoreCase ( "TestCC" ) ) return;
-			concept2GenesCounts.put ( conceptID, Long.valueOf ( 0 ) );
-		});
-		
-		// Output concept -> gene counts
-		JSONObject conceptsPerGene = new JSONObject ();
-
-		concept2GenesCounts.entrySet ()
-		.stream ()
-		.sorted ( Map.Entry.comparingByKey () )
-		.forEach ( pair ->
-		{
-			for ( ConceptClass conceptClass : conceptClasses )
-			{
-				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-				
-				String conID = conceptClass.getId ();
-				if ( !pair.getKey ().equals ( conID ) ) continue;
-
-				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				
-				conceptsPerGene.put ( conID, Math.toIntExact ( pair.getValue () ) );
-			}
-		});
-		graphStats.put ( "conceptsPerGene", conceptsPerGene );
-			
-		
-		// Relations per concept
-		//
-		
-		JSONObject avgRelationsPerConcept = new JSONObject ();
-		
-		// Print connectivity, ie, the average number of relations per concept, for each concept class
-		for ( ConceptClass conceptClass : conceptClasses )
-		{
-			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-			String conID = conceptClass.getId ();
-			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
-			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-			
-			int relationsCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
-			int conceptsCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
-			
-			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-
-			double connectivity = 1d * relationsCount / conceptsCount;
-			avgRelationsPerConcept.put ( conID,  connectivity );
-		}
-		graphStats.put ( "avgRelationsPerConcept", avgRelationsPerConcept );
-		
-		// Eventually...
-		//
-		JSONObject outJson = new JSONObject ();
-		outJson.put ( "graphSummaries", graphSummaries );
-		outJson.put ( "graphStats", graphStats );
-		outJson.put ( "semanticMotifStats", semanticMotifStats );
-		
-		try
-		{
-			IOUtils.writeFile ( exportFilePath, outJson.toString() );
-			
-			// TODO: remove, it's only invoked upon data initialisation, doesn't make much sense to
-			// deal with this here, if you need archiving, use the command line tool
-			//
-			// Also, create a copy to keep an historic track of it.
-//			long timestamp = System.currentTimeMillis ();
-//			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
-//			IOUtils.writeFile ( newStatsPath, outJson.toString() );
-
-			// TODO: remove?
-			// generateGeneEvidenceStats(exportPathDirUrl);
-		}
-		catch ( IOException ex )
-		{
-			exLog.logEx ( "Error while writing stats for the Knetminer graph", ex );
-		}
-		
-		log.info ( "End of graph stats export" );
-	}
-	
-	/**
-	 * @deprecated: this is the old version of {@link #exportGraphStats()}, which is the one still in use
-	 * and invoked from TODO. TODO: to be removed after the client side of #695 is completed.
-	 * 
-	 */
-	@Deprecated
-	void exportGraphStatsOld ()
-	{
-		ONDEXGraph graph = this.dataService.getGraph ();
-		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
-		
-		log.info ( "Saving graph stats to '{}'", exportDirPath );
-
-		int totalGenes = dataService.getGenomeGenesCount ();
-		int totalConcepts = graph.getConcepts ().size ();
-		int totalRelations = graph.getRelations ().size ();
-		
-		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-		int geneEvidenceConcepts = concepts2Genes.size ();
-
-		int [] minValues = new int[] { geneEvidenceConcepts > 0 ? Integer.MAX_VALUE : 0 },
-			maxValues = new int [] { 0 }, 
-			allValuesCount = new int [] { 0 }; 
-
-		// Min/Max/avg per each gene-related concept group
-		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();
-		
-		genes2Concepts
-		.entrySet ()
-		.stream ()
-		.map ( Map.Entry::getValue )
-		.map ( Collection::size )
-		.forEach ( thisSetSize ->
-		{
-			if ( thisSetSize < minValues [ 0 ] ) minValues [ 0 ] = thisSetSize;
-			if ( thisSetSize > maxValues [ 0 ] ) maxValues [ 0 ] = thisSetSize;
-			allValuesCount [ 0 ] += thisSetSize;					
-		});
-
-		// Total no. of keys in the HashMap.
-		int genesCount = genes2Concepts.keySet ().size ();
-		// Calculate average size of gene-evidence networks in the HashMap.
-		int avgValues = genesCount > 0 ? allValuesCount [ 0 ] / genesCount : 0;
-
-		// Write the Stats to a .tab file.
-		StringBuffer out = new StringBuffer ();
-		// sb.append("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
-		out.append ( "<stats>\n" );
-		out.append ( "<totalGenes>" ).append ( totalGenes ).append ( "</totalGenes>\n" );
-		out.append ( "<totalConcepts>" ).append ( totalConcepts ).append ( "</totalConcepts>\n" );
-		out.append ( "<totalRelations>" ).append ( totalRelations ).append ( "</totalRelations>\n" );
-		out.append ( "<geneEvidenceConcepts>" ).append ( geneEvidenceConcepts ).append ( "</geneEvidenceConcepts>\n" );
-		out.append ( "<evidenceNetworkSizes>\n" );
-		out.append ( "<minSize>" ).append ( minValues [ 0 ] ).append ( "</minSize>\n" );
-		out.append ( "<maxSize>" ).append ( maxValues [ 0 ] ).append ( "</maxSize>\n" );
-		out.append ( "<avgSize>" ).append ( avgValues ).append ( "</avgSize>\n" );
-		out.append ( "</evidenceNetworkSizes>\n" );
-
-		Set<ConceptClass> conceptClasses = new TreeSet<> ( graph.getMetaData ().getConceptClasses () ); 
-		
-		// Display table breakdown of all conceptClasses in network
-		out.append ( "<conceptClasses>\n" );
-		for ( ConceptClass conClass : conceptClasses )
-		{
-			String conID = conClass.getId ();
-			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue; 
-			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-
-			int conCount = graph.getConceptsOfConceptClass ( conClass ).size ();
-			if ( conCount == 0 ) continue;
-			
-			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-			
-			out.append ( "<cc_count>" ).append ( conID ).append ( "=" ).append ( conCount ).append ( "</cc_count>\n" );
-		}
-		out.append ( "</conceptClasses>\n" );
-		out.append ( "<ccgeneEviCount>\n" ); // Obtain concept count from concept2gene
-
-		final Map<String, Long> concept2GenesCounts = concepts2Genes.entrySet ()
-		.stream ()
-		.collect ( Collectors.groupingBy ( 
-			_concepts2Genes -> graph.getConcept ( _concepts2Genes.getKey () ).getOfType ().getId (), // CC
-			Collectors.counting ()  
-		));
-
-		// Ensure that the missing ID's are added to the Map, if they weren't in the mapConcept2Genes map.
-		conceptClasses.stream ()
-		.forEach ( conceptClass -> 
-		{
-			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) return;
-			String conceptID = conceptClass.getId ();
-			if ( concept2GenesCounts.containsKey ( conceptID ) ) return;
-			if ( conceptID.equalsIgnoreCase ( "Thing" ) ) return;
-			if ( conceptID.equalsIgnoreCase ( "TestCC" ) ) return;
-			concept2GenesCounts.put ( conceptID, Long.valueOf ( 0 ) );
-		});
-		
-		// Prints concept -> gene counts
-		concept2GenesCounts.entrySet ()
-		.stream ()
-		.sorted ( Map.Entry.comparingByKey () )
-		.forEach ( pair ->
-		{
-			for ( ConceptClass conceptClass : conceptClasses )
-			{
-				if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-				
-				String conID = conceptClass.getId ();
-				if ( !pair.getKey ().equals ( conID ) ) continue;
-
-				if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-				else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-				out.append ( "<ccEvi>" ).append ( conID ).append ( "=>" ).append ( Math.toIntExact ( pair.getValue () ) )
-					.append ( "</ccEvi>\n" );
-			}
-		});
-
-		out.append ( "</ccgeneEviCount>\n" );
-		out.append ( "<connectivity>\n" ); // Relationships per concept
-		
-		// Print connectivity, ie, the average number of relations per concept, for each concept class
-		for ( ConceptClass conceptClass : conceptClasses )
-		{
-			if ( graph.getConceptsOfConceptClass ( conceptClass ).size () == 0 ) continue;
-			String conID = conceptClass.getId ();
-			if ( conID.equalsIgnoreCase ( "Thing" ) ) continue;
-			if ( conID.equalsIgnoreCase ( "TestCC" ) ) continue;
-			
-			int relationCount = graph.getRelationsOfConceptClass ( conceptClass ).size ();
-			int conCount = graph.getConceptsOfConceptClass ( conceptClass ).size ();
-			
-			if ( conID.equalsIgnoreCase ( "Path" ) ) conID = "Pathway";
-			else if ( conID.equalsIgnoreCase ( "Comp" ) ) conID = "Compound";
-
-			float connectivity = ( (float) relationCount / (float) conCount );
-			out.append ( "<hubiness>" ).append ( conID ).append ( "->" )
-				.append ( String.format ( "%2.02f", connectivity ) ).append ( "</hubiness>\n" );
-		}
-		out.append ( "</connectivity>\n" );
-		out.append ( "</stats>" );
-		
-		try
-		{
-			// The latest stats
-			String statsPath = Paths.get ( exportDirPath, "latestNetwork_Stats.tab" ).toString ();
-			IOUtils.writeFile ( statsPath, out.toString () );
-			
-			// Also, create a copy to keep an historic track of it.
-			long timestamp = System.currentTimeMillis ();
-			String newStatsPath = Paths.get ( exportDirPath, timestamp + "_Network_Stats.tab" ).toString ();
-			IOUtils.writeFile ( newStatsPath, out.toString () );
-
-			// TODO: remove?
-			// generateGeneEvidenceStats(exportPathDirUrl);
-		}
-		catch ( IOException ex )
-		{
-			exLog.logEx ( "Error while writing stats for the Knetminer graph", ex );
-		}
-		
-		log.info ( "End of graph stats export" );
-	}
-	
-	
-  /*
-   * Not in use right now. Might still be useful in future, so, keeping it. Needs
-   * cleaning/rewriting. 
-   *  
-   * generate gene2evidence .tab file with contents of the mapGenes2Concepts
-   * HashMap & evidence2gene .tab file with contents of the mapConcepts2Genes
-   * author singha
-   */
-	private void generateGeneEvidenceStats ()
-	{
-		var exportDirPath = dataService.getConfiguration ().getDataDirPath ();
-
-		try
-		{
-			String g2c_fileName = Paths.get ( exportDirPath, "gene2evidences.tab.gz" ).toString (); // gene2evidences.tab
-			String c2g_fileName = Paths.get ( exportDirPath, "evidence2genes.tab.gz" ).toString (); // evidence2genes.tab
-			String g2pl_fileName = Paths.get ( exportDirPath, "gene2PathLength.tab.gz" ).toString (); // gene2PathLength.tab
-
-			log.debug ( "Print mapGene2Concepts Stats in a new .tab file: " + g2c_fileName );
-			try ( 
-				Writer out = 
-					new BufferedWriter ( new OutputStreamWriter ( 
-						new GZIPOutputStream ( new FileOutputStream ( g2c_fileName ) ) ) )
-			)
-			{
-				out.write ( "Gene_ONDEXID" + "\t" + "Total_Evidences" + "\t" + "EvidenceIDs" + "\n" );
-				for ( Map.Entry<Integer, Set<Integer>> mEntry : semanticMotifDataService.getGenes2Concepts ().entrySet () )
-				{ // for each <K,V> entry
-					int geneID = mEntry.getKey ();
-					Set<Integer> conIDs = mEntry.getValue (); // Set<Integer> value
-					String txt = geneID + "\t" + conIDs.size () + "\t";
-					Iterator<Integer> itr = conIDs.iterator ();
-					while ( itr.hasNext () )
-					{
-						txt = txt + itr.next ().toString () + ",";
-					}
-					txt = txt.substring ( 0, txt.length () - 1 ) + "\n"; // omit last comma character
-					out.write ( txt ); // write contents.
-				}
-			}
-
-			log.debug ( "Print mapConcept2Genes Stats in a new .tab file: " + c2g_fileName );
-
-			try ( 
-				Writer out = new BufferedWriter (
-					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( c2g_fileName ) ) ) )
-			)
-			{
-				out.write ( "Evidence_ONDEXID" + "\t" + "Total_Genes" + "\t" + "GeneIDs" + "\n" );
-				for ( Map.Entry<Integer, Set<Integer>> mapEntry : semanticMotifDataService.getConcepts2Genes ().entrySet () )
-				{ // for each <K,V> entry
-					int eviID = (Integer) mapEntry.getKey ();
-					Set<Integer> geneIDs = mapEntry.getValue (); // Set<Integer> value
-					String evi_txt = eviID + "\t" + geneIDs.size () + "\t";
-					Iterator<Integer> iter = geneIDs.iterator ();
-					while ( iter.hasNext () )
-					{
-						evi_txt = evi_txt + iter.next ().toString () + ",";
-					}
-					evi_txt = evi_txt.substring ( 0, evi_txt.length () - 1 ) + "\n"; // omit last comma character
-					out.write ( evi_txt ); // write contents.
-				}
-			}
-
-			log.debug ( "Print mapGene2PathLength Stats in a new .tab file: " + g2pl_fileName );
-			try ( 
-				Writer out = new BufferedWriter (
-					new OutputStreamWriter ( new GZIPOutputStream ( new FileOutputStream ( g2pl_fileName ) ) ) )
-			)
-			{
-				out.write ( "Gene_ONDEXID//EndNode_ONDEXID" + "\t" + "PathLength" + "\n" );
-				for ( Map.Entry<Pair<Integer, Integer>, Integer> plEntry : semanticMotifDataService.getGenes2PathLengths ().entrySet () )
-				{
-					var idPair = plEntry.getKey ();
-					String key = idPair.getLeft () + "//" + idPair.getRight ();
-					int pl = plEntry.getValue ();
-					String pl_txt = key + "\t" + pl + "\n";
-					// log.info("mapGene2PathLength: "+ pl_txt);
-					out.write ( pl_txt ); // write contents.
-				}
-			}
-		}
-		catch ( Exception ex )
-		{
-			exLog.logEx ( "Error while writing stats", ex );
-		}
-	}
-
 	
 	
 	/**
@@ -545,7 +95,7 @@ public class ExportService
 		
 		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
 	  var graph = dataService.getGraph ();
-		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
+		var genes2QTLs = knetInitializer.getGenes2QTLs ();
 		var config = dataService.getConfiguration ();
 
 		if ( userGenes == null ) userGenes = Set.of ();
@@ -610,8 +160,8 @@ public class ExportService
 	
 			qtls.stream ()
 			.filter ( loci -> !loci.getChromosome ().isEmpty () )
-			.filter ( loci -> geneHelper.getBeginBP ( true ) >= loci.getStart () )
-			.filter ( loci -> geneHelper.getEndBP ( true ) <= loci.getEnd () )
+			.filter ( loci -> geneHelper.getBeginBP () >= loci.getStart () )
+			.filter ( loci -> geneHelper.getEndBP () <= loci.getEnd () )
 			.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
 			.forEach ( infoQTL::add );
 	
@@ -688,7 +238,7 @@ public class ExportService
 			
 			out.append (
 				geneId + "\t" + GraphLabelsUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-				+ geneHelper.getBeginBP ( true ) + "\t" + geneHelper.getTaxID () + "\t" 
+				+ geneHelper.getBeginBP () + "\t" + geneHelper.getTaxID () + "\t" 
 				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
 				+ evidenceStr + "\n" 
 			);
@@ -767,8 +317,8 @@ public class ExportService
 			if ( chr == null || "U".equals ( chr ) )
 				continue;
 			
-			int beg = geneHelper.getBeginBP ( true );
-			int end = geneHelper.getEndBP ( true );
+			int beg = geneHelper.getBeginBP ();
+			int end = geneHelper.getEndBP ();
 
 			// TODO: shortest acc methods? This is just a bit faster and picks the first one because
 			// any is fine for querying.
@@ -972,7 +522,7 @@ public class ExportService
 		
 		// The rest is r-o or not used in parallel
 		//
-		var genes2Concepts = semanticMotifDataService.getGenes2Concepts ();			
+		var genes2Concepts = knetInitializer.getGenes2Concepts ();			
 		int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
 
@@ -1002,8 +552,8 @@ public class ExportService
 
 			String foundName = GraphLabelsUtils.getBestConceptLabel ( foundConcept );
 
-			var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
-			var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
+			var concepts2Genes = knetInitializer.getConcepts2Genes ();
+			var genes2QTLs = knetInitializer.getGenes2QTLs ();
 			
 			Integer ondexId = foundConcept.getId ();
 			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
@@ -1028,7 +578,7 @@ public class ExportService
 				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
 
 				String chr = geneHelper.getChromosome ();
-				int beg = geneHelper.getBeginBP ( true );
+				int beg = geneHelper.getBeginBP ();
 					
 				
 				// Count the matching QTLs

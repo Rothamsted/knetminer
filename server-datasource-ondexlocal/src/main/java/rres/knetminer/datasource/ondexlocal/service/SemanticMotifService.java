@@ -32,6 +32,7 @@ import net.sourceforge.ondex.tools.ondex.ONDEXGraphCloner;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
  * The semantic motif sub-service for {@link OndexServiceProvider}.
@@ -46,11 +47,11 @@ import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 @Component
 public class SemanticMotifService
 {	 
-	@Autowired
-	private DataService dataService;
+  @Autowired
+  private KnetMinerInitializer knetInitializer;
 	
 	@Autowired
-	private SemanticMotifDataService semanticMotifDataService;
+	private DataService dataService;
 	
 	@Autowired
 	private SearchService searchService;
@@ -72,7 +73,7 @@ public class SemanticMotifService
 	{
 		log.info ( "evidencePath() - evidenceOndexId: {}", evidenceOndexId );
     var graph = dataService.getGraph ();
-		var concepts2Genes = semanticMotifDataService.getConcepts2Genes ();
+		var concepts2Genes = knetInitializer.getConcepts2Genes ();
 
 		// Searches genes related to the evidenceID. If user genes provided, only include those.
 		Set<ONDEXConcept> relatedONDEXConcepts = new HashSet<> ();
@@ -85,8 +86,8 @@ public class SemanticMotifService
 
 		// the results give us a map of every starting concept to every valid
 		// path
-		Map<ONDEXConcept, List<EvidencePathNode>> evidencePaths = 
-			semanticMotifDataService.getGraphTraverser ().traverseGraph ( graph, relatedONDEXConcepts, null );
+		Map<ONDEXConcept, List<EvidencePathNode>> evidencePaths = knetInitializer.getGraphTraverser ()
+		  .traverseGraph ( graph, relatedONDEXConcepts, null );
 
 		// create new graph to return
 		ONDEXGraph subGraph = new MemoryONDEXGraph ( "evidencePathGraph" );
@@ -140,7 +141,7 @@ public class SemanticMotifService
 		var config = dataService.getConfiguration ();
 		
 		// the results give us a map of every starting concept to every valid path
-		Map<ONDEXConcept, List<EvidencePathNode>> results = semanticMotifDataService
+		Map<ONDEXConcept, List<EvidencePathNode>> results = knetInitializer
 			.getGraphTraverser ()
 			.traverseGraph ( graph, seedGenes, null );
 
@@ -333,7 +334,7 @@ public class SemanticMotifService
 		} // if doFilter
 
 		// add gene-QTL-Trait relations to the network
-		var genes2QTLs = semanticMotifDataService.getGenes2QTLs ();
+		var genes2QTLs = knetInitializer.getGenes2QTLs ();
 		if ( !genes2QTLs.containsKey ( geneNode.getId () ) ) return;
 		
 		RelationType rt = gcloneMetaFact.createRelationType ( "is_p" );

@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
-import rres.knetminer.datasource.ondexlocal.service.utils.GeneHelper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
 /**
  * 
@@ -75,7 +75,7 @@ public class SemanticMotifSearchMgr
 		var graph = this.ondexProvider.getDataService ().getGraph ();
 		
 		Map<Integer, Set<Integer>> concept2Genes = this.ondexProvider
-			.getSemanticMotifDataService ()
+			.getKnetInitializer ()
 			.getConcepts2Genes ();
 		
 		this.luceneDocumentsLinked = (int) luceneConceptsSet.parallelStream ()
