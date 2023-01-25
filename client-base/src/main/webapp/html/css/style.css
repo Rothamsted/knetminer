@@ -2384,7 +2384,11 @@ a {
 .accession-popup-container {
     display: flex;
     flex-direction: column-reverse;
-    width: 400px;
+    width: 550px;
+}
+
+.accession-popup-table{
+    max-height: 600px;
 }
 
 .accession-popup-header{
@@ -2396,8 +2400,6 @@ a {
 .accession-popup-icons{
     display: flex;
     align-items: center;
-    width: 16%;
-    justify-content: space-between;
 }
 
 .accession-clipboard{
@@ -2411,6 +2413,7 @@ a {
     padding: 0.1rem;
     border: 1px solid silver;
     border-radius: 8px;
+    margin-left: .5rem;
 }
 
 .accession-clipboard img{
@@ -2423,3 +2426,8 @@ a {
 }
 
 
+@media(min-width:1920px) {
+    .accession-popup-table{
+        max-height: 700px;
+    }
+}

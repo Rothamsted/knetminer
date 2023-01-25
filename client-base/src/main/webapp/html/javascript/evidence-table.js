@@ -325,11 +325,8 @@
                 target:'#revertEvidenceView',
                 reposition:true
             });
-        
         }
      }
- 
-    
  }
  
 
@@ -345,7 +342,8 @@
 				// display already existed modal
         modalElement.css({
             "display":'block',
-            "opacity": 1
+            "opacity": 1,
+            "margin":'0 auto'
         });
 
         var ModalOverlay 	=  $(`#Modal_${conceptId}-overlay`)	
@@ -371,15 +369,17 @@
 
 
     }else{
-       
+        
+        // add a loader here 
+        activateSpinner("#tabviewer");
+
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
         var associateArr = [];
     
         $.get(api_url + `/genome${getTaxIdFrag}&keyword=ConceptID:${conceptId}`,'').done( function(data){
-            if(data.geneTable !== null )
-                    {
+            if(data.geneTable !== null ){
 
             var geneTable = data.geneTable.split("\n");
             var headers = geneTable[0].split("\t").slice(1,4); 
@@ -387,7 +387,7 @@
             associateArr.push(headers.join("\t"));
             var accessionTable = "";
             accessionTable += '<div class="accession-popup-container">';
-            accessionTable += '<table class="tablesorter">';
+            accessionTable += '<div class="accession-popup-table"><table class="tablesorter">';
             accessionTable += '<thead>';
             accessionTable += '<tr>'
             accessionTable += '<th> ACCESSION </th>';
@@ -402,7 +402,7 @@
                 accessionTable += '<td>'+ value[2] +'</td></tr>';
             };
 
-            accessionTable += '</tbody></table>';
+            accessionTable += '</tbody></table></div>';
         
             if(associateArr.length > 0)
             {
@@ -437,6 +437,7 @@
                 delayOpen: 50,
             });
 
+            deactivateSpinner("#tabviewer");
             accessionModal.open()
         
             }
@@ -459,7 +460,7 @@
                 }
 
                 if(accessionList.length > 0 ){
-                    navigator.clipboard.writeText(accessionList.toString()); 
+                    navigator.clipboard.writeText(accessionList.join("\n")); 
                 }
 
                 evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
@@ -467,9 +468,12 @@
             })
             
         }).fail(function(xhr,status,errolog){
-            jboxNotice(xhr, 'red', 300, 2000);
+            jboxNotice('An error occured, kindly try again', 'red', 300, 2000); 
+            deactivateSpinner("#tabviewer");
+
         }) 
 
     }
+  
 }
 
