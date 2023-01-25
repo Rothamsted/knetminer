@@ -57,7 +57,8 @@ multiSpeciesFeature = function ()
         drawGeneMaps('draw',null);
         getChromosomeList();
         matchCounter();
-        getQueryExamples(); //order changed (used to be first) to preserve release notes functionality when adding species specific queries
+        // Keep it as last, maybe it interfers with release notes
+        getQueryExamples(); 
         return true;
     }
 
@@ -148,7 +149,7 @@ multiSpeciesFeature = function ()
                     * Object structure for parsed XML data
                     *
                     * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
-                    * 		> name				= STRING - Name of the example query - this is now removed
+                    * 		> name				= STRING - Name of the example query - this is now removed. TODO: remove it forever?
                     * 		> description		= STRING - short description of the example query
                     * 		> term 				= STRING - Query Search Terms -
                     * 		> withinRegion 		= BOOLEAN - TRUE = Search within QTL region / FALSE = search whole genome -
