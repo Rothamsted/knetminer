@@ -443,8 +443,9 @@
             }
 
             }else{
-                evidenceNotice = '<span><b>Sorry, Genes Accession are absent.</b></span>'
+                evidenceNotice = '<span><b>Sorry, These genes are without Accessions </b></span>'
                 jboxNotice(evidenceNotice, 'red', 300, 2000);
+                deactivateSpinner("#tabviewer");
             }
 
 
@@ -465,6 +466,8 @@
 
                 evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
+                deactivateSpinner("#tabviewer");
+
             })
             
         }).fail(function(xhr,status,errolog){
