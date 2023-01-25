@@ -339,16 +339,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.1</version>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-						<showWarnings>true</showWarnings>
-						<showDeprecation>true</showDeprecation>
-						<maxmem>1024m</maxmem>
-						<encoding>UTF-8</encoding>
-						<fork>true</fork>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -373,9 +363,9 @@
 						<enableAssertions>true</enableAssertions>
 						<redirectTestOutputToFile>false</redirectTestOutputToFile>
 						<useFile>false</useFile>
-						<!--testFailureIgnore>true</testFailureIgnore -->
 					</configuration>
 				</plugin>
+								
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
