@@ -443,7 +443,7 @@
             }
 
             }else{
-                evidenceNotice = '<span><b>Sorry, These genes are without Accessions </b></span>'
+                evidenceNotice = '<span><b>Sorry, these genes have no accessions</b></span>'
                 jboxNotice(evidenceNotice, 'red', 300, 2000);
                 deactivateSpinner("#tabviewer");
             }
