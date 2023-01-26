@@ -384,7 +384,7 @@
 				<plugin>
 				  <groupId>org.eclipse.jetty</groupId>
 				  <artifactId>jetty-maven-plugin</artifactId>
-			    <version>10.0.1</version>
+			    <version>10.0.13</version>
 				  <executions>
 				  	<execution>
 				  		<id>start</id>

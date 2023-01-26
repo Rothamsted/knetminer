@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.jsonpath.DocumentContext;
