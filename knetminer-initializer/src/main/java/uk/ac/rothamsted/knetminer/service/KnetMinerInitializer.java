@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
@@ -171,21 +172,27 @@ public class KnetMinerInitializer
       //
       if ( indexFile.exists() )
       {
-    	  if ( !doReset ) {
-    		log.info ( "Skipping Ondex/Lucene indexing and reusing existing index files" );
-    		return;
+  			File graphFile = Optional.ofNullable ( this.getOxlFilePath () )
+					.map ( File::new )
+					.orElse ( null );
+
+  			if ( doReset || 
+  				graphFile != null && graphFile.exists () && indexFile.lastModified () < graphFile.lastModified () )
+    	  {
+    	  	log.info ( "Deleting old Lucene index" );
+    	  	FileUtils.deleteDirectory ( indexFile );
     	  }
-        log.info("Graph file updated since index last built, deleting old index");
-        FileUtils.deleteDirectory ( indexFile );
+    	  else
+    	  	log.info ( "Skipping Ondex/Lucene indexing and reusing existing index files" );
       }
   
-      log.info ( "Building Lucene Index: " + indexFile.getAbsolutePath() );
+      log.info ( "Getting/building Lucene Index from: " + indexFile.getAbsolutePath() );
       this.luceneMgr = new LuceneEnv ( indexFile.getAbsolutePath(), !indexFile.exists() );
       luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
       luceneMgr.setONDEXGraph ( graph );
       luceneMgr.setReadOnlyMode ( true );
 		
-		  log.info ( "Ondex graph indexed" );
+		  log.info ( "Ondex graph index initialisation finished" );
     } 
     catch (Exception e)
     {
@@ -277,14 +284,21 @@ public class KnetMinerInitializer
 		File fileGene2PathLength = Paths.get ( dataPath, "genes2PathLengths.ser" ).toFile ();
 		File fileGene2QTLs = Paths.get ( dataPath, "genes2QTLs.ser" ).toFile ();
 
-		File graphFile = new File ( this.getOxlFilePath () );
 		
+		File graphFile = Optional.ofNullable ( this.getOxlFilePath () )
+			.map ( File::new )
+			.orElse ( null );
+			
+		// Decide if possibly existing support files need to be deleted and force
+		// their re-creation
+		//
 		if ( doReset || 
-			fileConcept2Genes.exists () && graphFile.exists () 
+			fileConcept2Genes.exists ()
+			&& ( graphFile != null && graphFile.exists () ) 
 			&& fileConcept2Genes.lastModified () < graphFile.lastModified () 
 		)
 		{
-			log.info ( "(Re)creating semantic motif files, as per doReset flag" );
+			log.info ( "Deleting old semantic motif files" );
 			fileConcept2Genes.delete ();
 			fileGene2Concepts.delete ();
 			fileGene2PathLength.delete ();
