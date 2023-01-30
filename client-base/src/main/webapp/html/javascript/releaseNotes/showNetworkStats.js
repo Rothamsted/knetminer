@@ -27,13 +27,14 @@ async function fetchStats() {
     $.get(api_url + "/dataset-info/network-stats")
         .done(function (data) {
 
-            var releaseData = JSON.parse(data);
+            var releaseData = JSON.parse(data)
+
             var graphSummaries = releaseData.graphSummaries
             var semanticMotifStats = releaseData.semanticMotifStats;
             var graphStats = releaseData.graphStats;
 
-            var graphStatsTotalValue = graphStats.conceptClassTotals
-            var graphStatsTotalValueArray = convertObjectToArray(graphStatsTotalValue);
+            var graphStatsTablekeys = Object.keys(graphStats.conceptClassTotals).sort();
+            var graphStatsTotalValues = convertObjectToArray(graphStats.conceptClassTotals)
             var graphstatsConceptValue = convertObjectToArray(graphStats.conceptsPerGene);
             var avgRelationsPerConcept = convertObjectToArray(graphStats.avgRelationsPerConcept);
 
@@ -68,18 +69,18 @@ async function fetchStats() {
                 "<th style='border: 1px solid #dddddd; text-align: left;'>Type</th>" +
                 "<th style='border: 1px solid #dddddd; text-align: left;'>#Total</th></tr>";
 
-            for (var totalValue in graphStatsTotalValue) {
-                cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>" + totalValue + "</td>" +
-                    "<td style='border: 1px solid #dddddd; text-align: left;'>" + graphStatsTotalValue[totalValue] + "</td></tr>";
+            for (var value=0; value <= graphStatsTablekeys.length -1; value++) {
+                cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>" + graphStatsTablekeys[value] + "</td>" +
+                    "<td style='border: 1px solid #dddddd; text-align: left;'>" + graphStatsTotalValues[value] + "</td></tr>";
             }
 
             cc_table += "</table><table style='border-collapse: collapse; float: left'><th style='border: 1px solid #dddddd; text-align: left;'>#Linked</th>" +
                 "<th style='border: 1px solid #dddddd; text-align: left;'>%Linked</th></tr>"
 
 
-            for (var statsPosition = 0; statsPosition <= graphStatsTotalValueArray.length - 1; statsPosition++) {
+            for (var statsPosition = 0; statsPosition <= graphStatsTotalValues.length - 1; statsPosition++) {
 
-                var conEviPercentage = (parseFloat(graphstatsConceptValue[statsPosition]) / parseFloat(graphStatsTotalValueArray[statsPosition])) * 100;
+                var conEviPercentage = (parseFloat(graphstatsConceptValue[statsPosition]) / parseFloat(graphStatsTotalValues[statsPosition])) * 100;
                 conEviPercentage = conEviPercentage.toFixed(2);
                 cc_table += "<tr><td style='border: 1px solid #dddddd; text-align: left;'>" + graphstatsConceptValue[statsPosition] + "</td>" +
                     "<td style='border: 1px solid #dddddd; text-align: left;'>" + conEviPercentage + "</td></tr>";
@@ -126,8 +127,8 @@ async function fetchStats() {
         });
 }
 
-// function converts Objects to array
+// function converts Objects to array and return object values based on keys alphabetical order
 function convertObjectToArray(conceptData) {
-    var value = Object.keys(conceptData).map(key => conceptData[key]);
+    var value = Object.keys(conceptData).sort().map(key => conceptData[key]);
     return value;
 }
