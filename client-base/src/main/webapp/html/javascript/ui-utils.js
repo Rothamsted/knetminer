@@ -36,10 +36,15 @@ function activateButton(option){
 Functions for Add, Remove or Replace terms from the query search box
 */
 function addKeyword(keyword, from, target) {
-    query = $('#' + target).val();
-    newquery = query + ' OR ' + keyword;
-    $('#' + target).val(newquery);
+    var query = $('#' + target).val();
+    if (query.indexOf("ConceptID") >= 0 && query !== keyword && !query.includes(keyword)){
+       newQuery = query + ' OR ' + keyword;
+    }else{
+       newQuery = keyword
+    }
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('addKeywordUndo addKeyword');
+    document.getElementById('search').scrollIntoView();
 
     //Updates the query counter
     matchCounter();
@@ -50,10 +55,17 @@ function addKeyword(keyword, from, target) {
 
 function addKeywordUndo(keyword, from, target) {
     query = $('#' + target).val();
-    newquery = query.replace(' OR ' + keyword, "");
-    $('#' + target).val(newquery);
+    if (query.includes('OR ' + keyword)){
+        newQuery = query.replace(' OR ' + keyword, "");
+     }else if(query.includes(`NOT ${keyword}`)){
+         newQuery = query.replace('NOT '+keyword,keyword);
+     }else{
+         newQuery = query.replace(keyword, "");
+     } 
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('addKeywordUndo addKeyword');
 
+    document.getElementById('search').scrollIntoView();
     //Updates the query counter
     matchCounter();
 
@@ -63,9 +75,17 @@ function addKeywordUndo(keyword, from, target) {
 
 function excludeKeyword(keyword, from, target) {
     query = $('#' + target).val();
-    newquery = query + ' NOT ' + keyword;
-    $('#' + target).val(newquery);
+    if(query === keyword){
+       newQuery = ' NOT ' + keyword;
+    }else if(query.includes(keyword)){
+       newQuery = query.replace(' OR ' + keyword , ' NOT ' + keyword) 
+    }else{
+       newQuery = keyword
+    }
+
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('excludeKeywordUndo excludeKeyword');
+    document.getElementById('search').scrollIntoView();
     
     //Updates the query counter
     matchCounter();
@@ -76,9 +96,10 @@ function excludeKeyword(keyword, from, target) {
 
 function excludeKeywordUndo(keyword, from, target) {
     query = $('#' + target).val();
-    newquery = query.replace(' NOT ' + keyword, "");
-    $('#' + target).val(newquery);
+   newQuery = query.replace(' NOT ' + keyword, "");
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('excludeKeywordUndo excludeKeyword');
+    document.getElementById('search').scrollIntoView();
     //Updates the query counter
     matchCounter();
 
@@ -88,8 +109,8 @@ function excludeKeywordUndo(keyword, from, target) {
 
 function replaceKeyword(oldkeyword, newkeyword, from, target) {
     query = $('#' + target).val();
-    newquery = query.replace(oldkeyword, newkeyword);
-    $('#' + target).val(newquery);
+   newQuery = query.replace(oldkeyword, newkeyword);
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('replaceKeywordUndo replaceKeyword');
     //Updates the query counter
     matchCounter();
@@ -100,8 +121,8 @@ function replaceKeyword(oldkeyword, newkeyword, from, target) {
 
 function replaceKeywordUndo(oldkeyword, newkeyword, from, target) {
     query = $('#' + target).val();
-    newquery = query.replace(newkeyword, oldkeyword);
-    $('#' + target).val(newquery);
+   newQuery = query.replace(newkeyword, oldkeyword);
+    $('#' + target).val(newQuery);
     $('#' + from).toggleClass('replaceKeywordUndo replaceKeyword');
     //Updates the query counter
     matchCounter();
