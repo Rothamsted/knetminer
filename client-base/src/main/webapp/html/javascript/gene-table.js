@@ -151,21 +151,9 @@ function createGenesTable(text, keyword, rows){
 					var evidenceCC = evidenceElems[0];
 					var evidenceSize = evidenceElems[1];
 					var evidenceNodes = evidenceElems[2].split("//");
-					evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceCC + '" class="evidence_item evidence_item_' + evidenceCC + ' dropdown_box_open" title="' + evidenceCC + '" >';
+					evidenceTd += '<div class="evidence-container"><div  class="evidence_item evidence_item_' + evidenceCC + '" title="' + evidenceCC + '" >';
 					//Builds the evidence box
-					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceCC + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidenceCC + '></span>';
-					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceCC + '"></div> <span>' + evidenceCC + '</span></p>';
-					for (var ievNode = 0; ievNode < evidenceNodes.length; ievNode++) {
-						if (evidenceCC == 'Publication') {
-							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-							evidenceValueTd = '<a href="' + pubmedurl + evidenceNodes[ievNode].substring(5) + '" target="_blank">' + evidenceNodes[ievNode] + '</a>';
-						}
-						else
-							evidenceValueTd = evidenceNodes[ievNode];
 
-						evidenceTd += '<p>' + evidenceValueTd + '</p>';
-					}
-					evidenceTd += '</div>';
 					evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
 				} // for iev
 			} // if evidence.length
@@ -213,20 +201,23 @@ function createGenesTable(text, keyword, rows){
 		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword, exportPlainJSON: false }, false);
 	});
 
+
+	// TODO: evidence dropdown functions to refined in Knetminer 5.7 
+
 	/*
 	 * click handlers for opening and closing the qtl and evidence column drop down boxes.
 	 */
-	$(".dropdown_box_open").click(function (e) {
-		e.preventDefault();
-		var targetname = $(e.target).attr("id").replace("open_", "");
-		$("#" + targetname).slideDown(300);
-	});
+	// $(".dropdown_box_open").click(function (e) {
+	// 	e.preventDefault();
+	// 	var targetname = $(e.target).attr("id").replace("open_", "");
+	// 	$("#" + targetname).slideDown(300);
+	// });
 
-	$(".dropdown_box_close").click(function (e) {
-		e.preventDefault();
-		var targetname = $(e.target).attr("id").replace("close_", "");
-		$("#" + targetname).slideUp(100);
-	});
+	// $(".dropdown_box_close").click(function (e) {
+	// 	e.preventDefault();
+	// 	var targetname = $(e.target).attr("id").replace("close_", "");
+	// 	$("#" + targetname).slideUp(100);
+	// });
 
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
