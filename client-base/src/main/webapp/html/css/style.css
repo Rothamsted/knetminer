@@ -2400,11 +2400,13 @@ a {
 .accession-popup-icons{
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .accession-clipboard{
     height: 24px;
     width: 24px;
+    cursor: pointer;
 }
 
 .accession-downloadicon{

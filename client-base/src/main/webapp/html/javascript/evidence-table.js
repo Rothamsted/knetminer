@@ -336,6 +336,11 @@
 
     var modalElement = $(`#Modal_${conceptId}`); 
 
+    var accessionTooltip = new jBox('Tooltip', {target:'.accession-clipboard', attach:'accession-clipboard' , pointer: 'center', content:'<div style="text-align:center;width:160px;padding:0.5rem;font-size:0.75rem">Use to copy accession codes for KnetMiner genelist search</div>',position:{
+        x:'top',
+        y:'top'
+    }});
+
 		// Checking if modal element is already created for the current conceptId
     if(modalElement.length){
 
@@ -346,7 +351,7 @@
             "margin":'0 auto'
         });
 
-        var ModalOverlay 	=  $(`#Modal_${conceptId}-overlay`)	
+        var ModalOverlay =  $(`#Modal_${conceptId}-overlay`)	
 
 				ModalOverlay.css({
 						"display":'block',
@@ -378,7 +383,7 @@
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
         var associateArr = [];
     
-        $.get(api_url + `/genome${getTaxIdFrag}&keyword=ConceptID:${conceptId}`,'').done( function(data){
+        $.get(api_url + `/genome?keyword=ConceptID:${conceptId}`,'').done( function(data){
             if(data.geneTable !== null ){
 
             var geneTable = data.geneTable.split("\n");
@@ -394,7 +399,7 @@
             accessionTable += '<th> GENE NAME</th>';
             accessionTable += '<th> CHROMOSOME </th></tr></thead><tbody>';
 
-            for (var geneValue = 1; geneValue < (geneTable.length - 1) ; geneValue++){
+            for (var geneValue = 1; geneValue < (geneTable.length -1) ; geneValue++){
                 var value = geneTable[geneValue].split("\t").slice(1,4);
                 associateArr.push(value.join("\t"));
                 accessionTable += '<tr><td>'+ value[0] +'</td>';
@@ -437,6 +442,8 @@
                 delayOpen: 50,
             });
 
+            
+
             deactivateSpinner("#tabviewer");
             accessionModal.open()
         
@@ -468,6 +475,16 @@
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
                 deactivateSpinner("#tabviewer");
 
+            })
+
+            $(".accession-clipboard").mouseover(function(e){
+                e.preventDefault();
+                accessionTooltip.open()
+            })
+
+            $(".accession-clipboard").mouseout(function(e){
+                e.preventDefault();
+                accessionTooltip.close()
             })
             
         }).fail(function(xhr,status,errolog){
