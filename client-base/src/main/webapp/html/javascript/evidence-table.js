@@ -330,18 +330,16 @@
  }
  
 
-
-//  Function creates popup with a table of accessions of a given evidence gene list
+//  Function creates popup showing table of accessions associated to a genes concept
  function openGeneListPopup(conceptId, element){
 
     var modalElement = $(`#Modal_${conceptId}`); 
 
-    var accessionTooltip = new jBox('Tooltip', {target:'.accession-clipboard', attach:'accession-clipboard' , pointer: 'center', content:'<div style="text-align:center;width:160px;padding:0.5rem;font-size:0.75rem">Use to copy accession codes for KnetMiner genelist search</div>',position:{
-        x:'top',
-        y:'top'
-    }});
+    // tooltips components 
+    var accessionToolTip = accessionToolTips(`#copy-${conceptId}`,'Copy accession codes for KnetMiner genelist search');
+    var downloadToolTip = accessionToolTips(`#download-${conceptId}`,'Download full accession data for internal or external use');
 
-		// Checking if modal element is already created for the current conceptId
+	// Checking if modal element is already created for current conceptID
     if(modalElement.length){
 
 				// display already existed modal
@@ -382,7 +380,8 @@
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
         var associateArr = [];
-    
+        
+        // fetching data genetable data 
         $.get(api_url + `/genome?keyword=ConceptID:${conceptId}`,'').done( function(data){
             if(data.geneTable !== null ){
 
@@ -399,7 +398,12 @@
             accessionTable += '<th> GENE NAME</th>';
             accessionTable += '<th> CHROMOSOME </th></tr></thead><tbody>';
 
-            for (var geneValue = 1; geneValue < (geneTable.length -1) ; geneValue++){
+            var genesCount = geneTable.length >= 501 ? 501 : geneTable.length
+
+            var genesCountMessage = geneTable.length >= 501 ? '<div style="display;flex; align-items:center; justify-items:center; order:4;"><span><b>First 500 genes</b></span>:<span> download or copy accession codes to see full list</span></div>' : '';
+
+
+            for (var geneValue = 1; geneValue < (genesCount -1) ; geneValue++){
                 var value = geneTable[geneValue].split("\t").slice(1,4);
                 associateArr.push(value.join("\t"));
                 accessionTable += '<tr><td>'+ value[0] +'</td>';
@@ -418,15 +422,15 @@
             })
             
             var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes)+''; 
-
-            accessionTable += '<div class="accession-popup-header"><div><p style="margin-bottom: 0.5rem;">TaxID: '+ getTaxIdFrag.replace('?taxId=', "")+ '</p>';
+            accessionTable += genesCountMessage;
+            accessionTable += '<div class="accession-popup-header"><div><p style="margin-bottom: 0.5rem; margin-top:0.5rem;">TaxID: '+ getTaxIdFrag.replace('?taxId=', "")+ '</p>';
             accessionTable +=  '<p style="margin-top: 0;"> '+ type +': '+ description +'</p></div>'; 
             accessionTable +=  '<div class="accession-popup-icons">'; 
-            accessionTable +=  '<p class="accession-clipboard" href="javascript:;"><img src="html/image/copy.svg" alt="copy-accession"/></p>'; 
-            accessionTable += '<a class="accession-downloadicon" download="Accession.tsv" href="'+delimiterAttr+'"><img src="html/image/Knetdownload.png" alt="download-accession"/></a></div></div>';
-            accessionTable += '</div>';
+            accessionTable +=  '<a id="copy-'+conceptId+'" class="accession-clipboard" href="javascript:;"><img src="html/image/copy.svg" alt="copy-accession"/></a>'; 
+            accessionTable += '<a id="download-'+conceptId+'" class="accession-downloadicon" download="Accession.tsv" href="'+delimiterAttr+'"><img src="html/image/Knetdownload.png" alt="download-accession"/></a></div></div>';
+            accessionTable +=  '</div>';
     
-
+            // creating Jbox accession element
             var  accessionModal = new jBox('Modal', {
                 id: `Modal_${conceptId}`,
                 class:'accessionModal',
@@ -441,8 +445,6 @@
                 },
                 delayOpen: 50,
             });
-
-            
 
             deactivateSpinner("#tabviewer");
             accessionModal.open()
@@ -474,17 +476,35 @@
                 evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
                 deactivateSpinner("#tabviewer");
+                accessionModal.close();
+                // remove 
+                accessionToolTip.destroy();
+                downloadToolTip.destroy();
+
 
             })
 
+
+            // Popup icons mouseover and mouse leave events
+
             $(".accession-clipboard").mouseover(function(e){
                 e.preventDefault();
-                accessionTooltip.open()
+                accessionToolTip.open()
             })
 
             $(".accession-clipboard").mouseout(function(e){
                 e.preventDefault();
-                accessionTooltip.close()
+                accessionToolTip.close()
+            })
+
+            $(".accession-downloadicon").mouseover(function(e){
+                e.preventDefault();
+                downloadToolTip.open()
+            })
+
+            $(".accession-downloadicon").mouseout(function(e){
+                e.preventDefault();
+                downloadToolTip.close()
             })
             
         }).fail(function(xhr,status,errolog){
@@ -494,6 +514,13 @@
         }) 
 
     }
-  
+}
+
+// Function creates tooltips for icons in genelist popup
+function accessionToolTips(targetElement,content){
+    return  new jBox('Tooltip', {target:`${targetElement}`, pointer: 'center', content:'<div style="text-align:center;width:160px;padding:0.25rem;font-size:0.75rem">'+content+'</div>',position:{
+        x:'center',
+        y:'top'
+    }});
 }
 
