@@ -4,22 +4,9 @@ multiSpeciesFeature = function ()
     var currentTaxId = "";
 
     // function get lists of registered species from API
-   function getSpeciesList()
+   function setSpeciesSelector()
     {
-	          // TODO: two tasks into the same function, too complicated, setting the ID
-	          // based on URL should be dealt with else where, this looks more for 
-	          // fetching the species. 
-	          
-	          // TODO: also the function name doesn't look very good: does it get the species and
-	          // set up the user interface? => Name it something like setSpeciesSelector ()  
-	          //
-	            	
-            var taxIdFromURL = new URLSearchParams ( document.location.search )
-              .get ( "taxId" );
-            if ( taxIdFromURL ) setTaxId ( taxIdFromURL );
-       
-            
-            
+	
             $.get(api_url + '/dataset-info','').done( function(data){
                 renderHtmlHeaders(data);
                 var speciesInfos = data.species;
@@ -39,17 +26,31 @@ multiSpeciesFeature = function ()
     // function creates the species dropdown
     function createDropdown(speciesNames){
         var expectedOptions = speciesNames.length;
-        for(var speciesName in speciesNames){
-            var singleSpecie = speciesNames[speciesName]; 
-            var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
-            $('.navbar-select').append(optionElement);
-            var speciesOptions = $('.navbar-select option')
-            if(speciesOptions.length === expectedOptions){
-                return true
+        if(expectedOptions > 1){
+            for(var speciesName in speciesNames){
+                var singleSpecie = speciesNames[speciesName]; 
+                var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
+                $('.navbar-select').append(optionElement);
+                var speciesOptions = $('.navbar-select option')
+                if(speciesOptions.length === expectedOptions){
+                    return true
+                }
             }
+        }else{
+            setTaxId(speciesNames[0].taxId);
+            var optionElement = '<option value='+ speciesNames[0].taxId+'>'+speciesNames[0].scientificName+'</option>'; 
+            $('.navbar-select').replaceWith("<span class='navbar-select'></span>");
+            $('.navbar-select').append(optionElement);
+            $('.navbarselect-container').css({
+                "border":"none",
+                "height":'unset'
+            })
+            $('.navbar-select').css({
+                "height":"unset"
+            })
+   
+            return true
         }
-        
-        
     }
 
     // function house events that needs to be called when currentTaxId changes
@@ -89,16 +90,18 @@ multiSpeciesFeature = function ()
      */
     function selectDropdown(){
         if(currentTaxId !== ""){
+            // set 
             var speciesOptions = $('.navbar-select option')
             speciesOptions.each(function(){
                 if(currentTaxId === this.value){
                     $(this).attr('selected', true)
                     var url = window.location.href; 
                     url = url.split('?')[0]
-                    console.log(url);
                     history.pushState ( {}, '',url);
                 }
             })
+
+
         }else{
             var firstSpecies = $('.navbar-select').first();
             setTaxId(firstSpecies.val());  
@@ -303,12 +306,14 @@ multiSpeciesFeature = function ()
         return currentSpecies
     }
 
+
     return {
-        init:getSpeciesList,
+        init:setSpeciesSelector,
         speciesEvents: multiSpeciesEvents,
         setTaxId: setTaxId,
         getTaxId: getTaxIdUrlFrag,
         maps:drawGeneMaps,
         speciesData: currentSpecies
+
     }
 }(); 
