@@ -15,11 +15,11 @@ $(document).ready (
 			showApiInitResult ();
 			
 			
-			genemap = GENEMAP.GeneMap({apiUrl: api_url})
-				.width(800).height(550); // changed from 750x400
+		genemap = GENEMAP.GeneMap({apiUrl: api_url})
+			.width(800).height(550); // changed from 750x400
 	
-			knetmaps = KNETMAPS.KnetMaps();
-	
+		knetmaps = KNETMAPS.KnetMaps();
+		getTaxIdFromUrl();
 	    multiSpeciesFeature.init();					
 			loginUtilsInit();	 // See notes in loginUtils.js
 	    loadOnReady();
