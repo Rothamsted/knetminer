@@ -400,7 +400,7 @@
 
             var genesCount = geneTable.length >= 501 ? 501 : geneTable.length
 
-            var genesCountMessage = geneTable.length >= 501 ? '<div style="display;flex; align-items:center; justify-items:center; order:4;"><span><b>First 500 genes</b></span>:<span> download or copy accession codes to see full list</span></div>' : '';
+            var genesCountMessage = geneTable.length >= 501 ? '<div style="display:flex; align-items:center; justify-items:center;margin:.5rem 0;"><span><b>First 500 genes</b></span>:<span> download or copy accession codes to see full list</span></div>' : '';
 
 
             for (var geneValue = 1; geneValue < (genesCount -1) ; geneValue++){
