@@ -2433,3 +2433,17 @@ a {
         max-height: 700px;
     }
 }
+
+
+
+/* dark mode fix for inputs */
+
+@media(prefers-color-scheme: dark){
+    #num-genes{
+        color: black;
+    }
+    .num-genes-container{
+        border: 1px  solid black;
+        background-color: white;
+    }
+}
