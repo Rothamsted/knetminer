@@ -349,6 +349,8 @@
             "margin":'0 auto'
         });
 
+				// TODO: violates naming convention, is there a reason for this to be capitalised, 
+				// rather than the usual modalOverlay? Is it a class or an object?
         var ModalOverlay =  $(`#Modal_${conceptId}-overlay`)	
 
 				ModalOverlay.css({
