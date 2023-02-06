@@ -336,8 +336,8 @@
     var modalElement = $(`#Modal_${conceptId}`); 
 
     // tooltips components 
-    var accessionToolTip = accessionToolTips(`#copy-${conceptId}`,'Copy accession codes for KnetMiner genelist search');
-    var downloadToolTip = accessionToolTips(`#download-${conceptId}`,'Download full accession data for internal or external use');
+    var accessionToolTip = accessionToolTips(`#copy-${conceptId}`,'Copy gene accessions (for genelist search).');
+    var downloadToolTip = accessionToolTips(`#download-${conceptId}`,'Download full table.');
 
 	// Checking if modal element is already created for current conceptID
     if(modalElement.length){
@@ -402,7 +402,7 @@
 
             var genesCount = geneTable.length >= 501 ? 501 : geneTable.length
 
-            var genesCountMessage = geneTable.length >= 501 ? '<div style="display:flex; align-items:center; justify-items:center;margin:.5rem 0;"><span><b>First 500 genes</b></span>:<span> download or copy accession codes to see full list</span></div>' : '';
+            var genesCountMessage = geneTable.length >= 501 ? '<div style="display:flex; align-items:center; justify-items:center;margin:.5rem 0;"><span><b>Showing 500 genes.</b> Copy or Download (top right) for the full list.</span></div>' : '';
 
 
             for (var geneValue = 1; geneValue < (genesCount -1) ; geneValue++){

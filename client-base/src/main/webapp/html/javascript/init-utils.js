@@ -320,7 +320,7 @@ function bodyHandlers() {
 									addClass = "knetscorehint";
 							break;
 							case "accession-info":
-									message ="<p>Genes in the current Knowledge Graph related to your Evidence of interest.</p>";
+									message ="<p>Genes related to your evidence of interest in the current Knowledge Graph.</p>";
 										addClass = "knetscorehint";
 								break
 						}
