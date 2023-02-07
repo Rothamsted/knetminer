@@ -332,59 +332,61 @@
 
 //  Function creates popup showing table of accessions associated to a genes concept
  function openGeneListPopup(conceptId, element){
+    
+    // remove existing tooltip to avoid duplication
+     removeAccessionToolTips('copy_tooltip'); 
+     removeAccessionToolTips('download_tooltip'); 
+    
 
-    var modalElement = $(`#Modal_${conceptId}`); 
-
-    // tooltips components 
-    var accessionToolTip = accessionToolTips(`#copy-${conceptId}`,'Copy gene accessions (for genelist search).');
-    var downloadToolTip = accessionToolTips(`#download-${conceptId}`,'Download full table.');
+    // Modal popup DOM element
+    var modalElement = $(`#modal_${conceptId}`); 
 
 	// Checking if modal element is already created for current conceptID
-    if(modalElement.length){
+    if(modalElement.length){     
+         
 
-				// display already existed modal
+        // display already existing modal element
         modalElement.css({
             "display":'block',
             "opacity": 1,
             "margin":'0 auto'
         });
+				
+        var modalOverlay =  $(`#modal_${conceptId}-overlay`);
 
-				// TODO: violates naming convention, is there a reason for this to be capitalised, 
-				// rather than the usual modalOverlay? Is it a class or an object?
-        var ModalOverlay =  $(`#Modal_${conceptId}-overlay`)	
+        modalOverlay.css({
+                "display":'block',
+                "opacity": 1
+        })
 
-				ModalOverlay.css({
-						"display":'block',
-						"opacity": 1
-				})
+        // close modals with Overlay
+        modalOverlay.bind("click", function(e){
+            e.preventDefault();
+            modalElement.hide();
+            modalOverlay.hide();
+        })
 
-				// close modals with Overlay
-				ModalOverlay.bind("click", function(e){
-					e.preventDefault();
-					modalElement.hide();
-					ModalOverlay.hide();
-				})
+        // close Modals with cancel button
+        $('.jBox-closeButton').bind("click", function(e){
+            e.preventDefault();
+            modalElement.hide();
+            modalOverlay.hide();
+        })
 
-				// close Modals with cancel button
-				$('.jBox-closeButton').bind("click", function(e){
-					e.preventDefault();
-					modalElement.hide();
-					ModalOverlay.hide();
-				})
-
+       triggerAccessionToolTips(conceptId);
 
     }else{
-        
-        // add a loader here 
+
+        // activate loading animation here 
         activateSpinner("#tabviewer");
 
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
         var associateArr = [];
-        
-        // fetching data genetable data 
-        $.get(api_url + `/genome?keyword=ConceptID:${conceptId}`,'').done( function(data){
+
+        // fetching data genetable data with a timeout of 1min 66secs
+        $.get({url:api_url + `/genome?keyword=ConceptID:${conceptId}`,data:'',timeout:100000}).done( function(data){
             if(data.geneTable !== null ){
 
             var geneTable = data.geneTable.split("\n");
@@ -434,7 +436,7 @@
     
             // creating Jbox accession element
             var  accessionModal = new jBox('Modal', {
-                id: `Modal_${conceptId}`,
+                id: `modal_${conceptId}`,
                 class:'accessionModal',
                 animation: 'pulse',
                 title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accession-info" class="hint hint-small accession-info"><i  class="far fa-question-circle"></i> </span>',
@@ -479,50 +481,62 @@
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
                 deactivateSpinner("#tabviewer");
                 accessionModal.close();
-                // remove 
-                accessionToolTip.destroy();
-                downloadToolTip.destroy();
-
 
             })
 
-
-            // Popup icons mouseover and mouse leave events
-
-            $(".accession-clipboard").mouseover(function(e){
-                e.preventDefault();
-                accessionToolTip.open()
-            })
-
-            $(".accession-clipboard").mouseout(function(e){
-                e.preventDefault();
-                accessionToolTip.close()
-            })
-
-            $(".accession-downloadicon").mouseover(function(e){
-                e.preventDefault();
-                downloadToolTip.open()
-            })
-
-            $(".accession-downloadicon").mouseout(function(e){
-                e.preventDefault();
-                downloadToolTip.close()
-            })
+           triggerAccessionToolTips(conceptId);
             
         }).fail(function(xhr,status,errolog){
             jboxNotice('An error occured, kindly try again', 'red', 300, 2000); 
             deactivateSpinner("#tabviewer");
 
-        }) 
-
+        })
     }
 }
 
 // Function creates tooltips for icons in genelist popup
-function accessionToolTips(targetElement,content){
+function createAccessionToolTips(targetElement,content,element){
+
     return  new jBox('Tooltip', {target:`${targetElement}`, pointer: 'center', content:'<div style="text-align:center;width:160px;padding:0.25rem;font-size:0.75rem">'+content+'</div>',position:{
         x:'center',
         y:'top'
-    }});
+    }, 
+    id:`${element}_tooltip`
+    });
 }
+
+// Function removes tooltips for icons in genelist popup
+function removeAccessionToolTips(elementId){
+    var tooltipElement = $(`#${elementId}`)
+    if(tooltipElement !== undefined) tooltipElement.remove();
+}
+
+// Function triggers tooltips mouse events for icons in genelist popup
+function triggerAccessionToolTips(conceptId){
+
+    var accessionToolTip = createAccessionToolTips(`#copy-${conceptId}`,'Copy gene accessions (for genelist search).', 'copy');
+    var downloadToolTip = createAccessionToolTips(`#download-${conceptId}`,'Download full table.','download');
+
+    $(".accession-clipboard").mouseover(function(e){
+        e.preventDefault();
+        accessionToolTip.open();
+    })
+
+    $(".accession-clipboard").mouseout(function(e){
+        e.preventDefault();
+        accessionToolTip.close()
+    })
+
+    $(".accession-downloadicon").mouseover(function(e){
+        e.preventDefault();
+        downloadToolTip.open();
+    })
+
+    $(".accession-downloadicon").mouseout(function(e){
+        e.preventDefault();
+        downloadToolTip.close();
+    })
+  
+}
+
 
