@@ -284,7 +284,7 @@ function createGenesTable(text, keyword, rows){
 		$(this).toggleClass('checked')
 
 		// update selected genes count
-		updateSelectedGenesCount("candidates", "#candidate-count");
+		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
 	});
 
 	// bind click event on all candidateGenes checkboxes in Gene View table.
@@ -425,8 +425,8 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 // Arne 18/01/23 added viewName which requests a name (probably either Term or Gene).
 function updateSelectedGenesCount(inputName, countContainer, viewName) {
 	var count = returnCheckInputCount(inputName);
-	var viewName = count > 1 ? viewName + 's' : viewName // >1 testing
-	$('' + countContainer + ' span').text(count + ' ' + viewName + ' selected'); // update
+	var viewCount = count > 1 ? viewName + 's' : viewName // >1 testing
+	$('' + countContainer + ' span').text(count + ' ' + viewCount + ' selected'); // update
 	$(countContainer).next().toggleClass('non-active', count < 1);
 	changeButtonOffSvg('NetworkCanvas_button')
 }

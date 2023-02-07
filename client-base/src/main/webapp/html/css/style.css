@@ -479,7 +479,7 @@ select {
 
 .num-genes-container{
     width: fit-content;
-    padding: 0.4rem 0.6rem;
+    padding: 0.3rem 0.6rem;
     background: #000;
     border-radius: 8px;
     margin-right: 1.5rem;
@@ -682,8 +682,6 @@ table.suggestorTable .evidence_item {
 table.suggestorTable .qtl_item {
     margin-left: 50px;
 }
-
-
 
 /* tooltip */
 span.hint {
