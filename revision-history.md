@@ -4,7 +4,12 @@
 
 # 5.0.1-SNAPSHOT
 
-* TODO: multi-species, new configuration, API URL auto-discovery, /network with plainJSON
+* TODO:
+	* multi-species
+	* new configuration
+	* API URL auto-discovery
+	* /network with plainJSON
+	* data initialiser component
 
 ## UI Improvements
 * List of gene synonyms added to gene view (#602).
