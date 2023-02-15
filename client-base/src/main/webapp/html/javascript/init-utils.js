@@ -319,10 +319,24 @@ function bodyHandlers() {
 									message ="The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised.";
 									addClass = "knetscorehint";
 							break;
-							case "accession-info":
-									message ="<p>Genes related to your evidence of interest in the current Knowledge Graph.</p>";
+						case "accession-info":
+									message ="<p>Genes in the current Knowledge Graph related to your Evidence of interest.</p>";
 										addClass = "knetscorehint";
-								break
+              case"pvalue":
+                message = "<p>Calculated using Fisher's exact test across all Species in dataset.</p>";
+                addClass = "knetscorehint";
+                break;
+              case"genelistHint":
+                message = "<p>Genes from your Gene List matching Description.</p>";
+                addClass = "knetscorehint";
+								break; 
+                case"genesHint":
+                message = "<p>Genes in dataset matching Description.</p>";
+                addClass = "knetscorehint";
+								break;
+
+              default:
+                break
 						}
 						
     $("div.tooltip").remove();
@@ -374,6 +388,17 @@ function bodyHandlers() {
 function geneViewHelper() {
   var modalElement = document.getElementById("geneviewHelper");
   var isModalCreated = $.contains(document.body, modalElement);
+
+  var offsetY;
+
+  // checking window width to set modal offset Y position
+  if(window.innerWidth <= 1440){
+    offsetY = -720;
+  }else{
+    offsetY = -650;
+  }
+
+
   if (isModalCreated) {
     modalElement.remove();
     $("#geneviewHelper-overlay").remove();
@@ -389,12 +414,14 @@ function geneViewHelper() {
     content: content,
     cancelButton: "Exit",
     draggable: "title",
-    target: $("#hint_sortable_table"),
+    target:"#hint_sortable_table",
     width: 350,
-    offset: { x: -130, y: -480 },
+    offset: {x:0, y:offsetY},
     delayOpen: 100,
   });
   geneHelperModal.open();
+
+    
 }
 
 // util function removes genome region input row from the DOM

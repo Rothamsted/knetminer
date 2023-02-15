@@ -41,9 +41,9 @@
          table = table + '<th width="50">Type</th>';
          table = table + '<th width="212">Description</th>';
          //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
-         table = table + '<th width="78"> P-Value</th>';
-         table = table + '<th width="70">Genes</th>';
-         table = table + '<th width="103">Gene List</th>';
+         table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+         table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
+         table = table + '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
          table = table + '<th width="70">Select</th>';
          table = table + '</tr>';
          table = table + '</thead>';
