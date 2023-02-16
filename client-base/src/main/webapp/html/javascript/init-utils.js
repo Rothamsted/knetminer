@@ -334,10 +334,9 @@ function bodyHandlers() {
                 message = "<p>Genes in dataset matching Description.</p>";
                 addClass = "knetscorehint";
 								break;
-
-              default:
+               default:
                 break
-						}
+		}
 						
     $("div.tooltip").remove();
 

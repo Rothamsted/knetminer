@@ -624,7 +624,7 @@ table.tablesorter tfoot tr th {
     padding: 4px;
 }
 
-table.tablesorter thead tr .header {
+table.tablesorter thead tr .tablesorter-header {
     background-image: url(../image/bg.gif);
     background-repeat: no-repeat;
     background-position: center right;
@@ -648,19 +648,27 @@ table.tablesorter tbody tr.odd td {
     background-color: #D5EECD;
 }
 
-table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .tablesorter-headerAsc {
     background-image: url(../image/asc.gif);
 }
 
-table.tablesorter thead tr .headerSortDown {
+
+table.tablesorter thead tr .tablesorter-headerDesc {
     background-image: url(../image/desc.gif);
 }
 
-table.tablesorter thead tr .headerSortDown,
-table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .tablesorter-headerAsc,
+table.tablesorter thead tr .tablesorter-headerDesc {
     background-color: #F0F0F6;
     background-color: #BDB7A8;
 }
+
+table.tablesorter thead tr .tablesorter-headerUnSorted {
+    background-image: none;
+}
+
+
+
 
 table.suggestorTable {
     margin-left: 28px;

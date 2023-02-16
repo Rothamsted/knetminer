@@ -31,7 +31,7 @@
          var evi_legend= getEvidencesLegend(text);
          table = '';
          table = table + '<div class="gene_header_container">' + evi_legend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
-         table = table + '<div id= "evidenceViewTable" class = "scrollTable">';
+         table = table + '<div id= "evidenceViewTable" class="scrollTable">';
          table = table + '<table id="tablesorterEvidence" class="tablesorter">';
          table = table + '<thead>';
          table = table + '<tr>';
