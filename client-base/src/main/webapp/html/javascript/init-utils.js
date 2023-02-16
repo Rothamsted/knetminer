@@ -295,11 +295,36 @@ function searchHandlers() {
 }
 
 // function handles body events
+// TODO: better name. To manage which events? All? Tooltips?
+// TODO: mov to a more appropriate file? Eg, ui-utils.js? 
 function bodyHandlers() {
   $("body").on("mouseenter", "span.hint", function (event) {
   var target = $(this)[0].id;
     var message = "";
     addClass = "";
+
+		/* TODO: this is very common, yet rather poor code style.
+		 * 
+		 * A more compact way to manage this case is:
+		 * 
+		 * eventsAnswers = {
+		 *   "hintSearchQtlGenome": [ "Select the "whole-genome" option..." ],
+		 *   "knetScore": [ "The KnetMiner Gene Rank score...", "knetscorehint" ]
+		 *   ...
+		 * }
+		 * ...
+		 * answerParams = eventsAnswers [ target ]
+		 * message = answerParams [ 0 ]
+		 * addedClass = answerParams.length > 1 ? answerParams [ 1 ] : "" 
+		 * <use message, addedClass>  
+		 * 
+		 * This makes the code more compact and easier to extend (possibly, with a separated file to 
+		 * define eventsAnswers). Potentially, this allows for fulfilling the open-closed principle
+		 * (http://joelabrahamsson.com/a-simple-example-of-the-openclosed-principle/, https://www.baeldung.com/java-open-closed-principle)
+		 * 
+		 * If the params become more, and/or more complicated, use dictionaries
+		 * (not arrays) for the cases too( "case": { message: "...", addedClass = "..." }). 
+		 */  
 
     switch(target){
       case	"hintSearchQtlGenome":
