@@ -83,6 +83,7 @@
 		<plugins>
 
 			<!-- Disabling stuff from the parent level -->
+			<!-- TODO: remove, it has been disabled 
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
         <executions>
@@ -96,6 +97,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
 		
 		</plugins>
 	</build>
