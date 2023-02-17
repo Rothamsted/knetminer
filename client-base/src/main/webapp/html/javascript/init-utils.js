@@ -408,44 +408,17 @@ function bodyHandlers() {
   });
 }
 
-// function creates, shows and destroys gene and evidence view helper modal element
-function geneViewHelper() {
-  var modalElement = document.getElementById("geneviewHelper");
-  var isModalCreated = $.contains(document.body, modalElement);
+// function shows gene and evidence view helper modal element
+function showGeneViewHelper(event) {
+  $('#helperModal').show();
+  $('.helper-modal-overlay').show();
 
-  var offsetY;
+}
 
-  // checking window width to set modal offset Y position
-  if(window.innerWidth <= 1440){
-    offsetY = -720;
-  }else{
-    offsetY = -650;
-  }
-
-
-  if (isModalCreated) {
-    modalElement.remove();
-    $("#geneviewHelper-overlay").remove();
-  }
-  var header = '<h2 style="color:white;margin:0">KnetMiner View Helper</h2>';
-  var content =
-    "<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>";
-
-  var geneHelperModal = new jBox("Modal", {
-    id: "geneviewHelper",
-    animation: "pulse",
-    title: header,
-    content: content,
-    cancelButton: "Exit",
-    draggable: "title",
-    target:"#hint_sortable_table",
-    width: 350,
-    offset: {x:0, y:offsetY},
-    delayOpen: 100,
-  });
-  geneHelperModal.open();
-
-    
+// function closes gene and evidence view helper modal element
+function closeGeneViewHelper(){
+  $('#helperModal').hide();
+  $('.helper-modal-overlay').hide();
 }
 
 // util function removes genome region input row from the DOM
