@@ -31,7 +31,6 @@
 			  <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-surefire-plugin</artifactId>
-			    <version>3.0.0-M1</version>
 			    <configuration combine.self = "override">
 						<forkCount>0</forkCount>
 			      <properties>
@@ -48,7 +47,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 		      <artifactId>maven-failsafe-plugin</artifactId>
-		      <version>3.0.0-M1</version>
 		      <configuration combine.self = "override">
 		      	<forkCount>0</forkCount>
 		        <trimStackTrace>false</trimStackTrace>
@@ -85,6 +83,7 @@
 		<plugins>
 
 			<!-- Disabling stuff from the parent level -->
+			<!-- TODO: remove, it has been disabled 
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
         <executions>
@@ -98,6 +97,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
 		
 		</plugins>
 	</build>

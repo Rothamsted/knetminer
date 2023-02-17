@@ -479,7 +479,7 @@ select {
 
 .num-genes-container{
     width: fit-content;
-    padding: 0.4rem 0.6rem;
+    padding: 0.3rem 0.6rem;
     background: #000;
     border-radius: 8px;
     margin-right: 1.5rem;
@@ -624,7 +624,7 @@ table.tablesorter tfoot tr th {
     padding: 4px;
 }
 
-table.tablesorter thead tr .header {
+table.tablesorter thead tr .tablesorter-header {
     background-image: url(../image/bg.gif);
     background-repeat: no-repeat;
     background-position: center right;
@@ -648,19 +648,27 @@ table.tablesorter tbody tr.odd td {
     background-color: #D5EECD;
 }
 
-table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .tablesorter-headerAsc {
     background-image: url(../image/asc.gif);
 }
 
-table.tablesorter thead tr .headerSortDown {
+
+table.tablesorter thead tr .tablesorter-headerDesc {
     background-image: url(../image/desc.gif);
 }
 
-table.tablesorter thead tr .headerSortDown,
-table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .tablesorter-headerAsc,
+table.tablesorter thead tr .tablesorter-headerDesc {
     background-color: #F0F0F6;
     background-color: #BDB7A8;
 }
+
+table.tablesorter thead tr .tablesorter-headerUnSorted {
+    background-image: none;
+}
+
+
+
 
 table.suggestorTable {
     margin-left: 28px;
@@ -682,8 +690,6 @@ table.suggestorTable .evidence_item {
 table.suggestorTable .qtl_item {
     margin-left: 50px;
 }
-
-
 
 /* tooltip */
 span.hint {
@@ -2231,6 +2237,7 @@ a {
     align-items: center;
     justify-content: end;
     width: 24%;
+    position: relative;
 }
 
 .tabviwer-views-btns{
@@ -2384,7 +2391,7 @@ a {
 .accession-popup-container {
     display: flex;
     flex-direction: column-reverse;
-    width: 550px;
+    width: 580px;
 }
 
 .accession-popup-table{
@@ -2448,8 +2455,7 @@ a {
     }
 }
 
-
-/* loading times overlay */
+/* Long load time pop-up (#710) */
 .overlay{
     position: absolute;
     display: flex;
@@ -2479,4 +2485,40 @@ a {
     font-size: 1.15rem;
     font-weight: 600;
     color: #51CE7B;
+}
+
+/* helper modal css */
+
+.helper-modal-overlay{
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 15;
+    right: 0;
+    top: 0;
+    opacity: 0.6;
+}
+
+#helperModal{
+    position: absolute;
+    width: 350px;
+    background: white;
+    z-index: 16;
+    display: none;
+    top:2.2pc;
+    right: 3pc;
+    border-radius: 6px;
+}
+
+#helperModal h2{
+    color: white;
+    background: black;
+    margin:0;
+    padding: .5rem;
+}
+
+#helperModal p{
+    padding: .5rem;
 }

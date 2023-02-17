@@ -253,7 +253,7 @@
 			 		</plugin>
 			 		
 					<!-- 
-						Restore Neo4j test DB dump. This happens after neo4j-server-maven-plugin has downladed the 
+						Restores Neo4j test DB dump. This happens after neo4j-server-maven-plugin has downladed the 
 						server distribution, see below. 
 					-->
 					<plugin>

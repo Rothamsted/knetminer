@@ -172,9 +172,15 @@
 			</div>
 
 			<div class='tabviewer-actions'>
-				<span class="ctaButton" id="hint_sortable_table" onclick="geneViewHelper()">Help<i style="margin-left:.25rem;" class="fas fa-info-circle"></i></span>
+				<span class="ctaButton" id="hint_sortable_table" onclick="showGeneViewHelper(event)">Help<i style="margin-left:.25rem;" class="fas fa-info-circle"></i></span>
 				<a   class="delimited-cta network_button" target="_blank"><img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a>
-			</div>
+				<div onclick="closeGeneViewHelper()" class="helper-modal-overlay"> 
+				</div>
+				<div id="helperModal">
+						<h2>KnetMiner View Helper</h2>
+						<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>
+						</div> 
+				</div>
 		</div>
     	
         <div id="tabviewer_content">

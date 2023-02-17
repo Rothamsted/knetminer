@@ -295,11 +295,36 @@ function searchHandlers() {
 }
 
 // function handles body events
+// TODO: better name. To manage which events? All? Tooltips?
+// TODO: mov to a more appropriate file? Eg, ui-utils.js? 
 function bodyHandlers() {
   $("body").on("mouseenter", "span.hint", function (event) {
   var target = $(this)[0].id;
     var message = "";
     addClass = "";
+
+		/* TODO: this is very common, yet rather poor code style.
+		 * 
+		 * A more compact way to manage this case is:
+		 * 
+		 * eventsAnswers = {
+		 *   "hintSearchQtlGenome": [ "Select the "whole-genome" option..." ],
+		 *   "knetScore": [ "The KnetMiner Gene Rank score...", "knetscorehint" ]
+		 *   ...
+		 * }
+		 * ...
+		 * answerParams = eventsAnswers [ target ]
+		 * message = answerParams [ 0 ]
+		 * addedClass = answerParams.length > 1 ? answerParams [ 1 ] : "" 
+		 * <use message, addedClass>  
+		 * 
+		 * This makes the code more compact and easier to extend (possibly, with a separated file to 
+		 * define eventsAnswers). Potentially, this allows for fulfilling the open-closed principle
+		 * (http://joelabrahamsson.com/a-simple-example-of-the-openclosed-principle/, https://www.baeldung.com/java-open-closed-principle)
+		 * 
+		 * If the params become more, and/or more complicated, use dictionaries
+		 * (not arrays) for the cases too( "case": { message: "...", addedClass = "..." }). 
+		 */  
 
     switch(target){
       case	"hintSearchQtlGenome":
@@ -319,11 +344,24 @@ function bodyHandlers() {
 									message ="The KnetMiner Gene Rank score published in <b>Hassani-Pak et al 2021</b>. The score is not normalised.";
 									addClass = "knetscorehint";
 							break;
-							case "accession-info":
+						case "accession-info":
 									message ="<p>Genes in the current Knowledge Graph related to your Evidence of interest.</p>";
 										addClass = "knetscorehint";
-								break
-						}
+              case"pvalue":
+                message = "<p>Calculated using Fisher's exact test across all Species in dataset.</p>";
+                addClass = "knetscorehint";
+                break;
+              case"genelistHint":
+                message = "<p>Genes from your Gene List matching Description.</p>";
+                addClass = "knetscorehint";
+								break; 
+                case"genesHint":
+                message = "<p>Genes in dataset matching Description.</p>";
+                addClass = "knetscorehint";
+								break;
+               default:
+                break
+		}
 						
     $("div.tooltip").remove();
 
@@ -370,31 +408,17 @@ function bodyHandlers() {
   });
 }
 
-// function creates, shows and destroys gene and evidence view helper modal element
-function geneViewHelper() {
-  var modalElement = document.getElementById("geneviewHelper");
-  var isModalCreated = $.contains(document.body, modalElement);
-  if (isModalCreated) {
-    modalElement.remove();
-    $("#geneviewHelper-overlay").remove();
-  }
-  var header = '<h2 style="color:white;margin:0">KnetMiner View Helper</h2>';
-  var content =
-    "<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>";
+// function shows gene and evidence view helper modal element
+function showGeneViewHelper(event) {
+  $('#helperModal').show();
+  $('.helper-modal-overlay').show();
 
-  var geneHelperModal = new jBox("Modal", {
-    id: "geneviewHelper",
-    animation: "pulse",
-    title: header,
-    content: content,
-    cancelButton: "Exit",
-    draggable: "title",
-    target: $("#hint_sortable_table"),
-    width: 350,
-    offset: { x: -130, y: -480 },
-    delayOpen: 100,
-  });
-  geneHelperModal.open();
+}
+
+// function closes gene and evidence view helper modal element
+function closeGeneViewHelper(){
+  $('#helperModal').hide();
+  $('.helper-modal-overlay').hide();
 }
 
 // util function removes genome region input row from the DOM
