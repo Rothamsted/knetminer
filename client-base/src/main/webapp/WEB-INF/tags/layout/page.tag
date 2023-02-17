@@ -118,6 +118,9 @@
         <!-- multi species file -->
         <script type="text/javascript" src="html/javascript/multispecies.js"></script>
 
+        <!-- string loadtimes files -->
+        <script type="text/javascript" src="html/javascript/loadtimes-popup.js"></script>
+        
         <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
@@ -126,7 +129,7 @@
         
         <!-- string data Utils-->
         <script type="text/javascript" src="html/javascript/string-utils.js"></script>
-
+      
         <!-- google analytics-->
         <script type="text/javascript" src="html/javascript/google-analytics.js"></script>
 

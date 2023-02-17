@@ -126,18 +126,31 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
                      })
-                     .success(function (data) {
+                     .success(function(data){
+
                         var gviewer = data.gviewer
-                         var querytime= performance.now() - this.startTime; // query response time
-                         var queryseconds= querytime/1000;
-                         queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
+                        var querytime= performance.now() - this.startTime; // query response time
+                        var queryseconds= querytime/1000;
+                        queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
 
-                         $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+                        $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
 
+                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
+                     }
+
+                     ).always(function(){
+                        timeOutId =  setTimeout(getLongWaitMessage.init(),4000);
+                     })
+                     .complete(function(){
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
-                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-                     });
+                        $('.overlay').remove();
+                        $('#tabviewer').show();
+                        var timeOutId =  getLongWaitMessage.timeOutId(); 
+
+                        // clear timeout from callstack
+                        clearTimeout(timeOutId);
+                     })
              }
              else {
                  $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
@@ -326,9 +339,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          $('#suggestor_search_area').slideUp(500);
 
 
-
-         activateButton('resultsTable');
-         $('#tabviewer').show();
          createGenesTable(data.geneTable, keyword, candidateGenes);
          createEvidenceTable(data.evidenceTable, keyword);
          handleDelimintedCta.getData(data); 
