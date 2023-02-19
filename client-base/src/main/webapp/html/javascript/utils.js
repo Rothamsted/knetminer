@@ -28,7 +28,7 @@ $(document).ready (
 	    inputHandlers();
 	    QtlRegionHandlers();
 	    searchHandlers();
-	    bodyHandlers();
+		showToolTips();
 		intialiseFeedbackCtaConfig();
 		
 		// Do this as last step, so that it doesn't track in 

@@ -101,6 +101,9 @@
         <!-- utils -->
         <script type="text/javascript" src="html/javascript/utils.js"></script>
 
+           <!-- tooltips data -->
+        <script type="text/javascript" src="html/javascript/tooltips-data.js"></script>
+
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
@@ -117,6 +120,8 @@
 
         <!-- multi species file -->
         <script type="text/javascript" src="html/javascript/multispecies.js"></script>
+        
+     
 
         <!-- string loadtimes files -->
         <script type="text/javascript" src="html/javascript/loadtimes-popup.js"></script>

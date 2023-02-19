@@ -352,3 +352,57 @@ function intialiseFeedbackCtaConfig(){
 function feedbackCloseBtn(){
   $("#feedbackNav").remove();
 }
+
+// function handles tooltips event for knetminer tabview
+function showToolTips() {
+    $("body").on("mouseenter", "span.hint", function (event) {
+    var target = $(this)[0].id;
+    var Tooltips = getToolTipsData(); 
+      var currentTooltip = Tooltips[target];
+      var message = currentTooltip[0];
+      var addClass = currentTooltip.length > 1 ? currentTooltip[1] : "";
+                  
+      $("div.tooltip").remove();
+  
+      $('<div class="tooltip ' + addClass + '">' + message + "</div>").appendTo(
+        "body"
+      );
+  
+      tooltipY = $(this).offset()["top"] - 12;
+      tooltipX = $(this).offset()["left"] - 4;
+      winWidth = $(window).width();
+      if (tooltipX + 300 > winWidth) {
+        tooltipX = winWidth - 300;
+      }
+  
+      $("div.tooltip.tooltip-static").css({ top: tooltipY, left: tooltipX }); //for sample queries tooltip
+    });
+  
+    $("body").on("mousemove", "span.hint:not(#hintEgKeywords)", function (event) {
+      target = $(this)[0].id;
+  
+      var tooltipX = event.pageX - 8;
+      var tooltipY = event.pageY + 8;
+  
+      winWidth = $(window).width();
+      if (tooltipX + 300 > winWidth) {
+        tooltipX = winWidth - 300;
+      }
+  
+      $("div.tooltip").css({ top: tooltipY, left: tooltipX });
+    });
+  
+    $("body").on("mouseleave", "span.hint", function (event) {
+      if (
+        $(event.relatedTarget).hasClass("tooltip-static") ||
+        $(event.relatedTarget).parent().hasClass("tooltip-static")
+      ) {
+        return;
+      }
+      $("div.tooltip").remove();
+    });
+  
+    $("body").on("mouseleave", "div.tooltip-static", function (event) {
+      $("div.tooltip").remove();
+    });
+  }

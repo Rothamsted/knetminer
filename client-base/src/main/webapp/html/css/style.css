@@ -722,10 +722,15 @@ span.hint-big:hover {
     margin: 8px;
     padding: 8px;
     border: 1px solid grey;
-    background-color: #FBF2D7;
+    background-color: #E5F8EB;
     position: absolute;
     margin-bottom: 20px;
     z-index: 100000;
+}
+
+.tooltip p {
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -2430,7 +2435,7 @@ a {
     width: 100%;
 }
 
-.accession-info {
+.accessionInfo {
     color: white;
 }
 

@@ -439,7 +439,7 @@
                 id: `modal_${conceptId}`,
                 class:'accessionModal',
                 animation: 'pulse',
-                title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accession-info" class="hint hint-small accession-info"><i  class="far fa-question-circle"></i> </span>',
+                title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accessionInfo" class="hint hint-small accessionInfo"><i  class="far fa-question-circle"></i> </span>',
                 content: accessionTable,
                 cancelButton: 'Exit',
                 draggable: 'title',
