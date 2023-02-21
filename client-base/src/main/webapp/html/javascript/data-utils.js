@@ -103,9 +103,10 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         complete: function () {
 
             if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-                $('#tabviewer').show(); // show Tab buttons and viewer
+                // $('#tabviewer').show(); // show Tab buttons and viewer
                 // Show loading spinner on 'search' div
                 activateSpinner("#search");
+                var firstTimeout; 
                  $.post({
                      url: api_url + request,
                      timeout: 1000000,
@@ -126,30 +127,29 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
                      })
-                     .success(function(data){
-
+                     .success( function(data){
                         var gviewer = data.gviewer
                         var querytime= performance.now() - this.startTime; // query response time
                         var queryseconds= querytime/1000;
                         queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
-
                         $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-
                         genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-                     }
-
-                     ).always(function(){
-                        timeOutId =  setTimeout(getLongWaitMessage.init(),4000);
+                    }
+                    ).always(function(){
+                         firstTimeout = setTimeout(function (){
+                            getLongWaitMessage.init()
+                        },2500);
                      })
                      .complete(function(){
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
                         $('.overlay').remove();
                         $('#tabviewer').show();
-                        var timeOutId =  getLongWaitMessage.timeOutId(); 
-
+                        var secondTimeOut =  getLongWaitMessage.timeOutId();
+                        
                         // clear timeout from callstack
-                        clearTimeout(timeOutId);
+                        clearTimeout(firstTimeout);
+                        clearTimeout(secondTimeOut);
                      })
              }
              else {

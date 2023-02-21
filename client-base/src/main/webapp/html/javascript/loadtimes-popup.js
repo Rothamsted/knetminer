@@ -2,20 +2,23 @@
 getLongWaitMessage = function(){
 
     var getTimeOut;
+
+    var loadingPulse = '<div class="dot"></div>'; 
+
     
-    // static files with message and animation pair 
+    // static files
     var loadTimeUiItems = [
         {
             message: 'Connecting the dots',
-            animation: '<iframe src="https://embed.lottiefiles.com/animation/109382"></iframe>'
+            animation: '<img src="html/image/bulb.png" alt="export menu" width="300"/>'
         },
         {
             message: 'Traversing millions of edges', 
-            animation:'<iframe src="https://embed.lottiefiles.com/animation/62900"></iframe>'
+            animation:'<img src="html/image/DNA.png" alt="export menu" width="300"/>'
         }, 
         {
            message:'Mining the knowledge graph.', 
-           animation:'<iframe src="https://embed.lottiefiles.com/animation/7931"></iframe>'
+           animation:'<img src="html/image/Metrics.png" alt="export menu" width="300"/>'
         }
     ]
 
@@ -27,8 +30,8 @@ getLongWaitMessage = function(){
 
     // function to create overlay upon  
     function createUiItem(uiItem){
-        var uIContent = '<div class="overlay"><div style="margin-bottom:1rem">'+ uiItem.animation + '</div>'
-        uIContent += '<span>'+ uiItem.message + '</span> </div>';
+        var uIContent = '<div class="overlay"><div style="margin-bottom:1rem">'+ uiItem.animation +'</div>'
+        uIContent += '<span>'+ uiItem.message + loadingPulse +'</span> </div>';
         $('#search').append(uIContent);
 
     }

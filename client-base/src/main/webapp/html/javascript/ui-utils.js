@@ -357,8 +357,8 @@ function feedbackCloseBtn(){
 function showToolTips() {
     $("body").on("mouseenter", "span.hint", function (event) {
     var target = $(this)[0].id;
-    var Tooltips = getToolTipsData(); 
-      var currentTooltip = Tooltips[target];
+    var toolTips = getToolTipsData(); 
+      var currentTooltip = toolTips[target];
       var message = currentTooltip[0];
       var addClass = currentTooltip.length > 1 ? currentTooltip[1] : "";
                   
