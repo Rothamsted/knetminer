@@ -10,15 +10,15 @@ getLongWaitMessage = function(){
     var loadTimeUiItems = [
         {
             message: 'Connecting the dots',
-            animation: '<img src="html/image/bulb.png" alt="export menu" width="300"/>'
+            animation: '<iframe src="https://embed.lottiefiles.com/animation/109382"></iframe>'
         },
         {
             message: 'Traversing millions of edges', 
-            animation:'<img src="html/image/DNA.png" alt="export menu" width="300"/>'
+            animation:'<iframe src="https://embed.lottiefiles.com/animation/62900"></iframe>'
         }, 
         {
-           message:'Mining the knowledge graph.', 
-           animation:'<img src="html/image/Metrics.png" alt="export menu" width="300"/>'
+           message:'Mining the knowledge graph', 
+           animation:'<iframe src="https://embed.lottiefiles.com/animation/7931"></iframe>'
         }
     ]
 

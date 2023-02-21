@@ -135,22 +135,21 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                         genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
                     }
-                    ).always(function(){
-                         firstTimeout = setTimeout(function (){
-                            getLongWaitMessage.init()
-                        },2500);
-                     })
-                     .complete(function(){
+                    ).complete(function(){
                         // Remove loading spinner from 'search' div
                         deactivateSpinner("#search");
                         $('.overlay').remove();
                         $('#tabviewer').show();
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
-                        
+
                         // clear timeout from callstack
                         clearTimeout(firstTimeout);
                         clearTimeout(secondTimeOut);
+                        document.getElementById('pGSearch_title').scrollIntoView();
                      })
+
+                    // load animation after waiting for 3 seconds 
+                     firstTimeout = setTimeout(function(){getLongWaitMessage.init()},3000);
              }
              else {
                  $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');

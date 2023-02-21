@@ -2493,44 +2493,6 @@ a {
     display: flex;
     align-items: center;
 }
-
-/* helper modal css */
-
-.helper-modal-overlay{
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    background: black;
-    z-index: 15;
-    right: 0;
-    top: 0;
-    opacity: 0.6;
-}
-
-#helperModal{
-    position: absolute;
-    width: 350px;
-    background: white;
-    z-index: 16;
-    display: none;
-    top:2.2pc;
-    right: 3pc;
-    border-radius: 6px;
-}
-
-#helperModal h2{
-    color: white;
-    background: black;
-    margin:0;
-    padding: .5rem;
-}
-
-#helperModal p{
-    padding: .5rem;
-}
-
-
 /* pulse animation */
 .dot {
     position: relative;
@@ -2600,3 +2562,39 @@ a {
       box-shadow: 10014px 0 0 -5px;
     }
   }
+
+/* helper modal css */
+
+.helper-modal-overlay{
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 15;
+    right: 0;
+    top: 0;
+    opacity: 0.6;
+}
+
+#helperModal{
+    position: absolute;
+    width: 350px;
+    background: white;
+    z-index: 16;
+    display: none;
+    top:2.2pc;
+    right: 3pc;
+    border-radius: 6px;
+}
+
+#helperModal h2{
+    color: white;
+    background: black;
+    margin:0;
+    padding: .5rem;
+}
+
+#helperModal p{
+    padding: .5rem;
+}
