@@ -1,15 +1,10 @@
 # Revision History
 
-*This file was last reviewed on 6/5/2022*
+*This file was last reviewed on 2023-02-17* **Please, keep this note updated** 
 
 # 5.0.1-SNAPSHOT
-
-* TODO:
-	* multi-species
-	* new configuration
-	* API URL auto-discovery
-	* /network with plainJSON
-	* data initialiser component
+## Key Features
+* Multiple specie functionality: KnetMiner has better support for datasets that merge knowledge about multiple species. Searches and the user interface are focused on a user-selected specie, connections between a specie of interest and other species are highlighted in places like the network view. APIs are also able to work on a specified specie parameter.
 
 ## UI Improvements
 * List of gene synonyms added to gene view (#602).
@@ -18,10 +13,19 @@
 * Display number of genes in gene list box.
 
 ## API improvements
-* New /graphinfo/concept-info endpoint to retrieve node properties
+* New /graphinfo/concept-info endpoint to retrieve node properties.
+* API for graph statistics improved (#695).
+* Network view API now can return pure JSON (#652).
 
 ## New configurations
 * Brassica Camelina configuration added.
+
+## Administration improvements
+* We have completely reworked the configuration mechanisms, now Knetminer can be configured entirely via YAML (or JSON) files, any need to rebuild an instance via Maven has been eliminated, making everything simpler and faster ([documentation][WIKI-CFG]).
+* New component to initialise data, which can be invoked via CLI, outside of the web application (Knetbuilder#55).
+* New logging components that separates a regular logging file from a detailed one (#664).
+
+[WIKI-CFG]: https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#configuring-knetminer
 
 ## Internal improvements and bugfixes
 * Methods to harmonise the gene and concept label displaying (#604).
@@ -29,6 +33,11 @@
 * Heavy code refactoring, cleaning, etc for `KnetMinerServer`, `KnetMinerDataSource` and 
   `OndexLocalDataSource`.
 * UI's Javascript refactoring (#621).
+* Small API client library added (REF).
+* Cleaning the way external Javascript dependencies are used in KnetMiner (REF).
+* Cleaning some file redundance (REF).
+
+
 
 
 # 5.0
