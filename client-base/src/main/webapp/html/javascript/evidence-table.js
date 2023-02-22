@@ -39,7 +39,7 @@
 
          table = table + '<th width="75">Omit/Add</th>';
          table = table + '<th width="50">Type</th>';
-         table = table + '<th width="212">Description</th>';
+         table = table + '<th width="212">Node label</th>';
          //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
          table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
          table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
