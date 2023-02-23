@@ -45,7 +45,8 @@ function deploy_npm ()
   
   echo -e "\n Downloading $npm_name\n"
   cd target/tmp
-  mkdir -p "$npm_name"
+  rm -Rf "$npm_name"
+  mkdir "$npm_name"
   # TODO: it's the only practical and versatile way I know
   npm pack "$npm_url"
 
