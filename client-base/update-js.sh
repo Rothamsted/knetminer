@@ -68,11 +68,12 @@ if [[ "$#" > 1 ]]; then
   #
   deploy_npm $1 $2 $3 $4
 else
-	# TODO: move to the master branch when possible
-	deploy_npm "https://github.com/Rothamsted/knetmaps.js#202204_upgrades" knetmaps
-	deploy_npm "https://github.com/Rothamsted/genomaps.js.git#202210_refactor" genomaps
+	# TODO: this branch DOES NOT work at the moment, we need to merge changes from
+	# knetmaps-plus
+	# deploy_npm "https://github.com/Rothamsted/knetmaps.js#202204_upgrades" knetmaps
+	deploy_npm "https://github.com/Rothamsted/genomaps.js.git#2.0-RC" genomaps
 	
-	# TODO: this should become part of knetmaps.js, see TODO
+	# TODO: this should become part of knetmaps.js, see knetmaps-plus
 	deploy_npm "jquery-ui-dist@1.12.1" 'jquery-ui-dist' 'jquery-ui' 'package'
 	
 	deploy_npm "jbox@1.0.6" jbox
