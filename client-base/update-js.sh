@@ -47,6 +47,8 @@ function deploy_npm ()
   cd target/tmp
   rm -Rf "$npm_name"
   mkdir "$npm_name"
+  rm -Rf "$npm_name"*.tgz
+  
   # TODO: it's the only practical and versatile way I know
   npm pack "$npm_url"
 
@@ -72,7 +74,7 @@ else
 	# TODO: this branch DOES NOT work at the moment, we need to merge changes from
 	# knetmaps-plus
 	# deploy_npm "https://github.com/Rothamsted/knetmaps.js#202204_upgrades" knetmaps
-	deploy_npm "https://github.com/Rothamsted/genomaps.js.git#2.0-RC" genomaps
+	deploy_npm "https://github.com/Rothamsted/genomaps.js.git#v2.0.0-RC.1" genomaps
 	
 	# TODO: this should become part of knetmaps.js, see knetmaps-plus
 	deploy_npm "jquery-ui-dist@1.12.1" 'jquery-ui-dist' 'jquery-ui' 'package'
