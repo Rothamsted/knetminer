@@ -82,159 +82,19 @@
 		  still needs Java system properties (eg, the Neo4j traverser). In such cases, you can use
 		  "systemProperties" in the YAML configuration (see documentation and existing examples).
 		 -->
-
-		<!-- This is where the file has to be found BY TOMCAT, NOT NECESSARILY where it is during builds -->
-		<!-- TODO:newConfig, remove
-		<knetminer.datasetDir>${project.build.testOutputDirectory}/knetminer-dataset</knetminer.datasetDir>
-		<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
-		<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir>
-		<knetminer.configFile>${knetminer.configDir}/test-cfg.yml</knetminer.configFile>		
-		-->
 		
 		<!--
 			In most cases, probably you'll be fine with the overriding provided below, in the 'docker' profile.
 			For aratiny, we need this non-common value since it's difficult to rename a downloaded test file. 
 		-->
 		<knetminer.oxlFile>${project.build.directory}/dependency/poaceae-sample.oxl</knetminer.oxlFile>
-		 
-		<!-- TODO:newConfig, remove
-		<knetminer.dataSourceId>aratiny</knetminer.dataSourceId>
-		<knetminer.specieName>Arabidopsis Thaliana</knetminer.specieName>
-		<knetminer.appDescription>Knetminer instance about tiny arabidopsis data set</knetminer.appDescription>
-		<knetminer.appKeywords>arabidopsis, a.thaliana, knetminer, quickstart, demo, docker</knetminer.appKeywords>
-		-->
-		
-		<!-- TODO:newConfig, remove -->
-		<!-- 3702=Ara,4565=Wheat,4577=Maize -->
-		<!-- <knetminer.specieTaxId>3702,4565,4577</knetminer.specieTaxId> -->
-		
-		<!-- TODO:newConfig, remove -->
-		<!-- knetminer.backend.seedGenesFile></knetminer.backend.seedGenesFile -->
-		<!-- knetminer.backend.seedGenesFile>${knetminer.configDir}/seed-genes-example.tsv</knetminer.backend.seedGenesFile -->		
-		
-		<!-- TODO:newConfig, remove -->
-		<!--
-			Used to add the number of publications one wants visibly exported in the KnetMiner instance, default set at 20,
-			edit this, or pass a mvn arg for it, to ammend it to a greater, or lesser, value.
-		-->
-		<!-- <knetminer.backend.defaultExportedPublicationCount>100</knetminer.backend.defaultExportedPublicationCount> -->
-
-		
-		<!-- TODO:newConfig, remove -->
-		<!-- 
-			TODO: this appears to be the dataset version, Knetminer version should be ${project.version}.
-			It requires renaming to avoid confusion. 
-		-->
-		<!--
-		<knetminer.version>51</knetminer.version>
-		<knetminer.provider>Rothamsted Research</knetminer.provider> -->
-		<!-- TODO: What's the difference between this and provider?! -->
-		<!--
-		<knetminer.sourceOrganization>${knetminer.provider}</knetminer.sourceOrganization> -->
-		
-		<!-- TODO:newConfig, to be removed -->
-		<!-- <knetminer.knetSpaceHost>https://knetminer.com/beta/knetspace</knetminer.knetSpaceHost> -->
-
-
-    <!-- TODO:newConfig -->
-    <!-- 
-	    google analytics (enabled by default with knetminer's own 2 ga_id's for api and ui). Setting this 
-	    to false will disable google analytics entirely. Alternatively, users can set true AND change the 2 
-	    ga_id's to redirect to their own google analytics tracking if they wish
-	   -->
-	  <!-- TODO:newConfig, remove
-		<knetminer.enableAnalytics>true</knetminer.enableAnalytics>
-		<knetminer.gaIdUi>UA-88753233-1</knetminer.gaIdUi>
-		<knetminer.gaIdApi>UA-88753233-2</knetminer.gaIdApi> -->
-
-		<!-- TODO:newConfig, remove -->
-		<!-- 
-			When building for Docker, this is XPath-computed from basemap.xml and injected via mvn command line.
-			That kind of behaviour is enabled by  
-		  See the docker profile in datasets/*/
-		-->
-		<!-- knetminer.chromosomeList>1,2,3,4,5</knetminer.chromosomeList -->
-		
-		<!-- TODO:newConfig, remove -->		
-		<!--  true if you are providing a reference genome -->
-		<!-- <knetminer.isReferenceGenomeProvided>true</knetminer.isReferenceGenomeProvided> -->
-
-    <!-- TODO:newConfig. Currently used release.html only (see notes in that file) -->
-		<!-- 
-			If your dataset config directory contains client/release_notes.html, its contents will be used as a value for
-			the corresponding placeholder, taking priority over this variable. Hence, it will be ignored in such a case. 
-		-->
-		<!--
-		<knetminer.releaseNotesHtml><![CDATA[
-			<h2>CHANGE ME!</h2>
-			<p>This is just a <b>sample text</b> text, showing how specific release notes can be injected into the release.html template.</p>
-			<p>Lorem ipsum dolor sit amet, etc etc</p>.
-		]]></knetminer.releaseNotesHtml>
-		-->
-
-		
-		<!-- TODO:newConfig, still to be migrated (see client-base) -->
-		<!-- 
-			This is used by Genestack to customise the client/frontend layout with stuff like their own logo.
-			When using the Docker runtime, this can be overridden by adding -Dknetminer.ui.embeddableLayout=true 
-			to MAVEN_ARGS. The latter can be set via the \-\-env option of 'docker run', or see scripts like
-			docker-run.sh. REMEMBER that, if you use this MAVEN_ARGS, it always requires -Pdocker when 
-			running Docker (and -Pdocker,neo4j or even additional profiles (possibly in future), if you want
-			the corresponding features enabled.  			 
-		-->
-		<knetminer.ui.embeddableLayout>false</knetminer.ui.embeddableLayout>
-				
-						
+								
 		<knetminer.api.httpPort>9090</knetminer.api.httpPort>
-
-		<!-- TODO:newConfig, probably we don't need all of them and they are for the build only -->
-		<!-- Here, it is http://localhost:9090 -->
-		<!-- <knetminer.api.rootUrl>http://localhost:${knetminer.api.httpPort}</knetminer.api.rootUrl> -->
-		<!-- Here, it is http://localhost:9090/ws -->
-		<!-- <knetminer.api.baseUrl>>${knetminer.api.rootUrl}/ws</knetminer.api.baseUrl> -->
-		<!-- Here, it is http://localhost:9090/ws/aratiny -->
 		<knetminer.api.url>http://localhost:${knetminer.api.httpPort}/ws/aratiny</knetminer.api.url>
-		
-		<!-- Here, it is http://localhost:9090/ws/aratiny/dataset-info -->
-		<!-- TODO: REMOVE!!! See utils-config.js for details 
-		<knetminer.api.versionUrl>${knetminer.api.baseUrl}/${knetminer.dataSourceId}/${knetminer.dataContext}</knetminer.api.versionUrl>
-		-->
-		
-		<!-- TODO:newConfig, remove -->
-		<!-- 
-			This is injected into config.xml for the ws/ war. 
-		  With empty value, the traditional Ondex traverser is picked. The alternative is
-		  uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser (see neo4j profile in aratiny-ws/pom.xml),
-		  which uses the new Neo4j-backed traverser.  
-		 -->
-		<!-- knetminer.api.graphTraverserClass></knetminer.api.graphTraverserClass -->
 
-		<!-- TODO:newConfig, to be managed with alternate config files -->
-		<!-- There is a production version, which searches into state machine-generated files -->
-		<!-- <knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config-test.xml</knetminer.neo4j.configFile> -->
-				
-		<!--
-		  TODO:newConfig, part of these are for Maven, another part in config files is to be managed 
-		  via JVM properties
-		-->   
-		<!-- neo4j.server.boltPort>17690</neo4j.server.boltPort -->
-		<!-- neo4j.server.httpPort>17490</neo4j.server.httpPort -->
-		<!-- neo4j.server.user>neo4j</neo4j.server.user -->
-		<!-- neo4j.server.password>test</neo4j.server.password -->
-		
-		<!-- TODO:newConfig, remove 
-		<neo4j.server.host>localhost</neo4j.server.host>
-		<neo4j.server.boltUrl>bolt://localhost:${neo4j.server.boltPort}</neo4j.server.boltUrl>
-		-->
-
-
-		<!-- TODO:newConfig, remove -->
-		<!-- See the description in aratiny-ws/src/test/resources/knetminer-dataset/config/data-source.xml -->
-		<!-- <knetminer.backend.cypherDebugger.enabled>false</knetminer.backend.cypherDebugger.enabled> -->
-			
 
 		<!--
-			Instead, these shouldn't need to be changed (apart from development purposes).
+			These shouldn't need to be changed (apart from development purposes).
 		-->
 		
 		<!-- 
@@ -473,41 +333,11 @@
 			<id>docker</id>
 			<activation><activeByDefault>false</activeByDefault></activation>
 			<properties>
-				
-				<!-- TODO:newConfig, most to be removed -->
-				
-				<!--
-					These are common values for a Docker-dedicated build.
-					Remember, these DISAPPEAR from production files (see notes above).
-				-->
-				<!-- TODO:newConfig, remove 
-				<knetminer.datasetDir>/root/knetminer-dataset</knetminer.datasetDir>
-				<knetminer.configDir>${knetminer.datasetDir}/config</knetminer.configDir>
-				<knetminer.dataDir>${knetminer.datasetDir}/data</knetminer.dataDir> -->
-				<!-- <knetminer.oxlFile>${knetminer.dataDir}/knowledge-network.oxl</knetminer.oxlFile> -->
 								
 				<knetminer.api.httpPort>8080</knetminer.api.httpPort>
-
-				<!-- TODO:newConfig, remove -->
-				<!-- It's just /ws, so that our Tomcat can append the right prefix automatically -->
-  			<!-- <knetminer.api.baseUrl>/ws</knetminer.api.baseUrl> -->
 				
 				<!-- It's just this, so that our Tomcat can append the right prefix automatically -->
 				<knetminer.api.url>/ws/aratiny</knetminer.api.url>
-								
-				<!--
-				  TODO:newConfig, part of these are for Maven, another part in config files is to be managed 
-				  via JVM properties
-				-->   
-				<!-- This needs to be mapped to the right Neo4j server, via \-\-link or 'docker network' commands -->									
-				<!-- neo4j.server.host>neo4j</neo4j.server.host -->
-				<!-- Moreover, default Neo4j ports require proper mappings -->
-				<!-- neo4j.server.boltPort>7687</neo4j.server.boltPort -->
-				<!-- Not actually used, but just in case -->
-				<!-- neo4j.server.httpPort>7474</neo4j.server.httpPort -->
-
-				<!-- TODO:newConfig, to be managed with alternate config files -->
-				<!-- <knetminer.neo4j.configFile>${knetminer.configDir}/neo4j/config.xml</knetminer.neo4j.configFile> -->
 
 			</properties>
 				
@@ -711,13 +541,6 @@
 				<version>20220924</version>
 			</dependency>
 
-			<!-- TODO:newConfig, remove, this is old and dead, replaced by the mikehardy variant
-			<dependency>
-				<groupId>com.brsanthu</groupId>
-				<artifactId>google-analytics-java</artifactId>
-				<version>2.0.0</version>
-			</dependency>
-			-->
 			<dependency>
 			  <groupId>net.mikehardy</groupId>
 			  <artifactId>google-analytics-java</artifactId>
@@ -735,20 +558,6 @@
 					</exclusion>			
 				</exclusions>
 			</dependency>
-			<!--
-			  TODO: to be removed, no longer needed
-			 
-				This is used to setup CORS in the response. See:
-				- https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-				- http://tuckey.org/urlrewrite/
-				
-				We use this web filter in src/main/webapp/WEB-INF 
-			<dependency>
-				<groupId>org.tuckey</groupId>
-				<artifactId>urlrewritefilter</artifactId>
-				<version>4.0.4</version>
-			</dependency>	
-			 -->
 			
 			<!-- Needed in Java >= 11 -->	  
 			<dependency>

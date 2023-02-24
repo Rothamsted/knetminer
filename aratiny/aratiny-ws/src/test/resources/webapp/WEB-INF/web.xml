@@ -19,22 +19,5 @@
 		<param-name>knetminer.api.configFilePath</param-name>
 		<param-value>${project.build.testOutputDirectory}/knetminer-dataset/config/${knetminer.testConfigFileName}</param-value>
 	</context-param>
-	
-	<!--
-	  Uses the Tuckey rule engine to authorise CORS for these URLs.
-	  TODO: remove, we now use @CrossOrigin and these paths don't exist anymore. 
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-	  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-	  <filter-name>UrlRewriteFilter</filter-name>
-	  <url-pattern>/cydebug/*</url-pattern>
-	  <url-pattern>/graphinfo/*</url-pattern>
-	  <dispatcher>REQUEST</dispatcher>
-	  <dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	-->
 		
 </web-app>

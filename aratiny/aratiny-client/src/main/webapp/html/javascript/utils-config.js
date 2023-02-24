@@ -3,7 +3,6 @@ var api_url = "";
 
 var knetspace_api_host= "";
 
-// TODO:newConfig probably it's poor Js, I've added this to utils::$.ready()
 /**
  * Sets up the API-related URL variables (eg, api_url).
  *

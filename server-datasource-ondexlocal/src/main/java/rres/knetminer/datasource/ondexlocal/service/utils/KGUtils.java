@@ -210,21 +210,5 @@ public class KGUtils
     }
     return results;    	
   }	
-  
-	
-	/** 
-	 * A simple facility that checks if taxId is in the reference.
-	 * Before comparing, it checks that taxId isn't null and return false if it is.
-	 * 
-	 * Such check is necessary when {@link DataService#getTaxIds()} is used, because that
-	 * method returns a collection that doesn't access nulls. So, this method here is a facility
-	 * to work with that.
-	 */
-  /* TODO:newConfig remove, no longer needed
-  public static boolean containsTaxId ( Set<String> reftaxIds, String taxId )
-  {
-  	if ( taxId == null ) return false;
-  	return reftaxIds.contains ( taxId );
-  } */
 
 }

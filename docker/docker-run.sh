@@ -117,21 +117,6 @@ fi
 
 echo -e "\n"
 
-# TODO: remove, now you can switch to the neo4j mode by simply using a different config file, via --config-file
-# Neo4j mode
-# 
-#if [[ ! -z "$is_neo4j" ]]; then
-#	MAVEN_ARGS="$MAVEN_ARGS -Pneo4j"
-#	# As you see, all the Maven properties used in the POMs (and, from there in other files) can be overridden from
-#	# the maven command line. So, this is a way to customise things like local installations, and doing so while
-#	# keeping maven-settings.xml independent on the local environment (depending only on the dataset).
-#	 
-#	[ "$neo4j_url" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.boltUrl=$neo4j_url"
-#	[ "$neo4j_user" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.user=$neo4j_user"
-#	[ "$neo4j_pwd" == "" ] || JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dneo4j.server.password=$neo4j_pwd"
-#fi
-
-
 [[ -z "JAVA_TOOL_OPTIONS" ]] || { 
 	echo -e "exporting JAVA_TOOL_OPTIONS: $JAVA_TOOL_OPTIONS"
 	export JAVA_TOOL_OPTIONS

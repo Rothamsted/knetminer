@@ -34,14 +34,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		
-		<!--
-		  TODO: to be removed, no longer needed. 
-			This is used to setup CORS in the response. See main POM
-		<dependency>
-			<groupId>org.tuckey</groupId>
-			<artifactId>urlrewritefilter</artifactId>
-		</dependency>	
-		 -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -200,9 +192,6 @@
 			<id>neo4j</id>
 			<properties>
 				<maven.profileId>neo4j</maven.profileId>
-				<!-- TODO:newConfig, needs to be managed with an alternative profile
-				<knetminer.api.graphTraverserClass>uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser</knetminer.api.graphTraverserClass>
-				-->
 				<knetminer.testConfigFileName>test-cfg-neo4j.yml</knetminer.testConfigFileName>		
 			</properties>
 			<build>
@@ -375,17 +364,6 @@
 					  	<execution><id>stop</id><phase>_none_</phase></execution>
 					  </executions>
 					</plugin>
-					<!-- TODO:newConfig, remove, you're not supposed to use the neo4j profile together with this
-					<plugin>
-				    <groupId>com.github.harti2006</groupId>
-					  <artifactId>neo4j-server-maven-plugin</artifactId>
-					  <executions>
-					  	<execution><id>neo4j-server-download</id><phase>_none_</phase></execution>
-					  	<execution><id>start-neo4j-server</id><phase>_none_</phase></execution>
-					  	<execution><id>stop-neo4j-server</id><phase>_none_</phase></execution>
-					  </executions>
-					</plugin>
-					-->
 				</plugins>
 			</build>			
 		</profile>	
