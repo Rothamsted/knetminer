@@ -27,7 +27,9 @@ function activateButton(option){
         $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
         $('#suggestor_search_area').slideUp(500);
     });
+    // check if the view is created
     handleDelimintedCta.setData(option);
+    handleViewCreation(option)
     changeButtonOnSvg()
     changeButtonOffSvg(option + '_button')
 }

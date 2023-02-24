@@ -199,7 +199,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
              //Collapse Suggestor view
              $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
              $('#suggestor_search_area').slideUp(500);
-                                     //$('#suggestor_search').dialog('close');
+            //$('#suggestor_search').dialog('close');
          }
 
          $("#pGViewer_title").html(genomicViewTitle);
@@ -327,11 +327,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          }
 
          $("#pGSearch_title").show().html(genomicViewTitle);
-         // Setup the mapview component
-         var annotationsMap = data.gviewer;
 
-         // create new basemap with bands for genes and pass it as well to the Map Viewer.
-         multiSpeciesFeature.maps('drawRaw',annotationsMap);
 
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
@@ -339,8 +335,10 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
 
          createGenesTable(data.geneTable, keyword, candidateGenes);
-         createEvidenceTable(data.evidenceTable, keyword);
-         handleDelimintedCta.getData(data); 
+         handleDelimintedCta.getData(data);
+
+         $("body").data("data",{evidence:data.evidenceTable,map:data.gviewer,keyword:keyword});
+
          if(geneList_size > 0) {
             $('#selectUser').show();
            }
@@ -569,5 +567,20 @@ handleDelimintedCta = function(){
         setData: setDemlimiterAttributes,
     }
 }()
+
+
+
+/**
+ * @desc function creates evidence and map view using jquery data method 
+ * @param {string} * a string that idenitifies the current tab view
+ */
+function handleViewCreation(option){
+    var data = $('body').data().data
+    if(option === 'evidenceTable'){
+        createEvidenceTable(data.evidence, data.keyword);
+    }else if(option === 'genemap-tab'){
+        multiSpeciesFeature.maps('drawRaw',data.map);
+    }
+}
 
 

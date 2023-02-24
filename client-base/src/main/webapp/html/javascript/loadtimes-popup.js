@@ -48,6 +48,7 @@ getLongWaitMessage = function(){
         var getUiItem = getRandomUiItem();
         createUiItem(getUiItem);
         $('#tabviewer').hide();
+        $('#pGSearch_title').html('');
 
        getTimeOut = setTimeout(function(){
             $('.overlay').html('')
