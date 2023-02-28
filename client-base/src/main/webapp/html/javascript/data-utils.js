@@ -72,6 +72,7 @@ function searchKeyword(){
         $('#evidenceTable').data({keys:[]}); 
         $('#resultsTable').data({keys:[]}); 
         $("#NetworkCanvas_button").removeClass('network-created');
+        $('#evidenceTable_button').removeClass('created');
         fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size);
       }
 }
@@ -336,8 +337,9 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
          createGenesTable(data.geneTable, keyword, candidateGenes);
          handleDelimintedCta.getData(data);
+         multiSpeciesFeature.maps('drawRaw',data.gviewer);
 
-         $("body").data("data",{evidence:data.evidenceTable,map:data.gviewer,keyword:keyword});
+         $("body").data("data",{evidence:data.evidenceTable,keyword:keyword});
 
          if(geneList_size > 0) {
             $('#selectUser').show();
@@ -571,16 +573,17 @@ handleDelimintedCta = function(){
 
 
 /**
- * @desc function creates evidence and map view using jquery data method 
+ * @desc function creates evidence view using jquery data method 
  * @param {string} * a string that idenitifies the current tab view
  */
 function handleViewCreation(option){
     var data = $('body').data().data
-    if(option === 'evidenceTable'){
-        createEvidenceTable(data.evidence, data.keyword);
-    }else if(option === 'genemap-tab'){
-        multiSpeciesFeature.maps('drawRaw',data.map);
-    }
+    $('#'+option+'_button').addClass('created');
+    var rows = data.evidence.split("\n").length - 2;
+    console.log(rows);
+    createEvidenceTable(data.evidence, data.keyword,rows);
+    deactivateSpinner("#tabviewer_content");
+    console.log('evidence view created')
 }
 
 

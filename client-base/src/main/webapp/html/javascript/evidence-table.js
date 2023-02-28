@@ -9,7 +9,7 @@
      
      if ( !pvalueStr ) return na;
      
-     var pvalue = Number ( pvalueStr ); 
+     var pvalue = Number (pvalueStr); 
  
      // -1 is usually to mark that there is no p-value
      if ( pvalue < 0 ) return na;
@@ -19,13 +19,17 @@
      return pvalue.toFixed ( 4 )	
  }
  
- function createEvidenceTable(text, keyword)
+ function createEvidenceTable(text, keyword,rows)
  {
      var table = "";
      var summaryArr = new Array();
      var summaryText = '';
      $('#evidenceTable').html("<p>No evidence found.</p>");
      var evidenceTable = text.split("\n");
+     var results = evidenceTable.length -2;
+     
+    
+
      if (evidenceTable.length > 2) {
          // Evidence View: interactive legend for evidences.
          var evi_legend= getEvidencesLegend(text);
@@ -52,8 +56,8 @@
          var eviTableLimit= evidenceTable.length-1;
  
          // limit evidence view table to top 1000 evidences
-         if(eviTableLimit > 1000) eviTableLimit= 1001;
-        
+         if( eviTableLimit >= 500)eviTableLimit= 501
+         
          for (var ev_i = 1; ev_i < eviTableLimit; ev_i++)
          {
            values = evidenceTable[ev_i].split("\t");
@@ -111,11 +115,16 @@
            table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
          
          } // for ev_i in evidenceTable
- 
-         
          table = table + '</tbody>';
          table = table + '</table>';
-         table = table + '</div>';
+         table = table + '</div><div class="evidence-footer">';
+         table = table + '<div class="evidence-select"><select value="' + /*rows*/results + '" id="evidence-select">';
+         table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000 </option>';
+         table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
+         table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
+         table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
+         table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
+         table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + results + ')</option> </select></div>';
          table = table + '<div class="gene-footer-container" style="justify-content:flex-end"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>'; 
          table = table + '<button id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
         //  table = table + '</insert><div id="loadingNetwork_Div"></div>';
@@ -231,7 +240,7 @@
           * Revert filtering changes on Evidence View table
           */
          $("#revertEvidenceView").click(function (e) {
-             createEvidenceTable(text, keyword); // redraw table
+             createEvidenceTable(text, keyword,rows); // redraw table
              $('#evidenceTable').data({keys:[]}); 
          });
          
@@ -249,15 +258,19 @@
         updateSelectedGenesCount("evidences","#evidence-count", viewName); // update selected genes count
     });
 
+    $("#evidence-select").change(function (e) {
+        consolee.log(e);
+		createEvidenceTable(text, keyword, $("").val());	//if number of genes to show changes, redraw table.
+	});
+
  }
- 
- 
  
  /*
   * Function to get the network of all "genes" related to a given evidence
   * 
   */
- function evidencePath(id, genes){
+ function evidencePath(id, genes)
+ {
      
      var params = {keyword: 'ConceptID:'+id};
      if (genes.length > 0) {
@@ -278,7 +291,8 @@
   * Generates multi evidence network in KnetMaps
   * @author: Ajit Singh.
   */
- function generateMultiEvidenceNetwork(){
+ function generateMultiEvidenceNetwork()
+ {
      var evidence_ondexids_and_genes = [];
      var evidences_ondexid_list = "";
      var geneids = [];
@@ -331,7 +345,8 @@
  
 
 //  Function creates popup showing table of accessions associated to a genes concept
- function openGeneListPopup(conceptId, element){
+ function openGeneListPopup(conceptId, element)
+ {
     
     // remove existing tooltip to avoid duplication
      removeAccessionToolTips('copy_tooltip'); 

@@ -467,7 +467,7 @@ select {
 
 }
 
-#num-genes {
+#num-genes, #evidence-select{
     width: 100%; 
     outline:none; 
     border:none; 
@@ -477,7 +477,9 @@ select {
     margin: 0;
 }
 
-.num-genes-container{
+
+
+.num-genes-container, .evidence-select{
     width: fit-content;
     padding: 0.3rem 0.6rem;
     background: #000;
@@ -510,6 +512,10 @@ div.gene-footer-container {
     -ms-flex-pack: justify;
     justify-content: space-between;
     -webkit-box-orient: horizontal;
+}
+div.evidence-footer{
+    display: flex;
+    align-items: center;
 }
 
 div.gene-footer-container input[type="button"] {

@@ -29,7 +29,13 @@ function activateButton(option){
     });
     // check if the view is created
     handleDelimintedCta.setData(option);
-    handleViewCreation(option)
+    var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
+
+    if( !isEvidenceViewCreated && option == 'evidenceTable'){
+        activateSpinner("#tabviewer_content");
+        handleViewCreation(option)
+    }
+
     changeButtonOnSvg()
     changeButtonOffSvg(option + '_button')
 }
@@ -356,7 +362,8 @@ function feedbackCloseBtn(){
 }
 
 // function handles tooltips event for knetminer tabview
-function showToolTips() {
+function showToolTips() 
+{
     $("body").on("mouseenter", "span.hint", function (event) {
     var target = $(this)[0].id;
     var toolTips = getToolTipsData(); 
@@ -407,4 +414,17 @@ function showToolTips() {
     $("body").on("mouseleave", "div.tooltip-static", function (event) {
       $("div.tooltip").remove();
     });
-  }
+}
+
+// function returns select component for gene and evidence view
+// function tabviewUtil(results,rows,elementId){
+//     var selectComponent = '<select value="' + /*rows*/results + '" id="'+elementId+'">';
+// 	selectComponent += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000 Genes</option>';
+// 	selectComponent += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500 Genes</option>';
+// 	selectComponent += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200 Genes</option>';
+// 	selectComponent += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100 Genes</option>';
+// 	selectComponent += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50 Genes</option>';
+// 	selectComponent += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All Genes (' + results + ')</option> </select>'; 
+
+//     return  selectComponent;
+// }
