@@ -1723,7 +1723,7 @@ KNETMAPS.Menu = function() {
 
    // Go to Help docs.
  my.openKnetHelpPage = function() {
-   var helpURL = 'https://knetminer.com/knetwiki/network-view';
+   var helpURL = 'https://knetminer.com/tutorial/search-views/network-view';
    window.open(helpURL, '_blank');
   };
 
