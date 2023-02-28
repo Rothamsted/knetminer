@@ -13,14 +13,14 @@
 # 
 "dataset @merge":
   id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
-  title: Poaceae Test Instance
-  version: 53 # TODO: not sure if this is 53 or 54
+  title: Beta Poaceae KnetMiner
+  version: 55 
 
   # Have a look here about YAML multi-line strings: http://yaml-multiline.info
   description: >-
-    The Poaceae dataset, used to power the CI Knetminer instance, which
-    is auto-updated upon Knetminer rebuild (from GitHub Actions).  
-  keywords: Knetminer Test, Knetminer CI, Poaceae
+    Beta version of the KnetMiner gene discovery platform for Arabidopsis, wheat and rice.
+    The instance is auto-updated upon Knetminer rebuild (from GitHub Actions).  
+  keywords: Knetminer Beta, Knetminer CI, wheat, rice, Arabidopsis
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
@@ -32,19 +32,19 @@
   # I've also experienced problems with adding rice to the first two.
   #
   species:
-  #- taxId: 3702
-  #  scientificName: Arabidopsis Thaliana
-  #  commonName: Thale cress
-  #  # chromosomeBaseMap: config/species/base-map-3702.xml # this is the default
+  - taxId: 3702
+    scientificName: Arabidopsis thaliana
+    commonName: Arabidopsis
+
   - taxId: 4565
     scientificName: Triticum aestivum
-    commonName: Bread Wheat
-  - taxId: 4577
-    scientificName: Zea mays
-    commonName: Maize
-  #- taxId: 39947
-  #  scientificName: Oryza sativa Japonica Group
-  #  commonName: Japonica rice    
+    commonName: Wheat
+
+  - taxId: 39947
+    scientificName: Oryza sativa Japonica
+    commonName: Rice
+    
+#seedGenesFile: config/seed-genes-poaceae.tsv
 
 # See the defaults for details. TODO: these are my (M. Brandizi) personal IDs. See details in the default
 # file.
