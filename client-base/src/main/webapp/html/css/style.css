@@ -499,7 +499,6 @@ div#advanced_search_area {
 }
 
 div.gene-footer-container {
-    width: 100%;
     height:70px;
     margin-top: 8px;
     display: -webkit-box;
@@ -516,6 +515,7 @@ div.gene-footer-container {
 div.evidence-footer{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 div.gene-footer-container input[type="button"] {

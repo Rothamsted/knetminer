@@ -56,7 +56,11 @@
          var eviTableLimit= evidenceTable.length-1;
  
          // limit evidence view table to top 1000 evidences
-         if( eviTableLimit >= 500)eviTableLimit= 501
+         if( eviTableLimit >= 500){
+            eviTableLimit= 501
+            rows = 500;
+         }
+
          
          for (var ev_i = 1; ev_i < eviTableLimit; ev_i++)
          {
@@ -124,8 +128,8 @@
          table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
          table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100</option>';
          table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50</option>';
-         table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + results + ')</option> </select></div>';
-         table = table + '<div class="gene-footer-container" style="justify-content:flex-end"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>'; 
+         table += '<option value="' + results + '"' + (rows == results ? 'selected' : '')+ '> All ('+ results + ')</option> </select></div>';
+         table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>'; 
          table = table + '<button id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
         //  table = table + '</insert><div id="loadingNetwork_Div"></div>';
 
