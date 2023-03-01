@@ -56,9 +56,9 @@
          var eviTableLimit= evidenceTable.length-1;
  
          // limit evidence view table to top 1000 evidences
-         if( eviTableLimit >= 500){
-            eviTableLimit= 501
-            rows = 500;
+         if( eviTableLimit >= 100){
+            eviTableLimit= 100
+            rows = 100;
          }
 
          
@@ -263,7 +263,6 @@
     });
 
     $("#evidence-select").change(function (e) {
-        consolee.log(e);
 		createEvidenceTable(text, keyword, $("").val());	//if number of genes to show changes, redraw table.
 	});
 

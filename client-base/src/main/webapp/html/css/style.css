@@ -1249,6 +1249,7 @@ a.contact-button :hover {
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
     -o-border-radius: 18px;
+    position:relative;
 }
 
 /* Search bar */
@@ -2457,10 +2458,10 @@ a {
 /* dark mode fix for inputs */
 
 @media(prefers-color-scheme: dark){
-    #num-genes{
+    #num-genes, #evidence-select{
         color: black;
     }
-    .num-genes-container{
+    .num-genes-container, .evidence-select{
         border: 1px  solid black;
         background-color: white;
     }
@@ -2479,7 +2480,7 @@ a {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(237, 237, 237, 1);
+    background-color: rgba(237, 237, 237, 0.6);
     z-index: 2;
     cursor: pointer;
     border-radius: 14px;

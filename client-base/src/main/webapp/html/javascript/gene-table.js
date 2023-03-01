@@ -307,7 +307,8 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	// Show loading spinner on 'tabviewer' div
-	activateSpinner("#tabviewer");
+	getLongWaitMessage.createLoader(0,'#tabviewer_content')
+	// activateSpinner("#tabviewer");
 	//console.log("network: start spinner...");
 
 	$.post({
@@ -374,7 +375,7 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			console.log(errorMsg);
 			//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 		}
-	}).always(function () { deactivateSpinner("#tabviewer"); });
+	}).always(function () { $('.overlay').remove() });
 }
 
 /*

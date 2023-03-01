@@ -14,25 +14,17 @@ getLongWaitMessage = function(){
         },
         {
             message: 'Traversing millions of edges', 
-            animation:'<iframe src="https://embed.lottiefiles.com/animation/62900"></iframe>'
+            animation:'<iframe src="https://embed.lottiefiles.com/animation/109382"></iframe>'
         }, 
-        {
-           message:'Mining the knowledge graph', 
-           animation:'<iframe src="https://embed.lottiefiles.com/animation/7931"></iframe>'
-        }
     ]
 
-    // function return random position from static files 
-    function getRandomUiItem(){
-        var generateRandomInteger = Math.floor(Math.random() * loadTimeUiItems.length);
-        return loadTimeUiItems[generateRandomInteger];
-    }
 
     // function to create overlay upon  
-    function createUiItem(uiItem){
-        var uIContent = '<div class="overlay"><div style="margin-bottom:1rem">'+ uiItem.animation +'</div>'
-        uIContent += '<span>'+ uiItem.message + loadingPulse +'</span> </div>';
-        $('#search').append(uIContent);
+    function createUiItem(position,element){
+        var itemPosition = loadTimeUiItems[position]
+        var uiContent = '<div class="overlay"><div style="margin-bottom:1rem">'+ itemPosition.animation +'</div>'
+        uiContent += '<span>'+ itemPosition.message + loadingPulse +'</span> </div>';
+        $(element).append(uiContent);
 
     }
 
@@ -45,11 +37,10 @@ getLongWaitMessage = function(){
     function setMessage(){
 
         deactivateSpinner("#search");
-        var getUiItem = getRandomUiItem();
-        createUiItem(getUiItem);
+        createUiItem(1,'#search');
         $('#tabviewer').hide();
         $('#pGSearch_title').html('');
-
+        
        getTimeOut = setTimeout(function(){
             $('.overlay').html('')
             var longerWaitContent = {
@@ -63,6 +54,7 @@ getLongWaitMessage = function(){
 
     return{
         init:setMessage,
-        timeOutId:returnTimeOut
+        timeOutId:returnTimeOut,
+        createLoader:createUiItem
     }
 }();

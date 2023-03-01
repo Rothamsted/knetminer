@@ -580,10 +580,8 @@ function handleViewCreation(option){
     var data = $('body').data().data
     $('#'+option+'_button').addClass('created');
     var rows = data.evidence.split("\n").length - 2;
-    console.log(rows);
     createEvidenceTable(data.evidence, data.keyword,rows);
     deactivateSpinner("#tabviewer_content");
-    console.log('evidence view created')
 }
 
 
