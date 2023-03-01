@@ -3,21 +3,21 @@
 
 	<!-- Generic queries -->	
 	<query>
-		<description>Trehalose genes</description>
-		<term>drought OR heat OR frost</term>
-		<gene>TPS*</gene>
-		<gene>TPP?</gene>
-	</query>
-
-	<query>
-		<description>Genome search</description>
+		<description>Keyword search (AND)</description>
 		<term>"seed germination" AND flavon*</term>
 	</query>
 	
 	<query>
-		<description>Dormancy</description>
+		<description>Keyword search (OR)</description>
 		<term>dormancy OR anthocyanin</term>
 	</query>
+	
+	<query>
+		<description>Gene names</description>
+		<term>drought OR heat OR frost</term>
+		<gene>TPS*</gene>
+		<gene>TPP?</gene>
+	</query>	
 	
 	<!-- Wheat queries -->
 	<query>
@@ -177,6 +177,7 @@
 		<gene>OS05G0552300</gene>
 		<gene>OS09G0570800</gene>
 		<gene>OS07G0137800</gene>
+		
 	</query>
 	
 	
