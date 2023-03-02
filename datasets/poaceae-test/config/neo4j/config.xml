@@ -14,7 +14,7 @@
 	
 	
   <bean name = "neo4j.BoltUrl" class = "java.lang.String">
-  	<constructor-arg value = "bolt://babvs65.rothamsted.ac.uk:7688" />
+  	<constructor-arg value = "bolt://babvs65.rothamsted.ac.uk:7687" />
   </bean> 
   <bean name = "neo4j.user" class = "java.lang.String">
   	<constructor-arg value = "rouser" />
