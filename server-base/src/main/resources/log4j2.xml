@@ -46,6 +46,8 @@
 		<RollingFile name="VerboseRollingFile" fileName = "${logName}-details.log" 
 		    filePattern = "${logName}-details-%d{yyyy-MM-dd}.log">
 			
+			<ThresholdFilter level = "DEBUG" />
+			
 			<PatternLayout>
 				<pattern>%d{yyyyMMdd-HH:mm:ss.SSS} [%thread] %-5level %logger{1} - %msg%n</pattern>
 			</PatternLayout>
@@ -65,6 +67,7 @@
 
 		<Root level="INFO">
 			<AppenderRef ref = "RollingFile" />
+			<AppenderRef ref = "VerboseRollingFile" />			
 		</Root>
 
 		<Logger name="analytics-log" level="INFO" additivity = "false">
@@ -73,13 +76,10 @@
 
 		<!--
 		  Exceptions are logged in this package by sending both a short message with ERROR level and one 
-		  with the stack trace. So, this will send the short message to both this detail file and the main file 
-		  (additivity = true), while the debug message is sent to this detail file only (actually, is blocked
-		  by the threshold filter in the main file).  
+		  with the stack trace at the DEBUG level. The debug/detailed message will be picked by the 
+		  detail log file, since it's the only one having the debug level. 
 		-->
-		<Logger name = "rres.knetminer" level = "DEBUG" additivity = "true">
-			<AppenderRef ref = "VerboseRollingFile" />
-		</Logger>
+		<Logger name = "rres.knetminer" level = "DEBUG" />
 
 	</Loggers>
 
