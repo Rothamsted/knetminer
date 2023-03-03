@@ -2480,7 +2480,7 @@ a {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(237, 237, 237, 0.6);
+    background-color: rgba(13, 243, 89, 0.3);
     z-index: 2;
     cursor: pointer;
     border-radius: 14px;
@@ -2496,7 +2496,7 @@ a {
 .overlay span{
     font-size: 1.15rem;
     font-weight: 600;
-    color: #51CE7B;
+    color: #000000;
     display: flex;
     align-items: center;
 }
@@ -2507,8 +2507,8 @@ a {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #51CE7B;
-    color: #51CE7B;;
+    background-color: #000000;
+    color: #000000;
     box-shadow: 9999px 0 0 -5px;
     animation: dot-pulse 1.5s infinite linear;
     animation-delay: 0.25s;
@@ -2522,8 +2522,8 @@ a {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #51CE7B;;
-    color: #51CE7B;;
+    background-color: #000000;
+    color: #000000;
   }
   .dot::before {
     box-shadow: 9984px 0 0 -5px;

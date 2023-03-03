@@ -235,7 +235,7 @@ function createGenesTable(text, keyword, rows){
 	});
 
 	$("#num-genes").change(function (e) {
-		createGenesTable(text, keyword, $("#num-genes").val());	//if number of genes to show changes, redraw table.
+		createGenesTable(text, keyword, $("#num-genes option:selected").val());	//if number of genes to show changes, redraw table.
 	});
 
 	/*
@@ -308,7 +308,6 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 
 	// Show loading spinner on 'tabviewer' div
 	getLongWaitMessage.createLoader(0,'#tabviewer_content')
-	// activateSpinner("#tabviewer");
 	//console.log("network: start spinner...");
 
 	$.post({

@@ -35,8 +35,6 @@ getLongWaitMessage = function(){
 
     // function to set message and animation
     function setMessage(){
-
-        deactivateSpinner("#search");
         createUiItem(1,'#search');
         $('#tabviewer').hide();
         $('#pGSearch_title').html('');

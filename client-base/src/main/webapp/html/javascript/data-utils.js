@@ -106,7 +106,6 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
             if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
                 // $('#tabviewer').show(); // show Tab buttons and viewer
                 // Show loading spinner on 'search' div
-                activateSpinner("#search");
                 var firstTimeout; 
                  $.post({
                      url: api_url + request,
@@ -125,20 +124,18 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                          var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
                          console.log(server_error.detail);
                          alert(errorMsg);
-                        // Remove loading spinner from 'search' div
-                        deactivateSpinner("#search");
+                         $('.overlay').remove();
                      })
                      .success( function(data){
                         var gviewer = data.gviewer
                         var querytime= performance.now() - this.startTime; // query response time
                         var queryseconds= querytime/1000;
                         queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
-                        $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+                        // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                         genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
                     }
                     ).complete(function(){
                         // Remove loading spinner from 'search' div
-                        deactivateSpinner("#search");
                         $('.overlay').remove();
                         $('#tabviewer').show();
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
@@ -148,9 +145,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         clearTimeout(secondTimeOut);
                         document.getElementById('pGSearch_title').scrollIntoView();
                      })
-
-                    // load animation after waiting for 3 seconds 
-                     firstTimeout = setTimeout(function(){getLongWaitMessage.init()},3000);
+                   getLongWaitMessage.init()
              }
              else {
                  $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
@@ -333,8 +328,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
          $('#suggestor_search_area').slideUp(500);
-
-
+         
+         
          createGenesTable(data.geneTable, keyword, candidateGenes);
          handleDelimintedCta.getData(data);
          multiSpeciesFeature.maps('drawRaw',data.gviewer);
@@ -580,7 +575,7 @@ function handleViewCreation(option){
     var data = $('body').data().data
     $('#'+option+'_button').addClass('created');
     var rows = data.evidence.split("\n").length - 2;
-    createEvidenceTable(data.evidence, data.keyword,rows);
+    createEvidenceTable(data.evidence, data.keyword,rows, false);
     deactivateSpinner("#tabviewer_content");
 }
 
