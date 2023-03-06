@@ -7,6 +7,7 @@ function createGenesTable(text, keyword, rows){
 	var table = "";
 	var candidateGenes = text.split("\n");
 	var results = candidateGenes.length - 2;
+	
 
 	if (candidateGenes.length > 2)
 	{
@@ -307,7 +308,7 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	// Show loading spinner on 'tabviewer' div
-	getLongWaitMessage.createLoader(0,'#tabviewer_content')
+	getLongWaitMessage.createLoader('#new_generateMultiEvidenceNetworkButton','#tabviewer_content','Creating Network')
 	//console.log("network: start spinner...");
 
 	$.post({
@@ -368,6 +369,7 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			// Remove the preloader message in Gene View, for the Network Viewer
 			$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 			$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+			$('#new_generateMultiEvidenceNetworkButton').html('Create Network');
 		}
 		catch (err) {
 			var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;

@@ -138,6 +138,8 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         // Remove loading spinner from 'search' div
                         $('.overlay').remove();
                         $('#tabviewer').show();
+                        $('#searchBtn').html('New Search')
+                        document.getElementById('resultsTable_button').click(); 
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
 
                         // clear timeout from callstack
@@ -221,6 +223,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                  longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
              }
          }
+            candidateGenes = candidateGenes >= 100 ? 100 : candidateGenes;
 
          // default search display msg.
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
@@ -318,9 +321,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                  }
               }
            }
-         if (candidateGenes > 1000) { // for over 1000 results in any searchMode
-             candidateGenes = 1000;
-         }
 
          $("#pGSearch_title").show().html(genomicViewTitle);
 
@@ -328,12 +328,11 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          //Collapse Suggestor view
          $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
          $('#suggestor_search_area').slideUp(500);
-         
-         
+        //  activateButton('resultsTable')
          createGenesTable(data.geneTable, keyword, candidateGenes);
          handleDelimintedCta.getData(data);
-         multiSpeciesFeature.maps('drawRaw',data.gviewer);
 
+         multiSpeciesFeature.maps('drawRaw',data.gviewer);
          $("body").data("data",{evidence:data.evidenceTable,keyword:keyword});
 
          if(geneList_size > 0) {

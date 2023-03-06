@@ -1,51 +1,30 @@
 
 getLongWaitMessage = function(){
 
-    var getTimeOut;
-
+    var getTimeOutId;
     var loadingPulse = '<div class="dot"></div>'; 
 
-    
-    // static files
-    var loadTimeUiItems = [
-        {
-            message: 'Connecting the dots',
-            animation: '<iframe src="https://embed.lottiefiles.com/animation/109382"></iframe>'
-        },
-        {
-            message: 'Traversing millions of edges', 
-            animation:'<iframe src="https://embed.lottiefiles.com/animation/109382"></iframe>'
-        }, 
-    ]
-
-
     // function to create overlay upon  
-    function createUiItem(position,element){
-        var itemPosition = loadTimeUiItems[position]
-        var uiContent = '<div class="overlay"><div style="margin-bottom:1rem">'+ itemPosition.animation +'</div>'
-        uiContent += '<span>'+ itemPosition.message + loadingPulse +'</span> </div>';
-        $(element).append(uiContent);
-
+    function createUiItem(button,parentElement,loaderText){
+        var uiContent = '<span style="display:flex;align-items:center;">'+ loaderText + loadingPulse +'</span>';
+        var overlay = '<div class="overlay"></div>'
+        $(parentElement).append(overlay);
+        $(button).html(uiContent)
     }
 
     // function returns timeout Id
     function returnTimeOut(){
-        return getTimeOut;
+        return getTimeOutId;
     }
 
     // function to set message and animation
     function setMessage(){
-        createUiItem(1,'#search');
-        $('#tabviewer').hide();
-        $('#pGSearch_title').html('');
+        createUiItem('#searchBtn','#search','Searching');
         
-       getTimeOut = setTimeout(function(){
+
+       getTimeOutId = setTimeout(function(){
             $('.overlay').html('')
-            var longerWaitContent = {
-                message: 'This is taking longer than usual. Please wait a bit longer.',
-                animation:'<iframe src="https://embed.lottiefiles.com/animation/77634"></iframe>'
-            }
-            createUiItem(longerWaitContent);     
+            createUiItem('#searchBtn','#search','Loading Result');     
         },116000)
 
     }

@@ -26,8 +26,6 @@ function createEvidenceTable(text, keyword, rows, change) {
     var evidenceTable = text.split("\n");
     var results = evidenceTable.length - 2;
 
-
-
     if (evidenceTable.length > 2) {
         // Evidence View: interactive legend for evidences.
         var evi_legend = getEvidencesLegend(text);
@@ -55,7 +53,6 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         // limit evidence view table to top 1000 evidences
         if (results >= 100 && !change) {
-            results = 100
             rows = 100;
         } else if (change && rows > results) {
             rows = results
@@ -145,7 +142,7 @@ function createEvidenceTable(text, keyword, rows, change) {
 
             if ($(e.target).hasClass("excludeKeyword")) {
                 if ($("#keywords").val() === '') {
-                    $("#keywords").val('ConceptID:' + values[7]);
+                    $("#keywords").val('NOT ConceptID:' + values[7]);
                     $('#' + targetID).toggleClass('excludeKeywordUndo excludeKeyword');
                     matchCounter();
                 }
@@ -356,7 +353,6 @@ function openGeneListPopup(conceptId, element) {
     // Checking if modal element is already created for current conceptID
     if (modalElement.length) {
 
-
         // display already existing modal element
         modalElement.css({
             "display": 'block',
@@ -461,7 +457,7 @@ function openGeneListPopup(conceptId, element) {
                         delayOpen: 50,
                     });
 
-                    deactivateSpinner("#tabviewer");
+                    
                     accessionModal.open()
 
                 }
@@ -469,7 +465,7 @@ function openGeneListPopup(conceptId, element) {
             } else {
                 evidenceNotice = '<span><b>Sorry, these genes have no accessions</b></span>'
                 jboxNotice(evidenceNotice, 'red', 300, 2000);
-                deactivateSpinner("#tabviewer");
+                
             }
 
 
@@ -490,7 +486,6 @@ function openGeneListPopup(conceptId, element) {
 
                 evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
-                deactivateSpinner("#tabviewer");
                 accessionModal.close();
 
             })
@@ -499,7 +494,7 @@ function openGeneListPopup(conceptId, element) {
 
         }).fail(function (xhr, status, errolog) {
             jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
-            deactivateSpinner("#tabviewer");
+            
 
         })
     }
