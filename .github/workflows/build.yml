@@ -59,6 +59,8 @@ jobs:
         KNET_JENKINS_TOKEN: ${{secrets.KNET_JENKINS_TOKEN}}
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        CI_SLACK_API_NOTIFICATION_URL: ${{secrets.CI_SLACK_API_NOTIFICATION_URL}}
+
             
         
       run: |
