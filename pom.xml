@@ -114,7 +114,7 @@
 
 		<lucene.version>6.6.0</lucene.version>
 		<ondex.version>5.2</ondex.version>
-		<knetminer.backend.version>2.1</knetminer.backend.version>
+		<knetminer.backend.version>2.2</knetminer.backend.version>
 		
 		<!-- We define these using the Jetty properties, so that they can be overridden from the 
 		     command line -->
