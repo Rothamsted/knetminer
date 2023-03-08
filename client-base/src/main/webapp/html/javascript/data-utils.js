@@ -138,7 +138,7 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         // Remove loading spinner from 'search' div
                         $('.overlay').remove();
                         $('#tabviewer').show();
-                        $('#searchBtn').html('New Search')
+                        $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
                         document.getElementById('resultsTable_button').click(); 
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
 
@@ -575,7 +575,6 @@ function handleViewCreation(option){
     $('#'+option+'_button').addClass('created');
     var rows = data.evidence.split("\n").length - 2;
     createEvidenceTable(data.evidence, data.keyword,rows, false);
-    deactivateSpinner("#tabviewer_content");
 }
 
 

@@ -2593,3 +2593,7 @@ a {
 #helperModal p{
     padding: .5rem;
 }
+
+.showFilter{
+    display:none;
+}

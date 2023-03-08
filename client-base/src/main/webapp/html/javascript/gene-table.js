@@ -8,7 +8,6 @@ function createGenesTable(text, keyword, rows){
 	var candidateGenes = text.split("\n");
 	var results = candidateGenes.length - 2;
 	
-
 	if (candidateGenes.length > 2)
 	{
 		// Gene View: interactive summary legend for evidence types.
@@ -166,7 +165,8 @@ function createGenesTable(text, keyword, rows){
 			table += '</tr>';
 		} // for row
 		table += '</tbody>';
-		table += '</table></div>';
+		table += '</table>';
+		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
 		table += '</form>';
 	} // if ( candidateGenes.length > 2 )
 
@@ -182,9 +182,6 @@ function createGenesTable(text, keyword, rows){
 	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
 	table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
-
-
-
 
 	document.getElementById('resultsTable').innerHTML = table;
 	// scroll down to geneTable, but show tabviewer_buttons above
@@ -222,6 +219,7 @@ function createGenesTable(text, keyword, rows){
 
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
+		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
 	});
 
 	$("#tablesorter").tablesorter({
@@ -308,8 +306,9 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	// Show loading spinner on 'tabviewer' div
-	getLongWaitMessage.createLoader('#new_generateMultiEvidenceNetworkButton','#tabviewer_content','Creating Network')
-	//console.log("network: start spinner...");
+	
+
+	
 
 	$.post({
 		url: url,
@@ -369,6 +368,7 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			// Remove the preloader message in Gene View, for the Network Viewer
 			$("#loadingNetworkDiv").replaceWith('<div id="loadingNetworkDiv"></div>');
 			$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
+			$('#new_generateMultiGeneNetworkButton').html('Create Network');
 			$('#new_generateMultiEvidenceNetworkButton').html('Create Network');
 		}
 		catch (err) {

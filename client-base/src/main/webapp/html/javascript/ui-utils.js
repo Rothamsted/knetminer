@@ -32,7 +32,6 @@ function activateButton(option){
     var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
 
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
-        activateSpinner("#tabviewer_content");
         handleViewCreation(option)
     }
 
@@ -156,25 +155,25 @@ function contactWindow() {
 }
 
 
-function activateSpinner(target) {
-	// maskloader animation
-	  $(target).maskLoader({
-      // fade effect
-      'fade': true,
-      'z-index': '999',
-      'background': '#F4F5F7',
-      'opacity': '0.6',
-      // position property
-      'position': 'absolute',
-      // custom loading spinner
-      'imgLoader': false,
-      // If false, you will have to run the "create" function.
-      //  Ex: $('body').maskLoader().create(); 
-      'autoCreate':true,
-      // displayes text alert
-      'textAlert':false
-	  });
-}
+// function activateSpinner(target) {
+// 	// maskloader animation
+// 	  $(target).maskLoader({
+//       // fade effect
+//       'fade': true,
+//       'z-index': '999',
+//       'background': '#F4F5F7',
+//       'opacity': '0.6',
+//       // position property
+//       'position': 'absolute',
+//       // custom loading spinner
+//       'imgLoader': false,
+//       // If false, you will have to run the "create" function.
+//       //  Ex: $('body').maskLoader().create(); 
+//       'autoCreate':true,
+//       // displayes text alert
+//       'textAlert':false
+// 	  });
+// }
 
 /*
  * Function
@@ -213,9 +212,9 @@ function showApiInitResult ( error = null )
 }
 
 
-function deactivateSpinner(target) {
-  $(target).maskLoader().destroy();
-}
+// function deactivateSpinner(target) {
+//   $(target).maskLoader().destroy();
+// }
 
 //  function creates an hidden element and takes a file type to be donwloaded to user system 
 function downloadFunction(filename,filetype){

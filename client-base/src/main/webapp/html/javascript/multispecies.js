@@ -16,7 +16,6 @@ multiSpeciesFeature = function ()
                     selectDropdown();
                     $('#species_header').css('display','flex');
                     multiSpeciesEvents(); 
-                    deactivateSpinner("#wrapper");
                 }
             }).fail(function(xhr,status,errolog){
                 errorComponent('#pGViewer_title',xhr);
@@ -206,8 +205,6 @@ multiSpeciesFeature = function ()
                             while (!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
                                 $("#addRow").click();
                             }
-
-                            removeGeneRow()
 
                             if ($("#region_search_area").is(":hidden")) {
                                 $("#region_search").click();

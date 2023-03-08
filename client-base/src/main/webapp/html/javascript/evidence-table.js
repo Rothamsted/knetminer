@@ -218,6 +218,7 @@ function createEvidenceTable(text, keyword, rows, change) {
         $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
             // new multi select checkboxes in evidence view to render knetwork via 'network' api
             generateMultiEvidenceNetwork();
+            getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network')
         });
 
         $("#tablesorterEvidence").tablesorter({
@@ -384,10 +385,6 @@ function openGeneListPopup(conceptId, element) {
         triggerAccessionToolTips(conceptId);
 
     } else {
-
-        // activate loading animation here 
-        activateSpinner("#tabviewer");
-
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
@@ -398,9 +395,7 @@ function openGeneListPopup(conceptId, element) {
             if (data.geneTable !== null) {
 
                 var geneTable = data.geneTable.split("\n");
-                var headers = geneTable[0].split("\t").slice(1, 4);
 
-                associateArr.push(headers.join("\t"));
                 var accessionTable = "";
                 accessionTable += '<div class="accession-popup-container">';
                 accessionTable += '<div class="accession-popup-table"><table class="tablesorter">';
@@ -417,7 +412,6 @@ function openGeneListPopup(conceptId, element) {
 
                 for (var geneValue = 1; geneValue < (genesCount - 1); geneValue++) {
                     var value = geneTable[geneValue].split("\t").slice(1, 4);
-                    associateArr.push(value.join("\t"));
                     accessionTable += '<tr><td>' + value[0] + '</td>';
                     accessionTable += '<td>' + value[1] + '</td>';
                     accessionTable += '<td>' + value[2] + '</td></tr>';
@@ -425,8 +419,8 @@ function openGeneListPopup(conceptId, element) {
 
                 accessionTable += '</tbody></table></div>';
 
-                if (associateArr.length > 0) {
-                    var result = associateArr.join("\n");
+                if (geneTable.length > 0) {
+                    var result = geneTable.join("\n");
 
                     var utf8Bytes = encodeURIComponent(result).replace(/%([0-9A-F]{2})/g, function (match, p1) {
                         return String.fromCharCode('0x' + p1);
@@ -486,7 +480,7 @@ function openGeneListPopup(conceptId, element) {
 
                 evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
                 jboxNotice(evidenceNotice, 'green', 300, 2000);
-                accessionModal.close();
+                accessionModal.close()
 
             })
 

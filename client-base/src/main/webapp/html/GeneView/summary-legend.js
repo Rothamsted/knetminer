@@ -72,6 +72,7 @@
                         var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
                         setLegendsState(tableLocation,gene_evidences,currentRow,currentData);
                     } 
+                    showFilterTips();
                 }
                
          }
@@ -120,6 +121,7 @@
             }else{
                 $(currentRow).addClass('current-filter').removeClass('non-filter');
             }
+            
             break;
         case "evidenceTable":
             if(!currentData.some(keys => gene_evidences.includes(keys))){
@@ -130,4 +132,14 @@
             break;
 
     }
+ }
+
+
+ function showFilterTips(){
+    var hiddenRow = $('#tablesorter > tbody').children().not('.current-filter').length; 
+    var totalRenderedRows = $('#tablesorter > tbody').children().length; 
+    if(hiddenRow == totalRenderedRows){
+        $('#filterMessage').toggle('showFilter')
+    }else{$('#filterMessage').hide()}
+  
  }
