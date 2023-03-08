@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sampleQueries>
+
+	<!-- Generic queries -->	
+	<query>
+		<description>Keyword search (AND)</description>
+		<term>"seed germination" AND flavon*</term>
+	</query>
+	
+	<query>
+		<description>Keyword search (OR)</description>
+		<term>dormancy OR anthocyanin</term>
+	</query>
+	
+	<query>
+		<description>Gene names</description>
+		<term>drought OR heat OR frost</term>
+		<gene>TPS*</gene>
+		<gene>TPP?</gene>
+	</query>	
+	
+	<!-- Wheat queries -->
+	<query>
+		<description>Wheat gene symbols</description>
+		<taxId>4565</taxId>
+		<term>yield AND rust</term>
+		<gene>TRAESCS3D02G468400</gene>
+		<gene>TRAESCS3D03G0544800</gene>
+		<gene>TaSIZ1</gene>
+		<gene>CDC5</gene>
+	</query>
+	
+	<query>
+		<description>Wheat gene list</description>
+		<taxId>4565</taxId>
+		<term>"seed germination" OR "seed dormancy"</term>
+		<gene>TRAESCS3D02G468400</gene>
+		<gene>TRAESCS2B02G038700</gene>
+		<gene>TRAESCS2A02G025700</gene>
+		<gene>TRAESCS2A02G527700</gene>
+		<gene>TRAESCS2D02G530600</gene>
+		<gene>TRAESCS2B02G558400</gene>
+		<gene>TRAESCS3B02G257900</gene>
+		<gene>TRAESCS3A02G226600</gene>
+		<gene>TRAESCS3D02G224600</gene>
+		<gene>TRAESCS2D02G493400</gene>
+		<gene>TRAESCS6A02G369700</gene>
+		<gene>TRAESCS6B02G406400</gene>
+		<gene>TRAESCS6B02G405900</gene>
+		<gene>TRAESCS3B02G280700</gene>
+		<gene>TRAESCS4A02G085900</gene>
+		<gene>TRAESCS3B02G006300</gene>
+		<gene>TRAESCS3B02G007400</gene>
+		<gene>TRAESCS4A02G206800</gene>
+		<gene>TRAESCS3B02G006100</gene>
+		<gene>TRAESCS3A02G464900</gene>
+	</query>
+	
+	<query>
+		<description>Grain colour + PHS</description>
+		<taxId>4565</taxId>
+		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
+		<gene>TraesCS3B02G007400</gene>
+		<gene>TraesCS2A02G025700</gene>
+		<gene>TraesCS2D02G530600</gene>
+		<gene>TraesCS2A02G527700</gene>
+		<gene>TraesCS2B02G558400</gene>
+		<gene>TraesCS2B02G038700</gene>
+		<gene>TraesCS3B02G257900</gene>
+		<gene>TraesCS3A02G226600</gene>
+		<gene>TraesCS3D02G224600</gene>
+		<gene>TraesCS3D02G468400</gene>
+		<gene>TraesCS3B02G280700</gene>
+		<gene>TraesCS2D02G493400</gene>
+	</query>
+	
+	<query>
+		<description>Rust response</description>
+		<taxId>4565</taxId>
+		<term>rust OR disease</term>
+		<gene>TRAESCS5B02G337300</gene>
+		<gene>TRAESCS6D02G405600</gene>
+		<gene>TRAESCS6A02G417600</gene>
+		<gene>TRAESCS5D02G560900</gene>
+		<gene>TRAESCS2A02G395200</gene>
+		<gene>TRAESCS2D02G010700</gene>
+		<gene>TRAESCS6A02G416300</gene>
+		<gene>TRAESCS5B02G241800</gene>
+		<gene>TRAESCS2B02G183200</gene>
+		<gene>TRAESCS5D02G560600</gene>
+		<gene>TRAESCS6D02G401700</gene>
+		<gene>TRAESCS1B02G343800</gene>
+		<gene>TRAESCS6B02G462300</gene>
+		<gene>TRAESCS7A02G033100</gene>
+		<gene>TRAESCS4A02G456300</gene>
+	</query>
+	
+	<query>
+		<description>Grain growth</description>
+		<taxId>4565</taxId>
+		<term>"grain fill duration" OR "seed growth"</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>5A</chromosome>
+			<start>580000000</start>
+			<end>590000000</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+		<chromosome>2D</chromosome>
+			<start>280000000</start>
+			<end>310000000</end>
+			<label>QTL2</label>
+		</region>		
+	</query>
+
+	
+	<!-- Arabidopsis queries -->
+	<query>
+		<description>FLC gene expression</description>
+		<taxId>3702</taxId>
+		<term>flowering FLC FT</term>
+	</query>
+	
+	<query>	
+		<description>Petal size QTL</description>
+		<taxId>3702</taxId>
+		<term>"cell size" OR "cell division" OR "cell cycle"</term>
+		<withinRegion>true</withinRegion>
+		<region>
+			<chromosome>4</chromosome>
+			<start>9920000</start>
+			<end>10180000</end>
+			<label>Petal size</label>
+		</region>
+        <gene>At4g18330</gene>
+	</query>
+	
+	<query>
+		<description>Dormancy</description>
+		<taxId>3702</taxId>
+		<term>dormancy OR anthocyanin</term>
+	</query>
+	
+	<!-- Rice queries -->
+	<query>
+		<description>Rice gene symbols</description>
+		<taxId>39947</taxId>
+		<term>strigolactone</term>
+		<gene>LOC_Os12g29980</gene>
+		<gene>Os12g0484900</gene>
+		<gene>OsGRF7</gene>
+		<gene>GRF7</gene>
+	</query>
+	
+	<query>
+		<description>Rice gene list</description>
+		<taxId>39947</taxId>
+		<term>drought</term>
+		<gene>OS07G0150700</gene>
+		<gene>OS06G0606000</gene>
+		<gene>OS08G0472000</gene>
+		<gene>OS06G0211200</gene>
+		<gene>OS02G0766700</gene>
+		<gene>OS01G0827800</gene>
+		<gene>OS06G0562200</gene>
+		<gene>OS02G0255500</gene>
+		<gene>OS05G0213500</gene>
+		<gene>OS03G0214200</gene>
+		<gene>OS03G0610900</gene>
+		<gene>OS03G0764800</gene>
+		<gene>OS12G0586100</gene>
+		<gene>OS03G0758400</gene>
+		<gene>OS01G0648000</gene>
+		<gene>OS05G0473000</gene>
+		<gene>OS10G0564800</gene>
+		<gene>OS05G0552300</gene>
+		<gene>OS09G0570800</gene>
+		<gene>OS07G0137800</gene>
+		
+	</query>
+	
+	
+	<!-- Maize queries -->
+	<query>
+		<taxId>4577</taxId>
+		<description>Maize genes</description>
+		<term>drought</term>
+		<gene>ZM00001EB073420</gene>
+		<gene>ZM00001EB158420</gene>
+		<gene>ZM00001EB324540</gene>
+		<gene>ZM00001EB149160</gene>
+		<gene>ZM00001EB160470</gene>
+		<gene>ZM00001EB176680</gene>
+		<gene>ZM00001EB393150</gene>
+		<gene>ZM00001EB038010</gene>
+		<gene>ZM00001EB270240</gene>
+		<gene>ZM00001EB166990</gene>
+		<gene>ZM00001EB119320</gene>
+		<gene>ZM00001EB144000</gene>
+		<gene>ZM00001EB214530</gene>
+		<gene>ZM00001EB219160</gene>
+		<gene>ZM00001EB387090</gene>
+		<gene>ZM00001EB058980</gene>
+		<gene>ZM00001EB386560</gene>
+		<gene>ZM00001EB086800</gene>
+		<gene>ZM00001EB274190</gene>
+		<gene>ZM00001EB300010</gene>	
+	</query>
+	
+	<query>
+		<taxId>4577</taxId>
+		<description>Maize genes (pro plan)</description>
+		<term>drought</term>
+		<gene>ZM00001EB038010</gene>
+		<gene>ZM00001EB176680</gene>
+		<gene>ZM00001EB149160</gene>
+		<gene>ZM00001EB300010</gene>
+		<gene>ZM00001EB160470</gene>
+		<gene>ZM00001EB158420</gene>
+		<gene>ZM00001EB393150</gene>
+		<gene>ZM00001EB073420</gene>
+		<gene>ZM00001EB274190</gene>
+		<gene>ZM00001EB343590</gene>
+		<gene>ZM00001EB214530</gene>
+		<gene>ZM00001EB387090</gene>
+		<gene>ZM00001EB324540</gene>
+		<gene>ZM00001EB071930</gene>
+		<gene>ZM00001EB270240</gene>
+		<gene>ZM00001EB110650</gene>
+		<gene>ZM00001EB144000</gene>
+		<gene>ZM00001EB329590</gene>
+		<gene>ZM00001EB119320</gene>
+		<gene>ZM00001EB386560</gene>
+		<gene>ZM00001EB030890</gene>
+		<gene>ZM00001EB058980</gene>
+		<gene>ZM00001EB030900</gene>
+		<gene>ZM00001EB073430</gene>
+		<gene>ZM00001EB086800</gene>
+		<gene>ZM00001EB119310</gene>
+		<gene>ZM00001EB127670</gene>
+		<gene>ZM00001EB131280</gene>
+		<gene>ZM00001EB286850</gene>
+		<gene>ZM00001EB166990</gene>
+		<gene>ZM00001EB219160</gene>
+		<gene>ZM00001EB064480</gene>
+		<gene>ZM00001EB240630</gene>
+	</query>
+	
+	<!-- Crafter by MB to see something significant about regions -->
+	<query>
+		<description>Maize region search</description>
+		<taxId>4577</taxId>
+		<term>drought AND ABA</term>
+		<gene>SIZ1</gene>
+		<gene>HAB1</gene>
+		<gene>AT1G50370</gene>
+		<gene>ZM00001EB355410</gene>
+		<region>
+			<chromosome>8</chromosome>
+			<start>122482486</start>
+			<end>168395052</end>
+			<label>Drought</label>
+		</region>
+	</query>	
+
+</sampleQueries>

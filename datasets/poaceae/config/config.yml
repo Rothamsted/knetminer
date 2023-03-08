@@ -1,0 +1,71 @@
+# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# used when no other option is given to Docker.
+# 
+# Your dataset will need its own version of this file. 
+# 
+ 
+"@includes":
+- defaults-cfg.yml
+
+# oxl: data/knowledge-network.oxl this is the default
+
+# Details about the datset and supported species
+# 
+"dataset @merge":
+  id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
+  title: Beta Poaceae KnetMiner
+  version: 55 
+
+  # Have a look here about YAML multi-line strings: http://yaml-multiline.info
+  description: >-
+    Beta version of the KnetMiner gene discovery platform for Arabidopsis, wheat and rice.
+    The instance is auto-updated upon Knetminer rebuild (from GitHub Actions).  
+  keywords: Knetminer Beta, Knetminer CI, wheat, rice, Arabidopsis
+     
+  # organization: is in the defaults
+  # sampleQueries: config/sample-queries.xml # this is a default
+  # backgroundImage: config/background.jpg # this is the default 
+  
+  # ======> WARNING!
+  # SemanticMotif.txt won't work if you include Arabidopsis (endless paths met).
+  # For that to work, you need to use SemanticMotifs-no-ara.txt
+  # I've also experienced problems with adding rice to the first two.
+  #
+  species:
+  - taxId: 3702
+    scientificName: Arabidopsis thaliana
+    commonName: Arabidopsis
+
+  - taxId: 4565
+    scientificName: Triticum aestivum
+    commonName: Wheat
+
+  - taxId: 39947
+    scientificName: Oryza sativa Japonica
+    commonName: Rice
+    
+#seedGenesFile: config/seed-genes-poaceae.tsv
+
+# See the defaults for details. TODO: these are my (M. Brandizi) personal IDs. See details in the default
+# file.
+#
+googleAnalyticsIdApi: UA-237399750-1
+googleAnalyticsIdClient: UA-237399750-1
+
+# The new GA4 API
+#
+#googleAnalyticsIdApi: G-DPWNWT8BSF
+#googleAnalyticsIdClient: G-DPWNWT8BSF
+
+# These are custom options, which aren't explicitly defined by the Knetminer configuration. 
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
+# 
+# WARNING: DO NOT ABUSE this feature! As explained in the link above, this is an hack to help with provisional
+# or uncommon configuration parameters. Using this section SHOULD BE AN EXCEPTION to defining configuration
+# variables explicitly (out of this section), so that they can be validated. 
+#
+customOptions:
+  ui:
+    # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+    # Likely, you don't want it enabled.
+    betaFeedbackBannerEnabled: true

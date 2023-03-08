@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+
+	<!-- This is for the RRes test instance  -->
+
+
+  <!-- For all the rest, the defaults should be fine -->
+	<import resource = "defaults-cfg.xml" />
+	
+	
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "bolt://babvs65.rothamsted.ac.uk:7687" />
+  </bean> 
+  <bean name = "neo4j.user" class = "java.lang.String">
+  	<constructor-arg value = "rouser" />
+  </bean> 
+  <bean name = "neo4j.password" class = "java.lang.String">
+  	<constructor-arg value = "rouser" />
+  </bean> 
+
+	
+	<bean name = "configDirPath" class = "java.lang.String">
+  	<constructor-arg value = "#{ systemProperties['knetminer.configDir'] }/neo4j" />
+	</bean> 
+
+	<!-- Usually, we use the single-file queries only  -->
+	<bean name = "semanticMotifsQueries" 
+				class = "uk.ac.ebi.utils.collections.ListUtils" factory-method = "union" >
+		<constructor-arg>
+			<array>
+				<!--  <ref bean = "semanticMotifsQueriesCustom" />
+				<ref bean = "semanticMotifsQueriesStateMachine" />  -->
+				<ref bean = "semanticMotifsQueriesFromFile" />
+			</array>
+		</constructor-arg>				
+	</bean>
+      		
+</beans>
