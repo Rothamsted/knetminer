@@ -154,7 +154,7 @@ function contactWindow() {
     window.open("html/contact.html", "KnetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0");
 }
 
-
+// TODO: remove? (Commented on 8/3/2023)
 // function activateSpinner(target) {
 // 	// maskloader animation
 // 	  $(target).maskLoader({
