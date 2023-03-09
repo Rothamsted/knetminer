@@ -2500,7 +2500,7 @@ a {
     box-shadow: 9999px 0 0 -5px;
     animation: dot-pulse 1.5s infinite linear;
     animation-delay: 0.25s;
-    margin-left: 1.5rem;
+    margin-left: 1.20rem;
   }
   .dot::before, .dot::after {
     content: "";

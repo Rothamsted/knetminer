@@ -82,12 +82,13 @@ function addKeywordUndo(keyword, from, target) {
 
 function excludeKeyword(keyword, from, target) {
     query = $('#' + target).val();
+    var newQuery; 
     if(query === keyword){
        newQuery = ' NOT ' + keyword;
     }else if(query.includes(keyword)){
-       newQuery = query.replace(' OR ' + keyword , ' NOT ' + keyword) 
+        newQuery = query.replace('OR '+ keyword ,' NOT '+ keyword)
     }else{
-       newQuery = keyword
+       newQuery = 'NOT '+keyword
     }
 
     $('#' + target).val(newQuery);
@@ -103,7 +104,7 @@ function excludeKeyword(keyword, from, target) {
 
 function excludeKeywordUndo(keyword, from, target) {
     query = $('#' + target).val();
-   newQuery = query.replace(' NOT ' + keyword, "");
+    newQuery = query.replace(' NOT ' + keyword, keyword);
     $('#' + target).val(newQuery);
     $('#' + from).toggleClass('excludeKeywordUndo excludeKeyword');
     document.getElementById('search').scrollIntoView();
@@ -154,26 +155,7 @@ function contactWindow() {
     window.open("html/contact.html", "KnetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0");
 }
 
-// TODO: remove? (Commented on 8/3/2023)
-// function activateSpinner(target) {
-// 	// maskloader animation
-// 	  $(target).maskLoader({
-//       // fade effect
-//       'fade': true,
-//       'z-index': '999',
-//       'background': '#F4F5F7',
-//       'opacity': '0.6',
-//       // position property
-//       'position': 'absolute',
-//       // custom loading spinner
-//       'imgLoader': false,
-//       // If false, you will have to run the "create" function.
-//       //  Ex: $('body').maskLoader().create(); 
-//       'autoCreate':true,
-//       // displayes text alert
-//       'textAlert':false
-// 	  });
-// }
+
 
 /*
  * Function
@@ -211,10 +193,6 @@ function showApiInitResult ( error = null )
   $('#error_page').css('display', 'flex');
 }
 
-
-// function deactivateSpinner(target) {
-//   $(target).maskLoader().destroy();
-// }
 
 //  function creates an hidden element and takes a file type to be donwloaded to user system 
 function downloadFunction(filename,filetype){

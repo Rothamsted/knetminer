@@ -141,23 +141,9 @@ function createEvidenceTable(text, keyword, rows, change) {
             var values = e.data.x[evidenceNum].split("\t");
 
             if ($(e.target).hasClass("excludeKeyword")) {
-                if ($("#keywords").val() === '') {
-                    $("#keywords").val('NOT ConceptID:' + values[7]);
-                    $('#' + targetID).toggleClass('excludeKeywordUndo excludeKeyword');
-                    matchCounter();
-                }
-                else {
                     excludeKeyword('ConceptID:' + values[7], targetID, 'keywords');
-                }
             } else {
-                if ($("#keywords").val() === '') {
-                    $("#keywords").val('ConceptID:' + values[7]);
-                    $('#' + targetID).toggleClass('excludeKeywordUndo excludeKeyword');
-                    matchCounter();
-                }
-                else {
                     excludeKeywordUndo('ConceptID:' + values[7], targetID, 'keywords');
-                }
             }
         });
 
@@ -323,6 +309,8 @@ function generateMultiEvidenceNetwork() {
             generateCyJSNetwork(api_url + '/network', params, false);
         }
         else {
+            $('.overlay').remove();
+            $('#new_generateMultiEvidenceNetworkButton').html('Create Network');
             evidenceNotice = '<span><b>Search with a genelist to view network.</b></span>'
             new jBox('Notice', {
                 content: evidenceNotice,
@@ -388,14 +376,11 @@ function openGeneListPopup(conceptId, element) {
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
-        var associateArr = [];
 
         // fetching data genetable data with a timeout of 1min 66secs
         $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 }).done(function (data) {
             if (data.geneTable !== null) {
-
                 var geneTable = data.geneTable.split("\n");
-
                 var accessionTable = "";
                 accessionTable += '<div class="accession-popup-container">';
                 accessionTable += '<div class="accession-popup-table"><table class="tablesorter">';
