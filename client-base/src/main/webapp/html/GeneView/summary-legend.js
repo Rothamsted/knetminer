@@ -72,7 +72,8 @@
                         var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
                         setLegendsState(tableLocation,gene_evidences,currentRow,currentData);
                     } 
-                    showFilterTips();
+                    // shows filter tips for only geneview 
+                    if(tableLocation === 'resultsTable') showFilterTips();
                 }
                
          }
