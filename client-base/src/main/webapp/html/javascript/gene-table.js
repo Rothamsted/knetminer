@@ -25,11 +25,8 @@ function createGenesTable(text, keyword, rows){
 		table += '<tr>';
 
 		var headers = candidateGenes[0].split("\t");
-		var hAcc = headers[1];
-		var hName = headers[2];
-
 		table += '<th width="100"> Accession </th>';
-		table += '<th width="100" title="Show ' + hName + ', if not same as ' + hAcc + '"> Gene</th>'; // added Gene Name to Gene View table
+		table += '<th width="100" title="Show Symbol, if not same as Accession"> Symbol</th>'; // added Gene Name to Gene View table
 
 
 

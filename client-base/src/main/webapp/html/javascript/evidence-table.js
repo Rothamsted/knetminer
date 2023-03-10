@@ -35,7 +35,6 @@ function createEvidenceTable(text, keyword, rows, change) {
         table = table + '<table id="tablesorterEvidence" class="tablesorter">';
         table = table + '<thead>';
         table = table + '<tr>';
-        var header = evidenceTable[0].split("\t");
 
         table = table + '<th width="75">Omit/Add</th>';
         table = table + '<th width="50">Type</th>';
@@ -63,6 +62,7 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
             values = evidenceTable[ev_i].split("\t");
+            [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = values
             table = table + '<tr>';
 
             table = table + '<td><p id="evidence_exclude_' + ev_i + '" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>' +
@@ -70,17 +70,17 @@ function createEvidenceTable(text, keyword, rows, change) {
 
             //link publications with pubmed
             pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-            if (values[0] == 'Publication')
-                evidenceValue = '<a href="' + pubmedurl + values[1].substring(5) + '" target="_blank">' + values[1] + '</a>';
+            if (type == 'Publication')
+                evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
             else
-                evidenceValue = values[1];
+                evidenceValue = nodeLabel;
 
-            table = table + '<td type-sort-value="' + values[0] + '"><div class="evidence_item evidence_item_' + values[0] + '" title="' + values[0] + '"></div></td>';
+            table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
             //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
 
             // p-values
-            var pvalue = values[3];
+     
             pvalue = renderEvidencePvalue(pvalue);
             // to tell table-sorter that it's a number
             var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
@@ -89,30 +89,15 @@ function createEvidenceTable(text, keyword, rows, change) {
             // /end:p-values
 
             // Count of all matching genes
-            table = table + `<td ><span style="margin-right:.5rem;">${values[4]}</span> <span data-type="${values[0]}" data-description="${values[1]}" class="accession-download" onclick="openGeneListPopup(${values[7]},this)"><i class="fas fa-file-download"></i></span> <div id="concept${values[7]}"></div> </td>`;
+            table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
 
-            // Matching User Genes 
-            var userGenes = values[5]; // The array of user genes, if any, else []
-
-            if (userGenes) {
-                userGenes = userGenes.trim();
-                // The old code that returned "N/A" was fixed, now the API yields always an empty string if
-                // it has no genes. So, this split works fine for 1-gene case too
-                userGenes = userGenes.split(",");
-            }
-            else
-                userGenes = [];
-
-            if (userGenes.length == 0 || userGenes.length >= 500)
-                // If they're too many, just yield the count
-                table += '<td>' + userGenes.length + '</td>'; // user genes
-            else
+           
                 // launch evidence network with them, if they're not too many.
-                table += '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + userGenes.length + '</a></td>';
+                table += '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + genesCount + '</a></td>';
 
             // /end:user genes
 
-            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + values[7] + ':' + values[5] + '">';
+            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
             table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
 
         } // for ev_i in evidenceTable
@@ -198,7 +183,7 @@ function createEvidenceTable(text, keyword, rows, change) {
             // for user genes column in evidence view
             var evidenceNum = $(e.target).attr("id").replace("userGenes_evidenceNetwork_", "");
             var values = e.data.x[evidenceNum].split("\t");
-            var evi_userGenes = values[5].trim(); // user gene(s) provided
+            var evi_userGenes = geneList.trim(); // user gene(s) provided
             evidencePath(values[7], evi_userGenes.split(","));
         });
 
@@ -288,7 +273,7 @@ function generateMultiEvidenceNetwork() {
             evidences_ondexid_list = evidences_ondexid_list + ' ConceptID:' + evidence_ondexids_and_genes[0]; // ondex IDs of all selected evidences via checkboxes
             var geneids_row = evidence_ondexids_and_genes[1].split(',');
             for (var j = 0; j < geneids_row.length; j++) {
-                // for each evidence ondexID (values[7]), find its values[5] geneIDs and add to a new unique list
+                // for each evidence ondexID (values[7]), find its geneList geneIDs and add to a new unique list
                 if (geneids.indexOf(geneids_row[j]) === -1) {
                     geneids.push(geneids_row[j]); // insert unique geneID
                 }
@@ -526,5 +511,8 @@ function triggerAccessionToolTips(conceptId) {
     })
 
 }
+
+
+// function countString 
 
 
