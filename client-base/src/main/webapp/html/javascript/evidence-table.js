@@ -164,6 +164,11 @@ function createEvidenceTable(text, keyword, rows, change) {
             }
         });
 
+
+        $(".tablesorter").tablesorter({
+            sortList: [[3, 0]],
+        });
+
         /*
          * click handler for generating the evidence path network for total genes (UNUSED now)
          */
