@@ -54,6 +54,7 @@ function createEvidenceTable(text, keyword, rows, change) {
         // limit evidence view table to top 1000 evidences
         if (results >= 100 && !change) {
             rows = 100;
+            eviTableLimit = 101;
         } else if (change && rows > results) {
             rows = results
         } else if (change && rows < results) {
