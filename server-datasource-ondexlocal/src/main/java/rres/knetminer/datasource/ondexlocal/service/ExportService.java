@@ -663,7 +663,8 @@ public class ExportService
 				result.getInt ( "genesSize" ) + "\t" + 
 				userGenesStr + "\t" + 
 				result.getInt ( "qtlsSize" ) + "\t" +
-				result.getInt ( "ondexId" );
+				result.getInt ( "ondexId" ) + "\t" +
+				userGeneLabels.size ();
 		})
 		.collect ( Collectors.joining ( "\n" ) );
 		
@@ -672,7 +673,7 @@ public class ExportService
 		
 		log.info ( "Returning {} row(s) for the evidence table", tableSize.getValue () );
 		
-		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\n" + tableStr;
+		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + tableStr;
 		
 	} // exportEvidenceTable()	
 }
