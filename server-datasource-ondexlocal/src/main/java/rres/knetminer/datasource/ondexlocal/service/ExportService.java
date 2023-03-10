@@ -664,6 +664,8 @@ public class ExportService
 				userGenesStr + "\t" + 
 				result.getInt ( "qtlsSize" ) + "\t" +
 				result.getInt ( "ondexId" ) + "\t" +
+				// This was added in #726, to avoid that the client spends too much time computing the
+				// same number. TODO: Java unit test 
 				userGeneLabels.size ();
 		})
 		.collect ( Collectors.joining ( "\n" ) );
