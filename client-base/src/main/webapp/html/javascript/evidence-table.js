@@ -18,6 +18,23 @@ function renderEvidencePvalue(pvalueStr) {
     return pvalue.toFixed(4)
 }
 
+/**
+ * 
+ * Renders the evidence table from API output.
+ * 
+ * TODO: change the param names into more meaningful names as per the following (to be kept)
+ *
+ * tableStringOrRows: the API-produced string that represent the table in TSV format, or
+ * the rows array, which is obtained from the former during the first call and passed in 
+ * upon recursive calls (when isRefreshMode == true).
+ * 
+ * isRefreshMode: the function is being called after the first time, to manage a refresh/redraw
+ * in response to user interaction.   
+ * 
+ * TODO: remove rows, WHAT THE HELL!? Use the first parameter as explained.
+ * TODO: treat isRefreshMode as optional (ie, might be null)
+ * TODO: keyword is never used, to be removed?
+ */
 function createEvidenceTable(text, keyword, rows, change) {
     var table = "";
     var summaryArr = new Array();
@@ -26,8 +43,10 @@ function createEvidenceTable(text, keyword, rows, change) {
     var evidenceTable = text.split("\n");
     var results = evidenceTable.length - 2;
 
-    if (evidenceTable.length > 2) {
+    if (evidenceTable.length > 2) 
+    {
         // Evidence View: interactive legend for evidences.
+        // TODO: fix the names and use Js conventions (eg, eviLegend)
         var evi_legend = getEvidencesLegend(text);
         table = '';
         table = table + '<div class="gene_header_container">' + evi_legend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
@@ -39,7 +58,6 @@ function createEvidenceTable(text, keyword, rows, change) {
         table = table + '<th width="75">Omit/Add</th>';
         table = table + '<th width="50">Type</th>';
         table = table + '<th width="212">Node label</th>';
-        //table = table + '<th width="78">LUCENE ' + header[2] + '</th>';
         table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
         table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
         table = table + '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
@@ -50,7 +68,8 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         var eviTableLimit = evidenceTable.length - 1;
 
-        // limit evidence view table to top 1000 evidences
+        // limit evidence view table to top scored rows
+        // TODO: turn 'results' into a less confusing name, eg, displayedSize
         if (results >= 100 && !change) {
             rows = 100;
             eviTableLimit = 101;
@@ -60,7 +79,8 @@ function createEvidenceTable(text, keyword, rows, change) {
             eviTableLimit = rows;
         }
 
-        for (var ev_i = 1; ev_i < eviTableLimit; ev_i++) {
+        for (var ev_i = 1; ev_i < eviTableLimit; ev_i++)
+        {
             values = evidenceTable[ev_i].split("\t");
             [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = values
             table = table + '<tr>';
@@ -77,10 +97,9 @@ function createEvidenceTable(text, keyword, rows, change) {
 
             table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
-            //table = table + '<td>' + values[2] + '</td>'; // TODO: remove? What was it?!
 
-            // p-values
-     
+
+            // p-values     
             pvalue = renderEvidencePvalue(pvalue);
             // to tell table-sorter that it's a number
             var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
@@ -91,20 +110,27 @@ function createEvidenceTable(text, keyword, rows, change) {
             // Count of all matching genes
             table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
 
-           
-                // launch evidence network with them, if they're not too many.
-                table += '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + genesCount + '</a></td>';
-
+            // launch evidence network with them, if they're not too many.
+            table += '<td><a href="javascript:;" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_' + ev_i + '">' + genesCount + '</a></td>';
             // /end:user genes
 
             var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
             table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
 
         } // for ev_i in evidenceTable
+        
+        
+        // The trailer
+        //
+        
         table = table + '</tbody>';
         table = table + '</table>';
+        
+        
         table = table + '</div><div class="evidence-footer">';
-        table = table + '<div class="evidence-select"><select value="' + /*rows*/results + '" id="evidence-select">';
+        table = table + '<div class="evidence-select"><select value="' + results + '" id="evidence-select">';
+        
+        // TODO: WTH? Render it with a loop on a range array (as per #726)
         table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000 </option>';
         table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500</option>';
         table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200</option>';
@@ -117,6 +143,24 @@ function createEvidenceTable(text, keyword, rows, change) {
 
 
         $('#evidenceTable').html(table);
+
+				// TODO: appending handlers at the end is poor, it forces us to retrieve per-row params
+				// from the HTML and even put such values into clumsy to-be-parsed strings
+				//
+				// Use a different style, with this in the rows loop:
+				// function evidenceExcludeButtonEvent ( conceptId )
+				//   ...
+				// <p onclick = evidenceExcludeButtonEvent ( $conceptId ) ...>
+				// 
+				// In the current implementation: 
+				// - injecting the table via data object is convoluted (and what sort of name is 'x'?!?)
+				// - getting the element index from an ID string that carries structure (evidence_exclude_X) is
+				//   convoluted
+				// - using the index to re-parse the table row is garbage, values[7] is more garbage and the
+				//   function shouldn't need the whole table, as suggested above. Should it ever need
+				//   more than the concept ID, just change the handler signature and pass what's needed
+				//   only (possibly, the entire row, but without forcing the handler to parse it again)
+				// 
 
         $(".evidenceTableExcludeKeyword").bind("click", { x: evidenceTable }, function (e) {
 
@@ -133,6 +177,7 @@ function createEvidenceTable(text, keyword, rows, change) {
             }
         });
 
+				// TODO: similar to the above notes, use evidenceIncludeButtonEvent
         $(".evidenceTableAddKeyword").bind("click", { x: evidenceTable }, function (e) {
 
             e.preventDefault();
@@ -166,6 +211,8 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         /*
          * click handler for generating the evidence path network for total genes (UNUSED now)
+         * TODO: if it's not used anymore, remove it, else see notes above about per-row 
+		     * handlers
          */
         $(".generateEvidencePath").bind("click", { x: evidenceTable }, function (e) {
             e.preventDefault();
@@ -176,7 +223,10 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         /*
          * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
-                * @author: Ajit Singh (19/07/2018)
+         * @author: Ajit Singh (19/07/2018)
+		     * 
+		     * TODO: see notes above about per-row event handlers
+			   *   
          */
         $(".userGenes_evidenceNetwork").bind("click", { x: evidenceTable }, function (e) {
             e.preventDefault();
@@ -187,6 +237,14 @@ function createEvidenceTable(text, keyword, rows, change) {
             evidencePath(values[7], evi_userGenes.split(","));
         });
 
+
+		    // TODO: see notes above about per-row event handlers
+		    //
+		    // This case is even worse than the others, since it has multiple parameters fit into 
+				// an HTML value, with ad-hoc syntax. This technique is rubbish when not needed, since
+				// it introduces error-prone unneeded marshal/unmarshal code, which depends on remembering
+				// the correct syntax to use to place HTML strings. Plus, it's potentially insecure.
+				//
         $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
             // new multi select checkboxes in evidence view to render knetwork via 'network' api
             generateMultiEvidenceNetwork();
@@ -224,6 +282,14 @@ function createEvidenceTable(text, keyword, rows, change) {
             $("#revertEvidenceView").removeClass('hover').addClass('unhover');
         });
     }
+    
+    // TODO: these are useless when the the table isn't rendered. So the if ( evidenceTable.length ) block above
+    // should be turned into something like: 
+    // if ( evidenceTable.length <= 2 ) return
+    // <function body>
+    // and the whole block de-dented 
+    //
+    
     // bind click event on all candidateGenes checkboxes in evidence view table.
     $('input:checkbox[name="evidences"]').click(function (e) {
         var viewName = "Term";
