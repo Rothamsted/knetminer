@@ -39,6 +39,7 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 
+import rres.knetminer.datasource.api.GenomeRequest;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
@@ -110,8 +111,109 @@ public class KnetminerServer
 		return this.dataSources.get ( 0 ).getGoogleAnalyticsIdApi ();
 	}
 
+	
 
+	/**
+	 * Overwrite the normal request routing in order to manage the {@link GenomeRequest specific request}
+	 * for this call.
+	 */
+	@CrossOrigin
+	@PostMapping ( path = "/{ds}/genome", produces = MediaType.APPLICATION_JSON_VALUE ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> genome ( 
+		@PathVariable String ds, @RequestBody GenomeRequest request, HttpServletRequest rawRequest 
+	) 
+	{
+		return this.handle ( ds, "genome", request, rawRequest );
+	}
+	
+	/**
+	 * @see #genome(String, GenomeRequest, HttpServletRequest)
+	 */
+	@CrossOrigin
+	@GetMapping ( path = "/{ds}/genome", produces = MediaType.APPLICATION_JSON_VALUE  ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> genome (
+		@PathVariable String ds,
+		@RequestParam(required = false, defaultValue = "") String keyword,
+		@RequestParam(required = false) List<String> list,
+		@RequestParam(required = false, defaultValue = "") String listMode,
+		@RequestParam(required = false) List<String> qtl,
+		@RequestParam(required = false, defaultValue = "") String taxId,
+		@RequestParam(required = false, defaultValue = "false" ) boolean isSortedEvidenceTable,
+		HttpServletRequest rawRequest
+	)
+	{
+		return this.handleGenomeOrQtl ( 
+			ds, keyword, list, listMode, qtl, taxId, isSortedEvidenceTable, rawRequest, "genome"
+		);
+	}	
+	
+	
+	/**
+	 * Wrapper similar to {@link #genome(String, GenomeRequest, HttpServletRequest)}
+	 */
+	@CrossOrigin
+	@PostMapping ( path = "/{ds}/qtl", produces = MediaType.APPLICATION_JSON_VALUE ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> qtl ( 
+		@PathVariable String ds, @RequestBody GenomeRequest request, HttpServletRequest rawRequest 
+	) 
+	{
+		return this.handle ( ds, "qtl", request, rawRequest );
+	}
+	
+	/**
+	 * @see #qtl(String, GenomeRequest, HttpServletRequest)
+	 */
+	@CrossOrigin
+	@GetMapping ( path = "/{ds}/qtl", produces = MediaType.APPLICATION_JSON_VALUE  ) 
+	public @ResponseBody ResponseEntity<KnetminerResponse> qtl (
+		@PathVariable String ds,
+		@RequestParam(required = false, defaultValue = "") String keyword,
+		@RequestParam(required = false) List<String> list,
+		@RequestParam(required = false, defaultValue = "") String listMode,
+		@RequestParam(required = false) List<String> qtl,
+		@RequestParam(required = false, defaultValue = "") String taxId,
+		@RequestParam(required = false, defaultValue = "false" ) boolean isSortedEvidenceTable,
+		HttpServletRequest rawRequest
+	)
+	{
+		return this.handleGenomeOrQtl ( 
+			ds, keyword, list, listMode, qtl, taxId, isSortedEvidenceTable, rawRequest, "qtl"
+		);
+	}
+	
+	
+	/**
+	 * Wrappers for {@link #handleGenomeOrQtl(String, GenomeRequest, HttpServletRequest, String)}
+	 */
+	private ResponseEntity<KnetminerResponse> handleGenomeOrQtl (
+		String ds,
+		String keyword,
+		List<String> list,
+		String listMode,
+		List<String> qtl,
+		String taxId,
+		boolean isSortedEvidenceTable,
+		HttpServletRequest rawRequest,
+		String method
+	)
+	{
+		// TODO: isn't this done downstream?
+		if (qtl == null) qtl = Collections.emptyList();
+		if (list == null) list = Collections.emptyList();
 
+		var request = new GenomeRequest ();
+		request.setKeyword(keyword);
+		request.setListMode(listMode);
+		request.setList(list);
+		request.setQtl(qtl);
+		request.setTaxId(taxId);
+		request.setSortedEvidenceTable ( isSortedEvidenceTable );
+
+		return this.handle ( ds, method, request, rawRequest );
+	}
+	
+	
+	
 	/**
 	 * @see #network(String, NetworkRequest, HttpServletRequest)
 	 */
@@ -148,8 +250,8 @@ public class KnetminerServer
 	
 	
 	/**
-	 * Overwrite the normal request routing in order to manage the {@link NetworkRequest specific request}
-	 * for this call.
+	 * As for the case of {@link #genome(String, GenomeRequest, HttpServletRequest)}, 
+	 * manages the {@link NetworkRequest specific request} for this call.
 	 */
 	@CrossOrigin
 	@PostMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE ) 

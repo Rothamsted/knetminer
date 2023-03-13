@@ -83,9 +83,9 @@ public abstract class KnetminerDataSource {
 
 	public abstract CountLociResponse countLoci(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
-	public abstract GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	public abstract GenomeResponse genome(String dsName, GenomeRequest request) throws IllegalArgumentException;
 
-	public abstract QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException;
+	public abstract QtlResponse qtl(String dsName, GenomeRequest request) throws IllegalArgumentException;
 
 	public abstract NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException;
 	
