@@ -35,7 +35,8 @@ function renderEvidencePvalue(pvalueStr) {
  * TODO: treat isRefreshMode as optional (ie, might be null)
  * TODO: keyword is never used, to be removed?
  */
-function createEvidenceTable(text, keyword, rows, change) {
+function createEvidenceTable(text, keyword, rows, change)
+{
     var table = "";
     var summaryArr = new Array();
     var summaryText = '';
@@ -45,6 +46,9 @@ function createEvidenceTable(text, keyword, rows, change) {
 
     if (evidenceTable.length > 2) 
     {
+				// TODO: until we finish testing #727, you need to sort evidenceTable
+				// and with a compare function that considers p-value, user genes, total genes in order
+		    
         // Evidence View: interactive legend for evidences.
         // TODO: fix the names and use Js conventions (eg, eviLegend)
         var evi_legend = getEvidencesLegend(text);
@@ -98,8 +102,8 @@ function createEvidenceTable(text, keyword, rows, change) {
             table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
             table = table + '<td>' + evidenceValue + '</td>';
 
-
-            // p-values     
+            // p-values
+            //
             pvalue = renderEvidencePvalue(pvalue);
             // to tell table-sorter that it's a number
             var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
@@ -144,23 +148,23 @@ function createEvidenceTable(text, keyword, rows, change) {
 
         $('#evidenceTable').html(table);
 
-				// TODO: appending handlers at the end is poor, it forces us to retrieve per-row params
-				// from the HTML and even put such values into clumsy to-be-parsed strings
-				//
-				// Use a different style, with this in the rows loop:
-				// function evidenceExcludeButtonEvent ( conceptId )
-				//   ...
-				// <p onclick = evidenceExcludeButtonEvent ( $conceptId ) ...>
-				// 
-				// In the current implementation: 
-				// - injecting the table via data object is convoluted (and what sort of name is 'x'?!?)
-				// - getting the element index from an ID string that carries structure (evidence_exclude_X) is
-				//   convoluted
-				// - using the index to re-parse the table row is garbage, values[7] is more garbage and the
-				//   function shouldn't need the whole table, as suggested above. Should it ever need
-				//   more than the concept ID, just change the handler signature and pass what's needed
-				//   only (possibly, the entire row, but without forcing the handler to parse it again)
-				// 
+        // TODO: appending handlers at the end is poor, it forces us to retrieve per-row params
+        // from the HTML and even put such values into clumsy to-be-parsed strings
+        //
+        // Use a different style, with this in the rows loop:
+        // function evidenceExcludeButtonEvent ( conceptId )
+        //   ...
+        // <p onclick = evidenceExcludeButtonEvent ( $conceptId ) ...>
+        // 
+        // In the current implementation: 
+        // - injecting the table via data object is convoluted (and what sort of name is 'x'?!?)
+        // - getting the element index from an ID string that carries structure (evidence_exclude_X) is
+        //   convoluted
+        // - using the index to re-parse the table row is garbage, values[7] is more garbage and the
+        //   function shouldn't need the whole table, as suggested above. Should it ever need
+        //   more than the concept ID, just change the handler signature and pass what's needed
+        //   only (possibly, the entire row, but without forcing the handler to parse it again)
+        // 
 
         $(".evidenceTableExcludeKeyword").bind("click", { x: evidenceTable }, function (e) {
 
@@ -177,7 +181,7 @@ function createEvidenceTable(text, keyword, rows, change) {
             }
         });
 
-				// TODO: similar to the above notes, use evidenceIncludeButtonEvent
+        // TODO: similar to the above notes, use evidenceIncludeButtonEvent
         $(".evidenceTableAddKeyword").bind("click", { x: evidenceTable }, function (e) {
 
             e.preventDefault();
@@ -209,10 +213,11 @@ function createEvidenceTable(text, keyword, rows, change) {
             }
         });
 
+
         /*
          * click handler for generating the evidence path network for total genes (UNUSED now)
          * TODO: if it's not used anymore, remove it, else see notes above about per-row 
-		     * handlers
+         * handlers
          */
         $(".generateEvidencePath").bind("click", { x: evidenceTable }, function (e) {
             e.preventDefault();
@@ -224,9 +229,9 @@ function createEvidenceTable(text, keyword, rows, change) {
         /*
          * click handler for generating the evidence path network for user genes (using user_genes and search keywords, passed to api_url
          * @author: Ajit Singh (19/07/2018)
-		     * 
-		     * TODO: see notes above about per-row event handlers
-			   *   
+         * 
+         * TODO: see notes above about per-row event handlers
+         *   
          */
         $(".userGenes_evidenceNetwork").bind("click", { x: evidenceTable }, function (e) {
             e.preventDefault();
@@ -238,13 +243,13 @@ function createEvidenceTable(text, keyword, rows, change) {
         });
 
 
-		    // TODO: see notes above about per-row event handlers
-		    //
-		    // This case is even worse than the others, since it has multiple parameters fit into 
-				// an HTML value, with ad-hoc syntax. This technique is rubbish when not needed, since
-				// it introduces error-prone unneeded marshal/unmarshal code, which depends on remembering
-				// the correct syntax to use to place HTML strings. Plus, it's potentially insecure.
-				//
+        // TODO: see notes above about per-row event handlers
+        //
+        // This case is even worse than the others, since it has multiple parameters fit into 
+        // an HTML value, with ad-hoc syntax. This technique is rubbish when not needed, since
+        // it introduces error-prone unneeded marshal/unmarshal code, which depends on remembering
+        // the correct syntax to use to place HTML strings. Plus, it's potentially insecure.
+        //
         $("#new_generateMultiEvidenceNetworkButton").click(function (e) {
             // new multi select checkboxes in evidence view to render knetwork via 'network' api
             generateMultiEvidenceNetwork();
@@ -297,9 +302,8 @@ function createEvidenceTable(text, keyword, rows, change) {
     });
 
     $("#evidence-select").change(function (e) {
-        createEvidenceTable(text, keyword, $("#evidence-select option:selected").val(), true);	//if number of genes to show changes, redraw table.
+        createEvidenceTable(text, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
     });
-
 }
 
 /*

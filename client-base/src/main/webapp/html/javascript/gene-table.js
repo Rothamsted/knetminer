@@ -26,7 +26,7 @@ function createGenesTable(text, keyword, rows){
 
 		var headers = candidateGenes[0].split("\t");
 		table += '<th width="100"> Accession </th>';
-		table += '<th width="100" title="Show Symbol, if not same as Accession"> Symbol</th>'; // added Gene Name to Gene View table
+		table += '<th width="100"> Symbol</th>';
 
 
 
