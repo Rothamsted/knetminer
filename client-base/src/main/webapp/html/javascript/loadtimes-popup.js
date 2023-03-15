@@ -6,7 +6,7 @@ getLongWaitMessage = function(){
 
     // function to create overlay upon  
     function createUiItem(button,parentElement,loaderText){
-        var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+loaderText +loadingPulse+'</span>';
+        var uiContent = '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;margin:auto;">'+loaderText +loadingPulse+'</span>';
         var overlay = '<div class="overlay"></div>'
         $(parentElement).append(overlay);
         $(button).html(uiContent)
