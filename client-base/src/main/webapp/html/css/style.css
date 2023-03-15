@@ -2501,6 +2501,7 @@ a {
     animation: dot-pulse 1.5s infinite linear;
     animation-delay: 0.25s;
     margin-left: 1.20rem;
+    margin-right: 1.20rem;
   }
   .dot::before, .dot::after {
     content: "";
