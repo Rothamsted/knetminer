@@ -139,7 +139,7 @@
  function showFilterTips(){
     var hiddenRow = $('#tablesorter > tbody').children().not('.current-filter').length; 
     var totalRenderedRows = $('#tablesorter > tbody').children().length; 
-    if(hiddenRow == totalRenderedRows){
+    if(hiddenRow >= totalRenderedRows){
         $('#filterMessage').toggle('showFilter')
     }else{$('#filterMessage').hide()}
   
