@@ -58,25 +58,36 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
 
 		// TODO: lower/higher are misleading names, the sort algo passes any pair of indices here 
     sortedEvidenceTable.sort(function(i1,i2){
+								 
+				// TODO: need to use the same criteria that the table sorter initially uses
+				// p-value, user genes, total genes.
+				//
+				// Also, this approach is wrong, correct one is priority-based:
+				// pvalue1 = pvalue[i1] == 'N/A' ? 1 : parseFloat ( pvalue[i1] )
+				// pvalue2 = <same for pvalue at row i2>
+				// result = pval1 - pval2 
+				// if result != 0 return result
+				// nUsergenes1 = <value for row i1>,
+				// nUserGenes2 = <same for i2>
+				// result = nUserGenes2 - nUserGenes1 // 2-1 cause we want descending order here
+				// if result != 0 return result
+				// <same for total genes>
+				// result = totGenes2 - totGenes1 // again, descending
+				// return result // unconditionally, we need to compare on something
+				//
+				// Finally I'm not sure that if pvalue[0] == 'N/A', then all the pvalues
+				// are N/A (and the comparison should be as above, anyway)
+				//
 				
-		    // TODO: this damn column indices are popping up everywhere, we need to factorise their conversion
-				// with something like:
+		    // TODO: this damn column indices are popping up everywhere, either use the conversion to 
+		    // meaning variables, or, if we have many of this row value accesses, consider to get them
+		    // with a common function like:
+		    //
 				// function getEvidenceTableRowAsDict ( arrayRow ) {
 				//   returns a dictionary object 'dict', with the meaningful keys, ie,
 				//   dict.type, dict.nodeLabel, dict.pvalue...
 				// }
-				 
-				// TODO: need to use the same criteria that the table sorter initially uses
-				// p-value, user genes, total genes.
-				// Also, this approach is wrong, correct one is priority-based:
-				// pvalue1 = pvalue[i1] == 'N/A' ? 1 : parseFloat ( pvalue[i1] )
-				// pvalue2 = <same for i2>
-				// result = pval1 - pval2 
-				// if result != 0 return result
-				// nUsergenes1 = <row i1 value>, same for nUserGenes2
-				// result = nUserGenes2 - nUserGenes1 // 2-1 cause we want descending order here
-				// <same for total genes>, eventually return totGenes2 - totGenes1
-				//				
+								
         if(sortedEvidenceTable[0].split('\t')[3] !== 'N/A'){
             return ( parseFloat(i1.split('\t')[3]) - parseFloat(i2.split('\t')[3]))
         }else{
