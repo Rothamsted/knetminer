@@ -21,8 +21,28 @@ function renderEvidencePvalue(pvalueStr) {
 /**
  * 
  * Renders the evidence table from API output.
+ * 
+ * tableStringOrRows: the API-produced string that represent the table in TSV format, or
+ * the rows array, which is obtained from the former during the first call and passed in 
+ * upon recursive calls (when isRefreshMode == true).
+ * 
+ * isRefreshMode: the function is being called after the first time, to manage a refresh/redraw
+ * in response to user interaction.   
+ * 
+ * TODO: change the param names into more meaningful names as per the following.
+ * 
+ * DO NOT remove TODOs until completed or cancelled
+ * 
+ * DO NOT remove the parameter descriptions below, they're meant to remain here,
+ * DO CHANGE the code to match them!
+ * 
+ * TODO: remove the param tableRows, WHAT THE HELL!? Use the first parameter as explained, to pass either the table as 
+ * string, or as array.
+ * 
+ * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
+ * 
  */
-function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode)
+function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = false)
 {
     var table = "";
     $('#evidenceTable').html("<p>No evidence found.</p>");
@@ -31,16 +51,35 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode)
    
     if(evidenceTable.length <= 2) return null 
 
+		// This takes memory, do we need a copy? Can't we just change the original param?
     var sortedEvidenceTable = evidenceTable
     // remove table first value (header)
     sortedEvidenceTable.shift();
 
-    // sort table p-value and genes in ascending order 
-    sortedEvidenceTable.sort(function(lowerIndex,higherIndex){
+		// TODO: lower/higher are misleading names, the sort algo passes any pair of indices here 
+    sortedEvidenceTable.sort(function(i1,i2){
+				
+		    // TODO: this damn column indices are popping up everywhere, we need to factorise their conversion
+				// with something like:
+				// function getEvidenceTableRow ( arrayRow ) {
+				//   returns a dictionary object dict with the keys type, nodeLabel,pvalue... 
+				// }
+				 
+				// TODO: need to use the same criteria that the table sorter initially uses
+				// p-value, user genes, total genes.
+				// Also, this approach is wrong, correct one is priority-based:
+				// pvalue1 = pvalue[i1] == 'N/A' ? 1 : parseFloat ( pvalue[i1] )
+				// pvalue2 = <same for i2>
+				// result = pval1 - pval2 
+				// if result != 0 return result
+				// nUsergenes1 = <row i1 value>, same for nUserGenes2
+				// result = nUserGenes2 - nUserGenes1 // 2-1 cause we want descending order here
+				// <same for total genes>, eventually return totGenes2 - totGenes1
+				//				
         if(sortedEvidenceTable[0].split('\t')[3] !== 'N/A'){
-            return ( parseFloat(lowerIndex.split('\t')[3]) - parseFloat(higherIndex.split('\t')[3]))
+            return ( parseFloat(i1.split('\t')[3]) - parseFloat(i2.split('\t')[3]))
         }else{
-            return ( parseFloat(lowerIndex.split('\t')[4]) - parseFloat(higherIndex.split('\t')[4]))
+            return ( parseFloat(i1.split('\t')[4]) - parseFloat(i2.split('\t')[4]))
         }
         
     }); 
@@ -130,7 +169,11 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode)
     $('#evidenceTable').html(table);
 
     // TODO: tablesorter seems to perform same sorting functionality as 
-
+    // TODO: (MB) as what? Yes, this initially sorts the rendered table with the same criteria as the 
+    // initial data sorting. But the latter is needed before cutting the rows to 100.
+    //  I don't know if this additional sorting is also needed to have the column sorting arrows displayed (or upon the
+    // table re-creation). If not, remove it. Remove these comments when this is clarified.
+    //
     $("#tablesorterEvidence").tablesorter({
         // Initial sorting is by p-value, user genes, total genes
         // This ensures something significant if both pvalues and user genes are N/A and 0
@@ -162,16 +205,15 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode)
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
 
-  // bind click event on all candidateGenes checkboxes in evidence view table.
-$('input:checkbox[name="evidences"]').click(function (e) {
-    var viewName = "Term";
-    updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
-});
-
-$("#evidence-select").change(function (e) {
-    createEvidenceTable(tableStrings, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
-});
-    
+		// bind click event on all candidateGenes checkboxes in evidence view table.
+		$('input:checkbox[name="evidences"]').click(function (e) {
+		    var viewName = "Term";
+		    updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
+		});
+		
+		$("#evidence-select").change(function (e) {
+		    createEvidenceTable(tableStrings, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
+		});
 }
 
 /*
