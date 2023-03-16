@@ -17,7 +17,7 @@ docker run --rm \
   --env KNET_REPO_USER \
   --env KNET_REPO_PASSWORD \
   "knetminer/knetminer-bare:$docker_tag_bare" \
-  "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots $MAVEN_ARGS"
+  "mvn $MAVEN_GOAL --settings ci-build/maven-settings.xml --update-snapshots --no-transfer-progress $MAVEN_ARGS"
 
 # For some reason, we get files that the GHA runner can't access anymore
 echo -e "\n  Maven build finished, fixing new files permissions\n"
