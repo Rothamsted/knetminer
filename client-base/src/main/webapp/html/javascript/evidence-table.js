@@ -61,8 +61,9 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
 				
 		    // TODO: this damn column indices are popping up everywhere, we need to factorise their conversion
 				// with something like:
-				// function getEvidenceTableRow ( arrayRow ) {
-				//   returns a dictionary object dict with the keys type, nodeLabel,pvalue... 
+				// function getEvidenceTableRowAsDict ( arrayRow ) {
+				//   returns a dictionary object 'dict', with the meaningful keys, ie,
+				//   dict.type, dict.nodeLabel, dict.pvalue...
 				// }
 				 
 				// TODO: need to use the same criteria that the table sorter initially uses
