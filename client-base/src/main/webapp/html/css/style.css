@@ -2598,3 +2598,12 @@ a {
 .showFilter{
     display:none;
 }
+
+
+.userGenes_evidenceNetwork{
+    cursor: pointer;
+    text-decoration: underline;
+    border: none;
+    background: transparent;
+    color: #51CE7B;
+}
