@@ -27,9 +27,151 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode)
     var table = "";
     $('#evidenceTable').html("<p>No evidence found.</p>");
     var evidenceTable = tableStrings.split("\n");
+    var displayedSize = evidenceTable.length - 2;
    
     if(evidenceTable.length <= 2) return null 
-    evidenceTableBody(table,evidenceTable,tableStrings, keyword, tableRows, isRefreshMode)
+
+    var sortedEvidenceTable = evidenceTable
+    // remove table first value (header)
+    sortedEvidenceTable.shift();
+
+    // sort table p-value and genes in ascending order 
+    sortedEvidenceTable.sort(function(lowerIndex,higherIndex){
+        if(sortedEvidenceTable[0].split('\t')[3] !== 'N/A'){
+            return ( parseFloat(lowerIndex.split('\t')[3]) - parseFloat(higherIndex.split('\t')[3]))
+        }else{
+            return ( parseFloat(lowerIndex.split('\t')[4]) - parseFloat(higherIndex.split('\t')[4]))
+        }
+        
+    }); 
+
+        
+    // Evidence View: interactive legend for evidences.
+    var eviLegend = getEvidencesLegend(tableStrings);
+    table = '';
+    table = table + '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
+    table = table + '<div id= "evidenceViewTable" class="scrollTable">';
+    table = table + '<table id="tablesorterEvidence" class="tablesorter">';
+    table = table + '<thead>';
+    table = table + '<tr>';
+
+    table = table + '<th width="75">Omit/Add</th>';
+    table = table + '<th width="50">Type</th>';
+    table = table + '<th width="212">Node label</th>';
+    table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+    table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
+    table = table + '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+    table = table + '<th width="70">Select</th>';
+    table = table + '</tr>';
+    table = table + '</thead>';
+    table = table + '<tbody class="scrollTable">';
+
+    var eviTableLimit = sortedEvidenceTable.length - 1;
+
+    // limit evidence view table to top scored tableRows
+    if (displayedSize >= 100 && !isRefreshMode) {
+        tableRows = 100;
+        eviTableLimit = 101;
+    } else if (isRefreshMode && tableRows > displayedSize) {
+        tableRows = displayedSize
+    } else if (isRefreshMode && tableRows < displayedSize) {
+        eviTableLimit = tableRows;
+    }
+
+    for (var ev_i = 0; ev_i < eviTableLimit; ev_i++)
+    {
+        evidenceTableValues = sortedEvidenceTable[ev_i].split("\t");
+        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTableValues;
+
+        table = table + '<tr>';
+
+        table = table + `<td><p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>`;
+        
+        table = table + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
+
+        //link publications with pubmed
+        pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+        if (type == 'Publication')
+            evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
+        else
+            evidenceValue = nodeLabel;
+
+        table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
+        table = table + '<td>' + evidenceValue + '</td>';
+
+        // p-values
+        pvalue = renderEvidencePvalue(pvalue);
+        // to tell table-sorter that it's a number
+        var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
+
+        table += `<td actual-pvalue = '${sortedPval}'>${pvalue}</td>`;
+        // /end:p-values
+
+        // Count of all matching genes
+        table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
+
+        // launch evidence network with them, if they're not too many.
+        table = table +  `<td><button data-genelist="${geneList}" onclick="evidencePath(${conceptId},this,${genesCount})" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
+
+        var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
+        table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
+    } 
+    
+    table = table + '</tbody>';
+    table = table + '</table>';
+    
+    var selectElement = createTableSelectElement(tableRows,displayedSize);
+    table = table + '</div><div class="evidence-footer">';
+    table = table + '<div class="evidence-select">'+ selectElement +'</div>';
+    
+    table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
+    table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
+
+    $('#evidenceTable').html(table);
+
+    // TODO: tablesorter seems to perform same sorting functionality as 
+
+    $("#tablesorterEvidence").tablesorter({
+        // Initial sorting is by p-value, user genes, total genes
+        // This ensures something significant if both pvalues and user genes are N/A and 0
+        sortList: [[3, 0], [5, 1], [4, 1]],
+        textExtraction: function (node) { // Sort TYPE column
+            var attr = $(node).attr('type-sort-value');
+            if (typeof attr !== 'undefined' && attr !== false) {
+                return attr;
+            }
+            var actualPvalue = $(node).attr('actual-pvalue');
+            if (actualPvalue) return actualPvalue;
+            return $(node).text();
+        }
+    });
+
+    /*
+     * Revert filtering changes on Evidence View table
+     */
+    $("#revertEvidenceView").click(function (e) {
+        createEvidenceTable(tableStrings, keyword, tableRows); // redraw table
+        $('#evidenceTable').data({ keys: [] });
+    });
+
+    $("#revertEvidenceView").mouseenter(function (e) {
+        $("#revertEvidenceView").removeClass('unhover').addClass('hover');
+    });
+
+    $("#revertEvidenceView").mouseout(function (e) {
+        $("#revertEvidenceView").removeClass('hover').addClass('unhover');
+    });
+
+  // bind click event on all candidateGenes checkboxes in evidence view table.
+$('input:checkbox[name="evidences"]').click(function (e) {
+    var viewName = "Term";
+    updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
+});
+
+$("#evidence-select").change(function (e) {
+    createEvidenceTable(tableStrings, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
+});
+    
 }
 
 /*
@@ -307,7 +449,10 @@ function triggerAccessionToolTips(conceptId) {
 
 }
 
-
+/**
+ * @desc function toggles 'NOT conceptId' to keyword search input
+ * @param  * takes row conceptId, event object and current Target Element
+ */
 function evidenceTableExcludeKeyword(conceptId, targetElement,event){
     event.preventDefault();
     var targetID = $(targetElement).attr("id");
@@ -319,29 +464,19 @@ function evidenceTableExcludeKeyword(conceptId, targetElement,event){
     }
 }
 
-// TODO: looking into convulated nested statements within function
+/**
+ * @desc function toggles 'OR conceptId' to keyword search input
+ * @param  * takes row conceptId, event object and current Target Element
+ */
 function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 
     event.preventDefault();
+    var  targetId = $(targetElement).attr('id');
 
     if ($(event.target).hasClass("addKeyword")) {
-        if ($("#keywords").val() === '') {
-            $("#keywords").val('ConceptID:' + conceptId);
-            $('#' + targetElement).toggleClass('addKeywordUndo addKeyword');
-            matchCounter();
-        }
-        else {
-            addKeyword('ConceptID:' + conceptId, targetElement, 'keywords');
-        }
+        addKeyword('ConceptID:' + conceptId,targetId)
     } else {
-        if ($("#keywords").val() === '') {
-            $("#keywords").val('ConceptID:' + conceptId);
-            $('#' + targetElement).toggleClass('addKeywordUndo addKeyword');
-            matchCounter();
-        }
-        else {
-            addKeywordUndo('ConceptID:' + conceptId, targetElement, 'keywords');
-        }
+        addKeywordUndo('ConceptID:' + conceptId, targetId , 'keywords');
     }
 }
 
@@ -350,7 +485,7 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
  * @param {number} * takes tableRows value and number of data rows
  */
 // TODO: will extend function to serve genetable 
-function createSelectRange(tableRows,displayedSize){
+function createTableSelectElement(tableRows,displayedSize){
 
     var selectRanges = [50,100,200,500,1000]; 
     var selectButton = '<select value="' + displayedSize + '" id="evidence-select">'
@@ -361,142 +496,7 @@ function createSelectRange(tableRows,displayedSize){
     return selectButton; 
 }
 
-/**
- * @desc function creates evidence table body
- * @param {} * takes table element, number of rows to be displayed, total number of data rendered from server, search keyword
- */
-function evidenceTableBody(table,evidenceTable,tableStrings, keyword, tableRows, isRefreshMode){
-    var displayedSize = evidenceTable.length - 2;
-        if(displayedSize > 2){// TODO: until we finish testing #727, you need to sort evidenceTable
-        // and with a compare function that considers p-value, user genes, total genes in order
-		    
-        // Evidence View: interactive legend for evidences.
-        var eviLegend = getEvidencesLegend(tableStrings);
-        table = '';
-        table = table + '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
-        table = table + '<div id= "evidenceViewTable" class="scrollTable">';
-        table = table + '<table id="tablesorterEvidence" class="tablesorter">';
-        table = table + '<thead>';
-        table = table + '<tr>';
 
-        table = table + '<th width="75">Omit/Add</th>';
-        table = table + '<th width="50">Type</th>';
-        table = table + '<th width="212">Node label</th>';
-        table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-        table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
-        table = table + '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-        table = table + '<th width="70">Select</th>';
-        table = table + '</tr>';
-        table = table + '</thead>';
-        table = table + '<tbody class="scrollTable">';
-
-        var eviTableLimit = evidenceTable.length - 1;
-
-        // limit evidence view table to top scored tableRows
-        if (displayedSize >= 100 && !isRefreshMode) {
-            tableRows = 100;
-            eviTableLimit = 101;
-        } else if (isRefreshMode && tableRows > displayedSize) {
-            tableRows = displayedSize
-        } else if (isRefreshMode && tableRows < displayedSize) {
-            eviTableLimit = tableRows;
-        }
-
-        for (var ev_i = 1; ev_i < eviTableLimit; ev_i++)
-        {
-            values = evidenceTable[ev_i].split("\t");
-            [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = values
-            table = table + '<tr>';
-
-            table = table + `<td><p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>`;
-            
-            table = table + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
-
-            //link publications with pubmed
-            pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-            if (type == 'Publication')
-                evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
-            else
-                evidenceValue = nodeLabel;
-
-            table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
-            table = table + '<td>' + evidenceValue + '</td>';
-
-            // p-values
-            pvalue = renderEvidencePvalue(pvalue);
-            // to tell table-sorter that it's a number
-            var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
-
-            table += `<td actual-pvalue = '${sortedPval}'>${pvalue}</td>`;
-            // /end:p-values
-
-            // Count of all matching genes
-            table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
-
-            // launch evidence network with them, if they're not too many.
-            table = table +  `<td><button data-genelist="${geneList}" onclick="evidencePath(${conceptId},this,${genesCount})" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
-
-            var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
-            table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
-        } 
-        
-        table = table + '</tbody>';
-        table = table + '</table>';
-        
-        var selectElement = createSelectRange(tableRows,displayedSize);
-        table = table + '</div><div class="evidence-footer">';
-        table = table + '<div class="evidence-select">'+ selectElement +'</div>';
-        
-
-        
-
-        table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
-        table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
-
-        $('#evidenceTable').html(table);
-
-        $("#tablesorterEvidence").tablesorter({
-            // Initial sorting is by p-value, user genes, total genes
-            // This ensures something significant if both pvalues and user genes are N/A and 0
-            sortList: [[3, 0], [5, 1], [4, 1]],
-            textExtraction: function (node) { // Sort TYPE column
-                var attr = $(node).attr('type-sort-value');
-                if (typeof attr !== 'undefined' && attr !== false) {
-                    return attr;
-                }
-                var actualPvalue = $(node).attr('actual-pvalue');
-                if (actualPvalue) return actualPvalue;
-                return $(node).text();
-            }
-        });
-
-        /*
-         * Revert filtering changes on Evidence View table
-         */
-        $("#revertEvidenceView").click(function (e) {
-            createEvidenceTable(tableStrings, keyword, tableRows); // redraw table
-            $('#evidenceTable').data({ keys: [] });
-        });
-
-        $("#revertEvidenceView").mouseenter(function (e) {
-            $("#revertEvidenceView").removeClass('unhover').addClass('hover');
-        });
-
-        $("#revertEvidenceView").mouseout(function (e) {
-            $("#revertEvidenceView").removeClass('hover').addClass('unhover');
-        });
-
-      // bind click event on all candidateGenes checkboxes in evidence view table.
-    $('input:checkbox[name="evidences"]').click(function (e) {
-        var viewName = "Term";
-        updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
-    });
-
-    $("#evidence-select").change(function (e) {
-        createEvidenceTable(tableStrings, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
-    });
-}
-}
 
 
 

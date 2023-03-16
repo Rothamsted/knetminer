@@ -42,15 +42,16 @@ function activateButton(option){
 /*
 Functions for Add, Remove or Replace terms from the query search box
 */
-function addKeyword(keyword, from, target) {
-    var query = $('#' + target).val();
-    if (query.indexOf("ConceptID") >= 0 && query !== keyword && !query.includes(keyword)){
-       newQuery = query + ' OR ' + keyword;
+function addKeyword(keyword,targetId) {
+    var query = $('#keywords').val();
+    var newQuery;
+    if (query.includes(' NOT ' + keyword)){
+       newQuery = query.replace(' NOT '+ keyword, ' OR ' + keyword);
     }else{
-       newQuery = keyword
+         newQuery = query + ' OR ' + keyword;
     }
-    $('#' + target).val(newQuery);
-    $('#' + from).toggleClass('addKeywordUndo addKeyword');
+    $('#keywords').val(newQuery);
+    $('#' + targetId).toggleClass('addKeywordUndo addKeyword');
     document.getElementById('search').scrollIntoView();
 
     //Updates the query counter
@@ -62,13 +63,14 @@ function addKeyword(keyword, from, target) {
 
 function addKeywordUndo(keyword, from, target) {
     query = $('#' + target).val();
-    if (query.includes('OR ' + keyword)){
-        newQuery = query.replace(' OR ' + keyword, "");
-     }else if(query.includes(`NOT ${keyword}`)){
-         newQuery = query.replace('NOT '+keyword,keyword);
+    var newQuery; 
+    if (query.includes(' OR ' + keyword)){
+        newQuery = query.replace(' OR ' + keyword, '');
+     }else if(query.includes( ' NOT ' + keyword)){
+         newQuery = query.replace(' NOT '+ keyword, ' OR ' + keyword);
      }else{
-         newQuery = query.replace(keyword, "");
-     } 
+        newQuery = query;
+     }
     $('#' + target).val(newQuery);
     $('#' + from).toggleClass('addKeywordUndo addKeyword');
 
@@ -83,12 +85,11 @@ function addKeywordUndo(keyword, from, target) {
 function excludeKeyword(keyword, from, target) {
     query = $('#' + target).val();
     var newQuery; 
-    if(query === keyword){
-       newQuery = ' NOT ' + keyword;
-    }else if(query.includes(keyword)){
-        newQuery = query.replace('OR '+ keyword ,' NOT '+ keyword)
+
+  if(query.includes(' OR ' + keyword)){
+        newQuery = query.replace(' OR '+ keyword ,' NOT '+ keyword)
     }else{
-       newQuery = 'NOT '+keyword
+       newQuery = query + ' NOT ' + keyword
     }
 
     $('#' + target).val(newQuery);
@@ -104,7 +105,7 @@ function excludeKeyword(keyword, from, target) {
 
 function excludeKeywordUndo(keyword, from, target) {
     query = $('#' + target).val();
-    newQuery = query.replace(' NOT ' + keyword, keyword);
+    newQuery = query.replace(' NOT ' + keyword, '');
     $('#' + target).val(newQuery);
     $('#' + from).toggleClass('excludeKeywordUndo excludeKeyword');
     document.getElementById('search').scrollIntoView();
