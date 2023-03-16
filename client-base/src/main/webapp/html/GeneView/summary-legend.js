@@ -111,9 +111,7 @@
      }
  }
 
-  /*
-  * Function sets the visibility state of Gene and Evidence legends
-  *0*/
+  // Function sets the visibility state of Gene and Evidence legends  
  function setLegendsState(tableLocation,gene_evidences,currentRow,currentData){
     switch(tableLocation){
         case "resultsTable":
@@ -135,12 +133,15 @@
     }
  }
 
-
+  /*
+  * Function shows or hides a string ("Your filter is returning no results. Try increasing the amount of genes visible (bottom left).") 
+  * when filter returns no results.
+  */
  function showFilterTips(){
     var hiddenRow = $('#tablesorter > tbody').children().not('.current-filter').length; 
     var totalRenderedRows = $('#tablesorter > tbody').children().length; 
-    if(hiddenRow >= totalRenderedRows){
-        $('#filterMessage').toggle('showFilter')
+    if(hiddenRow == totalRenderedRows){
+        $('#filterMessage').show();
     }else{$('#filterMessage').hide()}
-  
+ 
  }
