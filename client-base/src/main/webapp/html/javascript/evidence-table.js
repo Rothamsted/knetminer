@@ -63,6 +63,7 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
 				// p-value, user genes, total genes.
 				//
 				// Also, this approach is wrong, correct one is priority-based:
+				// 
 				// pvalue1 = pvalue[i1] == 'N/A' ? 1 : parseFloat ( pvalue[i1] )
 				// pvalue2 = <same for pvalue at row i2>
 				// result = pval1 - pval2 
@@ -77,6 +78,9 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
 				//
 				// Finally I'm not sure that if pvalue[0] == 'N/A', then all the pvalues
 				// are N/A (and the comparison should be as above, anyway)
+				//
+				// Because this way this comparator will become quite long, consider having a separate
+				// named function
 				//
 				
 		    // TODO: this damn column indices are popping up everywhere, either use the conversion to 
