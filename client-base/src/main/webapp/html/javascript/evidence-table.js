@@ -539,18 +539,19 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 }
 
 /**
- * @desc function creates table select button
- * @param {number} * takes tableRows value and number of data rows
+ * @desc creates the selector for the number of rows to be displayed
+ *  
  */
 // TODO: will extend function to serve genetable 
-function createTableSelectElement(tableRows,displayedSize){
-
-    var selectRanges = [50,100,200,500,1000]; 
-    var selectButton = '<select value="' + displayedSize + '" id="evidence-select">'
-    for (var range in selectRanges){
-        selectButton =  selectButton +  '<option value="1000"' + (tableRows == selectRanges[range] ? 'selected' : '') + '>' + selectRanges[range] +'</option>'
+function createTableSelectElement ( selectedSize, tableSize )
+{
+    var sizeOpts = [50, 100, 200, 500, 1000]; 
+    var selectButton = `<select value = "${tableSize}" id = "evidence-select">\n`
+    for (var sizeOpt in sizeOpts){
+        selectButton += `  <option value = "${sizeOpt}" ${selectedSize == sizeOpt ? 'selected' : ''}>${sizeOpt}</option>\n`
     }
-    selectButton = selectButton + '<option value="' + displayedSize + '"' + (tableRows == displayedSize ? 'selected' : '') + '> All (' + displayedSize + ')</option> </select>'; 
+    selectButton += `  <option value = "${tableSize}" ${selectedSize == tableSize ? 'selected' : ''}>All (${tableSize})</option>\n`
+    selectButton += '</select>\n'; 
     return selectButton; 
 }
 
