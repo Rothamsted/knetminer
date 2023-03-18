@@ -573,8 +573,20 @@ handleDelimintedCta = function(){
 function handleViewCreation(option){
     var data = $('body').data().data
     $('#'+option+'_button').addClass('created');
-    var rows = data.evidence.split("\n").length - 2;
-    createEvidenceTable(data.evidence, data.keyword,rows, false);
+    
+    // TODO: safety checks on data.evidence 
+    var evidenceTable = data.evidence.split ( "\n" );
+
+    // TODO: safety checks on evidenceTable size 
+    
+		// First line is the header, last one is always empty
+    evidenceTable.pop ();
+    evidenceTable.shift ();
+    
+    // Turns it into the final matrix
+    evidenceTable = evidenceTable.map ( rowStr => rowStr.split ( "\t" ) )
+    
+    createEvidenceTable ( evidenceTable, data.keyword, null, true );
 }
 
 

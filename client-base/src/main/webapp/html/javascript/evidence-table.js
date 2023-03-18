@@ -3,106 +3,98 @@
 /**
  * Used in the evidence table, to render p-values nicely.
  */
-function renderEvidencePvalue(pvalueStr) {
-    const na = "N/A";
+function renderEvidencePvalue ( pvalueStr )
+{
+   const na = "N/A";
 
-    if (!pvalueStr) return na;
+   if ( !pvalueStr ) return na;
 
-    var pvalue = Number(pvalueStr);
+   var pvalue = Number( pvalueStr );
 
-    // -1 is usually to mark that there is no p-value
-    if (pvalue < 0) return na;
-    // for smaller values, use the scientific notation with a suitable no. of digit, eg, 1.1234E-8
-    if (pvalue < 1E-4) return pvalue.toExponential(2).toString().toUpperCase();
-    // for bigger values, just round to a good digit, eg, 0.0123
-    return pvalue.toFixed(4)
+   // -1 is usually to mark that there is no p-value
+   if (pvalue < 0) return na;
+   // for smaller values, use the scientific notation with a suitable no. of digit, eg, 1.1234E-8
+   if (pvalue < 1E-4) return pvalue.toExponential(2).toString().toUpperCase();
+   // for bigger values, just round to a good digit, eg, 0.0123
+   return pvalue.toFixed(4)
+}
+
+/**
+ * Used in the evidence table, get a plain number representing a signficant pvalue for 
+ * computations. Eg, if none is defined, returns 1
+ *
+ */
+function getEvidencePvalue ( pvalueStr )
+{
+   if ( !pvalueStr ) return 1;
+
+   var pvalue = Number ( pvalueStr );
+
+   // -1 is usually to mark that there is no p-value
+   if ( pvalue < 0 ) return 1;
+   
+   return pvalue;	
 }
 
 /**
  * 
- * Renders the evidence table from API output.
+ * @desc Renders the evidence table from API output.
  * 
- * tableStringOrRows: the API-produced string that represent the table in TSV format, or
- * the rows array, which is obtained from the former during the first call and passed in 
- * upon recursive calls (when isRefreshMode == true).
+ * @param evidenceTable: the evidence table data, as it comes from the API, after being turned into
+ * a matrix and after bean cleane of header and empty trailer (see data-utils.js:handleViewCreation()).
  * 
- * isRefreshMode: the function is being called after the first time, to manage a refresh/redraw
- * in response to user interaction.   
- * 
- * TODO: change the param names into more meaningful names as per the following.
+ * @param selectedSize: how many rows to display. This is non-null when the function is called by the
+ * bottom size selector. When null (the default), it shows up to 100 rows.  
  * 
  * DO NOT remove TODOs until completed or cancelled
  * 
- * DO NOT remove the parameter descriptions below, they're meant to remain here,
- * DO CHANGE the code to match them!
- * 
- * TODO: remove the param tableRows, WHAT THE HELL!? Use the first parameter as explained, to pass either the table as 
- * string, or as array.
+ * DO NOT remove the parameter descriptions above, they're meant to remain here.
  * 
  * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
  * 
  */
-function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = false)
+function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
     $('#evidenceTable').html("<p>No evidence found.</p>");
-    var evidenceTable = tableStrings.split("\n");
-    var displayedSize = evidenceTable.length - 2;
-   
-    if(evidenceTable.length <= 2) return null 
+       
+    if(evidenceTable.length == 0) return null 
 
-		// This takes memory, do we need a copy? Can't we just change the original param?
-    var sortedEvidenceTable = evidenceTable
-    // remove table first value (header)
-    sortedEvidenceTable.shift();
-
-		// TODO: lower/higher are misleading names, the sort algo passes any pair of indices here 
-    sortedEvidenceTable.sort(function(i1,i2){
-								 
-				// TODO: need to use the same criteria that the table sorter initially uses
-				// p-value, user genes, total genes.
-				//
-				// Also, this approach is wrong, correct one is priority-based:
-				// 
-				// pvalue1 = pvalue[i1] == 'N/A' ? 1 : parseFloat ( pvalue[i1] )
-				// pvalue2 = <same for pvalue at row i2>
-				// result = pval1 - pval2 
-				// if result != 0 return result
-				// nUsergenes1 = <value for row i1>,
-				// nUserGenes2 = <same for i2>
-				// result = nUserGenes2 - nUserGenes1 // 2-1 cause we want descending order here
-				// if result != 0 return result
-				// <same for total genes>
-				// result = totGenes2 - totGenes1 // again, descending
-				// return result // unconditionally, we need to compare on something
-				//
-				// Finally I'm not sure that if pvalue[0] == 'N/A', then all the pvalues
-				// are N/A (and the comparison should be as above, anyway)
-				//
-				// Because this way this comparator will become quite long, consider having a separate
-				// named function
-				//
-				
-		    // TODO: this damn column indices are popping up everywhere, either use the conversion to 
-		    // meaning variables, or, if we have many of this row value accesses, consider to get them
-		    // with a common function like:
-		    //
-				// function getEvidenceTableRowAsDict ( arrayRow ) {
-				//   returns a dictionary object 'dict', with the meaningful keys, ie,
-				//   dict.type, dict.nodeLabel, dict.pvalue...
-				// }
-								
-        if(sortedEvidenceTable[0].split('\t')[3] !== 'N/A'){
-            return ( parseFloat(i1.split('\t')[3]) - parseFloat(i2.split('\t')[3]))
-        }else{
-            return ( parseFloat(i1.split('\t')[4]) - parseFloat(i2.split('\t')[4]))
-        }
-        
-    }); 
-
+		// TODO: remove once the API change to sort is implemented (and invoked)
+		if ( doSortTable )
+		{
+	    evidenceTable.sort(function( row1, row2 )
+	    {
+			    // TODO: this damn column indices are popping up everywhere, either use the conversion to 
+			    // meaning variables, or, if we have many of this row value accesses, consider to get them
+			    // with a common function like:
+			    //
+					// function getEvidenceTableRowAsDict ( arrayRow ) {
+					//   returns a dictionary object 'dict', with the meaningful keys, ie,
+					//   dict.type, dict.nodeLabel, dict.pvalue...
+					// }
+													  
+				  var [ pval1, nUserGenes1, totGenes1 ] = [ row1 [ 3 ], row1 [ 5 ], row1 [ 4 ] ]
+				  var [ pval2, nUserGenes2, totGenes2 ] = [ row2 [ 3 ], row2 [ 5 ], row2 [ 4 ] ]
+									
+					pval1 = getEvidencePvalue ( pval1 )
+					pval2 = getEvidencePvalue ( pval2 )
+					if ( pval1 !== pval2 ) return pval1 - pval2
+	        
+	        nUserGenes1 = Number ( nUserGenes1 )
+	        nUserGenes2 = Number ( nUserGenes2 )
+	        if ( nUserGenes1 !== nUserGenes2 )
+	        	return nUserGenes2 - nUserGenes1 // descending order
+	        
+	        totGenes1 = Number ( totGenes1 )
+	        totGenes2 = Number ( totGenes2 )
+	        
+	        return totGenes2 - totGenes1 // descending order
+	    }); 
+		} // if doSortTable
         
     // Evidence View: interactive legend for evidences.
-    var eviLegend = getEvidencesLegend(tableStrings);
+    var eviLegend = getEvidencesLegend(evidenceTable);
     table = '';
     table = table + '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
     table = table + '<div id= "evidenceViewTable" class="scrollTable">';
@@ -121,22 +113,21 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable">';
 
-    var eviTableLimit = sortedEvidenceTable.length - 1;
-
-    // limit evidence view table to top scored tableRows
-    if (displayedSize >= 100 && !isRefreshMode) {
-        tableRows = 100;
-        eviTableLimit = 101;
-    } else if (isRefreshMode && tableRows > displayedSize) {
-        tableRows = displayedSize
-    } else if (isRefreshMode && tableRows < displayedSize) {
-        eviTableLimit = tableRows;
-    }
-
-    for (var ev_i = 0; ev_i < eviTableLimit; ev_i++)
+    // Manage the no of displayed rows, based on the bottom selector (or default)
+    //
+    if ( selectedSize )
+   	{
+		   // selectedSize is passed new user selection refresh
+			 if ( selectedSize > evidenceTable.length ) selectedSize = evidenceTable.length;
+	  }
+	  else
+	    // or, it's null upon the initial call or complete refresh
+	    selectedSize = evidenceTable.length < 100 ? evidenceTable.length : 100;
+	  
+	  
+    for (var ev_i = 0; ev_i < selectedSize; ev_i++)
     {
-        evidenceTableValues = sortedEvidenceTable[ev_i].split("\t");
-        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTableValues;
+        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
 
         table = table + '<tr>';
 
@@ -145,11 +136,14 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
         table = table + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
 
         //link publications with pubmed
-        pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+        var evidenceValue;
         if (type == 'Publication')
-            evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
+        {
+        	pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+          evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
+        }
         else
-            evidenceValue = nodeLabel;
+          evidenceValue = nodeLabel;
 
         table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
         table = table + '<td>' + evidenceValue + '</td>';
@@ -175,7 +169,7 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
     table = table + '</tbody>';
     table = table + '</table>';
     
-    var selectElement = createTableSelectElement(tableRows,displayedSize);
+    var selectElement = createTableSelectElement ( selectedSize, evidenceTable.length );
     table = table + '</div><div class="evidence-footer">';
     table = table + '<div class="evidence-select">'+ selectElement +'</div>';
     
@@ -209,7 +203,7 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
      * Revert filtering changes on Evidence View table
      */
     $("#revertEvidenceView").click(function (e) {
-        createEvidenceTable(tableStrings, keyword, tableRows); // redraw table
+        createEvidenceTable(evidenceTable, keyword ); // redraw table
         $('#evidenceTable').data({ keys: [] });
     });
 
@@ -227,8 +221,10 @@ function createEvidenceTable(tableStrings, keyword, tableRows, isRefreshMode = f
 		    updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
 		});
 		
+		// The size selector
 		$("#evidence-select").change(function (e) {
-		    createEvidenceTable(tableStrings, keyword, $("#evidence-select option:selected").val(), true);  //if number of genes to show changes, redraw table.
+				// Call myself with the new selected size
+		    createEvidenceTable( evidenceTable, keyword, $("#evidence-select option:selected").val() );  
 		});
 }
 
@@ -543,14 +539,15 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
  *  
  */
 // TODO: will extend function to serve genetable 
+// TODO: (MB, 2003): what does this comment mean?
 function createTableSelectElement ( selectedSize, tableSize )
 {
     var sizeOpts = [50, 100, 200, 500, 1000]; 
-    var selectButton = `<select value = "${tableSize}" id = "evidence-select">\n`
-    for (var sizeOpt in sizeOpts){
-        selectButton += `  <option value = "${sizeOpt}" ${selectedSize == sizeOpt ? 'selected' : ''}>${sizeOpt}</option>\n`
+    var selectButton = `<select value = "${selectedSize}" id = "evidence-select">\n`
+    for (var sizeOpt of sizeOpts){
+        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt}</option>\n`
     }
-    selectButton += `  <option value = "${tableSize}" ${selectedSize == tableSize ? 'selected' : ''}>All (${tableSize})</option>\n`
+    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All (${tableSize})</option>\n`
     selectButton += '</select>\n'; 
     return selectButton; 
 }
