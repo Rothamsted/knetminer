@@ -18,13 +18,10 @@ function createGenesTable(text, keyword, rows){
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
-
 		table += '<div id= "geneViewTable" class = "scrollTable">';
 		table += '<table id = "tablesorter" class="tablesorter">';
 		table += '<thead>';
 		table += '<tr>';
-
-		var headers = candidateGenes[0].split("\t");
 		table += '<th width="100"> Accession </th>';
 		table += '<th width="100"> Symbol</th>';
 
@@ -43,52 +40,41 @@ function createGenesTable(text, keyword, rows){
 		// Main loop over the resulting genes.
 		for (var row = 1; row <= results; row++) 
 		{
-			var values = candidateGenes[row].split("\t");
+			var geneTableValues = candidateGenes[row].split("\t");
+			[geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = geneTableValues
 
 			if (row > rows /*&& values[7]=="no"*/) continue;
 			table += '<tr>';
 
-			var geneId = values[0];
+			geneAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
 
-			var geneAcc = values[1];
-			geneAcc = geneAcc.toUpperCase(); // always display gene ACCESSION in uppercase
-
-			var geneAccNorm = geneAcc.replace(".", "_");
-
-			var geneName = values[2]; // display both accession & gene name.
+			var geneAccNorm = geneAccessions.replace(".", "_");
 
 			// Gene accession
-			var geneTd = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + row + '">' + geneAcc + '</a></td>';
+			var geneTd = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + row + '">' + geneAccessions + '</a></td>';
 
-			var geneNameTd = geneName.toUpperCase() == geneAcc
+			var geneNameTd = geneName.toUpperCase() == geneAccessions
 				// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
 				? '<td></td>'
 				// else, gene name column, with synonym expansion
 				: '<td><span class="gene_name">' + geneName + '</span> <span onclick="createGeneNameSynonyms(this,' + geneId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
 
-
-			var taxId = values[5];
 			var taxIdTd = ''
 
 			var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
 
 			// Currently not shown
-			var score = values[6];
 			var scoreTd = '<td>' + score + '</td>';
 
 
 			var chrTd = '';
 			var chrStartTd = '';
 
-
-			var chr = values[3];
-			var chrStart = values[4];
 			var chrTd = '<td>' + chr + '</td>';
 			var chrStartTd = '<td>' + chrStart + '</td>';
 
 			// QTL column with information box
 			var qtlTd = '<td>';
-			var withinQTLs = values[8];
 			if (withinQTLs.length > 1) {
 				var withinQTLs = withinQTLs.split("||");
 				//Shows the icons
@@ -139,7 +125,6 @@ function createGenesTable(text, keyword, rows){
 
 			// For each evidence show the images - start
 			var evidenceTd = '<td><div class="evidence-column-container">';
-			var evidence = values[9];
 			if (evidence.length > 0) {
 				var evidences = evidence.split("||");
 				for (var iev = 0; iev < evidences.length; iev++) {
@@ -157,7 +142,7 @@ function createGenesTable(text, keyword, rows){
 			evidenceTd += '<div></td>';
 			// Foreach evidence show the images - end
 
-			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAcc + '"></td>';
+			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
 			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
 			table += '</tr>';
 		} // for row
@@ -167,14 +152,10 @@ function createGenesTable(text, keyword, rows){
 		table += '</form>';
 	} // if ( candidateGenes.length > 2 )
 
+	var selectElement = createTableSelectElement(rows, results, 'resultsTable', 'num-genes')
+
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container"><select value="' + /*rows*/results + '" id="num-genes">';
-	table += '<option value="1000"' + (rows == 1000 ? 'selected' : '') + '>1000 Genes</option>';
-	table += '<option value="500"' + (rows == 500 ? 'selected' : '') + '>500 Genes</option>';
-	table += '<option value="200"' + (rows == 200 ? 'selected' : '') + '>200 Genes</option>';
-	table += '<option value="100"' + (rows == 100 ? 'selected' : '') + '>100 Genes</option>';
-	table += '<option value="50"' + (rows == 50 ? 'selected' : '') + '>50 Genes</option>';
-	table += '<option value="' + results + '"' + (rows == results ? 'selected' : '') + '>All Genes (' + results + ')</option> </select></div>';
+	table += '<div class="num-genes-container">'+selectElement+'</div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';

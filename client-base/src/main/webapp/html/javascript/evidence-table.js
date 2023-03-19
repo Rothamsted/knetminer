@@ -168,8 +168,9 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     
     table = table + '</tbody>';
     table = table + '</table>';
-    
-    var selectElement = createTableSelectElement ( selectedSize, evidenceTable.length );
+
+    // creates selects options ranging from 50 to 1000 . 
+    var selectElement = createTableSelectElement ( selectedSize, evidenceTable.length, 'evidenceTable', 'evidence-select');
     table = table + '</div><div class="evidence-footer">';
     table = table + '<div class="evidence-select">'+ selectElement +'</div>';
     
@@ -536,18 +537,27 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 
 /**
  * @desc creates the selector for the number of rows to be displayed
+ * 
+ * @param selectedSize: the number of the rows to be displayed
  *  
+ * @param tableSize: the total number of rows of data availabe from API call
+ * 
+ * @param tableId: the id of the table rendering the select component
+ * 
+ * @param selectElementId: id for the select button, used to check for change in options selected
+ * 
  */
 // TODO: will extend function to serve genetable 
 // TODO: (MB, 2003): what does this comment mean?
-function createTableSelectElement ( selectedSize, tableSize )
+function createTableSelectElement ( selectedSize, tableSize, tableId, selectElementId)
 {
     var sizeOpts = [50, 100, 200, 500, 1000]; 
-    var selectButton = `<select value = "${selectedSize}" id = "evidence-select">\n`
+    var selectButton = `<select value = "${selectedSize}" id = "${selectElementId}">\n`;
+    var OptionsStrings = `${tableId == 'resultsTable' ? 'Genes' : ''}`
     for (var sizeOpt of sizeOpts){
-        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt}</option>\n`
+        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt} ${OptionsStrings}</option>\n`
     }
-    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All (${tableSize})</option>\n`
+    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All ${OptionsStrings} (${tableSize})</option>\n`
     selectButton += '</select>\n'; 
     return selectButton; 
 }
