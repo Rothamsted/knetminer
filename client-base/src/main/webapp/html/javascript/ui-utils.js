@@ -47,7 +47,10 @@ function addKeyword(keyword,targetId) {
     var newQuery;
     if (query.includes(' NOT ' + keyword)){
        newQuery = query.replace(' NOT '+ keyword, ' OR ' + keyword);
-    }else{
+    }else if(query.includes(' OR ' + keyword)){
+        newQuery = query;  
+    }
+    else{
          newQuery = query + ' OR ' + keyword;
     }
     $('#keywords').val(newQuery);
