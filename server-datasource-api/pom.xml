@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>app-common</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>5.0.1-SNAPSHOT</version>
+		<version>5.6-RC</version>
 	</parent>
 
 	<artifactId>server-datasource-api</artifactId>
