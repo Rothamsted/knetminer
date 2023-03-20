@@ -1,49 +1,273 @@
 # Revision History
 
-*This file was last reviewed on 2023-08-20* **Please, keep this note updated** 
+*This file was last reviewed on 20/03/2023*
 
-# 5.6-SNAPSHOT
-* Current snapshot (to be changed after final 5.6)
+<br>
 
-# 5.6
+# <b>5.6</b>
 
-## Key Features
-* Multiple specie functionality: KnetMiner has better support for datasets that merge knowledge about multiple species. Searches and the user interface are focused on a user-selected specie, connections between a specie of interest and other species are highlighted in places like the network view. APIs are also able to work on a specified specie parameter.
+## What's new?
 
-## UI Improvements
-* List of gene synonyms added to gene view (#602).
-* Query suggester has become a “Concept selector” which can map keywords to concepts from the knowledge graph.
-* Search reset button.
-* Display number of genes in gene list box.
+KnetMiner 5.6 brings multispecies functionality, performance improvements, bug fixes, UI enhancements, website improvements, new tutorial and several new species and updated datasets.
 
-## API improvements
-* New /graphinfo/concept-info endpoint to retrieve node properties.
-* API for graph statistics improved (#695).
-* Network view API now can return pure JSON (#652).
+# Key Features
+## 1. Multispecies functionality
+Multispecies functionality brings a major change to how KnetMiner functions and can be queried.
 
-## New configurations
-* Brassica Camelina configuration added.
+- Added a Species selector for datasets containing >1 species: when a species is selected, searches will only return genes belonging to the selected species. 
+- Genome Region Search now works correctly with selected species (updating with the correct chromosomes).
+- Map View displays the correct list of chromosomes for the selected species.
 
-## Administration improvements
-* We have completely reworked the configuration mechanisms, now Knetminer can be configured entirely via YAML (or JSON) files, any need to rebuild an instance via Maven has been eliminated, making everything simpler and faster ([documentation][WIKI-CFG]).
-* New component to initialise data, which can be invoked via CLI, outside of the web application (Knetbuilder#55).
-* New logging components that separates a regular logging file from a detailed one (#664).
+<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/33641372/218092444-e79d1db7-30bc-49e0-9c47-34e05a322eb9.png">
 
-[WIKI-CFG]: https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#configuring-knetminer
+## 2. Public Beta/ Continuous Integration instance
+Allows users to test out the latest development build and provide early feedback.
 
-## Internal improvements and bugfixes
-* Methods to harmonise the gene and concept label displaying (#604).
-* Compatibility with Neo4j 4.4.
-* Heavy code refactoring, cleaning, etc for `KnetMinerServer`, `KnetMinerDataSource` and 
-  `OndexLocalDataSource`.
-* UI's Javascript refactoring (#621).
-* Small API client library added (REF).
-* Cleaning the way external Javascript dependencies are used in KnetMiner (REF).
-* Cleaning some file redundance (REF).
-* Migration from DockerHub to GitHub Packages.
+We have developed a new way to receive rapid feedback from users. Enter KnetMiner CI. The Continuous Integration instance of KnetMiner will always contain a full dataset (selected by us) and our most recent development build. We advise that users making use of the build carefully considers the nature of a development build and the potential instability and bugs which come along with the it. We also reboot it at least once daily.
+
+Importantly, the instance has an added banner for users to share their feedback quickly. This feedback is always passed to the relevant developer. All actionable feedback is appreciated.
+
+The CI instance is available [here](https://knetminer.com/ci-test/client/).
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/218734757-e032c674-93fe-4810-9fc1-d9125938fe1f.png">
+
+If you are a developer, you will be happy to know that the feedback banner can be enabled programatically in the KnetMiner config.yml 
+
+<code>customOptions:
+      # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+      # Likely, you don't want it enabled.
+      ui:
+    betaFeedbackBannerEnabled: true</code>
+
+## 3. Gene synonym viewer
+Show all synonyms in Gene View: allows users to view all synonyms for a gene, in Gene View.
+
+- Gene preferred names are now correctly selected by default.
+
+<img width="350" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/220589349-4e32ecb8-6f95-471c-9f9a-d7e47952bd74.png">
+
+## 4. Network data exporter
+Users can now export their network data (from Network view).
+- Both exporting methods will export the currently visible graph with node and edge information but without all details (which would normally be visible in the Info box).
+- Allows for exporting in Tabular format and Cytoscape desktop (json) formats. 
+
+<img width="350" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/220590885-8577c736-f53e-49d4-8508-f12885406fca.png">
+
+- Downloading the Cytoscape desktop format file prompts users to follow a [guide we've written for setting up Cytoscape desktop](https://knetminer.com/tutorial/cytoscape).
+
+## 5. KnetScore visibility
+Knetscore is now visible in Gene View
+- Published in [KnetMiner: a comprehensive approach for supporting evidence-based gene discovery and complex trait analysis across species](https://onlinelibrary.wiley.com/doi/10.1111/pbi.13583).
+- Gene View now exposes the KnetScore (not normalised) to order and better sort candidate genes by ranking their evidences and significance.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220595111-f2cafdd8-76c9-4450-b6e5-01d1346319cb.png">
 
 
+## 6. Evidence View Gene List functionality
+Quickly return all the genes associated to a concept via semantic motifs in the current Knowledge Graph.
 
+- Allows users to quickly view all genes related to a particular Evidence 
+- Quick copying of gene accessions for KnetMiner Gene List Search
+- Quick downloading of entire table
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220596063-9375056e-9c11-421f-9b0e-3107784cfc72.png">
+
+<img width="350" alt="Gene list popup" src="https://user-images.githubusercontent.com/33641372/220596245-cb948378-3a7d-4447-90dd-c70005b7ec13.png">
+
+## 7. KnetMiner (KnetGraph) programmatic endpoints homepage update
+### Available [here](http://knetminer-data.cyverseuk.org/lodestar/).
+- Modernised visuals
+- Updated links
+- Improved key features (logo, key texts)
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/218739919-f30fe5e4-3f34-49a1-9856-6c9968294507.png">
+
+## 8. Appended species initials
+We now append the species initials to the front of genes in Network View. 
+
+- Helps identify genes from various species in multi-species networks.
+- Stops users having to individually click on nodes to determine their species.
+
+<img width="350" src="https://user-images.githubusercontent.com/33641372/220668770-a5870d88-8eb4-413f-a447-240b6ad87061.png">
+
+
+<br>
+
+# Other new features
+
+## More meaningful P-values in Evidence View
+- Exponential values are now displayed correctly.
+- Decimal place count has been increased.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220602429-7a59afa3-157d-42d9-b44a-c9643711c47f.png">
+
+## Improved evidence filtering
+
+- Added individual evidence names to key.
+- Users can now multi-select evidences to filter by, both in Gene and Evidence views.
+- New UI is translated into the evidence column too, with correct overflow and table scaling.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220663610-460763f3-564c-4785-8f4d-423825d21b9a.png">
+
+
+<br>
+
+# Visual improvements
+
+## Added information ("i") tooltips 
+- Several column headers in Gene and Evidence views now contain helpful tooltips which describe the column.
+
+<img width="350" alt="Evidence View headers with 'i'" src="https://user-images.githubusercontent.com/33641372/220669792-2717fbe1-55cc-4474-b6fd-33b82a1c6bca.png">
+
+## Improved Evidence View handling of empty user Gene Lists
+- N/A for P-values column.
+- "0" for Gene List column.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220671862-0fd43418-be5d-4148-80a0-d619c6523f32.png">
+
+## New KnetMiner Genepage
+- Updated to visually match new KnetMiner interface.
+- Correctly retains gene list and keywords via URL. 
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220673354-54cf4d11-b51b-47af-9b43-49b90dc05053.png">
+
+## Refined knowledge graph release notes
+Available via an animated button beside the multispecies selector (top left).
+
+Contains:
+- KG information: title, explainer, versioning and size details.
+- A detailed tabulated breakdown of which data is available in the graph.
+
+<img width="150" src="https://user-images.githubusercontent.com/33641372/220674508-a40e9e63-c3e4-44ab-af79-f721b4165da8.png">
+
+<img width="250" src="https://user-images.githubusercontent.com/33641372/220674805-ab01429b-d5c8-41b9-9d26-8be645db33b8.png">
+
+## Evidence view Node Label max character length increased
+Evidence view Description/Node label can now display longer lengths of text.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220678402-3536ce8d-c25d-4065-9831-cc00a8cf0bb8.png">
+
+## New loading animation
+We've removed the double-helix loading animation and simplified the animation into the search button itself.
+
+![image](https://user-images.githubusercontent.com/33641372/226440970-0ae4172b-b850-42af-9318-48f3f8aa4b48.png)
+
+## KnetMiner is rebooting page
+On the odd chance that a user finds us rebooting or updating the instance they selected, they are prompted about ongoing updates.
+
+- Contact us directs to [/contact](https://knetminer.com/contact).
+- Reload button refreshes the page and tries to access KnetMiner again.
+- Homepage returns to [KnetMiner.com](https://knetminer.com).
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220729050-bd64f289-7c70-4ff2-96a1-7333a082205f.png">
+
+## Concept Selector updated
+Query suggestor has become a “Concept selector”.
+
+- Quickly map keywords to <b>concepts</b> from the knowledge graph.
+
+<img width="850" src="https://user-images.githubusercontent.com/33641372/220732809-ac50afdc-31ec-41c9-92aa-83c889b5e528.png">
+
+<br>
+
+# Backend
+- New /graphinfo/concept-info endpoint to retrieve node properties
+- API URL auto-discovery
+- Overhauled KnetMiner configuration.
+- New API to help the client get information on the available species and related information.
+- Genome API is now split into three endpoints: search/genome, search/genelist and search/region.
+- Moved to clean json formats for the split genome API.
+- KnetMiner (knetbuilder) now uses the same labels as the CytoscapeJS plugin.
+- Tmbased mapping plugin has been extended to allow for stop words which should be excluded from the text mining search.
+- API exception logging has been improved.
+- Network API can now export plainJSON format.
+- Fixed Google Analytics for KnetMiner (configurable by developers for other projects).
+- Cleaned up datasets throughout KnetMiner and KnetMiner dependencies.
+
+# ETL updates
+- New workflow for text mining, including (1) more gene name stop words and (2) expanded gene synonym searches
+- Updates to combat NCBI PubMed Abstract download restrictions
+- Updates to use new UniProt REST interface
+- Collections of names (chemical and brand) of both fungicides and insecticides for text-mining training
+
+# New species in KnetMiner
+- Ascomycota:
+   * Aspergillus Fumigatus
+   * Fusarium Culmorum
+   * Neurospora Crassa
+   * Zymoseptoria Tritici
+   * Aspergillus Nidulans
+   * Fusarium Graminearum
+   * Saccharomyces Cerevisiae
+   * Candida Albicans
+   * Magnaporthe Oryzae
+   * Schizosaccharomyces Pombe
+
+- Brassica:
+   * Brassica Napus
+   * Brassica Oleracea
+   * Brassica Rapa
+   * Camelina Sativa
+   * Arabidopsis Thaliana
+
+- Tropicana:
+   * Arabidopsis Thaliana
+   * Musa Acuminata
+   * Coffea Canephora
+
+# New configurations
+- Brassica Camelina.
+
+# Minor visual updates
+- Display number of genes inputted in Gene List box.
+- "Clear Search Fields" button.
+- Added "Help" popup.
+- Removed background image.
+- Updated top banner color to white.
+- Added "Tutorial" and "Cite Us" buttons to banner.
+- Rounded buttons, boxes and sections.
+- Improved clarity of text popups, errors and notifications.
+- Added "Revert all filtering changes" button to Gene and Evidence View keys.
+- Moved positions of several UI features (amount of genes to show in gene view, unlinked/linked genes selectors, "X genes selected").
+- Swapped Evidence and Map view positions.
+- Seperated Network View from other Views.
+- Network View button is now greyed out/disabled when no graph has been created.
+- Greyed out "Genes" box in Genome Region Search (as the value isn't user-adjustable).
+- Revamped Region Search "Add region" UI/UX.
+- Evidence view now correctly displays amount of "terms" selected.
+- Added meaningful icons to views buttons.
+- KnetMiner logo in banner now redirects to /products page.
+- Example queries auto-changes with species.
+- Now only show X on second (and beyond) Genome Region Search boxes.
+- Renamed Evidence View's "Description" column to "Node label".
+
+# Fixed bugs and internal improvements
+- Multiple concept names having preferred flags mistakenly set to true.
+- White text in several dropdowns displaying as white on white for users with darkmode active in their browser.
+- Page crashing when clicking example queries while having multiple open Genome Region Search boxes.
+- Removed incorrect numbering in Evidence View key.
+- Interactive legend not scaling correctly with many evidence types.
+- Methods to harmonise the gene and concept label displaying (#604).
+- Compatibility with Neo4j 4.4.
+- Heavy code refactoring, cleaning, etc for `KnetMinerServer`, `KnetMinerDataSource` and `OndexLocalDataSource`.
+- UI's Javascript refactoring (#621).
+
+# KnetMiner.com website updates
+- Tutorial is now a searchable and Google indexed [Wiki](https://knetminer.com/wiki).
+- Release notes are now available on [KnetMiner.com/release_notes](https://knetminer.com/release_notes).
+- Added [MailChimp](https://mailchimp.com/en-gb/?currency=GBP) support.
+- Changed product offering page to [KnetMiner.com/products](https://KnetMiner.com/products).
+- Added several new paid and free species products to the [KnetMiner products page](https://KnetMiner.com/products).
+- Added website-wide popup to [KnetMiner.com](https://knetminer.com).
+- Added several new publications [citing KnetMiner](https://KnetMiner.com/publications).
+- Updated [KnetMiner.com/About](https://KnetMiner.com/about).
+- Updated email for general queries to hello@knetminer.com.
+
+# Misc
+- We are now on [Twitter](https://twitter.com/KnetMiner), [LinkedIn](https://www.linkedin.com/company/knetminer/) and [Instagram](https://www.instagram.com/knetminer/)
+- We've made a [KnetMiner introduction video](https://www.youtube.com/watch?v=F8OYhzWQn5Q).
+
+<br>
 
 # 5.0
 
