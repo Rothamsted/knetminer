@@ -170,7 +170,7 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     table = table + '</table>';
 
     // creates selects options ranging from 50 to 1000 . 
-    var selectElement = createTableSelectElement ( selectedSize, evidenceTable.length, 'evidenceTable', 'evidence-select');
+    var selectElement = createEvidenceTableSizeSelector ( selectedSize, evidenceTable.length );
     table = table + '</div><div class="evidence-footer">';
     table = table + '<div class="evidence-select">'+ selectElement +'</div>';
     
@@ -536,29 +536,63 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 }
 
 /**
- * @desc creates the selector for the number of rows to be displayed
+ * @see createTableSizeSelector()
+ */
+function createEvidenceTableSizeSelector ( selectedSize, tableSize )
+{
+	return createTableSizeSelector ( selectedSize, tableSize, false ) 
+}
+
+
+/**
+ * @desc Core function to create the selector for the number of rows to be displayed in the gene or
+ * evidence table.
+ * 
+ * WARNING: this is a wrapper of more specific functions and you shouldn't call it directly 
  * 
  * @param selectedSize: the number of the rows to be displayed
  *  
  * @param tableSize: the total number of rows of data availabe from API call
  * 
- * @param tableId: the id of the table rendering the select component
+ * @param isGeneTable: true if you're calling me to render the selector for the gene table, else
+ * I'm rendering the evidence table (they're slightly different).
  * 
- * @param selectElementId: id for the select button, used to check for change in options selected
- * 
+ * TODO: this has become a generic function, so it should be moved to some other file
+ * (probably, ui-utils.js) 
  */
 // TODO: will extend function to serve genetable 
 // TODO: (MB, 2003): what does this comment mean?
-function createTableSelectElement ( selectedSize, tableSize, tableId, selectElementId)
+function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 {
-    var sizeOpts = [50, 100, 200, 500, 1000]; 
+    var sizeOpts = [50, 100, 200, 500, 1000];
+    
+    // The HTML selector ID depends on gene/evidence table
+    // TODO: do we need them to have different IDs? Can we use the same ID and 
+    // avoid this conditional?
+    var selectElementId; 
+    
+    // Messages have 'Genes' qualifier in the gene table and '' in the evidence table
+    var itemsLabel;
+    if ( isGeneTable ) {
+			selectElementId = "num-genes";
+			itemsLabel = "Genes";
+		}
+		else {
+			selectElementId = "evidence-select";
+			itemsLabel = "";
+		}
+		 
+		// if non-null, we always put a space before
+		var itemsLabelStr = itemsLabel ? '' : ` ${itemsLabel}`
+		 
     var selectButton = `<select value = "${selectedSize}" id = "${selectElementId}">\n`;
-    var OptionsStrings = `${tableId == 'resultsTable' ? 'Genes' : ''}`
     for (var sizeOpt of sizeOpts){
-        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt} ${OptionsStrings}</option>\n`
+        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt} ${itemsLabelStr}</option>\n`
     }
-    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All ${OptionsStrings} (${tableSize})</option>\n`
+
+    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All${itemsLabelStr} (${tableSize})</option>\n`
     selectButton += '</select>\n'; 
+    
     return selectButton; 
 }
 

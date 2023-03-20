@@ -152,7 +152,7 @@ function createGenesTable(text, keyword, rows){
 		table += '</form>';
 	} // if ( candidateGenes.length > 2 )
 
-	var selectElement = createTableSelectElement(rows, results, 'resultsTable', 'num-genes')
+	var selectElement = createGeneTableSizeSelector ( rows, results )
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
 	table += '<div class="num-genes-container">'+selectElement+'</div>';
@@ -459,10 +459,13 @@ function downloadNetwork() {
 		})
 	}
 
-
-
 }
 
-
-
+/**
+ * @see createTableSizeSelector()
+ */
+function createGeneTableSizeSelector ( selectedSize, tableSize )
+{
+	return createTableSizeSelector ( selectedSize, tableSize, true )
+}
 
