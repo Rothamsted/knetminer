@@ -2,7 +2,10 @@
 
 *This file was last reviewed on 2023-08-20* **Please, keep this note updated** 
 
-# 5.0.1-SNAPSHOT
+# 5.6-SNAPSHOT
+* Current snapshot (to be changed after final 5.6)
+
+# 5.6
 
 ## Key Features
 * Multiple specie functionality: KnetMiner has better support for datasets that merge knowledge about multiple species. Searches and the user interface are focused on a user-selected specie, connections between a specie of interest and other species are highlighted in places like the network view. APIs are also able to work on a specified specie parameter.
