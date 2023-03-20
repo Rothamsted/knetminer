@@ -44,21 +44,26 @@ jobs:
 
     - name: Build
       env:
-        KNET_REPO_USER: ${{secrets.KNET_REPO_USER}}
-        KNET_REPO_PASSWORD: ${{secrets.KNET_REPO_PASSWORD}}
-        GIT_USER: ${{secrets.GIT_USER}}
-        GIT_PASSWORD: ${{github.token}}
-        GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
         NEW_RELEASE_VER: ${{ github.event.inputs.NEW_RELEASE_VER }}
         NEW_SNAPSHOT_VER: ${{ github.event.inputs.NEW_SNAPSHOT_VER }}
+        KNET_REPO_USER: ${{secrets.KNET_REPO_USER}}
+        KNET_REPO_PASSWORD: ${{secrets.KNET_REPO_PASSWORD}}
+        # TODO: Replacing the old secrets.GIT_USER, to be tested and the old secret to be
+        # removed
+        GIT_USER: ${{github.actor}}
+        # TODO: replacing the old github.token, remove this note after testing
+        GIT_PASSWORD: ${{secrets.GITHUB_TOKEN}}
+        GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
         CI_TRIGGERING_EVENT: ${{ github.event_name }}
         # If you use on: schedule:, this will tell build.sh how often you try to trigger a build
         # It uses it to know if there are git changes since the last scheduled build
         CI_SCHEDULE_PERIOD: 24 # hours
         KNET_JENKINS_USER: ${{secrets.KNET_JENKINS_USER}}
         KNET_JENKINS_TOKEN: ${{secrets.KNET_JENKINS_TOKEN}}
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        # TODO: remove (from the settings too), were used with the Docker registry
+        #DOCKER_USER: ${{secrets.DOCKER_USER}}
+        #DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        # Used to notify events like build failures
         CI_SLACK_API_NOTIFICATION_URL: ${{secrets.CI_SLACK_API_NOTIFICATION_URL}}
 
             

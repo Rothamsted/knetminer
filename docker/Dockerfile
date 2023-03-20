@@ -8,7 +8,7 @@
 # of the bare image beneat us.
 ARG DOCKER_TAG='latest' 
 
-FROM knetminer/knetminer-bare:${DOCKER_TAG}
+FROM ghcr.io/rothamsted/knetminer-bare:${DOCKER_TAG}
 
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.

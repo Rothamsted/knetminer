@@ -40,7 +40,7 @@ docker stop "$container_name" || true
 docker rm "$container_name" || true
 docker system prune --all --force
 docker volume prune --force
-docker pull knetminer/knetminer
+docker pull ghcr.io/rothamsted/knetminer
 
 # This used to be the default. Now, it's normally disabled and manually ran when needed
 # TODO: flag to be passed from the CI framework 

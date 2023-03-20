@@ -15,16 +15,16 @@ fi
 if `$IS_RELEASE`; then
 	echo -e "\n\n\tTagging and pushing new Docker images with ${NEW_RELEASE_VER}\n"
 	# We don't need this here, since it was already got to do the build
-	# docker pull "knetminer/knetminer-bare:$docker_tag_bare"
+	# docker pull "ghcr.io/rothamsted/knetminer-bare:$docker_tag_bare"
 else
 	echo -e "\n\n\tPushing new Docker image(s)\n"
 fi
 
 
-docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+docker login -u "$GIT_USER" -p "$GIT_PASSWORD"
 
 echo -e "\nPushing main image with tag '$docker_tag'\n"
-docker push "knetminer/knetminer:$docker_tag"
+docker push "ghcr.io/rothamsted/knetminer:$docker_tag"
 
 # When we're releasing, we further tag the same images with the release tag and
 # push them too. This should only happen for the master branch
@@ -32,16 +32,16 @@ docker push "knetminer/knetminer:$docker_tag"
 if `$IS_RELEASE`; then
 
 	echo -e "\nTagging Docker main with $NEW_RELEASE_VER\n"
-	docker tag "knetminer/knetminer:$docker_tag" "knetminer/knetminer:$NEW_RELEASE_VER"
+	docker tag "ghcr.io/rothamsted/knetminer:$docker_tag" "ghcr.io/rothamsted/knetminer:$NEW_RELEASE_VER"
 
 	echo -e "\nTagging Docker bare with $NEW_RELEASE_VER\n"
-	docker tag "knetminer/knetminer-bare:$docker_tag_bare" "knetminer/knetminer-bare:$NEW_RELEASE_VER"
+	docker tag "ghcr.io/rothamsted/knetminer-bare:$docker_tag_bare" "ghcr.io/rothamsted/knetminer-bare:$NEW_RELEASE_VER"
 
 	echo -e "\nPushing main:$NEW_RELEASE_VER\n"
-	docker push "knetminer/knetminer:$NEW_RELEASE_VER"
+	docker push "ghcr.io/rothamsted/knetminer:$NEW_RELEASE_VER"
 
 	echo -e "\nPushing bare:$NEW_RELEASE_VER\n"
-	docker push "knetminer-bare/knetminer-bare:$NEW_RELEASE_VER"
+	docker push "ghcr.io/rothamsted/knetminer-bare:$NEW_RELEASE_VER"
 
 fi
 

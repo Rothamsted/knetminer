@@ -52,7 +52,7 @@ do
   	--config-file)
   		config_file="$2"; shift;;
   	#--: Identifies the Docker image version you want to use (eg, --image-version test, 
-  	#--: will pick knetminer/knetminer:test). Default is 'latest' for the latest version in github, or a given 
+  	#--: will pick ghcr.io/rothamsted/knetminer:test). Default is 'latest' for the latest version in github, or a given 
   	#--: version, depending on the release distribution you are using.
   	--image-version)
   		image_version="$2"; shift 2;;
@@ -124,4 +124,4 @@ echo -e "\n"
 }
 
 set -x
-docker run $DOCKER_OPTS knetminer/knetminer:$image_version
+docker run $DOCKER_OPTS ghcr.io/rothamsted/knetminer:$image_version

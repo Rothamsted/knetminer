@@ -10,6 +10,8 @@ do_bare=false
 docker_tag=latest
 docker_tag_bare=latest
 do_mvn_clean=true
+# Used to be the Docker registry, but we migrated to GH Packages
+image_prefix='ghcr.io/rothamsted'
 
 while [[ $# -gt 0 ]]
 do
@@ -88,12 +90,12 @@ mvn $clean_goal install $MAVEN_ARGS -DskipTests -DskipITs
 
 if `$do_bare`; then
 	echo -e "\n\  Creating Bare image\n" 
-	docker build -t "knetminer/knetminer-bare:$docker_tag_bare" $DOCKER_OPTS -f docker/Dockerfile-bare .
+	docker build -t "$image_prefix/knetminer-bare:$docker_tag_bare" $DOCKER_OPTS -f docker/Dockerfile-bare .
 fi
 
 
 echo -e "\n\  Creating image\n"
-docker build -t "knetminer/knetminer:$docker_tag" --build-arg DOCKER_TAG="$docker_tag_bare" \
+docker build -t "$image_prefix/knetminer:$docker_tag" --build-arg DOCKER_TAG="$docker_tag_bare" \
   $DOCKER_OPTS -f docker/Dockerfile .
 
 echo -e "\n\  The End\n" 
