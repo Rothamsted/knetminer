@@ -21,7 +21,7 @@ else
 fi
 
 
-docker login -u "$GIT_USER" -p "$GIT_PASSWORD"
+echo "$GIT_PASSWORD" | docker login ghcr.io -u "$GIT_USER" --password-stdin
 
 echo -e "\nPushing main image with tag '$docker_tag'\n"
 docker push "ghcr.io/rothamsted/knetminer:$docker_tag"
