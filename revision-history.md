@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-02-17* **Please, keep this note updated** 
+*This file was last reviewed on 2023-08-20* **Please, keep this note updated** 
 
 # 5.0.1-SNAPSHOT
 
@@ -37,6 +37,7 @@
 * Small API client library added (REF).
 * Cleaning the way external Javascript dependencies are used in KnetMiner (REF).
 * Cleaning some file redundance (REF).
+* Migration from DockerHub to GitHub Packages.
 
 
 

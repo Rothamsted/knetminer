@@ -1,6 +1,9 @@
 # Used in RRes resources, to CI-deploy test containers
-# from DockerHub, after they've beeen updated.
+# from GH Packages, after they've beeen updated.
 #
+# TODO: we don't use DockerHub anymore, this script needs renaming (and the RRes infrastructure
+# needs updates)
+
 set -e # Stop upon the first problem
 
 dataset_dir=/opt/data/knetminer-datasets/poaceae-ci
