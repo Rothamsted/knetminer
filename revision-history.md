@@ -1,8 +1,12 @@
 # Revision History
 
-*This file was last reviewed on 20/03/2023*
+*This file was last reviewed on 2023-08-21* **Please, keep this note updated** 
 
 <br>
+
+# 5.6-SNAPSHOT
+* Current snapshot (to be changed after final 5.6)
+
 
 # <b>5.6</b>
 
