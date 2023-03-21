@@ -160,7 +160,7 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
         table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
 
         // launch evidence network with them, if they're not too many.
-        table = table +  `<td><button data-genelist="${geneList}" onclick="evidencePath(${conceptId},this,${genesCount})" class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
+        table = table +  `<td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
 
         var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
         table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
