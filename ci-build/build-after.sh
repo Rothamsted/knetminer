@@ -57,13 +57,12 @@ if $IS_RELEASE; then
 else
 	# Else, we might need to restore the pointers to the the one we have built
 	if ! egrep -q "^image_version='latest'" docker/docker-run.sh; then
-	  msg = "Restoring 'latest' version for --image-version in docker-run.sh"
+	  msg="Restoring 'latest' version for --image-version in docker-run.sh"
 		echo -e "\n\n\t$msg\n"
 		
 		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
 		
-		git commit docker/docker-run.sh \
-		    -m "$msg (ci script). [ci skip]"
+		git commit docker/docker-run.sh -m "$msg (ci script). [ci skip]"
 		export NEEDS_PUSH=true
 	fi
 fi
