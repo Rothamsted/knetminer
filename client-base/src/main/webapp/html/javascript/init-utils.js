@@ -210,89 +210,58 @@ function emptyRegionInputs(rowNumber) {
   }
 }
 
-// functions handle click events for click events on knetminer search form
-function searchHandlers() {
-  $("#advanced_search").click(function () {
-    var src =
-      $(this).attr("src") === "html/image/expand.gif"
-        ? "html/image/collapse.gif"
-        : "html/image/expand.gif";
-    $(this).attr("src", src);
-    $("#advanced_search_area").animate(
-      {
-        height: "toggle",
-      },
-      500
-    );
-  });
 
-  //
-  $("#suggestor_search").click(function () {
-    var suggestorSearchDiv = $("#suggestor_search_div");
-    if (suggestorSearchDiv.css("display") === "none") {
-      suggestorSearchDiv.show();
-    }
 
-    var src =
-      $(this).attr("src") === "html/image/qs_expand.png"
-        ? "html/image/qs_collapse.png"
-        : "html/image/qs_expand.png";
-    $(this).attr("src", src);
-    $("#suggestor_search_area").animate(
-      {
-        height: "toggle",
-      },
-      500
-    );
-    if ($("#suggestor_search").attr("src") == "html/image/qs_collapse.png") {
-      refreshQuerySuggester();
-    }
-  });
-
-  // Keyword search
-  $("#kwd_search").click(function () {
-    var old_src = $(this).attr("src");
-    var src =
-      old_src === "html/image/expand.gif"
-        ? "html/image/collapse.gif"
-        : "html/image/expand.gif";
-    $(this).attr("src", src);
+// function handles Keyword search toggle button event
+function  keywordInputHandler(targetElement, inputId) {
+   
+  handleGenomeSearch(targetElement,inputId)
     $("#keywords")
       .animate(
         {
           height: "toggle",
         },
         500
-      )
-      .css("display", "inline-block");
-    $("#matchesResultDiv").animate(
-      {
-        height: "toggle",
-      },
-      500
-    );
+      ).css("display", "inline-block");
 
-    if (old_src === "html/image/collapse.gif") {
+    if ($(targetElement).attr('src') === "html/image/collapse.gif") {
       // hide suggestor_search img icon and suggestor_search_area div
       $("#suggestor_search").css("display", "none");
       $("#suggestor_search_area").css("display", "none");
     }
-  });
+};
 
-  $("#region_search").click(function () {
-    var src =
-      $(this).attr("src") === "html/image/expand.gif"
-        ? "html/image/collapse.gif"
-        : "html/image/expand.gif";
-    $(this).attr("src", src);
-    $("#region_search_area").animate(
-      {
-        height: "toggle",
-      },
-      500
-    );
-  });
+// function handles Query Suggestor input event
+function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
+  if (suggestorSearchDiv.css("display") === "none") suggestorSearchDiv.show();
+    handleGenomeSearch(targetElement,inputId)
+    if ($(targetEelement).attr("src") == "html/image/qs_collapse.png") refreshQuerySuggester();
+    
 }
+
+/** 
+ * @desc Toggles Keyword Search, Gene List, Gene Region and Query Suggestion Search Inputs 
+ * 
+ * @param targetElement: The element object that recieves the onclick event
+ * 
+ * @param inputId: The Id of corresponding input elements related to the Target Element
+*/
+
+function handleGenomeSearch(targetElement,inputId) {
+  var src =
+    $(targetElement).attr("src") === "html/image/expand.gif"
+      ? "html/image/collapse.gif"
+      : "html/image/expand.gif";
+  $(targetElement).attr("src", src);
+  $(inputId).animate(
+    {
+      height: "toggle",
+    },
+    500
+  );
+}
+
+
 
 // function shows gene and evidence view helper modal element
 function showGeneViewHelper(event) {
