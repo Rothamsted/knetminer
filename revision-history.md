@@ -14,13 +14,19 @@ KnetMiner 5.6 brings multispecies functionality, performance improvements, bug f
 ## 1. Multispecies functionality
 Multispecies functionality brings a major change to how KnetMiner functions and can be queried.
 
-- Added a Species selector for datasets containing >1 species: when a species is selected, searches will only return genes belonging to the selected species. 
-- Genome Region Search now works correctly with selected species (updating with the correct chromosomes).
-- Map View displays the correct list of chromosomes for the selected species.
+- KnetMiner can now be configured (see new config.yml) to serve a knowledge graph with multiple species (taxonomy ids).
+- Added a Species selector in the header which shows the list of species available in the config.yml.
+- Search messages and sample queries have been made species specific.
+- Genome Region Search has been updated to show chromosome names and gene numbers for selected species.
+- Gene View will only show genes belonging to the selected species.
+- Evidence View columns (p-value, total genes) are still based on all species data.
+- Map View automatically picks the chromosome map for the selected species.
+- Network View still shows nodes and relations across all species present in the KG.
 
-<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/33641372/218092444-e79d1db7-30bc-49e0-9c47-34e05a322eb9.png">
+<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/5624714/226596498-c0768fdc-e9dc-4ced-abe0-f42deaf7e106.png"> 
 
-## 2. Public Beta/ Continuous Integration instance
+
+## 2. Public Beta/ Continuous Integration instance (TODO: Change this to: New YAML based Configuration)
 Allows users to test out the latest development build and provide early feedback.
 
 We have developed a new way to receive rapid feedback from users. Enter KnetMiner CI. The Continuous Integration instance of KnetMiner will always contain a full dataset (selected by us) and our most recent development build. We advise that users making use of the build carefully considers the nature of a development build and the potential instability and bugs which come along with the it. We also reboot it at least once daily.
@@ -39,7 +45,7 @@ If you are a developer, you will be happy to know that the feedback banner can b
       ui:
     betaFeedbackBannerEnabled: true</code>
 
-## 3. Gene synonym viewer
+## 3. Gene names and synonyms
 Show all synonyms in Gene View: allows users to view all synonyms for a gene, in Gene View.
 
 - Gene preferred names are now correctly selected by default.
