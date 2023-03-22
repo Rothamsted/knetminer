@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-08-21* **Please, keep this note updated** 
+*This file was last reviewed on 2023-03-22* **Please, keep this note updated** 
 
 <br>
 
@@ -28,7 +28,7 @@ Multispecies functionality brings a major change to how KnetMiner functions and 
 - Map View automatically picks the chromosome map for the selected species.
 - Network View still shows nodes and relations across all species present in the KG.
 
-<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/5624714/226596498-c0768fdc-e9dc-4ced-abe0-f42deaf7e106.png"> 
+<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/33641372/226940196-09651587-e194-4ff9-9741-0604dadc1b52.png"> 
 
 
 ### 2. Public Beta/ Continuous Integration instance (TODO: Change this to: New YAML based Configuration)
@@ -56,6 +56,13 @@ Show all synonyms in Gene View: allows users to view all synonyms for a gene, in
 - Gene preferred names are now correctly selected by default.
 
 <img width="350" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/220589349-4e32ecb8-6f95-471c-9f9a-d7e47952bd74.png">
+
+We now append the species initials to the front of genes in Network View. 
+
+- Helps identify genes from various species in multi-species networks.
+- Stops users having to individually click on nodes to determine their species.
+
+<img width="350" src="https://user-images.githubusercontent.com/33641372/220668770-a5870d88-8eb4-413f-a447-240b6ad87061.png">
 
 ### 4. Network data exporter
 Users can now export their network data (from Network view).
@@ -93,14 +100,14 @@ Quickly return all the genes associated to a concept via semantic motifs in the 
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/218739919-f30fe5e4-3f34-49a1-9856-6c9968294507.png">
 
-### 8. Appended species initials
-We now append the species initials to the front of genes in Network View. 
+### 8. New Tutorial
+### Available [here](https://knetminer.com/tutorial)
+The new and improved KnetMiner tutorial offers users a user-friendly platform to quickly troubleshoot problems or learn about features. We now also link to the tutorial page from within the KnetMiner header.
 
-- Helps identify genes from various species in multi-species networks.
-- Stops users having to individually click on nodes to determine their species.
+- Improved navigation
+- Google indexed 
 
-<img width="350" src="https://user-images.githubusercontent.com/33641372/220668770-a5870d88-8eb4-413f-a447-240b6ad87061.png">
-
+<img width="850" src="https://user-images.githubusercontent.com/33641372/226945410-75d94031-d4b2-4300-a9de-4b1ff6ed6f3a.png">
 
 <br>
 
@@ -119,7 +126,6 @@ We now append the species initials to the front of genes in Network View.
 - New UI is translated into the evidence column too, with correct overflow and table scaling.
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/220663610-460763f3-564c-4785-8f4d-423825d21b9a.png">
-
 
 <br>
 
@@ -181,17 +187,19 @@ Query suggestor has become a “Concept selector”.
 
 
 ## Backend updates
-- API URL auto-discovery in the UI code 
 - Overhauled KnetMiner configuration.
-- New API to help the client get information on the available species and related information.
-- Cleaning of JSON formats for the split genome API.
-- New /graphinfo/concept-info endpoint to retrieve node properties
-- KnetMiner now uses the same labels as the CytoscapeJS plugin (from KnetBuilder).
+- New /graphinfo/concept-info endpoint to retrieve node properties.
 - The text mining tool (from KnetBuilder) has been extended to allow for stop words which should be excluded from the text mining search.
-- API exception logging has been improved.
-- Network API can now export plainJSON format.
 - Bugfixes to Google Analytics for KnetMiner (with new configuration options for deployers).
 - Cleaned up dataset data and configuration throughout KnetMiner and KnetMiner dependencies.
+
+## APIs
+- API URL auto-discovery in the UI code.
+- New API to help the client get information on the available species and related information.
+- KnetMiner now uses the same labels as the CytoscapeJS plugin (from KnetBuilder).
+- Cleaning of JSON formats for the split genome API.
+- API exception logging has been improved.
+- Network API can now export plainJSON format.
 
 ## ETL updates
 - New workflow for text mining, including (1) more gene name stop words and (2) expanded gene synonym searches
@@ -262,7 +270,7 @@ Query suggestor has become a “Concept selector”.
 - UI's Javascript refactoring (#621).
 
 ## KnetMiner.com website updates
-- Tutorial is now a searchable and Google indexed [Wiki](https://knetminer.com/wiki).
+- Tutorial is now a searchable and Google indexed [Tutorial](https://knetminer.com/tutorial).
 - Release notes are now available on [KnetMiner.com/release_notes](https://knetminer.com/release_notes).
 - Added [MailChimp](https://mailchimp.com/en-gb/?currency=GBP) support.
 - Changed product offering page to [KnetMiner.com/products](https://KnetMiner.com/products).
