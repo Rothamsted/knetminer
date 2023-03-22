@@ -4,7 +4,7 @@
 
 <br>
 
-# 5.6-SNAPSHOT
+# 5.6-SNAPSHOT
 * Current snapshot (to be changed after final 5.6)
 
 
