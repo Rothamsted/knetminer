@@ -23,7 +23,7 @@ KnetMiner 5.6 brings multispecies functionality, performance improvements, bug f
 ### 1. Multispecies functionality
 Multispecies functionality brings a major change to how KnetMiner functions and can be queried.
 
-- KnetMiner can now be configured (see new config.yml) to serve a knowledge graph with multiple species (taxonomy ids).
+- KnetMiner can now be configured (see "New YAML based Configuration" below) to serve a knowledge graph with multiple species (taxonomy ids).
 - Added a Species selector in the header which shows the list of species available in the config.yml.
 - Search messages and sample queries have been made species specific.
 - Genome Region Search has been updated to show chromosome names and gene numbers for selected species.
@@ -37,7 +37,11 @@ Multispecies functionality brings a major change to how KnetMiner functions and 
 
 ### 2. New YAML based Configuration
 
-XXXX
+KnetMiner is now easier than ever to configure. We have introduced a new YAML-based configuration system, which enables more efficient customisation and extension of default settings through the use of inclusions, overrides and merges. This system supports advanced features such as special markers, rules and property interpolation. 
+
+For a comprehensive guide on creating and configuring a KnetMiner instance, please refer to our documentation available on [GitHub](https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#configuring-knetminer).
+
+<img width="850" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/227287258-a83c61cc-45a3-4531-afb3-ec725dd95ff6.png">
 
 ### 3. Gene names and synonyms
 Show all synonyms in Gene View: allows users to view all synonyms for a gene, in Gene View.
