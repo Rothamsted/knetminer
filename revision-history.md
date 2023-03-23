@@ -203,7 +203,7 @@ Query suggestor has become a “Concept selector”.
 
 ## ETL updates
 - New workflow for text mining, including (1) more gene name stop words and (2) expanded gene synonym searches
-- Updates to combat NCBI PubMed Abstract download restrictions
+- Updates to obviate NCBI PubMed Abstract download restrictions
 - Updates to use new UniProt REST interface
 - Collections of names (chemical and brand) of both fungicides and insecticides for text-mining training
 
