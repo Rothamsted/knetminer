@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-03-22* **Please, keep this note updated** 
+*This file was last reviewed on 2023-03-23* **Please, keep this note updated** 
 
 <br>
 
@@ -9,6 +9,10 @@
 
 
 # 5.6
+
+### Try the multispecies 5.6 (Beta) instances here:
+- [Poaceae 3-Species](https://knetminer.com/poaceae/) containing: Arabidopsis Thaliana, Triticum aestivum and Oryza sativa Japonica.
+- [Ascomycota 10-Species](https://knetminer.com/ascomycota/) containing: Fusarium culmorum CS7071, Fusarium graminearum PH-1, Zymoseptoria tritici, Aspergillus fumigatus Af293, Aspergillus nidulans, Candida albicans, Magnaporthe oryzae, Neurospora crassa, Saccharomyces cerevisiae and Schizosaccharomyces pombe.
 
 ## What's new?
 
@@ -31,24 +35,9 @@ Multispecies functionality brings a major change to how KnetMiner functions and 
 <img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/33641372/226940196-09651587-e194-4ff9-9741-0604dadc1b52.png"> 
 
 
-### 2. Public Beta/ Continuous Integration instance (TODO: Change this to: New YAML based Configuration)
-Allows users to test out the latest development build and provide early feedback.
+### 2. New YAML based Configuration
 
-We have developed a new way to receive rapid feedback from users. Enter KnetMiner CI. The Continuous Integration instance of KnetMiner will always contain a full dataset (selected by us) and our most recent development build. We advise that users making use of the build carefully considers the nature of a development build and the potential instability and bugs which come along with the it. We also reboot it at least once daily.
-
-Importantly, the instance has an added banner for users to share their feedback quickly. This feedback is always passed to the relevant developer. All actionable feedback is appreciated.
-
-The CI instance is available [here](https://knetminer.com/ci-test/client/).
-
-<img width="850" src="https://user-images.githubusercontent.com/33641372/218734757-e032c674-93fe-4810-9fc1-d9125938fe1f.png">
-
-If you are a developer, you will be happy to know that the feedback banner can be enabled programatically in the KnetMiner config.yml 
-
-<code>customOptions:
-      # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
-      # Likely, you don't want it enabled.
-      ui:
-    betaFeedbackBannerEnabled: true</code>
+XXXX
 
 ### 3. Gene names and synonyms
 Show all synonyms in Gene View: allows users to view all synonyms for a gene, in Gene View.
