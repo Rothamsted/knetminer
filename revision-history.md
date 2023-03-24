@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-03-23* **Please, keep this note updated** 
+*This file was last reviewed on 2023-03-24* **Please, keep this note updated** 
 
 <br>
 
@@ -10,13 +10,15 @@
 
 # 5.6
 
-### Try the multispecies 5.6 (Beta) instances here:
-- [Poaceae 3-Species](https://knetminer.com/poaceae/) containing: Arabidopsis Thaliana, Triticum aestivum and Oryza sativa Japonica.
-- [Ascomycota 10-Species](https://knetminer.com/ascomycota/) containing: Fusarium culmorum CS7071, Fusarium graminearum PH-1, Zymoseptoria tritici, Aspergillus fumigatus Af293, Aspergillus nidulans, Candida albicans, Magnaporthe oryzae, Neurospora crassa, Saccharomyces cerevisiae and Schizosaccharomyces pombe.
-
 ## What's new?
 
 KnetMiner 5.6 brings multispecies functionality, performance improvements, bug fixes, UI enhancements, website improvements, new tutorial and several new species and updated datasets.
+
+### Find the multispecies 5.6 (Beta) instances here:
+- [Poaceae 3-Species](https://knetminer.com/poaceae/) containing: Arabidopsis Thaliana, Triticum aestivum and Oryza sativa Japonica.
+- [Ascomycota 10-Species](https://knetminer.com/ascomycota/) containing: Fusarium culmorum CS7071, Fusarium graminearum PH-1, Zymoseptoria tritici, Aspergillus fumigatus Af293, Aspergillus nidulans, Candida albicans, Magnaporthe oryzae, Neurospora crassa, Saccharomyces cerevisiae and Schizosaccharomyces pombe.
+
+<br>
 
 ## Key Features
 
@@ -73,7 +75,6 @@ Knetscore is now visible in Gene View
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/220595111-f2cafdd8-76c9-4450-b6e5-01d1346319cb.png">
 
-
 ### 6. Evidence View Gene List functionality
 Quickly return all the genes associated to a concept via semantic motifs in the current Knowledge Graph.
 
@@ -119,6 +120,13 @@ The new and improved KnetMiner tutorial offers users a user-friendly platform to
 - New UI is translated into the evidence column too, with correct overflow and table scaling.
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/220663610-460763f3-564c-4785-8f4d-423825d21b9a.png">
+
+### Added additional RefSeq gene IDs to Poaceae KG (Release 55+)
+
+Improved gene identification by allowing users to query KnetMiner using a combination of gene ID formats. 
+In 5.6, we've added:
+- Triticum aestivum [RefSeq 2.1 gene IDs](https://www.ncbi.nlm.nih.gov/genome/?term=Triticum+aestivum).
+- Oryza sativa Japonica [MSU gene IDs](http://rice.uga.edu/).
 
 <br>
 
