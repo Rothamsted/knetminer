@@ -14,13 +14,12 @@ function refreshQuerySuggester() {
     var url = api_url + request;
 
     $.get(url, '').done(function (data) {
-
         createSynonymTable(data.synonyms);
+        $(".concept-selector").css({"background":"#51CE7B", "pointer-events":"auto"})
+    }).fail(function (error) {
+        console.log(error);
+        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
 
-    }).fail(function () {
-        var table = "No suggestions found";
-        $('#suggestor_terms').html(" ");
-        $('#suggestor_tables').html(table);
     });
 }
 
@@ -247,6 +246,7 @@ function createSynonymTable(text){
         table = "No suggestions found";
         $('#suggestor_terms').html(" ");
         $('#suggestor_tables').html(table);
+        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
     }
 }
 

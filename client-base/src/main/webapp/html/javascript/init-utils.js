@@ -33,7 +33,7 @@ function initResetButton() {
     $("#pGViewer_title").empty();
     $("#pGSearch_title").empty();
     $("#matchesResultDiv").html("Type a query to begin");
-    $("#suggestor_search").hide();
+    $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
     $("#suggestor_search_div").hide();
     $("#tabviewer").hide("");
     $("#resetknet").hide();
@@ -211,7 +211,6 @@ function emptyRegionInputs(rowNumber) {
 }
 
 
-
 // function handles Keyword search toggle button event
 function  keywordInputHandler(targetElement, inputId) {
    
@@ -226,17 +225,32 @@ function  keywordInputHandler(targetElement, inputId) {
 
     if ($(targetElement).attr('src') === "html/image/collapse.gif") {
       // hide suggestor_search img icon and suggestor_search_area div
-      $("#suggestor_search").css("display", "none");
       $("#suggestor_search_area").css("display", "none");
     }
 };
 
 // function handles Query Suggestor input event
 function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
-  if (suggestorSearchDiv.css("display") === "none") suggestorSearchDiv.show();
-    handleGenomeSearch(targetElement,inputId)
-    if ($(targetEelement).attr("src") == "html/image/qs_collapse.png") refreshQuerySuggester();
-    
+
+  var suggestorSearchDiv = $("#suggestor_search_div");
+    if ($(suggestorSearchDiv).css("display") === "none") {
+      suggestorSearchDiv.show();
+    }
+
+    var src = $(targetElement).attr("src") === "html/image/qs_expand.png"
+        ? "html/image/qs_collapse.png"
+        : "html/image/qs_expand.png";
+
+    $(targetElement).attr("src", src);
+
+    $("#suggestor_search_area").animate(
+      {
+        height: "toggle",
+      },
+      500
+    );
+
+      refreshQuerySuggester();
 }
 
 /** 
@@ -260,7 +274,6 @@ function handleGenomeSearch(targetElement,inputId) {
     500
   );
 }
-
 
 
 // function shows gene and evidence view helper modal element

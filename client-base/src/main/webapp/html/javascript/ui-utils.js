@@ -24,7 +24,6 @@ function activateButton(option){
         $('#' + option).fadeIn();
         $('#' + option + '_button').addClass('button_off').removeClass('button_on')
         //Collapse Suggestor view
-        $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
         $('#suggestor_search_area').slideUp(500);
     });
     // check if the view is created

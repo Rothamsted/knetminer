@@ -26,11 +26,10 @@
 				    <b><img onclick="keywordInputHandler(this,'#matchesResultDiv')" id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
-					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
-
-						 <span style="vertical-align:middle">
-						      <img onclick="querySuggestorHandler(this,"#suggestor_search_area","#suggestorSearchDiv")" id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
-						 </span>
+						<div class="keyword-container">
+							<input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
+							<div onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" title="Concept Selector" class="concept-selector">Concept Selector</div>
+						</div>
 
 						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>
 

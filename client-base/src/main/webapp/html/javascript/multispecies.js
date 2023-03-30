@@ -264,9 +264,7 @@ multiSpeciesFeature = function ()
                         geneCounter(); 
 
                         // Refresh the Query Suggester, if it's already open.
-                        if ($('#suggestor_search').attr('src') == "html/image/qs_collapse.png") {
                             refreshQuerySuggester();
-                        }
 
                     });
                 }

@@ -418,15 +418,15 @@ function findGenes(id, chr_name, start, end) {
  * Function to get the number of matches
  *
  */
+// TODO: looking to clean up function with convulated if else statements
 function matchCounter() {
     var keyword = $('#keywords').val();
-    var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
-
+    var taxonomyID =  $('.navbar-select').children("option:selected").val();
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
     if (keyword.length == 0) {
         $('#matchesResultDiv').html('Type a query to begin');
 		// hide query suggestor icon
-		$('#suggestor_search').css('display', 'none');
+        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
@@ -438,12 +438,12 @@ function matchCounter() {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
 					// show query suggestor icon
-					$('#suggestor_search').css('display', 'inline-block');
+                    $(".concept-selector").css({"background":"#51CE7B", "pointer-events":"auto"})
                 }
                 else {
 				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
-				  // hide query suggestor icon
-				  $('#suggestor_search').css('display', 'none');
+				  // hide query suggestor icon 
+                  $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
 				}
             }).fail(function (xhr,status,errorlog) {
                 errorComponent('#matchesResultDiv',xhr)
