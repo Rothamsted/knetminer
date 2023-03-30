@@ -42,7 +42,6 @@
         	TODO: see notes in page.tag
         -->
         <link rel="stylesheet" type="text/css" href="lib/genomaps/css/jquery-bstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="lib/genomaps/css/genomaps.css"/>
         
         <!-- KnetMaps.js CSS -->
         <link rel="stylesheet" type="text/css" href="lib/knetmaps/css/knetmaps.css"/>
@@ -62,14 +61,10 @@
         -->
         <script type="text/javascript" src="lib/genomaps/js/jquery-bstrap.min.js"></script>
         <script type="text/javascript" src="lib/jquery-ui/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps-libs.min.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps.min.js"></script>
 
         <!--JBox (managed by update-js.sh) -->
       	<script type="text/javascript" src="lib/jbox/jBox.all.min.js"></script>
 
-        <!--Particle-->
-        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
@@ -102,9 +97,6 @@
         
         <!-- gene table -->
         <script type="text/javascript" src="javascript/gene-table.js"></script>
-        
-
-      
 
         <!-- string data Utils-->
         <script type="text/javascript" src="javascript/string-utils.js"></script>
