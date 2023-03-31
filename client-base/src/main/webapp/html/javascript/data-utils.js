@@ -394,10 +394,18 @@ function geneCounter(){
 }
 
 /*
- * Function
+ * Function finds genes present in a chromosome region
  *
  */
-function findGenes(id, chr_name, start, end) {
+function findGenes(event) {
+    
+    var currentElement = event.currentTarget
+    var currentRowNumber = returnRegionNumber(currentElement);
+    var id = `genes${currentRowNumber}`;
+    var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
+    var start = $(`#start${currentRowNumber}`).val();
+    var end = $(`#end${currentRowNumber}`).val();
+
 
     if (chr_name != "" && start != "" && end != "") {
         var searchMode = "countLoci";
@@ -447,7 +455,8 @@ function matchCounter() {
                   $("#suggestor_search_area").slideUp(500)
 				}
             }).fail(function (xhr,status,errorlog) {
-                errorComponent('#matchesResultDiv',xhr)
+                $('#matchesResultDiv').html('<span class="redText">Please use OR/AND to seperate Keywords, or the Concept Selector to select ConceptIDs.</span>');
+                // errorComponent('#matchesResultDiv',xhr)
             });
         } else {
             $('#matchesResultDiv').html('');

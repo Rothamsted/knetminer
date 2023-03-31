@@ -91,15 +91,7 @@ function QtlRegionHandlers() {
         id: "chr" + curMaxInput,
         name: "chr" + curMaxInput,
         onChange:
-          "findGenes('genes" +
-          curMaxInput +
-          "', $('#chr" +
-          curMaxInput +
-          " option:selected').val(), $('#start" +
-          curMaxInput +
-          "').val(), $('#end" +
-          curMaxInput +
-          "').val())",
+          "findGenes(event)",
       })
       .parent()
       .parent()
@@ -109,16 +101,7 @@ function QtlRegionHandlers() {
         id: "start" + curMaxInput,
         name: "start" + curMaxInput,
         onKeyup:
-          "findGenes('genes" +
-          curMaxInput +
-          "', $('#chr" +
-          curMaxInput +
-          " option:selected').val(), $('#start" +
-          curMaxInput +
-          "').val(), $('#end" +
-          curMaxInput +
-          "').val())",
-        oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
+          "findGenes('event')",
       })
       .parent()
       .parent()
@@ -128,15 +111,7 @@ function QtlRegionHandlers() {
         id: "end" + curMaxInput,
         name: "end" + curMaxInput,
         onKeyup:
-          "findGenes('genes" +
-          curMaxInput +
-          "', $('#chr" +
-          curMaxInput +
-          " option:selected').val(), $('#start" +
-          curMaxInput +
-          "').val(), $('#end" +
-          curMaxInput +
-          "').val())",
+          "findGenes('event')",
         oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
@@ -157,13 +132,7 @@ function QtlRegionHandlers() {
         id: "genes" + curMaxInput,
         name: "label" + curMaxInput,
         onFocus:
-          "findGenes(this.id, $('#chr" +
-          curMaxInput +
-          " option:selected').val(), $('#start" +
-          curMaxInput +
-          "').val(), $('#end" +
-          curMaxInput +
-          "').val())",
+          "findGenes(event)",
       })
       .parent()
       .parent()
@@ -180,23 +149,44 @@ function QtlRegionHandlers() {
   });
 }
 
+
 // function removes and empty gene regions
 function removeRegionRow(event) {
   activateResetButton();
+  var currentElement = event.currentTarget;
+  var regionRow = $(currentElement).parents("tr");
 
   if ($("#region_search_area tr").length > 3) {
     // find current row and remove from DOM
-    var currentElement = event.currentTarget;
-    var regionRow = $(currentElement).parents("tr");
     regionRow.remove();
   } else {
-    emptyRegionInputs(1);
+    var chr = currentElement.getAttribute("id")
+    var regionNumber = chr.replace(/\D/g, '');
+    emptyRegionInputs(regionNumber);
+
+    if(regionNumber > 1){
+        regionElementArray = $(currentElement).parent().siblings()
+        $(currentElement).attr("id",'delete1')
+        $(regionElementArray[0]).children().attr('id','chr1')
+        $(regionElementArray[1]).children().attr('id','start1')
+        $(regionElementArray[2]).children().attr('id','end1')
+        $(regionElementArray[3]).children().attr('id','label1')
+        $(regionElementArray[4]).children().attr('id','genes1')
+      
+    }
   }
 
   if ($("#rows tr").length < 7) {
     $("#addRow").removeAttr("disabled");
   }
   return false;
+}
+
+// util function extracts number from genome region inputs Ids
+function returnRegionNumber(currentElement){
+  const chr = currentElement.getAttribute("id")
+  var regionNumber = chr.replace(/\D/g, '');
+  return regionNumber
 }
 
 // util function take rowNumber of gene regions and reset all input fields
@@ -231,9 +221,7 @@ function  keywordInputHandler(targetElement, inputId) {
 };
 
 // function handles Query Suggestor input event
-function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
-
-  var suggestorSearchDiv = $("#suggestor_search_div");
+function querySuggestorHandler(suggestorSearchDiv) {
     if ($(suggestorSearchDiv).css("display") === "none") {
       suggestorSearchDiv.show();
     }
@@ -255,7 +243,6 @@ function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
  * 
  * @param inputId: The Id of corresponding input elements related to the Target Element
 */
-
 function handleGenomeSearch(targetElement,inputId) {
   var src =
     $(targetElement).attr("src") === "html/image/expand.gif"
@@ -307,7 +294,6 @@ function toggleRegionDeleteIcon(regionID) {
     }
   }
 }
-
 
 // function detects taxID in url and set it as the current taxId
 function getTaxIdFromUrl(){          	
