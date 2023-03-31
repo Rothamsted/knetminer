@@ -65,11 +65,12 @@ function inputHandlers() {
       e.which !== 40
     ) {
       // Refresh the query suggester table as well, if it's already open.
-      if ($("#suggestor_search").attr("src") === "html/image/qs_collapse.png") {
-        //if($('#suggestor_search').dialog('isOpen')) {
+      if ($("#suggestor_search").css('events-pointer') == 'auto'){
         refreshQuerySuggester();
       }
+      
     }
+
   });
 
   $("#list_of_genes").keyup(function () {
@@ -237,12 +238,6 @@ function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
       suggestorSearchDiv.show();
     }
 
-    var src = $(targetElement).attr("src") === "html/image/qs_expand.png"
-        ? "html/image/qs_collapse.png"
-        : "html/image/qs_expand.png";
-
-    $(targetElement).attr("src", src);
-
     $("#suggestor_search_area").animate(
       {
         height: "toggle",
@@ -250,7 +245,7 @@ function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
       500
     );
 
-      refreshQuerySuggester();
+    refreshQuerySuggester();
 }
 
 /** 

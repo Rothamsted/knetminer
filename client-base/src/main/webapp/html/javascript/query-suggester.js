@@ -19,7 +19,6 @@ function refreshQuerySuggester() {
     }).fail(function (error) {
         console.log(error);
         $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
-
     });
 }
 
@@ -243,9 +242,9 @@ function createSynonymTable(text){
 
 
     } else {
-        table = "No suggestions found";
-        $('#suggestor_terms').html(" ");
-        $('#suggestor_tables').html(table);
+        // table = "No suggestions found";
+        // $('#suggestor_terms').html(" ");
+        // $('#suggestor_tables').html(table);
         $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
     }
 }

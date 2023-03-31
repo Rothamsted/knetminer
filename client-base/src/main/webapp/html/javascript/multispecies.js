@@ -265,7 +265,6 @@ multiSpeciesFeature = function ()
 
                         // Refresh the Query Suggester, if it's already open.
                             refreshQuerySuggester();
-
                     });
                 }
             });

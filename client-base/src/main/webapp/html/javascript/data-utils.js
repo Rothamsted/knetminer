@@ -195,7 +195,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                  }
              }
              //Collapse Suggestor view
-             $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
+             
              $('#suggestor_search_area').slideUp(500);
             //$('#suggestor_search').dialog('close');
          }
@@ -324,9 +324,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
 
          $("#pGSearch_title").show().html(genomicViewTitle);
 
-
          //Collapse Suggestor view
-         $('#suggestor_search').attr('src', 'html/image/qs_expand.png');
          $('#suggestor_search_area').slideUp(500);
         //  activateButton('resultsTable')
          createGenesTable(data.geneTable, keyword, candidateGenes);
@@ -425,6 +423,8 @@ function matchCounter() {
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
     if (keyword.length == 0) {
         $('#matchesResultDiv').html('Type a query to begin');
+
+        $("#suggestor_search_area").slideUp(500)
 		// hide query suggestor icon
         $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
     } else {
@@ -444,6 +444,7 @@ function matchCounter() {
 				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
 				  // hide query suggestor icon 
                   $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+                  $("#suggestor_search_area").slideUp(500)
 				}
             }).fail(function (xhr,status,errorlog) {
                 errorComponent('#matchesResultDiv',xhr)
