@@ -37,12 +37,11 @@
         <link rel="stylesheet" type="text/css" href="css/maskloader-spinner.css"/>
         
         <!-- 
-        	Genomaps.js CSS
+        	This is available from the genomap package.
         	 
         	TODO: see notes in page.tag
         -->
         <link rel="stylesheet" type="text/css" href="lib/genomaps/css/jquery-bstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="lib/genomaps/css/genomaps.css"/>
         
         <!-- KnetMaps.js CSS -->
         <link rel="stylesheet" type="text/css" href="lib/knetmaps/css/knetmaps.css"/>
@@ -54,22 +53,12 @@
 				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <!-- 
-        	Genomaps.js
-        	
-        	TODO: Do we need genomaps here!?
-        	TODO: see notes on page.tag
-        -->
         <script type="text/javascript" src="lib/genomaps/js/jquery-bstrap.min.js"></script>
         <script type="text/javascript" src="lib/jquery-ui/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps-libs.min.js"></script>
-        <script type="text/javascript" src="lib/genomaps/js/genomaps.min.js"></script>
 
         <!--JBox (managed by update-js.sh) -->
       	<script type="text/javascript" src="lib/jbox/jBox.all.min.js"></script>
 
-        <!--Particle-->
-        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
         <script type="text/javascript" src="lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
@@ -102,9 +91,6 @@
         
         <!-- gene table -->
         <script type="text/javascript" src="javascript/gene-table.js"></script>
-        
-
-      
 
         <!-- string data Utils-->
         <script type="text/javascript" src="javascript/string-utils.js"></script>

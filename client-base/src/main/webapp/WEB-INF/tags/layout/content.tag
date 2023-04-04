@@ -26,11 +26,10 @@
 				    <b><img onclick="keywordInputHandler(this,'#matchesResultDiv')" id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
-					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
-
-						 <span style="vertical-align:middle">
-						      <img onclick="querySuggestorHandler(this,"#suggestor_search_area","#suggestorSearchDiv")" id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
-						 </span>
+						<div class="keyword-container">
+							<input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
+							<div onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" title="Concept Selector" class="concept-selector">Concept Selector</div>
+						</div>
 
 						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>
 
@@ -88,12 +87,12 @@
                             </tr>
                             <tr>
 								<td>
-									<select id="chr1" onChange="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" ></select>
+									<select id="chr1" onChange="findGenes(event)" ></select>
 								</td>
-								<td><input id="start1" name="start" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
-								<td><input id="end1" name="end" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><input id="start1" name="start" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes(event)" /></td>
+								<td><input id="end1" name="end" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes(event)" /></td>
 								<td><input id="label1" name="label" type="text" oninput="toggleRegionDeleteIcon(1)" /></td>
-								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(this.id, $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())" /></td>
+								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(event)" /></td>
 								<td style="position:relative;"><span id="delete1" style="display:none" onclick="removeRegionRow(event)" class="remove-icon"><i class="fa fa-times" aria-hidden="true"></i></span></td>
 							</tr>
                             <tr>

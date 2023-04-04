@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-08-21* **Please, keep this note updated** 
+*This file was last reviewed on 2023-03-24* **Please, keep this note updated** 
 
 <br>
 
@@ -14,12 +14,18 @@
 
 KnetMiner 5.6 brings multispecies functionality, performance improvements, bug fixes, UI enhancements, website improvements, new tutorial and several new species and updated datasets.
 
+### Find the multispecies 5.6 (Beta) instances here:
+- [Poaceae 3-Species](https://knetminer.com/poaceae/) containing: Arabidopsis Thaliana, Triticum aestivum and Oryza sativa Japonica.
+- [Ascomycota 10-Species](https://knetminer.com/ascomycota/) containing: Fusarium culmorum CS7071, Fusarium graminearum PH-1, Zymoseptoria tritici, Aspergillus fumigatus Af293, Aspergillus nidulans, Candida albicans, Magnaporthe oryzae, Neurospora crassa, Saccharomyces cerevisiae and Schizosaccharomyces pombe.
+
+<br>
+
 ## Key Features
 
 ### 1. Multispecies functionality
 Multispecies functionality brings a major change to how KnetMiner functions and can be queried.
 
-- KnetMiner can now be configured (see new config.yml) to serve a knowledge graph with multiple species (taxonomy ids).
+- KnetMiner can now be configured (see "New YAML based Configuration" below) to serve a knowledge graph with multiple species (taxonomy ids).
 - Added a Species selector in the header which shows the list of species available in the config.yml.
 - Search messages and sample queries have been made species specific.
 - Genome Region Search has been updated to show chromosome names and gene numbers for selected species.
@@ -28,27 +34,16 @@ Multispecies functionality brings a major change to how KnetMiner functions and 
 - Map View automatically picks the chromosome map for the selected species.
 - Network View still shows nodes and relations across all species present in the KG.
 
-<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/5624714/226596498-c0768fdc-e9dc-4ced-abe0-f42deaf7e106.png"> 
+<img width="350" alt="Multispecies functionality (top left of new KnetMiner interface)" src="https://user-images.githubusercontent.com/33641372/226940196-09651587-e194-4ff9-9741-0604dadc1b52.png"> 
 
 
-### 2. Public Beta/ Continuous Integration instance (TODO: Change this to: New YAML based Configuration)
-Allows users to test out the latest development build and provide early feedback.
+### 2. New YAML based Configuration
 
-We have developed a new way to receive rapid feedback from users. Enter KnetMiner CI. The Continuous Integration instance of KnetMiner will always contain a full dataset (selected by us) and our most recent development build. We advise that users making use of the build carefully considers the nature of a development build and the potential instability and bugs which come along with the it. We also reboot it at least once daily.
+KnetMiner is now easier than ever to configure. We have introduced a new YAML-based configuration system, which enables more efficient customisation and extension of default settings through the use of inclusions, overrides and merges. This system supports advanced features such as special markers, rules and property interpolation. 
 
-Importantly, the instance has an added banner for users to share their feedback quickly. This feedback is always passed to the relevant developer. All actionable feedback is appreciated.
+For a comprehensive guide on creating and configuring a KnetMiner instance, please refer to our documentation available on [GitHub](https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#configuring-knetminer).
 
-The CI instance is available [here](https://knetminer.com/ci-test/client/).
-
-<img width="850" src="https://user-images.githubusercontent.com/33641372/218734757-e032c674-93fe-4810-9fc1-d9125938fe1f.png">
-
-If you are a developer, you will be happy to know that the feedback banner can be enabled programatically in the KnetMiner config.yml 
-
-<code>customOptions:
-      # Enable to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
-      # Likely, you don't want it enabled.
-      ui:
-    betaFeedbackBannerEnabled: true</code>
+<img width="850" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/227287258-a83c61cc-45a3-4531-afb3-ec725dd95ff6.png">
 
 ### 3. Gene names and synonyms
 Show all synonyms in Gene View: allows users to view all synonyms for a gene, in Gene View.
@@ -56,6 +51,13 @@ Show all synonyms in Gene View: allows users to view all synonyms for a gene, in
 - Gene preferred names are now correctly selected by default.
 
 <img width="350" alt="Gene Synonyms dropdown" src="https://user-images.githubusercontent.com/33641372/220589349-4e32ecb8-6f95-471c-9f9a-d7e47952bd74.png">
+
+We now append the species initials to the front of genes in Network View. 
+
+- Helps identify genes from various species in multi-species networks.
+- Stops users having to individually click on nodes to determine their species.
+
+<img width="350" src="https://user-images.githubusercontent.com/33641372/220668770-a5870d88-8eb4-413f-a447-240b6ad87061.png">
 
 ### 4. Network data exporter
 Users can now export their network data (from Network view).
@@ -72,7 +74,6 @@ Knetscore is now visible in Gene View
 - Gene View now exposes the KnetScore (not normalised) to order and better sort candidate genes by ranking their evidences and significance.
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/220595111-f2cafdd8-76c9-4450-b6e5-01d1346319cb.png">
-
 
 ### 6. Evidence View Gene List functionality
 Quickly return all the genes associated to a concept via semantic motifs in the current Knowledge Graph.
@@ -93,14 +94,14 @@ Quickly return all the genes associated to a concept via semantic motifs in the 
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/218739919-f30fe5e4-3f34-49a1-9856-6c9968294507.png">
 
-### 8. Appended species initials
-We now append the species initials to the front of genes in Network View. 
+### 8. New Tutorial
+### Available [here](https://knetminer.com/tutorial)
+The new and improved KnetMiner tutorial offers users a user-friendly platform to quickly troubleshoot problems or learn about features. We now also link to the tutorial page from within the KnetMiner header.
 
-- Helps identify genes from various species in multi-species networks.
-- Stops users having to individually click on nodes to determine their species.
+- Improved navigation
+- Google indexed 
 
-<img width="350" src="https://user-images.githubusercontent.com/33641372/220668770-a5870d88-8eb4-413f-a447-240b6ad87061.png">
-
+<img width="850" src="https://user-images.githubusercontent.com/33641372/226945410-75d94031-d4b2-4300-a9de-4b1ff6ed6f3a.png">
 
 <br>
 
@@ -120,6 +121,12 @@ We now append the species initials to the front of genes in Network View.
 
 <img width="850" src="https://user-images.githubusercontent.com/33641372/220663610-460763f3-564c-4785-8f4d-423825d21b9a.png">
 
+### Added additional RefSeq gene IDs to Poaceae KG (Release 55+)
+
+Improved gene identification by allowing users to query KnetMiner using a combination of gene ID formats. 
+In 5.6, we've added:
+- Triticum aestivum [RefSeq 2.1 gene IDs](https://www.ncbi.nlm.nih.gov/genome/?term=Triticum+aestivum).
+- Oryza sativa Japonica [MSU gene IDs](http://rice.uga.edu/).
 
 <br>
 
@@ -181,21 +188,23 @@ Query suggestor has become a “Concept selector”.
 
 
 ## Backend updates
-- API URL auto-discovery in the UI code 
 - Overhauled KnetMiner configuration.
-- New API to help the client get information on the available species and related information.
-- Cleaning of JSON formats for the split genome API.
-- New /graphinfo/concept-info endpoint to retrieve node properties
-- KnetMiner now uses the same labels as the CytoscapeJS plugin (from KnetBuilder).
+- New /graphinfo/concept-info endpoint to retrieve node properties.
 - The text mining tool (from KnetBuilder) has been extended to allow for stop words which should be excluded from the text mining search.
-- API exception logging has been improved.
-- Network API can now export plainJSON format.
 - Bugfixes to Google Analytics for KnetMiner (with new configuration options for deployers).
 - Cleaned up dataset data and configuration throughout KnetMiner and KnetMiner dependencies.
 
+## APIs
+- API URL auto-discovery in the UI code.
+- New API to help the client get information on the available species and related information.
+- KnetMiner now uses the same labels as the CytoscapeJS plugin (from KnetBuilder).
+- Cleaning of JSON formats for the split genome API.
+- API exception logging has been improved.
+- Network API can now export plainJSON format.
+
 ## ETL updates
 - New workflow for text mining, including (1) more gene name stop words and (2) expanded gene synonym searches
-- Updates to combat NCBI PubMed Abstract download restrictions
+- Updates to obviate NCBI PubMed Abstract download restrictions
 - Updates to use new UniProt REST interface
 - Collections of names (chemical and brand) of both fungicides and insecticides for text-mining training
 
@@ -262,7 +271,7 @@ Query suggestor has become a “Concept selector”.
 - UI's Javascript refactoring (#621).
 
 ## KnetMiner.com website updates
-- Tutorial is now a searchable and Google indexed [Wiki](https://knetminer.com/wiki).
+- Tutorial is now a searchable and Google indexed [Tutorial](https://knetminer.com/tutorial).
 - Release notes are now available on [KnetMiner.com/release_notes](https://knetminer.com/release_notes).
 - Added [MailChimp](https://mailchimp.com/en-gb/?currency=GBP) support.
 - Changed product offering page to [KnetMiner.com/products](https://KnetMiner.com/products).
