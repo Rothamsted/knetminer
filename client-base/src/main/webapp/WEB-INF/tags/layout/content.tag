@@ -28,7 +28,7 @@
 					<div id="keyword_search">
 						<div class="keyword-container">
 							<input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
-							<div onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" title="Concept Selector" class="concept-selector">Concept Selector</div>
+							<img  src="html/image/concept.png" onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" alt="concept" title="Concept Selector" class="concept-selector"/>
 						</div>
 
 						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>

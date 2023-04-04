@@ -15,10 +15,10 @@ function refreshQuerySuggester() {
 
     $.get(url, '').done(function (data) {
         createSynonymTable(data.synonyms);
-        $(".concept-selector").css({"background":"#51CE7B", "pointer-events":"auto"})
+        $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
     }).fail(function (error) {
         console.log(error);
-        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+        $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     });
 }
 

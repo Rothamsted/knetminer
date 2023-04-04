@@ -33,7 +33,7 @@ function initResetButton() {
     $("#pGViewer_title").empty();
     $("#pGSearch_title").empty();
     $("#matchesResultDiv").html("Type a query to begin");
-    $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+    $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     $("#suggestor_search_div").hide();
     $("#tabviewer").hide("");
     $("#resetknet").hide();
@@ -90,8 +90,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "chr" + curMaxInput,
         name: "chr" + curMaxInput,
-        onChange:
-          "findGenes(event)",
+        onChange:findGenes(event),
       })
       .parent()
       .parent()
@@ -100,8 +99,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "start" + curMaxInput,
         name: "start" + curMaxInput,
-        onKeyup:
-          "findGenes('event')",
+        onKeyup:findGenes(event),
       })
       .parent()
       .parent()
@@ -110,8 +108,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "end" + curMaxInput,
         name: "end" + curMaxInput,
-        onKeyup:
-          "findGenes('event')",
+        onKeyup:findGenes(event),
         oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
@@ -131,8 +128,7 @@ function QtlRegionHandlers() {
         class: "gene_count",
         id: "genes" + curMaxInput,
         name: "label" + curMaxInput,
-        onFocus:
-          "findGenes(event)",
+        onFocus:findGenes(event),
       })
       .parent()
       .parent()
@@ -151,35 +147,25 @@ function QtlRegionHandlers() {
 
 
 // function removes and empty gene regions
-function removeRegionRow(event) {
+async function removeRegionRow(event) {
   activateResetButton();
   var currentElement = event.currentTarget;
   var regionRow = $(currentElement).parents("tr");
+  var regionNumber = returnRegionNumber(currentElement)
 
-  if ($("#region_search_area tr").length > 3) {
-    // find current row and remove from DOM
-    regionRow.remove();
-  } else {
-    var chr = currentElement.getAttribute("id")
-    var regionNumber = chr.replace(/\D/g, '');
-    emptyRegionInputs(regionNumber);
-
-    if(regionNumber > 1){
-        regionElementArray = $(currentElement).parent().siblings()
-        $(currentElement).attr("id",'delete1')
-        $(regionElementArray[0]).children().attr('id','chr1')
-        $(regionElementArray[1]).children().attr('id','start1')
-        $(regionElementArray[2]).children().attr('id','end1')
-        $(regionElementArray[3]).children().attr('id','label1')
-        $(regionElementArray[4]).children().attr('id','genes1')
-      
+    if ($("#region_search_area tr").length > 3) {
+      // find current row and remove from DOM
+    await regionRow.remove();
+      // renumber the remaining rows
+      resetRegion();
+    } else {
+      emptyRegionInputs(regionNumber);
     }
-  }
 
-  if ($("#rows tr").length < 7) {
-    $("#addRow").removeAttr("disabled");
-  }
-  return false;
+    if ($("#rows tr").length < 7) {
+      $("#addRow").removeAttr("disabled");
+    }
+    return false;
 }
 
 // util function extracts number from genome region inputs Ids
@@ -187,6 +173,23 @@ function returnRegionNumber(currentElement){
   const chr = currentElement.getAttribute("id")
   var regionNumber = chr.replace(/\D/g, '');
   return regionNumber
+}
+
+// function renumbers genome regions inputs when a row is removed
+function resetRegion(){
+  var regionInputs = $('#regions_table > tbody').children();
+  // remove first last inputs
+  regionInputs = regionInputs.slice(1,-1); 
+  for (var i = 0; i < regionInputs.length; i++) {
+      var regionElementArray = $(regionInputs[i]).children();
+      var newOrder = i+1
+      $(regionElementArray[0]).children().attr('id',`chr${newOrder}`);
+      $(regionElementArray[1]).children().attr('id',`start${newOrder}`);
+      $(regionElementArray[2]).children().attr('id',`end${newOrder}`);
+      $(regionElementArray[3]).children().attr('id',`label${newOrder}`);
+      $(regionElementArray[4]).children().attr('id',`genes${newOrder}`);
+      $(regionElementArray[5]).children().attr('id',`delete${newOrder}`);
+  }
 }
 
 // util function take rowNumber of gene regions and reset all input fields
@@ -198,6 +201,8 @@ function emptyRegionInputs(rowNumber) {
   $("#genes" + rowNumber).val("");
   if (rowNumber == 1) {
     $("#delete1").hide();
+  }else{
+    resetRegion();
   }
 }
 
@@ -256,7 +261,6 @@ function handleGenomeSearch(targetElement,inputId) {
     500
   );
 }
-
 
 // function shows gene and evidence view helper modal element
 function showGeneViewHelper(event) {
