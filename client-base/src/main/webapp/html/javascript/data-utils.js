@@ -406,7 +406,6 @@ function findGenes(event) {
     var start = $(`#start${currentRowNumber}`).val();
     var end = $(`#end${currentRowNumber}`).val();
 
-
     if (chr_name != "" && start != "" && end != "") {
         var searchMode = "countLoci";
         var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
@@ -434,7 +433,7 @@ function matchCounter() {
 
         $("#suggestor_search_area").slideUp(500)
 		// hide query suggestor icon
-        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+        $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var searchMode = "countHits";
@@ -446,12 +445,12 @@ function matchCounter() {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
                     $('.keywordsSubmit').removeAttr("disabled");
 					// show query suggestor icon
-                    $(".concept-selector").css({"background":"#51CE7B", "pointer-events":"auto"})
+                    $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
                 }
                 else {
 				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
 				  // hide query suggestor icon 
-                  $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+                  $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
                   $("#suggestor_search_area").slideUp(500)
 				}
             }).fail(function (xhr,status,errorlog) {

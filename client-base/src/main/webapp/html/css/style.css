@@ -2616,14 +2616,14 @@ a {
 
 .concept-selector{
     padding: 0 .6rem;
-    background:grey;
     cursor:pointer; 
     display:flex;
     border-radius: 6px;
     font-size:.8rem;
     color: #FFFFFF;
     pointer-events:none;
-    height: 24px;
+    height: 32px;
+    width: 32px;
     align-items: center;
     text-align: center;
     justify-content: center;
