@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -45,6 +46,7 @@ import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.collections.OptionsMap;
+import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
@@ -652,8 +654,10 @@ public class ExportService
 		});
 		// for foundConcepts()
 		
-
+		
 		// Now resultRows has to become the final TSV table
+		//
+		
 		var resultRowsStrm = resultRows.parallelStream ()
 		// Let's keep user genes with > 0 count, if any
 		.filter ( row -> {
@@ -667,18 +671,30 @@ public class ExportService
 		// Let's sort it if requested. 
 		if ( doSortResult )
 		{
+			@SuppressWarnings ( "unchecked" )
 			Comparator<OptionsMap> cmp = Comparator.comparingDouble ( (OptionsMap row) -> { 
 				double pvalue = row.getDouble ( "pvalue" );
 				return pvalue == -1 ? 1 : pvalue;
 			})
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> row.getInt ( "userGeneLabels" ) ).reversed () )
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> row.getInt ( "startGenesSize" ) ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> ( (Set<String>) row.get ( "userGeneLabels" ) ).size () ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> row.getInt ( "genesSize" ) ).reversed () )
 			// Lucene score is left as lowest priority, since it isn't even used in the UI
 			.thenComparing ( Comparator.comparingDouble ( (OptionsMap row) -> row.getDouble ( "score" ) ).reversed () )
 			// Last resort...
 			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ) ).reversed () );
-					
-			resultRowsStrm = resultRowsStrm.sorted ( cmp );
+			
+			resultRowsStrm = resultRowsStrm
+				.sorted ( cmp )
+				.sequential (); // we have to walk it in order anyway, so let's have this just in case
+			
+			/*
+			// Now we have to sort the underline list and turn it back to a stream, else we can't do 
+			// parallel sorting and also we have seen synch conflicts
+			OptionsMap[] sortedRows = (OptionsMap[]) resultRowsStrm.toArray ( sz -> new OptionsMap [ sz ] );
+			resultRows.clear (); // Free some memory
+			Arrays.parallelSort ( sortedRows, cmp );
+			resultRowsStrm = Arrays.stream ( sortedRows );
+			*/
 		}
 		
 		// Building the final TSV table
