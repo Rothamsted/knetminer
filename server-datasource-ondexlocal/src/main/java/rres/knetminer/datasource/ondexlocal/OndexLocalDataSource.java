@@ -30,6 +30,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraph;
 import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
+import rres.knetminer.datasource.api.GenomeRequest;
 import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
@@ -179,7 +180,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override	
-	public GenomeResponse genome(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	public GenomeResponse genome(String dsName, GenomeRequest request) throws IllegalArgumentException
 	{
 		GenomeResponse response = new GenomeResponse();
 		this.handleMainSearch (response, request );
@@ -187,7 +188,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	@Override
-	public QtlResponse qtl(String dsName, KnetminerRequest request) throws IllegalArgumentException
+	public QtlResponse qtl(String dsName, GenomeRequest request) throws IllegalArgumentException
 	{
 		QtlResponse response = new QtlResponse();
 		this.handleMainSearch(response, request);
@@ -197,9 +198,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	/**
 	 * Used to be named _keyword()
 	 * 
-	 * As you can see above, it handles the /genome and /qtl API calls. 
+	 * As you can see above, it handles the /genome and /qtl API calls.
+	 * 
+	 * TODO: As in 2023, in practice the API call /qtl is exactly the same as /genome, with the 
+	 * addition of the qtl paramter (and this method is considering it or not, based on T), so
+	 * the whole thing (API signature, implementation and use) should be cleaned into removing
+	 * /qtl and managing everything from /genome, with this method (simplified).
+	 * 
 	 */
-	private <T extends KeywordResponse> T handleMainSearch ( T response, KnetminerRequest request )
+	private <T extends KeywordResponse> T handleMainSearch ( T response, GenomeRequest request )
 		throws IllegalArgumentException 
 	{
 		// Find genes from the user's gene list
@@ -326,7 +333,8 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		log.debug ( "3) API, doing evidence table" );
 		String evidenceTable = exportService.exportEvidenceTable (
-			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl ()
+			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl (),
+			request.isSortedEvidenceTable ()
 		);
 		log.debug ( "Evidence table done" );
 
