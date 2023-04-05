@@ -169,6 +169,7 @@ async function removeRegionRow(event) {
 }
 
 // util function extracts number from genome region inputs Ids
+// TODO: see comments in findGenes()
 function returnRegionNumber(currentElement){
   const chr = currentElement.getAttribute("id")
   var regionNumber = chr.replace(/\D/g, '');

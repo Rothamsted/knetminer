@@ -397,6 +397,19 @@ function geneCounter(){
  * Finds genes present in a chromosome region,
  * using the corresponding API.
  *
+ * TODO: code quality improvements, when there is time:
+ * - the name is too generic and misleading, choose something better, eg, findChromosomeGenes()
+ * - why are we passing the event if the only thing we need is the row index? Consider one of the alternatives:
+ *   - pass the index straight ( event(1) ), the HTML-rendering code should be able to set the right param
+ *     in this case
+ *   - add an attribute like 'index' to the first HTML element and fetch it in returnRegionNumber()
+ * - whatever the new approach, we should avoid 'strings with syntax', ie, chrXXX makes the code to depend
+ *   on the structure of a string that is just an ID. That's poorly readable and fragile. 
+ * - returnRegionNumber() is a weird uncommon name: functions that return something are usually name
+ *   like getXXX, fetchXXX, extractXXX, etc. In this case, getChromosomeRegionIndex() could be better
+ *   - 'Region' is too generic, 'Number' is not what it returns, cause it's actually an index
+ * - returnRegionNumber() (or whatever it's called) should stay in this file and not in init-utils.js
+ * 
  */
 function findGenes(event) {
     
