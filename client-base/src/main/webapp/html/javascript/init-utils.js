@@ -47,6 +47,12 @@ function initResetButton() {
 function inputHandlers() {
   $("#keywords").keyup(function (e) {
     // this stops matchCounter being called when the enter or arrow keys are used.
+    // TODO: 
+    // - what the hell are these numbers?! e.which is deprecated, at some point, we should 
+    // migrate to the more modern interface for this (see https://stackoverflow.com/questions/35394937,
+    // https://www.toptal.com/developers/keycode)
+    // - Apart from that, this code style is awful, and it should be turned into something like:  
+    //   e not in [13, 37, 38...] (Js has functions to search values into arrays)
     if (
       e.which !== 13 &&
       e.which !== 37 &&
