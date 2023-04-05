@@ -25,6 +25,8 @@ import rres.knetminer.api.client.CountHitsApiResult;
 import rres.knetminer.api.client.GenomeApiResult;
 import rres.knetminer.api.client.KnetminerApiClient;
 import rres.knetminer.api.client.KnetminerApiClient.RequestOptions;
+import uk.ac.ebi.utils.collections.ListUtils;
+import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 import uk.ac.ebi.utils.xml.XPathReader;
@@ -182,25 +184,34 @@ public class ApiIT
 		assertFalse ( "evidenceTable is null/empty!", evidenceTable.isEmpty () );
 		assertEquals ( "Wrong no. of rows for filtered genes!", 4, evidenceTable.size () );
 		
-		var rowFound = evidenceTable.stream ().anyMatch ( cols ->
+		String[] headers = evidenceTable.get ( 0 );
+		
+		var rowFound = evidenceTable.stream ()
+		.map ( cols -> ListUtils.getRow ( headers, cols ) )
+		.anyMatch ( cols ->
 		{
-			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
-			if ( !"Regulation Of Transcription, DNA-templated".equals ( cols [ 1 ]) ) return false;
-			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( cols [ 4 ] ) <= 0 ) return false; // genes count
-			if ( !"AT3G16830".equals ( cols [ 5 ] ) ) return false; // genes
+			// "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE
+			if ( !"BioProc".equals ( cols.getString ( "TYPE" )) ) return false;
+			if ( !"Regulation Of Transcription, DNA-templated".equals ( cols.getString ( "NAME" ) ) ) 
+				return false;
+			if ( cols.getDouble ( "SCORE" ) <= 0d ) return false;
+			if ( cols.getInt ( "GENES" ) <= 0 ) return false;
+			if ( !"AT3G16830".equals ( cols.getString ( "USER_GENES" ) ) ) return false;
 			return true;
 		});
 		assertTrue ( "Expected evidence table row not found (single gene)!", rowFound );
 		
-		rowFound = evidenceTable.stream ().anyMatch ( cols ->
+		rowFound = evidenceTable.stream ()
+		.map ( cols -> ListUtils.getRow ( headers, cols ) )
+		.anyMatch ( cols ->
 		{
-			if ( !"BioProc".equals ( cols [ 0 ]) ) return false;
-			if ( !"Vesicle-mediated Transport".equals ( cols [ 1 ]) ) return false;
-			if ( NumberUtils.toDouble ( cols [ 2 ] ) <= 0d ) return false; // score
-			if ( NumberUtils.toInt ( cols [ 4 ] ) <= 0 ) return false; // genes count
-			var genes = cols [ 5 ].split ( "," ); // user genes
-			
+			// "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE
+			if ( !"BioProc".equals ( cols.getString ( "TYPE" )) ) return false;
+			if ( !"Vesicle-mediated Transport".equals ( cols.getString ( "NAME" ) ) ) 
+				return false;
+			if ( cols.getDouble ( "SCORE" ) <= 0d ) return false;
+			if ( cols.getInt ( "GENES" ) <= 0 ) return false;
+			var genes = cols.getString ( "USER_GENES" ).split ( "," );
 			if ( genes == null ) return false;
 						
 			String currentProfile = getMavenProfileId ();
@@ -237,6 +248,53 @@ public class ApiIT
 		assertTrue ( "Expected evidence table row not found (multi-genes)!", rowFound );
 	}
 	
+	
+	/**
+	 * Tests the isSortedEvidenceTable option, see the API implementation for details.
+	 */
+	@Test
+	public void testEvidenceTableWithSorting ()
+	{
+		GenomeApiResult apiOut = CLI.genome ( 
+			"spikelet OR seed OR \"seed size\" OR \"yield\" OR \"inflorescence\"",
+			List.of ( "ONE1", "U12", "CAK*", "AT1G*" ),
+			null,
+			"3702",
+			true
+		);
+		assertNotNull ( "No result returned!",  apiOut );
+
+		List<String[]> evidenceTable = apiOut.getEvidenceTable ();
+		assertFalse ( "evidenceTable is null/empty!", evidenceTable.isEmpty () );
+		assertEquals ( "Wrong no. of rows for sorted table option!", 5, evidenceTable.size () );
+
+		log.debug ( "cols[1]: {}", (Object)evidenceTable.get ( 1 ) );
+
+		String[] headers = evidenceTable.get ( 0 );
+		OptionsMap cols = ListUtils.getRow ( headers, evidenceTable.get ( 1 ) );
+		
+		// "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE
+		assertTrue ( "Wrong value for the row 1", 
+		  "Trait".equals ( cols.getString ( "TYPE" ) ) &&
+		  "seed maturation".equals ( cols.getString ( "NAME" ) ) &&
+		  cols.getDouble ( "P-VALUE" ) > 0.0061 && cols.getDouble ( "P-VALUE" ) < 0.0062 &&
+		  cols.getDouble ( "SCORE" ) > 8.65 && cols.getDouble ( "SCORE" ) < 8.67 &&
+		  cols.getInt ( "GENES" ) == 3 &&
+		  cols.getString ( "USER_GENES" ).contains ( "AT1G61275") &&
+		  cols.getString ( "USER_GENES" ).contains ( "AT1G80840") 
+		);
+		
+		log.debug ( "cols[4]: {}", (Object)evidenceTable.get ( 4 ) );
+		cols = ListUtils.getRow ( headers, evidenceTable.get ( 4 ) );
+		assertTrue ( "Wrong value for the row 4", 
+		  "Trait".equals ( cols.getString ( "TYPE" ) ) &&
+		  "other miscellaneous trait".equals ( cols.getString ( "NAME" ) ) &&
+		  cols.getDouble ( "P-VALUE" ) > 0.192 && cols.getDouble ( "P-VALUE" ) < 0.193 &&
+		  cols.getDouble ( "SCORE" ) > 5.64 && cols.getDouble ( "SCORE" ) < 5.66 &&
+		  cols.getInt ( "GENES" ) == 5 &&
+		  cols.getString ( "USER_GENES" ).equals ( "AT1G68940" )
+		);
+	}
 
 	
 	/**

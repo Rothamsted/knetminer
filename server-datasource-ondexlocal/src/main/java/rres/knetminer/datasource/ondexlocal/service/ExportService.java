@@ -682,19 +682,13 @@ public class ExportService
 			.thenComparing ( Comparator.comparingDouble ( (OptionsMap row) -> row.getDouble ( "score" ) ).reversed () )
 			// Last resort...
 			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ) ).reversed () );
-			
-			resultRowsStrm = resultRowsStrm
-				.sorted ( cmp )
-				.sequential (); // we have to walk it in order anyway, so let's have this just in case
-			
-			/*
-			// Now we have to sort the underline list and turn it back to a stream, else we can't do 
-			// parallel sorting and also we have seen synch conflicts
+						
+			// Stream.sorted() does the same thing, but this way we can clear the original list
+			//
 			OptionsMap[] sortedRows = (OptionsMap[]) resultRowsStrm.toArray ( sz -> new OptionsMap [ sz ] );
-			resultRows.clear (); // Free some memory
+			resultRows.clear (); // as said, let's free some memory
 			Arrays.parallelSort ( sortedRows, cmp );
 			resultRowsStrm = Arrays.stream ( sortedRows );
-			*/
 		}
 		
 		// Building the final TSV table

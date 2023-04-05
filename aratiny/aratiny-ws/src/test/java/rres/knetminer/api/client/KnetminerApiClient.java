@@ -141,7 +141,10 @@ public class KnetminerApiClient
 	 * @param taxId the NCBI specie ID, must be one served by the KnetMiner instance.
 	 *   
 	 */
-	public GenomeApiResult genome ( String keyword, List<String> geneList, List<String> genomeRegions, String taxId )
+	public GenomeApiResult genome ( 
+		String keyword, List<String> geneList, List<String> genomeRegions, String taxId,
+		boolean isSortedEvidenceTable
+	)
 	{
 		// TODO: I removed the need for this from the server, but needs testing
 		
@@ -157,9 +160,20 @@ public class KnetminerApiClient
 			
 		return new GenomeApiResult ( invokeApiJs (
 			"genome",
-			params ( "keyword", keyword, "list", geneList, "qtl", genomeRegions, "taxId", taxId ) )
-		);		
+			params (
+				"keyword", keyword, "list", geneList, "qtl", genomeRegions, "taxId", taxId,
+				"isSortedEvidenceTable", isSortedEvidenceTable ) 
+		));		
 	}
+	
+	/**
+	 * Defaults to isSortedEvidenceTable = false
+	 */
+	public GenomeApiResult genome ( String keyword, List<String> geneList, List<String> genomeRegions, String taxId )
+	{
+		return genome ( keyword, geneList, genomeRegions, taxId, false );
+	}
+	
 	
 	/**
 	 * Invokes the /countLoci API, which is used to count the no. of genes falling within a region.

@@ -63,4 +63,12 @@ public class KnetminerRequest {
 		this.taxId = taxId;
 	}
 
+	@Override
+	public String toString ()
+	{
+		return String.format ( 
+			"KnetminerRequest{qtl: %s, keyword: %s, list: %s, listMode: %s, taxId: %s}",
+			qtl, keyword, list, listMode, taxId 
+		);
+	}
 }

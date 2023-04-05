@@ -158,7 +158,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	/**
 	 * We now support both the {@link region search box format QTL#fromString(String)} and the original
-	 * {@link countLoci() format QTL#countLoci2regionStr(String)}. (TODO: this needs testing).
+	 * {@link QTL#countLoci2regionStr(String) countLoci() format}. (TODO: this needs testing).
 	 * 
 	 */
 	@Override
@@ -228,7 +228,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			userGenes.addAll ( searchService.fetchQTLs ( request.getQtl(), taxId ) );
 
 		// Genome search
-		log.info ( "Processing search mode: {}", response.getClass ().getName () );
+		log.info ( "Keyword search for the {} request", response.getClass ().getName () );
 
 		SemanticMotifSearchMgr smSearchMgr = new SemanticMotifSearchMgr (
 			request.getKeyword (), ondexServiceProvider, userGenes, taxId
@@ -240,7 +240,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		// Please note, this deal with the cases of /genome (response == GenomeResponse) and /qtl
 		// If you add additional calls, try to apply the S-of-SOLID and deal with them separately.
 
-		log.info ( "Computing response to /genome or /qtl" );
+		log.info ( "Keyword search done" );
 
 		candidateGenesMap = smSearchMgr.getSortedGeneCandidates ();
 		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
@@ -255,7 +255,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		if ( response instanceof QtlResponse )
 		{
-			log.info ( "Filtering QTL(s) for QTL response " );
+			log.info ( "Filtering QTLs for /qtl" );
 
 			// TODO: this is very inefficient, the right way to do it would be passing it the genes and
 			// search if they match the QTL regions
@@ -293,9 +293,11 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		if ( genes.size () == 0 )
 			return response;
 
+		
 		// We have genes, let's use them to build actual output
 		//
-
+		log.info ( "Search almost done, assembling the result" );
+		
 		// Chromosome view
 		//
 		String xmlGViewer = "";

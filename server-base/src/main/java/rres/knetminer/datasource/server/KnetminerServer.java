@@ -123,6 +123,7 @@ public class KnetminerServer
 		@PathVariable String ds, @RequestBody GenomeRequest request, HttpServletRequest rawRequest 
 	) 
 	{
+		if ( log.isDebugEnabled () ) log.debug ( "/genome POST, request: {}", request );
 		return this.handle ( ds, "genome", request, rawRequest );
 	}
 	
@@ -226,7 +227,7 @@ public class KnetminerServer
 		@RequestParam(required = false, defaultValue = "") String listMode,
 		@RequestParam(required = false) List<String> qtl,
 		@RequestParam(required = false, defaultValue = "") String taxId,
-		@RequestParam(required = false, defaultValue = "false" ) boolean exportPlainJSON,
+		@RequestParam(required = false, defaultValue = "false" ) boolean isExportPlainJSON,
 		HttpServletRequest rawRequest
 	)
 	{
@@ -243,7 +244,7 @@ public class KnetminerServer
 		request.setList(list);
 		request.setQtl(qtl);
 		request.setTaxId(taxId);
-		request.setExportPlainJSON ( exportPlainJSON );
+		request.setExportPlainJSON ( isExportPlainJSON );
 		
 		return this.network ( ds, request, rawRequest );
 	}
@@ -324,8 +325,10 @@ public class KnetminerServer
 	 */
 	@CrossOrigin
 	@PostMapping("/{ds}/{mode}")
-	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
-			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
+	public @ResponseBody ResponseEntity<KnetminerResponse> handle (
+		@PathVariable String ds, @PathVariable String mode,
+		@RequestBody KnetminerRequest request, HttpServletRequest rawRequest
+	)
 	{
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
@@ -354,10 +357,7 @@ public class KnetminerServer
 
 		if ( log.isDebugEnabled () )
 		{
-			String paramsStr = "Keyword:" + request.getKeyword () + " , List:"
-				+ Arrays.toString ( request.getList ().toArray () ) + " , ListMode:" + request.getListMode () + " , QTL:"
-				+ Arrays.toString ( request.getQtl ().toArray () );
-			log.debug ( "Calling " + mode + " with " + paramsStr );
+			log.debug ( "Calling /" + mode + " with " + request );
 		}
 
 		try
