@@ -92,7 +92,7 @@ function inputHandlers() {
 // - we also need to review the files they belong, eg, there seem to be much stuff in this init-utils
 // that isn't mainly about initialisation
 // 
-function QtlRegionHandlers() {
+function qtlRegionHandlers() {
   $("#addRow").click(function () {
     var curMaxInput = $("#region_search_area table tr").length - 1;
     $("#region_search_area tr:nth-child(2)")
@@ -103,7 +103,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "chr" + curMaxInput,
         name: "chr" + curMaxInput,
-        onChange:findGenes(event),
+        onChange:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
@@ -112,7 +112,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "start" + curMaxInput,
         name: "start" + curMaxInput,
-        onKeyup:findGenes(event),
+        onKeyup:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
@@ -121,7 +121,7 @@ function QtlRegionHandlers() {
       .attr({
         id: "end" + curMaxInput,
         name: "end" + curMaxInput,
-        onKeyup:findGenes(event),
+        onKeyup:"findChromosomeGenes(event)",
         oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
@@ -141,7 +141,7 @@ function QtlRegionHandlers() {
         class: "gene_count",
         id: "genes" + curMaxInput,
         name: "label" + curMaxInput,
-        onFocus:findGenes(event),
+        onFocus:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
@@ -164,7 +164,7 @@ async function removeRegionRow(event) {
   activateResetButton();
   var currentElement = event.currentTarget;
   var regionRow = $(currentElement).parents("tr");
-  var regionNumber = returnRegionNumber(currentElement)
+  var regionNumber = getChromosomeRegionIndex(currentElement)
 
     if ($("#region_search_area tr").length > 3) {
       // find current row and remove from DOM
@@ -183,7 +183,7 @@ async function removeRegionRow(event) {
 
 // util function extracts number from genome region inputs Ids
 // TODO: see comments in findGenes()
-function returnRegionNumber(currentElement){
+function getChromosomeRegionIndex(currentElement){
   const chr = currentElement.getAttribute("id")
   var regionNumber = chr.replace(/\D/g, '');
   return regionNumber

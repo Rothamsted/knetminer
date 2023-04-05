@@ -411,27 +411,28 @@ function geneCounter(){
  * - returnRegionNumber() (or whatever it's called) should stay in this file and not in init-utils.js
  * 
  */
-function findGenes(event) {
+function findChromosomeGenes(event) {
+    if(event !== undefined){
+        var currentElement = event.currentTarget
+        var currentRowNumber = getChromosomeRegionIndex(currentElement);
+        var id = `genes${currentRowNumber}`;
+        var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
+        var start = $(`#start${currentRowNumber}`).val();
+        var end = $(`#end${currentRowNumber}`).val();
     
-    var currentElement = event.currentTarget
-    var currentRowNumber = returnRegionNumber(currentElement);
-    var id = `genes${currentRowNumber}`;
-    var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
-    var start = $(`#start${currentRowNumber}`).val();
-    var end = $(`#end${currentRowNumber}`).val();
-
-    if (chr_name != "" && start != "" && end != "") {
-        var searchMode = "countLoci";
-        var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
-        var keyword = chr_name + "-" + start + "-" + end;
-        var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
-        var url = api_url + request;
-        $.get(url, '').done(function (data) {
-            $("#" + id).val(data.geneCount);
-        });
+        if (chr_name != "" && start != "" && end != "") {
+            var searchMode = "countLoci";
+            var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
+            var keyword = chr_name + "-" + start + "-" + end;
+            var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
+            var url = api_url + request;
+            $.get(url, '').done(function (data) {
+                $("#" + id).val(data.geneCount);
+            });
+        }
     }
+   
 }
-
 
 /*
  * Function to get the number of matches
@@ -453,7 +454,6 @@ function matchCounter() {
             var searchMode = "countHits";
             var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
             var url = api_url + request;
-
             $.get(url, '').done(function (data) {
                 if (data.luceneLinkedCount != 0) {
                     $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
@@ -479,7 +479,7 @@ function matchCounter() {
 
 /*
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
- *
+ * 
  */
 function createGeneNameSynonyms(element,data){
 
@@ -544,7 +544,9 @@ function changeSpecies(selectElement){
             var isChangeSuccessful  = multiSpeciesFeature.speciesEvents()
             if(isChangeSuccessful){
                 setTimeout(function(){
-                    findGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
+                    // TODO: Recommended approach by using index fits cases like this
+                    // Currently working on it
+                    findChromosomeGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
                 },100)
             }
     }

@@ -87,12 +87,12 @@
                             </tr>
                             <tr>
 								<td>
-									<select id="chr1" onChange="findGenes(event)" ></select>
+									<select id="chr1" onChange="findChromosomeGenes(event)" ></select>
 								</td>
-								<td><input id="start1" name="start" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes(event)" /></td>
-								<td><input id="end1" name="end" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findGenes(event)" /></td>
+								<td><input id="start1" name="start" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findChromosomeGenes(event)" /></td>
+								<td><input id="end1" name="end" type="text" oninput="toggleRegionDeleteIcon(1)" onKeyup="findChromosomeGenes(event)" /></td>
 								<td><input id="label1" name="label" type="text" oninput="toggleRegionDeleteIcon(1)" /></td>
-								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findGenes(event)" /></td>
+								<td><input style="margin-right:1rem;background: #d4d9e0;" id="genes1" name="label" type="text" readonly="readonly" onfocus="findChromosomeGenes(event)" /></td>
 								<td style="position:relative;"><span id="delete1" style="display:none" onclick="removeRegionRow(event)" class="remove-icon"><i class="fa fa-times" aria-hidden="true"></i></span></td>
 							</tr>
                             <tr>

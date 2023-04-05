@@ -26,7 +26,7 @@ $(document).ready (
 	    showReferenceGenome();
 	    initResetButton();
 	    inputHandlers();
-	    QtlRegionHandlers();
+	    qtlRegionHandlers();
 		showToolTips();
 		intialiseFeedbackCtaConfig();
 		
