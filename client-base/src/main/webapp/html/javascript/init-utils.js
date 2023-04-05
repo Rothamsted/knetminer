@@ -79,6 +79,13 @@ function inputHandlers() {
 }
 
 // function add and remove QTL region
+// TODO: code quality, to be addressed when there is time:
+// - is there any reason why this is named unconventionally, with the capitalised format?
+// - all these names like *region* are too generic and don't convey what they are about, we
+// should make them more homogeneous and mention either of chr, chromosome, chromosomeRegion or alike
+// - we also need to review the files they belong, eg, there seem to be much stuff in this init-utils
+// that isn't mainly about initialisation
+// 
 function QtlRegionHandlers() {
   $("#addRow").click(function () {
     var curMaxInput = $("#region_search_area table tr").length - 1;
