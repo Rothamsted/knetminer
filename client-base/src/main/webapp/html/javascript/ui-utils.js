@@ -31,6 +31,7 @@ function activateButton(option){
     var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
 
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
+        getLongWaitMessage.uiLoader('#tabviewer_content')
         handleViewCreation(option)
     }
 

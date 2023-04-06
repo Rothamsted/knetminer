@@ -188,7 +188,7 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     $("#tablesorterEvidence").tablesorter({
         // Initial sorting is by p-value, user genes, total genes
         // This ensures something significant if both pvalues and user genes are N/A and 0
-        sortList: [[3, 0], [5, 1], [4, 1]],
+        // sortList: [[3, 0], [5, 1], [4, 1]],
         textExtraction: function (node) { // Sort TYPE column
             var attr = $(node).attr('type-sort-value');
             if (typeof attr !== 'undefined' && attr !== false) {

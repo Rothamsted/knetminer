@@ -3,11 +3,17 @@ getLongWaitMessage = function(){
 
     var getTimeOutId;
     var loadingPulse = '<div class="dot"></div>'; 
+    var overlay = '<div class="overlay"></div>'
+
+    // function to create overlay with fontawesome spinners
+    function createOverlayLoader(parentElement){
+        const loaderContainer = `<div style="font-size:2rem;color:#51CE7B;" class="overlay"><i class="fas fa-dna fa-spin fa-lg"></i></div>`   
+        $(parentElement).append(loaderContainer)
+    }
 
     // function to create overlay upon  
     function createUiItem(button,parentElement,loaderText){
         var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+loaderText +loadingPulse+'</span>';
-        var overlay = '<div class="overlay"></div>'
         $(parentElement).append(overlay);
         $(button).html(uiContent)
     }
@@ -32,6 +38,7 @@ getLongWaitMessage = function(){
     return{
         init:setMessage,
         timeOutId:returnTimeOut,
-        createLoader:createUiItem
+        createLoader:createUiItem,
+        uiLoader:createOverlayLoader
     }
 }();
