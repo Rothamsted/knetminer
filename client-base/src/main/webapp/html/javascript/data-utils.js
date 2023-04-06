@@ -411,10 +411,8 @@ function geneCounter(){
  * - returnRegionNumber() (or whatever it's called) should stay in this file and not in init-utils.js
  * 
  */
-function findChromosomeGenes(event) {
-    if(event !== undefined){
-        var currentElement = event.currentTarget
-        var currentRowNumber = getChromosomeRegionIndex(currentElement);
+function findChromosomeGenes(event,num) {
+        var currentRowNumber = event !== null ? getChromosomeRegionIndex(event?.currentTarget) : num;
         var id = `genes${currentRowNumber}`;
         var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
         var start = $(`#start${currentRowNumber}`).val();
@@ -430,7 +428,7 @@ function findChromosomeGenes(event) {
                 $("#" + id).val(data.geneCount);
             });
         }
-    }
+    
    
 }
 
@@ -544,9 +542,13 @@ function changeSpecies(selectElement){
             var isChangeSuccessful  = multiSpeciesFeature.speciesEvents()
             if(isChangeSuccessful){
                 setTimeout(function(){
-                    // TODO: Recommended approach by using index fits cases like this
-                    // Currently working on it
-                    findChromosomeGenes('genes1', $('#chr1 option:selected').val(), $('#start1').val(), $('#end1').val())
+                    // gets genome region search table row elements
+                    var getGenomeRegionRow = getGenomeRegionRows()
+
+                    for(genomeRegionIndex = 0; genomeRegionIndex < getGenomeRegionRow.length; genomeRegionIndex++){
+                        var geneomeDatarow = $(getGenomeRegionRow[genomeRegionIndex]).children();
+                        $(geneomeDatarow[4]).children().focus();
+                    }
                 },100)
             }
     }
@@ -596,22 +598,23 @@ handleDelimintedCta = function(){
  * @param {string} * a string that idenitifies the current tab view
  */
 function handleViewCreation(option){
-    var data = $('body').data().data
     $('#'+option+'_button').addClass('created');
-    
-    // TODO: safety checks on data.evidence 
-    var evidenceTable = data.evidence.split ( "\n" );
 
-    // TODO: safety checks on evidenceTable size 
-    
-		// First line is the header, last one is always empty
-    evidenceTable.pop ();
-    evidenceTable.shift ();
-    
-    // Turns it into the final matrix
-    evidenceTable = evidenceTable.map ( rowStr => rowStr.split ( "\t" ) )
-    
-    createEvidenceTable ( evidenceTable, data.keyword, null, true );
+    var keyword = $('#keywords').val();
+    var taxonomyID =  $('.navbar-select').children("option:selected").val();
+
+    // gets genome api with isSortedEvidenceTable flag
+    $.get({ url: api_url + `/genome?keyword=${keyword}&taxId=${taxonomyID}&isSortedEvidenceTable=true`, data: '', timeout: 100000 }).done(function (data) {
+         var evidenceTable = data.evidenceTable?.split ( "\n" ); 
+            // First line is the header, last one is always empty
+            evidenceTable.pop ();
+            evidenceTable.shift ();
+            evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
+            // removes loading spinner
+            $('.overlay').remove();
+            // creates evidence table
+            createEvidenceTable ( evidenceTable, data.keyword, null, true );
+    })
 }
 
 

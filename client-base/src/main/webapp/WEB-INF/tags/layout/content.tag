@@ -85,7 +85,7 @@
                                 <td><label>Label</label></td>
                                 <td><label>Genes</label></td>
                             </tr>
-                            <tr>
+                            <tr data-index='1'>
 								<td>
 									<select id="chr1" onChange="findChromosomeGenes(event)" ></select>
 								</td>

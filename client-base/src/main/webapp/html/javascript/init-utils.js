@@ -98,12 +98,13 @@ function qtlRegionHandlers() {
     $("#region_search_area tr:nth-child(2)")
       .clone()
       .insertAfter($("#region_search_area tr:last").prev())
+      .attr('data-index', curMaxInput)
       .find("td:eq(0)")
       .find("select:eq(0)")
       .attr({
         id: "chr" + curMaxInput,
         name: "chr" + curMaxInput,
-        onChange:"findChromosomeGenes(event)",
+        onChange:"findChromosomeGenes(event,null)",
       })
       .parent()
       .parent()
@@ -112,7 +113,7 @@ function qtlRegionHandlers() {
       .attr({
         id: "start" + curMaxInput,
         name: "start" + curMaxInput,
-        onKeyup:"findChromosomeGenes(event)",
+        onKeyup:"findChromosomeGenes(event,null)",
       })
       .parent()
       .parent()
@@ -121,7 +122,7 @@ function qtlRegionHandlers() {
       .attr({
         id: "end" + curMaxInput,
         name: "end" + curMaxInput,
-        onKeyup:"findChromosomeGenes(event)",
+        onKeyup:"findChromosomeGenes(event,null)",
         oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
@@ -141,7 +142,7 @@ function qtlRegionHandlers() {
         class: "gene_count",
         id: "genes" + curMaxInput,
         name: "label" + curMaxInput,
-        onFocus:"findChromosomeGenes(event)",
+        onFocus:"findChromosomeGenes(event,null)",
       })
       .parent()
       .parent()
@@ -184,26 +185,35 @@ async function removeRegionRow(event) {
 // util function extracts number from genome region inputs Ids
 // TODO: see comments in findGenes()
 function getChromosomeRegionIndex(currentElement){
-  const chr = currentElement.getAttribute("id")
+  // retrieves index from row data-index attribute
+  const chr = currentElement.closest('tr').getAttribute("data-index");
   var regionNumber = chr.replace(/\D/g, '');
   return regionNumber
 }
 
 // function renumbers genome regions inputs when a row is removed
 function resetRegion(){
-  var regionInputs = $('#regions_table > tbody').children();
-  // remove first last inputs
-  regionInputs = regionInputs.slice(1,-1); 
-  for (var i = 0; i < regionInputs.length; i++) {
-      var regionElementArray = $(regionInputs[i]).children();
-      var newOrder = i+1
-      $(regionElementArray[0]).children().attr('id',`chr${newOrder}`);
-      $(regionElementArray[1]).children().attr('id',`start${newOrder}`);
-      $(regionElementArray[2]).children().attr('id',`end${newOrder}`);
-      $(regionElementArray[3]).children().attr('id',`label${newOrder}`);
-      $(regionElementArray[4]).children().attr('id',`genes${newOrder}`);
-      $(regionElementArray[5]).children().attr('id',`delete${newOrder}`);
+  var regionInputs = getGenomeRegionRows(); 
+
+  for (var genomeRegionIndex = 0; genomeRegionIndex < regionInputs.length; genomeRegionIndex++) {
+      var regionElementArray = $(regionInputs[genomeRegionIndex]).children();
+      var newOrder = genomeRegionIndex+1
+      var [chromosome,start,end,label,Genes, cancel] = regionElementArray
+
+      $(chromosome).children().attr('id',`chr${newOrder}`);
+      $(start).children().attr('id',`start${newOrder}`);
+      $(end).children().attr('id',`end${newOrder}`);
+      $(label).children().attr('id',`label${newOrder}`);
+      $(Genes).children().attr('id',`genes${newOrder}`);
+      $(cancel).children().attr('id',`delete${newOrder}`);
   }
+}
+
+// util function returns all genome region rows
+function getGenomeRegionRows(){
+  var regionInputs = $('#regions_table > tbody').children();
+  regionInputs = regionInputs.slice(1,-1); 
+  return regionInputs
 }
 
 // util function take rowNumber of gene regions and reset all input fields
@@ -243,7 +253,7 @@ function  keywordInputHandler(targetElement, inputId) {
 function querySuggestorHandler(suggestorSearchDiv) {
     if ($(suggestorSearchDiv).css("display") === "none") {
       suggestorSearchDiv.show();
-    }
+  }
 
     $("#suggestor_search_area").animate(
       {
