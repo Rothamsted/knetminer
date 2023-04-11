@@ -245,7 +245,7 @@ function createSynonymTable(text){
         // table = "No suggestions found";
         // $('#suggestor_terms').html(" ");
         // $('#suggestor_tables').html(table);
-        $(".concept-selector").css({"background":"grey", "pointer-events":"none"})
+        $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     }
 }
 

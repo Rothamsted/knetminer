@@ -471,6 +471,7 @@ function matchCounter() {
             });
         } else {
             $('#matchesResultDiv').html('');
+            $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
         }
     }
 }

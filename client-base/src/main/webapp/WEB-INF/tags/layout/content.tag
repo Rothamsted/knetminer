@@ -27,7 +27,7 @@
 					<hr width="85%" align="left">
 					<div id="keyword_search">
 						<div class="keyword-container">
-							<input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
+							<input id="keywords" onkeyup="keyWordEvent(event)" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 							<img  src="html/image/concept.png" onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" alt="concept" title="Concept Selector" class="concept-selector"/>
 						</div>
 
@@ -63,7 +63,7 @@
 					<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
-							<textarea id="list_of_genes" cols="50" rows="7" placeholder="Search for gene id/name (one per line)"></textarea>
+							<textarea onkeyup="geneCounter()" id="list_of_genes" cols="50" rows="7" placeholder="Search for gene id/name (one per line)"></textarea>
 							<div class='counttext' id="geneResultDiv" style="display: block;"></div>
 							<!-- <div class="rightnav_genelist" style="display:none">
 								<input type="radio" name="list_mode" value="GLrestrict">Intersection
