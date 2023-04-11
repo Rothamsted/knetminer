@@ -199,7 +199,9 @@ function resetRegion(){
       var regionElementArray = $(regionInputs[genomeRegionIndex]).children();
       var newOrder = genomeRegionIndex+1
       var [chromosome,start,end,label,Genes, cancel] = regionElementArray
-
+      // change region table row data-index attributes
+      $(regionInputs[genomeRegionIndex]).attr('data-index', `${newOrder}`)
+      
       $(chromosome).children().attr('id',`chr${newOrder}`);
       $(start).children().attr('id',`start${newOrder}`);
       $(end).children().attr('id',`end${newOrder}`);
