@@ -637,7 +637,11 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
         // Does the caller really need it? The value is set and changed here, in the lines below.
         // If the caller actually needs it, it's just a function like: 
         //   getTablePageLimits ( currentPageIdx, pageSize, tableSize )
-        // which could be called from wherever it's needed 
+        // which could be called from wherever it's needed
+        // Also, why are you returning back currentPage, if the caller already has it!?
+        //
+        // => The only thing that this function needs to return is tableBody, as a string
+        //
       	return [tableBody,pageEnds,currentPage];
       // currentPage is > 1 (TODO: always true?)
       $('#count').html(pageEnds)
