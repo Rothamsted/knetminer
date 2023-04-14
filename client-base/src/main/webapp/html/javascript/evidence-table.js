@@ -641,6 +641,9 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
         // Also, why are you returning back currentPage, if the caller already has it!?
         //
         // => The only thing that this function needs to return is tableBody, as a string
+        // 
+        // Similarly, this function doesn't need evidencePageCount as parameter, since it
+        // can compute it with the same function above.
         //
       	return [tableBody,pageEnds,currentPage];
       // currentPage is > 1 (TODO: always true?)
