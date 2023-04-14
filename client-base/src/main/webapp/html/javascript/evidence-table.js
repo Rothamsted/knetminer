@@ -56,10 +56,10 @@ function getEvidencePvalue ( pvalueStr )
 function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
-    var eventTimer;
+    var eventTimer; // TODO: not used, remove?
     var evidenceTableLimit = evidenceTable.length; 
-    var tableIncreasesBy = 10;
-    var evidencePageCount = Math.ceil(evidenceTableLimit/tableIncreasesBy);
+    var pageSize = 10;
+    var pageCount = Math.ceil(evidenceTableLimit/pageSize);
     var currentPage = 0
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
@@ -117,7 +117,7 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable">';
-    var [tableBody, pageEnds,currentPage] = createEvidenceTableBody(evidenceTable,1,tableIncreasesBy,evidencePageCount)
+    var [tableBody, pageEnds,currentPage] = createEvidenceTableBody(evidenceTable,1,pageSize,pageCount)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
@@ -188,10 +188,10 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
                 // if user reaches end of the page new rows are created
                 if(calcEndOfPage){
                     currentPage = currentPage + 1
-                    createEvidenceTableBody(evidenceTable, currentPage, tableIncreasesBy, evidencePageCount)
+                    createEvidenceTableBody(evidenceTable, currentPage, pageSize, pageCount)
                 }
 
-                if(evidencePageCount === currentPage){
+                if(pageCount === currentPage){
                     $('#evidenceViewTable').unbind();
                 }
 
@@ -568,23 +568,32 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 }
 
 // function creates evidence table body
-function createEvidenceTableBody(evidenceTable,pageIndex,tableIncreasesBy,evidencePageCount){
+//
+function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCount){
 
+		// TODO: currentPage starts from 1 and pageIndex starts from 0?
+		// Is this necessary? Can't we harmonise both to the 0-start convention?
+		//
     var currentPage = pageIndex; 
     var tableBody=""; 
 
-    var pageStart = (pageIndex - 1) * tableIncreasesBy;
-    var pageEnds = currentPage == evidencePageCount ? evidenceTable.length : pageIndex * tableIncreasesBy; 
+    var pageStart = (pageIndex - 1) * pageSize;
+    var pageEnds = currentPage == evidencePageCount ? evidenceTable.length : pageIndex * pageSize; 
 
     for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
     {   
         [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
 
-        tableBody = tableBody + '<tr>';
-
-        tableBody = tableBody + `<td><p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>`;
-        
-        tableBody = tableBody + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
+				// TODO: prefer this templating style, at least for new code
+				// Also, avoid "x = x + ...", it's more verbose, especially when it's needed many times
+				//  
+				tableBody +=
+				`<tr>
+				    <td>
+				      <p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
+					    <p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
+					  </td>
+				`;
 
         //link publications with pubmed
         var evidenceValue;
@@ -596,31 +605,43 @@ function createEvidenceTableBody(evidenceTable,pageIndex,tableIncreasesBy,eviden
         else
           evidenceValue = nodeLabel;
 
-        tableBody = tableBody + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
-        tableBody = tableBody + '<td>' + evidenceValue + '</td>';
+        tableBody += `  <td type-sort-value="${type}"><div class="evidence_item evidence_item_${type}" title="${type}"></div></td>\n`;
+        tableBody += `  <td>${evidenceValue}</td>\n`;
 
         // p-values
+        //
         pvalue = renderEvidencePvalue(pvalue);
+        
         // to tell tableBody-sorter that it's a number
         var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
 
-        tableBody += `<td actual-pvalue='${sortedPval}'>${pvalue}</td>`;
+        tableBody += `  <td actual-pvalue='${sortedPval}'>${pvalue}</td>\n`;
         // /end:p-values
 
+
         // Count of all matching genes
-        tableBody = tableBody + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
+        tableBody += `  <td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div></td>\n`;
 
         // launch evidence network with them, if they're not too many.
-        tableBody = tableBody +  `<td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
+        tableBody += `  <td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>\n`;
 
         var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
-        tableBody = tableBody + '<td>' + select_evidence + '</td>'; // eviView select checkbox
+        tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
     } 
     
-    if(tableBody !== '' && currentPage == 1){
-        return [tableBody,pageEnds,currentPage]
-    }else if(tableBody !== '' && currentPage > 1){
-        $('#count').html(pageEnds)
-        $('#tablesorterEvidence').append(tableBody)
+    if ( tableBody )
+    {
+      if ( currentPage == 1 )
+        // TODO: come on! This is nonsense.
+        // There is no need for this function to deal with pageEnds and to return it to the caller.
+        // Does the caller really need it? The value is set and changed here, in the lines below.
+        // If the caller actually needs it, it's just a function like: 
+        //   getTablePageLimits ( currentPageIdx, pageSize, tableSize )
+        // which could be called from wherever it's needed 
+      	return [tableBody,pageEnds,currentPage];
+      // currentPage is > 1 (TODO: always true?)
+      $('#count').html(pageEnds)
+      $('#tablesorterEvidence').append(tableBody)
     }
+    return null // just to be clear 
 }
