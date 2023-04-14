@@ -46,9 +46,10 @@ function getEvidencePvalue ( pvalueStr )
  * @param selectedSize: how many rows to display. This is non-null when the function is called by the
  * bottom size selector. When null (the default), it shows up to 100 rows.  
  * 
- * DO NOT remove TODOs until completed or cancelled
- * 
- * DO NOT remove the parameter descriptions above, they're meant to remain here.
+ * @param doSortTable: if true, the table needs to be sorted. This is set to false whem the 
+ * first caller gets the table from the API and with the API-level sorting option set. DO NOT
+ * remove the conditional code that depend on this flag, since we're still not sure how well
+ * this server-side sorting performs. 
  * 
  * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
  * 
@@ -136,7 +137,7 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     //  I don't know if this additional sorting is also needed to have the column sorting arrows displayed (or upon the
     // table re-creation). If not, remove it. Remove these comments when this is clarified.
     //
-    $("#tablesorterEvidence").tablesorter({
+    tableSorterOpts = {
         // Initial sorting is by p-value, user genes, total genes
         // This ensures something significant if both pvalues and user genes are N/A and 0
         // sortList: [[3, 0], [5, 1], [4, 1]],
@@ -149,7 +150,17 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
             if (actualPvalue) return actualPvalue;
             return $(node).text();
         }
-    });
+    }
+    // Tell table sorter to sort it if not already done (server side)
+    // TODO: as discussed and mentioned in #744, when this is not set, table sorter
+    // doesn't draw the column header markers that show the column is sorted, so we
+    // need a function to tweak them, as explained here:
+    //
+    // https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
+    //
+    if ( !doSortTable ) tableSorterOpts.sortList = [[3, 0], [5, 1], [4, 1]];
+    
+    $("#tablesorterEvidence").tablesorter();
 
     /*
      * Revert filtering changes on Evidence View table

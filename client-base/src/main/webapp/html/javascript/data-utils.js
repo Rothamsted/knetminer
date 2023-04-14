@@ -605,16 +605,25 @@ function handleViewCreation(option){
     var taxonomyID =  $('.navbar-select').children("option:selected").val();
 
     // gets genome api with isSortedEvidenceTable flag
-    $.get({ url: api_url + `/genome?keyword=${keyword}&taxId=${taxonomyID}&isSortedEvidenceTable=true`, data: '', timeout: 100000 }).done(function (data) {
-         var evidenceTable = data.evidenceTable?.split ( "\n" ); 
-            // First line is the header, last one is always empty
-            evidenceTable.pop ();
-            evidenceTable.shift ();
-            evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
-            // removes loading spinner
-            $('.overlay').remove();
-            // creates evidence table
-            createEvidenceTable ( evidenceTable, data.keyword, null, true );
+    $.get({ 
+		  url: api_url + `/genome?keyword=${keyword}&taxId=${taxonomyID}&isSortedEvidenceTable=true`, 
+		  data: '', 
+		  timeout: 100000})
+		.done(function (data) 
+		{
+	    var evidenceTable = data.evidenceTable?.split ( "\n" ); 
+			// First line is the header, last one is always empty
+			evidenceTable.pop ();
+			evidenceTable.shift ();
+			
+			evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
+			
+			// removes loading spinner
+			$('.overlay').remove();
+			
+			// Finally, render the table. 
+			// Testing with doSortTable = false and sorting coming from the server
+			createEvidenceTable ( evidenceTable, data.keyword, null, false );
     })
 }
 
