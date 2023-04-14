@@ -636,7 +636,7 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
         // There is no need for this function to deal with pageEnds and to return it to the caller.
         // Does the caller really need it? The value is set and changed here, in the lines below.
         // If the caller actually needs it, it's just a function like: 
-        //   getTablePageLimits ( currentPageIdx, pageSize, tableSize ) = [begin, end - 1]
+        //   getTablePageLimits ( currentPageIdx, pageSize, tableSize ) = [begin, end + 1]
         // which could be called from wherever it's needed
         // Also, why are you returning back currentPage, if the caller already has it!?
         //
