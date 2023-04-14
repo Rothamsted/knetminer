@@ -54,14 +54,16 @@ function getEvidencePvalue ( pvalueStr )
  * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
  * 
  */
-function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
+async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
     var eventTimer; // TODO: not used, remove?
     var evidenceTableLimit = evidenceTable.length; 
     var pageSize = 10;
     var pageCount = Math.ceil(evidenceTableLimit/pageSize);
-    var currentPage = 0
+    var pageEnds = evidenceTable.length < pageSize ?evidenceTable.length : pageSize;
+    var currentPage = 1; 
+    
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(evidenceTable.length == 0) return null 
@@ -117,8 +119,8 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     table = table + '<th width="70">Select</th>';
     table = table + '</tr>';
     table = table + '</thead>';
-    table = table + '<tbody class="scrollTable">';
-    var [tableBody, pageEnds,currentPage] = createEvidenceTableBody(evidenceTable,1,pageSize,pageCount)
+    table = table + '<tbody class="scrollTable" id="evidenceBody">';
+    var tableBody = await createEvidenceTableBody(evidenceTable,1,pageSize,pageCount)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
@@ -187,13 +189,14 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     
     // binds onscroll event to evidence table to add new rows after one seconds
     $('#evidenceViewTable').scroll(function(e){
-        var evidenceViewTable = document.getElementById('evidenceViewTable')
+        if(eventTimer) return
         eventTimer = true; 
 
         // throtting to prevent hundreds of events firing at once
         setTimeout(function(){
                 eventTimer = false; 
                 // checks if user reach end of the evidenceTable
+                // TODO: currently looking for a solution to detect when a user scrolls to the buttom of the document
                 var calcEndOfPage =  $(e.currentTarget).innerHeight()  >= evidenceViewTable.offsetHeight
                 
                 // if user reaches end of the page new rows are created
@@ -580,7 +583,7 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 
 // function creates evidence table body
 //
-function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCount){
+async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCount){
 
 		// TODO: currentPage starts from 1 and pageIndex starts from 0?
 		// Is this necessary? Can't we harmonise both to the 0-start convention?
@@ -595,16 +598,14 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
     {   
         [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
 
-				// TODO: prefer this templating style, at least for new code
-				// Also, avoid "x = x + ...", it's more verbose, especially when it's needed many times
-				//  
-				tableBody +=
-				`<tr>
-				    <td>
-				      <p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
-					    <p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
-					  </td>
-				`;
+        // TODO: prefer this templating style, at least for new code
+        // Also, avoid "x = x + ...", it's more verbose, especially when it's needed many times
+        //  
+        tableBody +=`<tr>
+                        <td>
+                        <p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
+                            <p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
+                        </td>`;
 
         //link publications with pubmed
         var evidenceValue;
@@ -638,11 +639,13 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
 
         var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
         tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
+       
+
     } 
     
     if ( tableBody )
     {
-      if ( currentPage == 1 )
+      if ( currentPage == 1 ) return tableBody;
         // TODO: come on! This is nonsense.
         // There is no need for this function to deal with pageEnds and to return it to the caller.
         // Does the caller really need it? The value is set and changed here, in the lines below.
@@ -656,10 +659,8 @@ function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCo
         // Similarly, this function doesn't need evidencePageCount as parameter, since it
         // can compute it with the same function above.
         //
-      	return [tableBody,pageEnds,currentPage];
-      // currentPage is > 1 (TODO: always true?)
-      $('#count').html(pageEnds)
-      $('#tablesorterEvidence').append(tableBody)
+
+          $('#tablesorterEvidence').append(tableBody)
+          $('#count').html(pageEnds)
     }
-    return null // just to be clear 
 }

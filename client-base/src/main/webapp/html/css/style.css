@@ -2472,6 +2472,7 @@ a {
     .num-genes-container, .evidence-select{
         border: 1px  solid black;
         background-color: white;
+        color: black;
     }
 }
 
