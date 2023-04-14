@@ -56,6 +56,11 @@ function getEvidencePvalue ( pvalueStr )
 function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
+    var eventTimer;
+    var evidenceTableLimit = evidenceTable.length; 
+    var tableIncreasesBy = 10;
+    var evidencePageCount = Math.ceil(evidenceTableLimit/tableIncreasesBy);
+    var currentPage = 0
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(evidenceTable.length == 0) return null 
@@ -112,67 +117,13 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable">';
-
-    // Manage the no of displayed rows, based on the bottom selector (or default)
-    //
-    if ( selectedSize )
-   	{
-		   // selectedSize is passed new user selection refresh
-			 if ( selectedSize > evidenceTable.length ) selectedSize = evidenceTable.length;
-	  }
-	  else
-	    // or, it's null upon the initial call or complete refresh
-	    selectedSize = evidenceTable.length < 100 ? evidenceTable.length : 100;
-	  
-	  
-    for (var ev_i = 0; ev_i < selectedSize; ev_i++)
-    {
-        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
-
-        table = table + '<tr>';
-
-        table = table + `<td><p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>`;
-        
-        table = table + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
-
-        //link publications with pubmed
-        var evidenceValue;
-        if (type == 'Publication')
-        {
-        	pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-          evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
-        }
-        else
-          evidenceValue = nodeLabel;
-
-        table = table + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
-        table = table + '<td>' + evidenceValue + '</td>';
-
-        // p-values
-        pvalue = renderEvidencePvalue(pvalue);
-        // to tell table-sorter that it's a number
-        var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
-
-        table += `<td actual-pvalue = '${sortedPval}'>${pvalue}</td>`;
-        // /end:p-values
-
-        // Count of all matching genes
-        table = table + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
-
-        // launch evidence network with them, if they're not too many.
-        table = table +  `<td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
-
-        var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
-        table = table + '<td>' + select_evidence + '</td>'; // eviView select checkbox
-    } 
-    
+    var [tableBody, pageEnds,currentPage] = createEvidenceTableBody(evidenceTable,1,tableIncreasesBy,evidencePageCount)
+    table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
 
-    // creates selects options ranging from 50 to 1000 . 
-    var selectElement = createEvidenceTableSizeSelector ( selectedSize, evidenceTable.length );
     table = table + '</div><div class="evidence-footer">';
-    table = table + '<div class="evidence-select">'+ selectElement +'</div>';
+    table = table + '<div class="evidence-select"><span>Showing <span id="count">'+pageEnds+'</span> of <span id="limit">'+evidenceTable.length+'</span></span></div>';
     
     table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
@@ -216,17 +167,37 @@ function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSo
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
 
-		// bind click event on all candidateGenes checkboxes in evidence view table.
-		$('input:checkbox[name="evidences"]').click(function (e) {
-		    var viewName = "Term";
-		    updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
-		});
-		
-		// The size selector
-		$("#evidence-select").change(function (e) {
-				// Call myself with the new selected size
-		    createEvidenceTable( evidenceTable, keyword, $("#evidence-select option:selected").val() );  
-		});
+    // bind click event on all candidateGenes checkboxes in evidence view table.
+    $('input:checkbox[name="evidences"]').click(function (e) {
+        var viewName = "Term";
+        updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
+    });
+
+    
+    // binds onscroll event to evidence table to add new rows after one seconds
+    $('#evidenceViewTable').scroll(function(e){
+        var evidenceViewTable = document.getElementById('evidenceViewTable')
+        eventTimer = true; 
+
+        // throtting to prevent hundreds of events firing at once
+        setTimeout(function(){
+                eventTimer = false; 
+                // checks if user reach end of the evidenceTable
+                var calcEndOfPage =  $(e.currentTarget).innerHeight()  >= evidenceViewTable.offsetHeight
+                
+                // if user reaches end of the page new rows are created
+                if(calcEndOfPage){
+                    currentPage = currentPage + 1
+                    createEvidenceTableBody(evidenceTable, currentPage, tableIncreasesBy, evidencePageCount)
+                }
+
+                if(evidencePageCount === currentPage){
+                    $('#evidenceViewTable').unbind();
+                }
+
+                // TODO: will implement a skeleton loader and a function remove scroll event
+        }, 1000)
+    })
 }
 
 /*
@@ -596,8 +567,60 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
     return selectButton; 
 }
 
+// function creates evidence table body
+function createEvidenceTableBody(evidenceTable,pageIndex,tableIncreasesBy,evidencePageCount){
 
+    var currentPage = pageIndex; 
+    var tableBody=""; 
 
+    var pageStart = (pageIndex - 1) * tableIncreasesBy;
+    var pageEnds = currentPage == evidencePageCount ? evidenceTable.length : pageIndex * tableIncreasesBy; 
 
+    for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
+    {   
+        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
 
+        tableBody = tableBody + '<tr>';
 
+        tableBody = tableBody + `<td><p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>`;
+        
+        tableBody = tableBody + `<p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p></td>`; 
+
+        //link publications with pubmed
+        var evidenceValue;
+        if (type == 'Publication')
+        {
+        	pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+          evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
+        }
+        else
+          evidenceValue = nodeLabel;
+
+        tableBody = tableBody + '<td type-sort-value="' + type + '"><div class="evidence_item evidence_item_' + type + '" title="' + type + '"></div></td>';
+        tableBody = tableBody + '<td>' + evidenceValue + '</td>';
+
+        // p-values
+        pvalue = renderEvidencePvalue(pvalue);
+        // to tell tableBody-sorter that it's a number
+        var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
+
+        tableBody += `<td actual-pvalue='${sortedPval}'>${pvalue}</td>`;
+        // /end:p-values
+
+        // Count of all matching genes
+        tableBody = tableBody + `<td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div> </td>`;
+
+        // launch evidence network with them, if they're not too many.
+        tableBody = tableBody +  `<td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>`;
+
+        var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
+        tableBody = tableBody + '<td>' + select_evidence + '</td>'; // eviView select checkbox
+    } 
+    
+    if(tableBody !== '' && currentPage == 1){
+        return [tableBody,pageEnds,currentPage]
+    }else if(tableBody !== '' && currentPage > 1){
+        $('#count').html(pageEnds)
+        $('#tablesorterEvidence').append(tableBody)
+    }
+}

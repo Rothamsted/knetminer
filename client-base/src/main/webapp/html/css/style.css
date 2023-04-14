@@ -489,6 +489,8 @@ select {
     width: fit-content;
     padding: 0.3rem 0.6rem;
     background: #000;
+    color: white;
+    font-size: .75rem;
     border-radius: 8px;
     margin-right: 1.5rem;
     display: flex;
