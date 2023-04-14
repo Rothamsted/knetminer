@@ -45,18 +45,11 @@ function initResetButton() {
 
 
 // function stops matchCounter being called when the enter or arrow keys are used.
-function keyWordEvent(event){
-
-  TODO: 
-    // - what the hell are these numbers?! e.which is deprecated, at some point, we should 
-    // migrate to the more modern interface for this (see https://stackoverflow.com/questions/35394937,
-    // https://www.toptal.com/developers/keycode)
-    // - Apart from that, this code style is awful, and it should be turned into something like:  
-    //   e not in [13, 37, 38...] (Js has functions to search values into arrays)
-
+function keyWordEvent(event)
+{
   var currentEventKey = event.key
   const keyEvents = ['Enter','ArrowLeft','ArrowUp','ArrowRight', 'ArrowDown']
-  const checkKeyEvents = keyEvents.some( keyEvent => currentEventKey.includes(keyEvent)) ? true : false; 
+  const checkKeyEvents = keyEvents.some( keyEvent => currentEventKey.includes(keyEvent)); 
   if(!checkKeyEvents){
     matchCounter();
     if ($("#suggestor_search").css('events-pointer') == 'auto'){
