@@ -95,11 +95,13 @@ public class KnetminerServer
 		);
 		
 		this.dataSourceCache = new HashMap<>();
-		for (KnetminerDataSource dataSource : dataSources) {
-			for (String ds : dataSource.getDataSourceNames()) {
-				this.dataSourceCache.put(ds, dataSource);
-				log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
-			}
+		
+		// So, we're sure there is only this one
+		KnetminerDataSource dataSource = dataSources.get ( 0 );
+		// TODO: reduce this too to 1 element only
+		for (String ds : dataSource.getDataSourceNames()) {
+			this.dataSourceCache.put(ds, dataSource);
+			log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
 		}
 	}
 
