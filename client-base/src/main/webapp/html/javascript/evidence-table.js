@@ -194,10 +194,10 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
 
         // throtting to prevent hundreds of events firing at once
         setTimeout(function(){
+            const evidenceViewTable = document.getElementById('evidenceViewTable'); 
                 eventTimer = false; 
                 // checks if user reach end of the evidenceTable
-                // TODO: currently looking for a solution to detect when a user scrolls to the buttom of the document
-                var calcEndOfPage =  $(e.currentTarget).innerHeight()  >= evidenceViewTable.offsetHeight
+                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight
                 
                 // if user reaches end of the page new rows are created
                 if(calcEndOfPage){
@@ -205,12 +205,15 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
                     createEvidenceTableBody(evidenceTable, currentPage, pageSize, pageCount)
                 }
 
+
+                // when last page is reached scroll event is removed
                 if(pageCount === currentPage){
                     $('#evidenceViewTable').unbind();
                 }
 
-                // TODO: will implement a skeleton loader and a function remove scroll event
         }, 1000)
+
+        return
     })
 }
 
@@ -627,7 +630,7 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidence
         // to tell tableBody-sorter that it's a number
         var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
 
-        tableBody += `  <td actual-pvalue='${sortedPval}'>${pvalue}</td>\n`;
+        tableBody += `<td actual-pvalue='${sortedPval}'>${pvalue}</td>\n`;
         // /end:p-values
 
 
