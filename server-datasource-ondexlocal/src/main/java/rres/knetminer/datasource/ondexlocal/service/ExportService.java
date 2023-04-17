@@ -658,16 +658,17 @@ public class ExportService
 		// Now resultRows has to become the final TSV table
 		//
 		
-		var resultRowsStrm = resultRows.parallelStream ()
+		var resultRowsStrm = resultRows.parallelStream ();
+		
+		if ( hasMatchingUserGenes.isTrue () )
+		
 		// Let's keep user genes with > 0 count, if any
-		.filter ( row -> {
-			if ( hasMatchingUserGenes.isFalse () ) return true;
-			
+		resultRowsStrm = resultRowsStrm.filter ( row -> {
 			Set<String> userGeneLabels = row.getOpt ( "userGeneLabels" );
 			return userGeneLabels.size () > 0;
 		});
+
 		
-				
 		// Let's sort it if requested. 
 		if ( doSortResult )
 		{
