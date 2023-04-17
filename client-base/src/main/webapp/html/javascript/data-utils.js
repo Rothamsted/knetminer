@@ -213,11 +213,13 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
        status = false
          // For a valid response, i.e., search output.
          var candidateGenes = data.geneCount;
+         // TODO: not used, remove?
          var docSize = data.docSize; // for pGViewer_title_line display msg
+         // TODO: not used, remove?
          var totalDocSize = data.totalDocSize; // for pGViewer_title_line display msg
          var results = data.geneCount; // for pGViewer_title_line display msg
 
-         var longestChromosomeLength = "";
+         var longestChromosomeLength = ""; // TODO: not used, remove?
          if (typeof longest_chr != "undefined") {
              if (longest_chr != null) {
                  longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
@@ -288,7 +290,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
             if(keyword.length < 2) {  // msg for qtl region only search
 
                if(count_notfound === 0) {
-                 messsageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
+                 messageNode = '<b>' + count_linked + ' linked genes</b> and '+count_unlinked+' unlinked genes were found ('+queryseconds+' seconds).'
                   genomicViewTitle = createGenomicViewTitle(messageNode,status); 
                  }
                else if(count_notfound > 0) {
@@ -419,10 +421,9 @@ function findChromosomeGenes(event,num) {
         var end = $(`#end${currentRowNumber}`).val();
     
         if (chr_name != "" && start != "" && end != "") {
-            var searchMode = "countLoci";
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
             var keyword = chr_name + "-" + start + "-" + end;
-            var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
+            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
                 $("#" + id).val(data.geneCount);
@@ -449,8 +450,8 @@ function matchCounter() {
         $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     } else {
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
-            var searchMode = "countHits";
-            var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
+            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
+
             var url = api_url + request;
             $.get(url, '').done(function (data) {
                 if (data.luceneLinkedCount != 0) {

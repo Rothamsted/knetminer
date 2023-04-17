@@ -5,13 +5,10 @@ function refreshQuerySuggester() {
     $('#suggestor_terms').html('');
 
     // Create the Synonym table.
-    var searchMode = "synonyms";
 
     var keyword = $('#keywords').val();
 
-    var request = "/" + searchMode + "?keyword=" + keyword;
-
-    var url = api_url + request;
+    var url = `${api_url}/synonyms?keyword=${keyword}`;
 
     $.get(url, '').done(function (data) {
         createSynonymTable(data.synonyms);
