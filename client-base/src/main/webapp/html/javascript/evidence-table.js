@@ -663,4 +663,5 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidence
           $('#tablesorterEvidence').append(tableBody)
           $('#count').html(pageEnds)
     }
+    return null; // just to return something
 }
