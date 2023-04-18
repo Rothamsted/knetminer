@@ -405,21 +405,12 @@ function geneCounter(){
  * using the corresponding API.
  *
  * TODO: code quality improvements, when there is time:
- * - the name is too generic and misleading, choose something better, eg, findChromosomeGenes()
- * - why are we passing the event if the only thing we need is the row index? Consider one of the alternatives:
- *   - pass the index straight ( event(1) ), the HTML-rendering code should be able to set the right param
- *     in this case
- *   - add an attribute like 'index' to the first HTML element and fetch it in returnRegionNumber()
  * - whatever the new approach, we should avoid 'strings with syntax', ie, chrXXX makes the code to depend
  *   on the structure of a string that is just an ID. That's poorly readable and fragile. 
- * - returnRegionNumber() is a weird uncommon name: functions that return something are usually name
- *   like getXXX, fetchXXX, extractXXX, etc. In this case, getChromosomeRegionIndex() could be better
- *   - 'Region' is too generic, 'Number' is not what it returns, cause it's actually an index
- * - returnRegionNumber() (or whatever it's called) should stay in this file and not in init-utils.js
  * 
  */
-function findChromosomeGenes(event,num) {
-        var currentRowNumber = event !== null ? getChromosomeRegionIndex(event?.currentTarget) : num;
+function findChromosomeGenes(event) {
+        var currentRowNumber = getChromosomeRegionIndex(event.currentTarget);
         var id = `genes${currentRowNumber}`;
         var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
         var start = $(`#start${currentRowNumber}`).val();
@@ -428,18 +419,16 @@ function findChromosomeGenes(event,num) {
         if (chr_name != "" && start != "" && end != "") {
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
             var keyword = chr_name + "-" + start + "-" + end;
-            var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
+            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
                 $("#" + id).val(data.geneCount);
             });
-        }
-    
-   
+        } 
 }
 
 /*
- * Function to get the number of matches
+ * Function to get the number of matches in the keywords text box.
  *
  */
 // TODO: looking to clean up function with convulated if else statements

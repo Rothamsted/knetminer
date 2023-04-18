@@ -61,7 +61,6 @@ function keyWordEvent(event)
 
 // function add and remove QTL region
 // TODO: code quality, to be addressed when there is time:
-// - is there any reason why this is named unconventionally, with the capitalised format?
 // - all these names like *region* are too generic and don't convey what they are about, we
 // should make them more homogeneous and mention either of chr, chromosome, chromosomeRegion or alike
 // - we also need to review the files they belong, eg, there seem to be much stuff in this init-utils
@@ -79,7 +78,7 @@ function qtlRegionHandlers() {
       .attr({
         id: "chr" + curMaxInput,
         name: "chr" + curMaxInput,
-        onChange:"findChromosomeGenes(event,null)",
+        onChange:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
@@ -88,7 +87,7 @@ function qtlRegionHandlers() {
       .attr({
         id: "start" + curMaxInput,
         name: "start" + curMaxInput,
-        onKeyup:"findChromosomeGenes(event,null)",
+        onKeyup:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
@@ -97,7 +96,7 @@ function qtlRegionHandlers() {
       .attr({
         id: "end" + curMaxInput,
         name: "end" + curMaxInput,
-        onKeyup:"findChromosomeGenes(event,null)",
+        onKeyup:"findChromosomeGenes(event)",
         oninput: "toggleRegionDeleteIcon(" + curMaxInput + ")",
       })
       .parent()
@@ -117,7 +116,7 @@ function qtlRegionHandlers() {
         class: "gene_count",
         id: "genes" + curMaxInput,
         name: "label" + curMaxInput,
-        onFocus:"findChromosomeGenes(event,null)",
+        onFocus:"findChromosomeGenes(event)",
       })
       .parent()
       .parent()
