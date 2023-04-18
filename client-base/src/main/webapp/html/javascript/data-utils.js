@@ -449,6 +449,18 @@ function matchCounter() {
 		// hide query suggestor icon
         $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     } else {
+				/* TODO: (not urgent), this is awful.
+				   - brackets balance is chcecked twice, by bracketsAreBalanced() and following checks
+				   - many mysterious clauses without any explanation of what they are (or if they're still needed)
+				   - should go in a function like validateSearchKeywords()
+				   - inside such function, if it has to remain as a single conditional, should be formatted as:
+				     function validateSearchKeywords()
+				     {
+				       return <clause> // possible comment on whay the hell it means
+				         && <clause> // possible comment
+				         ...
+				     }
+				*/ 
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
             var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
 

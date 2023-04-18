@@ -75,6 +75,8 @@ public abstract class KnetminerDataSource {
 	 * request object is missing any information required to run the query. If
 	 * execution of an external command fails, failure should be notified by
 	 * throwing an exception sub-classed from Error.
+	 * 
+	 * TODO: probably it's not Error anymore in 2023, to be checked.
 	 */
 
 	public abstract CountHitsResponse countHits(String dsName, KnetminerRequest request) throws IllegalArgumentException;
