@@ -428,7 +428,7 @@ function findChromosomeGenes(event,num) {
         if (chr_name != "" && start != "" && end != "") {
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
             var keyword = chr_name + "-" + start + "-" + end;
-            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
+            var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
                 $("#" + id).val(data.geneCount);
@@ -467,7 +467,7 @@ function matchCounter() {
 				     }
 				*/ 
         if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
-            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
+            var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
 
             var url = api_url + request;
             $.get(url, '').done(function (data) {
@@ -484,7 +484,9 @@ function matchCounter() {
                   $("#suggestor_search_area").slideUp(500)
 				}
             }).fail(function (xhr,status,errorlog) {
-                $('#matchesResultDiv').html('<span class="redText">Please use OR/AND to seperate Keywords, or the Concept Selector to select ConceptIDs.</span>');
+                var server_error= JSON.parse(xhr.responseText); // full error json from server
+                var errorMsg= server_error.title.replace('(start >= end) ', '')
+                $('#matchesResultDiv').html(`<span class="redText">${errorMsg}</span>`);
                 // errorComponent('#matchesResultDiv',xhr)
             });
         } else {
