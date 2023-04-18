@@ -566,16 +566,34 @@ a[id="generateMultiGeneNetworkButton"] {
           margin:0px;
   }
   */
+
 div.scrollTable {
     width: 100%;
     /* table width will be 99% of this*/
-    max-height: 550px;
+    height: 550px;
     /* must be greater than tbody*/
-    overflow: auto;
+    overflow: scroll;
     margin: 0 auto;
     position: -webkit-sticky;
     position: sticky;
 }
+
+/* scrollbar cutomisation for Knetminer Tables */
+div.scrollTable::-webkit-scrollbar{
+    height: 6px;
+    width: 6px;
+}
+
+div.scrollTable::-webkit-scrollbar-track:horizontal{
+    background: transparent;
+    border: none;
+}
+
+div.scrollTable::-webkit-scrollbar-thumb{
+    background: #D3D3D3;
+    border-radius: 1ex;
+}
+
 
 div.scrollTable table {
     width: 99%;
@@ -680,9 +698,6 @@ table.tablesorter thead tr .tablesorter-headerDesc {
 table.tablesorter thead tr .tablesorter-headerUnSorted {
     background-image: none;
 }
-
-
-
 
 table.suggestorTable {
     margin-left: 28px;
@@ -1793,7 +1808,7 @@ a {
 /* reducing table height for smaller screen, this allow create network button to be above the fold */
 @media (max-width: 1440px) {
     div.scrollTable {
-        max-height: 410px;
+        height: 410px;
     }
 }
 

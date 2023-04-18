@@ -27,6 +27,7 @@ function searchKeyword(){
     if (list.length > 0) {
         requestParams['list'] = list;
         requestParams['listMode'] = listMode;
+        requestParams['isSortedEvidenceTable']= true;
     }
 
     // qtl regions provided
@@ -333,7 +334,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          handleDelimintedCta.getData(data);
 
          multiSpeciesFeature.maps('drawRaw',data.gviewer);
-         $("body").data("data",{evidence:data.evidenceTable,keyword:keyword});
+         $("body").data("data",{evidenceTable:data.evidenceTable,keyword:keyword,geneTable:data.geneTable});
 
          if(geneList_size > 0) {
             $('#selectUser').show();
@@ -341,6 +342,10 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
            else { $('#selectUser').hide(); }
     }
 }
+
+
+
+
 
 // function creates Genomic title
 function createGenomicViewTitle(message,status){
@@ -612,32 +617,23 @@ handleDelimintedCta = function(){
  * @param {string} * a string that idenitifies the current tab view
  */
 function handleViewCreation(option){
+
     $('#'+option+'_button').addClass('created');
-
-    var keyword = $('#keywords').val();
-    var taxonomyID =  $('.navbar-select').children("option:selected").val();
-
-    // gets genome api with isSortedEvidenceTable flag
-    $.get({ 
-		  url: api_url + `/genome?keyword=${keyword}&taxId=${taxonomyID}&isSortedEvidenceTable=true`, 
-		  data: '', 
-		  timeout: 100000})
-		.done(function (data) 
-		{
-	    var evidenceTable = data.evidenceTable?.split ( "\n" ); 
-			// First line is the header, last one is always empty
-			evidenceTable.pop ();
-			evidenceTable.shift ();
+    var data = $('body').data().data
+	var evidenceTable = data.evidenceTable?.split( "\n" ); 
+    console.log(evidenceTable); 
+    // First line is the header, last one is always empty
+    evidenceTable.pop ();
+    evidenceTable.shift ();
 			
-			evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
+    evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
 			
-			// removes loading spinner
-			$('.overlay').remove();
+    // removes loading spinner
+    $('.overlay').remove();
 			
-			// Finally, render the table. 
-			// Testing with doSortTable = false and sorting coming from the server
-			createEvidenceTable ( evidenceTable, data.keyword, null, false );
-    })
+    // Finally, render the table. 
+    // Testing with doSortTable = false and sorting coming from the server
+    createEvidenceTable ( evidenceTable, data.keyword, null, false );
 }
 
 
