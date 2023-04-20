@@ -677,8 +677,8 @@ public class ExportService
 			// Lucene score is left as lowest priority, since it isn't even used in the UI
 			.thenComparing ( Comparator.comparingDouble ( (OptionsMap row) -> row.getDouble ( "score" ) ).reversed () )
 			// Last resort...
-			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ) ).reversed () );
-						
+			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ), String.CASE_INSENSITIVE_ORDER ) );
+									
 			// Stream.sorted() does the same thing, but this way we can clear the original list
 			//
 			OptionsMap[] sortedRows = (OptionsMap[]) resultRowsStrm.toArray ( sz -> new OptionsMap [ sz ] );

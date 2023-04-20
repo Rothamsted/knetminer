@@ -345,8 +345,9 @@ function openGeneListPopup(conceptId, element) {
         var type = $(element).attr("data-type");
         var getTaxIdFrag = multiSpeciesFeature.getTaxId();
 
-        // fetching data genetable data with a timeout of 1min 66secs
-        $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 }).done(function (data) {
+        $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 })
+        .done(function (data)
+        {
             if (data.geneTable !== null) {
                 var geneTable = data.geneTable.split("\n");
                 var accessionTable = "";

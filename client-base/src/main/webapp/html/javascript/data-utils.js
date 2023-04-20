@@ -24,11 +24,13 @@ function searchKeyword(){
     var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
     requestParams['taxId'] = taxonomyID; 
     requestParams['keyword'] = keyword;
+    requestParams['isSortedEvidenceTable']= true;
+
     if (list.length > 0) {
         requestParams['list'] = list;
         requestParams['listMode'] = listMode;
-        requestParams['isSortedEvidenceTable']= true;
     }
+
 
     // qtl regions provided
     var regions = document.getElementById('regions_table').rows.length - 2;
