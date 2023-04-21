@@ -638,7 +638,7 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPag
 
 
 /**
- * 
+ * function handles scroll events for Geneview and Evidence view tables.
  */
 function tableScrollEvent(tableData,table,totalPage,isTableScrollable,rows,count){
     var tableElement =  $(`#${table}`);
