@@ -215,11 +215,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
     else {
        status = false
          // For a valid response, i.e., search output.
-         var candidateGenes = data.geneCount;
-         // TODO: not used, remove?
-         var docSize = data.docSize; // for pGViewer_title_line display msg
-         // TODO: not used, remove?
-         var totalDocSize = data.totalDocSize; // for pGViewer_title_line display msg
          var results = data.geneCount; // for pGViewer_title_line display msg
 
          var longestChromosomeLength = ""; // TODO: not used, remove?
@@ -228,7 +223,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                  longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
              }
          }
-            candidateGenes = candidateGenes >= 100 ? 100 : candidateGenes;
 
          // default search display msg.
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
@@ -280,7 +274,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                 $('#pGViewer_title').html(noGenesFound);
               }
         }
-
          if(searchMode === "qtl") { 
              // msg for QTL search
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
@@ -332,11 +325,15 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          //Collapse Suggestor view
          $('#suggestor_search_area').slideUp(500);
         //  activateButton('resultsTable')
-         createGenesTable(data.geneTable, keyword, candidateGenes);
+
+        var resultsTable = refineTableData(data.geneTable);
+        var evidenceTable = refineTableData(data.evidenceTable)
+
+         createGenesTable(resultsTable,keyword);
          handleDelimintedCta.getData(data);
 
          multiSpeciesFeature.maps('drawRaw',data.gviewer);
-         $("body").data("data",{evidenceTable:data.evidenceTable,keyword:keyword,geneTable:data.geneTable});
+         $("body").data("data",{evidenceTable:evidenceTable,keyword:keyword,resultsTable:resultsTable});
 
          if(geneList_size > 0) {
             $('#selectUser').show();
@@ -344,10 +341,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
            else { $('#selectUser').hide(); }
     }
 }
-
-
-
-
 
 // function creates Genomic title
 function createGenomicViewTitle(message,status){
@@ -610,23 +603,27 @@ handleDelimintedCta = function(){
  * @param {string} * a string that idenitifies the current tab view
  */
 function handleViewCreation(option){
-
     $('#'+option+'_button').addClass('created');
     var data = $('body').data().data
-	var evidenceTable = data.evidenceTable?.split( "\n" ); 
-    console.log(evidenceTable); 
-    // First line is the header, last one is always empty
-    evidenceTable.pop ();
-    evidenceTable.shift ();
-			
-    evidenceTable = evidenceTable?.map ( rowStr => rowStr.split ( "\t" ) )
-			
+
     // removes loading spinner
     $('.overlay').remove();
 			
     // Finally, render the table. 
     // Testing with doSortTable = false and sorting coming from the server
-    createEvidenceTable ( evidenceTable, data.keyword, null, false );
+    createEvidenceTable ( data.evidenceTable, data.keyword, null, false );
 }
 
 
+/**
+ * @desc refines table data by removing newline and tabs for both evidence and geneview
+ */
+function refineTableData(data){
+    var tableData = data.split('\n'); 
+    tableData.pop(); 
+    tableData.shift();
+
+    tableData = tableData?.map ( rowStr => rowStr.split ( "\t" ) ); 
+
+    return tableData;
+ }

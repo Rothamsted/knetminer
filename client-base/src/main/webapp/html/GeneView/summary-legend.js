@@ -2,16 +2,15 @@
   * Function to create interactive legend as summary for Gene View evidences.
   * @returns interactive Gene View summary legend <div> for filtering
   */
- function getInteractiveSummaryLegend(GeneView_fullText) {
-  var evidences_rows= GeneView_fullText.split("\n");
+function getInteractiveSummaryLegend(GeneView_fullText) {
 
   var evidencesArr= new Array();
-  for(var i=1; i < evidences_rows.length-1; i++) {
-      var evi_value= evidences_rows[i].split("\t")[9].trim();
+  for(var i=1; i < GeneView_fullText.length; i++) {
+      var evi_value= GeneView_fullText[i][9].trim();
       if(evi_value !== "") {
          evidencesArr.push(evi_value);
         }
-     }
+    }
 
   var con_legend= new Map();
   // Iterate through evidences and get counts for each evidence Concept Type.
@@ -41,12 +40,12 @@
   {     
     var contype= key.trim();
 
-			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","#resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
+			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
   });
 
   legend= legend + summaryText +'</div>';
   return legend;
- }
+}
 
 
   /*
@@ -54,27 +53,43 @@
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
   *0*/
   function filterTableByType(key,location,sortingPosition,table,event,revertButton) {
+
+            
            updateLegendsKeys(key,location,event)
      try{
-         if ($(location).css('display') === 'block') {
-             var gvTable=  document.getElementById(table);
-             var rowLength= gvTable.rows.length;
-             var currentData = $(location).data('keys'); 
+         if ($('#'+location).css('display') === 'block') {
 
-             if(currentData.length === 0 ){
+    
+             var gvTable=  $('body').data().data[location];
+             var rowLength=  gvTable.length;
+
+             var selectedKeys = $(`#${location}`).data('keys'); 
+
+
+             if(selectedKeys.length === 0 ){
                 // reset table if all legends are unselected
                 document.getElementById(revertButton).click();
              }else{
-                    for(var i=1; i < rowLength; i++) { // i=1 to skip title row
-                        var currentRow= gvTable.rows.item(i);
-                        var gv_cells = currentRow.cells;
-                        var gene_evidences = gv_cells.item(sortingPosition).innerHTML;
+                    var evidenceKeysArrays = []
+                    for(var tableIndex=0; tableIndex < rowLength; tableIndex++) {
+                        var currentPosition = gvTable[tableIndex];
+
+                        var evidenceKeys = location.includes('resultsTable') ? currentPosition[9].split('__')[0]: currentPosition[0] ;
+
                         var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
-                        setLegendsState(tableLocation,gene_evidences,currentRow,currentData);
+                        var selectedEvidence =  setLegendsState(tableLocation,evidenceKeys,currentPosition,selectedKeys);
+
+                        if(selectedEvidence !== undefined) evidenceKeysArrays.push(selectedEvidence)
                     } 
-                    // shows filter tips for only geneview 
-                    if(tableLocation === 'resultsTable') showFilterTips();
-                }
+
+                    if(evidenceKeysArrays.length > 0)
+                    {
+                        createFilteredTable(evidenceKeysArrays,location)
+                    }else{
+                        $('#tablesorter').hide() 
+                        $('#filterMessage').show();
+                    }
+             }
                
          }
      }catch (err) {
@@ -82,21 +97,24 @@
          console.log(errorMsg);
      }
     
- }
+}
  
 //  function updates, store and checks for non-active legend keys
  function updateLegendsKeys(key,location,event){
 
+    const currentTable = $(`#${location}`)
+
      $(event.currentTarget).toggleClass('active-legend');
 
     // current keys stored using jquery.data() method
-     var getKeys = $(location).data('keys'); 
+     var getKeys = currentTable.data('keys'); 
     
     //  if getKeys is empty
      if(getKeys == undefined){
-         $(location).data({keys: [key]}); 
+        currentTable.data({keys: [key]}); 
      }else{
          isKeyElementActive = $(event.currentTarget).hasClass('active-legend')
+
         //  if legends is not active function returns true to remove legend associated rows from table
          if(isKeyElementActive){
              // pushing new keys to getKeys Array 
@@ -106,7 +124,7 @@
              if(getCurrentIndex > -1 ){getKeys.splice(getCurrentIndex, 1);}
          }
          
-         $(location).data({keys: getKeys}); 
+         currentTable.data({keys: getKeys}); 
          
      }
  }
@@ -115,33 +133,45 @@
  function setLegendsState(tableLocation,gene_evidences,currentRow,currentData){
     switch(tableLocation){
         case "resultsTable":
-            if(!currentData.every(keys => gene_evidences.includes(keys))){
-                $(currentRow).addClass('non-filter').removeClass('current-filter')
-            }else{
-                $(currentRow).addClass('current-filter').removeClass('non-filter');
+            if(currentData.every(keys => gene_evidences.includes(keys))){
+                return currentRow; 
             }
-            
             break;
         case "evidenceTable":
-            if(!currentData.some(keys => gene_evidences.includes(keys))){
-                $(currentRow).addClass('non-filter').removeClass('current-filter');
-            }else{
-                $(currentRow).addClass('current-filter').removeClass('non-filter');
+            if(currentData.some(keys => gene_evidences.includes(keys))){
+               return currentRow
             }
             break;
-
     }
  }
-
-  /*
-  * Function shows or hides a string ("Your filter is returning no results. Try increasing the amount of genes visible (bottom left).") 
-  * when filter returns no results.
-  */
- function showFilterTips(){
-    var hiddenRow = $('#tablesorter > tbody').children().not('.current-filter').length; 
-    var totalRenderedRows = $('#tablesorter > tbody').children().length; 
-    if(hiddenRow == totalRenderedRows){
-        $('#filterMessage').show();
-    }else{$('#filterMessage').hide()}
  
+ 
+/**
+ * @desc function creates table body for filtered geneview and evidence table
+ * @param {*} filteredTable 
+ * @param {*} table 
+ */
+ async function createFilteredTable(evidenceKeysArrays,location){
+
+        $('#filterMessage').hide();
+        $('#tablesorter').show();
+
+        var{currentPage,rows,totalPage,shownItems}= createPaginationForTable(evidenceKeysArrays,location); 
+
+        switch(location){
+            case 'resultsTable':
+                var filteredBody = createGeneTableBody(evidenceKeysArrays,currentPage,rows,totalPage);
+                $('#geneTableBody').html('').append(filteredBody)
+                $('#geneCount').html(shownItems);
+                $('#geneLimit').html(evidenceKeysArrays.length);
+                break;
+            case 'evidenceTable': 
+            var filteredBody = await createEvidenceTableBody(evidenceKeysArrays,currentPage,rows,totalPage)
+            $('#evidenceBody').html(filteredBody);
+            $('#count').html(shownItems);
+            $('#limit').html(evidenceKeysArrays.length);
+            // add total page
+            break; 
+            
+        }
  }
