@@ -57,7 +57,7 @@ function getEvidencePvalue ( pvalueStr )
 async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
-    var {currentPage,isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(evidenceTable, 'evidenceViewTable')
+    var {isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(evidenceTable)
 
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
@@ -164,6 +164,7 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
     $("#revertEvidenceView").click(function (e) {
         createEvidenceTable(evidenceTable, keyword ); // redraw table
         $('#evidenceTable').data({ keys: [] });
+        tableEvents.setTableData(evidenceTable,'evidenceTable');
     });
 
     $("#revertEvidenceView").mouseenter(function (e) {
@@ -182,7 +183,7 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
 
     
     // binds onscroll event to evidence table to add new rows after one seconds
-    tableScrollEvent(evidenceTable,'evidenceViewTable',totalPage,isTableScrollable,rows,'count');
+    tableEvents.scrollEvent('evidenceViewTable',isTableScrollable,rows,'count', 'limit');
 }
 
 /*
@@ -640,41 +641,57 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPag
 /**
  * function handles scroll events for Geneview and Evidence view tables.
  */
-function tableScrollEvent(tableData,table,totalPage,isTableScrollable,rows,count){
-    var tableElement =  $(`#${table}`);
+ tableEvents = function(){
 
-    tableElement.scroll(function(e){
-        if(isTableScrollable) return
-        isTableScrollable = true; 
+    var tableInformation ={
+        geneTable:[],
+        evidenceTable:[]
+    }
 
-        // throtting to prevent hundreds of events firing at once
-        setTimeout(function(){
-            isTableScrollable = false; 
-    
-            const evidenceViewTable = document.getElementById(table); 
-            // checks if user reaches the end of page
-            var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
-            var currentPage = Math.ceil($(`#${count}`).html()/rows);
+    function setTableData(data,dataKey){
+            tableInformation[dataKey] = data
+    }
 
-            // when last page is reached scroll event is removed
-            if( totalPage === currentPage) tableElement.unbind();
+    function scrollTable(table,isTableScrollable, rows, count, limit){
+        var tableElement =  $(`#${table}`);
 
-                // if user reaches end of the page new rows are created
-                if(calcEndOfPage){
-                    switch(table){
-                        // creates evidence table 
-                        case 'evidenceViewTable':
-                        createEvidenceTableBody(tableData, currentPage + 1, rows,totalPage)
-                        break;
-                        // creates geneview table
-                        case 'geneViewTable':
-                        createGeneTableBody(tableData,currentPage+1,rows,totalPage)
-                        break;
+        tableElement.scroll(function(e){
+            if(isTableScrollable) return
+            isTableScrollable = true; 
+
+            // throtting to prevent hundreds of events firing at once
+            setTimeout(function(){
+                isTableScrollable = false; 
+                
+                const evidenceViewTable = document.getElementById(table); 
+                // checks if user reaches the end of page
+                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+                var currentPage = Math.ceil($(`#${count}`).html()/rows);
+                var totalPage = Math.ceil($(`#${limit}`).html()/rows);
+
+                // when last page is reached scroll event is removed
+                if( totalPage === currentPage) tableElement.unbind();
+
+                    // if user reaches end of the page new rows are created
+                    if(calcEndOfPage){
+                        switch(table){
+                            // creates evidence table 
+                            case 'evidenceViewTable':
+                            createEvidenceTableBody(tableInformation.evidenceTable, currentPage + 1, rows,totalPage)
+                            break;
+                            // creates geneview table
+                            case 'geneViewTable':
+                            createGeneTableBody(tableInformation.geneTable,currentPage+1,rows,totalPage)
+                            break;
+                        }
                     }
-                }
-    
+            }, 1000)
+        })
+    }
 
-      
-        }, 1000)
-    })
-}
+
+    return {
+        setTableData:setTableData,
+        scrollEvent:scrollTable
+    }
+}()

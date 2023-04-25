@@ -330,6 +330,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
         var evidenceTable = refineTableData(data.evidenceTable)
 
          createGenesTable(resultsTable,keyword);
+         tableEvents.setTableData(resultsTable,'geneTable'); 
          handleDelimintedCta.getData(data);
 
          multiSpeciesFeature.maps('drawRaw',data.gviewer);
@@ -612,6 +613,7 @@ function handleViewCreation(option){
     // Finally, render the table. 
     // Testing with doSortTable = false and sorting coming from the server
     createEvidenceTable ( data.evidenceTable, data.keyword, null, false );
+    tableEvents.setTableData(data.evidenceTable,'evidenceTable');
 }
 
 

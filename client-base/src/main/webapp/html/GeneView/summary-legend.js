@@ -40,7 +40,7 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
   {     
     var contype= key.trim();
 
-			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","resultsTable",'+4+',"tablesorter",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
+			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","resultsTable",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
   });
 
   legend= legend + summaryText +'</div>';
@@ -52,9 +52,7 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
   * Function
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
   *0*/
-  function filterTableByType(key,location,sortingPosition,table,event,revertButton) {
-
-            
+function filterTableByType(key,location,event,revertButton) {       
            updateLegendsKeys(key,location,event)
      try{
          if ($('#'+location).css('display') === 'block') {
@@ -74,7 +72,7 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
                     for(var tableIndex=0; tableIndex < rowLength; tableIndex++) {
                         var currentPosition = gvTable[tableIndex];
 
-                        var evidenceKeys = location.includes('resultsTable') ? currentPosition[9].split('__')[0]: currentPosition[0] ;
+                        var evidenceKeys = location.includes('resultsTable') ? getGeneKeyTypes(currentPosition[9]): currentPosition[0] ;
 
                         var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
                         var selectedEvidence =  setLegendsState(tableLocation,evidenceKeys,currentPosition,selectedKeys);
@@ -88,6 +86,7 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
                     }else{
                         $('#tablesorter').hide() 
                         $('#filterMessage').show();
+                        $('.num-genes-container').hide();
                     }
              }
                
@@ -110,9 +109,8 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
      var getKeys = currentTable.data('keys'); 
     
     //  if getKeys is empty
-     if(getKeys == undefined){
-        currentTable.data({keys: [key]}); 
-     }else{
+     if(!getKeys)currentTable.data({keys: [key]}); 
+
          isKeyElementActive = $(event.currentTarget).hasClass('active-legend')
 
         //  if legends is not active function returns true to remove legend associated rows from table
@@ -121,15 +119,14 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
              getKeys.push(key);
          }else{
              var getCurrentIndex = getKeys.indexOf(key);
-             if(getCurrentIndex > -1 ){getKeys.splice(getCurrentIndex, 1);}
-         }
+            if(getCurrentIndex > -1 )getKeys.splice(getCurrentIndex, 1);}
          
          currentTable.data({keys: getKeys}); 
          
-     }
+     
  }
 
-  // Function sets the visibility state of Gene and Evidence legends  
+// Function sets the visibility state of Gene and Evidence legends  
  function setLegendsState(tableLocation,gene_evidences,currentRow,currentData){
     switch(tableLocation){
         case "resultsTable":
@@ -155,23 +152,39 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
 
         $('#filterMessage').hide();
         $('#tablesorter').show();
+        $('.num-genes-container').show();
 
-        var{currentPage,rows,totalPage,shownItems}= createPaginationForTable(evidenceKeysArrays,location); 
+        var{rows,totalPage,shownItems}= createPaginationForTable(evidenceKeysArrays); 
+        var itemsCount = location == 'resultsTable' ? ['geneCount','geneLimit'] : ['count','limit']; 
 
         switch(location){
             case 'resultsTable':
-                var filteredBody = createGeneTableBody(evidenceKeysArrays,currentPage,rows,totalPage);
-                $('#geneTableBody').html('').append(filteredBody)
-                $('#geneCount').html(shownItems);
-                $('#geneLimit').html(evidenceKeysArrays.length);
-                break;
+            var filteredBody = createGeneTableBody(evidenceKeysArrays,1,rows,totalPage);
+            $('#geneTableBody').html('').append(filteredBody)
+            break;
             case 'evidenceTable': 
-            var filteredBody = await createEvidenceTableBody(evidenceKeysArrays,currentPage,rows,totalPage)
+            var filteredBody = await createEvidenceTableBody(evidenceKeysArrays,1,rows,totalPage)
             $('#evidenceBody').html(filteredBody);
-            $('#count').html(shownItems);
-            $('#limit').html(evidenceKeysArrays.length);
-            // add total page
             break; 
-            
         }
+        
+        $(`#${itemsCount[0]}`).html(shownItems);
+        $(`#${itemsCount[1]}`).html(evidenceKeysArrays.length);
+
+        tableEvents.setTableData(evidenceKeysArrays,location);
+ }
+
+/**
+ * @desc returns a list of evidence keys contained in genes evidence string 
+ * @param {*} evidences 
+ * @returns array of evidence keys 
+ */ 
+ function getGeneKeyTypes(evidences){
+    var  evidencesList = []; 
+    var evidencesCount = evidences.split("||")
+    for(var evidenceIndex = 0; evidenceIndex < evidencesCount.length; evidenceIndex++){
+        singleEvidence = evidencesCount[evidenceIndex].split('__')[0]; 
+        evidencesList.push(singleEvidence); 
+    }
+    return evidencesList
  }

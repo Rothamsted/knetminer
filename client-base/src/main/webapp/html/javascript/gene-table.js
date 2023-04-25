@@ -6,7 +6,7 @@
 function createGenesTable(text, keyword, rows){
 	var table = "";
 	
-	var{currentPage,isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(text,'resultsTable')
+	var{isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(text)
 	
 	if (text.length > 0 ){
 
@@ -36,7 +36,7 @@ function createGenesTable(text, keyword, rows){
 	table += '</thead>';
 	table += '<tbody id="geneTableBody" class="scrollTable">';
 
-	var TableBody = createGeneTableBody(text,currentPage,rows,totalPage,currentPage); 
+	var TableBody = createGeneTableBody(text,1,rows,totalPage); 
 	table = table + TableBody; 
 	table += '</tbody>';
 	table += '</table>';
@@ -118,6 +118,7 @@ function createGenesTable(text, keyword, rows){
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(text, keyword, $("#num-genes").val()); // redraw table
 		$('#resultsTable').data({ keys: [] });
+		tableEvents.setTableData(text,'geneTable');
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -167,7 +168,7 @@ function createGenesTable(text, keyword, rows){
 		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
 	});
 
-	tableScrollEvent(text,'geneViewTable',totalPage,isTableScrollable,rows,'geneCount');
+	tableEvents.scrollEvent('geneViewTable',isTableScrollable,rows,'geneCount','geneLimit');
 
 }
 
@@ -362,17 +363,15 @@ function downloadNetwork() {
 /**
  * @desc function creates calculates and return pagination values for gene view and evidence table
  */
-function createPaginationForTable (tableData,tableType)
+function createPaginationForTable (tableData)
 {
 	var isTableScrollable = false; // TODO: not used, remove?
     var evidenceTableLimit = tableData.length; 
-    var rowSize = tableType == 'resultsTable' ? 12 :10;
+    var rowSize =  30;
     var pageCount = Math.ceil(evidenceTableLimit/rowSize);
     var shownItems = tableData.length < rowSize ? tableData.length : rowSize;
-    var currentPage = 1; 
 	
 	var data =  {
-		currentPage:currentPage,
 		isTableScrollable:isTableScrollable,
 		rows:rowSize,
 		totalPage:pageCount,
