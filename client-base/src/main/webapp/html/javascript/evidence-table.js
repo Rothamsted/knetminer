@@ -57,13 +57,8 @@ function getEvidencePvalue ( pvalueStr )
 async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
-    var eventTimer; // TODO: not used, remove?
-    var evidenceTableLimit = evidenceTable.length; 
-    var pageSize = 10;
-    var pageCount = Math.ceil(evidenceTableLimit/pageSize);
-    var pageEnds = evidenceTable.length < pageSize ?evidenceTable.length : pageSize;
-    var currentPage = 1; 
-    
+    var {isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(evidenceTable)
+
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(evidenceTable.length == 0) return null 
@@ -120,13 +115,12 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable" id="evidenceBody">';
-    var tableBody = await createEvidenceTableBody(evidenceTable,1,pageSize,pageCount)
+    var tableBody = await createEvidenceTableBody(evidenceTable,1,rows,totalPage)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
-
     table = table + '</div><div class="evidence-footer">';
-    table = table + '<div class="evidence-select"><span>Showing <span id="count">'+pageEnds+'</span> of <span id="limit">'+evidenceTable.length+'</span></span></div>';
+    table = table + '<div class="evidence-select"><span>Showing <span id="count">'+shownItems+'</span> of <span id="limit">'+evidenceTable.length+'</span></span></div>';
     
     table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
@@ -170,6 +164,7 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
     $("#revertEvidenceView").click(function (e) {
         createEvidenceTable(evidenceTable, keyword ); // redraw table
         $('#evidenceTable').data({ keys: [] });
+        tableEvents.setTableData(evidenceTable,'evidenceTable');
     });
 
     $("#revertEvidenceView").mouseenter(function (e) {
@@ -188,35 +183,7 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
 
     
     // binds onscroll event to evidence table to add new rows after one seconds
-    $('#evidenceViewTable').scroll(function(e){
-        if(eventTimer) return
-        eventTimer = true; 
-
-        // throtting to prevent hundreds of events firing at once
-        setTimeout(function(){
-            const evidenceViewTable = document.getElementById('evidenceViewTable'); 
-                eventTimer = false; 
-                // checks if user reach end of the evidenceTable
-                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight
-                
-                // if user reaches end of the page new rows are created
-                if(calcEndOfPage){
-                    currentPage = currentPage + 1
-                    createEvidenceTableBody(evidenceTable, currentPage, pageSize, pageCount)
-                }
-
-
-                // when last page is reached scroll event is removed
-                if(pageCount === currentPage){
-                    $('#evidenceViewTable').unbind();
-                }
-
-        }, 1000)
-
-		// TODO: What's the point of this? Are we getting 
-		// any return value? Which one?
-        return
-    })
+    tableEvents.scrollEvent('evidenceViewTable',isTableScrollable,rows,'count', 'limit');
 }
 
 /*
@@ -588,17 +555,14 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 }
 
 // function creates evidence table body
-//
-async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidencePageCount){
+async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPage){
 
 		// TODO: currentPage starts from 1 and pageIndex starts from 0?
 		// Is this necessary? Can't we harmonise both to the 0-start convention?
 		//
-    var currentPage = pageIndex; 
     var tableBody=""; 
-
     var pageStart = (pageIndex - 1) * pageSize;
-    var pageEnds = currentPage == evidencePageCount ? evidenceTable.length : pageIndex * pageSize; 
+    var pageEnds = pageIndex == totalPage ? evidenceTable.length : pageIndex * pageSize; 
 
     for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
     {   
@@ -651,7 +615,7 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidence
     
     if ( tableBody )
     {
-      if ( currentPage == 1 ) return tableBody;
+      if ( pageIndex == 1 ) return tableBody;
         // TODO: come on! This is nonsense.
         // There is no need for this function to deal with pageEnds and to return it to the caller.
         // Does the caller really need it? The value is set and changed here, in the lines below.
@@ -666,8 +630,68 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,evidence
         // can compute it with the same function above.
         //
 
-        $('#tablesorterEvidence').append(tableBody)
+        $('#evidenceBody').append(tableBody)
         $('#count').html(pageEnds)
     }
     return null; // just to return something
 }
+
+
+
+/**
+ * function handles scroll events for Geneview and Evidence view tables.
+ */
+ tableEvents = function(){
+
+    var tableInformation ={
+        geneTable:[],
+        evidenceTable:[]
+    }
+
+    function setTableData(data,dataKey){
+            tableInformation[dataKey] = data
+    }
+
+    function scrollTable(table,isTableScrollable, rows, count, limit){
+        var tableElement =  $(`#${table}`);
+
+        tableElement.scroll(function(e){
+            if(isTableScrollable) return
+            isTableScrollable = true; 
+
+            // throtting to prevent hundreds of events firing at once
+            setTimeout(function(){
+                isTableScrollable = false; 
+                
+                const evidenceViewTable = document.getElementById(table); 
+                // checks if user reaches the end of page
+                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+                var currentPage = Math.ceil($(`#${count}`).html()/rows);
+                var totalPage = Math.ceil($(`#${limit}`).html()/rows);
+
+                // when last page is reached scroll event is removed
+                if( totalPage === currentPage) tableElement.unbind();
+
+                    // if user reaches end of the page new rows are created
+                    if(calcEndOfPage){
+                        switch(table){
+                            // creates evidence table 
+                            case 'evidenceViewTable':
+                            createEvidenceTableBody(tableInformation.evidenceTable, currentPage + 1, rows,totalPage)
+                            break;
+                            // creates geneview table
+                            case 'geneViewTable':
+                            createGeneTableBody(tableInformation.geneTable,currentPage+1,rows,totalPage)
+                            break;
+                        }
+                    }
+            }, 1000)
+        })
+    }
+
+
+    return {
+        setTableData:setTableData,
+        scrollEvent:scrollTable
+    }
+}()

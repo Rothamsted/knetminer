@@ -5,173 +5,70 @@
  */
 function createGenesTable(text, keyword, rows){
 	var table = "";
-	var candidateGenes = text.split("\n");
-	var results = candidateGenes.length - 2;
 	
-	if (candidateGenes.length > 2)
-	{
-		// Gene View: interactive summary legend for evidence types.
-		var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
-
-		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
-		table += '</div>';
-		table += '<br>';
-		// dynamic Evidence Summary to be displayed above Gene View table
-		table += '<div id= "geneViewTable" class = "scrollTable">';
-		table += '<table id = "tablesorter" class="tablesorter">';
-		table += '<thead>';
-		table += '<tr>';
-		table += '<th width="100"> Accession </th>';
-		table += '<th width="100"> Symbol</th>';
+	var{isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(text)
+	
+	if (text.length > 0 ){
 
 
 
-		table += '<th width="60">Chr</th>';
-		table += '<th width="70">Nt start</th>';
+	// Gene View: interactive summary legend for evidence types.
+	var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
 
-		table += '<th width="330">Evidence</th>';
-		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-		table += '<th width="70">Select</th>';
-		table += '</tr>';
-		table += '</thead>';
-		table += '<tbody class="scrollTable">';
+	table += '<form name="checkbox_form"><div class="gene_header_container">';
+	table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+	table += '</div>';
+	table += '<br>';
+	// dynamic Evidence Summary to be displayed above Gene View table
+	table += '<div id= "geneViewTable" class = "scrollTable">';
+	table += '<table id = "tablesorter" class="tablesorter">';
+	table += '<thead>';
+	table += '<tr>';
+	table += '<th width="100"> Accession </th>';
+	table += '<th width="100"> Symbol</th>';
+	table += '<th width="60">Chr</th>';
+	table += '<th width="70">Nt start</th>';
 
-		// Main loop over the resulting genes.
-		for (var row = 1; row <= results; row++) 
-		{
-			var geneTableValues = candidateGenes[row].split("\t");
-			[geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = geneTableValues
+	table += '<th width="330">Evidence</th>';
+	table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+	table += '<th width="70">Select</th>';
+	table += '</tr>';
+	table += '</thead>';
+	table += '<tbody id="geneTableBody" class="scrollTable">';
 
-			if (row > rows /*&& values[7]=="no"*/) continue;
-			table += '<tr>';
-
-			geneAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
-
-			var geneAccNorm = geneAccessions.replace(".", "_");
-
-			// Gene accession
-			var geneTd = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + row + '">' + geneAccessions + '</a></td>';
-
-			var geneNameTd = geneName.toUpperCase() == geneAccessions
-				// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
-				? '<td></td>'
-				// else, gene name column, with synonym expansion
-				: '<td><span class="gene_name">' + geneName + '</span> <span onclick="createGeneNameSynonyms(this,' + geneId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
-
-			var taxIdTd = ''
-
-			var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
-
-			// Currently not shown
-			var scoreTd = '<td>' + score + '</td>';
-
-
-			var chrTd = '';
-			var chrStartTd = '';
-
-			var chrTd = '<td>' + chr + '</td>';
-			var chrStartTd = '<td>' + chrStart + '</td>';
-
-			// QTL column with information box
-			var qtlTd = '<td>';
-			if (withinQTLs.length > 1) {
-				var withinQTLs = withinQTLs.split("||");
-				//Shows the icons
-				qtlTd = '<td><div class="qtl_item qtl_item_' + withinQTLs.length + '" title="' + withinQTLs.length + ' QTLs"><a href"javascript:;" class="dropdown_box_open" id="qtl_box_open_' + geneAccNorm + withinQTLs.length + '">' + withinQTLs.length + '</a>';
-
-				//Builds the evidence box
-				qtlTd += '<div id="qtl_box_' + geneAccNorm + withinQTLs.length + '" class="qtl_box"><span class="dropdown_box_close" id="qtl_box_close_' + geneAccNorm + withinQTLs.length + '"></span>';
-				qtlTd += '<p><span>' + "QTLs" + '</span></p>';
-
-				var uniqueQTLs = new Object();
-				var uniqueTraits = new Object();
-
-				for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
-					var withinQTLElems = withinQTLs[iqtl].split("//");
-					if (withinQTLElems[1].length > 0) {
-						if (uniqueTraits[withinQTLElems[1]] == null)
-							uniqueTraits[withinQTLElems[1]] = 1;
-						else
-							uniqueTraits[withinQTLElems[1]]++;
-					}
-					else {
-						if (uniqueQTLs[withinQTLElems[0]] == null)
-							uniqueQTLs[withinQTLElems[0]] = 1;
-						else
-							uniqueQTLs[withinQTLElems[0]]++;
-					}
-				}
-
-				var unique = "";
-				for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
-					var withinQTLElems = withinQTLs[iqtl].split("//");
-					if (withinQTLElems[1].length > 0) {
-						if (unique.indexOf(withinQTLElems[1] + ";") == -1) {
-							unique += withinQTLElems[1] + ";";
-							qtlTd += '<p>' + uniqueTraits[withinQTLElems[1]] + ' ' + withinQTLElems[1] + '</p>';
-						}
-					}
-					else {
-						if (unique.indexOf(withinQTLElems[0] + ";") == -1) {
-							unique = unique + withinQTLElems[0] + ";";
-							qtlTd += '<p>' + uniqueQTLs[withinQTLElems[0]] + ' ' + withinQTLElems[0] + '</p>';
-						}
-					}
-				}
-			} // if ( withinQTLs.length )
-			qtlTd += '</td>';
-
-
-			// For each evidence show the images - start
-			var evidenceTd = '<td><div class="evidence-column-container">';
-			if (evidence.length > 0) {
-				var evidences = evidence.split("||");
-				for (var iev = 0; iev < evidences.length; iev++) {
-					//Shows the icons
-					var evidenceElems = evidences[iev].split("__");
-					var evidenceCC = evidenceElems[0];
-					var evidenceSize = evidenceElems[1];
-					var evidenceNodes = evidenceElems[2].split("//");
-					evidenceTd += '<div class="evidence-container"><div  class="evidence_item evidence_item_' + evidenceCC + '" title="' + evidenceCC + '" >';
-					//Builds the evidence box
-
-					evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
-				} // for iev
-			} // if evidence.length
-			evidenceTd += '<div></td>';
-			// Foreach evidence show the images - end
-
-			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
-			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
-			table += '</tr>';
-		} // for row
-		table += '</tbody>';
-		table += '</table>';
-		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
-		table += '</form>';
-	} // if ( candidateGenes.length > 2 )
-
-	var selectElement = createGeneTableSizeSelector ( rows, results )
+	var TableBody = createGeneTableBody(text,1,rows,totalPage); 
+	table = table + TableBody; 
+	table += '</tbody>';
+	table += '</table>';
+	table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
+	table += '</form>';
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container">'+selectElement+'</div>';
+	table += '<div class="num-genes-container"><span>Showing <span id="geneCount">'+shownItems+'</span> of <span id="geneLimit">'+text.length+'</span></span></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
-	// table += '</insert><div id="loadingNetworkDiv"></div>'; 
+
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
+
 	table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
 
-	document.getElementById('resultsTable').innerHTML = table;
+	$('#resultsTable').html(table);
+
+	}else{
+		console.log('not working okay')
+	}
+	
+	
+
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGSearch_title').scrollIntoView();
 
 	/*
 	 * click Handler for viewing a network.
 	 */
-	$(".viewGeneNetwork").bind("click", { x: candidateGenes }, function (e) {
+	$(".viewGeneNetwork").bind("click", { x: text }, function (e) {
 		e.preventDefault();
 		var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
-		var values = e.data.x[geneNum].split("\t");
+		var values = e.data.x[geneNum];
 
 		// Generate Network in KnetMaps.
 		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword, exportPlainJSON: false }, false);
@@ -221,6 +118,7 @@ function createGenesTable(text, keyword, rows){
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(text, keyword, $("#num-genes").val()); // redraw table
 		$('#resultsTable').data({ keys: [] });
+		tableEvents.setTableData(text,'geneTable');
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -235,13 +133,13 @@ function createGenesTable(text, keyword, rows){
 	 * Select all KNOWN targets: find all targets with existing Evidence & check them.
 	 * Select all NOVEL targets: find all targets with no Evidence & check them.
 	 */
-	$('input:button[name="checkbox_Targets"]').bind("click", { x: candidateGenes }, function (e) {
+	$('input:button[name="checkbox_Targets"]').bind("click", { x: text }, function (e) {
 		e.preventDefault();
-		var numResults = candidateGenes.length - 2;
+		var numResults = text.length ;
 		var targetClass = $(this).hasClass('checked')
 
 		for (var i = 1; i <= numResults; i++) {
-			var values = e.data.x[i].split("\t");
+			var values = e.data.x[i]
 			if (values[7] === "yes") {
 				// Check which input buttons are selected.
 				if ($(this).val() === "Linked Genes") { // Select Known Targets.
@@ -269,6 +167,8 @@ function createGenesTable(text, keyword, rows){
 		var viewName = "Gene";
 		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
 	});
+
+	tableEvents.scrollEvent('geneViewTable',isTableScrollable,rows,'geneCount','geneLimit');
 
 }
 
@@ -415,7 +315,6 @@ function updateSelectedGenesCount(inputName, countContainer, viewName) {
 function returnCheckInputCount(inputname) { return $('input:checkbox[name=' + inputname + ']:checked').length }
 
 
-
 // function downloads cytoscape compatible json files
 function downloadNetwork() {
 
@@ -462,10 +361,157 @@ function downloadNetwork() {
 }
 
 /**
- * @see createTableSizeSelector()
+ * @desc function creates calculates and return pagination values for gene view and evidence table
  */
-function createGeneTableSizeSelector ( selectedSize, tableSize )
+function createPaginationForTable (tableData)
 {
-	return createTableSizeSelector ( selectedSize, tableSize, true )
+	var isTableScrollable = false; // TODO: not used, remove?
+    var evidenceTableLimit = tableData.length; 
+    var rowSize =  30;
+    var pageCount = Math.ceil(evidenceTableLimit/rowSize);
+    var shownItems = tableData.length < rowSize ? tableData.length : rowSize;
+	
+	var data =  {
+		isTableScrollable:isTableScrollable,
+		rows:rowSize,
+		totalPage:pageCount,
+		shownItems:shownItems
+	}
+
+	return data;
+}
+
+
+/**
+ * @desc function creates and returns geneview table body
+ * @param {*} results 
+ * @param {*} pageIndex 
+ * @param {*} rows 
+ * @param {*} totalPage 
+ * @returns 
+ */
+function createGeneTableBody(results, pageIndex,rows,totalPage){
+
+
+	var table = ''
+	// Main loop over the resulting genes.
+	var pageStart = (pageIndex - 1) * rows;
+    var pageEnds = pageIndex == totalPage ? results.length : pageIndex * rows; 
+	for (var row = pageStart; row < pageEnds; row++)
+	{
+		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = results[row]
+
+		// if (row > rows /*&& values[7]=="no"*/) continue;
+		table += '<tr>';
+
+		geneAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
+
+		var geneAccNorm = geneAccessions.replace(".", "_");
+
+		// Gene accession
+		var geneTd = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + row + '">' + geneAccessions + '</a></td>';
+
+		var geneNameTd = geneName.toUpperCase() == geneAccessions
+			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
+			? '<td></td>'
+			// else, gene name column, with synonym expansion
+			: '<td><span class="gene_name">' + geneName + '</span> <span onclick="createGeneNameSynonyms(this,' + geneId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
+
+		var taxIdTd = ''
+
+		var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
+
+		// Currently not shown
+		var scoreTd = '<td>' + score + '</td>';
+
+
+		var chrTd = '';
+		var chrStartTd = '';
+
+		var chrTd = '<td>' + chr + '</td>';
+		var chrStartTd = '<td>' + chrStart + '</td>';
+
+		// QTL column with information box
+		var qtlTd = '<td>';
+		if (withinQTLs.length > 1) {
+			var withinQTLs = withinQTLs.split("||");
+			//Shows the icons
+			qtlTd = '<td><div class="qtl_item qtl_item_' + withinQTLs.length + '" title="' + withinQTLs.length + ' QTLs"><a href"javascript:;" class="dropdown_box_open" id="qtl_box_open_' + geneAccNorm + withinQTLs.length + '">' + withinQTLs.length + '</a>';
+
+			//Builds the evidence box
+			qtlTd += '<div id="qtl_box_' + geneAccNorm + withinQTLs.length + '" class="qtl_box"><span class="dropdown_box_close" id="qtl_box_close_' + geneAccNorm + withinQTLs.length + '"></span>';
+			qtlTd += '<p><span>' + "QTLs" + '</span></p>';
+
+			var uniqueQTLs = new Object();
+			var uniqueTraits = new Object();
+
+			for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
+				var withinQTLElems = withinQTLs[iqtl].split("//");
+				if (withinQTLElems[1].length > 0) {
+					if (uniqueTraits[withinQTLElems[1]] == null)
+						uniqueTraits[withinQTLElems[1]] = 1;
+					else
+						uniqueTraits[withinQTLElems[1]]++;
+				}
+				else {
+					if (uniqueQTLs[withinQTLElems[0]] == null)
+						uniqueQTLs[withinQTLElems[0]] = 1;
+					else
+						uniqueQTLs[withinQTLElems[0]]++;
+				}
+			}
+
+			var unique = "";
+			for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
+				var withinQTLElems = withinQTLs[iqtl].split("//");
+				if (withinQTLElems[1].length > 0) {
+					if (unique.indexOf(withinQTLElems[1] + ";") == -1) {
+						unique += withinQTLElems[1] + ";";
+						qtlTd += '<p>' + uniqueTraits[withinQTLElems[1]] + ' ' + withinQTLElems[1] + '</p>';
+					}
+				}
+				else {
+					if (unique.indexOf(withinQTLElems[0] + ";") == -1) {
+						unique = unique + withinQTLElems[0] + ";";
+						qtlTd += '<p>' + uniqueQTLs[withinQTLElems[0]] + ' ' + withinQTLElems[0] + '</p>';
+					}
+				}
+			}
+		} // if ( withinQTLs.length )
+		qtlTd += '</td>';
+
+
+		// For each evidence show the images - start
+		var evidenceTd = '<td><div class="evidence-column-container">';
+		if (evidence.length > 0) {
+			var evidences = evidence.split("||");
+			for (var iev = 0; iev < evidences.length; iev++) {
+				//Shows the icons
+				var evidenceElems = evidences[iev].split("__");
+				var evidenceCC = evidenceElems[0];
+				var evidenceSize = evidenceElems[1];
+				var evidenceNodes = evidenceElems[2].split("//");
+				evidenceTd += '<div class="evidence-container"><div  class="evidence_item evidence_item_' + evidenceCC + '" title="' + evidenceCC + '" >';
+				//Builds the evidence box
+
+				evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
+			} // for iev
+		} // if evidence.length
+		evidenceTd += '<div></td>';
+		// Foreach evidence show the images - end
+
+		var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
+		table = table + geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
+		// table += '</tr>';
+	}// for row
+
+	if(table)
+	{
+	 if(pageIndex == 1)return table; 
+
+	 $('#geneTableBody').append(table)
+    $('#geneCount').html(pageEnds)
+
+	}
 }
 
