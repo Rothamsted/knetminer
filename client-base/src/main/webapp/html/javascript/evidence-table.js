@@ -52,12 +52,14 @@ function getEvidencePvalue ( pvalueStr )
  * this server-side sorting performs. 
  * 
  * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
+ * TODO: selectedSize isn't used anymore after the introduction of scrolling, eventually consider it
+ * for removal
  * 
  */
 async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
 {
     var table = "";
-    var {isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(evidenceTable)
+    var {isTableScrollable,rows,totalPage,shownItems} = getTablePaginationData(evidenceTable)
 
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
@@ -555,7 +557,9 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 }
 
 // function creates evidence table body
-async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPage){
+//
+async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, totalPage )
+{
 
 		// TODO: currentPage starts from 1 and pageIndex starts from 0?
 		// Is this necessary? Can't we harmonise both to the 0-start convention?
@@ -640,6 +644,24 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPag
 
 /**
  * function handles scroll events for Geneview and Evidence view tables.
+ * 
+ * TODO: THIS IS INSANE! WE HAVE TO STOP TO PROGRAM THIS BADLY!
+ * 
+ * Programming is about THINKING, using logic, think about clean code organisation, CHANGE
+ * existing code to adapt it to new features and needs, NOT MAKE ABSURD CONVOLUTIONS
+ * around it.
+ * 
+ * This is a short block with an incredible amount of MESS: 
+ * 
+ * - The name tableEvents is wrong, this is about the infinite scrolling of two tables.
+ *   STOP naming things randomly
+ * - Why the hell do you need to manage two tables at the same time?! Why can't you have 
+ *   ONE class and TWO instance objects, each with its own table to manage?
+ * - Once it's a class, what's the point of having a global object? Why can't it be instantiated
+ *   and used where it's needed, in the respective tables? 
+ *  
+ * More issues are reported below.
+ * 
  */
  tableEvents = function(){
 
@@ -652,38 +674,50 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPag
             tableInformation[dataKey] = data
     }
 
-    function scrollTable(table,isTableScrollable, rows, count, limit){
-        var tableElement =  $(`#${table}`);
+	  /*
+	    TODO:
+	      - isTableScrollable probably has a different meaning and needs a better name (scrollingActive?),
+	        the table is always scrollable
+	      
+	      count and limit are the names of HTML elements, where the current page start and the total no of
+	      pages are stored.
+	      
+	      - Do we need to place these state variables into HTML? Can't they be fields of the 
+	      hereby object? 
+	      - If we really need them as HTML, I don't see any need for the corresponding elements
+	      to have variable names. They could be named the same in both tables, eg, 
+	      currentOffset, tableSize and then this method wouldn't need these parameters at all.
+
+	  */
+    function scrollTable ( tableName, isTableScrollable, rows, count, limit )
+    {
+        var tableElement =  $(`#${tableName}`);
 
         tableElement.scroll(function(e){
             if(isTableScrollable) return
             isTableScrollable = true; 
 
-            // throtting to prevent hundreds of events firing at once
+            // throttling to prevent hundreds of events firing at once
             setTimeout(function(){
                 isTableScrollable = false; 
                 
-                const evidenceViewTable = document.getElementById(table); 
+                const evidenceViewTable = document.getElementById(tableName); 
                 // checks if user reaches the end of page
-                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+                var isPageEnd =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
                 var currentPage = Math.ceil($(`#${count}`).html()/rows);
-                var totalPage = Math.ceil($(`#${limit}`).html()/rows);
+                var totalPages = Math.ceil($(`#${limit}`).html()/rows);
 
                 // when last page is reached scroll event is removed
-                if( totalPage === currentPage) tableElement.unbind();
+                if( totalPages === currentPage) tableElement.unbind();
 
                     // if user reaches end of the page new rows are created
-                    if(calcEndOfPage){
-                        switch(table){
-                            // creates evidence table 
-                            case 'evidenceViewTable':
-                            createEvidenceTableBody(tableInformation.evidenceTable, currentPage + 1, rows,totalPage)
-                            break;
-                            // creates geneview table
-                            case 'geneViewTable':
-                            createGeneTableBody(tableInformation.geneTable,currentPage+1,rows,totalPage)
-                            break;
-                        }
+                    if(isPageEnd)
+                    {
+											[targetTable, targetRenderer] = tableName == 'evidenceViewTable'
+												? [ tableInformation.evidenceTable, createEvidenceTableBody ]													
+												: [ tableInformation.geneTable, createGeneTableBody ]
+	                    
+	                    targetRenderer ( targetTable, currentPage + 1, rows, totalPages )
                     }
             }, 1000)
         })
@@ -692,6 +726,7 @@ async function createEvidenceTableBody(evidenceTable,pageIndex,pageSize,totalPag
 
     return {
         setTableData:setTableData,
+        // TODO: does it really need to have a different name?
         scrollEvent:scrollTable
     }
 }()

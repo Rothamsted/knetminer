@@ -1,12 +1,15 @@
  /*
   * Function to create interactive legend as summary for Gene View evidences.
-  * @returns interactive Gene View summary legend <div> for filtering
+  * @returns the <div> containing the interactive Gene View summary legend.
+  * 
+  * TODO (not urgent): what is geneViewFullText? The gene table? Why is it named like this?
+  * Why is it parsed here too and not after the API call, or by the gene view renderer?
   */
-function getInteractiveSummaryLegend(GeneView_fullText) {
+function getInteractiveSummaryLegend(geneViewFullText) {
 
   var evidencesArr= new Array();
-  for(var i=1; i < GeneView_fullText.length; i++) {
-      var evi_value= GeneView_fullText[i][9].trim();
+  for(var i=1; i < geneViewFullText.length; i++) {
+      var evi_value= geneViewFullText[i][9].trim();
       if(evi_value !== "") {
          evidencesArr.push(evi_value);
         }
@@ -48,10 +51,13 @@ function getInteractiveSummaryLegend(GeneView_fullText) {
 }
 
 
-  /*
-  * Function
+ /*
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
-  *0*/
+  *
+  * TODO: (not urgent) these table-related names aren't about any table, they need better names,
+  * eg, filterKnetTableByType.
+  * 
+  */
 function filterTableByType(key,location,event,revertButton) {       
            updateLegendsKeys(key,location,event)
      try{
@@ -154,7 +160,7 @@ function filterTableByType(key,location,event,revertButton) {
         $('#tablesorter').show();
         $('.num-genes-container').show();
 
-        var{rows,totalPage,shownItems}= createPaginationForTable(evidenceKeysArrays); 
+        var{rows,totalPage,shownItems}= getTablePaginationData(evidenceKeysArrays); 
         var itemsCount = location == 'resultsTable' ? ['geneCount','geneLimit'] : ['count','limit']; 
 
         switch(location){

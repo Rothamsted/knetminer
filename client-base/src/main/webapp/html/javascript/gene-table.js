@@ -6,7 +6,7 @@
 function createGenesTable(text, keyword, rows){
 	var table = "";
 	
-	var{isTableScrollable,rows,totalPage,shownItems} = createPaginationForTable(text)
+	var{isTableScrollable,rows,totalPage,shownItems} = getTablePaginationData(text)
 	
 	if (text.length > 0 ){
 
@@ -363,12 +363,14 @@ function downloadNetwork() {
 /**
  * @desc function creates calculates and return pagination values for gene view and evidence table
  */
-function createPaginationForTable (tableData)
+function getTablePaginationData (tableData)
 {
-	var isTableScrollable = false; // TODO: not used, remove?
-    var evidenceTableLimit = tableData.length; 
+	var isTableScrollable = false; // TODO: DAMN IT! WHAT'S THE POINT OF RETURNING A CONSTANT!?
+    var evidenceTableLimit = tableData.length;
+    // TODO: bad name, use something like pageSize
     var rowSize =  30;
     var pageCount = Math.ceil(evidenceTableLimit/rowSize);
+    // TODO: bad name, use something like length or actualLenght
     var shownItems = tableData.length < rowSize ? tableData.length : rowSize;
 	
 	var data =  {
@@ -384,6 +386,10 @@ function createPaginationForTable (tableData)
 
 /**
  * @desc function creates and returns geneview table body
+ 
+ TODO: I can read the parameter list on the signature, do not
+ report them here without telling what they are
+ 
  * @param {*} results 
  * @param {*} pageIndex 
  * @param {*} rows 

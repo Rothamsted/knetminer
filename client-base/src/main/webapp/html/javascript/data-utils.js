@@ -1,4 +1,3 @@
-
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
@@ -601,7 +600,7 @@ handleDelimintedCta = function(){
 
 /**
  * @desc function creates evidence view using jquery data method 
- * @param {string} * a string that idenitifies the current tab view
+ * @param option a string that idenitifies the current tab view
  */
 function handleViewCreation(option){
     $('#'+option+'_button').addClass('created');
