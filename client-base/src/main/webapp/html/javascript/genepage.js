@@ -1,39 +1,46 @@
 var knetmaps;
 var genemaps;
 
-$(document).ready(function () {
+$(document).ready ( function ()
+{
+  setupApiUrls('/html/genepage.jsp')
+  .then(function ()
+  {
+    showApiInitResult ();
+
+    var urlParams = (new URL(window.location.href)).searchParams;
+
+    var keywords = urlParams.get("keyword")
+
+    var list = urlParams.get('list').split(',');
+    list = cleanGeneList ( list );
 
 
-    setupApiUrls('/html/genepage.jsp')
-        .then(function () {
+    $('.logo-top').attr('src', 'image/logo.svg');
+    $('#exportBtns img').attr('src', 'image/Knetdownload.png');
+    $('#search-gene').html(`${list.join(', ')}`)
 
-            showApiInitResult ();
-
-            var urlParams = (new URL(window.location.href)).searchParams;
-
-            var keywords = urlParams.get("keyword")
-
-            var list = urlParams.get('list').split(',');
-            list = cleanGeneList ( list );
-        
+    // conditionals address the case where keyword value is empty
+    if (keywords !== '') {
+        $('#search-keyword').html(keywords)
+    } else {
+        $('#keyword-section').hide();
+    }
+    generateCyJSNetwork(api_url + '/network', { keyword: keywords, list: list, exportPlainJSON: false }, true);
+    loginUtilsInit();
+    knetmaps = KNETMAPS.KnetMaps();
+    $('#NetworkCanvas').show();
     
-            $('.logo-top').attr('src', 'image/logo.svg');
-            $('#exportBtns img').attr('src', 'image/Knetdownload.png');
-            $('#search-gene').html(`${list.join(', ')}`)
-
-            // conditionals address the case where keyword value is empty
-            if (keywords !== '') {
-                $('#search-keyword').html(keywords)
-            } else {
-                $('#keyword-section').hide();
-            }
-            generateCyJSNetwork(api_url + '/network', { keyword: keywords, list: list, exportPlainJSON: false }, true);
-            loginUtilsInit();
-            knetmaps = KNETMAPS.KnetMaps();
-            $('#NetworkCanvas').show();
-        }).catch(
-            err => showApiInitResult(err)
-        );
-
-})
+		// Do this as last step, so that it doesn't track in 
+		// case of failure		
+    googleAnalytics.start ()
+    .then ( () => googleAnalytics.trackEvent (
+			"gene page opened", 
+			{ keywords: keywords, list: list }
+		))    
+  }).catch(
+      err => showApiInitResult(err)
+  );
+  // setupApiUrls()
+}) // ready()
 

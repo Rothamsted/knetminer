@@ -135,6 +135,11 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
                         // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
                         genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
+                        
+                        googleAnalytics.trackEvent (
+                          request, // It already has a leading '/'
+                          { 'keyword': keyword, 'searchMode': searchMode, 'geneListSize': geneList_size }
+                        )
                     }
                     ).complete(function(){
                         // Remove loading spinner from 'search' div
@@ -601,6 +606,10 @@ handleDelimintedCta = function(){
 /**
  * @desc function creates evidence view using jquery data method 
  * @param option a string that idenitifies the current tab view
+ * 
+ * TODO: It is ONLY used for the EVIDENCE TABLE! Why does it have such a generic 
+ * name?! And what's 'option' for, if it's ALWAYS set to 'evidenceTable'?!
+ * 
  */
 function handleViewCreation(option){
     $('#'+option+'_button').addClass('created');

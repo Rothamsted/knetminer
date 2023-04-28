@@ -13,25 +13,24 @@ $(document).ready (
 		.then ( function ()
 		{		
 			showApiInitResult ();
+			genemap = GENEMAP.GeneMap({apiUrl: api_url})
+			  .width(800).height(550); // changed from 750x400
 			
-			
-		genemap = GENEMAP.GeneMap({apiUrl: api_url})
-			.width(800).height(550); // changed from 750x400
-	
-		knetmaps = KNETMAPS.KnetMaps();
-		getTaxIdFromUrl();
+			knetmaps = KNETMAPS.KnetMaps();
+			getTaxIdFromUrl();
 	    multiSpeciesFeature.init();					
 			loginUtilsInit();	 // See notes in loginUtils.js
 	    loadOnReady();
 	    showReferenceGenome();
 	    initResetButton();
 	    qtlRegionHandlers();
-		showToolTips();
-		intialiseFeedbackCtaConfig();
+	    showToolTips();
+	    intialiseFeedbackCtaConfig();
 		
-		// Do this as last step, so that it doesn't track in 
-		// case of failure		
-	    doGoogleAnalytics ();
+			// Do this as last step, so that it doesn't track in 
+			// case of failure		
+	    googleAnalytics.start ()
+	    .then ( () => googleAnalytics.trackEvent ( "UI opened" ) );
 		})
 		.catch ( 
 			err => showApiInitResult ( err )
