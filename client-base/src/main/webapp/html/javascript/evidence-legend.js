@@ -33,7 +33,9 @@ function getEvidencesLegend( evidenceTable )
     // `<div onClick = ...
     //    <div class = ....
     // ...`
-    summaryText = summaryText + '<div  onclick=filterTableByType("' + contype + '","evidenceTable",event,"revertEvidenceView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_' + key + '"  title="' + key+ '"></div> <span style="font-weight:600; margin-right:.5rem;">' + key+ '</span> <span> ('+ value +') </span></div>';
+    summaryText = summaryText + '<div  onclick=filterKnetTableByType("' + contype + '","evidenceTable",event,"revertEvidenceView");  class="evidenceSummaryItem">';
+    summaryText = summaryText + '<div class="evidence-icons evidence_item evidence_item_' + key + '"  title="' + key+ '"></div>';
+    summaryText= summaryText + '<span style="font-weight:600; margin-right:.5rem;">' + key+ '</span> <span> ('+ value +') </span></div>';
   });
 
   legend = legend + summaryText + '</div>';

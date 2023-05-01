@@ -3,15 +3,14 @@
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
-function createGenesTable(text, keyword, rows){
+function createGenesTable(text, keyword){
 	var table = "";
-	
-	var{isTableScrollable,rows,totalPage,shownItems} = getTablePaginationData(text)
+ 	var {totalPage,itemsLength} = getTablePaginationData(text); 
+
+	// set table data for infinite scrolling
+	 infiniteScrollEvents.setTableData(text,'resultsTable'); 
 	
 	if (text.length > 0 ){
-
-
-
 	// Gene View: interactive summary legend for evidence types.
 	var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
 
@@ -36,15 +35,15 @@ function createGenesTable(text, keyword, rows){
 	table += '</thead>';
 	table += '<tbody id="geneTableBody" class="scrollTable">';
 
-	var TableBody = createGeneTableBody(text,1,rows,totalPage); 
-	table = table + TableBody; 
+	var tableBody = createGeneTableBody(text,1,totalPage); 
+	table = table + tableBody; 
 	table += '</tbody>';
 	table += '</table>';
 	table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
 	table += '</form>';
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container"><span>Showing <span id="geneCount">'+shownItems+'</span> of <span id="geneLimit">'+text.length+'</span></span></div>';
+	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+itemsLength+'</span> of <span id="limit">'+text.length+'</span></span></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
@@ -53,10 +52,7 @@ function createGenesTable(text, keyword, rows){
 
 	$('#resultsTable').html(table);
 
-	}else{
-		console.log('not working okay')
 	}
-	
 	
 
 	// scroll down to geneTable, but show tabviewer_buttons above
@@ -108,17 +104,14 @@ function createGenesTable(text, keyword, rows){
 		// }
 	});
 
-	$("#num-genes").change(function (e) {
-		createGenesTable(text, keyword, $("#num-genes option:selected").val());	//if number of genes to show changes, redraw table.
-	});
 
 	/*
 	 * Revert Evidence Filtering changes on Gene View table
 	 */
 	$("#revertGeneView").click(function (e) {
-		createGenesTable(text, keyword, $("#num-genes").val()); // redraw table
+		createGenesTable(text, keyword,); // redraw table
 		$('#resultsTable').data({ keys: [] });
-		tableEvents.setTableData(text,'geneTable');
+		infiniteScrollEvents.setTableData(text,'resultsTable'); 
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -168,7 +161,7 @@ function createGenesTable(text, keyword, rows){
 		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
 	});
 
-	tableEvents.scrollEvent('geneViewTable',isTableScrollable,rows,'geneCount','geneLimit');
+	infiniteScrollEvents.scrollTable('geneViewTable');
 
 }
 
@@ -363,21 +356,15 @@ function downloadNetwork() {
 /**
  * @desc function creates calculates and return pagination values for gene view and evidence table
  */
-function getTablePaginationData (tableData)
+function getTablePaginationData(tableData)
 {
-	var isTableScrollable = false; // TODO: DAMN IT! WHAT'S THE POINT OF RETURNING A CONSTANT!?
-    var evidenceTableLimit = tableData.length;
-    // TODO: bad name, use something like pageSize
-    var rowSize =  30;
-    var pageCount = Math.ceil(evidenceTableLimit/rowSize);
+    var pageCount = Math.ceil(tableData.length/30);
     // TODO: bad name, use something like length or actualLenght
-    var shownItems = tableData.length < rowSize ? tableData.length : rowSize;
+    var itemsLength = tableData.length < 30 ? tableData.length : 30;
 	
 	var data =  {
-		isTableScrollable:isTableScrollable,
-		rows:rowSize,
 		totalPage:pageCount,
-		shownItems:shownItems
+		itemsLength:itemsLength
 	}
 
 	return data;
@@ -390,19 +377,18 @@ function getTablePaginationData (tableData)
  TODO: I can read the parameter list on the signature, do not
  report them here without telling what they are
  
- * @param {*} results 
- * @param {*} pageIndex 
- * @param {*} rows 
- * @param {*} totalPage 
+ * @param {*} results geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
+ * @param {*} pageIndex number is used compute the geneview's data starting and ending range.
+ * @param {*} rowSize number of data rows to be created, defaults to number geneViewData if length is less than 30 see(getTablePaginationData()).
+ * @param {*} totalPage total number of pages that can be rendered, results from dividing geneView data length by rowSize. see (getTablePaginationData())
  * @returns 
  */
-function createGeneTableBody(results, pageIndex,rows,totalPage){
-
-
+function createGeneTableBody(results, pageIndex,totalPage){
 	var table = ''
+
 	// Main loop over the resulting genes.
-	var pageStart = (pageIndex - 1) * rows;
-    var pageEnds = pageIndex == totalPage ? results.length : pageIndex * rows; 
+	var pageStart = (pageIndex - 1) * 30;
+    var pageEnds = pageIndex == totalPage ? results.length : pageIndex * 30; 
 	for (var row = pageStart; row < pageEnds; row++)
 	{
 		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = results[row]
@@ -520,4 +506,61 @@ function createGeneTableBody(results, pageIndex,rows,totalPage){
 
 	}
 }
+
+
+ /*
+  * Function to create interactive legend as summary for Gene View evidences.
+  * @returns the <div> containing the interactive Gene View summary legend.
+  * 
+  * TODO (not urgent): what is geneViewFullText? The gene table? Why is it named like this?
+  * Why is it parsed here too and not after the API call, or by the gene view renderer?
+  * function is currently called within geneview Renderer
+  */
+ function getInteractiveSummaryLegend(geneViewData) {
+
+	var evidencesArr= new Array();
+	for(var i=1; i < geneViewData.length; i++) {
+		var evi_value= geneViewData[i][9].trim();
+		if(evi_value !== "") {
+		   evidencesArr.push(evi_value);
+		  }
+	  }
+  
+	var con_legend= new Map();
+	// Iterate through evidences and get counts for each evidence Concept Type.
+	evidencesArr.forEach(function(evi) {
+		var row_values= evi.trim().split("||");
+		row_values.forEach(function(rv) {
+			var conType= rv.trim().split("__")[0].trim();
+			var conCount= Number(rv.trim().split("__")[1].trim());
+			// check/add unique concept types to Map
+			if(con_legend.has(conType)) {
+			   // update if this count is greater than old, stored count
+			   var old_count= con_legend.get(conType);
+			   if(Number(conCount) > Number(old_count)) { con_legend.set(conType, conCount); }
+			  }
+			else { // add new conType to Map
+				con_legend.set(conType, conCount);
+			}
+		  });
+	   });
+  
+	// Display evidence icons with count and name in legend.
+	//var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
+	var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
+	var summaryText = '';
+  
+	con_legend.forEach(function(value, key, map)
+	{     
+	  var contype= key.trim();
+  
+			  summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterKnetTableByType("'+contype+'","resultsTable",event,"revertGeneView");  class="evidenceSummaryItem">';
+			  summaryText = summaryText + '<div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '">';
+			  summaryText = summaryText + '</div> '+ key +'</div>';
+	});
+  
+	legend= legend + summaryText +'</div>';
+	return legend;
+}
+  
 

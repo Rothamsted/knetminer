@@ -56,47 +56,47 @@ function getEvidencePvalue ( pvalueStr )
  * for removal
  * 
  */
-async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null, doSortTable = false )
+async function createEvidenceTable(evidenceTable,doSortTable=false) 
 {
     var table = "";
-    var {isTableScrollable,rows,totalPage,shownItems} = getTablePaginationData(evidenceTable)
+    var {totalPage,itemsLength} = getTablePaginationData(evidenceTable)
+
+    // set current table data for infinite scrolling
+   
 
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(evidenceTable.length == 0) return null 
 
-		// TODO: remove once the API change to sort is implemented (and invoked)
-		if ( doSortTable )
-		{
-	    evidenceTable.sort(function( row1, row2 )
-	    {
-			    // TODO: this damn column indices are popping up everywhere, either use the conversion to 
-			    // meaning variables, or, if we have many of this row value accesses, consider to get them
-			    // with a common function like:
-			    //
-					// function getEvidenceTableRowAsDict ( arrayRow ) {
-					//   returns a dictionary object 'dict', with the meaningful keys, ie,
-					//   dict.type, dict.nodeLabel, dict.pvalue...
-					// }
-													  
-				  var [ pval1, nUserGenes1, totGenes1 ] = [ row1 [ 3 ], row1 [ 5 ], row1 [ 4 ] ]
-				  var [ pval2, nUserGenes2, totGenes2 ] = [ row2 [ 3 ], row2 [ 5 ], row2 [ 4 ] ]
-									
-					pval1 = getEvidencePvalue ( pval1 )
-					pval2 = getEvidencePvalue ( pval2 )
-					if ( pval1 !== pval2 ) return pval1 - pval2
-	        
-	        nUserGenes1 = Number ( nUserGenes1 )
-	        nUserGenes2 = Number ( nUserGenes2 )
-	        if ( nUserGenes1 !== nUserGenes2 )
-	        	return nUserGenes2 - nUserGenes1 // descending order
-	        
-	        totGenes1 = Number ( totGenes1 )
-	        totGenes2 = Number ( totGenes2 )
-	        
-	        return totGenes2 - totGenes1 // descending order
-	    }); 
-		} // if doSortTable
+    evidenceTable.sort(function( row1, row2 )
+    {
+            // TODO: this damn column indices are popping up everywhere, either use the conversion to 
+            // meaning variables, or, if we have many of this row value accesses, consider to get them
+            // with a common function like:
+            //
+                // function getEvidenceTableRowAsDict ( arrayRow ) {
+                //   returns a dictionary object 'dict', with the meaningful keys, ie,
+                //   dict.type, dict.nodeLabel, dict.pvalue...
+                // }
+                                                    
+                var [ pval1, nUserGenes1, totGenes1 ] = [ row1 [ 3 ], row1 [ 5 ], row1 [ 4 ] ]
+                var [ pval2, nUserGenes2, totGenes2 ] = [ row2 [ 3 ], row2 [ 5 ], row2 [ 4 ] ]
+                                
+                pval1 = getEvidencePvalue ( pval1 )
+                pval2 = getEvidencePvalue ( pval2 )
+                if ( pval1 !== pval2 ) return pval1 - pval2
+        
+        nUserGenes1 = Number ( nUserGenes1 )
+        nUserGenes2 = Number ( nUserGenes2 )
+        if ( nUserGenes1 !== nUserGenes2 )
+            return nUserGenes2 - nUserGenes1 // descending order
+        
+        totGenes1 = Number ( totGenes1 )
+        totGenes2 = Number ( totGenes2 )
+        
+        return totGenes2 - totGenes1 // descending order
+    }); 
+
         
     // Evidence View: interactive legend for evidences.
     var eviLegend = getEvidencesLegend(evidenceTable);
@@ -117,13 +117,12 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable" id="evidenceBody">';
-    var tableBody = await createEvidenceTableBody(evidenceTable,1,rows,totalPage)
+    var tableBody = await createEvidenceTableBody(evidenceTable,1,totalPage)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
     table = table + '</div><div class="evidence-footer">';
-    table = table + '<div class="evidence-select"><span>Showing <span id="count">'+shownItems+'</span> of <span id="limit">'+evidenceTable.length+'</span></span></div>';
-    
+    table = table + '<div class="evidence-select"><span>Showing <span id="evidenceCount" class="count">'+itemsLength+'</span> of <span class="limit">'+evidenceTable.length+'</span></span></div>';
     table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
@@ -155,18 +154,33 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
     // need a function to tweak them, as explained here:
     //
     // https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
-    //
-    if ( !doSortTable ) tableSorterOpts.sortList = [[3, 0], [5, 1], [4, 1]];
-    
-    $("#tablesorterEvidence").tablesorter();
 
+    //
+    if ( !doSortTable ){
+        tableSorterOpts.sortList = [[3, 0], [5, 1], [4, 1]];
+    }
+        // initialise tablesorter 
+        $("#tablesorterEvidence").tablesorter(); 
+
+        // sorting positions
+        var  sortingPositions = [[4,0], [5,1],[6,1]]; 
+        console.log(sortingPositions);
+
+        for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++){
+    
+            var getSortingDirection = sortingPositions[sortingIndex][1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
+    
+            $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPositions[sortingIndex][0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
+        }
+      
     /*
      * Revert filtering changes on Evidence View table
      */
     $("#revertEvidenceView").click(function (e) {
-        createEvidenceTable(evidenceTable, keyword ); // redraw table
+        console.log('here')
+        createEvidenceTable(evidenceTable,false); // redraw table
         $('#evidenceTable').data({ keys: [] });
-        tableEvents.setTableData(evidenceTable,'evidenceTable');
+        infiniteScrollEvents.setTableData(evidenceTable,'evidenceTable');
     });
 
     $("#revertEvidenceView").mouseenter(function (e) {
@@ -185,7 +199,7 @@ async function createEvidenceTable ( evidenceTable, keyword, selectedSize = null
 
     
     // binds onscroll event to evidence table to add new rows after one seconds
-    tableEvents.scrollEvent('evidenceViewTable',isTableScrollable,rows,'count', 'limit');
+    infiniteScrollEvents.scrollTable('evidenceViewTable');
 }
 
 /*
@@ -558,15 +572,15 @@ function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
 
 // function creates evidence table body
 //
-async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, totalPage )
+async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 {
 
 		// TODO: currentPage starts from 1 and pageIndex starts from 0?
 		// Is this necessary? Can't we harmonise both to the 0-start convention?
 		//
     var tableBody=""; 
-    var pageStart = (pageIndex - 1) * pageSize;
-    var pageEnds = pageIndex == totalPage ? evidenceTable.length : pageIndex * pageSize; 
+    var pageStart = (pageIndex - 1) * 30;
+    var pageEnds = pageIndex == totalPage ? evidenceTable.length : pageIndex * 30; 
 
     for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
     {   
@@ -635,11 +649,10 @@ async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, total
         //
 
         $('#evidenceBody').append(tableBody)
-        $('#count').html(pageEnds)
+        $('#evidenceCount').html(pageEnds)
     }
     return null; // just to return something
 }
-
 
 
 /**
@@ -663,10 +676,10 @@ async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, total
  * More issues are reported below.
  * 
  */
- tableEvents = function(){
-
+infiniteScrollEvents = function(){
+    // Update: Tried using classes as recommended but found it diffcult to handle data changes because each instance will only have access data it was instantiated with. Currently investigating better approach as recommended. 
     var tableInformation ={
-        geneTable:[],
+        resultsTable:[],
         evidenceTable:[]
     }
 
@@ -674,50 +687,36 @@ async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, total
             tableInformation[dataKey] = data
     }
 
-	  /*
-	    TODO:
-	      - isTableScrollable probably has a different meaning and needs a better name (scrollingActive?),
-	        the table is always scrollable
-	      
-	      count and limit are the names of HTML elements, where the current page start and the total no of
-	      pages are stored.
-	      
-	      - Do we need to place these state variables into HTML? Can't they be fields of the 
-	      hereby object? 
-	      - If we really need them as HTML, I don't see any need for the corresponding elements
-	      to have variable names. They could be named the same in both tables, eg, 
-	      currentOffset, tableSize and then this method wouldn't need these parameters at all.
-
-	  */
-    function scrollTable ( tableName, isTableScrollable, rows, count, limit )
-    {
-        var tableElement =  $(`#${tableName}`);
+    function scrollTable(table){
+        var isTableScrollable;
+        var tableElement =  $(`#${table}`);
 
         tableElement.scroll(function(e){
             if(isTableScrollable) return
             isTableScrollable = true; 
 
-            // throttling to prevent hundreds of events firing at once
+            // throtting to prevent hundreds of events firing at once
             setTimeout(function(){
                 isTableScrollable = false; 
                 
-                const evidenceViewTable = document.getElementById(tableName); 
+                const evidenceViewTable = document.getElementById(table); 
                 // checks if user reaches the end of page
-                var isPageEnd =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
-                var currentPage = Math.ceil($(`#${count}`).html()/rows);
-                var totalPages = Math.ceil($(`#${limit}`).html()/rows);
-
-                // when last page is reached scroll event is removed
-                if( totalPages === currentPage) tableElement.unbind();
+                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+                var currentPage = Math.ceil($(`#${location}`).find('.count').html()/30);
+                var totalPage  = Math.ceil(data[location].length/30);
 
                     // if user reaches end of the page new rows are created
-                    if(isPageEnd)
-                    {
-											[targetTable, targetRenderer] = tableName == 'evidenceViewTable'
-												? [ tableInformation.evidenceTable, createEvidenceTableBody ]													
-												: [ tableInformation.geneTable, createGeneTableBody ]
-	                    
-	                    targetRenderer ( targetTable, currentPage + 1, rows, totalPages )
+                    if(calcEndOfPage && totalPage !== currentPage){
+                        switch(table){
+                            // creates evidence table 
+                            case 'evidenceViewTable':
+                            createEvidenceTableBody(tableInformation.evidenceTable, currentPage + 1, totalPage)
+                            break;
+                            // creates geneview table
+                            case 'geneViewTable':
+                            createGeneTableBody(tableInformation.resultsTable,currentPage+1,totalPage)
+                            break;
+                        }
                     }
             }, 1000)
         })
@@ -726,7 +725,6 @@ async function createEvidenceTableBody(evidenceTable, pageIndex, pageSize, total
 
     return {
         setTableData:setTableData,
-        // TODO: does it really need to have a different name?
-        scrollEvent:scrollTable
+        scrollTable:scrollTable
     }
 }()

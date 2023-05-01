@@ -334,7 +334,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
         var evidenceTable = refineTableData(data.evidenceTable)
 
          createGenesTable(resultsTable,keyword);
-         tableEvents.setTableData(resultsTable,'geneTable'); 
          handleDelimintedCta.getData(data);
 
          multiSpeciesFeature.maps('drawRaw',data.gviewer);
@@ -617,11 +616,11 @@ function handleViewCreation(option){
 
     // removes loading spinner
     $('.overlay').remove();
+    infiniteScrollEvents.setTableData(data.evidenceTable,'evidenceTable');
 			
     // Finally, render the table. 
     // Testing with doSortTable = false and sorting coming from the server
-    createEvidenceTable ( data.evidenceTable, data.keyword, null, false );
-    tableEvents.setTableData(data.evidenceTable,'evidenceTable');
+    createEvidenceTable ( data.evidenceTable,false);
 }
 
 
@@ -636,4 +635,4 @@ function refineTableData(data){
     tableData = tableData?.map ( rowStr => rowStr.split ( "\t" ) ); 
 
     return tableData;
- }
+}

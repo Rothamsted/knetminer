@@ -1,55 +1,3 @@
- /*
-  * Function to create interactive legend as summary for Gene View evidences.
-  * @returns the <div> containing the interactive Gene View summary legend.
-  * 
-  * TODO (not urgent): what is geneViewFullText? The gene table? Why is it named like this?
-  * Why is it parsed here too and not after the API call, or by the gene view renderer?
-  */
-function getInteractiveSummaryLegend(geneViewFullText) {
-
-  var evidencesArr= new Array();
-  for(var i=1; i < geneViewFullText.length; i++) {
-      var evi_value= geneViewFullText[i][9].trim();
-      if(evi_value !== "") {
-         evidencesArr.push(evi_value);
-        }
-    }
-
-  var con_legend= new Map();
-  // Iterate through evidences and get counts for each evidence Concept Type.
-  evidencesArr.forEach(function(evi) {
-      var row_values= evi.trim().split("||");
-      row_values.forEach(function(rv) {
-          var conType= rv.trim().split("__")[0].trim();
-          var conCount= Number(rv.trim().split("__")[1].trim());
-          // check/add unique concept types to Map
-          if(con_legend.has(conType)) {
-             // update if this count is greater than old, stored count
-             var old_count= con_legend.get(conType);
-             if(Number(conCount) > Number(old_count)) { con_legend.set(conType, conCount); }
-            }
-          else { // add new conType to Map
-              con_legend.set(conType, conCount);
-          }
-        });
-     });
-
-  // Display evidence icons with count and name in legend.
-  //var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
-  var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
-  var summaryText = '';
-
-  con_legend.forEach(function(value, key, map)
-  {     
-    var contype= key.trim();
-
-			summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterTableByType("'+contype+'","resultsTable",event,"revertGeneView");  class="evidenceSummaryItem"><div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '"></div> '+ key +'</div>';
-  });
-
-  legend= legend + summaryText +'</div>';
-  return legend;
-}
-
 
  /*
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
@@ -58,7 +6,7 @@ function getInteractiveSummaryLegend(geneViewFullText) {
   * eg, filterKnetTableByType.
   * 
   */
-function filterTableByType(key,location,event,revertButton) {       
+function filterKnetTableByType(key,location,event,revertButton) {       
            updateLegendsKeys(key,location,event)
      try{
          if ($('#'+location).css('display') === 'block') {
@@ -154,35 +102,35 @@ function filterTableByType(key,location,event,revertButton) {
  * @param {*} filteredTable 
  * @param {*} table 
  */
- async function createFilteredTable(evidenceKeysArrays,location){
+async function createFilteredTable(evidenceKeysArrays,location){
 
-        $('#filterMessage').hide();
-        $('#tablesorter').show();
-        $('.num-genes-container').show();
+    $('#filterMessage').hide();
+    $('#tablesorter').show();
+    $('.num-genes-container').show();
+    
+    infiniteScrollEvents.setTableData(evidenceKeysArrays,location);
 
-        var{rows,totalPage,shownItems}= getTablePaginationData(evidenceKeysArrays); 
-        var itemsCount = location == 'resultsTable' ? ['geneCount','geneLimit'] : ['count','limit']; 
+    // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
+    var{totalPage,itemsLength}= getTablePaginationData(evidenceKeysArrays); 
 
-        switch(location){
-            case 'resultsTable':
-            var filteredBody = createGeneTableBody(evidenceKeysArrays,1,rows,totalPage);
-            $('#geneTableBody').html('').append(filteredBody)
-            break;
-            case 'evidenceTable': 
-            var filteredBody = await createEvidenceTableBody(evidenceKeysArrays,1,rows,totalPage)
-            $('#evidenceBody').html(filteredBody);
-            break; 
-        }
-        
-        $(`#${itemsCount[0]}`).html(shownItems);
-        $(`#${itemsCount[1]}`).html(evidenceKeysArrays.length);
+    switch(location){
+        case 'resultsTable':
+        var filteredBody = createGeneTableBody(evidenceKeysArrays,1,totalPage);
+        $('#geneTableBody').html('').append(filteredBody);
+        break;
+        case 'evidenceTable': 
+        var filteredBody = await createEvidenceTableBody(evidenceKeysArrays,1,totalPage); 
+        $('#evidenceBody').html(filteredBody);
+        break; 
+    }
 
-        tableEvents.setTableData(evidenceKeysArrays,location);
- }
+    $(`#${location}`).find('.count').html(itemsLength); 
+    $(`#${location}`).find('.limit').html(evidenceKeysArrays.length); 
+}
 
 /**
  * @desc returns a list of evidence keys contained in genes evidence string 
- * @param {*} evidences 
+ * @param {*} evidences string of evidence from API data, see(filterKnetTableByType())
  * @returns array of evidence keys 
  */ 
  function getGeneKeyTypes(evidences){

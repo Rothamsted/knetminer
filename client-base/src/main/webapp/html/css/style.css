@@ -680,6 +680,10 @@ table.tablesorter tbody tr.odd td {
     background-color: #D5EECD;
 }
 
+table.tablesorter thead tr .tablesorter-headerUnSorted{
+    background-image: none;
+}
+
 table.tablesorter thead tr .tablesorter-headerAsc {
     background-image: url(../image/asc.gif);
 }
@@ -695,9 +699,6 @@ table.tablesorter thead tr .tablesorter-headerDesc {
     background-color: #BDB7A8;
 }
 
-table.tablesorter thead tr .tablesorter-headerUnSorted {
-    background-image: none;
-}
 
 table.suggestorTable {
     margin-left: 28px;
