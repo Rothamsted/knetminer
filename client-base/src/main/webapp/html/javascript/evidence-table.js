@@ -50,13 +50,9 @@ function getEvidencePvalue ( pvalueStr )
  * first caller gets the table from the API and with the API-level sorting option set. DO NOT
  * remove the conditional code that depend on this flag, since we're still not sure how well
  * this server-side sorting performs. 
- * 
- * TODO: keyword is never used (apart from, obviously, recursive calls), to be removed?
- * TODO: selectedSize isn't used anymore after the introduction of scrolling, eventually consider it
- * for removal
- * 
+ 
  */
-async function createEvidenceTable(evidenceTable,doSortTable=false) 
+async function createEvidenceTable( evidenceTable, doSortTable=false ) 
 {
     var table = "";
     var {totalPage,itemsLength} = getTablePaginationData(evidenceTable)
@@ -68,26 +64,32 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
        
     if(evidenceTable.length == 0) return null 
 
-    evidenceTable.sort(function( row1, row2 )
-    {
-            // TODO: this damn column indices are popping up everywhere, either use the conversion to 
-            // meaning variables, or, if we have many of this row value accesses, consider to get them
-            // with a common function like:
-            //
-                // function getEvidenceTableRowAsDict ( arrayRow ) {
-                //   returns a dictionary object 'dict', with the meaningful keys, ie,
-                //   dict.type, dict.nodeLabel, dict.pvalue...
-                // }
-                                                    
-                var [ pval1, nUserGenes1, totGenes1 ] = [ row1 [ 3 ], row1 [ 5 ], row1 [ 4 ] ]
-                var [ pval2, nUserGenes2, totGenes2 ] = [ row2 [ 3 ], row2 [ 5 ], row2 [ 4 ] ]
-                                
-                pval1 = getEvidencePvalue ( pval1 )
-                pval2 = getEvidencePvalue ( pval2 )
-                if ( pval1 !== pval2 ) return pval1 - pval2
-        
+		// TODO: remove once the API change to sort is implemented (and invoked)
+		// WARNING: I am OBVIUSLY talking of the WHOLE block (if + its body), if you remove the 
+		// if only, you'll end up doing the OPPOSITE of what it's meant!
+		if ( doSortTable )
+		{
+	    evidenceTable.sort ( function( row1, row2 )
+	    {
+	      // TODO: this damn column indices are popping up everywhere, either use the conversion to 
+	      // meaning variables, or, if we have many of this row value accesses, consider to get them
+	      // with a common function like:
+	      //
+        // function getEvidenceTableRowAsDict ( arrayRow ) {
+        //   returns a dictionary object 'dict', with the meaningful keys, ie,
+        //   dict.type, dict.nodeLabel, dict.pvalue...
+        // }
+	                                                    
+        var [ pval1, nUserGenes1, totGenes1 ] = [ row1 [ 3 ], row1 [ 5 ], row1 [ 4 ] ]
+        var [ pval2, nUserGenes2, totGenes2 ] = [ row2 [ 3 ], row2 [ 5 ], row2 [ 4 ] ]
+                        
+        pval1 = getEvidencePvalue ( pval1 )
+        pval2 = getEvidencePvalue ( pval2 )
+        if ( pval1 !== pval2 ) return pval1 - pval2
+	        
         nUserGenes1 = Number ( nUserGenes1 )
         nUserGenes2 = Number ( nUserGenes2 )
+
         if ( nUserGenes1 !== nUserGenes2 )
             return nUserGenes2 - nUserGenes1 // descending order
         
@@ -95,7 +97,8 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
         totGenes2 = Number ( totGenes2 )
         
         return totGenes2 - totGenes1 // descending order
-    }); 
+	    }); // evidenceTable.sort ()
+		} // if doSortTable
 
         
     // Evidence View: interactive legend for evidences.
@@ -135,19 +138,17 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
     // table re-creation). If not, remove it. Remove these comments when this is clarified.
     //
     tableSorterOpts = {
-        // Initial sorting is by p-value, user genes, total genes
-        // This ensures something significant if both pvalues and user genes are N/A and 0
-        // sortList: [[3, 0], [5, 1], [4, 1]],
-        textExtraction: function (node) { // Sort TYPE column
-            var attr = $(node).attr('type-sort-value');
-            if (typeof attr !== 'undefined' && attr !== false) {
-                return attr;
-            }
-            var actualPvalue = $(node).attr('actual-pvalue');
-            if (actualPvalue) return actualPvalue;
-            return $(node).text();
+      textExtraction: function (node) { // Sort TYPE column
+        var attr = $(node).attr('type-sort-value');
+        if (typeof attr !== 'undefined' && attr !== false) {
+            return attr;
         }
+        var actualPvalue = $(node).attr('actual-pvalue');
+        if (actualPvalue) return actualPvalue;
+        return $(node).text();
+      }
     }
+    
     // Tell table sorter to sort it if not already done (server side)
     // TODO: as discussed and mentioned in #744, when this is not set, table sorter
     // doesn't draw the column header markers that show the column is sorted, so we
@@ -155,23 +156,43 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
     //
     // https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
 
-    //
-    if ( !doSortTable ){
-        tableSorterOpts.sortList = [[3, 0], [5, 1], [4, 1]];
+    // Initial sorting is by p-value, user genes, total genes, node label
+    // This ensures something significant if both pvalues and user genes are N/A and 0
+
+    // TODO: check the numbers again, they don't seem to reflect the comment above
+    var  sortingPositions = [[3, 0], [5, 1], [4, 1]]; 
+    
+    if ( doSortTable ) {
+			// If it's the sorter that has to sort, then here there are the columns
+    	tableSorterOpts.sortList = sortingPositions;
     }
-        // initialise tablesorter 
-        $("#tablesorterEvidence").tablesorter(); 
+        
+    // initialise tablesorter 
+    $("#tablesorterEvidence").tablesorter(); 
 
-        // sorting positions
-        var  sortingPositions = [[4,0], [5,1],[6,1]]; 
-
-        for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++){
     
-            var getSortingDirection = sortingPositions[sortingIndex][1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
+    if ( !doSortTable )
+   	{
+	    // Place the header sorting marks to columns that we already know to be sorted
+	    // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
+	    // by the table sorter, else, it sorts and places thes ticks on its own. 
+     
+    	for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)
+    	{
+				// TODO: NO!!! As I tried to said multiple times, define A FUNCTION like:
+				//    
+				//   function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
+				//  
+				//  which does the things in the loop body (choose the right file for it, it's a small generic helper).
+				//  Then invoke it like:
+				//  
+				//   for ( var sortPos in sortingPositions ) setTableSorterHeaderTick ( ... )
+				//
+        var getSortingDirection = sortingPositions[sortingIndex][1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
+        $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPositions[sortingIndex][0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
+    	}
+    } // if ( doSortTable )
     
-            $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPositions[sortingIndex][0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
-        }
-      
     /*
      * Revert filtering changes on Evidence View table
      */
@@ -656,6 +677,14 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 
 /**
  * function handles scroll events for Geneview and Evidence view tables.
+ * 
+ * TODO: This is still a mess (2023-05-02), see previous notes and in particular: 
+ *   - Why is it a singleton and not a class that can be instantiated twice, ideally inside the 
+ *     function that manages the table and scrolling, not as a global variable
+ *   - Why does it have two tables as fields? Renaming one into resultsTable means little, the point 
+ *     is it shouldn't have two tables, cause there should be one object (class instance) per table, 
+ *     not a singleton handling data from the two tables. This is simple OOP, please let's have 
+ *     a brief call if you need further clarifications.
  * 
  * TODO: THIS IS INSANE! WE HAVE TO STOP TO PROGRAM THIS BADLY!
  * 

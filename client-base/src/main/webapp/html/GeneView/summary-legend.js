@@ -1,9 +1,6 @@
 
  /*
   * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
-  *
-  * TODO: (not urgent) these table-related names aren't about any table, they need better names,
-  * eg, filterKnetTableByType.
   * 
   */
 function filterKnetTableByType(key,location,event,revertButton) {       
@@ -111,7 +108,7 @@ async function createFilteredTable(evidenceKeysArrays,location){
     infiniteScrollEvents.setTableData(evidenceKeysArrays,location);
 
     // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
-    var{totalPage,itemsLength}= getTablePaginationData(evidenceKeysArrays); 
+    var {totalPage,itemsLength} = getTablePaginationData(evidenceKeysArrays); 
 
     switch(location){
         case 'resultsTable':
