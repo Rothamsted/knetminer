@@ -43,7 +43,7 @@ function createGenesTable(text, keyword){
 	table += '</form>';
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+itemsLength+'</span> of <span id="limit">'+text.length+'</span></span></div>';
+	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+itemsLength+'</span> of <span class="limit">'+text.length+'</span></span></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
@@ -161,7 +161,7 @@ function createGenesTable(text, keyword){
 		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
 	});
 
-	infiniteScrollEvents.scrollTable('geneViewTable');
+	infiniteScrollEvents.scrollTable('geneViewTable','resultsTable');
 
 }
 

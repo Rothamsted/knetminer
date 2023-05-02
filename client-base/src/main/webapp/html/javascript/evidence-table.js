@@ -164,7 +164,6 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
 
         // sorting positions
         var  sortingPositions = [[4,0], [5,1],[6,1]]; 
-        console.log(sortingPositions);
 
         for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++){
     
@@ -199,7 +198,7 @@ async function createEvidenceTable(evidenceTable,doSortTable=false)
 
     
     // binds onscroll event to evidence table to add new rows after one seconds
-    infiniteScrollEvents.scrollTable('evidenceViewTable');
+    infiniteScrollEvents.scrollTable('evidenceViewTable','evidenceTable');
 }
 
 /*
@@ -687,7 +686,7 @@ infiniteScrollEvents = function(){
             tableInformation[dataKey] = data
     }
 
-    function scrollTable(table){
+    function scrollTable(table,tableContainer){
         var isTableScrollable;
         var tableElement =  $(`#${table}`);
 
@@ -702,9 +701,9 @@ infiniteScrollEvents = function(){
                 const evidenceViewTable = document.getElementById(table); 
                 // checks if user reaches the end of page
                 var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
-                var currentPage = Math.ceil($(`#${location}`).find('.count').html()/30);
-                var totalPage  = Math.ceil(data[location].length/30);
-
+                var itemsLength = $(`#${tableContainer}`).find('.count').html(); 
+                var currentPage = Math.ceil(+itemsLength/30);
+                var totalPage  = Math.ceil(tableInformation[tableContainer].length/30);
                     // if user reaches end of the page new rows are created
                     if(calcEndOfPage && totalPage !== currentPage){
                         switch(table){
