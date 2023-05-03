@@ -100,15 +100,13 @@ function filterKnetTableByType(key,location,event,revertButton) {
  * @param {*} table 
  */
 async function createFilteredTable(evidenceKeysArrays,location){
-
+    
     $('#filterMessage').hide();
     $('#tablesorter').show();
     $('.num-genes-container').show();
     
-    infiniteScrollEvents.setTableData(evidenceKeysArrays,location);
-
-    // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
-    var {totalPage,itemsLength} = getTablePaginationData(evidenceKeysArrays); 
+        // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
+        var {totalPage,itemsLength} = tableHandler.saveTableData(evidenceKeysArrays,location); 
 
     switch(location){
         case 'resultsTable':

@@ -5,10 +5,7 @@
  */
 function createGenesTable(text, keyword){
 	var table = "";
- 	var {totalPage,itemsLength} = getTablePaginationData(text); 
-
-	// set table data for infinite scrolling
-	 infiniteScrollEvents.setTableData(text,'resultsTable'); 
+ 	var {totalPage,itemsLength} = tableHandler.saveTableData(text); 
 	
 	if (text.length > 0 ){
 	// Gene View: interactive summary legend for evidence types.
@@ -111,7 +108,7 @@ function createGenesTable(text, keyword){
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(text, keyword,); // redraw table
 		$('#resultsTable').data({ keys: [] });
-		infiniteScrollEvents.setTableData(text,'resultsTable'); 
+		
 	});
 
 	$("#revertGeneView").mouseenter(function (e) {
@@ -156,13 +153,7 @@ function createGenesTable(text, keyword){
 		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
 	});
 
-	// bind click event on all candidateGenes checkboxes in Gene View table.
-	// $('input:checkbox[name="candidates"]').click(function (e) {
-	// 	var viewName = "Gene";
-	// 	// update selected genes count
-	// });
-
-	infiniteScrollEvents.scrollTable('geneViewTable','resultsTable');
+	tableHandler.scrollTable('geneViewTable','resultsTable');
 
 }
 
@@ -357,19 +348,6 @@ function downloadNetwork() {
 /**
  * @desc function creates calculates and return pagination values for gene view and evidence table
  */
-function getTablePaginationData(tableData)
-{
-    var pageCount = Math.ceil(tableData.length/30);
-    // TODO: bad name, use something like length or actualLenght
-    var itemsLength = tableData.length < 30 ? tableData.length : 30;
-	
-	var data =  {
-		totalPage:pageCount,
-		itemsLength:itemsLength
-	}
-
-	return data;
-}
 
 
 /**
