@@ -197,7 +197,6 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
      * Revert filtering changes on Evidence View table
      */
     $("#revertEvidenceView").click(function (e) {
-        console.log('here')
         createEvidenceTable(evidenceTable,false); // redraw table
         $('#evidenceTable').data({ keys: [] });
         infiniteScrollEvents.setTableData(evidenceTable,'evidenceTable');
@@ -211,13 +210,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
 
-    // bind click event on all candidateGenes checkboxes in evidence view table.
-    $('input:checkbox[name="evidences"]').click(function (e) {
-        var viewName = "Term";
-        updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
-    });
 
-    
     // binds onscroll event to evidence table to add new rows after one seconds
     infiniteScrollEvents.scrollTable('evidenceViewTable','evidenceTable');
 }
@@ -645,7 +638,7 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
         // launch evidence network with them, if they're not too many.
         tableBody += `  <td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>\n`;
 
-        var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
+        var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${ev_i}" type="checkbox" name= "evidences" value="${conceptId}:${geneList}">`;
         tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
        
 
@@ -705,8 +698,10 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
  * 
  */
 infiniteScrollEvents = function(){
+
     // Update: Tried using classes as recommended but found it diffcult to handle data changes because each instance will only have access data it was instantiated with. Currently investigating better approach as recommended. 
-    var tableInformation ={
+
+    var tableInformation = {
         resultsTable:[],
         evidenceTable:[]
     }
@@ -749,7 +744,6 @@ infiniteScrollEvents = function(){
             }, 1000)
         })
     }
-
 
     return {
         setTableData:setTableData,

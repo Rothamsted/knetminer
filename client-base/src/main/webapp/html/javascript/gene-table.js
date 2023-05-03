@@ -128,11 +128,12 @@ function createGenesTable(text, keyword){
 	 */
 	$('input:button[name="checkbox_Targets"]').bind("click", { x: text }, function (e) {
 		e.preventDefault();
-		var numResults = text.length ;
+		var numResults = text.length;
 		var targetClass = $(this).hasClass('checked')
 
-		for (var i = 1; i <= numResults; i++) {
-			var values = e.data.x[i]
+		for (var i = 1; i < numResults; i++) {
+			var values = e.data.x[i];
+
 			if (values[7] === "yes") {
 				// Check which input buttons are selected.
 				if ($(this).val() === "Linked Genes") { // Select Known Targets.
@@ -156,10 +157,10 @@ function createGenesTable(text, keyword){
 	});
 
 	// bind click event on all candidateGenes checkboxes in Gene View table.
-	$('input:checkbox[name="candidates"]').click(function (e) {
-		var viewName = "Gene";
-		updateSelectedGenesCount("candidates", "#candidate-count", viewName); // update selected genes count
-	});
+	// $('input:checkbox[name="candidates"]').click(function (e) {
+	// 	var viewName = "Gene";
+	// 	// update selected genes count
+	// });
 
 	infiniteScrollEvents.scrollTable('geneViewTable','resultsTable');
 
@@ -492,7 +493,7 @@ function createGeneTableBody(results, pageIndex,totalPage){
 		evidenceTd += '<div></td>';
 		// Foreach evidence show the images - end
 
-		var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
+		var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${geneAccessions}" /></td>`;
 		table = table + geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
 		// table += '</tr>';
 	}// for row
@@ -501,7 +502,7 @@ function createGeneTableBody(results, pageIndex,totalPage){
 	{
 	 if(pageIndex == 1)return table; 
 
-	 $('#geneTableBody').append(table)
+	$('#geneTableBody').append(table); 
     $('#geneCount').html(pageEnds)
 
 	}
