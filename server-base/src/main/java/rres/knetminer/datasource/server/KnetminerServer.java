@@ -467,19 +467,19 @@ public class KnetminerServer
 			return;
 		}
 
-		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
+		String clientIp = rawRequest.getHeader ( "X-FORWARDED-FOR" );
 		
-		if ( ipAddress == null )
+		if ( clientIp == null )
 		{
-			ipAddress = rawRequest.getRemoteAddr ();
-			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", ipAddress );
+			clientIp = rawRequest.getRemoteAddr ();
+			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", clientIp );
 		} 
 		else
 		{
-			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", ipAddress );
-			if ( ipAddress.indexOf ( ',' ) != -1 ) ipAddress = ipAddress.split ( "," )[ 0 ];
+			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", clientIp );
+			if ( clientIp.indexOf ( ',' ) != -1 ) clientIp = clientIp.split ( "," )[ 0 ];
 			
-			log.debug ( "Preparing Google Analytics, using splitted IP: {}", ipAddress );
+			log.debug ( "Preparing Google Analytics, using splitted IP: {}", clientIp );
 		}
 
 		// TODO: what's the point?! Just logging?! MB: I've put it under log.isDebug
@@ -514,7 +514,7 @@ public class KnetminerServer
       .withDefaultRequest ( 
       	new DefaultRequest ()
       		.trackingId ( gaId )	
-      		.userIp( ipAddress )
+      		.userIp( clientIp )
       		.documentHostName ( clientHost )
       		.documentTitle ( pageName )
       		.documentPath ( "/" + pageName )
@@ -524,7 +524,7 @@ public class KnetminerServer
 			.build ();
 			
 		
-			final var ipAddressRO = ipAddress; // lambdas requires immutables
+			final var ipAddressRO = clientIp; // lambdas requires immutables
 			
 			// Invoke GA asynchronously, don't waste my time with waiting
 			ga.

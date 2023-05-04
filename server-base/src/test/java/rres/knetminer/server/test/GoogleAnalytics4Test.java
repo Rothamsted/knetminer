@@ -15,7 +15,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Some manual experiment with the new GA4
+ * Some manual experiment with the new GA4.
+ * 
+ * TODO: remove. We have implemented a proper way to manage this.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>17 Apr 2023</dd></dl>

@@ -91,6 +91,14 @@
 			<groupId>uk.ac.ebi</groupId>
 			<artifactId>jutils</artifactId>
 		</dependency>
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-test</artifactId>
+		  <!-- TODO: common POM? -->
+		  <version>${springframework.version}</version>
+		  <scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
