@@ -30,7 +30,7 @@ $(document).ready (
 			// Do this as last step, so that it doesn't track in 
 			// case of failure		
 	    googleAnalytics.start ()
-	    .then ( () => googleAnalytics.trackEvent ( "UI opened" ) );
+	    .then ( () => googleAnalytics.trackEvent ( "uiOpened" ) );
 		})
 		.catch ( 
 			err => showApiInitResult ( err )

@@ -33,14 +33,14 @@ const googleAnalytics = function ()
 	{
     // Let's send a better event ID to GA
     const gaEventsMap = {
-		  'resultsTable': 'gene table',
-		  'evidenceTable': 'evidence table',
-		  'genemap-tab': 'chromosome/map view',
-		  'NetworkCanvas': 'network view'
+		  'resultsTable': 'geneTable',
+		  'evidenceTable': 'evidenceTable',
+		  'genemap-tab': 'mapView',
+		  'NetworkCanvas': 'networkView'
 		}
 		targetStr = gaEventsMap [ viewId ]
 		if ( !targetStr ) targetStr = '<unknown view/tab>'
-	  googleAnalytics.trackEvent ( `${targetStr} selected` );	
+	  googleAnalytics.trackEvent ( `${targetStr}Selected` );	
 	}
 	
   /** 

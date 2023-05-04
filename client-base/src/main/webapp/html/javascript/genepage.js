@@ -35,7 +35,7 @@ $(document).ready ( function ()
 		// case of failure		
     googleAnalytics.start ()
     .then ( () => googleAnalytics.trackEvent (
-			"gene page opened", 
+			"genePageOpened", 
 			{ keywords: keywords, list: list }
 		))    
   }).catch(
