@@ -616,7 +616,7 @@ function handleViewCreation(option){
 
     // removes loading spinner
     $('.overlay').remove();
-    infiniteScrollEvents.setTableData(data.evidenceTable,'evidenceTable');
+    
 			
     // Finally, render the table. 
     // Testing with doSortTable = false and sorting coming from the server

@@ -55,11 +55,9 @@ function getEvidencePvalue ( pvalueStr )
 async function createEvidenceTable( evidenceTable, doSortTable=false ) 
 {
     var table = "";
-    var {totalPage,itemsLength} = getTablePaginationData(evidenceTable)
+    var {totalPage,itemsLength} = tableHandler.saveTableData(evidenceTable,'evidenceTable');
 
     // set current table data for infinite scrolling
-   
-
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(evidenceTable.length == 0) return null 
@@ -197,10 +195,8 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
      * Revert filtering changes on Evidence View table
      */
     $("#revertEvidenceView").click(function (e) {
-        console.log('here')
         createEvidenceTable(evidenceTable,false); // redraw table
         $('#evidenceTable').data({ keys: [] });
-        infiniteScrollEvents.setTableData(evidenceTable,'evidenceTable');
     });
 
     $("#revertEvidenceView").mouseenter(function (e) {
@@ -211,15 +207,9 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
 
-    // bind click event on all candidateGenes checkboxes in evidence view table.
-    $('input:checkbox[name="evidences"]').click(function (e) {
-        var viewName = "Term";
-        updateSelectedGenesCount("evidences", "#evidence-count", viewName); // update selected genes count
-    });
 
-    
     // binds onscroll event to evidence table to add new rows after one seconds
-    infiniteScrollEvents.scrollTable('evidenceViewTable','evidenceTable');
+    tableHandler.scrollTable('evidenceViewTable','evidenceTable');
 }
 
 /*
@@ -645,7 +635,7 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
         // launch evidence network with them, if they're not too many.
         tableBody += `  <td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>\n`;
 
-        var select_evidence = '<input id="checkboxEvidence_' + ev_i + '" type="checkbox" name= "evidences" value="' + conceptId + ':' + geneList + '">';
+        var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${ev_i}" type="checkbox" name= "evidences" value="${conceptId}:${geneList}">`;
         tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
        
 
@@ -704,18 +694,27 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
  * More issues are reported below.
  * 
  */
-infiniteScrollEvents = function(){
+tableHandler = function(){
+
     // Update: Tried using classes as recommended but found it diffcult to handle data changes because each instance will only have access data it was instantiated with. Currently investigating better approach as recommended. 
-    var tableInformation ={
-        resultsTable:[],
-        evidenceTable:[]
+    var tableData
+
+    function saveTableData(data){
+        tableData = data
+        var pageCount = Math.ceil(tableData.length/30)
+        var itemsLength = tableData.length < 30 ? tableData.length : 30;
+        
+        var data =  {
+            totalPage:pageCount,
+            itemsLength:itemsLength
+        }
+    
+        return data;
     }
 
-    function setTableData(data,dataKey){
-            tableInformation[dataKey] = data
-    }
+    function scrollTable(table,row){
 
-    function scrollTable(table,tableContainer){
+        var tableContainer = table == 'resultsTable' ? 'geneView' : 'evidenceView';
         var isTableScrollable;
         var tableElement =  $(`#${table}`);
 
@@ -729,12 +728,15 @@ infiniteScrollEvents = function(){
                 
                 const evidenceViewTable = document.getElementById(table); 
                 // checks if user reaches the end of page
-                var calcEndOfPage =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+                var tableOverflow =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
+
                 var itemsLength = $(`#${tableContainer}`).find('.count').html(); 
-                var currentPage = Math.ceil(+itemsLength/30);
-                var totalPage  = Math.ceil(tableInformation[tableContainer].length/30);
+
+                var currentPage = _.ceil(+itemsLength/row);
+                var totalPage  = _.ceil(data.length/row);
+
                     // if user reaches end of the page new rows are created
-                    if(calcEndOfPage && totalPage !== currentPage){
+                    if(tableOverflow && totalPage !== currentPage){
                         switch(table){
                             // creates evidence table 
                             case 'evidenceViewTable':
@@ -750,9 +752,5 @@ infiniteScrollEvents = function(){
         })
     }
 
-
-    return {
-        setTableData:setTableData,
-        scrollTable:scrollTable
-    }
+    return{saveTableData, scrollTable}
 }()
