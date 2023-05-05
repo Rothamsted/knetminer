@@ -209,7 +209,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
 
 
     // binds onscroll event to evidence table to add new rows after one seconds
-    tableHandler.scrollTable('evidenceViewTable','evidenceTable');
+    tableHandler.scrollTable('evidenceViewTable');
 }
 
 /*
@@ -712,9 +712,9 @@ tableHandler = function(){
         return data;
     }
 
-    function scrollTable(table,row){
+    function scrollTable(table){
 
-        var tableContainer = table == 'resultsTable' ? 'geneView' : 'evidenceView';
+        var tableContainer = table == 'geneViewTable' ? 'resultsTable' : 'evidenceTable';
         var isTableScrollable;
         var tableElement =  $(`#${table}`);
 
@@ -726,25 +726,24 @@ tableHandler = function(){
             setTimeout(function(){
                 isTableScrollable = false; 
                 
-                const evidenceViewTable = document.getElementById(table); 
+                const selectedtable = document.getElementById(table); 
                 // checks if user reaches the end of page
-                var tableOverflow =  evidenceViewTable.scrollTop + evidenceViewTable.offsetHeight >= evidenceViewTable.scrollHeight;
-
-                var itemsLength = $(`#${tableContainer}`).find('.count').html(); 
-
-                var currentPage = _.ceil(+itemsLength/row);
-                var totalPage  = _.ceil(data.length/row);
+                var tableOverflow =  selectedtable.scrollTop + selectedtable.offsetHeight >= selectedtable.scrollHeight;
+                var itemsLength = $(`#${tableContainer}`).find('.count').text(); 
+                console.log(itemsLength); 
+                var currentPage = Math.ceil(+itemsLength/30);
+                var totalPage  = Math.ceil(tableData.length/30);
 
                     // if user reaches end of the page new rows are created
                     if(tableOverflow && totalPage !== currentPage){
                         switch(table){
                             // creates evidence table 
                             case 'evidenceViewTable':
-                            createEvidenceTableBody(tableInformation.evidenceTable, currentPage + 1, totalPage)
+                            createEvidenceTableBody(tableData, currentPage + 1, totalPage)
                             break;
                             // creates geneview table
                             case 'geneViewTable':
-                            createGeneTableBody(tableInformation.resultsTable,currentPage+1,totalPage)
+                            createGeneTableBody(tableData,currentPage+1,totalPage)
                             break;
                         }
                     }
@@ -752,5 +751,5 @@ tableHandler = function(){
         })
     }
 
-    return{saveTableData, scrollTable}
+    return {saveTableData, scrollTable} 
 }()

@@ -575,7 +575,7 @@ handleDelimintedCta = function(){
         setDemlimiterAttributes('resultsTable'); 
     }
 
-    function getencodedFile (){
+    function getencodedFile(){
         
         utf8Bytes = encodeURIComponent(currentData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
         return String.fromCharCode('0x' + p1);

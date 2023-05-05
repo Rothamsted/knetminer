@@ -153,7 +153,7 @@ function createGenesTable(text, keyword){
 		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
 	});
 
-	tableHandler.scrollTable('geneViewTable','resultsTable');
+	tableHandler.scrollTable('geneViewTable');
 
 }
 
