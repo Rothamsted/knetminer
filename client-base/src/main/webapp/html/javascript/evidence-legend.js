@@ -28,13 +28,8 @@ function getEvidencesLegend( evidenceTable )
   var summaryText = '';
   eviLegend.forEach(function (value, key, map) {
     var contype = key.trim();
-    // TODO: (not urgent) it has reached the length of 357 columns!
-    // Can we split it into simpler blocks, using their semantics, eg, 
-    // `<div onClick = ...
-    //    <div class = ....
-    // ...`
     summaryText += 
-    	`<div  onclick=filterKnetTableByType("${contype}","evidenceTable",event,"revertEvidenceView");  class="evidenceSummaryItem">
+    	`<div onclick = "filterEvidenceTableByType ( event, '${contype}' );"   class="evidenceSummaryItem">
     	 <div class="evidence-icons evidence_item evidence_item_${key}"  title="${key}"></div>
     	 <span style="font-weight:600; margin-right:.5rem;">${key}</span> <span> (${value}) </span></div>`
   });

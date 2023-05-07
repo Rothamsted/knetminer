@@ -730,7 +730,7 @@ tableHandler = function(){
                 // checks if user reaches the end of page
                 var tableOverflow =  selectedtable.scrollTop + selectedtable.offsetHeight >= selectedtable.scrollHeight;
                 var itemsLength = $(`#${tableContainer}`).find('.count').text(); 
-                console.log(itemsLength); 
+                console.trace( "scrolling timeout, new itemsLenght", itemsLength); 
                 var currentPage = Math.ceil(+itemsLength/30);
                 var totalPage  = Math.ceil(tableData.length/30);
 

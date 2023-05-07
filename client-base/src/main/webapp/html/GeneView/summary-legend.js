@@ -1,52 +1,108 @@
 
+
 /*
- * Filter visible Gene and Evidence View table by selected Concept Type (from legend)
+ * Filters gene or evidence table by the selected Concept Type (coming from the legend).
+ *  
+ * DO NOT call me directly, use the wrappers below.
  * 
+ * @param {type} the concept type ID from the legend to be used as filter key
+ * @param {tableId} the HTML ID of the table to filter 
+ * @param {revertButtonId} the ID of the filter reset button
+ * @param {rowFilterPredicate} a function (selectedTypes, tableRow) => boolean tells if the
+ *        concept type(s) associated to a target table row are selected by the current selection
+ *        from the legend, selectedTypes. The criteria are different for the two tables, see the
+ *        invocations below. 
  */
-function filterKnetTableByType(key, location, event, revertButton) {
-    updateLegendsKeys(key, location, event)
-    try {
-        if ($('#' + location).css('display') === 'block') {
+function _filterKnetTableByType ( 
+	event, type, tableId, revertButtonId, rowFilterPredicate
+) 
+{
+    updateLegendsKeys(type, tableId, event)
+    try 
+    {
+			// Nothing to do if we aren't visible
+      if ($('#' + tableId).css('display') !== 'block') return 
+
+      // TODO: to be clarified why this is thrown into a body function data(),
+      // which then returns a data array. WHY does it need to be so convoluted!?
+      //
+      // Also, this is not the gene view table ONLY anymore, WE NEED SOME TIDINESS! 
+      var tableData = $('body').data().data [ tableId ];
+
+      var selectedTypes = $(`#${tableId}`).data('keys');
+
+      if (selectedTypes.length === 0) {
+          // reset table if all legends are unselected
+          document.getElementById( revertButtonId ).click();
+          // and then we're finished in this case
+          return
+      } 
+      
+      // Select what required, using the helper
+			var evidenceKeysArrays = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
 
 
-            var gvTable = $('body').data().data[location];
-            var rowLength = gvTable.length;
+      // TODO: remove. Please pay attention to the cleaned version. We need some more common sense here, some
+      /* more attention!
+      var evidenceKeysArrays = []
+      for (var tableRow in tableData )
+      {
+          // TODO: remove? this ends up being == tableId, if that's always the case, remove it
+          // else, harmonise these IDs or use an additional parameter
+          // var tableLocation = tableId.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
+          
+          // var selectedEvidence = setLegendsState(tableId, evidenceKeys, currentPosition, selectedKeys);
+          // if (selectedEvidence !== undefined) evidenceKeysArrays.push(selectedEvidence)
+          
+          if ( rowFilterPredicate ( selectedTypes, tableRow ) )
+          	evidenceKeysArrays.push ( tableRow )
+      } // for tableRow
+      */
 
-            var selectedKeys = $(`#${location}`).data('keys');
-
-
-            if (selectedKeys.length === 0) {
-                // reset table if all legends are unselected
-                document.getElementById(revertButton).click();
-            } else {
-                var evidenceKeysArrays = []
-                for (var tableIndex = 0; tableIndex < rowLength; tableIndex++) {
-                    var currentPosition = gvTable[tableIndex];
-
-                    var evidenceKeys = location.includes('resultsTable') ? getGeneKeyTypes(currentPosition[9]) : currentPosition[0];
-
-                    var tableLocation = location.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
-                    var selectedEvidence = setLegendsState(tableLocation, evidenceKeys, currentPosition, selectedKeys);
-
-                    if (selectedEvidence !== undefined) evidenceKeysArrays.push(selectedEvidence)
-                }
-
-                if (evidenceKeysArrays.length > 0) {
-                    createFilteredTable(evidenceKeysArrays, location)
-                } else {
-                    $('#tablesorter').hide()
-                    $('#filterMessage').show();
-                    $('.num-genes-container').hide();
-                }
-            }
-
-        }
-    } catch (err) {
-        var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
-        console.log(errorMsg);
+      if (evidenceKeysArrays.length > 0)
+        createFilteredTable ( evidenceKeysArrays, tableId )
+      else
+      {
+        $('#tablesorter').hide()
+        $('#filterMessage').show();
+        $('.num-genes-container').hide();
+      }
+    } 
+    catch (err) {
+        console.error ( "Error while selecting from concept legend", err );
     }
+} // _filterKnetTableByType()
 
+function filterGeneTableByType ( event, conceptType )
+{
+	const rowFilterPred = ( selectedTypes, tableRow ) => 
+	{
+		const rowEvidencesString = tableRow [ 9 ]
+		if ( !rowEvidencesString ) return false // just in case
+	 	// Splits the gene evidences string in the gene table into an array of evidences. 
+	  // See the API for details about this format
+	  const evidenceCountStrings = rowEvidencesString.split ( "||" )
+		const rowEvidences = evidenceCountStrings.map ( evStr => evStr.split('__')[ 0 ] )
+	  return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
+	}
+	
+	_filterKnetTableByType ( 
+		event, conceptType, "resultsTable", "revertGeneView", rowFilterPred 
+	)
 }
+
+function filterEvidenceTableByType ( event, conceptType )
+{
+	const rowFilterPred = ( selectedTypes, tableRow ) => {
+		const rowEvidencesString = tableRow [ 0 ]
+	  return selectedTypes.some ( t => t == rowEvidencesString )
+	}
+
+	_filterKnetTableByType ( 
+		event, conceptType, "evidenceTable", "revertEvidenceView", rowFilterPred 
+	)
+}
+
 
 //  function updates, store and checks for non-active legend keys
 function updateLegendsKeys(key, location, event) {
@@ -74,10 +130,13 @@ function updateLegendsKeys(key, location, event) {
 
     currentTable.data({ keys: getKeys });
 
-
 }
 
+// TODO: remove, AFTER having read the new version. 
+// I don't know how it's possible to conceive things this way! Please, some more common sense, some
+// more attention!
 // Function sets the visibility state of Gene and Evidence legends  
+/*
 function setLegendsState(tableLocation, gene_evidences, currentRow, currentData) {
     switch (tableLocation) {
         case "resultsTable":
@@ -92,7 +151,7 @@ function setLegendsState(tableLocation, gene_evidences, currentRow, currentData)
             break;
     }
 }
-
+*/
 
 /**
  * @desc function creates table body for filtered geneview and evidence table
@@ -122,17 +181,3 @@ async function createFilteredTable(evidenceKeysArrays, location) {
     $(`#${location}`).find('.limit').html(evidenceKeysArrays.length);
 }
 
-/**
- * @desc returns a list of evidence keys contained in genes evidence string 
- * @param {*} evidences string of evidence from API data, see(filterKnetTableByType())
- * @returns array of evidence keys 
- */
-function getGeneKeyTypes(evidences) {
-    var evidencesList = [];
-    var evidencesCount = evidences.split("||")
-    for (var evidenceIndex = 0; evidenceIndex < evidencesCount.length; evidenceIndex++) {
-        singleEvidence = evidencesCount[evidenceIndex].split('__')[0];
-        evidencesList.push(singleEvidence);
-    }
-    return evidencesList
-}

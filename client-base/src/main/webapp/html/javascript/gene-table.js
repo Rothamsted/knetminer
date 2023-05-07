@@ -491,9 +491,6 @@ function createGeneTableBody(results, pageIndex,totalPage){
   * Function to create interactive legend as summary for Gene View evidences.
   * @returns the <div> containing the interactive Gene View summary legend.
   * 
-  * TODO (not urgent): what is geneViewFullText? The gene table? Why is it named like this?
-  * Why is it parsed here too and not after the API call, or by the gene view renderer?
-  * function is currently called within geneview Renderer
   */
  function getInteractiveSummaryLegend(geneViewData) {
 
@@ -533,9 +530,11 @@ function createGeneTableBody(results, pageIndex,totalPage){
 	{     
 	  var contype= key.trim();
   
-			  summaryText = summaryText + '<div style="font-weight:600;"  onclick=filterKnetTableByType("'+contype+'","resultsTable",event,"revertGeneView");  class="evidenceSummaryItem">';
-			  summaryText = summaryText + '<div class="evidence-icons evidence_item evidence_item_'+key+'"  title="' + key + '">';
-			  summaryText = summaryText + '</div> '+ key +'</div>';
+			  summaryText += 
+			    `<div style="font-weight:600;" 
+			          onclick = "filterGeneTableByType ( event, '${contype}' );"
+			          class = "evidenceSummaryItem">`
+			  + `<div class="evidence-icons evidence_item evidence_item_${key}" title = "${key}"></div> ${key}</div>`;
 	});
   
 	legend= legend + summaryText +'</div>';
