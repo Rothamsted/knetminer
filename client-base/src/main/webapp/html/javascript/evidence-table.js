@@ -98,7 +98,6 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
 	    }); // evidenceTable.sort ()
 		} // if doSortTable
 
-        
     // Evidence View: interactive legend for evidences.
     var eviLegend = getEvidencesLegend(evidenceTable);
     table = '';
@@ -128,6 +127,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
     $('#evidenceTable').html(table);
+    
 
     // TODO: tablesorter seems to perform same sorting functionality as 
     // TODO: (MB) as what? Yes, this initially sorts the rendered table with the same criteria as the 
@@ -135,17 +135,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     //  I don't know if this additional sorting is also needed to have the column sorting arrows displayed (or upon the
     // table re-creation). If not, remove it. Remove these comments when this is clarified.
     //
-    tableSorterOpts = {
-      textExtraction: function (node) { // Sort TYPE column
-        var attr = $(node).attr('type-sort-value');
-        if (typeof attr !== 'undefined' && attr !== false) {
-            return attr;
-        }
-        var actualPvalue = $(node).attr('actual-pvalue');
-        if (actualPvalue) return actualPvalue;
-        return $(node).text();
-      }
-    }
+  
     
     // Tell table sorter to sort it if not already done (server side)
     // TODO: as discussed and mentioned in #744, when this is not set, table sorter
@@ -158,7 +148,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     // This ensures something significant if both pvalues and user genes are N/A and 0
 
     // TODO: check the numbers again, they don't seem to reflect the comment above
-    var  sortingPositions = [[3, 0], [5, 1], [4, 1]]; 
+    var  sortingPositions = [[4, 0], [6, 1], [5, 1]]; 
     
     if ( doSortTable ) {
 			// If it's the sorter that has to sort, then here there are the columns
@@ -177,18 +167,9 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
      
     	for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)
     	{
-				// TODO: NO!!! As I tried to said multiple times, define A FUNCTION like:
-				//    
-				//   function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
-				//  
-				//  which does the things in the loop body (choose the right file for it, it's a small generic helper).
-				//  Then invoke it like:
-				//  
-				//   for ( var sortPos in sortingPositions ) setTableSorterHeaderTick ( ... )
-				//
-        var getSortingDirection = sortingPositions[sortingIndex][1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
-        $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPositions[sortingIndex][0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
-    	}
+        var sortingPosition = sortingPositions[sortingIndex]; 
+        setTableSorterHeaderTick(sortingPosition)
+        }
     } // if ( doSortTable )
     
     /*
@@ -208,8 +189,6 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     });
 
 
-    // binds onscroll event to evidence table to add new rows after one seconds
-    tableHandler.scrollTable('evidenceViewTable');
 }
 
 /*
@@ -519,73 +498,12 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
     }
 }
 
-/**
- * @see createTableSizeSelector()
- */
-function createEvidenceTableSizeSelector ( selectedSize, tableSize )
-{
-	return createTableSizeSelector ( selectedSize, tableSize, false ) 
-}
-
-
-/**
- * @desc Core function to create the selector for the number of rows to be displayed in the gene or
- * evidence table.
- * 
- * WARNING: this is a wrapper of more specific functions and you shouldn't call it directly 
- * 
- * @param selectedSize: the number of the rows to be displayed
- *  
- * @param tableSize: the total number of rows of data availabe from API call
- * 
- * @param isGeneTable: true if you're calling me to render the selector for the gene table, else
- * I'm rendering the evidence table (they're slightly different).
- * 
- * TODO: this has become a generic function, so it should be moved to some other file
- * (probably, ui-utils.js) 
- */
-// TODO: will extend function to serve genetable 
-// TODO: (MB, 2003): what does this comment mean?
-function createTableSizeSelector ( selectedSize, tableSize, isGeneTable )
-{
-    var sizeOpts = [50, 100, 200, 500, 1000];
-    
-    // The HTML selector ID depends on gene/evidence table
-    // TODO: do we need them to have different IDs? Can we use the same ID and 
-    // avoid this conditional?
-    var selectElementId; 
-    
-    // Messages have 'Genes' qualifier in the gene table and '' in the evidence table
-    var itemsLabel;
-    if ( isGeneTable ) {
-			selectElementId = "num-genes";
-			itemsLabel = "Genes";
-		}
-		else {
-			selectElementId = "evidence-select";
-			itemsLabel = "";
-		}
-		 
-		// if non-null, we always put a space before
-		var itemsLabelStr = itemsLabel ? '' : ` ${itemsLabel}`
-		 
-    var selectButton = `<select value = "${selectedSize}" id = "${selectElementId}">\n`;
-    for (var sizeOpt of sizeOpts){
-        selectButton += `  <option value = "${sizeOpt}"${selectedSize == sizeOpt ? ' selected' : ''}>${sizeOpt} ${itemsLabelStr}</option>\n`
-    }
-
-    selectButton += `  <option value = "${tableSize}"${selectedSize == tableSize ? ' selected' : ''}>All${itemsLabelStr} (${tableSize})</option>\n`
-    selectButton += '</select>\n'; 
-    
-    return selectButton; 
-}
 
 // function creates evidence table body
-//
 async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 {
 
-		// TODO: currentPage starts from 1 and pageIndex starts from 0?
+	// TODO: currentPage starts from 1 and pageIndex starts from 0?
 		// Is this necessary? Can't we harmonise both to the 0-start convention?
 		//
     var tableBody=""; 
@@ -657,99 +575,17 @@ async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
         // Similarly, this function doesn't need evidencePageCount as parameter, since it
         // can compute it with the same function above.
         //
-
         $('#evidenceBody').append(tableBody)
-        $('#evidenceCount').html(pageEnds)
     }
     return null; // just to return something
 }
 
+// function sets tableSorter tick to evidence table headers
+function setTableSorterHeaderTick(sortingPosition){
+    var getSortingDirection = sortingPosition[1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
+    $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPosition[0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
+}
 
-/**
- * function handles scroll events for Geneview and Evidence view tables.
- * 
- * TODO: This is still a mess (2023-05-02), see previous notes and in particular: 
- *   - Why is it a singleton and not a class that can be instantiated twice, ideally inside the 
- *     function that manages the table and scrolling, not as a global variable
- *   - Why does it have two tables as fields? Renaming one into resultsTable means little, the point 
- *     is it shouldn't have two tables, cause there should be one object (class instance) per table, 
- *     not a singleton handling data from the two tables. This is simple OOP, please let's have 
- *     a brief call if you need further clarifications.
- * 
- * TODO: THIS IS INSANE! WE HAVE TO STOP TO PROGRAM THIS BADLY!
- * 
- * Programming is about THINKING, using logic, think about clean code organisation, CHANGE
- * existing code to adapt it to new features and needs, NOT MAKE ABSURD CONVOLUTIONS
- * around it.
- * 
- * This is a short block with an incredible amount of MESS: 
- * 
- * - The name tableEvents is wrong, this is about the infinite scrolling of two tables.
- *   STOP naming things randomly
- * - Why the hell do you need to manage two tables at the same time?! Why can't you have 
- *   ONE class and TWO instance objects, each with its own table to manage?
- * - Once it's a class, what's the point of having a global object? Why can't it be instantiated
- *   and used where it's needed, in the respective tables? 
- *  
- * More issues are reported below.
- * 
- */
-tableHandler = function(){
 
-    // Update: Tried using classes as recommended but found it diffcult to handle data changes because each instance will only have access data it was instantiated with. Currently investigating better approach as recommended. 
-    var tableData
 
-    function saveTableData(data){
-        tableData = data
-        var pageCount = Math.ceil(tableData.length/30)
-        var itemsLength = tableData.length < 30 ? tableData.length : 30;
-        
-        var data =  {
-            totalPage:pageCount,
-            itemsLength:itemsLength
-        }
-    
-        return data;
-    }
 
-    function scrollTable(table){
-
-        var tableContainer = table == 'geneViewTable' ? 'resultsTable' : 'evidenceTable';
-        var isTableScrollable;
-        var tableElement =  $(`#${table}`);
-
-        tableElement.scroll(function(e){
-            if(isTableScrollable) return
-            isTableScrollable = true; 
-
-            // throtting to prevent hundreds of events firing at once
-            setTimeout(function(){
-                isTableScrollable = false; 
-                
-                const selectedtable = document.getElementById(table); 
-                // checks if user reaches the end of page
-                var tableOverflow =  selectedtable.scrollTop + selectedtable.offsetHeight >= selectedtable.scrollHeight;
-                var itemsLength = $(`#${tableContainer}`).find('.count').text(); 
-                console.trace( "scrolling timeout, new itemsLenght", itemsLength); 
-                var currentPage = Math.ceil(+itemsLength/30);
-                var totalPage  = Math.ceil(tableData.length/30);
-
-                    // if user reaches end of the page new rows are created
-                    if(tableOverflow && totalPage !== currentPage){
-                        switch(table){
-                            // creates evidence table 
-                            case 'evidenceViewTable':
-                            createEvidenceTableBody(tableData, currentPage + 1, totalPage)
-                            break;
-                            // creates geneview table
-                            case 'geneViewTable':
-                            createGeneTableBody(tableData,currentPage+1,totalPage)
-                            break;
-                        }
-                    }
-            }, 1000)
-        })
-    }
-
-    return {saveTableData, scrollTable} 
-}()

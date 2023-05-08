@@ -107,6 +107,8 @@
           <!-- string loadtimes files -->
         <script type="text/javascript" src="html/javascript/loadtimes-popup.js"></script>
 
+      
+
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
          
@@ -114,6 +116,14 @@
         
         <!-- query suggestor -->
         <script type="text/javascript" src="html/javascript/query-suggester.js"></script>
+
+        <!-- species selector file -->
+        <script type="text/javascript" src="html/javascript/knet-selector.js"></script>
+
+        <!-- multi species file -->
+        <script type="text/javascript" src="html/javascript/knet-widget.js"></script>
+
+       
         
         <!-- gene table -->
         <script type="text/javascript" src="html/javascript/gene-table.js"></script>
@@ -121,19 +131,17 @@
         <!-- evidence table -->
         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
 
-        <!-- multi species file -->
-        <script type="text/javascript" src="html/javascript/multispecies.js"></script>
-        
-     
-
-      
+ 
         
         <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
+        <!-- table-handler -->
+        <script type="text/javascript" src="html/javascript/table-handler.js"></script>
+
         <!-- ajax data Utils-->
         <script type="text/javascript" src="html/javascript/data-utils.js"></script>
-        
+
         <!-- string data Utils-->
         <script type="text/javascript" src="html/javascript/string-utils.js"></script>
       

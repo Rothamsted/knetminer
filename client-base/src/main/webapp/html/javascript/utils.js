@@ -18,14 +18,14 @@ $(document).ready (
 			
 			knetmaps = KNETMAPS.KnetMaps();
 			getTaxIdFromUrl();
-	    multiSpeciesFeature.init();					
+			knetSelector.register();					
 			loginUtilsInit();	 // See notes in loginUtils.js
-	    loadOnReady();
-	    showReferenceGenome();
-	    initResetButton();
-	    qtlRegionHandlers();
-	    showToolTips();
-	    intialiseFeedbackCtaConfig();
+			loadOnReady();
+			showReferenceGenome();
+			initResetButton();
+			qtlRegionHandlers();
+			showToolTips();
+			intialiseFeedbackCtaConfig();
 		
 			// Do this as last step, so that it doesn't track in 
 			// case of failure		

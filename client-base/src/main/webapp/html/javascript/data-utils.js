@@ -23,7 +23,7 @@ function searchKeyword(){
     var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
     requestParams['taxId'] = taxonomyID; 
     requestParams['keyword'] = keyword;
-    requestParams['isSortedEvidenceTable']= true;
+    requestParams['isSortedEvidenceTable'] = true;
 
     if (list.length > 0) {
         requestParams['list'] = list;
@@ -336,7 +336,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          createGenesTable(resultsTable,keyword);
          handleDelimintedCta.getData(data);
 
-         multiSpeciesFeature.maps('drawRaw',data.gviewer);
+         knetWidgets.drawMap('drawRaw',data.gviewer);
          $("body").data("data",{evidenceTable:evidenceTable,keyword:keyword,resultsTable:resultsTable});
 
          if(geneList_size > 0) {
@@ -548,7 +548,7 @@ function changeSpecies(selectElement){
     $('#pGSearch_title').hide(); 
     
     if(currentTaxData){
-            var isChangeSuccessful  = multiSpeciesFeature.speciesEvents()
+            var isChangeSuccessful  = knetSelector.events()
             if(isChangeSuccessful){
                 setTimeout(function(){
                     // gets genome region search table row elements
