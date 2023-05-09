@@ -52,7 +52,7 @@ function getEvidencePvalue ( pvalueStr )
  * this server-side sorting performs. 
  
  */
-async function createEvidenceTable( evidenceTable, doSortTable=false ) 
+function createEvidenceTable( evidenceTable, doSortTable=false ) 
 {
     var table = "";
     var {totalPage,itemsLength} = tableHandler.saveTableData(evidenceTable,'evidenceTable');
@@ -184,6 +184,9 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     $("#revertEvidenceView").mouseout(function (e) {
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
+
+
+    tableHandler.scrollTable('evidenceViewTable');
 
 
 }
@@ -573,6 +576,7 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
         // can compute it with the same function above.
         //
         $('#evidenceBody').append(tableBody)
+        $('#evidenceCount').html(pageEnds)
     }
     return null; // just to return something
 }
