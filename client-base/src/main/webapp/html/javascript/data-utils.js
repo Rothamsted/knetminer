@@ -541,14 +541,14 @@ function errorComponent(elementInfo,xhr){
 // function to be triggered on changing the species dropdown option
 function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected"),
-    currentTaxData = multiSpeciesFeature.setTaxId(selectedSpecie.val());
+    currentTaxData = knetSelector.setTaxId(selectedSpecie.val());
     $('#speciename_container').empty();
     $('#chr1').empty();
     $('#tabviewer').hide(); 
     $('#pGSearch_title').hide(); 
     
     if(currentTaxData){
-            var isChangeSuccessful  = knetSelector.events()
+            var isChangeSuccessful  = knetSelector.event()
             if(isChangeSuccessful){
                 setTimeout(function(){
                     // gets genome region search table row elements

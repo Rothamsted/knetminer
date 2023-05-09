@@ -315,7 +315,7 @@ function openGeneListPopup(conceptId, element) {
     } else {
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
-        var getTaxIdFrag = multiSpeciesFeature.getTaxId();
+        var getTaxIdFrag = knetSelector.getTaxId();
 
         $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 })
         .done(function (data)
