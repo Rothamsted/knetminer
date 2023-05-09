@@ -117,7 +117,7 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable" id="evidenceBody">';
-    var tableBody = await createEvidenceTableBody(evidenceTable,1,totalPage)
+    var tableBody = createEvidenceTableBody(evidenceTable,1,totalPage)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
@@ -129,11 +129,6 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     $('#evidenceTable').html(table);
     
 
-    // TODO: tablesorter seems to perform same sorting functionality as 
-    // TODO: (MB) as what? Yes, this initially sorts the rendered table with the same criteria as the 
-    // initial data sorting. But the latter is needed before cutting the rows to 100.
-    //  I don't know if this additional sorting is also needed to have the column sorting arrows displayed (or upon the
-    // table re-creation). If not, remove it. Remove these comments when this is clarified.
     //
   
     
@@ -153,14 +148,16 @@ async function createEvidenceTable( evidenceTable, doSortTable=false )
     if ( doSortTable ) {
 			// If it's the sorter that has to sort, then here there are the columns
     	tableSorterOpts.sortList = sortingPositions;
+            // initialise tablesorter 
+        
     }
         
-    // initialise tablesorter 
-    $("#tablesorterEvidence").tablesorter(); 
+
 
     
     if ( !doSortTable )
-   	{
+   	{   
+        $("#tablesorterEvidence").tablesorter(); 
 	    // Place the header sorting marks to columns that we already know to be sorted
 	    // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
 	    // by the table sorter, else, it sorts and places thes ticks on its own. 
@@ -500,7 +497,7 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 
 
 // function creates evidence table body
-async function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
+function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 {
 
 	// TODO: currentPage starts from 1 and pageIndex starts from 0?

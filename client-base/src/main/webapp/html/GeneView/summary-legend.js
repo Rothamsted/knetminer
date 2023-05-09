@@ -39,25 +39,8 @@ function _filterKnetTableByType (
       } 
       
       // Select what required, using the helper
-			var evidenceKeysArrays = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
+	var evidenceKeysArrays = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
 
-
-      // TODO: remove. Please pay attention to the cleaned version. We need some more common sense here, some
-      /* more attention!
-      var evidenceKeysArrays = []
-      for (var tableRow in tableData )
-      {
-          // TODO: remove? this ends up being == tableId, if that's always the case, remove it
-          // else, harmonise these IDs or use an additional parameter
-          // var tableLocation = tableId.includes('resultsTable') ? 'resultsTable' : 'evidenceTable';
-          
-          // var selectedEvidence = setLegendsState(tableId, evidenceKeys, currentPosition, selectedKeys);
-          // if (selectedEvidence !== undefined) evidenceKeysArrays.push(selectedEvidence)
-          
-          if ( rowFilterPredicate ( selectedTypes, tableRow ) )
-          	evidenceKeysArrays.push ( tableRow )
-      } // for tableRow
-      */
 
       if (evidenceKeysArrays.length > 0)
         createFilteredTable ( evidenceKeysArrays, tableId )
@@ -103,7 +86,6 @@ function filterEvidenceTableByType ( event, conceptType )
 	)
 }
 
-
 //  function updates, store and checks for non-active legend keys
 function updateLegendsKeys(key, location, event) {
 
@@ -132,32 +114,12 @@ function updateLegendsKeys(key, location, event) {
 
 }
 
-// TODO: remove, AFTER having read the new version. 
-// I don't know how it's possible to conceive things this way! Please, some more common sense, some
-// more attention!
-// Function sets the visibility state of Gene and Evidence legends  
-/*
-function setLegendsState(tableLocation, gene_evidences, currentRow, currentData) {
-    switch (tableLocation) {
-        case "resultsTable":
-            if (currentData.every(keys => gene_evidences.includes(keys))) {
-                return currentRow;
-            }
-            break;
-        case "evidenceTable":
-            if (currentData.some(keys => gene_evidences.includes(keys))) {
-                return currentRow
-            }
-            break;
-    }
-}
-*/
-
 /**
  * @desc function creates table body for filtered geneview and evidence table
  * @param {*} filteredTable 
  * @param {*} table 
  */
+// refine function
 async function createFilteredTable(evidenceKeysArrays, location) {
 
     $('#filterMessage').hide();
@@ -166,17 +128,19 @@ async function createFilteredTable(evidenceKeysArrays, location) {
 
     // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
     var { totalPage, itemsLength } = tableHandler.saveTableData(evidenceKeysArrays);
-    switch (location) {
-        case 'resultsTable':
-            var filteredBody = createGeneTableBody(evidenceKeysArrays, 1, totalPage);
-            $('#geneTableBody').html('').append(filteredBody);
-            break;
-        case 'evidenceTable':
-            var filteredBody = await createEvidenceTableBody(evidenceKeysArrays, 1, totalPage);
-            $('#evidenceBody').html(filteredBody);
-            break;
-    }
 
+
+    var [createFilteredBody,tableId,tableSorterId,sortList] = location == 'resultsTable'? 
+    [ createGeneTableBody,'#geneTableBody','#tablesorter', [[5,1]]] 
+    : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[4, 0], [6, 1], [5, 1]] ]
+
+    // creates filtered body
+    var filteredBody = createFilteredBody(evidenceKeysArrays, 1, totalPage)
+    $(tableId).html(filteredBody);
+
+    // updates table sorter
+    $(tableSorterId).trigger('update', [ sortList ]);
+   
     $(`#${location}`).find('.count').html(itemsLength);
     $(`#${location}`).find('.limit').html(evidenceKeysArrays.length);
 }
