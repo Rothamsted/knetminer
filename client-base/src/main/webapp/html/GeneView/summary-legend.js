@@ -132,7 +132,7 @@ async function createFilteredTable(evidenceKeysArrays, location) {
 
     var [createFilteredBody,tableId,tableSorterId,sortList] = location == 'resultsTable'? 
     [ createGeneTableBody,'#geneTableBody','#tablesorter', [[5,1]]] 
-    : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[4, 0], [6, 1], [5, 1]] ]
+    : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
     // creates filtered body
     var filteredBody = createFilteredBody(evidenceKeysArrays, 1, totalPage)
