@@ -6,50 +6,64 @@ const knetSelector = function ()
     // function get lists of registered species from API
    function register ()
     {
-            $.get(api_url + '/dataset-info','').done( function(data){
-                knetWidgets.html(data);
-                var speciesInfos = data.species;
-                var createdDropDown = create(speciesInfos); 
-                if(createdDropDown){
-                    select();
-                    $('#species_header').css('display','flex');
-                    events(); 
-                }
-            }).fail(function(xhr,status,errolog){
-                errorComponent('#pGViewer_title',xhr);
-            });
+	    /**
+	     * function creates the species dropdown selector
+	     * @return true if the selector was created correctly
+	     * 
+	     * This is inside this other function, cause it's not needed anywhere else.
+	     */
+	    function create(speciesInfo)
+	    {
+	        var expectedOptions = speciesInfo.length;
+	        if(expectedOptions > 1){
+	            for(var speciesName in speciesInfo){
+	                var singleSpecie = speciesInfo[speciesName]; 
+	                var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
+	                $('.navbar-select').append(optionElement);
+	                var speciesOptions = $('.navbar-select option')
+	                // TODO: Why does it need to be so convoluted?
+	                // Are you expecting this loop to iterate over a different no of elements?
+	                // why can't it be:
+	                //
+	                // for ( speciesName ... )
+	                //   <render the option element>
+	                // return true
+	                // 
+	                if (speciesOptions.length === expectedOptions)
+	                    return true
+	            }
+	        }else{
+	        		// Draw one element and hide it, so that the rest of the UI works the same as multiple options
+	            setTaxId(speciesInfo[0].taxId);
+	            var optionElement = '<option value='+ speciesInfo[0].taxId+'>'+speciesInfo[0].scientificName+'</option>'; 
+	            $('.navbar-select').replaceWith("<span class='navbar-select'></span>");
+	            $('.navbar-select').append(optionElement);
+	            $('.navbarselect-container').css({
+	                "border":"none",
+	                "height":'unset'
+	            })
+	            $('.navbar-select').css({
+	                "height":"unset"
+	            })
+	            return false
+	        }
+	    }
+	
+	    $.get(api_url + '/dataset-info','').done( function(data){
+	        knetWidgets.html(data);
+	        var speciesInfo = data.species;
+	        var createdDropDown = create(speciesInfo); 
+	        if(createdDropDown){
+	            select();
+	            $('#species_header').css('display','flex');
+	            events(); 
+	        }
+	    }).fail(function(xhr,status,errolog){
+	        errorComponent('#pGViewer_title',xhr);
+	    });
     }
 
-    // function creates the species dropdown
-    function create(speciesNames)
-    {
-        var expectedOptions = speciesNames.length;
-        if(expectedOptions > 1){
-            for(var speciesName in speciesNames){
-                var singleSpecie = speciesNames[speciesName]; 
-                var optionElement = '<option value='+ singleSpecie.taxId+'>'+singleSpecie.scientificName+'</option>'
-                $('.navbar-select').append(optionElement);
-                var speciesOptions = $('.navbar-select option')
-                if(speciesOptions.length === expectedOptions){
-                    return true
-                }
-            }
-        }else{
-            setTaxId(speciesNames[0].taxId);
-            var optionElement = '<option value='+ speciesNames[0].taxId+'>'+speciesNames[0].scientificName+'</option>'; 
-            $('.navbar-select').replaceWith("<span class='navbar-select'></span>");
-            $('.navbar-select').append(optionElement);
-            $('.navbarselect-container').css({
-                "border":"none",
-                "height":'unset'
-            })
-            $('.navbar-select').css({
-                "height":"unset"
-            })
-   
-            return null
-        }
-    }
+
 
     // function house events that needs to be called when currentTaxId changes
     function events()
@@ -280,8 +294,13 @@ const knetSelector = function ()
         register:register,
         event: events,
         setTaxId: setTaxId,
-        getTaxId: getTaxIdUrlFrag,
-        create:create,
+        // TODO: remove!!! COME ON!!! getTaxId is ALMOST ALWAYS understood as: GET ME THAT VALUE
+        // NOT A STRING BASED ON IT!!!
+        // Also, it's cleaner to name the exposed keys the same as the internal functions.
+        // getTaxId: getTaxIdUrlFrag,
+        getTaxIdUrlFrag: getTaxIdUrlFrag,
+        // TODO: remove. Why do you expose it to the world, if it's an internal helper?!
+        // create:create,
         select:select,
         getSpecies:getSpecies
     }

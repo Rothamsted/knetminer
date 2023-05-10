@@ -2,7 +2,7 @@ const knetWidgets = function()
 {
 
     function getList(){
-        var getTaxIdFrag = knetSelector.getTaxId();
+        var getTaxIdFrag = knetSelector.getTaxIdUrlFrag();
         $.get(api_url + '/dataset-info/chromosome-ids' + getTaxIdFrag ,'').done( function(chromosomes){
             for(let i=0; i < chromosomes.length; i++){
                 var chr1Options = '<option value='+chromosomes[i]+'>'+ chromosomes[i]+'</option>';
@@ -20,7 +20,7 @@ const knetWidgets = function()
     }
 
     function drawMap(basemapString,data){  
-        var getTaxIdFrag = knetSelector.getTaxId();
+        var getTaxIdFrag = knetSelector.getTaxIdUrlFrag();
         var taxIdBaseXmlUrl = api_url + '/dataset-info/basemap.xml'+ getTaxIdFrag; 
             if(basemapString === 'draw'){
                 genemap.draw('#genemap',taxIdBaseXmlUrl, data)

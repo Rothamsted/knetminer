@@ -310,7 +310,7 @@ function openGeneListPopup(conceptId, element) {
     } else {
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
-        var getTaxIdFrag = knetSelector.getTaxId();
+        var getTaxIdFrag = knetSelector.getTaxIdUrlFrag();
 
         $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 })
         .done(function (data)
@@ -577,7 +577,7 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 }
 
 /* TODO: remove after reading:
-  - Don't write triviality, we can read this is a function:
+  - Don't write trivia, we can read this is a function:
     function sets tableSorter tick to evidence table headers
     
   - getSortingDirection was renamed, getXXX() is commonly used for methods or
@@ -595,6 +595,8 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
  * without asking it for re-sorting.
  * 
  * Details: https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
+ * 
+ * TODO: not urgent, move to ui-utils.js?
  */
 function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
 {
