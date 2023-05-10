@@ -190,8 +190,12 @@ function showApiInitResult ( error = null )
 		return;		
 	}
 	
-	var details = "HTTP code/message: " + error.status + "/" + error.statusText;
-	if ( error.responseText ) details += ". Response: " + error.responseText;
+	var details;
+	if ( error.status ) {
+		details = "HTTP code/message: " + error.status + "/" + error.statusText;
+		if ( error.responseText ) details += ". Response: " + error.responseText;
+	}
+	else details = error
 		
   logError ( "Error while doing API initialisation.", details );
   

@@ -34,7 +34,7 @@
    // add api_graphSummary to the above as well, if exists.
    var speciesTaxid= null, speciesName= null, dbVersion= null, dbDateCreated= null, sourceOrganization= null, provider= null;
    if(apiGraphSummary !== null && apiGraphSummary.size > 0) {
-        var currentSpecies =  multiSpeciesFeature.speciesData(apiGraphSummary.species)
+      var currentSpecies =  knetSelector.speciesData(apiGraphSummary.species)
       speciesTaxid= currentSpecies.taxId;
       speciesName= currentSpecies.scientificName;
       dbVersion= apiGraphSummary.version;
