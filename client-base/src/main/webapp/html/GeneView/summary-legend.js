@@ -39,11 +39,10 @@ function _filterKnetTableByType (
       } 
       
       // Select what required, using the helper
-	var evidenceKeysArrays = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
+      var filteredTable = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
 
-
-      if (evidenceKeysArrays.length > 0)
-        createFilteredTable ( evidenceKeysArrays, tableId )
+      if (filteredTable.length > 0)
+        createFilteredTable ( filteredTable, tableId )
       else
       {
         $('#tablesorter').hide()
@@ -117,31 +116,30 @@ function updateLegendsKeys(key, location, event) {
 /**
  * @desc function creates table body for filtered geneview and evidence table
  * @param {*} filteredTable 
- * @param {*} table 
+ * @param {*} tableId 
  */
-// refine function
-async function createFilteredTable(evidenceKeysArrays, location) {
-
+async function createFilteredTable(filteredTable, tableId) 
+{
     $('#filterMessage').hide();
     $('#tablesorter').show();
     $('.num-genes-container').show();
 
     // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
-    var { totalPage, itemsLength } = tableHandler.saveTableData(evidenceKeysArrays);
+    var { totalPage, itemsLength } = tableHandler.saveTableData(filteredTable);
 
 
-    var [createFilteredBody,tableId,tableSorterId,sortList] = location == 'resultsTable'? 
+    var [createFilteredBody,tableId,tableSorterId,sortList] = tableId == 'resultsTable'? 
     [ createGeneTableBody,'#geneTableBody','#tablesorter', [[5,1]]] 
     : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
     // creates filtered body
-    var filteredBody = createFilteredBody(evidenceKeysArrays, 1, totalPage)
+    var filteredBody = createFilteredBody(filteredTable, 1, totalPage)
     $(tableId).html(filteredBody);
 
     // updates table sorter
     $(tableSorterId).trigger('update', [ sortList ]);
    
-    $(`#${location}`).find('.count').html(itemsLength);
-    $(`#${location}`).find('.limit').html(evidenceKeysArrays.length);
+    $(`#${tableId}`).find('.count').html(itemsLength);
+    $(`#${tableId}`).find('.limit').html(filteredTable.length);
 }
 
