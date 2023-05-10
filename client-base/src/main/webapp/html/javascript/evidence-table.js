@@ -129,9 +129,6 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
     $('#evidenceTable').html(table);
     
 
-    //
-  
-    
     // Tell table sorter to sort it if not already done (server side)
     // TODO: as discussed and mentioned in #744, when this is not set, table sorter
     // doesn't draw the column header markers that show the column is sorted, so we
@@ -145,29 +142,22 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
     // TODO: check the numbers again, they don't seem to reflect the comment above
     var  sortingPositions = [[4, 0], [6, 1], [5, 1]]; 
     
-    if ( doSortTable ) {
+    if ( doSortTable )
 			// If it's the sorter that has to sort, then here there are the columns
     	tableSorterOpts.sortList = sortingPositions;
-            // initialise tablesorter 
-        
+    else        
+    {   
+      $("#tablesorterEvidence").tablesorter(); 
+      
+      // Place the header sorting marks to columns that we already know to be sorted
+      // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
+      // by the table sorter, else, it sorts and places thes ticks on its own. 
+       
+      // TODO: remove. Avoid this form of for() when it's not needed
+      // for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)     
+      for ( var sortingPosition of sortingPositions )
+        setTableSorterHeaderTick( "tablesorterEvidence", sortingPosition [ 0 ], sortingPosition [ 1 ] == 0 )
     }
-        
-
-
-    
-    if ( !doSortTable )
-   	{   
-        $("#tablesorterEvidence").tablesorter(); 
-	    // Place the header sorting marks to columns that we already know to be sorted
-	    // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
-	    // by the table sorter, else, it sorts and places thes ticks on its own. 
-     
-    	for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)
-    	{
-        var sortingPosition = sortingPositions[sortingIndex]; 
-        setTableSorterHeaderTick(sortingPosition)
-        }
-    } // if ( doSortTable )
     
     /*
      * Revert filtering changes on Evidence View table
@@ -187,8 +177,6 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
 
 
     tableHandler.scrollTable('evidenceViewTable');
-
-
 }
 
 /*
@@ -581,10 +569,32 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
     return null; // just to return something
 }
 
-// function sets tableSorter tick to evidence table headers
-function setTableSorterHeaderTick(sortingPosition){
-    var getSortingDirection = sortingPosition[1] == 0 ? 'tablesorter-headerDesc' : 'tablesorter-headerAsc'; 
-    $(`#tablesorterEvidence thead tr:nth-child(1) th:nth-child(${sortingPosition[0]})`).addClass(`${getSortingDirection} tablesorter-headerSorted`);
+/* TODO: remove after reading:
+  - Don't write triviality, we can read this is a function:
+    function sets tableSorter tick to evidence table headers
+    
+  - getSortingDirection was renamed, getXXX() is commonly used for methods or
+    functions that do some operation to provide a value, not for variables
+    
+  - $(`#tablesorterEvidence ... ) COME ON!!! Potentially, this can be useful in zillion
+    table sorter instances, HOW THE HECK did you think to stick it with ONE only?!?
+    
+  - sortingOptions as the only parameter: a function like this should not be forced to deal 
+    with a cryptic format, which is specific of another component.
+*/
+/**
+ * Can be used with a jQuery table sorter element, to manually mark a column as sorted,
+ * when the table was sorted from the outside and the table sorter component is invoked
+ * without asking it for re-sorting.
+ * 
+ * Details: https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
+ */
+function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
+{
+	// When the col is already in ascending order, headerAsc is the down arrow, to tell you can
+	// revert the order. This reproduces the same behaviour that the table sorter
+  var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
+  $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
 }
 
 
