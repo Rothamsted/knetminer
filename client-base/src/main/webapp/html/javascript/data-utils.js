@@ -539,6 +539,9 @@ function errorComponent(elementInfo,xhr){
 
 
 // function to be triggered on changing the species dropdown option
+// TODO: could this be a method of knetSelector? In that case, we could hide
+// refreshUI () ?
+//
 function changeSpecies(selectElement){
     var selectedSpecie = $(selectElement).children("option:selected"),
     currentTaxData = knetSelector.setTaxId(selectedSpecie.val());
@@ -548,7 +551,7 @@ function changeSpecies(selectElement){
     $('#pGSearch_title').hide(); 
     
     if(currentTaxData){
-            var isChangeSuccessful  = knetSelector.event()
+            var isChangeSuccessful  = knetSelector.refreshUI()
             if(isChangeSuccessful){
                 setTimeout(function(){
                     // gets genome region search table row elements

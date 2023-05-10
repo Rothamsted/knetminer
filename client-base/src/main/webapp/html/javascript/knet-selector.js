@@ -54,19 +54,19 @@ const knetSelector = function ()
 	        var speciesInfo = data.species;
 	        var createdDropDown = create(speciesInfo); 
 	        if(createdDropDown){
-	            select();
+	            doSpecieSwitch ();
 	            $('#species_header').css('display','flex');
-	            events(); 
+	            refreshUI (); 
 	        }
 	    }).fail(function(xhr,status,errolog){
 	        errorComponent('#pGViewer_title',xhr);
 	    });
     }
 
-
-
-    // function house events that needs to be called when currentTaxId changes
-    function events()
+		/** 
+		 * Calls the necessary events after switching specie. 
+		 */
+    function refreshUI ()
     {
         knetWidgets.drawMap('draw',null);
         knetWidgets.getList();
@@ -99,7 +99,8 @@ const knetSelector = function ()
      * If taxId is not set, the first select option is selected
      * 
      */
-    function select(){
+    function doSpecieSwitch ()
+    {
         if(currentTaxId !== ""){
             // set 
             var speciesOptions = $('.navbar-select option')
@@ -120,12 +121,13 @@ const knetSelector = function ()
 
     }
   
-
+		/* TODO: not used, remove?		
     // function filters out species Information using currentTaxId value
     function getSpecies(data){
         var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
         return currentSpecies
     }
+    */
 
     function examples(){
         var sampleQueryButtons = "";
@@ -291,18 +293,23 @@ const knetSelector = function ()
 
 
     return {
-        register:register,
-        event: events,
+        register: register,
+        refreshUI: refreshUI,
         setTaxId: setTaxId,
         // TODO: remove!!! COME ON!!! getTaxId is ALMOST ALWAYS understood as: GET ME THAT VALUE
         // NOT A STRING BASED ON IT!!!
         // Also, it's cleaner to name the exposed keys the same as the internal functions.
         // getTaxId: getTaxIdUrlFrag,
         getTaxIdUrlFrag: getTaxIdUrlFrag,
+        
         // TODO: remove. Why do you expose it to the world, if it's an internal helper?!
         // create:create,
-        select:select,
-        getSpecies:getSpecies
+        
+        // TODO: remove. Why do you expose it to the world, if it's an internal helper?!
+        // doSpecieSwitch: doSpecieSwitch,
+        
+        // TODO: not used, remove?
+        // getSpecies: getSpecies
     }
 }(); 
 
