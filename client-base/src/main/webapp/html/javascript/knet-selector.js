@@ -77,7 +77,6 @@ const knetSelector = function ()
     /** 
      * Set the current taxonomy ID, usually based on the user selection.
      */
-    // function setApiUrl(id)
     function setTaxId(id) {
       currentTaxId = id;
       return currentTaxId ? true : false
