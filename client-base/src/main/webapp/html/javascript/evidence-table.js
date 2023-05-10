@@ -127,31 +127,38 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
     $('#evidenceTable').html(table);
+
+		// This is used when the user start clicking on col headers cause they want to sort the table
+		// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
+    tableSorterOpts = {
+      // deals with p-value, offering the actual value for sorting, rather than the
+      // formatted one
+      textExtraction: function (node) { 
+        var attr = $(node).attr ( 'type-sort-value' );
+        if ( typeof attr !== 'undefined' && attr !== false ) return attr;
+        var actualPvalue = $(node).attr ( 'actual-pvalue' );
+        if (actualPvalue) return actualPvalue;
+        return $(node).text();
+      }
+    }
     
-
-    // Tell table sorter to sort it if not already done (server side)
-    // TODO: as discussed and mentioned in #744, when this is not set, table sorter
-    // doesn't draw the column header markers that show the column is sorted, so we
-    // need a function to tweak them, as explained here:
-    //
-    // https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
-
     // Initial sorting is by p-value, user genes, total genes, node label
-    // This ensures something significant if both pvalues and user genes are N/A and 0
-
-    // TODO: check the numbers again, they don't seem to reflect the comment above
     var  sortingPositions = [[4, 0], [6, 1], [5, 1]]; 
     
     if ( doSortTable )
 			// If it's the sorter that has to sort, then here there are the columns
     	tableSorterOpts.sortList = sortingPositions;
-    else        
+    	
+    // As said above, tableSorterOpts, whether with sortingPositions or not, IS ALWAYS REQUIRED
+    $("#tablesorterEvidence").tablesorter( tableSorterOpts ); 
+    	
+    if ( !doSortTable )        
     {   
-      $("#tablesorterEvidence").tablesorter(); 
       
-      // Place the header sorting marks to columns that we already know to be sorted
+      // As explained in #744, place the header sorting marks to columns that we already know 
+      // to be sorted.
       // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
-      // by the table sorter, else, it sorts and places thes ticks on its own. 
+      // by the table sorter, else, it sorts and places thes ticks on its own.
        
       // TODO: remove. Avoid this form of for() when it's not needed
       // for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)     
