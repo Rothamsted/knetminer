@@ -510,7 +510,8 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
         [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
 
         // Prefer this templating style, at least for new code
-        // Also, avoid "x = x + ...", it's more verbose, especially when it's needed many times
+        // Also, avoid "x = x + ...", it's more verbose than +=, especially when
+        // it's needed many times.
         //  
         tableBody +=`<tr>
                         <td>
@@ -550,8 +551,6 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 
         var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${ev_i}" type="checkbox" name= "evidences" value="${conceptId}:${geneList}">`;
         tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
-       
-
     } 
     
     if ( tableBody )
