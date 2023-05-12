@@ -1,15 +1,17 @@
-
 /*
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
-function createGenesTable(text, keyword){
+function createGenesTable(tableData, keyword){
 	var table = "";
- 	var {totalPage,itemsLength} = tableHandler.saveTableData(text); 
+
+	genesTableScroller.setTable ( tableData )
+	const pagesCount = genesTableScroller.getPagesCount ()
+	const firstPageEnd = genesTableScroller.getPageEnd ()
 	
-	if (text.length > 0 ){
+	if (tableData.length > 0 ){
 	// Gene View: interactive summary legend for evidence types.
-	var interactiveSummaryLegend = getInteractiveSummaryLegend(text);
+	var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 
 	table += '<form name="checkbox_form"><div class="gene_header_container">';
 	table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
@@ -32,7 +34,7 @@ function createGenesTable(text, keyword){
 	table += '</thead>';
 	table += '<tbody id="geneTableBody" class="scrollTable">';
 
-	var tableBody = createGeneTableBody(text,1,totalPage); 
+	var tableBody = createGeneTableBody(tableData,1,pagesCount); 
 	table = table + tableBody; 
 	table += '</tbody>';
 	table += '</table>';
@@ -40,7 +42,7 @@ function createGenesTable(text, keyword){
 	table += '</form>';
 
 	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+itemsLength+'</span> of <span class="limit">'+text.length+'</span></span></div>';
+	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+firstPageEnd+'</span> of <span class="limit">'+tableData.length+'</span></span></div>';
 	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
 
 	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
@@ -58,7 +60,7 @@ function createGenesTable(text, keyword){
 	/*
 	 * click Handler for viewing a network.
 	 */
-	$(".viewGeneNetwork").bind("click", { x: text }, function (e) {
+	$(".viewGeneNetwork").bind("click", { x: tableData }, function (e) {
 		e.preventDefault();
 		var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
 		var values = e.data.x[geneNum];
@@ -106,7 +108,7 @@ function createGenesTable(text, keyword){
 	 * Revert Evidence Filtering changes on Gene View table
 	 */
 	$("#revertGeneView").click(function (e) {
-		createGenesTable(text, keyword,); // redraw table
+		createGenesTable(tableData, keyword,); // redraw table
 		$('#resultsTable').data({ keys: [] });
 		
 	});
@@ -123,9 +125,9 @@ function createGenesTable(text, keyword){
 	 * Select all KNOWN targets: find all targets with existing Evidence & check them.
 	 * Select all NOVEL targets: find all targets with no Evidence & check them.
 	 */
-	$('input:button[name="checkbox_Targets"]').bind("click", { x: text }, function (e) {
+	$('input:button[name="checkbox_Targets"]').bind("click", { x: tableData }, function (e) {
 		e.preventDefault();
-		var numResults = text.length;
+		var numResults = tableData.length;
 		var targetClass = $(this).hasClass('checked')
 
 		for (var i = 1; i < numResults; i++) {
@@ -153,8 +155,7 @@ function createGenesTable(text, keyword){
 		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
 	});
 
-	tableHandler.scrollTable('geneViewTable');
-
+	genesTableScroller.setupScrollHandler ()
 }
 
 
@@ -359,15 +360,15 @@ function downloadNetwork() {
  * @param {*} results geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
  * @param {*} pageIndex number is used compute the geneview's data starting and ending range.
  * @param {*} rowSize number of data rows to be created, defaults to number geneViewData if length is less than 30 see(getTablePaginationData()).
- * @param {*} totalPage total number of pages that can be rendered, results from dividing geneView data length by rowSize. see (getTablePaginationData())
+ * @param {*} pagesCount total number of pages that can be rendered, results from dividing geneView data length by rowSize. see (getTablePaginationData())
  * @returns 
  */
-function createGeneTableBody(results, pageIndex,totalPage){
+function createGeneTableBody(results, pageIndex,pagesCount){
 	var table = ''
 
 	// Main loop over the resulting genes.
 	var pageStart = (pageIndex - 1) * 30;
-    var pageEnds = pageIndex == totalPage ? results.length : pageIndex * 30; 
+    var pageEnds = pageIndex == pagesCount ? results.length : pageIndex * 30; 
 	for (var row = pageStart; row < pageEnds; row++)
 	{
 		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = results[row]

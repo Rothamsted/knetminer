@@ -52,22 +52,25 @@ function getEvidencePvalue ( pvalueStr )
  * this server-side sorting performs. 
  
  */
-function createEvidenceTable( evidenceTable, doSortTable=false ) 
+function createEvidenceTable( tableData, doSortTable=false ) 
 {
     var table = "";
-    var {totalPage,itemsLength} = tableHandler.saveTableData(evidenceTable,'evidenceTable');
+    
+		evidenceTableScroller.setTable ( tableData )
+		const pagesCount = evidenceTableScroller.getPagesCount ()
+		const firstPageEnd = evidenceTableScroller.getPageEnd ()
 
     // set current table data for infinite scrolling
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
-    if(evidenceTable.length == 0) return null 
+    if(tableData.length == 0) return null 
 
 		// TODO: remove once the API change to sort is implemented (and invoked)
 		// WARNING: I am OBVIUSLY talking of the WHOLE block (if + its body), if you remove the 
 		// if only, you'll end up doing the OPPOSITE of what it's meant!
 		if ( doSortTable )
 		{
-	    evidenceTable.sort ( function( row1, row2 )
+	    tableData.sort ( function( row1, row2 )
 	    {
 	      // TODO: this damn column indices are popping up everywhere, either use the conversion to 
 	      // meaning variables, or, if we have many of this row value accesses, consider to get them
@@ -95,11 +98,11 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
         totGenes2 = Number ( totGenes2 )
         
         return totGenes2 - totGenes1 // descending order
-	    }); // evidenceTable.sort ()
+	    }); // tableData.sort ()
 		} // if doSortTable
 
     // Evidence View: interactive legend for evidences.
-    var eviLegend = getEvidencesLegend(evidenceTable);
+    var eviLegend = getEvidencesLegend(tableData);
     table = '';
     table = table + '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
     table = table + '<div id= "evidenceViewTable" class="scrollTable">';
@@ -117,12 +120,12 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
     table = table + '</tr>';
     table = table + '</thead>';
     table = table + '<tbody class="scrollTable" id="evidenceBody">';
-    var tableBody = createEvidenceTableBody(evidenceTable,1,totalPage)
+    var tableBody = createEvidenceTableBody(tableData,1,pagesCount)
     table = table + tableBody; 
     table = table + '</tbody>';
     table = table + '</table>';
     table = table + '</div><div class="evidence-footer">';
-    table = table + '<div class="evidence-select"><span>Showing <span id="evidenceCount" class="count">'+itemsLength+'</span> of <span class="limit">'+evidenceTable.length+'</span></span></div>';
+    table = table + '<div class="evidence-select"><span>Showing <span id="evidenceCount" class="count">'+firstPageEnd+'</span> of <span class="limit">'+tableData.length+'</span></span></div>';
     table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
     table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
@@ -170,7 +173,7 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
      * Revert filtering changes on Evidence View table
      */
     $("#revertEvidenceView").click(function (e) {
-        createEvidenceTable(evidenceTable,false); // redraw table
+        createEvidenceTable(tableData,false); // redraw table
         $('#evidenceTable').data({ keys: [] });
     });
 
@@ -182,8 +185,7 @@ function createEvidenceTable( evidenceTable, doSortTable=false )
         $("#revertEvidenceView").removeClass('hover').addClass('unhover');
     });
 
-
-    tableHandler.scrollTable('evidenceViewTable');
+    evidenceTableScroller.setupScrollHandler ()
 }
 
 /*
@@ -495,7 +497,7 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 
 
 // function creates evidence table body
-function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
+function createEvidenceTableBody ( tableData, pageIndex, pagesCount )
 {
 
 	// TODO: currentPage starts from 1 and pageIndex starts from 0?
@@ -503,11 +505,11 @@ function createEvidenceTableBody(evidenceTable, pageIndex,totalPage )
 		//
     var tableBody=""; 
     var pageStart = (pageIndex - 1) * 30;
-    var pageEnds = pageIndex == totalPage ? evidenceTable.length : pageIndex * 30; 
+    var pageEnds = pageIndex == pagesCount ? tableData.length : pageIndex * 30; 
 
     for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
     {   
-        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = evidenceTable[ev_i];
+        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = tableData[ev_i];
 
         // Prefer this templating style, at least for new code
         // Also, avoid "x = x + ...", it's more verbose than +=, especially when

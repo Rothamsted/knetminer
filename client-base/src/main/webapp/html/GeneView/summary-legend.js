@@ -1,5 +1,3 @@
-
-
 /*
  * Filters gene or evidence table by the selected Concept Type (coming from the legend).
  *  
@@ -120,26 +118,47 @@ function updateLegendsKeys(key, location, event) {
  */
 async function createFilteredTable(filteredTable, tableId) 
 {
+		// TODO: If there is only ONE instance for each of these, then WHY do we have DIFFERENT
+		// names/variables/objects that manage genes and evidence tables separately, as if there were
+		// TWO instances of them?!?
+		// NEEDS serious review for coherence!
+		
     $('#filterMessage').hide();
     $('#tablesorter').show();
     $('.num-genes-container').show();
 
-    // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
-    var { totalPage, itemsLength } = tableHandler.saveTableData(filteredTable);
-
+		// Infinite scrolling and paging. TODO: needs parameterisation
+		const scrollMgr = tableId == 'resultsTable' ? genesTableScroller : evidenceTableScroller
+		scrollMgr.setTable ( filteredTable )
 
     var [createFilteredBody,tableId,tableSorterId,sortList] = tableId == 'resultsTable'? 
-    [ createGeneTableBody,'#geneTableBody','#tablesorter', [[5,1]]] 
-    : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
+    [ createGeneTableBody,'geneTableBody','tablesorter', [[5,1]]] 
+    : [createEvidenceTableBody,'evidenceBody','tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
     // creates filtered body
-    var filteredBody = createFilteredBody(filteredTable, 1, totalPage)
-    $(tableId).html(filteredBody);
+    var filteredBody = createFilteredBody ( filteredTable, 1, scrollMgr.getPagesCount () )
+    $(`#${tableId}`).html(filteredBody);
 
     // updates table sorter
-    $(tableSorterId).trigger('update', [ sortList ]);
+    $(`#${tableSorterId}`).trigger('update', [ sortList ]);
+       
+    var firstPageEnd = scrollMgr.getPageEnd ();
    
-    $(`#${tableId}`).find('.count').html(itemsLength);
-    $(`#${tableId}`).find('.limit').html(filteredTable.length);
+    // TODO: count is style class, NOT AN IDENTIFIER!!!
+    // This has to be done either by
+    // - using the SAME IDs for all corresponding elements belonging to the two tables
+    //   eg, in both tables we have HTML elements named tableContainer, tableCount, tableLimit etc.
+    // - OR define IDS for those elements with the same POSTFIXES for corresponding IDs
+    //   This way it would be tableId == genes || evidence and then we would have
+    //   genesTableContainer, genesTableBody, genesTableCount, genesTableLimit... PLUS
+    //   evidenceTableContainer, evidenceTableBody, evidenceTableCount, evidenceTableLimit... 
+    //   This way, it would be easy to have only one tableId parameter and use it to refer all
+    //   the possible elements
+    // Solution 1 is simpler, but we need to clarify IF we actually need to manage two tables
+    // separately, or we can switch from one each other (see the notes above)
+    //
+    
+    $(`#${tableId}`).find('.count').html( firstPageEnd );
+    $(`#${tableId}`).find('.limit').html ( filteredTable.length );
 }
 

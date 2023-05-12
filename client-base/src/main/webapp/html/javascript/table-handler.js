@@ -1,7 +1,186 @@
+// TODO: table-handler.js is a meaningless name, rename it to something like
+// table-scrolling.js 
+// 
+// Also, 'handler' using refer to small components such as event triggers, 
+// connection stream readers, cache update functions. Here, it could be name handler, but 
+// manager is maybe more appropriate. Apart from this, the problem is that 'scroll' was missing
+// from names
+//    
+
+class InfiniteScrollManager
+{
+	#table = null
+	#tableId = null
+	#tableBodyGenerator = null 
+	
+	#page = 0
+	
+	#pageSize = 30
+		
+	constructor ( tableId, tableBodyGenerator )
+	{
+		if ( this.constructor === InfiniteScrollManager ) 
+			throw new TypeError ( "Can't instantiate abstract class InfiniteScrollManager" )
+			
+		if ( !( typeof tableId == 'string' || tableId == "" ) ) throw TypeError ( 
+			"Can't set InfiniteScrollManager with null, empty or non string tableId" 
+		) 
+		if ( typeof tableBodyGenerator == 'function' )
+		
+		this.#tableId = tableId
+		this.#tableBodyGenerator = tableBodyGenerator
+	}
+	
+	getTable ()
+	{
+		return this.#table
+	}
+	
+	getTableId ()
+	{
+		return this.#tableId
+	}
+	
+	
+	setTable ( table ) 
+	{
+		if ( !Array.isArray ( table ) ) throw new TypeError ( 
+			"Can't set InfiniteScrollManager with null or non-array table" 
+		) 
+		
+		this.#table = table
+		this.setPage ( 0 )
+	}
+	
+	#validateTable () {
+		if ( ! this.#table ) throw new TypeError ( 
+			"InfiniteScrollManager, table not set" 
+		) 
+	}
+	
+	getPageSize () {
+		this.#validateTable ()
+		return this.#pageSize
+	}
+
+	setPageSize ( pageSize )
+	{
+		this.#validateTable ()
+		
+		if ( pageSize < 1 ) throw new RangeError ( 
+			`Invalid page size of ${pageSize}, must be a positive value` 
+		)
+				
+		$this.#pageSize = pageSize
+	}
+	
+	getPagesCount ()
+	{
+		this.#validateTable ()
+		return Math.ceil ( this.#table.length / this.#pageSize )
+	}
+	
+	
+	getPage () {
+		this.#validateTable ()
+		return this.#page
+	}
+
+	setPage ( page )
+	{
+		this.#validateTable ()
+		const pagesCt =  this.getPagesCount ()
+		if ( page >= pagesCt ) throw new RangeError ( 
+			`Invalid page value #${page} for table '${tableId}', which has ${pagesCt}` 
+		)
+		
+		this.#page = page
+	}
+
+
+	hasNextPage () {
+		this.#validateTable ()
+		return ( this.#page + 1 ) < this.getPagesCount ()
+	}
+
+	goNextPage ()
+	{
+		this.#validateTable ()
+		this.setPage ( this.#page + 1 )
+		return this.getPage ()
+	}
+
+	
+	getPageStart ()
+	{
+		this.#validateTable ()
+		return this.#page * this.#pageSize
+	}
+	
+	getPageEnd ()
+	{
+		this.#validateTable ()
+		
+		const result = ( this.#page + 1 ) * this.#pageSize
+		return Math.min ( result, this.#table.length ) 
+	}
+	
+	setupScrollHandler ()
+	{
+		this.#validateTable ()
+		
+		const jqTable = $(`#${ this.#tableId }` )
+		var timer = null
+		
+		const tableBodyGenerator = this.#tableBodyGenerator // Else, it's not visible below
+
+		
+		jqTable.scroll ( () => {
+			// Clear/set used to throttle the scroll event firing:
+			// https://stackoverflow.com/a/29654601/529286
+			// The scroll event clears any previous timeout for a while, nothing happens until the 
+			// delayed timeout handler fires too.
+			//
+			clearTimeout ( timer )
+			
+			timer = setTimeout ( () => 
+			{
+				// TODO: can't we use jqTable here?
+				const tableElem = document.getElementById ( this.getTableId () ); 
+				const needsMoreRows = tableElem.scrollTop + tableElem.offsetHeight >= tableElem.scrollHeight
+				if ( !needsMoreRows ) return
+				if ( !this.hasNextPage () ) return
+				
+				tableBodyGenerator ( this.getTable (), this.goNextPage () + 1, this.getPagesCount () )
+			}, 300 ) // setTimeout
+		}) // scroll()
+	} // scrollHandler ()
+}
+
+class GenesTableScroller extends InfiniteScrollManager
+{
+	constructor () {
+		super ( 'geneViewTable', createGeneTableBody )
+	}
+}
+
+class EvidenceTableScroller extends InfiniteScrollManager
+{
+	constructor () {
+		super ( 'evidenceViewTable', createEvidenceTableBody )
+	}
+}
+
+const genesTableScroller = Object.freeze ( new GenesTableScroller () )
+const evidenceTableScroller = Object.freeze ( new EvidenceTableScroller () )
+
+
 /**
+ * TODO: remove, replaced by the classes and objects above
  * function handles scroll events for Geneview and Evidence view tables.
+ * 
 */
-const tableHandler = function(){
+const _tableHandler = function(){
 
     // Update: Tried using classes as recommended but found it diffcult to handle data changes because each instance will only have access data it was instantiated with. Currently investigating better approach as recommended. 
     var tableData
@@ -59,3 +238,41 @@ const tableHandler = function(){
 
     return {saveTableData, scrollTable} 
 }()
+
+
+/** 
+ * TODO: I wrote this to run them manually, needs to be rewritten for Jasmine and integrated 
+ * into Maven with the Jasmine plug-in
+ *  
+ */
+// Provisionally set it to true when you want test. DO NOT COMMIT TRUE!!!
+const doTest = false
+if ( doTest )
+{
+	function createGeneTableBody () {}
+	
+	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
+	genesTableScroller.setTable ( testTable ) 
+	
+	console.assert ( genesTableScroller.getPageSize () == 30, "page size wrong!" )
+	console.assert ( 
+		genesTableScroller.getPagesCount () == Math.ceil ( testTable.length / 30 ), "pages count wrong!"
+	)
+	console.assert ( 
+		genesTableScroller.getPagesCount () == Math.ceil ( testTable.length / 30 ), "pages count wrong!"
+	)
+	console.assert ( genesTableScroller.getPageStart () == 0, "page start wrong!" )
+	console.assert ( genesTableScroller.getPageEnd () == 30, "page end wrong!" )
+	
+	genesTableScroller.setPage ( 2 )
+	console.assert ( genesTableScroller.getPageStart () == 30 * 2, "page start at page 2 is wrong!" )
+	console.assert ( genesTableScroller.getPageEnd () == 30 * 3, "page end at page 2 is wrong!" )
+	
+	console.assert ( genesTableScroller.hasNextPage (), "hasNextPage() is wrong!" )
+	console.assert ( genesTableScroller.goNextPage () == 3, "goNextPage() is wrong!" ) 
+	console.assert ( genesTableScroller.getPage () == 3, "getPage () after goNextPage() is wrong!" ) 
+	
+	genesTableScroller.setPage ( genesTableScroller.getPagesCount () - 1 )
+	console.assert ( genesTableScroller.getPageEnd () == testTable.length, "page end at pageCount is wrong!" )
+	console.assert ( !genesTableScroller.hasNextPage (), "hasNextPage() at last page is true!" )
+}
