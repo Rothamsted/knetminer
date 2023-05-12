@@ -118,17 +118,19 @@ function updateLegendsKeys(key, location, event) {
  * @param {*} filteredTable 
  * @param {*} tableId 
  */
-async function createFilteredTable(filteredTable, tableId) 
+async function createFilteredTable(filteredTable, table) 
 {
     $('#filterMessage').hide();
     $('#tablesorter').show();
     $('.num-genes-container').show();
 
     // returns totalpage and evidence and geneview actual length see( getTablePaginationData())
+    // sort data using formewr apporoach 
+
     var { totalPage, itemsLength } = tableHandler.saveTableData(filteredTable);
 
 
-    var [createFilteredBody,tableId,tableSorterId,sortList] = tableId == 'resultsTable'? 
+    var [createFilteredBody,tableId,tableSorterId,sortList] = table == 'resultsTable'? 
     [ createGeneTableBody,'#geneTableBody','#tablesorter', [[5,1]]] 
     : [createEvidenceTableBody,'#evidenceBody','#tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
@@ -139,7 +141,7 @@ async function createFilteredTable(filteredTable, tableId)
     // updates table sorter
     $(tableSorterId).trigger('update', [ sortList ]);
    
-    $(`#${tableId}`).find('.count').html(itemsLength);
-    $(`#${tableId}`).find('.limit').html(filteredTable.length);
+    $('#'+table).find('.count').html(itemsLength);
+    $('#'+table).find('.limit').html(filteredTable.length);
 }
 
