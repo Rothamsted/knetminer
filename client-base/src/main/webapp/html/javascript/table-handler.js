@@ -7,6 +7,10 @@
 // from names
 //    
 
+/**
+ * TODO: I (MB) need to comment this, will do ASAP.
+ * 
+ */
 class InfiniteScrollManager
 {
 	#tableData = null
@@ -247,6 +251,8 @@ const _tableHandler = function(){
 const doTest = false
 if ( doTest )
 {
+	// A stub to be able to test without having to load anything else in Node.js
+	// Normally I keep this disabled cause it interferes with my IDE.
 	// function createGeneTableBody () {}
 	
 	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
