@@ -127,31 +127,47 @@ function createEvidenceTable( tableData, doSortTable=false )
 		createEvidenceTableBody ( tableData )
     
 
-		// This is used when the user start clicking on col headers cause they want to sort the table
-		// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
-    tableSorterOpts = {
-      // deals with p-value, offering the actual value for sorting, rather than the
-      // formatted one
-      textExtraction: function (node) { 
-        var attr = $(node).attr ( 'type-sort-value' );
-        if ( typeof attr !== 'undefined' && attr !== false ) return attr;
-        var actualPvalue = $(node).attr ( 'actual-pvalue' );
-        if (actualPvalue) return actualPvalue;
-        return $(node).text();
-      }
-    }
-    
-    // Initial sorting is by p-value, user genes, total genes, node label
-    var  sortingPositions = [ [4, 0], [6, 1], [5, 1] ]; 
-    
-    if ( doSortTable )
-			// If it's the sorter that has to sort, then here there are the columns
-    	tableSorterOpts.sortList = sortingPositions;
+		// Deal with table sorting options, if they're enabled, see notes in init-utils.js
+		var tableSorterOpts = {}
+		
+		if ( knetTablesSortingEnabled )		
+		{
+			// This is used when the user start clicking on col headers cause they want to sort the table
+			// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
+	    tableSorterOpts = {
+	      // deals with p-value, offering the actual value for sorting, rather than the
+	      // formatted one
+	      textExtraction: function (node) { 
+	        var attr = $(node).attr ( 'type-sort-value' );
+	        if ( typeof attr !== 'undefined' && attr !== false ) return attr;
+	        var actualPvalue = $(node).attr ( 'actual-pvalue' );
+	        if (actualPvalue) return actualPvalue;
+	        return $(node).text();
+	      }
+	    }
+	    
+	    // Initial sorting is by p-value, user genes, total genes, node label
+	    var  sortingPositions = [ [4, 0], [6, 1], [5, 1] ]; 
+	    
+	    if ( doSortTable )
+				// If it's the sorter that has to sort, then here there are the columns
+	    	tableSorterOpts.sortList = sortingPositions;
+	  }
+	  else
+	  // !knetTablesSortingEnabled 
+	  {
+			var disabledHeaders = Object.fromEntries ( 
+				Array( tableData.length )
+				.fill ( { sorter: false } )
+				.map ( (x,i) => [i, x] ) 
+			)
+			tableSorterOpts.headers = disabledHeaders
+	  
+	  } // if knetTablesSortingEnabled
     	
-    // As said above, tableSorterOpts, whether with sortingPositions or not, IS ALWAYS REQUIRED
     $("#tablesorterEvidence").tablesorter( tableSorterOpts );
     	
-    if ( !doSortTable )        
+    if ( knetTablesSortingEnabled && !doSortTable )        
     {   
       
       // As explained in #744, place the header sorting marks to columns that we already know 
@@ -567,7 +583,7 @@ function createEvidenceTableBody ( tableData, doAppend = false )
 			$( ".tablesorter" ).trigger ( 'update' );
 		}
     
-    // Update "x/y rows shown"
+    // Update "x/y rows" label
     $('#evidenceCount').html ( toRow )
     $('#evidenceTotal').html ( tableData.length )
   }

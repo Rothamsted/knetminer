@@ -50,15 +50,23 @@ function createGenesTable ( tableData, keyword )
 	
 		$('#resultsTable').html(table);
 		createGeneTableBody ( tableData );
+		
+					
+		var tableSorterOpts = {}
+		
+		// Sort if enabled. See Notes in init-utils.js
+		if ( knetTablesSortingEnabled ) 
+			tableSorterOpts.sortList = [ [5, 1] ]
+		else {
+			var disabledHeaders = Object.fromEntries ( 
+				Array( tableData.length )
+				.fill ( { sorter: false } )
+				.map ( (x,i) => [i, x] ) 
+			)
+			tableSorterOpts.headers = disabledHeaders
+		}
 			
-		$("#tablesorter").tablesorter({
-			// knet score, descending
-			sortList: [ [5, 1] ],
-			// headers: {
-			// 	// "select" is disabled
-			// 	// 6: { sorter: false },
-			// }
-		});
+		$("#tablesorter").tablesorter( tableSorterOpts );
 		
 	} // if (tableData.length > 0 )
 

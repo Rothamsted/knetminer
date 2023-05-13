@@ -1,3 +1,13 @@
+/**
+ * Tells if the gene table or the evidence table should be sortable.
+ * 
+ * In May 2023 we disabled this, because it doesn't work together with infinite scrolling
+ * and it's hard to fix it.
+ * 
+ * The tables come already sorted from the API and by sensible columns. 
+ */
+const knetTablesSortingEnabled = false
+
 //function shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome() {
   $("#genomeorqtlsearchbox").show();

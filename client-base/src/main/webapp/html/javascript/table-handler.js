@@ -5,7 +5,17 @@
 // connection stream readers, cache update functions. Here, it could be name handler, but 
 // manager is maybe more appropriate. Apart from this, the problem is that 'scroll' was missing
 // from names
-//    
+//
+
+// Provisionally set it to true when you want test, see below. 
+// DO NOT COMMIT THIS WITH TRUE!!!
+const doTest = false
+if (doTest) {
+	// Stubs to be able to test without having to load anything else in Node.js
+	// Normally I keep this disabled cause it interferes with my IDE.
+	function createGeneTableBody () {}
+	function createEvidenceTableBody () {}
+}
 
 /**
  * TODO: I (MB) need to comment this, will do ASAP.
@@ -51,20 +61,20 @@ class InfiniteScrollManager
 		this.setPage ( 0 )
 	}
 	
-	#validateTable () {
+	#validateTableData () {
 		if ( ! this.#tableData ) throw new TypeError ( 
 			"InfiniteScrollManager, table not set" 
 		) 
 	}
 	
 	getPageSize () {
-		this.#validateTable ()
+		this.#validateTableData ()
 		return this.#pageSize
 	}
 
 	setPageSize ( pageSize )
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		
 		if ( pageSize < 1 ) throw new RangeError ( 
 			`Invalid page size of ${pageSize}, must be a positive value` 
@@ -75,19 +85,19 @@ class InfiniteScrollManager
 	
 	getPagesCount ()
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		return Math.ceil ( this.#tableData.length / this.#pageSize )
 	}
 	
 	
 	getPage () {
-		this.#validateTable ()
+		this.#validateTableData ()
 		return this.#page
 	}
 
 	setPage ( page )
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		const pagesCt =  this.getPagesCount ()
 		if ( page >= pagesCt ) throw new RangeError ( 
 			`Invalid page value #${page} for table '${tableId}', which has ${pagesCt}` 
@@ -98,13 +108,13 @@ class InfiniteScrollManager
 
 
 	hasNextPage () {
-		this.#validateTable ()
+		this.#validateTableData ()
 		return ( this.#page + 1 ) < this.getPagesCount ()
 	}
 
 	goNextPage ()
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		this.setPage ( this.#page + 1 )
 		return this.getPage ()
 	}
@@ -112,13 +122,13 @@ class InfiniteScrollManager
 	
 	getPageStart ()
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		return this.#page * this.#pageSize
 	}
 	
 	getPageEnd ()
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		
 		const result = ( this.#page + 1 ) * this.#pageSize
 		return Math.min ( result, this.#tableData.length ) 
@@ -126,13 +136,15 @@ class InfiniteScrollManager
 	
 	setupScrollHandler ()
 	{
-		this.#validateTable ()
+		this.#validateTableData ()
 		
 		const jqTable = $(`#${ this.#tableId }` )
 		var timer = null
 		
 		// Else, they're not visible below
-		const tableData = this.#tableData
+		// #tableData also requires dynamic access, for it might change (eg, via filtering) after
+		// the hereby scroll handler has been already set and the timer below launched.
+		const tableDataAccessor = () => this.#tableData
 		const tableBodyGenerator = this.#tableBodyGenerator
 		
 		jqTable.scroll ( () => {
@@ -152,7 +164,7 @@ class InfiniteScrollManager
 				if ( !this.hasNextPage () ) return
 				
 				this.goNextPage ()
-				tableBodyGenerator ( tableData, true )
+				tableBodyGenerator ( tableDataAccessor(), true )
 			}, 300 ) // setTimeout
 		}) // scroll()
 	} // scrollHandler ()
@@ -247,14 +259,8 @@ const _tableHandler = function(){
  * into Maven with the Jasmine plug-in
  *  
  */
-// Provisionally set it to true when you want test. DO NOT COMMIT TRUE!!!
-const doTest = false
 if ( doTest )
 {
-	// A stub to be able to test without having to load anything else in Node.js
-	// Normally I keep this disabled cause it interferes with my IDE.
-	// function createGeneTableBody () {}
-	
 	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
 	genesTableScroller.setTableData ( testTable ) 
 	
