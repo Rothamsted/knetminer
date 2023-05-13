@@ -635,16 +635,21 @@ function validateKeywords(keyword)
   - What's the point of defining these variables?!
     it should be like:
     return (keyword.length > 2)
+      && ((keyword.split('"').length - 1) % 2 == 0)
+      && ...
       && checkSubStrings ( ... ) 
       && checkSubStrings ( ....) 
       && ...
     
     OR, if you prefer:
     if ( ! ( keyword.length > 2 ) ) return false
+    if (! ((keyword.split('"').length - 1) % 2 == 0) ) return false 
     if ( !checkSubStrings (...) ) return false
     if ( !checkSubStrings (...) ) return false
     ...
     return true
+
+		OR a mix of these two forms.
     
     You're writing all these variables for NOTHING, you're building an equally horrible
     final expression with them, COME ON!!! 
