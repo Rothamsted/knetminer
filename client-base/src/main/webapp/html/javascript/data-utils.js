@@ -655,16 +655,8 @@ function validateKeywords(keyword)
     You're writing all these variables for NOTHING, you're building an equally horrible
     final expression with them, COME ON!!! 
  */
- var check_not = checkSubStrings(keyword,'NOT',3)
- var check_and= checkSubStrings(keyword,'AND',3)
- var check_an = checkSubStrings(keyword,' AN',3)
- var check = checkSubStrings(keyword,' O',2)
- var check_n = checkSubStrings(keyword,' N',2)
- var check_or = checkSubStrings(keyword,'OR',2)
- var check_not = checkSubStrings(keyword,' NO',2)
- var check_a = checkSubStrings(keyword, ' A', 2)
 
- var checkKeyword = (keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ' &&  check_not && check_and && check_an && check && check_n && check_or && check_a);
+ var checkKeyword = (keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ' ) && checkSubStrings(keyword,'NOT') && checkSubStrings(keyword,' AN') && checkSubStrings(keyword,' O') && checkSubStrings(keyword,' N') && checkSubStrings(keyword,'OR') && checkSubStrings(keyword,'NO') && checkSubStrings(keyword, ' A') &&  checkSubStrings(keyword,'AND') ;
  
  return checkKeyword
 }
@@ -678,6 +670,6 @@ function validateKeywords(keyword)
 // And if you need it, what's length for? It seems to always be checkStr.length, exept in the 
 // case of ' NO',2 (is that a typo?)
 //
-function checkSubStrings(keyword,checkStr,length){
-    return keyword.substr(keyword.length - length) != checkStr; 
+function checkSubStrings(keyword,checkStr){
+    return keyword.substr(keyword.length - checkStr.length) != checkStr; 
 }
