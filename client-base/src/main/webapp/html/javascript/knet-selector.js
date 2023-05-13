@@ -1,3 +1,9 @@
+/* 
+  TODO: this and its file need to change name. knetSelector has zero meaning, there are tens of 
+  selectors in an average application, each meaning completely different things.
+  
+  to consider: specieManager or specieSelector, or knetSpecieXXX
+*/ 
 // multi-species object literal house functions for the multi-species feature
 const knetSelector = function ()
 {
