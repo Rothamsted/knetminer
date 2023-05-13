@@ -49,8 +49,17 @@ function createGenesTable ( tableData, keyword )
 		table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
 	
 		$('#resultsTable').html(table);
-	
-		createGeneTableBody ( tableData ); 
+		createGeneTableBody ( tableData );
+			
+		$("#tablesorter").tablesorter({
+			// knet score, descending
+			sortList: [ [5, 1] ],
+			// headers: {
+			// 	// "select" is disabled
+			// 	// 6: { sorter: false },
+			// }
+		});
+		
 	} // if (tableData.length > 0 )
 
 	// scroll down to geneTable, but show tabviewer_buttons above
@@ -89,17 +98,6 @@ function createGenesTable ( tableData, keyword )
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
 		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
-	});
-
-	$("#tablesorter").tablesorter({
-		// sorting column 5 in descending order
-		// you can add sort columns in the array below [column number, sorting direction]
-		// sorting direction 1 is descending and 0 is ascending. 
-		sortList: [[5, 1]],
-		// headers: {
-		// 	// do not sort "select" column
-		// 	// 6: { sorter: false },
-		// }
 	});
 
 
@@ -472,9 +470,17 @@ function createGeneTableBody ( tableData, doAppend = false )
 	if(table)
 	{
 		const bodyContainer = $( '#geneTableBody' )
-		if ( doAppend ) bodyContainer.append ( table ) 
-		else bodyContainer.html ( table )
+		if ( doAppend )
+			bodyContainer.append ( table ) 
+		else
+		{ 
+			bodyContainer.html ( table )
+
+			// When it's being recreated, reset the sorting too
+			$( ".tablesorter" ).trigger ( 'update' );
+		}
 		 
+		// Updates "x of y" label
     $('#geneCount').html ( toRow )
     $('#geneTotal').html ( tableData.length )
 	}

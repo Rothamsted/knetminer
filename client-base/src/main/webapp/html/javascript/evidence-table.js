@@ -125,6 +125,7 @@ function createEvidenceTable( tableData, doSortTable=false )
 
     $('#evidenceTable').html ( table );
 		createEvidenceTableBody ( tableData )
+    
 
 		// This is used when the user start clicking on col headers cause they want to sort the table
 		// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
@@ -141,14 +142,14 @@ function createEvidenceTable( tableData, doSortTable=false )
     }
     
     // Initial sorting is by p-value, user genes, total genes, node label
-    var  sortingPositions = [[4, 0], [6, 1], [5, 1]]; 
+    var  sortingPositions = [ [4, 0], [6, 1], [5, 1] ]; 
     
     if ( doSortTable )
 			// If it's the sorter that has to sort, then here there are the columns
     	tableSorterOpts.sortList = sortingPositions;
     	
     // As said above, tableSorterOpts, whether with sortingPositions or not, IS ALWAYS REQUIRED
-    $("#tablesorterEvidence").tablesorter( tableSorterOpts ); 
+    $("#tablesorterEvidence").tablesorter( tableSorterOpts );
     	
     if ( !doSortTable )        
     {   
@@ -556,9 +557,17 @@ function createEvidenceTableBody ( tableData, doAppend = false )
   if ( tableBody )
   {
 		const bodyContainer = $( '#evidenceBody' )
-		if ( doAppend ) bodyContainer.append ( tableBody ) 
-		else bodyContainer.html ( tableBody )
+		if ( doAppend )
+			bodyContainer.append ( tableBody ) 
+		else
+		{ 
+			bodyContainer.html ( tableBody )
+
+			// When replacing, let's update sorting too
+			$( ".tablesorter" ).trigger ( 'update' );
+		}
     
+    // Update "x/y rows shown"
     $('#evidenceCount').html ( toRow )
     $('#evidenceTotal').html ( tableData.length )
   }

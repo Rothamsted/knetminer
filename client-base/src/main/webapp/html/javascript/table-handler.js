@@ -173,7 +173,8 @@ const evidenceTableScroller = Object.freeze ( new EvidenceTableScroller () )
 
 
 /**
- * TODO: remove, replaced by the classes and objects above
+ * TODO: remove, replaced by the classes and objects above.
+ * 
  * function handles scroll events for Geneview and Evidence view tables.
  * 
 */

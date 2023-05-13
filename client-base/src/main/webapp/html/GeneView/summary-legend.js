@@ -123,8 +123,10 @@ async function createFilteredGenesTable ( filteredTable )
 	
 	createGeneTableBody ( filteredTable )
 	
+	/* TODO: remove, moved to createGeneTableBody()
 	sortOptions = [[5,1]]
 	$( '#tablesorter' ).trigger ( 'update', [ sortOptions ] );
+	*/
 }
 
 /**
@@ -139,8 +141,10 @@ async function createFilteredEvidenceTable ( filteredTable )
 	
 	createEvidenceTableBody ( filteredTable )
 	
-	sortOptions = [ [3, 0], [4, 1], [5,1] ]
-	$( '#tablesorterEvidence' ).trigger ( 'update', [ sortOptions ] );	
+	// TODO: removed, moved to createEvidenceTableBody()
+	/* sortOptions = [ [3, 0], [4, 1], [5,1] ]
+	$( '#tablesorterEvidence' ).trigger ( 'update', [ sortOptions ] );
+	*/	
 }
  
  
