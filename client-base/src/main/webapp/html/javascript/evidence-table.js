@@ -128,7 +128,7 @@ function createEvidenceTable( tableData, doSortTable=false )
     table += '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
     $('#evidenceTable').html ( table );
-		createEvidenceTableBody ( tableData, 1, pagesCount )
+		createEvidenceTableBody ( tableData )
 
 		// This is used when the user start clicking on col headers cause they want to sort the table
 		// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
@@ -495,72 +495,76 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
 }
 
 
-// function creates evidence table body
-function createEvidenceTableBody ( tableData, pageIndex, pagesCount )
+/**
+ * @desc creates the evidence table body for a data window and places it in the DOM
+ * @param {tableData} evidence table data, as it comes from the API and turned into a nested array (see TODO).
+ * 
+ * The function considers the current page available in evidenceTableScroller.getPage()
+ */
+function createEvidenceTableBody ( tableData, doAppend = false )
 {
+  var tableBody=""; 
 
-	// TODO: currentPage starts from 1 and pageIndex starts from 0?
-		// Is this necessary? Can't we harmonise both to the 0-start convention?
-		//
-    var tableBody=""; 
-    var pageStart = (pageIndex - 1) * 30;
-    var pageEnds = pageIndex == pagesCount ? tableData.length : pageIndex * 30; 
+	const fromRow = evidenceTableScroller.getPageStart ()
+	const toRow = evidenceTableScroller.getPageEnd ()
 
-    for (var ev_i = pageStart; ev_i < pageEnds; ev_i++)
-    {   
-        [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = tableData[ev_i];
+  for (var ev_i = fromRow; ev_i < toRow; ev_i++)
+  {   
+    [type, nodeLabel,,pvalue,genes, geneList,,conceptId,genesCount, ...nonUsedValues] = tableData[ev_i];
 
-        // Prefer this templating style, at least for new code
-        // Also, avoid "x = x + ...", it's more verbose than +=, especially when
-        // it's needed many times.
-        //  
-        tableBody +=`<tr>
-                        <td>
-                        <p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
-                            <p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
-                        </td>`;
+    // Prefer this templating style, at least for new code
+    // Also, avoid "x = x + ...", it's more verbose than +=, especially when
+    // it's needed many times.
+    //  
+    tableBody +=`<tr>
+                    <td>
+                    <p onclick="evidenceTableExcludeKeyword(${conceptId},this,event)" id="evidence_exclude_${ev_i}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
+                        <p onclick="evidenceTableAddKeyword(${conceptId},this,event)" id="evidence_add_${ev_i}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
+                    </td>`;
 
-        //link publications with pubmed
-        var evidenceValue;
-        if (type == 'Publication')
-        {
-        	pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-          evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
-        }
-        else
-          evidenceValue = nodeLabel;
-
-        tableBody += `  <td type-sort-value="${type}"><div class="evidence_item evidence_item_${type}" title="${type}"></div></td>\n`;
-        tableBody += `  <td>${evidenceValue}</td>\n`;
-
-        // p-values
-        //
-        pvalue = renderEvidencePvalue(pvalue);
-        
-        // to tell tableBody-sorter that it's a number
-        var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
-
-        tableBody += `  <td actual-pvalue='${sortedPval}'>${pvalue}</td>\n`;
-        // /end:p-values
-
-
-        // Count of all matching genes
-        tableBody += `  <td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div></td>\n`;
-
-        // launch evidence network with them, if they're not too many.
-        tableBody += `  <td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>\n`;
-
-        var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${ev_i}" type="checkbox" name= "evidences" value="${conceptId}:${geneList}">`;
-        tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
-    } 
-    
-    if ( tableBody )
+    //link publications with pubmed
+    var evidenceValue;
+    if (type == 'Publication')
     {
-      $('#evidenceBody').append(tableBody)
-      
-	    $('#evidenceCount').html ( pageEnds )
-	    $('#evidenceTotal').html ( tableData.length )
+    	pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+      evidenceValue = '<a href="' + pubmedurl + nodeLabel.substring(5) + '" target="_blank">' + nodeLabel + '</a>';
     }
+    else
+      evidenceValue = nodeLabel;
+
+    tableBody += `  <td type-sort-value="${type}"><div class="evidence_item evidence_item_${type}" title="${type}"></div></td>\n`;
+    tableBody += `  <td>${evidenceValue}</td>\n`;
+
+    // p-values
+    //
+    pvalue = renderEvidencePvalue(pvalue);
+    
+    // to tell tableBody-sorter that it's a number
+    var sortedPval = pvalue == isNaN(pvalue) ? 1 : pvalue
+
+    tableBody += `  <td actual-pvalue='${sortedPval}'>${pvalue}</td>\n`;
+    // /end:p-values
+
+
+    // Count of all matching genes
+    tableBody += `  <td ><span style="margin-right:.5rem;">${genes}</span> <span data-type="${type}" data-description="${nodeLabel}" class="accession-download" onclick="openGeneListPopup(${conceptId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${conceptId}"></div></td>\n`;
+
+    // launch evidence network with them, if they're not too many.
+    tableBody += `  <td><button data-genelist="${geneList}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${conceptId},this,${genesCount})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${ev_i}">${genesCount}</button></td>\n`;
+
+    var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${ev_i}" type="checkbox" name= "evidences" value="${conceptId}:${geneList}">`;
+    tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
+  } 
+  
+  if ( tableBody )
+  {
+		const bodyContainer = $( '#evidenceBody' )
+		if ( doAppend ) bodyContainer.append ( tableBody ) 
+		else bodyContainer.html ( tableBody )
+    
+    $('#evidenceCount').html ( toRow )
+    $('#evidenceTotal').html ( tableData.length )
+  }
 }
 
 /* TODO: remove after reading:

@@ -136,28 +136,9 @@ async function createFilteredTable(filteredTable, tableId)
     : [createEvidenceTableBody,'evidenceBody','tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
     // Updates the table with the filtered data
-    createFilteredBody ( filteredTable, 1, scrollMgr.getPagesCount () )
+    createFilteredBody ( filteredTable )
 
     // updates table sorter
     $(`#${tableSorterId}`).trigger ( 'update', [ sortList ] );
-       
-    //var firstPageEnd = scrollMgr.getPageEnd ();
-   
-    // TODO: count is style class, NOT AN IDENTIFIER!!!
-    // This has to be done either by
-    // - using the SAME IDs for all corresponding elements belonging to the two tables
-    //   eg, in both tables we have HTML elements named tableContainer, tableCount, tableLimit etc.
-    // - OR define IDS for those elements with the same POSTFIXES for corresponding IDs
-    //   This way it would be tableId == genes || evidence and then we would have
-    //   genesTableContainer, genesTableBody, genesTableCount, genesTableLimit... PLUS
-    //   evidenceTableContainer, evidenceTableBody, evidenceTableCount, evidenceTableLimit... 
-    //   This way, it would be easy to have only one tableId parameter and use it to refer all
-    //   the possible elements
-    // Solution 1 is simpler, but we need to clarify IF we actually need to manage two tables
-    // separately, or we can switch from one each other (see the notes above)
-    //
-    
-    //$(`#${tableId}`).find('.count').html( firstPageEnd );
-    //$(`#${tableId}`).find('.limit').html ( filteredTable.length );
 }
 

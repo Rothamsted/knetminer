@@ -151,7 +151,8 @@ class InfiniteScrollManager
 				if ( !needsMoreRows ) return
 				if ( !this.hasNextPage () ) return
 				
-				tableBodyGenerator ( this.getTable (), this.goNextPage () + 1, this.getPagesCount () )
+				this.goNextPage ()
+				tableBodyGenerator ( this.getTable (), true )
 			}, 300 ) // setTimeout
 		}) // scroll()
 	} // scrollHandler ()

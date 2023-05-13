@@ -7,7 +7,6 @@ function createGenesTable ( tableData, keyword )
 	var table = "";
 
 	genesTableScroller.setTable ( tableData )
-	const pagesCount = genesTableScroller.getPagesCount ()
 	const firstPageEnd = genesTableScroller.getPageEnd ()
 	
 	if (tableData.length > 0 )
@@ -51,7 +50,7 @@ function createGenesTable ( tableData, keyword )
 	
 		$('#resultsTable').html(table);
 	
-		createGeneTableBody(tableData,1,pagesCount); 
+		createGeneTableBody ( tableData ); 
 	} // if (tableData.length > 0 )
 
 	// scroll down to geneTable, but show tabviewer_buttons above
@@ -350,24 +349,20 @@ function downloadNetwork() {
 
 
 /**
- * @desc function creates and returns geneview table body
- 
- TODO: I can read the parameter list on the signature, do not
- report them here without telling what they are
- 
- * @param {*} tableData geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
- * @param {*} pageIndex number is used compute the geneview's data starting and ending range.
- * @param {*} rowSize number of data rows to be created, defaults to number geneViewData if length is less than 30 see(getTablePaginationData()).
- * @param {*} pagesCount total number of pages that can be rendered, results from dividing geneView data length by rowSize. see (getTablePaginationData())
- * @returns 
+ * @desc creates the gene table body for a data window and places it in the DOM
+ * @param {tableData} geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
+ * 
+ * The function considers the current page available in evidenceTableScroller.getPage()
  */
-function createGeneTableBody(tableData, pageIndex,pagesCount){
+function createGeneTableBody ( tableData, doAppend = false )
+{
 	var table = ''
 
+	const fromRow = genesTableScroller.getPageStart ()
+	const toRow = genesTableScroller.getPageEnd ()
+
 	// Main loop over the resulting genes.
-	var pageStart = (pageIndex - 1) * 30;
-    var pageEnds = pageIndex == pagesCount ? tableData.length : pageIndex * 30; 
-	for (var row = pageStart; row < pageEnds; row++)
+	for (var row = fromRow; row < toRow; row++)
 	{
 		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = tableData[row]
 
@@ -477,9 +472,11 @@ function createGeneTableBody(tableData, pageIndex,pagesCount){
 
 	if(table)
 	{
-		$('#geneTableBody').append ( table );
+		const bodyContainer = $( '#geneTableBody' )
+		if ( doAppend ) bodyContainer.append ( table ) 
+		else bodyContainer.html ( table )
 		 
-    $('#geneCount').html ( pageEnds )
+    $('#geneCount').html ( toRow )
     $('#geneTotal').html ( tableData.length )
 	}
 }
