@@ -130,7 +130,7 @@ function createEvidenceTable( tableData, doSortTable=false )
 		// Deal with table sorting options, if they're enabled, see notes in init-utils.js
 		var tableSorterOpts = {}
 		
-		if ( knetTablesSortingEnabled )		
+		if ( KNET_TABLES_SORTING_ENABLED )		
 		{
 			// This is used when the user start clicking on col headers cause they want to sort the table
 			// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
@@ -154,7 +154,7 @@ function createEvidenceTable( tableData, doSortTable=false )
 	    	tableSorterOpts.sortList = sortingPositions;
 	  }
 	  else
-	  // !knetTablesSortingEnabled 
+	  // !KNET_TABLES_SORTING_ENABLED 
 	  {
 			var disabledHeaders = Object.fromEntries ( 
 				Array( tableData.length )
@@ -163,11 +163,11 @@ function createEvidenceTable( tableData, doSortTable=false )
 			)
 			tableSorterOpts.headers = disabledHeaders
 	  
-	  } // if knetTablesSortingEnabled
+	  } // if KNET_TABLES_SORTING_ENABLED
     	
     $("#tablesorterEvidence").tablesorter( tableSorterOpts );
     	
-    if ( knetTablesSortingEnabled && !doSortTable )        
+    if ( KNET_TABLES_SORTING_ENABLED && !doSortTable )        
     {   
       
       // As explained in #744, place the header sorting marks to columns that we already know 

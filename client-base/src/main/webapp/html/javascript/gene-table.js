@@ -55,7 +55,7 @@ function createGenesTable ( tableData, keyword )
 		var tableSorterOpts = {}
 		
 		// Sort if enabled. See Notes in init-utils.js
-		if ( knetTablesSortingEnabled ) 
+		if ( KNET_TABLES_SORTING_ENABLED ) 
 			tableSorterOpts.sortList = [ [5, 1] ]
 		else {
 			var disabledHeaders = Object.fromEntries ( 

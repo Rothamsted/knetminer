@@ -6,7 +6,7 @@
  * 
  * The tables come already sorted from the API and by sensible columns. 
  */
-const knetTablesSortingEnabled = false
+const KNET_TABLES_SORTING_ENABLED = false
 
 //function shows the genome or qtl search box and chromosome viewer if there is a reference genome
 function showReferenceGenome() {

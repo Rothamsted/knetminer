@@ -9,8 +9,8 @@
 
 // Provisionally set it to true when you want test, see below. 
 // DO NOT COMMIT THIS WITH TRUE!!!
-const doTest = false
-if (doTest) {
+const TEST_MODE = false
+if (TEST_MODE) {
 	// Stubs to be able to test without having to load anything else in Node.js
 	// Normally I keep this disabled cause it interferes with my IDE.
 	function createGeneTableBody () {}
@@ -259,7 +259,7 @@ const _tableHandler = function(){
  * into Maven with the Jasmine plug-in
  *  
  */
-if ( doTest )
+if ( TEST_MODE )
 {
 	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
 	genesTableScroller.setTableData ( testTable ) 
