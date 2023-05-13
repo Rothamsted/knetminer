@@ -53,7 +53,7 @@ function createEvidenceTable( tableData, doSortTable=false )
 {
     var table = "";
     
-		evidenceTableScroller.setTable ( tableData )
+		evidenceTableScroller.setTableData ( tableData )
 		const firstPageEnd = evidenceTableScroller.getPageEnd ()
 
     // set current table data for infinite scrolling

@@ -6,7 +6,7 @@ function createGenesTable ( tableData, keyword )
 {
 	var table = "";
 
-	genesTableScroller.setTable ( tableData )
+	genesTableScroller.setTableData ( tableData )
 	const firstPageEnd = genesTableScroller.getPageEnd ()
 	
 	if (tableData.length > 0 )

@@ -9,7 +9,7 @@
 
 class InfiniteScrollManager
 {
-	#table = null
+	#tableData = null
 	#tableId = null
 	#tableBodyGenerator = null 
 	
@@ -30,30 +30,25 @@ class InfiniteScrollManager
 		this.#tableId = tableId
 		this.#tableBodyGenerator = tableBodyGenerator
 	}
-	
-	getTable ()
-	{
-		return this.#table
-	}
-	
+		
 	getTableId ()
 	{
 		return this.#tableId
 	}
 	
 	
-	setTable ( table ) 
+	setTableData ( tableData ) 
 	{
-		if ( !Array.isArray ( table ) ) throw new TypeError ( 
+		if ( !Array.isArray ( tableData ) ) throw new TypeError ( 
 			"Can't set InfiniteScrollManager with null or non-array table" 
 		) 
 		
-		this.#table = table
+		this.#tableData = tableData
 		this.setPage ( 0 )
 	}
 	
 	#validateTable () {
-		if ( ! this.#table ) throw new TypeError ( 
+		if ( ! this.#tableData ) throw new TypeError ( 
 			"InfiniteScrollManager, table not set" 
 		) 
 	}
@@ -77,7 +72,7 @@ class InfiniteScrollManager
 	getPagesCount ()
 	{
 		this.#validateTable ()
-		return Math.ceil ( this.#table.length / this.#pageSize )
+		return Math.ceil ( this.#tableData.length / this.#pageSize )
 	}
 	
 	
@@ -122,7 +117,7 @@ class InfiniteScrollManager
 		this.#validateTable ()
 		
 		const result = ( this.#page + 1 ) * this.#pageSize
-		return Math.min ( result, this.#table.length ) 
+		return Math.min ( result, this.#tableData.length ) 
 	}
 	
 	setupScrollHandler ()
@@ -132,8 +127,9 @@ class InfiniteScrollManager
 		const jqTable = $(`#${ this.#tableId }` )
 		var timer = null
 		
-		const tableBodyGenerator = this.#tableBodyGenerator // Else, it's not visible below
-
+		// Else, they're not visible below
+		const tableData = this.#tableData
+		const tableBodyGenerator = this.#tableBodyGenerator
 		
 		jqTable.scroll ( () => {
 			// Clear/set used to throttle the scroll event firing:
@@ -152,7 +148,7 @@ class InfiniteScrollManager
 				if ( !this.hasNextPage () ) return
 				
 				this.goNextPage ()
-				tableBodyGenerator ( this.getTable (), true )
+				tableBodyGenerator ( tableData, true )
 			}, 300 ) // setTimeout
 		}) // scroll()
 	} // scrollHandler ()
@@ -253,7 +249,7 @@ if ( doTest )
 	// function createGeneTableBody () {}
 	
 	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
-	genesTableScroller.setTable ( testTable ) 
+	genesTableScroller.setTableData ( testTable ) 
 	
 	console.assert ( genesTableScroller.getPageSize () == 30, "page size wrong!" )
 	console.assert ( 

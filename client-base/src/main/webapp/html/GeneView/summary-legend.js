@@ -119,7 +119,7 @@ async function createFilteredGenesTable ( filteredTable )
 {
 	toggleKnetTablesDisplay ( true )
 	
-	genesTableScroller.setTable ( filteredTable )
+	genesTableScroller.setTableData ( filteredTable )
 	
 	createGeneTableBody ( filteredTable )
 	
@@ -135,7 +135,7 @@ async function createFilteredEvidenceTable ( filteredTable )
 {
 	toggleKnetTablesDisplay ( true )
 	
-	evidenceTableScroller.setTable ( filteredTable )
+	evidenceTableScroller.setTableData ( filteredTable )
 	
 	createEvidenceTableBody ( filteredTable )
 	
