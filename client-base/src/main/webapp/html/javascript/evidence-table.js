@@ -41,7 +41,7 @@ function getEvidencePvalue ( pvalueStr )
  * @desc Renders the evidence table from API output.
  * 
  * @param evidenceTable: the evidence table data, as it comes from the API, after being turned into
- * a matrix and after bean cleane of header and empty trailer (see data-utils.js:handleViewCreation()).
+ * a matrix and after been cleaned of header and empty trailer (see data-utils.js:createEvidenceView()).
  * 
  * @param selectedSize: how many rows to display. This is non-null when the function is called by the
  * bottom size selector. When null (the default), it shows up to 100 rows.  

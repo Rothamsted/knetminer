@@ -140,11 +140,11 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                           request, // It already has a leading '/'
                           { 'keyword': keyword, 'searchMode': searchMode, 'geneListSize': geneList_size }
                         )
+                        data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show(); 
                     }
                     ).complete(function(){
                         // Remove loading spinner from 'search' div
                         $('.overlay').remove();
-                        $('#tabviewer').show();
                         $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
                         document.getElementById('resultsTable_button').click(); 
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
@@ -195,14 +195,7 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
         }
 
         if (typeof gviewer != "undefined" && gviewer != false) {
-             var longestChromosomeLength = "";
-             if (typeof longest_chr != "undefined") {
-                 if (longest_chr != null) {
-                     longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
-                 }
-             }
-             //Collapse Suggestor view
-             
+ 
              $('#suggestor_search_area').slideUp(500);
             //$('#suggestor_search').dialog('close');
          }
@@ -221,12 +214,6 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          // For a valid response, i.e., search output.
          var results = data.geneCount; // for pGViewer_title_line display msg
 
-         var longestChromosomeLength = ""; // TODO: not used, remove?
-         if (typeof longest_chr != "undefined") {
-             if (longest_chr != null) {
-                 longestChromosomeLength = "&longestChromosomeLength=" + longest_chr;
-             }
-         }
 
          // default search display msg.
             messageNode = '<b>' + results + ' genes</b> were found ('+queryseconds+' seconds).'
@@ -410,18 +397,18 @@ function geneCounter(){
  */
 function findChromosomeGenes(event) {
         var currentRowNumber = getChromosomeRegionIndex(event.currentTarget);
-        var id = `genes${currentRowNumber}`;
-        var chr_name = $(`#chr${currentRowNumber} option:selected`).val();
-        var start = $(`#start${currentRowNumber}`).val();
-        var end = $(`#end${currentRowNumber}`).val();
+        var chr_name = $('#chr' + currentRowNumber+ 'option:selected').val();
+        var start = $('#start' + currentRowNumber).val()
+        var end = $('#end' + currentRowNumber).val()
+        var genes = 'genes' + currentRowNumber
     
         if (chr_name != "" && start != "" && end != "") {
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
             var keyword = chr_name + "-" + start + "-" + end;
-            var request = `/countLoci?keyword=${keyword}&taxId=${taxonomyID}`;
+            var request = '/countLoci?keyword='+keyword+'&taxId='+taxonomyID;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
-                $("#" + id).val(data.geneCount);
+                $("#" + genes).val(data.geneCount);
             });
         } 
 }
@@ -454,7 +441,8 @@ function matchCounter() {
 				         ...
 				     }
 				*/ 
-        if ((keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ') && (keyword.charAt(keyword.length - 1) != '(') && (keyword.substr(keyword.length - 3) != 'AND') && (keyword.substr(keyword.length - 3) != 'NOT') && (keyword.substr(keyword.length - 2) != 'OR') && (keyword.substr(keyword.length - 2) != ' A') && (keyword.substr(keyword.length - 3) != ' AN') && (keyword.substr(keyword.length - 2) != ' O') && (keyword.substr(keyword.length - 2) != ' N') && (keyword.substr(keyword.length - 2) != ' NO')) {
+            var isKeywordValidated = validateKeywords(keyword);
+        if (isKeywordValidated) {
             var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
 
             var url = api_url + request;
@@ -605,16 +593,9 @@ handleDelimintedCta = function(){
 
 
 
-/**
- * @desc function creates evidence view using jquery data method 
- * @param option a string that idenitifies the current tab view
- * 
- * TODO: It is ONLY used for the EVIDENCE TABLE! Why does it have such a generic 
- * name?! And what's 'option' for, if it's ALWAYS set to 'evidenceTable'?!
- * 
- */
-function handleViewCreation(option){
-    $('#'+option+'_button').addClass('created');
+function createEvidenceView()
+{
+    $('#evidenceTable_button').addClass('created');
     var data = $('body').data().data
 
     // removes loading spinner
@@ -638,4 +619,51 @@ function refineTableData(data){
     tableData = tableData?.map ( rowStr => rowStr.split ( "\t" ) ); 
 
     return tableData;
+}
+
+
+/**
+ * TODO: currently working on refining function
+ * @desc function validates search keywords and returns a boolean to confirm if check is valid or not. 
+ * @returns 
+ */
+function validateKeywords(keyword)
+{
+ /* TODO
+  - This doesn't work at all, don't commit code that doesn't work
+  
+  - What's the point of defining these variables?!
+    it should be like:
+    return (keyword.length > 2)
+      && checkSubStrings ( ... ) 
+      && checkSubStrings ( ....) 
+      && ...
+    
+    OR, if you prefer:
+    if ( ! ( keyword.length > 2 ) ) return false
+    if ( !checkSubStrings (...) ) return false
+    if ( !checkSubStrings (...) ) return false
+    ...
+    return true
+    
+    You're writing all these variables for NOTHING, you're building an equally horrible
+    final expression with them, COME ON!!! 
+ */
+ var check_not = checkSubStrings(keyword,'NOT',3)
+ var check_and= checkSubStrings(keyword,'AND',3)
+ var check_an = checkSubStrings(keyword,' AN',3)
+ var check = checkSubStrings(keyword,' O',2)
+ var check_n = checkSubStrings(keyword,' N',2)
+ var check_or = checkSubStrings(keyword,'OR',2)
+ var check_not = checkSubStrings(keyword,' NO',2)
+ var check_a = checkSubStrings(keyword, ' A', 2)
+
+ var checkKeyword = (keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ' &&  check_not && check_and && check_an && check && check_n && check_or && check_a);
+ 
+ return checkKeyword
+}
+
+// util function check for the substring in keyword search terms
+function checkSubStrings(keyword,checkStr,length){
+    return keyword.substr(keyword.length - length) != checkStr; 
 }
