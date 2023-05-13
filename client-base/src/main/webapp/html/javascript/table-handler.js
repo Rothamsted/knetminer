@@ -249,7 +249,7 @@ const _tableHandler = function(){
 const doTest = false
 if ( doTest )
 {
-	function createGeneTableBody () {}
+	// function createGeneTableBody () {}
 	
 	const testTable = Array ( 100 ).fill ( [ 'fooRowValue' ] )
 	genesTableScroller.setTable ( testTable ) 

@@ -2,57 +2,57 @@
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
-function createGenesTable(tableData, keyword){
+function createGenesTable ( tableData, keyword )
+{
 	var table = "";
 
 	genesTableScroller.setTable ( tableData )
 	const pagesCount = genesTableScroller.getPagesCount ()
 	const firstPageEnd = genesTableScroller.getPageEnd ()
 	
-	if (tableData.length > 0 ){
-	// Gene View: interactive summary legend for evidence types.
-	var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
-
-	table += '<form name="checkbox_form"><div class="gene_header_container">';
-	table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
-	table += '</div>';
-	table += '<br>';
-	// dynamic Evidence Summary to be displayed above Gene View table
-	table += '<div id= "geneViewTable" class = "scrollTable">';
-	table += '<table id = "tablesorter" class="tablesorter">';
-	table += '<thead>';
-	table += '<tr>';
-	table += '<th width="100"> Accession </th>';
-	table += '<th width="100"> Symbol</th>';
-	table += '<th width="60">Chr</th>';
-	table += '<th width="70">Nt start</th>';
-
-	table += '<th width="330">Evidence</th>';
-	table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-	table += '<th width="70">Select</th>';
-	table += '</tr>';
-	table += '</thead>';
-	table += '<tbody id="geneTableBody" class="scrollTable">';
-
-	var tableBody = createGeneTableBody(tableData,1,pagesCount); 
-	table = table + tableBody; 
-	table += '</tbody>';
-	table += '</table>';
-	table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
-	table += '</form>';
-
-	table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
-	table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+firstPageEnd+'</span> of <span class="limit">'+tableData.length+'</span></span></div>';
-	table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
-
-	table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
-
-	table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
-
-	$('#resultsTable').html(table);
-
-	}
+	if (tableData.length > 0 )
+	{
+		// Gene View: interactive summary legend for evidence types.
+		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 	
+		table += '<form name="checkbox_form"><div class="gene_header_container">';
+		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+		table += '</div>';
+		table += '<br>';
+		// dynamic Evidence Summary to be displayed above Gene View table
+		table += '<div id= "geneViewTable" class = "scrollTable">';
+		table += '<table id = "tablesorter" class="tablesorter">';
+		table += '<thead>';
+		table += '<tr>';
+		table += '<th width="100"> Accession </th>';
+		table += '<th width="100"> Symbol</th>';
+		table += '<th width="60">Chr</th>';
+		table += '<th width="70">Nt start</th>';
+	
+		table += '<th width="330">Evidence</th>';
+		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+		table += '<th width="70">Select</th>';
+		table += '</tr>';
+		table += '</thead>';
+		table += '<tbody id="geneTableBody" class="scrollTable">';
+	
+		table += '</tbody>';
+		table += '</table>';
+		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
+		table += '</form>';
+	
+		table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
+		table += '<div class="num-genes-container"><span> Showing <span id="geneCount" class="count">'+firstPageEnd+'</span> of <span id = "geneTotal" class="limit">'+tableData.length+'</span></span></div>';
+		table += '<div id="selectUser"><input class="unchecked" type="button" name="checkbox_Targets"  value="Linked Genes" title="Click to select genes with existing evidence." /> <input class="unchecked"  type="button" name="checkbox_Targets"  value="Unlinked Genes" title="Click to select genes without existing evidence." /> </div></div>';
+	
+		table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
+	
+		table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
+	
+		$('#resultsTable').html(table);
+	
+		createGeneTableBody(tableData,1,pagesCount); 
+	} // if (tableData.length > 0 )
 
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGSearch_title').scrollIntoView();
@@ -125,7 +125,8 @@ function createGenesTable(tableData, keyword){
 	 * Select all KNOWN targets: find all targets with existing Evidence & check them.
 	 * Select all NOVEL targets: find all targets with no Evidence & check them.
 	 */
-	$('input:button[name="checkbox_Targets"]').bind("click", { x: tableData }, function (e) {
+	$('input:button[name="checkbox_Targets"]').bind("click", { x: tableData }, function (e)
+	{
 		e.preventDefault();
 		var numResults = tableData.length;
 		var targetClass = $(this).hasClass('checked')
@@ -153,10 +154,12 @@ function createGenesTable(tableData, keyword){
 
 		// update selected genes count
 		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
-	});
+	
+	}); // input:button[name="checkbox_Targets"]'
 
 	genesTableScroller.setupScrollHandler ()
-}
+
+} // createGenesTable
 
 
 /*
@@ -170,9 +173,6 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	// Show loading spinner on 'tabviewer' div
-	
-
-	
 
 	$.post({
 		url: url,
@@ -282,8 +282,6 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		generateCyJSNetwork(api_url + '/network', { keyword: keyword, list: candidatelist, exportPlainJSON: false }, false);
 	}
 
-
-
 }
 
 
@@ -357,21 +355,21 @@ function downloadNetwork() {
  TODO: I can read the parameter list on the signature, do not
  report them here without telling what they are
  
- * @param {*} results geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
+ * @param {*} tableData geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
  * @param {*} pageIndex number is used compute the geneview's data starting and ending range.
  * @param {*} rowSize number of data rows to be created, defaults to number geneViewData if length is less than 30 see(getTablePaginationData()).
  * @param {*} pagesCount total number of pages that can be rendered, results from dividing geneView data length by rowSize. see (getTablePaginationData())
  * @returns 
  */
-function createGeneTableBody(results, pageIndex,pagesCount){
+function createGeneTableBody(tableData, pageIndex,pagesCount){
 	var table = ''
 
 	// Main loop over the resulting genes.
 	var pageStart = (pageIndex - 1) * 30;
-    var pageEnds = pageIndex == pagesCount ? results.length : pageIndex * 30; 
+    var pageEnds = pageIndex == pagesCount ? tableData.length : pageIndex * 30; 
 	for (var row = pageStart; row < pageEnds; row++)
 	{
-		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = results[row]
+		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = tableData[row]
 
 		// if (row > rows /*&& values[7]=="no"*/) continue;
 		table += '<tr>';
@@ -479,11 +477,10 @@ function createGeneTableBody(results, pageIndex,pagesCount){
 
 	if(table)
 	{
-	 if(pageIndex == 1)return table; 
-
-	$('#geneTableBody').append(table); 
-    $('#geneCount').html(pageEnds)
-
+		$('#geneTableBody').append ( table );
+		 
+    $('#geneCount').html ( pageEnds )
+    $('#geneTotal').html ( tableData.length )
 	}
 }
 

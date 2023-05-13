@@ -135,14 +135,13 @@ async function createFilteredTable(filteredTable, tableId)
     [ createGeneTableBody,'geneTableBody','tablesorter', [[5,1]]] 
     : [createEvidenceTableBody,'evidenceBody','tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
 
-    // creates filtered body
-    var filteredBody = createFilteredBody ( filteredTable, 1, scrollMgr.getPagesCount () )
-    $(`#${tableId}`).html(filteredBody);
+    // Updates the table with the filtered data
+    createFilteredBody ( filteredTable, 1, scrollMgr.getPagesCount () )
 
     // updates table sorter
-    $(`#${tableSorterId}`).trigger('update', [ sortList ]);
+    $(`#${tableSorterId}`).trigger ( 'update', [ sortList ] );
        
-    var firstPageEnd = scrollMgr.getPageEnd ();
+    //var firstPageEnd = scrollMgr.getPageEnd ();
    
     // TODO: count is style class, NOT AN IDENTIFIER!!!
     // This has to be done either by
@@ -158,7 +157,7 @@ async function createFilteredTable(filteredTable, tableId)
     // separately, or we can switch from one each other (see the notes above)
     //
     
-    $(`#${tableId}`).find('.count').html( firstPageEnd );
-    $(`#${tableId}`).find('.limit').html ( filteredTable.length );
+    //$(`#${tableId}`).find('.count').html( firstPageEnd );
+    //$(`#${tableId}`).find('.limit').html ( filteredTable.length );
 }
 

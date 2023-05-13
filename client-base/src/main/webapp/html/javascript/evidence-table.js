@@ -104,32 +104,31 @@ function createEvidenceTable( tableData, doSortTable=false )
     // Evidence View: interactive legend for evidences.
     var eviLegend = getEvidencesLegend(tableData);
     table = '';
-    table = table + '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
-    table = table + '<div id= "evidenceViewTable" class="scrollTable">';
-    table = table + '<table id="tablesorterEvidence" class="tablesorter">';
-    table = table + '<thead>';
-    table = table + '<tr>';
+    table += '<div class="gene_header_container">' + eviLegend + '<input id="revertEvidenceView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div><br>';
+    table += '<div id= "evidenceViewTable" class="scrollTable">';
+    table += '<table id="tablesorterEvidence" class="tablesorter">';
+    table += '<thead>';
+    table += '<tr>';
 
-    table = table + '<th width="75">Omit/Add</th>';
-    table = table + '<th width="50">Type</th>';
-    table = table + '<th width="212">Node label</th>';
-    table = table + '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-    table = table + '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
-    table = table + '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
-    table = table + '<th width="70">Select</th>';
-    table = table + '</tr>';
-    table = table + '</thead>';
-    table = table + '<tbody class="scrollTable" id="evidenceBody">';
-    var tableBody = createEvidenceTableBody(tableData,1,pagesCount)
-    table = table + tableBody; 
-    table = table + '</tbody>';
-    table = table + '</table>';
-    table = table + '</div><div class="evidence-footer">';
-    table = table + '<div class="evidence-select"><span>Showing <span id="evidenceCount" class="count">'+firstPageEnd+'</span> of <span class="limit">'+tableData.length+'</span></span></div>';
-    table = table + '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
-    table = table + '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
+    table += '<th width="75">Omit/Add</th>';
+    table += '<th width="50">Type</th>';
+    table += '<th width="212">Node label</th>';
+    table += '<th width="78"> P-Value <span id="pvalue" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+    table += '<th width="70">Genes <span id="genesHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></th>';
+    table += '<th width="103">Gene List  <span id="genelistHint" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+    table += '<th width="70">Select</th>';
+    table += '</tr>';
+    table += '</thead>';
+    table += '<tbody class="scrollTable" id="evidenceBody">';
+    table += '</tbody>';
+    table += '</table>';
+    table += '</div><div class="evidence-footer">';
+    table += '<div class="evidence-select"><span>Showing <span id="evidenceCount" class="count">'+firstPageEnd+'</span> of <span id = "evidenceTotal" class="limit">'+tableData.length+'</span></span></div>';
+    table += '<div class="gene-footer-container"><div class="gene-footer-flex" ><div id="evidence-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No terms selected</span></div>';
+    table += '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
-    $('#evidenceTable').html(table);
+    $('#evidenceTable').html ( table );
+		createEvidenceTableBody ( tableData, 1, pagesCount )
 
 		// This is used when the user start clicking on col headers cause they want to sort the table
 		// DO NOT REMOVE. It is necessary IN ANY CASE, including when doSortTable == false   
@@ -557,24 +556,11 @@ function createEvidenceTableBody ( tableData, pageIndex, pagesCount )
     
     if ( tableBody )
     {
-      if ( pageIndex == 1 ) return tableBody;
-        // TODO: come on! This is nonsense.
-        // There is no need for this function to deal with pageEnds and to return it to the caller.
-        // Does the caller really need it? The value is set and changed here, in the lines below.
-        // If the caller actually needs it, it's just a function like: 
-        //   getTablePageLimits ( currentPageIdx, pageSize, tableSize ) = [begin, end + 1]
-        // which could be called from wherever it's needed
-        // Also, why are you returning back currentPage, if the caller already has it!?
-        //
-        // => The only thing that this function needs to return is tableBody, as a string
-        // 
-        // Similarly, this function doesn't need evidencePageCount as parameter, since it
-        // can compute it with the same function above.
-        //
-        $('#evidenceBody').append(tableBody)
-        $('#evidenceCount').html(pageEnds)
+      $('#evidenceBody').append(tableBody)
+      
+	    $('#evidenceCount').html ( pageEnds )
+	    $('#evidenceTotal').html ( tableData.length )
     }
-    return null; // just to return something
 }
 
 /* TODO: remove after reading:
