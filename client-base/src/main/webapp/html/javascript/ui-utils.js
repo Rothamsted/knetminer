@@ -32,7 +32,7 @@ function activateButton(option){
 
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
         getLongWaitMessage.uiLoader('#tabviewer_content')
-        createEvidenceView()
+        createEvidenceView(option)
     }
 
     changeButtonOnSvg()
