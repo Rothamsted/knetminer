@@ -642,6 +642,7 @@ function validateKeywords(keyword)
       && ...
     
     OR, if you prefer:
+    
     if ( ! ( keyword.length > 2 ) ) return false
     if (! ((keyword.split('"').length - 1) % 2 == 0) ) return false 
     if ( !checkSubStrings (...) ) return false
@@ -669,6 +670,14 @@ function validateKeywords(keyword)
 }
 
 // util function check for the substring in keyword search terms
+//
+// TODO: Looks like you're reinventing the wheel: 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+// 
+// Probably you don't need this function of yours at all
+// And if you need it, what's length for? It seems to always be checkStr.length, exept in the 
+// case of ' NO',2 (is that a typo?)
+//
 function checkSubStrings(keyword,checkStr,length){
     return keyword.substr(keyword.length - length) != checkStr; 
 }
