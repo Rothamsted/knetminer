@@ -635,44 +635,26 @@ function postProcessTableData ( data )
  */
 function validateKeywords(keyword)
 {
- /* TODO
-  - This doesn't work at all, don't commit code that doesn't work
-  
-  - What's the point of defining these variables?!
-    it should be like:
-    return (keyword.length > 2)
-      && ((keyword.split('"').length - 1) % 2 == 0)
-      && ...
-      && checkSubStrings ( ... ) 
-      && checkSubStrings ( ....) 
-      && ...
+ /* TODO: remove after reading. Please, see below the readable version I've tried to explain. 
+    Please come back to me to talk about what it wasn't clear on it. 
     
-    OR, if you prefer:
-    
-    if ( ! ( keyword.length > 2 ) ) return false
-    if (! ((keyword.split('"').length - 1) % 2 == 0) ) return false 
-    if ( !checkSubStrings (...) ) return false
-    if ( !checkSubStrings (...) ) return false
-    ...
-    return true
+    Also, checkSubStrings() seems equivalent to String.endsWith() (see below).
+  */
 
-		OR a mix of these two forms.
-    
-    You're writing all these variables for NOTHING, you're building an equally horrible
-    final expression with them, COME ON!!! 
- */
- var check_not = checkSubStrings(keyword,'NOT',3)
- var check_and= checkSubStrings(keyword,'AND',3)
- var check_an = checkSubStrings(keyword,' AN',3)
- var check = checkSubStrings(keyword,' O',2)
- var check_n = checkSubStrings(keyword,' N',2)
- var check_or = checkSubStrings(keyword,'OR',2)
- var check_not = checkSubStrings(keyword,' NO',2)
- var check_a = checkSubStrings(keyword, ' A', 2)
-
- var checkKeyword = (keyword.length > 2) && ((keyword.split('"').length - 1) % 2 == 0) && bracketsAreBalanced(keyword) && (keyword.indexOf("()") < 0) && ((keyword.split('(').length) == (keyword.split(')').length)) && (keyword.charAt(keyword.length - 1) != ' ' &&  check_not && check_and && check_an && check && check_n && check_or && check_a);
- 
- return checkKeyword
+ return (keyword.length > 2) 
+   && ((keyword.split('"').length - 1) % 2 == 0) 
+   && bracketsAreBalanced(keyword) 
+   && (keyword.indexOf("()") < 0) 
+   && ((keyword.split('(').length) == (keyword.split(')').length)) 
+   && (keyword.charAt(keyword.length - 1) != ' ' ) 
+   && checkSubStrings(keyword,'NOT') 
+   && checkSubStrings(keyword,' AN') 
+   && checkSubStrings(keyword,' O') 
+   && checkSubStrings(keyword,' N') 
+   && checkSubStrings(keyword,'OR') 
+   && checkSubStrings(keyword,'NO') 
+   && checkSubStrings(keyword, ' A') 
+   &&  checkSubStrings(keyword,'AND') ;
 }
 
 // util function check for the substring in keyword search terms
@@ -681,9 +663,10 @@ function validateKeywords(keyword)
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
 // 
 // Probably you don't need this function of yours at all
-// And if you need it, what's length for? It seems to always be checkStr.length, exept in the 
-// case of ' NO',2 (is that a typo?)
+// 
+// Update: OK, the len has gone, yet this function doesn't seem needed, since it does the same as
+// the existing endsWith() (see link above)
 //
-function checkSubStrings(keyword,checkStr,length){
-    return keyword.substr(keyword.length - length) != checkStr; 
+function checkSubStrings(keyword,checkStr){
+    return keyword.substr(keyword.length - checkStr.length) != checkStr; 
 }

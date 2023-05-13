@@ -33,6 +33,11 @@ function activateButton(option){
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
         getLongWaitMessage.uiLoader('#tabviewer_content')
         createEvidenceView()
+
+        // TODO: remove after reading. This 'option' has always the same
+        // value here, the function DOES NOT NEED IT, why do you insist
+        // putting it back?! Let's talk about it.
+        // createEvidenceView(option)
     }
 
     changeButtonOnSvg()
