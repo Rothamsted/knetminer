@@ -317,8 +317,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
          $('#suggestor_search_area').slideUp(500);
         //  activateButton('resultsTable')
 
-        var resultsTable = refineTableData(data.geneTable);
-        var evidenceTable = refineTableData(data.evidenceTable)
+        var resultsTable = postProcessTableData ( data.geneTable );
+        var evidenceTable = postProcessTableData ( data.evidenceTable );
 
          createGenesTable(resultsTable,keyword);
          handleDelimintedCta.getData(data);
@@ -555,6 +555,9 @@ function changeSpecies(selectElement){
 }
 
 // function dynamically encodes Gene and evidence views delimited files to downloadable TSV files
+// TODO: not urgent, as usually, it requires separation between gene and evidence table, stop
+// using this messed-up if/elseif approach.
+//
 handleDelimintedCta = function(){
 
     var evidenceData, resultViewData,currentData;  
@@ -609,16 +612,19 @@ function createEvidenceView()
 
 
 /**
- * @desc refines table data by removing newline and tabs for both evidence and geneview
+ * @desc Post-process the genes/evidence table data string that comes from the API, doing things
+ * like string-to-array conversion, removing unused headers, and alike.
  */
-function refineTableData(data){
-    var tableData = data.split('\n'); 
-    tableData.pop(); 
-    tableData.shift();
+function postProcessTableData ( data )
+{
+	// The format is a TSV string
+  var tableData = data.split('\n'); 
+  tableData.pop(); // Last one is always an empty trailer
+  tableData.shift(); // First one is about headers and we don't use them (unfortunately)
 
-    tableData = tableData?.map ( rowStr => rowStr.split ( "\t" ) ); 
+  tableData = tableData?.map ( rowStr => rowStr.split ( "\t" ) ); 
 
-    return tableData;
+  return tableData;
 }
 
 

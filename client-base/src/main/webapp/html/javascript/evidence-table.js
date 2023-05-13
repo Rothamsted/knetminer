@@ -40,11 +40,8 @@ function getEvidencePvalue ( pvalueStr )
  * 
  * @desc Renders the evidence table from API output.
  * 
- * @param evidenceTable: the evidence table data, as it comes from the API, after being turned into
+ * @param tableData: the evidence table data, as it comes from the API, after being turned into
  * a matrix and after been cleaned of header and empty trailer (see data-utils.js:createEvidenceView()).
- * 
- * @param selectedSize: how many rows to display. This is non-null when the function is called by the
- * bottom size selector. When null (the default), it shows up to 100 rows.  
  * 
  * @param doSortTable: if true, the table needs to be sorted. This is set to false whem the 
  * first caller gets the table from the API and with the API-level sorting option set. DO NOT
@@ -57,7 +54,6 @@ function createEvidenceTable( tableData, doSortTable=false )
     var table = "";
     
 		evidenceTableScroller.setTable ( tableData )
-		const pagesCount = evidenceTableScroller.getPagesCount ()
 		const firstPageEnd = evidenceTableScroller.getPageEnd ()
 
     // set current table data for infinite scrolling
@@ -191,7 +187,7 @@ function createEvidenceTable( tableData, doSortTable=false )
  * Function to get the network of all "genes" related to a given evidence
  * 
  */
-function evidencePath(concept, targetElement,genesCount) {
+function evidencePath(concept, targetElement, genesCount) {
     
     var genesList = $(targetElement).attr('data-genelist').trim().split(",");
     var params = { keyword: 'ConceptID:' + concept };
@@ -499,7 +495,8 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
  * @desc creates the evidence table body for a data window and places it in the DOM
  * @param {tableData} evidence table data, as it comes from the API and turned into a nested array (see TODO).
  * 
- * The function considers the current page available in evidenceTableScroller.getPage()
+ * The function considers the current page available in evidenceTableScroller.getPage() and 
+ * shows that window only.
  */
 function createEvidenceTableBody ( tableData, doAppend = false )
 {

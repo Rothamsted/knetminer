@@ -1,4 +1,4 @@
-/*
+/**
  * Filters gene or evidence table by the selected Concept Type (coming from the legend).
  *  
  * DO NOT call me directly, use the wrappers below.
@@ -9,10 +9,11 @@
  * @param {rowFilterPredicate} a function (selectedTypes, tableRow) => boolean tells if the
  *        concept type(s) associated to a target table row are selected by the current selection
  *        from the legend, selectedTypes. The criteria are different for the two tables, see the
- *        invocations below. 
+ *        invocations below.
+ * @param {renderingFun} either createFilteredGenesTable or createFilteredEvidenceTable, see below 
  */
 function _filterKnetTableByType ( 
-	event, type, tableId, revertButtonId, rowFilterPredicate
+	event, type, tableId, revertButtonId, rowFilterPredicate, renderingFun
 ) 
 {
     updateLegendsKeys(type, tableId, event)
@@ -40,13 +41,9 @@ function _filterKnetTableByType (
       var filteredTable = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
 
       if (filteredTable.length > 0)
-        createFilteredTable ( filteredTable, tableId )
+        renderingFun ( filteredTable, tableId )
       else
-      {
-        $('#tablesorter').hide()
-        $('#filterMessage').show();
-        $('.num-genes-container').hide();
-      }
+      	toggleKnetTablesDisplay ( false )
     } 
     catch (err) {
         console.error ( "Error while selecting from concept legend", err );
@@ -67,7 +64,8 @@ function filterGeneTableByType ( event, conceptType )
 	}
 	
 	_filterKnetTableByType ( 
-		event, conceptType, "resultsTable", "revertGeneView", rowFilterPred 
+		event, conceptType, "resultsTable", "revertGeneView", 
+		rowFilterPred, createFilteredGenesTable 
 	)
 }
 
@@ -79,7 +77,8 @@ function filterEvidenceTableByType ( event, conceptType )
 	}
 
 	_filterKnetTableByType ( 
-		event, conceptType, "evidenceTable", "revertEvidenceView", rowFilterPred 
+		event, conceptType, "evidenceTable", "revertEvidenceView", 
+		rowFilterPred, createFilteredEvidenceTable 
 	)
 }
 
@@ -111,34 +110,64 @@ function updateLegendsKeys(key, location, event) {
 
 }
 
+
 /**
- * @desc function creates table body for filtered geneview and evidence table
- * @param {*} filteredTable 
- * @param {*} tableId 
+ * @desc Re-creates the table body for filtered geneview table
+ *  
  */
-async function createFilteredTable(filteredTable, tableId) 
+async function createFilteredGenesTable ( filteredTable )
+{
+	toggleKnetTablesDisplay ( true )
+	
+	genesTableScroller.setTable ( filteredTable )
+	
+	createGeneTableBody ( filteredTable )
+	
+	sortOptions = [[5,1]]
+	$( '#tablesorter' ).trigger ( 'update', [ sortOptions ] );
+}
+
+/**
+ * @desc Re-creates the table body for filtered evidence table
+ *  
+ */
+async function createFilteredEvidenceTable ( filteredTable )
+{
+	toggleKnetTablesDisplay ( true )
+	
+	evidenceTableScroller.setTable ( filteredTable )
+	
+	createEvidenceTableBody ( filteredTable )
+	
+	sortOptions = [ [3, 0], [4, 1], [5,1] ]
+	$( '#tablesorterEvidence' ).trigger ( 'update', [ sortOptions ] );	
+}
+ 
+ 
+/**
+ * Manipulates the DOM to show genes/evidence table, or a no-row message.
+ * 
+ * @param {displayOn} a boolean
+ */
+function toggleKnetTablesDisplay ( displayOn ) 
 {
 		// TODO: If there is only ONE instance for each of these, then WHY do we have DIFFERENT
 		// names/variables/objects that manage genes and evidence tables separately, as if there were
 		// TWO instances of them?!?
 		// NEEDS serious review for coherence!
 		
-    $('#filterMessage').hide();
-    $('#tablesorter').show();
-    $('.num-genes-container').show();
-
-		// Infinite scrolling and paging. TODO: needs parameterisation
-		const scrollMgr = tableId == 'resultsTable' ? genesTableScroller : evidenceTableScroller
-		scrollMgr.setTable ( filteredTable )
-
-    var [createFilteredBody,tableId,tableSorterId,sortList] = tableId == 'resultsTable'? 
-    [ createGeneTableBody,'geneTableBody','tablesorter', [[5,1]]] 
-    : [createEvidenceTableBody,'evidenceBody','tablesorterEvidence', [[3, 0], [4, 1], [5,1]] ]
-
-    // Updates the table with the filtered data
-    createFilteredBody ( filteredTable )
-
-    // updates table sorter
-    $(`#${tableSorterId}`).trigger ( 'update', [ sortList ] );
+		if ( displayOn )
+		{
+	    $('#filterMessage').hide();
+	    $('#tablesorter').show();
+	    $('.num-genes-container').show();
+			return		
+		}
+			
+	  // else, turn it off
+	  $('#tablesorter').hide()
+	  $('#filterMessage').show();
+	  $('.num-genes-container').hide();
 }
+
 

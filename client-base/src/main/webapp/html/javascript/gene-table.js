@@ -352,7 +352,8 @@ function downloadNetwork() {
  * @desc creates the gene table body for a data window and places it in the DOM
  * @param {tableData} geneview table data, as it comes from the API and turned into a nested array (see data-utils.js:genomicViewContent()).
  * 
- * The function considers the current page available in evidenceTableScroller.getPage()
+ * The function considers the current page available in evidenceTableScroller.getPage() and 
+ * shows that window only.
  */
 function createGeneTableBody ( tableData, doAppend = false )
 {
@@ -381,8 +382,6 @@ function createGeneTableBody ( tableData, doAppend = false )
 			? '<td></td>'
 			// else, gene name column, with synonym expansion
 			: '<td><span class="gene_name">' + geneName + '</span> <span onclick="createGeneNameSynonyms(this,' + geneId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
-
-		var taxIdTd = ''
 
 		var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
 
