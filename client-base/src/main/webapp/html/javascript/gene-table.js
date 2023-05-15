@@ -82,7 +82,7 @@ function createGenesTable ( tableData, keyword )
 		var values = e.data.x[geneNum];
 
 		// Generate Network in KnetMaps.
-		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword, exportPlainJSON: false }, false);
+		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword, isExportPlainJSON: false }, false);
 	});
 
 
@@ -284,7 +284,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		jboxNotice(knetNotice, 'red', 300, 2000);
 	}
 	else {
-		generateCyJSNetwork(api_url + '/network', { keyword: keyword, list: candidatelist, exportPlainJSON: false }, false);
+		generateCyJSNetwork(api_url + '/network', { keyword: keyword, list: candidatelist, isExportPlainJSON: false }, false);
 	}
 
 }
