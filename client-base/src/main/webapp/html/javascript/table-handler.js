@@ -18,19 +18,51 @@ if (TEST_MODE) {
 }
 
 /**
- * TODO: I (MB) need to comment this, will do ASAP.
+ * An helper to manage table infinite scrolling and paging.
+ * 
+ * It has a {@link setupTableScroller scroll event handler} and methods to manage a table 
+ * pagination view.
+ * 
+ * We currently use with the gene and evidence table, but the design is generic enough to be
+ * able to support virtually any table.
+ * 
+ * @author Marco Brandizi
+ * 
+ * @since 5.7 (2023-05-14)
  * 
  */
 class InfiniteScrollManager
 {
 	#tableData = null
+
+	/**
+	 * The HTML ID of the element that represents the table we manage.
+	 * 
+	 * This is used by the {@link setupTableScroller scroll event handler}.
+	 * 
+	 * We don't expose this to the outside, since we don't want this class to deal with 
+	 * the non-pertinent concern of holding its table reference for others.
+	 * 
+	 * Also, this is table-type specific and set by subclasses, by invoking the constructor.
+	 */
 	#tableId = null
+
+	/**
+	 * The method that {@link setupTableScroller} has to use to display additional rows when necessary.
+	 * 
+	 * This is table-type specific and set by subclasses, by invoking the constructor.
+	 * 
+	 */
 	#tableBodyGenerator = null 
 	
 	#page = 0
 	
 	#pageSize = 30
 		
+	/**
+	 * This class is abstract, the constructor raises an exception if you try to 
+	 * instantiate it directly. You need to define concrete sublcasses, ad done below.
+	 */
 	constructor ( tableId, tableBodyGenerator )
 	{
 		if ( this.constructor === InfiniteScrollManager ) 
@@ -44,13 +76,20 @@ class InfiniteScrollManager
 		this.#tableId = tableId
 		this.#tableBodyGenerator = tableBodyGenerator
 	}
-		
+	
 	getTableId ()
 	{
 		return this.#tableId
 	}
 	
-	
+	/**
+	 * The 'raw data' table we have to manage. This is the array of data, not the HTML
+	 * correspondant.
+	 * 
+	 * We don't expose this to the outside, since we don't want this class to deal with 
+	 * the non-pertinent concern of holding its table reference for others.
+	 * 
+	 */
 	setTableData ( tableData ) 
 	{
 		if ( !Array.isArray ( tableData ) ) throw new TypeError ( 
@@ -61,17 +100,28 @@ class InfiniteScrollManager
 		this.setPage ( 0 )
 	}
 	
+	/**
+	 * Internal method used pretty much everywhere, do some preliminary sanity checks (eg, 
+	 * the manage table is set).
+	 * 
+	 */
 	#validateTableData () {
-		if ( ! this.#tableData ) throw new TypeError ( 
+		if ( !this.#tableData ) throw new TypeError ( 
 			"InfiniteScrollManager, table not set" 
 		) 
 	}
 	
+	/**
+	 * The page size for paging and auto-scrolling functions. Default is 30.
+	 */
 	getPageSize () {
 		this.#validateTableData ()
 		return this.#pageSize
 	}
 
+	/**
+	 * It raises a RangeError if < 1
+	 */
 	setPageSize ( pageSize )
 	{
 		this.#validateTableData ()
@@ -83,18 +133,37 @@ class InfiniteScrollManager
 		$this.#pageSize = pageSize
 	}
 	
+	/** 
+	 * The no of available pages for the current table, which, of course is obtained by
+	 * dividing the table size by {@link getPageSize}.
+	 * 
+	 */	
 	getPagesCount ()
 	{
 		this.#validateTableData ()
 		return Math.ceil ( this.#tableData.length / this.#pageSize )
 	}
 	
-	
+	/**
+	 * These accessors allows for moving (managing) through the different table pages to 
+	 * visusalise.
+	 * 
+	 * As usually, this is a page index, ie, it ranges from 0 to the pages count - 1.
+	 * 
+	 * In Knetminer, page switching is done by the {@link setupTableScroller scroll event handler}.
+	 * 
+	 */
 	getPage () {
 		this.#validateTableData ()
 		return this.#page
 	}
 
+	/**
+	 * @see getPage
+	 * 
+	 * This raises an error if the parameter doesn't fall within 
+	 * 0 and {@link getPagesCount getPagesCount() - 1}
+	 */
 	setPage ( page )
 	{
 		this.#validateTableData ()
@@ -106,12 +175,19 @@ class InfiniteScrollManager
 		this.#page = page
 	}
 
-
+	/**
+	 * Based on the current table, tells, if there is still one more page after the current one.
+	 */
 	hasNextPage () {
 		this.#validateTableData ()
 		return ( this.#page + 1 ) < this.getPagesCount ()
 	}
 
+	/**
+	 * Helper that uses {@link setPage} to advance from the current page to the next.
+	 * 
+	 * Which implies it raises an exception if you're already at the last page.
+	 */
 	goNextPage ()
 	{
 		this.#validateTableData ()
@@ -119,13 +195,24 @@ class InfiniteScrollManager
 		return this.getPage ()
 	}
 
-	
+	/**
+	 * The table row index at which the {@link getPage current page} starts. 
+	 *  
+	 * As usually for indices, this starts at 0.
+	 * 
+	 */
 	getPageStart ()
 	{
 		this.#validateTableData ()
 		return this.#page * this.#pageSize
 	}
-	
+
+	/**
+	 * The table row *limit* at which the {@link getPage current page} ends. 
+	 *  
+	 * As usually for indices, this is the index of the last row in the page *plus* 1. This 
+	 * inclusive/exclusive range ease the use of these methods in loops and the like.
+	 */	
 	getPageEnd ()
 	{
 		this.#validateTableData ()
@@ -134,6 +221,13 @@ class InfiniteScrollManager
 		return Math.min ( result, this.#tableData.length ) 
 	}
 	
+	/**
+	 * Deploys the table scroll event handler that is used to rendere one more page each time the 
+	 * table's scroll bar reaches the bottom. 
+	 * 
+	 * This uses {@link #tableId} and  {@link #tableBodyGenerator} to manipulate the current table,
+	 * and the paging-related methods to establing when new rows need to be displayed and how many.
+	 */
 	setupScrollHandler ()
 	{
 		this.#validateTableData ()
@@ -144,6 +238,7 @@ class InfiniteScrollManager
 		// Else, they're not visible below
 		// #tableData also requires dynamic access, for it might change (eg, via filtering) after
 		// the hereby scroll handler has been already set and the timer below launched.
+		const tableId = this.#tableId
 		const tableDataAccessor = () => this.#tableData
 		const tableBodyGenerator = this.#tableBodyGenerator
 		
@@ -151,14 +246,14 @@ class InfiniteScrollManager
 			// Clear/set used to throttle the scroll event firing:
 			// https://stackoverflow.com/a/29654601/529286
 			// The scroll event clears any previous timeout for a while, nothing happens until the 
-			// delayed timeout handler fires too.
+			// delayed timeout handler below fires too.
 			//
 			clearTimeout ( timer )
 			
 			timer = setTimeout ( () => 
 			{
 				// TODO: can't we use jqTable here?
-				const tableElem = document.getElementById ( this.getTableId () ); 
+				const tableElem = document.getElementById ( tableId ); 
 				const needsMoreRows = tableElem.scrollTop + tableElem.offsetHeight >= tableElem.scrollHeight
 				if ( !needsMoreRows ) return
 				if ( !this.hasNextPage () ) return
@@ -170,6 +265,10 @@ class InfiniteScrollManager
 	} // scrollHandler ()
 }
 
+/**
+ * As said above, we have specific subclasses and singletons for the gene table and 
+ * the evidence table.
+ */
 class GenesTableScroller extends InfiniteScrollManager
 {
 	constructor () {
@@ -177,6 +276,10 @@ class GenesTableScroller extends InfiniteScrollManager
 	}
 }
 
+/**
+ * As said above, we have specific subclasses and singletons for the gene table and 
+ * the evidence table.
+ */
 class EvidenceTableScroller extends InfiniteScrollManager
 {
 	constructor () {
@@ -184,6 +287,10 @@ class EvidenceTableScroller extends InfiniteScrollManager
 	}
 }
 
+/**
+ * As said above, we have specific subclasses and singletons for the gene table and 
+ * the evidence table.
+ */
 const genesTableScroller = Object.freeze ( new GenesTableScroller () )
 const evidenceTableScroller = Object.freeze ( new EvidenceTableScroller () )
 
