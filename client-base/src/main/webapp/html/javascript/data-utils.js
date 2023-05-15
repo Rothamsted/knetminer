@@ -239,7 +239,8 @@ function genomicViewContent(data,keyword, geneList_size,searchMode,queryseconds,
                 }
             // for rare edge cases when no genes in list are found in search, then search is keyword-centric only.
             if((count_linked === 0) && (count_unlinked > geneList_size) && (!list.toString().includes("*"))) {
-                messageNode = 'no linked genes were found. Showing keyword-centric results only. In total <b>' + results + ' unlinked genes were found. ('+queryseconds+' seconds).'
+                messageNode = 'no linked genes were found. <span style="color: orange;">Showing keyword-centric results only.</span> In total <b>' + results + ' unlinked genes were found. ('+queryseconds+' seconds).'
+
                 genomicViewTitle = createGenomicViewTitle(messageNode,status)
                  }
               }
