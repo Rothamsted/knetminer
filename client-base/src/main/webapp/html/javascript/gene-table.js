@@ -487,8 +487,8 @@ function createGeneTableBody ( tableData, doAppend = false )
 			/*
 	 * click handlers for opening and closing the qtl and evidence column drop down boxes.
 	 */
-		$(".dropdown_box_open").click(function (e) {
-			toggleEvidencePopUp(e,300,'open')
+		$(".dropdown_box_open").click(function (event) {
+			toggleEvidencePopUp(event,300,'open')
 		});
 
 		$(".dropdown_box_close").click(function (e) {
@@ -560,10 +560,10 @@ function createGeneTableBody ( tableData, doAppend = false )
 /** 
  * function to toggle geneview evidence column popups 
 */
-function toggleEvidencePopUp(event,toogleHeight,action){
+function toggleEvidencePopUp(event,toggleDuration,toggleAction){
 	event.preventDefault(); 
-	var targetname = $(event.target).attr("id").replace(action +'_', "");
-	$("#" + targetname).slideToggle(toogleHeight);
+	var targetname = $(event.target).attr("id").replace(toggleAction +'_', "");
+	$("#" + targetname).slideToggle(toggleDuration);
 }
   
 
