@@ -87,22 +87,6 @@ function createGenesTable ( tableData, keyword )
 
 
 	// TODO: evidence dropdown functions to refined in Knetminer 5.7 
-
-	/*
-	 * click handlers for opening and closing the qtl and evidence column drop down boxes.
-	 */
-	// $(".dropdown_box_open").click(function (e) {
-	// 	e.preventDefault();
-	// 	var targetname = $(e.target).attr("id").replace("open_", "");
-	// 	$("#" + targetname).slideDown(300);
-	// });
-
-	// $(".dropdown_box_close").click(function (e) {
-	// 	e.preventDefault();
-	// 	var targetname = $(e.target).attr("id").replace("close_", "");
-	// 	$("#" + targetname).slideUp(100);
-	// });
-
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
 		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
@@ -458,21 +442,34 @@ function createGeneTableBody ( tableData, doAppend = false )
 			for (var iev = 0; iev < evidences.length; iev++) {
 				//Shows the icons
 				var evidenceElems = evidences[iev].split("__");
+			
 				var evidenceCC = evidenceElems[0];
 				var evidenceSize = evidenceElems[1];
 				var evidenceNodes = evidenceElems[2].split("//");
-				evidenceTd += '<div class="evidence-container"><div  class="evidence_item evidence_item_' + evidenceCC + '" title="' + evidenceCC + '" >';
-				//Builds the evidence box
+				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceCC + '" class="evidence_item evidence_item_' + evidenceCC + ' dropdown_box_open" title="' + evidenceCC + '" >';
+					//Builds the evidence box
+					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceCC + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidenceCC + '></span>';
+					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceCC + '"></div> <span>' + evidenceCC + '</span></p>';
+					for (var ievNode = 0; ievNode < evidenceNodes.length; ievNode++) {
+						if (evidenceCC == 'Publication') {
+							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+							evidenceValueTd = '<a href="' + pubmedurl + evidenceNodes[ievNode].substring(5) + '" target="_blank">' + evidenceNodes[ievNode] + '</a>';
+						}
+						else
+							evidenceValueTd = evidenceNodes[ievNode];
 
-				evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
-			} // for iev
-		} // if evidence.length
-		evidenceTd += '<div></td>';
-		// Foreach evidence show the images - end
+						evidenceTd += '<p>' + evidenceValueTd + '</p>';
+					}
+					evidenceTd += '</div>';
+					evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
+				} // for iev
+			} // if evidence.length
+			evidenceTd += '<div></td>';
+			// Foreach evidence show the images - end
 
-		var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${geneAccessions}" /></td>`;
-		table = table + geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
-		// table += '</tr>';
+			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
+			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
+			table += '</tr>';
 	}// for row
 
 	if(table)
@@ -486,7 +483,18 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 			// When it's being recreated, reset the sorting too
 			$( ".tablesorter" ).trigger ( 'update' );
-		}
+
+			/*
+	 * click handlers for opening and closing the qtl and evidence column drop down boxes.
+	 */
+		$(".dropdown_box_open").click(function (e) {
+			toggleEvidencePopUp(e,300,'open')
+		});
+
+		$(".dropdown_box_close").click(function (e) {
+			toggleEvidencePopUp(e,100,'close')
+		});
+	}
 		 
 		// Updates "x of y" label
     $('#geneCount').html ( toRow )
@@ -527,7 +535,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 				con_legend.set(conType, conCount);
 			}
 		  });
-	   });
+	});
   
 	// Display evidence icons with count and name in legend.
 	//var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
@@ -547,6 +555,15 @@ function createGeneTableBody ( tableData, doAppend = false )
   
 	legend= legend + summaryText +'</div>';
 	return legend;
+}
+
+/** 
+ * function to toggle geneview evidence column popups 
+*/
+function toggleEvidencePopUp(event,toogleHeight,action){
+	event.preventDefault(); 
+	var targetname = $(event.target).attr("id").replace(action +'_', "");
+	$("#" + targetname).slideToggle(toogleHeight);
 }
   
 
