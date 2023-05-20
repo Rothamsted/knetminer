@@ -27,7 +27,7 @@
 					<hr width="85%" align="left">
 					<div id="keyword_search">
 						<div class="keyword-container">
-							<input id="keywords" onkeyup="keyWordEvent(event)" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
+							<input id="keywords" onchange="matchCounter()" onkeyup="keyWordEvent(event)" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 							<img  src="html/image/concept.png" onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" alt="concept" title="Concept Selector" class="concept-selector"/>
 						</div>
 

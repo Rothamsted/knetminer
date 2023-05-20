@@ -59,7 +59,8 @@ function keyWordEvent(event)
 {
   var currentEventKey = event.key
   const keyEvents = ['Enter','ArrowLeft','ArrowUp','ArrowRight', 'ArrowDown']
-  const checkKeyEvents = keyEvents.some( keyEvent => currentEventKey.includes(keyEvent)); 
+  const checkKeyEvents = currentEventKey !== undefined ? keyEvents.some( keyEvent => currentEventKey.includes(keyEvent)) : true;
+
   if(!checkKeyEvents){
     matchCounter();
     if ($("#suggestor_search").css('events-pointer') == 'auto'){
@@ -170,7 +171,7 @@ async function removeRegionRow(event) {
 // TODO: see comments in findGenes()
 function getChromosomeRegionIndex(currentElement){
   // retrieves index from row data-index attribute
-  const chr = currentElement.closest('tr').getAttribute("data-index");
+  var chr = currentElement.closest('tr').getAttribute("data-index");
   var regionNumber = chr.replace(/\D/g, '');
   return regionNumber
 }

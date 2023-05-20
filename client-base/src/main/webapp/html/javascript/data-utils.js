@@ -37,7 +37,7 @@ function searchKeyword(){
     requestParams['qtl'] = [];
 
     for (i = 1; i <= regions; i++){
-        var chr = $("#chr" + i + " option:selected").val();
+        var chr = $("#chr" + i).find(":selected").val();
         var start = trim($("#start" + i).val());
         var end = trim($("#end" + i).val());
         var label = trim($("#label" + i).val());
@@ -398,14 +398,14 @@ function geneCounter(){
  */
 function findChromosomeGenes(event) {
         var currentRowNumber = getChromosomeRegionIndex(event.currentTarget);
-        var chr_name = $('#chr' + currentRowNumber+ 'option:selected').val();
+        var chromosome = $('#chr' + currentRowNumber).find(':selected').val();
         var start = $('#start' + currentRowNumber).val()
         var end = $('#end' + currentRowNumber).val()
         var genes = 'genes' + currentRowNumber
     
-        if (chr_name != "" && start != "" && end != "") {
+        if (chromosome != "" && start != "" && end != "") {
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
-            var keyword = chr_name + "-" + start + "-" + end;
+            var keyword = chromosome + "-" + start + "-" + end;
             var request = '/countLoci?keyword='+keyword+'&taxId='+taxonomyID;
             var url = api_url + request;
             $.get(url, '').done(function (data) {
@@ -418,31 +418,19 @@ function findChromosomeGenes(event) {
  * Function to get the number of matches in the keywords text box.
  *
  */
-// TODO: looking to clean up function with convulated if else statements
+
 function matchCounter() {
     var keyword = $('#keywords').val();
     var taxonomyID =  $('.navbar-select').children("option:selected").val();
     $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
-    if (keyword.length == 0) {
+    if (keyword == '') {
         $('#matchesResultDiv').html('Type a query to begin');
 
         $("#suggestor_search_area").slideUp(500)
 		// hide query suggestor icon
         $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     } else {
-				/* TODO: (not urgent), this is awful.
-				   - brackets balance is chcecked twice, by bracketsAreBalanced() and following checks
-				   - many mysterious clauses without any explanation of what they are (or if they're still needed)
-				   - should go in a function like validateSearchKeywords()
-				   - inside such function, if it has to remain as a single conditional, should be formatted as:
-				     function validateSearchKeywords()
-				     {
-				       return <clause> // possible comment on whay the hell it means
-				         && <clause> // possible comment
-				         ...
-				     }
-				*/ 
-            var isKeywordValidated = validateKeywords(keyword);
+        var isKeywordValidated = validateKeywords(keyword);
         if (isKeywordValidated) {
             var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
 
@@ -464,7 +452,6 @@ function matchCounter() {
                 var server_error= JSON.parse(xhr.responseText); // full error json from server
                 var errorMsg= server_error.title.replace('(start >= end) ', '')
                 $('#matchesResultDiv').html(`<span class="redText">${errorMsg}</span>`);
-                // errorComponent('#matchesResultDiv',xhr)
             });
         } else {
             $('#matchesResultDiv').html('');
@@ -540,18 +527,17 @@ function changeSpecies(selectElement){
     $('#pGSearch_title').hide(); 
     
     if(currentTaxData){
-            var isChangeSuccessful  = knetSelector.refreshUI()
-            if(isChangeSuccessful){
-                setTimeout(function(){
-                    // gets genome region search table row elements
-                    var getGenomeRegionRow = getGenomeRegionRows()
-
-                    for(genomeRegionIndex = 0; genomeRegionIndex < getGenomeRegionRow.length; genomeRegionIndex++){
-                        var geneomeDatarow = $(getGenomeRegionRow[genomeRegionIndex]).children();
-                        $(geneomeDatarow[4]).children().focus();
-                    }
-                },100)
+        knetSelector.refreshUI()
+        
+        setTimeout(function(){
+            // gets genome region search table row elements
+            var getGenomeRegionRow = getGenomeRegionRows();
+            for(genomeRegionIndex = 0; genomeRegionIndex < getGenomeRegionRow.length; genomeRegionIndex++){
+                var geneomeDatarow = $(getGenomeRegionRow[genomeRegionIndex]).children();
+                console.log(geneomeDatarow[4]); 
+                $(geneomeDatarow[4]).children().focus();
             }
+        },100)
     }
 }
 
