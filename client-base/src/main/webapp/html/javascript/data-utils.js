@@ -15,7 +15,6 @@ function searchKeyword(){
     list = cleanGeneList ( list )
     
     var geneList_size= list.length;
-    //console.log("geneList_size= "+ geneList_size);
 
     // requestParams
     var requestParams = {};
@@ -55,9 +54,6 @@ function searchKeyword(){
     
     // api request
     var request = "/" + searchMode;
-    //console.log("api_url/request= "+ api_url + request);
-    
-    //console.log("knetSpaceHost: "+ knetspace_api_host);
     var login_check_url= knetspace_api_host + "/api/v1/me";
 
     //if(geneList_size > freegenelist_limit) {
@@ -75,12 +71,13 @@ function searchKeyword(){
         $('#resultsTable').data({keys:[]}); 
         $("#NetworkCanvas_button").removeClass('network-created');
         $('#evidenceTable_button').removeClass('created');
-        fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size);
+
+        checkUserPlan(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size)
       }
 }
 
-//Function send form values to backend
-function fetchData(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
+//checks user login status, 
+function checkUserPlan(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
         timeout: 1000000, cache: false,
@@ -106,61 +103,64 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
         complete: function () {
 
             if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-                // $('#tabviewer').show(); // show Tab buttons and viewer
-                // Show loading spinner on 'search' div
-                var firstTimeout; 
-                 $.post({
-                     url: api_url + request,
-                     timeout: 1000000,
-                     startTime: performance.now(),
-                     headers: {
-                         "Accept": "application/json; charset=utf-8",
-                         "Content-Type": "application/json; charset=utf-8"
-                     },
-                     datatype: "json",
-                     data: JSON.stringify(requestParams)
-                     })
-                     .fail(function (xhr,status,errorlog) {
-                         $("#pGViewer_title").html(''); // clear display msg
-                         var server_error= JSON.parse(xhr.responseText); // full error json from server
-                         var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
-                         console.log(server_error.detail);
-                         alert(errorMsg);
-                         $('.overlay').remove();
-                     })
-                     .success( function(data){
-                        var gviewer = data.gviewer
-                        var querytime= performance.now() - this.startTime; // query response time
-                        var queryseconds= querytime/1000;
-                        queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
-                        // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-                        genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-                        
-                        googleAnalytics.trackEvent (
-                          request, // It already has a leading '/'
-                          { 'keyword': keyword, 'searchMode': searchMode, 'geneListSize': geneList_size }
-                        )
-                        data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show(); 
-                    }
-                    ).complete(function(){
-                        // Remove loading spinner from 'search' div
-                        $('.overlay').remove();
-                        $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
-                        document.getElementById('resultsTable_button').click(); 
-                        var secondTimeOut =  getLongWaitMessage.timeOutId();
-
-                        // clear timeout from callstack
-                        clearTimeout(firstTimeout);
-                        clearTimeout(secondTimeOut);
-                        document.getElementById('pGSearch_title').scrollIntoView();
-                     })
-                   getLongWaitMessage.init()
+                requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list)
+                getLongWaitMessage.init()
              }
              else {
                  $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
              }
         }
     });
+}
+
+// sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
+function requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list){
+    var firstTimeout; 
+    $.post({
+        url: api_url + request,
+        timeout: 1000000,
+        startTime: performance.now(),
+        headers: {
+            "Accept": "application/json; charset=utf-8",
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        datatype: "json",
+        data: JSON.stringify(requestParams)
+        })
+        .fail(function (xhr,status,errorlog) {
+            $("#pGViewer_title").html(''); // clear display msg
+            var server_error= JSON.parse(xhr.responseText); // full error json from server
+            var errorMsg= "Search failed...\t"+ server_error.statusReasonPhrase +" ("+ server_error.type +"),\t"+ server_error.title +"\nPlease use valid keywords, gene IDs or QTLs.";
+            console.log(server_error.detail);
+            alert(errorMsg);
+            $('.overlay').remove();
+        })
+        .success( function(data){
+           var gviewer = data.gviewer
+           var querytime= performance.now() - this.startTime; // query response time
+           var queryseconds= querytime/1000;
+           queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
+           // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+           genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
+           
+           googleAnalytics.trackEvent (
+             request, // It already has a leading '/'
+             { 'keyword': keyword, 'searchMode': searchMode, 'geneListSize': geneList_size }
+           )
+           data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show(); 
+       }
+       ).complete(function(){
+           // Remove loading spinner from 'search' div
+           $('.overlay').remove();
+           $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
+           document.getElementById('resultsTable_button').click(); 
+           var secondTimeOut =  getLongWaitMessage.timeOutId();
+
+           // clear timeout from callstack
+           clearTimeout(firstTimeout);
+           clearTimeout(secondTimeOut);
+           document.getElementById('pGSearch_title').scrollIntoView();
+        })
 }
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
@@ -359,7 +359,7 @@ function countLinkedUserGenes(gv_table) {
              }
           }
       }
-return linkedcount;
+    return linkedcount;
 }
 
 
@@ -560,7 +560,9 @@ handleDelimintedCta = function(){
 }()
 
 
-
+/**
+ * function creates evidenceView
+ */
 function createEvidenceView()
 {
     $('#evidenceTable_button').addClass('created');
