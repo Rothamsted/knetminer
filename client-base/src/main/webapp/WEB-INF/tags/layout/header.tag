@@ -9,7 +9,7 @@
 
 				<div id="species_header">
 					<div class="navbarselect-container">
-						<select onchange="changeSpecies(this)" class="navbar-select"></select>
+						<select onchange="knetSelector.changeSpecies(this)" class="navbar-select"></select>
 					</div>
 					
 					<div id="release_icon" onclick="fetchStats()">

@@ -26,10 +26,8 @@ function activateButton(option){
         //Collapse Suggestor view
         $('#suggestor_search_area').slideUp(500);
     });
-    // check if the view is created
-    handleDelimintedCta.setData(option);
-    var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
 
+    var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
         getLongWaitMessage.uiLoader('#tabviewer_content')
         createEvidenceView()
@@ -39,7 +37,18 @@ function activateButton(option){
         // putting it back?! Let's talk about it.
         // createEvidenceView(option)
     }
+    
+    const delimiterOptions = ['resultsTable','evidenceTable']
+    const isDelimiterOptionPresent  = delimiterOptions.some( delimiterOption => delimiterOption == option);
 
+    if(isDelimiterOptionPresent)
+    {
+        option == 'resultsTable' ? 
+        handleDelimintedCta.setGeneTable() : 
+        handleDelimintedCta.setEvidenceTable(); 
+    }else{$('.tabviewer-actions').hide();}
+
+    
     changeButtonOnSvg()
     changeButtonOffSvg(option + '_button')
     
@@ -165,8 +174,6 @@ function queryToggle(example,title,element){
 function contactWindow() {
     window.open("html/contact.html", "KnetMiner-Contact", "status=0, toolbar=0, location=0, menubar=0, height=200, width=400, resizable=0");
 }
-
-
 
 /*
  * Function

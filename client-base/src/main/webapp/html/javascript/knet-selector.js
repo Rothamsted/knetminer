@@ -78,6 +78,10 @@ const knetSelector = function ()
         knetWidgets.getList();
         examples()
         matchCounter();
+        $('#speciename_container').empty();
+        $('#chr1').empty();
+        $('#tabviewer').hide(); 
+        $('#pGSearch_title').hide();
     }
 
     /** 
@@ -297,6 +301,30 @@ const knetSelector = function ()
     }
 
 
+    // function to be triggered on changing the species dropdown option
+    // TODO: could this be a method of knetSelector? In that case, we could hide
+    // refreshUI () ?
+    //
+    function changeSpecies(selectElement){
+        var selectedSpecie = $(selectElement).children("option:selected"),
+        currentTaxData = setTaxId(selectedSpecie.val());
+
+        if(currentTaxData)
+        {
+            refreshUI()
+            setTimeout(function(){
+                // gets genome region search table row elements
+                var getGenomeRegionRow = getGenomeRegionRows();
+                for(genomeRegionIndex = 0; genomeRegionIndex < getGenomeRegionRow.length; genomeRegionIndex++){
+                    var geneomeDatarow = $(getGenomeRegionRow[genomeRegionIndex]).children();
+                    $(geneomeDatarow[4]).children().focus();
+                }
+            },100)
+        }
+    }
+
+
+
     return {
         register: register,
         refreshUI: refreshUI,
@@ -306,15 +334,7 @@ const knetSelector = function ()
         // Also, it's cleaner to name the exposed keys the same as the internal functions.
         // getTaxId: getTaxIdUrlFrag,
         getTaxIdUrlFrag: getTaxIdUrlFrag,
-        
-        // TODO: remove. Why do you expose it to the world, if it's an internal helper?!
-        // create:create,
-        
-        // TODO: remove. Why do you expose it to the world, if it's an internal helper?!
-        // doSpecieSwitch: doSpecieSwitch,
-        
-        // TODO: not used, remove?
-        // getSpecies: getSpecies
+        changeSpecies:changeSpecies
     }
 }(); 
 

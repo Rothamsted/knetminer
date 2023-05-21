@@ -391,10 +391,6 @@ function geneCounter(){
  * Finds genes present in a chromosome region,
  * using the corresponding API.
  *
- * TODO: code quality improvements, when there is time:
- * - whatever the new approach, we should avoid 'strings with syntax', ie, chrXXX makes the code to depend
- *   on the structure of a string that is just an ID. That's poorly readable and fragile. 
- * 
  */
 function findChromosomeGenes(event) {
         var currentRowNumber = getChromosomeRegionIndex(event.currentTarget);
@@ -514,32 +510,6 @@ function errorComponent(elementInfo,xhr){
 }
 
 
-// function to be triggered on changing the species dropdown option
-// TODO: could this be a method of knetSelector? In that case, we could hide
-// refreshUI () ?
-//
-function changeSpecies(selectElement){
-    var selectedSpecie = $(selectElement).children("option:selected"),
-    currentTaxData = knetSelector.setTaxId(selectedSpecie.val());
-    $('#speciename_container').empty();
-    $('#chr1').empty();
-    $('#tabviewer').hide(); 
-    $('#pGSearch_title').hide(); 
-    
-    if(currentTaxData){
-        knetSelector.refreshUI()
-        
-        setTimeout(function(){
-            // gets genome region search table row elements
-            var getGenomeRegionRow = getGenomeRegionRows();
-            for(genomeRegionIndex = 0; genomeRegionIndex < getGenomeRegionRow.length; genomeRegionIndex++){
-                var geneomeDatarow = $(getGenomeRegionRow[genomeRegionIndex]).children();
-                console.log(geneomeDatarow[4]); 
-                $(geneomeDatarow[4]).children().focus();
-            }
-        },100)
-    }
-}
 
 // function dynamically encodes Gene and evidence views delimited files to downloadable TSV files
 // TODO: not urgent, as usually, it requires separation between gene and evidence table, stop
@@ -547,37 +517,45 @@ function changeSpecies(selectElement){
 //
 handleDelimintedCta = function(){
 
-    var evidenceData, resultViewData,currentData;  
-    var utf8Bytes=''
+    var evidenceData, resultViewData ;
+
+    //  sets delimiter attributes for geneView
+    function setGeneTable(){
+        var encodedString = encodeData(resultViewData);
+        setDemlimiterAttributes('resultsTable',encodedString)
+    }
+
+    // sets delimiter attributes for evidenceView
+    function setEvidenceTable(){
+        var encodedString = encodeData(evidenceData);
+        setDemlimiterAttributes('evidenceTable',encodedString)
+    }
+
     // gets gene  and evidence view data from genomicViewContent function (ln 155)
     function getData(data){
         resultViewData = data.geneTable; 
         evidenceData = data.evidenceTable
-        setDemlimiterAttributes('resultsTable'); 
-    }
+        setGeneTable()
 
-    function getencodedFile(){
-        
-        utf8Bytes = encodeURIComponent(currentData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-        return String.fromCharCode('0x' + p1);
-    })
     }
-
-    function setDemlimiterAttributes(position){
-        currentData = position == 'resultsTable' ? resultViewData : evidenceData;
-    $('.tabviewer-actions').toggle(position ==='resultsTable' || position === 'evidenceTable');
-     getencodedFile(); 
-    var TsvFileName = position == 'resultsTable' ? 'genes' : 'evidencetable'; 
-    var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes)+''; 
-    $('.delimited-cta').attr({
-        'download': ''+TsvFileName+'.tsv',
-        'href':delimiterAttr
-    });
+    // encodes gene and evidence table data to TSV format
+    function encodeData(data){
+        return encodeURIComponent(data).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))
+    }
+    // sets delimiter attributes for gene and evidence table
+    function setDemlimiterAttributes(fileName,uft8String){
+        $('.tabviewer-actions').show(); 
+        var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(uft8String)+''; 
+        $('.delimited-cta').attr({
+            'download': ''+ fileName +'.tsv',
+            'href':delimiterAttr
+        });
     }
     
     return {
         getData:getData,
-        setData: setDemlimiterAttributes,
+        setGeneTable: setGeneTable,
+        setEvidenceTable:setEvidenceTable
     }
 }()
 
@@ -616,32 +594,18 @@ function postProcessTableData ( data )
 
 
 /**
- * TODO: currently working on refining function
  * @desc function validates search keywords and returns a boolean to confirm if check is valid or not. 
  * @returns 
  */
 function validateKeywords(keyword)
 {
- /* TODO: remove after reading. Please, see below the readable version I've tried to explain. 
-    Please come back to me to talk about what it wasn't clear on it. 
-    
-    Also, checkSubStrings() seems equivalent to String.endsWith() (see below).
-  */
-
  return (keyword.length > 2) 
    && ((keyword.split('"').length - 1) % 2 == 0) 
    && bracketsAreBalanced(keyword) 
    && (keyword.indexOf("()") < 0) 
    && ((keyword.split('(').length) == (keyword.split(')').length)) 
    && (keyword.charAt(keyword.length - 1) != ' ' ) 
-   && checkSubStrings(keyword,'NOT') 
-   && checkSubStrings(keyword,' AN') 
-   && checkSubStrings(keyword,' O') 
-   && checkSubStrings(keyword,' N') 
-   && checkSubStrings(keyword,'OR') 
-   && checkSubStrings(keyword,'NO') 
-   && checkSubStrings(keyword, ' A') 
-   &&  checkSubStrings(keyword,'AND') ;
+   && checkSubStrings(keyword);
 }
 
 // util function check for the substring in keyword search terms
@@ -653,7 +617,15 @@ function validateKeywords(keyword)
 // 
 // Update: OK, the len has gone, yet this function doesn't seem needed, since it does the same as
 // the existing endsWith() (see link above)
-//
-function checkSubStrings(keyword,checkStr){
-    return keyword.substr(keyword.length - checkStr.length) != checkStr; 
+
+function checkSubStrings(searchKeyword){
+    var searchTerms = ['AND', 'OR', 'A',' AN','NOT', ' O', ' N','NO']; 
+
+    searchTerms.map(searchTerm => {
+        var isSearchTermKeyword = searchKeyword.endsWith(searchTerm);
+        if(isSearchTermKeyword) return false
+    })
+
+    return true;
+    
 }
