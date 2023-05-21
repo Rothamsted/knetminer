@@ -141,10 +141,7 @@ function createGenesTable ( tableData, keyword )
 		// update button style for linked and unlinked genes
 		$(this).toggleClass('checked')
 
-		// update selected genes count
-		updateSelectedGenesCount("candidates", "#candidate-count",'Gene');
-	
-	}); // input:button[name="checkbox_Targets"]'
+	});
 
 	genesTableScroller.setupScrollHandler ()
 
@@ -467,7 +464,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 			evidenceTd += '<div></td>';
 			// Foreach evidence show the images - end
 
-			var selectTd = '<td><input id="checkboxGene_' + row + '" type="checkbox" name= "candidates" value="' + geneAccessions + '"></td>';
+			var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${geneAccessions}"></td>`;
 			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
 			table += '</tr>';
 	}// for row
