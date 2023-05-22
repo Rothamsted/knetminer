@@ -141,10 +141,12 @@ function createGenesTable ( tableData, keyword )
 		// update button style for linked and unlinked genes
 		$(this).toggleClass('checked')
 
+		// updates selected genes count 
+		updateSelectedGenesCount('candidates','#candidate-count','Gene')
 	});
 
+	// initiates infinite scrolling for geneView
 	genesTableScroller.setupScrollHandler ()
-
 } // createGenesTable
 
 
@@ -282,7 +284,7 @@ function updateSelectedGenesCount(inputName, countContainer, viewName) {
 }
 
 // takes gene or evidence view checkbox input names and returns the number of checked inputs 
-function returnCheckInputCount(inputname) { return $('input:checkbox[name=' + inputname + ']:checked').length }
+var returnCheckInputCount = (inputname) => $('input:checkbox[name=' + inputname + ']:checked').length;
 
 
 // function downloads cytoscape compatible json files
@@ -329,11 +331,6 @@ function downloadNetwork() {
 	}
 
 }
-
-/**
- * @desc function creates calculates and return pagination values for gene view and evidence table
- */
-
 
 /**
  * @desc creates the gene table body for a data window and places it in the DOM
