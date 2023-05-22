@@ -17,5 +17,4 @@ docker_tag='latest'
 # [[ "$GIT_BRANCH" == '202006_jdk11' ]] && docker_tag='j11'
 
 # You can play with a different bare image too, we usually don't
-# docker_tag_bare="$docker_tag"
-docker_tag_bare="5.6-rc"
+docker_tag_bare="$docker_tag"
