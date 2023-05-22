@@ -18,4 +18,4 @@ docker_tag='latest'
 
 # You can play with a different bare image too, we usually don't
 # docker_tag_bare="$docker_tag"
-docker_tag_bare="5.6-RC"
+docker_tag_bare="5.6-rc"
