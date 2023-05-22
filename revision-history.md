@@ -4,7 +4,7 @@
 
 <br>
 
-# 5.6-SNAPSHOT
+# 5.7-SNAPSHOT
 * Current snapshot (to be changed after final 5.6).
 * Bookmark: c986508 is the candidate commit for the final 5.6.
 
