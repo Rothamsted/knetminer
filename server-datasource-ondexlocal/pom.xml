@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>app-common</artifactId>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>5.6-SNAPSHOT</version>
+		<version>5.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>server-datasource-ondexlocal</artifactId>
