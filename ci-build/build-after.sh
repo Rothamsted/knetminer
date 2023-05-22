@@ -4,7 +4,7 @@ sudo chown -R "$USER" . # The build inside Docker creates files we don't own ye
 cd docker
 ./docker-build-image.sh --tag "$docker_tag" --tag-bare "$docker_tag_bare" --no-mvn-clean
 
-if [[ "$GIT_BRANCH" != 'master' ]]; then
+if ! $IS_DEPLOY; then
 	echo -e "\n\n\tThis isn't a Docker-deployed branch, Not pushing to DockerHub\n"
 	return
 fi
