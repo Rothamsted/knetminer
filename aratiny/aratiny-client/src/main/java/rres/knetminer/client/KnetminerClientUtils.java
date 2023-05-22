@@ -35,7 +35,7 @@ public class KnetminerClientUtils
 	private static Logger slog = LogManager.getLogger ( KnetminerClientUtils.class );
 
 	/**
-	 * <p>An helper class used to in api-url.jsp, to have a web service on the client that returns the URL of
+	 * <p>An helper class used in api-url.jsp, to have a web service on the client that returns the URL of
 	 * the Knetminer API root URL. This method is supposed to be invoked by a JSP</p>
 	 * 
 	 * <p>Writes the Knetminer API URL base (something like: http://root.org/ws/wheat) on jspOut, which is 

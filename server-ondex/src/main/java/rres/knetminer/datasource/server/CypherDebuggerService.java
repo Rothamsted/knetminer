@@ -34,17 +34,13 @@ import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser
  * of a config property. see {@link #checkEnabled()}. Furthermore, You must be running Knetminer in Neo4j mode, else
  * all the API methods below will raise an exception.</p>
  *
- * <p>TODO: all these mappings that depend on the data-source should be checked for a real DS, at the moment
- * we have services for which any DS is accepted, which doesn't make much sense. DS is needed everywhere in 
- * our APIs, @see KnetminerDataSource#getDataSourceNames() for details.</p> 
- *
- *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>10 Dec 2019</dd></dl>
  *
  */
 @RestController ()
-@RequestMapping( "/{ds}/cydebug" )
+// We have made the DS optional, see #753
+@RequestMapping( { "/{ds}/cydebug", "/cydebug" } )
 @CrossOrigin
 public class CypherDebuggerService
 {

@@ -27,7 +27,7 @@ $(document).ready(function () {
             } else {
                 $('#keyword-section').hide();
             }
-            generateCyJSNetwork(api_url + '/network', { keyword: keywords, list: list, exportPlainJSON: false }, true);
+            generateCyJSNetwork(api_url + '/network', { keyword: keywords, list: list, isExportPlainJSON: false }, true);
             loginUtilsInit();
             knetmaps = KNETMAPS.KnetMaps();
             $('#NetworkCanvas').show();

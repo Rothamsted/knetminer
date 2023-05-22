@@ -33,7 +33,11 @@ import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
  *
  */
 @RestController
-@RequestMapping ( path = "/{ds}/dataset-info", method = { RequestMethod.GET, RequestMethod.POST }  )
+@RequestMapping (
+	// We have made the DS optional, see #753
+	path = { "/{ds}/dataset-info", "/dataset-info" }, 
+	method = { RequestMethod.GET, RequestMethod.POST }
+)
 @CrossOrigin
 public class DatasetInfoService
 {	

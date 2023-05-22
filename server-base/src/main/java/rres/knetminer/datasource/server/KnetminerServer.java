@@ -116,15 +116,15 @@ public class KnetminerServer
 	 * @see #network(String, NetworkRequest, HttpServletRequest)
 	 */
 	@CrossOrigin
-	@GetMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE  ) 
+	@GetMapping ( path = { "/{ds}/network", "/network" }, produces = MediaType.APPLICATION_JSON_VALUE  ) 
 	public @ResponseBody ResponseEntity<KnetminerResponse> network (
-		@PathVariable String ds,
+		@PathVariable( required = false ) String ds,
 		@RequestParam(required = false, defaultValue = "") String keyword,
 		@RequestParam(required = false) List<String> list,
 		@RequestParam(required = false, defaultValue = "") String listMode,
 		@RequestParam(required = false) List<String> qtl,
 		@RequestParam(required = false, defaultValue = "") String taxId,
-		@RequestParam(required = false, defaultValue = "false" ) boolean exportPlainJSON,
+		@RequestParam(required = false, defaultValue = "false" ) boolean isExportPlainJSON,
 		HttpServletRequest rawRequest
 	)
 	{
@@ -141,7 +141,7 @@ public class KnetminerServer
 		request.setList(list);
 		request.setQtl(qtl);
 		request.setTaxId(taxId);
-		request.setExportPlainJSON ( exportPlainJSON );
+		request.setExportPlainJSON ( isExportPlainJSON );
 		
 		return this.network ( ds, request, rawRequest );
 	}
@@ -152,9 +152,9 @@ public class KnetminerServer
 	 * for this call.
 	 */
 	@CrossOrigin
-	@PostMapping ( path = "/{ds}/network", produces = MediaType.APPLICATION_JSON_VALUE ) 
+	@PostMapping ( path = { "/{ds}/network", "/network" }, produces = MediaType.APPLICATION_JSON_VALUE ) 
 	public @ResponseBody ResponseEntity<KnetminerResponse> network ( 
-		@PathVariable String ds, @RequestBody NetworkRequest request, HttpServletRequest rawRequest 
+		@PathVariable( required = false ) String ds, @RequestBody NetworkRequest request, HttpServletRequest rawRequest 
 	) 
 	{
 		return this.handle ( ds, "network", request, rawRequest );
@@ -180,9 +180,9 @@ public class KnetminerServer
 	 * @return
 	 */
 	@CrossOrigin
-	@GetMapping("/{ds}/{mode}")
+	@GetMapping( { "/{ds}/{mode}", "/{mode}" } )
 	public @ResponseBody ResponseEntity<KnetminerResponse> handle (
-			@PathVariable String ds,
+			@PathVariable( required = false ) String ds,
 			@PathVariable String mode,
 			@RequestParam(required = false) List<String> qtl,
 			@RequestParam(required = false, defaultValue = "") String keyword,
@@ -221,9 +221,12 @@ public class KnetminerServer
 	 * @return
 	 */
 	@CrossOrigin
-	@PostMapping("/{ds}/{mode}")
-	public @ResponseBody ResponseEntity<KnetminerResponse> handle(@PathVariable String ds, @PathVariable String mode,
-			@RequestBody KnetminerRequest request, HttpServletRequest rawRequest)
+	@PostMapping( { "/{ds}/{mode}", "/{mode}" } )
+	public @ResponseBody ResponseEntity<KnetminerResponse> handle (
+		@PathVariable( required = false ) String ds,
+		@PathVariable String mode,
+		@RequestBody KnetminerRequest request, HttpServletRequest rawRequest
+	)
 	{
 		return this.handleRaw ( ds, mode, request, rawRequest );
 	}
@@ -329,10 +332,21 @@ public class KnetminerServer
 	 */
 	private KnetminerDataSource getConfiguredDatasource ( String ds, HttpServletRequest rawRequest )
 	{
+		if ( this.dataSourceCache == null || dataSourceCache.isEmpty () )
+			throw new HttpClientErrorException ( 
+			HttpStatus.BAD_REQUEST,  
+			"Data source name isn't set, probably a Knetminer configuration error" 
+		);
+
+		// The default/omission
+		if ( ds == null || "default".equals ( ds ) || "_".equals ( ds ) )
+			ds = this.dataSourceCache.keySet ().iterator ().next (); 
+		
+		// When it's specified, let's keep checking
 		KnetminerDataSource dataSource = this.dataSourceCache.get ( ds );
 		if (dataSource == null) throw new HttpClientErrorException ( 
 			HttpStatus.BAD_REQUEST,  
-			"data source name isn't set, probably a Knetminer configuration error" 
+			String.format ( "Invalid data source '%s', you can omit it", ds ) 
 		);
 
 		String incomingUrlPath = rawRequest.getRequestURL ().toString ().split ( "\\?" )[ 0 ];
