@@ -1,33 +1,11 @@
-package rres.knetminer.datasource.server.utils;
+package rres.knetminer.datasource.server.utils.googleanalytics4;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.getClientHostParam;
+import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.getClientIPParam;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -38,8 +16,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import rres.knetminer.datasource.server.utils.GoogleAnalyticsHelper.Event;
-import rres.knetminer.datasource.server.utils.GoogleAnalyticsHelper.Parameter;
 import uk.ac.ebi.utils.opt.net.ServletUtils;
 
 /**
@@ -67,8 +43,8 @@ public class GoogleAnalyticsHelperTest
 		var response = gahelper.sendEvents ( 
 			new Event ( 
 				"unitTestEvent", 
-				new Parameter ( "textParam", "Hello, World!" ),
-				new Parameter ( "numericParam", 2.0 )
+				new StringParam ( "textParam", "Hello, World!" ),
+				new NumberParam ( "numericParam", 2.0 )
 			)
 		);
 		
@@ -90,9 +66,9 @@ public class GoogleAnalyticsHelperTest
 		var response = gahelper.sendEvents ( 
 			new Event ( 
 				"unitTestEventWithAddrs", 
-				new Parameter ( "textParam", "Hello, World!" ),
-				gahelper.getClientIPParam ( req ),
-				gahelper.getClientHostParam ( req )
+				new StringParam ( "textParam", "Hello, World!" ),
+				GoogleAnalyticsUtils.getClientIPParam ( req ),
+				GoogleAnalyticsUtils.getClientHostParam ( req )
 			)
 		);
 		
@@ -106,12 +82,12 @@ public class GoogleAnalyticsHelperTest
 	{
 		var response = gahelper.sendEvents ( 
 			new Event ( 
-				"unitTestEvent.01", 
-				new Parameter ( "textParam", "Hello, World!" ),
-				new Parameter ( "numericParam", 2.0 )
+				"unitTestEvent01", 
+				new StringParam ( "textParam", "Hello, World!" ),
+				new NumberParam ( "numericParam", 2.0 )
 			),
 			new Event (
-				"unitTestEvent.02"
+				"unitTestEvent02"
 			)
 		);
 		
@@ -143,7 +119,7 @@ public class GoogleAnalyticsHelperTest
 		MockHttpServletRequest req = new MockHttpServletRequest ();
 		req.setRemoteAddr ( "1.2.3.4" );
 		
-		Parameter p = gahelper.getClientIPParam ( req );
+		var p = getClientIPParam ( req );
 		assertEquals ( "getClientIPParam() doesn't work!", req.getRemoteAddr (), p.getString () );
 	}
 	
@@ -155,7 +131,7 @@ public class GoogleAnalyticsHelperTest
 		req.setRemoteAddr ( "1.2.3.4" );
 		req.addHeader ( "X-Forwarded-For", actualIp );
 		
-		Parameter p = gahelper.getClientIPParam ( req );
+		var p = getClientIPParam ( req );
 		assertEquals ( "getClientIPParam() doesn't work!", actualIp, p.getString () );
 	}
 
@@ -166,7 +142,7 @@ public class GoogleAnalyticsHelperTest
 		req.setRemoteAddr ( "1.2.3.4" );
 		req.setRemoteHost ( "knetminer.com" );
 		
-		Parameter p = gahelper.getClientHostParam ( req );
+		var p = getClientHostParam ( req );
 		assertEquals ( "getClientIPParam() doesn't work!", req.getRemoteHost (), p.getString () );
 	}
 	
@@ -182,11 +158,16 @@ public class GoogleAnalyticsHelperTest
 		req.setRemoteHost ( "knetminer.com" );
 		req.addHeader ( "X-Forwarded-Host", actualHost );
 
-		Parameter p = gahelper.getClientHostParam ( req );
+		var p = getClientHostParam ( req );
 		assertEquals ( "getClientIPParam() doesn't work!", actualHost, p.getString () );
 	}	
 	
-	
+	@Test ( expected = IllegalArgumentException.class )
+	public void testValidateGAName ()
+	{
+		// Google doesn't accept names with strange chars.
+		new Event ( "foo.name" );
+	}
 	
 	
 	private void verifySendEvents ( HttpResponse response )

@@ -9,13 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ObjectMessage;
@@ -35,16 +38,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.brsanthu.googleanalytics.GoogleAnalytics;
-import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
-import com.brsanthu.googleanalytics.request.DefaultRequest;
-
 import rres.knetminer.datasource.api.GenomeRequest;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
+import rres.knetminer.datasource.server.utils.googleanalytics4.Event;
+import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsHelper;
+import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils;
+import rres.knetminer.datasource.server.utils.googleanalytics4.NumberParam;
+import rres.knetminer.datasource.server.utils.googleanalytics4.StringParam;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.net.ServletUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
 /**
@@ -464,101 +469,82 @@ public class KnetminerServer
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
 	)
 	{
-		this.googleTrackPageView ( ds, mode, request.getKeyword (), request.getList (), request.getQtl (), rawRequest );
+		this.googleTrackPageView (
+			ds, mode, request.getTaxId (),
+			request.getKeyword (), request.getList (), request.getListMode (), 
+			request.getQtl (), rawRequest
+		);
 	}
 
 	
 	private void googleTrackPageView (
-		String ds, String mode, String keyword, List<String> userGenes, List<String> userChrRegions, HttpServletRequest rawRequest
+		String ds, String mode, String taxId,
+		String keyword, List<String> userGenes, String userGenesMode, 
+		List<String> userChrRegions, HttpServletRequest rawRequest
 	)
 	{
 		// TODO: googleLogApiRequest() considers certain API calls only, while this tracks all
 		
-		String gaId = getGoogleAnalyticsTrackingId ();
-		
-		if ( gaId == null ) {
-			log.info ( "Google Analytics, no ID set, not tracking" );
-			return;
-		}
-
-		String clientIp = rawRequest.getHeader ( "X-FORWARDED-FOR" );
-		
-		if ( clientIp == null )
-		{
-			clientIp = rawRequest.getRemoteAddr ();
-			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", clientIp );
-		} 
-		else
-		{
-			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", clientIp );
-			if ( clientIp.indexOf ( ',' ) != -1 ) clientIp = clientIp.split ( "," )[ 0 ];
-			
-			log.debug ( "Preparing Google Analytics, using splitted IP: {}", clientIp );
-		}
-
-		// TODO: what's the point?! Just logging?! MB: I've put it under log.isDebug
-		if ( log.isDebugEnabled () )
-		{
-			String[] IP_HEADER_CANDIDATES = { 
-				"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
-				"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
-				"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
-				"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
-			};
-
-			for ( String header : IP_HEADER_CANDIDATES )
-			{
-				String ip = rawRequest.getHeader ( header );
-				if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
-					log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
-			}
-		}
-		
-		// GA wants the actual client URL?
-		String clientHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
-			.orElse ( rawRequest.getRemoteHost () );
+					
+		String pageName = ds + "_" + mode;
 				
-		String pageName = ds + "/" + mode;
+		// TODO: log initialisation here
 		
-		// This is like USER_AGENT in jdk.internal.net.http.HttpRequestImpl, which isn't accessible
-		var userAgent = "Java-http-client/" + System.getProperty ( "java.version" );
-		// DEBUG userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
+		// TODO: Temp initialisation, to be done properly, with new config
+		GoogleAnalyticsHelper gahelper = new GoogleAnalyticsHelper ( 
+			"c9TGJqIBSVuKB1CoRcZ90Q", "G-31YFKXKSYH", "40cdb6ea-e542-4160-a7da-641f6c150d58"
+		);		
 		
-		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
-      .withDefaultRequest ( 
-      	new DefaultRequest ()
-      		.trackingId ( gaId )	
-      		.userIp( clientIp )
-      		.documentHostName ( clientHost )
-      		.documentTitle ( pageName )
-      		.documentPath ( "/" + pageName )
-      		.protocolVersion ( "2" )
-      		.userAgent ( userAgent )
-      )
-			.build ();
+		final var clientIpParam = GoogleAnalyticsUtils.getClientIPParam ( rawRequest );
+		final var clientHostParam = GoogleAnalyticsUtils.getClientHostParam ( rawRequest );
+		
+    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync ( 
+    	new Event ( "api_" + pageName, 
+    	  clientIpParam,
+    	  clientHostParam,
+    	  clientIpParam,
+    	  new StringParam ( "keywords", keyword ),
+    	  new NumberParam ( 
+    	  	"genesListSize",
+    	  	(double) Optional.ofNullable ( userGenes )
+    	  	.map ( List::size )
+    	  	.orElse ( 0 )
+    	  ),
+    	  new StringParam ( "genesListMode", userGenesMode ),
+    	  new NumberParam ( 
+    	  	"chrSize",
+    	  	(double) Optional.ofNullable ( userChrRegions )
+    	  	.map ( List::size )
+    	  	.orElse ( 0 )
+    	  ),
+    	  new StringParam ( "taxId", taxId )
+    ));
+		
+    eventFuture.thenAcceptAsync ( gaResponse -> 
+		{
+			StatusLine status = gaResponse.getStatusLine ();
+			int statusCode = status.getStatusCode ();
 			
-		
-			final var ipAddressRO = clientIp; // lambdas requires immutables
-			
-			// Invoke GA asynchronously, don't waste my time with waiting
-			ga.
-			pageView ()
-			.sendAsync ()
-			.thenAcceptAsync ( gaResponse -> 
+			// These should be what GA returns when it's happy with our request
+			boolean isValidReply = false;
+			String rbody = "";
+			if ( statusCode == 204 )
 			{
-				int gaRespCode = gaResponse.getStatusCode ();
-				if ( gaRespCode >= 400 )
-					log.error ( 
-						"Google Analytics, request to track '{}' with ID {} failed, HTTP status: {}, ip: {}, client: {}",
-						pageName, gaId, gaRespCode, ipAddressRO, clientHost 
-					);
-				else
-					log.info ( 
-						"Google Analytics invoked successfully for '{}', with ID {}, ip: {}, client: {}", 
-						pageName, gaId, ipAddressRO, clientHost
+				rbody = StringUtils.trimToEmpty ( ServletUtils.getResponseBody ( gaResponse ) );
+				isValidReply = rbody.length () == 0;
+			}
+			
+			if ( isValidReply )
+				log.info ( 
+						"Google Analytics invoked successfully for '/{}', IP: {}, client host: {}", 
+						pageName, clientIpParam.getString (), clientHostParam.getString ()
 				);
-			});
-		
+			else
+				log.error ( 
+					"Google Analytics, request to track '/{}' failed, HTTP status: {}, IP: {}, client host: {}",
+					pageName, status.toString (), clientIpParam.getString (), clientHostParam.getString () 
+				);
+		});
 		
 		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			

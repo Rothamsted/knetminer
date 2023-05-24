@@ -1,15 +1,9 @@
-package rres.knetminer.datasource.server.utils;
+package rres.knetminer.datasource.server.utils.googleanalytics4;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -30,10 +24,10 @@ import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.opt.net.ServletUtils;
 
 /**
- * TODO: comment me!
- *
  * TODO: this has to be moved to its own project about GA4, so see it as it was a 3rd-party dependency and 
  * DO NOT mix ANY Knetminer-specific thing with it!
+ * 
+ * TODO: comment me!
  * 
  * TODO: <a href = "https://support.google.com/analytics/answer/9355671">user properties</a> 
  * aren't supported yet.
@@ -44,128 +38,6 @@ import uk.ac.ebi.utils.opt.net.ServletUtils;
  */
 public class GoogleAnalyticsHelper
 {
-	/**
-	 * 
-	 * TODO: comment me!
-	 *
-	 * TODO: items isn't supported yet. According to <a href = "https://tinyurl.com/2mys5cth">docs</a>,
-	 * they're a parameter names 'items', which of value is an array of objects, and each object
-	 * can have values of string or number type only (ie, {@link Parameter} only). I've no idea
-	 * what these are for, the GA4 dashboard doesn't seem to show them anywhere.
-	 * 
-	 */
-	public static class Event
-	{
-		private String name;
-		// Storing them with a name index, just in case
-		private Map<String, Parameter> parameters = new HashMap<> ();
-		
-		public Event ( String name, Parameter... parameters )
-		{
-			super ();
-			this.name = name;
-			
-			if ( parameters == null ) return;
-			for ( Parameter p: parameters )
-				// This enforces name uniquess, via overriding
-				this.parameters.put ( p.getName (), p );
-		}
-
-		public JSONObject toJSON ()
-		{
-			JSONObject js = new JSONObject ();
-			
-			js.put ( "name", name );
-
-			JSONObject jparams = new JSONObject ();
-			parameters.forEach ( (k, p) -> jparams.put ( p.getName (), p.getValue () ) );
-			js.put ( "params", jparams );
-			
-			return js;
-		}
-
-		public String getName ()
-		{
-			return name;
-		}
-		
-		public Map<String, Parameter> getParameters ()
-		{
-			return Collections.unmodifiableMap ( parameters );
-		}
-		
-		public String toString ()
-		{
-			return "Event" + toJSON ().toString ();
-		}
-	}
-	
-	public static class Parameter
-	{
-		private String name;
-		private Object value;
-
-		public Parameter ( String name, String value )
-		{
-			this.name = name;
-			setValue ( value );
-		}
-
-		public Parameter ( String name, Double value )
-		{
-			this.name = name;
-			setValue ( value );
-		}
-
-		private void setValue ( String value ) {
-			this.value = value;
-		}
-		private void setValue ( Double value ) {
-			this.value = value;
-		}
-		
-		public Object getValue () {
-			return this.value;
-		}
-		
-		public String getString ()
-		{
-			return Optional.ofNullable ( value )
-				.map ( Object::toString )
-				.orElse ( null );
-		}
-
-		public Double getNumber ()
-		{
-			try {
-				return Optional.ofNullable ( value )
-					.map ( v -> v instanceof Double ? (Double) v : Double.valueOf ( (String) v ) )
-					.orElse ( null );
-			}
-			catch ( NumberFormatException ex ) {
-				throw ExceptionUtils.buildEx ( NumberFormatException.class, ex, 
-					"Can't parse the GA4 parameter '%s' as a number", value
-				);
-			}
-		}
-		
-		public String getName ()
-		{
-			return name;
-		}
-
-		@Override
-		public String toString ()
-		{
-			String vstr = Optional.ofNullable ( this.value )
-				.map ( v -> v instanceof Double ? this.getNumber ().toString () : this.getString () )
-				.orElse ( "<null>" );
-					
-			return String.format ( "Parameter{name: %s, value: %s}", name, vstr );
-		}
-
-	}
-	
 	private String apiSecret;
 	private String measurementId;
 	private String clientId;
@@ -225,7 +97,7 @@ public class GoogleAnalyticsHelper
 			
 			// Report results
 			
-			String eventStr = events != null && events.length > 0 
+			String eventStr = events.length > 0 
 				? events [ 0 ].getName ()
 				: "<NA>";
 			
@@ -248,9 +120,9 @@ public class GoogleAnalyticsHelper
 					respStatus.getReasonPhrase ()
 			);
 			
-			if ( log.isDebugEnabled () )
+			if ( log.isTraceEnabled () )
 			{
-				log.debug ( 
+				log.trace ( 
 					"Google Analytics, details, sent events: {}, measurementId: {}",
 					jsBody, this.measurementId 
 				);
@@ -291,31 +163,6 @@ public class GoogleAnalyticsHelper
 		
 		return js;
 	}
-	
-	public Parameter getClientIPParam ( HttpServletRequest httpRequest )
-	{
-		String clientIP = httpRequest.getHeader ( "X-Forwarded-For" );
-		
-		if ( clientIP == null )
-			clientIP = httpRequest.getRemoteAddr ();
-		else
-		{
-			log.debug ( "Preparing Google Analytics, splitting X-Forwarded-For IP: {}", clientIP );
-			if ( clientIP.indexOf ( ',' ) != -1 ) clientIP = clientIP.split ( "," )[ 0 ];
-		}
-		
-		log.debug ( "Preparing Google Analytics, clientIP: {}", clientIP );
-		return new Parameter ( "clientIP", clientIP );
-	}
-	
-	public Parameter getClientHostParam ( HttpServletRequest httpRequest )
-	{
-		String clientHost = Optional.ofNullable ( httpRequest.getHeader ( "X-Forwarded-Host" ) )
-			.orElse ( httpRequest.getRemoteHost () );
-		log.debug ( "Preparing Google Analytics, client host: {}", clientHost );
-		return new Parameter ( "clientHost", clientHost );
-	}
-
 
 	public String getApiSecret ()
 	{
@@ -374,5 +221,5 @@ public class GoogleAnalyticsHelper
 	public void setUserAgent ( String userAgent )
 	{
 		this.userAgent = userAgent;
-	}
+	}	
 }

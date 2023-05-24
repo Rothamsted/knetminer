@@ -535,11 +535,13 @@
 				<version>4.13.2</version>
 			</dependency>
 
+			<!-- TODO: remove, replaced by our own implementation of GA4
 			<dependency>
 			  <groupId>net.mikehardy</groupId>
 			  <artifactId>google-analytics-java</artifactId>
 			  <version>2.0.11</version>
-			</dependency>			
+			</dependency>
+			-->
 						
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>

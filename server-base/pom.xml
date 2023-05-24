@@ -74,10 +74,13 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-web</artifactId>
 		</dependency>
+		
+		<!-- TODO: remove, replaced by our own implementation of GA4
 		<dependency>
 		  <groupId>net.mikehardy</groupId>
 		  <artifactId>google-analytics-java</artifactId>
-		</dependency>			
+		</dependency>
+		-->			
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-datasource-api</artifactId>
