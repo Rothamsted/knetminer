@@ -76,7 +76,35 @@ function searchKeyword(){
       }
 }
 
-//checks user login status, 
+/**
+ * checks user login status and, in case of success, calls the API specified in searchMode and
+ * requestParams. 
+ * 
+ * TODO: (when we have time) this is a callback hell (google for it), checkUserPlan() receives
+ * parameters it shouldn't deal with at all, just to pass them along. 
+ * 
+ * The modern, cleaner way to do the same is to use promises, althogh in this case, checkUserPlan()
+ * needs to do some wrapping around the call back to be chained after success. So, it needs to become
+ * like:
+ * 
+ * function checkUserPlan ( onComplete ) // pass the callback, not its details or parameters
+ * {
+ *   $.ajax({
+ *     ...
+ *     complete: function () {
+ *       ... // the same current pre-processing
+ *       onComplete() // in place of the current requestGenomeData()
+ *       ... // the same current post-procesding
+ *     }
+ *   })
+ * } 
+ * 
+ * // This would be the invocation in searchKeyword() above
+ * // don't give the requestGenomeData() params to checkUserPlan(), it doesn't really need
+ * // to know them.
+ * checkUserPlan( () => requestGenomeData(...) ) 
+ * 
+ */
 function checkUserPlan(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
@@ -143,9 +171,18 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
            // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
            genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
            
+           // TODO: add requestParams.qtl.length
+           
            googleAnalytics.trackEvent (
              request, // It already has a leading '/'
-             { 'keyword': keyword, 'searchMode': searchMode, 'geneListSize': geneList_size }
+             { 
+				 		   // WARNING: keep these fields consistent with the API tracking in 
+				 		   // KnetminerServer.java
+				 		   'keywords': keyword,
+				 		   'genesListSize': geneList_size,
+				 		   'genesListMode': requestParams?.qtl?.listMode || "",
+				 		   'chrSize': requestParams?.qtl?.length || 0
+				 		 }
            )
            data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show(); 
        }
@@ -415,46 +452,67 @@ function findChromosomeGenes(event) {
  *
  */
 
-function matchCounter() {
-    var keyword = $('#keywords').val();
-    var taxonomyID =  $('.navbar-select').children("option:selected").val();
-    $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
-    if (keyword == '') {
-        $('#matchesResultDiv').html('Type a query to begin');
+function matchCounter() 
+{
+  var keyword = $('#keywords').val();
+  var taxonomyID =  $('.navbar-select').children("option:selected").val();
+  $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
+  if (keyword == '')
+  {
+    $('#matchesResultDiv').html('Type a query to begin');
 
-        $("#suggestor_search_area").slideUp(500)
-		// hide query suggestor icon
-        $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
-    } else {
-        var isKeywordValidated = validateKeywords(keyword);
-        if (isKeywordValidated) {
-            var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
+    $("#suggestor_search_area").slideUp(500)
+    // hide query suggestor icon
+    $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
+  } 
+  else
+  {
+    var isKeywordValidated = validateKeywords(keyword);
+    if (isKeywordValidated)
+    {
+      var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
 
-            var url = api_url + request;
-            $.get(url, '').done(function (data) {
-                if (data.luceneLinkedCount != 0) {
-                    $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
-                    $('.keywordsSubmit').removeAttr("disabled");
-					// show query suggestor icon
-                    $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
-                }
-                else {
-				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
-				  // hide query suggestor icon 
-                  $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
-                  $("#suggestor_search_area").slideUp(500)
-				}
-            }).fail(function (xhr,status,errorlog) {
-                var server_error= JSON.parse(xhr.responseText); // full error json from server
-                var errorMsg= server_error.title.replace('(start >= end) ', '')
-                $('#matchesResultDiv').html(`<span class="redText">${errorMsg}</span>`);
-            });
-        } else {
-            $('#matchesResultDiv').html('');
-            $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
+      var url = api_url + request;
+      $.get(url, '').done(function (data)
+      {
+        if (data.luceneLinkedCount != 0) 
+        {
+          $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
+          $('.keywordsSubmit').removeAttr("disabled");
+          // show query suggestor icon
+          $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
         }
-    }
-}
+        else
+        {
+          $('#matchesResultDiv').html('No documents or genes will be found with this query');
+          // hide query suggestor icon 
+          $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
+          $("#suggestor_search_area").slideUp(500)
+        }
+                
+        googleAnalytics.trackEvent (
+          "/countHits", 
+          {
+            'keywords': keyword,
+            'taxId': taxonomyID
+        })
+                
+        
+      }) // done()
+      .fail(function (xhr,status,errorlog)
+      {
+        var server_error= JSON.parse(xhr.responseText); // full error json from server
+        var errorMsg= server_error.title.replace('(start >= end) ', '')
+        $('#matchesResultDiv').html(`<span class="redText">${errorMsg}</span>`);
+      });
+    } // if keywordValidated 
+    else 
+    {
+      $('#matchesResultDiv').html('');
+      $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
+    } // else keywordValidated 
+  } // if ( keyword )
+} // matchCounter()
 
 /*
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event

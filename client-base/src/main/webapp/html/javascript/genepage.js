@@ -12,7 +12,8 @@ $(document).ready ( function ()
 
     var keywords = urlParams.get("keyword")
 
-    var list = urlParams.get('list').split(',');
+    var list = urlParams.get('list') || "";
+    list = list.split(',');
     list = cleanGeneList ( list );
 
 
@@ -36,7 +37,7 @@ $(document).ready ( function ()
     googleAnalytics.start ()
     .then ( () => googleAnalytics.trackEvent (
 			"genePageOpened", 
-			{ keywords: keywords, list: list }
+			{ 'keywords': keywords, 'genesListSize': list.length }
 		))    
   }).catch(
       err => showApiInitResult(err)

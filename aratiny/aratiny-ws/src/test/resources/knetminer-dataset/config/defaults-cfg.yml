@@ -79,13 +79,14 @@ graphTraverser:
 # The ID for enabling Google Analytics, to track the requests to a Knetminer instance via Google Analytics
 # The default for this is the ID that the Knetminer team uses, but you can use your own ID and get your  
 # instance tracked. If this isn't defined (ie, set to null), then GA is disabled.
-googleAnalyticsIdApi: UA-88753233-2
+# googleAnalyticsIdApi: UA-88753233-2
+
 
 # We used to have two different trackers, but this isn't very much needed and these two values could be
 # the same. As above, if this is null, no tracking happens (and no Google code is downloaded). 
-googleAnalyticsIdClient: UA-88753233-1
+# googleAnalyticsIdClient: UA-88753233-1
 # New GA4, my (MB) test key
-# googleAnalyticsIdClient: G-31YFKXKSYH
+googleAnalyticsIdClient: G-31YFKXKSYH
 
 # UA- are the old (universal) API, which is set to be turned off by July 2023 (TODO: migrate)
 # G- are for the new GA4, but they don't work with the Java library we're using (both work with the

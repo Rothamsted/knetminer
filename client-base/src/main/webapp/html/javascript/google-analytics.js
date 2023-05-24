@@ -14,12 +14,31 @@ const googleAnalytics = function ()
 	 * @param parametersObject additional data you want to be tracked with the event, eg, 
 	 * { searchString: 'blah', results: 123 }
 	 * 
+	 * WARNING! For Knetminer API tracking, we try to keep the parameter names
+	 * consistent with the server-side tracking in KnetminerServer.java
+	 * 
 	 */
 	function trackEvent ( eventId, parametersObject = {} )
 	{
+		/*
+		TODO: tobe verified, this applies to the measurement protocol, here GA seems to accept
+		a different format
+		
+		const gaValidationRe = /^\w+$/
+		if  ( ! eventId.match ( gaValidationRe ) )
+			throw new RangeError ( `Invalid GA format for event name "${eventId}"`)
+		
+		for ( paramName in parametersObject )
+			if  ( ! paramName.match ( gaValidationRe ) )
+				throw new RangeError ( `Invalid GA format for param name: "${eventId}"`)
+		*/
+			
+		if ( eventId.startsWith ( "api_" ) ) throw new RangeError ( 
+			`Invalid GA Analytics event ID "${eventId}", 'api_' names are reserved for the server components` 
+		)
+		 
 		gtag ( 'event', eventId, parametersObject )
 		console.info ( `Google Analytics, event '${eventId}' sent` )
-
 	}
 	
 	/**
@@ -39,7 +58,7 @@ const googleAnalytics = function ()
 		  'NetworkCanvas': 'networkView'
 		}
 		targetStr = gaEventsMap [ viewId ]
-		if ( !targetStr ) targetStr = '<unknown view/tab>'
+		if ( !targetStr ) targetStr = 'unknownView'
 	  googleAnalytics.trackEvent ( `${targetStr}Selected` );	
 	}
 	
@@ -54,10 +73,12 @@ const googleAnalytics = function ()
 	{
 		if ( !isEnabled ) return
 		dataLayer.push ( arguments );
+		// debug only, it's very verbose
+		/* 
 		const paramStr = arguments && arguments.length > 0 
 			? arguments [ 0 ] : '<NA>' 
-		// debug only, it's very verbose 
-		// console.debug ( `Google Analytics, '${paramStr}' sent` )
+		console.debug ( `Google Analytics, '${paramStr}' sent` )
+		*/
 	}
 
 	/**
@@ -84,7 +105,7 @@ const googleAnalytics = function ()
 	  	isEnabled = true;
 	  	gtag ( 'js', new Date() );
 	  	gtag ( 'config', googleAnalyticsId );
-	  	console.info ( "Google Analytics tracker invoked with", googleAnalyticsId );
+	  	console.info ( "Google Analytics tracker started with", googleAnalyticsId );
 	  }
 	  catch ( ex )
 	  {
