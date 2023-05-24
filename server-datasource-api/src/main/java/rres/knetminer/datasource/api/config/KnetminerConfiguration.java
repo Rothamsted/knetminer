@@ -60,12 +60,12 @@ public class KnetminerConfiguration
 	
 	@JsonProperty
 	private boolean cypherDebuggerEnabled = false;
-	
-	@JsonProperty
-	private String googleAnalyticsIdApi = null;
 
-	@JsonProperty
-	private String googleAnalyticsIdClient = null;
+	@JsonProperty ( "googleAnalyticsAPI" )
+	private GoogleAnalyticsConfiguration googleAnalyticsApiConfig = null; 
+
+	@JsonProperty ( "googleAnalyticsClient" )
+	private GoogleAnalyticsConfiguration googleAnalyticsClientConfig = null; 
 	
 	
 	@JsonIgnore
@@ -123,6 +123,9 @@ public class KnetminerConfiguration
 		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
 		
 		this.datasetInfo.postConstruct ( this );
+		
+		if ( this.googleAnalyticsClientConfig == null )
+			this.googleAnalyticsClientConfig = this.googleAnalyticsApiConfig;
 	}
 	
 	/**
@@ -234,21 +237,26 @@ public class KnetminerConfiguration
 	 * Used for tracking requests via Google Analytics.
 	 * When this is null, no tracking happens.
 	 */
-	public String getGoogleAnalyticsIdApi ()
+	public GoogleAnalyticsConfiguration getGoogleAnalyticsApiConfig ()
 	{
-		return googleAnalyticsIdApi;
+		return googleAnalyticsApiConfig;
 	}
 
 	/**
-	 * A Google Analytics ID, which is used for the client/UI.
-	 *  
-	 * API and client might use two different IDs, when they are on two different server and/or domains.
-	 * By default, we use the same ID for both. 
+	 * If you want, you can separate the GA credentials used for the API from those used for
+	 * the UI. We don't recommend it and if this is left null, it will use the 
+	 * {@link #getGoogleAnalyticsApiConfig() API credentials}.
+	 * 
+	 * WARNING: this imply that you need to omit BOTH this and the API credentials if you want to 
+	 * disable GA completely. We DO NOT support the setting where the API tracking is enabled and
+	 * the client tracking is not.
+	 * 
 	 */
-	public String getGoogleAnalyticsIdClient ()
+	public GoogleAnalyticsConfiguration getGoogleAnalyticsClientConfig ()
 	{
-		return googleAnalyticsIdClient;
+		return googleAnalyticsClientConfig;
 	}
+
 	
 	/**
 	 * Custom free-key options, which are not explicitly listed in other properties of this configuration class.
