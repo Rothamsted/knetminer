@@ -124,7 +124,7 @@ function createEvidenceTable( tableData, doSortTable=false )
     table += '<button onclick="generateMultiEvidenceNetwork(event)" id="new_generateMultiEvidenceNetworkButton" class="non-active btn knet_button" title="Render a knetwork of the selected evidences">Create Network</button></div></div>';
 
     $('#evidenceTable').html ( table );
-		createEvidenceTableBody ( tableData )
+	createEvidenceTableBody ( tableData )
     
 
 		// Deal with table sorting options, if they're enabled, see notes in init-utils.js
@@ -174,9 +174,6 @@ function createEvidenceTable( tableData, doSortTable=false )
       // to be sorted.
       // As you can see, we ONLY do it conditionally, ie, if the table is not sorted 
       // by the table sorter, else, it sorts and places thes ticks on its own.
-       
-      // TODO: remove. Avoid this form of for() when it's not needed
-      // for(var sortingIndex=0; sortingIndex < sortingPositions.length; sortingIndex++)     
       for ( var sortingPosition of sortingPositions )
         setTableSorterHeaderTick( "tablesorterEvidence", sortingPosition [ 0 ], sortingPosition [ 1 ] == 0 )
     }
@@ -324,7 +321,7 @@ function openGeneListPopup(conceptId, element) {
     } else {
         var description = $(element).attr("data-description");
         var type = $(element).attr("data-type");
-        var getTaxIdFrag = knetSelector.getTaxIdUrlFrag();
+        var getTaxIdFrag = speciesSelector.getTaxIdUrlFrag();
 
         $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 })
         .done(function (data)
@@ -589,19 +586,6 @@ function createEvidenceTableBody ( tableData, doAppend = false )
   }
 }
 
-/* TODO: remove after reading:
-  - Don't write trivia, we can read this is a function:
-    function sets tableSorter tick to evidence table headers
-    
-  - getSortingDirection was renamed, getXXX() is commonly used for methods or
-    functions that do some operation to provide a value, not for variables
-    
-  - $(`#tablesorterEvidence ... ) COME ON!!! Potentially, this can be useful in zillion
-    table sorter instances, HOW THE HECK did you think to stick it with ONE only?!?
-    
-  - sortingOptions as the only parameter: a function like this should not be forced to deal 
-    with a cryptic format, which is specific of another component.
-*/
 /**
  * Can be used with a jQuery table sorter element, to manually mark a column as sorted,
  * when the table was sorted from the outside and the table sorter component is invoked
@@ -618,7 +602,4 @@ function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
   var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
   $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
 }
-
-
-
 
