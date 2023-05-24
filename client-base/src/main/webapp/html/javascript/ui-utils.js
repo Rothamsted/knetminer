@@ -31,11 +31,6 @@ function activateButton(option){
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
         getLongWaitMessage.uiLoader('#tabviewer_content')
         createEvidenceView()
-
-        // TODO: remove after reading. This 'option' has always the same
-        // value here, the function DOES NOT NEED IT, why do you insist
-        // putting it back?! Let's talk about it.
-        // createEvidenceView(option)
     }
     
     const delimiterOptions = ['resultsTable','evidenceTable']
@@ -413,4 +408,18 @@ function showToolTips()
     $("body").on("mouseleave", "div.tooltip-static", function (event) {
       $("div.tooltip").remove();
     });
+}
+
+
+/**
+ * Can be used with a jQuery table sorter element, to manually mark a column as sorted,
+ * when the table was sorted from the outside and the table sorter component is invoked
+ * without asking it for re-sorting.
+ */
+function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
+{
+	// When the col is already in ascending order, headerAsc is the down arrow, to tell you can
+	// revert the order. This reproduces the same behaviour that the table sorter
+  var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
+  $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
 }

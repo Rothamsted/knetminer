@@ -170,9 +170,7 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
            queryseconds= queryseconds.toFixed(2); // rounded to 2 decimal places
            // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
            genomicViewContent(data,keyword,geneList_size,searchMode,queryseconds,gviewer,list)
-           
-           // TODO: add requestParams.qtl.length
-           
+                      
            googleAnalytics.trackEvent (
              request, // It already has a leading '/'
              { 
@@ -181,7 +179,8 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
 				 		   'keywords': keyword,
 				 		   'genesListSize': geneList_size,
 				 		   'genesListMode': requestParams?.qtl?.listMode || "",
-				 		   'chrSize': requestParams?.qtl?.length || 0
+				 		   'chrSize': requestParams?.qtl?.length || 0,
+				 		   'taxId': requestParams?.taxId
 				 		 }
            )
            data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show(); 
