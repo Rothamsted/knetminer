@@ -21,7 +21,7 @@ const googleAnalytics = function ()
 	function trackEvent ( eventId, parametersObject = {} )
 	{
 		/*
-		TODO: tobe verified, this applies to the measurement protocol, here GA seems to accept
+		TODO: to be verified, this applies to the measurement protocol, here GA seems to accept
 		a different format
 		
 		const gaValidationRe = /^\w+$/
