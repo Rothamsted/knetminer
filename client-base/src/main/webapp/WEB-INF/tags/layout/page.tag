@@ -118,7 +118,7 @@
         <script type="text/javascript" src="html/javascript/query-suggester.js"></script>
 
         <!-- species selector file -->
-        <script type="text/javascript" src="html/javascript/knet-selector.js"></script>
+        <script type="text/javascript" src="html/javascript/species-selector.js"></script>
 
         <!-- multi species file -->
         <script type="text/javascript" src="html/javascript/knet-widget.js"></script>

@@ -313,5 +313,5 @@ function toggleRegionDeleteIcon(regionID) {
 // function detects taxID in url and set it as the current taxId
 function getTaxIdFromUrl(){          	
   var taxIdFromURL = new URLSearchParams ( document.location.search ).get ( "taxId" );
-  if ( taxIdFromURL ) knetSelector.setTaxId ( taxIdFromURL );
+  if ( taxIdFromURL ) speciesSelector.setTaxId ( taxIdFromURL );
 }
