@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import rres.knetminer.datasource.api.KnetminerDataSource;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -123,6 +124,9 @@ public class KnetminerConfiguration
 		this.seedGenesFilePath = buildPath ( datasetDirPath, seedGenesFilePath );
 		
 		this.datasetInfo.postConstruct ( this );
+		
+		if ( googleAnalyticsApiConfig.getClientId () == null )
+			googleAnalyticsApiConfig.setClientId ( "knetminer::api::" + datasetInfo.getId () );
 		
 		if ( this.googleAnalyticsClientConfig == null )
 			this.googleAnalyticsClientConfig = this.googleAnalyticsApiConfig;
@@ -250,6 +254,12 @@ public class KnetminerConfiguration
 	 * WARNING: this imply that you need to omit BOTH this and the API credentials if you want to 
 	 * disable GA completely. We DO NOT support the setting where the API tracking is enabled and
 	 * the client tracking is not.
+	 * 
+	 * Moreover, the only param that is exposed to the UI is 
+	 * {@link GoogleAnalyticsConfiguration#getMeasurementId()}, since that's the only one 
+	 * that the Google-provided Js library gtag needs.
+	 * 
+	 * @see {@link DatasetInfoService#getGoogleAnalyticsIdClient()}
 	 * 
 	 */
 	public GoogleAnalyticsConfiguration getGoogleAnalyticsClientConfig ()

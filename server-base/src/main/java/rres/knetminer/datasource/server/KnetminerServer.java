@@ -43,6 +43,7 @@ import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
+import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
 import rres.knetminer.datasource.server.utils.googleanalytics4.Event;
 import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsHelper;
 import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils;
@@ -73,6 +74,8 @@ public class KnetminerServer
 	private List<KnetminerDataSource> dataSources;
 
 	private Map<String, KnetminerDataSource> dataSourceCache = new HashMap<> ();
+	
+	private GoogleAnalyticsHelper analyticsHelper;
 
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
@@ -108,12 +111,18 @@ public class KnetminerServer
 		}
 	}
 
-	/**
-	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsIdApi()}
-	 */
-	private String getGoogleAnalyticsTrackingId () 
+	@PostConstruct
+	private void initializeAnalytics ()
 	{
-		return this.dataSources.get ( 0 ).getGoogleAnalyticsIdApi ();
+		var gaCfg = this.dataSources.get ( 0 ).getGoogleAnalyticsApiConfig ();
+		if ( gaCfg == null ) {
+			log.info ( "Google Analytics configuration is null, no GA tracking will occur" );
+			return;
+		}
+		
+		this.analyticsHelper = new GoogleAnalyticsHelper ( 
+			gaCfg.getApiSecret (), gaCfg.getMeasurementId (), gaCfg.getClientId () 
+		);
 	}
 
 	
@@ -372,7 +381,7 @@ public class KnetminerServer
 		try
 		{
 			// TODO: as explained in their Javadoc, these are bridge methods, they should go away at some point
-			if ( "getGoogleAnalyticsIdApi".equals ( mode ) )
+			if ( "getGoogleAnalyticsApiConfig".equals ( mode ) )
 				ExceptionUtils.throwEx ( 
 					IllegalArgumentException.class, 
 					"The method %s isn't a valid data source API call, use the equivalent /dataset-info//google-analytics-id instead",
@@ -487,18 +496,11 @@ public class KnetminerServer
 		
 					
 		String pageName = ds + "_" + mode;
-				
-		// TODO: log initialisation here
-		
-		// TODO: Temp initialisation, to be done properly, with new config
-		GoogleAnalyticsHelper gahelper = new GoogleAnalyticsHelper ( 
-			"c9TGJqIBSVuKB1CoRcZ90Q", "G-31YFKXKSYH", "40cdb6ea-e542-4160-a7da-641f6c150d58"
-		);		
-		
+						
 		final var clientIpParam = GoogleAnalyticsUtils.getClientIPParam ( rawRequest );
 		final var clientHostParam = GoogleAnalyticsUtils.getClientHostParam ( rawRequest );
 		
-    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync ( 
+    CompletableFuture<HttpResponse> eventFuture = this.analyticsHelper.sendEventsAsync ( 
     	new Event ( "api_" + pageName, 
     	  clientIpParam,
     	  clientHostParam,

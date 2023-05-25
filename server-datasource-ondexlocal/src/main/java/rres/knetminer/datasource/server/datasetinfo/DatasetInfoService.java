@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import rres.knetminer.datasource.api.config.DatasetInfo;
+import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
 import rres.knetminer.datasource.api.config.KnetminerConfiguration;
+import rres.knetminer.datasource.ondexlocal.service.DataService;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
@@ -118,18 +121,25 @@ public class DatasetInfoService
 	}
 	
 	/**
-	 * We serve the ID reserved for the UI/client only.
+	 * The measurement ID of the GA account for the client, taken from the server configuration 
+	 * file. The credentials are made of several parameters, but the gtag library only needs the
+	 * {@link GoogleAnalyticsConfiguration#getMeasurementId() measurement ID}, so we expose that
+	 * only.
 	 * 
-	 * The {@link KnetminerConfiguration#getGoogleAnalyticsIdApi() server-dedicated ID} isn't needed outside the 
-	 * API app and hence we don't expose it.
+	 * @see KnetminerConfiguration#getGoogleAnalyticsClientConfig()
+	 * @see DataService#getConfiguration()
+	 * 
 	 */
 	@RequestMapping ( path = "/google-analytics-id" ) 
 	public String getGoogleAnalyticsIdClient ()
 	{
-		return OndexServiceProvider.getInstance ()
+		
+		return Optional.ofNullable ( OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getGoogleAnalyticsIdClient ();
+			.getGoogleAnalyticsClientConfig () )
+		.map ( GoogleAnalyticsConfiguration::getMeasurementId )
+		.orElse ( null );
 	}
 	
 	/**

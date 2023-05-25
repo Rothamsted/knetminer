@@ -44,6 +44,7 @@ import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
@@ -499,12 +500,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
   }
 
 	@Override
-	public String getGoogleAnalyticsIdApi ()
+	public GoogleAnalyticsConfiguration getGoogleAnalyticsApiConfig ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getGoogleAnalyticsIdApi ();
+			.getGoogleAnalyticsApiConfig ();
 	}
 		
 }

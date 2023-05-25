@@ -35,9 +35,22 @@ public class GoogleAnalyticsConfiguration
 		return apiSecret;
 	}
 	
+	/**
+	 * This is an ID of the client that sends tracking info. Typically, i's is 
+	 * a UUID, but it's arbitrary. If not set, the {@link DatasetInfo#getId() dataset ID} is
+	 * used.
+	 */
 	public String getClientId ()
 	{
 		return clientId;
+	}
+
+	/**
+	 * Used by {@link KnetminerConfiguration#load(String)}, to set the dataset ID as default. 
+	 */
+	void setClientId ( String clientId )
+	{
+		this.clientId = clientId;
 	}
 	
 }
