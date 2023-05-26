@@ -275,155 +275,69 @@ function generateMultiEvidenceNetwork(event) {
 
 
 //  Function creates popup showing table of accessions associated to a genes concept
-function openGeneListPopup(conceptId, element) {
+async function openGeneListPopup(conceptId, element)
+{
+  // TODO: (remove after reading) how the hell was this indented?!
+  
+  // Checking if modal element is already created for current conceptID
 
-    // remove existing tooltip to avoid duplication
-    removeAccessionToolTips('copy_tooltip');
-    removeAccessionToolTips('download_tooltip');
+	var description = $(element).attr("data-description");
+	var type = $(element).attr("data-type");
+	
+	// TODO: (remove after reading) you must stop using these bad names.
+	//  getXXX() is for object getters.        
+	var taxIdFrag = speciesSelector.getTaxIdUrlFrag();
+	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
+	
+	// TODO: (remove after reading) you must stop using these bad names.
+	// getXXX() is for object getters. Here, it's even nastier, due to the fact a 
+	// method with the same name already exists.
+	let data = await cacheManager.getCachedData(request);
+	if ( !data )
+	{
+	  data = await $.get({ url:request, data: '', timeout: 100000 })
+	  .done( rdata => {
+			cacheManager.cacheRequest ( request, rdata )
+		})
+		.fail(function (xhr, status, errolog) {
+	    jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
+	    return null
+	  })						
+	}
+	
+	if ( data )
+		createGenesColPopup ( description, data, type, taxIdFrag, conceptId )
 
+				/*
+				TODO: remove after reading. DRY principle here: avoid repeating the same code, 
+				createGenesColPopup(...) in this case, just because you need it in both branches 
+				of an if, in multiple steps or alike.
+				
+				even if you had to call such function inside .done() and in the else branch, you 
+				can always do:
+				
+				const popupInvoker = d => createGenesColPopup(description, d, type, taxIdFrag,conceptId)
+				
+				and then use popupInvoker(<data>) in each point.
+				 
+        if(!cachedData){
+            $.get({ url:request, data: '', timeout: 100000 })
+            .done(function (data)
+            {   
 
-    // Modal popup DOM element
-    var modalElement = $(`#modal_${conceptId}`);
+                // caches request url and returned data
+                // TODO: to investigate whether or not this approach is performant friendly in ci-test instance
+                cacheManager.cacheRequest(request,data);
 
-    // Checking if modal element is already created for current conceptID
-    if (modalElement.length) {
-
-        // display already existing modal element
-        modalElement.css({
-            "display": 'block',
-            "opacity": 1,
-            "margin": '0 auto'
-        });
-
-        var modalOverlay = $(`#modal_${conceptId}-overlay`);
-
-        modalOverlay.css({
-            "display": 'block',
-            "opacity": 1
-        })
-
-        // close modals with Overlay
-        modalOverlay.bind("click", function (e) {
-            e.preventDefault();
-            modalElement.hide();
-            modalOverlay.hide();
-        })
-
-        // close Modals with cancel button
-        $('.jBox-closeButton').bind("click", function (e) {
-            e.preventDefault();
-            modalElement.hide();
-            modalOverlay.hide();
-        })
-
-        triggerAccessionToolTips(conceptId);
-
-    } else {
-        var description = $(element).attr("data-description");
-        var type = $(element).attr("data-type");
-        var getTaxIdFrag = speciesSelector.getTaxIdUrlFrag();
-
-        $.get({ url: api_url + `/genome?keyword=ConceptID:${conceptId}`, data: '', timeout: 100000 })
-        .done(function (data)
-        {
-            if (data.geneTable !== null) {
-                var geneTable = data.geneTable.split("\n");
-                var accessionTable = "";
-                accessionTable += '<div class="accession-popup-container">';
-                accessionTable += '<div class="accession-popup-table"><table class="tablesorter">';
-                accessionTable += '<thead>';
-                accessionTable += '<tr>'
-                accessionTable += '<th> ACCESSION </th>';
-                accessionTable += '<th> GENE NAME</th>';
-                accessionTable += '<th> CHROMOSOME </th></tr></thead><tbody>';
-
-                var genesCount = geneTable.length >= 501 ? 501 : geneTable.length
-
-                var genesCountMessage = geneTable.length >= 501 ? '<div style="display:flex; align-items:center; justify-items:center;margin:.5rem 0;"><span><b>Showing 500 genes.</b> Copy or Download (top right) for the full list.</span></div>' : '';
-
-
-                for (var geneValue = 1; geneValue < (genesCount - 1); geneValue++) {
-                    var value = geneTable[geneValue].split("\t").slice(1, 4);
-                    accessionTable += '<tr><td>' + value[0] + '</td>';
-                    accessionTable += '<td>' + value[1] + '</td>';
-                    accessionTable += '<td>' + value[2] + '</td></tr>';
-                };
-
-                accessionTable += '</tbody></table></div>';
-
-                if (geneTable.length > 0) {
-                    var result = geneTable.join("\n");
-
-                    var utf8Bytes = encodeURIComponent(result).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-                        return String.fromCharCode('0x' + p1);
-                    })
-
-                    var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes) + '';
-                    accessionTable += genesCountMessage;
-                    accessionTable += '<div class="accession-popup-header"><div><p style="margin-bottom: 0.5rem; margin-top:0.5rem;">TaxID: ' + getTaxIdFrag.replace('?taxId=', "") + '</p>';
-                    accessionTable += '<p style="margin-top: 0;"> ' + type + ': ' + description + '</p></div>';
-                    accessionTable += '<div class="accession-popup-icons">';
-                    accessionTable += '<a id="copy-' + conceptId + '" class="accession-clipboard" href="javascript:;"><img src="html/image/copy.svg" alt="copy-accession"/></a>';
-                    accessionTable += '<a id="download-' + conceptId + '" class="accession-downloadicon" download="Accession.tsv" href="' + delimiterAttr + '"><img src="html/image/Knetdownload.png" alt="download-accession"/></a></div></div>';
-                    accessionTable += '</div>';
-
-                    // creating Jbox accession element
-                    var accessionModal = new jBox('Modal', {
-                        id: `modal_${conceptId}`,
-                        class: 'accessionModal',
-                        animation: 'pulse',
-                        title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accessionInfo" class="hint hint-small accessionInfo"><i  class="far fa-question-circle"></i> </span>',
-                        content: accessionTable,
-                        cancelButton: 'Exit',
-                        draggable: 'title',
-                        attributes: {
-                            x: 'center',
-                            y: 'center'
-                        },
-                        delayOpen: 50,
-                    });
-
-                    
-                    accessionModal.open()
-
-                }
-
-            } else {
-                evidenceNotice = '<span><b>Sorry, these genes have no accessions</b></span>'
-                jboxNotice(evidenceNotice, 'red', 300, 2000);
-                
-            }
-
-
-            // copy clipboard event that allows users to copy accessions as comma seperated string.
-            $(".accession-clipboard").bind("click", { x: data.geneTable }, function (e) {
-                e.preventDefault();
-                var currentData = e.data.x.split("\n");
-                accessionList = []
-
-                for (var accessionColumn = 1; accessionColumn < (currentData.length - 1); accessionColumn++) {
-                    var accessionItem = currentData[accessionColumn].split("\t").slice(1, 2);
-                    accessionList.push(accessionItem.join("\t"));
-                }
-
-                if (accessionList.length > 0) {
-                    navigator.clipboard.writeText(accessionList.join("\n"));
-                }
-
-                evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
-                jboxNotice(evidenceNotice, 'green', 300, 2000);
-                accessionModal.close()
-
-            })
-
-            triggerAccessionToolTips(conceptId);
-
-        }).fail(function (xhr, status, errolog) {
-            jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
+                createGenesColPopup(description, data, type, taxIdFrag,conceptId); 
             
-
-        })
-    }
+            }).fail(function (xhr, status, errolog) {
+                jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
+            })
+        }else{
+            createGenesColPopup(description, cachedData, type, taxIdFrag,conceptId);
+        }
+        */  
 }
 
 // Function creates tooltips for icons in genelist popup
@@ -438,27 +352,36 @@ function createAccessionToolTips(targetElement, content, element) {
     });
 }
 
+
 // Function removes tooltips for icons in genelist popup
-function removeAccessionToolTips(elementId) {
-    var tooltipElement = $(`#${elementId}`)
-    if (tooltipElement !== undefined) tooltipElement.remove();
+function removeAccessionToolTips(){
+    var tooltipElements = document.querySelectorAll('.jBox-Tooltip'); 
+    tooltipElements.forEach(tooltipElement => {
+        tooltipElement.remove()
+    })
+    // remove jbox overlay
+   document.querySelector('.jBox-overlay').remove(); 
+
+    // removes jbox overlay 
+   document.querySelector('.jBox-Modal').remove(); 
+
+
 }
 
 // Function triggers tooltips mouse events for icons in genelist popup
-function triggerAccessionToolTips(conceptId) {
-
-    var accessionToolTip = createAccessionToolTips(`#copy-${conceptId}`, 'Copy gene accessions (for genelist search).', 'copy');
-
-    var downloadToolTip = createAccessionToolTips(`#download-${conceptId}`, 'Download full table.', 'download');
+function triggerAccessionToolTips() {
+    var accessionToolTip  = createAccessionToolTips('.accession-clipboard', 'Copy gene accessions (for genelist search).', 'copy');
+    var downloadToolTip = createAccessionToolTips('.accession-downloadicon', 'Download full table.', 'download');
+    
 
     $(".accession-clipboard").mouseover(function (e) {
         e.preventDefault();
-        accessionToolTip.open();
+      accessionToolTip.open();
     })
 
     $(".accession-clipboard").mouseout(function (e) {
         e.preventDefault();
-        accessionToolTip.close()
+        accessionToolTip.close();
     })
 
     $(".accession-downloadicon").mouseover(function (e) {
@@ -468,7 +391,7 @@ function triggerAccessionToolTips(conceptId) {
 
     $(".accession-downloadicon").mouseout(function (e) {
         e.preventDefault();
-        downloadToolTip.close();
+       downloadToolTip.close();
     })
 
 }
@@ -603,3 +526,102 @@ function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
   $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
 }
 
+// function creates genes column popup 
+// TODO: will introduce HTML template style to table content and improve code quality in coming days. 
+function createGenesColPopup(description, data, type, getTaxIdFrag,conceptId){
+
+    if (data.geneTable !== null) {
+        var geneTable = data.geneTable.split("\n");
+        var accessionTable = "";
+        accessionTable += '<div class="accession-popup-container">';
+        accessionTable += '<div class="accession-popup-table"><table class="tablesorter">';
+        accessionTable += '<thead>';
+        accessionTable += '<tr>'
+        accessionTable += '<th> ACCESSION </th>';
+        accessionTable += '<th> GENE NAME</th>';
+        accessionTable += '<th> CHROMOSOME </th></tr></thead><tbody>';
+
+        var genesCount = geneTable.length >= 501 ? 501 : geneTable.length
+
+        var genesCountMessage = geneTable.length >= 501 ? '<div style="display:flex; align-items:center; justify-items:center;margin:.5rem 0;"><span><b>Showing 500 genes.</b> Copy or Download (top right) for the full list.</span></div>' : '';
+
+
+        for (var geneValue = 1; geneValue < (genesCount - 1); geneValue++) {
+            var value = geneTable[geneValue].split("\t").slice(1, 4);
+            accessionTable += '<tr><td>' + value[0] + '</td>';
+            accessionTable += '<td>' + value[1] + '</td>';
+            accessionTable += '<td>' + value[2] + '</td></tr>';
+        };
+
+        accessionTable += '</tbody></table></div>';
+
+        if (geneTable.length > 0) {
+            var result = geneTable.join("\n");
+
+            var utf8Bytes = encodeURIComponent(result).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+                return String.fromCharCode('0x' + p1);
+            })
+
+            var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(utf8Bytes) + '';
+            accessionTable += genesCountMessage;
+            accessionTable += '<div class="accession-popup-header"><div><p style="margin-bottom: 0.5rem; margin-top:0.5rem;">TaxID: ' + getTaxIdFrag.replace('?taxId=', "") + '</p>';
+            accessionTable += '<p style="margin-top: 0;"> ' + type + ': ' + description + '</p></div>';
+            accessionTable += '<div class="accession-popup-icons">';
+            accessionTable += '<a id="copy-' + conceptId + '" class="accession-clipboard" href="javascript:;"><img src="html/image/copy.svg" alt="copy-accession"/></a>';
+            accessionTable += '<a id="download-' + conceptId + '" class="accession-downloadicon" download="Accession.tsv" href="' + delimiterAttr + '"><img src="html/image/Knetdownload.png" alt="download-accession"/></a></div></div>';
+            accessionTable += '</div>';
+
+            // creating Jbox accession element
+            var accessionModal = new jBox('Modal', {
+                id: `modal_${conceptId}`,
+                class: 'accessionModal',
+                animation: 'pulse',
+                title: '<span><font size="3"><font color="#51CE7B">Gene List</font></font> <span id="accessionInfo" class="hint hint-small accessionInfo"><i  class="far fa-question-circle"></i> </span>',
+                content: accessionTable,
+                cancelButton: 'Exit',
+                draggable: 'title',
+                attributes: {
+                    x: 'center',
+                    y: 'center'
+                },
+                delayOpen: 50,
+                onClose:function(){
+                    removeAccessionToolTips();
+                }
+            });
+
+            
+            accessionModal.open()
+
+        }
+
+    } else {
+        evidenceNotice = '<span><b>Sorry, these genes have no accessions</b></span>'
+        jboxNotice(evidenceNotice, 'red', 300, 2000);
+        
+    }
+
+    // copy clipboard event that allows users to copy accessions as comma seperated string.
+    $(".accession-clipboard").bind("click", { x: data.geneTable }, function (e) {
+        e.preventDefault();
+        var currentData = e.data.x.split("\n");
+        accessionList = []
+
+        for (var accessionColumn = 1; accessionColumn < (currentData.length - 1); accessionColumn++) {
+            var accessionItem = currentData[accessionColumn].split("\t").slice(1, 2);
+            accessionList.push(accessionItem.join("\t"));
+        }
+
+        if (accessionList.length > 0) {
+            navigator.clipboard.writeText(accessionList.join("\n"));
+        }
+        
+        // popup to confirm navigator copied data to 
+        evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
+        jboxNotice(evidenceNotice, 'green', 300, 2000);
+        accessionModal.close()
+
+    })
+
+    triggerAccessionToolTips(conceptId);
+}
