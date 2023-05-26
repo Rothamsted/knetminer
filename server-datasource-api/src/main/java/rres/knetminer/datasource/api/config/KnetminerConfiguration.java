@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import rres.knetminer.datasource.api.KnetminerDataSource;
 import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.collections.OptionsMapWrapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -125,6 +124,7 @@ public class KnetminerConfiguration
 		
 		this.datasetInfo.postConstruct ( this );
 		
+		if ( this.googleAnalyticsApiConfig == null ) return;
 		if ( googleAnalyticsApiConfig.getClientId () == null )
 			googleAnalyticsApiConfig.setClientId ( "knetminer::api::" + datasetInfo.getId () );
 		
@@ -258,6 +258,9 @@ public class KnetminerConfiguration
 	 * Moreover, the only param that is exposed to the UI is 
 	 * {@link GoogleAnalyticsConfiguration#getMeasurementId()}, since that's the only one 
 	 * that the Google-provided Js library gtag needs.
+	 * 
+	 * This also implies that you can omit API secret and measurement ID from the client 
+	 * configuration.
 	 * 
 	 * @see {@link DatasetInfoService#getGoogleAnalyticsIdClient()}
 	 * 

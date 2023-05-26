@@ -43,7 +43,6 @@ import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
-import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
 import rres.knetminer.datasource.server.utils.googleanalytics4.Event;
 import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsHelper;
 import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils;
@@ -75,7 +74,13 @@ public class KnetminerServer
 
 	private Map<String, KnetminerDataSource> dataSourceCache = new HashMap<> ();
 	
-	private GoogleAnalyticsHelper analyticsHelper;
+	/**
+	 * Don't use me directly, this need proper initialisation, use 
+	 * {@link #getGoogleAnalyticsHelper()}.
+	 *  
+	 */
+	private GoogleAnalyticsHelper _analyticsHelper = null;
+	private boolean isAnalyticsInitialized = false;
 
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
@@ -111,18 +116,25 @@ public class KnetminerServer
 		}
 	}
 
-	@PostConstruct
-	private void initializeAnalytics ()
+	private GoogleAnalyticsHelper getGoogleAnalyticsHelper ()
 	{
-		var gaCfg = this.dataSources.get ( 0 ).getGoogleAnalyticsApiConfig ();
-		if ( gaCfg == null ) {
-			log.info ( "Google Analytics configuration is null, no GA tracking will occur" );
-			return;
+		if ( this.isAnalyticsInitialized ) return _analyticsHelper;
+		
+		synchronized ( this )
+		{
+			if ( isAnalyticsInitialized ) return _analyticsHelper;
+
+			var gaCfg = this.dataSources.get ( 0 ).getGoogleAnalyticsApiConfig ();
+			if ( gaCfg == null ) {
+				log.info ( "Google Analytics configuration is null, no GA tracking will occur" );
+				return null;
+			}
+			
+			return this._analyticsHelper = new GoogleAnalyticsHelper ( 
+				gaCfg.getApiSecret (), gaCfg.getMeasurementId (), gaCfg.getClientId () 
+			);
 		}
 		
-		this.analyticsHelper = new GoogleAnalyticsHelper ( 
-			gaCfg.getApiSecret (), gaCfg.getMeasurementId (), gaCfg.getClientId () 
-		);
 	}
 
 	
@@ -500,7 +512,9 @@ public class KnetminerServer
 		final var clientIpParam = GoogleAnalyticsUtils.getClientIPParam ( rawRequest );
 		final var clientHostParam = GoogleAnalyticsUtils.getClientHostParam ( rawRequest );
 		
-    CompletableFuture<HttpResponse> eventFuture = this.analyticsHelper.sendEventsAsync ( 
+		var gahelper = this.getGoogleAnalyticsHelper ();
+		
+    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync ( 
     	new Event ( "api_" + pageName, 
     	  clientIpParam,
     	  clientHostParam,
