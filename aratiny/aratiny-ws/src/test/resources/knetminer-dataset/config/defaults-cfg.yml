@@ -79,12 +79,17 @@ graphTraverser:
 # If this section isn't defined, no tracking happens.
 # 
 googleAnalyticsAPI:
-  measurementId: G-31YFKXKSYH
-  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+  # If you still have an old (UA-) property, YOU NEED to convert it into a GA4
+  # (if not already done by Google) and then use its measurement ID here.
+  measurementId: G-YX04MPYHBG
+  # You do need to setup one for the API, which uses the GA4 measurement protocol
+  # See here: https://wiki.resolution.de/doc/gafcc/latest/configure-the-measurement-api-secret
+  apiSecret: WplJN-diT-a3I0z5wOlrAQ
   # This is an ID of the client that sends tracking info. Typically, i's is 
-  # a UUID, but it's arbitrary. If not set, the {@link DatasetInfo#getId() dataset ID} is
-  # used.
-  clientId: 40cdb6ea-e542-4160-a7da-641f6c150d58
+  # a UUID, but it's arbitrary.
+  # If not set, the {@link DatasetInfo#getId() dataset ID} is
+  # used. The Unix command uuidgen can be uses to generate it.
+  #clientId: 40cdb6ea-e542-4160-a7da-641f6c150d58
 
 # If you want, you can separate the GA credentials used for the API from those used for
 # the UI. We don't recommend it and if this is left null, it will use the 
@@ -101,9 +106,18 @@ googleAnalyticsAPI:
 # This also implies that you can omit API secret and measurement ID from the client 
 # configuration.
 googleAnalyticsClient:
-  measurementId: G-31YFKXKSYH
-  # As said above, it's not used, yet it might be good separating the client IDs.
-  clientId: 75507276-c9d5-48ba-bc14-ed7f9cc53698
+  measurementId: G-YR7BJVWTNX
+  # As said above, it's not used.
+  # clientId: 75507276-c9d5-48ba-bc14-ed7f9cc53698
+
+# MB: these are my personal credentials, which I sometimes use for tests
+#googleAnalyticsAPI:
+#  measurementId: G-31YFKXKSYH
+#  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+#  clientId: 40cdb6ea-e542-4160-a7da-641f6c150d58
+#googleAnalyticsClient:
+#  measurementId: G-31YFKXKSYH
+#  clientId: 75507276-c9d5-48ba-bc14-ed7f9cc53698
 
 
 # TODO: remove, temporarily keeping it to easily remember the old IDs.
