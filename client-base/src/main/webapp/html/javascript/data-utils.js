@@ -688,3 +688,39 @@ function checkSubStrings(searchKeyword){
     return true;
     
 }
+
+// object literal manages caching for API request
+// currently only works for GET calls in (openGeneListPopup() in evidence-table.js)
+cacheManager = function(){
+
+    // function checks request url to determine if it's cached from previous API call.
+    async function getCachedData(request){
+
+        // checks if request url is available in browser API
+        var response = await caches.match(request); 
+
+        // if request url is not cached false boolean value is returned
+        if(!response) return false
+
+        // if request is cached, cached data is returned
+            var data = await response.json(); 
+            return data;
+        
+    }
+
+    // function puts cached data in browser API
+    function cacheRequest(url,data){
+        caches.open('my-cache').then((cache) => {
+            // We need to clone the request since a request can only be used once
+            cache.put(url, new Response(JSON.stringify(data), {
+                headers: {'Content-Type': 'application/json'}
+            }));
+
+        });
+    }
+
+    return {
+        getCachedData:getCachedData,
+        cacheRequest:cacheRequest
+    }
+}()
