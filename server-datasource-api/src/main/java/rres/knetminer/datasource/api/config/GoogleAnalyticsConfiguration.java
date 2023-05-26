@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 /**
  * TODO: comment me!
  *
+ * TODO: tests
+ * 
  * @author brandizi
  * <dl><dt>Date:</dt><dd>24 May 2023</dd></dl>
  *
