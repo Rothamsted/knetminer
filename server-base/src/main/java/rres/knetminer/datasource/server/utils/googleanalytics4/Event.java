@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+
 /**
  * 
  * TODO: comment me!
@@ -27,9 +29,16 @@ public class Event
 	public Event ( String name, Parameter<?>... parameters )
 	{
 		super ();
+
 		validateGAName ( name );
+		if ( name.length () > 40 ) ExceptionUtils.throwEx ( 
+			IllegalArgumentException.class,
+			"GA Analyitcs event ID \"%s\" is too long, can't be >40 chars",
+			name
+		);		
 		
 		this.name = name;
+
 		
 		if ( parameters == null ) return;
 		for ( var p: parameters )

@@ -75,25 +75,70 @@ graphTraverser:
   StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
   "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
 
+# Credentials for Google Analytics, which tracks various requests and events of a Knetminer instance
+# If this section isn't defined, no tracking happens.
+# 
+googleAnalyticsAPI:
+  # If you still have an old (UA-) property, YOU NEED to convert it into a GA4
+  # (if not already done by Google) and then use its measurement ID here.
+  measurementId: G-YX04MPYHBG
+  # You do need to setup one for the API, which uses the GA4 measurement protocol
+  # See here: https://wiki.resolution.de/doc/gafcc/latest/configure-the-measurement-api-secret
+  apiSecret: WplJN-diT-a3I0z5wOlrAQ
+  # This is an ID of the client that sends tracking info. Typically, i's is 
+  # a UUID, but it's arbitrary.
+  # If not set, the {@link DatasetInfo#getId() dataset ID} is
+  # used. The Unix command uuidgen can be uses to generate it.
+  #clientId: 40cdb6ea-e542-4160-a7da-641f6c150d58
 
+# If you want, you can separate the GA credentials used for the API from those used for
+# the UI. We don't recommend it and if this is left null, it will use the 
+# {@link #getGoogleAnalyticsApiConfig() API credentials}.
+# 
+# WARNING: this imply that you need to omit BOTH this and the API credentials if you want to 
+# disable GA completely. We DO NOT support the setting where the API tracking is enabled and
+# the client tracking is not.
+# 
+# Moreover, the only param that is exposed to the UI is 
+# {@link GoogleAnalyticsConfiguration#getMeasurementId()}, since that's the only one 
+# that the Google-provided Js library gtag needs.
+# 
+# This also implies that you can omit API secret and measurement ID from the client 
+# configuration.
+googleAnalyticsClient:
+  measurementId: G-YR7BJVWTNX
+  # As said above, it's not used.
+  # clientId: 75507276-c9d5-48ba-bc14-ed7f9cc53698
+
+# MB: these are my personal credentials, which I sometimes use for tests
+#googleAnalyticsAPI:
+#  measurementId: G-31YFKXKSYH
+#  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+#  clientId: 40cdb6ea-e542-4160-a7da-641f6c150d58
+#googleAnalyticsClient:
+#  measurementId: G-31YFKXKSYH
+#  clientId: 75507276-c9d5-48ba-bc14-ed7f9cc53698
+
+
+# TODO: remove, temporarily keeping it to easily remember the old IDs.
+#
 # The ID for enabling Google Analytics, to track the requests to a Knetminer instance via Google Analytics
 # The default for this is the ID that the Knetminer team uses, but you can use your own ID and get your  
 # instance tracked. If this isn't defined (ie, set to null), then GA is disabled.
 # googleAnalyticsIdApi: UA-88753233-2
-
-
+#
 # We used to have two different trackers, but this isn't very much needed and these two values could be
 # the same. As above, if this is null, no tracking happens (and no Google code is downloaded). 
 # googleAnalyticsIdClient: UA-88753233-1
 # New GA4, my (MB) test key
-googleAnalyticsIdClient: G-31YFKXKSYH
-
+# googleAnalyticsIdClient: G-31YFKXKSYH
+#
 # UA- are the old (universal) API, which is set to be turned off by July 2023 (TODO: migrate)
 # G- are for the new GA4, but they don't work with the Java library we're using (both work with the
 # Google-provided Js, which appear to be calling the universal API, very confusing).
 # Bottom line, we stick to the old API for the time being.
 #
-
+# /end: remove
 
 # This enables the CypherDebugger service and corresponding UI interface at TODO.
 # It only applies when Neo4j mode is enabled.

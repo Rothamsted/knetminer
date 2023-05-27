@@ -51,6 +51,10 @@ public class GoogleAnalyticsHelper
 	
 	public GoogleAnalyticsHelper ( String apiSecret, String measurementId, String clientId )
 	{
+		log.info ( 
+			"Initialising Google Analytics 4 with, measurement ID: {}, client ID: {}", 
+			measurementId, clientId
+		);
 		this.apiSecret = apiSecret;
 		this.measurementId = measurementId;
 		this.clientId = clientId;

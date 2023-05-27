@@ -6,11 +6,15 @@
 const googleAnalytics = function () 
 { 
 	var isEnabled = false
+	// TODO: we should have a global const, containing the whole DatasetInfo object
+	var datasetId = ""
 	
 	/**
 	 * Track an event, in the way explained by the documentation.
 	 * 
-	 * @param eventId something like 'app opened', 'user view selected' etc
+	 * @param eventId something like 'app opened', 'user view selected' etc. This is alwyas
+	 * prefixed with "ui:", to separate the reports from API events.
+	 * 
 	 * @param parametersObject additional data you want to be tracked with the event, eg, 
 	 * { searchString: 'blah', results: 123 }
 	 * 
@@ -35,6 +39,11 @@ const googleAnalytics = function ()
 			
 		if ( eventId.startsWith ( "api_" ) ) throw new RangeError ( 
 			`Invalid GA Analytics event ID "${eventId}", 'api_' names are reserved for the server components` 
+		)
+		 
+		eventId = `ui:${datasetId}:${eventId}`
+		if ( eventId.lenght > 40 ) throw new RangeError (
+			`GA Analyitcs event ID "${eventId}" is too long, can't be >40 chars`
 		)
 		 
 		gtag ( 'event', eventId, parametersObject )
@@ -110,7 +119,12 @@ const googleAnalytics = function ()
 	  catch ( ex )
 	  {
 			console.error ( "Google Analytics invocation failed:", ex );
-	  }					
+	  }
+	  
+	  await $.get (
+	    api_url + "/dataset-info",
+	    dinfo => { datasetId = dinfo.id }
+	  ); 					
 	} // start
 		
 	return {
