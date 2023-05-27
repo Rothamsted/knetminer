@@ -48,15 +48,36 @@ public class GoogleAnalyticsUtils
 	/**
 	 * GA4 expects names having alphanumeric characters only.
 	 * 
-	 * This raises an exception if that's not the case (or the name is empty). Used for validation
-	 * in various GA-related code.
 	 */
-	static void validateGAName ( String name ) throws IllegalArgumentException
+	public static boolean isValidGAName ( String name )
 	{
-		var matcher = RegEx.of ( "\\w+" );
-		if ( !matcher.matches ( name ) ) throw new IllegalArgumentException ( String.format ( 
+		if ( name == null ) return false;
+		var re = RegEx.of ( "\\w+" );
+		return re.matches ( name );
+	}
+	
+	
+	/**
+	 * Uses {@link #isValidGAName(String)} and raises an exception if the name isn't valid. 
+	 * Used for validation in various GA-related code.
+	 */
+	public static void validateGAName ( String name ) throws IllegalArgumentException
+	{
+		if ( !isValidGAName ( name ) ) throw new IllegalArgumentException ( String.format ( 
 			"The name \"%s\" is invalid for Google Analytics", name
 		));
+	}
+	
+	/**
+	 * Turns an invalid GA name an acceptable one, eg, normalise invalid chars into '_'
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static String normalizeGAName ( String name ) {
+		if ( name == null ) return null;
+		var matcher = RegEx.of ( "\\W" ).matcher ( name );
+		return matcher.replaceAll ( "_" );
 	}
 
 }

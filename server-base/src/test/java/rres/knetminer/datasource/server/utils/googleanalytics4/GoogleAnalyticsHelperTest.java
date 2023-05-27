@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.getClientHostParam;
 import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.getClientIPParam;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -169,6 +170,23 @@ public class GoogleAnalyticsHelperTest
 		new Event ( "foo.name" );
 	}
 	
+	@Test
+	public void testNormalizeGAName ()
+	{
+		Map.of ( 
+			"wheatknet-beta", "wheatknet_beta",
+			"foo.Name", "foo_Name",
+			"test!Name@", "test_Name_",
+			"Spaced Name", "Spaced_Name",
+			"good_Name", "good_Name",
+			"goodName01", "goodName01"
+		)
+		.forEach ( (testName, normName) ->
+			assertEquals ( 
+				"normalizeGAName() is wrong!", 
+				normName, GoogleAnalyticsUtils.normalizeGAName ( testName ) 
+		));
+	}
 	
 	private void verifySendEvents ( HttpResponse response )
 	{

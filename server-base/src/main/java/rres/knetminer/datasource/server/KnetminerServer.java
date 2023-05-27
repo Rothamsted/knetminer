@@ -1,5 +1,6 @@
 package rres.knetminer.datasource.server;
 
+import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.normalizeGAName;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
 import java.lang.reflect.InvocationTargetException;
@@ -446,7 +447,7 @@ public class KnetminerServer
 		}
 		finally {
 			// TODO: should we track when failed?
-			this.googleTrackPageView ( ds, mode, request, rawRequest );
+			this.analyticsTrackApiCall ( ds, mode, request, rawRequest );
 		}
 	}
 	
@@ -486,11 +487,11 @@ public class KnetminerServer
 	/**
 	 * TODO: do we need listMode?
 	 */
-	private void googleTrackPageView (
+	private void analyticsTrackApiCall (
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
 	)
 	{
-		this.googleTrackPageView (
+		this.analyticsTrackApiCall (
 			ds, mode, request.getTaxId (),
 			request.getKeyword (), request.getList (), request.getListMode (), 
 			request.getQtl (), rawRequest
@@ -498,7 +499,7 @@ public class KnetminerServer
 	}
 
 	
-	private void googleTrackPageView (
+	private void analyticsTrackApiCall (
 		String ds, String mode, String taxId,
 		String keyword, List<String> userGenes, String userGenesMode, 
 		List<String> userChrRegions, HttpServletRequest rawRequest
@@ -514,8 +515,9 @@ public class KnetminerServer
 		
 		var gahelper = this.getGoogleAnalyticsHelper ();
 		
-    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync ( 
-    	new Event ( "api_" + pageName, 
+    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync (
+    	// We need to normalise the data source, wheatknet-beta is invalid, due to '-'
+    	new Event ( "api_" + normalizeGAName ( pageName ), 
     	  clientIpParam,
     	  clientHostParam,
     	  clientIpParam,
