@@ -702,12 +702,14 @@ function checkSubStrings(searchKeyword){
  *   this variable here is an instance of it. WebCacheManager would be initialised with the
  *   cache name, eg, const cacheManager = new WebCacheManager ( "my-cache" )
  * 
- * - (not urgent) This design is named cache-aside, see https://hazelcast.com/blog/a-hitchhikers-guide-to-caching-patterns/
- *   I'm not a great fan of it, the read-through approach (see the same link) is usually cleaner when used with functional 
- *   programming (to set the function that fetch new cache entries).
+ * - (not urgent, can remain like this) This design is named cache-aside, see 
+ *   https://hazelcast.com/blog/a-hitchhikers-guide-to-caching-patterns/
+ *   I'm not a great fan of it, the read-through approach (see the same link) is usually cleaner when 
+ *   used with functional programming (to set the function that fetch new cache entries).
  * 
- *   In this case, it seems that the cache fetch/update handler would vary too much, so, maybe, a mix between
- *   the two would be an improvement:
+ *   In this case, it seems that the cache fetch/update handler would vary too much, so it might be
+ *   difficult to define a new entry handler.  Maybe, a mix between the two approaches would 
+ *   be an improvement:
  *    
  *   // invocation, more readable than data = cache.get(), if ( data ) else ()
  *   let data = cacheMgr.get ( request, r => await $.get (...) )
