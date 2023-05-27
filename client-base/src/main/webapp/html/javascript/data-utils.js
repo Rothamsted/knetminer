@@ -726,7 +726,7 @@ function checkSubStrings(searchKeyword){
  *     return value
  *   }
  */
-const cacheManager = function(){
+const webCacheWrapper = function(){
 
     // function checks request url to determine if it's cached from previous API call.
     async function getCachedData(request){
@@ -737,7 +737,7 @@ const cacheManager = function(){
         // Request url is not cached
         // TODO: meh! the invoker is expecting a cache object and you're returning a boolean
         // see if null works better. 
-        if(!response) return false
+        if(!response) return null
 
         // if request is cached, cached data is returned
         var data = await response.json(); 
