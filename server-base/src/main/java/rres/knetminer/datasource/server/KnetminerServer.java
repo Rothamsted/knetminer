@@ -514,6 +514,7 @@ public class KnetminerServer
 		final var clientHostParam = GoogleAnalyticsUtils.getClientHostParam ( rawRequest );
 		
 		var gahelper = this.getGoogleAnalyticsHelper ();
+		if ( gahelper == null ) return;
 		
     CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync (
     	// We need to normalise the data source, wheatknet-beta is invalid, due to '-'
@@ -564,6 +565,7 @@ public class KnetminerServer
 				);
 		});
 		
+    // TODO: What's the point of this, if everything already goes to GA?
 		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
 	}
