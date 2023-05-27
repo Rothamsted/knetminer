@@ -472,22 +472,6 @@ function createEvidenceTableBody ( tableData, doAppend = false )
   }
 }
 
-/**
- * Can be used with a jQuery table sorter element, to manually mark a column as sorted,
- * when the table was sorted from the outside and the table sorter component is invoked
- * without asking it for re-sorting.
- * 
- * Details: https://stackoverflow.com/questions/75778264/is-there-a-way-to-tell-jquery-tablesorter-that-the-table-is-already-sorted
- * 
- * TODO: not urgent, move to ui-utils.js?
- */
-function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
-{
-	// When the col is already in ascending order, headerAsc is the down arrow, to tell you can
-	// revert the order. This reproduces the same behaviour that the table sorter
-  var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
-  $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
-}
 
 // function creates genes column popup 
 // TODO: will introduce HTML template style to table content and improve code quality in coming days. 
