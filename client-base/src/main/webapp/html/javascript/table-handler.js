@@ -94,7 +94,10 @@ class InfiniteScrollManager
 	{
 		if ( !Array.isArray ( tableData ) ) throw new TypeError ( 
 			"Can't set InfiniteScrollManager with null or non-array table" 
-		) 
+		)
+		if ( tableData.length == 0 ) throw new RangeError ( 
+			"Can't set InfiniteScrollManager with empty table." 
+		)
 		
 		this.#tableData = tableData
 		this.setPage ( 0 )
@@ -168,8 +171,9 @@ class InfiniteScrollManager
 	{
 		this.#validateTableData ()
 		const pagesCt =  this.getPagesCount ()
-		if ( page >= pagesCt ) throw new RangeError ( 
-			`Invalid page value #${page} for table '${tableId}', which has ${pagesCt}` 
+		const tableId = this.getTableId ()
+		if ( page >= pagesCt && pagesCt  ) throw new RangeError ( 
+			`Invalid page value #${page} for table '${tableId}', which has ${pagesCt} page(s)` 
 		)
 		
 		this.#page = page

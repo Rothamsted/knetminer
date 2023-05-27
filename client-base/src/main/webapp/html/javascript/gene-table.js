@@ -5,12 +5,12 @@
 function createGenesTable ( tableData, keyword )
 {
 	var table = "";
-
-	genesTableScroller.setTableData ( tableData )
-	const firstPageEnd = genesTableScroller.getPageEnd ()
 	
 	if (tableData.length > 0 )
 	{
+		genesTableScroller.setTableData ( tableData )
+		const firstPageEnd = genesTableScroller.getPageEnd ()
+
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 	
@@ -70,6 +70,12 @@ function createGenesTable ( tableData, keyword )
 		
 	} // if (tableData.length > 0 )
 
+	// TODO: ==> Many of these steps appear to be useless when tableData.length == 0
+	// Possibly, turn the whole function into the guarded style:
+	// if ( len == 0 ) return
+	// <actually do something with non-empty table>
+	//
+
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGSearch_title').scrollIntoView();
 
@@ -86,7 +92,7 @@ function createGenesTable ( tableData, keyword )
 	});
 
 
-	// TODO: evidence dropdown functions to refined in Knetminer 5.7 
+	// TODO: evidence dropdown functions to be refined in Knetminer 5.7 
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
 		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
@@ -146,7 +152,7 @@ function createGenesTable ( tableData, keyword )
 	});
 
 	// initiates infinite scrolling for geneView
-	genesTableScroller.setupScrollHandler ()
+	if ( tableData.length > 0 )	genesTableScroller.setupScrollHandler ()
 } // createGenesTable
 
 
@@ -350,6 +356,10 @@ function downloadNetwork() {
  */
 function createGeneTableBody ( tableData, doAppend = false )
 {
+	// In this case, it doesn't do anything anyway and this prevents the scroller from 
+	// failing.
+	if ( !( tableData && tableData.length > 0 ) ) return
+
 	var table = ''
 
 	const fromRow = genesTableScroller.getPageStart ()

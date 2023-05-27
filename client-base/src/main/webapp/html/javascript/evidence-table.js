@@ -53,13 +53,14 @@ function createEvidenceTable( tableData, doSortTable=false )
 {
     var table = "";
     
-		evidenceTableScroller.setTableData ( tableData )
-		const firstPageEnd = evidenceTableScroller.getPageEnd ()
-
     // set current table data for infinite scrolling
     $('#evidenceTable').html("<p>No evidence found.</p>");
        
     if(tableData.length == 0) return null 
+
+		evidenceTableScroller.setTableData ( tableData )
+		const firstPageEnd = evidenceTableScroller.getPageEnd ()
+
 
 		// TODO: remove once the API change to sort is implemented (and invoked)
 		// WARNING: I am OBVIUSLY talking of the WHOLE block (if + its body), if you remove the 
@@ -400,6 +401,10 @@ function  evidenceTableAddKeyword(conceptId, targetElement, event) {
  */
 function createEvidenceTableBody ( tableData, doAppend = false )
 {
+	// In this case, it doesn't do anything anyway and this prevents the scroller from 
+	// failing.
+	if ( !( tableData && tableData.length > 0 ) ) return
+	
   var tableBody=""; 
 
 	const fromRow = evidenceTableScroller.getPageStart ()

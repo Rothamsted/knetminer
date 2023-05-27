@@ -119,14 +119,10 @@ async function createFilteredGenesTable ( filteredTable )
 {
 	toggleKnetTablesDisplay ( true )
 	
-	genesTableScroller.setTableData ( filteredTable )
+	if ( filteredTable && filteredTable.length > 0 )
+		genesTableScroller.setTableData ( filteredTable )
 	
-	createGeneTableBody ( filteredTable )
-	
-	/* TODO: remove, moved to createGeneTableBody()
-	sortOptions = [[5,1]]
-	$( '#tablesorter' ).trigger ( 'update', [ sortOptions ] );
-	*/
+	createGeneTableBody ( filteredTable )	
 }
 
 /**
@@ -137,14 +133,10 @@ async function createFilteredEvidenceTable ( filteredTable )
 {
 	toggleKnetTablesDisplay ( true )
 	
-	evidenceTableScroller.setTableData ( filteredTable )
+	if ( filteredTable && filteredTable.length > 0)
+		evidenceTableScroller.setTableData ( filteredTable )
 	
 	createEvidenceTableBody ( filteredTable )
-	
-	// TODO: removed, moved to createEvidenceTableBody()
-	/* sortOptions = [ [3, 0], [4, 1], [5,1] ]
-	$( '#tablesorterEvidence' ).trigger ( 'update', [ sortOptions ] );
-	*/	
 }
  
  
