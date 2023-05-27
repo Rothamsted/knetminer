@@ -53,14 +53,14 @@ cd .. # back to the codebase's root
 # 
 if $IS_RELEASE; then
 	echo -e "\n\n\tSetting '$NEW_RELEASE_VER' as default --image-version in docker-run.sh\n"
-	sed -E --in-place "s/^image_version='latest'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
+	sed -E --in-place "s/^image_version='($docker_tag|latest)'/image_version='$NEW_RELEASE_VER'/" docker/docker-run.sh
 else
 	# Else, we might need to restore the pointers to the the one we have built
-	if ! egrep -q "^image_version='latest'" docker/docker-run.sh; then
-	  msg="Restoring 'latest' version for --image-version in docker-run.sh"
+	if ! egrep -q "^image_version='$docker_tag'" docker/docker-run.sh; then
+	  msg="Restoring '$docker_tag' version for --image-version in docker-run.sh"
 		echo -e "\n\n\t$msg\n"
 		
-		sed -E --in-place "s/^image_version=.+$/image_version='latest'/" docker/docker-run.sh
+		sed -E --in-place "s/^image_version=.+$/image_version='$docker_tag'/" docker/docker-run.sh
 		
 		git commit docker/docker-run.sh -m "$msg (ci script). [ci skip]"
 		export NEEDS_PUSH=true
