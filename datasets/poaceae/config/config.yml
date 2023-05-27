@@ -52,8 +52,10 @@ googleAnalyticsAPI:
   measurementId: G-31YFKXKSYH # Converted from old UA-237399750-1
   apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
 
-# We're using the same as the API
-# googleAnalyticsClient:
+# We're using the same as the API, but we need to override defaults
+googleAnalyticsClient:
+  measurementId: G-31YFKXKSYH
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
 
 
 # These are custom options, which aren't explicitly defined by the Knetminer configuration. 
