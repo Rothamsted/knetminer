@@ -11,8 +11,10 @@ import org.json.JSONObject;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
- * 
- * TODO: comment me!
+ * A GA4/MP tracking request must receive at least one event. This is something like: 
+ * "api_search_call" and can have parameters like "keyword: blah".
+ *
+ * @see GoogleAnalyticsHelper
  *
  * TODO: items isn't supported yet. According to <a href = "https://tinyurl.com/2mys5cth">docs</a>,
  * they're a parameter names 'items', which of value is an array of objects, and each object
@@ -26,6 +28,13 @@ public class Event
 	// Storing them with a name index, just in case
 	private Map<String, Parameter<?>> parameters = new HashMap<> ();
 	
+	/**
+	 * The name is validated via {@link GoogleAnalyticsUtils#validateGAName(String)}, to ensure
+	 * GA accepts it. You can use {@link GoogleAnalyticsUtils#normalizeGAName(String)} to tame
+	 * possibly invalid names.
+	 * 
+	 * TODO: the values are restricted too, validation to be added.
+	 */
 	public Event ( String name, Parameter<?>... parameters )
 	{
 		super ();
@@ -46,6 +55,9 @@ public class Event
 			this.parameters.put ( p.getName (), p );
 	}
 
+	/**
+	 * The JSON format needed by GA. This makes use of {@link Parameter#getValue()}
+	 */
 	public JSONObject toJSON ()
 	{
 		JSONObject js = new JSONObject ();

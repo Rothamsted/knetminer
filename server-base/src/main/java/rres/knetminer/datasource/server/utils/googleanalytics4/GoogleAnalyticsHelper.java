@@ -19,11 +19,18 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import rres.knetminer.datasource.api.config.DatasetInfo;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UnexpectedValueException;
 import uk.ac.ebi.utils.opt.net.ServletUtils;
 
 /**
+ * 
+ * Simple Google Analytics 4 helper.
+ * 
+ * This uses direct invocations to their Measurement Protocol API and it's able to track
+ * events such as API calls, together with event-associated parameters (eg, API call params).
+ * 
  * TODO: this has to be moved to its own project about GA4, so see it as it was a 3rd-party dependency and 
  * DO NOT mix ANY Knetminer-specific thing with it!
  * 
@@ -61,11 +68,18 @@ public class GoogleAnalyticsHelper
 	}
 	
 	/**
-	 *
+	 * Sends a tracking {@link Event} to GA servers.
+	 * 
 	 * <b>WARNING</b>: Apparently, it is possible to send multiple events and if you try, you'll
 	 * get a 204 result, so, all looks fine, <b>however</b>, I don't see any record on the GA4
-	 * dashboard when I try this. So, at least for now, it's best to stick with sending 
-	 * one event only. 
+	 * dashboard when I try this.
+	 * 
+	 * So, at least for now, it's best to stick with sending 
+	 * one event only, we enforce this and this method accepting an array is for a possible 
+	 * future use.
+	 *  
+	 * @return the HTTP response from GA. As far as we know, in case of success, this 
+	 * returns HTTP/204 and empty contents. 
 	 *  
 	 * @see ServletUtils#getResponseBody(HttpResponse)
 	 */
@@ -148,11 +162,23 @@ public class GoogleAnalyticsHelper
 		}
 	}
 	
+	/**
+	 * Invokes {@link #sendEvents(Event...)} asynchronously, so that your application doesn't
+	 * waste time with tracking.
+	 * 
+	 * You can use the returned completable future to attach some 
+	 * {@link CompletableFuture#thenAcceptAsync(java.util.function.Consumer) async post-processing}, 
+	 * in particular, something that logs failures (based on HTTP code).
+	 * 
+	 */
 	public CompletableFuture<HttpResponse> sendEventsAsync ( Event ... events )
 	{
 		return CompletableFuture.supplyAsync ( () -> sendEvents ( events ) );
 	}
 	
+	/**
+	 * Used in {@link #sendEvents(Event...)} to prepare the JSON payload that GA/MP needs.
+	 */
 	private JSONObject getBody ( Event[] events )
 	{
 		JSONObject js = new JSONObject ();
@@ -167,7 +193,12 @@ public class GoogleAnalyticsHelper
 		
 		return js;
 	}
-
+	
+	/**
+	 * When used with the measurement protocol, GA also needs that you create an API secret.
+	 * 
+	 * @see #getMeasurementId()
+	 */
 	public String getApiSecret ()
 	{
 		return apiSecret;
@@ -179,7 +210,15 @@ public class GoogleAnalyticsHelper
 		this.apiSecret = apiSecret;
 	}
 
-
+	/**
+	 * GA4 allows for setting multiple measurement properties, which can be used either with their
+	 * Javascript library (to issue the so-called gtags), or on a server-side code (eg, an API), 
+	 * with the so-called measurement protocol.
+	 * 
+	 * See documentation about: 
+	 *   <a href = "https://support.google.com/analytics/answer/9304153">Javascript/gtag interface</a>,
+	 *   <a href = "https://codelabs.developers.google.com/codelabs/GA4_MP#0">measurement protocol</a>.
+	 */
 	public String getMeasurementId ()
 	{
 		return measurementId;
@@ -191,7 +230,13 @@ public class GoogleAnalyticsHelper
 		this.measurementId = measurementId;
 	}
 
-
+	/**
+	 * This is an ID of the client that sends tracking info. Typically, i's is 
+	 * a UUID, but it's arbitrary. If not set, the {@link DatasetInfo#getId() dataset ID} is
+	 * used.
+	 * 
+	 * @see #getMeasurementId()
+	 */
 	public String getClientId ()
 	{
 		return clientId;
@@ -203,7 +248,9 @@ public class GoogleAnalyticsHelper
 		this.clientId = clientId;
 	}
 
-
+	/**
+	 * This is used to set the non_personalized_ads in the payload object sent to GA.
+	 */
 	public boolean isNonPersonalizedAds ()
 	{
 		return nonPersonalizedAds;
@@ -215,7 +262,10 @@ public class GoogleAnalyticsHelper
 		this.nonPersonalizedAds = nonPersonalizedAds;
 	}
 
-
+	/**
+	 * GA always requires this in the headers of an HTTP request. 
+	 * If you don't set it, we use the sys property java.version to create a suitable default.
+	 */
 	public String getUserAgent ()
 	{
 		return userAgent;

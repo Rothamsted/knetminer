@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.ebi.utils.regex.RegEx;
 
 /**
- * TODO: comment me!
+ * Simple utilities for the GA functionality.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>24 May 2023</dd></dl>
@@ -20,6 +20,19 @@ public class GoogleAnalyticsUtils
 {
 	private final static Logger slog = LogManager.getLogger ( GoogleAnalyticsUtils.class );
 	
+	/**
+	 * Gets a GA parameter that tracks the IP of an HTTP request client.
+	 * 
+	 * <a href = "https://issuetracker.google.com/issues/237566549">GA doesn't support this in the MP</a>,
+	 * so you can use this workaround.
+	 * 
+	 * The method check the 'X-Forwarded-For' HTTP header, not only {@link HttpServletRequest#getRemoteAddr()}, 
+	 * to account for proxied connections.
+	 * 
+	 * Beware that tracking these data must be compatible with existing laws.
+	 * 
+	 * TODO: this is more generic than GA and it should go to jutils.
+	 */
 	public static StringParam getClientIPParam ( HttpServletRequest httpRequest )
 	{
 		String clientIP = httpRequest.getHeader ( "X-Forwarded-For" );
@@ -36,6 +49,13 @@ public class GoogleAnalyticsUtils
 		return new StringParam ( "clientIP", clientIP );
 	}
 	
+	/**
+	 * Gets a GA parameter that tracks the host of an HTTP request client 
+	 * (ie, the DNS name used by the client to reach us, which might be a virtual host).
+	 * 
+	 * The method check the 'X-Forwarded-Host' HTTP header, not only {@link HttpServletRequest#getRemoteHost()}, 
+	 * to account for proxied connections.
+	 */
 	public static StringParam getClientHostParam ( HttpServletRequest httpRequest )
 	{
 		String clientHost = Optional.ofNullable ( httpRequest.getHeader ( "X-Forwarded-Host" ) )
@@ -48,6 +68,9 @@ public class GoogleAnalyticsUtils
 	/**
 	 * GA4 expects names having alphanumeric characters only.
 	 * 
+	 * This tells if the name is valid.
+	 * 
+	 * TODO: consider length limits, consider param values. 
 	 */
 	public static boolean isValidGAName ( String name )
 	{
