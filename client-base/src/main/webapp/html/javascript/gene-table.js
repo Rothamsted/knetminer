@@ -298,8 +298,24 @@ function updateSelectedGenesCount(inputName, countContainer, viewName) {
 	changeButtonOffSvg('NetworkCanvas_button')
 }
 
-// takes gene or evidence view checkbox input names and returns the number of checked inputs 
-var returnCheckInputCount = (inputname) => $('input:checkbox[name=' + inputname + ']:checked').length;
+// TODO: remove after reading. Lambda expressions are normally uses only for in-line anonymous functions
+// An explicit regular function uses the 'function' keyword, using lambdas here looks very weird
+// and less readable.
+//
+// var returnCheckInputCount = (inputname) => $('input:checkbox[name=' + inputname + ']:checked').length;
+
+/** 
+ * Takes gene or evidence view checkbox input names and returns the number of checked inputs
+ *
+ * TODO: returnXXX is quite a silly name, every function returns something (or, we say they "returns void"), 
+ * nobody states the obvious with a name like this. Choose another one, eg, knetTableUserSelectionSize,
+ * (or *Count, but count is more coomonly used for a count that is updated during a loop or alike).
+ * 
+ */ 
+function returnCheckInputCount ( inputName )
+{
+	return $('input:checkbox[name=' + inputName + ']:checked').length
+}
 
 
 // function downloads cytoscape compatible json files
@@ -572,6 +588,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 /** 
  * function to toggle geneview evidence column popups 
+ * TODO: if it's about the gene table, then why is it in this file?
 */
 function toggleEvidencePopUp(event,toggleDuration,toggleAction){
 	event.preventDefault(); 

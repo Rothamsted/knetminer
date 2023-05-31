@@ -458,11 +458,10 @@ function findChromosomeGenes(event) {
         } 
 }
 
-/*
+/**
  * Function to get the number of matches in the keywords text box.
  *
  */
-
 function matchCounter() 
 {
   var keyword = $('#keywords').val();
@@ -581,9 +580,46 @@ function errorComponent(elementInfo,xhr){
 
 
 // function dynamically encodes Gene and evidence views delimited files to downloadable TSV files
-// TODO: not urgent, as usually, it requires separation between gene and evidence table, stop
-// using this messed-up if/elseif approach.
-//
+
+/* TODO: not urgent, as usually, it requires separation between gene and evidence table, stop
+   using this messed-up if/elseif approach.
+   
+   Also, its design is a bit of a convoluted mess.
+   
+   Namely, this could be re-factored like:
+
+function setGenesTableDelimitedCta () // What is Cta?
+{
+	_setDelimitedCta ( 'resultsTable', data.geneTable )
+}
+
+function setEvidenceTableDelimitedCta () 
+{
+	_setDelimitedCta ( 'evidenceTable', data.evidenceTable )
+}
+
+function _setDelimitedCta ( tableId, tableData )
+{
+	let encodedStr = encodeData ( data )
+  _setDemlimiterAttributes ( tableId, encodedStr )	
+}
+
+// Same, but without being in an object or class
+function _setDemlimiterAttributes ( fileName, uft8String )
+{
+	....
+}
+
+// Same, but without being in an object or class, without '_' prefix, cause it might 
+// not be so local
+// Rename it to something more meaningful, eg, csvEscape()
+// Also, probably there is a more standar way, not this ad-hoc string mangling
+function encodeData ( data )
+{
+	
+}
+
+*/
 handleDelimintedCta = function(){
 
     var evidenceData, resultViewData ;

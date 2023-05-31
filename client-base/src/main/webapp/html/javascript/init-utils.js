@@ -171,8 +171,8 @@ async function removeRegionRow(event) {
 // TODO: see comments in findGenes()
 function getChromosomeRegionIndex(currentElement){
   // retrieves index from row data-index attribute
-  var chr = currentElement.closest('tr').getAttribute("data-index");
-  var regionNumber = chr.replace(/\D/g, '');
+  const chr = currentElement.closest('tr').getAttribute("data-index");
+  const regionNumber = chr.replace(/\D/g, '');
   return regionNumber
 }
 
