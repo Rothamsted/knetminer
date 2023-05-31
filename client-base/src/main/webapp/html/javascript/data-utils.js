@@ -434,6 +434,18 @@ function findChromosomeGenes(event) {
         var start = $('#start' + currentRowNumber).val()
         var end = $('#end' + currentRowNumber).val()
         var genes = 'genes' + currentRowNumber
+
+				/* TODO (not urgent)
+				// Some minimal validation
+				let isValid = <start is a number> 
+				isValid &= <end is a number>
+				isValid &= start < end
+				if ( !isValid )
+				{
+					<set gene count to 0>
+					return // ie, don't call the API, it will always yield an error
+				} 
+				*/        
     
         if (chromosome != "" && start != "" && end != "") {
             var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
