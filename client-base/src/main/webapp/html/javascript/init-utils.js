@@ -311,7 +311,7 @@ function toggleRegionDeleteIcon(regionID) {
 }
 
 // function detects taxID in url and set it as the current taxId
-function getTaxIdFromUrl(){          	
+function getTaxIdFromUrl(){
   var taxIdFromURL = new URLSearchParams ( document.location.search ).get ( "taxId" );
   if ( taxIdFromURL ) speciesSelector.setTaxId ( taxIdFromURL );
 }
