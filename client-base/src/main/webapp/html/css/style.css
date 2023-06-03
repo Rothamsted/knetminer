@@ -2647,3 +2647,16 @@ a {
     text-align: center;
     justify-content: center;
 }
+
+.accession-count{
+    display:flex; 
+    align-items:center; 
+    justify-items:center;
+    margin:.5rem 0;
+}
+
+.accession-bold-font {
+    font-weight: bold;
+    margin-right: 4px;
+}
+

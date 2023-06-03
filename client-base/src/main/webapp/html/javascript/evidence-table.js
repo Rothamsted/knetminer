@@ -701,8 +701,8 @@ class AccessionPopupManager
         const accessionTitle = document.createElement('span')
         accessionTitle.innerHTML = `Copy or Download (top right) for the full list.`;
         
-        countTemplate.append(boldText);
-        countTemplate.append(counterSpan); 
+        accessionCount.append(boldText);
+        accessionCount.append(accessionTitle); 
 
         return accessionCount;
     }
