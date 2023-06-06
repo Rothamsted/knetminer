@@ -27,7 +27,6 @@ $(document).ready (
 	    initResetButton();
 	    inputHandlers();
 	    QtlRegionHandlers();
-	    searchHandlers();
 		showToolTips();
 		intialiseFeedbackCtaConfig();
 		
