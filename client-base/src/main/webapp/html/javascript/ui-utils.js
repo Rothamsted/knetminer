@@ -423,3 +423,18 @@ function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
   var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
   $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
 }
+
+// function clears genelist input values
+function clearGeneListInput(){
+    $("#list_of_genes").val("");
+    geneCounter()
+  
+  }
+  
+/**
+ * 
+ * function converts length of non-empty genelist inputs to percentage against the system assigned genelist limit
+ */
+  async function convertLengthToPercent(listLength){
+    return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
+  }

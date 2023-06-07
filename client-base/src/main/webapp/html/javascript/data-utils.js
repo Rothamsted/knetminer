@@ -54,7 +54,7 @@ function searchKeyword(){
     
     // api request
     var request = "/" + searchMode;
-    var login_check_url= knetspace_api_host + "/api/v1/me";
+
 
     //if(geneList_size > freegenelist_limit) {
       // check if user logged in and if yes, get user_id
@@ -72,7 +72,7 @@ function searchKeyword(){
         $("#NetworkCanvas_button").removeClass('network-created');
         $('#evidenceTable_button').removeClass('created');
 
-        checkUserPlan(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size)
+        requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list)
       }
 }
 
@@ -105,7 +105,10 @@ function searchKeyword(){
  * checkUserPlan( () => requestGenomeData(...) ) 
  * 
  */
-function checkUserPlan(requestParams,list,keyword,login_check_url,request,searchMode,geneList_size){
+function checkUserPlan(){
+  var login_check_url = knetspace_api_host + "/api/v1/me";
+  const geneLimit = document.getElementById("limit"); 
+
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
         timeout: 1000000, cache: false,
@@ -123,21 +126,13 @@ function checkUserPlan(requestParams,list,keyword,login_check_url,request,search
                     knetview_limit= 200; // let user select upto 200 IDs to visualize knetwork
                    }
                 else if(data.plan.name === "Free") {
+                    freegenelist_limit = 100;
                     enforce_genelist_limit= true; // back to default
                     knetview_limit= 10; // back to default
                    }
             }
         },
-        complete: function () {
 
-            if (list.length <= freegenelist_limit || enforce_genelist_limit === false) {
-                requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list)
-                getLongWaitMessage.init()
-             }
-             else {
-                 $(".loadingDiv").replaceWith('<div class="loadingDiv"><b>The KnetMiner Free Plan is limited to '+freegenelist_limit+' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan</a> to search with unlimited genes</b></div>');
-             }
-        }
     });
 }
 
@@ -404,24 +399,67 @@ function countLinkedUserGenes(gv_table) {
  *
  */
 function geneCounter(){
-    var geneListValue = $("#list_of_genes").val().split('\n');
-    var geneInput = $('#geneResultDiv');
-    var notemptygenes = []; 
+
+  var geneListValue = $("#list_of_genes").val().split('\n');
+  var geneInput = $('#geneResultDiv');
+ 
+  var nonEmptyInputs = []; 
 
     if(geneListValue[0] === ''){
-        geneInput.hide()
-    }else{
-        for(var i =0; i < geneListValue.length; i++ ){
-            if(geneListValue[i] !==  ''){
-                notemptygenes.push(geneListValue[i]); 
-                geneInput.show()
-                geneInput.html('<span>  <b>'+ notemptygenes.length +'</b>  inputed genes </span>')
-            }
-        }
-       
-    }
+      updateListBar(0);
+    } 
+     
+    
+
+      for(var i =0; i < geneListValue.length; i++ ){
+          if(geneListValue[i] !==  ''){
+            nonEmptyInputs.push(geneListValue[i]); 
+          }
+      }
+
+      geneInput.html('<span>  <b>'+ nonEmptyInputs.length +'</b>  Genes </span>')
+      var listLength = nonEmptyInputs.length; 
+      checkListLimit(listLength)
+      updateListBar(listLength);
+
+  
 
 }
+
+// function checks if genelist inputs are within or outside assigned limit
+function checkListLimit(listLength){
+
+  // checks either if genelist limit if false or if genelist inputs falls within allowed limit 
+  const isLimitReached = listLength <= freegenelist_limit || enforce_genelist_limit === false ? true : false;
+
+    $('#searchBtn').toggleClass('button-disabled', !isLimitReached); 
+    $(".genecount-container").toggleClass('show', isLimitReached)
+    $(".limit-message").toggleClass('show',!isLimitReached)
+    $(".border").toggleClass('limit-border',!isLimitReached)
+    $('.genesCount').toggleClass('genes-limit', !isLimitReached)
+}
+
+
+// function updated genelist progress bar on user input
+async function updateListBar(listLength){
+
+  const progressBar = document.querySelector('.progress');
+  const progressText = document.querySelector('.genesCount'); 
+
+  // removes progress bar since user is currently on unlimited plan
+  if(!enforce_genelist_limit){
+      progressBar.delete(); 
+  }
+
+  // convert list to percentage using the user limit
+  const listLengthPercent =  await convertLengthToPercent(listLength);
+
+  const progressColor = listLength > freegenelist_limit ? 'red' : `conic-gradient( #51CE7B ${listLengthPercent * 3.6}deg, grey 0deg)`; 
+  progressBar.style.background = progressColor;
+  progressText.innerHTML = `${listLength}/${freegenelist_limit}`; 
+}
+
+
 
 /*
  * Finds genes present in a chromosome region,

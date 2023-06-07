@@ -385,17 +385,19 @@ div#list_search {
 }
 
 
-div.loadingDiv {
-    width: 80%
-        /*450px*/
-    ;
-    height: 35px;
-    color: #D56048;
+div.loadingDiv, .limit-message {
+    width: fit-content;
+    padding: .75rem;
+    background:#FFF8F6 ;
     position: relative;
     top: 10px;
     /*left:5px;*/
-    display: inline-block;
+    display:none;
+    border-radius: 8px;
+    margin: .5rem 0;
 }
+
+
 
 div#loadingNetworkDiv {
     float: right;
@@ -579,7 +581,7 @@ div.scrollTable {
 }
 
 /* scrollbar cutomisation for Knetminer Tables */
-div.scrollTable::-webkit-scrollbar{
+div.scrollTable::-webkit-scrollbar, #list_of_genes::-webkit-scrollbar{
     height: 6px;
     width: 6px;
 }
@@ -589,7 +591,7 @@ div.scrollTable::-webkit-scrollbar-track:horizontal{
     border: none;
 }
 
-div.scrollTable::-webkit-scrollbar-thumb{
+div.scrollTable::-webkit-scrollbar-thumb, #list_of_genes::-webkit-scrollbar-thumb{
     background: #D3D3D3;
     border-radius: 1ex;
 }
@@ -1801,8 +1803,7 @@ a {
 .counttext {
     font-size: 12px;
     color: #9B9B9B;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    margin: 10px 0;
 }
 
 
@@ -2512,7 +2513,6 @@ a {
 }
 
 
-
 /* pulse animation */
 .dot {
     position: relative;
@@ -2624,7 +2624,6 @@ a {
     display:none;
 }
 
-
 .userGenes_evidenceNetwork{
     cursor: pointer;
     text-decoration: underline;
@@ -2659,4 +2658,103 @@ a {
     font-weight: bold;
     margin-right: 4px;
 }
+
+
+
+/* Genelist search styling */
+
+.genecount-container{
+    display: none;
+    width: 61%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    color: #6F7F8F;
+}
+
+.warning-icon{
+    color: "#e65719";
+}
+
+.warning-text{
+    margin: 0 .25rem ;
+}
+
+:root {
+    --progress-bar-width: 30px;
+    --progress-bar-height: 30px;
+    --font-size: 2rem;
+  }
+
+  .progress-container{
+    position:absolute; 
+    right: 1.2pc;
+    color: #51CE7B;
+    font-size: .85rem;
+    font-weight:600;
+  }
+
+  .progress {
+    width: var(--progress-bar-width);
+    height: var(--progress-bar-height);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: .5rem;
+   
+  }
+  .inner-progress {
+    position: absolute;
+    width: calc(var(--progress-bar-width) - 6px);
+    height: calc(var(--progress-bar-height) - 6px);
+    border-radius: 50%;
+    background-color:#FFF;
+  }
+
+  #list_of_genes{
+    border: none !important;
+    background-color: transparent !important;
+    outline: none !important;
+  }
+
+  .border{
+    width: fit-content;
+    border: 1px solid black;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: .5rem;
+    position: relative;
+    background-color: #fff;
+  }
+
+  textarea {
+    border-style: none;
+    border-color: Transparent;
+    overflow: auto;
+    outline: none;
+  }
+
+.button-disabled{
+pointer-events: none;
+background-color:#EEF0F3;
+color: #C0C0C0;
+}
+
+.show{
+    display: flex;
+}
+
+.limit-border{
+    border-color: red;
+}
+
+.genes-limit{
+    color: red;
+}
+
+
+
+
 

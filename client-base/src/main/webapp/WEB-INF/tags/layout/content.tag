@@ -63,12 +63,30 @@
 					<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
-							<textarea onkeyup="geneCounter()" id="list_of_genes" cols="50" rows="7" placeholder="Search for gene id/name (one per line)"></textarea>
-							<div class='counttext' id="geneResultDiv" style="display: block;"></div>
-							<!-- <div class="rightnav_genelist" style="display:none">
-								<input type="radio" name="list_mode" value="GLrestrict">Intersection
-								<input type="radio" name="list_mode" value="GL" checked="checked">Union </br>
-							</div> -->
+							<div class="border">
+										<textarea onchange="geneCounter()" onkeyup="geneCounter()" oninput="geneCounter()" id="list_of_genes" cols="48" rows="7" placeholder="Search for gene id/name (one per line)" style="border:none"></textarea>
+										<div class="progress-container">
+											<div class="progress">
+												<div class="inner-progress"></div>
+											</div>
+											<span class="genesCount"></span>
+										</div>	
+							</div>
+
+							<div class="genecount-container">
+								<span id="geneResultDiv"></span>
+								<div class>
+									<span style="margin-right:.5rem;">Clear all</span>
+									<i class="fas fa-times" onclick="clearGeneListInput()"></i>
+								</div>
+							</div>
+
+							<div class="limit-message">
+								<i class="fas fa-exclamation-circle warning-icon"></i>
+								<span class="warning-text">You have exceeded the usage limit.</span>
+								<a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade plan</a>
+							</div>
+
 						</div>
 					</div>
 				</li>
