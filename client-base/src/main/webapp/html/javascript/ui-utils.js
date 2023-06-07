@@ -446,5 +446,6 @@ function clearGeneListInput(){
    Also, this is super-ultra-fast, does it need to be be async?
 */
 async function convertLengthToPercent(listLength){
+	// TODO try this instead return Math.min ( 100, listLength / freegenelist_limit )
   return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
 }
