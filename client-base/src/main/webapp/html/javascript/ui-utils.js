@@ -435,6 +435,16 @@ function clearGeneListInput(){
  * 
  * function converts length of non-empty genelist inputs to percentage against the system assigned genelist limit
  */
-  async function convertLengthToPercent(listLength){
-    return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
-  }
+/* TODO: Come on!!! This function occurs zillion times and IT CAN'T DEPEND on nothing but
+   value and total: function percent ( value, total ).
+   
+   If you really want one that is specific to freegenelist_limit (but do you?!), 
+   FIRST define the generic one above and then invoke it from something like: 
+   
+   function availableUserGenesAsPercent ( currentListLen )
+   
+   Also, this is super-ultra-fast, does it need to be be async?
+*/
+async function convertLengthToPercent(listLength){
+  return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
+}
