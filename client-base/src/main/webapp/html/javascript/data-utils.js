@@ -155,7 +155,10 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                         var secondTimeOut =  getLongWaitMessage.timeOutId();
 
                         // clear timeout from callstack
+                        // TODO: this timeout is never set, remove its declaration and use
+                        // if no longer needed. 
                         clearTimeout(firstTimeout);
+                         
                         clearTimeout(secondTimeOut);
                         document.getElementById('pGSearch_title').scrollIntoView();
                      })
