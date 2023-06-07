@@ -14,8 +14,14 @@ getLongWaitMessage = function(){
     var loadingPulse = '<div class="dot"></div>';
     var overlay = '<div class="overlay"></div>'
 
+		/* TODO: this looks like bad design. It seems an option (eg, useAwesomeFonts) that could be set
+		 * in createUiItem(), or could be a separated method like setAwesomeFonts( enabled = true )
+		 * 
+		 * or maybe there's no need to make this optional, it could be always on and hidden from the
+		 * invoker. 
+		 * 
+		 */
     // function to create overlay with fontawesome spinners
-    // TODO: this is never used, remove?
     function createOverlayLoader(parentElement){
         const loaderContainer = `<div style="font-size:2rem;color:#51CE7B;" class="overlay"><i class="fas fa-dna fa-spin fa-lg"></i></div>`   
         $(parentElement).append(loaderContainer)
@@ -67,6 +73,7 @@ getLongWaitMessage = function(){
         // TODO: why both this and init() are needed. Isn't start ( message = 'Searching' ) a better
         // name for both the exposed method and the function (with the default, it could be invoked 
         // as start() and init() shouldn't be needed)
-        createLoader:createUiItem
+        createLoader:createUiItem,
+        uiLoader:createOverlayLoader
     }
 }();
