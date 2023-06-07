@@ -186,10 +186,14 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
            $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
            document.getElementById('resultsTable_button').click(); 
            var secondTimeOut =  getLongWaitMessage.timeOutId();
-
+           
            // clear timeout from callstack
+           // TODO: this timeout is never set, remove its declaration and use
+           // if no longer needed. 
            clearTimeout(firstTimeout);
+           
            clearTimeout(secondTimeOut);
+           
            document.getElementById('pGSearch_title').scrollIntoView();
         })
 }
