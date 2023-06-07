@@ -74,10 +74,19 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-web</artifactId>
 		</dependency>
+		
+		<!-- TODO: remove, replaced by our own implementation of GA4
 		<dependency>
 		  <groupId>net.mikehardy</groupId>
 		  <artifactId>google-analytics-java</artifactId>
-		</dependency>			
+		</dependency>
+		-->
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+			
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-datasource-api</artifactId>
@@ -91,22 +100,29 @@
 			<groupId>uk.ac.ebi</groupId>
 			<artifactId>jutils</artifactId>
 		</dependency>
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-test</artifactId>
+		  <!-- TODO: common POM? -->
+		  <version>${springframework.version}</version>
+		  <scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-						<include>ga.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
 				<filtering>false</filtering>				
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 	</build>
 
 </project>

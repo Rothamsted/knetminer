@@ -5,6 +5,8 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
+
 /**
  * A data source provides data for KnetminerServer to serve. The annotation makes it get picked up
  * automatically by the autowiring. Note that this class is abstract, and implementations of it
@@ -105,10 +107,10 @@ public abstract class KnetminerDataSource {
 	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
 
 	/**
-	 * Gets the Google API ID from the configuration.
+	 * Gets the Google Analytics configuration data.
 	 * 
 	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into
 	 * one. WARNING: because of that, do not invoke this as an API call, use DatasetInfoService instead.
 	 */
-	public abstract String getGoogleAnalyticsIdApi ();
+	public abstract GoogleAnalyticsConfiguration getGoogleAnalyticsApiConfig ();
 }

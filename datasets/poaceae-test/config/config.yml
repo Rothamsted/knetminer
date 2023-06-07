@@ -46,16 +46,18 @@
     
 #seedGenesFile: config/seed-genes-poaceae.tsv
 
-# See the defaults for details. TODO: these are my (M. Brandizi) personal IDs. See details in the default
-# file.
-#
-googleAnalyticsIdApi: UA-237399750-1
-googleAnalyticsIdClient: UA-237399750-1
 
-# The new GA4 API
-#
-#googleAnalyticsIdApi: G-DPWNWT8BSF
-#googleAnalyticsIdClient: G-DPWNWT8BSF
+# WARNING: READ the notes in defaults-cfg.yml!
+# 
+googleAnalyticsAPI:
+  measurementId: G-31YFKXKSYH # Converted from old UA-237399750-1
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+# We're using the same as the API, but we need to override defaults
+googleAnalyticsClient:
+  measurementId: G-31YFKXKSYH
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
 
 # These are custom options, which aren't explicitly defined by the Knetminer configuration. 
 # See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.

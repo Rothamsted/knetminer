@@ -1,21 +1,25 @@
 package rres.knetminer.datasource.server;
 
+import static rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils.normalizeGAName;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ObjectMessage;
@@ -35,15 +39,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.brsanthu.googleanalytics.GoogleAnalytics;
-import com.brsanthu.googleanalytics.GoogleAnalyticsBuilder;
-import com.brsanthu.googleanalytics.request.DefaultRequest;
-
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.KnetminerResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
+import rres.knetminer.datasource.server.utils.googleanalytics4.Event;
+import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsHelper;
+import rres.knetminer.datasource.server.utils.googleanalytics4.GoogleAnalyticsUtils;
+import rres.knetminer.datasource.server.utils.googleanalytics4.NumberParam;
+import rres.knetminer.datasource.server.utils.googleanalytics4.StringParam;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.opt.net.ServletUtils;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 
 /**
@@ -66,7 +72,15 @@ public class KnetminerServer
 	@Autowired
 	private List<KnetminerDataSource> dataSources;
 
-	private Map<String, KnetminerDataSource> dataSourceCache;
+	private Map<String, KnetminerDataSource> dataSourceCache = new HashMap<> ();
+	
+	/**
+	 * Don't use me directly, this need proper initialisation, use 
+	 * {@link #getGoogleAnalyticsHelper()}.
+	 *  
+	 */
+	private GoogleAnalyticsHelper _analyticsHelper = null;
+	private boolean isAnalyticsInitialized = false;
 
 	private final Logger log = LogManager.getLogger ( getClass() );
 	
@@ -92,26 +106,38 @@ public class KnetminerServer
 		if ( dataSources.size () > 1 ) throw new UnsupportedOperationException (
 			"More than one KnetminerDataSource defined, this is no longer supported"	
 		);
-		
-		this.dataSourceCache = new HashMap<>();
-		for (KnetminerDataSource dataSource : dataSources) {
-			for (String ds : dataSource.getDataSourceNames()) {
-				this.dataSourceCache.put(ds, dataSource);
-				log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
-			}
+				
+		// So, we're sure there is only this one
+		KnetminerDataSource dataSource = dataSources.get ( 0 );
+		// TODO: reduce this too to 1 element only
+		for (String ds : dataSource.getDataSourceNames()) {
+			this.dataSourceCache.put(ds, dataSource);
+			log.info("Mapped /" + ds + " to " + dataSource.getClass().getName());
 		}
 	}
 
-	/**
-	 * Initialises Google Analytics, via {@link KnetminerDataSource#getGoogleAnalyticsIdApi()}
-	 */
-	private String getGoogleAnalyticsTrackingId () 
+	private GoogleAnalyticsHelper getGoogleAnalyticsHelper ()
 	{
-		return this.dataSources.get ( 0 ).getGoogleAnalyticsIdApi ();
+		if ( this.isAnalyticsInitialized ) return _analyticsHelper;
+		
+		synchronized ( this )
+		{
+			if ( isAnalyticsInitialized ) return _analyticsHelper;
+
+			var gaCfg = this.dataSources.get ( 0 ).getGoogleAnalyticsApiConfig ();
+			if ( gaCfg == null ) {
+				log.info ( "Google Analytics configuration is null, no GA tracking will occur" );
+				return null;
+			}
+			
+			return this._analyticsHelper = new GoogleAnalyticsHelper ( 
+				gaCfg.getApiSecret (), gaCfg.getMeasurementId (), gaCfg.getClientId () 
+			);
+		}
+		
 	}
 
-
-
+	
 	/**
 	 * @see #network(String, NetworkRequest, HttpServletRequest)
 	 */
@@ -255,16 +281,13 @@ public class KnetminerServer
 
 		if ( log.isDebugEnabled () )
 		{
-			String paramsStr = "Keyword:" + request.getKeyword () + " , List:"
-				+ Arrays.toString ( request.getList ().toArray () ) + " , ListMode:" + request.getListMode () + " , QTL:"
-				+ Arrays.toString ( request.getQtl ().toArray () );
-			log.debug ( "Calling " + mode + " with " + paramsStr );
+			log.debug ( "Calling /" + mode + " with " + request );
 		}
 
 		try
 		{
 			// TODO: as explained in their Javadoc, these are bridge methods, they should go away at some point
-			if ( "getGoogleAnalyticsIdApi".equals ( mode ) )
+			if ( "getGoogleAnalyticsApiConfig".equals ( mode ) )
 				ExceptionUtils.throwEx ( 
 					IllegalArgumentException.class, 
 					"The method %s isn't a valid data source API call, use the equivalent /dataset-info//google-analytics-id instead",
@@ -317,7 +340,7 @@ public class KnetminerServer
 		}
 		finally {
 			// TODO: should we track when failed?
-			this.googleTrackPageView ( ds, mode, request, rawRequest );
+			this.analyticsTrackApiCall ( ds, mode, request, rawRequest );
 		}
 	}
 	
@@ -357,106 +380,85 @@ public class KnetminerServer
 	/**
 	 * TODO: do we need listMode?
 	 */
-	private void googleTrackPageView (
+	private void analyticsTrackApiCall (
 		String ds, String mode, KnetminerRequest request, HttpServletRequest rawRequest
 	)
 	{
-		this.googleTrackPageView ( ds, mode, request.getKeyword (), request.getList (), request.getQtl (), rawRequest );
+		this.analyticsTrackApiCall (
+			ds, mode, request.getTaxId (),
+			request.getKeyword (), request.getList (), request.getListMode (), 
+			request.getQtl (), rawRequest
+		);
 	}
 
 	
-	private void googleTrackPageView (
-		String ds, String mode, String keyword, List<String> userGenes, List<String> userChrRegions, HttpServletRequest rawRequest
+	private void analyticsTrackApiCall (
+		String ds, String mode, String taxId,
+		String keyword, List<String> userGenes, String userGenesMode, 
+		List<String> userChrRegions, HttpServletRequest rawRequest
 	)
 	{
 		// TODO: googleLogApiRequest() considers certain API calls only, while this tracks all
 		
-		String gaId = getGoogleAnalyticsTrackingId ();
+					
+		String pageName = ds + "_" + mode;
+						
+		final var clientIpParam = GoogleAnalyticsUtils.getClientIPParam ( rawRequest );
+		final var clientHostParam = GoogleAnalyticsUtils.getClientHostParam ( rawRequest );
 		
-		if ( gaId == null ) {
-			log.info ( "Google Analytics, no ID set, not tracking" );
-			return;
-		}
-
-		String ipAddress = rawRequest.getHeader ( "X-FORWARDED-FOR" );
+		var gahelper = this.getGoogleAnalyticsHelper ();
+		if ( gahelper == null ) return;
 		
-		if ( ipAddress == null )
+    CompletableFuture<HttpResponse> eventFuture = gahelper.sendEventsAsync (
+    	// We need to normalise the data source, wheatknet-beta is invalid, due to '-'
+    	new Event ( "api_" + normalizeGAName ( pageName ), 
+    	  clientIpParam,
+    	  clientHostParam,
+    	  clientIpParam,
+    	  new StringParam ( "keywords", keyword ),
+    	  new NumberParam ( 
+    	  	"genesListSize",
+    	  	(double) Optional.ofNullable ( userGenes )
+    	  	.map ( List::size )
+    	  	.orElse ( 0 )
+    	  ),
+    	  new StringParam ( "genesListMode", userGenesMode ),
+    	  new NumberParam ( 
+    	  	"chrSize",
+    	  	(double) Optional.ofNullable ( userChrRegions )
+    	  	.map ( List::size )
+    	  	.orElse ( 0 )
+    	  ),
+    	  new StringParam ( "taxId", taxId )
+    ));
+		
+    eventFuture.thenAcceptAsync ( gaResponse -> 
 		{
-			ipAddress = rawRequest.getRemoteAddr ();
-			log.debug ( "Preparing Google Analytics, using getRemoteAddr(): {}", ipAddress );
-		} 
-		else
-		{
-			log.debug ( "Preparing Google Analytics, splitting X-FORWARDED-FOR: {}", ipAddress );
-			if ( ipAddress.indexOf ( ',' ) != -1 ) ipAddress = ipAddress.split ( "," )[ 0 ];
+			StatusLine status = gaResponse.getStatusLine ();
+			int statusCode = status.getStatusCode ();
 			
-			log.debug ( "Preparing Google Analytics, using splitted IP: {}", ipAddress );
-		}
-
-		// TODO: what's the point?! Just logging?! MB: I've put it under log.isDebug
-		if ( log.isDebugEnabled () )
-		{
-			String[] IP_HEADER_CANDIDATES = { 
-				"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
-				"HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
-				"HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
-				"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
-			};
-
-			for ( String header : IP_HEADER_CANDIDATES )
+			// These should be what GA returns when it's happy with our request
+			boolean isValidReply = false;
+			String rbody = "";
+			if ( statusCode == 204 )
 			{
-				String ip = rawRequest.getHeader ( header );
-				if ( ip != null && ip.length () != 0 && !"unknown".equalsIgnoreCase ( ip ) )
-					log.debug ( "Preparing Google Analytics, considering request header, {}: {}", header, ip );
+				rbody = StringUtils.trimToEmpty ( ServletUtils.getResponseBody ( gaResponse ) );
+				isValidReply = rbody.length () == 0;
 			}
-		}
-		
-		// GA wants the actual client URL?
-		String clientHost = Optional.ofNullable ( rawRequest.getHeader ( "X-Forwarded-Host" ) )
-			.orElse ( rawRequest.getRemoteHost () );
-				
-		String pageName = ds + "/" + mode;
-		
-		// This is like USER_AGENT in jdk.internal.net.http.HttpRequestImpl, which isn't accessible
-		var userAgent = "Java-http-client/" + System.getProperty ( "java.version" );
-		// DEBUG userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
-		
-		GoogleAnalytics ga = new GoogleAnalyticsBuilder ()
-      .withDefaultRequest ( 
-      	new DefaultRequest ()
-      		.trackingId ( gaId )	
-      		.userIp( ipAddress )
-      		.documentHostName ( clientHost )
-      		.documentTitle ( pageName )
-      		.documentPath ( "/" + pageName )
-      		.protocolVersion ( "2" )
-      		.userAgent ( userAgent )
-      )
-			.build ();
 			
-		
-			final var ipAddressRO = ipAddress; // lambdas requires immutables
-			
-			// Invoke GA asynchronously, don't waste my time with waiting
-			ga.
-			pageView ()
-			.sendAsync ()
-			.thenAcceptAsync ( gaResponse -> 
-			{
-				int gaRespCode = gaResponse.getStatusCode ();
-				if ( gaRespCode >= 400 )
-					log.error ( 
-						"Google Analytics, request to track '{}' with ID {} failed, HTTP status: {}, ip: {}, client: {}",
-						pageName, gaId, gaRespCode, ipAddressRO, clientHost 
-					);
-				else
-					log.info ( 
-						"Google Analytics invoked successfully for '{}', with ID {}, ip: {}, client: {}", 
-						pageName, gaId, ipAddressRO, clientHost
+			if ( isValidReply )
+				log.info ( 
+						"Google Analytics invoked successfully for '/{}', IP: {}, client host: {}", 
+						pageName, clientIpParam.getString (), clientHostParam.getString ()
 				);
-			});
+			else
+				log.error ( 
+					"Google Analytics, request to track '/{}' failed, HTTP status: {}, IP: {}, client host: {}",
+					pageName, status.toString (), clientIpParam.getString (), clientHostParam.getString () 
+				);
+		});
 		
-		
+    // TODO: What's the point of this, if everything already goes to GA?
 		// TODO: should we track it when GA fails?
 		this.googleLogApiRequest ( ds, mode, keyword, userGenes, userChrRegions, rawRequest );			
 	}

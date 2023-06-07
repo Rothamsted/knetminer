@@ -100,6 +100,18 @@ function fetchData(requestParams,list,keyword,login_check_url,request,searchMode
                     knetview_limit= 10; // back to default
                    }
             }
+            googleAnalytics.trackEvent (
+             request, // It already has a leading '/'
+             { 
+				 		   // WARNING: keep these fields consistent with the API tracking in 
+				 		   // KnetminerServer.java
+				 		   'keywords': keyword,
+				 		   'genesListSize': geneList_size,
+				 		   'genesListMode': requestParams?.qtl?.listMode || "",
+				 		   'chrSize': requestParams?.qtl?.length || 0,
+				 		   'taxId': requestParams?.taxId || ""
+				 		 }
+           )
         },
         complete: function () {
 
@@ -433,20 +445,25 @@ function matchCounter() {
             var request = "/" + searchMode + "?keyword=" + keyword + "&taxId=" + taxonomyID;
             var url = api_url + request;
 
-            $.get(url, '').done(function (data) {
-                if (data.luceneLinkedCount != 0) {
-                    $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
-                    $('.keywordsSubmit').removeAttr("disabled");
-					// show query suggestor icon
-					$('#suggestor_search').css('display', 'inline-block');
-                }
-                else {
-				  $('#matchesResultDiv').html('No documents or genes will be found with this query');
-				  // hide query suggestor icon
-				  $('#suggestor_search').css('display', 'none');
-				}
-            }).fail(function (xhr,status,errorlog) {
-                errorComponent('#matchesResultDiv',xhr)
+            $.get(url, '').done(function (data)
+            {
+						  if (data.luceneLinkedCount != 0) {
+							  $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
+							  $('.keywordsSubmit').removeAttr("disabled");
+							  // show query suggestor icon
+							  $('#suggestor_search').css('display', 'inline-block');
+              }
+              else {
+				        $('#matchesResultDiv').html('No documents or genes will be found with this query');
+				        // hide query suggestor icon
+				        $('#suggestor_search').css('display', 'none');
+				      }
+				      googleAnalytics.trackEvent ( "/countHits", {
+						    'keywords': keyword, 'taxId': taxonomyID
+						  })				      
+            }) // done()
+            .fail(function (xhr,status,errorlog) {
+              errorComponent('#matchesResultDiv',xhr)
             });
         } else {
             $('#matchesResultDiv').html('');

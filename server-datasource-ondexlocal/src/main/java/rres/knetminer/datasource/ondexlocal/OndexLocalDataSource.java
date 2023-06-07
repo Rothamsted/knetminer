@@ -43,6 +43,7 @@ import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
+import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
@@ -157,7 +158,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 	/**
 	 * We now support both the {@link region search box format QTL#fromString(String)} and the original
-	 * {@link countLoci() format QTL#countLoci2regionStr(String)}. (TODO: this needs testing).
+	 * {@link QTL#countLoci2regionStr(String) countLoci() format}. (TODO: this needs testing).
 	 * 
 	 */
 	@Override
@@ -489,12 +490,12 @@ public class OndexLocalDataSource extends KnetminerDataSource
   }
 
 	@Override
-	public String getGoogleAnalyticsIdApi ()
+	public GoogleAnalyticsConfiguration getGoogleAnalyticsApiConfig ()
 	{
 		return OndexServiceProvider.getInstance ()
 			.getDataService ()
 			.getConfiguration ()
-			.getGoogleAnalyticsIdApi ();
+			.getGoogleAnalyticsApiConfig ();
 	}
 		
 }

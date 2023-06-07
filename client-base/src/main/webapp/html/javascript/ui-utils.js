@@ -37,6 +37,8 @@ function activateButton(option){
 
     changeButtonOnSvg()
     changeButtonOffSvg(option + '_button')
+    
+    googleAnalytics.trackViewSelection ( option );
 }
 
 /*

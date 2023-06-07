@@ -348,6 +348,15 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"></div>');
 			$('#new_generateMultiGeneNetworkButton').html('Create Network');
 			$('#new_generateMultiEvidenceNetworkButton').html('Create Network');
+			
+			googleAnalytics.trackEvent (
+			  "/network", // It already has a leading '/'
+			  { 
+				  // WARNING: keep these fields consistent with the API tracking in 
+				  // KnetminerServer.java
+				  'keywords': requestParams?.keyword,
+				  'genesListSize': requestParams?.list?.length || 0
+			})
 		}
 		catch (err) {
 			var errorMsg = err.stack + ":::" + err.name + ":::" + err.message;
