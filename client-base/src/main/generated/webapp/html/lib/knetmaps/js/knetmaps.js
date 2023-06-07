@@ -5,10 +5,16 @@ KNETMAPS.ConceptsLegend = function () {
     var my = function () {};
     my.conName = function (conText) {
         // Map the concept names to corresponding legend context names
-        map = {"Biological_Process": "BioProc", "Molecular_Function": "MolFunc",
-            "Cellular_Component": "CellComp", "Trait Ontology": "TO",
-            "PlantOntologyTerm": "PO", "Enzyme Classification": "EC",
-            "Quantitative Trait Locus": "QTL", "Protein Domain": "Domain"};
+        map = {
+					"Biological_Process": "BioProc",
+					"Molecular_Function": "MolFunc",
+          "Cellular_Component": "CellComp",
+          "Trait Ontology": "TO",
+          "PlantOntologyTerm": "PO",
+          "Enzyme Classification": "EC",
+          "Quantitative Trait Locus": "QTL",
+          "Protein Domain": "Domain"
+        };
         result = map[conText];
         // If result is not null, return result, else return conText
         return result != null ? result : conText;
@@ -28,19 +34,24 @@ KNETMAPS.ConceptsLegend = function () {
 
         var conceptsHashmap = {};
         conceptTypes.forEach(function (conType, index) {
+
             // Get the total number of concepts for that concept 
             var totConCount = conNodes.filterFn(function (ele) {
                 return ele.data('conceptType') === conType;
             }).size();
+
+
             // Get a collection of all the visible nodes and their length
             var currently_visibleNodes = cy.collection();
+
             conNodes.filter('node[conceptType="' + conType + '"]').forEach(function (conc) {
                 if (conc.hasClass('ShowEle')) {
                     currently_visibleNodes = currently_visibleNodes.add(conc);
                 }
             });
+
             var visible_len = $(currently_visibleNodes).length;
-            conceptsHashmap[conType] = (visible_len + "/" + totConCount);
+            conceptsHashmap[conType] = visible_len + "/" + totConCount;
         });
 
         // update knetLegend.
@@ -52,10 +63,11 @@ KNETMAPS.ConceptsLegend = function () {
             var conText = KNETMAPS.ConceptsLegend().conName(con);
             var conID = KNETMAPS.ConceptsLegend().conNameFormat(con);
             var collections = KNETMAPS.ConceptsLegend().nodeClassesOnGraph(cy, conID),
-                    hiddenEdges = collections.hiddenEdges,
-                    hiddenNodes = collections.hiddenNodes,
-                    currently_visibleNodes = collections.visibleNodes;
+                hiddenEdges = collections.hiddenEdges,
+                hiddenNodes = collections.hiddenNodes,
+                currently_visibleNodes = collections.visibleNodes;
             var edge_count = $(hiddenNodes.edgesWith(currently_visibleNodes)).length;
+
             if (edge_count == 0 && hiddenEdges >= 0) {
                 knetLegend = knetLegend + '<div class="knetLegend_cell"><input type="submit" value="" id="' + con.replace(/ /g, '_') + '" title="Show or remove all ' + con.replace(/_/g, ' ') + '(s)" class="knetCon_' + con.replace(/ /g, '_') + " opacity_class" + '" style="vertical-align:middle" ontouchmove="KNETMAPS.ConceptsLegend().hideConnectedByType(this.id);" ondblclick="KNETMAPS.ConceptsLegend().hideConnectedByType(this.id);" onclick="KNETMAPS.ConceptsLegend().showConnectedByType(this.id);">' +
                         '<span class="icon_caption">' + conceptsHashmap[con] + '<br>' + conText + '</span></div>';
@@ -70,15 +82,18 @@ KNETMAPS.ConceptsLegend = function () {
     }
 
     my.conNameFormat = function (conType) {
+
         if (conType === "Trait_Ontology" || conType === "Enzyme_Classification" ||
             conType === "Quantitative_Trait_Locus" || conType === "Protein_Domain") {
             return conType.replace(/_/g, ' ');
         }
+
         if (conType === "Biological Process" || conType === "Molecular Function" || conType === "Cellular Component") {
             return conType.replace(/ /g, '_');
-        } else {
+        }else {
             return conType;
         }
+
     }
 
     my.nodeClassesOnGraph = function (cy, conType) {
@@ -117,7 +132,7 @@ KNETMAPS.ConceptsLegend = function () {
 
     my.conceptCount = function (cy, conType, conText, totConcepts) {
         // Update the name of the icon with the relevant counts accordingly
-        $(document).ready(function () {
+        $(document).load(function () {
             var currentNodes_ofSameType = cy.collection();
             cy.nodes().filter('node[conceptType="' + conType + '"]').forEach(function (conc) {
                 if (conc.hasClass('ShowEle')) {
@@ -127,7 +142,7 @@ KNETMAPS.ConceptsLegend = function () {
             // Update the name with the current nodes / total nodes and the node type name. 
             var nameToUpdate = " " + $(currentNodes_ofSameType).length + '\/' + totConcepts + '<br>' + conText;
             $("span.icon_caption").each(function () {
-                if ($(this).text().includes(conText)) {
+                if ($(this).text() == conText) {
                     $(this).html(nameToUpdate);
                 }
             });
@@ -138,13 +153,12 @@ KNETMAPS.ConceptsLegend = function () {
         });
     }
 
-
     my.showConnectedByType = function (conType) {
         $('#infoDialog').html("");
         // get all cytoscape elements via jQuery 
         var cy = $('#cy').cytoscape('get');
         var conID = KNETMAPS.ConceptsLegend().conNameFormat(conType);
-        console.log("ID is: " + conID);
+        console.log("Showing Concept Type #", conID);
         var collections = KNETMAPS.ConceptsLegend().nodeClassesOnGraph(cy, conID),
                 hiddenNodes_ofSameType = collections.hiddenNodes,
                 currently_visibleNodes = collections.visibleNodes,
@@ -155,41 +169,45 @@ KNETMAPS.ConceptsLegend = function () {
 
         // end here
         var edge_count = $(hiddenNodes_ofSameType.edgesWith(currently_visibleNodes)).length;
+    
         if (edge_count > 0) {
             // Display hidden nodes of same Type which are connected to currently visible Nodes.
             hiddenNodes_ofSameType.edgesWith(currently_visibleNodes).connectedNodes().addClass('ShowEle').removeClass('HideEle');
             // Display edges between such connected Nodes too.
             hiddenNodes_ofSameType.edgesWith(currently_visibleNodes).addClass('ShowEle').removeClass('HideEle');
             KNETMAPS.ConceptsLegend().populateConceptLegend();
-
         }
+
         if (hiddenEdges >= 0 && edge_count == 0) {
-            KNETMAPS.ConceptsLegend().populateConceptLegend();
+        	// TODO: remove?
+            // KNETMAPS.ConceptsLegend().populateConceptLegend();
             $('#infoDialog').html('<font color="red">' + "Can't show more  " + conText + " concept nodes. Please check your graph.</font>").show();
             $('#' + conID.replace(/ /g, '_')).addClass('opacity_class');
-            
         }
 
         stats.updateKnetStats(); // Refresh network Stats.
+        // TODO: uncommenting conceptCount() seem to solve https://github.com/Rothamsted/knetminer/issues/737
+        // looking to understand main cause of the bug
         KNETMAPS.ConceptsLegend().conceptCount(cy, conID, conText, totConcepts); // Update the text count
     }
 
-
     my.hideConnectedByType = function (conType) {
+        console.debug ("Toggling ", conType, " visible" ); 
         $('#infoDialog').html("");
         // get all cytoscape elements via jQuery 
         var cy = $('#cy').cytoscape('get');
         var conID = KNETMAPS.ConceptsLegend().conNameFormat(conType);
+
         // Define the visible nodes of the same type as a Cytoscape collection
         var collections = KNETMAPS.ConceptsLegend().nodeClassesOnGraph(cy, conID),
-                visibleNodes_ofSameType = collections.visibleOfSameType,
-                currently_visibleNodes = collections.visibleNodes,
-                conText = collections.text,
-                totConcepts = collections.total;
-        $('#' + conID.replace(/_/g, ' ')).removeClass('opacity_class');
+        visibleNodes_ofSameType = collections.visibleOfSameType,
+        currently_visibleNodes = collections.visibleNodes,
+        conText = collections.text,
+        totConcepts = collections.total;
 
-
+        // $('#' + conID.replace(/_/g, ' ')).removeClass('opacity_class');
         var edge_count = $(visibleNodes_ofSameType.edgesWith(currently_visibleNodes)).length; // Obtain the number of edges present
+
         // Ensure that Gene concepts cannot be removed. 
         if (conText.includes("Gene") == false) {
             // Set the collection of visible nodes to hidden and remove its show class, thus setting the CSS display to None.
@@ -214,7 +232,7 @@ KNETMAPS.ConceptsLegend = function () {
             $('#infoDialog').html("");
         }
 
-        //KNETMAPS.ConceptsLegend().conceptCount(cy, conID, conText, totConcepts); // Update the text count
+        KNETMAPS.ConceptsLegend().conceptCount(cy, conID, conText, totConcepts); // Update the text count
         KNETMAPS.ConceptsLegend().populateConceptLegend();
     }
 
@@ -1723,7 +1741,7 @@ KNETMAPS.Menu = function() {
 
    // Go to Help docs.
  my.openKnetHelpPage = function() {
-   var helpURL = 'https://knetminer.com/tutorial/search-views/network-view';
+   var helpURL = 'https://github.com/Rothamsted/knetmaps.js/wiki/KnetMaps.js';
    window.open(helpURL, '_blank');
   };
 

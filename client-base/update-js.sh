@@ -73,7 +73,8 @@ if [[ "$#" > 1 ]]; then
 else
 	# TODO: this branch DOES NOT work completely at the moment, we still need to merge changes from
 	# knetmaps-plus
-	deploy_npm "https://github.com/Rothamsted/knetmaps.js#2.2.1-RC.1" knetmaps 
+	# TODO: remove deploy_npm "https://github.com/Rothamsted/knetmaps.js#2.2.1-RC.1" knetmaps
+  deploy_npm "https://github.com/Rothamsted/knetmaps.js#dev-2.2" knetmaps
 	deploy_npm "https://github.com/Rothamsted/genomaps.js.git#v2.0.0-RC.1" genomaps
 	
 	# TODO: it is expected that this will be dragged in by knetmaps.js, see knetmaps-plus
