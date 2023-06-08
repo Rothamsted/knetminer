@@ -107,6 +107,7 @@ multiSpeciesFeature = function ()
         }
 
     }
+		
     // get species query examples 
     function getQueryExamples(){
             var sampleQueryButtons = "";
@@ -226,9 +227,7 @@ multiSpeciesFeature = function ()
                             removeGeneRow()
                             emptyRegionInputs(1); 
                             if ($("#region_search_area").is(":visible")) {
-                                $("#region_search").attr('src', 'html/image/expand.gif')
-                                $('#region_search_area').hide();
-                                
+                                $("#region_search").click();
                             }
                         }
 
@@ -238,9 +237,7 @@ multiSpeciesFeature = function ()
                         } else {
                             $("input:radio[name=list_mode]").val(['GLrestrict']);
                         }
-                        
 
-                        // TODO: extend original function that takes the on clicking the buttton
                         //console.log("sampleQueries[sampleNum].genes.length= "+ sampleQueries[sampleNum].genes.length);
                         if (sampleQueries[sampleNum].genes.length > 0) {
                             if ($("#advanced_search_area").is(":hidden")) {
@@ -254,8 +251,7 @@ multiSpeciesFeature = function ()
                         } else {
                             $("#list_of_genes").val("");
                             if ($("#advanced_search_area").is(":visible")) {
-                                $("#advanced_search").attr('src', 'html/image/expand.gif')
-                                $("#advanced_search_area").hide();
+                                $("#advanced_search").click();
                             }
                         }
 
@@ -272,7 +268,6 @@ multiSpeciesFeature = function ()
                 }
             });
     }
-
     // get the gene chromosome list 
     function getChromosomeList(){
         $.get(api_url + '/dataset-info/chromosome-ids' + getTaxIdUrlFrag () ,'').done( function(chromosomes){

@@ -23,13 +23,13 @@
 				</li>
 
 				<li style="width: 80%;"> <!-- Keyword search -->
-				    <b><img onclick="keywordInputHandler(this,'#matchesResultDiv')" id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Keyword Search</b>
+				    <b><img id="kwd_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Keyword Search</b>
 					<hr width="85%" align="left">
 					<div id="keyword_search">
 					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 
 						 <span style="vertical-align:middle">
-						      <img onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
+						      <img id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
 						 </span>
 
 						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>
@@ -60,7 +60,7 @@
 				  </div>
 				</li> -->
 				<li style="padding-top:20px; width:70%;">
-					<b><img onclick="handleGenomeSearch(this,'#advanced_search_area')" id="advanced_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;"/>Gene List Search</b>
+					<b><img id="advanced_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Gene List Search</b>
 					<hr width="45%" align="left">
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
@@ -75,7 +75,7 @@
 				</li>
 				<li id="genomeorqtlsearchbox" style="width: 70%;padding-bottom: 20px;">
     				<br>
-				    <b><img onclick="handleGenomeSearch(this,'#region_search_area')" id="region_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;" />Genome Region Search</b>
+				    <b><img id="region_search" src="html/image/collapse.gif" style="padding-right:5px;cursor:pointer;">Genome Region Search</b>
                     <hr width="60%" align="left">
                     <div id="region_search_area">
                         <table id="regions_table">
