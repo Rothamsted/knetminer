@@ -47,9 +47,11 @@ function initResetButton() {
     $("#suggestor_search_div").hide();
     $("#tabviewer").hide("");
     $("#resetknet").hide();
-    $("#geneResultDiv").hide();
     $("#region_search_area").hide();
+
     $("#region_search").attr("src", "html/image/expand.gif");
+    
+    clearGeneListInput()
   });
 }
 

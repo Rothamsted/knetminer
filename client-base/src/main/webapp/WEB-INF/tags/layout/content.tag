@@ -82,9 +82,12 @@
 							</div>
 
 							<div class="limit-message">
-								<i class="fas fa-exclamation-circle warning-icon"></i>
-								<span class="warning-text">You have exceeded the usage limit.</span>
-								<a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade plan</a>
+								<div style="display:flex;align-items:center">
+									<i class="fas fa-exclamation-circle warning-icon"></i>
+									<span class="warning-text"></span>
+									<a class="warning-link" target="_blank"></a>
+								</div>
+								
 							</div>
 
 						</div>

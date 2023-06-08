@@ -394,8 +394,9 @@ div.loadingDiv, .limit-message {
     /*left:5px;*/
     display:none;
     border-radius: 8px;
-    margin: .5rem 0;
+    margin-right: .5rem 0;
 }
+
 
 
 
@@ -2672,12 +2673,27 @@ a {
     color: #6F7F8F;
 }
 
+
+
+@media(min-width:1920px) {
+    .genecount-container{
+        width: 54%;
+    }
+}
+@media(min-width:2560px) {
+    .genecount-container{
+        width: 48%;
+    }
+}
+
+
+
 .warning-icon{
     color: "#e65719";
 }
 
 .warning-text{
-    margin: 0 .25rem ;
+    margin: 0 .4rem ;
 }
 
 :root {
@@ -2704,6 +2720,7 @@ a {
     margin-bottom: .5rem;
    
   }
+
   .inner-progress {
     position: absolute;
     width: calc(var(--progress-bar-width) - 6px);

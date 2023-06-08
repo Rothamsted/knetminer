@@ -409,62 +409,19 @@ function geneCounter(){
  
   var nonEmptyInputs = []; 
 
-    if(geneListValue[0] === ''){
-      updateListBar(0);
-    } 
-     
-    
 
-      for(var i =0; i < geneListValue.length; i++ ){
-          if(geneListValue[i] !==  ''){
-            nonEmptyInputs.push(geneListValue[i]); 
-          }
+  for(var i =0; i < geneListValue.length; i++ ){
+      if(geneListValue[i] !==  ''){
+        nonEmptyInputs.push(geneListValue[i]); 
       }
-
-      geneInput.html('<span>  <b>'+ nonEmptyInputs.length +'</b>  Genes </span>')
-      var listLength = nonEmptyInputs.length; 
-      checkListLimit(listLength)
-      updateListBar(listLength);
-
-  
-
-}
-
-// function checks if genelist inputs are within or outside assigned limit
-function checkListLimit(listLength){
-
-  // checks either if genelist limit if false or if genelist inputs falls within allowed limit 
-  const isLimitReached = listLength <= freegenelist_limit || enforce_genelist_limit === false ? true : false;
-
-    $('#searchBtn').toggleClass('button-disabled', !isLimitReached); 
-    $(".genecount-container").toggleClass('show', isLimitReached)
-    $(".limit-message").toggleClass('show',!isLimitReached)
-    $(".border").toggleClass('limit-border',!isLimitReached)
-    $('.genesCount').toggleClass('genes-limit', !isLimitReached)
-}
-
-
-// function updated genelist progress bar on user input
-async function updateListBar(listLength){
-
-  const progressBar = document.querySelector('.progress');
-  const progressText = document.querySelector('.genesCount'); 
-
-  // removes progress bar since user is currently on unlimited plan
-  if(!enforce_genelist_limit){
-      progressBar.delete(); 
   }
 
-  // convert list to percentage using the user limit
-  const listLengthPercent =  await convertLengthToPercent(listLength);
+  geneInput.html('<span>  <b>'+ nonEmptyInputs.length +'</b>  Genes </span>')
+  var listLength = nonEmptyInputs.length; 
+  var geneListCounter = new GenesListManager(listLength); 
 
-  const progressColor = listLength > freegenelist_limit ? 'red' : `conic-gradient( #51CE7B ${listLengthPercent * 3.6}deg, grey 0deg)`; 
-  progressBar.style.background = progressColor;
-  progressText.innerHTML = `${listLength}/${freegenelist_limit}`; 
+  geneListCounter.detectLimit(); 
 }
-
-
-
 /*
  * Finds genes present in a chromosome region,
  * using the corresponding API.
@@ -563,7 +520,8 @@ function matchCounter()
       $('#matchesResultDiv').html('');
       $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
     } // else keywordValidated 
-  } // if ( keyword )
+  } 
+  // if ( keyword )
 } // matchCounter()
 
 /*
@@ -864,5 +822,105 @@ function setTableSorterHeaderTick ( tableId, columnIndex, isAscending = true )
 	// revert the order. This reproduces the same behaviour that the table sorter
   var sortingDirection = isAscending ?  'tablesorter-headerAsc' : 'tablesorter-headerDesc'; 
   $(`#${tableId} thead tr:nth-child(1) th:nth-child(${columnIndex})`).addClass(`${sortingDirection} tablesorter-headerSorted`);
+}
+
+// An helper class to manage GeneList Limit
+class GenesListManager 
+{
+
+  // System defined geneslist limit, 20 for guest users, 100 for logged in users 
+  // unlimited for pro users
+  #listLimit = freegenelist_limit; 
+
+  // Geneslist input length
+  #listLength = null;
+
+  // System defined boolean value to check if genelist input limit is enforced
+  #isLimitEnforced = enforce_genelist_limit
+
+
+  constructor(listLength){
+    this.#listLength = listLength;
+  }
+
+
+  // Detects geneslist limit by checking genelist inputs against system defined limit, while updating input progress bar.
+  detectLimit(){
+    this.#setLimitStatus()
+    this.#updateProgressBar()
+  }
+
+  // Internal method creates progress bar to track user input against defined limit
+  #updateProgressBar(){
+
+      const progressBar = document.querySelector('.progress');
+      const progressText = document.querySelector('.genesCount'); 
+    
+      // removes progress bar if user is on unlimited plan
+      if(!this.#isLimitEnforced){
+          progressBar.delete(); 
+      }
+    
+      // convert list to percentage using the user limit
+      const listInPercentage =  this.#getListPercentage(this.#listLength);
+    
+      const progressColor = this.#listLength > this.#listLimit ? 'red' : `conic-gradient( #51CE7B ${listInPercentage * 3.6}deg, grey 0deg)`; 
+      progressBar.style.background = progressColor;
+      progressText.innerHTML = `${this.#listLength}/${this.#listLimit}`; 
+  
+  }
+
+  // Internal util method that converts genelist input length to a percentage value
+  // called in updateProgressBar()
+  #getListPercentage(){
+    return (this.#listLength / this.#listLimit) * 100;
+  }
+
+  // Method checks if genelist limit is reached and passes resulting boolean as a state value to toggle HTML Elements and to triggers type of message shown on UI.
+  #setLimitStatus(){
+
+    const isLimitReached = this.#listLength <=  this.#listLimit || !this.#isLimitEnforced ? true : false;
+
+    $('#searchBtn').toggleClass('button-disabled', !isLimitReached); 
+    $(".genecount-container").toggleClass('show', isLimitReached)
+    $(".limit-message").toggleClass('show',!isLimitReached);
+    $(".border").toggleClass('limit-border',!isLimitReached);
+    $('.genesCount').toggleClass('genes-limit', !isLimitReached);
+
+    if(!isLimitReached) this.#showStatusMessage(isLimitReached); 
+    
+  }
+
+  // Internal method to show messages and call to action depending on geneslist limit
+  #showStatusMessage(){
+
+    if(this.#listLimit == 20){
+      this.#setFreePlanMessage()
+    }else{
+      this.#setPaidPlanMessage()
+    }
+
+  }
+
+  // Returns message shown to users who exceeds geneslist limit as guest users 
+  #setFreePlanMessage(){
+    this.#setLimitMessage('You have exceeded your guest user limit. Please',' Login',"onclick","loginModalInit()");
+  }
+
+  // Returns the message shown to users who exceeds genelist as free users
+  #setPaidPlanMessage(){
+    this.#setLimitMessage('You have exceeded your free user limit. Please',' Upgrade','href','https://knetminer.com/pricing-plans');
+  }
+
+  // Util method takes limit specific parameters that are shown on UI, when users reach geneslist Limit
+  #setLimitMessage(message,actionText,attributeType,attributeAction){
+
+    $('.warning-text').html(message);
+
+    const limitCta = document.querySelector('.warning-link'); 
+    limitCta.setAttribute(attributeType,attributeAction)
+    limitCta.innerHTML = actionText;
+  }
+
 }
 
