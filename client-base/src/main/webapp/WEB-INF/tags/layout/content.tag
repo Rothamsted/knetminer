@@ -29,7 +29,7 @@
 					     <input id="keywords" name="keywords" type="text" placeholder="Search for traits, diseases, pathways, molecules, ..." style="display: inline-block;">
 
 						 <span style="vertical-align:middle">
-						      <img onclick="querySuggestorHandler(this,"#suggestor_search_area","#suggestorSearchDiv")" id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
+						      <img onclick="querySuggestorHandler(this,'#suggestor_search_area','#suggestorSearchDiv')" id="suggestor_search" src="html/image/qs_expand.png" alt="suggestions" title="Concept Selector " style="cursor:pointer; position:relative; right:41px; top:0; width:28px; height:28px; display:none;">
 						 </span>
 
 						 <div class="counttext" id="matchesResultDiv" style="display: block;">Type a query to begin</div>

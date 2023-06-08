@@ -232,11 +232,12 @@ function  keywordInputHandler(targetElement, inputId) {
 };
 
 // function handles Query Suggestor input event
-function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv) {
+function querySuggestorHandler(targetElement,inputId, suggestorSearchDiv)
+{
+	suggestorSearchDiv = $(suggestorSearchDiv)
   if (suggestorSearchDiv.css("display") === "none") suggestorSearchDiv.show();
-    handleGenomeSearch(targetElement,inputId)
-    if ($(targetEelement).attr("src") == "html/image/qs_collapse.png") refreshQuerySuggester();
-    
+  handleGenomeSearch(targetElement,inputId)
+  if ($(targetEelement).attr("src") == "html/image/qs_collapse.png") refreshQuerySuggester();
 }
 
 /** 
