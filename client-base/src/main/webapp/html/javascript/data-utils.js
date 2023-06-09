@@ -419,9 +419,9 @@ function geneCounter(){
 
   geneInput.html('<span>  <b>'+ nonEmptyInputs.length +'</b>  Genes </span>')
   var listLength = nonEmptyInputs.length; 
-  var geneListCounter = new GenesListManager(listLength); 
 
-  geneListCounter.detectLimit(); 
+  var geneListCounter = new GenesListManager(listLength); 
+    geneListCounter.detectLimit(); 
 }
 /*
  * Finds genes present in a chromosome region,
@@ -465,65 +465,62 @@ function findChromosomeGenes(event) {
 function matchCounter() 
 {
   var keyword = $('#keywords').val();
-  var taxonomyID =  $('.navbar-select').children("option:selected").val();
+
+  var isKeywordValidated;
+
   $("#pGViewer_title").replaceWith('<div id="pGViewer_title"></div>'); // clear display msg
-  if (keyword == '')
-  {
-    $('#matchesResultDiv').html('Type a query to begin');
 
-    $("#suggestor_search_area").slideUp(500)
-    // hide query suggestor icon
-    $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
-  } 
-  else
-  {
-    var isKeywordValidated = validateKeywords(keyword);
-    if (isKeywordValidated)
-    {
-      var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
+  keyword.length ? isKeywordValidated = validateKeywords(keyword) : renderMatchCounterHtml('Type a query to begin.');
 
-      var url = api_url + request;
-      $.get(url, '').done(function (data)
-      {
-        if (data.luceneLinkedCount != 0) 
-        {
-          $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
-          $('.keywordsSubmit').removeAttr("disabled");
-          // show query suggestor icon
-          $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
-        }
-        else
-        {
-          $('#matchesResultDiv').html('No documents or genes will be found with this query');
-          // hide query suggestor icon 
-          $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
-          $("#suggestor_search_area").slideUp(500)
-        }
-                
-        googleAnalytics.trackEvent (
-          "/countHits", 
-          {
-            'keywords': keyword,
-            'taxId': taxonomyID
-        })
-                
-        
-      }) // done()
-      .fail(function (xhr,status,errorlog)
-      {
-        var server_error= JSON.parse(xhr.responseText); // full error json from server
-        var errorMsg= server_error.title.replace('(start >= end) ', '')
-        $('#matchesResultDiv').html(`<span class="redText">${errorMsg}</span>`);
-      });
-    } // if keywordValidated 
-    else 
-    {
-      $('#matchesResultDiv').html('');
-      $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png')
-    } // else keywordValidated 
-  } 
+  if (isKeywordValidated){countHitsApiCall(keyword)}
+  
+  if (isKeywordValidated == false) renderMatchCounterHtml('No documents or genes will be found with this query')
+ 
+
   // if ( keyword )
 } // matchCounter()
+
+// calls count hits REST endpoint
+function countHitsApiCall(keyword){
+  var taxonomyID =  $('.navbar-select').children("option:selected").val();
+  var request = `/countHits?keyword=${keyword}&taxId=${taxonomyID}`;
+  var url = api_url + request;
+  
+    $.get(url, '').done(function (data)
+    {
+      var documentLength = data.luceneLinkedCount; 
+
+      if (documentLength > 0) 
+      {
+        $('#matchesResultDiv').html('<b>' + data.luceneLinkedCount + ' documents</b>  and <b>' + data.geneCount + ' genes</b> will be found with this query');
+        $('.keywordsSubmit').removeAttr("disabled");
+        // show query suggestor icon
+        $(".concept-selector").css("pointer-events","auto").attr('src', 'html/image/concept_active.png')
+      }
+              
+      googleAnalytics.trackEvent (
+        "/countHits", 
+        {
+          'keywords': keyword,
+          'taxId': taxonomyID
+      })
+              
+      
+    }) // done()
+    .fail(function (xhr,status,errorlog)
+    {
+      var server_error= JSON.parse(xhr.responseText); // full error json from server
+      var errorMsg= server_error.title.replace('(start >= end) ', '')
+      renderMatchCounterHtml('No documents or genes will be found with this query')(`<span class="redText">${errorMsg}</span>`);
+    });
+}
+
+// renders matchCounter HTML messages 
+function renderMatchCounterHtml(counterMessage){
+  $('#matchesResultDiv').html(counterMessage);
+  $(".concept-selector").css("pointer-events","none").attr('src', 'html/image/concept.png');
+  $("#suggestor_search_area").slideUp(500)
+}
 
 /*
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
