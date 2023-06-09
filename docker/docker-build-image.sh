@@ -95,7 +95,7 @@ fi
 
 
 echo -e "\n\  Creating image\n"
-docker build -t "$image_prefix/knetminer:$docker_tag" --build-arg DOCKER_TAG="$docker_tag_bare" \
+docker build -t "$image_prefix/knetminer:$docker_tag" --build-arg DOCKER_BARE_TAG="$docker_tag_bare" \
   $DOCKER_OPTS -f docker/Dockerfile .
 
 echo -e "\n\  The End\n" 
