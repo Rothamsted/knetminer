@@ -73,6 +73,7 @@ function searchKeyword(){
         $('#evidenceTable_button').removeClass('created');
 
         requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list)
+        getLongWaitMessage.init()
       }
 }
 
@@ -526,7 +527,6 @@ function matchCounter()
 
 /*
  * Function to create,get and showcase gene name synonyms with a dropdown onclick event
- * 
  */
 function createGeneNameSynonyms(element,data){
 
@@ -873,7 +873,7 @@ class GenesListManager
   // Internal util method that converts genelist input length to a percentage value
   // called in updateProgressBar()
   #getListPercentage(){
-    return (this.#listLength / this.#listLimit) * 100;
+      return  (this.#listLength / this.#listLimit) * 100;
   }
 
   // Method checks if genelist limit is reached and passes resulting boolean as a state value to toggle HTML Elements and to triggers type of message shown on UI.
