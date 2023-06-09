@@ -4,11 +4,11 @@
 # climbing up the host paths is forbidden
 #
 
-# Sometimes, it can be usefult to change it, when developing and/or playing with different versions
+# Sometimes, it can be useful to change it, when developing and/or playing with different versions
 # of the bare image beneat us.
-ARG DOCKER_TAG='latest' 
+ARG DOCKER_BARE_TAG='latest' 
 
-FROM ghcr.io/rothamsted/knetminer-bare:${DOCKER_TAG}
+FROM ghcr.io/rothamsted/knetminer-bare:${DOCKER_BARE_TAG}
 
 # If set, tomcat-users.xml is populated with the user 'tomcat' and this password
 # Can be useful for basic debugging.
