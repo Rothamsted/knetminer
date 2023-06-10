@@ -120,6 +120,8 @@ function knetSpaceProfile() {
         });
         return jsonVal;
     });
+    checkUserPlan();
+    $('#list_of_genes').trigger("focus");
     console.log(jsonVal.username);
     return jsonVal;
 }
@@ -152,7 +154,7 @@ function loginUtilsInit ()
  * initialize  loginModal
  * @returns {loginModal}
  */
-function loginModalInit() {
+async function loginModalInit() {
     getKsAPI().then(function (ksAddress) {
         const knetspace_address = ksAddress;
         var loginHtml = "<form class='form' method='post' action='#'>"
@@ -208,8 +210,10 @@ function loginModalToggle() {
         if (!bool) {
             console.log("User isn't logged in, initalizing login Modal");
             // If the user isn't logged in then we return undiefined so we can initalize the login button.
-            $('#login_icon').click(function (e) {
-                loginModalInit();
+            $('#login_icon').click(async function (e) {
+                await loginModalInit().then(()=> {
+                    console.log('logged in')
+                });
             });
             return false;
         }
@@ -281,7 +285,7 @@ function logOut(knetspace_address) {
  * 
  * @param {type} loginModal
  */
-function fetchCredentials(loginModal) {
+function   fetchCredentials(loginModal) {
 
     getKsAPI().then(function (ksAddress) {
         const knetspace_address = ksAddress;

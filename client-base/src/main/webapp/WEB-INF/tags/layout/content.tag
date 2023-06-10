@@ -64,7 +64,7 @@
 					<div id="list_search">
 						<div id="advanced_search_area" style="display: block;">
 							<div class="border">
-										<textarea onchange="geneCounter()" onkeyup="geneCounter()" oninput="geneCounter()" id="list_of_genes" cols="48" rows="7" placeholder="Search for gene id/name (one per line)" style="border:none"></textarea>
+										<textarea onchange="geneCounter()" onfocus="geneCounter()" oninput="geneCounter()" id="list_of_genes" cols="48" rows="7" placeholder="Search for gene id/name (one per line)" style="border:none"></textarea>
 										<div class="progress-container">
 											<div class="progress">
 												<div class="inner-progress"></div>
