@@ -2666,26 +2666,12 @@ a {
 
 .genecount-container{
     display: none;
-    width: 61%;
+    width: 413px;
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
     color: #6F7F8F;
 }
-
-
-
-@media(min-width:1920px) {
-    .genecount-container{
-        width: 54%;
-    }
-}
-@media(min-width:2560px) {
-    .genecount-container{
-        width: 48%;
-    }
-}
-
 
 
 .warning-icon{
@@ -2718,7 +2704,7 @@ a {
     justify-content: center;
     align-items: center;
     margin-bottom: .5rem;
-   
+    background:conic-gradient( grey 360deg, grey 0deg)
   }
 
   .inner-progress {

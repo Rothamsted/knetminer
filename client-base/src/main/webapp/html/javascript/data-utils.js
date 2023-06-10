@@ -135,6 +135,8 @@ function checkUserPlan(){
         },
 
     });
+
+    $('.genesCount').html(`0/${freegenelist_limit}`)
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above

@@ -73,8 +73,8 @@
 										</div>	
 							</div>
 
-							<div class="genecount-container">
-								<span id="geneResultDiv"></span>
+							<div class="genecount-container show">
+								<span id="geneResultDiv">0 Genes</span>
 								<div class>
 									<span style="margin-right:.5rem;">Clear all</span>
 									<i class="fas fa-times" onclick="clearGeneListInput()"></i>
