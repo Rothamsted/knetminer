@@ -79,17 +79,7 @@ function createGenesTable ( tableData, keyword )
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGSearch_title').scrollIntoView();
 
-	/*
-	 * click Handler for viewing a network.
-	 */
-	$(".viewGeneNetwork").bind("click", { x: tableData }, function (e) {
-		e.preventDefault();
-		var geneNum = $(e.target).attr("id").replace("viewGeneNetwork_", "");
-		var values = e.data.x[geneNum];
 
-		// Generate Network in KnetMaps.
-		generateCyJSNetwork(api_url + '/network', { list: [values[1]], keyword: keyword, isExportPlainJSON: false }, false);
-	});
 
 
 	// TODO: evidence dropdown functions to be refined in Knetminer 5.7 
@@ -389,12 +379,12 @@ function createGeneTableBody ( tableData, doAppend = false )
 		// if (row > rows /*&& values[7]=="no"*/) continue;
 		table += '<tr>';
 
-		geneAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
+		var upperCasedAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
 
-		var geneAccNorm = geneAccessions.replace(".", "_");
+		var geneAccNorm = upperCasedAccessions.replace(".", "_");
 
 		// Gene accession
-		var geneTd = '<td class="gene_accesion"><a href = "javascript:;" class="viewGeneNetwork" title="Display network in KnetMaps" id="viewGeneNetwork_' + row + '">' + geneAccessions + '</a></td>';
+		var geneTd = `<td class="gene_accesion"><a href = "javascript:;" onclick="openNetworkView(event,'${geneAccessions}')" title="Display network in KnetMaps">${upperCasedAccessions}</a></td>`;
 
 		var geneNameTd = geneName.toUpperCase() == geneAccessions
 			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
@@ -586,14 +576,25 @@ function createGeneTableBody ( tableData, doAppend = false )
 	return legend;
 }
 
-/** 
- * function to toggle geneview evidence column popups 
- * TODO: if it's about the gene table, then why is it in this file?
-*/
-function toggleEvidencePopUp(event,toggleDuration,toggleAction){
-	event.preventDefault(); 
-	var targetname = $(event.target).attr("id").replace(toggleAction +'_', "");
-	$("#" + targetname).slideToggle(toggleDuration);
+/**
+ * function create network for rows of gene View using genesAccessions.
+ * called in createGenesTable
+ */
+function openNetworkView(event,genesAccessions){
+	event.preventDefault();
+	var keyword = trim($("#keywords").val());
+	var list = []; 
+
+	if(typeof genesAccessions == 'string')list.push(genesAccessions)
+
+	// Generate Network in KnetMaps.
+	if(keyword.length && list.length){
+		var networkParameter = { list: list, keyword: keyword, isExportPlainJSON: false };
+		generateCyJSNetwork(api_url + '/network',networkParameter, false);
+	}
+
 }
+
+
   
 

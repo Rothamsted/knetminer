@@ -753,3 +753,13 @@ class AccessionPopupManager
     }
 }
 
+
+/** 
+ * function to toggle geneview evidence column popups
+*/
+function toggleEvidencePopUp(event,toggleDuration,toggleAction){
+	event.preventDefault(); 
+	var targetname = $(event.target).attr("id").replace(toggleAction +'_', "");
+	$("#" + targetname).slideToggle(toggleDuration);
+}
+
