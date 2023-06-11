@@ -121,7 +121,6 @@ function knetSpaceProfile() {
         return jsonVal;
     });
     checkUserPlan();
-    $('#list_of_genes').trigger("focus");
     console.log(jsonVal.username);
     return jsonVal;
 }

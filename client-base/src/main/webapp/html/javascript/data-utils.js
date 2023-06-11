@@ -133,10 +133,14 @@ function checkUserPlan(){
                    }
             }
         },
+        complete:function(){
+          $('.genesCount').html(`0/${freegenelist_limit}`);
+          geneCounter();
+        }
 
     });
 
-    $('.genesCount').html(`0/${freegenelist_limit}`)
+    
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
