@@ -121,6 +121,8 @@
 		<jetty.http.port>8080</jetty.http.port>
 		<jetty.http.stopPort>8081</jetty.http.stopPort>
 		
+		<jutils.version>11.1</jutils.version>		
+		
 	</properties>
 
 
