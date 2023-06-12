@@ -33903,7 +33903,7 @@ module.exports = zScore;
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
-  var functionsHaveNames = (function foo() {}).name === 'foo'; // eslint-disable-line no-extra-parens
+  var functionsHaveNames = (function foo() {}).name === 'foo';
 
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
@@ -34089,12 +34089,12 @@ module.exports = zScore;
     return _toString(value) === '[object Arguments]';
   };
   var isLegacyArguments = function isArguments(value) {
-    return value !== null &&
-      typeof value === 'object' &&
-      typeof value.length === 'number' &&
-      value.length >= 0 &&
-      _toString(value) !== '[object Array]' &&
-      _toString(value.callee) === '[object Function]';
+    return value !== null
+      && typeof value === 'object'
+      && typeof value.length === 'number'
+      && value.length >= 0
+      && _toString(value) !== '[object Array]'
+      && _toString(value.callee) === '[object Function]';
   };
   var isArguments = isStandardArguments(arguments) ? isStandardArguments : isLegacyArguments;
 
@@ -34230,10 +34230,6 @@ module.exports = zScore;
     SameValueZero: function (a, b) {
       // same as SameValue except for SameValueZero(+0, -0) == true
       return (a === b) || (numberIsNaN(a) && numberIsNaN(b));
-    },
-
-    IsIterable: function (o) {
-      return ES.TypeIsObject(o) && (typeof o[$iterator$] !== 'undefined' || isArguments(o));
     },
 
     GetIterator: function (o) {
@@ -34775,8 +34771,8 @@ module.exports = zScore;
   // see http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
     ES.RequireObjectCoercible(s);
-    this._s = ES.ToString(s);
-    this._i = 0;
+    defineProperty(this, '_s', ES.ToString(s));
+    defineProperty(this, '_i', 0);
   };
   StringIterator.prototype.next = function () {
     var s = this._s;
@@ -34885,9 +34881,9 @@ module.exports = zScore;
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
   ArrayIterator = function (array, kind) {
-    this.i = 0;
-    this.array = array;
-    this.kind = kind;
+    defineProperty(this, 'i', 0);
+    defineProperty(this, 'array', array);
+    defineProperty(this, 'kind', kind);
   };
 
   defineProperties(ArrayIterator.prototype, {
@@ -35110,7 +35106,10 @@ module.exports = zScore;
   // Chrome defines keys/values/entries on Array, but doesn't give us
   // any way to identify its iterator.  So add our own shimmed field.
   if (Object.getPrototypeOf) {
-    addIterator(Object.getPrototypeOf([].values()));
+    var ChromeArrayIterator = Object.getPrototypeOf([].values());
+    if (ChromeArrayIterator) { // in WSH, this is `undefined`
+      addIterator(ChromeArrayIterator);
+    }
   }
 
   // note: this is positioned here because it relies on Array#entries
@@ -35141,9 +35140,9 @@ module.exports = zScore;
     overrideNative(Array, 'from', function from(items) {
       if (arguments.length > 1 && typeof arguments[1] !== 'undefined') {
         return ES.Call(origArrayFrom, this, arguments);
-      } else {
-        return _call(origArrayFrom, this, items);
       }
+      return _call(origArrayFrom, this, items);
+
     });
   }
 
@@ -35273,10 +35272,8 @@ module.exports = zScore;
       NEGATIVE_INFINITY: OrigNumber.NEGATIVE_INFINITY,
       POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
     });
-    /* eslint-disable no-undef, no-global-assign */
-    Number = NumberShim;
+    Number = NumberShim; // eslint-disable-line no-global-assign
     Value.redefine(globals, 'Number', NumberShim);
-    /* eslint-enable no-undef, no-global-assign */
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -35380,7 +35377,7 @@ module.exports = zScore;
     var ES5ObjectShims = {
       // 19.1.3.9
       // shim from https://gist.github.com/WebReflection/5593554
-      setPrototypeOf: (function (Object, magic) {
+      setPrototypeOf: (function (Object) {
         var set;
 
         var checkArgs = function (O, proto) {
@@ -35400,16 +35397,16 @@ module.exports = zScore;
 
         try {
           // this works already in Firefox and Safari
-          set = Object.getOwnPropertyDescriptor(Object.prototype, magic).set;
+          set = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;
           _call(set, {}, null);
         } catch (e) {
-          if (Object.prototype !== {}[magic]) {
+          if (Object.prototype !== ({}).__proto__) { // eslint-disable-line no-proto
             // IE < 11 cannot be shimmed
             return;
           }
           // probably Chrome or some old Mobile stock browser
           set = function (proto) {
-            this[magic] = proto;
+            this.__proto__ = proto; // eslint-disable-line no-proto
           };
           // please note that this will **not** work
           // in those browsers that do not inherit
@@ -35429,7 +35426,7 @@ module.exports = zScore;
           // we can even delete Object.prototype.__proto__;
         }
         return setPrototypeOf;
-      }(Object, '__proto__'))
+      }(Object))
     };
 
     defineProperties(Object, ES5ObjectShims);
@@ -35437,9 +35434,12 @@ module.exports = zScore;
 
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
   // but Object.create(null) does.
-  if (Object.setPrototypeOf && Object.getPrototypeOf &&
-      Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
-      Object.getPrototypeOf(Object.create(null)) === null) {
+  if (
+    Object.setPrototypeOf
+    && Object.getPrototypeOf
+    && Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null
+    && Object.getPrototypeOf(Object.create(null)) === null
+  ) {
     (function () {
       var FAKENULL = Object.create(null);
       var gpo = Object.getPrototypeOf;
@@ -35639,6 +35639,7 @@ module.exports = zScore;
       return '/' + pattern + '/' + flags;
     }, true);
     Value.preserveToString(RegExp.prototype.toString, origRegExpToString);
+    RegExp.prototype.toString.prototype = void 0;
   }
 
   if (supportsDescriptors && (!regExpSupportsFlagsWithRegex || regExpNeedsToSupportSymbolMatch)) {
@@ -35675,10 +35676,8 @@ module.exports = zScore;
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    /* eslint-disable no-undef, no-global-assign */
-    RegExp = RegExpShim;
+    RegExp = RegExpShim; // eslint-disable-line no-global-assign
     Value.redefine(globals, 'RegExp', RegExpShim);
-    /* eslint-enable no-undef, no-global-assign */
   }
 
   if (supportsDescriptors) {
@@ -35937,8 +35936,8 @@ module.exports = zScore;
 
   var origMathRound = Math.round;
   // breaks in e.g. Safari 8, Internet Explorer 11, Opera 12
-  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0 &&
-    Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
+  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0
+    && Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
 
   // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
   // This behavior should be governed by "round to nearest, ties to even mode"
@@ -36048,10 +36047,13 @@ module.exports = zScore;
         return pr.then(task);
       };
     };
-    var enqueue = ES.IsCallable(globals.setImmediate) ?
-      globals.setImmediate :
-      typeof process === 'object' && process.nextTick ? process.nextTick : makePromiseAsap() ||
-      (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() : function (task) { setTimeout(task, 0); }); // fallback
+    var enqueue = ES.IsCallable(globals.setImmediate)
+      ? globals.setImmediate
+      : (
+        typeof process === 'object' && process.nextTick
+          ? process.nextTick
+          : makePromiseAsap() || (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() : function (task) { setTimeout(task, 0); })
+      ); // fallback
 
     // Constants for Promise implementation
     var PROMISE_IDENTITY = function (x) { return x; };
@@ -36525,13 +36527,15 @@ module.exports = zScore;
       return !!BadResolverPromise.all([1, 2]);
     });
 
-    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
-        !promiseRequiresObjectContext || promiseResolveBroken ||
-        !getsThenSynchronously || hasBadResolverPromise) {
-      /* globals Promise: true */
-      /* eslint-disable no-undef, no-global-assign */
-      Promise = PromiseShim;
-      /* eslint-enable no-undef, no-global-assign */
+    if (
+      !promiseSupportsSubclassing
+      || !promiseIgnoresNonFunctionThenCallbacks
+      || !promiseRequiresObjectContext
+      || promiseResolveBroken
+      || !getsThenSynchronously
+      || hasBadResolverPromise
+    ) {
+      Promise = PromiseShim; // eslint-disable-line no-global-assign
       overrideNative(globals, 'Promise', PromiseShim);
     }
     if (Promise.all.length !== 1) {
@@ -36703,9 +36707,9 @@ module.exports = zScore;
 
         var MapIterator = function MapIterator(map, kind) {
           requireMapSlot(map, '[[MapIterator]]');
-          this.head = map._head;
-          this.i = this.head;
-          this.kind = kind;
+          defineProperty(this, 'head', map._head);
+          defineProperty(this, 'i', this.head);
+          defineProperty(this, 'kind', kind);
         };
 
         MapIterator.prototype = {
@@ -36794,18 +36798,18 @@ module.exports = zScore;
               entry = this._storage[fkey];
               if (entry) {
                 return entry.value;
-              } else {
-                return;
               }
+              return;
+
             }
             if (this._map) {
               // fast object key path
               entry = origMapGet.call(this._map, key);
               if (entry) {
                 return entry.value;
-              } else {
-                return;
               }
+              return;
+
             }
             var head = this._head;
             var i = head;
@@ -36848,11 +36852,11 @@ module.exports = zScore;
               if (typeof this._storage[fkey] !== 'undefined') {
                 this._storage[fkey].value = value;
                 return this;
-              } else {
-                entry = this._storage[fkey] = new MapEntry(key, value); /* eslint no-multi-assign: 1 */
-                i = head.prev;
-                // fall through
               }
+              entry = this._storage[fkey] = new MapEntry(key, value); /* eslint no-multi-assign: 1 */
+              i = head.prev;
+              // fall through
+
             } else if (this._map) {
               // fast object key path
               if (origMapHas.call(this._map, key)) {
@@ -37014,16 +37018,16 @@ module.exports = zScore;
             return null;
           } else if (k === '^undefined') {
             return void 0;
-          } else {
-            var first = k.charAt(0);
-            if (first === '$') {
-              return _strSlice(k, 1);
-            } else if (first === 'n') {
-              return +_strSlice(k, 1);
-            } else if (first === 'b') {
-              return k === 'btrue';
-            }
           }
+          var first = k.charAt(0);
+          if (first === '$') {
+            return _strSlice(k, 1);
+          } else if (first === 'n') {
+            return +_strSlice(k, 1);
+          } else if (first === 'b') {
+            return k === 'btrue';
+          }
+
           return +k;
         };
         // Switch from the object backing storage to a full Map.
@@ -37123,7 +37127,7 @@ module.exports = zScore;
         addIterator(SetShim.prototype, SetShim.prototype.values);
 
         var SetIterator = function SetIterator(it) {
-          this.it = it;
+          defineProperty(this, 'it', it);
         };
         SetIterator.prototype = {
           isSetIterator: true,
@@ -37296,18 +37300,18 @@ module.exports = zScore;
         - In Firefox 25 at least, Map and Set are callable without "new"
       */
       if (
-        typeof globals.Map.prototype.clear !== 'function' ||
-        new globals.Set().size !== 0 ||
-        newMap.size !== 0 ||
-        typeof globals.Map.prototype.keys !== 'function' ||
-        typeof globals.Set.prototype.keys !== 'function' ||
-        typeof globals.Map.prototype.forEach !== 'function' ||
-        typeof globals.Set.prototype.forEach !== 'function' ||
-        isCallableWithoutNew(globals.Map) ||
-        isCallableWithoutNew(globals.Set) ||
-        typeof newMap.keys().next !== 'function' || // Safari 8
-        mapIterationThrowsStopIterator || // Firefox 25
-        !mapSupportsSubclassing
+        typeof globals.Map.prototype.clear !== 'function'
+        || new globals.Set().size !== 0
+        || newMap.size !== 0
+        || typeof globals.Map.prototype.keys !== 'function'
+        || typeof globals.Set.prototype.keys !== 'function'
+        || typeof globals.Map.prototype.forEach !== 'function'
+        || typeof globals.Set.prototype.forEach !== 'function'
+        || isCallableWithoutNew(globals.Map)
+        || isCallableWithoutNew(globals.Set)
+        || typeof newMap.keys().next !== 'function' // Safari 8
+        || mapIterationThrowsStopIterator // Firefox 25
+        || !mapSupportsSubclassing
       ) {
         defineProperties(globals, {
           Map: collectionShims.Map,
@@ -37486,14 +37490,14 @@ module.exports = zScore;
           return Reflect.defineProperty(receiver, key, {
             value: value
           });
-        } else {
-          return Reflect.defineProperty(receiver, key, {
-            value: value,
-            writable: true,
-            enumerable: true,
-            configurable: true
-          });
         }
+        return Reflect.defineProperty(receiver, key, {
+          value: value,
+          writable: true,
+          enumerable: true,
+          configurable: true
+        });
+
       }
 
       if (desc.set) {
@@ -37712,9 +37716,9 @@ module.exports = zScore;
           if (typeof parsedValue !== 'symbol') {
             if (Type.symbol(parsedValue)) {
               return assignTo({})(parsedValue);
-            } else {
-              return parsedValue;
             }
+            return parsedValue;
+
           }
         };
         args.push(wrappedReplacer);
