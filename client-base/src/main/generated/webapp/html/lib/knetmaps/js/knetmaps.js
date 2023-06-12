@@ -1978,8 +1978,8 @@ KNETMAPS.KnetMaps = function() {
 				+ "<option value='ngraph_force_layout' title='using ngraph_force layout (works well on planar graphs)'>Force layout</option>"
 				+ "<option value='circle_layout'>Circular layout</option>"
 				+ "<option value='concentric_layout'>Concentric layout</option>"
-				+ "<option value='coseBilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"
-			/*	+ "<option value='euler_layout'>Euler layout</option>"
+		/*	+ "<option value='coseBilkent_layout' title='using CoSE-Bilkent layout (with node clustering, but performance-intensive for larger networks)'>CoSE-Bilkent layout</option>"
+				+ "<option value='euler_layout'>Euler layout</option>"
                                 + "<option* value='random_layout'>Random layout</option>" */
 				+ "</select>"
 				+ "<select id='changeLabelVisibility' class='knet-dropdowns' onChange='KNETMAPS.Menu().showHideLabels(this.value);' title='Select label visibility'>"
