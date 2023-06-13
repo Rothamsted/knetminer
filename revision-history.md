@@ -5,7 +5,10 @@
 <br>
 
 # 5.7-SNAPSHOT
-* Current snapshot (to be changed after final 5.6).
+* Current snapshot (on master).
+
+# 5.6.0-SNAPSHOT
+* Current snapshot (on 5.6 branch).
 
 
 # 5.6
