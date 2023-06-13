@@ -7,7 +7,7 @@
 
 	<parent>
 		<groupId>uk.ac.rothamsted.knetminer</groupId>
-		<version>5.6-SNAPSHOT</version>
+		<version>5.6</version>
 		<artifactId>app-common</artifactId>
 	</parent>
 

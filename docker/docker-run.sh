@@ -13,7 +13,7 @@ set -e
 dataset_id=''
 dataset_dir=''
 host_port=8080
-image_version='5.6-dev'
+image_version='5.6'
 
 # Our defaults tell the JVM to use a quota of the RAM passed to the container. 
 # UseCompressedOops is needed due to: https://stackoverflow.com/a/58121363/529286
