@@ -118,7 +118,7 @@
 							</tr>
                             <tr>
                                 <td colspan="5">
-									<span id="addRow"><i class="fa fa-plus" aria-hidden="true"></i> Add region</span>
+									<span onclick="createChromosomeRegion()" id="addRow"><i class="fa fa-plus" aria-hidden="true"></i> Add region</span>
                                 </td>
                             </tr>
                         </tbody></table>
