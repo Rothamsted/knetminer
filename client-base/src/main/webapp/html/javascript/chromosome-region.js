@@ -216,10 +216,3 @@ function findChromosomeGenes(event) {
     })
 
 }
-
-
-function checkChrRegionInputs(start,end,chromosome){
-
-
-}
-
