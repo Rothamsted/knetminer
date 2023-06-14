@@ -49,6 +49,13 @@ function cleanGeneList ( geneList )
 		.map ( s => s.trim () );
 }
 
+/**
+ * function checks if input is of type number
+ */
+function isParameterNumber(input){
+    return (typeof input == 'number'); 
+}
+
 
 
 

@@ -23,7 +23,6 @@ $(document).ready (
 			loadOnReady();
 			showReferenceGenome();
 			initResetButton();
-			qtlRegionHandlers();
 			showToolTips();
 			intialiseFeedbackCtaConfig();
 			checkUserPlan();

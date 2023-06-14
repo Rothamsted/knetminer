@@ -335,7 +335,7 @@ function intialiseFeedbackCtaConfig(){
             <span style="color:#FFFFFF;">You're one of very few using KnetMiner Beta. Providing feedback helps us improve.</span> 
             <a href="https://knetminer.com/beta-feedback-form" target="_blank" class="feedback-button" title="Submit Feedback">Share your Feedback</a> 
         </div>
-        <span onClick="feedbackCloseBtn()" class="nav-padding"><i class="fa fa-times" aria-hidden="true"></i></span>
+        <span onclick="feedbackCloseBtn()" class="nav-padding"><i class="fa fa-times" aria-hidden="true"></i></span>
     </div> `;
 
     if(isFeedbackEnabled){
@@ -445,7 +445,7 @@ function clearGeneListInput(){
    
    Also, this is super-ultra-fast, does it need to be be async?
 */
-async function convertLengthToPercent(listLength){
-	// TODO try this instead return Math.min ( 100, listLength / freegenelist_limit )
-  return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
-}
+// async function convertLengthToPercent(listLength){
+// 	// TODO try this instead return Math.min ( 100, listLength / freegenelist_limit )
+//   return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
+// }
