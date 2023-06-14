@@ -131,13 +131,18 @@
         <!-- evidence table -->
         <script type="text/javascript" src="html/javascript/evidence-table.js"></script>
 
- 
+        <!-- Web cache -->
+        <script type="text/javascript" src="html/javascript/web-cache.js"></script>
         
+        <!-- Chromosome region-->
+        <script type="text/javascript" src="html/javascript/chromosome-region.js"></script>
+
+
         <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
         <!-- table-handler -->
-        <script type="text/javascript" src="html/javascript/table-handler.js"></script>
+        <script type="text/javascript" src="html/javascript/table-scrolling.js"></script>
 
         <!-- ajax data Utils-->
         <script type="text/javascript" src="html/javascript/data-utils.js"></script>
