@@ -278,29 +278,15 @@ function generateMultiEvidenceNetwork(event) {
 //  Function creates popup showing table of accessions associated to a genes concept
 async function openGeneListPopup(conceptId, element)
 {
-  // TODO: (remove after reading) how the hell was this indented?!
-  
-  // Checking if modal element is already created for current conceptID
 
-	
-	var type = $(element).attr("data-type");      
+  // Checking if modal element is already created for current conceptID 
 	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
 	
-	let data = await webCacheWrapper.getCachedData(request);
-	if ( !data )
-    {
-	  data = await $.get({ url:request, data: '', timeout: 100000 })
-	  .done( rdata => {
-            webCacheWrapper.cacheRequest ( request, rdata )
-		})
-		.fail(function (xhr, status, errolog) {
-	    jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
-	    return null
-	  })						
-	}
+	let accessionCache  = new WebCacheWrapper('accession-cache', request);
+    let accessionData = await accessionCache.get(); 
 	
-	if ( data ){
-        var geneTable = data.geneTable.split("\n").slice(1,-1)
+	if ( accessionData ){
+        var geneTable = accessionData.geneTable.split("\n").slice(1,-1)
         var accessionPopup = new AccessionPopupManager(element, conceptId, geneTable); 
         accessionPopup.showPopup()
     }

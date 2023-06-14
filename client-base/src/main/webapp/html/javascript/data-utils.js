@@ -429,40 +429,6 @@ function geneCounter(){
   var geneListCounter = new GenesListManager(listLength); 
     geneListCounter.detectLimit(); 
 }
-/*
- * Finds genes present in a chromosome region,
- * using the corresponding API.
- *
- */
-function findChromosomeGenes(event) {
-        var currentRowNumber = getChromosomeRegionIndex(event.currentTarget);
-        var chromosome = $('#chr' + currentRowNumber).find(':selected').val();
-        var start = $('#start' + currentRowNumber).val()
-        var end = $('#end' + currentRowNumber).val()
-        var genes = 'genes' + currentRowNumber
-
-				/* TODO (not urgent)
-				// Some minimal validation
-				let isValid = <start is a number> 
-				isValid &= <end is a number>
-				isValid &= start < end
-				if ( !isValid )
-				{
-					<set gene count to 0>
-					return // ie, don't call the API, it will always yield an error
-				} 
-				*/        
-    
-        if (chromosome != "" && start != "" && end != "") {
-            var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
-            var keyword = chromosome + "-" + start + "-" + end;
-            var request = '/countLoci?keyword='+keyword+'&taxId='+taxonomyID;
-            var url = api_url + request;
-            $.get(url, '').done(function (data) {
-                $("#" + genes).val(data.geneCount);
-            });
-        } 
-}
 
 /**
  * Function to get the number of matches in the keywords text box.
@@ -740,77 +706,7 @@ function checkSubStrings(searchKeyword){
     
 }
 
-// object literal manages caching for API request
-// currently only works for GET calls in (openGeneListPopup() in evidence-table.js)
-/** 
- * TODO:
- * - This name is misleading. This is not to cache any object, but to cache web requests/data only,
- *   based on browser facilities. Choose a better name, eg, webCacheWrapper.
- * 
- * - (not urgent). Having it as a singleton is dirty, cause it doesn't allow fo reusing the same 
- *   code for multiple caches, should the need arise (of which I'm not sure, but still...). A better
- *   approach would be that the methods before are class methods (eg, WebCacheManager) and 
- *   this variable here is an instance of it. WebCacheManager would be initialised with the
- *   cache name, eg, const cacheManager = new WebCacheManager ( "my-cache" )
- * 
- * - (not urgent, can remain like this) This design is named cache-aside, see 
- *   https://hazelcast.com/blog/a-hitchhikers-guide-to-caching-patterns/
- *   I'm not a great fan of it, the read-through approach (see the same link) is usually cleaner when 
- *   used with functional programming (to set the function that fetch new cache entries).
- * 
- *   In this case, it seems that the cache fetch/update handler would vary too much, so it might be
- *   difficult to define a new entry handler.  Maybe, a mix between the two approaches would 
- *   be an improvement:
- *    
- *   // invocation, more readable than data = cache.get(), if ( data ) else ()
- *   let data = cacheMgr.get ( request, r => await $.get (...) )
- *   ...
- *   
- *   get() would be in place of getCachedData() and would be like (in pseudo-code):
- * 
- *   // implementation
- *   function cacheManager.get ( request, newEntryFetcher )
- *   {
- *     if request is already cached => return cached value
- *     value = newEntryFetcher ( request )
- *     save value in the cache
- *     return value
- *   }
- */
-const webCacheWrapper = function(){
 
-    // function checks request url to determine if it's cached from previous API call.
-    async function getCachedData(request){
-
-        // checks if request url is available in browser API
-        var response = await caches.match(request); 
-
-        // Request url is not cached
-        // TODO: meh! the invoker is expecting a cache object and you're returning a boolean
-        // see if null works better. 
-        if(!response) return null
-
-        // if request is cached, cached data is returned
-        var data = await response.json(); 
-        return data;
-    }
-
-    // function puts cached data in browser API
-    function cacheRequest(url,data){
-        caches.open('my-cache').then((cache) => {
-            // We need to clone the request since a request can only be used once
-            cache.put(url, new Response(JSON.stringify(data), {
-                headers: {'Content-Type': 'application/json'}
-            }));
-
-        });
-    }
-
-    return {
-        getCachedData:getCachedData,
-        cacheRequest:cacheRequest
-    }
-}()
 
 /**
  * Can be used with a jQuery table sorter element, to manually mark a column as sorted,
@@ -856,12 +752,14 @@ class GenesListManager
   // Internal method creates progress bar to track user input against defined limit
   #updateProgressBar(){
 
-      const progressBar = document.querySelector('.progress');
-      const progressText = document.querySelector('.genesCount'); 
+      const progresUIContainer = document.querySelector('.progress-container'); 
+
+      const progressBar = progresUIContainer.firstElementChild
+      const progressText = progresUIContainer.lastElementChild
     
       // removes progress bar if user is on unlimited plan
       if(!this.#isLimitEnforced){
-          progressBar.delete(); 
+        progresUIContainer.remove(); 
       }
     
       // convert list to percentage using the user limit
