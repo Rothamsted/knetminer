@@ -283,7 +283,7 @@ async function openGeneListPopup(conceptId, element)
 	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
 	
 	let accessionCache  = new WebCacheWrapper('accession-cache', request);
-    let accessionData = await accessionCache.get(); 
+  let accessionData = await accessionCache.get(); 
 	
 	if ( accessionData ){
         var geneTable = accessionData.geneTable.split("\n").slice(1,-1)
@@ -661,7 +661,7 @@ class AccessionPopupManager
     }
 
     /**
-     * Util method sets acession popup row count looking at the total number of genes present. 
+     * Util method sets accession popup row count looking at the total number of genes present. 
      * When genes count is higher than 500, method caps Genes count to 500 and return orginal length when less than 500.
      * Method is called internally below (#getPaginationHtml())
      */ 

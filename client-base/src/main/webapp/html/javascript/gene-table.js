@@ -579,14 +579,29 @@ function createGeneTableBody ( tableData, doAppend = false )
 /**
  * function create network for rows of gene View using genesAccessions.
  * called in createGenesTable
+ * 
+ * TODO: there is a function with the same name and different purpose in genomap.js, probably
+ * this one needs a different name.
  */
 function openNetworkView(event,genesAccessions){
 	event.preventDefault();
 	var keyword = trim($("#keywords").val());
-	var list = []; 
 
-	if(typeof genesAccessions == 'string')list.push(genesAccessions)
+	/**
+	 * TODO: remove after reading, this didn't work, 'list' remains empty if genesAccession is an array.
+	 * You couldn't see this bug, for the function is only used for the gene table,
+	 * single gene links. So,
+	 * 
+	 * TODO: (not urgent) see if there are other invocation points, where it might be useful
+	 * to use this function too, instead of the ugly generateCyJSNetwork()
+	 */ 
+	// var list = []; 
+	// if(typeof genesAccessions == 'string')list.push(genesAccessions)
 
+	let list = typeof genesAccessions == 'string'
+	  ? [ genesAccessions ]
+	  : genesAccessions
+	
 	// Generate Network in KnetMaps.
 	if(keyword.length && list.length){
 		var networkParameter = { list: list, keyword: keyword, isExportPlainJSON: false };

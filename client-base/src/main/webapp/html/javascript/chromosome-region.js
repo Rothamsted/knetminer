@@ -185,27 +185,17 @@ function findChromosomeGenes(event) {
   var end = $('#end' + currentRowNumber).val()
   var genes = 'genes' + currentRowNumber; 
 
-  /* TODO (not urgent)
-				// Some minimal validation
-				let isValid = <start is a number> 
-				isValid &= <end is a number>
-				isValid &= start < end
-				if ( !isValid )
-				{
-					<set gene count to 0>
-					return // ie, don't call the API, it will always yield an error
-				} 
-				*/  
-
+  // Some basic validation
   var isInputValid = isParameterNumber(start)
   isInputValid &= isParameterNumber(end)
   isInputValid &= start < end 
   isInputValid &= chromosome !== ''; 
 
-
-  if(!isInputValid) $("#" + genes).val(0)
-
-
+  // The API call is pointless if the checks above fail
+  if(!isInputValid) {
+    $("#" + genes).val(0)
+    return
+  }
 
   var taxonomyID =  $('.navbar-select').children("option:selected").val(); 
   var keyword = chromosome + "-" + start + "-" + end;
@@ -214,5 +204,4 @@ function findChromosomeGenes(event) {
     $.get(url, '').done(function (data) {
       $("#" + genes).val(data.geneCount)
     })
-
 }

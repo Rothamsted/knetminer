@@ -411,20 +411,30 @@ function countLinkedUserGenes(gv_table) {
  */
 function geneCounter(){
 
-  var geneListValue = $("#list_of_genes").val().split('\n');
+  var geneListValues = $("#list_of_genes").val().split('\n');
   var geneInput = $('#geneResultDiv');
  
-  var nonEmptyInputs = []; 
-
-
+  /* 
+  
+    TODO: remove after reading.
+    See the new implementation below. We're in 2023, we don't write explicit list filters anymore, let's try to 
+    use modern programming facilities.
+     
+    Also, how many times are we parsing and filtering the user text area? Maybe it's useful
+    to factorise this pre-processing (split + remove empty rows) in a separated function? 
+      
   for(var i =0; i < geneListValue.length; i++ ){
       if(geneListValue[i] !==  ''){
         nonEmptyInputs.push(geneListValue[i]); 
       }
   }
+  */
+  
+  geneListValues = geneListValues.filter ( gene => gene && gene.trim () != '' )
+  
 
-  geneInput.html('<span>  <b>'+ nonEmptyInputs.length +'</b>  Genes </span>')
-  var listLength = nonEmptyInputs.length; 
+  geneInput.html('<span>  <b>'+ geneListValues.length +'</b>  Genes </span>')
+  var listLength = geneListValues.length; 
 
   var geneListCounter = new GenesListManager(listLength); 
     geneListCounter.detectLimit(); 
