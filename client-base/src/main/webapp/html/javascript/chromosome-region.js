@@ -186,8 +186,12 @@ function findChromosomeGenes(event) {
   var genes = 'genes' + currentRowNumber; 
 
   // Some basic validation
-  var isInputValid = isParameterNumber(start)
-  isInputValid &= isParameterNumber(end)
+/* TODO: isParameterNumber() DOES NOT WORK here, start is always a string.
+   TEST THINGS BEFORE COMMITTING!!! */ 
+  var isInputValid = !isNaN ( start )
+  isInputValid & !isNaN ( end )
+  start = Number ( start )
+  end = Number ( end )
   isInputValid &= start < end 
   isInputValid &= chromosome !== ''; 
 

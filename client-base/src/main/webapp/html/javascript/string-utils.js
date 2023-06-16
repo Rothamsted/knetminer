@@ -49,10 +49,16 @@ function cleanGeneList ( geneList )
 		.map ( s => s.trim () );
 }
 
+/* TODO: (optional) marginally useful, possibly remove it. 
+   The current version doesn't work, see below. 
+   If it's to be kept, a shorter name
+   like isNumber( value ) is maybe preferrable.
+*/
 /**
  * function checks if input is of type number
  */
 function isParameterNumber(input){
+	  /* TODO this DOES NOT WORK with findChromosomeGenes() see there */
     return (typeof input == 'number'); 
 }
 
