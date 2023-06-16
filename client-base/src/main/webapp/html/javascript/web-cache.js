@@ -6,11 +6,13 @@
  * 
  * TODO: this is too poor see TODO comments below and in the class code.
  * For the moment, it's doesn't do much damage, cause it's used in one place only, but
- * its usage can't be extended in the current form.
+ * its usage can't be extended in the current form. 
+ * 
+ * ===> Let's have a call/chat on this, before going on with the described changes. 
  * 
  */
-class WebCacheWrapper {
-
+class WebCacheWrapper
+{
     #cacheName = null
     #requestUrl = null
   
