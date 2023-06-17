@@ -108,7 +108,6 @@ function searchKeyword(){
  */
 function checkUserPlan(){
   var login_check_url = knetspace_api_host + "/api/v1/me";
-  const geneLimit = document.getElementById("limit"); 
 
     $.ajax({
         type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json", 
@@ -815,22 +814,23 @@ class GenesListManager
 
   // Returns message shown to users who exceeds geneslist limit as guest users 
   #setFreePlanMessage(){
-    this.#setLimitMessage('You have exceeded your guest user limit. Please',' Login',"onclick","loginModalInit()");
+    this.#setLimitMessage('Please <a class="warning-link" onclick="loginModalInit()">Login/Register</a> to search with up to 100 genes.',' Upgrade to remove limit.');
   }
 
   // Returns the message shown to users who exceeds genelist as free users
   #setPaidPlanMessage(){
-    this.#setLimitMessage('You have exceeded your free user limit. Please',' Upgrade','href','https://knetminer.com/pricing-plans');
+    this.#setLimitMessage('You have exceeded your free user limit. Please',' Upgrade',);
   }
 
   // Util method takes limit specific parameters that are shown on UI, when users reach geneslist Limit
-  #setLimitMessage(message,actionText,attributeType,attributeAction){
+  #setLimitMessage(message,actionText){
 
-    $('.warning-text').html(message);
+   
 
     const limitCta = document.querySelector('.warning-link'); 
-    limitCta.setAttribute(attributeType,attributeAction)
+    limitCta.setAttribute('href','https://knetminer.com/pricing-plans')
     limitCta.innerHTML = actionText;
+    $('.warning-text').html(message);
   }
 
 }
