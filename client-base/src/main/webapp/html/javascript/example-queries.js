@@ -79,7 +79,7 @@ function examples(){
                 if(enforce_genelist_limit){
 
                     if(freegenelist_limit == 20 && sampleQueries[i].accType.toLowerCase() == 'free'){
-                        queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Sign Up)</a>`; 
+                        queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Create Account)</a>`; 
                     }
 
                     if(freegenelist_limit <=100 && sampleQueries[i].accType.toLowerCase() == 'pro'){
