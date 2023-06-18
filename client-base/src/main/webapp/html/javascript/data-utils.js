@@ -135,6 +135,7 @@ function checkUserPlan(){
         complete:function(){
           $('.genesCount').html(`0/${freegenelist_limit}`);
           geneCounter();
+          examples();
         }
 
     });
@@ -824,9 +825,6 @@ class GenesListManager
 
   // Util method takes limit specific parameters that are shown on UI, when users reach geneslist Limit
   #setLimitMessage(message,actionText){
-
-   
-
     const limitCta = document.querySelector('.warning-link'); 
     limitCta.setAttribute('href','https://knetminer.com/pricing-plans')
     limitCta.innerHTML = actionText;

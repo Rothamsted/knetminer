@@ -141,6 +141,9 @@
         <!-- UI utils  -->
         <script type="text/javascript" src="html/javascript/ui-utils.js"></script>
 
+        <!-- Example Queries -->
+        <script type="text/javascript" src="html/javascript/example-queries.js"></script>
+
         <!-- table-handler -->
         <script type="text/javascript" src="html/javascript/table-scrolling.js"></script>
 

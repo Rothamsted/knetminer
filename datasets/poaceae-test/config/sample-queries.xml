@@ -5,11 +5,13 @@
 	<query>
 		<description>Keyword search (AND)</description>
 		<term>"seed germination" AND flavon*</term>
+		<accType>Guest</accType>
 	</query>
 	
 	<query>
 		<description>Keyword search (OR)</description>
 		<term>dormancy OR anthocyanin</term>
+		<accType>Guest</accType>
 	</query>
 	
 	<query>
@@ -17,6 +19,7 @@
 		<term>drought OR heat OR frost</term>
 		<gene>TPS*</gene>
 		<gene>TPP?</gene>
+		<accType>Guest</accType>
 	</query>	
 	
 	<!-- Wheat queries -->
@@ -28,6 +31,7 @@
 		<gene>TRAESCS3D03G0544800</gene>
 		<gene>TaSIZ1</gene>
 		<gene>CDC5</gene>
+		<accType>Free</accType>
 	</query>
 	
 	<query>
@@ -54,6 +58,7 @@
 		<gene>TRAESCS4A02G206800</gene>
 		<gene>TRAESCS3B02G006100</gene>
 		<gene>TRAESCS3A02G464900</gene>
+		<accType>Free</accType>
 	</query>
 	
 	<query>
@@ -72,6 +77,7 @@
 		<gene>TraesCS3D02G468400</gene>
 		<gene>TraesCS3B02G280700</gene>
 		<gene>TraesCS2D02G493400</gene>
+		<accType>Free</accType>
 	</query>
 	
 	<query>
@@ -93,6 +99,7 @@
 		<gene>TRAESCS6B02G462300</gene>
 		<gene>TRAESCS7A02G033100</gene>
 		<gene>TRAESCS4A02G456300</gene>
+		<accType>Pro</accType>
 	</query>
 	
 	<query>
@@ -111,7 +118,8 @@
 			<start>280000000</start>
 			<end>310000000</end>
 			<label>QTL2</label>
-		</region>		
+		</region>
+		<accType>Pro</accType>	
 	</query>
 
 	
@@ -120,6 +128,7 @@
 		<description>FLC gene expression</description>
 		<taxId>3702</taxId>
 		<term>flowering FLC FT</term>
+		<accType>Free</accType>
 	</query>
 	
 	<query>	
@@ -134,12 +143,14 @@
 			<label>Petal size</label>
 		</region>
         <gene>At4g18330</gene>
+		<accType>Free</accType>
 	</query>
 	
 	<query>
 		<description>Dormancy</description>
 		<taxId>3702</taxId>
 		<term>dormancy OR anthocyanin</term>
+		<accType>Pro</accType>
 	</query>
 	
 	<!-- Rice queries -->
@@ -205,7 +216,7 @@
 		<gene>ZM00001EB386560</gene>
 		<gene>ZM00001EB086800</gene>
 		<gene>ZM00001EB274190</gene>
-		<gene>ZM00001EB300010</gene>	
+		<gene>ZM00001EB300010</gene>
 	</query>
 	
 	<query>

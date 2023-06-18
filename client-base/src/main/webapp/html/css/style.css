@@ -361,7 +361,7 @@ div#list_search {
     margin-right: 15px;
     width:
         /*230px*/
-        25%;
+        32%;
 }
 
 .details h3 {
@@ -767,9 +767,34 @@ span.hint-big:hover {
 }
 
 
+#eg_queries{
+    display: flex;
+    flex-direction: column;
+
+}
+
 .exampleQuery {
     cursor: pointer;
+    margin-bottom:6px;
 }
+
+.exampleQuery::before{
+    content: "• ";
+    font-size: 20px;
+    color: black;
+}
+
+.query-restriction-text{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#restricted-query .exampleQuery{
+    pointer-events: none;
+    color: #000000;
+}
+
+
 
 /* Evidence pictures */
 
@@ -2756,7 +2781,6 @@ color: #C0C0C0;
 .genes-limit{
     color: red;
 }
-
 
 
 
