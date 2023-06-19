@@ -18,7 +18,8 @@ $(document).ready (
 			
 			knetmaps = KNETMAPS.KnetMaps();
 			getTaxIdFromUrl();
-			speciesSelector.initiate();					
+			speciesSelector.initiate();	
+			exampleQuery.setQueryData();				
 			loginUtilsInit();	 // See notes in loginUtils.js
 			loadOnReady();
 			showReferenceGenome();

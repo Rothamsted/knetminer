@@ -135,7 +135,7 @@ function checkUserPlan(){
         complete:function(){
           $('.genesCount').html(`0/${freegenelist_limit}`);
           geneCounter();
-          examples();
+          exampleQuery.renderQueryHtml(); 
         }
 
     });
@@ -414,22 +414,6 @@ function geneCounter(){
   var geneListValues = $("#list_of_genes").val().split('\n');
   var geneInput = $('#geneResultDiv');
  
-  /* 
-  
-    TODO: remove after reading.
-    See the new implementation below. We're in 2023, we don't write explicit list filters anymore, let's try to 
-    use modern programming facilities.
-     
-    Also, how many times are we parsing and filtering the user text area? Maybe it's useful
-    to factorise this pre-processing (split + remove empty rows) in a separated function? 
-      
-  for(var i =0; i < geneListValue.length; i++ ){
-      if(geneListValue[i] !==  ''){
-        nonEmptyInputs.push(geneListValue[i]); 
-      }
-  }
-  */
-  
   geneListValues = geneListValues.filter ( gene => gene && gene.trim () != '' )
   
 
@@ -764,13 +748,16 @@ class GenesListManager
 
       const progresUIContainer = document.querySelector('.progress-container'); 
 
-      const progressBar = progresUIContainer.firstElementChild
-      const progressText = progresUIContainer.lastElementChild
-    
-      // removes progress bar if user is on unlimited plan
-      if(!this.#isLimitEnforced){
-        progresUIContainer.remove(); 
+       // removes progress bar if user is on unlimited plan
+       if(!this.#isLimitEnforced){
+        progresUIContainer.style.display = 'none'
+        return
       }
+
+      const progressBar = progresUIContainer.firstElementChild 
+      const progressText =  progresUIContainer.lastElementChild
+    
+     
     
       // convert list to percentage using the user limit
       const listInPercentage =  this.#getListPercentage(this.#listLength);

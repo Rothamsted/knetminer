@@ -1,8 +1,4 @@
 /* 
-  TODO: this and its file need to change name. KnetSelector has zero meaning, there are tens of 
-  selectors in an average application, each meaning completely different things.
-  
-  to consider: specieManager or specieSelector, or knetSpecieXXX
 */ 
 // multi-species object literal house functions for the multi-species feature
 const speciesSelector = function ()
@@ -141,7 +137,7 @@ const speciesSelector = function ()
         if(currentTaxData)
         {
             refreshUI ()
-            examples()
+            exampleQuery.renderQueryHtml(); 
             setTimeout(function(){
                 // gets genome region search table row elements
                 var getGenomeRegionRow = getGenomeRegionRows();
