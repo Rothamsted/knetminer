@@ -11,6 +11,23 @@
 	<query>
 		<description>Keyword search (OR)</description>
 		<term>dormancy OR anthocyanin</term>
+		<!--
+		  TODO:
+		  - The common convention for these is all lower case, guest and not Guest.
+		  Then, they're usually checked case-insensitive, as it is already implemented, to that's to be kept
+		  
+			- accType is a poor name for a config file like this. What does it mean? Accession? Access?
+			Rename it to something better, eg, allowedUserRole
+			
+			Also, It might need to be plural, like: 
+			  <allowedUserRoles>premium,advanced,test</allowedUserRoles>
+			  
+			Additionally, this file format is accumulating too many tweaks, it would be worth to 
+			turn it into JSON and write a script to JSON-convert all old XML files. In which case, 
+			it would be worth to add a separated Javascript validator (and maybe using JSONSchema). 
+			
+			Let's discuss the last two at some point.
+		-->
 		<accType>Guest</accType>
 	</query>
 	

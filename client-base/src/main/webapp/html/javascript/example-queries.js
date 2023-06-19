@@ -1,4 +1,11 @@
 /**
+ * TODO: Regarding recent changes about accType, we don't have anything to test them in 
+ * aratiny, that's not good, we should check if we can have a test user which can be used
+ * for the aratiny dataset.
+ * 
+ */
+
+/**
  * Makes URL calls to sample queries endpoints
  * Creates Elements and attach to UI with click events to autofill queries to search inputs.
  */
