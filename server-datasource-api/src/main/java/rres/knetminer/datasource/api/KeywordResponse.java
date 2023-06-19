@@ -1,5 +1,10 @@
 package rres.knetminer.datasource.api;
 
+import java.util.List;
+import java.util.Optional;
+
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
+
 /**
  * Contains elements that are common to both NetworkResponse and GenomeResponse, hence it is abstract.
  * 
@@ -8,27 +13,28 @@ package rres.knetminer.datasource.api;
  */
 public abstract class KeywordResponse extends KnetminerResponse {
 	private String GViewer;
-	private String geneTable;
+	private List<GeneTableEntry> geneTable;
 	private String evidenceTable;
 	private int geneCount;
 	private int docSize;
 	private int totalDocSize;
+	
 	public String getGViewer() {
 		return GViewer;
 	}
 	public void setGViewer(String gViewer) {
 		GViewer = gViewer;
 	}
-	public String getGeneTable() {
+	public List<GeneTableEntry> getGeneTable() {
 		return geneTable;
 	}
-	public void setGeneTable(String geneTable) {
-		this.geneTable = geneTable;
+	public void setGeneTable ( List<GeneTableEntry> geneTable ) {
+		this.geneTable = Optional.ofNullable ( geneTable ).orElse ( List.of () );
 	}
 	public String getEvidenceTable() {
 		return evidenceTable;
 	}
-	public void setEvidenceTable(String evidenceTable) {
+	public void setEvidenceTable ( String evidenceTable ) {
 		this.evidenceTable = evidenceTable;
 	}
 	public int getGeneCount() {
