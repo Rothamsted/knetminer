@@ -24,8 +24,6 @@ import rres.knetminer.api.client.GenomeApiResult;
 import rres.knetminer.api.client.KnetminerApiClient;
 import rres.knetminer.api.client.KnetminerApiClient.RequestOptions;
 import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
-import uk.ac.ebi.utils.collections.ListUtils;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 import uk.ac.ebi.utils.xml.XPathReader;
