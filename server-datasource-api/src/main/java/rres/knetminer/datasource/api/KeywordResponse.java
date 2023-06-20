@@ -9,9 +9,11 @@ import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
  * Contains elements that are common to both NetworkResponse and GenomeResponse, hence it is abstract.
  * 
  * @author holland
+ * @author Marco Brandizi (2023, reviewed for pure JSON output)
  *
  */
-public abstract class KeywordResponse extends KnetminerResponse {
+public abstract class KeywordResponse extends KnetminerResponse 
+{
 	private String GViewer;
 	private List<GeneTableEntry> geneTable;
 	private String evidenceTable;

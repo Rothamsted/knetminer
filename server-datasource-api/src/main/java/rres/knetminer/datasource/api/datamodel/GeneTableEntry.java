@@ -1,11 +1,13 @@
 package rres.knetminer.datasource.api.datamodel;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 /**
  * TODO: comment me!
@@ -14,12 +16,22 @@ import java.util.Optional;
  * <dl><dt>Date:</dt><dd>19 Jun 2023</dd></dl>
  *
  */
+@JsonAutoDetect (
+	// This allows for better control of isXXX()
+	getterVisibility = Visibility.NONE, fieldVisibility = Visibility.NONE,
+	setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE
+)
 public class GeneTableEntry
 {
 	public static class TypeEvidences
 	{
 		private List<String> conceptLabels;
 		private Integer reportedSize = 0;
+		
+		@SuppressWarnings ( "unused" )
+		private TypeEvidences () {
+			// Needed by JSON serialisers
+		}
 		
 		public TypeEvidences ( List<String> conceptLabels, Integer reportedSize )
 		{
@@ -35,11 +47,11 @@ public class GeneTableEntry
 			);
 		}
 
-		List<String> getConceptLabels () {
+		public List<String> getConceptLabels () {
 			return conceptLabels;
 		}
 
-		int getReportedSize () {
+		public int getReportedSize () {
 			return reportedSize;
 		}
 	} // TypeEvidences
@@ -48,6 +60,11 @@ public class GeneTableEntry
 	{
 		private String regionLabel = "", regionTrait = "";
 
+		@SuppressWarnings ( "unused" )
+		private QTLEvidence () {
+			// Needed by JSON serializers 
+		}
+		
 		public QTLEvidence ( String regionLabel, String regionTrait )
 		{
 			super ();
@@ -55,27 +72,47 @@ public class GeneTableEntry
 			this.regionTrait = regionTrait;
 		}
 
-		String getRegionLabel () {
+		public String getRegionLabel () {
 			return regionLabel;
 		}
 
-		String getRegionTrait () {
+		public String getRegionTrait () {
 			return regionTrait;
 		}	
 	} // QTLEvidence
 	
+	@JsonProperty
 	private int ondexId = -1;
+	
+	@JsonProperty
 	private String accession;
+	
+	@JsonProperty
 	private String name;
+	
+	@JsonProperty
 	private String chromosome = "";
+	
+	@JsonProperty
 	private Integer geneBeginBP;
+	
+	@JsonProperty
 	private Integer geneEndBP;
-	private Double score; 
+
+	@JsonProperty
+	private Double score;
+
 	private Boolean isUserGene;
 
 	// TODO: sorted?
 	private Map<String, TypeEvidences> conceptEvidences;  
 	private List<QTLEvidence> qtlEvidences;
+	
+	@SuppressWarnings ( "unused" )
+	private GeneTableEntry () {
+		// Required by JSON serializers
+	}
+	
 	
 	public GeneTableEntry ( 
 		int ondexId, String accession, String name, 
@@ -97,52 +134,59 @@ public class GeneTableEntry
 		this.qtlEvidences = Optional.ofNullable ( qtlEvidences ).orElse ( List.of () );
 	}
 
-	int getOndexId ()
+	public int getOndexId ()
 	{
 		return ondexId;
 	}
 
-	String getAccession ()
+	public String getAccession ()
 	{
 		return accession;
 	}
 
-	String getName ()
+	public String getName ()
 	{
 		return name;
 	}
 
-	String getChromosome ()
+	public String getChromosome ()
 	{
 		return chromosome;
 	}
 
-	Integer getGeneBeginBP ()
+	public Integer getGeneBeginBP ()
 	{
 		return geneBeginBP;
 	}
 
-	Integer getGeneEndBP ()
+	public Integer getGeneEndBP ()
 	{
 		return geneEndBP;
 	}
 
-	Double getScore ()
+	public Double getScore ()
 	{
 		return score;
 	}
 
-	Boolean getIsUserGene ()
+	@JsonProperty ( "isUserGene" )
+	public Boolean isUserGene ()
 	{
 		return isUserGene;
 	}
 
-	Map<String, TypeEvidences> getConceptEvidences ()
+	@JsonProperty ( "isUserGene" )
+	private void setUserGene ( Boolean isUserGene ) {
+		this.isUserGene = isUserGene;
+	}
+
+	
+	public Map<String, TypeEvidences> getConceptEvidences ()
 	{
 		return Collections.unmodifiableMap ( conceptEvidences );
 	}
 
-	List<QTLEvidence> getQtlEvidences ()
+	public List<QTLEvidence> getQtlEvidences ()
 	{
 		return Collections.unmodifiableList ( qtlEvidences );
 	}
