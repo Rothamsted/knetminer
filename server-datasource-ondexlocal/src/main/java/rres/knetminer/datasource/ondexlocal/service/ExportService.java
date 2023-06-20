@@ -5,13 +5,11 @@ import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,8 +26,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +37,7 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry.QTLEvidence;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry.TypeEvidences;
@@ -49,7 +45,6 @@ import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
@@ -497,7 +492,7 @@ public class ExportService
    * no of matching user genes, no of total matching genes, Lucene score). On the API it's false
    * by default, to avoid undesired performance issues.
    */
-	public String exportEvidenceTable ( 
+	public List<EvidenceTableEntry> exportEvidenceTable ( 
 		String keywords, 
 		Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
 		boolean doSortResult
@@ -533,9 +528,10 @@ public class ExportService
 		
 		// WARNING: we need to collect all the matching elements, due to the need to subsequent 
 		// filter by hasMatchingUserGenes, which requires to be assessed over ALL elements in 
-		// foundConcepts. Because of that YOU CAN'T get this via Stream.collect()
+		// foundConcepts. Because of that, YOU CAN'T get this via Stream.collect()
 		//
-		List<OptionsMap> resultRows = new ArrayList<> (); // it has ad-hoc synch, see below 
+		List<EvidenceTableEntry> evidenceTable = new ArrayList<> (); // it has ad-hoc synch, see below 
+		var evidenceTableRO = evidenceTable; // Needed in lambdas
 		
 		// This doesn't need concurrency management, cause it can only be toggled to true 
 		var hasMatchingUserGenes = new MutableBoolean ( false );
@@ -632,21 +628,17 @@ public class ExportService
 			if ( hasMatchingUserGenes.isFalse () && !userGeneLabels.isEmpty () ) 
 				hasMatchingUserGenes.setTrue ();
 
-			var row = OptionsMap.from ( Map.of ( 
-				"type", foundType,
-				"name", foundName,
-				"score", score,
-				"pvalue", pvalue,
-				"genesSize", startGenesSize,
-				"userGeneLabels", userGeneLabels,
-				"qtlsSize", qtlsSize.get (),
-				"ondexId", ondexId
-			));
+			var row = new EvidenceTableEntry ( 
+				ondexId, foundType, foundName, 
+				score, pvalue, 
+				startGenesSize, userGeneLabels, 
+				qtlsSize.get () 
+			); 
 			
 			// This is the only time when we need synchronisation, so this is faster than 
 			// synchronizedList()
-			synchronized ( resultRows ) {
-				resultRows.add ( row );
+			synchronized ( evidenceTableRO ) {
+				evidenceTableRO.add ( row );
 			}
 		});
 		// for foundConcepts()
@@ -655,78 +647,43 @@ public class ExportService
 		// Now resultRows has to become the final TSV table
 		//
 		
-		var resultRowsStrm = resultRows.parallelStream ();
+		var evidenceTableStrm = evidenceTable.parallelStream ();
 		
 		if ( hasMatchingUserGenes.isTrue () )
-		
-		// Let's keep user genes with > 0 count, if any
-		resultRowsStrm = resultRowsStrm.filter ( row -> {
-			Set<String> userGeneLabels = row.getOpt ( "userGeneLabels" );
-			return userGeneLabels.size () > 0;
+			// Let's keep user genes with > 0 count, if any
+			evidenceTableStrm = evidenceTableStrm.filter ( row -> {
+				Set<String> userGeneLabels = row.getUserGeneAccessions ();
+				return userGeneLabels.size () > 0;
 		});
 
 		
 		// Let's sort it if requested. 
 		if ( doSortResult )
 		{
-			@SuppressWarnings ( "unchecked" )
-			Comparator<OptionsMap> cmp = Comparator.comparingDouble ( (OptionsMap row) -> { 
-				double pvalue = row.getDouble ( "pvalue" );
+			Comparator<EvidenceTableEntry> cmp = Comparator.comparingDouble ( (EvidenceTableEntry row) -> { 
+				double pvalue = row.getPvalue ();
 				return pvalue == -1 ? 1 : pvalue;
 			})
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> ( (Set<String>) row.get ( "userGeneLabels" ) ).size () ).reversed () )
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> row.getInt ( "genesSize" ) ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (EvidenceTableEntry row) -> row.getUserGeneAccessions ().size () ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (EvidenceTableEntry row) -> row.getTotalGenesSize () ).reversed () )
 			// Lucene score is left as lowest priority, since it isn't even used in the UI
-			.thenComparing ( Comparator.comparingDouble ( (OptionsMap row) -> row.getDouble ( "score" ) ).reversed () )
+			.thenComparing ( Comparator.comparingDouble ( (EvidenceTableEntry row) -> row.getScore () ).reversed () )
 			// Last resort...
-			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ), String.CASE_INSENSITIVE_ORDER ) );
+			.thenComparing ( Comparator.comparing ( (EvidenceTableEntry row) -> row.getName (), String.CASE_INSENSITIVE_ORDER ) );
 									
-			// Stream.sorted() does the same thing, but this way we can clear the original list
-			//
-			OptionsMap[] sortedRows = (OptionsMap[]) resultRowsStrm.toArray ( sz -> new OptionsMap [ sz ] );
-			resultRows.clear (); // as said, let's free some memory
+			// Stream.sorted() uses a backup array like here, but this way we can clear the original list
+			// We need an array for parallel sorting, can't be done in a list 
+			// (https://stackoverflow.com/questions/25961018)
+			EvidenceTableEntry[] sortedRows = (EvidenceTableEntry[]) evidenceTableStrm.toArray ( sz -> new EvidenceTableEntry [ sz ] );
 			Arrays.parallelSort ( sortedRows, cmp );
-			resultRowsStrm = Arrays.stream ( sortedRows );
+			evidenceTable = Collections.unmodifiableList ( Arrays.asList ( sortedRows ) );
 		}
+		else
+			evidenceTable = evidenceTableStrm.collect ( Collectors.toUnmodifiableList () );
 		
-		// Building the final TSV table
-		//
-
-		// The operations below should be sequential, but let's use this just in case, since the base
-		// stream is parallel
-		var tableSize = new AtomicInteger ( 0 );	
+		log.info ( "Returning {} row(s) for the evidence table", evidenceTable.size () );
 		
-		String tableStr = resultRowsStrm.map ( row ->
-		// Yields a TSV row as final result
-		{
-			tableSize.incrementAndGet ();
-			
-			Set<String> userGeneLabels = row.getOpt ( "userGeneLabels" );
-			var userGenesStr = userGeneLabels.size () == 0
-				? ""
-				: userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
-						
-			return 
-				row.getString ( "type" ) + "\t" + 
-				row.getString ( "name" ) + "\t" +
-				row.getDouble ( "score" ) + "\t" + 
-				row.getDouble ( "pvalue" ) + "\t" + 
-				row.getInt ( "genesSize" ) + "\t" + 
-				userGenesStr + "\t" + 
-				row.getInt ( "qtlsSize" ) + "\t" +
-				row.getInt ( "ondexId" ) + "\t" +
-				// This was added in #726, to avoid that the client spends too much time computing the
-				// same number. TODO: Java unit test 
-				userGeneLabels.size ();
-		})
-		.collect ( Collectors.joining ( "\n" ) );
-		
-		// Required by the client TSV reader
-		if ( !tableStr.isEmpty () ) tableStr += "\n";
-		
-		log.info ( "Returning {} row(s) for the evidence table", tableSize.get () );
-		
-		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + tableStr;
+		return evidenceTable;
 		
 	} // exportEvidenceTable()	
 }

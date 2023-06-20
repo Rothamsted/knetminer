@@ -45,6 +45,7 @@ import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
@@ -336,7 +337,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		//
 
 		log.debug ( "3) API, doing evidence table" );
-		String evidenceTable = exportService.exportEvidenceTable (
+		List<EvidenceTableEntry> evidenceTable = exportService.exportEvidenceTable (
 			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl (),
 			request.isSortedEvidenceTable ()
 		);

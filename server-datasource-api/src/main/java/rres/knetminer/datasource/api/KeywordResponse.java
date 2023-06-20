@@ -3,6 +3,7 @@ package rres.knetminer.datasource.api;
 import java.util.List;
 import java.util.Optional;
 
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 
 /**
@@ -16,7 +17,7 @@ public abstract class KeywordResponse extends KnetminerResponse
 {
 	private String GViewer;
 	private List<GeneTableEntry> geneTable;
-	private String evidenceTable;
+	private List<EvidenceTableEntry> evidenceTable;
 	private int geneCount;
 	private int docSize;
 	private int totalDocSize;
@@ -33,10 +34,10 @@ public abstract class KeywordResponse extends KnetminerResponse
 	public void setGeneTable ( List<GeneTableEntry> geneTable ) {
 		this.geneTable = Optional.ofNullable ( geneTable ).orElse ( List.of () );
 	}
-	public String getEvidenceTable() {
+	public List<EvidenceTableEntry> getEvidenceTable() {
 		return evidenceTable;
 	}
-	public void setEvidenceTable ( String evidenceTable ) {
+	public void setEvidenceTable ( List<EvidenceTableEntry> evidenceTable ) {
 		this.evidenceTable = evidenceTable;
 	}
 	public int getGeneCount() {

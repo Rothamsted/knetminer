@@ -1,16 +1,14 @@
 package rres.knetminer.api.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
@@ -29,7 +27,7 @@ public class GenomeApiResult
 	private int totalDocSize = -1;
 	
 	private List<GeneTableEntry> geneTable = List.of();
-	private List<String[]> evidenceTable = List.of ();
+	private List<EvidenceTableEntry> evidenceTable = List.of ();
 	private String gviewer = "";
 	
 
@@ -42,7 +40,7 @@ public class GenomeApiResult
 	 * <pre>
 	 * {
 	 *   "geneTable": [ {@link GeneTableEntry} ... ]
-	 *   "evidenceTable": "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\t..."
+	 *   "evidenceTable": [ @link {@link EvidenceTableEntry} ]
 	 *   "geneCount": 12,
 	 *	 "docSize": 3643,
 	 *   "totalDocSize": 5153,
@@ -59,15 +57,20 @@ public class GenomeApiResult
 			docSize = jsResult.getInt ( "docSize" );
 			totalDocSize = jsResult.getInt ( "totalDocSize" );
 			
-			var geneTableJs = jsResult.getJSONArray ( "geneTable" );
 			var mapper = new ObjectMapper ();
+			
 			// TODO: there is a more efficient way: https://stackoverflow.com/a/33780051/529286
 			this.geneTable = mapper.readValue (
-				geneTableJs.toString (), 
+				jsResult.getJSONArray ( "geneTable" ).toString (), 
 				mapper.getTypeFactory ().constructCollectionType ( List.class, GeneTableEntry.class ) 
 			);
 			
-			this.evidenceTable = str2Table ( jsResult.getString ( "evidenceTable" ) );
+			// TODO: ditto
+			this.evidenceTable = mapper.readValue (
+				jsResult.getJSONArray ( "evidenceTable" ).toString (), 
+				mapper.getTypeFactory ().constructCollectionType ( List.class, EvidenceTableEntry.class ) 
+			); 
+			//str2Table ( jsResult.getString ( "evidenceTable" ) );
 			this.gviewer = jsResult.getString ( "gviewer" );
 		}
 		catch ( JsonProcessingException | JSONException ex )
@@ -78,6 +81,7 @@ public class GenomeApiResult
 		}
 	}
 	
+	/* TODO: remove, used with the old table-in-JSON format
 	private static List<String[]> str2Table ( String tableString )
 	{
 		StringUtils.trimToNull ( tableString );
@@ -90,6 +94,7 @@ public class GenomeApiResult
 		
 		return table;
 	}
+	*/
 
 	public int getGeneCount ()
 	{
@@ -120,7 +125,7 @@ public class GenomeApiResult
 	 * First element contains the headers.
 	 *  
 	 */
-	public List<String[]> getEvidenceTable ()
+	public List<EvidenceTableEntry> getEvidenceTable ()
 	{
 		return evidenceTable;
 	}

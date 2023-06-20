@@ -1,12 +1,15 @@
 package rres.knetminer.datasource.api.datamodel;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Collections2;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 /**
@@ -26,14 +29,14 @@ public class GeneTableEntry
 	public static class TypeEvidences
 	{
 		private List<String> conceptLabels;
-		private Integer reportedSize = 0;
+		private int reportedSize = 0;
 		
 		@SuppressWarnings ( "unused" )
 		private TypeEvidences () {
 			// Needed by JSON serialisers
 		}
 		
-		public TypeEvidences ( List<String> conceptLabels, Integer reportedSize )
+		public TypeEvidences ( List<String> conceptLabels, int reportedSize )
 		{
 			this.conceptLabels = Optional.ofNullable ( conceptLabels ).orElse ( List.of () );
 			this.reportedSize = reportedSize;
@@ -58,7 +61,7 @@ public class GeneTableEntry
 	
 	public static class QTLEvidence
 	{
-		private String regionLabel = "", regionTrait = "";
+		private String regionLabel, regionTrait;
 
 		@SuppressWarnings ( "unused" )
 		private QTLEvidence () {
@@ -91,7 +94,7 @@ public class GeneTableEntry
 	private String name;
 	
 	@JsonProperty
-	private String chromosome = "";
+	private String chromosome;
 	
 	@JsonProperty
 	private Integer geneBeginBP;
@@ -130,8 +133,8 @@ public class GeneTableEntry
 		this.geneEndBP = geneEndBP;
 		this.score = score;
 		this.isUserGene = isUserGene;
-		this.conceptEvidences = Optional.ofNullable ( conceptEvidences ).orElse ( Map.of () );
-		this.qtlEvidences = Optional.ofNullable ( qtlEvidences ).orElse ( List.of () );
+		this.conceptEvidences = conceptEvidences;
+		this.qtlEvidences = qtlEvidences;
 	}
 
 	public int getOndexId ()
@@ -180,15 +183,19 @@ public class GeneTableEntry
 		this.isUserGene = isUserGene;
 	}
 
-	
 	public Map<String, TypeEvidences> getConceptEvidences ()
 	{
-		return Collections.unmodifiableMap ( conceptEvidences );
+		return Optional.ofNullable ( conceptEvidences )
+			.map ( Collections::unmodifiableMap )
+			.orElse ( Map.of () );
 	}
 
 	public List<QTLEvidence> getQtlEvidences ()
 	{
-		return Collections.unmodifiableList ( qtlEvidences );
+		return Optional.ofNullable ( qtlEvidences )
+			.map ( Collections::unmodifiableList )
+			.orElse ( List.of () );
 	}
+
 }
 
