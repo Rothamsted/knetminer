@@ -236,7 +236,8 @@ public class ExportService
 			result.add ( new GeneTableEntry ( 
 				geneId, 
 				GraphLabelsUtils.getBestGeneAccession ( gene ), 
-				geneName, 
+				geneName,
+				geneHelper.getTaxID (),
 				geneHelper.getChromosome (), geneHelper.getBeginBP (), geneHelper.getEndBP (), 
 				score, isUserGene, 
 				typeEvidences, qtlEvidences 
