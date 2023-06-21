@@ -276,6 +276,7 @@ function generateMultiEvidenceNetwork(event) {
 
 
 //  Function creates popup showing table of accessions associated to a genes concept
+// TODO: MB, bookmark for JSON conversion
 async function openGeneListPopup(conceptId, element)
 {
 
@@ -283,7 +284,9 @@ async function openGeneListPopup(conceptId, element)
 	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
 	
 	let accessionCache  = new WebCacheWrapper('accession-cache', request);
-  let accessionData = await accessionCache.get(); 
+  let accessionData = await accessionCache.get();
+  
+  fixGenomeTables2OldStrings ( accessionData )
 	
 	if ( accessionData ){
         var geneTable = accessionData.geneTable.split("\n").slice(1,-1)
