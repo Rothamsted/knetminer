@@ -1,16 +1,13 @@
 package rres.knetminer.datasource.api.datamodel;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Collections2;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * TODO: comment me!
@@ -94,6 +91,9 @@ public class GeneTableEntry
 	private String name;
 	
 	@JsonProperty
+	private String taxID;
+
+	@JsonProperty
 	private String chromosome;
 	
 	@JsonProperty
@@ -101,6 +101,7 @@ public class GeneTableEntry
 	
 	@JsonProperty
 	private Integer geneEndBP;
+	
 
 	@JsonProperty
 	private Double score;
@@ -108,7 +109,12 @@ public class GeneTableEntry
 	private Boolean isUserGene;
 
 	// TODO: sorted?
-	private Map<String, TypeEvidences> conceptEvidences;  
+	// TODO: need tests
+	@JsonProperty
+	private Map<String, TypeEvidences> conceptEvidences;
+	
+	// TODO: need tests
+	@JsonProperty
 	private List<QTLEvidence> qtlEvidences;
 	
 	@SuppressWarnings ( "unused" )
@@ -118,8 +124,9 @@ public class GeneTableEntry
 	
 	
 	public GeneTableEntry ( 
-		int ondexId, String accession, String name, 
-		String chromosome, Integer geneBeginBP, Integer geneEndBP, 
+		int ondexId, String accession, String name,
+		String taxID,
+		String chromosome, Integer geneBeginBP, Integer geneEndBP,
 		Double score, Boolean isUserGene, 
 		Map<String, TypeEvidences> conceptEvidences,
 		List<QTLEvidence> qtlEvidences )
@@ -128,6 +135,7 @@ public class GeneTableEntry
 		this.ondexId = ondexId;
 		this.accession = accession;
 		this.name = name;
+		this.taxID = taxID;
 		this.chromosome = chromosome;
 		this.geneBeginBP = geneBeginBP;
 		this.geneEndBP = geneEndBP;
@@ -151,6 +159,11 @@ public class GeneTableEntry
 	{
 		return name;
 	}
+	
+	public String getTaxID ()
+	{
+		return taxID;
+	}
 
 	public String getChromosome ()
 	{
@@ -166,7 +179,7 @@ public class GeneTableEntry
 	{
 		return geneEndBP;
 	}
-
+	
 	public Double getScore ()
 	{
 		return score;
