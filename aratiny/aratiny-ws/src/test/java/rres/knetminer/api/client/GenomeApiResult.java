@@ -2,6 +2,8 @@ package rres.knetminer.api.client;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +32,7 @@ public class GenomeApiResult
 	private List<EvidenceTableEntry> evidenceTable = List.of ();
 	private String gviewer = "";
 	
-
+	private Logger log = LogManager.getLogger ( this.getClass () );
 		
 	/**
 	 * Invoke it with the JSON coming from the /genome API invocation.
@@ -60,8 +62,10 @@ public class GenomeApiResult
 			var mapper = new ObjectMapper ();
 			
 			// TODO: there is a more efficient way: https://stackoverflow.com/a/33780051/529286
+			var geneTableJsonStr = jsResult.getJSONArray ( "geneTable" ).toString ();
+			if ( log.isDebugEnabled () ) log.debug ( "geneTable data: {}", geneTableJsonStr );
 			this.geneTable = mapper.readValue (
-				jsResult.getJSONArray ( "geneTable" ).toString (), 
+				geneTableJsonStr, 
 				mapper.getTypeFactory ().constructCollectionType ( List.class, GeneTableEntry.class ) 
 			);
 			
