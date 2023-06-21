@@ -75,9 +75,9 @@
 
 							<div class="genecount-container show">
 								<span id="geneResultDiv">0 Genes</span>
-								<div class>
+								<div onclick="clearGeneListInput()" style="cursor:pointer">
 									<span style="margin-right:.5rem;">Clear all</span>
-									<i class="fas fa-times" onclick="clearGeneListInput()"></i>
+									<i class="fas fa-times"></i>
 								</div>
 							</div>
 

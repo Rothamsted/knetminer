@@ -115,11 +115,11 @@ const exampleQuery = function()
             if(enforce_genelist_limit){
 
                 if(freegenelist_limit == 20 && accType.toLowerCase() == 'free'){
-                    queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Create Account)</a>`; 
+                    queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
                 }
 
                 if(freegenelist_limit <=100 && accType.toLowerCase() == 'pro'){
-                    queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade to Pro)</a>`; 
+                    queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
                 }
             }
 
