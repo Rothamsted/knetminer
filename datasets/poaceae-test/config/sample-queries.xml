@@ -179,6 +179,7 @@
 		<gene>Os12g0484900</gene>
 		<gene>OsGRF7</gene>
 		<gene>GRF7</gene>
+		<accType>Free</accType>
 	</query>
 	
 	<query>
@@ -205,7 +206,7 @@
 		<gene>OS05G0552300</gene>
 		<gene>OS09G0570800</gene>
 		<gene>OS07G0137800</gene>
-		
+		<accType>Pro</accType>
 	</query>
 	
 	
