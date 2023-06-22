@@ -829,7 +829,7 @@ class GenesListManager
  * TODO: this is a TEMPORARY DIRTY HACK which allows for quick merge of the API changes 
  * (addresed by #655) into the master branch.
  * 
- * DO NOT KEEP it too long, the code using the gene/evidence tables DO NEED to be upgraded, so that
+ * DO NOT KEEP it for too long, the code using the gene/evidence tables DOES NEED to be upgraded, so that
  * it uses the new JSON format straight and we can move on with further developing features that can
  * be based on such format (eg, gene/evidence distance filtering). 
  * 
