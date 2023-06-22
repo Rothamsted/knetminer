@@ -1015,6 +1015,11 @@ public class KnetMinerInitializer
 		return genes2PathLengths;
 	}
 	
+	/**
+	 * gene => QTL concepts. QTLs are chromosome regions and are linked to a gene when both 
+	 * the gene and the QTL have region coordinates and the gene coordinates falls into 
+	 * the QTL region.
+	 */
 	public Map<Integer, Set<Integer>> getGenes2QTLs ()
 	{
 		return genes2QTLs;

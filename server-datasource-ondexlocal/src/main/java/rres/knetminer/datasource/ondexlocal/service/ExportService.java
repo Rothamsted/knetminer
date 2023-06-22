@@ -5,7 +5,6 @@ import static net.sourceforge.ondex.core.util.ONDEXGraphUtils.getAttributeName;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,14 +37,17 @@ import net.sourceforge.ondex.core.ONDEXConcept;
 import net.sourceforge.ondex.core.ONDEXGraphMetaData;
 import net.sourceforge.ondex.core.searchable.LuceneConcept;
 import net.sourceforge.ondex.core.util.GraphLabelsUtils;
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry.QTLEvidence;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry.TypeEvidences;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
-import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
-import uk.ac.ebi.utils.collections.OptionsMap;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.QTL;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
@@ -60,7 +63,7 @@ import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
  */
 @Component
 public class ExportService
-{
+{	
   @Autowired
   private KnetMinerInitializer knetInitializer;
 	
@@ -83,17 +86,16 @@ public class ExportService
 	 * 'Gene View'.
 	 * 
 	 * TODO: too big! Split into separated functions.
-	 *
-	 * Was named writeGeneTable
+	 * 
 	 */
-	public String exportGeneTable ( 
-		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
+	public List<GeneTableEntry> exportGeneTable ( 
+		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> userQtlsStr, 
 		String listMode,  SemanticMotifsSearchResult searchResult 
 	)
 	{
 		log.info ( "Exporting gene table" );
 		
-		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
+		List<QTL> userQtls =  QTL.fromStringList ( userQtlsStr );
 	  var graph = dataService.getGraph ();
 		var genes2QTLs = knetInitializer.getGenes2QTLs ();
 		var config = dataService.getConfiguration ();
@@ -103,8 +105,8 @@ public class ExportService
 				.map ( ONDEXConcept::getId )
 				.collect ( Collectors.toSet () );
 
-		if ( userGenes.isEmpty () ) log.info ( "No user gene list defined." );
-		if ( qtls.isEmpty () ) log.info ( "No QTL regions defined." );
+		if ( userGenes.isEmpty () ) log.info ( "No user gene list defined" );
+		if ( userQtls.isEmpty () ) log.info ( "No QTL regions defined" );
 		
 		var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
 		
@@ -112,9 +114,8 @@ public class ExportService
 		var scoredCandidates = Optional.ofNullable ( searchResult.getGene2Score () )
 			.orElse ( Collections.emptyMap () );			
 		
+		List<GeneTableEntry> result = new LinkedList<> ();
 		
-		StringBuffer out = new StringBuffer ();
-		out.append ( "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
 		for ( ONDEXConcept gene : candidateGenes )
 		{
 			int geneId = gene.getId ();
@@ -125,17 +126,17 @@ public class ExportService
 			// Exclude accessions when possible
 			String geneName = GraphLabelsUtils.getBestName ( gene, true );
 	
-			boolean isInList = userGeneIds.contains ( gene.getId () );
-	
-			List<String> infoQTL = new LinkedList<> ();
+			boolean isUserGene = userGeneIds.contains ( gene.getId () );
+			
+			// Look for evidence in the chromosome/QTL regions
+			//
+			List<QTLEvidence> qtlEvidences = new LinkedList<> ();
 			for ( Integer qtlConceptId : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
 			{
 				ONDEXConcept qtl = graph.getConcept ( qtlConceptId );
 	
-				/*
-				 * TODO: a TEMPORARY fix for a bug wr're seeing, we MUST apply a similar massage to ALL cases like this,
-				 * and hence we MUST move this code to some utility.
-				 */
+				// TODO: we used to see this error here, but probably was due to bad multi-threading, to
+				// be tested (ideally, apply proof or correctness) and removed when OK.
 				if ( qtl == null )
 				{
 					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
@@ -153,27 +154,21 @@ public class ExportService
 				String traitDesc = Optional.of ( getAttrValueAsString ( graph, gene, "Trait", false ) )
 					.orElse ( acc );
 	
-				// TODO: traitDesc twice?! Looks wrong.
-				infoQTL.add ( traitDesc + "//" + traitDesc ); 
+				qtlEvidences.add ( new QTLEvidence ( traitDesc, traitDesc ) ); 
 			} // for genes2QTLs
 	
-	
-			qtls.stream ()
-			.filter ( loci -> !loci.getChromosome ().isEmpty () )
-			.filter ( loci -> geneHelper.getBeginBP () >= loci.getStart () )
-			.filter ( loci -> geneHelper.getEndBP () <= loci.getEnd () )
-			.map ( loci -> loci.getLabel () + "//" + loci.getTrait () )
-			.forEach ( infoQTL::add );
-	
-			String infoQTLStr = infoQTL.stream ().collect ( Collectors.joining ( "||" ) );
 			
+			userQtls.stream ()
+			.filter ( geneHelper::isInQTL )
+			.map ( qtl -> new QTLEvidence ( qtl.getLabel (), qtl.getTrait () ) )
+			.forEach ( qtlEvidences::add );
+				
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 
 			
 			// group related concepts by their type and map each concept to its best label
 			//
-			
 			Map<String, List<String>> byCCRelatedLabels = luceneHits.stream ()
 			.map ( graph::getConcept )
 			// We deal with these below
@@ -195,6 +190,7 @@ public class ExportService
 			
 			var allPubSize = allPubs.size (); // we want this to be shown, despite the filter
 			
+			// Possibly cut the no. of publications
 			AttributeName attYear = getAttributeName ( graph, "YEAR" );
 			List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 				allPubs, 
@@ -216,37 +212,37 @@ public class ExportService
 			}
 
 	
-			// And eventually, create output string for evidences column in GeneView table
+			// And eventually, create output string for gene evidences
 			// 
-			String evidenceStr = byCCRelatedLabels.entrySet ()
+			Map<String, TypeEvidences> typeEvidences = byCCRelatedLabels.entrySet ()
 			.stream ()
 			.map ( cc2Labels -> {
-				// Values in the results are like: "Protein__23__label1//label2//...||Publication__12__..."
-				// Here we spawn each string in a ||-delimited block
 				String ccId = cc2Labels.getKey ();
 				List<String> labels = cc2Labels.getValue ();
-				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : labels.size (); 
-				return ccId + "__" + reportedSize + "__" + String.join ( "//", labels );
+				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : labels.size ();
+
+				return Pair.of ( ccId, new TypeEvidences ( labels, reportedSize ) );
 			})
-			// And then we join all the per-CC strings 
-			.collect ( Collectors.joining ( "||" ) );
+			.collect ( Collectors.toMap ( Pair::getKey, Pair::getValue ) );
 							
+			// TODO: What's this?! Is still in use?
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 			
-			// TODO: is this right?!
-			if ( ! ( !evidenceStr.isEmpty () || qtls.isEmpty () ) ) continue;
+			if ( typeEvidences.isEmpty () && qtlEvidences.isEmpty () ) continue;
 			
-			out.append (
-				geneId + "\t" + GraphLabelsUtils.getBestGeneAccession ( gene ) + "\t" + geneName + "\t" + geneHelper.getChromosome () + "\t" 
-				+ geneHelper.getBeginBP () + "\t" + geneHelper.getTaxID () + "\t" 
-				+ new DecimalFormat ( "0.00" ).format ( score ) + "\t" + (isInList ? "yes" : "no" ) + "\t" + infoQTLStr + "\t" 
-				+ evidenceStr + "\n" 
-			);
-	
+			// Build the entry!
+			result.add ( new GeneTableEntry ( 
+				geneId, 
+				GraphLabelsUtils.getBestGeneAccession ( gene ), 
+				geneName,
+				geneHelper.getTaxID (),
+				geneHelper.getChromosome (), geneHelper.getBeginBP (), geneHelper.getEndBP (), 
+				score, isUserGene, 
+				typeEvidences, qtlEvidences 
+			));
 		} // for candidates
 		log.info ( "Gene table generated" );
-		return out.toString ();
-	
+		return result;
 	} // exportGeneTable()
 	
 	
@@ -259,7 +255,6 @@ public class ExportService
    * @param userQtlStr user QTLs
    * @param keyword user-specified keyword
    * 
-   * Was named writeAnnotationXML
    */
 	public String exportGenomapXML ( 
 		String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
@@ -370,13 +365,13 @@ public class ExportService
 		}
 
 		log.info ( "Display user QTLs... QTLs provided: " + userQtl.size () );
-		for ( QTL region : userQtl )
+		for ( QTL userRegion : userQtl )
 		{
-			String chr = region.getChromosome ();
-			int start = region.getStart ();
-			int end = region.getEnd ();
+			String chr = userRegion.getChromosome ();
+			int start = userRegion.getStart ();
+			int end = userRegion.getEnd ();
 			
-			String label = Optional.ofNullable ( region.getLabel () )
+			String label = Optional.ofNullable ( userRegion.getLabel () )
 				.filter ( lbl -> !lbl.isEmpty () )
 				.orElse ( "QTL" );
 
@@ -495,9 +490,9 @@ public class ExportService
    * no of matching user genes, no of total matching genes, Lucene score). On the API it's false
    * by default, to avoid undesired performance issues.
    */
-	public String exportEvidenceTable ( 
+	public List<EvidenceTableEntry> exportEvidenceTable ( 
 		String keywords, 
-		Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
+		Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> userQtlsStr,
 		boolean doSortResult
 	)
 	{
@@ -507,16 +502,7 @@ public class ExportService
     var graph = dataService.getGraph ();
 		
     /*
-     * TODO: review, much has changed since this comments
-     * 
-   	 * Edge cases:
-   	 * keywords          user genes                   result
-   	 * no match          !null, no match							empty
- 		 * some match        !null, no match              total genes, 0 for user genes
- 		 * some match        some match                   filter user genes = 0
- 		 * null              sem motif matches            total genes, user genes
- 		 *  
- 		 * So, this should do:
+ 		 * Note on behaviour:
  		 *   for a result list, if there is at least one user gene that isn't 0, filter 0s
  		 *   else, user genes are all at 0, don't filter
      */
@@ -531,16 +517,17 @@ public class ExportService
 		
 		// WARNING: we need to collect all the matching elements, due to the need to subsequent 
 		// filter by hasMatchingUserGenes, which requires to be assessed over ALL elements in 
-		// foundConcepts. Because of that YOU CAN'T get this via Stream.collect()
+		// foundConcepts. Because of that, YOU CAN'T get this via Stream.collect()
 		//
-		List<OptionsMap> resultRows = new ArrayList<> (); // it has ad-hoc synch, see below 
+		List<EvidenceTableEntry> evidenceTable = new ArrayList<> (); // it has ad-hoc synch, see below 
 		
 		// This doesn't need concurrency management, cause it can only be toggled to true 
 		var hasMatchingUserGenes = new MutableBoolean ( false );
 		
-		List<QTL> qtls = QTL.fromStringList ( qtlsStr ); // it's never null					
+		List<QTL> userQtls = QTL.fromStringList ( userQtlsStr ); // it's never null					
 
 		// final proxies needed within lambdas
+		final var evidenceTableRO = evidenceTable;
 		final var foundConceptsRo = foundConcepts;
 		final var userGenesRo = userGenes;
 		
@@ -569,39 +556,31 @@ public class ExportService
 			Integer ondexId = foundConcept.getId ();
 			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
 			
-			Set<Integer> startGeneIds = concepts2Genes.get ( ondexId );
-			Integer startGenesSize = startGeneIds.size ();
+			Set<Integer> conceptGenesIds = concepts2Genes.get ( ondexId );
+			Integer startGenesSize = conceptGenesIds.size ();
 			
 			Set<String> userGeneLabels = ConcurrentHashMap.newKeySet ();
 			var qtlsSize = new AtomicInteger ( 0 );
 
 			// Consider the genes to which this concept is related
 			//
-			startGeneIds.parallelStream ()
-			.forEach ( (Integer startGeneId) ->
+			conceptGenesIds.parallelStream ()
+			.forEach ( (Integer conceptGeneId) ->
 			{
-				ONDEXConcept startGene = graph.getConcept ( startGeneId );
-				var geneHelper = new GeneHelper ( graph, startGene );
+				ONDEXConcept conceptGene = graph.getConcept ( conceptGeneId );
+				var conceptGeneHelper = new GeneHelper ( graph, conceptGene );
 				
-				if ( startGene != null && userGenesRo.contains ( startGene ) )
-					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( startGene ) );
+				if ( conceptGene != null && userGenesRo.contains ( conceptGene ) )
+					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( conceptGene ) );
 
-				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
+				// Count QTLs resulting from the semantic motifs
+				if ( genes2QTLs.containsKey ( conceptGeneId ) ) qtlsSize.incrementAndGet ();
 
-				String chr = geneHelper.getChromosome ();
-				int beg = geneHelper.getBeginBP ();
-					
-				
-				// Count the matching QTLs
+				// Count the user QTLs that 
 				//
-				int matchingQtls = (int) qtls.parallelStream ()
-				.filter ( (QTL loci) -> {
-					String qtlChrom = loci.getChromosome ();
-					Integer qtlStart = loci.getStart ();
-					Integer qtlEnd = loci.getEnd ();
-					return qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd;
-				})
-				.count ();
+				int matchingQtls = (int) userQtls.parallelStream ()
+					.filter ( conceptGeneHelper::isInQTL )
+					.count ();
 				
 				if ( matchingQtls > 0 ) qtlsSize.addAndGet ( matchingQtls );
 				
@@ -630,21 +609,17 @@ public class ExportService
 			if ( hasMatchingUserGenes.isFalse () && !userGeneLabels.isEmpty () ) 
 				hasMatchingUserGenes.setTrue ();
 
-			var row = OptionsMap.from ( Map.of ( 
-				"type", foundType,
-				"name", foundName,
-				"score", score,
-				"pvalue", pvalue,
-				"genesSize", startGenesSize,
-				"userGeneLabels", userGeneLabels,
-				"qtlsSize", qtlsSize.get (),
-				"ondexId", ondexId
-			));
+			var row = new EvidenceTableEntry ( 
+				ondexId, foundType, foundName, 
+				score, pvalue, 
+				startGenesSize, userGeneLabels, 
+				qtlsSize.get () 
+			); 
 			
 			// This is the only time when we need synchronisation, so this is faster than 
 			// synchronizedList()
-			synchronized ( resultRows ) {
-				resultRows.add ( row );
+			synchronized ( evidenceTableRO ) {
+				evidenceTableRO.add ( row );
 			}
 		});
 		// for foundConcepts()
@@ -653,78 +628,43 @@ public class ExportService
 		// Now resultRows has to become the final TSV table
 		//
 		
-		var resultRowsStrm = resultRows.parallelStream ();
+		var evidenceTableStrm = evidenceTable.parallelStream ();
 		
 		if ( hasMatchingUserGenes.isTrue () )
-		
-		// Let's keep user genes with > 0 count, if any
-		resultRowsStrm = resultRowsStrm.filter ( row -> {
-			Set<String> userGeneLabels = row.getOpt ( "userGeneLabels" );
-			return userGeneLabels.size () > 0;
+			// Let's keep user genes with > 0 count, if any
+			evidenceTableStrm = evidenceTableStrm.filter ( row -> {
+				Set<String> userGeneLabels = row.getUserGeneAccessions ();
+				return userGeneLabels.size () > 0;
 		});
 
 		
 		// Let's sort it if requested. 
 		if ( doSortResult )
 		{
-			@SuppressWarnings ( "unchecked" )
-			Comparator<OptionsMap> cmp = Comparator.comparingDouble ( (OptionsMap row) -> { 
-				double pvalue = row.getDouble ( "pvalue" );
+			Comparator<EvidenceTableEntry> cmp = Comparator.comparingDouble ( (EvidenceTableEntry row) -> { 
+				double pvalue = row.getPvalue ();
 				return pvalue == -1 ? 1 : pvalue;
 			})
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> ( (Set<String>) row.get ( "userGeneLabels" ) ).size () ).reversed () )
-			.thenComparing ( Comparator.comparingInt ( (OptionsMap row) -> row.getInt ( "genesSize" ) ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (EvidenceTableEntry row) -> row.getUserGeneAccessions ().size () ).reversed () )
+			.thenComparing ( Comparator.comparingInt ( (EvidenceTableEntry row) -> row.getTotalGenesSize () ).reversed () )
 			// Lucene score is left as lowest priority, since it isn't even used in the UI
-			.thenComparing ( Comparator.comparingDouble ( (OptionsMap row) -> row.getDouble ( "score" ) ).reversed () )
+			.thenComparing ( Comparator.comparingDouble ( (EvidenceTableEntry row) -> row.getScore () ).reversed () )
 			// Last resort...
-			.thenComparing ( Comparator.comparing ( (OptionsMap row) -> row.getString ( "name" ), String.CASE_INSENSITIVE_ORDER ) );
+			.thenComparing ( Comparator.comparing ( (EvidenceTableEntry row) -> row.getName (), String.CASE_INSENSITIVE_ORDER ) );
 									
-			// Stream.sorted() does the same thing, but this way we can clear the original list
-			//
-			OptionsMap[] sortedRows = (OptionsMap[]) resultRowsStrm.toArray ( sz -> new OptionsMap [ sz ] );
-			resultRows.clear (); // as said, let's free some memory
+			// Stream.sorted() uses a backup array like here, but this way we can clear the original list
+			// We need an array for parallel sorting, can't be done in a list 
+			// (https://stackoverflow.com/questions/25961018)
+			EvidenceTableEntry[] sortedRows = (EvidenceTableEntry[]) evidenceTableStrm.toArray ( sz -> new EvidenceTableEntry [ sz ] );
 			Arrays.parallelSort ( sortedRows, cmp );
-			resultRowsStrm = Arrays.stream ( sortedRows );
+			evidenceTable = Collections.unmodifiableList ( Arrays.asList ( sortedRows ) );
 		}
+		else
+			evidenceTable = evidenceTableStrm.collect ( Collectors.toUnmodifiableList () );
 		
-		// Building the final TSV table
-		//
-
-		// The operations below should be sequential, but let's use this just in case, since the base
-		// stream is parallel
-		var tableSize = new AtomicInteger ( 0 );	
+		log.info ( "Returning {} row(s) for the evidence table", evidenceTable.size () );
 		
-		String tableStr = resultRowsStrm.map ( row ->
-		// Yields a TSV row as final result
-		{
-			tableSize.incrementAndGet ();
-			
-			Set<String> userGeneLabels = row.getOpt ( "userGeneLabels" );
-			var userGenesStr = userGeneLabels.size () == 0
-				? ""
-				: userGeneLabels.stream ().collect ( Collectors.joining ( "," ) ); 
-						
-			return 
-				row.getString ( "type" ) + "\t" + 
-				row.getString ( "name" ) + "\t" +
-				row.getDouble ( "score" ) + "\t" + 
-				row.getDouble ( "pvalue" ) + "\t" + 
-				row.getInt ( "genesSize" ) + "\t" + 
-				userGenesStr + "\t" + 
-				row.getInt ( "qtlsSize" ) + "\t" +
-				row.getInt ( "ondexId" ) + "\t" +
-				// This was added in #726, to avoid that the client spends too much time computing the
-				// same number. TODO: Java unit test 
-				userGeneLabels.size ();
-		})
-		.collect ( Collectors.joining ( "\n" ) );
-		
-		// Required by the client TSV reader
-		if ( !tableStr.isEmpty () ) tableStr += "\n";
-		
-		log.info ( "Returning {} row(s) for the evidence table", tableSize.get () );
-		
-		return "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + tableStr;
+		return evidenceTable;
 		
 	} // exportEvidenceTable()	
 }

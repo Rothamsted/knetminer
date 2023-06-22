@@ -1,16 +1,6 @@
-// TODO: table-handler.js is a meaningless name, rename it to something like
-// table-scrolling.js 
-// 
-// Also, 'handler' using refer to small components such as event triggers, 
-// connection stream readers, cache update functions. Here, it could be name handler, but 
-// manager is maybe more appropriate. Apart from this, the problem is that 'scroll' was missing
-// from names
-//
-
-// Provisionally set it to true when you want test, see below. 
-// DO NOT COMMIT THIS WITH TRUE!!!
-const TEST_MODE = false
+// See init-utils.js
 if (TEST_MODE) {
+	// This is used at the end of the hereby file
 	// Stubs to be able to test without having to load anything else in Node.js
 	// Normally I keep this disabled cause it interferes with my IDE.
 	function createGeneTableBody () {}

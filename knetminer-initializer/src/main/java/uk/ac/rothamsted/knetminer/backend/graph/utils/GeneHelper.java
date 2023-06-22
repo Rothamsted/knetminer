@@ -66,7 +66,7 @@ public class GeneHelper
 	/**
 	 * The gene's attribute 'BEGIN'. 0 if it's 0 or doesn't exist. 
 	 */
-	public Integer getBeginBP ()
+	public int getBeginBP ()
 	{
 		return beginBP;
 	}
@@ -75,7 +75,7 @@ public class GeneHelper
 	/**
 	 * The gene's attribute 'END'. 0 if it's 0 or doesn't exist. 
 	 */
-	public Integer getEndBP ()
+	public int getEndBP ()
 	{
 		return endBP;
 	}
@@ -90,4 +90,30 @@ public class GeneHelper
 	{
 		return chromosome;
 	}
+	
+	/**
+	 * Tells if this gene overlaps with the QTL region. It also makes some sanity checks, like 
+	 * TAXID, chromosome name, existence of coordinates. 
+	 */
+	public boolean isInQTL ( QTL qtl )
+	{
+		if ( this.taxID == null 
+				 || this.chromosome == null
+				 || this.beginBP == 0 
+				 || this.endBP == 0
+		) return false;
+
+		if ( !taxID.equals ( qtl.getTaxID () ) ) return false;
+		if ( !chromosome.equals ( qtl.getChromosome () ) ) return false;
+		
+		var qbegin = qtl.getStart ();
+		var qend = qtl.getEnd ();
+
+		// The gene starts before the QTL start, the other end has to start after the QTL start
+		if ( beginBP <= qbegin && endBP >= qbegin ) return true;
+
+		// The gene starts after the QTL start, it must also start before the QTL end
+		return beginBP <= qend;
+	}
+
 }

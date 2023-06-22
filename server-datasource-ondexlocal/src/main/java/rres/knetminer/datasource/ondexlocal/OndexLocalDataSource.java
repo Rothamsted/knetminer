@@ -45,14 +45,16 @@ import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
 import rres.knetminer.datasource.api.QtlResponse;
 import rres.knetminer.datasource.api.SynonymsResponse;
 import rres.knetminer.datasource.api.config.GoogleAnalyticsConfiguration;
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
-import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.QTL;
 
 /**
  * A KnetminerDataSource that knows how to load ONDEX indexes into memory and query them. Specific 
@@ -272,9 +274,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		//
 		final var candidatesProxy = new MutableObject<> ( candidateGenesMap ); // lambdas doesn't want non-finals
 		Map<ONDEXConcept, Double> genesMap = genesStream.collect (
-				Collectors.toConcurrentMap ( Functions.identity (),
-				gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
-			);
+			Collectors.toConcurrentMap ( Functions.identity (),
+			gene -> candidatesProxy.getValue ().getOrDefault ( gene, 0d ) )
+		);
 		candidatesProxy.setValue ( candidateGenesMap = null ); // Free-up memory
 		
 		List<ONDEXConcept> genes;
@@ -325,7 +327,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		log.debug ( "2.) API, doing gene table view" );
 
 		var newSearchResult = new SemanticMotifsSearchResult ( smSearchMgr.getGeneId2RelatedConceptIds (), genesMap );
-		String geneTable = exportService.exportGeneTable ( 
+		List<GeneTableEntry> geneTable = exportService.exportGeneTable ( 
 			genes, userGenes, request.getQtl (), request.getListMode (), newSearchResult 
 		);
 
@@ -335,7 +337,7 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		//
 
 		log.debug ( "3) API, doing evidence table" );
-		String evidenceTable = exportService.exportEvidenceTable (
+		List<EvidenceTableEntry> evidenceTable = exportService.exportEvidenceTable (
 			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl (),
 			request.isSortedEvidenceTable ()
 		);

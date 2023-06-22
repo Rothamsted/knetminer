@@ -285,6 +285,9 @@ async function openGeneListPopup(conceptId, element)
 	let accessionCache  = new WebCacheWrapper('accession-cache', request);
   let accessionData = await accessionCache.get(); 
 	
+	// TODO: to be replaced, see the function's comments.
+	fixGenomeTables2OldStrings ( accessionData )
+	
 	if ( accessionData ){
         var geneTable = accessionData.geneTable.split("\n").slice(1,-1)
         var accessionPopup = new AccessionPopupManager(element, conceptId, geneTable); 

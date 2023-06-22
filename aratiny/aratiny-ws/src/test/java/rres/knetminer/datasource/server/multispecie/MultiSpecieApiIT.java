@@ -7,6 +7,7 @@ import static rres.knetminer.api.ApiIT.CLI;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -39,17 +40,21 @@ public class MultiSpecieApiIT
 		GenomeApiResult outAra = CLI.genome ( "seed", null, null, "3702" );
 		GenomeApiResult outAll = CLI.genome ( "seed", null, null, null );
 		
-		assertTrue ( "Ara probe gene not found in the filtered search (case 1)!",
-			findAccession(outAra,"AT1G21970") );
+		assertTrue ( 
+			"Ara probe gene not found in the filtered search (case 1)!",
+			isInGeneTable(outAra,"AT1G21970")
+		);
 
-		assertTrue ( "Ara probe gene not found in the filtered search (case 2)",
-			findAccession(outAra,"AT1G66750") );
+		assertTrue (
+			"Ara probe gene not found in the filtered search (case 2)",
+			isInGeneTable(outAra,"AT1G66750") 
+		);
 
 		// Must be there to be significant
 		//
 		var maizeProbe = "ZM00001EB097190";
-		assertTrue  ( "Maize probe gene not found in the unfiltered search", findAccession ( outAll, maizeProbe) );
-		assertFalse ( "Maize probe gene found in the filtered search", findAccession ( outAra, maizeProbe ) );
+		assertTrue  ( "Maize probe gene not found in the unfiltered search", isInGeneTable ( outAll, maizeProbe) );
+		assertFalse ( "Maize probe gene found in the filtered search", isInGeneTable ( outAra, maizeProbe ) );
 
 		assertTrue ( "Specie-filtered search yielding more results than generic search",
 			outAll.getGeneCount () > outAra.getGeneCount () );
@@ -76,10 +81,10 @@ public class MultiSpecieApiIT
 		);
 
 		assertTrue( "Accession TRAESCS5B02G381900 not found in the result",
-			findAccession( outWheatTaxId, "TRAESCS5B02G381900" ) );
+			isInGeneTable( outWheatTaxId, "TRAESCS5B02G381900" ) );
 
 		assertFalse( "Ara probe gene found in the wheat-filtered search",
-			findAccession ( outWheatTaxId, "AT1G21970" ) );
+			isInGeneTable ( outWheatTaxId, "AT1G21970" ) );
 
 		assertTrue ( "Specie-filtered search yielding more results than generic search!",
 			outAll.getGeneCount () > outWheatTaxId.getGeneCount () );
@@ -102,22 +107,22 @@ public class MultiSpecieApiIT
 		//
 		assertTrue (
 			"Arabidopsis probe gene not found in the unfiltered search!", 
-			findAccession ( outAll, "AT2G22440" ) 
+			isInGeneTable ( outAll, "AT2G22440" ) 
 		);
 		assertTrue (
 			"Maize probe gene not found in the unfiltered search!", 
-			findAccession ( outAll, "ZM00001EB079100" ) 
+			isInGeneTable ( outAll, "ZM00001EB079100" ) 
 		);
 		
 		// Specie-specific genes must be in their own specie-specific search and not elsewhere
 		//
 		assertTrue (
 			"Maize probe gene not found in the filtered search!", 
-			findAccession ( outMaize, "ZM00001EB079100" ) 
+			isInGeneTable ( outMaize, "ZM00001EB079100" ) 
 		);
 		assertFalse (
 			"Arabidopsis probe gene found in the maize-filtered search!", 
-			findAccession ( outMaize, "AT2G22440" ) 
+			isInGeneTable ( outMaize, "AT2G22440" ) 
 		);
 
 		assertTrue ( "Specie-filtered search yielding more results than generic search!",
@@ -140,22 +145,22 @@ public class MultiSpecieApiIT
 		//
 		assertTrue (
 			"Arabidopsis probe gene not found in the unfiltered search!", 
-			findAccession ( outAll, "AT2G28056" ) 
+			isInGeneTable ( outAll, "AT2G28056" ) 
 		);
 		assertTrue (
 			"Maize probe gene not found in the unfiltered search!", 
-			findAccession ( outAll, "ZM00001EB074940" ) 
+			isInGeneTable ( outAll, "ZM00001EB074940" ) 
 		);
 		
 		// Specie-specific genes must be in their own specie-specific search and not elsewhere
 		//
 		assertTrue (
 			"Maize probe gene not found in the filtered search!", 
-			findAccession ( outMaize, "ZM00001EB074940" ) 
+			isInGeneTable ( outMaize, "ZM00001EB074940" ) 
 		);
 		assertFalse (
 			"Arabidopsis probe gene found in the maize-filtered search!", 
-			findAccession ( outMaize, "AT2G28056" ) 
+			isInGeneTable ( outMaize, "AT2G28056" ) 
 		);
 
 		assertTrue ( "Specie-filtered search yielding more results than generic search!",
@@ -178,8 +183,8 @@ public class MultiSpecieApiIT
 				List.of( "AT1G21970", "AT1G80840", "AT4G14110", "TRAESCS5B02G381900" ,"ZM00001EB307230" ),
 				List.of( "5A:580000000:590000000"), null );
 
-		assertTrue ( "Maize probe gene not found by the specie-filtered search!", findAccession ( outWithTaxId, "ZM00001EB307230" ) );
-		assertFalse ( "Arabidopsis probe gene found from the maize search!", findAccession ( outWithTaxId, "AT1G80840" ) );
+		assertTrue ( "Maize probe gene not found by the specie-filtered search!", isInGeneTable ( outWithTaxId, "ZM00001EB307230" ) );
+		assertFalse ( "Arabidopsis probe gene found from the maize search!", isInGeneTable ( outWithTaxId, "AT1G80840" ) );
 
 		assertTrue (
 			"Filtered search showing more results than unfiltered!",
@@ -252,8 +257,11 @@ public class MultiSpecieApiIT
 	 * Checking the given accession present in the gene table coming
 	 * from the API.
 	 */
-	boolean findAccession(GenomeApiResult result, String geneAcc) {
-		return result.getGeneTable().stream().anyMatch ( a -> a[1].toString().equals ( geneAcc ) );
+	private boolean isInGeneTable ( GenomeApiResult result, String geneAcc ) 
+	{
+		return result.getGeneTable()
+			.parallelStream ()
+			.anyMatch ( row -> StringUtils.equals ( geneAcc, row.getAccession () ) );
 	}
 
 }

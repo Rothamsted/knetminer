@@ -147,3 +147,11 @@ function getTaxIdFromUrl(){
   var taxIdFromURL = new URLSearchParams ( document.location.search ).get ( "taxId" );
   if ( taxIdFromURL ) speciesSelector.setTaxId ( taxIdFromURL );
 }
+
+/**
+ * There is some hacky test code, which I enable and use with Node.JS, from the command line
+ * TODO: needs to be turned into Jasmine tests and be invoked by Maven.
+ * 
+ * NEVER COMMIT IT WITH true!!!
+ */
+const TEST_MODE = false

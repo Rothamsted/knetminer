@@ -1,34 +1,43 @@
 package rres.knetminer.datasource.api;
 
+import java.util.List;
+import java.util.Optional;
+
+import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
+
 /**
  * Contains elements that are common to both NetworkResponse and GenomeResponse, hence it is abstract.
  * 
  * @author holland
+ * @author Marco Brandizi (2023, reviewed for pure JSON output)
  *
  */
-public abstract class KeywordResponse extends KnetminerResponse {
+public abstract class KeywordResponse extends KnetminerResponse 
+{
 	private String GViewer;
-	private String geneTable;
-	private String evidenceTable;
+	private List<GeneTableEntry> geneTable;
+	private List<EvidenceTableEntry> evidenceTable;
 	private int geneCount;
 	private int docSize;
 	private int totalDocSize;
+	
 	public String getGViewer() {
 		return GViewer;
 	}
 	public void setGViewer(String gViewer) {
 		GViewer = gViewer;
 	}
-	public String getGeneTable() {
+	public List<GeneTableEntry> getGeneTable() {
 		return geneTable;
 	}
-	public void setGeneTable(String geneTable) {
-		this.geneTable = geneTable;
+	public void setGeneTable ( List<GeneTableEntry> geneTable ) {
+		this.geneTable = Optional.ofNullable ( geneTable ).orElse ( List.of () );
 	}
-	public String getEvidenceTable() {
+	public List<EvidenceTableEntry> getEvidenceTable() {
 		return evidenceTable;
 	}
-	public void setEvidenceTable(String evidenceTable) {
+	public void setEvidenceTable ( List<EvidenceTableEntry> evidenceTable ) {
 		this.evidenceTable = evidenceTable;
 	}
 	public int getGeneCount() {

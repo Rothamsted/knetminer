@@ -166,6 +166,9 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
             $('.overlay').remove();
         })
         .success( function(data){
+					 // TODO: to be replaced, see the function's comments.
+           fixGenomeTables2OldStrings ( data )
+					
            var gviewer = data.gviewer
            var querytime= performance.now() - this.startTime; // query response time
            var queryseconds= querytime/1000;
@@ -820,3 +823,263 @@ class GenesListManager
 
 }
 
+/**
+ * Converts the new JSON format for the gene table back into TSV-into-string.
+ * 
+ * TODO: this is a TEMPORARY DIRTY HACK which allows for quick merge of the API changes 
+ * (addresed by #655) into the master branch.
+ * 
+ * DO NOT KEEP it too long, the code using the gene/evidence tables DO NEED to be upgraded, so that
+ * it uses the new JSON format straight and we can move on with further developing features that can
+ * be based on such format (eg, gene/evidence distance filtering). 
+ * 
+ * Also, when working on such migration, possiblt consider the factorisation of all the API calls into a 
+ * KnetminerAPIClient, with methods like genome ( keywords, userGenes, chromosomeRegions ), which
+ * would abstract away from the lower web/API level (eg, hides the URLs or Request/Response objects ).
+ *  
+ */
+function geneTable2OldString ( geneTableJson )
+{
+	// The web cache might return this after conversion
+	if ( typeof geneTableJson === 'string' ) return geneTableJson
+	if ( !geneTableJson ) geneTableJson = []
+	
+	let result = geneTableJson.map ( entry =>
+	{
+		let evidences = entry.conceptEvidences
+		let evidencesStr = 
+		Object.entries ( evidences ).map ( ev =>
+		{
+			const [conceptType, typeEvidence] = ev
+			// type__10__acc1//acc2//...
+			let evidenceStr = conceptType + "__" + typeEvidence.reportedSize + "__"
+			let conceptLabels = typeEvidence.conceptLabels
+			evidenceStr += conceptLabels.join ( "//" )
+			return evidenceStr
+		})
+		.join ( "||" )
+		
+		
+		// label//trait||...
+		let qtlStr = entry.qtlEvidences
+		  .map ( qtl => qtl.regionLabel + "//" + qtl.regionTrait )
+		  .join ( "||" )
+		
+		return [ 
+		  entry.ondexId, entry.accession, entry.name, entry.chromosome, 
+			entry.geneBeginBP, entry.taxID,
+			Number ( entry.score ).toFixed ( 2 ), 
+			(entry.isUserGene ? "yes" : "no" ), qtlStr, 
+			evidencesStr
+		]
+		.join ( "\t" )
+		
+	})
+	.join ( "\n" )
+	
+	if ( result ) result += "\n"
+  result = "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" + result;
+  return result
+}
+
+/**
+ * Converts the new JSON format for the evidence table back into TSV-into-string.
+ * 
+ * TODO: as said above for geneTable2OldString(), this is a TEMPORARY DIRTY HACK, see the comments
+ * in that function. 
+ *  
+ */
+function evidenceTable2OldString ( evidenceTableJson )
+{
+	// The web cache might return this after conversion
+	if ( typeof evidenceTableJson === 'string' ) return evidenceTableJson
+	if ( !evidenceTableJson ) evidenceTableJson = []
+	
+	let result = evidenceTableJson.map ( entry => 
+	{
+		userGeneAccessions = entry.userGeneAccessions.join ( "," ) 
+		
+		return [ entry.conceptType,
+			entry.name,
+			entry.score,
+	  	entry.pvalue,
+	  	entry.totalGenesSize,
+	  	userGeneAccessions,
+	  	entry.qtlsSize,
+	  	entry.ondexId,
+	  	entry.userGenesSize
+	  ]
+	  .join ( "\t" )
+	})
+	.join ( "\n" )
+	
+	if ( result ) result += "\n"
+	result = "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + result;
+	
+	return result
+}
+
+/**
+ * Helper that gets all the data received from /genome or /qtl and fixes (convert back to strings) both
+ * the gene and evidence tables in one go, by using the above functions geneTable2OldString()
+ * and evidenceTable2OldString().
+ * 
+ * TODO: as already said, this is a TEMPORARY hack, see above.
+ */
+function fixGenomeTables2OldStrings ( data )
+{
+	data.geneTable = geneTable2OldString ( data.geneTable )
+	data.evidenceTable = evidenceTable2OldString ( data.evidenceTable )
+} 
+
+
+// TODO: see init-utils.js 
+//
+if ( TEST_MODE )
+{
+	function testGeneTable2OldString ()
+	{
+	   let testTableJs = [
+	     {
+	       "accession" : "ZM00001EB307230",
+	       "chromosome" : "7",
+	       "conceptEvidences" : {
+	          "Publication" : {
+	             "conceptLabels" : [
+	                "PMID:28121385"
+	             ],
+	             "reportedSize" : 1
+	          }
+	       },
+	       "geneBeginBP" : 50783674,
+	       "geneEndBP" : 50785615,
+	       "isUserGene" : true,
+	       "name" : "RPS4",
+	       "ondexId" : 6639989,
+	       "qtlEvidences" : [],
+	       "score" : 2.75531940846045,
+	       "taxID" : "4577"
+	     },
+	     {
+	       "accession" : "ZM00001EB307232",
+	       "chromosome" : "6",
+	       "conceptEvidences" : {
+	          "Publication" : {
+	             "conceptLabels" : [
+	                "PMID:28121387"
+	             ],
+	             "reportedSize" : 1
+	          }
+	       },
+	       "geneBeginBP" : 50783674,
+	       "geneEndBP" : 50785620,
+	       "isUserGene" : true,
+	       "name" : "RPS4Foo",
+	       "ondexId" : 6639990,
+	       "qtlEvidences" : [ 
+					 { "regionLabel": "QTL1", "regionTrait": "The Foo QTL 1" }, 
+					 { "regionLabel": "QTL2", "regionTrait": "The Foo QTL 2" } 
+					],
+	       "score" : 3.1459,
+	       "taxID" : "4577"
+	     }
+	   ] // testTableJs
+	   
+		 let table = geneTable2OldString ( testTableJs )
+	   console.assert ( table, "geneTable2OldString() didn't work!" )
+	   
+	   // console.log ( "THE TABLE:", table )
+	   
+	   table = table.split ( "\n" )
+	   
+	   console.assert ( table.length == 4, "geneTable2OldString(), wrong result size!" )
+	   console.assert ( table [ 0 ].includes ( "ONDEX-ID\tACCESSION"), "geneTable2OldString() no headers!" )
+	   console.assert ( table [ 1 ].includes ( "6639989\tZM00001EB307230"), "geneTable2OldString() no 1st accession!" )
+	   
+	   const row = table [ 2 ].split ( "\t" )
+	   console.assert ( row [ row.length - 4 ] == 3.15, "geneTable2OldString() bad score!" )
+	   
+	   qtlStr = row [ row.length - 2 ]   
+	   console.assert ( 
+			 qtlStr.includes ( "QTL1//The Foo QTL 1" )
+	   	 && qtlStr.includes ( "QTL2//The Foo QTL 2" )
+	   	 && qtlStr.includes ( "||" )
+	   	 && ! ( qtlStr.startsWith ( "||" ) || qtlStr.endsWith ( "||" ) )
+	     , "geneTable2OldString() bad QTL!"
+	   )
+	   
+	} // testGeneTable2OldString
+
+
+	function testEvidenceTable2OldString ()
+	{
+		testTableJs = [
+			{
+				"ondexId": 6649576,
+				"conceptType": "Trait",
+				"name": "seed weight",
+				"score": 7.334310054779053,
+				"pvalue": -1.0,
+				"totalGenesSize": 1,
+				"userGeneAccessions": [],
+				"qtlsSize": 0,
+				"userGenesSize": 0
+			},
+			{
+				"ondexId": 6639684,
+				"conceptType": "Path",
+				"name": "Regulation of seed size",
+				"score": 7.334310054779053,
+				"pvalue": 0.01,
+				"totalGenesSize": 2,
+				"userGeneAccessions": [ "FOO-1", "FOO-2" ],
+				"qtlsSize": 2,
+				"userGenesSize": 3
+			},
+			{
+				"ondexId": 6643264,
+				"conceptType": "Trait",
+				"name": "seed maturation",
+				"score": 8.66998291015625,
+				"pvalue": -1.0,
+				"totalGenesSize": 3,
+				"userGeneAccessions": [],
+				"qtlsSize": 0,
+				"userGenesSize": 0
+			}		
+		] // testTableJs
+	
+		 table = evidenceTable2OldString ( testTableJs )
+	   console.assert ( table, "evidenceTable2OldString() didn't work!" )
+	   
+	   console.log ( "THE EV TABLE:", table )
+	   
+	   table = table.split ( "\n" )
+	   
+	   console.assert ( table.length == 5, "evidenceTable2OldString(), wrong result size!" )
+	   console.assert ( table [ 0 ].includes ( "TYPE\tNAME\tSCORE\tP-VALUE"), "evidenceTable2OldString() no headers!" )
+	   console.assert ( table [ 1 ].includes ( "Trait\tseed weight"), "evidenceTable2OldString() 1st row is wrong!" )
+	   
+	   const row = table [ 2 ].split ( "\t" )
+	   console.log ( "THE EV ROW:", row )	  	
+	   
+	   console.assert ( row [ row.length - 2 ] == 6639684, "evidenceTable2OldString() bad ondexId!" )
+	   
+	   let score = row [ 2 ]
+	   console.assert ( score > 7.32 && score < 7.34, "evidenceTable2OldString() bad score!" )
+	
+	   let pvalue = row [ 3 ]
+	   console.assert ( pvalue == 0.01, "evidenceTable2OldString() bad pvalue!" )
+	
+	   let userGenes = row [ 5 ].split ( "," )
+	   console.assert ( userGenes && userGenes.length == 2, "evidenceTable2OldString() bad user genes" )
+	   console.assert ( 
+			 userGenes.includes ( 'FOO-1' ) && userGenes.includes ( 'FOO-2' ),
+			 "evidenceTable2OldString() bad user genes"
+		 )
+	} // testEvidenceTable2OldString
+
+  testGeneTable2OldString ()
+  testEvidenceTable2OldString ()
+  
+} // if TEST_MODE
