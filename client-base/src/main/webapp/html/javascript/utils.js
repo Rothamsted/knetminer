@@ -13,8 +13,11 @@ $(document).ready (
 		.then ( function ()
 		{		
 			showApiInitResult ();
-			genemap = GENEMAP.GeneMap({apiUrl: api_url})
-			  .width(800).height(550); // changed from 750x400
+			// sets genemap width based on user screen-size see in ui-utils.js
+			var genemapWidth = setMapWidthSize();
+
+			genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(genemapWidth).height(500)
+		 // changed from 750x400
 			
 			knetmaps = KNETMAPS.KnetMaps();
 			getTaxIdFromUrl();

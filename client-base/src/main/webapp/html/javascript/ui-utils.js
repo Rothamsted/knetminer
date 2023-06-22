@@ -449,3 +449,24 @@ function clearGeneListInput(){
 // 	// TODO try this instead return Math.min ( 100, listLength / freegenelist_limit )
 //   return listLength >= freegenelist_limit ? 100 : (listLength / freegenelist_limit) * 100 ; 
 // }
+
+
+/** NOTE: NOT SURE IF THIS IS NEEDED, WAITING FOR FEEDBACK.
+ * returns genemap view width based on user screen size.
+ * @returns width
+ */
+function setMapWidthSize (){
+
+	// targets larger screens 
+	if(matchMedia("(min-width:2560px)").matches) return 1250
+
+	// targets normal monitor screen size
+	if(matchMedia("(min-width:1920px)").matches) return 1030
+
+	// target laptop screen size
+	if(matchMedia("(min-width:1400px)").matches) return 900
+
+	// orginal size
+	return 800; 
+
+}
