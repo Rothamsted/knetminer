@@ -166,9 +166,7 @@ function requestGenomeData(requestParams,keyword,request,searchMode,geneList_siz
             $('.overlay').remove();
         })
         .success( function(data){
-
-// TODO: MB, bookmark for JSON conversion
-
+					 // TODO: to be replaced, see the function's comments.
            fixGenomeTables2OldStrings ( data )
 					
            var gviewer = data.gviewer
@@ -838,8 +836,25 @@ class GenesListManager
 
 }
 
+/**
+ * Converts the new JSON format for the gene table back into TSV-into-string.
+ * 
+ * TODO: this is a TEMPORARY DIRTY HACK which allows for quick merge of the API changes 
+ * (addresed by #655) into the master branch.
+ * 
+ * DO NOT KEEP it too long, the code using the gene/evidence tables DO NEED to be upgraded, so that
+ * it uses the new JSON format straight and we can move on with further developing features that can
+ * be based on such format (eg, gene/evidence distance filtering). 
+ * 
+ * Also, when working on such migration, possiblt consider the factorisation of all the API calls into a 
+ * KnetminerAPIClient, with methods like genome ( keywords, userGenes, chromosomeRegions ), which
+ * would abstract away from the lower web/API level (eg, hides the URLs or Request/Response objects ).
+ *  
+ */
 function geneTable2OldString ( geneTableJson )
 {
+	// The web cache might return this after conversion
+	if ( typeof geneTableJson === 'string' ) return geneTableJson
 	if ( !geneTableJson ) geneTableJson = []
 	
 	let result = geneTableJson.map ( entry =>
@@ -880,8 +895,17 @@ function geneTable2OldString ( geneTableJson )
   return result
 }
 
+/**
+ * Converts the new JSON format for the evidence table back into TSV-into-string.
+ * 
+ * TODO: as said above for geneTable2OldString(), this is a TEMPORARY DIRTY HACK, see the comments
+ * in that function. 
+ *  
+ */
 function evidenceTable2OldString ( evidenceTableJson )
 {
+	// The web cache might return this after conversion
+	if ( typeof evidenceTableJson === 'string' ) return evidenceTableJson
 	if ( !evidenceTableJson ) evidenceTableJson = []
 	
 	let result = evidenceTableJson.map ( entry => 
@@ -908,6 +932,13 @@ function evidenceTable2OldString ( evidenceTableJson )
 	return result
 }
 
+/**
+ * Helper that gets all the data received from /genome or /qtl and fixes (convert back to strings) both
+ * the gene and evidence tables in one go, by using the above functions geneTable2OldString()
+ * and evidenceTable2OldString().
+ * 
+ * TODO: as already said, this is a TEMPORARY hack, see above.
+ */
 function fixGenomeTables2OldStrings ( data )
 {
 	data.geneTable = geneTable2OldString ( data.geneTable )

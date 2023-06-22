@@ -43,11 +43,11 @@ import rres.knetminer.datasource.api.datamodel.GeneTableEntry.QTLEvidence;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry.TypeEvidences;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
-import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
 import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.QTL;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
@@ -86,17 +86,16 @@ public class ExportService
 	 * 'Gene View'.
 	 * 
 	 * TODO: too big! Split into separated functions.
-	 *
-	 * Was named writeGeneTable
+	 * 
 	 */
 	public List<GeneTableEntry> exportGeneTable ( 
-		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> qtlsStr, 
+		List<ONDEXConcept> candidateGenes, Set<ONDEXConcept> userGenes, List<String> userQtlsStr, 
 		String listMode,  SemanticMotifsSearchResult searchResult 
 	)
 	{
 		log.info ( "Exporting gene table" );
 		
-		List<QTL> qtls =  QTL.fromStringList ( qtlsStr );
+		List<QTL> userQtls =  QTL.fromStringList ( userQtlsStr );
 	  var graph = dataService.getGraph ();
 		var genes2QTLs = knetInitializer.getGenes2QTLs ();
 		var config = dataService.getConfiguration ();
@@ -107,7 +106,7 @@ public class ExportService
 				.collect ( Collectors.toSet () );
 
 		if ( userGenes.isEmpty () ) log.info ( "No user gene list defined" );
-		if ( qtls.isEmpty () ) log.info ( "No QTL regions defined" );
+		if ( userQtls.isEmpty () ) log.info ( "No QTL regions defined" );
 		
 		var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
 		
@@ -117,7 +116,6 @@ public class ExportService
 		
 		List<GeneTableEntry> result = new LinkedList<> ();
 		
-		// out.append ( "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" );
 		for ( ONDEXConcept gene : candidateGenes )
 		{
 			int geneId = gene.getId ();
@@ -159,11 +157,10 @@ public class ExportService
 				qtlEvidences.add ( new QTLEvidence ( traitDesc, traitDesc ) ); 
 			} // for genes2QTLs
 	
-			qtls.stream ()
-			.filter ( loci -> !loci.getChromosome ().isEmpty () )
-			.filter ( loci -> geneHelper.getBeginBP () >= loci.getStart () )
-			.filter ( loci -> geneHelper.getEndBP () <= loci.getEnd () )
-			.map ( loci -> new QTLEvidence ( loci.getLabel (), loci.getTrait () ) )
+			
+			userQtls.stream ()
+			.filter ( geneHelper::isInQTL )
+			.map ( qtl -> new QTLEvidence ( qtl.getLabel (), qtl.getTrait () ) )
 			.forEach ( qtlEvidences::add );
 				
 			// get lucene hits per gene
@@ -172,7 +169,6 @@ public class ExportService
 			
 			// group related concepts by their type and map each concept to its best label
 			//
-			
 			Map<String, List<String>> byCCRelatedLabels = luceneHits.stream ()
 			.map ( graph::getConcept )
 			// We deal with these below
@@ -194,6 +190,7 @@ public class ExportService
 			
 			var allPubSize = allPubs.size (); // we want this to be shown, despite the filter
 			
+			// Possibly cut the no. of publications
 			AttributeName attYear = getAttributeName ( graph, "YEAR" );
 			List<Integer> newPubs = PublicationUtils.newPubsByNumber ( 
 				allPubs, 
@@ -228,6 +225,7 @@ public class ExportService
 			})
 			.collect ( Collectors.toMap ( Pair::getKey, Pair::getValue ) );
 							
+			// TODO: What's this?! Is still in use?
 			if ( luceneHits.isEmpty () && listMode.equals ( "GLrestrict" ) ) continue;
 			
 			if ( typeEvidences.isEmpty () && qtlEvidences.isEmpty () ) continue;
@@ -257,7 +255,6 @@ public class ExportService
    * @param userQtlStr user QTLs
    * @param keyword user-specified keyword
    * 
-   * Was named writeAnnotationXML
    */
 	public String exportGenomapXML ( 
 		String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
@@ -368,13 +365,13 @@ public class ExportService
 		}
 
 		log.info ( "Display user QTLs... QTLs provided: " + userQtl.size () );
-		for ( QTL region : userQtl )
+		for ( QTL userRegion : userQtl )
 		{
-			String chr = region.getChromosome ();
-			int start = region.getStart ();
-			int end = region.getEnd ();
+			String chr = userRegion.getChromosome ();
+			int start = userRegion.getStart ();
+			int end = userRegion.getEnd ();
 			
-			String label = Optional.ofNullable ( region.getLabel () )
+			String label = Optional.ofNullable ( userRegion.getLabel () )
 				.filter ( lbl -> !lbl.isEmpty () )
 				.orElse ( "QTL" );
 
@@ -495,7 +492,7 @@ public class ExportService
    */
 	public List<EvidenceTableEntry> exportEvidenceTable ( 
 		String keywords, 
-		Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> qtlsStr,
+		Map<ONDEXConcept, Float> foundConcepts, Set<ONDEXConcept> userGenes, List<String> userQtlsStr,
 		boolean doSortResult
 	)
 	{
@@ -505,16 +502,7 @@ public class ExportService
     var graph = dataService.getGraph ();
 		
     /*
-     * TODO: review, much has changed since this comments
-     * 
-   	 * Edge cases:
-   	 * keywords          user genes                   result
-   	 * no match          !null, no match							empty
- 		 * some match        !null, no match              total genes, 0 for user genes
- 		 * some match        some match                   filter user genes = 0
- 		 * null              sem motif matches            total genes, user genes
- 		 *  
- 		 * So, this should do:
+ 		 * Note on behaviour:
  		 *   for a result list, if there is at least one user gene that isn't 0, filter 0s
  		 *   else, user genes are all at 0, don't filter
      */
@@ -532,14 +520,14 @@ public class ExportService
 		// foundConcepts. Because of that, YOU CAN'T get this via Stream.collect()
 		//
 		List<EvidenceTableEntry> evidenceTable = new ArrayList<> (); // it has ad-hoc synch, see below 
-		var evidenceTableRO = evidenceTable; // Needed in lambdas
 		
 		// This doesn't need concurrency management, cause it can only be toggled to true 
 		var hasMatchingUserGenes = new MutableBoolean ( false );
 		
-		List<QTL> qtls = QTL.fromStringList ( qtlsStr ); // it's never null					
+		List<QTL> userQtls = QTL.fromStringList ( userQtlsStr ); // it's never null					
 
 		// final proxies needed within lambdas
+		final var evidenceTableRO = evidenceTable;
 		final var foundConceptsRo = foundConcepts;
 		final var userGenesRo = userGenes;
 		
@@ -568,39 +556,31 @@ public class ExportService
 			Integer ondexId = foundConcept.getId ();
 			if ( !concepts2Genes.containsKey ( ondexId ) ) return;
 			
-			Set<Integer> startGeneIds = concepts2Genes.get ( ondexId );
-			Integer startGenesSize = startGeneIds.size ();
+			Set<Integer> conceptGenesIds = concepts2Genes.get ( ondexId );
+			Integer startGenesSize = conceptGenesIds.size ();
 			
 			Set<String> userGeneLabels = ConcurrentHashMap.newKeySet ();
 			var qtlsSize = new AtomicInteger ( 0 );
 
 			// Consider the genes to which this concept is related
 			//
-			startGeneIds.parallelStream ()
-			.forEach ( (Integer startGeneId) ->
+			conceptGenesIds.parallelStream ()
+			.forEach ( (Integer conceptGeneId) ->
 			{
-				ONDEXConcept startGene = graph.getConcept ( startGeneId );
-				var geneHelper = new GeneHelper ( graph, startGene );
+				ONDEXConcept conceptGene = graph.getConcept ( conceptGeneId );
+				var conceptGeneHelper = new GeneHelper ( graph, conceptGene );
 				
-				if ( startGene != null && userGenesRo.contains ( startGene ) )
-					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( startGene ) );
+				if ( conceptGene != null && userGenesRo.contains ( conceptGene ) )
+					userGeneLabels.add ( GraphLabelsUtils.getBestGeneAccession ( conceptGene ) );
 
-				if ( genes2QTLs.containsKey ( startGeneId ) ) qtlsSize.incrementAndGet ();
+				// Count QTLs resulting from the semantic motifs
+				if ( genes2QTLs.containsKey ( conceptGeneId ) ) qtlsSize.incrementAndGet ();
 
-				String chr = geneHelper.getChromosome ();
-				int beg = geneHelper.getBeginBP ();
-					
-				
-				// Count the matching QTLs
+				// Count the user QTLs that 
 				//
-				int matchingQtls = (int) qtls.parallelStream ()
-				.filter ( (QTL loci) -> {
-					String qtlChrom = loci.getChromosome ();
-					Integer qtlStart = loci.getStart ();
-					Integer qtlEnd = loci.getEnd ();
-					return qtlChrom.equals ( chr ) && beg >= qtlStart && beg <= qtlEnd;
-				})
-				.count ();
+				int matchingQtls = (int) userQtls.parallelStream ()
+					.filter ( conceptGeneHelper::isInQTL )
+					.count ();
 				
 				if ( matchingQtls > 0 ) qtlsSize.addAndGet ( matchingQtls );
 				

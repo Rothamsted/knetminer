@@ -48,9 +48,9 @@ import net.sourceforge.ondex.core.searchable.ONDEXLuceneFields;
 import net.sourceforge.ondex.core.searchable.ScoredHits;
 import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.KGUtils;
-import rres.knetminer.datasource.ondexlocal.service.utils.QTL;
 import rres.knetminer.datasource.ondexlocal.service.utils.SearchUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.backend.graph.utils.QTL;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**

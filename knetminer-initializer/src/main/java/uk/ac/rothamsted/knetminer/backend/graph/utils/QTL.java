@@ -1,4 +1,4 @@
-package rres.knetminer.datasource.ondexlocal.service.utils;
+package uk.ac.rothamsted.knetminer.backend.graph.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
