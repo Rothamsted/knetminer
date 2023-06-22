@@ -150,7 +150,7 @@ function getTaxIdFromUrl(){
 
 /**
  * There is some hacky test code, which I enable and use with Node.JS, from the command line
- * TODO: needs to be turned into Jasmine tests and be invoked by Maven.
+ * TODO: needs to be turned into Jest (or other framework) tests and be invoked by Maven.
  * 
  * NEVER COMMIT IT WITH true!!!
  */

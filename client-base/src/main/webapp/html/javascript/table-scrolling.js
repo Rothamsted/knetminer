@@ -290,7 +290,7 @@ const evidenceTableScroller = Object.freeze ( new EvidenceTableScroller () )
 
 
 /** 
- * TODO: I wrote this to run them manually, needs to be rewritten for Jasmine and integrated 
+ * TODO: I wrote this to run them manually, needs to be rewritten for Jest (or other framework) and integrated 
  * into Maven with the Jasmine plug-in
  *  
  */
