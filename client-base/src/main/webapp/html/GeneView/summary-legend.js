@@ -54,13 +54,15 @@ function filterGeneTableByType ( event, conceptType )
 {
 	const rowFilterPred = ( selectedTypes, tableRow ) => 
 	{
-		const rowEvidencesString = tableRow [ 9 ]
-		if ( !rowEvidencesString ) return false // just in case
+		const { conceptEvidences } = tableRow
+		if ( !conceptEvidences ) return false // just in case
 	 	// Splits the gene evidences string in the gene table into an array of evidences. 
 	  // See the API for details about this format
-	  const evidenceCountStrings = rowEvidencesString.split ( "||" )
-		const rowEvidences = evidenceCountStrings.map ( evStr => evStr.split('__')[ 0 ] )
-	  return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
+	  let evidences = []
+	  for(let evidence in conceptEvidences){
+		evidences.push(evidence)
+	  }	
+	  return selectedTypes.every ( t => evidences.includes ( t ) ) 
 	}
 	
 	_filterKnetTableByType ( 
@@ -72,7 +74,7 @@ function filterGeneTableByType ( event, conceptType )
 function filterEvidenceTableByType ( event, conceptType )
 {
 	const rowFilterPred = ( selectedTypes, tableRow ) => {
-		const rowEvidencesString = tableRow [ 0 ]
+		const rowEvidencesString = tableRow.conceptType
 	  return selectedTypes.some ( t => t == rowEvidencesString )
 	}
 
@@ -82,7 +84,7 @@ function filterEvidenceTableByType ( event, conceptType )
 	)
 }
 
-//  function updates, store and checks for non-active legend keys
+//  function updates, store and  checks for non-active legend keys
 function updateLegendsKeys(key, location, event) {
 
     const currentTable = $(`#${location}`)
@@ -151,19 +153,9 @@ function toggleKnetTablesDisplay ( displayOn )
 		// names/variables/objects that manage genes and evidence tables separately, as if there were
 		// TWO instances of them?!?
 		// NEEDS serious review for coherence!
-		
-		if ( displayOn )
-		{
-	    $('#filterMessage').hide();
-	    $('#tablesorter').show();
-	    $('.num-genes-container').show();
-			return		
-		}
-			
-	  // else, turn it off
-	  $('#tablesorter').hide()
-	  $('#filterMessage').show();
-	  $('.num-genes-container').hide();
+	    $('#filterMessage').toggleClass('show-block',!displayOn); 
+	    $('.num-genes-container').toggleClass('show-block',displayOn); 
+		$('#tablesorter').toggleClass('hide',!displayOn);
 }
 
 

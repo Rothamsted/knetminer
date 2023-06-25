@@ -2770,8 +2770,14 @@ background-color:#EEF0F3;
 color: #C0C0C0;
 }
 
-.show{
+.show-flex{
     display: flex;
+}
+.hide{
+  display: none;  
+}
+.show-block{
+    display: block;
 }
 
 .limit-border{
