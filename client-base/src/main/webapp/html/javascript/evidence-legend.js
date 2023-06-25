@@ -4,7 +4,7 @@
  */
 function getEvidencesLegend( evidenceTable )
 {
-	var types = evidenceTable.map ( row => row [ 0 ] )
+	var types = evidenceTable.map ( row => row.conceptType );
 
   var eviLegend = new Map();
   // Iterate through evidence types and get counts for each evidence Concept Type.
