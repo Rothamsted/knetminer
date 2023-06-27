@@ -55,7 +55,7 @@ function searchKeyword(){
     // api request
     var request = "/" + searchMode;
 
-
+  // TODO: possibly related to #768
   //if(geneList_size > freegenelist_limit) {
   // check if user logged in and if yes, get user_id
 

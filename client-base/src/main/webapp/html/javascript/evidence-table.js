@@ -286,9 +286,12 @@ async function openGeneListPopup(conceptId, element)
   let accessionData = await accessionCache.get(); 
 	
 	if ( accessionData ){
-        // TODO: WAITING TO CONFIRM IF THIS APPROACH IS ALLOWED 
+        // TODO: WAITING TO CONFIRM IF THIS APPROACH IS ALLOWED
+        // Note: this should go away once all the consumer code uses the JSON rows, it won't be
+        // necessary anymore 
         var geneTable = geneTable2OldString(accessionData.geneTable);
         
+        // TODO: Should go away as above
         geneTable = geneTable.split("\n").slice(1,-1); 
 
         var accessionPopup = new AccessionPopupManager(element, conceptId, geneTable); 
@@ -423,13 +426,19 @@ function createEvidenceTableBody ( tableData, doAppend = false )
 	const toRow = evidenceTableScroller.getPageEnd ()
 
     tableData.forEach( (evidence,index) => 
-  {   
-    let {conceptType, name, pvalue, totalGenesSize, geneList, ondexId, userGenesSize, userGeneAccessions } = evidence
+  {  
+		// TODO: can be kept for the moment, though it's not needed, the same fields
+		// can be accessed simply like evidence.conceptType, evidence.name, etc. 
+    let {conceptType, name, 
+      pvalue, totalGenesSize, geneList, 
+      ondexId, userGenesSize, userGeneAccessions 
+     } = evidence
 
     // Prefer this templating style, at least for new code
     // Also, avoid "x = x + ...", it's more verbose than +=, especially when
     // it's needed many times.
     //  
+    // TODO: is the index-based ID still needed? And if yes, ondexId is probably more reliable (the index varies upon type filtering)
     tableBody +=`<tr>
                     <td>
                     <p onclick="evidenceTableExcludeKeyword(${ondexId},this,event)" id="evidence_exclude_${index}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>

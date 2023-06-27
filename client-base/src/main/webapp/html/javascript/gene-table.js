@@ -374,6 +374,8 @@ function createGeneTableBody ( tableData, doAppend = false )
 	// Main loop over the resulting genes.
 	for (var row = fromRow; row < toRow; row++)
 	{	
+		// TODO: can be kept for the moment, though it's not needed, the same fields
+		// can be accessed simply like: tableRow = tableData [ row ]; tableRow.ondexId, rableRow.accession, etc. 
 		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
 		// var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ]= tableData[row]
 

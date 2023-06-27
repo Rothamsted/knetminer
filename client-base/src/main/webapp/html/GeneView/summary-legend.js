@@ -54,15 +54,18 @@ function filterGeneTableByType ( event, conceptType )
 {
 	const rowFilterPred = ( selectedTypes, tableRow ) => 
 	{
-		const { conceptEvidences } = tableRow
+		const { conceptEvidences } = tableRow.
 		if ( !conceptEvidences ) return false // just in case
 	 	// Splits the gene evidences string in the gene table into an array of evidences. 
 	  // See the API for details about this format
+	  
+	  /* TODO: remove
 	  let evidences = []
 	  for(let evidence in conceptEvidences){
 		evidences.push(evidence)
-	  }	
-	  return selectedTypes.every ( t => evidences.includes ( t ) ) 
+	  } */
+	  const rowEvidences = Object.keys ( conceptEvidences )
+	  return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
 	}
 	
 	_filterKnetTableByType ( 
