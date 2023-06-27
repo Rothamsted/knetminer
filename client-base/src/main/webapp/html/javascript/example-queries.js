@@ -114,15 +114,18 @@ const exampleQuery = function()
 
             if(enforce_genelist_limit){
 
+                /* TODO: too messed-up, See #768 */
+                
                 if(freegenelist_limit == 20 && accType.toLowerCase() == 'free'){
                     queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
                 }
 
+                // TODO: should this be an else if?
                 if(freegenelist_limit <=100 && accType.toLowerCase() == 'pro'){
                     queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
                 }
             }
-
+            
             // example query buttons
             var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`; 
 

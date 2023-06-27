@@ -455,6 +455,9 @@ function clearGeneListInput(){
  * returns genemap view width based on user screen size.
  * @returns width
  */
+ /* TODO: makes sense. But which map? A better name would be
+    preferrable, eg, adaptGenoMapSize ()
+ * 
 function setMapWidthSize (){
 
 	// targets larger screens 

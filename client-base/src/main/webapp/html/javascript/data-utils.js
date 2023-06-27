@@ -752,6 +752,8 @@ class GenesListManager
       const progresUIContainer = document.querySelector('.progress-container'); 
 
        // removes progress bar if user is on unlimited plan
+       // TODO: as other access control cases, this is bad, see #768
+       // 
        if(!this.#isLimitEnforced){
         progresUIContainer.style.display = 'none'
         return
