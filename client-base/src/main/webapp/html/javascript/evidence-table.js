@@ -282,8 +282,8 @@ async function openGeneListPopup(conceptId, element)
   // Checking if modal element is already created for current conceptID 
 	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
 	
-	let accessionCache  = new WebCacheWrapper('accession-cache');
-  let accessionData = await accessionCache.get(request); 
+    let accessionCache  = new WebCacheWrapper('accession-cache', request);
+    let accessionData = await accessionCache.get(); 
 	
 	if ( accessionData ){
         // TODO: WAITING TO CONFIRM IF THIS APPROACH IS ALLOWED 
