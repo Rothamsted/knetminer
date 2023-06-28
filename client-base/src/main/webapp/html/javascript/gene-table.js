@@ -116,18 +116,18 @@ function createGenesTable ( tableData, keyword )
 		var numResults = tableData.length;
 		var targetClass = $(this).hasClass('checked')
 
-		for (var i = 1; i < numResults; i++) {
-			var values = e.data.x[i];
+		for (var i = 0; i < numResults; i++) {
+			var {isUserGene, conceptEvidences} = e.data.x[i];
 
-			if (values[7] === "yes") {
+
+			if (isUserGene) {
 				// Check which input buttons are selected.
-				if ($(this).val() === "Linked Genes") { // Select Known Targets.
-					if (values[9].length > 0) {
-						$("#checkboxGene_" + i + ":visible").prop('checked', !targetClass);
-					}
-				}
-				else if ($(this).val() === "Unlinked Genes") { // Select Novel Targets.
-					if (values[9].length === 0) {
+		 // Select Known Targets.
+					if (conceptEvidences && ($(this).val() === "Linked Genes") ) $("#checkboxGene_" + i + ":visible").prop('checked', !targetClass);
+				
+
+				if ($(this).val() === "Unlinked Genes") { // Select Novel Targets.
+					if (!conceptEvidences) {
 						$("#checkboxGene_" + i + ":visible").prop('checked', !targetClass);
 					}
 				}
@@ -281,7 +281,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 // update selected genes count whenever a Gene View or evidence table entry is clicked or Known/ Novel targets options in gene view are selected.
 // Arne 18/01/23 added viewName which requests a name (probably either Term or Gene).
 function updateSelectedGenesCount(inputName, countContainer, viewName) {
-	var count = returnCheckInputCount(inputName);
+	var count = knetTableUserCountSize(inputName);
 	var viewCount = count > 1 ? viewName + 's' : viewName // >1 testing
 	$('' + countContainer + ' span').text(count + ' ' + viewCount + ' selected'); // update
 	$(countContainer).next().toggleClass('non-active', count < 1);
@@ -302,7 +302,7 @@ function updateSelectedGenesCount(inputName, countContainer, viewName) {
  * (or *Count, but count is more coomonly used for a count that is updated during a loop or alike).
  * 
  */ 
-function returnCheckInputCount ( inputName )
+function knetTableUserCountSize ( inputName )
 {
 	return $('input:checkbox[name=' + inputName + ']:checked').length
 }
@@ -373,121 +373,74 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 	// Main loop over the resulting genes.
 	for (var row = fromRow; row < toRow; row++)
-	{
-		var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ] = tableData[row]
+	{	
+		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
+		// var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ]= tableData[row]
 
 		// if (row > rows /*&& values[7]=="no"*/) continue;
 		table += '<tr>';
 
-		var upperCasedAccessions = geneAccessions.toUpperCase(); // always display gene ACCESSION in uppercase
+		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
 
 		var geneAccNorm = upperCasedAccessions.replace(".", "_");
 
 		// Gene accession
-		var geneTd = `<td class="gene_accesion"><a href = "javascript:;" onclick="openNetworkView(event,'${geneAccessions}')" title="Display network in KnetMaps">${upperCasedAccessions}</a></td>`;
+		var geneTd = `<td class="gene_accesion"><a href = "javascript:;" onclick="openAccessionNetworkView(event,'${accession}')" title="Display network in KnetMaps">${upperCasedAccessions}</a></td>`;
 
-		var geneNameTd = geneName.toUpperCase() == geneAccessions
+		var geneNameTd = name.toUpperCase() == accession
 			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
 			? '<td></td>'
 			// else, gene name column, with synonym expansion
-			: '<td><span class="gene_name">' + geneName + '</span> <span onclick="createGeneNameSynonyms(this,' + geneId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
-
-		var taxIdTd = '<td><a href="http://www.uniprot.org/taxonomy/' + taxId + '" target="_blank">' + taxId + '</a></td>';
+			: '<td><span class="gene_name">' + name + '</span> <span onclick="createGeneNameSynonyms(this,' + ondexId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
 
 		// Currently not shown
-		var scoreTd = '<td>' + score + '</td>';
+		var scoreTd = '<td>' + Number(score).toFixed(2) + '</td>';
 
 
 		var chrTd = '';
 		var chrStartTd = '';
 
-		var chrTd = '<td>' + chr + '</td>';
-		var chrStartTd = '<td>' + chrStart + '</td>';
+		var chrTd = '<td>' + chromosome + '</td>';
+		var chrStartTd = '<td>' + geneBeginBP + '</td>';
 
-		// QTL column with information box
-		var qtlTd = '<td>';
-		if (withinQTLs.length > 1) {
-			var withinQTLs = withinQTLs.split("||");
-			//Shows the icons
-			qtlTd = '<td><div class="qtl_item qtl_item_' + withinQTLs.length + '" title="' + withinQTLs.length + ' QTLs"><a href"javascript:;" class="dropdown_box_open" id="qtl_box_open_' + geneAccNorm + withinQTLs.length + '">' + withinQTLs.length + '</a>';
-
-			//Builds the evidence box
-			qtlTd += '<div id="qtl_box_' + geneAccNorm + withinQTLs.length + '" class="qtl_box"><span class="dropdown_box_close" id="qtl_box_close_' + geneAccNorm + withinQTLs.length + '"></span>';
-			qtlTd += '<p><span>' + "QTLs" + '</span></p>';
-
-			var uniqueQTLs = new Object();
-			var uniqueTraits = new Object();
-
-			for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
-				var withinQTLElems = withinQTLs[iqtl].split("//");
-				if (withinQTLElems[1].length > 0) {
-					if (uniqueTraits[withinQTLElems[1]] == null)
-						uniqueTraits[withinQTLElems[1]] = 1;
-					else
-						uniqueTraits[withinQTLElems[1]]++;
-				}
-				else {
-					if (uniqueQTLs[withinQTLElems[0]] == null)
-						uniqueQTLs[withinQTLElems[0]] = 1;
-					else
-						uniqueQTLs[withinQTLElems[0]]++;
-				}
-			}
-
-			var unique = "";
-			for (var iqtl = 0; iqtl < withinQTLs.length; iqtl++) {
-				var withinQTLElems = withinQTLs[iqtl].split("//");
-				if (withinQTLElems[1].length > 0) {
-					if (unique.indexOf(withinQTLElems[1] + ";") == -1) {
-						unique += withinQTLElems[1] + ";";
-						qtlTd += '<p>' + uniqueTraits[withinQTLElems[1]] + ' ' + withinQTLElems[1] + '</p>';
-					}
-				}
-				else {
-					if (unique.indexOf(withinQTLElems[0] + ";") == -1) {
-						unique = unique + withinQTLElems[0] + ";";
-						qtlTd += '<p>' + uniqueQTLs[withinQTLElems[0]] + ' ' + withinQTLElems[0] + '</p>';
-					}
-				}
-			}
-		} // if ( withinQTLs.length )
-		qtlTd += '</td>';
 
 
 		// For each evidence show the images - start
 		var evidenceTd = '<td><div class="evidence-column-container">';
-		if (evidence.length > 0) {
-			var evidences = evidence.split("||");
-			for (var iev = 0; iev < evidences.length; iev++) {
-				//Shows the icons
-				var evidenceElems = evidences[iev].split("__");
-			
-				var evidenceCC = evidenceElems[0];
-				var evidenceSize = evidenceElems[1];
-				var evidenceNodes = evidenceElems[2].split("//");
-				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceCC + '" class="evidence_item evidence_item_' + evidenceCC + ' dropdown_box_open" title="' + evidenceCC + '" >';
+
+		if (conceptEvidences) {
+
+			for(var evidence in conceptEvidences){
+
+				var { conceptLabels, reportedSize} = conceptEvidences[evidence]; 
+
+				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidence + '" class="evidence_item evidence_item_' + evidence + ' dropdown_box_open" title="' + evidence + '" >';
 					//Builds the evidence box
-					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceCC + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidenceCC + '></span>';
-					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceCC + '"></div> <span>' + evidenceCC + '</span></p>';
-					for (var ievNode = 0; ievNode < evidenceNodes.length; ievNode++) {
-						if (evidenceCC == 'Publication') {
+					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidence + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidence + '></span>';
+					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidence + '"></div> <span>' + evidence + '</span></p>';
+					for (var ievNode = 0; ievNode < conceptLabels.length; ievNode++) {
+						if (evidence == 'Publication') {
 							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-							evidenceValueTd = '<a href="' + pubmedurl + evidenceNodes[ievNode].substring(5) + '" target="_blank">' + evidenceNodes[ievNode] + '</a>';
+							evidenceValueTd = '<a href="' + pubmedurl + conceptLabels[ievNode].substring(5) + '" target="_blank">' + conceptLabels[ievNode] + '</a>';
 						}
 						else
-							evidenceValueTd = evidenceNodes[ievNode];
+							evidenceValueTd = conceptLabels[ievNode];
 
 						evidenceTd += '<p>' + evidenceValueTd + '</p>';
 					}
 					evidenceTd += '</div>';
-					evidenceTd += '</div> <span style="margin-right:.5rem">' + evidenceSize + '</span></div>';
-				} // for iev
-			} // if evidence.length
+					evidenceTd += '</div> <span style="margin-right:.5rem">' + reportedSize + '</span></div>';
+
+				}
+			// for iev
+
+
+		} // if evidence.length
 			evidenceTd += '<div></td>';
 			// Foreach evidence show the images - end
 
-			var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${geneAccessions}"></td>`;
-			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + /*usersList +*/ /*qtlTd +*/ scoreTd + selectTd;
+			var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${accession}"></td>`;
+			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + scoreTd + selectTd;
 			table += '</tr>';
 	}// for row
 
@@ -530,41 +483,23 @@ function createGeneTableBody ( tableData, doAppend = false )
  function getInteractiveSummaryLegend(geneViewData) {
 
 	var evidencesArr= new Array();
-	for(var i=1; i < geneViewData.length; i++) {
-		var evi_value= geneViewData[i][9].trim();
-		if(evi_value !== "") {
-		   evidencesArr.push(evi_value);
-		  }
-	  }
-  
-	var con_legend= new Map();
-	// Iterate through evidences and get counts for each evidence Concept Type.
-	evidencesArr.forEach(function(evi) {
-		var row_values= evi.trim().split("||");
-		row_values.forEach(function(rv) {
-			var conType= rv.trim().split("__")[0].trim();
-			var conCount= Number(rv.trim().split("__")[1].trim());
-			// check/add unique concept types to Map
-			if(con_legend.has(conType)) {
-			   // update if this count is greater than old, stored count
-			   var old_count= con_legend.get(conType);
-			   if(Number(conCount) > Number(old_count)) { con_legend.set(conType, conCount); }
-			  }
-			else { // add new conType to Map
-				con_legend.set(conType, conCount);
-			}
-		  });
-	});
+
+	geneViewData.forEach((geneData) => {
+		var key  = Object.keys(geneData.conceptEvidences)[0]; 
+		if (!evidencesArr.includes(key)) evidencesArr.push(key)
+	})
+
   
 	// Display evidence icons with count and name in legend.
-	//var legend= '<div id="evidence_Summary_Legend" class="evidenceSummary">'+ '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
+
 	var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
 	var summaryText = '';
   
-	con_legend.forEach(function(value, key, map)
+	evidencesArr.forEach(function(evidence)
 	{     
-	  var contype= key.trim();
-  
+		var key = evidence
+	  	var contype= key.trim();
+
 			  summaryText += 
 			    `<div style="font-weight:600;" 
 			          onclick = "filterGeneTableByType ( event, '${contype}' );"
@@ -583,7 +518,7 @@ function createGeneTableBody ( tableData, doAppend = false )
  * TODO: there is a function with the same name and different purpose in genomap.js, probably
  * this one needs a different name.
  */
-function openNetworkView(event,genesAccessions){
+function openAccessionNetworkView(event,genesAccessions){
 	event.preventDefault();
 	var keyword = trim($("#keywords").val());
 
