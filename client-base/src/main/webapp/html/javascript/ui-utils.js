@@ -457,8 +457,8 @@ function clearGeneListInput(){
  */
  /* TODO: makes sense. But which map? A better name would be
     preferrable, eg, adaptGenoMapSize ()
- * 
-function setMapWidthSize (){
+ */
+function adaptGenoMapSize (){
 
 	// targets larger screens 
 	if(matchMedia("(min-width:2560px)").matches) return 1250

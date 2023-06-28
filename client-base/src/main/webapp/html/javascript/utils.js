@@ -14,7 +14,7 @@ $(document).ready (
 		{		
 			showApiInitResult ();
 			// sets genemap width based on user screen-size see in ui-utils.js
-			var genemapWidth = setMapWidthSize();
+			var genemapWidth = adaptGenoMapSize();
 
 			genemap = GENEMAP.GeneMap({apiUrl: api_url}).width(genemapWidth).height(500)
 		 // changed from 750x400
