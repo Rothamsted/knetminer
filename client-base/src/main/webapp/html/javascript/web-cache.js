@@ -11,11 +11,7 @@
  * ===> Let's have a call/chat on this, before going on with the described changes. 
  * 
  */
-class WebCacheWrapper
-{
-    #cacheName = null
-    #requestUrl = null
-  
+
 /* TODO: You're instantiating a whole WebCacheWrapper to cache ONE conceptID specific URL
    like: api_url+'/genome?keyword=ConceptID:'+ conceptId
  
@@ -49,90 +45,129 @@ class WebCacheWrapper
      inside get (), but have it if you prefer so. I see even less the need for 
      #cacheRequest() below.
 */
- 
-   constructor(cacheName, requestUrl){
-     this.#cacheName = cacheName
-     this.#requestUrl = requestUrl
-   }
+
+
+  /* TODO: this is too specific, what if we need different options? What if we need to cache 
+      * a format other than JSON? That's why I'm proposing 'options' as an optional parameter
+      * of get().
+      * 
+      * TODO: (not urgent?) does this mean that every time a cached object is fetched from the cache, there 
+      * is some overhead to rebuild the JSON object? If yes, let's try to improve this:
+      * can't we save the response straight from $.get()? Like in: 
+      * 
+      * $.get ( { url: ... })
+      * .done ( data => cache.put ( request, data, options ) )
+      * 
+      * Or, if that's not possible (why?) can't we build the Response without stringify()?, Like in:
+      * 
+      * cache.put(url, new Response(data) )
+      * 
+      * TODO: (not urgent, optional) since the data we are have been caching so far are only gene accessions, 
+      * we might want an extension of this WebCacheWrapper (eg, EvidenceAccessionCache extends WebCacheWrapper), 
+      * which specifically turns the API response into the corresponding table (array of arrays), once for all  
+      * in the API handler. Namely:
+      * 
+      * get ( keyword, conceptId ) 
+      *   Overrides get ( req, opts ), builds the URL using the specific params
+      * 
+      * #apiHandler ( request, options )
+      *   Instead of saving the API raw data, turns them into array of array and then saves this
+      *   inside a Response:
+      * 
+      *   $.get ( { url: ... })
+      *   .done ( data => { 
+      *     accessionsTable = // transformed data, via the usual split("\n"), split(",") 
+      *     cache.put ( request, new Response (accessionTable), options ) 
+      *   })    
+      *  
+      */
+
+  class WebCacheWrapper
+  {
+      cacheName = null
     
-    // Method checks request url to determine if it's cached from previous API call.
-    async get(){
-      var response = await caches.match(this.#requestUrl)
-    
-        if(!response){
-            return this.#apihandler()
+      constructor(cacheName){
+        this.cacheName = cacheName
+      }
+
+      // Method get cached data if available or calls API endpoints 
+      async requestHandler(request, options){
+
+        let data = await this.get(request)
+
+        if(!data)
+        {
+          data = await $.get({ url:request, data: '', timeout: 100000 })
+          .done( response => this.openCache(request,response,options))
+          .fail(function (xhr, status, errolog) {
+            jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
+            return null
+          })
         }
 
-        // if request is cached, cached data is returned
-        var data = await response.json(); 
         return data;
-    }
-    
-    // Method puts cached data in browser API
-    #cacheRequest(url,data){
-      caches.open(this.#cacheName).then((cache) => {
-
-/* TODO: this is too specific, what if we need different options? What if we need to cache 
- * a format other than JSON? That's why I'm proposing 'options' as an optional parameter
- * of get().
- * 
- * TODO: (not urgent?) does this mean that every time a cached object is fetched from the cache, there 
- * is some overhead to rebuild the JSON object? If yes, let's try to improve this:
- * can't we save the response straight from $.get()? Like in: 
- * 
- * $.get ( { url: ... })
- * .done ( data => cache.put ( request, data, options ) )
- * 
- * Or, if that's not possible (why?) can't we build the Response without stringify()?, Like in:
- * 
- * cache.put(url, new Response(data) )
- * 
- * TODO: (not urgent, optional) since the data we are have been caching so far are only gene accessions, 
- * we might want an extension of this WebCacheWrapper (eg, EvidenceAccessionCache extends WebCacheWrapper), 
- * which specifically turns the API response into the corresponding table (array of arrays), once for all  
- * in the API handler. Namely:
- * 
- * get ( keyword, conceptId ) 
- *   Overrides get ( req, opts ), builds the URL using the specific params
- * 
- * #apiHandler ( request, options )
- *   Instead of saving the API raw data, turns them into array of array and then saves this
- *   inside a Response:
- * 
- *   $.get ( { url: ... })
- *   .done ( data => { 
- *     accessionsTable = // transformed data, via the usual split("\n"), split(",") 
- *     cache.put ( request, new Response (accessionTable), options ) 
- *   })    
- *  
- */
-        // We need to clone the request since a request can only be used once
-        cache.put(url, new Response(JSON.stringify(data), {
-            headers: {'Content-Type': 'application/json'}
-        }));
-  
-      });
-    }
+        
+      }
 
 
-/* TODO: see the above notes on how to rewrite the class so that it can deal with requests
-   as a get() parameter */
+      // Method checks request url to determine if it's cached from previous API call.
+      async get(request){
+        // if request is cached, cached data is returned
+        const cachedData = await caches.match(request);
 
-    // Method handles get request for url passed to constructor during initialisation.
-    #apihandler()
-    {
-      const data = $.get({ url:this.#requestUrl, data: '', timeout: 100000 })
-      .done( rdata => {
-/* TODO: as said above, I don't see the need to do this in a separated method, instead of 
-   directly down here */		  
-        this.#cacheRequest ( this.#requestUrl, rdata )
-      })
-      .fail(function (xhr, status, errolog) {
-        jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
-        return null
-      })
+        if(!cachedData) return null 
+
+        const response = cachedData.json(); 
+        return response; 
       
+      }
+
+      // Method puts cached data in browser API
+      openCache(request,response,options)
+      {
+        caches.open(this.cacheName).then((cache) => {
+          cache.put(request,new Response(JSON.stringify(response),options))
+        })
+      }
+      
+  }
+
+  // Extended class caters solely for AccessionTable Popup, called in evidence-table(openGeneListPopup())
+  class EvidenceAccessionCache extends WebCacheWrapper
+  {
+
+    // gets cached data and calls for API endpoint when cache request is not 
+    async apiHandler(conceptId){
+      // api request string
+      let request =  api_url+'/genome?keyword=ConceptID:'+ conceptId
+
+      // gets cached request
+      let data = await super.get(request); 
+      
+      // calls API endpoints when request is not 
+      if(!data)
+      {
+        await $.get({url:request,timeout:100000})
+        .done((response) => {
+          const accessionData = response.geneTable
+          // TODO: WILL BE REMOVED IN COMING DAYS
+          let geneTable = geneTable2OldString(accessionData);
+          geneTable = geneTable.split("\n").slice(1,-1); 
+
+          // extended method registers cache request and response objects (geneTable and headers)
+          super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})
+
+          data = geneTable
+        })
+        .fail(function (xhr, status, errolog) {
+          jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
+          return null
+        })
+      }
+
       return data; 
     }
-  
+
   }
+
+

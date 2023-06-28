@@ -280,18 +280,12 @@ async function openGeneListPopup(conceptId, element)
 {
 
   // Checking if modal element is already created for current conceptID 
-	var request = api_url+'/genome?keyword=ConceptID:'+ conceptId
-	
-    let accessionCache  = new WebCacheWrapper('accession-cache', request);
-    let accessionData = await accessionCache.get(); 
+
+    let accessionCache = new EvidenceAccessionCache('accession-cache');
+    let accessionData =  await accessionCache.apiHandler(conceptId); 
 	
 	if ( accessionData ){
-        // TODO: WAITING TO CONFIRM IF THIS APPROACH IS ALLOWED 
-        var geneTable = geneTable2OldString(accessionData.geneTable);
-        
-        geneTable = geneTable.split("\n").slice(1,-1); 
-
-        var accessionPopup = new AccessionPopupManager(element, conceptId, geneTable); 
+        var accessionPopup = new AccessionPopupManager(element, conceptId, accessionData); 
         accessionPopup.showPopup()
     }
 
