@@ -193,7 +193,7 @@
 
 			<div class='tabviewer-actions'>
 				<span class="ctaButton" id="hint_sortable_table" onclick="showGeneViewHelper(event)">Help<i style="margin-left:.25rem;" class="fas fa-info-circle"></i></span>
-				<a   class="delimited-cta network_button" target="_blank"><img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </a>
+				<div onmouseenter="showPopupOnHover('#delimiter-menu')"  id="delimiter-download"  class="network_button"><img clas="delimited-cta-icon" src="html/image/Knetdownload.png" alt="down Tab delimited file"/> </div>
 				<div onclick="closeGeneViewHelper()" class="helper-modal-overlay"> 
 				</div>
 				<div id="helperModal">
@@ -201,7 +201,12 @@
 						<p>Select genes from either Gene View, Evidence View or Map View and click <strong>'Create Network' </strong>to generate an interactive Knowledge network containing only the selected genes and relevant evidence.</p>
 						</div> 
 				</div>
-		</div>
+				<div onmouseleave="hidePopupOnLeave('#delimiter-menu')" id="delimiter-menu">
+				   	<a  class="delimited-cta export_button" style="border-bottom: .3px solid silver">Tabular Format</a>
+				   	<a  class="delimited-cta-noevidence export_button" style="border-bottom: .3px solid silver">Tabular Format (No evidence)</a>
+					<a class="delimited-json export_button">JSON</a>
+				</div>
+			</div>
     	
         <div id="tabviewer_content">
             <div id="resultsTable" class="result_viewer"></div>

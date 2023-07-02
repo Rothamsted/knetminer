@@ -124,66 +124,66 @@ function checkUserPlan() {
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
-    function requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list) {
-      var firstTimeout;
-      $.post({
-        url: api_url + request,
-        timeout: 1000000,
-        startTime: performance.now(),
-        headers: {
-          "Accept": "application/json; charset=utf-8",
-          "Content-Type": "application/json; charset=utf-8"
-        },
-        datatype: "json",
-        data: JSON.stringify(requestParams)
-      })
-        .fail(function (xhr, status, errorlog) {
-          $("#pGViewer_title").html(''); // clear display msg
-          var server_error = JSON.parse(xhr.responseText); // full error json from server
-          var errorMsg = "Search failed...\t" + server_error.statusReasonPhrase + " (" + server_error.type + "),\t" + server_error.title + "\nPlease use valid keywords, gene IDs or QTLs.";
-          console.log(server_error.detail);
-          alert(errorMsg);
-          $('.overlay').remove();
-        })
-        .success(function (data) {
-          var gviewer = data.gviewer
-          var querytime = performance.now() - this.startTime; // query response time
-          var queryseconds = querytime / 1000;
-          queryseconds = queryseconds.toFixed(2); // rounded to 2 decimal places
-          // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-          genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list)
+function requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list) {
+  var firstTimeout;
+  $.post({
+    url: api_url + request,
+    timeout: 1000000,
+    startTime: performance.now(),
+    headers: {
+      "Accept": "application/json; charset=utf-8",
+      "Content-Type": "application/json; charset=utf-8"
+    },
+    datatype: "json",
+    data: JSON.stringify(requestParams)
+  })
+    .fail(function (xhr, status, errorlog) {
+      $("#pGViewer_title").html(''); // clear display msg
+      var server_error = JSON.parse(xhr.responseText); // full error json from server
+      var errorMsg = "Search failed...\t" + server_error.statusReasonPhrase + " (" + server_error.type + "),\t" + server_error.title + "\nPlease use valid keywords, gene IDs or QTLs.";
+      console.log(server_error.detail);
+      alert(errorMsg);
+      $('.overlay').remove();
+    })
+    .success(function (data) {
+      var gviewer = data.gviewer
+      var querytime = performance.now() - this.startTime; // query response time
+      var queryseconds = querytime / 1000;
+      queryseconds = queryseconds.toFixed(2); // rounded to 2 decimal places
+      // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+      genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list)
 
-          googleAnalytics.trackEvent(
-            request, // It already has a leading '/'
-            {
-              // WARNING: keep these fields consistent with the API tracking in 
-              // KnetminerServer.java
-              'keywords': keyword,
-              'genesListSize': geneList_size,
-              'genesListMode': requestParams?.qtl?.listMode || "",
-              'chrSize': requestParams?.qtl?.length || 0,
-              'taxId': requestParams?.taxId || ""
-            }
-          )
-          data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show();
+      googleAnalytics.trackEvent(
+        request, // It already has a leading '/'
+        {
+          // WARNING: keep these fields consistent with the API tracking in 
+          // KnetminerServer.java
+          'keywords': keyword,
+          'genesListSize': geneList_size,
+          'genesListMode': requestParams?.qtl?.listMode || "",
+          'chrSize': requestParams?.qtl?.length || 0,
+          'taxId': requestParams?.taxId || ""
         }
-        ).complete(function () {
-          // Remove loading spinner from 'search' div
-          $('.overlay').remove();
-          $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
-          document.getElementById('resultsTable_button').click();
-          var secondTimeOut = getLongWaitMessage.timeOutId();
-
-          // clear timeout from callstack
-          // TODO: this timeout is never set, remove its declaration and use
-          // if no longer needed. 
-          clearTimeout(firstTimeout);
-
-          clearTimeout(secondTimeOut);
-
-          document.getElementById('pGSearch_title').scrollIntoView();
-        })
+      )
+      data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show();
     }
+    ).complete(function () {
+      // Remove loading spinner from 'search' div
+      $('.overlay').remove();
+      $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
+      document.getElementById('resultsTable_button').click();
+      var secondTimeOut = getLongWaitMessage.timeOutId();
+
+      // clear timeout from callstack
+      // TODO: this timeout is never set, remove its declaration and use
+      // if no longer needed. 
+      clearTimeout(firstTimeout);
+
+      clearTimeout(secondTimeOut);
+
+      document.getElementById('pGSearch_title').scrollIntoView();
+    })
+}
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
 function genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list) {
@@ -556,38 +556,68 @@ function encodeData ( data )
 */
 handleDelimintedCta = function () {
 
-  var evidenceData, resultViewData;
+  var evidenceData, resultViewData, refinedResultViewData; 
 
-  //  sets delimiter attributes for geneView
+  var resultDataInJson, evidenceDataInJson;
+
+  //  sets delimiter attributes for TSV and JSON data available to be downloaded in geneView
   function setGeneTable() {
-    var encodedString = encodeData(resultViewData);
-    setDemlimiterAttributes('resultsTable', encodedString)
+    
+    // Original TSV dataset with evidence column 
+    var geneTableData = encodeData(resultViewData)
+    setDemlimiterAttributes('resultsTable.tsv', geneTableData, '.delimited-cta')
+
+    // geneview data without evidence column 
+    var geneTableWithoutEvidence = encodeData(refinedResultViewData)
+    setDemlimiterAttributes('refinedresultsTable.tsv', geneTableWithoutEvidence, '.delimited-cta-noevidence')
+    
+    // geneview data in JSON format
+    var geneTableJson =  JSON.stringify(resultDataInJson, null, "\t")
+    geneTableJson = encodeData(geneTableJson);
+    setDemlimiterAttributes('resultsTable.json', geneTableJson, '.delimited-json'); 
   }
+
 
   // sets delimiter attributes for evidenceView
   function setEvidenceTable() {
+
+    // evidenceview data in TSV format 
     var encodedString = encodeData(evidenceData);
-    setDemlimiterAttributes('evidenceTable', encodedString)
+    setDemlimiterAttributes('evidenceTable.tsv', encodedString, '.delimited-cta')
+
+    // evidence data in JSON format 
+    var encodedJson = JSON.stringify(evidenceDataInJson, null, "\t")
+    encodedJson = encodeData(encodedJson);
+    setDemlimiterAttributes('evidenceTable.json', encodedJson, '.delimited-json'); 
   }
 
   // gets gene  and evidence view data from genomicViewContent function (ln 155)
   function getData(data) {
     
+    // geneView data
     resultViewData = geneTable2OldString(data.geneTable);
-    evidenceData = evidenceTable2OldString(data.evidenceTable);
-    setGeneTable()
+    refinedResultViewData = geneTableToTsv(data.geneTable); 
+    resultDataInJson = data.geneTable; 
+
+    // evidence view data 
+    evidenceData = evidenceTableToTsv(data.evidenceTable);
+    evidenceDataInJson = data.evidenceTable;
+
+    setGeneTable();
 
   }
+
   // encodes gene and evidence table data to TSV format
   function encodeData(data) {
     return encodeURIComponent(data).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))
   }
+
   // sets delimiter attributes for gene and evidence table
-  function setDemlimiterAttributes(fileName, uft8String) {
+  function setDemlimiterAttributes(fileName, uft8String, location) {
     $('.tabviewer-actions').show();
     var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(uft8String) + '';
-    $('.delimited-cta').attr({
-      'download': '' + fileName + '.tsv',
+    $(location).attr({
+      'download': fileName,
       'href': delimiterAttr
     });
   }
@@ -903,6 +933,48 @@ function evidenceTable2OldString ( evidenceTableJson )
 // 	data.evidenceTable = evidenceTable2OldString ( data.evidenceTable )
 // } 
 
+/**
+ * Converts genetable JSON format data to TSV format removing conceptEvidences and qtlEvidence properties.
+ */
+function geneTableToTsv(data){
+
+  const genesWithoutEvidence = []
+
+  data.forEach(genes => {
+      delete genes['conceptEvidences']
+      delete genes['qtlEvidences']; 
+      genesWithoutEvidence.push(genes)
+  })
+
+  if(genesWithoutEvidence.length){
+    const tsvFormat = formatJsonToTsv(genesWithoutEvidence); 
+    return tsvFormat; 
+  }
+
+}
+
+/**
+ * Converts evidenceTable JSON format data to TSV format.
+ */
+function evidenceTableToTsv(data){
+  const tsvData = formatJsonToTsv(data)
+  return tsvData;
+}
+
+/**
+ * Helper function converst JSON format data to TSV format data.
+ * called in geneTableTsv and evidenceTableToTsv above.
+ */
+function formatJsonToTsv(data){
+
+  const headers = Object.keys(data[0]).join('\t'); 
+
+  const rows = data.map(obj => Object.values(obj).join('\t')).join('\n');
+  return  headers + '\n' + rows; 
+}
+
+
+
 
 // TODO: see init-utils.js 
 //
@@ -1054,3 +1126,6 @@ if ( TEST_MODE )
   testEvidenceTable2OldString ()
   
 } // if TEST_MODE
+
+
+

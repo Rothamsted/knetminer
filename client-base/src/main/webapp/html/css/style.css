@@ -1962,7 +1962,7 @@ a {
 
 /* network dropdown styesheet*/
 
-#export-menu {
+#export-menu, #delimiter-menu {
     display: none;
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -1985,6 +1985,14 @@ a {
     height: 100px;
     border-radius: 8px;
 }
+
+#delimiter-menu{
+    width: fit-content;
+    height: fit-content; 
+    padding: 0 1rem;
+    right: .5rem;
+}
+
 
 
 .export_border {
@@ -2258,7 +2266,7 @@ a {
     top: 0.5pc;
 }
 
-.delimited-cta {
+#delimiter-download {
     margin-left: 0.75rem;
     width: 15px;
     height: 15px;
@@ -2268,6 +2276,7 @@ a {
     height: 15px;
     width: 15px;
     margin-left: 0.5rem;
+    text-decoration: none;
 }
 
 #selectUser input[type="button"]{
@@ -2293,6 +2302,7 @@ a {
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .tabviewer-actions{
@@ -2787,6 +2797,8 @@ color: #C0C0C0;
 .genes-limit{
     color: red;
 }
+
+
 
 
 

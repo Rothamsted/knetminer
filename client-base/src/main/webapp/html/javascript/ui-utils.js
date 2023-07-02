@@ -39,8 +39,11 @@ function activateButton(option){
     if(isDelimiterOptionPresent)
     {
         option == 'resultsTable' ? 
-        handleDelimintedCta.setGeneTable() : 
-        handleDelimintedCta.setEvidenceTable(); 
+        handleDelimintedCta.setGeneTable() : handleDelimintedCta.setEvidenceTable(); 
+        
+        // Shows no-evidence tabular data for only geneview
+        $('.delimited-cta-noevidence').toggleClass('hide', option == 'evidenceTable')
+  
     }else{$('.tabviewer-actions').hide();}
 
     
@@ -211,8 +214,8 @@ function showApiInitResult ( error = null )
 }
 
 
-//  function creates an hidden element and takes a file type to be donwloaded to user system 
-function downloadFunction(filename,filetype){
+// Function creates an hidden element and takes a file type to be donwloaded to user system.
+function triggerFileDownload(filename,filetype){
 
     var utf8Bytes = "";
     utf8Bytes = encodeURIComponent(filetype).replace(/%([0-9A-F]{2})/g, function(match, p1) {
@@ -226,29 +229,34 @@ function downloadFunction(filename,filetype){
     hiddenElement.click();
     return true;
 
-  }
+}
 
-// function to handle network export: show and hide events
+// function handles closing network, geneview and evidence view export popups
 $(function(){
+    // closes delimiter popup
+    closePopup("#delimiter-menu")
+    // closes network view export popup 
+    closePopup('#export-menu')
+})
 
-    // show on hover download button 
-    $('#exportBtns').hover(function(e){
-        $('#export-menu').css('display','flex'); 
-    });
+// Util function shows export buttons menu popup for geneTable, evidenceTable and network views on mouse hover. 
+function showPopupOnHover(targetElement){
+    $(targetElement).css('display','flex'); 
+}
 
-    // hide popup on mouse leave 
-    $('#export-menu').mouseleave(function(){
-       $('#export-menu').css('display','');
-    }); 
+// Hides popup menu when user mouse leaves targetElements : #export-menu and #delimiter-menu'
+function hidePopupOnLeave(targetElement)
+{
+    $(targetElement).css('display','');
+}
 
-    // close when clicked outside 
+// Util function closes export popups when user clicks outside targetElements: #export-menu and #delimiter-menu'
+function closePopup(targetElement){
     $(document).click(function(e){
-        if($(e.target).closest('#export-menu').length !== 0)return false;
+        if($(e.target).closest(targetElement).length !== 0)return false;
         $('#export-menu').css('display','');
     }); 
-
-    // 
-})
+}
 
 /** 
  * Small helper to log an error within the jQuery functions like $.get().fail( jqXHR, textStatus, errorThrown )
