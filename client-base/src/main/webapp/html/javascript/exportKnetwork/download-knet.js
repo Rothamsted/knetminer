@@ -56,5 +56,5 @@
     });
 
    // allow dlTable download to PC using a hiddenElement, download and click event.
-   downloadFunction('knetmaps_genes.tsv',dlTable); 
+   triggerFileDownload('knetmaps_genes.tsv',dlTable); 
   }

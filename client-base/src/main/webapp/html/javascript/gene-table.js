@@ -322,7 +322,7 @@ function downloadNetwork() {
 		}
 	}
 
-	var isDownloaded = downloadFunction('knetminer_network.json', JSON.stringify(graph.graphJSON, null, "\t"));
+	var isDownloaded = triggerFileDownload('knetminer_network.json', JSON.stringify(graph.graphJSON, null, "\t"));
 
 	// ispopup stopped is set when the user clicks don't show again button
 	var isPopupstopped = JSON.parse(localStorage.getItem('popup'));
