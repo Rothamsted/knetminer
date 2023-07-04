@@ -347,7 +347,7 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
 
   createGenesTable(geneTable, keyword);
 
-  handleDelimintedCta.getData(data);
+  handleDelimintedCta.setApiData(data);
 
   knetWidgets.drawMap('drawRaw', data.gviewer);
   $("body").data("data", { evidenceTable: evidenceTable, keyword: keyword, resultsTable: geneTable });
@@ -556,25 +556,24 @@ function encodeData ( data )
 */
 handleDelimintedCta = function () {
 
-  var evidenceData, resultViewData, refinedResultViewData; 
-
-  var resultDataInJson, evidenceDataInJson;
+  var delimitedData = {}
 
   //  sets delimiter attributes for TSV and JSON data available to be downloaded in geneView
   function setGeneTable() {
     
     // Original TSV dataset with evidence column 
-    var geneTableData = encodeData(resultViewData)
-    setDemlimiterAttributes('resultsTable.tsv', geneTableData, '.delimited-cta')
+    setDemlimiterAttributes('genes.tsv','.delimited-cta')
 
     // geneview data without evidence column 
-    var geneTableWithoutEvidence = encodeData(refinedResultViewData)
-    setDemlimiterAttributes('refinedresultsTable.tsv', geneTableWithoutEvidence, '.delimited-cta-noevidence')
+    setDemlimiterAttributes('genesNoEvidence.tsv','.delimited-cta-noevidence')
     
-    // geneview data in JSON format
-    var geneTableJson =  JSON.stringify(resultDataInJson, null, "\t")
-    geneTableJson = encodeData(geneTableJson);
-    setDemlimiterAttributes('resultsTable.json', geneTableJson, '.delimited-json'); 
+    // // geneview data in JSON format
+    setDemlimiterAttributes('genes.json', '.delimited-json'); 
+  }
+
+  // gets data using from delimited data Object using filename key. 
+  function getData(fileName){
+    return delimitedData[fileName]
   }
 
 
@@ -582,52 +581,61 @@ handleDelimintedCta = function () {
   function setEvidenceTable() {
 
     // evidenceview data in TSV format 
-    var encodedString = encodeData(evidenceData);
-    setDemlimiterAttributes('evidenceTable.tsv', encodedString, '.delimited-cta')
+    setDemlimiterAttributes('evidence.tsv','.delimited-cta')
 
     // evidence data in JSON format 
-    var encodedJson = JSON.stringify(evidenceDataInJson, null, "\t")
-    encodedJson = encodeData(encodedJson);
-    setDemlimiterAttributes('evidenceTable.json', encodedJson, '.delimited-json'); 
+    setDemlimiterAttributes('evidence.json','.delimited-json'); 
   }
 
   // gets gene  and evidence view data from genomicViewContent function (ln 155)
-  function getData(data) {
+  function setApiData(data) {
     
     // geneView data
-    resultViewData = geneTable2OldString(data.geneTable);
-    refinedResultViewData = geneTableToTsv(data.geneTable); 
-    resultDataInJson = data.geneTable; 
+    delimitedData.genesTsv = geneTable2OldString(data.geneTable);
+    delimitedData.genesNoEvidenceTsv = geneTableToTsv(data.geneTable); 
+    delimitedData.genesJson = data.geneTable; 
 
     // evidence view data 
-    evidenceData = evidenceTableToTsv(data.evidenceTable);
-    evidenceDataInJson = data.evidenceTable;
+    delimitedData.evidenceTsv = evidenceTableToTsv(data.evidenceTable);
+    delimitedData.evidenceJson = data.evidenceTable;
 
     setGeneTable();
 
   }
 
-  // encodes gene and evidence table data to TSV format
-  function encodeData(data) {
-    return encodeURIComponent(data).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))
-  }
-
   // sets delimiter attributes for gene and evidence table
-  function setDemlimiterAttributes(fileName, uft8String, location) {
-    $('.tabviewer-actions').show();
-    var delimiterAttr = 'data:application/octet-stream;base64,' + btoa(uft8String) + '';
-    $(location).attr({
-      'download': fileName,
-      'href': delimiterAttr
-    });
+  function setDemlimiterAttributes(fileName,location) {
+      $('.tabviewer-actions').show();
+      $(location).attr('onclick',`downloadFile('${fileName}')`)
   }
 
   return {
-    getData: getData,
+    setApiData: setApiData,
     setGeneTable: setGeneTable,
-    setEvidenceTable: setEvidenceTable
+    setEvidenceTable: setEvidenceTable,
+    getData : getData
   }
+
 }()
+
+/**
+ * External util function called on clicking delimiter data exporters
+ * 
+ */
+function downloadFile(fileName){
+
+  var spiltStr = fileName.split('.')
+
+  var fileStr = spiltStr[0] + spiltStr[1].charAt(0).toUpperCase() + spiltStr[1].slice(1); 
+
+  var fileType = handleDelimintedCta.getData(fileStr)
+
+  if(spiltStr[1] == 'json'){
+    fileType = JSON.stringify(fileType, null, "\t")
+  }
+  // downloads files 
+  triggerFileDownload(fileName,fileType)
+}
 
 
 /**
