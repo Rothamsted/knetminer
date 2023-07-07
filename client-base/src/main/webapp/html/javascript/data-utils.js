@@ -1141,7 +1141,7 @@ if ( TEST_MODE )
 } // if TEST_MODE
 
 
-// function replaces gene and evidence genome data ondexId key with nodeId 
+// function replace gene and evidence genome data ondexId key with nodeId 
 function replaceOndexId(tableData){
 
   const refinedGeneTable = tableData.map(({
@@ -1151,6 +1151,6 @@ function replaceOndexId(tableData){
     nodeId,
     ...data
   }))
-  console.log(refinedGeneTable); 
+  
   return refinedGeneTable
 }
