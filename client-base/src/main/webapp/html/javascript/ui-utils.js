@@ -38,11 +38,12 @@ function activateButton(option){
 
     if(isDelimiterOptionPresent)
     {
-        option == 'resultsTable' ? 
-        handleDelimintedCta.setGeneTable() : handleDelimintedCta.setEvidenceTable(); 
+        option == 'resultsTable' ? handleDelimintedCta.setGeneTable() : handleDelimintedCta.setEvidenceTable(); 
         
         // Shows no-evidence tabular data for only geneview
         $('.delimited-cta-noevidence').toggleClass('hide', option == 'evidenceTable')
+        $('.delimited-cta').toggleClass('hide', option == 'resultsTable')
+
   
     }else{$('.tabviewer-actions').hide();}
 
@@ -221,7 +222,6 @@ function triggerFileDownload(filename,filetype){
     utf8Bytes = encodeURIComponent(filetype).replace(/%([0-9A-F]{2})/g, function(match, p1) {
         return String.fromCharCode('0x' + p1);
        });
-    //<a download="knetmaps_genes.tsv" href="data:application/octet-stream;base64,' + btoa(utf8Bytes) + '" target="_blank">Download as TAB delimited file</a>
     var hiddenElement= document.createElement('a');
     hiddenElement.href= 'data:application/octet-stream;base64,' + btoa(utf8Bytes);
     hiddenElement.target= '_blank';
@@ -254,7 +254,7 @@ function hidePopupOnLeave(targetElement)
 function closePopup(targetElement){
     $(document).click(function(e){
         if($(e.target).closest(targetElement).length !== 0)return false;
-        $('#export-menu').css('display','');
+        $(targetElement).css('display','');
     }); 
 }
 
