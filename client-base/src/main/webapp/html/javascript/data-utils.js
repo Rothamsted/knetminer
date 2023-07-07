@@ -191,7 +191,14 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
   let genomicViewTitle;
   let status;
 
-  var { geneCount, geneTable, evidenceTable } = data
+   // TEMPORARY HACK TO REPLACE ONDEXID WITH NODEID 
+  data.geneTable = replaceOndexId(data.geneTable); 
+  data.evidenceTable = replaceOndexId(data.evidenceTable); 
+
+  let { geneCount, geneTable , evidenceTable} = data; 
+
+ 
+
 
   if (geneCount == 0) {
     status = true;
@@ -560,9 +567,6 @@ handleDelimintedCta = function () {
 
   //  sets delimiter attributes for TSV and JSON data available to be downloaded in geneView
   function setGeneTable() {
-    
-    // Original TSV dataset with evidence column 
-    setDemlimiterAttributes('genes.tsv','.delimited-cta')
 
     // geneview data without evidence column 
     setDemlimiterAttributes('genesNoEvidence.tsv','.delimited-cta-noevidence')
@@ -589,9 +593,10 @@ handleDelimintedCta = function () {
 
   // gets gene  and evidence view data from genomicViewContent function (ln 155)
   function setApiData(data) {
+
+
     
     // geneView data
-    delimitedData.genesTsv = geneTable2OldString(data.geneTable);
     delimitedData.genesNoEvidenceTsv = geneTableToTsv(data.geneTable); 
     delimitedData.genesJson = data.geneTable; 
 
@@ -1136,4 +1141,16 @@ if ( TEST_MODE )
 } // if TEST_MODE
 
 
+// function replaces gene and evidence genome data ondexId key with nodeId 
+function replaceOndexId(tableData){
 
+  const refinedGeneTable = tableData.map(({
+    ondexId:nodeId,
+    ...data
+  })=> ({
+    nodeId,
+    ...data
+  }))
+  console.log(refinedGeneTable); 
+  return refinedGeneTable
+}
