@@ -15,7 +15,7 @@ function createGenesTable ( tableData, keyword )
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 	
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+		table += '' + interactiveSummaryLegend + '<div class="legend-actions-container"><i onclick="" class="legend-filter-button fas fa-filter"></i><input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -374,7 +374,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 	// Main loop over the resulting genes.
 	for (var row = fromRow; row < toRow; row++)
 	{	
-		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
+		var {nodeId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
 		// var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ]= tableData[row]
 
 		// if (row > rows /*&& values[7]=="no"*/) continue;
@@ -391,7 +391,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
 			? '<td></td>'
 			// else, gene name column, with synonym expansion
-			: '<td><span class="gene_name">' + name + '</span> <span onclick="createGeneNameSynonyms(this,' + ondexId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
+			: '<td><span class="gene_name">' + name + '</span> <span onclick="createGeneNameSynonyms(this,' + nodeId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
 
 		// Currently not shown
 		var scoreTd = '<td>' + Number(score).toFixed(2) + '</td>';

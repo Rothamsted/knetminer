@@ -149,10 +149,10 @@
       {
         await $.get({url:request,timeout:100000})
         .done((response) => {
-          const accessionData = response.geneTable
+
           // TODO: WILL BE REMOVED IN COMING DAYS
-          let geneTable = geneTable2OldString(accessionData);
-          geneTable = geneTable.split("\n").slice(1,-1); 
+          let geneTable = formatJsonToTsv(response.geneTable);
+          geneTable = geneTable.split("\n")
 
           // extended method registers cache request and response objects (geneTable and headers)
           super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})

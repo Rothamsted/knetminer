@@ -143,7 +143,7 @@ function closeGeneViewHelper(){
 
 
 // function detects taxID in url and set it as the current taxId
-function getTaxIdFromUrl(){
+function detectTaxIdFromUrl(){
   var taxIdFromURL = new URLSearchParams ( document.location.search ).get ( "taxId" );
   if ( taxIdFromURL ) speciesSelector.setTaxId ( taxIdFromURL );
 }

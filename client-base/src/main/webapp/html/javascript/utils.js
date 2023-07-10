@@ -20,7 +20,9 @@ $(document).ready (
 		 // changed from 750x400
 			
 			knetmaps = KNETMAPS.KnetMaps();
-			getTaxIdFromUrl();
+
+			detectTaxIdFromUrl();
+
 			speciesSelector.initiate();	
 			exampleQuery.setQueryData();				
 			loginUtilsInit();	 // See notes in loginUtils.js
