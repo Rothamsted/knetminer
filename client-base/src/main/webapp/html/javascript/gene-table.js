@@ -15,7 +15,7 @@ function createGenesTable ( tableData, keyword )
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 	
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<div class="legend-actions-container"><i onclick="" class="legend-filter-button fas fa-filter"></i><input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div></div>';
+		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table

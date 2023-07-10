@@ -1,8 +1,8 @@
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
-function searchKeyword(){
-    //var searchMode = getRadioValue(document.gviewerForm.search_mode);
+function searchKeyword() {
+  //var searchMode = getRadioValue(document.gviewerForm.search_mode);
   var searchMode = "genome"; // default
 
   var listMode = 'GL'; // getRadioValue(document.gviewerForm.list_mode);
@@ -24,57 +24,57 @@ function searchKeyword(){
   requestParams['keyword'] = keyword;
   requestParams['isSortedEvidenceTable'] = true;
 
-    if (list.length > 0) {
-        requestParams['list'] = list;
-        requestParams['listMode'] = listMode;
+  if (list.length > 0) {
+    requestParams['list'] = list;
+    requestParams['listMode'] = listMode;
+  }
+
+
+  // qtl regions provided
+  var regions = document.getElementById('regions_table').rows.length - 2;
+  var counter = 1;
+  requestParams['qtl'] = [];
+
+  for (i = 1; i <= regions; i++) {
+    var chr = $("#chr" + i).find(":selected").val();
+    var start = trim($("#start" + i).val());
+    var end = trim($("#end" + i).val());
+    var label = trim($("#label" + i).val());
+
+    if (chr.length > 0 && start.length > 0 && end.length > 0 && parseInt(start) < parseInt(end)) {
+      requestParams['qtl'].push("&qtl" + counter + "=" + chr + ":" + start + ":" + end + ":" + label);
+      counter++;
     }
+  }
 
+  // if a region is provided, set searchMode to "qtl" (to focus only on that region)
+  if (counter > 1) { searchMode = "qtl"; }
+  // if a gene list is provided, use "genome" searchMode
+  if (geneList_size > 0) { searchMode = "genome"; }
 
-    // qtl regions provided
-    var regions = document.getElementById('regions_table').rows.length - 2;
-    var counter = 1;
-    requestParams['qtl'] = [];
-
-    for (i = 1; i <= regions; i++){
-        var chr = $("#chr" + i).find(":selected").val();
-        var start = trim($("#start" + i).val());
-        var end = trim($("#end" + i).val());
-        var label = trim($("#label" + i).val());
-
-        if (chr.length > 0 && start.length > 0 && end.length > 0 && parseInt(start) < parseInt(end)) {
-            requestParams['qtl'].push("&qtl" + counter + "=" + chr + ":" + start + ":" + end + ":" + label);
-            counter++;
-        }
-    }
-
-    // if a region is provided, set searchMode to "qtl" (to focus only on that region)
-    if(counter > 1) { searchMode="qtl"; }
-    // if a gene list is provided, use "genome" searchMode
-    if(geneList_size > 0) { searchMode="genome"; }
-    
-    // api request
-    var request = "/" + searchMode;
+  // api request
+  var request = "/" + searchMode;
 
 
   //if(geneList_size > freegenelist_limit) {
   // check if user logged in and if yes, get user_id
 
-     //if inputs are empty client get an error saying input is empty 
-    //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
-      if(keyword == '' && list.length == 0 && requestParams.qtl.length == 0 ){
-        var searchErrorTitle = '<span class="pGViewer_title_line">Please input at least one search parameter.</span>'; 
-        $("#pGViewer_title").html(searchErrorTitle);
-        $('.pGViewer_title_line').css("color","red");
-        $('#tabviewer').hide();
-      }else if(keyword !== '' || list.length !== 0 || requestParams.qtl.length !== 0 ){
-        $('#evidenceTable').data({keys:[]}); 
-        $('#resultsTable').data({keys:[]}); 
-        $("#NetworkCanvas_button").removeClass('network-created');
-        $('#evidenceTable_button').removeClass('created');
+  //if inputs are empty client get an error saying input is empty 
+  //  else if inputs are not empty, function fecthData is called and it sends from data to backend server
+  if (keyword == '' && list.length == 0 && requestParams.qtl.length == 0) {
+    var searchErrorTitle = '<span class="pGViewer_title_line">Please input at least one search parameter.</span>';
+    $("#pGViewer_title").html(searchErrorTitle);
+    $('.pGViewer_title_line').css("color", "red");
+    $('#tabviewer').hide();
+  } else if (keyword !== '' || list.length !== 0 || requestParams.qtl.length !== 0) {
+    $('#evidenceTable').data({ keys: [] });
+    $('#resultsTable').data({ keys: [] });
+    $("#NetworkCanvas_button").removeClass('network-created');
+    $('#evidenceTable_button').removeClass('created');
 
-        requestGenomeData(requestParams,keyword,request,searchMode,geneList_size,list)
-        getLongWaitMessage.init()
-      }
+    requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list)
+    getLongWaitMessage.init()
+  }
 }
 
 /**
@@ -191,13 +191,13 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
   let genomicViewTitle;
   let status;
 
-   // TEMPORARY HACK TO REPLACE ONDEXID WITH NODEID 
-  data.geneTable = replaceOndexId(data.geneTable); 
-  data.evidenceTable = replaceOndexId(data.evidenceTable); 
+  // TEMPORARY HACK TO REPLACE ONDEXID WITH NODEID 
+  data.geneTable = replaceOndexId(data.geneTable);
+  data.evidenceTable = replaceOndexId(data.evidenceTable);
 
-  let { geneCount, geneTable , evidenceTable} = data; 
+  let { geneCount, geneTable, evidenceTable } = data;
 
- 
+
 
 
   if (geneCount == 0) {
@@ -307,7 +307,7 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
     var count_notfound = geneList_size - count_linked - count_unlinked;
     // for wildcard in genelist when all matches will be found
     if (geneCount === (count_linked + count_unlinked)) { count_notfound = 0; }
-    
+
     if (keyword.length < 2) {  // msg for qtl region only search
 
       if (count_notfound === 0) {
@@ -378,15 +378,15 @@ function createGenomicViewTitle(message, status) {
  */
 
 function countLinkedUserGenes(geneViewData) {
-    let linkedcount = 0;
+  let linkedcount = 0;
 
-    geneViewData.forEach((genes) => {
-      const {isUserGene, conceptEvidences} = genes
-      if (isUserGene && conceptEvidences) linkedcount += 1;
+  geneViewData.forEach((genes) => {
+    const { isUserGene, conceptEvidences } = genes
+    if (isUserGene && conceptEvidences) linkedcount += 1;
 
-    })
+  })
 
-    return linkedcount;
+  return linkedcount;
 }
 
 
@@ -569,14 +569,14 @@ handleDelimintedCta = function () {
   function setGeneTable() {
 
     // geneview data without evidence column 
-    setDemlimiterAttributes('genesNoEvidence.tsv','.delimited-cta-noevidence')
-    
+    setDemlimiterAttributes('genesNoEvidence.tsv', '.delimited-cta-noevidence')
+
     // // geneview data in JSON format
-    setDemlimiterAttributes('genes.json', '.delimited-json'); 
+    setDemlimiterAttributes('genes.json', '.delimited-json');
   }
 
   // gets data using from delimited data Object using filename key. 
-  function getData(fileName){
+  function getData(fileName) {
     return delimitedData[fileName]
   }
 
@@ -585,47 +585,45 @@ handleDelimintedCta = function () {
   function setEvidenceTable() {
 
     // evidenceview data in TSV format 
-    setDemlimiterAttributes('evidence.tsv','.delimited-cta')
+    setDemlimiterAttributes('evidence.tsv', '.delimited-cta')
 
     // evidence data in JSON format 
-    setDemlimiterAttributes('evidence.json','.delimited-json'); 
+    setDemlimiterAttributes('evidence.json', '.delimited-json');
   }
 
   // gets gene  and evidence view data from genomicViewContent function (ln 155)
   function setApiData(data) {
 
-
-    
-    // geneView data
-    delimitedData.genesNoEvidenceTsv = geneTableToTsv(data.geneTable); 
-    delimitedData.genesJson = data.geneTable; 
-
-    // evidence view data 
-    delimitedData.evidenceTsv = evidenceTableToTsv(data.evidenceTable);
+    // JSON data
+    delimitedData.genesJson = data.geneTable;
     delimitedData.evidenceJson = data.evidenceTable;
+
+    // TSV data 
+    delimitedData.genesNoEvidenceTsv = geneTableToTsv(data.geneTable);
+    delimitedData.evidenceTsv = evidenceTableToTsv(data.evidenceTable);
 
     setGeneTable();
 
   }
 
   // sets delimiter attributes for gene and evidence table
-  function setDemlimiterAttributes(fileName,location) {
-      $('.tabviewer-actions').show();
-      $(location).attr('onclick',`downloadFile('${fileName}')`)
+  function setDemlimiterAttributes(fileName, location) {
+    $('.tabviewer-actions').show();
+    $(location).attr('onclick', `downloadFile('${fileName}')`)
   }
 
   return {
     setApiData: setApiData,
     setGeneTable: setGeneTable,
     setEvidenceTable: setEvidenceTable,
-    getData : getData
+    getData: getData
   }
 
 }()
 
 /**
  * External util function called on clicking delimiter data exporters
- * 
+ * Use ends with instead
  */
 function downloadFile(fileName){
 
@@ -635,11 +633,12 @@ function downloadFile(fileName){
 
   var fileType = handleDelimintedCta.getData(fileStr)
 
-  if(spiltStr[1] == 'json'){
+  if (fileName.endsWith('json')) {
     fileType = JSON.stringify(fileType, null, "\t")
   }
+
   // downloads files 
-  triggerFileDownload(fileName,fileType)
+  triggerFileDownload(fileName, fileType)
 }
 
 
@@ -659,21 +658,6 @@ function createEvidenceView() {
   createEvidenceTable(data.evidenceTable, false);
 }
 
-
-/**
- * @desc Post-process the genes/evidence table data string that comes from the API, doing things
- * like string-to-array conversion, removing unused headers, and alike.
- */
-function postProcessTableData(data) {
-  // The format is a TSV string
-  var tableData = data.split('\n');
-  tableData.pop(); // Last one is always an empty trailer
-  tableData.shift(); // First one is about headers and we don't use them (unfortunately)
-
-  tableData = tableData?.map(rowStr => rowStr.split("\t"));
-
-  return tableData;
-}
 
 
 /**
@@ -763,13 +747,13 @@ class GenesListManager {
       progresUIContainer.style.display = 'none'
       return
     }
-       // removes progress bar if user is on unlimited plan
-       // TODO: as other access control cases, this is bad, see #768
-       // 
-       if(!this.#isLimitEnforced){
-        progresUIContainer.style.display = 'none'
-        return
-      }
+    // removes progress bar if user is on unlimited plan
+    // TODO: as other access control cases, this is bad, see #768
+    // 
+    if (!this.#isLimitEnforced) {
+      progresUIContainer.style.display = 'none'
+      return
+    }
 
     const progressBar = progresUIContainer.firstElementChild
     const progressText = progresUIContainer.lastElementChild
@@ -852,49 +836,49 @@ class GenesListManager {
  * would abstract away from the lower web/API level (eg, hides the URLs or Request/Response objects ).
  *  
  */
-function geneTable2OldString ( geneTableJson )
-{
-	// The web cache might return this after conversion
-	if ( typeof geneTableJson === 'string' ) return geneTableJson
-	if ( !geneTableJson ) geneTableJson = []
-	
-	let result = geneTableJson.map ( entry =>
-	{
-		let evidences = entry.conceptEvidences
-		let evidencesStr = 
-		Object.entries ( evidences ).map ( ev =>
-		{
-			const [conceptType, typeEvidence] = ev
-			// type__10__acc1//acc2//...
-			let evidenceStr = conceptType + "__" + typeEvidence.reportedSize + "__"
-			let conceptLabels = typeEvidence.conceptLabels
-			evidenceStr += conceptLabels.join ( "//" )
-			return evidenceStr
-		})
-		.join ( "||" )
-		
-		
-		// label//trait||...
-		let qtlStr = entry.qtlEvidences
-		  .map ( qtl => qtl.regionLabel + "//" + qtl.regionTrait )
-		  .join ( "||" )
-		
-		return [ 
-		  entry.ondexId, entry.accession, entry.name, entry.chromosome, 
-			entry.geneBeginBP, entry.taxID,
-			Number ( entry.score ).toFixed ( 2 ), 
-			(entry.isUserGene ? "yes" : "no" ), qtlStr, 
-			evidencesStr
-		]
-		.join ( "\t" )
-		
-	})
-	.join ( "\n" )
-	
-	if ( result ) result += "\n"
-  result = "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" + result;
-  return result
-}
+// function geneTable2OldString ( geneTableJson )
+// {
+// 	// The web cache might return this after conversion
+// 	if ( typeof geneTableJson === 'string' ) return geneTableJson
+// 	if ( !geneTableJson ) geneTableJson = []
+
+// 	let result = geneTableJson.map ( entry =>
+// 	{
+// 		let evidences = entry.conceptEvidences
+// 		let evidencesStr = 
+// 		Object.entries ( evidences ).map ( ev =>
+// 		{
+// 			const [conceptType, typeEvidence] = ev
+// 			// type__10__acc1//acc2//...
+// 			let evidenceStr = conceptType + "__" + typeEvidence.reportedSize + "__"
+// 			let conceptLabels = typeEvidence.conceptLabels
+// 			evidenceStr += conceptLabels.join ( "//" )
+// 			return evidenceStr
+// 		})
+// 		.join ( "||" )
+
+
+// 		// label//trait||...
+// 		let qtlStr = entry.qtlEvidences
+// 		  .map ( qtl => qtl.regionLabel + "//" + qtl.regionTrait )
+// 		  .join ( "||" )
+
+// 		return [ 
+// 		  entry.ondexId, entry.accession, entry.name, entry.chromosome, 
+// 			entry.geneBeginBP, entry.taxID,
+// 			Number ( entry.score ).toFixed ( 2 ), 
+// 			(entry.isUserGene ? "yes" : "no" ), qtlStr, 
+// 			evidencesStr
+// 		]
+// 		.join ( "\t" )
+
+// 	})
+// 	.join ( "\n" )
+
+// 	if ( result ) result += "\n"
+//   result = "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" + result;
+//   return result
+// }
 
 /**
  * Converts the new JSON format for the evidence table back into TSV-into-string.
@@ -903,35 +887,35 @@ function geneTable2OldString ( geneTableJson )
  * in that function. 
  *  
  */
-function evidenceTable2OldString ( evidenceTableJson )
-{
-	// The web cache might return this after conversion
-	if ( typeof evidenceTableJson === 'string' ) return evidenceTableJson
-	if ( !evidenceTableJson ) evidenceTableJson = []
-	
-	let result = evidenceTableJson.map ( entry => 
-	{
-		userGeneAccessions = entry.userGeneAccessions.join ( "," ) 
-		
-		return [ entry.conceptType,
-			entry.name,
-			entry.score,
-	  	entry.pvalue,
-	  	entry.totalGenesSize,
-	  	userGeneAccessions,
-	  	entry.qtlsSize,
-	  	entry.ondexId,
-	  	entry.userGenesSize
-	  ]
-	  .join ( "\t" )
-	})
-	.join ( "\n" )
-	
-	if ( result ) result += "\n"
-	result = "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + result;
-	
-	return result
-}
+// function evidenceTable2OldString ( evidenceTableJson )
+// {
+// 	// The web cache might return this after conversion
+// 	if ( typeof evidenceTableJson === 'string' ) return evidenceTableJson
+// 	if ( !evidenceTableJson ) evidenceTableJson = []
+
+// 	let result = evidenceTableJson.map ( entry => 
+// 	{
+// 		userGeneAccessions = entry.userGeneAccessions.join ( "," ) 
+
+// 		return [ entry.conceptType,
+// 			entry.name,
+// 			entry.score,
+// 	  	entry.pvalue,
+// 	  	entry.totalGenesSize,
+// 	  	userGeneAccessions,
+// 	  	entry.qtlsSize,
+// 	  	entry.ondexId,
+// 	  	entry.userGenesSize
+// 	  ]
+// 	  .join ( "\t" )
+// 	})
+// 	.join ( "\n" )
+
+// 	if ( result ) result += "\n"
+// 	result = "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + result;
+
+// 	return result
+// }
 
 /**
  * Helper that gets all the data received from /genome or /qtl and fixes (convert back to strings) both
@@ -949,27 +933,25 @@ function evidenceTable2OldString ( evidenceTableJson )
 /**
  * Converts genetable JSON format data to TSV format removing conceptEvidences and qtlEvidence properties.
  */
-function geneTableToTsv(data){
-
-  const genesWithoutEvidence = []
+function geneTableToTsv(data) {
+  const genesArrayExclEvidences = []
 
   data.forEach(genes => {
-      delete genes['conceptEvidences']
-      delete genes['qtlEvidences']; 
-      genesWithoutEvidence.push(genes)
+    const { conceptEvidences, qtlEvidences, ...genesWithoutEvidence } = genes
+    genesArrayExclEvidences.push(genesWithoutEvidence)
   })
 
-  if(genesWithoutEvidence.length){
-    const tsvFormat = formatJsonToTsv(genesWithoutEvidence); 
-    return tsvFormat; 
-  }
+
+  const tsvFormat = formatJsonToTsv(genesArrayExclEvidences);
+  return tsvFormat;
+
 
 }
 
 /**
  * Converts evidenceTable JSON format data to TSV format.
  */
-function evidenceTableToTsv(data){
+function evidenceTableToTsv(data) {
   const tsvData = formatJsonToTsv(data)
   return tsvData;
 }
@@ -978,179 +960,178 @@ function evidenceTableToTsv(data){
  * Helper function converst JSON format data to TSV format data.
  * called in geneTableTsv and evidenceTableToTsv above.
  */
-function formatJsonToTsv(data){
+function formatJsonToTsv(data) {
 
-  const headers = Object.keys(data[0]).join('\t'); 
+  // There some cases where evidenceTable is empty
+  // checks if the first item of the data object is undefined or null,
+  if (!data.length) return null
+  const headers = Object.keys(data[0]).join('\t');
 
   const rows = data.map(obj => Object.values(obj).join('\t')).join('\n');
-  return  headers + '\n' + rows; 
+  return headers + '\n' + rows;
+
 }
-
-
 
 
 // TODO: see init-utils.js 
 //
-if ( TEST_MODE )
-{
-	function testGeneTable2OldString ()
-	{
-	   let testTableJs = [
-	     {
-	       "accession" : "ZM00001EB307230",
-	       "chromosome" : "7",
-	       "conceptEvidences" : {
-	          "Publication" : {
-	             "conceptLabels" : [
-	                "PMID:28121385"
-	             ],
-	             "reportedSize" : 1
-	          }
-	       },
-	       "geneBeginBP" : 50783674,
-	       "geneEndBP" : 50785615,
-	       "isUserGene" : true,
-	       "name" : "RPS4",
-	       "ondexId" : 6639989,
-	       "qtlEvidences" : [],
-	       "score" : 2.75531940846045,
-	       "taxID" : "4577"
-	     },
-	     {
-	       "accession" : "ZM00001EB307232",
-	       "chromosome" : "6",
-	       "conceptEvidences" : {
-	          "Publication" : {
-	             "conceptLabels" : [
-	                "PMID:28121387"
-	             ],
-	             "reportedSize" : 1
-	          }
-	       },
-	       "geneBeginBP" : 50783674,
-	       "geneEndBP" : 50785620,
-	       "isUserGene" : true,
-	       "name" : "RPS4Foo",
-	       "ondexId" : 6639990,
-	       "qtlEvidences" : [ 
-					 { "regionLabel": "QTL1", "regionTrait": "The Foo QTL 1" }, 
-					 { "regionLabel": "QTL2", "regionTrait": "The Foo QTL 2" } 
-					],
-	       "score" : 3.1459,
-	       "taxID" : "4577"
-	     }
-	   ] // testTableJs
-	   
-		 let table = geneTable2OldString ( testTableJs )
-	   console.assert ( table, "geneTable2OldString() didn't work!" )
-	   
-	   // console.log ( "THE TABLE:", table )
-	   
-	   table = table.split ( "\n" )
-	   
-	   console.assert ( table.length == 4, "geneTable2OldString(), wrong result size!" )
-	   console.assert ( table [ 0 ].includes ( "ONDEX-ID\tACCESSION"), "geneTable2OldString() no headers!" )
-	   console.assert ( table [ 1 ].includes ( "6639989\tZM00001EB307230"), "geneTable2OldString() no 1st accession!" )
-	   
-	   const row = table [ 2 ].split ( "\t" )
-	   console.assert ( row [ row.length - 4 ] == 3.15, "geneTable2OldString() bad score!" )
-	   
-	   qtlStr = row [ row.length - 2 ]   
-	   console.assert ( 
-			 qtlStr.includes ( "QTL1//The Foo QTL 1" )
-	   	 && qtlStr.includes ( "QTL2//The Foo QTL 2" )
-	   	 && qtlStr.includes ( "||" )
-	   	 && ! ( qtlStr.startsWith ( "||" ) || qtlStr.endsWith ( "||" ) )
-	     , "geneTable2OldString() bad QTL!"
-	   )
-	   
-	} // testGeneTable2OldString
+if (TEST_MODE) {
+  function testGeneTable2OldString() {
+    let testTableJs = [
+      {
+        "accession": "ZM00001EB307230",
+        "chromosome": "7",
+        "conceptEvidences": {
+          "Publication": {
+            "conceptLabels": [
+              "PMID:28121385"
+            ],
+            "reportedSize": 1
+          }
+        },
+        "geneBeginBP": 50783674,
+        "geneEndBP": 50785615,
+        "isUserGene": true,
+        "name": "RPS4",
+        "ondexId": 6639989,
+        "qtlEvidences": [],
+        "score": 2.75531940846045,
+        "taxID": "4577"
+      },
+      {
+        "accession": "ZM00001EB307232",
+        "chromosome": "6",
+        "conceptEvidences": {
+          "Publication": {
+            "conceptLabels": [
+              "PMID:28121387"
+            ],
+            "reportedSize": 1
+          }
+        },
+        "geneBeginBP": 50783674,
+        "geneEndBP": 50785620,
+        "isUserGene": true,
+        "name": "RPS4Foo",
+        "ondexId": 6639990,
+        "qtlEvidences": [
+          { "regionLabel": "QTL1", "regionTrait": "The Foo QTL 1" },
+          { "regionLabel": "QTL2", "regionTrait": "The Foo QTL 2" }
+        ],
+        "score": 3.1459,
+        "taxID": "4577"
+      }
+    ] // testTableJs
+
+    let table = geneTable2OldString(testTableJs)
+    console.assert(table, "geneTable2OldString() didn't work!")
+
+    // console.log ( "THE TABLE:", table )
+
+    table = table.split("\n")
+
+    console.assert(table.length == 4, "geneTable2OldString(), wrong result size!")
+    console.assert(table[0].includes("ONDEX-ID\tACCESSION"), "geneTable2OldString() no headers!")
+    console.assert(table[1].includes("6639989\tZM00001EB307230"), "geneTable2OldString() no 1st accession!")
+
+    const row = table[2].split("\t")
+    console.assert(row[row.length - 4] == 3.15, "geneTable2OldString() bad score!")
+
+    qtlStr = row[row.length - 2]
+    console.assert(
+      qtlStr.includes("QTL1//The Foo QTL 1")
+      && qtlStr.includes("QTL2//The Foo QTL 2")
+      && qtlStr.includes("||")
+      && !(qtlStr.startsWith("||") || qtlStr.endsWith("||"))
+      , "geneTable2OldString() bad QTL!"
+    )
+
+  } // testGeneTable2OldString
 
 
-	function testEvidenceTable2OldString ()
-	{
-		testTableJs = [
-			{
-				"ondexId": 6649576,
-				"conceptType": "Trait",
-				"name": "seed weight",
-				"score": 7.334310054779053,
-				"pvalue": -1.0,
-				"totalGenesSize": 1,
-				"userGeneAccessions": [],
-				"qtlsSize": 0,
-				"userGenesSize": 0
-			},
-			{
-				"ondexId": 6639684,
-				"conceptType": "Path",
-				"name": "Regulation of seed size",
-				"score": 7.334310054779053,
-				"pvalue": 0.01,
-				"totalGenesSize": 2,
-				"userGeneAccessions": [ "FOO-1", "FOO-2" ],
-				"qtlsSize": 2,
-				"userGenesSize": 3
-			},
-			{
-				"ondexId": 6643264,
-				"conceptType": "Trait",
-				"name": "seed maturation",
-				"score": 8.66998291015625,
-				"pvalue": -1.0,
-				"totalGenesSize": 3,
-				"userGeneAccessions": [],
-				"qtlsSize": 0,
-				"userGenesSize": 0
-			}		
-		] // testTableJs
-	
-		 table = evidenceTable2OldString ( testTableJs )
-	   console.assert ( table, "evidenceTable2OldString() didn't work!" )
-	   
-	   console.log ( "THE EV TABLE:", table )
-	   
-	   table = table.split ( "\n" )
-	   
-	   console.assert ( table.length == 5, "evidenceTable2OldString(), wrong result size!" )
-	   console.assert ( table [ 0 ].includes ( "TYPE\tNAME\tSCORE\tP-VALUE"), "evidenceTable2OldString() no headers!" )
-	   console.assert ( table [ 1 ].includes ( "Trait\tseed weight"), "evidenceTable2OldString() 1st row is wrong!" )
-	   
-	   const row = table [ 2 ].split ( "\t" )
-	   console.log ( "THE EV ROW:", row )	  	
-	   
-	   console.assert ( row [ row.length - 2 ] == 6639684, "evidenceTable2OldString() bad ondexId!" )
-	   
-	   let score = row [ 2 ]
-	   console.assert ( score > 7.32 && score < 7.34, "evidenceTable2OldString() bad score!" )
-	
-	   let pvalue = row [ 3 ]
-	   console.assert ( pvalue == 0.01, "evidenceTable2OldString() bad pvalue!" )
-	
-	   let userGenes = row [ 5 ].split ( "," )
-	   console.assert ( userGenes && userGenes.length == 2, "evidenceTable2OldString() bad user genes" )
-	   console.assert ( 
-			 userGenes.includes ( 'FOO-1' ) && userGenes.includes ( 'FOO-2' ),
-			 "evidenceTable2OldString() bad user genes"
-		 )
-	} // testEvidenceTable2OldString
+  function testEvidenceTable2OldString() {
+    testTableJs = [
+      {
+        "ondexId": 6649576,
+        "conceptType": "Trait",
+        "name": "seed weight",
+        "score": 7.334310054779053,
+        "pvalue": -1.0,
+        "totalGenesSize": 1,
+        "userGeneAccessions": [],
+        "qtlsSize": 0,
+        "userGenesSize": 0
+      },
+      {
+        "ondexId": 6639684,
+        "conceptType": "Path",
+        "name": "Regulation of seed size",
+        "score": 7.334310054779053,
+        "pvalue": 0.01,
+        "totalGenesSize": 2,
+        "userGeneAccessions": ["FOO-1", "FOO-2"],
+        "qtlsSize": 2,
+        "userGenesSize": 3
+      },
+      {
+        "ondexId": 6643264,
+        "conceptType": "Trait",
+        "name": "seed maturation",
+        "score": 8.66998291015625,
+        "pvalue": -1.0,
+        "totalGenesSize": 3,
+        "userGeneAccessions": [],
+        "qtlsSize": 0,
+        "userGenesSize": 0
+      }
+    ] // testTableJs
 
-  testGeneTable2OldString ()
-  testEvidenceTable2OldString ()
-  
+    table = evidenceTable2OldString(testTableJs)
+    console.assert(table, "evidenceTable2OldString() didn't work!")
+
+    console.log("THE EV TABLE:", table)
+
+    table = table.split("\n")
+
+    console.assert(table.length == 5, "evidenceTable2OldString(), wrong result size!")
+    console.assert(table[0].includes("TYPE\tNAME\tSCORE\tP-VALUE"), "evidenceTable2OldString() no headers!")
+    console.assert(table[1].includes("Trait\tseed weight"), "evidenceTable2OldString() 1st row is wrong!")
+
+    const row = table[2].split("\t")
+    console.log("THE EV ROW:", row)
+
+    console.assert(row[row.length - 2] == 6639684, "evidenceTable2OldString() bad ondexId!")
+
+    let score = row[2]
+    console.assert(score > 7.32 && score < 7.34, "evidenceTable2OldString() bad score!")
+
+    let pvalue = row[3]
+    console.assert(pvalue == 0.01, "evidenceTable2OldString() bad pvalue!")
+
+    let userGenes = row[5].split(",")
+    console.assert(userGenes && userGenes.length == 2, "evidenceTable2OldString() bad user genes")
+    console.assert(
+      userGenes.includes('FOO-1') && userGenes.includes('FOO-2'),
+      "evidenceTable2OldString() bad user genes"
+    )
+  } // testEvidenceTable2OldString
+
+  testGeneTable2OldString()
+  testEvidenceTable2OldString()
+
 } // if TEST_MODE
 
 
 // function replace gene and evidence genome data ondexId key with nodeId 
-function replaceOndexId(tableData){
+function replaceOndexId(tableData) {
 
-  const refinedGeneTable = tableData.map(({
-    ondexId:nodeId,
+  const refinedTableData = tableData.map(({
+    ondexId: nodeId,
     ...data
-  })=> ({
+  }) => ({
     nodeId,
     ...data
   }))
-  
-  return refinedGeneTable
+
+  return refinedTableData
 }
