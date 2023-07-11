@@ -58,11 +58,15 @@ function filterGeneTableByType ( event, conceptType )
 		if ( !conceptEvidences ) return false // just in case
 	 	// Splits the gene evidences string in the gene table into an array of evidences. 
 	  // See the API for details about this format
+	  
+	  /* TODO: remove, use the available facilities for these
+	     operations
 	  let evidences = []
 	  for(let evidence in conceptEvidences){
 		evidences.push(evidence)
-	  }	
-	  return selectedTypes.every ( t => evidences.includes ( t ) ) 
+	  } */
+	  const rowEvidences = Object.keys ( conceptEvidences )
+	  return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
 	}
 	
 	_filterKnetTableByType ( 
@@ -74,8 +78,7 @@ function filterGeneTableByType ( event, conceptType )
 function filterEvidenceTableByType ( event, conceptType )
 {
 	const rowFilterPred = ( selectedTypes, tableRow ) => {
-		const rowEvidencesString = tableRow.conceptType
-	  return selectedTypes.some ( t => t == rowEvidencesString )
+	  return selectedTypes.some ( t => t == tableRow.conceptType )
 	}
 
 	_filterKnetTableByType ( 
@@ -84,7 +87,7 @@ function filterEvidenceTableByType ( event, conceptType )
 	)
 }
 
-//  function updates, store and  checks for non-active legend keys
+//  function updates, store and checks for non-active legend keys
 function updateLegendsKeys(key, location, event) {
 
     const currentTable = $(`#${location}`)

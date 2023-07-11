@@ -1,3 +1,15 @@
+/** 
+ * TODO: THIS HAS BECOME WRONG IN UNINMAGINABLE WAYS!!! 
+ * 
+ * See web-cache-new.js, study that code, replace this mess here with that (ie, copy-paste here), use it for the
+ * evidence table (ie, use get() and assume it always return a result), test it, and eventually commit 
+ * (and also remove the -new file).
+ * 
+ * ==> I'm not 100% sure that code is correct and corresponds to what you're trying to do, please DO 
+ * understand it before use and come back to me if you need clarifications.
+ * 
+ */
+
 /**
  * Manages the caching for web requests, with a specific new entry handler that 
  * make URL calls and deals with possible errors.
@@ -169,5 +181,3 @@
     }
 
   }
-
-

@@ -55,7 +55,7 @@ function searchKeyword() {
   // api request
   var request = "/" + searchMode;
 
-
+  // TODO: possibly related to #768
   //if(geneList_size > freegenelist_limit) {
   // check if user logged in and if yes, get user_id
 
@@ -80,6 +80,31 @@ function searchKeyword() {
 /**
  * checks user login status and, in case of success, calls the API specified in searchMode and
  * requestParams. 
+ * 
+ * TODO: (when we have time, don't remove this commnt until completed, possubly move it to a GH issue)
+ * This is a callback hell (google for it), checkUserPlan() receives
+ * parameters it shouldn't deal with at all, just to pass them along. 
+ * 
+ * The modern, cleaner way to do the same is to use promises, althogh in this case, checkUserPlan()
+ * needs to do some wrapping around the call back to be chained after success. So, it needs to become
+ * like:
+ * 
+ * function checkUserPlan ( onComplete ) // pass the callback, not its details or parameters
+ * {
+ *   $.ajax({
+ *     ...
+ *     complete: function () {
+ *       ... // the same current pre-processing
+ *       onComplete() // in place of the current requestGenomeData()
+ *       ... // the same current post-procesding
+ *     }
+ *   })
+ * } 
+ * 
+ * // This would be the invocation in searchKeyword() above
+ * // don't give the requestGenomeData() params to checkUserPlan(), it doesn't really need
+ * // to know them.
+ * checkUserPlan( () => requestGenomeData(...) ) 
  * 
  */
 function checkUserPlan() {
@@ -934,18 +959,25 @@ class GenesListManager {
  * Converts genetable JSON format data to TSV format removing conceptEvidences and qtlEvidence properties.
  */
 function geneTableToTsv(data) {
+	
+	/* TODO: remove. Stop coding these transformations this way.
   const genesArrayExclEvidences = []
 
   data.forEach(genes => {
     const { conceptEvidences, qtlEvidences, ...genesWithoutEvidence } = genes
     genesArrayExclEvidences.push(genesWithoutEvidence)
   })
+  */
 
+	const genesArrayExclEvidences = data.map ( geneTableRow => {
+		// TODO: remove WHAT SORT OF NAME IS genesWithoutEvidence?!?
+		// const { conceptEvidences, qtlEvidences, ...genesWithoutEvidence } = genes
+		const { conceptEvidences, qtlEvidences, ...filteredFields} = geneTableRow
+		return filteredFields
+	})
 
   const tsvFormat = formatJsonToTsv(genesArrayExclEvidences);
   return tsvFormat;
-
-
 }
 
 /**
@@ -972,9 +1004,25 @@ function formatJsonToTsv(data) {
 
 }
 
+// function replace gene and evidence genome data ondexId key with nodeId 
+function replaceOndexId(tableData) {
 
-// TODO: see init-utils.js 
-//
+  const refinedTableData = tableData.map(({
+    ondexId: nodeId,
+    ...data
+  }) => ({
+    nodeId,
+    ...data
+  }))
+
+  return refinedTableData
+}
+
+
+/* 
+ * TODO: see init-utils.js 
+ * Keep this test/provisional code ad the end of files.
+ */
 if (TEST_MODE) {
   function testGeneTable2OldString() {
     let testTableJs = [
@@ -1120,18 +1168,3 @@ if (TEST_MODE) {
   testEvidenceTable2OldString()
 
 } // if TEST_MODE
-
-
-// function replace gene and evidence genome data ondexId key with nodeId 
-function replaceOndexId(tableData) {
-
-  const refinedTableData = tableData.map(({
-    ondexId: nodeId,
-    ...data
-  }) => ({
-    nodeId,
-    ...data
-  }))
-
-  return refinedTableData
-}

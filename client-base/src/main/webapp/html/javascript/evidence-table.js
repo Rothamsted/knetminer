@@ -343,7 +343,7 @@ function triggerAccessionToolTips() {
     var downloadToolTip = createAccessionToolTips('.accession-downloadicon', 'Download full table.', 'download');
     
 
-    // TODO: too much repition 
+    // TODO: too much repeatition 
 
     $(".accession-clipboard").mouseover(function (e) {
         e.preventDefault();
@@ -417,7 +417,16 @@ function createEvidenceTableBody ( tableData, doAppend = false )
 	const fromRow = evidenceTableScroller.getPageStart ()
 	const toRow = evidenceTableScroller.getPageEnd ()
 
-    tableData.forEach( (evidence,index) => 
+	/**
+	 * TODO: how can this work, if before we were looping on the fromRow/toRow window?
+	 * 
+	 * Is it because it now gets the rendered window only? If yes, remove fromRow, toRow declarations, 
+	 * but then what's evidenceTableScroller for? 
+	 * 
+	 * if it's a bug, fix it with a loop over the right window 
+	 */
+  
+  tableData.forEach( (evidence,index) => 
   {   
     let {conceptType, name, pvalue, totalGenesSize, geneList, nodeId, userGenesSize, userGeneAccessions } = evidence
 
