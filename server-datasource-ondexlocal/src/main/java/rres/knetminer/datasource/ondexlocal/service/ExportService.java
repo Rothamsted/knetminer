@@ -109,10 +109,7 @@ public class ExportService
 		if ( userQtls.isEmpty () ) log.info ( "No QTL regions defined" );
 		
 		var mapGene2HitConcept = searchResult.getGeneId2RelatedConceptIds ();
-		
-		// TODO: but could it be null?!
-		var scoredCandidates = Optional.ofNullable ( searchResult.getGene2Score () )
-			.orElse ( Collections.emptyMap () );			
+		var scoredCandidates = searchResult.getGene2Score ();
 		
 		List<GeneTableEntry> result = new LinkedList<> ();
 		
@@ -135,6 +132,7 @@ public class ExportService
 			{
 				ONDEXConcept qtl = graph.getConcept ( qtlConceptId );
 	
+				/* TODO: remove
 				// TODO: we used to see this error here, but probably was due to bad multi-threading, to
 				// be tested (ideally, apply proof or correctness) and removed when OK.
 				if ( qtl == null )
@@ -142,6 +140,7 @@ public class ExportService
 					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
 					continue;
 				}
+				*/
 				
 				String acc = Optional.ofNullable ( qtl.getConceptName () )
 					.map ( ConceptName::getName )
@@ -166,6 +165,8 @@ public class ExportService
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 
+			// TODO: use <initializer>.getGenes2PathLengths() to add the distance to TypeEvidences 
+			
 			
 			// group related concepts by their type and map each concept to its best label
 			//
@@ -212,7 +213,7 @@ public class ExportService
 			}
 
 	
-			// And eventually, create output string for gene evidences
+			// And eventually, create output data for gene evidences
 			// 
 			Map<String, TypeEvidences> typeEvidences = byCCRelatedLabels.entrySet ()
 			.stream ()

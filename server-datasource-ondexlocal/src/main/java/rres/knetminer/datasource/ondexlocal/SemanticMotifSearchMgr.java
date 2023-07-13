@@ -12,13 +12,17 @@ import org.apache.logging.log4j.Logger;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
+import rres.knetminer.datasource.ondexlocal.service.SearchService;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 
 /**
+ * An helper to post-process results from {@link SearchService#searchGeneRelatedConcepts(String, Collection, boolean)}
+ * and keep the results together with summary data like counts. 
  * 
- * TODO: very messy, with computed stuff made stateful fields or viceversa, needs serious review.
+ * TODO: very messy, with computed stuff made stateful fields or vice versa, needs serious review.
  * 
  * Used to be named Hits.
  * 
@@ -31,9 +35,9 @@ public class SemanticMotifSearchMgr
 	protected final Logger log = LogManager.getLogger ( getClass () );
 
 	private OndexServiceProvider ondexProvider;
-	private Map<ONDEXConcept, Float> luceneConcepts; // concept and Lucene score
-	private int luceneDocumentsLinked;
-	private int numConnectedGenes;
+	private Map<ONDEXConcept, Float> scoredConcepts; // concept and Lucene score
+	private int scoredConceptsCount;
+	private int linkedGenesCount;
 	private SemanticMotifsSearchResult searchResult = null;
 	private String taxId;
 
@@ -50,7 +54,7 @@ public class SemanticMotifSearchMgr
 		
 		try
 		{
-			this.luceneConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
+			this.scoredConcepts = ondexProvider.getSearchService ().searchGeneRelatedConcepts ( keyword, geneList, true );
 			this.countLinkedGenes ();
 		}
 		catch ( Exception ex )
@@ -66,10 +70,10 @@ public class SemanticMotifSearchMgr
 
 	private void countLinkedGenes ()
 	{
-		Set<ONDEXConcept> luceneConceptsSet = luceneConcepts.keySet ();
+		Set<ONDEXConcept> matchedConceptsSet = scoredConcepts.keySet ();
 		
 		log.info ( 
-			"Counting unique genes for {} Lucene concept(s) matching the keyword input", luceneConceptsSet.size () 
+			"Counting unique genes for {} Lucene concept(s) matching the keyword input", matchedConceptsSet.size () 
 		);
 
 		var graph = this.ondexProvider.getDataService ().getGraph ();
@@ -78,13 +82,13 @@ public class SemanticMotifSearchMgr
 			.getKnetInitializer ()
 			.getConcepts2Genes ();
 		
-		this.luceneDocumentsLinked = (int) luceneConceptsSet.parallelStream ()
+		this.scoredConceptsCount = (int) matchedConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
 			.filter ( concept2Genes::containsKey )
 			.count ();
-		log.info ( "Matching {} unique concept(s)", luceneDocumentsLinked );
+		log.info ( "Matching {} unique concept(s)", scoredConceptsCount );
 		
-		Stream<Integer> genesStrm = luceneConceptsSet.parallelStream ()
+		Stream<Integer> genesStrm = matchedConceptsSet.parallelStream ()
 			.map ( ONDEXConcept::getId )
 			.filter ( concept2Genes::containsKey )
 			.flatMap ( luceneConceptId -> concept2Genes.get ( luceneConceptId ).parallelStream () )
@@ -93,38 +97,81 @@ public class SemanticMotifSearchMgr
 		if ( this.taxId != null )
 			genesStrm = genesStrm.filter ( geneId -> taxId.equals ( new GeneHelper ( graph, geneId ).getTaxID () ) );
 		
-		this.numConnectedGenes = (int) genesStrm.count ();
-		log.info ( "Matching {} unique gene(s)", numConnectedGenes );
+		this.linkedGenesCount = (int) genesStrm.count ();
+		log.info ( "Matching {} unique gene(s)", linkedGenesCount );
 	}
 
-	public int getLuceneDocumentsLinked ()
+	/**
+	 * Number of distinct concepts that match the search keywords and have some semantic motif-linked genes.
+	 * 
+	 * This is computed by matching {@link #getScoredConcepts()} to {@link KnetMinerInitializer#getConcepts2Genes()}.
+	 */
+	public int getScoredConceptsCount ()
 	{
-		return luceneDocumentsLinked;
+		return scoredConceptsCount;
 	}
 
-	public int getNumConnectedGenes ()
+	/**
+	 * Count of distinct genes that could be found from the keyword-matched concepts, using 
+	 * semantic motif paths.
+	 * 
+	 * This is computed going from {@link #getScoredConcepts()} to {@link KnetMinerInitializer#getConcepts2Genes()}
+	 * and counting all genes that lead to each matched concept.
+	 */
+	public int getLinkedGenesCount ()
 	{
-		return numConnectedGenes;
+		return linkedGenesCount;
 	}
 
-	public Map<ONDEXConcept, Float> getLuceneConcepts ()
+	/**
+	 * The set of keyword-matched concepts, along with their relevance scores (based on Lucene).
+	 */
+	public Map<ONDEXConcept, Float> getScoredConcepts ()
 	{
-		return this.luceneConcepts;
+		return this.scoredConcepts;
 	}
 
+	/**
+	 * A wrapper of {@link SemanticMotifsSearchResult#getGene2Score()}, using {@link #getSearchResult()}.
+	 * 
+	 * In other words, these are the genes that lead to keyword-matched concepts. 
+	 */
 	public Map<ONDEXConcept, Double> getSortedGeneCandidates ()
 	{
 		return getSearchResult ().getGene2Score ();
 	}
 
+	/**
+	 * A wrapper of {@link SemanticMotifsSearchResult#getGeneId2RelatedConceptIds()}.
+	 * 
+	 * That is, for each gene that lead to some of the keyword-matched concepts (via sem motifs), returns all the 
+	 * reached concepts. 
+	 */
 	public Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()
 	{
 		return getSearchResult ().getGeneId2RelatedConceptIds ();
 	}
 
+	/**
+	 * A cached wrapper of {@link SearchService#getScoredGenes(Map, String)}, based on the parameters
+	 * {@link #getScoredConcepts()} and {@link #getTaxId()}.
+	 * 
+	 * That is: the genes that are linked to 
+	 * keywords-related entities, via semantic motifs.
+	 * 
+	 */
 	public SemanticMotifsSearchResult getSearchResult ()
 	{
 		if ( searchResult != null ) return searchResult;
-		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( luceneConcepts, this.taxId );
+		return searchResult = ondexProvider.getSearchService ().getScoredGenes ( scoredConcepts, this.taxId );
 	}
+
+	/**
+	 * The specific taxonomy ID used for this search.
+	 */
+	public String getTaxId ()
+	{
+		return taxId;
+	}
+
 }

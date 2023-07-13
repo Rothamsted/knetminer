@@ -131,9 +131,9 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			request.getKeyword(), ondexServiceProvider, null, request.getTaxId()
 		);
 		CountHitsResponse response = new CountHitsResponse();
-		response.setLuceneCount ( hits.getLuceneConcepts().size() ); // number of Lucene documents
-		response.setLuceneLinkedCount ( hits.getLuceneDocumentsLinked() ); // number of Lucene documents related to genes
-		response.setGeneCount ( hits.getNumConnectedGenes() ); // count unique genes linked to Lucene documents
+		response.setLuceneCount ( hits.getScoredConcepts().size() ); // number of Lucene documents
+		response.setLuceneLinkedCount ( hits.getScoredConceptsCount() ); // number of Lucene documents related to genes
+		response.setGeneCount ( hits.getLinkedGenesCount() ); // count unique genes linked to Lucene documents
 		return response;
 	}
 
@@ -338,15 +338,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 
 		log.debug ( "3) API, doing evidence table" );
 		List<EvidenceTableEntry> evidenceTable = exportService.exportEvidenceTable (
-			request.getKeyword (), smSearchMgr.getLuceneConcepts (), userGenes, request.getQtl (),
+			request.getKeyword (), smSearchMgr.getScoredConcepts (), userGenes, request.getQtl (),
 			request.isSortedEvidenceTable ()
 		);
 		log.debug ( "Evidence table done" );
 
-		int docSize = searchService.getMapEvidences2Genes ( smSearchMgr.getLuceneConcepts () ).size ();
+		int docSize = searchService.getMapEvidences2Genes ( smSearchMgr.getScoredConcepts () ).size ();
 
 		// Total documents
-		int totalDocSize = smSearchMgr.getLuceneConcepts ().size ();
+		int totalDocSize = smSearchMgr.getScoredConcepts ().size ();
 
 		// We have annotation and table file
 		response.setGViewer ( xmlGViewer );

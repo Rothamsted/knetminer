@@ -105,9 +105,8 @@ public class KnetMinerInitializer
 	/**
 	 * Does all the initialisation work, by calling initXXX() methods.
 	 * 
-	 * @param overridingConfig if not null, sets up the Knetminer configuration to work with with this 
-	 * object and proceeds with the initialisation. If it's null, it gets the configuration from 
-	 * {@link #loadKnetminerConfiguration()}, that is, uses {@link #getConfigYmlPath() the configuration path}.
+	 * @param doReset if true, it enforces the re-creation of index and semantic motif data, even when 
+	 * they're already available and up to date.
 	 * 
 	 */
 	public void initKnetMinerData ( boolean doReset )
@@ -186,7 +185,9 @@ public class KnetMinerInitializer
     	  	log.info ( "Skipping Ondex/Lucene indexing and reusing existing index files" );
       }
   
+      
       log.info ( "Getting/building Lucene Index from: " + indexFile.getAbsolutePath() );
+      
       this.luceneMgr = new LuceneEnv ( indexFile.getAbsolutePath(), !indexFile.exists() );
       luceneMgr.addONDEXListener( new ONDEXLogger() ); // sends Ondex messages to the logger.
       luceneMgr.setONDEXGraph ( graph );

@@ -127,8 +127,9 @@ public class SearchService
 			for ( ONDEXConcept gene : geneList )
 			{
 				if ( gene == null ) continue;
-				if ( genes2Concepts.get ( gene.getId () ) == null ) continue;
-				for ( int relatedConceptId : genes2Concepts.get ( gene.getId () ) )
+				Set<Integer> relatedConceptIds = genes2Concepts.get ( gene.getId () );
+				if ( relatedConceptIds == null ) continue;
+				for ( int relatedConceptId : relatedConceptIds )
 				{
 					ONDEXConcept relatedConcept = graph.getConcept ( relatedConceptId );
 					if ( !includePublications && relatedConcept.getOfType ().getId ().equalsIgnoreCase ( "Publication" ) )

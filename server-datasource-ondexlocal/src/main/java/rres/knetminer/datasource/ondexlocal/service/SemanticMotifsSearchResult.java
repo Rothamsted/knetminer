@@ -1,7 +1,13 @@
 package rres.knetminer.datasource.ondexlocal.service;
 
+import static java.util.Collections.emptyMap;
+
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import net.sourceforge.ondex.core.ONDEXConcept;
 
@@ -36,8 +42,8 @@ public class SemanticMotifsSearchResult
 	)
 	{
 		super ();
-		this.geneId2RelatedConceptIds = geneId2RelatedConceptIds;
-		this.gene2Score = gene2Score; 
+		this.geneId2RelatedConceptIds = Optional.ofNullable ( geneId2RelatedConceptIds ).orElse ( emptyMap () );
+		this.gene2Score = Optional.ofNullable ( gene2Score ).orElse ( emptyMap () ); 
 	}
 
 	/**
@@ -45,6 +51,7 @@ public class SemanticMotifsSearchResult
 	 * semantic motif search.
 	 * 
 	 */
+	@Nonnull
 	public Map<Integer, Set<Integer>> getGeneId2RelatedConceptIds ()
 	{
 		return geneId2RelatedConceptIds;
@@ -55,6 +62,7 @@ public class SemanticMotifsSearchResult
 	 * @see SearchService#getScoredGenes(Map, String)
 	 * 
 	 */
+	@Nonnull
 	public Map<ONDEXConcept, Double> getGene2Score ()
 	{
 		return gene2Score;
