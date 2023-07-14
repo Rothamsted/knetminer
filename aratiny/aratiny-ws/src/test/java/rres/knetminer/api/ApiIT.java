@@ -167,6 +167,7 @@ public class ApiIT
 		assertNotNull ( "Gene table is null!", geneTable );
 		assertEquals ( "Gene table size is wrong!", 6, geneTable.size () );
 		
+		// Row about AT1G66750
 		{
 			GeneTableEntry row = geneTable.stream ()
 			.filter ( e -> 
@@ -209,10 +210,10 @@ public class ApiIT
 				assertNotNull ( "Test publication evidence not found!", pubEv );
 			}
 		
-		} // row 1
+		} // AT1G66750
 		
 		
-		// Just another row
+		// Just another row, AT1G21970
 		{
 			GeneTableEntry row = geneTable.stream ()
 			.filter ( e -> 
@@ -241,7 +242,7 @@ public class ApiIT
 			assertEquals ( "Test trait evidence is wrong (label)!", "seed dormancy", traitEv.getConceptLabel () );
 			assertEquals ( "Test trait evidence is wrong (graphDistance)!", (Integer) 1, traitEv.getGraphDistance () );
 	
-		} // row 2
+		} // AT1G21970
 		
 	} // testGeneTable
 	
