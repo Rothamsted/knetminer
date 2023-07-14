@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,35 +24,46 @@ import rres.knetminer.datasource.api.KeywordResponse;
  * Example of JSON that this class returns via API:
  * 
  * <pre>
- * [{
- *   "accession" : "ZM00001EB307232",
- *   "chromosome" : "6",
- *   "conceptEvidences" :
- *   {
- *     "Publication" : {
- *       "conceptLabels" : [ "PMID:28121387", "PMID:281213455" ],
- *       "reportedSize" : 10
- *     },
- *     "Protein" : {
- *       "conceptLabels" : [ "FOO-PROT-1", "FOO-PROT-2" ],
- *       "reportedSize" : 2
- *     }
- *   },
- *   "geneBeginBP" : 50783674,
- *   "geneEndBP" : 50785620,
- *   "isUserGene" : true,
- *   "name" : "RPS4Foo",
- *   "ondexId" : 6639990,
- *   "qtlEvidences" : [ 
- *		 { "regionLabel": "QTL1", "regionTrait": "The Foo QTL 1" }, 
- *		 { "regionLabel": "QTL2", "regionTrait": "The Foo QTL 2" } 
- *		],
- *   "score" : 3.1459,
- *   "taxID" : "4577"
- * },
- * {...},
- * ...
- * ]
+[
+  {
+    "score": 7.291821709509696,
+    "geneEndBP": 5737854,
+    "isUserGene": true,
+    "taxID": "3702",
+    "conceptEvidences": {
+      "BioProc": {
+        "conceptEvidences": [
+          {
+            "graphDistance": 2,
+            "conceptLabel": "Regulation Of Transcription, DNA-templated"
+          }
+        ],
+        "reportedSize": 1
+      },
+      "Publication": {
+        "conceptEvidences": [
+          {
+            "graphDistance": 2,
+            "conceptLabel": "PMID:19130088"
+          },
+          {
+            "graphDistance": 2,
+            "conceptLabel": "PMID:19341407"
+          }
+        ],
+        "reportedSize": 2
+      }
+    },
+    "chromosome": "3",
+    "name": "TPR2",
+    "ondexId": 6648480,
+    "qtlEvidences": [],
+    "accession": "AT3G16830",
+    "geneBeginBP": 5731519
+  },
+  {...},
+  ...
+ ]
  * <pre>
  *
  */
@@ -63,41 +76,50 @@ public class GeneTableEntry
 {
 	/**
 	 * For each gene, there are evidence concepts, represented from this class.
+	 * 
+	 * Namely, for each concept type in {@link GeneTableEntry#getConceptEvidences()}, we have an instance
+	 * of {@link TypeEvidences}, with some summary about all the concepts of the same type, and then 
+	 * a collection of this this hereby type, in {@link TypeEvidences#getConceptEvidences()}
+	 * 
 	 * As the rest, this is turned into JSON upon the API response.
 	 */
 	public static class TypeEvidences
 	{
-		private List<String> conceptLabels;
+		private List<ConceptEvidence> conceptEvidences;
 		private int reportedSize = 0;
+				
+		public TypeEvidences ( List<ConceptEvidence> conceptEvidences, int reportedSize )
+		{
+			this.conceptEvidences = conceptEvidences;
+			this.reportedSize = reportedSize;
+		}
 		
+		/** 
+		 * Defaults to {@code reportedSize == conceptEvidences.size()}.
+		 * 
+		 */
+		public TypeEvidences ( List<ConceptEvidence> conceptEvidences )
+		{
+			this ( 
+				conceptEvidences, 
+				Optional.ofNullable ( conceptEvidences ).map ( List::size ).orElse ( 0 ) 
+			);
+		}
+
 		@SuppressWarnings ( "unused" )
 		private TypeEvidences () {
 			// Needed by JSON serialisers
 		}
 		
-		public TypeEvidences ( List<String> conceptLabels, int reportedSize )
-		{
-			this.conceptLabels = conceptLabels;
-			this.reportedSize = reportedSize;
-		}
 		
-		public TypeEvidences ( List<String> conceptLabels )
-		{
-			this ( 
-				conceptLabels, 
-				Optional.ofNullable ( conceptLabels ).map ( List::size ).orElse ( 0 ) 
-			);
-		}
-
 		/**
-		 * Something like the shortest name or accession for this concept. This is computed by the
-		 * API implementation.
+		 * Details about the specific evidence concepts.
 		 * 
-		 * This is never null.
 		 */
-		public List<String> getConceptLabels ()
+		@Nonnull
+		public List<ConceptEvidence> getConceptEvidences ()
 		{
-			return Optional.ofNullable ( conceptLabels )
+			return Optional.ofNullable ( conceptEvidences )
 				.map ( Collections::unmodifiableList )
 				.orElse ( List.of () );
 		}
@@ -113,6 +135,48 @@ public class GeneTableEntry
 			return reportedSize;
 		}
 	} // TypeEvidences
+	
+	/**
+	 * The specific evidence concept in the gene table.
+	 * 
+	 * @see TypeEvidences above.
+	 */
+	public static class ConceptEvidence
+	{
+		private String conceptLabel;
+		private Integer graphDistance;
+
+		public ConceptEvidence ( String conceptLabel, Integer graphDistance )
+		{
+			super ();
+			this.conceptLabel = conceptLabel;
+			this.graphDistance = graphDistance;
+		}
+		
+		@SuppressWarnings ( "unused" )
+		private ConceptEvidence () {
+			// Needed by JSON serialisers
+		}
+		
+		/**
+		 * Something like the shortest name or accession for this concept. This is computed by the
+		 * API implementation.
+		 */
+		public String getConceptLabel ()
+		{
+			return conceptLabel;
+		}
+
+		/**
+		 * The shortest topological distance from the gene this concept refers up to this concept, based on
+		 * semantic motif traversals. 
+		 */
+		public Integer getGraphDistance ()
+		{
+			return graphDistance;
+		}
+		
+	} // ConceptEvidence
 	
 	/**
 	 * This has two possible entries:

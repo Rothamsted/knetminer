@@ -41,6 +41,7 @@ import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry.QTLEvidence;
 import rres.knetminer.datasource.api.datamodel.GeneTableEntry.TypeEvidences;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry.ConceptEvidence;
 import rres.knetminer.datasource.ondexlocal.service.utils.FisherExact;
 import rres.knetminer.datasource.ondexlocal.service.utils.PublicationUtils;
 import rres.knetminer.datasource.ondexlocal.service.utils.UIUtils;
@@ -98,6 +99,7 @@ public class ExportService
 		List<QTL> userQtls =  QTL.fromStringList ( userQtlsStr );
 	  var graph = dataService.getGraph ();
 		var genes2QTLs = knetInitializer.getGenes2QTLs ();
+		Map<Pair<Integer, Integer>, Integer> genes2PathLengths = knetInitializer.getGenes2PathLengths ();
 		var config = dataService.getConfiguration ();
 
 		if ( userGenes == null ) userGenes = Set.of ();
@@ -165,12 +167,10 @@ public class ExportService
 			// get lucene hits per gene
 			Set<Integer> luceneHits = mapGene2HitConcept.getOrDefault ( geneId, Collections.emptySet () );
 
-			// TODO: use <initializer>.getGenes2PathLengths() to add the distance to TypeEvidences 
 			
-			
-			// group related concepts by their type and map each concept to its best label
+			// Group related concepts by their type and collect concept details
 			//
-			Map<String, List<String>> byCCRelatedLabels = luceneHits.stream ()
+			Map<String, List<ConceptEvidence>> byCCRelatedLabels = luceneHits.stream ()
 			.map ( graph::getConcept )
 			// We deal with these below
 			.filter ( relatedConcept -> !"Publication".equals ( relatedConcept.getOfType ().getId () ) )
@@ -178,7 +178,12 @@ public class ExportService
 				// group by CC
 				relatedConcept -> relatedConcept.getOfType ().getId (),
 				// for each CC, make a list of labels
-				Collectors.mapping ( GraphLabelsUtils::getBestConceptLabel, Collectors.toList () )
+				Collectors.mapping ( 
+					evidenceConcept -> new ConceptEvidence ( 
+						GraphLabelsUtils.getBestConceptLabel ( evidenceConcept ), 
+						genes2PathLengths.get ( Pair.of ( geneId, evidenceConcept.getId () ) )
+					),
+					Collectors.toList () )
 			)); 
 				
 			
@@ -199,17 +204,23 @@ public class ExportService
 				config.getDefaultExportedPublicationCount () 
 			);
 			
-			// Get best labels for publications and add to the rest
+			// Now collect these publications, the same way we did it for the other concepts
 			if ( !newPubs.isEmpty () )
 			{
-				List<String> pubLabels = newPubs.stream ()
+				List<ConceptEvidence> pubEvidences = newPubs.stream ()
 				.map ( graph::getConcept )
-			  .map ( GraphLabelsUtils::getBestConceptLabel )
-			  // TODO: is this right?! What if the name IS NOT a PMID?!
-			  .map ( name -> name.contains ( "PMID:" ) ? name : "PMID:" + name )
-			  .collect ( Collectors.toList () );
+				.map ( evidenceConcept -> {
+					var label = GraphLabelsUtils.getBestConceptLabel ( evidenceConcept );
+				  // TODO: is this right?! What if the name IS NOT a PMID?!
+					if ( !label.contains ( "PMID:" ) ) label = "PMID:" + label;
+					return new ConceptEvidence ( 
+						label, 
+						genes2PathLengths.get ( Pair.of ( geneId, evidenceConcept.getId () ) )
+					);		
+				})
+				.collect ( Collectors.toList () );
 				
-				byCCRelatedLabels.put ( "Publication", pubLabels );
+				byCCRelatedLabels.put ( "Publication", pubEvidences );
 			}
 
 	
@@ -219,10 +230,10 @@ public class ExportService
 			.stream ()
 			.map ( cc2Labels -> {
 				String ccId = cc2Labels.getKey ();
-				List<String> labels = cc2Labels.getValue ();
-				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : labels.size ();
+				List<ConceptEvidence> conceptEvidences = cc2Labels.getValue ();
+				var reportedSize = "Publication".equals ( ccId ) ? allPubSize : conceptEvidences.size ();
 
-				return Pair.of ( ccId, new TypeEvidences ( labels, reportedSize ) );
+				return Pair.of ( ccId, new TypeEvidences ( conceptEvidences, reportedSize ) );
 			})
 			.collect ( Collectors.toMap ( Pair::getKey, Pair::getValue ) );
 							
@@ -265,15 +276,6 @@ public class ExportService
 		log.info ( "Genomaps: generating XML..." );
 
 		List<QTL> userQtl = QTL.fromStringList ( userQtlStr );  
-
-		// TODO: can we remove this?
-		// If user provided a gene list, use that instead of the all Genes (04/07/2018, singha)
-		/*
-		 * if(userGenes != null) { // use this (Set<ONDEXConcept> userGenes) in place of the genes
-		 * ArrayList<ONDEXConcept> genes. genes= new ArrayList<ONDEXConcept> (userGenes);
-		 * log.info("Genomaps: Using user-provided gene list... genes: "+ genes.size()); }
-		 */
-		// added user gene list restriction above (04/07/2018, singha)
 
     var graph = dataService.getGraph ();
 		ONDEXGraphMetaData gmeta = graph.getMetaData ();

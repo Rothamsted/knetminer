@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpException;
@@ -24,6 +25,9 @@ import rres.knetminer.api.client.GenomeApiResult;
 import rres.knetminer.api.client.KnetminerApiClient;
 import rres.knetminer.api.client.KnetminerApiClient.RequestOptions;
 import rres.knetminer.datasource.api.datamodel.EvidenceTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry.ConceptEvidence;
+import rres.knetminer.datasource.api.datamodel.GeneTableEntry.TypeEvidences;
 import uk.ac.ebi.utils.exceptions.NotReadyException;
 import uk.ac.ebi.utils.opt.springweb.exceptions.ResponseStatusException2;
 import uk.ac.ebi.utils.xml.XPathReader;
@@ -112,39 +116,135 @@ public class ApiIT
 
 	
 	@Test
-	public void testGenomeGrowth () {
-		testGenome ( "growth", "ILR1" );
+	public void testGeneMapViewGrowth () {
+		testGeneMapView ( "growth", "ILR1" );
 	}
 	
 	@Test
-	public void testGenomeWithAccession () {
-		testGenome ( "\"NuDt19\"", "NUDT19" );
+	public void testGeneMapViewWithAccession () {
+		testGeneMapView ( "\"NuDt19\"", "NUDT19" );
 	}
 
 	/**
 	 * This is actually run only if we're running the neo4j profile (we receive a flag by Maven, reporting that).
 	 */
 	@Test
-	public void testGenomeNeo4j () 
+	public void testGeneMapViewNeo4j () 
 	{
 		if ( !"neo4j".equals ( getMavenProfileId () ) ) {
 			log.warn ( "Skipping test for neo4j profile-only" );
 			return;
 		}
 		
-		testGenome ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
+		testGeneMapView ( "'Lorem ipsum dolor'", "TEST-GENE-01" );
 	}
 
 	
 	@Test
-	public void testGeneFilter () 
+	public void testGeneMapViewGeneFilter () 
 	{
 		Stream.of ( "MIR172B", "MIR172A", "at1g07350", "MBD12", "MBD3", "MBD5" )
 		.forEach ( expectedGeneLabel ->
-			testGenome ( "flowering FLC FT", expectedGeneLabel, "MIR*", "at1g07350", "mBd*"	)
+			testGeneMapView ( "flowering FLC FT", expectedGeneLabel, "MIR*", "at1g07350", "mBd*"	)
 		);
 	}
 
+	/**
+	 * TODO: {@link GeneTableEntry#getQtlEvidences()} isn't tested, cause we're currently not using it.
+	 */
+	@Test
+	public void testGeneTable ()
+	{
+		GenomeApiResult apiOut = CLI.genome (
+		  "spikelet OR seed*  OR \"yield\" OR \"inflorescence\"",
+		  List.of ( "ONE1", "U12", "CAK*" , "AT1G*" ),
+		  null,
+		  "3702"
+		);
+
+		List<GeneTableEntry> geneTable = apiOut.getGeneTable ();
+		
+		assertNotNull ( "Gene table is null!", geneTable );
+		assertEquals ( "Gene table size is wrong!", 6, geneTable.size () );
+		
+		{
+			GeneTableEntry row = geneTable.stream ()
+			.filter ( e -> 
+				"AT1G66750".equals ( e.getAccession () )
+				&& "3702".equals ( e.getTaxID () )
+				&& "1".equals ( e.getChromosome () )
+				&& e.getGeneBeginBP () == 24894523 && e.getGeneEndBP () == 24897259
+				&& e.getScore () >= 3.4 && e.getScore () <= 3.5
+				&& e.isUserGene ()
+				&& e.getOndexId () == 6650736
+			)
+			.findAny ()
+			.orElse ( null );
+			
+			assertNotNull ( "Probed gene not found in the gene table!", row );
+			
+			Map<String, TypeEvidences> evidences = row.getConceptEvidences ();
+			
+			assertNotNull ( "Test evidences is null!", evidences );
+			assertEquals ( "Test evidences is wrong!", 1, evidences.size () );
+			
+			TypeEvidences pubEvidences = evidences.get ( "Publication" );
+			assertNotNull ( "Test evidences has no Publication entry!", pubEvidences );
+			assertEquals ( "Reported size of Publication evidences is wrong!", 2, pubEvidences.getReportedSize () );
+	
+			List<ConceptEvidence> pubs = pubEvidences.getConceptEvidences ();
+			assertNotNull ( "Pubs from TypeEvidences is null!", pubs );
+			assertEquals ( "Pubs from TypeEvidences is wrong!", 2, pubs.size () );
+			
+			for ( var pmid: new String [] { "21908688", "14576160" })
+			{
+				ConceptEvidence pubEv = pubs.stream ()
+				.filter ( pub -> 
+					( "PMID:" + pmid ).equals ( pub.getConceptLabel () )
+					&& pub.getGraphDistance () == 2
+				)
+				.findAny ()
+				.orElse ( null );
+				
+				assertNotNull ( "Test publication evidence not found!", pubEv );
+			}
+		
+		} // row 1
+		
+		
+		// Just another row
+		{
+			GeneTableEntry row = geneTable.stream ()
+			.filter ( e -> 
+				"AT1G21970".equals ( e.getAccession () )
+			)
+			.findAny ()
+			.orElse ( null );
+			
+			assertNotNull ( "Probed gene not found in the gene table!", row );
+			
+			Map<String, TypeEvidences> evidences = row.getConceptEvidences ();
+			
+			assertNotNull ( "Test evidences is null!", evidences );
+			assertEquals ( "Test evidences is wrong!", 1, evidences.size () );
+			
+			TypeEvidences traitEvidences = evidences.get ( "Trait" );
+			assertNotNull ( "Test evidences has no Trait entry!", traitEvidences );
+			assertEquals ( "Size of Publication evidences is wrong!", 1, traitEvidences.getReportedSize () );
+	
+			List<ConceptEvidence> traits = traitEvidences.getConceptEvidences ();
+			assertNotNull ( "Pubs from TypeEvidences is null!", traits );
+			assertEquals ( "Pubs from TypeEvidences is wrong!", 1, traits.size () );
+			
+			ConceptEvidence traitEv = traits.get ( 0 );
+			assertNotNull ( "Test trait evidence is null!", traitEv );
+			assertEquals ( "Test trait evidence is wrong (label)!", "seed dormancy", traitEv.getConceptLabel () );
+			assertEquals ( "Test trait evidence is wrong (graphDistance)!", (Integer) 1, traitEv.getGraphDistance () );
+	
+		} // row 2
+		
+	} // testGeneTable
+	
 	
 	@Test
 	public void testEvidenceTable ()
@@ -200,7 +300,6 @@ public class ApiIT
 		rowFound = evidenceTable.stream ()
 		.anyMatch ( row ->
 		{
-			// "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE
 			if ( !"BioProc".equals ( row.getConceptType () ) ) return false;
 			if ( !"Vesicle-mediated Transport".equals ( row.getName () ) ) 
 				return false;
@@ -390,16 +489,16 @@ public class ApiIT
 	 * @param expectedGeneLabel is checked against the 'gviewer' result, 
 	 * to see if {@code /genome/feature/geneLabel} has the expected value.
 	 * 
-	 * @param geneAccFilters (optional), the list of genes to restrict the search on. This is 
+	 * @param userGenes (optional), the list of genes to restrict the search on. This is 
 	 * the same as the "Gene List Search" box, it's case-insensitive and can contains Lucene 
 	 * wildcards ('*', '?', '-').
 	 * 
 	 * TODO: we need tests with chromosome regions too
 	 * 
 	 */
-	private void testGenome ( String keyword, String expectedGeneLabel, String...geneAccFilters  )
+	private void testGeneMapView ( String keyword, String expectedGeneLabel, String...userGenes  )
 	{
-		GenomeApiResult apiOut = CLI.genome ( keyword, Arrays.asList ( geneAccFilters ), null, null );
+		GenomeApiResult apiOut = CLI.genome ( keyword, Arrays.asList ( userGenes ), null, null );
 				
 		assertTrue ( "geneCount from /genome + " + keyword + " is wrong!", apiOut.getGeneCount () > 0 );
 		

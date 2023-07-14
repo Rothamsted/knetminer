@@ -14,8 +14,8 @@ import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 
 /**
  * 
- * TODO: to be merged with a class of ONDEX graph utility functions 
- *
+ * TODO: to be merged with a class of ONDEX graph utility functions. 
+ * TODO: option to return either IDs or {@link ONDEXConcept}.
  */
 public class PublicationUtils
 {
