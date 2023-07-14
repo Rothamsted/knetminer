@@ -189,12 +189,12 @@ public class ApiIT
 			assertEquals ( "Test evidences is wrong!", 1, evidences.size () );
 			
 			TypeEvidences pubEvidences = evidences.get ( "Publication" );
-			assertNotNull ( "Test evidences has no Publication entry!", pubEvidences );
-			assertEquals ( "Reported size of Publication evidences is wrong!", 2, pubEvidences.getReportedSize () );
+			assertNotNull ( "Test TypeEvidences has no Publication entry!", pubEvidences );
+			assertEquals ( "reportedSize of Publication evidences is wrong!", 2, pubEvidences.getReportedSize () );
 	
 			List<ConceptEvidence> pubs = pubEvidences.getConceptEvidences ();
-			assertNotNull ( "Pubs from TypeEvidences is null!", pubs );
-			assertEquals ( "Pubs from TypeEvidences is wrong!", 2, pubs.size () );
+			assertNotNull ( "Pubs collection from TypeEvidences is null!", pubs );
+			assertEquals ( "Pubs collection from TypeEvidences is wrong!", 2, pubs.size () );
 			
 			for ( var pmid: new String [] { "21908688", "14576160" })
 			{
@@ -225,16 +225,16 @@ public class ApiIT
 			
 			Map<String, TypeEvidences> evidences = row.getConceptEvidences ();
 			
-			assertNotNull ( "Test evidences is null!", evidences );
-			assertEquals ( "Test evidences is wrong!", 1, evidences.size () );
+			assertNotNull ( "Test TypeEvidences is null!", evidences );
+			assertEquals ( "Test TypeEvidences is wrong!", 1, evidences.size () );
 			
 			TypeEvidences traitEvidences = evidences.get ( "Trait" );
-			assertNotNull ( "Test evidences has no Trait entry!", traitEvidences );
-			assertEquals ( "Size of Publication evidences is wrong!", 1, traitEvidences.getReportedSize () );
+			assertNotNull ( "Test TypeEvidences has no Trait entry!", traitEvidences );
+			assertEquals ( "Size of Trait evidences is wrong!", 1, traitEvidences.getReportedSize () );
 	
 			List<ConceptEvidence> traits = traitEvidences.getConceptEvidences ();
-			assertNotNull ( "Pubs from TypeEvidences is null!", traits );
-			assertEquals ( "Pubs from TypeEvidences is wrong!", 1, traits.size () );
+			assertNotNull ( "Traits from TypeEvidences is null!", traits );
+			assertEquals ( "Traits from TypeEvidences is wrong!", 1, traits.size () );
 			
 			ConceptEvidence traitEv = traits.get ( 0 );
 			assertNotNull ( "Test trait evidence is null!", traitEv );
