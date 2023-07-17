@@ -5,17 +5,17 @@
 function createGenesTable ( tableData, keyword )
 {
 	var table = "";
-	
 	if (tableData.length > 0 )
 	{
 		genesTableScroller.setTableData ( tableData )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
 
+
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
-	
+
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+		table += '' + interactiveSummaryLegend + '<div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover" ></i></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -368,16 +368,13 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 	var table = ''
 
-	const fromRow = genesTableScroller.getPageStart ()
+	const fromRow = genesTableScroller.getPageStart () 
 	const toRow = genesTableScroller.getPageEnd ()
 
 	// Main loop over the resulting genes.
 	for (var row = fromRow; row < toRow; row++)
 	{	
 		var {nodeId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
-		// var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ]= tableData[row]
-
-		// if (row > rows /*&& values[7]=="no"*/) continue;
 		table += '<tr>';
 
 		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
@@ -396,49 +393,42 @@ function createGeneTableBody ( tableData, doAppend = false )
 		// Currently not shown
 		var scoreTd = '<td>' + Number(score).toFixed(2) + '</td>';
 
-
 		var chrTd = '';
 		var chrStartTd = '';
 
 		var chrTd = '<td>' + chromosome + '</td>';
 		var chrStartTd = '<td>' + geneBeginBP + '</td>';
 
-
-
 		// For each evidence show the images - start
 		var evidenceTd = '<td><div class="evidence-column-container">';
 
-		if (conceptEvidences) {
-
 			for(var evidence in conceptEvidences){
 
-				var { conceptLabels, reportedSize} = conceptEvidences[evidence]; 
+				if(!conceptEvidences[evidence]) break; 
+
+				var {conceptEvidences} = conceptEvidences[evidence]
 
 				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidence + '" class="evidence_item evidence_item_' + evidence + ' dropdown_box_open" title="' + evidence + '" >';
 					//Builds the evidence box
 					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidence + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidence + '></span>';
 					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidence + '"></div> <span>' + evidence + '</span></p>';
-					for (var ievNode = 0; ievNode < conceptLabels.length; ievNode++) {
+					for (var ievNode = 0; ievNode < conceptEvidences.length; ievNode++) {
+						var {conceptLabel} = conceptEvidences[ievNode]
 						if (evidence == 'Publication') {
 							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-							evidenceValueTd = '<a href="' + pubmedurl + conceptLabels[ievNode].substring(5) + '" target="_blank">' + conceptLabels[ievNode] + '</a>';
+							evidenceValueTd = '<a href="' + pubmedurl + conceptLabel.substring(5) + '" target="_blank">' + conceptLabel + '</a>';
 						}
 						else
-							evidenceValueTd = conceptLabels[ievNode];
+							evidenceValueTd = conceptLabel;
 
 						evidenceTd += '<p>' + evidenceValueTd + '</p>';
 					}
 					evidenceTd += '</div>';
-					evidenceTd += '</div> <span style="margin-right:.5rem">' + reportedSize + '</span></div>';
+					evidenceTd += '</div> <span style="margin-right:.5rem">' + conceptEvidences.length + '</span></div>';
 
-				}
-			// for iev
-
-
-		} // if evidence.length
-			evidenceTd += '<div></td>';
-			// Foreach evidence show the images - end
-
+			}
+			// for iev // if evidence.length
+		evidenceTd += '<div></td>';
 			var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${accession}"></td>`;
 			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + scoreTd + selectTd;
 			table += '</tr>';
@@ -508,6 +498,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 	});
   
 	legend= legend + summaryText +'</div>';
+
 	return legend;
 }
 
