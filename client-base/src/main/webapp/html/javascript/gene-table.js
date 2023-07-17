@@ -5,17 +5,17 @@
 function createGenesTable ( tableData, keyword )
 {
 	var table = "";
-	
 	if (tableData.length > 0 )
 	{
 		genesTableScroller.setTableData ( tableData )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
 
+
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
-	
+
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<input id="revertGeneView" type="button" value="" class="unhover" title= "Revert all filtering changes"></div>';
+		table += '' + interactiveSummaryLegend + '<div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover" ></i></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -362,7 +362,7 @@ function downloadNetwork() {
  */
 function createGeneTableBody ( tableData, doAppend = false )
 {
-  // In this case, it doesn't do anything anyway and this prevents the scroller from 
+	// In this case, it doesn't do anything anyway and this prevents the scroller from 
 	// failing.
 	if ( !( tableData && tableData.length > 0 ) ) return
 
@@ -375,9 +375,6 @@ function createGeneTableBody ( tableData, doAppend = false )
 	for (var row = fromRow; row < toRow; row++)
 	{	
 		var {nodeId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
-		// var [geneId, geneAccessions,geneName,chr,chrStart,taxId,score,,withinQTLs,evidence ]= tableData[row]
-
-		// if (row > rows /*&& values[7]=="no"*/) continue;
 		table += '<tr>';
 
 		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
@@ -395,7 +392,6 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 		// Currently not shown
 		var scoreTd = '<td>' + Number(score).toFixed(2) + '</td>';
-
 
 		var chrTd = '';
 		var chrStartTd = '';
@@ -443,7 +439,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 			// for evidenceType, typeEvidencesSummary
 
 		} // if conceptEvidences
-		evidenceTd += '<div></td>';
+		evidenceTd += '</div></td>';
 		// Foreach evidence show the images - end
 
 		var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${accession}"></td>`;
@@ -516,6 +512,7 @@ function getInteractiveSummaryLegend(geneViewData) {
 	});
   
 	legend= legend + summaryText +'</div>';
+
 	return legend;
 }
 
