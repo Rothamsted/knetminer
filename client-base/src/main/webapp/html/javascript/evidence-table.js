@@ -294,10 +294,13 @@ async function openGeneListPopup(conceptId, element)
         e.preventDefault();
 
         var accessionList = []
-        for (var accessionColumn = 0; accessionColumn < geneTable.length; accessionColumn++) {
-            var accessionItem = geneTable[accessionColumn].split("\t").slice(1, 2);
+        for (var accessionColumn = 0; accessionColumn < accessionData.length; accessionColumn++) {
+            var accessionItem = accessionData[accessionColumn].split("\t").slice(1, 2);
+
             accessionList.push(accessionItem.join("\t"))
         }
+
+        accessionList.shift(); 
 
         navigator.clipboard.writeText(accessionList.join("\n"));
     
