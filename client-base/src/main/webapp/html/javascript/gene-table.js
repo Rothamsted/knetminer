@@ -404,16 +404,19 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 			for(var evidence in conceptEvidences){
 
-				if(!conceptEvidences[evidence]) break; 
+			
 
-				var {conceptEvidences} = conceptEvidences[evidence]
+				var geneConcepts = conceptEvidences[evidence]; 
+
+				if(!geneConcepts) break; 
+
 
 				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidence + '" class="evidence_item evidence_item_' + evidence + ' dropdown_box_open" title="' + evidence + '" >';
 					//Builds the evidence box
 					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidence + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidence + '></span>';
 					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidence + '"></div> <span>' + evidence + '</span></p>';
-					for (var ievNode = 0; ievNode < conceptEvidences.length; ievNode++) {
-						var {conceptLabel} = conceptEvidences[ievNode]
+					for (var ievNode = 0; ievNode < geneConcepts.conceptEvidences.length; ievNode++) {
+						var {conceptLabel} = geneConcepts.conceptEvidences[ievNode]
 						if (evidence == 'Publication') {
 							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
 							evidenceValueTd = '<a href="' + pubmedurl + conceptLabel.substring(5) + '" target="_blank">' + conceptLabel + '</a>';
@@ -424,7 +427,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 						evidenceTd += '<p>' + evidenceValueTd + '</p>';
 					}
 					evidenceTd += '</div>';
-					evidenceTd += '</div> <span style="margin-right:.5rem">' + conceptEvidences.length + '</span></div>';
+					evidenceTd += '</div> <span style="margin-right:.5rem">' + geneConcepts.conceptEvidences.length + '</span></div>';
 
 			}
 			// for iev // if evidence.length
