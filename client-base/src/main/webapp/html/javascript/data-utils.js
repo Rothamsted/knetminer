@@ -1024,6 +1024,8 @@ function replaceOndexId(tableData) {
  * Keep this test/provisional code ad the end of files.
  */
 if (TEST_MODE) {
+	
+	/* TODO: remove, don't work anymore. Write tests that are compatible with the new JSON. */
   function testGeneTable2OldString() {
     let testTableJs = [
       {

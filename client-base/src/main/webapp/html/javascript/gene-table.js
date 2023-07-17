@@ -362,7 +362,7 @@ function downloadNetwork() {
  */
 function createGeneTableBody ( tableData, doAppend = false )
 {
-	// In this case, it doesn't do anything anyway and this prevents the scroller from 
+  // In this case, it doesn't do anything anyway and this prevents the scroller from 
 	// failing.
 	if ( !( tableData && tableData.length > 0 ) ) return
 
@@ -408,41 +408,49 @@ function createGeneTableBody ( tableData, doAppend = false )
 		// For each evidence show the images - start
 		var evidenceTd = '<td><div class="evidence-column-container">';
 
-		if (conceptEvidences) {
+		if (conceptEvidences)
+		{
+			for ( const [evidenceType, typeEvidencesSummary] of Object.entries ( conceptEvidences ) ) 
+			{
+				const thisTypeEvidences = typeEvidencesSummary.conceptEvidences
+				const reportedSize = typeEvidencesSummary.reportedSize
 
-			for(var evidence in conceptEvidences){
+				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceType + '" class="evidence_item evidence_item_' + evidenceType + ' dropdown_box_open" title="' + evidenceType + '" >';
+				//Builds the evidence box
+				evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceType + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidenceType + '></span>';
+				evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceType + '"></div> <span>' + evidenceType + '</span></p>';
+				for (const evidence of thisTypeEvidences )
+				{
+					let evidenceLabel = evidence.conceptLabel
+					let evidenceGraphDistance = evidence.graphDistance // TODO: use this
+					
+					let evidenceValueTd = ''
 
-				var { conceptLabels, reportedSize} = conceptEvidences[evidence]; 
-
-				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidence + '" class="evidence_item evidence_item_' + evidence + ' dropdown_box_open" title="' + evidence + '" >';
-					//Builds the evidence box
-					evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidence + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidence + '></span>';
-					evidenceTd += '<p><div class="evidence_item evidence_item_' + evidence + '"></div> <span>' + evidence + '</span></p>';
-					for (var ievNode = 0; ievNode < conceptLabels.length; ievNode++) {
-						if (evidence == 'Publication') {
-							pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
-							evidenceValueTd = '<a href="' + pubmedurl + conceptLabels[ievNode].substring(5) + '" target="_blank">' + conceptLabels[ievNode] + '</a>';
-						}
-						else
-							evidenceValueTd = conceptLabels[ievNode];
-
-						evidenceTd += '<p>' + evidenceValueTd + '</p>';
+					if (evidenceType == 'Publication') {
+						pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+						evidenceLabel = evidenceLabel.replace ( /^PMID\:/i, "" );
+						evidenceValueTd = `<a href="${pubmedurl}${evidenceLabel}" target = "_blank">PMID:${evidenceLabel}</a>`;
 					}
-					evidenceTd += '</div>';
-					evidenceTd += '</div> <span style="margin-right:.5rem">' + reportedSize + '</span></div>';
+					else
+						evidenceValueTd = evidenceLabel;
 
+					evidenceTd += '<p>' + evidenceValueTd + '</p>';
 				}
-			// for iev
+				evidenceTd += '</div>';
+				evidenceTd += '</div> <span style="margin-right:.5rem">' + reportedSize + '</span></div>';
 
+			}
+			// for evidenceType, typeEvidencesSummary
 
-		} // if evidence.length
-			evidenceTd += '<div></td>';
-			// Foreach evidence show the images - end
+		} // if conceptEvidences
+		evidenceTd += '<div></td>';
+		// Foreach evidence show the images - end
 
-			var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${accession}"></td>`;
-			table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + scoreTd + selectTd;
-			table += '</tr>';
-	}// for row
+		var selectTd = `<td><input onchange="updateSelectedGenesCount('candidates','#candidate-count','Gene');" id="checkboxGene_${row}" type="checkbox" name= "candidates" value="${accession}"></td>`;
+		table += geneTd + geneNameTd + /*taxIdTd +*/ chrTd + chrStartTd + evidenceTd + scoreTd + selectTd;
+		table += '</tr>';
+		
+	} // for row
 
 	if(table)
 	{
@@ -457,22 +465,22 @@ function createGeneTableBody ( tableData, doAppend = false )
 			$( ".tablesorter" ).trigger ( 'update' );
 
 			/*
-	 * click handlers for opening and closing the qtl and evidence column drop down boxes.
-	 */
-		$(".dropdown_box_open").click(function (event) {
-			toggleEvidencePopUp(event,300,'open')
-		});
-
-		$(".dropdown_box_close").click(function (e) {
-			toggleEvidencePopUp(e,100,'close')
-		});
-	}
+			 * click handlers for opening and closing the qtl and evidence column drop down boxes.
+			 */
+			$(".dropdown_box_open").click(function (event) {
+				toggleEvidencePopUp(event,300,'open')
+			});
+	
+			$(".dropdown_box_close").click(function (e) {
+				toggleEvidencePopUp(e,100,'close')
+			});
+		}
 		 
 		// Updates "x of y" label
     $('#geneCount').html ( toRow )
     $('#geneTotal').html ( tableData.length )
 	}
-}
+} // createGeneTableBody()
 
 
  /*
@@ -480,7 +488,7 @@ function createGeneTableBody ( tableData, doAppend = false )
   * @returns the <div> containing the interactive Gene View summary legend.
   * 
   */
- function getInteractiveSummaryLegend(geneViewData) {
+function getInteractiveSummaryLegend(geneViewData) {
 
 	var evidencesArr= new Array();
 
