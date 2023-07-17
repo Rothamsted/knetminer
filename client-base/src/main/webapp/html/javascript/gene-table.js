@@ -417,7 +417,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 
 				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceType + '" class="evidence_item evidence_item_' + evidenceType + ' dropdown_box_open" title="' + evidenceType + '" >';
 				//Builds the evidence box
-				evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceType + '" class="evidence_box"><span class="dropdown_box_close" id=evidence_box_close_' + geneAccNorm + evidenceType + '></span>';
+				evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceType + '" class="evidence_box"><span class="dropdown_box_close" id="evidence_box_close_' + geneAccNorm + evidenceType + '"></span>';
 				evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceType + '"></div> <span>' + evidenceType + '</span></p>';
 				for (const evidence of thisTypeEvidences )
 				{
