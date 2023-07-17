@@ -12,6 +12,18 @@
     font-style: italic;
 }
 
+
+:root{
+    --green : #51CE7B;
+    --white: #FFFFFF; 
+    --progress-bar-width: 30px;
+    --progress-bar-height: 30px;
+    --font-size: 2rem;
+    --default-range: calc(5/10 * 100%); 
+    --default-distance: calc(5/10 * 100%)
+
+}
+
 html {
     height: 100%;
     /*background-color: #F4F5F7;*/
@@ -61,7 +73,7 @@ p {
 
 a {
     text-decoration: none;
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
 }
 
@@ -200,7 +212,7 @@ div#leftnav {
     height: 100%;
     background: transparent;
     border: none;
-    color: #51CE7B;
+    color: var(--green);
     font-weight: 600;
     outline: none;
     z-index: 10;
@@ -248,7 +260,7 @@ div#leftnav {
 
 .nav-links:hover {
     border-bottom: 1px solid #6F7F8F;
-    color: #51CE7B;
+    color: var(--green);
     text-decoration: none;
 }
 
@@ -313,7 +325,7 @@ div#keyword_search li {
 div#keyword_search .keyword-container{
     font-family: 'Nexa Regular', sans-serif;
     width:80%;
-    border: solid 2px #51CE7B;
+    border: solid 2px var(--green);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -406,7 +418,7 @@ div#loadingNetworkDiv {
     height: 30px;
     padding-top: 13px;
     padding-right: 5px;
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
     font-size: 14px;
 }
@@ -421,7 +433,7 @@ div#loadingNetwork_Div {
     height: 20px;
     padding-top: 13px;
     padding-right: 5px;
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
     font-size: 14px;
 }
@@ -1187,13 +1199,13 @@ a.contact-button {
 }
 
 a.contact-button :hover {
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
     font-weight: bold;
 }
 
 .contact-page a:hover {
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
     text-decoration: none;
 }
@@ -1254,7 +1266,7 @@ a.contact-button :hover {
 }
 
 #NetworkCanvas_button.network-created{
-    background: #51CE7B;
+    background: var(--green);
     color: #FFFFFF;
     pointer-events:auto;
 
@@ -1266,12 +1278,12 @@ a.contact-button :hover {
 
 .button_off#NetworkCanvas_button {
     background-color: #51CE7B15;
-    border: 1px solid #51CE7B;
+    border: 1px solid var(--green);
     pointer-events: none;
 }
 
 .button_off#NetworkCanvas_button span{
-    color:  #51CE7B;;
+    color:  var(--green);;
 }
 
 
@@ -1409,7 +1421,7 @@ a.contact-button :hover {
 
 #loadingDiv_GeneView {
     float: right;
-    color: #51CE7B;
+    color: var(--green);
     /*color:darkorange;*/
     font-size: 15px;
     font-weight: bold;
@@ -1418,20 +1430,18 @@ a.contact-button :hover {
     display: none;
 }
 
+
+
 #revertGeneView.unhover {
     cursor: pointer;
     border: none;
-    width: 30px;
-    height: 30px;
-    background: url("../image/reset_filter.png") center center no-repeat;
+
 }
 
 #revertGeneView.hover {
     cursor: pointer;
     border: none;
-    width: 30px;
-    height: 30px;
-    background: url("../image/reset_filter_hover.png") center center no-repeat;
+
 }
 
 /* Evidence View: interactive evidence summary filter */
@@ -1954,7 +1964,7 @@ a {
 }
 
 .specie_title {
-    color: #51CE7B;
+    color: var(--green);
     font-weight: 400;
     margin: 0;
 }
@@ -2010,7 +2020,7 @@ a {
 }
 
 .export_button:hover {
-    color: #51CE7B;
+    color: var(--green);
 }
 
 
@@ -2024,7 +2034,7 @@ a {
     top: 48pc;
     right: 0.5pc;
     z-index: 100;
-    background: #51CE7B;
+    background: var(--green);
     z-index: 1;
     border-radius: 8px;
     -webkit-transition: right 0.5s ease-in;
@@ -2035,7 +2045,7 @@ a {
 /* sign up button */
 .ctaButton {
     padding: 0.6rem 1.2rem;
-    background: #51CE7B;
+    background: var(--green);
     color: white;
     margin-left: 1.2rem;
     border-radius: 8px;
@@ -2198,7 +2208,7 @@ a {
     padding: 0 0.5rem;
     margin: 0 0.5rem;
     height: 70%;
-    border: 1px solid #51CE7B;
+    border: 1px solid var(--green);
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -2244,6 +2254,7 @@ a {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    position: relative;
 }
 
 #hint_sortable_table {
@@ -2256,7 +2267,7 @@ a {
 }
 
 #addRow {
-    color: #51CE7B;
+    color: var(--green);
     margin-top: .5rem;
     cursor: pointer;
 }
@@ -2291,7 +2302,7 @@ a {
 }
 
 #selectUser input[type="button"].checked{
-    background:#51CE7B; 
+    background:var(--green); 
 }
 
 .tabviewer-header{
@@ -2365,7 +2376,7 @@ a {
     margin-left: 2rem;
     padding: .5rem 1.2rem;
     border-radius: 6px;
-    background: #51CE7B;
+    background: var(--green);
     border: none;
     color: #ffffff;
 }
@@ -2422,7 +2433,7 @@ a {
 
 #feedbackData button{
     padding: 0.6rem 1.2rem;
-    background: #51CE7B;
+    background: var(--green);
     border: none;
     color: white;
     border-radius: 6px;
@@ -2458,7 +2469,7 @@ a {
 .accession-download{
     cursor: pointer;
     font-size: 14px;
-    color: #51CE7B;
+    color: var(--green);
 }
 
 .accession-popup-container {
@@ -2622,7 +2633,7 @@ a {
 
 /* helper modal css */
 
-.helper-modal-overlay{
+.helper-modal-overlay, .filter-overlay{
     position: fixed;
     display: none;
     width: 100%;
@@ -2634,7 +2645,16 @@ a {
     opacity: 0.6;
 }
 
-#helperModal{
+.filter-popup{
+    padding: .5rem;
+
+}
+
+.filter-overlay{
+    background-color: transparent;
+}
+
+#helperModal, #filter-popup {
     position: absolute;
     width: 350px;
     background: white;
@@ -2644,6 +2664,14 @@ a {
     right: 3pc;
     border-radius: 6px;
 }
+
+#filter-popup{
+    border: .5px solid var(--green);
+    top:1.5pc;
+    right:2.6pc;
+    padding:1rem; 
+}
+
 
 #helperModal h2{
     color: white;
@@ -2665,7 +2693,7 @@ a {
     text-decoration: underline;
     border: none;
     background: transparent;
-    color: #51CE7B;
+    color: var(--green);
 }
 
 .concept-selector{
@@ -2717,16 +2745,11 @@ a {
     margin: 0 .4rem ;
 }
 
-:root {
-    --progress-bar-width: 30px;
-    --progress-bar-height: 30px;
-    --font-size: 2rem;
-  }
 
   .progress-container{
     position:absolute; 
     right: 1.2pc;
-    color: #51CE7B;
+    color: var(--green);
     font-size: .85rem;
     font-weight:600;
   }
@@ -2799,6 +2822,10 @@ color: #C0C0C0;
 }
 
 
+.legends-filter-button{
+    font-size: 1rem;
+    cursor: pointer;
+}
 
 
 
