@@ -754,7 +754,12 @@ class AccessionPopupManager
  * function to toggle geneview evidence column popups
 */
 function toggleEvidencePopUp(event,toggleDuration,toggleAction){
-	event.preventDefault(); 
+	if ( event.currentTarget !== event.target )
+	  // The event comes from a children, we don't deal with it
+	  // This fixes #777
+	  return true;
+	  
+	event.preventDefault();
 	var targetname = $(event.target).attr("id").replace(toggleAction +'_', "");
 	$("#" + targetname).slideToggle(toggleDuration);
 }
