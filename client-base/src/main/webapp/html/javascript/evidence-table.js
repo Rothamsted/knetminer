@@ -756,6 +756,7 @@ class AccessionPopupManager
 function toggleEvidencePopUp(event,toggleDuration,toggleAction){
 	if ( event.currentTarget !== event.target )
 	  // The event comes from a children, we don't deal with it
+	  // REF: https://stackoverflow.com/a/56031614/529286
 	  // This fixes #777
 	  return true;
 	  
