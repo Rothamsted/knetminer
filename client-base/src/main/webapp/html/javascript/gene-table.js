@@ -11,11 +11,12 @@ function createGenesTable ( tableData, keyword )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
 
 
+
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
-
+		
 		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover" ></i></div></div>';
+		table += '' + interactiveSummaryLegend + '<div class="legend-actions-container"><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"  ></i></div></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -28,8 +29,8 @@ function createGenesTable ( tableData, keyword )
 		table += '<th width="60">Chr</th>';
 		table += '<th width="70">Nt start</th>';
 	
-		table += '<th width="330">Evidence</th>';
-		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+		table += '<th width="330"> Evidence</th>';
+		table += '<th id="knetscore-container" width="150"><div class="knetscore-title-container"> <div class="filter-overlay" onclick="geneDistance.closeFilter()"></div><i onclick="geneDistance.showFilter()" class="legends-filter-button fas fa-filter"></i> <span>KnetScore</span> <span id="knetScore" class="hint hint-small"><i class="fas fa-info-circle"></i></span> </div></th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
 		table += '</thead>';
@@ -65,8 +66,11 @@ function createGenesTable ( tableData, keyword )
 			)
 			tableSorterOpts.headers = disabledHeaders
 		}
-			
+		
 		$("#tablesorter").tablesorter( tableSorterOpts );
+		geneDistance.appendFilterToUi(); 
+		geneDistance.detectScoreRange(tableData); 
+
 		
 	} // if (tableData.length > 0 )
 
