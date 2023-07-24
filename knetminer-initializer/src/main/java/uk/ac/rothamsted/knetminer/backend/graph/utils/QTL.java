@@ -130,7 +130,6 @@ public class QTL {
 	 * which means: random ID = chromosome no.:start:end:optional label
 	 * 
 	 * The "qtl1=" part is optional so this is equivalent: "4:9920000:10180000:Petal size"
-	 * TODO: to be removed? It was here in the past, now it doesn't seem to be in use anymore.
 	 * 
 	 */
 	public static QTL fromString(String qtlStr) throws IllegalArgumentException
@@ -169,7 +168,7 @@ public class QTL {
 		String[] frags = countLociStr.split ( "-" );
 		
 		if ( frags.length < 1  )
-			throw new IllegalArgumentException ( countLociStr + " not valid qtl region" );
+			throw new IllegalArgumentException ( "the parameter \"" + countLociStr + "\" isn't a valid qtl region" );
 
 		String chr = frags [ 0 ];
 		int start = frags.length > 1 ? Integer.parseInt ( frags [ 1 ] ) : 0;
