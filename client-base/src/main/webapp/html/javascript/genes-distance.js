@@ -24,15 +24,6 @@ const geneDistance = function(){
         // sets defaults values for min and max range inputs
         setRangeInputValues(minValue, 'min')
         setRangeInputValues(maxValue, 'max')
-
-
-        // TO VERIFY IF THIS NEEDED WITH ARNE
-        // I noticed there is a glitch in the positioning and functionality of both range inputs when the gap betweeen max and min score is less than 3 
-        // if gap between min and max range type is less or equals to 3, knetscore filter button is not shown
-        const rangeDifference =  Math.round(maxValue - minValue ); 
-        $('.legends-filter-button').toggleClass('hide', rangeDifference <= 3); 
-
-
     }
 
     // Function set input values for range input type called in (detectScoreRange)
@@ -51,27 +42,47 @@ const geneDistance = function(){
     // Gets the left range input value when an onchange event event is triggered.
     // Set style direction in percentage
     function handleLeftThumb(element){ 
-        const inputValue = $(element).val()
-        $('#minValue').val(inputValue);
-       const positionInPercentage = ( Number(inputValue)/maxScore) * 100 + '%';  
+        let inputValue = parseFloat($(element).val());
+        const rightValue = parseFloat($('#score-max').val());
 
-       setScorePosition(element, positionInPercentage , inputValue ,'min')
+        // Check if left thumb is crossing the right thumb
+        if(inputValue >= rightValue){
+            inputValue = rightValue - 0.01;
+            $(element).val(inputValue.toFixed(2));
+        }
+
+        $('#minValue').val(inputValue.toFixed(2));
+        const positionInPercentage = (inputValue / maxScore) * 100 + '%';  
+
+        setScorePosition(element, inputValue, 'min');
     }
 
     // Handles onchange event for the right thumb 
     function handleRightThumb(element){
+        let inputValue = parseFloat($(element).val());
+        const leftValue = parseFloat($('#score-min').val());
 
-        const inputValue = $(element).val()
-       const positionInPercentage = 100 - (Number(inputValue)/maxScore) * 100 + '%';
-       $('#maxValue').val(inputValue);
+        // Check if right thumb is crossing the left thumb
+        if(inputValue <= leftValue){
+            inputValue = leftValue + 0.01;
+            $(element).val(inputValue.toFixed(2));
+        }
 
-       setScorePosition(element,positionInPercentage ,inputValue ,'max')
+        const positionInPercentage = 100 - (inputValue / maxScore) * 100 + '%';
+        $('#maxValue').val(inputValue.toFixed(2));
+
+        setScorePosition(element, inputValue, 'max');
     }
 
     // Adds CSS style position and coverage percentage to range slider
-    function setScorePosition(element,rangePosition){
-            const position = $(element).attr('data-direction')
-            $('.range-selected').css(position,rangePosition);
+    function setScorePosition(element, inputValue, direction){
+        const percentage = ((inputValue - minScore) / (maxScore - minScore)) * 100;
+
+        if(direction === 'min') {
+            $('.range-selected').css('left', percentage + '%');
+        } else if(direction === 'max') {
+            $('.range-selected').css('right', (100 - percentage) + '%');
+        }
     }
 
     // Append Filters
@@ -92,8 +103,8 @@ const geneDistance = function(){
                         </div>
 
                         <div class='slider-container'>
-                            <input onchange='geneDistance.handleLeftThumb(this)' data-direction='left' class='score-range' id='score-min' type='range'/>
-                            <input data-direction='right' onchange='geneDistance.handleRightThumb(this)' class='score-range' id='score-max' type='range'/>
+                        <input oninput='geneDistance.handleLeftThumb(this)' data-direction='left' class='score-range' id='score-min' type='range' step='0.01'/>
+                        <input data-direction='right' oninput='geneDistance.handleRightThumb(this)' class='score-range' id='score-max' type='range' step='0.01'/>                      
                         </div>
 
                     </div>
@@ -162,12 +173,12 @@ const geneDistance = function(){
 
         let filteredData = []
 
-        // filter through data 
+        // Filter through data 
         for(let genes of table ){
             const score = Number(genes.score).toFixed(2);
 
-            // check number that is not higher than max and not lesser than the min.
-                const isScoreInRange = ((score > scoreMin ) && (score < scoreMax) )
+                // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
+                const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) )
 
                 if(isScoreInRange) filteredData.push(genes)
         }
