@@ -188,9 +188,8 @@ const geneDistance = function(){
         if(!filteredData.length){
 
             $('#filterMessage').text('Your filter is returning no results')
-
-            $('#filterMessage').toggleClass('show-block',!filteredData.length); 
-            $('#tablesorter').toggleClass('hide',!filteredData.length);
+            $('#filterMessage').toggleClass('show-block'); 
+            $('#tablesorter').toggleClass('hide');
         }
       
 
@@ -213,7 +212,6 @@ const geneDistance = function(){
         appendFilterToUi:appendFilterToUi,
         handleLeftThumb:handleLeftThumb,
         handleRightThumb:handleRightThumb
-
     }
 
 }()
