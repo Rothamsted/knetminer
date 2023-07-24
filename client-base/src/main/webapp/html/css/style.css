@@ -19,8 +19,7 @@
     --progress-bar-width: 30px;
     --progress-bar-height: 30px;
     --font-size: 2rem;
-    --default-range: calc(5/10 * 100%); 
-    --default-distance: calc(5/10 * 100%)
+    --placeholder-color:#BDC5CE; 
 
 }
 
@@ -2647,7 +2646,10 @@ a {
 
 .filter-popup{
     padding: .5rem;
+}
 
+.filter-form{
+    position: relative;
 }
 
 .filter-overlay{
@@ -2666,9 +2668,10 @@ a {
 }
 
 #filter-popup{
+    width: 364px;
     border: .5px solid var(--green);
-    top:1.5pc;
-    right:2.6pc;
+    top: 1.3pc;
+    right:0.6pc;
     padding:1rem; 
 }
 
@@ -2803,6 +2806,7 @@ background-color:#EEF0F3;
 color: #C0C0C0;
 }
 
+
 .show-flex{
     display: flex;
 }
@@ -2820,13 +2824,5 @@ color: #C0C0C0;
 .genes-limit{
     color: red;
 }
-
-
-.legends-filter-button{
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-
 
 

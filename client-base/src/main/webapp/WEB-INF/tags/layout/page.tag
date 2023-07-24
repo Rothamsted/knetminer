@@ -26,6 +26,9 @@
         <!-- KnetMiner button css -->
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
 
+        <!-- genes distance css -->
+        <link rel="stylesheet" type="text/css" href="html/css/genes-distance.css"/>
+
          <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
 
@@ -119,6 +122,9 @@
 
         <!-- species selector file -->
         <script type="text/javascript" src="html/javascript/species-selector.js"></script>
+
+        <!-- species selector file -->
+        <script type="text/javascript" src="html/javascript/genes-distance.js"></script>
 
         <!-- multi species file -->
         <script type="text/javascript" src="html/javascript/knet-widget.js"></script>
