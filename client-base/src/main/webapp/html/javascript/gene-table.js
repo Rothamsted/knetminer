@@ -9,14 +9,16 @@ function createGenesTable ( tableData, keyword )
 	{
 		genesTableScroller.setTableData ( tableData )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
-
-
-
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
+		var geneDistanceFilter = graphDistanceFilterHtml()
 		
-		table += '<form name="checkbox_form"><div class="gene_header_container">';
-		table += '' + interactiveSummaryLegend + '<div class="legend-actions-container"><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"  ></i></div></div></div>';
+		table += '<form name="checkbox_form"><div class="filter-tab"> <h5>Filters:</h5>';
+		table +=  '<div class="filter-container"><div class="evidence"><input onchange="changeFilterView(this)" id="concepts" name="filters" value="concepts" type="radio"/checked><label for="concepts">Concepts</label></div>';
+		table += '<div class="distance"><input onchange="changeFilterView(this)" type="radio" name="filters" id="distance" value="distance"/><label for="distance">Evidence Distance</label></div>';
+		table += '<div class="knetscore"><input onchange="changeFilterView(this)" name="filters" id="knetscore" value="knetscore" type="radio"/><label for="knetscore">KnetScore</label></div></div></div>'
+		table += '<div class="divider"></div><div class="gene_header_container">';
+		table += '<div id="filters">'+ geneDistanceFilter + interactiveSummaryLegend + '</div><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"></i></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -29,8 +31,8 @@ function createGenesTable ( tableData, keyword )
 		table += '<th width="60">Chr</th>';
 		table += '<th width="70">Nt start</th>';
 	
-		table += '<th width="330"> Evidence</th>';
-		table += '<th id="knetscore-container" width="150"><div class="knetscore-title-container"> <div class="filter-overlay" onclick="geneDistance.closeFilter()"></div><i onclick="geneDistance.showFilter()" class="legends-filter-button fas fa-filter"></i> <span>KnetScore</span> <span id="knetScore" class="hint hint-small"><i class="fas fa-info-circle"></i></span> </div></th>';
+		table += '<th id="evidence-filter" width="330">Evidence</th>';
+		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
 		table += '</thead>';
@@ -68,8 +70,10 @@ function createGenesTable ( tableData, keyword )
 		}
 		
 		$("#tablesorter").tablesorter( tableSorterOpts );
-		geneDistance.appendFilterToUi(); 
-		geneDistance.detectScoreRange(tableData); 
+		knetscoreFilter.appendFilterToUi(); 
+		geneTableFilterMgr.saveTableData(tableData);
+
+
 
 		
 	} // if (tableData.length > 0 )
@@ -83,7 +87,7 @@ function createGenesTable ( tableData, keyword )
 	// scroll down to geneTable, but show tabviewer_buttons above
 	document.getElementById('pGSearch_title').scrollIntoView();
 
-
+	
 
 
 	// TODO: evidence dropdown functions to be refined in Knetminer 5.7 
@@ -144,6 +148,7 @@ function createGenesTable ( tableData, keyword )
 		// updates selected genes count 
 		updateSelectedGenesCount('candidates','#candidate-count','Gene')
 	});
+
 
 	// initiates infinite scrolling for geneView
 	if ( tableData.length > 0 )	genesTableScroller.setupScrollHandler ()
@@ -412,21 +417,21 @@ function createGeneTableBody ( tableData, doAppend = false )
 		{
 			for ( const [evidenceType, typeEvidencesSummary] of Object.entries ( conceptEvidences ) ) 
 			{
-				const thisTypeEvidences = typeEvidencesSummary.conceptEvidences
-				const reportedSize = typeEvidencesSummary.reportedSize
 
-				evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceType + '" class="evidence_item evidence_item_' + evidenceType + ' dropdown_box_open" title="' + evidenceType + '" >';
+				const thisTypeEvidences = typeEvidencesSummary.conceptEvidences
+
+				if(thisTypeEvidences.length){
+					evidenceTd += '<div class="evidence-container"><div id="evidence_box_open_' + geneAccNorm + evidenceType + '" class="evidence_item evidence_item_' + evidenceType + ' dropdown_box_open" title="' + evidenceType + '" >';
 				//Builds the evidence box
 				evidenceTd += '<div id="evidence_box_' + geneAccNorm + evidenceType + '" class="evidence_box"><span class="dropdown_box_close" id="evidence_box_close_' + geneAccNorm + evidenceType + '"></span>';
 				evidenceTd += '<p><div class="evidence_item evidence_item_' + evidenceType + '"></div> <span>' + evidenceType + '</span></p>';
 				for (const evidence of thisTypeEvidences )
 				{
 					let evidenceLabel = evidence.conceptLabel
-					let evidenceGraphDistance = evidence.graphDistance // TODO: use this
 					
 					let evidenceValueTd = ''
 
-					if (evidenceType == 'Publication') {
+					if ( evidenceType == 'Publication' ) {
 						pubmedurl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
 						evidenceLabel = evidenceLabel.replace ( /^PMID\:/i, "" );
 						evidenceValueTd = `<a href="${pubmedurl}${evidenceLabel}" target = "_blank">PMID:${evidenceLabel}</a>`;
@@ -437,7 +442,10 @@ function createGeneTableBody ( tableData, doAppend = false )
 					evidenceTd += '<p>' + evidenceValueTd + '</p>';
 				}
 				evidenceTd += '</div>';
-				evidenceTd += '</div> <span style="margin-right:.5rem">' + reportedSize + '</span></div>';
+				evidenceTd += '</div> <span style="margin-right:.5rem">' + thisTypeEvidences.length + '</span></div>';
+				}
+
+				
 
 			}
 			// for evidenceType, typeEvidencesSummary
@@ -500,7 +508,7 @@ function getInteractiveSummaryLegend(geneViewData) {
   
 	// Display evidence icons with count and name in legend.
 
-	var legend= '<div id="evidenceSummary2" class="evidenceSummary" title="Click to filter by type">';
+	var legend= '<div id="concepts-view" class="evidenceSummary view active" title="Click to filter by type">';
 	var summaryText = '';
   
 	evidencesArr.forEach(function(evidence)
@@ -554,6 +562,27 @@ function openAccessionNetworkView(event,genesAccessions){
 
 }
 
+//  function returns graph distance filter HTML element
+ function graphDistanceFilterHtml(){
 
-  
+	const distanceLimit = 8  // number could be dynamic 
 
+	let ui = '<div id="distance-view" class="view"><span>Distance</span><select id="select-distance" onchange="geneTableFilterMgr.filterByGraphDistance()">'
+    for(let index = 1; index < distanceLimit; index++){
+        ui += `<option value='${index}'>${index}</option>`
+    }
+
+    ui += '</select></div>';
+	return ui
+ }
+
+/**
+ * changes upper genetable filter views
+ */
+ function changeFilterView(element){
+
+	const selected = $(element).val(); 
+	$('.view').removeClass('active')
+
+	$(`#${selected}-view`).addClass('active');
+ }

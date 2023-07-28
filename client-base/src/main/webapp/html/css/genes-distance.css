@@ -17,14 +17,12 @@
 .distance-unit {
     display: flex;
     align-items: center;
+    margin-right: 1.5rem;
 }
 
-.distance-unit button{
-    margin: 0 .5rem ;
-}
+
 .distance-buttons{
     justify-content: flex-end;
-    margin-top: 1rem;
 }   
 
 .unit{
@@ -37,10 +35,11 @@
 .filter-button{
     float: right;
     clear: right;
-    padding: 0.5rem 1.9rem;
+    padding: 0.3rem .9rem;
     background: var(--green);
     border: none;
-    color: var(--white)
+    color: var(--white); 
+    border-radius: 8px;
 }
 
 .no-border{
@@ -51,27 +50,26 @@
 
 .score-range{
     position: absolute;
-    width: 67%;
+    width: 100%;
     outline: none;
     appearance:none;
     --webkit-appearance:none;
     cursor: pointer;
-    height: .25rem;
+    height: .2rem;
     border-radius: 0.75rem;
     background:none;
     top: 0.3pc;
-    left: 7pc;
     pointer-events: none;
 }
 
                     
 .range-slider{
     height: 0.25rem;
-    width: 67%;
+    width: 100%;
     position: absolute;
-    background-color: #BDC5CE;
+    background-color: grey;
     top: 0.41pc;
-    left: 7.12pc;
+    left: 0.1pc;
     border-radius: 0.75rem;
 }
 
@@ -89,8 +87,8 @@
     appearance: none;
     background: var(--white);
     border: 2px solid var(--green);
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.4rem;
+    width: 1.4rem;
     border-radius: 100%;
     pointer-events: auto;
 }
@@ -109,18 +107,18 @@
     display: flex;
     justify-content:space-between;
     align-items: center;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1.2rem;
     margin-left: .5rem;
 
 }
 
 .score-value-container input {
-    width: 20%;
+    width: 50%;
     border: none;
     outline: none;
     text-align: right;
-    color: #BDC5CE;
+    color: grey;
+    background: transparent;
 
 }
 
@@ -135,10 +133,6 @@ input[type="number"]::-webkit-outer-spin-button
 }
 
 
-.filter-button{
-    margin-top: 1rem;
-}
-
 .knetscore-title-container{
     display: flex;
     align-items: center;
@@ -148,7 +142,6 @@ input[type="number"]::-webkit-outer-spin-button
 .score-range-container{
     position: relative;
     display: inline-flex;
-    margin-top: 1.5rem;
 
 }
 
@@ -157,3 +150,46 @@ input[type="number"]::-webkit-outer-spin-button
     font-weight: 500;
 }
 
+
+
+.filter-container{
+    display: flex;
+    align-items: center;
+    margin-left: .5rem;
+    font-size: 1rem;
+}
+
+
+.filter-tab{
+    display: flex;
+    align-items: center;
+}
+
+.filter-tab h5 {
+    font-size: 1rem;
+    margin:0rem;
+    line-height:0
+}
+
+.view{
+    display:none;
+}
+
+.active{
+    display: flex;
+
+}
+
+#filters{
+    margin: 0.5rem 0 ;
+    width: 100%;
+}
+
+#knetScore-Form{
+    display: flex;
+    align-items: flex-start;
+}
+
+.distance{
+    margin: 0 0.5rem;
+}

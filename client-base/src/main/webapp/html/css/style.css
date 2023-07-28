@@ -521,8 +521,8 @@ div#advanced_search_area {
 }
 
 div.gene-footer-container {
-    height:70px;
-    margin-top: 8px;
+    /* height:70px; */
+    margin-top: 1.5rem;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -584,7 +584,7 @@ a[id="generateMultiGeneNetworkButton"] {
 div.scrollTable {
     width: 100%;
     /* table width will be 99% of this*/
-    height: 550px;
+    height: 500px;
     /* must be greater than tbody*/
     overflow: scroll;
     margin: 0 auto;
@@ -1387,7 +1387,6 @@ a.contact-button :hover {
 .evidenceSummary {
     position: relative;
     width: 100%;
-    display: flex;
     align-items: center;
     flex-wrap: wrap
 }
@@ -1412,7 +1411,7 @@ a.contact-button :hover {
 }
 
 /* Gene View: interactive evidence summary filter */
-#evidenceSummary2 {
+#concepts {
     cursor: pointer;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -1845,7 +1844,7 @@ a {
 /* reducing table height for smaller screen, this allow create network button to be above the fold */
 @media (max-width: 1440px) {
     div.scrollTable {
-        height: 410px;
+        height: 376px;
     }
 }
 
@@ -2254,6 +2253,7 @@ a {
     -ms-flex-align: center;
     align-items: center;
     position: relative;
+    margin-top: 1rem;
 }
 
 #hint_sortable_table {
@@ -2656,7 +2656,7 @@ a {
     background-color: transparent;
 }
 
-#helperModal, #filter-popup {
+#helperModal{
     position: absolute;
     width: 350px;
     background: white;
@@ -2669,9 +2669,6 @@ a {
 
 #filter-popup{
     width: 364px;
-    border: .5px solid var(--green);
-    top: 1.3pc;
-    right:0.6pc;
     padding:1rem; 
 }
 
@@ -2823,6 +2820,19 @@ color: #C0C0C0;
 
 .genes-limit{
     color: red;
+}
+
+#distance-view{
+    align-items: center;
+}
+
+#distance-view select{
+    margin: 0;
+}
+
+#distance-view span {
+    color:var(--green);
+    margin-right:.5rem
 }
 
 
