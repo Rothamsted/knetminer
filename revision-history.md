@@ -1,12 +1,9 @@
 # Revision History
 
-*This file was last reviewed on 2023-06-13* **Please, keep this note updated** 
+*This file was last reviewed on 2023-07-28* **Please, keep this note updated** 
 
 <br>
 
-# 5.7-SNAPSHOT
-* Current snapshot (to be changed after final 5.6).
-* Bookmark: c986508 is the candidate commit for the final 5.6.
 # 5.7-SNAPSHOT
 * Current snapshot (on master).
 

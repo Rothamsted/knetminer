@@ -87,9 +87,10 @@
   </bean> 
   <bean name = "neo4j.user" class = "java.lang.String">
   	<constructor-arg value = "#{systemProperties[ 'neo4j.user'] ?: 'neo4j' }" />
-  </bean> 
+  </bean>
+  <!-- Since 5.10, Neo demands >=8 passwords, so this is the new default --> 
   <bean name = "neo4j.password" class = "java.lang.String">
-  	<constructor-arg value = "#{systemProperties[ 'neo4j.password'] ?: 'test' }" />
+  	<constructor-arg value = "#{systemProperties[ 'neo4j.password'] ?: 'testTest' }" />
   </bean> 
  	
  	
