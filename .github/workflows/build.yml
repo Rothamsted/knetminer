@@ -26,21 +26,21 @@ jobs:
 
     steps:
     - name: Code checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v3
       with:
-        distribution: 'adopt'
-        java-version: 11
+        distribution: 'temurin'
+        java-version: 17
         settings-path: ${{ github.workspace }} # location for the settings.xml file
   
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.m2
-        key: ${{ runner.os }}-m2-v4-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2-v4-
+        key: ${{ runner.os }}-m2-v5-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2-v5-
 
     - name: Build
       env:

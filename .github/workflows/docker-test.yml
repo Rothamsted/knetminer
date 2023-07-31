@@ -1,7 +1,7 @@
 name: Docker Test
 
 # Just a rough attempt to test an ARM image with GH Actions 
-# 
+# WARNING: outdated, not in use!
 
 on:
   workflow_dispatch # Ran
@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Code checkout
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v3
     
     # This is to test ARM, comment it and leave "run" if you don't need to specify the architecture. 
     - uses: uraimo/run-on-arch-action@v2.0.9
