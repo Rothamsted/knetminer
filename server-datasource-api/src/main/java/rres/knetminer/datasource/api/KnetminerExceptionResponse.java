@@ -3,9 +3,10 @@ package rres.knetminer.datasource.api;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -23,7 +24,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	private String type, title, detail, path, statusReasonPhrase;
 	private int status;
 	
-	public KnetminerExceptionResponse ( Throwable ex, HttpServletRequest request, HttpStatus httpStatus )
+	public KnetminerExceptionResponse ( Throwable ex, HttpServletRequest request, HttpStatusCode httpStatus )
 	{
 		this.init ( ex, request.getRequestURL ().toString (), httpStatus );
 	}
@@ -33,7 +34,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 		this ( ex, request, HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 
-	public KnetminerExceptionResponse ( Throwable ex, ServletWebRequest request, HttpStatus httpStatus )
+	public KnetminerExceptionResponse ( Throwable ex, ServletWebRequest request, HttpStatusCode httpStatus )
 	{
 		this ( ex, request.getRequest (), httpStatus );
 	}
@@ -43,7 +44,7 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 		this ( ex, request, HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 	
-	public KnetminerExceptionResponse ( Throwable ex, WebRequest request, HttpStatus httpStatus )
+	public KnetminerExceptionResponse ( Throwable ex, WebRequest request, HttpStatusCode httpStatus )
 	{
 		if ( request instanceof ServletWebRequest ) 
 			init ( ex, ((ServletWebRequest) request).getRequest (), httpStatus );
@@ -57,12 +58,12 @@ public class KnetminerExceptionResponse extends KnetminerResponse
 	}
 	
 	
-	private void init ( Throwable ex, HttpServletRequest request, HttpStatus httpStatus )
+	private void init ( Throwable ex, HttpServletRequest request, HttpStatusCode httpStatus )
 	{
 		init ( ex, request.getRequestURL ().toString (), httpStatus );
 	}
 	
-	private void init ( Throwable ex, String requestURI, HttpStatus httpStatus )
+	private void init ( Throwable ex, String requestURI, HttpStatusCode httpStatus )
 	{
 		StringWriter sw = new StringWriter ();
 		ex.printStackTrace ( new PrintWriter ( sw ) );
@@ -70,7 +71,8 @@ public class KnetminerExceptionResponse extends KnetminerResponse
   	type = ex.getClass ().getName ();
   	title = ex.getMessage ();
   	status = httpStatus.value ();
-  	statusReasonPhrase = httpStatus.getReasonPhrase ();
+  	statusReasonPhrase = httpStatus instanceof HttpStatus 
+  		? ((HttpStatus) httpStatus).getReasonPhrase () : "";
   	detail = sw.toString ();
   	path = requestURI;
 	}	

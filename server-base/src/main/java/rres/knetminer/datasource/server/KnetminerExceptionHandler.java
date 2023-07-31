@@ -4,13 +4,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,7 +53,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	 * 
 	 */
 	@SuppressWarnings ( "serial" )
-	private static final Map<Class<? extends Exception>, HttpStatus> MAPPED_EXCEPTIONS = new LinkedHashMap<> () 
+	private static final Map<Class<? extends Exception>, HttpStatusCode> MAPPED_EXCEPTIONS = new LinkedHashMap<> () 
 	{{
 		this.put ( NotReadyException.class, HttpStatus.SERVICE_UNAVAILABLE );
 	}};
@@ -74,7 +75,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	 */
 	@Override
 	protected final ResponseEntity<Object> handleExceptionInternal ( 
-		Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request )
+		Exception ex, Object body, HttpHeaders headers, HttpStatusCode status, WebRequest request )
 	{
 		if ( headers == null ) headers = new HttpHeaders ();
 		
@@ -96,7 +97,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	 */
 	@SuppressWarnings ( "unchecked" )
 	private ResponseEntity<KnetminerExceptionResponse> handleExceptionInternal (
-		Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request, HttpServletResponse response
+		Exception ex, HttpHeaders headers, HttpStatusCode status, WebRequest request, HttpServletResponse response
 	)
 	{
 		return (ResponseEntity<KnetminerExceptionResponse>) (ResponseEntity<?>) 
@@ -119,7 +120,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	public ResponseEntity<KnetminerExceptionResponse> handleGenericException 
 		( Exception ex, WebRequest request, HttpServletResponse response )
 	{
-		HttpStatus status = Optional.ofNullable ( 
+		HttpStatusCode status = Optional.ofNullable ( 
 			AnnotatedElementUtils.findMergedAnnotation ( ex.getClass(), ResponseStatus.class ) 
 		).map ( ResponseStatus::value )
 		.orElse ( null );
@@ -138,7 +139,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 	 * the corresponding status if it finds something, null otherwise. 
 	 * 
 	 */
-	private HttpStatus findExceptionMapping ( Exception ex )
+	private HttpStatusCode findExceptionMapping ( Exception ex )
 	{
 		for ( var exClass: MAPPED_EXCEPTIONS.keySet () )
 		{
@@ -158,7 +159,7 @@ public class KnetminerExceptionHandler extends ResponseEntityExceptionHandler
 		ResponseStatusException ex, WebRequest request, HttpServletResponse response
 	)
 	{
-		return handleExceptionInternal ( ex, ex.getResponseHeaders (), ex.getStatus (), request, response );
+		return handleExceptionInternal ( ex, ex.getHeaders (), ex.getStatusCode (), request, response );
 	}
 
 	/**

@@ -136,6 +136,24 @@
 			    </webApp>
 			    <stopPort>9091</stopPort>
 			  </configuration>
+			  <dependencies>
+					<!-- 
+					  This Jetty uses Jakarta/JAXB 3.x, which has this issue: https://github.com/jakartaee/jaxb-api/issues/224
+					  that seems to affect us too.
+					  
+					  TODO: remove in future Jetty versions. 
+					-->
+					<dependency>
+		        <groupId>jakarta.xml.bind</groupId>
+		        <artifactId>jakarta.xml.bind-api</artifactId>
+		        <version>4.0.0</version>
+					</dependency>					
+					<dependency>
+						<groupId>com.sun.xml.bind</groupId>
+						<artifactId>jaxb-impl</artifactId>
+						<version>4.0.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>	
 		
 			<plugin>

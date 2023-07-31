@@ -17,6 +17,14 @@
 	</description>
 
 	<dependencies>
+		
+		<!-- Used indirectly, in OndexLocalDataSource -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>uk.ac.rothamsted.knetminer</groupId>
 			<artifactId>server-datasource-api</artifactId>
@@ -77,11 +85,6 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
-		</dependency>
-		<dependency>
-	    <groupId>javax.servlet</groupId>
-	    <artifactId>javax.servlet-api</artifactId>
-	    <scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
