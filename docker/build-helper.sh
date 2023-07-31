@@ -87,7 +87,16 @@ fi
 # 'tomcat' user with the given password. This Might be Useful during dev, to inspect the web server status
 # 
 if [[ ! -z "$knet_tomcat_pwd" ]] && [ ! -e ./tomcat-users.xml.knetminer-bkp ]; then
-  echo -e "\n\n\tEnabling Tomcat Management app\n"
+
+  cat <<EOT
+	Enabling Tomcat Management app
+  
+WARNING: Since Tomcat 10.11, the manager IS NOT included in the Docker image, since this and other
+default apps are put into <tomcat-home>/webapps.dist. Also, you'll need to edit the manager's context.xml
+to allow for connections from outside Docker.
+
+EOT
+
   cd "$knet_tomcat_home/conf"
   mv -f tomcat-users.xml tomcat-users.xml.knetminer-bkp
   cat <<EOT >tomcat-users.xml

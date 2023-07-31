@@ -293,6 +293,7 @@
   
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
 				<groupId>uk.ac.rothamsted.knetminer</groupId>
 				<artifactId>server-datasource-ondexlocal</artifactId>
@@ -305,6 +306,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			
 			<!-- The new backend, based on Neo4j -->
 			<dependency>
 				<groupId>uk.ac.rothamsted.knetminer.backend</groupId>
@@ -316,18 +318,34 @@
 						<artifactId>log4j-over-slf4j</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>		
+			</dependency>
+					
 			<dependency>
 				<groupId>jakarta.servlet</groupId>
 				<artifactId>jakarta.servlet-api</artifactId>
 				<version>6.0.0</version>
 			</dependency>
+			<dependency>
+				<groupId>org.glassfish.web</groupId>
+				<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+						
 			<!--
+			  TODO: Neither Tomcat nor Jetty seem to need this, consider enabling it if something
+			  doesn't work. 
+			  
+			  You'll need it in client-base only.
+			  
 			<dependency>
 				<groupId>jakarta.servlet.jsp</groupId>
 				<artifactId>jakarta.servlet.jsp-api</artifactId>
 				<version>3.1.1</version>
 			</dependency>
+			-->
+			
+			<!-- TODO: remove, were used by old containers, now they have replacements
+			
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>jstl</artifactId>

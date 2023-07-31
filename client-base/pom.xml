@@ -37,7 +37,8 @@
 	</build>
 
 	<dependencies>
-		<!--
+		<!-- TODO: remove, were used in old containers, now they have replacements
+		
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -57,6 +58,12 @@
 			<artifactId>taglibs-standard-spec</artifactId>
 		</dependency>
 		-->
+		
+		<!-- See notes on the main POM -->
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+		</dependency>			
 		
 		<dependency>
 			<groupId>uk.ac.ebi</groupId>

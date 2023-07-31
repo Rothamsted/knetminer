@@ -2,7 +2,7 @@
 #
 # TODO: migrate to a more recent Tomcat version
 # 
-FROM tomcat:9-jdk11-adoptopenjdk-hotspot
+FROM tomcat:10-jdk17-temurin-jammy
 
 # TODO: Python is for AWS and that would be worth a separated image
 # TODO: is python-dev needed?
