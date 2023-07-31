@@ -1,13 +1,13 @@
 
-const geneDistance = function(){
+// houses knetscore slider type filter internal functionalities
+const knetscoreFilter = function(){
 
-    let table = null, minScore, maxScore; 
-
+    let minScore, maxScore; 
 
     // Function detects min and max knetscore values from genetable data
     function detectScoreRange(tableData){
 
-        table = tableData
+        // gets data from parent element
 
         const scoreArry = []; 
         tableData.forEach(genes => {
@@ -25,7 +25,6 @@ const geneDistance = function(){
         setRangeInputValues(minValue, 'min')
         setRangeInputValues(maxValue, 'max')
     }
-
     // Function set input values for range input type called in (detectScoreRange)
     function setRangeInputValues(value, rangeType){
 
@@ -52,9 +51,8 @@ const geneDistance = function(){
         }
 
         $('#minValue').val(inputValue.toFixed(2));
-        const positionInPercentage = (inputValue / maxScore) * 100 + '%';  
 
-        setScorePosition(element, inputValue, 'min');
+        setScorePosition(inputValue, 'min');
     }
 
     // Handles onchange event for the right thumb 
@@ -68,14 +66,13 @@ const geneDistance = function(){
             $(element).val(inputValue.toFixed(2));
         }
 
-        const positionInPercentage = 100 - (inputValue / maxScore) * 100 + '%';
         $('#maxValue').val(inputValue.toFixed(2));
 
-        setScorePosition(element, inputValue, 'max');
+        setScorePosition(inputValue, 'max');
     }
 
     // Adds CSS style position and coverage percentage to range slider
-    function setScorePosition(element, inputValue, direction){
+    function setScorePosition(inputValue, direction){
         const percentage = ((inputValue - minScore) / (maxScore - minScore)) * 100;
 
         if(direction === 'min') {
@@ -89,7 +86,7 @@ const geneDistance = function(){
     function appendFilterToUi(){
 
         const popup = $(`
-        <div id='filter-popup' class='filter-popup'>
+        <div id='knetscore-view' class='view'>
 
             <form id="knetScore-Form">
                 <div class='distance-unit'>
@@ -97,14 +94,13 @@ const geneDistance = function(){
                 <div class='score-range-container'>
 
                     <div class='score-class'>
-                        <span>KnetScore:</span>
                         <div class="range-slider">
                             <span class="range-selected"></span>
                         </div>
 
                         <div class='slider-container'>
-                        <input oninput='geneDistance.handleLeftThumb(this)' data-direction='left' class='score-range' id='score-min' type='range' step='0.01'/>
-                        <input data-direction='right' oninput='geneDistance.handleRightThumb(this)' class='score-range' id='score-max' type='range' step='0.01'/>                      
+                        <input oninput='knetscoreFilter.handleLeftThumb(this)' data-direction='left' class='score-range' id='score-min' type='range' step='0.01'/>
+                        <input data-direction='right' oninput='knetscoreFilter.handleRightThumb(this)' class='score-range' id='score-max' type='range' step='0.01'/>                      
                         </div>
 
                     </div>
@@ -118,100 +114,103 @@ const geneDistance = function(){
                 </div>
 
                 <div class='distance-unit distance-buttons'>
-                    <button onclick='geneDistance.resetFilter(event)'  class='no-border filter-button'>Clear All</button>
-                    <button onclick="geneDistance.filterGenesByScore(event)" class='filter-button'>Apply</button>
+                    <button onclick="geneTableFilterMgr.filterByKnetScore(event)" class='filter-button'>Apply</button>
                 </div>
 
             </form>
 
         </div>`);
 
-        $('#knetscore-container').append(popup)
+        $('#filters').append(popup); 
     }
-
-    // Shows filter
-    function showFilter(){
-        $('#filter-popup').show()
-        $('.filter-overlay').show()
-    }
-
-    // Closes filter
-    function closeFilter(){
-        $('#filter-popup').hide();
-        $('.filter-overlay').hide();
-    }
-
-    // Resets filter back to API endpoint maximum and minimum knetscore value
-    function resetFilter(event){
-        event.preventDefault(); 
-
-        $('#minValue').val(minScore); 
-        $('#maxValue').val(maxScore);
-
-        $('#score-min').val(minScore)
-        $('#score-max').val(maxScore)
-
-
-        $('.range-selected').css({
-            left:'0%', 
-            right:'0%'
-        })
-
-        createGenesTable(table)
-    }
-
-    // Function  filteres genetable by checking for genes that falls within a specific knetscore range.
-    function filterGenesByScore(event)
-    {
-
-        event.preventDefault();
-
-        const scoreMin = Number($('#score-min').val()); 
-
-        const scoreMax = Number($('#score-max').val()); 
-
-
-        let filteredData = []
-
-        // Filter through data 
-        for(let genes of table ){
-            const score = Number(genes.score).toFixed(2);
-
-                // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
-                const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) )
-
-                if(isScoreInRange) filteredData.push(genes)
-        }
-
-        if(filteredData.length) createGenesTable(filteredData)
-
-        if(!filteredData.length){
-
-            $('#filterMessage').text('Your filter is returning no results')
-            $('#filterMessage').toggleClass('show-block'); 
-            $('#tablesorter').toggleClass('hide');
-        }
-      
-
-    }
-
-    // Creates Genes Table 
-    function createGenesTable(data){
-        genesTableScroller.setTableData ( data )
-        createGeneTableBody( data ) 
-        closeFilter()
-    }
-
 
     return{
-        showFilter:showFilter,
         detectScoreRange:detectScoreRange,
-        filterGenesByScore:filterGenesByScore,
-        closeFilter:closeFilter, 
-        resetFilter:resetFilter,
         appendFilterToUi:appendFilterToUi,
         handleLeftThumb:handleLeftThumb,
-        handleRightThumb:handleRightThumb
+        handleRightThumb:handleRightThumb,
     }
 
+}()
+
+// Handles evidence and knetscore filters 
+const geneTableFilterMgr = function() {
+
+    let tableData = null
+
+   return { 
+        // saves geneview table
+        saveTableData:function(data){
+                tableData = data;
+                knetscoreFilter.detectScoreRange(data); 
+        },
+        renderFilteredTable: function (table){
+            genesTableScroller.setTableData (table)
+            createGeneTableBody(table) 
+        },
+        // hnadles knetscore filtering
+        filterByKnetScore: function (event)
+        {
+
+            event.preventDefault();
+
+            const scoreMin = Number($('#score-min').val()); 
+
+            const scoreMax = Number($('#score-max').val()); 
+
+
+            let filteredData = []
+
+            // Filter through data 
+            for(let genes of tableData ){
+                const score = Number(genes.score).toFixed(2);
+
+                    // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
+                    const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) )
+
+                    if(isScoreInRange) filteredData.push(genes)
+            }
+
+            if(filteredData.length) geneTableFilterMgr.renderFilteredTable(filteredData)
+
+            if(!filteredData.length)$('#filterMessage').text('Your filter is returning no results')
+            $('#filterMessage').toggleClass('show-block',!filteredData.length); 
+            $('#geneTableBody').toggleClass('hide',!filteredData.length);
+        
+        },
+        // handles graph distance filtering
+        filterByGraphDistance: function()
+        {
+            const distance = $('#select-distance option:selected').val()
+            const filteredData = []
+            const data = [...tableData]
+        
+            data.forEach(genes => {
+        
+                let concepts = genes.conceptEvidences
+        
+                for(let concept in concepts ){
+                    
+                    let evidence = concepts[concept].conceptEvidences;
+                    evidence = evidence.filter( item => item.graphDistance > distance)
+        
+                    if(!evidence.length){
+                        const newObject = Object.assign({},concepts)
+                        delete newObject[concept]; 
+                        concepts = newObject;
+                    } 
+                }
+                // checks if object.Keys has length
+                const isConceptEmpty = Object.keys(concepts).length
+                if(isConceptEmpty > 0 ) filteredData.push(genes)
+                
+            })
+        
+            if(filteredData.length) geneTableFilterMgr.renderFilteredTable(filteredData)
+        
+            $('#filterMessage').text('Your filter is returning no results');
+            $('#filterMessage').toggleClass('show-block',!filteredData.length); 
+            $('#tablesorter').toggleClass('hide',!filteredData.length);
+        }
+    }
 }()
