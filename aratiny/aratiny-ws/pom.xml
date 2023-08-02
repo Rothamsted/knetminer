@@ -274,12 +274,7 @@
 					        <goal>exec</goal>
 					      </goals>
 					      <configuration>
-					        <executable>target/neo4j.server/neo4j-community-${neo4j.server.version}/bin/neo4j-admin</executable>
-					        <arguments>
-					        	<argument>load</argument>
-					        	<argument>--force</argument>
-										<argument>--from=target/dependency/poaceae-sample-neo4j.dump</argument>
-									</arguments>
+					        <executable>src/build/load-test-neo4j.sh</executable>
 					      </configuration>
 					    </execution>
 					  </executions>

@@ -1,3 +1,6 @@
+# Use this when building with -Pneo4j: JAVA_TOOL_OPTIONS="-Xms1G -Xmx4G"
+# That's a workaround for https://github.com/neo4j/neo4j/issues/13270
+#
 export JAVA_TOOL_OPTIONS="-Xms1G -Xmx4G" 
 
 # Let's make it less verbose
