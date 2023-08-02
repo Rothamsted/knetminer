@@ -2,7 +2,7 @@
 <Configuration status="INFO">
 
 	<Properties>
-		<Property name="logName">${sys:catalina.home}/logs/${web:contextPath}</Property>
+		<Property name="logName">${sys:catalina.home}/logs/ws</Property>
 	</Properties>
 	
 	<Appenders>
