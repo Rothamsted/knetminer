@@ -107,45 +107,12 @@ function searchKeyword() {
  * checkUserPlan( () => requestGenomeData(...) ) 
  * 
  */
-function checkUserPlan() {
-  var login_check_url = knetspace_api_host + "/api/v1/me";
-
-  $.ajax({
-    type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json",
-    timeout: 1000000, cache: false,
-    headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" },
-    success: function (data) {
-      //if logged out, keep default restrictions.
-      if ((typeof data.id === "undefined") || (data.id === null)) {
-        enforce_genelist_limit = true; // back to default
-        knetview_limit = 10; // back to default
-        return
-      }
-      // check logged in (valid) user's plan
-
-      if (data.plan.name === "Pro") {
-        console.log("knetspace user_id= " + data.id + ", plan= " + data.plan.name);
-        enforce_genelist_limit = false; // let user search with unlimited genelist
-        knetview_limit = 200;
-      }
-
-      if (data.plan.name === "Free") {
-        console.log("knetspace user_id= " + data.id + ", plan= " + data.plan.name);
-        freegenelist_limit = 100;
-        enforce_genelist_limit = true; // back to default
-        knetview_limit = 10;
-      }
-
-    },
-    complete: function () {
-      $('.genesCount').html(`0/${freegenelist_limit}`);
-      geneCounter();
-      exampleQuery.renderQueryHtml();
-    }
-
-  });
-
-
+function setupGenesSearch() 
+{   			
+    let userPlan = new UserAccessManager(); 
+    const geneListLimit = userPlan.getGenesListLimit();
+    $('.genesCount').html(`0/${geneListLimit}`);
+    geneCounter();			
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
@@ -768,11 +735,6 @@ class GenesListManager {
     const progresUIContainer = document.querySelector('.progress-container');
 
     // removes progress bar if user is on unlimited plan
-    if (!this.#isLimitEnforced) {
-      progresUIContainer.style.display = 'none'
-      return
-    }
-    // removes progress bar if user is on unlimited plan
     // TODO: as other access control cases, this is bad, see #768
     // 
     if (!this.#isLimitEnforced) {
@@ -847,127 +809,10 @@ class GenesListManager {
 }
 
 /**
- * Converts the new JSON format for the gene table back into TSV-into-string.
- * 
- * TODO: this is a TEMPORARY DIRTY HACK which allows for quick merge of the API changes 
- * (addresed by #655) into the master branch.
- * 
- * DO NOT KEEP it for too long, the code using the gene/evidence tables DOES NEED to be upgraded, so that
- * it uses the new JSON format straight and we can move on with further developing features that can
- * be based on such format (eg, gene/evidence distance filtering). 
- * 
- * Also, when working on such migration, possiblt consider the factorisation of all the API calls into a 
- * KnetminerAPIClient, with methods like genome ( keywords, userGenes, chromosomeRegions ), which
- * would abstract away from the lower web/API level (eg, hides the URLs or Request/Response objects ).
- *  
- */
-// function geneTable2OldString ( geneTableJson )
-// {
-// 	// The web cache might return this after conversion
-// 	if ( typeof geneTableJson === 'string' ) return geneTableJson
-// 	if ( !geneTableJson ) geneTableJson = []
-
-// 	let result = geneTableJson.map ( entry =>
-// 	{
-// 		let evidences = entry.conceptEvidences
-// 		let evidencesStr = 
-// 		Object.entries ( evidences ).map ( ev =>
-// 		{
-// 			const [conceptType, typeEvidence] = ev
-// 			// type__10__acc1//acc2//...
-// 			let evidenceStr = conceptType + "__" + typeEvidence.reportedSize + "__"
-// 			let conceptLabels = typeEvidence.conceptLabels
-// 			evidenceStr += conceptLabels.join ( "//" )
-// 			return evidenceStr
-// 		})
-// 		.join ( "||" )
-
-
-// 		// label//trait||...
-// 		let qtlStr = entry.qtlEvidences
-// 		  .map ( qtl => qtl.regionLabel + "//" + qtl.regionTrait )
-// 		  .join ( "||" )
-
-// 		return [ 
-// 		  entry.ondexId, entry.accession, entry.name, entry.chromosome, 
-// 			entry.geneBeginBP, entry.taxID,
-// 			Number ( entry.score ).toFixed ( 2 ), 
-// 			(entry.isUserGene ? "yes" : "no" ), qtlStr, 
-// 			evidencesStr
-// 		]
-// 		.join ( "\t" )
-
-// 	})
-// 	.join ( "\n" )
-
-// 	if ( result ) result += "\n"
-//   result = "ONDEX-ID\tACCESSION\tGENE_NAME\tCHRO\tSTART\tTAXID\tSCORE\tUSER\tQTL\tEVIDENCE\n" + result;
-//   return result
-// }
-
-/**
- * Converts the new JSON format for the evidence table back into TSV-into-string.
- * 
- * TODO: as said above for geneTable2OldString(), this is a TEMPORARY DIRTY HACK, see the comments
- * in that function. 
- *  
- */
-// function evidenceTable2OldString ( evidenceTableJson )
-// {
-// 	// The web cache might return this after conversion
-// 	if ( typeof evidenceTableJson === 'string' ) return evidenceTableJson
-// 	if ( !evidenceTableJson ) evidenceTableJson = []
-
-// 	let result = evidenceTableJson.map ( entry => 
-// 	{
-// 		userGeneAccessions = entry.userGeneAccessions.join ( "," ) 
-
-// 		return [ entry.conceptType,
-// 			entry.name,
-// 			entry.score,
-// 	  	entry.pvalue,
-// 	  	entry.totalGenesSize,
-// 	  	userGeneAccessions,
-// 	  	entry.qtlsSize,
-// 	  	entry.ondexId,
-// 	  	entry.userGenesSize
-// 	  ]
-// 	  .join ( "\t" )
-// 	})
-// 	.join ( "\n" )
-
-// 	if ( result ) result += "\n"
-// 	result = "TYPE\tNAME\tSCORE\tP-VALUE\tGENES\tUSER_GENES\tQTLs\tONDEXID\tUSER_GENES_SIZE\n" + result;
-
-// 	return result
-// }
-
-/**
- * Helper that gets all the data received from /genome or /qtl and fixes (convert back to strings) both
- * the gene and evidence tables in one go, by using the above functions geneTable2OldString()
- * and evidenceTable2OldString().
- * 
- * TODO: as already said, this is a TEMPORARY hack, see above.
- */
-// function fixGenomeTables2OldStrings ( data )
-// {
-// 	data.geneTable = geneTable2OldString ( data.geneTable )
-// 	data.evidenceTable = evidenceTable2OldString ( data.evidenceTable )
-// } 
-
-/**
  * Converts genetable JSON format data to TSV format removing conceptEvidences and qtlEvidence properties.
  */
 function geneTableToTsv(data) {
 	
-	/* TODO: remove. Stop coding these transformations this way.
-  const genesArrayExclEvidences = []
-
-  data.forEach(genes => {
-    const { conceptEvidences, qtlEvidences, ...genesWithoutEvidence } = genes
-    genesArrayExclEvidences.push(genesWithoutEvidence)
-  })
-  */
 
 	const genesArrayExclEvidences = data.map ( geneTableRow => {
 		// TODO: remove WHAT SORT OF NAME IS genesWithoutEvidence?!?

@@ -28,10 +28,11 @@ const speciesSelector = function ()
      * Calls the necessary events after switching specie. 
      */
     function refreshUI ()
-    {
+    {   
         knetWidgets.drawMap('draw',null);
         knetWidgets.getList();
         matchCounter();
+        exampleQuery.renderQueryHtml()
         $('#speciename_container').empty();
         $('#chr1').empty();
         $('#tabviewer').hide(); 
@@ -64,14 +65,14 @@ const speciesSelector = function ()
      */
     function doSpecieSwitch ()
     {
-        if(currentTaxId !== ""){
+        if(currentTaxId){
          
             var speciesOptions = $('.navbar-select option')
+
             speciesOptions.each(function(){
                 if(currentTaxId === this.value){
                     $(this).attr('selected', true)
-                    var url = window.location.href; 
-                    url = url.split('?')[0]
+                    var url = window.location.href.split('?')[0]
                     history.pushState ( {}, '',url);
                 }
             })
@@ -91,8 +92,6 @@ const speciesSelector = function ()
         var currentSpecies = data.filter(speciesnames => speciesnames.taxId === currentTaxId)[0]
         return currentSpecies
     }
-
-
 
     /**
      * function creates the species dropdown selector
@@ -138,6 +137,7 @@ const speciesSelector = function ()
         {
             refreshUI ()
             exampleQuery.renderQueryHtml(); 
+
             setTimeout(function(){
                 // gets genome region search table row elements
                 var getGenomeRegionRow = getGenomeRegionRows();
@@ -149,12 +149,14 @@ const speciesSelector = function ()
         }
     }
 
+   
     return {
         initiate: initiate,
         getCurrentSpecies:getCurrentSpecies,
         refreshUI: refreshUI,
         setTaxId: setTaxId,
         getTaxIdUrlFrag: getTaxIdUrlFrag,
-        changeSpecies:changeSpecies
+        changeSpecies:changeSpecies,
+
     }
 }(); 

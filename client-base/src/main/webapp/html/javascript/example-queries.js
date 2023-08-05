@@ -20,120 +20,73 @@ const exampleQuery = function()
      * function gets XML-format example queries from dataset-info API endpoint.
      * Parses data into an array of objects.
      */
-    function setQueryData(){
+    async function setQueryData(){
+
+        let request = api_url + '/dataset-info/sample-query.xml';
 
         $.ajax({
             type: 'POST',
-            url: api_url + '/dataset-info/sample-query.xml', 
+            url: request, 
             dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
-                // Parse the values from the recieved sampleQueries.xml file into an object.
-                 //object to hold parsed xml data
-                $("query", sampleQuery).each(function (index) {	//for each different Query
-                    var tempXML = new Object();
-                    tempXML["description"] = $("description", this).text();
-                    tempXML["term"] = $("term", this).text();
-                    // tempXML["withinRegion"] = $("withinRegion", this).text();
-                    tempXML["taxId"] = $("taxId", this).text();
-                    tempXML["accType"] = $("accType", this).text();
-                    tempXML["index"] = index
-                    var regions = Array();
-    
-                    $("region", this).each(function () {
-                        regions.push({
-                            chromosome: $("chromosome", this).text(),
-                            start: $("start", this).text(),
-                            end: $("end", this).text(),
-                            label: $("label", this).text()
-                        });
+        // Parse the values from the recieved sampleQueries.xml file into an object.
+            //object to hold parsed xml data
+            $("query", sampleQuery).each(function (index) {	//for each different Query
+                var tempXML = new Object();
+                tempXML["description"] = $("description", this).text();
+                tempXML["term"] = $("term", this).text();
+                // tempXML["withinRegion"] = $("withinRegion", this).text();
+                tempXML["taxId"] = $("taxId", this).text();
+                tempXML["accType"] = $("minimumUserRole", this).text();
+                tempXML["index"] = index
+                var regions = Array();
+
+                $("region", this).each(function () {
+                    regions.push({
+                        chromosome: $("chromosome", this).text(),
+                        start: $("start", this).text(),
+                        end: $("end", this).text(),
+                        label: $("label", this).text()
                     });
-    
-                    tempXML["regions"] = regions;
-    
-                    var genes = Array();
-    
-                    $("gene", this).each(function () {
-                        genes.push($(this).text());
-                    });
-    
-                    tempXML["genes"] = genes;
-                    sampleQueries.push(tempXML);
                 });
-    
-                /*
-                * Object structure for parsed XML data
-                *
-                * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
-                * 		> name				= STRING - Name of the example query - this is now removed. TODO: remove it forever?
-                * 		> description		= STRING - short description of the example query
-                * 		> term 				= STRING - Query Search Terms -
-                * 		> withinRegion 		= BOOLEAN - TRUE = Search within QTL region / FALSE = search whole genome -
-                * 		> region[] 			= ARRAY - qtl regions
-                * 			> chromosome 	= STRING ( chromosome name )
-                * 			> start		 	= NUMBER - region start
-                * 			> end		 	= NUMBER - region end
-                * 			> label		 	= STRING - region label
-                * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
-                * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
-                *       > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
-                *
-                */
 
-            }
-        });
-    }
+                tempXML["regions"] = regions;
 
-     /**
-     * Gets example queries for selected species taxId, though global examples with no taxId are also shown.
-     * 
-     */
-    function getQueryExamples(){
-        var currentTaxId =  $(".navbar-select").children("option:selected").val();
+                var genes = Array();
 
-        // Filters and return an array of sample queries if taxid is empty or ones that matches the current selected species 
-        var selectedQuery = sampleQueries.filter((queries)=> queries.taxId == currentTaxId || queries.taxId == ''); 
-        return selectedQuery; 
-    }
+                $("gene", this).each(function () {
+                    genes.push($(this).text());
+                });
 
-    /**
-     * Renders query examples to UI .
-     */
-    function renderQueryHtml(){
+                tempXML["genes"] = genes;
+                sampleQueries.push(tempXML);
+            });
 
-        // empty exiting examples 
-        $('#eg_queries').html('');
-    
-       var speciesQueries =  getQueryExamples(); 
+            renderQueryHtml(); 
 
-       speciesQueries.forEach(function(query)
-        {
-            var {accType,description,index} = query
-            var queryRestriction;
+        }})
 
 
-            if(enforce_genelist_limit){
 
-                /* TODO: too messed-up, See #768 */
-                
-                if(freegenelist_limit == 20 && accType.toLowerCase() == 'free'){
-                    queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
-                }
-
-                // TODO: should this be an else if?
-                if(freegenelist_limit <=100 && accType.toLowerCase() == 'pro'){
-                    queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
-                }
-            }
-            
-            // example query buttons
-            var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`; 
-
-            //add example queries to page  
-            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query"><div> ${sampleQueryButtons} ${queryRestriction}</div>`; 
-
-            $('#eg_queries').append(query);
-        }) 
+        /*
+        * Object structure for parsed XML data
+        *
+        * sampleQueries[] 			= array of all queries parsed from sampleQuery.xml
+        * 		> name				= STRING - Name of the example query - this is now removed. TODO: remove it forever?
+        * 		> description		= STRING - short description of the example query
+        * 		> term 				= STRING - Query Search Terms -
+        * 		> withinRegion 		= BOOLEAN - TRUE = Search within QTL region / FALSE = search whole genome -
+        * 		> region[] 			= ARRAY - qtl regions
+        * 			> chromosome 	= STRING ( chromosome name )
+        * 			> start		 	= NUMBER - region start
+        * 			> end		 	= NUMBER - region end
+        * 			> label		 	= STRING - region label
+        * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
+        * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
+        *       > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
+        *
+        */
     }
 
     /**
@@ -171,8 +124,6 @@ const exampleQuery = function()
         populatekeywordSearch(term); 
 
         triggerInputsEvents()
-
-         
 
         //  if (trim(withinRegion) == 'true') {
         //      $("input:radio[name=search_mode]").val(['qtl']);
@@ -216,26 +167,27 @@ const exampleQuery = function()
     function populateGenomeRegion(regions){
 
         var numRegions = regions.length;
-            while (!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
-                $("#addRow").click();
-            }
 
-            if ($("#region_search_area").is(":hidden")) {
-                $("#region_search").click();
-            }
+        while (!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
+            $("#addRow").click();
+        }
 
-            //loop through all regions and fill in the QTL region rows
-            for (i = 0; i < numRegions; i++) {
-                var num = i + 1;
-                var {chromosome, start, end, label} = regions[i]
-                $("#chr" + num).val(chromosome);
-                $("#start" + num).val(start);
-                $("#end" + num).val(end);
-                $("#label" + num).val(label);
-                $("#genes" + num).focus();
-    
-                toggleRegionDeleteIcon(num)
-            }
+        if ($("#region_search_area").is(":hidden")) {
+            $("#region_search").click();
+        }
+
+        //loop through all regions and fill in the QTL region rows
+        for (i = 0; i < numRegions; i++) {
+            var num = i + 1;
+            var {chromosome, start, end, label} = regions[i]
+            $("#chr" + num).val(chromosome);
+            $("#start" + num).val(start);
+            $("#end" + num).val(end);
+            $("#label" + num).val(label);
+            $("#genes" + num).focus();
+
+            toggleRegionDeleteIcon(num)
+        }
 
          
     }
@@ -259,10 +211,50 @@ const exampleQuery = function()
 
     }
 
+      /**
+     * Renders query examples to UI .
+     */
+    function renderQueryHtml(){
+        $('#eg_queries').html('')
+       var currentTaxId =  $(".navbar-select").children("option:selected").val();
+
+        var selectedQuery = sampleQueries.filter((queries)=> queries.taxId === currentTaxId || queries.taxId === '');
+        // empty exiting examples 
+       var userAccess = new UserAccessManager(); 
+
+       selectedQuery.forEach(function(query)
+        {
+            var {accType,description,index} = query
+            var queryRestriction;
+                // /* TODO: too messed-up, See #768 */
+                var isQueryRestricted  = userAccess.requires(accType);
+                var isGeneListRestricted = userAccess.isLimitEnforced(); 
+
+                /* TODO: too messed-up, See #768 */
+                if(!isQueryRestricted){
+                    queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
+                } else if(!isGeneListRestricted){
+                    queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
+                }
+
+        
+            // Example query buttons
+            var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`; 
+
+            //Add example queries to page  
+            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query"><div> ${sampleQueryButtons} ${queryRestriction}</div>`; 
+
+            $('#eg_queries').append(query);
+        }) 
+    }
+
+
+
     return{
         setQueryData:setQueryData,
-        renderQueryHtml:renderQueryHtml,
-        populateQueryValues:populateQueryValues
+        populateQueryValues:populateQueryValues,
+        renderQueryHtml:renderQueryHtml
+
     }
 
 }(); 

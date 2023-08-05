@@ -21,17 +21,21 @@ $(document).ready (
 			
 			knetmaps = KNETMAPS.KnetMaps();
 
-			detectTaxIdFromUrl();
 
+			detectTaxIdFromUrl();
+		
 			speciesSelector.initiate();	
-			exampleQuery.setQueryData();				
+				
+
+
+			exampleQuery.setQueryData();						
 			loginUtilsInit();	 // See notes in loginUtils.js
 			loadOnReady();
 			showReferenceGenome();
 			initResetButton();
 			showToolTips();
 			intialiseFeedbackCtaConfig();
-			checkUserPlan();
+			setupGenesSearch
 		
 			// Do this as last step, so that it doesn't track in 
 			// case of failure		
