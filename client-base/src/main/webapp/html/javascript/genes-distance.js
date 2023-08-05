@@ -192,7 +192,8 @@ const geneTableFilterMgr = function() {
                 for(let concept in concepts ){
                     
                     let evidence = concepts[concept].conceptEvidences;
-                    evidence = evidence.filter( item => item.graphDistance > distance)
+
+                    evidence = evidence.filter( item => item.graphDistance <= distance)
         
                     if(!evidence.length){
                         const newObject = Object.assign({},concepts)

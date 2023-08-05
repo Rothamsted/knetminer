@@ -786,7 +786,6 @@ span.hint-big:hover {
 
 .exampleQuery {
     cursor: pointer;
-    margin-bottom:6px;
 }
 
 .exampleQuery::before{
@@ -2834,5 +2833,3 @@ color: #C0C0C0;
     color:var(--green);
     margin-right:.5rem
 }
-
-

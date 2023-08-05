@@ -13,10 +13,10 @@ function createGenesTable ( tableData, keyword )
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 		var geneDistanceFilter = graphDistanceFilterHtml()
 		
-		table += '<form name="checkbox_form"><div class="filter-tab"> <h5>Filters:</h5>';
-		table +=  '<div class="filter-container"><div class="evidence"><input onchange="changeFilterView(this)" id="concepts" name="filters" value="concepts" type="radio"/checked><label for="concepts">Concepts</label></div>';
-		table += '<div class="distance"><input onchange="changeFilterView(this)" type="radio" name="filters" id="distance" value="distance"/><label for="distance">Evidence Distance</label></div>';
-		table += '<div class="knetscore"><input onchange="changeFilterView(this)" name="filters" id="knetscore" value="knetscore" type="radio"/><label for="knetscore">KnetScore</label></div></div></div>'
+		table += '<form name="checkbox_form"><div class="filter-tab">';
+		table +=  '<div class="filter-container"><div class="filter-tabs active-tabs" onclick="changeFilterView(this)" id="concepts" name="filters" value="concepts" type="radio"> <i class="fas fa-dna"></i> Concepts</div>';
+		table += '<div class="filter-tabs" onclick="changeFilterView(this)" type="radio" name="filters" id="distance" value="distance"> <i class="fab fa-megaport"></i> Evidence Distance</div>';
+		table += '<div class="filter-tabs" onclick="changeFilterView(this)" name="filters" id="knetscore" value="knetscore" type="radio"> <i class="fas fa-exchange-alt"></i> </i> KnetScore </div></div></div>'
 		table += '<div class="divider"></div><div class="gene_header_container">';
 		table += '<div id="filters">'+ geneDistanceFilter + interactiveSummaryLegend + '</div><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"></i></div></div>';
 		table += '</div>';
@@ -37,7 +37,6 @@ function createGenesTable ( tableData, keyword )
 		table += '</tr>';
 		table += '</thead>';
 		table += '<tbody id="geneTableBody" class="scrollTable">';
-	
 		table += '</tbody>';
 		table += '</table>';
 		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
@@ -50,11 +49,9 @@ function createGenesTable ( tableData, keyword )
 		table += '<div class="gene-footer-flex"><div  id="candidate-count" class="selected-genes-count"><span style="color:#51CE7B; font-size: 14px;">No genes selected</span></div>';
 	
 		table += '<button id="new_generateMultiGeneNetworkButton" class="non-active btn knet_button" title="Display the network in KnetMaps"> Create Network </button></div></div>';
-	
 		$('#resultsTable').html(table);
 		createGeneTableBody ( tableData );
-		
-					
+	
 		var tableSorterOpts = {}
 		
 		// Sort if enabled. See Notes in init-utils.js
@@ -444,9 +441,6 @@ function createGeneTableBody ( tableData, doAppend = false )
 				evidenceTd += '</div>';
 				evidenceTd += '</div> <span style="margin-right:.5rem">' + thisTypeEvidences.length + '</span></div>';
 				}
-
-				
-
 			}
 			// for evidenceType, typeEvidencesSummary
 
@@ -581,8 +575,11 @@ function openAccessionNetworkView(event,genesAccessions){
  */
  function changeFilterView(element){
 
-	const selected = $(element).val(); 
-	$('.view').removeClass('active')
 
+	const selected = $(element).attr('value'); 
+	$('.view').removeClass('active')
+	$('.filter-tabs').removeClass('active-tabs')
+
+	$(element).addClass('active-tabs'); 
 	$(`#${selected}-view`).addClass('active');
  }
