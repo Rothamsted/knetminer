@@ -5,7 +5,7 @@
 	<query>
 		<description>Keyword search (AND)</description>
 		<term>"seed germination" AND flavon*</term>
-		<accType>free</accType>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -16,7 +16,7 @@
 		  - The common convention for these is all lower case, free and not free.
 		  Then, they're usually checked case-insensitive, as it is already implemented, to that's to be kept
 		  
-			- accType is a poor name for a config file like this. What does it mean? Accession? Access?
+			- minimumUserRole is a poor name for a config file like this. What does it mean? Accession? Access?
 			Rename it to something better, eg, allowedUserRole
 			
 			Also, It might need to be plural, like: 
@@ -28,7 +28,7 @@
 			
 			Let's discuss the last two at some point.
 		-->
-		<accType>free</accType>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -36,7 +36,7 @@
 		<term>drought OR heat OR frost</term>
 		<gene>TPS*</gene>
 		<gene>TPP?</gene>
-		<accType>free</accType>
+		<minimumUserRole>free</minimumUserRole>
 	</query>	
 	
 	<!-- Wheat queries -->
@@ -48,7 +48,7 @@
 		<gene>TRAESCS3D03G0544800</gene>
 		<gene>TaSIZ1</gene>
 		<gene>CDC5</gene>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>
@@ -75,7 +75,7 @@
 		<gene>TRAESCS4A02G206800</gene>
 		<gene>TRAESCS3B02G006100</gene>
 		<gene>TRAESCS3A02G464900</gene>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>
@@ -94,7 +94,7 @@
 		<gene>TraesCS3D02G468400</gene>
 		<gene>TraesCS3B02G280700</gene>
 		<gene>TraesCS2D02G493400</gene>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>
@@ -116,7 +116,7 @@
 		<gene>TRAESCS6B02G462300</gene>
 		<gene>TRAESCS7A02G033100</gene>
 		<gene>TRAESCS4A02G456300</gene>
-		<accType>pro</accType>
+		<minimumUserRole>pro</minimumUserRole>
 	</query>
 	
 	<query>
@@ -136,7 +136,7 @@
 			<end>310000000</end>
 			<label>QTL2</label>
 		</region>
-		<accType>pro</accType>	
+		<minimumUserRole>pro</minimumUserRole>	
 	</query>
 
 	
@@ -145,7 +145,7 @@
 		<description>FLC gene expression</description>
 		<taxId>3702</taxId>
 		<term>flowering FLC FT</term>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>	
@@ -160,14 +160,14 @@
 			<label>Petal size</label>
 		</region>
         <gene>At4g18330</gene>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>
 		<description>Dormancy</description>
 		<taxId>3702</taxId>
 		<term>dormancy OR anthocyanin</term>
-		<accType>pro</accType>
+		<minimumUserRole>pro</minimumUserRole>
 	</query>
 	
 	<!-- Rice queries -->
@@ -179,7 +179,7 @@
 		<gene>Os12g0484900</gene>
 		<gene>OsGRF7</gene>
 		<gene>GRF7</gene>
-		<accType>registered</accType>
+		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<query>
@@ -206,7 +206,7 @@
 		<gene>OS05G0552300</gene>
 		<gene>OS09G0570800</gene>
 		<gene>OS07G0137800</gene>
-		<accType>pro</accType>
+		<minimumUserRole>pro</minimumUserRole>
 	</query>
 	
 	
