@@ -10,7 +10,7 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         
         <!-- 
-          TODO: schema.org, annotations from the the graph metadata descriptor
+            TODO: schema.org, annotations from the the graph metadata descriptor
           For the moment, these values are taken from the blog.
          -->
         <title>KnetMiner - Knowledge Graph based tools and resources for Life Sciences</title>
@@ -110,7 +110,8 @@
           <!-- string loadtimes files -->
         <script type="text/javascript" src="html/javascript/loadtimes-popup.js"></script>
 
-      
+              <!-- species selector file -->
+        <script type="text/javascript" src="html/javascript/user-access.js"></script>
 
         <!-- init utils -->
         <script type="text/javascript" src="html/javascript/init-utils.js"></script>
@@ -175,6 +176,7 @@
 
         <!-- release note animation-->
         <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+        
     </head>
     <body>
       <div id="wrapper">
