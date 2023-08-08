@@ -225,13 +225,14 @@ const exampleQuery = function()
        selectedQuery.forEach(function(query)
         {
             var {accType,description,index} = query
+
             var queryRestriction;
                 // /* TODO: too messed-up, See #768 */
                 var isQueryRestricted  = userAccess.requires(accType);
                 var isGeneListRestricted = userAccess.isLimitEnforced(); 
 
                 /* TODO: too messed-up, See #768 */
-                if(!isQueryRestricted){
+                if(!isQueryRestricted && isGeneListRestricted){
                     queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
                 } else if(!isGeneListRestricted){
                     queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
