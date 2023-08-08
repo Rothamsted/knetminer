@@ -120,7 +120,7 @@ function knetSpaceProfile() {
         });
         return jsonVal;
     });
-    checkUserPlan();
+    setupGenesSearch();
     console.log(jsonVal.username);
     return jsonVal;
 }
