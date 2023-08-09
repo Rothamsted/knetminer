@@ -233,9 +233,11 @@ const exampleQuery = function()
                 var isGeneListRestricted = userAccess.isLimitEnforced(); 
 
                 /* TODO: too messed-up, See #768 */
-                if(isQueryRestricted && isGeneListRestricted){
+                if(!isQueryRestricted){
                     queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
-                }else{
+                }
+                
+                if(isGeneListRestricted && accType == 'pro'){
                      queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
                 }
                 
@@ -250,8 +252,6 @@ const exampleQuery = function()
             $('#eg_queries').append(query);
         }) 
     }
-
-
 
     return{
         setQueryData:setQueryData,

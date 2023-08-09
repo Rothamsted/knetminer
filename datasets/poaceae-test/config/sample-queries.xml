@@ -5,15 +5,16 @@
 	<query>
 		<description>Keyword search (AND)</description>
 		<term>"seed germination" AND flavon*</term>
-		<minimumUserRole>free</minimumUserRole>
+		<minimumUserRole>guest</minimumUserRole>
 	</query>
 	
 	<query>
 		<description>Keyword search (OR)</description>
 		<term>dormancy OR anthocyanin</term>
+		<minimumUserRole>guest</minimumUserRole>
 		<!--
 		  TODO:
-		  - The common convention for these is all lower case, free and not free.
+		  - The common convention for these is all lower case, guest and not guest.
 		  Then, they're usually checked case-insensitive, as it is already implemented, to that's to be kept
 		  
 			- minimumUserRole is a poor name for a config file like this. What does it mean? Accession? Access?
@@ -28,7 +29,6 @@
 			
 			Let's discuss the last two at some point.
 		-->
-		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -36,7 +36,7 @@
 		<term>drought OR heat OR frost</term>
 		<gene>TPS*</gene>
 		<gene>TPP?</gene>
-		<minimumUserRole>free</minimumUserRole>
+		<minimumUserRole>guest</minimumUserRole>
 	</query>	
 	
 	<!-- Wheat queries -->
@@ -48,7 +48,7 @@
 		<gene>TRAESCS3D03G0544800</gene>
 		<gene>TaSIZ1</gene>
 		<gene>CDC5</gene>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>guest</minimumUserRole>
 	</query>
 	
 	<query>
@@ -75,7 +75,7 @@
 		<gene>TRAESCS4A02G206800</gene>
 		<gene>TRAESCS3B02G006100</gene>
 		<gene>TRAESCS3A02G464900</gene>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -94,7 +94,7 @@
 		<gene>TraesCS3D02G468400</gene>
 		<gene>TraesCS3B02G280700</gene>
 		<gene>TraesCS2D02G493400</gene>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -145,7 +145,7 @@
 		<description>FLC gene expression</description>
 		<taxId>3702</taxId>
 		<term>flowering FLC FT</term>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>	
@@ -160,7 +160,7 @@
 			<label>Petal size</label>
 		</region>
         <gene>At4g18330</gene>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>
@@ -179,7 +179,7 @@
 		<gene>Os12g0484900</gene>
 		<gene>OsGRF7</gene>
 		<gene>GRF7</gene>
-		<minimumUserRole>registered</minimumUserRole>
+		<minimumUserRole>free</minimumUserRole>
 	</query>
 	
 	<query>

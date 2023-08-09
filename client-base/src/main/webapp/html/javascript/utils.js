@@ -35,7 +35,7 @@ $(document).ready (
 			initResetButton();
 			showToolTips();
 			intialiseFeedbackCtaConfig();
-			setupGenesSearch
+			setupGenesSearch()
 		
 			// Do this as last step, so that it doesn't track in 
 			// case of failure		

@@ -3,7 +3,7 @@
  */
 class UserAccessManager{
 
-    #current = 'free'; 
+    #current = 'guest'; 
     #defaultGeneLimit = 20; 
     #isGeneLimitEnforced = true; 
 
@@ -24,7 +24,7 @@ class UserAccessManager{
           headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" },
           success: function (data) {
             if( ! typeof data.id == 'undefined') return (data.plan.name).toLowerCase(); 
-            return 
+            return null
           },
       
         });
@@ -70,8 +70,8 @@ class UserAccessManager{
 class UserRole {
     #level = null
 
-    static FREE = new UserRole ( 1000 )
-    static REGISTERED = new UserRole ( 500 )
+    static GUEST = new UserRole ( 1000 )
+    static FREE = new UserRole ( 500 )
     static PRO = new UserRole ( 100 )
 
     constructor(level){
@@ -100,8 +100,7 @@ class UserRole {
 	 * Param can be a UserRole or a string.
    */
     static can ( role,queryRole )
-  {   
-
+  {  
     return  UserRole.compare(role,queryRole) >= 0;
   }
 
